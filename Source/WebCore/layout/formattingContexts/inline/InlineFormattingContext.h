@@ -34,6 +34,8 @@
 #include "LayoutIntegrationUtils.h"
 #include <wtf/TZoneMalloc.h>
 
+extern "C" WEBCORE_EXPORT void* InlineFormattingContext_globalLayoutState(void*);
+
 namespace WebCore {
 namespace Layout {
 
@@ -105,6 +107,8 @@ private:
     const IntegrationUtils m_integrationUtils;
     InlineContentCache& m_inlineContentCache;
     InlineLayoutState m_inlineLayoutState;
+
+    friend void* ::InlineFormattingContext_globalLayoutState(void*);
 };
 
 }

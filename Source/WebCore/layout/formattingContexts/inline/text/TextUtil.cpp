@@ -39,8 +39,536 @@
 #include "TextRun.h"
 #include "TextSpacing.h"
 #include "WidthIterator.h"
+#include "wtf/text/AtomString.h"
+#include <cstdint>
 #include <unicode/ubidi.h>
 #include <wtf/text/TextBreakIterator.h>
+
+#include <optional>
+#include <span>
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_unicodeBidi(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->unicodeBidi());
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_tabSizeValue(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->tabSize().value();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_tabSizeIsSpaces(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->tabSize().isSpaces();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_fontCascade(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->fontCascade();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textAlign(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textAlign());
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_direction(const void* p)
+{
+    return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->direction());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_whiteSpaceCollapse(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->whiteSpaceCollapse());
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_textWrapMode(const void* p)
+{
+    return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->textWrapMode());
+}
+
+extern "C" WEBCORE_EXPORT const void* FontCascade_fontDescription(const void* p)
+{
+    return &static_cast<const WebCore::FontCascade*>(p)->fontDescription();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_size(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->size();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_letterSpacing(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->letterSpacing();
+}
+
+extern "C" WEBCORE_EXPORT bool FontCascade_canTakeFixedPitchFastContentMeasuring(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->canTakeFixedPitchFastContentMeasuring();
+}
+
+extern "C" WEBCORE_EXPORT bool FontCascade_enableKerning(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->enableKerning();
+}
+
+extern "C" WEBCORE_EXPORT bool FontCascade_requiresShaping(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->requiresShaping();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_primaryFontSpaceWidth(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->primaryFont().spaceWidth();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_widthOfSpaceString(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->widthOfSpaceString();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_wordSpacing(const void* p)
+{
+    return static_cast<const WebCore::FontCascade*>(p)->wordSpacing();
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_widthForTextUsingSimplifiedMeasuring(const void* font_cascade_ptr, const void* text_ptr, bool textDirection)
+{
+    const auto& text = *static_cast<const StringView*>(text_ptr);
+    const auto font_cascade = static_cast<const WebCore::FontCascade*>(font_cascade_ptr);
+    return font_cascade->widthForTextUsingSimplifiedMeasuring(text, static_cast<WebCore::TextDirection>(textDirection));
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_widthForSimpleTextWithFixedPitch(const void* font_cascade_ptr, const void* text_ptr, bool textDirection)
+{
+    const auto& text = *static_cast<const StringView*>(text_ptr);
+    const auto font_cascade = static_cast<const WebCore::FontCascade*>(font_cascade_ptr);
+    return font_cascade->widthForSimpleTextWithFixedPitch(text, textDirection);
+}
+
+extern "C" WEBCORE_EXPORT float FontCascade_width(const void* font_cascade_ptr, const void* text_run_ptr)
+{
+    const auto& text_run = *static_cast<const WebCore::TextRun*>(text_run_ptr);
+    const auto font_cascade = static_cast<const WebCore::FontCascade*>(font_cascade_ptr);
+    return font_cascade->width(text_run);
+}
+
+extern "C" WEBCORE_EXPORT const void* FontCascade_metricsOfPrimaryFont(const void* font_cascade_ptr)
+{
+    return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->metricsOfPrimaryFont();
+}
+
+extern "C" WEBCORE_EXPORT const void* InlineTextBox_content(const void* p)
+{
+    return &static_cast<const WebCore::Layout::InlineTextBox*>(p)->content();
+}
+
+extern "C" WEBCORE_EXPORT bool InlineTextBox_isCombined(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineTextBox*>(p)->isCombined();
+}
+
+extern "C" WEBCORE_EXPORT bool InlineTextBox_canUseSimplifiedContentMeasuring(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineTextBox*>(p)->canUseSimplifiedContentMeasuring();
+}
+
+extern "C" WEBCORE_EXPORT bool InlineTextBox_canUseSimpleFontCodePath(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineTextBox*>(p)->canUseSimpleFontCodePath();
+}
+
+extern "C" WEBCORE_EXPORT bool InlineTextBox_hasPositionDependentContentWidth(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineTextBox*>(p)->hasPositionDependentContentWidth();
+}
+
+extern "C" WEBCORE_EXPORT bool InlineTextBox_hasStrongDirectionalityContent(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineTextBox*>(p)->hasStrongDirectionalityContent();
+}
+
+extern "C" WEBCORE_EXPORT const void* InlineTextBox_style(const void* p)
+{
+    return &static_cast<const WebCore::Layout::InlineTextBox*>(p)->style();
+}
+
+extern "C" WEBCORE_EXPORT unsigned String_length(const void* p)
+{
+    return static_cast<const String*>(p)->length();
+}
+
+extern "C" WEBCORE_EXPORT unsigned StringView_length(const void* p)
+{
+    return static_cast<const StringView*>(p)->length();
+}
+
+extern "C" WEBCORE_EXPORT uint16_t String_subscript(const void* p, unsigned index)
+{
+    return (*static_cast<const String*>(p))[index];
+}
+
+extern "C" WEBCORE_EXPORT bool String_is8Bit(const void* p)
+{
+    return static_cast<const String*>(p)->is8Bit();
+}
+
+extern "C" WEBCORE_EXPORT void String_convertTo16Bit(const void* p)
+{
+    static_cast<String*>(const_cast<void*>(p))->convertTo16Bit();
+}
+
+extern "C" WEBCORE_EXPORT bool StringView_is8Bit(const void* p)
+{
+    return static_cast<const StringView*>(p)->is8Bit();
+}
+
+extern "C" WEBCORE_EXPORT void TextRun_setTabSize(void* p, bool allow, float numOrLength, bool isSpaces)
+{
+    WebCore::TabSize tabSize(numOrLength, static_cast<WebCore::TabSizeValueType>(isSpaces));
+    static_cast<WebCore::TextRun*>(p)->setTabSize(allow, tabSize);
+}
+
+extern "C" WEBCORE_EXPORT void TextRun_setTextSpacingState(void* text_run_raw, const void* spacing_state)
+{
+    auto text_run = static_cast<WebCore::TextRun*>(text_run_raw);
+    if (!spacing_state) {
+        text_run->setTextSpacingState(WebCore::TextSpacing::SpacingState {});
+        return;
+    }
+    text_run->setTextSpacingState(*static_cast<const WebCore::TextSpacing::SpacingState*>(spacing_state));
+}
+
+extern "C" WEBCORE_EXPORT uint64_t span8_size(const void* p)
+{
+    return static_cast<const std::span<const LChar>*>(p)->size();
+}
+
+extern "C" WEBCORE_EXPORT uint64_t span16_size(const void* p)
+{
+    return static_cast<const std::span<const UChar>*>(p)->size();
+}
+
+extern "C" WEBCORE_EXPORT uint16_t span8_subscript(const void* p, uint64_t index)
+{
+    return (*static_cast<const std::span<const LChar>*>(p))[index];
+}
+
+extern "C" WEBCORE_EXPORT uint16_t span16_subscript(const void* p, uint64_t index)
+{
+    return (*static_cast<const std::span<const UChar>*>(p))[index];
+}
+
+extern "C" bool StringBuilder_isEmpty(const void* builder)
+{
+    return static_cast<const StringBuilder*>(builder)->isEmpty();
+}
+
+// TODO(asuhan): Fix leaks
+
+extern "C" WEBCORE_EXPORT const void* String_span8(const void* p)
+{
+    return new std::span<const LChar>(static_cast<const String*>(p)->span8());
+}
+
+extern "C" WEBCORE_EXPORT const void* String_span16(const void* p)
+{
+    return new std::span<const UChar>(static_cast<const String*>(p)->span16());
+}
+
+extern "C" WEBCORE_EXPORT const void* StringView_span8(const void* p)
+{
+    return new std::span<const LChar>(static_cast<const StringView*>(p)->span8());
+}
+
+extern "C" WEBCORE_EXPORT const void* StringView_span16(const void* p)
+{
+    return new std::span<const UChar>(static_cast<const StringView*>(p)->span16());
+}
+
+extern "C" WEBCORE_EXPORT const void* StringView_fromString(const void* p)
+{
+    return new StringView(*static_cast<const String*>(p));
+}
+
+extern "C" WEBCORE_EXPORT const void* StringView_substring(const void* p, unsigned start, unsigned length)
+{
+    return new StringView(static_cast<const StringView*>(p)->substring(start, length));
+}
+
+extern "C" WEBCORE_EXPORT void* TextRun_fromStringView(const void* p, float xpos, float expansion, bool direction, bool directionalOverride)
+{
+    return new WebCore::TextRun(*static_cast<const StringView*>(p), xpos, expansion, WebCore::ExpansionBehavior::defaultBehavior(), static_cast<WebCore::TextDirection>(direction), directionalOverride);
+}
+
+extern "C" WEBCORE_EXPORT const void* String_new()
+{
+    return new String();
+}
+
+extern "C" WEBCORE_EXPORT const void* String_new_copy(const void* s)
+{
+    return new String(*static_cast<const String*>(s));
+}
+
+extern "C" WEBCORE_EXPORT void* StringBuilder_new()
+{
+    return new StringBuilder();
+}
+
+extern "C" WEBCORE_EXPORT void StringBuilder_append_StringView(void* builder, const void* s)
+{
+    static_cast<StringBuilder*>(builder)->append(*static_cast<const StringView*>(s));
+}
+
+extern "C" WEBCORE_EXPORT const void* Length_new()
+{
+    return new WebCore::Length();
+}
+
+extern "C" WEBCORE_EXPORT const void* FloatRect_new(float x, float y, float width, float height)
+{
+    return new WebCore::FloatRect(x, y, width, height);
+}
+
+extern "C" WEBCORE_EXPORT const void* Expansion_new(uint8_t left, uint8_t right, float horizontal_expansion)
+{
+    return new WebCore::InlineDisplay::Box::Expansion(
+        {
+            static_cast<WebCore::ExpansionBehavior::Behavior>(left),
+            static_cast<WebCore::ExpansionBehavior::Behavior>(right)
+        },
+        horizontal_expansion);
+}
+
+extern "C" WEBCORE_EXPORT const void* Text_new(
+    uint64_t start,
+    uint64_t length,
+    uint32_t partially_visible_content_length,
+    bool has_partially_visible_content_length,
+    const void* original_content,
+    const void* adjusted_content_to_render,
+    bool has_hyphen)
+{
+    auto text = new WebCore::InlineDisplay::Box::Text(
+        start,
+        length,
+        *static_cast<const String*>(original_content),
+        *static_cast<const String*>(adjusted_content_to_render),
+        has_hyphen);
+    if (has_partially_visible_content_length) {
+        text->setPartiallyVisibleContentLength(partially_visible_content_length);
+    }
+    return text;
+}
+
+extern "C" WEBCORE_EXPORT void* CachedLineBreakIteratorFactory_new(
+    const void* string_view,
+    const void* locale,
+    uint8_t mode,
+    uint8_t content_analysis)
+{
+    return new CachedLineBreakIteratorFactory(
+        *static_cast<const StringView*>(string_view),
+        *static_cast<const AtomString*>(locale),
+        static_cast<TextBreakIterator::LineMode::Behavior>(mode),
+        static_cast<TextBreakIterator::ContentAnalysis>(content_analysis));
+}
+
+extern "C" WEBCORE_EXPORT void* CachedLineBreakIteratorFactory_stringView(const void* p)
+{
+    return new StringView(static_cast<const CachedLineBreakIteratorFactory*>(p)->stringView());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t CachedLineBreakIteratorFactory_mode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const CachedLineBreakIteratorFactory*>(p)->mode());
+}
+
+extern "C" WEBCORE_EXPORT void* CachedLineBreakIteratorFactory_get(void* p)
+{
+    return &static_cast<CachedLineBreakIteratorFactory*>(p)->get();
+}
+
+extern "C" WEBCORE_EXPORT void* CachedLineBreakIteratorFactory_priorContext(void* p)
+{
+    return &static_cast<CachedLineBreakIteratorFactory*>(p)->priorContext();
+}
+
+extern "C" WEBCORE_EXPORT int64_t CachedTextBreakIterator_following(const void* p, uint32_t location)
+{
+    const auto following_opt = static_cast<const CachedTextBreakIterator*>(p)->following(location);
+    return following_opt ? *following_opt : -1;
+}
+
+extern "C" WEBCORE_EXPORT uint32_t PriorContext_length(const void* p)
+{
+    return static_cast<const CachedLineBreakIteratorFactory::PriorContext*>(p)->length();
+}
+
+extern "C" WEBCORE_EXPORT uint16_t PriorContext_lastCharacter(const void* p)
+{
+    return static_cast<const CachedLineBreakIteratorFactory::PriorContext*>(p)->lastCharacter();
+}
+
+extern "C" WEBCORE_EXPORT uint16_t PriorContext_secondToLastCharacter(const void* p)
+{
+    return static_cast<const CachedLineBreakIteratorFactory::PriorContext*>(p)->secondToLastCharacter();
+}
+
+extern "C" WEBCORE_EXPORT void PriorContext_set(void* p, uint16_t ch0, uint16_t ch1)
+{
+    static_cast<CachedLineBreakIteratorFactory::PriorContext*>(p)->set(std::array<UChar, 2>{ch0, ch1});
+}
+
+extern "C" WEBCORE_EXPORT const void* EnclosingTopAndBottom_new(float top, float bottom)
+{
+    return new WebCore::InlineDisplay::Line::EnclosingTopAndBottom(top, bottom);
+}
+
+extern "C" WEBCORE_EXPORT const void* InlineDisplayBox_new(
+    const void* layout_box,
+    const void* unflipped_visual_rect,
+    const void* ink_overflow,
+    uint64_t line_index,
+    const void* expansion,
+    uint8_t bidi_level,
+    uint8_t type,
+    bool has_content,
+    uint8_t position_within_inline_level_box,
+    bool is_fully_truncated,
+    const void* text)
+{
+    return new WebCore::InlineDisplay::Box(
+        line_index,
+        static_cast<WebCore::InlineDisplay::Box::Type>(type),
+        *static_cast<const WebCore::Layout::Box*>(layout_box),
+        bidi_level,
+        *static_cast<const WebCore::FloatRect*>(unflipped_visual_rect),
+        *static_cast<const WebCore::FloatRect*>(ink_overflow),
+        *static_cast<const WebCore::InlineDisplay::Box::Expansion*>(expansion),
+        text ? std::make_optional(*static_cast<const WebCore::InlineDisplay::Box::Text*>(text)) : std::nullopt,
+        has_content,
+        is_fully_truncated,
+        OptionSet<WebCore::InlineDisplay::Box::PositionWithinInlineLevelBox>::fromRaw(position_within_inline_level_box));
+}
+
+extern "C" WEBCORE_EXPORT const void* InlineDisplayLine_new(
+    uint64_t first_box_index,
+    uint64_t box_count,
+    const void* line_box_rect,
+    const void* line_box_logical_rect,
+    const void* scrollable_overflow,
+    const void* content_overflow,
+    const void* ink_overflow,
+    const void* enclosing_logical_top_and_bottom,
+    float alignment_baseline,
+    float content_logical_left,
+    float content_logical_left_ignoring_inline_direction,
+    float content_logical_width,
+    uint8_t baseline_type,
+    bool is_left_to_right_direction,
+    bool is_horizontal,
+    bool is_first_after_page_break,
+    bool is_fully_truncated_in_block_direction,
+    bool has_content_after_ellipsis_box,
+    const void* ellipsis)
+{
+    auto line = new WebCore::InlineDisplay::Line(
+        *static_cast<const WebCore::FloatRect*>(line_box_logical_rect),
+        *static_cast<const WebCore::FloatRect*>(line_box_rect),
+        *static_cast<const WebCore::FloatRect*>(content_overflow),
+        *static_cast<const WebCore::InlineDisplay::Line::EnclosingTopAndBottom*>(enclosing_logical_top_and_bottom),
+        alignment_baseline,
+        static_cast<WebCore::FontBaseline>(baseline_type),
+        content_logical_left,
+        content_logical_left_ignoring_inline_direction,
+        content_logical_width,
+        is_left_to_right_direction,
+        is_horizontal,
+        is_fully_truncated_in_block_direction);
+    line->setFirstBoxIndex(first_box_index);
+    line->setBoxCount(box_count);
+    line->setScrollableOverflow(*static_cast<const WebCore::FloatRect*>(scrollable_overflow));
+    line->setInkOverflow(*static_cast<const WebCore::FloatRect*>(ink_overflow));
+    if (is_first_after_page_break) {
+        line->setIsFirstAfterPageBreak();
+    }
+    if (has_content_after_ellipsis_box) {
+        line->setHasContentAfterEllipsisBox();
+    }
+    if (ellipsis) {
+        line->setEllipsis(*static_cast<const WebCore::InlineDisplay::Line::Ellipsis*>(ellipsis));
+    }
+    return line;
+}
+
+extern "C" void InlineLayoutResult_displayContent_addLine(void* inline_layout_result, const void* line)
+{
+    const auto& displayLine = *static_cast<const WebCore::InlineDisplay::Line*>(line);
+    static_cast<WebCore::Layout::InlineLayoutResult*>(inline_layout_result)->displayContent.lines.append(displayLine);
+}
+
+extern "C" void InlineLayoutResult_displayContent_addBox(void* inline_layout_result, const void* box)
+{
+    const auto& displayBox = *static_cast<const WebCore::InlineDisplay::Box*>(box);
+    static_cast<WebCore::Layout::InlineLayoutResult*>(inline_layout_result)->displayContent.boxes.append(displayBox);
+}
+
+extern "C" void InlineLayoutResult_setRange(void* inline_layout_result, uint8_t range)
+{
+    static_cast<WebCore::Layout::InlineLayoutResult*>(inline_layout_result)->range = static_cast<WebCore::Layout::InlineLayoutResult::Range>(range);
+}
+
+extern "C" const void* TextUtil_ellipsisTextInInlineDirection(bool is_horizontal)
+{
+    const auto ellipsis_text = WebCore::Layout::TextUtil::ellipsisTextInInlineDirection(is_horizontal);
+    return new AtomString(ellipsis_text);
+}
+
+extern "C" WEBCORE_EXPORT const void* Ellipsis_new(uint8_t type, float x, float y, float width, float height, const void* text)
+{
+    return new WebCore::InlineDisplay::Line::Ellipsis(
+        static_cast<WebCore::InlineDisplay::Line::Ellipsis::Type>(type),
+        WebCore::FloatRect(x, y, width, height),
+        *static_cast<const AtomString*>(text));
+}
+
+struct WordBreakLeftRaw {
+    uint64_t length;
+    float logicalWidth;
+};
+
+extern "C" WordBreakLeftRaw TextUtil_breakWord(
+    const void* inline_text_box,
+    uint64_t start_position,
+    uint64_t length,
+    float text_width,
+    float available_width,
+    float content_logical_left,
+    const void* font_cascade) {
+    const auto& inlineTextBox = *static_cast<WebCore::Layout::InlineTextBox*>(const_cast<void*>(inline_text_box));
+    const auto& fontCascade = *static_cast<const WebCore::FontCascade*>(font_cascade);
+    auto raw = WebCore::Layout::TextUtil::breakWord(inlineTextBox, start_position, length, text_width, available_width, content_logical_left, fontCascade);
+    return { raw.length, raw.logicalWidth };
+}
+
+extern "C" uint64_t TextUtil_firstUserPerceivedCharacterLength(const void* inline_text_box, uint64_t start_position, uint64_t length)
+{
+    return WebCore::Layout::TextUtil::firstUserPerceivedCharacterLength(*static_cast<const WebCore::Layout::InlineTextBox*>(inline_text_box), start_position, length);
+}
+
+extern "C" const void* AtomString_string(const void* p)
+{
+    return &static_cast<const AtomString*>(p)->string();
+}
+
+extern "C" bool AtomString_isNull(const void* p)
+{
+    return static_cast<const AtomString*>(p)->isNull();
+}
+
+extern "C" float TextUtil_width_box(const void*, const void*, unsigned, unsigned, float, bool, const void*);
 
 namespace WebCore {
 namespace Layout {
@@ -53,6 +581,14 @@ static inline InlineLayoutUnit spaceWidth(const FontCascade& fontCascade, bool c
 }
 
 InlineLayoutUnit TextUtil::width(const InlineTextBox& inlineTextBox, const FontCascade& fontCascade, unsigned from, unsigned to, InlineLayoutUnit contentLogicalLeft, UseTrailingWhitespaceMeasuringOptimization useTrailingWhitespaceMeasuringOptimization, TextSpacing::SpacingState spacingState)
+{
+    auto swift = TextUtil_width_box(&inlineTextBox, &fontCascade, from, to, contentLogicalLeft, static_cast<bool>(useTrailingWhitespaceMeasuringOptimization), &spacingState);
+    auto cpp = widthImpl(inlineTextBox, fontCascade, from, to, contentLogicalLeft, useTrailingWhitespaceMeasuringOptimization, spacingState);
+    assert(swift == cpp);
+    return cpp;
+}
+
+InlineLayoutUnit TextUtil::widthImpl(const InlineTextBox& inlineTextBox, const FontCascade& fontCascade, unsigned from, unsigned to, InlineLayoutUnit contentLogicalLeft, UseTrailingWhitespaceMeasuringOptimization useTrailingWhitespaceMeasuringOptimization, TextSpacing::SpacingState spacingState)
 {
     if (from == to)
         return 0;

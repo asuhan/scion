@@ -64,6 +64,97 @@
 #include <wtf/Assertions.h>
 #include <wtf/Range.h>
 
+struct BoxGeometryHorizontalEdgesRaw {
+    int32_t start;
+    int32_t end;
+};
+
+struct BoxGeometryVerticalEdgesRaw {
+    int32_t before;
+    int32_t after;
+};
+
+struct BoxGeometryEdgesRaw {
+    struct BoxGeometryHorizontalEdgesRaw horizontal;
+    struct BoxGeometryVerticalEdgesRaw vertical;
+};
+
+struct BoxGeometryRaw {
+    void* orig_ptr;
+    struct BoxGeometryEdgesRaw padding;
+    int32_t vertical_space_for_scrollbar;
+    int32_t horizontal_space_for_scrollbar;
+};
+
+struct PlacedFloatsItemRaw {
+    const void* layout_box;
+    uint8_t position;
+    struct BoxGeometryRaw absolute_box_geometry;
+    uint64_t placed_by_line;
+    bool placed_by_line_is_valid;
+};
+
+struct PlacedFloatsRaw {
+    const void* block_formatting_context_root;
+    const struct PlacedFloatsItemRaw* inline_items;
+    const uint64_t inline_items_count;
+};
+
+extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, void*);
+
+namespace {
+
+BoxGeometryRaw convertBoxGeometry(WebCore::Layout::BoxGeometry& boxGeometry)
+{
+    BoxGeometryHorizontalEdgesRaw horizontalPaddingEdgesRaw {
+        boxGeometry.paddingStart().rawValue(),
+        boxGeometry.paddingEnd().rawValue()
+    };
+    BoxGeometryVerticalEdgesRaw verticalPaddingEdgesRaw {
+        boxGeometry.paddingBefore().rawValue(),
+        boxGeometry.paddingAfter().rawValue()
+    };
+    BoxGeometryEdgesRaw paddingEdgesRaw { horizontalPaddingEdgesRaw, verticalPaddingEdgesRaw };
+    return {
+        &boxGeometry,
+        paddingEdgesRaw,
+        boxGeometry.verticalSpaceForScrollbar().rawValue(),
+        boxGeometry.horizontalSpaceForScrollbar().rawValue()
+    };
+}
+
+PlacedFloatsItemRaw convertPlacedFloatsItem(WebCore::Layout::PlacedFloats::Item& item)
+{
+    return {
+        item.layoutBox(),
+        static_cast<uint8_t>(item.isLeftPositioned()
+            ? WebCore::Layout::PlacedFloats::Item::Position::Left
+            : WebCore::Layout::PlacedFloats::Item::Position::Right),
+        convertBoxGeometry(item.absoluteBoxGeometry()),
+        item.placedByLine().value_or(0),
+        item.placedByLine().has_value()
+    };
+}
+
+}  // namespace
+
+PlacedFloatsRaw convertPlacedFloats(WebCore::Layout::PlacedFloats& placedFloats)
+{
+    auto& items = placedFloats.list();
+    // TODO(asuhan): Fix leaks
+    PlacedFloatsItemRaw* itemsRaw = items.isEmpty()
+        ? nullptr
+        : new PlacedFloatsItemRaw[items.size()];
+    for (size_t i = 0; i < items.size(); ++i) {
+        itemsRaw[i] = convertPlacedFloatsItem(items[i]);
+    }
+    return {
+        &placedFloats.formattingContextRoot(),
+        itemsRaw,
+        placedFloats.list().size()
+    };
+}
+
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -517,7 +608,27 @@ std::optional<LayoutRect> LineLayout::layout()
     // Temporary, integration only.
     inlineFormattingContext.layoutState().setNestedListMarkerOffsets(m_boxGeometryUpdater.takeNestedListMarkerOffsets());
 
-    auto layoutResult = inlineFormattingContext.layout(inlineContentConstraints(), m_lineDamage.get());
+    auto constraints = inlineContentConstraints();
+    auto lineDamage = m_lineDamage.get();
+#if 1
+    auto layoutResult = inlineFormattingContext.layout(constraints, lineDamage);
+#else
+    std::vector<const Layout::ElementBox*> nested_list_markers;
+    std::vector<int32_t> nested_list_marker_offsets_raw;
+    for (const auto& pair : inlineFormattingContext.layoutState().nestedListMarkerOffsets()) {
+        nested_list_markers.push_back(pair.key);
+        nested_list_marker_offsets_raw.push_back(pair.value.rawValue());
+    }
+    const auto placedFloatsRaw = convertPlacedFloats(m_blockFormattingState.placedFloats());
+    Layout::InlineLayoutResult layoutResult;
+    InlineFormattingContext_layout(
+        &inlineFormattingContext, &constraints, lineDamage,
+        nested_list_markers.empty() ? nullptr : &nested_list_markers[0],
+        nested_list_marker_offsets_raw.empty() ? nullptr : &nested_list_marker_offsets_raw[0],
+        static_cast<uint64_t>(nested_list_markers.size()),
+        placedFloatsRaw,
+        &layoutResult);
+#endif
     auto repaintRect = LayoutRect { constructContent(inlineFormattingContext.layoutState(), WTFMove(layoutResult)) };
 
     m_lineDamage = { };

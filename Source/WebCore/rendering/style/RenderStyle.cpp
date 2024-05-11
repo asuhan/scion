@@ -64,6 +64,191 @@
 #include <wtf/PointerComparison.h>
 #include <wtf/StdLibExtras.h>
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textOverflow(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textOverflow());
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_computedLocale(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->computedLocale();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterDrop(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->initialLetterDrop();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_isHorizontalWritingMode(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isHorizontalWritingMode();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_blockFlowDirection(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->blockFlowDirection());
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, int32_t width, int32_t height)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayInlineType(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayInlineType();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_letterSpacing(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->letterSpacing();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void* p)
+{
+    WebCore::LayoutUnit left;
+    WebCore::LayoutUnit right;
+    static_cast<const WebCore::RenderStyle*>(p)->getBoxShadowHorizontalExtent(left, right);
+    return left;
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_getBoxShadowHorizontalExtentRight(const void* p)
+{
+    WebCore::LayoutUnit left;
+    WebCore::LayoutUnit right;
+    static_cast<const WebCore::RenderStyle*>(p)->getBoxShadowHorizontalExtent(left, right);
+    return right;
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_getBoxShadowVerticalExtentTop(const void* p)
+{
+    WebCore::LayoutUnit top;
+    WebCore::LayoutUnit bottom;
+    static_cast<const WebCore::RenderStyle*>(p)->getBoxShadowVerticalExtent(top, bottom);
+    return top.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_getBoxShadowVerticalExtentBottom(const void* p)
+{
+    WebCore::LayoutUnit top;
+    WebCore::LayoutUnit bottom;
+    static_cast<const WebCore::RenderStyle*>(p)->getBoxShadowVerticalExtent(top, bottom);
+    return bottom.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_floating(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->floating());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_overflowX(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->overflowX());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_verticalAlign(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->verticalAlign());
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_verticalAlignLength(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->verticalAlignLength();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_lineHeight(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->lineHeight();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_computedLineHeight(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->computedLineHeight();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_autoWrap(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->autoWrap();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_top(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().top().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_right(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().right().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_bottom(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().bottom().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_left(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().left().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_nbspMode(const void* p)
+{
+    return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->nbspMode());
+}
+
+extern "C" WEBCORE_EXPORT int16_t RenderStyle_hyphenationLimitLines(const void* p)
+{
+    return static_cast<int16_t>(static_cast<const WebCore::RenderStyle*>(p)->hyphenationLimitLines());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textEmphasisFill(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textEmphasisFill());
+}
+
+extern "C" WEBCORE_EXPORT uint16_t RenderStyle_lineFitEdge(const void* p)
+{
+    const auto lineFitEdge = static_cast<const WebCore::RenderStyle*>(p)->lineFitEdge();
+    return (static_cast<uint8_t>(lineFitEdge.over) * 256) | static_cast<uint8_t>(lineFitEdge.under);
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationSkipInk(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textDecorationSkipInk());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineBoxContain(const void* p)
+{
+    const auto lineBoxContain = static_cast<const WebCore::RenderStyle*>(p)->lineBoxContain();
+    return lineBoxContain.toRaw();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationsInEffect(const void* p)
+{
+    const auto textDecorationsInEffect = static_cast<const WebCore::RenderStyle*>(p)->textDecorationsInEffect();
+    return textDecorationsInEffect.toRaw();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_outlineSize(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->outlineSize();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasOutlineInVisualOverflow(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasOutlineInVisualOverflow();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_marginLeft(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->marginLeft();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif

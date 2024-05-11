@@ -28,6 +28,8 @@
 #include "LayoutUnit.h"
 #include <wtf/OptionSet.h>
 
+extern "C" WEBCORE_EXPORT uint8_t ConstraintsForInlineContent_baseTypeFlags(const void*);
+
 namespace WebCore {
 namespace Layout {
 
@@ -68,6 +70,8 @@ private:
     unsigned m_baseTypeFlags : 3; // OptionSet<BaseTypeFlag>
     HorizontalConstraints m_horizontal;
     LayoutUnit m_logicalTop;
+
+    friend uint8_t ::ConstraintsForInlineContent_baseTypeFlags(const void*);
 };
 
 struct ConstraintsForOutOfFlowContent {

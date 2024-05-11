@@ -70,6 +70,7 @@ public:
     void setShouldNotSynthesizeInlineBlockBaseline() { m_shouldNotSynthesizeInlineBlockBaseline = true; }
     bool shouldNotSynthesizeInlineBlockBaseline() const { return m_shouldNotSynthesizeInlineBlockBaseline; }
 
+    const HashMap<const ElementBox*, LayoutUnit>& nestedListMarkerOffsets() const { return m_nestedListMarkerOffsets; }
 private:
     BlockLayoutState& m_parentBlockLayoutState;
     InlineLayoutUnit m_clearGapBeforeFirstLine { 0.f };

@@ -99,6 +99,67 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_availableLogicalWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->availableLogicalWidth().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_contentLogicalSize_width(const void* p)
+{
+    const auto logical_size = static_cast<const WebCore::RenderBox*>(p)->contentLogicalSize();
+    return logical_size.width().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_contentLogicalSize_height(const void* p)
+{
+    const auto logical_size = static_cast<const WebCore::RenderBox*>(p)->contentLogicalSize();
+    return logical_size.height().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->paddingBoxWidth().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxHeight(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->paddingBoxHeight().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_width(const void* p)
+{
+    const auto padding_box_rect = static_cast<const WebCore::RenderBox*>(p)->paddingBoxRectIncludingScrollbar();
+    return padding_box_rect.width().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_height(const void* p)
+{
+    const auto padding_box_rect = static_cast<const WebCore::RenderBox*>(p)->paddingBoxRectIncludingScrollbar();
+    return padding_box_rect.height().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_x(const void* p)
+{
+    const auto padding_box_rect = static_cast<const WebCore::RenderBox*>(p)->paddingBoxRectIncludingScrollbar();
+    return padding_box_rect.x().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(const void* p)
+{
+    const auto padding_box_rect = static_cast<const WebCore::RenderBox*>(p)->paddingBoxRectIncludingScrollbar();
+    return padding_box_rect.y().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderBox_isFlexItem(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->isFlexItem();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderBox_shapeOutsideInfo(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->shapeOutsideInfo();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBox);

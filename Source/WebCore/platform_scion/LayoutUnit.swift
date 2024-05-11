@@ -1,0 +1,284 @@
+/*
+ * Copyright (c) 2012-2017, Google Inc. All rights reserved.
+ * Copyright (c) 2012-2024, Apple Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+import Foundation
+
+internal let kLayoutUnitFractionalBits = 6
+internal let kFixedPointDenominator: Int32 = 1 << kLayoutUnitFractionalBits
+internal let intMaxForLayoutUnit = Int32.max / kFixedPointDenominator
+
+struct LayoutUnit: Comparable {
+  static func fromRawValue(value: Int32) -> LayoutUnit {
+    var v = LayoutUnit()
+    v.value = value
+    return v
+  }
+
+  func toInt() -> Int32 {
+    return value / kFixedPointDenominator
+  }
+
+  func toFloat() -> Float32 { return Float32(value) / Float32(kFixedPointDenominator) }
+
+  func bool() -> Bool { return value != 0 }
+
+  func float() -> Float32 { return toFloat() }
+
+  func mightBeSaturated() -> Bool {
+    return rawValue() == Int32.max || rawValue() == Int32.min
+  }
+
+  prefix static func - (a: LayoutUnit) -> LayoutUnit {
+    // -min() is saturated to max().
+    if a == LayoutUnit.min() {
+      return LayoutUnit.max()
+    }
+
+    var returnVal = LayoutUnit()
+    returnVal.value = -a.rawValue()
+    return returnVal
+  }
+
+  static func - (lhs: LayoutUnit, rhs: LayoutUnit) -> LayoutUnit {
+    var returnVal = LayoutUnit()
+    // TODO(asuhan): implement this correctly
+    returnVal.value = lhs.rawValue() - rhs.rawValue()
+    return returnVal
+  }
+
+  static func - (a: Float32, b: LayoutUnit) -> Float32 {
+    return a - b.toFloat()
+  }
+
+  static func - (a: LayoutUnit, b: Int) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func - (a: LayoutUnit, b: Float32) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func / (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func / (a: LayoutUnit, b: Int) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func / (a: LayoutUnit, b: UInt64) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func / (a: Float32, b: LayoutUnit) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (a: LayoutUnit, b: LayoutUnit) -> Bool {
+    return a.rawValue() == b.rawValue()
+  }
+
+  static func fromFloatCeil(value: Float32) -> LayoutUnit {
+    var v = LayoutUnit()
+    v.value = clampToInteger(value: ceilf(value * Float32(kFixedPointDenominator)))
+    return v
+  }
+
+  static func < (lhs: LayoutUnit, rhs: LayoutUnit) -> Bool {
+    return lhs.rawValue() < rhs.rawValue()
+  }
+
+  static func < (lhs: LayoutUnit, rhs: Float32) -> Bool {
+    return lhs.toFloat() < rhs
+  }
+
+  static func < (lhs: Float32, rhs: LayoutUnit) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func <= (lhs: LayoutUnit, rhs: Float32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func >= (lhs: LayoutUnit, rhs: Float32) -> Bool {
+    return lhs.toFloat() >= rhs
+  }
+
+  static func > (lhs: LayoutUnit, rhs: Int) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func rawValue() -> Int32 { return value }
+
+  func ceil() -> Int32 {
+    if value >= Int32.max - kFixedPointDenominator + 1 {
+      return intMaxForLayoutUnit
+    }
+    if value >= 0 {
+      return (value + kFixedPointDenominator - 1) / kFixedPointDenominator
+    }
+    return toInt()
+  }
+
+  func floor() -> Int {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func epsilon() -> Float32 {
+    return 1 / Float32(kFixedPointDenominator)
+  }
+
+  static func max() -> LayoutUnit {
+    var m = LayoutUnit()
+    m.value = Int32.max
+    return m
+  }
+
+  static func min() -> LayoutUnit {
+    var m = LayoutUnit()
+    m.value = Int32.min
+    return m
+  }
+
+  init() {
+    value = 0
+  }
+
+  init(value: Float32) {
+    // TODO(asuhan): implement this correctly
+    self.value = Int32(value * Float32(kFixedPointDenominator))
+  }
+
+  init(value: Int) {
+    // TODO(asuhan): implement this correctly
+    self.value = Int32(value)
+  }
+
+  init(value: Float64) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func * (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func * (a: LayoutUnit, b: Float32) -> Float32 {
+    return a.toFloat() * b
+  }
+
+  static func * (a: Float32, b: LayoutUnit) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func + (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this correctly
+    var returnVal = LayoutUnit()
+    returnVal.value = a.rawValue() + b.rawValue()
+    return returnVal
+  }
+
+  static func + (a: LayoutUnit, b: Int) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func + (a: LayoutUnit, b: Float32) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func + (a: Int, b: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func + (a: Float32, b: LayoutUnit) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static func += (a: inout LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this correctly
+    a.value = a.rawValue() + b.rawValue()
+    return a
+  }
+
+  @discardableResult
+  static func += (a: inout LayoutUnit, b: Float32) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static func += (a: inout Float32, b: LayoutUnit) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static func *= (a: inout LayoutUnit, b: Float32) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static func -= (a: inout LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this correctly
+    a.value = a.rawValue() - b.rawValue()
+    return a
+  }
+
+  private var value: Int32
+}
+
+internal func roundToInt(value: Float32) -> Int {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+internal func roundToInt(value: LayoutUnit) -> Int {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

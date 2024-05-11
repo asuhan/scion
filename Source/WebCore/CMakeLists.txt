@@ -4,6 +4,7 @@ include(Headers.cmake)
 include(WebCoreMacros.cmake)
 
 add_subdirectory(PAL/pal)
+add_subdirectory(layout_scion)
 
 list(APPEND WebCore_UNIFIED_SOURCE_LIST_FILES
     "Sources.txt"
@@ -2305,6 +2306,9 @@ if (USE_LIBWEBRTC)
         "platform/SourcesLibWebRTC.txt"
     )
 endif ()
+
+list(APPEND WebCore_LIBRARIES $ENV{HOME}/WebKit/WebKitBuild/GTK/Debug/lib/liblayout_scion.a $ENV{HOME}/swift-5.10.1-RELEASE-ubuntu24.04/usr/lib/swift/linux/libswiftCore.so $ENV{HOME}/swift-5.10.1-RELEASE-ubuntu24.04/usr/lib/swift/linux/libswiftSwiftOnoneSupport.so)
+# list(APPEND WebCore_LIBRARIES layout_scion)
 
 # FIXME: This needs a more scalable solution. See webkit.org/b/267080 for some related discussion.
 if (HAVE_OS_DARK_MODE_SUPPORT)

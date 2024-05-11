@@ -73,6 +73,8 @@ public:
 
         const Box* layoutBox() const { return m_layoutBox.get(); }
 
+        const BoxGeometry& absoluteBoxGeometry() const { return m_absoluteBoxGeometry; }
+        BoxGeometry& absoluteBoxGeometry() { return m_absoluteBoxGeometry; }
     private:
         CheckedPtr<const Box> m_layoutBox;
         Position m_position;
@@ -83,6 +85,7 @@ public:
     };
     using List = Vector<Item>;
     const List& list() const { return m_list; }
+    List& list() { return m_list; }
     const Item* last() const { return list().isEmpty() ? nullptr : &m_list.last(); }
 
     void append(Item);

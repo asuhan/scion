@@ -106,6 +106,9 @@ public:
 
     static bool canUseSimplifiedTextMeasuring(StringView, const FontCascade&, bool whitespaceIsCollapsed, const RenderStyle* firstLineStyle);
     static bool hasPositionDependentContentWidth(StringView);
+
+private:
+    static InlineLayoutUnit widthImpl(const InlineTextBox&, const FontCascade&, unsigned from, unsigned to, InlineLayoutUnit contentLogicalLeft, UseTrailingWhitespaceMeasuringOptimization = UseTrailingWhitespaceMeasuringOptimization::Yes, TextSpacing::SpacingState spacingState = { });
 };
 
 } // namespace Layout

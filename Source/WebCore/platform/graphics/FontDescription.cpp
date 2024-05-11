@@ -34,6 +34,36 @@
 #include "LocaleToScriptMapping.h"
 #include <wtf/Language.h>
 
+extern "C" WEBCORE_EXPORT float FontDescription_computedSize(const void* p)
+{
+    return static_cast<const WebCore::FontDescription*>(p)->computedSize();
+}
+
+extern "C" WEBCORE_EXPORT int32_t FontMetrics_intHeight(const void* p, uint8_t baselineType)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->intHeight(static_cast<WebCore::FontBaseline>(baselineType));
+}
+
+extern "C" WEBCORE_EXPORT int32_t FontMetrics_intAscent(const void* p, uint8_t baselineType)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->intAscent(static_cast<WebCore::FontBaseline>(baselineType));
+}
+
+extern "C" WEBCORE_EXPORT int32_t FontMetrics_intDescent(const void* p, uint8_t baselineType)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->intDescent(static_cast<WebCore::FontBaseline>(baselineType));
+}
+
+extern "C" WEBCORE_EXPORT float FontMetrics_lineSpacing(const void* p)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->lineSpacing();
+}
+
+extern "C" WEBCORE_EXPORT int32_t FontMetrics_intLineSpacing(const void* p)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->intLineSpacing();
+}
+
 namespace WebCore {
 
 FontDescription::FontDescription()

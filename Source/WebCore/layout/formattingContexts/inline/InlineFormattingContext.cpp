@@ -59,6 +59,95 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT const void* InlineFormattingContext_root(const void* p)
+{
+    return &static_cast<const WebCore::Layout::InlineFormattingContext*>(p)->root();
+}
+
+extern "C" WEBCORE_EXPORT void* InlineFormattingContext_globalLayoutState(void* p)
+{
+    return &static_cast<WebCore::Layout::InlineFormattingContext*>(p)->m_globalLayoutState;
+}
+
+extern "C" WEBCORE_EXPORT int32_t ConstraintsForInlineContent_horizontal_logicalLeft(const void* p)
+{
+    return static_cast<const WebCore::Layout::ConstraintsForInlineContent*>(p)->horizontal().logicalLeft.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t ConstraintsForInlineContent_horizontal_logicalWidth(const void* p)
+{
+    return static_cast<const WebCore::Layout::ConstraintsForInlineContent*>(p)->horizontal().logicalWidth.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t ConstraintsForInlineContent_logicalTop(const void* p)
+{
+    return static_cast<const WebCore::Layout::ConstraintsForInlineContent*>(p)->logicalTop().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t ConstraintsForInlineContent_visualLeft(const void* p)
+{
+    return static_cast<const WebCore::Layout::ConstraintsForInlineContent*>(p)->visualLeft().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t ConstraintsForInlineContent_baseTypeFlags(const void* p)
+{
+    return static_cast<const WebCore::Layout::ConstraintsForInlineContent*>(p)->m_baseTypeFlags;
+}
+
+extern "C" WEBCORE_EXPORT void* LayoutState_ensureGeometryForBox(void* layout_state, const void* layout_box)
+{
+    return &static_cast<WebCore::Layout::LayoutState*>(layout_state)->ensureGeometryForBox(*static_cast<const WebCore::Layout::Box*>(layout_box));
+}
+
+extern "C" WEBCORE_EXPORT void* LayoutState_geometryForBox(const void* layout_state, const void* layout_box)
+{
+    const void* box = &static_cast<const WebCore::Layout::LayoutState*>(layout_state)->geometryForBox(*static_cast<const WebCore::Layout::Box*>(layout_box));
+    return const_cast<void*>(box);
+}
+
+struct InlineItemPositionRaw {
+    uint64_t index;
+    uint64_t offset;
+};
+
+struct LayoutPositionRaw {
+    uint64_t line_index;
+    InlineItemPositionRaw inline_item_position;
+    int32_t partial_content_top;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT LayoutPositionRaw InlineDamage_layoutStartPosition(const void* p)
+{
+    auto layoutStartPosition = static_cast<const WebCore::Layout::InlineDamage*>(p)->layoutStartPosition();
+    if (!layoutStartPosition)
+        return {};
+    return {
+        layoutStartPosition->lineIndex,
+        {
+            layoutStartPosition->inlineItemPosition.index,
+            layoutStartPosition->inlineItemPosition.offset
+        },
+        layoutStartPosition->partialContentTop.rawValue(),
+        true
+    };
+}
+
+extern "C" WEBCORE_EXPORT void InlineDamage_setInlineItemListClean(void* p)
+{
+    static_cast<WebCore::Layout::InlineDamage*>(p)->setInlineItemListClean();
+}
+
+extern "C" WEBCORE_EXPORT const void* CPtrArrElement(const void* const* arr, uint64_t idx)
+{
+    return arr[idx];
+}
+
+extern "C" WEBCORE_EXPORT int32_t I32ArrElement(const void* arr, uint64_t idx)
+{
+    return static_cast<const int32_t*>(arr)[idx];
+}
+
 namespace WebCore {
 namespace Layout {
 
@@ -557,7 +646,9 @@ void InlineFormattingContext::rebuildInlineItemListIfNeeded(InlineDamage* lineDa
         // Unsupported damage. Need to run full build/layout.
         return { };
     };
-    InlineItemsBuilder { inlineContentCache, root(), m_globalLayoutState.securityOrigin() }.build(startPositionForInlineItemsBuilding());
+    auto builder = InlineItemsBuilder { inlineContentCache, root(), m_globalLayoutState.securityOrigin() };
+    auto startPosition = startPositionForInlineItemsBuilding();
+    builder.build(startPosition);
     if (lineDamage)
         lineDamage->setInlineItemListClean();
     inlineContentCache.clearMaximumIntrinsicWidthLineContent();

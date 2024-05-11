@@ -30,6 +30,121 @@
 #include "RenderStyleInlines.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT const void* ElementBox_firstChild(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->firstChild();
+}
+
+extern "C" WEBCORE_EXPORT const void* ElementBox_firstInFlowChild(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->firstInFlowChild();
+}
+
+extern "C" WEBCORE_EXPORT bool ElementBox_isListMarkerImage(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->isListMarkerImage();
+}
+
+extern "C" WEBCORE_EXPORT bool ElementBox_isListMarkerOutside(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->isListMarkerOutside();
+}
+
+extern "C" WEBCORE_EXPORT bool ElementBox_isListMarkerInsideList(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->isListMarkerInsideList();
+}
+
+extern "C" WEBCORE_EXPORT void* ElementBox_rendererForIntegration(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->rendererForIntegration();
+}
+
+extern "C" WEBCORE_EXPORT bool ElementBox_hasOutOfFlowChild(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->hasOutOfFlowChild();
+}
+
+extern "C" WEBCORE_EXPORT void ElementBox_setBaselineForIntegration(const void* p, int32_t baseline_raw)
+{
+    const auto element_box = static_cast<const WebCore::Layout::ElementBox*>(p);
+    const_cast<WebCore::Layout::ElementBox*>(element_box)->setBaselineForIntegration(WebCore::LayoutUnit::fromRawValue(baseline_raw));
+}
+
+extern "C" WEBCORE_EXPORT bool ElementBox_hasBaselineForIntegration(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->baselineForIntegration().has_value();
+}
+
+extern "C" WEBCORE_EXPORT int32_t ElementBox_baselineForIntegration(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->baselineForIntegration()->rawValue();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderListItem(const void* p) {
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderListItem();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderListMarker(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderListMarker();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderBlockFlow(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderBlockFlow();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderFlexibleBox(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderFlexibleBox();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderBlock();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderBox(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderBox();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isImage(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isImage();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderObject_isFieldset(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isFieldset();
+}
+
+extern "C" WEBCORE_EXPORT void* RenderObject_containingBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->containingBlock();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderObject_style(const void* p)
+{
+    return &static_cast<const WebCore::RenderObject*>(p)->style();
+}
+
+extern "C" WEBCORE_EXPORT void* RenderObject_layoutBox(void* p)
+{
+    return static_cast<WebCore::RenderObject*>(p)->layoutBox();
+}
+
+extern "C" WEBCORE_EXPORT void RenderElement_layoutIfNeeded(void* p)
+{
+    static_cast<WebCore::RenderElement*>(p)->layoutIfNeeded();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderElement_isWritingModeRoot(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->isWritingModeRoot();
+}
+
 namespace WebCore {
 namespace Layout {
 

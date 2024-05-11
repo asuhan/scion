@@ -34,6 +34,20 @@
 #include <wtf/text/StringBuilder.h>
 #include <wtf/text/WTFString.h>
 
+extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_inlineContentCache(const void*);
+
+extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_root(const void*);
+
+extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_securityOrigin(const void*);
+
+extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_contentRequiresVisualReordering(const void*);
+
+extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_isTextAndForcedLineBreakOnlyContent(const void*);
+
+extern "C" WEBCORE_EXPORT size_t InlineItemsBuilder_inlineBoxCount(const void*);
+
+extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_hasTextAutospace(const void*);
+
 namespace WebCore {
 namespace Layout {
 class InlineTextBox;
@@ -75,6 +89,14 @@ private:
     bool m_isTextAndForcedLineBreakOnlyContent { true };
     size_t m_inlineBoxCount { 0 };
     bool m_hasTextAutospace { !root().style().textAutospace().isNoAutospace() };
+
+    friend const void* ::InlineItemsBuilder_inlineContentCache(const void*);
+    friend const void* ::InlineItemsBuilder_root(const void*);
+    friend const void* ::InlineItemsBuilder_securityOrigin(const void*);
+    friend bool ::InlineItemsBuilder_contentRequiresVisualReordering(const void*);
+    friend bool ::InlineItemsBuilder_isTextAndForcedLineBreakOnlyContent(const void*);
+    friend size_t ::InlineItemsBuilder_inlineBoxCount(const void*);
+    friend bool ::InlineItemsBuilder_hasTextAutospace(const void*);
 };
 
 }

@@ -53,6 +53,12 @@
 #include "RenderTextControlMultiLine.h"
 #include "RenderTheme.h"
 
+extern "C" WEBCORE_EXPORT bool RenderBlockFlow_hasNonSyntheticBaseline(const void* p) {
+    const auto blockFlow = static_cast<const WebCore::RenderBlockFlow*>(p);
+    auto hasAppearance = blockFlow->style().hasUsedAppearance() && !blockFlow->theme().isControlContainer(blockFlow->style().usedAppearance());
+    return hasAppearance || !blockFlow->childrenInline() || blockFlow->hasLines() || blockFlow->hasLineIfEmpty();
+}
+
 namespace WebCore {
 namespace LayoutIntegration {
 

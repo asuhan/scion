@@ -38,6 +38,151 @@
 #include <wtf/NeverDestroyed.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool Box_isAnonymous(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isAnonymous();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isBlockContainer(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isBlockContainer();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isInlineLevelBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInlineLevelBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isInlineBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInlineBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isInlineTextBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInlineTextBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isPositioned(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isInFlowPositioned(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInFlowPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isOutOfFlowPositioned(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isOutOfFlowPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isFixedPositioned(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isFixedPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isFloatingPositioned(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isFloatingPositioned();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isAtomicInlineBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isAtomicInlineBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isInitialContainingBlock(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInitialContainingBlock();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isRubyAnnotationBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isRubyAnnotationBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isRubyBase(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isRubyBase();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isRubyInlineBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isRubyInlineBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isWordBreakOpportunity(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isWordBreakOpportunity();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isLineBreakBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isLineBreakBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isListMarkerBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isListMarkerBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isReplacedBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isReplacedBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isInlineIntegrationRoot(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInlineIntegrationRoot();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isFirstChildForIntegration(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isFirstChildForIntegration();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_isElementBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isElementBox();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_establishesFormattingContext(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->establishesFormattingContext();
+}
+
+extern "C" WEBCORE_EXPORT bool Box_establishesInlineFormattingContext(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->establishesInlineFormattingContext();
+}
+
+extern "C" WEBCORE_EXPORT const void* Box_parent(const void* p)
+{
+    return &(static_cast<const WebCore::Layout::Box*>(p)->parent());
+}
+
+extern "C" WEBCORE_EXPORT const void* Box_nextSibling(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->nextSibling();
+}
+
+extern "C" WEBCORE_EXPORT const void* Box_firstLineStyle(const void* p)
+{
+    return &static_cast<const WebCore::Layout::Box*>(p)->firstLineStyle();
+}
+
+extern "C" WEBCORE_EXPORT const void* Box_style(const void* p)
+{
+    return &static_cast<const WebCore::Layout::Box*>(p)->style();
+}
+
+extern "C" WEBCORE_EXPORT const void* Box_shape(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->shape();
+}
+
 namespace WebCore {
 namespace Layout {
 

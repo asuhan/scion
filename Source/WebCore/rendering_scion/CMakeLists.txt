@@ -1,0 +1,38 @@
+target_sources(layout_scion PRIVATE
+    FloatingObjects.swift
+    HitTestLocation.swift
+    HitTestRequest.swift
+    HitTestResult.swift
+    PaintInfo.swift
+    PaintPhase.swift
+    BreakLines.swift
+    RenderBlock.swift
+    RenderBlockFlow.swift
+    RenderBox.swift
+    RenderBoxModelObject.swift
+    RenderButton.swift
+    RenderDeprecatedFlexibleBox.swift
+    RenderElement.swift
+    RenderFlexibleBox.swift
+    RenderGrid.swift
+    RenderInline.swift
+    RenderLayer.swift
+    RenderLayerModelObject.swift
+    RenderLayoutState.swift
+    RenderLineBreak.swift
+    RenderListBox.swift
+    RenderListItem.swift
+    RenderListMarker.swift
+    RenderObject.swift
+    RenderObjectEnums.swift
+    RenderReplaced.swift
+    RenderSlider.swift
+    RenderTable.swift
+    RenderText.swift
+    RenderView.swift
+    RenderTextControl.swift
+    RenderTextControlMultiLine.swift
+)
+add_subdirectory(mathml)
+add_subdirectory(shapes)
+add_subdirectory(style)

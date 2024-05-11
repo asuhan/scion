@@ -29,6 +29,9 @@
 #include "LayoutUnits.h"
 #include <wtf/TZoneMalloc.h>
 
+extern "C" WEBCORE_EXPORT int32_t BoxGeometry_top(const void*);
+extern "C" WEBCORE_EXPORT int32_t BoxGeometry_left(const void*);
+
 namespace WebCore {
 namespace Layout {
 
@@ -212,6 +215,9 @@ private:
     bool m_hasValidContentBoxWidth { false };
     bool m_hasPrecomputedMarginBefore { false };
 #endif // ASSERT_ENABLED
+
+    friend int32_t ::BoxGeometry_top(const void*);
+    friend int32_t ::BoxGeometry_left(const void*);
 };
 
 #if ASSERT_ENABLED

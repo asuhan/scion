@@ -42,6 +42,17 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/unicode/CharacterNames.h>
 
+extern "C" WEBCORE_EXPORT bool RenderListMarker_isInside(const void* p)
+{
+    return static_cast<const WebCore::RenderListMarker*>(p)->isInside();
+}
+
+extern "C" WEBCORE_EXPORT void* RenderListMarker_listItem(void* p)
+{
+    const auto list_item = static_cast<WebCore::RenderListMarker*>(p)->listItem();
+    return const_cast<void*>(static_cast<const void*>(list_item));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderListMarker);

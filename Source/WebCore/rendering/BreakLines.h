@@ -27,6 +27,9 @@
 #include <wtf/text/TextBreakIterator.h>
 #include <wtf/unicode/CharacterNames.h>
 
+extern "C" bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
+extern "C" uint16_t BreakLines_classify(uint16_t, uint8_t);
+
 namespace WebCore {
 
 class BreakLines {
@@ -129,6 +132,8 @@ private:
         WEBCORE_EXPORT static const uint8_t breakTable[rowCount][columnCount];
     };
     static const LineBreakTable lineBreakTable;
+    friend bool ::LineBreakTable_unsafeLookup(uint16_t, uint16_t);
+    friend uint16_t ::BreakLines_classify(uint16_t, uint8_t);
 };
 
 

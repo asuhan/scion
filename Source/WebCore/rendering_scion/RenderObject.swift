@@ -1,0 +1,187 @@
+/*
+ * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
+ *           (C) 2000 Antti Koivisto (koivisto@kde.org)
+ *           (C) 2000 Dirk Mueller (mueller@kde.org)
+ *           (C) 2004 Allan Sandfeld Jensen (kde@carewolf.com)
+ * Copyright (C) 2003-2022 Apple Inc. All rights reserved.
+ * Copyright (C) 2009 Google Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ *
+ */
+
+import wk_interop
+
+class RenderObjectWrapper {
+  init(p: UnsafeMutableRawPointer) {
+    self.p = p
+  }
+
+  func layoutBox() -> BoxWrapper? {
+    let unwrapped = wk_interop.RenderObject_layoutBox(p)
+    if unwrapped == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    if wk_interop.Box_isElementBox(unwrapped) {
+      let box = ElementBoxWrapper()
+      box.p = UnsafeRawPointer(unwrapped!)
+      return box
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func parent() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func previousSibling() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nextSibling() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFieldset() -> Bool {
+    return wk_interop.RenderObject_isFieldset(p)
+  }
+
+  func isRenderFrameSet() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isImage() -> Bool {
+    return wk_interop.RenderObject_isImage(p)
+  }
+
+  func everHadLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func childrenInline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderSVGBlock() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isAnonymous() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFloating() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isOutOfFlowPositioned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isInline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isHorizontalWritingMode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasNonVisibleOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func view() -> RenderViewWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hitTest(
+    request: HitTestRequestWrapper, result: HitTestResultWrapper,
+    locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,
+    hitTestFilter: HitTestFilter = .HitTestAll
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func protectedNodeForHitTest() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateHitTestResult(result: HitTestResultWrapper, point: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containingBlock() -> RenderBlockWrapper? {
+    if let unwrapped = wk_interop.RenderObject_containingBlock(p) {
+      // TODO(asuhan): decide the type correctly
+      if wk_interop.RenderObject_isRenderListItem(unwrapped) {
+        return RenderListItemWrapper(p: unwrapped)
+      }
+      return RenderBlockWrapper(p: unwrapped)
+    }
+    return nil
+  }
+
+  static func containingBlockForPositionType(
+    positionType: PositionType, renderer: RenderObjectWrapper
+  )
+    -> RenderBlockWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func style() -> RenderStyleWrapper {
+    return convert_render_style(p: wk_interop.RenderObject_style(p))
+  }
+
+  // Repaint the entire object.  Called when, e.g., the color of a border changes, or when a border
+  // style changes.
+  enum ForceRepaint {
+    case No
+    case Yes
+  }
+
+  func repaint(forceRepaint: ForceRepaint = .No) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isInFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var p: UnsafeMutableRawPointer
+}

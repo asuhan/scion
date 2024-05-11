@@ -31,6 +31,19 @@
 #include <wtf/StdLibExtras.h>
 #include <wtf/unicode/CharacterNames.h>
 
+extern "C" WEBCORE_EXPORT bool LineBreakTable_unsafeLookup(uint16_t before, uint16_t after)
+{
+    return WebCore::BreakLines::LineBreakTable::unsafeLookup(before, after);
+}
+
+extern "C" WEBCORE_EXPORT uint16_t BreakLines_classify(uint16_t character, uint8_t no_break_space_behavior)
+{
+    if (no_break_space_behavior == 0) {
+        return WebCore::BreakLines::classify<WebCore::BreakLines::LineBreakRules::Normal,WebCore::BreakLines::NoBreakSpaceBehavior::Normal>(character);
+    }
+    return WebCore::BreakLines::classify<WebCore::BreakLines::LineBreakRules::Normal,WebCore::BreakLines::NoBreakSpaceBehavior::Break>(character);
+}
+
 // This file is generated from JSC's $vm.dumpLineBreakData()
 
 namespace WebCore {

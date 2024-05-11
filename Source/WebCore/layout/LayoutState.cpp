@@ -37,6 +37,16 @@
 #include "TableFormattingState.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT bool LayoutState_inStandardsMode(const void* p)
+{
+    return static_cast<const WebCore::Layout::LayoutState*>(p)->inStandardsMode();
+}
+
+extern "C" WEBCORE_EXPORT const void* LayoutState_securityOrigin(const void* p)
+{
+    return &static_cast<const WebCore::Layout::LayoutState*>(p)->securityOrigin();
+}
+
 namespace WebCore {
 namespace Layout {
 

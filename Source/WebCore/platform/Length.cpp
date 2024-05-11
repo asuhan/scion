@@ -39,6 +39,36 @@
 #include <wtf/text/StringView.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT float Length_value(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->value();
+}
+
+extern "C" WEBCORE_EXPORT uint8_t Length_type(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::Length*>(p)->type());
+}
+
+extern "C" WEBCORE_EXPORT float Length_percent(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->percent();
+}
+
+extern "C" WEBCORE_EXPORT float Length_nonNanCalculatedValue(const void* p, float maxValue)
+{
+    return static_cast<const WebCore::Length*>(p)->nonNanCalculatedValue(maxValue);
+}
+
+extern "C" WEBCORE_EXPORT bool Length_eq(const void* a, const void* b)
+{
+    return *static_cast<const WebCore::Length*>(a) == *static_cast<const WebCore::Length*>(b);
+}
+
+extern "C" WEBCORE_EXPORT bool Length_isFixed(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->isFixed();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Length);

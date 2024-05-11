@@ -27,6 +27,11 @@
 
 #include "LayoutBox.h"
 
+extern "C" WEBCORE_EXPORT bool Box_isContainingBlockForOutOfFlowPosition(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isContainingBlockForOutOfFlowPosition();
+}
+
 namespace WebCore {
 
 namespace Layout {

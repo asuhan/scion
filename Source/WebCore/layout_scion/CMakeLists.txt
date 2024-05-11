@@ -1,0 +1,38 @@
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_library(layout_scion
+    FormattingState.swift
+    LayoutContext.swift
+    LayoutState.swift
+    LayoutUnits.swift
+    MarginTypes.swift
+    InternalWrappers.swift
+    WebKitWrappers.swift
+)
+add_subdirectory(floats)
+add_subdirectory(formattingContexts)
+add_subdirectory(formattingContexts/block)
+add_subdirectory(formattingContexts/flex)
+add_subdirectory(formattingContexts/inline)
+add_subdirectory(formattingContexts/inline/display)
+add_subdirectory(formattingContexts/inline/invalidation)
+add_subdirectory(formattingContexts/inline/ruby)
+add_subdirectory(formattingContexts/inline/text)
+add_subdirectory(integration)
+add_subdirectory(integration/inline)
+add_subdirectory(layouttree)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/rendering_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/rendering_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/platform_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/platform_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/css_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/css_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/style_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/style_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WTF/wtf_scion
+    ${CMAKE_BINARY_DIR}/Source/WTF/wtf_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WTF/icu_scion/unicode
+    ${CMAKE_BINARY_DIR}/Source/WTF/icu_scion/unicode)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/page_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/page_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/dom_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/dom_scion)

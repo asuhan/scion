@@ -77,6 +77,30 @@
 #include "RuntimeApplicationChecks.h"
 #endif
 
+extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_paddingStart(const void* p)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->paddingStart().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_borderStart(const void* p)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->borderStart().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_marginStart(const void* p, const void* other_style)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->marginStart(static_cast<const WebCore::RenderStyle*>(other_style)).rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_baselinePosition(const void* p, uint8_t baseline_type, bool first_line, uint8_t direction, uint8_t line_position_mode)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->baselinePosition(
+        static_cast<WebCore::FontBaseline>(baseline_type),
+        first_line,
+        static_cast<WebCore::LineDirectionMode>(direction),
+        static_cast<WebCore::LinePositionMode>(line_position_mode)).rawValue();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

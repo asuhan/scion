@@ -38,6 +38,41 @@
 #include <wtf/text/TextBreakIterator.h>
 #include <wtf/unicode/CharacterNames.h>
 
+extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_inlineContentCache(const void* p)
+{
+    return &static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_inlineContentCache;
+}
+
+extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_root(const void* p)
+{
+    return &static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_root;
+}
+
+extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_securityOrigin(const void* p)
+{
+    return &static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_securityOrigin;
+}
+
+extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_contentRequiresVisualReordering(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_contentRequiresVisualReordering;
+}
+
+extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_isTextAndForcedLineBreakOnlyContent(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_isTextAndForcedLineBreakOnlyContent;
+}
+
+extern "C" WEBCORE_EXPORT size_t InlineItemsBuilder_inlineBoxCount(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_inlineBoxCount;
+}
+
+extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_hasTextAutospace(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_hasTextAutospace;
+}
+
 namespace WebCore {
 namespace Layout {
 

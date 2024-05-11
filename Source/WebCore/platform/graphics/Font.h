@@ -183,7 +183,7 @@ public:
     bool isZeroWidthSpaceGlyph(Glyph glyph) const { return glyph == m_zeroWidthSpaceGlyph && glyph; }
 
     GlyphData glyphDataForCharacter(char32_t) const;
-    Glyph glyphForCharacter(char32_t) const;
+    WEBCORE_EXPORT Glyph glyphForCharacter(char32_t) const;
     bool supportsCodePoint(char32_t) const;
     bool platformSupportsCodePoint(char32_t, std::optional<char32_t> variation = std::nullopt) const;
 

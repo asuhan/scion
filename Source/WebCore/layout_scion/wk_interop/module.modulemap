@@ -1,0 +1,3 @@
+module wk_interop {
+    header "wk_interop.h"
+}

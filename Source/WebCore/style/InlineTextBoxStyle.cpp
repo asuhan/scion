@@ -35,6 +35,33 @@
 #include "RenderBoxModelObjectInlines.h"
 #include "RenderInline.h"
 
+namespace {
+
+WebCore::GlyphOverflow visualOverflowForDecorationsWrapper(const void* style_ptr, float text_run_logical_height, float text_run_offset_from_bottom_most) {
+    const auto style = static_cast<const WebCore::RenderStyle*>(style_ptr);
+    return WebCore::visualOverflowForDecorations(*style, { text_run_logical_height, text_run_offset_from_bottom_most });
+}
+
+}
+
+struct GlyphOverflowRaw {
+    int32_t left;
+    int32_t right;
+    int32_t top;
+    int32_t bottom;
+};
+
+extern "C" WEBCORE_EXPORT GlyphOverflowRaw visualOverflowForDecorations(const void* style_ptr, float text_run_logical_height, float text_run_offset_from_bottom_most)
+{
+    const auto glyph_overflow = visualOverflowForDecorationsWrapper(style_ptr, text_run_logical_height, text_run_offset_from_bottom_most);
+    return {
+        glyph_overflow.left.rawValue(),
+        glyph_overflow.right.rawValue(),
+        glyph_overflow.top.rawValue(),
+        glyph_overflow.bottom.rawValue()
+    };
+}
+
 namespace WebCore {
 
 struct UnderlineOffsetArguments {
