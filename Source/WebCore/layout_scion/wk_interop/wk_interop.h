@@ -304,6 +304,7 @@ uint8_t RenderStyle_lineBoxContain(const void*);
 uint8_t RenderStyle_textDecorationsInEffect(const void*);
 float RenderStyle_outlineSize(const void*);
 bool RenderStyle_hasOutlineInVisualOverflow(const void*);
+const void* RenderStyle_textIndent(const void*);
 const void* RenderStyle_marginLeft(const void*);
 const void* RenderStyle_marginRight(const void*);
 bool RenderStyle_autoWrap(const void*);

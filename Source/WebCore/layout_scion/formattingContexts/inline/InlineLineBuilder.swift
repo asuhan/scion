@@ -340,7 +340,7 @@ final class LineBuilder: AbstractLineBuilder {
   {
     // TODO(asuhan): implement this
     let previousLineEndsWithLineBreak =
-      previousLine == nil || previousLine!.hasInlineContent ? nil : previousLine!.endsWithLineBreak
+      previousLine == nil || !previousLine!.hasInlineContent ? nil : previousLine!.endsWithLineBreak
     initialize(
       initialLineLogicalRect: lineInput.initialLogicalRect,
       needsLayoutRange: lineInput.needsLayoutRange, previousLine: previousLine,

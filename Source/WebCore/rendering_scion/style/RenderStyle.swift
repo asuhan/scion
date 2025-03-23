@@ -375,7 +375,10 @@ class RenderStyleWrapper {
   }
 
   func textIndent() -> LengthWrapper {
-    return rareInheritedData.indent
+    if p == nil {
+      fatalError("Not implemented")
+    }
+    return LengthWrapper(p: wk_interop.RenderStyle_textIndent(p))
   }
 
   func textIndentLine() -> TextIndentLine {
