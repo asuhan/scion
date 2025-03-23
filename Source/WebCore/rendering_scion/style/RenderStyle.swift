@@ -705,7 +705,11 @@ class RenderStyleWrapper {
   }
 
   static func initialTextIndent() -> LengthWrapper {
-    return LengthWrapper()
+    return zeroLength()
+  }
+
+  static func zeroLength() -> LengthWrapper {
+    return LengthWrapper(type: .Fixed)
   }
 
   static func initialBoxDecorationBreak() -> BoxDecorationBreak {

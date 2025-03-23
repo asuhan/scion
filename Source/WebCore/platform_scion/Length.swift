@@ -40,8 +40,8 @@ enum LengthType: UInt8 {
 }
 
 struct LengthWrapper: Equatable {
-  init() {
-    self.p = wk_interop.Length_new()
+  init(type: LengthType = .Auto) {
+    self.p = wk_interop.Length_new(type.rawValue)
   }
 
   init(p: UnsafeRawPointer) {

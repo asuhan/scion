@@ -1059,7 +1059,8 @@ struct Line {
     return true
   }
 
-  func needsNewRun(inlineTextItem: InlineTextItemWrapper, style: RenderStyleWrapper) -> Bool {
+  private func needsNewRun(inlineTextItem: InlineTextItemWrapper, style: RenderStyleWrapper) -> Bool
+  {
     if runs.isEmpty {
       return true
     }
