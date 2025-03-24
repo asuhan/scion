@@ -45,7 +45,7 @@ class InlineTextItemWrapper: InlineItemWrapper {
     super.init(layoutBox: inlineTextBox, type: Type_.Text, bidiLevel: bidiLevel)
     self.startOrPosition = start
     self.length = length
-    self.hasWidth = width != 0
+    self.hasWidth = width != nil
     self.hasTrailingSoftHyphen = hasTrailingSoftHyphen
     self.isWordSeparator = isWordSeparator
     self.width = width ?? 0
