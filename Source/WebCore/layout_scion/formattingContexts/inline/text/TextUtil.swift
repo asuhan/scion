@@ -187,11 +187,17 @@ class TextUtil {
     var ascent = InlineLayoutUnit()
     var descent = InlineLayoutUnit()
   }
+
   static func enclosingGlyphBoundsForText(textContent: StringWrapperView, style: RenderStyleWrapper)
     -> EnclosingAscentDescent
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if textContent.p == nil || style.p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    let raw = wk_interop.TextUtil_enclosingGlyphBoundsForText(textContent.p, style.p)
+    return EnclosingAscentDescent(
+      ascent: raw.ascent, descent: raw.descent)
   }
 
   struct WordBreakLeft {

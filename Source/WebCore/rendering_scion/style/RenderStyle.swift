@@ -110,8 +110,11 @@ class RenderStyleWrapper {
   }
 
   func metricsOfPrimaryFont() -> FontMetricsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return FontMetricsWrapper(p: wk_interop.RenderStyle_metricsOfPrimaryFont(p))
   }
 
   func computedFontSize() -> Float32 {

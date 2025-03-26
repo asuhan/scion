@@ -71,6 +71,11 @@ struct OptionalFloatRaw {
     bool is_valid;
 };
 
+struct EnclosingAscentDescentRaw {
+    float ascent;
+    float descent;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -203,6 +208,8 @@ struct WordBreakLeftRaw TextUtil_breakWord(
     const void* font_cascade);
 uint64_t TextUtil_firstUserPerceivedCharacterLength(
     const void* inline_text_box, uint64_t start_position, uint64_t length);
+struct EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(
+    const void* text_content_raw, const void* style_raw);
 bool AtomString_isNull(const void*);
 const void* AtomString_string(const void*);
 uint8_t Length_type(const void*);
@@ -284,6 +291,7 @@ const void* Box_nextSibling(const void*);
 const void* Box_firstLineStyle(const void*);
 const void* Box_style(const void*);
 const void* Box_shape(const void*);
+const void* RenderStyle_metricsOfPrimaryFont(const void*);
 uint8_t RenderStyle_textOverflow(const void*);
 const void* RenderStyle_computedLocale(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);

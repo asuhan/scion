@@ -558,6 +558,19 @@ extern "C" uint64_t TextUtil_firstUserPerceivedCharacterLength(const void* inlin
     return WebCore::Layout::TextUtil::firstUserPerceivedCharacterLength(*static_cast<const WebCore::Layout::InlineTextBox*>(inline_text_box), start_position, length);
 }
 
+struct EnclosingAscentDescentRaw {
+    float ascent;
+    float descent;
+};
+
+extern "C" WEBCORE_EXPORT struct EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(const void* text_content_raw, const void* style_raw)
+{
+    const auto textContent = *static_cast<const StringView*>(text_content_raw);
+    const auto& style = *static_cast<const WebCore::RenderStyle*>(style_raw);
+    auto enclosingAscentDescent = WebCore::Layout::TextUtil::enclosingGlyphBoundsForText(textContent, style);
+    return { enclosingAscentDescent.ascent, enclosingAscentDescent.descent };
+}
+
 extern "C" const void* AtomString_string(const void* p)
 {
     return &static_cast<const AtomString*>(p)->string();

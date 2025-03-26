@@ -952,7 +952,7 @@ struct InlineDisplayContentBuilder {
         physicalRect: textRunRect.InlineLayoutRect(),
         inkOverflow: inkOverflow(
           inlineTextBox: inlineTextBox,
-          textRunRect: textRunRect, style: style
+          textRunRect: textRunRect, content: content, text: text!, style: style
         ).InlineLayoutRect(),
         expansion: lineRun.expansion,
         text: InlineDisplay.Box.Text(
@@ -964,7 +964,8 @@ struct InlineDisplayContentBuilder {
   }
 
   private func inkOverflow(
-    inlineTextBox: InlineTextBoxWrapper, textRunRect: InlineRect, style: RenderStyleWrapper
+    inlineTextBox: InlineTextBoxWrapper, textRunRect: InlineRect, content: StringWrapper,
+    text: Line.Run.Text, style: RenderStyleWrapper
   ) -> InlineRect {
     var inkOverflow = textRunRect
 
@@ -972,7 +973,9 @@ struct InlineDisplayContentBuilder {
       textRunRect: textRunRect, style: style, inkOverflow: &inkOverflow)
     addStrokeOverflow(inkOverflow: &inkOverflow, style: style)
     InlineDisplayContentBuilder.addTextShadow(inkOverflow: &inkOverflow, style: style)
-    InlineDisplayContentBuilder.addGlyphOverflow(inlineTextBox: inlineTextBox)
+    InlineDisplayContentBuilder.addGlyphOverflow(
+      inkOverflow: &inkOverflow,
+      inlineTextBox: inlineTextBox, content: content, text: text, style: style)
 
     return inkOverflow
   }
@@ -1008,13 +1011,26 @@ struct InlineDisplayContentBuilder {
       left: -textShadow.left.float())
   }
 
-  private static func addGlyphOverflow(inlineTextBox: InlineTextBoxWrapper) {
+  private static func addGlyphOverflow(
+    inkOverflow: inout InlineRect, inlineTextBox: InlineTextBoxWrapper, content: StringWrapper,
+    text: Line.Run.Text,
+    style: RenderStyleWrapper
+  ) {
     if inlineTextBox.canUseSimpleFontCodePath() {
       // canUseSimpleFontCodePath maps to CodePath::Simple (and content with potential glyph overflow would says CodePath::SimpleWithGlyphOverflow).
       return
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let enclosingAscentAndDescent = TextUtil.enclosingGlyphBoundsForText(
+      textContent: StringWrapperView(s: content).substring(
+        start: UInt32(text.start), length: UInt32(text.length)), style: style)
+    // FIXME: Take fallback fonts into account.
+    let fontMetrics = style.metricsOfPrimaryFont()
+    let topOverflow = max(
+      0, ceilf(-enclosingAscentAndDescent.ascent) - Float32(fontMetrics.intAscent()))
+    let bottomOverflow = max(
+      0, ceilf(enclosingAscentAndDescent.descent) - Float32(fontMetrics.intDescent()))
+    inkOverflow.inflate(
+      top: topOverflow, right: InlineLayoutUnit(), bottom: bottomOverflow, left: InlineLayoutUnit())
   }
 
   private static func adjustedContentToRender(text: Line.Run.Text?) -> StringWrapper {
