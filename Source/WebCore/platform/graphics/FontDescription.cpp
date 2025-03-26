@@ -64,6 +64,17 @@ extern "C" WEBCORE_EXPORT int32_t FontMetrics_intLineSpacing(const void* p)
     return static_cast<const WebCore::FontMetrics*>(p)->intLineSpacing();
 }
 
+struct OptionalFloatRaw {
+    float value;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT struct OptionalFloatRaw FontMetrics_xHeight(const void* p)
+{
+    const auto xHeight = static_cast<const WebCore::FontMetrics*>(p)->xHeight();
+    return xHeight ? OptionalFloatRaw{*xHeight, true} : OptionalFloatRaw{0, false};
+}
+
 namespace WebCore {
 
 FontDescription::FontDescription()

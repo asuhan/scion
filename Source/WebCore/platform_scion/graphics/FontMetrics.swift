@@ -65,8 +65,15 @@ class FontMetricsWrapper {
   }
 
   func xHeight() -> Float32? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    let xHeight = wk_interop.FontMetrics_xHeight(p)
+    if !xHeight.is_valid {
+      return nil
+    }
+    return xHeight.value
   }
 
   func intCapHeight() -> Int {

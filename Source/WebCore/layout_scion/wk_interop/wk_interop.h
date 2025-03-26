@@ -66,6 +66,11 @@ struct HorizontalEdgesRaw {
     int32_t end;
 };
 
+struct OptionalFloatRaw {
+    float value;
+    bool is_valid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -92,6 +97,7 @@ int32_t FontMetrics_intAscent(const void*, uint8_t);
 int32_t FontMetrics_intDescent(const void*, uint8_t);
 float FontMetrics_lineSpacing(const void*);
 int32_t FontMetrics_intLineSpacing(const void*);
+struct OptionalFloatRaw FontMetrics_xHeight(const void*);
 const void* FontCascade_metricsOfPrimaryFont(const void*);
 const void* InlineTextBox_content(const void*);
 bool InlineTextBox_isCombined(const void*);
