@@ -243,10 +243,7 @@ struct Line {
     return lastRunLogicalRight() + clonedEndDecorationWidthForInlineBoxRuns
   }
 
-  func hangingTrailingContentWidth() -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hangingTrailingContentWidth() -> InlineLayoutUnit { return hangingContent.trailingWidth() }
 
   func hangingTrailingWhitespaceLength() -> UInt64 {
     // TODO(asuhan): implement this
