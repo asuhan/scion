@@ -299,6 +299,7 @@ bool RenderStyle_isHorizontalWritingMode(const void*);
 uint8_t RenderStyle_blockFlowDirection(const void*);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);
+bool RenderStyle_isOriginalDisplayListItemType(const void*);
 float RenderStyle_letterSpacing(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentRight(const void*);
