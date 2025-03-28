@@ -301,6 +301,11 @@ extern "C" WEBCORE_EXPORT const void* StringView_substring(const void* p, unsign
     return new StringView(static_cast<const StringView*>(p)->substring(start, length));
 }
 
+extern "C" WEBCORE_EXPORT const void* StringView_upconvertedCharacters(const void* p)
+{
+    return new StringView::UpconvertedCharactersWithSize<32>(static_cast<const StringView*>(p)->upconvertedCharacters());
+}
+
 extern "C" WEBCORE_EXPORT void* TextRun_fromStringView(const void* p, float xpos, float expansion, bool direction, bool directionalOverride)
 {
     return new WebCore::TextRun(*static_cast<const StringView*>(p), xpos, expansion, WebCore::ExpansionBehavior::defaultBehavior(), static_cast<WebCore::TextDirection>(direction), directionalOverride);

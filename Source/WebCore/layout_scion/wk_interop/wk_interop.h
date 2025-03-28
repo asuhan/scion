@@ -131,6 +131,7 @@ const void* StringView_span8(const void*);
 const void* StringView_span16(const void*);
 const void* StringView_fromString(const void*);
 const void* StringView_substring(const void*, unsigned, unsigned);
+const void* StringView_upconvertedCharacters(const void*);
 void* TextRun_fromStringView(const void*, float, float, bool, bool);
 const void* String_new();
 const void* String_new_copy(const void*);

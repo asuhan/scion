@@ -81,11 +81,16 @@ class StringWrapperView {
     return substring(start: self.length() - length, length: length)
   }
 
-  class UpconvertedCharactersWithSize {}
+  class UpconvertedCharactersWithSize {
+    init(p: UnsafeRawPointer) {
+      self.p = p
+    }
+
+    var p: UnsafeRawPointer
+  }
 
   func upconvertedCharacters() -> UpconvertedCharactersWithSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return UpconvertedCharactersWithSize(p: wk_interop.StringView_upconvertedCharacters(p))
   }
 
   var p: UnsafeRawPointer?
