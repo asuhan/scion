@@ -264,6 +264,11 @@ extern "C" bool StringBuilder_isEmpty(const void* builder)
     return static_cast<const StringBuilder*>(builder)->isEmpty();
 }
 
+extern "C" void* StringBuilder_view(const void* builder)
+{
+    return new StringView(*static_cast<const StringBuilder*>(builder));
+}
+
 // TODO(asuhan): Fix leaks
 
 extern "C" WEBCORE_EXPORT const void* String_span8(const void* p)

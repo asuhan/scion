@@ -55,9 +55,8 @@ class StringBuilderWrapper {
   }
 
   func view() -> StringWrapperView {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StringWrapperView(p: wk_interop.StringBuilder_view(self.p))
   }
 
-  var p: UnsafeMutableRawPointer?
+  var p: UnsafeMutableRawPointer
 }

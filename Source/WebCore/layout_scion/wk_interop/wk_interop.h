@@ -124,6 +124,7 @@ uint64_t span16_size(const void*);
 uint16_t span8_subscript(const void*, uint64_t);
 uint16_t span16_subscript(const void*, uint64_t);
 bool StringBuilder_isEmpty(const void*);
+void* StringBuilder_view(const void*);
 const void* String_span8(const void*);
 const void* String_span16(const void*);
 const void* StringView_span8(const void*);
