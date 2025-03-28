@@ -76,6 +76,11 @@ struct EnclosingAscentDescentRaw {
     float descent;
 };
 
+struct UBiDiLogicalRunRaw {
+    int32_t logical_limit;
+    uint8_t level;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -382,3 +387,7 @@ int32_t BoxGeometry_top(const void*);
 int32_t BoxGeometry_left(const void*);
 struct GlyphOverflowRaw visualOverflowForDecorations(const void*, float, float);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
+void ubidi_close_scion(void*);
+struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position);
+void* ubidi_open_scion();
+int32_t ubidi_setPara_scion(void* p, const void* text, uint32_t length, uint8_t para_level);

@@ -538,23 +538,21 @@ struct InlineItemsBuilder {
     let bidiContentLength = paragraphContentBuilder.length()
     assert(bidiContentLength != 0)
     let error = ubidi_setPara(
-      pBiDi: ubidi, text: bidiContent, length: bidiContentLength, paraLevel: rootBidiLevel,
-      embeddingLevels: [])
+      pBiDi: ubidi, text: bidiContent, length: bidiContentLength, paraLevel: rootBidiLevel)
 
     if U_FAILURE(errorCode: error) {
-      assert(false)
-      return
+      fatalError("Not reached")
     }
 
     var inlineItemIndex: UInt64 = 0
     var hasSeenOpaqueItem = false
     var currentPosition: Int32 = 0
     while currentPosition < bidiContentLength {
-      let bidiLevel = UBiDiLevel.UBIDI_LTR
+      var bidiLevel = UBiDiLevel.UBIDI_LTR
       var endPosition = currentPosition
       ubidi_getLogicalRun(
         pBiDi: ubidi, logicalPosition: currentPosition, pLogicalLimit: &endPosition,
-        pLevel: bidiLevel)
+        pLevel: &bidiLevel)
       setBidiLevelOnRange(
         inlineItemList: inlineItemList,
         inlineItemOffsets: inlineItemOffsets,

@@ -20,26 +20,27 @@
 *  YOU ARE DOING, OTHERWISE VERY BAD THINGS WILL HAPPEN!
 */
 
+import wk_interop
+
 func u_getIntPropertyValue(character: UChar, property: UProperty) -> UInt32 {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
 
 internal func ubidi_close(ubidi: UBiDiWrapper) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  wk_interop.ubidi_close_scion(ubidi.p)
 }
 
 internal func ubidi_getLogicalRun(
-  pBiDi: UBiDiWrapper, logicalPosition: Int32, pLogicalLimit: inout Int32, pLevel: UBiDiLevel
+  pBiDi: UBiDiWrapper, logicalPosition: Int32, pLogicalLimit: inout Int32, pLevel: inout UBiDiLevel
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let raw = wk_interop.ubidi_getLogicalRun_scion(pBiDi.p, logicalPosition)
+  pLogicalLimit = raw.logical_limit
+  pLevel = UBiDiLevel(rawValue: raw.level)!
 }
 
 internal func ubidi_open() -> UBiDiWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return UBiDiWrapper(p: wk_interop.ubidi_open_scion())
 }
 
 internal func ubidi_reorderVisual(runLevels: [UBiDiLevel], visualOrderList: [Int32]) {
@@ -49,8 +50,8 @@ internal func ubidi_reorderVisual(runLevels: [UBiDiLevel], visualOrderList: [Int
 
 internal func ubidi_setPara(
   pBiDi: UBiDiWrapper, text: StringWrapperView.UpconvertedCharactersWithSize, length: UInt32,
-  paraLevel: UBiDiLevel, embeddingLevels: [UBiDiLevel]
+  paraLevel: UBiDiLevel
 ) -> UErrorCode {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return UErrorCode(
+    rawValue: wk_interop.ubidi_setPara_scion(pBiDi.p, text.p, length, paraLevel.rawValue))!
 }

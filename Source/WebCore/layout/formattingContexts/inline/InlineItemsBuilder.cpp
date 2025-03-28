@@ -73,6 +73,36 @@ extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_hasTextAutospace(const void* p
     return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_hasTextAutospace;
 }
 
+extern "C" WEBCORE_EXPORT void ubidi_close_scion(void* p)
+{
+    ubidi_close(static_cast<UBiDi*>(p));
+}
+
+struct UBiDiLogicalRunRaw {
+    int32_t logical_limit;
+    uint8_t level;
+};
+
+extern "C" WEBCORE_EXPORT struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position)
+{
+    int32_t logical_limit;
+    UBiDiLevel level;
+    ubidi_getLogicalRun(static_cast<UBiDi*>(p), logical_position, &logical_limit, static_cast<UBiDiLevel*>(&level));
+    return {logical_limit, level};
+}
+
+extern "C" WEBCORE_EXPORT void* ubidi_open_scion()
+{
+    return ubidi_open();
+}
+
+extern "C" WEBCORE_EXPORT int32_t ubidi_setPara_scion(void* p, const void* text, uint32_t length, uint8_t para_level)
+{
+    UErrorCode error = U_ZERO_ERROR;
+    ubidi_setPara(static_cast<UBiDi*>(p), *static_cast<const StringView::UpconvertedCharactersWithSize<32>*>(text), length, para_level, nullptr, &error);
+    return error;
+}
+
 namespace WebCore {
 namespace Layout {
 

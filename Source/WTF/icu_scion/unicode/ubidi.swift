@@ -25,9 +25,9 @@ enum UBiDiLevel: UInt8 {
 }
 
 struct UBiDiWrapper {
-  init(p: UnsafeRawPointer?) {
+  init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
 
-  var p: UnsafeRawPointer?
+  var p: UnsafeMutableRawPointer
 }
