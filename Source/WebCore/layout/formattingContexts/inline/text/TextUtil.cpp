@@ -264,6 +264,11 @@ extern "C" bool StringBuilder_isEmpty(const void* builder)
     return static_cast<const StringBuilder*>(builder)->isEmpty();
 }
 
+extern "C" uint32_t StringBuilder_length(const void* builder)
+{
+    return static_cast<const StringBuilder*>(builder)->length();
+}
+
 extern "C" void* StringBuilder_view(const void* builder)
 {
     return new StringView(*static_cast<const StringBuilder*>(builder));

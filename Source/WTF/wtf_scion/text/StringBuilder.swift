@@ -50,8 +50,7 @@ class StringBuilderWrapper {
   }
 
   func length() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.StringBuilder_length(self.p)
   }
 
   func view() -> StringWrapperView {
