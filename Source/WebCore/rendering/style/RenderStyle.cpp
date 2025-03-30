@@ -216,6 +216,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textEmphasisFill(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textEmphasisFill());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasTextCombine(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasTextCombine();
+}
+
 extern "C" WEBCORE_EXPORT uint16_t RenderStyle_lineFitEdge(const void* p)
 {
     const auto lineFitEdge = static_cast<const WebCore::RenderStyle*>(p)->lineFitEdge();

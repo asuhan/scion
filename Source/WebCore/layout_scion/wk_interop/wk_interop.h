@@ -340,6 +340,7 @@ bool RenderStyle_nbspMode(const void*);
 int16_t RenderStyle_hyphenationLimitLines(const void*);
 const void* RenderStyle_marginStart(const void*);
 uint8_t RenderStyle_textEmphasisFill(const void*);
+bool RenderStyle_hasTextCombine(const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
 uint16_t BreakLines_classify(uint16_t, uint8_t);
 bool LayoutState_inStandardsMode(const void*);

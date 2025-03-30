@@ -320,6 +320,14 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasTextCombine() -> Bool {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_hasTextCombine(p)
+  }
+
   func tabSize() -> TabSizeWrapper {
     return rareInheritedData.tabSize
   }
