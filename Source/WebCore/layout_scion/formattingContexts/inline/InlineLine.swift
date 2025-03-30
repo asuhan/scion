@@ -246,8 +246,7 @@ struct Line {
   func hangingTrailingContentWidth() -> InlineLayoutUnit { return hangingContent.trailingWidth() }
 
   func hangingTrailingWhitespaceLength() -> UInt64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hangingContent.trailingWhitespaceLength()
   }
 
   func isHangingTrailingContentWhitespace() -> Bool {
