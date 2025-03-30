@@ -158,6 +158,21 @@ extern "C" WEBCORE_EXPORT const void* FontCascade_metricsOfPrimaryFont(const voi
     return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->metricsOfPrimaryFont();
 }
 
+struct ExpansionOpportunityCountRaw {
+    uint32_t count;
+    bool isAfterExpansion;
+};
+
+extern "C" WEBCORE_EXPORT struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(const void* string_view, uint8_t direction, uint8_t expansion_behavior_left, uint8_t expansion_behavior_right)
+{
+    const auto& stringView = *static_cast<const StringView*>(string_view);
+    auto result = WebCore::FontCascade::expansionOpportunityCount(stringView, static_cast<WebCore::TextDirection>(direction), {
+        static_cast<WebCore::ExpansionBehavior::Behavior>(expansion_behavior_left),
+        static_cast<WebCore::ExpansionBehavior::Behavior>(expansion_behavior_right)
+    });
+    return { result.first, result.second };
+}
+
 extern "C" WEBCORE_EXPORT const void* InlineTextBox_content(const void* p)
 {
     return &static_cast<const WebCore::Layout::InlineTextBox*>(p)->content();

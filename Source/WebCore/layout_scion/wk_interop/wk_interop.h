@@ -81,6 +81,11 @@ struct UBiDiLogicalRunRaw {
     uint8_t level;
 };
 
+struct ExpansionOpportunityCountRaw {
+    uint32_t count;
+    bool isAfterExpansion;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -101,6 +106,11 @@ float FontCascade_wordSpacing(const void*);
 float FontCascade_widthForTextUsingSimplifiedMeasuring(const void*, const void*, bool);
 float FontCascade_widthForSimpleTextWithFixedPitch(const void*, const void*, bool);
 float FontCascade_width(const void*, const void*);
+struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
+    const void* string_view,
+    uint8_t direction,
+    uint8_t expansion_behavior_left,
+    uint8_t expansion_behavior_right);
 float FontDescription_computedSize(const void*);
 int32_t FontMetrics_intHeight(const void*, uint8_t);
 int32_t FontMetrics_intAscent(const void*, uint8_t);

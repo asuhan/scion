@@ -150,8 +150,14 @@ class FontCascadeWrapper {
     stringView: StringWrapperView, direction: TextDirection,
     expansionBehavior: ExpansionBehaviorWrapper
   ) -> (UInt64, Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if stringView.p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    let raw = wk_interop.FontCascade_expansionOpportunityCount(
+      stringView.p, direction.rawValue, expansionBehavior.left.rawValue,
+      expansionBehavior.right.rawValue)
+    return (UInt64(raw.count), raw.isAfterExpansion)
   }
 }
 

@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum TextDirection {
+enum TextDirection: UInt8 {
   case LTR
   case RTL
 }
