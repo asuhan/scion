@@ -645,10 +645,7 @@ struct Line {
       self.bidiLevel = inlineItem.bidiLevel
     }
 
-    func hasTextCombine() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func hasTextCombine() -> Bool { return style.hasTextCombine() }
 
     func expand(inlineTextItem: InlineTextItemWrapper, logicalWidth: InlineLayoutUnit) {
       assert(!hasCollapsedTrailingWhitespace())
