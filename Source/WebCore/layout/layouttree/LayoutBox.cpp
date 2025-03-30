@@ -103,6 +103,11 @@ extern "C" WEBCORE_EXPORT bool Box_isRubyAnnotationBox(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->isRubyAnnotationBox();
 }
 
+extern "C" WEBCORE_EXPORT bool Box_isRuby(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isRuby();
+}
+
 extern "C" WEBCORE_EXPORT bool Box_isRubyBase(const void* p)
 {
     return static_cast<const WebCore::Layout::Box*>(p)->isRubyBase();

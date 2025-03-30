@@ -283,6 +283,7 @@ bool Box_isFloatingPositioned(const void*);
 bool Box_isAtomicInlineBox(const void*);
 bool Box_isInitialContainingBlock(const void*);
 bool Box_isRubyAnnotationBox(const void*);
+bool Box_isRuby(const void*);
 bool Box_isRubyBase(const void*);
 bool Box_isRubyInlineBox(const void*);
 bool Box_isWordBreakOpportunity(const void*);
