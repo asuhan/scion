@@ -202,9 +202,10 @@ public func InlineFormattingContext_layout(
       box.unflippedVisualRect.height())
     let ink_overflow = wk_interop.FloatRect_new(
       box.inkOverflow.x(), box.inkOverflow.y(), box.inkOverflow.width(), box.inkOverflow.height())
-    // TODO(asuhan): implement this
-    let expansion_kind = ExpansionBehaviorWrapper.Behavior.Forbid.rawValue
-    let expansion = wk_interop.Expansion_new(expansion_kind, expansion_kind, 0)
+    let expansion = box.expansion()
+    let expansionC = wk_interop.Expansion_new(
+      expansion.behavior.left.rawValue, expansion.behavior.right.rawValue,
+      expansion.horizontalExpansion)
     let text =
       box.isTextOrSoftLineBreak()
       ? wk_interop.Text_new(
@@ -228,7 +229,7 @@ public func InlineFormattingContext_layout(
       unflipped_visual_rect,
       ink_overflow,
       UInt64(box.lineIndex),
-      expansion,
+      expansionC,
       box.bidiLevel.rawValue,
       box.type.rawValue,
       box.hasContent,

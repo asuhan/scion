@@ -257,8 +257,7 @@ extension InlineDisplay {
     }
 
     func expansion() -> Expansion {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return Expansion(behavior: expansionBehavior, horizontalExpansion: horizontalExpansion)
     }
 
     func style() -> RenderStyleWrapper {
