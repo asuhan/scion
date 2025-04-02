@@ -133,8 +133,13 @@ class InlineTextItemWrapper: InlineItemWrapper {
   }
 
   func split(leftSideLength: UInt64) -> InlineTextItemWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(length > 1)
+    assert(leftSideLength != 0 && leftSideLength < length)
+    let rightSide = right(length: length - UInt32(leftSideLength), width: nil)
+    length -= rightSide.length
+    hasWidth = false
+    width = InlineLayoutUnit()
+    return rightSide
   }
 
   var hasTrailingSoftHyphen = false
