@@ -32,8 +32,7 @@ class StringBuilderWrapper {
   }
 
   func append(character: UChar) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.StringBuilder_append_UChar(self.p, character)
   }
 
   func append(string: StringWrapper) {
