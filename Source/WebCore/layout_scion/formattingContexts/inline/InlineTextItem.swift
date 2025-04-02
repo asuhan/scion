@@ -123,8 +123,13 @@ class InlineTextItemWrapper: InlineItemWrapper {
   }
 
   func right(length: UInt32, width: InlineLayoutUnit?) -> InlineTextItemWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(length <= self.length)
+    assert(textItemType != .Undefined)
+    assert(length != 0)
+    return InlineTextItemWrapper(
+      inlineTextBox: inlineTextBox(), start: end() - length, length: length, bidiLevel: bidiLevel,
+      hasTrailingSoftHyphen: hasTrailingSoftHyphen, isWordSeparator: isWordSeparator, width: width,
+      textItemType: textItemType)
   }
 
   static func shouldPreserveSpacesAndTabs(inlineTextItem: InlineTextItemWrapper) -> Bool {
