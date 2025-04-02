@@ -53,10 +53,7 @@ struct LineBox {
         layoutBox: rootLayoutBox, rootBox: rootLayoutBox as! ElementBoxWrapper))
   }
 
-  func hasAtomicInlineBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasAtomicInlineBox() -> Bool { return boxTypes.contains(.AtomicInlineBox) }
 
   func logicalRectForTextRun(run: Line.Run) -> InlineRect {
     assert(run.isText() || run.isSoftLineBreak())
