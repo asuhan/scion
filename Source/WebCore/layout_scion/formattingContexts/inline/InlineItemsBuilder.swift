@@ -467,12 +467,11 @@ struct InlineItemsBuilder {
   }
 
   mutating func build(startPosition: InlineItemPosition) {
-    // TODO(asuhan): implement this
-    let inlineItemList = collectInlineItems(startPosition: startPosition)
+    var inlineItemList = collectInlineItems(startPosition: startPosition)
 
     if !root.style.isLeftToRightDirection() || contentRequiresVisualReordering {
       // FIXME: Add support for partial, yet paragraph level bidi content handling.
-      breakAndComputeBidiLevels(inlineItemList: inlineItemList)
+      breakAndComputeBidiLevels(inlineItemList: &inlineItemList)
     }
     InlineItemsBuilder.computeInlineTextItemWidths(inlineItemList: inlineItemList)
 
@@ -496,7 +495,7 @@ struct InlineItemsBuilder {
       contentAttributes: contentAttributes)
   }
 
-  func breakAndComputeBidiLevels(inlineItemList: InlineItemList) {
+  private func breakAndComputeBidiLevels(inlineItemList: inout InlineItemList) {
     assert(!inlineItemList.isEmpty)
 
     let paragraphContentBuilder = StringBuilderWrapper()
@@ -554,8 +553,8 @@ struct InlineItemsBuilder {
         pBiDi: ubidi, logicalPosition: currentPosition, pLogicalLimit: &endPosition,
         pLevel: &bidiLevel)
       setBidiLevelOnRange(
-        inlineItemList: inlineItemList,
-        inlineItemOffsets: inlineItemOffsets,
+        inlineItemList: &inlineItemList,
+        inlineItemOffsets: &inlineItemOffsets,
         bidiEnd: UInt64(endPosition), bidiLevelForRange: bidiLevel,
         inlineItemIndex: &inlineItemIndex, hasSeenOpaqueItem: &hasSeenOpaqueItem)
       currentPosition = endPosition
@@ -564,8 +563,9 @@ struct InlineItemsBuilder {
       inlineItemList: inlineItemList, hasSeenOpaqueItem: hasSeenOpaqueItem)
   }
 
-  func setBidiLevelOnRange(
-    inlineItemList: InlineItemList, inlineItemOffsets: InlineItemOffsetList, bidiEnd: UInt64,
+  private func setBidiLevelOnRange(
+    inlineItemList: inout InlineItemList, inlineItemOffsets: inout InlineItemOffsetList,
+    bidiEnd: UInt64,
     bidiLevelForRange: UBiDiLevel,
     inlineItemIndex: inout UInt64,
     hasSeenOpaqueItem: inout Bool
@@ -589,16 +589,20 @@ struct InlineItemsBuilder {
         break
       }
       inlineItem.setBidiLevel(bidiLevel: bidiLevelForRange)
-      let inlineTextItem = inlineItem as? InlineTextItemWrapper
-      if inlineTextItem == nil {
+      if let inlineTextItem = inlineItem as? InlineTextItemWrapper {
+        // Check if this text item is on bidi boundary and needs splitting.
+        let endPosition = offset! + UInt64(inlineTextItem.length)
+        if endPosition > bidiEnd {
+          inlineItemList.insert(
+            inlineTextItem.split(leftSideLength: bidiEnd - offset!), at: Int(inlineItemIndex + 1))
+          // Right side is going to be processed at the next bidi range.
+          inlineItemOffsets.insert(bidiEnd, at: Int(inlineItemIndex + 1))
+          inlineItemIndex += 1
+          break
+        }
+      } else {
         inlineItemIndex += 1
         continue
-      }
-      // Check if this text item is on bidi boundary and needs splitting.
-      let endPosition = offset! + UInt64(inlineTextItem!.length)
-      if endPosition > bidiEnd {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
       }
     }
   }
