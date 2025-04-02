@@ -94,10 +94,7 @@ class InlineItemWrapper: Equatable {
 
   func isOpaque() -> Bool { return type == .Opaque }
 
-  func setBidiLevel(bidiLevel: UBiDiLevel) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setBidiLevel(bidiLevel: UBiDiLevel) { self.bidiLevel = bidiLevel }
 
   static func == (lhs: InlineItemWrapper, rhs: InlineItemWrapper) -> Bool {
     // TODO(asuhan): implement this
