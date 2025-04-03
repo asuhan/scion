@@ -570,7 +570,6 @@ struct InlineItemsBuilder {
     inlineItemIndex: inout UInt64,
     hasSeenOpaqueItem: inout Bool
   ) {
-    // TODO(asuhan): implement this
     // We should always have inline item(s) associated with a bidi range.
     assert(inlineItemIndex < inlineItemOffsets.count)
     // Start of the range is always where we left off (bidi ranges do not have gaps).
@@ -589,20 +588,17 @@ struct InlineItemsBuilder {
         break
       }
       inlineItem.setBidiLevel(bidiLevel: bidiLevelForRange)
+      inlineItemIndex += 1
       if let inlineTextItem = inlineItem as? InlineTextItemWrapper {
         // Check if this text item is on bidi boundary and needs splitting.
         let endPosition = offset! + UInt64(inlineTextItem.length)
         if endPosition > bidiEnd {
           inlineItemList.insert(
-            inlineTextItem.split(leftSideLength: bidiEnd - offset!), at: Int(inlineItemIndex + 1))
+            inlineTextItem.split(leftSideLength: bidiEnd - offset!), at: Int(inlineItemIndex))
           // Right side is going to be processed at the next bidi range.
-          inlineItemOffsets.insert(bidiEnd, at: Int(inlineItemIndex + 1))
-          inlineItemIndex += 1
+          inlineItemOffsets.insert(bidiEnd, at: Int(inlineItemIndex))
           break
         }
-      } else {
-        inlineItemIndex += 1
-        continue
       }
     }
   }
