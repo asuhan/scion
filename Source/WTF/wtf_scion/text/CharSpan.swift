@@ -52,5 +52,5 @@ class CharSpanWrapper<CharacterType> {
     }
   }
 
-  private var p: UnsafeRawPointer? = nil
+  var p: UnsafeRawPointer? = nil
 }

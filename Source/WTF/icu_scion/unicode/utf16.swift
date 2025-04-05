@@ -16,9 +16,10 @@
 *   created by: Markus W. Scherer
 */
 
+import wk_interop
+
 func U16_NEXT(s: CharSpanWrapper<UChar>, i: UInt64, length: UInt32) -> UInt32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return wk_interop.U16_NEXT_scion(s.p, i, length)
 }
 
 internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {
