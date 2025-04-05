@@ -1694,8 +1694,7 @@ struct InlineDisplayContentBuilder {
   }
 
   private func rootStyle() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return lineIndex() != 0 ? root().style : root().firstLineStyle()
   }
 
   var formattingContext: InlineFormattingContext
