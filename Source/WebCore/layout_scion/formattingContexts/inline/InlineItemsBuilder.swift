@@ -113,13 +113,13 @@ internal func requiresVisualReordering(layoutBox: BoxWrapper) -> Bool {
 }
 
 internal func isNewLineOrTabCharacter(
-  textContent: StringWrapper, position: UInt64, needsUnicodeHandling: Bool, contentLength: UInt32
+  textContent: StringWrapper, position: inout UInt64, needsUnicodeHandling: Bool,
+  contentLength: UInt32
 )
   -> Bool
 {
-  // TODO(asuhan): implement this
   let characters = textContent.span16()
-  let character = U16_NEXT(s: characters, i: position, length: contentLength)
+  let character = U16_NEXT(s: characters, i: &position, length: contentLength)
   return character == CharacterNames.Unicode.newlineCharacter
     || character == CharacterNames.Unicode.tabCharacter
 }
@@ -127,19 +127,18 @@ internal func isNewLineOrTabCharacter(
 func replaceNonPreservedNewLineAndTabCharactersAndAppend(
   inlineTextBox: InlineTextBoxWrapper, paragraphContentBuilder: StringBuilderWrapper
 ) {
-  // TODO(asuhan): implement this
   // ubidi prefers non-preserved new lines/tabs as space characters.
   assert(!TextUtil.shouldPreserveNewline(layoutBox: inlineTextBox))
   let textContent = inlineTextBox.content
   let contentLength = textContent.length()
   let needsUnicodeHandling = !textContent.is8Bit()
-  var nonReplacedContentStartPosition = 0
-  let position = 0
+  var nonReplacedContentStartPosition: UInt64 = 0
+  var position: UInt64 = 0
   while position < contentLength {
     // Note that because of proper code point boundary handling (see U16_NEXT), position is incremented in an unconventional way here.
     let startPosition = position
     if !isNewLineOrTabCharacter(
-      textContent: textContent, position: UInt64(position),
+      textContent: textContent, position: &position,
       needsUnicodeHandling: needsUnicodeHandling,
       contentLength: contentLength)
     {

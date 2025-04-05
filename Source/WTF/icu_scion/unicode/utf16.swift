@@ -18,8 +18,10 @@
 
 import wk_interop
 
-func U16_NEXT(s: CharSpanWrapper<UChar>, i: UInt64, length: UInt32) -> UInt32 {
-  return wk_interop.U16_NEXT_scion(s.p, i, length)
+func U16_NEXT(s: CharSpanWrapper<UChar>, i: inout UInt64, length: UInt32) -> UInt32 {
+  let raw = wk_interop.U16_NEXT_scion(s.p, i, length)
+  i = raw.position
+  return raw.character
 }
 
 internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {

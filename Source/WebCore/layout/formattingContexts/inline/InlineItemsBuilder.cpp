@@ -108,12 +108,17 @@ extern "C" WEBCORE_EXPORT void ubidi_reorderVisual_scion(const uint8_t* levels, 
     ubidi_reorderVisual(static_cast<const UBiDiLevel*>(levels), length, index_map);
 }
 
-extern "C" WEBCORE_EXPORT uint32_t U16_NEXT_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
+struct NextU16Raw {
+    uint32_t character;
+    uint64_t position;
+};
+
+extern "C" WEBCORE_EXPORT struct NextU16Raw U16_NEXT_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
 {
     const auto characters = *static_cast<const std::span<const UChar>*>(characters_raw);
     char32_t character;
     U16_NEXT(characters, position, content_length, character);
-    return character;
+    return { character, position };
 }
 
 namespace WebCore {
