@@ -554,7 +554,7 @@ struct InlineDisplayContentBuilder {
       let layoutBox = lineRun.layoutBox
       let parentDisplayBoxNodeIndex = ensureDisplayBoxForContainer(
         elementBox: layoutBox.parent(), displayBoxTree: &displayBoxTree,
-        ancestorStack: &ancestorStack, boxes: boxes)
+        ancestorStack: &ancestorStack, boxes: &boxes)
       hasInlineBox =
         hasInlineBox || parentDisplayBoxNodeIndex != 0 || lineRun.isInlineBoxStart()
         || lineRun.isLineSpanningInlineBoxStart()
@@ -668,7 +668,7 @@ struct InlineDisplayContentBuilder {
         if isEmptyInlineBox(
           lineRun: lineRun, inlineContent: inlineContent, logicalIndex: UInt64(logicalIndex))
         {
-          appendInlineDisplayBoxAtBidiBoundary(layoutBox: layoutBox, boxes: boxes)
+          appendInlineDisplayBoxAtBidiBoundary(layoutBox: layoutBox, boxes: &boxes)
           createDisplayBoxNodeForContainerAndPushToAncestorStack(
             elementBox: layoutBox as! ElementBoxWrapper, displayBoxIndex: UInt64(boxes.count - 1),
             parentDisplayBoxNodeIndex: parentDisplayBoxNodeIndex,
@@ -1175,11 +1175,22 @@ struct InlineDisplayContentBuilder {
       ))
   }
 
-  private func appendInlineDisplayBoxAtBidiBoundary(
-    layoutBox: BoxWrapper, boxes: InlineDisplay.Boxes
+  private mutating func appendInlineDisplayBoxAtBidiBoundary(
+    layoutBox: BoxWrapper, boxes: inout InlineDisplay.Boxes
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Geometries for inline boxes at bidi boundaries are computed at a post-process step.
+    hasSeenRubyBase = hasSeenRubyBase || layoutBox.isRubyBase()
+    boxes.append(
+      InlineDisplay.Box(
+        lineIndex: lineIndex(),
+        type: .NonRootInlineBox,
+        layoutBox: layoutBox,
+        bidiLevel: UBiDiLevel.UBIDI_DEFAULT_LTR,
+        physicalRect: InlineLayoutRect(),
+        inkOverflow: InlineLayoutRect(),
+        expansion: InlineDisplay.Box.Expansion(),
+        text: nil,
+        hasContent: true, isFullyTruncated: isLineFullyTruncatedInBlockDirection()))
   }
 
   private func processRubyContent(
@@ -1554,10 +1565,10 @@ struct InlineDisplayContentBuilder {
       boxGeometry: boxGeometry, isLeftToRightDirection: isLeftToRightDirection)
   }
 
-  private func ensureDisplayBoxForContainer(
+  private mutating func ensureDisplayBoxForContainer(
     elementBox: ElementBoxWrapper, displayBoxTree: inout DisplayBoxTree,
     ancestorStack: inout AncestorStack,
-    boxes: InlineDisplay.Boxes
+    boxes: inout InlineDisplay.Boxes
   ) -> UInt64 {
     assert(elementBox.isInlineBox() || CPtrToInt(elementBox.p) == CPtrToInt(root().p))
     if let lowestCommonAncestorIndex = ancestorStack.unwind(elementBox: elementBox) {
@@ -1566,8 +1577,8 @@ struct InlineDisplayContentBuilder {
     let enclosingDisplayBoxNodeIndexForContainer = ensureDisplayBoxForContainer(
       elementBox: elementBox.parent(), displayBoxTree: &displayBoxTree,
       ancestorStack: &ancestorStack,
-      boxes: boxes)
-    appendInlineDisplayBoxAtBidiBoundary(layoutBox: elementBox, boxes: boxes)
+      boxes: &boxes)
+    appendInlineDisplayBoxAtBidiBoundary(layoutBox: elementBox, boxes: &boxes)
     return createDisplayBoxNodeForContainerAndPushToAncestorStack(
       elementBox: elementBox, displayBoxIndex: UInt64(boxes.count - 1),
       parentDisplayBoxNodeIndex: enclosingDisplayBoxNodeIndexForContainer,
