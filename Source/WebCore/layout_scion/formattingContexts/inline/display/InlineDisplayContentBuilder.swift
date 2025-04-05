@@ -1536,7 +1536,7 @@ struct InlineDisplayContentBuilder {
     ancestorStack: inout AncestorStack,
     boxes: InlineDisplay.Boxes
   ) -> UInt64 {
-    assert(elementBox.isInlineBox() || elementBox === root())
+    assert(elementBox.isInlineBox() || CPtrToInt(elementBox.p) == CPtrToInt(root().p))
     if let lowestCommonAncestorIndex = ancestorStack.unwind(elementBox: elementBox) {
       return lowestCommonAncestorIndex
     }
