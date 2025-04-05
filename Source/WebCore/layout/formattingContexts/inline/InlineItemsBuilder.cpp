@@ -103,6 +103,11 @@ extern "C" WEBCORE_EXPORT int32_t ubidi_setPara_scion(void* p, const void* text,
     return error;
 }
 
+extern "C" WEBCORE_EXPORT void ubidi_reorderVisual_scion(const uint8_t* levels, uint64_t length, int32_t* index_map)
+{
+    ubidi_reorderVisual(static_cast<const UBiDiLevel*>(levels), length, index_map);
+}
+
 namespace WebCore {
 namespace Layout {
 

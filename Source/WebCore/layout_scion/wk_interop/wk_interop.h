@@ -404,3 +404,4 @@ void ubidi_close_scion(void*);
 struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position);
 void* ubidi_open_scion();
 int32_t ubidi_setPara_scion(void* p, const void* text, uint32_t length, uint8_t para_level);
+void ubidi_reorderVisual_scion(const uint8_t* levels, uint64_t length, int32_t* index_map);

@@ -110,7 +110,7 @@ internal func computedVisualOrder(
   while visualOrderList.count < runLevels.count {
     visualOrderList.append(0)
   }
-  ubidi_reorderVisual(runLevels: runLevels, visualOrderList: visualOrderList)
+  ubidi_reorderVisual(runLevels: runLevels, visualOrderList: &visualOrderList)
   if hasOpaqueRun {
     assert(visualOrderList.count == runIndexOffsetMap.count)
     for i in 0..<runIndexOffsetMap.count {

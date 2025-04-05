@@ -43,9 +43,13 @@ internal func ubidi_open() -> UBiDiWrapper {
   return UBiDiWrapper(p: wk_interop.ubidi_open_scion())
 }
 
-internal func ubidi_reorderVisual(runLevels: [UBiDiLevel], visualOrderList: [Int32]) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+internal func ubidi_reorderVisual(runLevels: [UBiDiLevel], visualOrderList: inout [Int32]) {
+  visualOrderList.withUnsafeMutableBufferPointer { visualOrderListPtr in
+    runLevels.withUnsafeBufferPointer { runLevelsPtr in
+      wk_interop.ubidi_reorderVisual_scion(
+        runLevelsPtr.baseAddress, UInt64(runLevels.count), visualOrderListPtr.baseAddress)
+    }
+  }
 }
 
 internal func ubidi_setPara(
