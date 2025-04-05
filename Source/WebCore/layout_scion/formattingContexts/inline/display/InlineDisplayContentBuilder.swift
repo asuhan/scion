@@ -188,9 +188,19 @@ struct DisplayBoxTree {
 }
 
 struct AncestorStack {
-  func unwind(elementBox: ElementBoxWrapper) -> UInt64? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func unwind(elementBox: ElementBoxWrapper) -> UInt64? {
+    assert(elementBox.p != nil)
+    let elementBoxPtr = CPtrToInt(elementBox.p)
+    if !elementSet.contains(elementBoxPtr) {
+      return nil
+    }
+    while CPtrToInt(elementStack.last!.p) != elementBoxPtr {
+      nodeIndexStack.removeLast()
+      elementSet.remove(CPtrToInt(elementStack.last!.p))
+      elementStack.removeLast()
+    }
+    // Root is always a common ancestor.
+    return nodeIndexStack.last!
   }
 
   mutating func push(displayBoxNodeIndexForContainer: UInt64, elementBox: ElementBoxWrapper) {
@@ -200,9 +210,11 @@ struct AncestorStack {
     let oldElementBoxPtr = elementSet.update(with: elementBoxPtr)
     assert(oldElementBoxPtr == nil)
     elementSet.insert(elementBoxPtr)
+    elementStack.append(elementBox)
   }
 
   private var elementSet: Set<UInt> = []
+  private var elementStack: [ElementBoxWrapper] = []
   private var nodeIndexStack: [UInt64] = []
 }
 
