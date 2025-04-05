@@ -229,8 +229,8 @@ extension InlineDisplay {
     }
 
     func setRect(rect: FloatRectWrapper, inkOverflow: FloatRectWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.unflippedVisualRect = rect
+      self.inkOverflow = inkOverflow
     }
 
     func setHasContent() {
