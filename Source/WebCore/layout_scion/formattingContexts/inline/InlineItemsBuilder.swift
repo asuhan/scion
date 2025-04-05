@@ -118,10 +118,17 @@ internal func isNewLineOrTabCharacter(
 )
   -> Bool
 {
-  let characters = textContent.span16()
-  let character = U16_NEXT(s: characters, i: &position, length: contentLength)
-  return character == CharacterNames.Unicode.newlineCharacter
-    || character == CharacterNames.Unicode.tabCharacter
+  if needsUnicodeHandling {
+    let characters = textContent.span16()
+    let character = U16_NEXT(s: characters, i: &position, length: contentLength)
+    return character == CharacterNames.Unicode.newlineCharacter
+      || character == CharacterNames.Unicode.tabCharacter
+  }
+  let ch = textContent[UInt32(position)]
+  let isNewLineOrTab =
+    ch == CharacterNames.Unicode.newlineCharacter || ch == CharacterNames.Unicode.tabCharacter
+  position += 1
+  return isNewLineOrTab
 }
 
 func replaceNonPreservedNewLineAndTabCharactersAndAppend(
