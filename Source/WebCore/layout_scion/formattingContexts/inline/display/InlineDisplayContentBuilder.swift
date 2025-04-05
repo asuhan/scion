@@ -154,7 +154,7 @@ func computeInkOverflowForInlineBox(
 @discardableResult
 func createDisplayBoxNodeForContainerAndPushToAncestorStack(
   elementBox: ElementBoxWrapper, displayBoxIndex: UInt64, parentDisplayBoxNodeIndex: UInt64,
-  displayBoxTree: DisplayBoxTree, ancestorStack: inout AncestorStack
+  displayBoxTree: inout DisplayBoxTree, ancestorStack: inout AncestorStack
 ) -> UInt64 {
   let displayBoxNodeIndex = displayBoxTree.append(
     parentNodeIndex: parentDisplayBoxNodeIndex, childDisplayBoxIndex: displayBoxIndex)
@@ -163,7 +163,15 @@ func createDisplayBoxNodeForContainerAndPushToAncestorStack(
 }
 
 struct DisplayBoxTree {
-  struct Node {
+  class Node {
+    init(parentIndex: UInt64?, displayBoxIndex: UInt64, children: [UInt64]) {
+      self.parentIndex = parentIndex
+      self.displayBoxIndex = displayBoxIndex
+      self.children = children
+    }
+
+    // Node's parent index in m_displayBoxNodes.
+    var parentIndex: UInt64? = nil
     // Associated display box index in DisplayBoxes.
     var displayBoxIndex: UInt64 = 0
     // Child indexes in displayBoxNodes.
@@ -179,9 +187,12 @@ struct DisplayBoxTree {
   }
 
   @discardableResult
-  func append(parentNodeIndex: UInt64, childDisplayBoxIndex: UInt64) -> UInt64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func append(parentNodeIndex: UInt64, childDisplayBoxIndex: UInt64) -> UInt64 {
+    let childDisplayBoxNodeIndex = UInt64(displayBoxNodes.count)
+    displayBoxNodes.append(
+      Node(parentIndex: parentNodeIndex, displayBoxIndex: childDisplayBoxIndex, children: []))
+    at(index: parentNodeIndex).children.append(childDisplayBoxNodeIndex)
+    return childDisplayBoxNodeIndex
   }
 
   var displayBoxNodes: [Node] = []
@@ -474,7 +485,7 @@ struct InlineDisplayContentBuilder {
       lineLayoutResult.directionality.visualOrderList.count <= lineLayoutResult.inlineContent.count)
 
     var ancestorStack = AncestorStack()
-    let displayBoxTree = DisplayBoxTree()
+    var displayBoxTree = DisplayBoxTree()
     ancestorStack.push(displayBoxNodeIndexForContainer: 0, elementBox: root())
 
     let writingMode = root().style.writingMode()
@@ -494,7 +505,7 @@ struct InlineDisplayContentBuilder {
       contentStartInInlineDirectionVisualOrder: contentStartInInlineDirectionVisualOrder,
       lineLogicalTop: lineLogicalTop,
       lineLogicalLeft: lineLogicalLeft,
-      displayBoxTree: displayBoxTree,
+      displayBoxTree: &displayBoxTree,
       ancestorStack: &ancestorStack,
       writingMode: writingMode,
       isHorizontalWritingMode: isHorizontalWritingMode,
@@ -513,7 +524,7 @@ struct InlineDisplayContentBuilder {
     contentStartInInlineDirectionVisualOrder: Float32,
     lineLogicalTop: Float32,
     lineLogicalLeft: Float32,
-    displayBoxTree: DisplayBoxTree,
+    displayBoxTree: inout DisplayBoxTree,
     ancestorStack: inout AncestorStack,
     writingMode: WritingMode,
     isHorizontalWritingMode: Bool,
@@ -542,7 +553,7 @@ struct InlineDisplayContentBuilder {
 
       let layoutBox = lineRun.layoutBox
       let parentDisplayBoxNodeIndex = ensureDisplayBoxForContainer(
-        elementBox: layoutBox.parent(), displayBoxTree: displayBoxTree,
+        elementBox: layoutBox.parent(), displayBoxTree: &displayBoxTree,
         ancestorStack: &ancestorStack, boxes: boxes)
       hasInlineBox =
         hasInlineBox || parentDisplayBoxNodeIndex != 0 || lineRun.isInlineBoxStart()
@@ -661,7 +672,7 @@ struct InlineDisplayContentBuilder {
           createDisplayBoxNodeForContainerAndPushToAncestorStack(
             elementBox: layoutBox as! ElementBoxWrapper, displayBoxIndex: UInt64(boxes.count - 1),
             parentDisplayBoxNodeIndex: parentDisplayBoxNodeIndex,
-            displayBoxTree: displayBoxTree, ancestorStack: &ancestorStack)
+            displayBoxTree: &displayBoxTree, ancestorStack: &ancestorStack)
         }
         continue
       }
@@ -1544,7 +1555,7 @@ struct InlineDisplayContentBuilder {
   }
 
   private func ensureDisplayBoxForContainer(
-    elementBox: ElementBoxWrapper, displayBoxTree: DisplayBoxTree,
+    elementBox: ElementBoxWrapper, displayBoxTree: inout DisplayBoxTree,
     ancestorStack: inout AncestorStack,
     boxes: InlineDisplay.Boxes
   ) -> UInt64 {
@@ -1553,14 +1564,14 @@ struct InlineDisplayContentBuilder {
       return lowestCommonAncestorIndex
     }
     let enclosingDisplayBoxNodeIndexForContainer = ensureDisplayBoxForContainer(
-      elementBox: elementBox.parent(), displayBoxTree: displayBoxTree,
+      elementBox: elementBox.parent(), displayBoxTree: &displayBoxTree,
       ancestorStack: &ancestorStack,
       boxes: boxes)
     appendInlineDisplayBoxAtBidiBoundary(layoutBox: elementBox, boxes: boxes)
     return createDisplayBoxNodeForContainerAndPushToAncestorStack(
       elementBox: elementBox, displayBoxIndex: UInt64(boxes.count - 1),
       parentDisplayBoxNodeIndex: enclosingDisplayBoxNodeIndexForContainer,
-      displayBoxTree: displayBoxTree,
+      displayBoxTree: &displayBoxTree,
       ancestorStack: &ancestorStack)
   }
 
