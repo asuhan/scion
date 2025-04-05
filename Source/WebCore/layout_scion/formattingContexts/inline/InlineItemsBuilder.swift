@@ -356,15 +356,13 @@ func buildBidiParagraph(
   var lastInlineTextBox: BoxWrapper? = nil
   var inlineTextBoxOffset: UInt32 = 0
   for inlineItem in inlineItemList {
-    // TODO(asuhan): implement this
     let layoutBox = inlineItem.layoutBox
 
     if inlineItem.isText() || inlineItem.isSoftLineBreak() {
       let inlineTextBox = layoutBox as? InlineTextBoxWrapper
       let mayAppendTextContentAsOneEntry =
-        inlineTextBox != nil && TextUtil.shouldPreserveNewline(layoutBox: inlineTextBox!)
+        inlineTextBox != nil && !TextUtil.shouldPreserveNewline(layoutBox: inlineTextBox!)
       if mayAppendTextContentAsOneEntry {
-        // TODO(asuhan): implement this
         // Append the entire InlineTextBox content and keep track of individual inline item positions as we process them.
         if lastInlineTextBox?.p != layoutBox.p {
           inlineTextBoxOffset = paragraphContentBuilder.length()
