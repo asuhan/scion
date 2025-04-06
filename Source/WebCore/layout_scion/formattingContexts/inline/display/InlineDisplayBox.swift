@@ -215,8 +215,9 @@ extension InlineDisplay {
     }
 
     func setRight(physicalRight: Float32) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let offset = physicalRight - right()
+      unflippedVisualRect.shiftMaxXEdgeTo(edge: physicalRight)
+      inkOverflow.shiftMaxXEdgeTo(edge: inkOverflow.maxX() + offset)
     }
 
     func setTop(physicalTop: Float32) {
