@@ -40,8 +40,7 @@ func marginRightInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirecti
 func borderLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
   -> LayoutUnit
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return isLeftToRightDirection ? boxGeometry.borderStart() : boxGeometry.borderEnd()
 }
 
 func borderRightInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
