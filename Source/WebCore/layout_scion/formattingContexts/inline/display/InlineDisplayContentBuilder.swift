@@ -28,15 +28,13 @@ import Foundation
 func marginLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
   -> LayoutUnit
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return isLeftToRightDirection ? boxGeometry.marginStart() : boxGeometry.marginEnd()
 }
 
 func marginRightInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
   -> LayoutUnit
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return isLeftToRightDirection ? boxGeometry.marginEnd() : boxGeometry.marginStart()
 }
 
 func borderLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
