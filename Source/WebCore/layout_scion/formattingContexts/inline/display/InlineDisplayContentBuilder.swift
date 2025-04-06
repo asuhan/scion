@@ -46,8 +46,7 @@ func borderLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirectio
 func borderRightInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
   -> LayoutUnit
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return isLeftToRightDirection ? boxGeometry.borderEnd() : boxGeometry.borderStart()
 }
 
 func paddingLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
