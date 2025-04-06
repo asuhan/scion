@@ -232,7 +232,7 @@ struct IsFirstLastIndex {
   var last: UInt64? = nil
 }
 
-typealias IsFirstLastIndexesMap = [BoxWrapper: IsFirstLastIndex]
+typealias IsFirstLastIndexesMap = [UInt: IsFirstLastIndex]
 
 func outOfFlowBox(
   i: UInt64, indexListOfOutOfFlowBoxes: [UInt64], lineRuns: Line.RunList, visualOrderList: [Int32],
@@ -779,10 +779,11 @@ struct InlineDisplayContentBuilder {
       if !isFirstBox && !isLastBox {
         continue
       }
+      let layoutBoxPtr = CPtrToInt(layoutBox.p)
       if isFirstBox {
-        let isFirstLastIndexes = isFirstLastIndexesMap[layoutBox, default: IsFirstLastIndex()]
+        let isFirstLastIndexes = isFirstLastIndexesMap[layoutBoxPtr, default: IsFirstLastIndex()]
         if isFirstLastIndexes.first == nil || isLastBox {
-          isFirstLastIndexesMap[layoutBox] = IsFirstLastIndex(
+          isFirstLastIndexesMap[layoutBoxPtr] = IsFirstLastIndex(
             first: isFirstLastIndexes.first ?? UInt64(index),
             last: isLastBox ? UInt64(index) : isFirstLastIndexes.last)
           continue
@@ -790,7 +791,8 @@ struct InlineDisplayContentBuilder {
       }
       if isLastBox {
         assert(!isFirstBox)
-        isFirstLastIndexesMap[layoutBox] = IsFirstLastIndex(first: UInt64(0), last: UInt64(index))
+        isFirstLastIndexesMap[layoutBoxPtr] = IsFirstLastIndex(
+          first: UInt64(0), last: UInt64(index))
         continue
       }
     }
@@ -1436,7 +1438,7 @@ struct InlineDisplayContentBuilder {
 
     let boxGeometry = formattingContext.geometryForBox(layoutBox: layoutBox)
     let isLeftToRightDirection = layoutBox.style.isLeftToRightDirection()
-    let isFirstLastIndexes = isFirstLastIndexesMap[layoutBox]!
+    let isFirstLastIndexes = isFirstLastIndexesMap[CPtrToInt(layoutBox.p)]!
     let isFirstBox =
       isFirstLastIndexes.first != nil && isFirstLastIndexes.first! == displayBoxNodeIndex
     let isLastBox =
