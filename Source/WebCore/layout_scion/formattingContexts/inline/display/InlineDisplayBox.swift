@@ -209,8 +209,9 @@ extension InlineDisplay {
     }
 
     func setLeft(physicalLeft: Float32) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let offset = physicalLeft - left()
+      unflippedVisualRect.setX(x: physicalLeft)
+      inkOverflow.setX(x: inkOverflow.x() + offset)
     }
 
     func setRight(physicalRight: Float32) {
