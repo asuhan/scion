@@ -44,10 +44,11 @@ internal func ubidi_open() -> UBiDiWrapper {
 }
 
 internal func ubidi_reorderVisual(runLevels: [UBiDiLevel], visualOrderList: inout [Int32]) {
+  let runLevelsUInt8 = runLevels.map { runLevel in runLevel.rawValue }
   visualOrderList.withUnsafeMutableBufferPointer { visualOrderListPtr in
-    runLevels.withUnsafeBufferPointer { runLevelsPtr in
+    runLevelsUInt8.withUnsafeBufferPointer { runLevelsPtr in
       wk_interop.ubidi_reorderVisual_scion(
-        runLevelsPtr.baseAddress, UInt64(runLevels.count), visualOrderListPtr.baseAddress)
+        runLevelsPtr.baseAddress, UInt64(runLevelsUInt8.count), visualOrderListPtr.baseAddress)
     }
   }
 }
