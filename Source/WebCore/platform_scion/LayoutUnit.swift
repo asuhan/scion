@@ -252,8 +252,8 @@ struct LayoutUnit: Comparable {
 
   @discardableResult
   static func += (a: inout Float32, b: LayoutUnit) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    a = a + b
+    return a
   }
 
   @discardableResult
