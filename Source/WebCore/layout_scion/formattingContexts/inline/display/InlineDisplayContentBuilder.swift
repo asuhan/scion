@@ -780,7 +780,7 @@ struct InlineDisplayContentBuilder {
         continue
       }
       if isFirstBox {
-        let isFirstLastIndexes = isFirstLastIndexesMap[layoutBox]!
+        let isFirstLastIndexes = isFirstLastIndexesMap[layoutBox, default: IsFirstLastIndex()]
         if isFirstLastIndexes.first == nil || isLastBox {
           isFirstLastIndexesMap[layoutBox] = IsFirstLastIndex(
             first: isFirstLastIndexes.first ?? UInt64(index),
