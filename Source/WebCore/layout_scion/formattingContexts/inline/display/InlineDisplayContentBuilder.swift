@@ -176,6 +176,10 @@ struct DisplayBoxTree {
     var children: [UInt64] = []
   }
 
+  init() {
+    displayBoxNodes.append(Node(parentIndex: nil, displayBoxIndex: 0, children: []))
+  }
+
   func root() -> Node {
     return displayBoxNodes.first!
   }
