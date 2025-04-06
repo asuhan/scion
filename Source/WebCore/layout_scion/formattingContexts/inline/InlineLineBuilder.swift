@@ -228,6 +228,11 @@ struct LineCandidate {
         return
       }
 
+      if inlineItem.isWordBreakOpportunity() {
+        trailingWordBreakOpportunity = inlineItem
+        return
+      }
+
       fatalError("Not reached")
     }
 
