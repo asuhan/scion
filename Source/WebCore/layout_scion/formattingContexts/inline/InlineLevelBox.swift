@@ -74,8 +74,9 @@ class InlineLevelBox {
   static func createGenericInlineLevelBox(
     layoutBox: BoxWrapper, style: RenderStyleWrapper, logicalLeft: InlineLayoutUnit
   ) -> InlineLevelBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return InlineLevelBox(
+      layoutBox: layoutBox, style: style, logicalLeft: logicalLeft, logicalSize: InlineLayoutSize(),
+      type: .GenericInlineLevelBox)
   }
 
   struct AscentAndDescent {
