@@ -396,6 +396,7 @@ int32_t BoxGeometry_marginBorderAndPaddingStart(const void*);
 int32_t BoxGeometry_marginBorderAndPaddingEnd(const void*);
 int32_t BoxGeometry_horizontalMarginBorderAndPadding(const void*);
 void BoxGeometry_setTopLeft(void*, int32_t, int32_t);
+void BoxGeometry_setLeft(void*, int32_t);
 void BoxGeometry_setContentBoxHeight(void*, int32_t);
 void BoxGeometry_setContentBoxWidth(void*, int32_t);
 void BoxGeometry_setHorizontalMargin(void*, int32_t, int32_t);

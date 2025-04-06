@@ -334,8 +334,11 @@ struct BoxGeometry {
   }
 
   func setLeft(left: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    wk_interop.BoxGeometry_setLeft(p, left.rawValue())
   }
 
   func moveHorizontally(offset: LayoutUnit) {

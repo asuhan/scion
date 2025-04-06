@@ -154,6 +154,11 @@ extern "C" WEBCORE_EXPORT void BoxGeometry_setTopLeft(void* p, int32_t x, int32_
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setTopLeft({ WebCore::LayoutUnit::fromRawValue(x), WebCore::LayoutUnit::fromRawValue(y) });
 }
 
+extern "C" WEBCORE_EXPORT void BoxGeometry_setLeft(void* p, int32_t left)
+{
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setLeft(WebCore::LayoutUnit::fromRawValue(left));
+}
+
 extern "C" WEBCORE_EXPORT void BoxGeometry_setContentBoxHeight(void* p, int32_t height)
 {
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setContentBoxHeight(WebCore::LayoutUnit::fromRawValue(height));
