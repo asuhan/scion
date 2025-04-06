@@ -58,8 +58,7 @@ func paddingLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirecti
 func paddingRightInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
   -> LayoutUnit
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return isLeftToRightDirection ? boxGeometry.paddingEnd() : boxGeometry.paddingStart()
 }
 
 func isFirstLastBox(inlineBox: InlineLevelBox) -> InlineDisplay.Box.PositionWithinInlineLevelBox {
