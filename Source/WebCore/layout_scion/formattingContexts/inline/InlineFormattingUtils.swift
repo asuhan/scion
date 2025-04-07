@@ -89,7 +89,7 @@ internal func nearestCommonAncestor(
 
   var descendantsSet: Set<UInt> = []
   var descendant = firstParent
-  while descendant !== rootBox {
+  while CPtrToInt(descendant.p) != CPtrToInt(rootBox.p) {
     descendantsSet.insert(CPtrToInt(descendant.p))
     descendant = descendant.parent()
   }
