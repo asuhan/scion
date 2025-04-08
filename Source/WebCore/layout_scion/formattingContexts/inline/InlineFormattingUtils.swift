@@ -394,7 +394,6 @@ struct InlineFormattingUtils {
     lineContentEnd: InlineItemPosition, previousLineContentEnd: InlineItemPosition?,
     lineHasIntrusiveOrNewlyPlacedFloat: Bool, layoutRangeEnd: InlineItemPosition
   ) -> InlineItemPosition {
-    // TODO(asuhan): implement this
     if previousLineContentEnd == nil {
       return lineContentEnd
     }
@@ -404,6 +403,10 @@ struct InlineFormattingUtils {
           < lineContentEnd.offset)
     {
       // Either full or partial advancing.
+      return lineContentEnd
+    }
+    if lineContentEnd == previousLineContentEnd! && lineHasIntrusiveOrNewlyPlacedFloat {
+      // Couldn't manage to put any content on line due to floats.
       return lineContentEnd
     }
     if lineContentEnd == layoutRangeEnd {
