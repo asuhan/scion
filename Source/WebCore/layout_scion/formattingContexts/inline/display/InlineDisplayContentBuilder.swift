@@ -951,6 +951,9 @@ struct InlineDisplayContentBuilder {
     return inkOverflowRect
   }
 
+  private static var objectReplacementCharacterString = StringWrapper(
+    characters: WTF.span(character: CharacterNames.Unicode.objectReplacementCharacter))
+
   private mutating func appendTextDisplayBox(
     lineRun: Line.Run, textRunRect: InlineRect, boxes: inout InlineDisplay.Boxes
   ) {
@@ -969,8 +972,26 @@ struct InlineDisplayContentBuilder {
         : !inlineTextBox.parent().style.textDecorationsInEffect().isEmpty)
 
     if inlineTextBox.isCombined {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // The rendered text is the actual combined content, while the "original" one is blank.
+      boxes.append(
+        InlineDisplay.Box(
+          lineIndex: lineIndex(),
+          type: .Text,
+          layoutBox: inlineTextBox,
+          bidiLevel: lineRun.bidiLevel,
+          physicalRect: textRunRect.InlineLayoutRect(),
+          inkOverflow: inkOverflow(
+            inlineTextBox: inlineTextBox,
+            textRunRect: textRunRect, content: content, text: text!, style: style
+          ).InlineLayoutRect(),
+          expansion: lineRun.expansion,
+          text: InlineDisplay.Box.Text(
+            start: text!.start, length: 1,
+            originalContent: InlineDisplayContentBuilder.objectReplacementCharacterString,
+            adjustedContentToRender: content),
+          hasContent: isContentful,
+          isFullyTruncated: isLineFullyTruncatedInBlockDirection()))
+      return
     }
 
     boxes.append(
