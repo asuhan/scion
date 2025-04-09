@@ -39,6 +39,11 @@ extern "C" WEBCORE_EXPORT float FontDescription_computedSize(const void* p)
     return static_cast<const WebCore::FontDescription*>(p)->computedSize();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t FontDescription_orientation(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::FontDescription*>(p)->orientation());
+}
+
 extern "C" WEBCORE_EXPORT int32_t FontMetrics_intHeight(const void* p, uint8_t baselineType)
 {
     return static_cast<const WebCore::FontMetrics*>(p)->intHeight(static_cast<WebCore::FontBaseline>(baselineType));

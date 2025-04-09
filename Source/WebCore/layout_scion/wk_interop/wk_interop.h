@@ -117,6 +117,7 @@ struct ExpansionOpportunityCountRaw FontCascade_expansionOpportunityCount(
     uint8_t expansion_behavior_left,
     uint8_t expansion_behavior_right);
 float FontDescription_computedSize(const void*);
+uint8_t FontDescription_orientation(const void*);
 int32_t FontMetrics_intHeight(const void*, uint8_t);
 int32_t FontMetrics_intAscent(const void*, uint8_t);
 int32_t FontMetrics_intDescent(const void*, uint8_t);

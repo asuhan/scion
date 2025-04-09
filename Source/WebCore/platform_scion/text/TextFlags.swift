@@ -23,6 +23,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum FontOrientation: UInt8 {
+  case Horizontal
+  case Vertical
+}
+
 struct ExpansionBehaviorWrapper: Equatable {
   enum Behavior: UInt8 {
     case Forbid

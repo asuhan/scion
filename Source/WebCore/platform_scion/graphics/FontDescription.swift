@@ -34,4 +34,8 @@ class FontDescriptionWrapper {
   func computedSize() -> Float32 {
     return wk_interop.FontDescription_computedSize(p)
   }
+
+  func orientation() -> FontOrientation {
+    return FontOrientation(rawValue: wk_interop.FontDescription_orientation(p))!
+  }
 }
