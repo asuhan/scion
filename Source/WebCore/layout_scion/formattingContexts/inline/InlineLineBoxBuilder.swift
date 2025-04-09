@@ -913,8 +913,8 @@ struct LineBoxBuilder {
   }
 
   private func primaryFontRequiresIdeographicBaseline(style: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style.fontDescription().orientation() == .Vertical
+      || style.fontCascade().primaryFont().hasVerticalGlyphs()
   }
 
   private func adjustLayoutBoundsWithIdeographicBaseline(
