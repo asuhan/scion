@@ -317,6 +317,7 @@ const void* Box_firstLineStyle(const void*);
 const void* Box_style(const void*);
 const void* Box_shape(const void*);
 const void* RenderStyle_metricsOfPrimaryFont(const void*);
+const void* RenderStyle_fontDescription(const void*);
 uint8_t RenderStyle_textOverflow(const void*);
 const void* RenderStyle_computedLocale(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
