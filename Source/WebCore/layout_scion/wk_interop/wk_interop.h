@@ -158,6 +158,8 @@ const void* StringView_upconvertedCharacters(const void*);
 void* TextRun_fromStringView(const void*, float, float, bool, bool);
 const void* String_new();
 const void* String_new_copy(const void*);
+const void* String_new_span(const void*);
+const void* WTF_span_from_uchar(uint16_t);
 void* StringBuilder_new();
 void StringBuilder_append_UChar(void*, uint16_t);
 void StringBuilder_append_StringView(void*, const void*);

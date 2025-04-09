@@ -29,6 +29,11 @@ class StringWrapper {
     self.p = p ?? wk_interop.String_new()
   }
 
+  // Construct a string with UTF-16 data.
+  init(characters: CharSpanWrapper<UChar>) {
+    self.p = wk_interop.String_new_span(characters.p)
+  }
+
   func length() -> UInt32 {
     if self.p != nil {
       return string_length(p: self.p!)
