@@ -146,6 +146,14 @@ class FontCascadeWrapper {
     fatalError("Not implemented")
   }
 
+  func primaryFont() -> FontWrapper {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return FontWrapper(p: wk_interop.FontCascade_primaryFont(p))
+  }
+
   static func expansionOpportunityCount(
     stringView: StringWrapperView, direction: TextDirection,
     expansionBehavior: ExpansionBehaviorWrapper

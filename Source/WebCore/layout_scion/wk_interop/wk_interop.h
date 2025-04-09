@@ -125,6 +125,7 @@ float FontMetrics_lineSpacing(const void*);
 int32_t FontMetrics_intLineSpacing(const void*);
 struct OptionalFloatRaw FontMetrics_xHeight(const void*);
 const void* FontCascade_metricsOfPrimaryFont(const void*);
+const void* FontCascade_primaryFont(const void*);
 const void* InlineTextBox_content(const void*);
 bool InlineTextBox_isCombined(const void*);
 bool InlineTextBox_canUseSimplifiedContentMeasuring(const void*);

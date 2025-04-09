@@ -20,6 +20,10 @@
  */
 
 class FontWrapper: Hashable {
+  init(p: UnsafeRawPointer) {
+    self.p = p
+  }
+
   static func == (lhs: FontWrapper, rhs: FontWrapper) -> Bool {
     return lhs === rhs
   }
@@ -37,4 +41,6 @@ class FontWrapper: Hashable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var p: UnsafeRawPointer
 }

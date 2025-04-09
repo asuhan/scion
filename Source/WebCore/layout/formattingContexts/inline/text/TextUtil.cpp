@@ -158,6 +158,11 @@ extern "C" WEBCORE_EXPORT const void* FontCascade_metricsOfPrimaryFont(const voi
     return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->metricsOfPrimaryFont();
 }
 
+extern "C" WEBCORE_EXPORT const void* FontCascade_primaryFont(const void* font_cascade_ptr)
+{
+    return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->primaryFont();
+}
+
 struct ExpansionOpportunityCountRaw {
     uint32_t count;
     bool isAfterExpansion;
