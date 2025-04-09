@@ -26,7 +26,7 @@
 import wk_interop
 
 class CharSpanWrapper<CharacterType> {
-  init(p: UnsafeRawPointer? = nil) {
+  init(p: UnsafeRawPointer) {
     self.p = p
   }
 
@@ -52,5 +52,5 @@ class CharSpanWrapper<CharacterType> {
     }
   }
 
-  var p: UnsafeRawPointer? = nil
+  var p: UnsafeRawPointer
 }
