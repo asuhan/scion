@@ -135,6 +135,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_layoutBox(void* p)
     return static_cast<WebCore::RenderObject*>(p)->layoutBox();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderObject_parent(void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->parent();
+}
+
 extern "C" WEBCORE_EXPORT void RenderElement_layoutIfNeeded(void* p)
 {
     static_cast<WebCore::RenderElement*>(p)->layoutIfNeeded();

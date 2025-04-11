@@ -46,8 +46,12 @@ class RenderObjectWrapper {
   }
 
   func parent() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let unwrapped = wk_interop.RenderObject_parent(p)
+    if unwrapped == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return RenderElementWrapper(p: unwrapped!)
   }
 
   func previousSibling() -> RenderObjectWrapper? {

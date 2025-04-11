@@ -271,6 +271,7 @@ bool RenderObject_isFieldset(const void*);
 void* RenderObject_containingBlock(const void*);
 const void* RenderObject_style(const void*);
 void* RenderObject_layoutBox(void*);
+void* RenderObject_parent(void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 int32_t RenderBox_availableLogicalWidth(const void*);
