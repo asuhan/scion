@@ -326,6 +326,7 @@ uint8_t RenderStyle_textOverflow(const void*);
 const void* RenderStyle_computedLocale(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
+bool RenderStyle_isVerticalWritingMode(const void*);
 uint8_t RenderStyle_blockFlowDirection(const void*);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);
