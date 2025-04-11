@@ -37,6 +37,21 @@ func usedValueOrZero(length: LengthWrapper, availableWidth: LayoutUnit?) -> Layo
   return minimumValueForLength(length: length, maximumValue: availableWidth!)
 }
 
+func intrinsicPaddingForTableCell(renderer: RenderBoxWrapper) -> BoxGeometry.VerticalEdges {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+func contentLogicalWidthForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+func contentLogicalHeightForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func scrollbarLogicalSize(renderer: RenderBoxWrapper) -> LayoutSizeWrapper {
   // Scrollbars eat into the padding box area. They never stretch the border box but they may shrink the padding box.
   // In legacy render tree, RenderBox::contentWidth/contentHeight values are adjusted to accommodate the scrollbar width/height.
@@ -130,8 +145,7 @@ extension LayoutIntegration {
       }
 
       if BoxGeometryUpdater.needsFullGeometryUpdate(layoutBox: layoutBox, renderBox: renderBox) {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        updateLayoutBoxDimensions(renderBox: renderBox, availableWidth: availableWidth)
       }
 
       if renderBox.shapeOutsideInfo() != nil {
@@ -164,6 +178,46 @@ extension LayoutIntegration {
     func takeNestedListMarkerOffsets() -> [UInt: LayoutUnit] {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    private func updateLayoutBoxDimensions(
+      renderBox: RenderBoxWrapper, availableWidth: LayoutUnit?,
+      intrinsicWidthMode: IntrinsicWidthMode? = nil
+    ) {
+      let layoutBox = renderBox.layoutBox()!
+      var boxGeometry = layoutState.ensureGeometryForBox(layoutBox: layoutBox)
+      let isLeftToRightInlineDirection = renderBox.parent()!.style().isLeftToRightDirection()
+
+      let inlineMargin = horizontalLogicalMargin(
+        renderer: renderBox, availableWidth: availableWidth,
+        isLeftToRightInlineDirection: isLeftToRightInlineDirection)
+      let border = logicalBorder(
+        renderer: renderBox, isLeftToRightInlineDirection: isLeftToRightInlineDirection,
+        isIntrinsicWidthMode: intrinsicWidthMode != nil)
+      var padding = logicalPadding(
+        renderer: renderBox, availableWidth: availableWidth,
+        isLeftToRightInlineDirection: isLeftToRightInlineDirection)
+      if intrinsicWidthMode == nil {
+        padding.vertical += intrinsicPaddingForTableCell(renderer: renderBox)
+      }
+
+      let scrollbarSize = scrollbarLogicalSize(renderer: renderBox)
+
+      if intrinsicWidthMode != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      boxGeometry.setSpaceForScrollbar(scrollbarSize: scrollbarSize)
+
+      boxGeometry.setContentBoxWidth(width: contentLogicalWidthForRenderer(renderer: renderBox))
+      boxGeometry.setContentBoxHeight(height: contentLogicalHeightForRenderer(renderer: renderBox))
+
+      boxGeometry.setVerticalMargin(
+        margin: verticalLogicalMargin(renderer: renderBox, availableWidth: availableWidth))
+      boxGeometry.setHorizontalMargin(margin: inlineMargin)
+      boxGeometry.setBorder(border: border)
+      boxGeometry.setPadding(padding: padding)
     }
 
     func setListMarkerOffsetForMarkerOutside(listMarker: RenderListMarkerWrapper) {
@@ -248,6 +302,31 @@ extension LayoutIntegration {
         return BoxGeometry.HorizontalEdges(start: logicalLeftValue, end: logicalRightValue)
       }
 
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func verticalLogicalMargin(
+      renderer: RenderBoxModelObjectWrapper, availableWidth: LayoutUnit?
+    ) -> BoxGeometry.VerticalEdges {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func logicalBorder(
+      renderer: RenderBoxModelObjectWrapper, isLeftToRightInlineDirection: Bool,
+      isIntrinsicWidthMode: Bool = false, retainBorderStart: Bool = true,
+      retainBorderEnd: Bool = true
+    ) -> BoxGeometry.Edges {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func logicalPadding(
+      renderer: RenderBoxModelObjectWrapper, availableWidth: LayoutUnit?,
+      isLeftToRightInlineDirection: Bool, retainPaddingStart: Bool = true,
+      retainPaddingEnd: Bool = true
+    ) -> BoxGeometry.Edges {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

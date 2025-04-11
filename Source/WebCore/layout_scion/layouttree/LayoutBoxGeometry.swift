@@ -50,6 +50,13 @@ struct BoxGeometry {
   struct VerticalEdges {
     var before = LayoutUnit()
     var after = LayoutUnit()
+
+    @discardableResult
+    static func += (this: inout VerticalEdges, other: VerticalEdges) -> VerticalEdges {
+      this.before += other.before
+      this.after += other.after
+      return this
+    }
   }
 
   struct HorizontalEdges {
