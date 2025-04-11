@@ -324,8 +324,11 @@ class RenderStyleWrapper {
   }
 
   func textEmphasisPosition() -> TextEmphasisPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return TextEmphasisPosition(rawValue: wk_interop.RenderStyle_textEmphasisPosition(p))
   }
 
   func hasTextCombine() -> Bool {

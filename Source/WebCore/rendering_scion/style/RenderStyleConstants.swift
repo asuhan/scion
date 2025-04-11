@@ -358,7 +358,7 @@ enum TextEmphasisMark: UInt8 {
 }
 
 struct TextEmphasisPosition: OptionSet {
-  let rawValue: UInt32
+  let rawValue: UInt8
   static let Over = TextEmphasisPosition(rawValue: 1 << 0)
   static let Under = TextEmphasisPosition(rawValue: 1 << 1)
   static let Left = TextEmphasisPosition(rawValue: 1 << 2)

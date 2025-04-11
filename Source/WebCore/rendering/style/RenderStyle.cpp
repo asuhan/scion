@@ -221,6 +221,12 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textEmphasisFill(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textEmphasisFill());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textEmphasisPosition(const void* p)
+{
+    const auto textEmphasisPosition = static_cast<const WebCore::RenderStyle*>(p)->textEmphasisPosition();
+    return static_cast<uint8_t>(textEmphasisPosition.toRaw());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasTextCombine(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasTextCombine();
