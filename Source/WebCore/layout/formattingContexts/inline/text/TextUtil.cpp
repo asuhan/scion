@@ -158,6 +158,12 @@ extern "C" WEBCORE_EXPORT const void* FontCascade_metricsOfPrimaryFont(const voi
     return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->metricsOfPrimaryFont();
 }
 
+extern "C" WEBCORE_EXPORT float FontCascade_floatEmphasisMarkHeight(const void* font_cascade_ptr, const void* mark_ptr)
+{
+    const auto& mark = *static_cast<const AtomString*>(mark_ptr);
+    return static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->floatEmphasisMarkHeight(mark);
+}
+
 extern "C" WEBCORE_EXPORT const void* FontCascade_primaryFont(const void* font_cascade_ptr)
 {
     return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->primaryFont();

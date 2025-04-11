@@ -142,8 +142,11 @@ class FontCascadeWrapper {
   }
 
   func floatEmphasisMarkHeight(mark: AtomStringWrapper) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil || mark.p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.FontCascade_floatEmphasisMarkHeight(p, mark.p)
   }
 
   func primaryFont() -> FontWrapper {
