@@ -84,6 +84,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_computedLocale(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->computedLocale();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_textEmphasisMarkString(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->textEmphasisMarkString();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterDrop(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterDrop();

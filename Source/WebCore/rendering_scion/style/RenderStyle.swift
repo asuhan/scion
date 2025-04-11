@@ -623,8 +623,11 @@ class RenderStyleWrapper {
   }
 
   func textEmphasisMarkString() -> AtomStringWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return AtomStringWrapper(p: wk_interop.RenderStyle_textEmphasisMarkString(p))
   }
 
   func rubyPosition() -> RubyPosition {

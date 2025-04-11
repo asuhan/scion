@@ -324,6 +324,7 @@ const void* RenderStyle_metricsOfPrimaryFont(const void*);
 const void* RenderStyle_fontDescription(const void*);
 uint8_t RenderStyle_textOverflow(const void*);
 const void* RenderStyle_computedLocale(const void*);
+const void* RenderStyle_textEmphasisMarkString(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
 bool RenderStyle_isVerticalWritingMode(const void*);
