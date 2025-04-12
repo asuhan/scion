@@ -332,8 +332,16 @@ extension LayoutIntegration {
     private func verticalLogicalMargin(
       renderer: RenderBoxModelObjectWrapper, availableWidth: LayoutUnit?
     ) -> BoxGeometry.VerticalEdges {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let style = renderer.style()
+      switch blockFlowDirection() {
+      case .TopToBottom, .BottomToTop:
+        return BoxGeometry.VerticalEdges(
+          before: usedValueOrZero(length: style.marginTop(), availableWidth: availableWidth),
+          after: usedValueOrZero(length: style.marginBottom(), availableWidth: availableWidth))
+      case .LeftToRight, .RightToLeft:
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
     }
 
     private func logicalBorder(
