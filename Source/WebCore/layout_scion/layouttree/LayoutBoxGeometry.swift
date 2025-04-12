@@ -399,9 +399,8 @@ struct BoxGeometry {
     wk_interop.BoxGeometry_setVerticalMargin(p, margin.before.rawValue(), margin.after.rawValue())
   }
 
-  func setBorder(border: Edges) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func setBorder(border: Edges) {
+    self.border = border
   }
 
   mutating func setPadding(padding: Edges) {
@@ -461,6 +460,7 @@ struct BoxGeometry {
 
   private func topLeft() -> LayoutPointWrapper { return LayoutPointWrapper(x: left(), y: top()) }
 
+  private var border = Edges()
   var padding = Edges()
 
   var verticalSpaceForScrollbar = LayoutUnit()
