@@ -174,6 +174,11 @@ extern "C" WEBCORE_EXPORT void BoxGeometry_setHorizontalMargin(void* p, int32_t 
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setHorizontalMargin(WebCore::Layout::BoxGeometry::HorizontalEdges { WebCore::LayoutUnit::fromRawValue(start), WebCore::LayoutUnit::fromRawValue(end) });
 }
 
+extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalMargin(void* p, int32_t before, int32_t after)
+{
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setVerticalMargin(WebCore::Layout::BoxGeometry::VerticalEdges { WebCore::LayoutUnit::fromRawValue(before), WebCore::LayoutUnit::fromRawValue(after) });
+}
+
 extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalSpaceForScrollbar(void* p, int32_t scrollbar_height)
 {
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setVerticalSpaceForScrollbar(WebCore::LayoutUnit::fromRawValue(scrollbar_height));

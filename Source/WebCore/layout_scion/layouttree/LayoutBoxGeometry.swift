@@ -392,8 +392,11 @@ struct BoxGeometry {
   }
 
   func setVerticalMargin(margin: VerticalEdges) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    wk_interop.BoxGeometry_setVerticalMargin(p, margin.before.rawValue(), margin.after.rawValue())
   }
 
   func setBorder(border: Edges) {
