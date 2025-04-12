@@ -71,8 +71,8 @@ func contentLogicalWidthForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
 }
 
 func contentLogicalHeightForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return renderer.parent()!.style().isHorizontalWritingMode()
+    ? renderer.contentHeight() : renderer.contentWidth()
 }
 
 func scrollbarLogicalSize(renderer: RenderBoxWrapper) -> LayoutSizeWrapper {
