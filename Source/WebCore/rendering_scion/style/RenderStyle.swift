@@ -715,7 +715,11 @@ class RenderStyleWrapper {
   }
 
   func writingMode() -> WritingMode {
-    return inheritedFlags.writingMode
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return WritingMode(rawValue: wk_interop.RenderStyle_writingMode(p))!
   }
 
   func isHorizontalWritingMode() -> Bool {

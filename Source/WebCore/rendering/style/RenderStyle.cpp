@@ -94,6 +94,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterDrop(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterDrop();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_writingMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->writingMode());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isHorizontalWritingMode(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isHorizontalWritingMode();

@@ -330,6 +330,7 @@ uint8_t RenderStyle_textOverflow(const void*);
 const void* RenderStyle_computedLocale(const void*);
 const void* RenderStyle_textEmphasisMarkString(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
+uint8_t RenderStyle_writingMode(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
 bool RenderStyle_isVerticalWritingMode(const void*);
 uint8_t RenderStyle_blockFlowDirection(const void*);
