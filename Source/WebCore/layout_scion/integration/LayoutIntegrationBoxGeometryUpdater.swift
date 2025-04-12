@@ -58,8 +58,11 @@ func adjustBorderForTableAndFieldset(
 }
 
 func intrinsicPaddingForTableCell(renderer: RenderBoxWrapper) -> BoxGeometry.VerticalEdges {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if renderer is RenderTableCellWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  return BoxGeometry.VerticalEdges()
 }
 
 func contentLogicalWidthForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
