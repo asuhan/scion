@@ -66,8 +66,8 @@ func intrinsicPaddingForTableCell(renderer: RenderBoxWrapper) -> BoxGeometry.Ver
 }
 
 func contentLogicalWidthForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return renderer.parent()!.style().isHorizontalWritingMode()
+    ? renderer.contentWidth() : renderer.contentHeight()
 }
 
 func contentLogicalHeightForRenderer(renderer: RenderBoxWrapper) -> LayoutUnit {
