@@ -265,6 +265,26 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationsInEffect(const void
     return textDecorationsInEffect.toRaw();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_borderLeftWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderLeftWidth();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_borderRightWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderRightWidth();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_borderTopWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderTopWidth();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_borderBottomWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderBottomWidth();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_outlineSize(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->outlineSize();

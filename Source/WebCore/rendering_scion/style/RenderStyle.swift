@@ -359,23 +359,35 @@ class RenderStyleWrapper {
   }
 
   func borderLeftWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_borderLeftWidth(p)
   }
 
   func borderRightWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_borderRightWidth(p)
   }
 
   func borderTopWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_borderTopWidth(p)
   }
 
   func borderBottomWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_borderBottomWidth(p)
   }
 
   func outlineSize() -> Float32 {
