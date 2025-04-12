@@ -373,6 +373,28 @@ extension LayoutIntegration {
       isLeftToRightInlineDirection: Bool, retainPaddingStart: Bool = true,
       retainPaddingEnd: Bool = true
     ) -> BoxGeometry.Edges {
+      let style = renderer.style()
+
+      let paddingLeft = usedValueOrZero(length: style.paddingLeft(), availableWidth: availableWidth)
+      let paddingRight = usedValueOrZero(
+        length: style.paddingRight(), availableWidth: availableWidth)
+      let paddingTop = usedValueOrZero(length: style.paddingTop(), availableWidth: availableWidth)
+      let paddingBottom = usedValueOrZero(
+        length: style.paddingBottom(), availableWidth: availableWidth)
+
+      if blockFlowDirection() == .TopToBottom || blockFlowDirection() == .BottomToTop {
+        let paddingLogicalLeft =
+          retainPaddingStart
+          ? isLeftToRightInlineDirection ? paddingLeft : paddingRight : LayoutUnit(value: 0)
+        let paddingLogicalRight =
+          retainPaddingEnd
+          ? isLeftToRightInlineDirection ? paddingRight : paddingLeft : LayoutUnit(value: 0)
+        return BoxGeometry.Edges(
+          horizontal: BoxGeometry.HorizontalEdges(
+            start: paddingLogicalLeft, end: paddingLogicalRight),
+          vertical: BoxGeometry.VerticalEdges(before: paddingTop, after: paddingBottom))
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
