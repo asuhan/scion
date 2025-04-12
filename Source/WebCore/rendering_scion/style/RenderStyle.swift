@@ -467,8 +467,11 @@ class RenderStyleWrapper {
   }
 
   func marginTop() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LengthWrapper(p: wk_interop.RenderStyle_marginTop(p))
   }
 
   func marginBottom() -> LengthWrapper {
