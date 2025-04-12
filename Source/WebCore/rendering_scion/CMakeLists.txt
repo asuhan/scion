@@ -28,6 +28,7 @@ target_sources(layout_scion PRIVATE
     RenderReplaced.swift
     RenderSlider.swift
     RenderTable.swift
+    RenderTableCell.swift
     RenderText.swift
     RenderView.swift
     RenderTextControl.swift

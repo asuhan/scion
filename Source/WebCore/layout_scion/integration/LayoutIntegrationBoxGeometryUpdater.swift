@@ -37,6 +37,26 @@ func usedValueOrZero(length: LengthWrapper, availableWidth: LayoutUnit?) -> Layo
   return minimumValueForLength(length: length, maximumValue: availableWidth!)
 }
 
+func adjustBorderForTableAndFieldset(
+  renderer: RenderBoxModelObjectWrapper, borderLeft: inout LayoutUnit,
+  borderRight: inout LayoutUnit, borderTop: inout LayoutUnit, borderBottom: inout LayoutUnit
+) {
+  if renderer as? RenderTableWrapper != nil {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  if renderer as? RenderTableCellWrapper != nil {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  if renderer.isFieldset() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 func intrinsicPaddingForTableCell(renderer: RenderBoxWrapper) -> BoxGeometry.VerticalEdges {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -318,6 +338,32 @@ extension LayoutIntegration {
       isIntrinsicWidthMode: Bool = false, retainBorderStart: Bool = true,
       retainBorderEnd: Bool = true
     ) -> BoxGeometry.Edges {
+      let style = renderer.style()
+
+      var borderLeft = LayoutUnit(value: style.borderLeftWidth())
+      var borderRight = LayoutUnit(value: style.borderRightWidth())
+      var borderTop = LayoutUnit(value: style.borderTopWidth())
+      var borderBottom = LayoutUnit(value: style.borderBottomWidth())
+
+      if !isIntrinsicWidthMode {
+        adjustBorderForTableAndFieldset(
+          renderer: renderer, borderLeft: &borderLeft, borderRight: &borderRight,
+          borderTop: &borderTop, borderBottom: &borderBottom)
+      }
+
+      if blockFlowDirection() == .TopToBottom || blockFlowDirection() == .BottomToTop {
+        let borderLogicalLeft =
+          retainBorderStart
+          ? isLeftToRightInlineDirection ? borderLeft : borderRight : LayoutUnit(value: 0)
+        let borderLogicalRight =
+          retainBorderEnd
+          ? isLeftToRightInlineDirection ? borderRight : borderLeft : LayoutUnit(value: 0)
+        return BoxGeometry.Edges(
+          horizontal: BoxGeometry.HorizontalEdges(
+            start: borderLogicalLeft, end: borderLogicalRight),
+          vertical: BoxGeometry.VerticalEdges(before: borderTop, after: borderBottom))
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
