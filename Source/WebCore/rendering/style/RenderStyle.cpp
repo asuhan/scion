@@ -310,6 +310,26 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingLeft(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->paddingLeft();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingRight(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->paddingRight();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingBottom(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->paddingBottom();
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif

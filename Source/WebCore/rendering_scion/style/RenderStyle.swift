@@ -484,14 +484,36 @@ class RenderStyleWrapper {
     return LengthWrapper(p: wk_interop.RenderStyle_marginRight(p))
   }
 
+  func paddingTop() -> LengthWrapper {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingTop(p))
+  }
+
+  func paddingBottom() -> LengthWrapper {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingBottom(p))
+  }
+
   func paddingLeft() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingLeft(p))
   }
 
   func paddingRight() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingRight(p))
   }
 
   func paddingBefore() -> LengthWrapper {
