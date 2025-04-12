@@ -275,6 +275,8 @@ void* RenderObject_parent(void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 int32_t RenderBox_availableLogicalWidth(const void*);
+int32_t RenderBox_contentWidth(const void*);
+int32_t RenderBox_contentHeight(const void*);
 int32_t RenderBox_contentLogicalSize_width(const void*);
 int32_t RenderBox_contentLogicalSize_height(const void*);
 int32_t RenderBox_paddingBoxWidth(const void*);

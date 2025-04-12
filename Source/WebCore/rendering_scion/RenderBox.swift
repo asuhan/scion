@@ -63,6 +63,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func contentWidth() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentWidth(p))
+  }
+
+  func contentHeight() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentHeight(p))
+  }
+
   func contentLogicalSize() -> LayoutSizeWrapper {
     let width = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_width(p))
     let height = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_height(p))
