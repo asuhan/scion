@@ -70,6 +70,8 @@ struct FloatRectWrapper {
 
   mutating func moveBy(delta: FloatPoint) { m_location.move(dx: delta.x, dy: delta.y) }
 
+  mutating func move(dx: Float32, dy: Float32) { m_location.move(dx: dx, dy: dy) }
+
   func expand(size: FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -91,6 +93,11 @@ struct FloatRectWrapper {
   mutating func shiftMaxYEdgeTo(edge: Float32) {
     let delta = edge - maxY()
     setHeight(height: max(0, height() + delta))
+  }
+
+  mutating func shiftXEdgeBy(delta: Float32) {
+    move(dx: delta, dy: 0)
+    setWidth(width: max(0, width() - delta))
   }
 
   mutating func shiftMaxXEdgeBy(delta: Float32) {

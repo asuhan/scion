@@ -142,8 +142,8 @@ struct InlineRect {
   }
 
   mutating func shiftLeftBy(offset: InlineLayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasValidLeft)
+    rect!.shiftXEdgeBy(delta: offset)
   }
 
   mutating func shiftRightBy(offset: InlineLayoutUnit) {
