@@ -157,9 +157,22 @@ struct LayoutUnit: Comparable {
     return toInt()
   }
 
+  func round() -> Int32 {
+    return toInt()
+      + ((fraction().rawValue() + (kFixedPointDenominator / 2)) >> kLayoutUnitFractionalBits)
+  }
+
   func floor() -> Int {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func fraction() -> LayoutUnit {
+    // Add the fraction to the size (as opposed to the full location) to avoid overflows.
+    // Compute fraction using the mod operator to preserve the sign of the value as it may affect rounding.
+    var fraction = LayoutUnit()
+    fraction.value = rawValue() % kFixedPointDenominator
+    return fraction
   }
 
   static func epsilon() -> Float32 {
@@ -273,11 +286,9 @@ struct LayoutUnit: Comparable {
 }
 
 internal func roundToInt(value: Float32) -> Int {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return roundToInt(value: LayoutUnit(value: value))
 }
 
 internal func roundToInt(value: LayoutUnit) -> Int {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return Int(value.round())
 }
