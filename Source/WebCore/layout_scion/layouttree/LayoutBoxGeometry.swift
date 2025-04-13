@@ -295,8 +295,7 @@ struct BoxGeometry {
   }
 
   func marginBorderAndPaddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return marginAfter() + borderAndPaddingAfter()
   }
 
   func marginBorderAndPaddingStart() -> LayoutUnit {
