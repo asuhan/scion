@@ -21,6 +21,8 @@ enum UBiDiLevel: UInt8 {
   case UBIDI_LTR = 0
   case UBIDI_RTL = 1
   case UBIDI_MIXED = 2
+  case UBIDI_NEUTRAL = 3
+  case UBIDI_OPTION_STREAMING = 4
   case OPAQUE = 0xff
   case UBIDI_MAX_EXPLICIT_LEVEL = 125
 }
