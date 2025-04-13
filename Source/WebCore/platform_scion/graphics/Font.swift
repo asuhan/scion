@@ -19,6 +19,8 @@
  *
  */
 
+import wk_interop
+
 class FontWrapper: Hashable {
   init(p: UnsafeRawPointer) {
     self.p = p
@@ -33,8 +35,7 @@ class FontWrapper: Hashable {
   }
 
   func hasVerticalGlyphs() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Font_hasVerticalGlyphs(p)
   }
 
   func fontMetrics() -> FontMetricsWrapper {

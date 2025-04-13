@@ -50,6 +50,11 @@
 #include "OpenTypeVerticalData.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool Font_hasVerticalGlyphs(const void* font)
+{
+    return static_cast<const WebCore::Font*>(font)->hasVerticalGlyphs();
+}
+
 namespace WebCore {
 
 unsigned GlyphPage::s_count = 0;

@@ -99,6 +99,7 @@ uint8_t RenderStyle_textAlign(const void*);
 bool RenderStyle_direction(const void*);
 uint8_t RenderStyle_whiteSpaceCollapse(const void*);
 bool RenderStyle_textWrapMode(const void*);
+bool Font_hasVerticalGlyphs(const void*);
 const void* FontCascade_fontDescription(const void*);
 float FontCascade_size(const void*);
 float FontCascade_letterSpacing(const void*);
