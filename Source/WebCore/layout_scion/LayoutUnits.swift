@@ -116,8 +116,7 @@ func toLayoutPoint(point: InlineLayoutPoint) -> LayoutPointWrapper {
 }
 
 func toLayoutSize(size: InlineLayoutSize) -> LayoutSizeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return LayoutSizeWrapper(size: size)
 }
 
 func toLayoutRect(rect: InlineLayoutRect) -> LayoutRectWrapper {

@@ -41,6 +41,11 @@ class LayoutSizeWrapper {
     height_ = LayoutUnit(value: height)
   }
 
+  init(size: FloatSize) {
+    width_ = LayoutUnit(value: size.width)
+    height_ = LayoutUnit(value: size.height)
+  }
+
   func width() -> LayoutUnit { return width_ }
 
   func height() -> LayoutUnit { return height_ }
