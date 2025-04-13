@@ -406,6 +406,7 @@ int32_t BoxGeometry_borderEnd(const void*);
 int32_t BoxGeometry_paddingStart(const void*);
 int32_t BoxGeometry_paddingEnd(const void*);
 int32_t BoxGeometry_borderAndPaddingBefore(const void*);
+int32_t BoxGeometry_borderAndPaddingAfter(const void*);
 int32_t BoxGeometry_horizontalBorderAndPadding(const void*);
 int32_t BoxGeometry_verticalBorderAndPadding(const void*);
 int32_t BoxGeometry_contentBoxLeft(const void*);

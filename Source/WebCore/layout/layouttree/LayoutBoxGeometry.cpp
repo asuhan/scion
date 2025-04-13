@@ -84,6 +84,11 @@ extern "C" WEBCORE_EXPORT int32_t BoxGeometry_borderAndPaddingBefore(const void*
     return static_cast<const WebCore::Layout::BoxGeometry*>(p)->borderAndPaddingBefore().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t BoxGeometry_borderAndPaddingAfter(const void* p)
+{
+    return static_cast<const WebCore::Layout::BoxGeometry*>(p)->borderAndPaddingAfter().rawValue();
+}
+
 extern "C" WEBCORE_EXPORT int32_t BoxGeometry_horizontalBorderAndPadding(const void* p)
 {
     return static_cast<const WebCore::Layout::BoxGeometry*>(p)->horizontalBorderAndPadding().rawValue();

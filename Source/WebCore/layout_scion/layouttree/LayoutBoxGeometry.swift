@@ -172,6 +172,14 @@ struct BoxGeometry {
     return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingBefore(p))
   }
 
+  func borderAndPaddingAfter() -> LayoutUnit {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingAfter(p))
+  }
+
   func horizontalBorderAndPadding() -> LayoutUnit {
     if p == nil {
       // TODO(asuhan): implement this
