@@ -306,6 +306,7 @@ bool Box_isOutOfFlowPositioned(const void*);
 bool Box_isFixedPositioned(const void*);
 bool Box_isFloatingPositioned(const void*);
 bool Box_isAtomicInlineBox(const void*);
+bool Box_isInlineBlockBox(const void*);
 bool Box_isInlineTableBox(const void*);
 bool Box_isInitialContainingBlock(const void*);
 bool Box_isRubyAnnotationBox(const void*);

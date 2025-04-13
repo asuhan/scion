@@ -93,6 +93,11 @@ extern "C" WEBCORE_EXPORT bool Box_isAtomicInlineBox(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->isAtomicInlineBox();
 }
 
+extern "C" WEBCORE_EXPORT bool Box_isInlineBlockBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isInlineBlockBox();
+}
+
 extern "C" WEBCORE_EXPORT bool Box_isInlineTableBox(const void* p)
 {
     return static_cast<const WebCore::Layout::Box*>(p)->isInlineTableBox();
