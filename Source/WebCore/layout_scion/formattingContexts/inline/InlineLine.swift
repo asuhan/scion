@@ -559,8 +559,7 @@ struct Line {
     }
 
     func isWhitespaceOnly() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return hasTrailingWhitespace() && trailingWhitespace!.length == textContent!.length
     }
 
     func inlineDirection() -> TextDirection {
