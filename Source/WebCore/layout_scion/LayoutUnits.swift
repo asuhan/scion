@@ -28,11 +28,15 @@ typealias InlineLayoutPoint = FloatPoint
 typealias InlineLayoutSize = FloatSize
 typealias InlineLayoutRect = FloatRectWrapper
 
-struct Position {
+struct Position: Comparable, Equatable {
   var value = LayoutUnit()
 
   func toLayoutUnit() -> LayoutUnit {
     return value
+  }
+
+  static func < (a: Position, b: Position) -> Bool {
+    return a.value < b.value
   }
 }
 

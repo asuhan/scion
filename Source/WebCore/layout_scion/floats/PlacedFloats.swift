@@ -90,6 +90,10 @@ class PlacedFloats {
       return absoluteBoxGeometry.horizontalMargin()
     }
 
+    func absoluteBottom() -> PositionInContextRoot {
+      return PositionInContextRoot(value: absoluteRectWithMargin().bottom())
+    }
+
     func shape() -> ShapeWrapper? { return m_shape }
 
     func layoutBox() -> BoxWrapper? { return m_layoutBox }

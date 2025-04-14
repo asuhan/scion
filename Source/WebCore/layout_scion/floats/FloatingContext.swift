@@ -55,8 +55,71 @@ class Iterator {
 
   @discardableResult
   prefix static func ++ (iterator: Iterator) -> Iterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if iterator.current.isEmpty() {
+      fatalError("Not reached")
+    }
+
+    // 1. Take the current floating from left and right and check which one's bottom edge is positioned higher (they could be on the same vertical position too).
+    // The current floats from left and right are considered the inner-most pair for the current vertical position.
+    // 2. Move away from inner-most pair by picking one of the previous floats in the list(#1)
+    // Ensure that the new floating bottom edge is positioned lower than the current one -which essentially means skipping in-between floats that are positioned higher).
+    // 3. Reset the vertical position and align it with the new left-right pair. These floats are now the inner-most boxes for the current vertical position.
+    // As the result we have more horizontal space on the current vertical position.
+    let leftBottom =
+      iterator.current.left() != nil ? iterator.current.left()!.absoluteBottom() : nil
+    let rightBottom =
+      iterator.current.right() != nil ? iterator.current.right()!.absoluteBottom() : nil
+
+    let updateLeft =
+      (leftBottom == rightBottom)
+      || (rightBottom == nil || (leftBottom != nil && leftBottom! < rightBottom!))
+    let updateRight =
+      (leftBottom == rightBottom)
+      || (leftBottom == nil || (rightBottom != nil && leftBottom! > rightBottom!))
+
+    if updateLeft {
+      assert(iterator.current.floatPair.left != nil)
+      iterator.current.verticalPosition = leftBottom!
+      iterator.current.floatPair.left = iterator.findPreviousFloatingWithLowerBottom(
+        floatingType: .Left, currentIndex: iterator.current.floatPair.left!)
+    }
+
+    if updateRight {
+      assert(iterator.current.floatPair.right != nil)
+      iterator.current.verticalPosition = rightBottom!
+      iterator.current.floatPair.right = iterator.findPreviousFloatingWithLowerBottom(
+        floatingType: .Right, currentIndex: iterator.current.floatPair.right!)
+    }
+
+    return iterator
+  }
+
+  private func findPreviousFloatingWithLowerBottom(floatingType: Float, currentIndex: UInt32)
+    -> UInt32?
+  {
+    assert(currentIndex < floats.count)
+
+    // Last floating? There's certainly no previous floating at this point.
+    if currentIndex == 0 {
+      return nil
+    }
+
+    let currentBottom = floats[Int(currentIndex)].absoluteRectWithMargin().bottom()
+
+    var index: UInt32? = currentIndex
+    while true {
+      index = previousFloatingIndex(
+        floatingType: floatingType, floats: floats, currentIndex: index!)
+      if index == nil {
+        return nil
+      }
+
+      if floats[Int(index!)].absoluteRectWithMargin().bottom() > currentBottom {
+        return index
+      }
+    }
+
+    fatalError("Not reached")
   }
 
   prefix static func * (iterator: Iterator) -> FloatPair { return iterator.current }
