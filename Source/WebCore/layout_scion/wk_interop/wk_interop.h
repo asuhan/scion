@@ -325,6 +325,7 @@ bool Box_establishesInlineFormattingContext(const void*);
 const void* Box_parent(const void*);
 const void* Box_nextSibling(const void*);
 const void* Box_firstLineStyle(const void*);
+const void* Box_associatedRubyAnnotationBox(const void*);
 const void* Box_style(const void*);
 const void* Box_shape(const void*);
 const void* RenderStyle_metricsOfPrimaryFont(const void*);

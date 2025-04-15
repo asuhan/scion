@@ -188,6 +188,11 @@ extern "C" WEBCORE_EXPORT const void* Box_firstLineStyle(const void* p)
     return &static_cast<const WebCore::Layout::Box*>(p)->firstLineStyle();
 }
 
+extern "C" WEBCORE_EXPORT const void* Box_associatedRubyAnnotationBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->associatedRubyAnnotationBox();
+}
+
 extern "C" WEBCORE_EXPORT const void* Box_style(const void* p)
 {
     return &static_cast<const WebCore::Layout::Box*>(p)->style();

@@ -421,8 +421,16 @@ class BoxWrapper: Hashable {
   }
 
   func associatedRubyAnnotationBox() -> ElementBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    if let unwrapped = wk_interop.Box_associatedRubyAnnotationBox(p) {
+      let box = ElementBoxWrapper()
+      box.p = unwrapped
+      return box
+    }
+    return nil
   }
 
   func rendererForIntegration() -> RenderObjectWrapper? {
