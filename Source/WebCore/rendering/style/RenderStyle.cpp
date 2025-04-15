@@ -89,6 +89,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_textEmphasisMarkString(const v
     return &static_cast<const WebCore::RenderStyle*>(p)->textEmphasisMarkString();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_rubyPosition(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->rubyPosition());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isInterCharacterRubyPosition(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isInterCharacterRubyPosition();

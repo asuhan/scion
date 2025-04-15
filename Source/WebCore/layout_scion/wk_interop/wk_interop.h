@@ -333,6 +333,7 @@ const void* RenderStyle_fontDescription(const void*);
 uint8_t RenderStyle_textOverflow(const void*);
 const void* RenderStyle_computedLocale(const void*);
 const void* RenderStyle_textEmphasisMarkString(const void*);
+uint8_t RenderStyle_rubyPosition(const void*);
 bool RenderStyle_isInterCharacterRubyPosition(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 uint8_t RenderStyle_writingMode(const void*);
