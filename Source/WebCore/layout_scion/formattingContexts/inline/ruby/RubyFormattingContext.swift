@@ -422,8 +422,12 @@ class RubyFormattingContext {
     displayBoxes: InlineDisplay.Boxes, alignmentOffset: InlineLayoutUnit,
     inlineFormattingContext: InlineFormattingContext
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if alignmentOffset == 0 {
+      return
+    }
+    InlineContentAligner.applyRubyAnnotationAlignmentOffset(
+      displayBoxes: displayBoxes, alignmentOffset: alignmentOffset,
+      inlineFormattingContext: inlineFormattingContext)
   }
 
   static func applyRubyOverhang(

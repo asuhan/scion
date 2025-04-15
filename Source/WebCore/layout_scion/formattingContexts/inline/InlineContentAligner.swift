@@ -194,6 +194,14 @@ class InlineContentAligner {
     fatalError("Not implemented")
   }
 
+  static func applyRubyAnnotationAlignmentOffset(
+    displayBoxes: InlineDisplay.Boxes, alignmentOffset: InlineLayoutUnit,
+    inlineFormattingContext: InlineFormattingContext
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func applyExpansionOnRange(
     runs: Line.RunList, range: Range<UInt64>, expansion: ExpansionInfo,
     spaceToDistribute: InlineLayoutUnit
