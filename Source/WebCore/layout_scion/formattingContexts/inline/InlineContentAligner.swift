@@ -23,6 +23,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+internal func shiftDisplayBox(
+  displayBox: InlineDisplay.Box, offset: InlineLayoutUnit,
+  inlineFormattingContext: InlineFormattingContext
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 enum IgnoreRubyRange: UInt8 {
   case No
   case Yes
@@ -198,8 +206,11 @@ class InlineContentAligner {
     displayBoxes: InlineDisplay.Boxes, alignmentOffset: InlineLayoutUnit,
     inlineFormattingContext: InlineFormattingContext
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for displayBox in displayBoxes {
+      shiftDisplayBox(
+        displayBox: displayBox, offset: alignmentOffset,
+        inlineFormattingContext: inlineFormattingContext)
+    }
   }
 
   static func applyExpansionOnRange(
