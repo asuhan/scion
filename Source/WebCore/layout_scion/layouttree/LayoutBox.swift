@@ -428,6 +428,8 @@ class BoxWrapper: Hashable {
     if let unwrapped = wk_interop.Box_associatedRubyAnnotationBox(p) {
       let box = ElementBoxWrapper()
       box.p = unwrapped
+      let styleUnwrapped = wk_interop.Box_style(unwrapped)
+      box.style = convert_render_style(p: styleUnwrapped!)
       return box
     }
     return nil
