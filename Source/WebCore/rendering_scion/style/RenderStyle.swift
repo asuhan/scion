@@ -676,8 +676,11 @@ class RenderStyleWrapper {
   }
 
   func isInterCharacterRubyPosition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_isInterCharacterRubyPosition(p)
   }
 
   func rubyAlign() -> RubyAlign {
