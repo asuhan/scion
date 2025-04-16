@@ -79,8 +79,7 @@ class LayoutSizeWrapper {
   }
 
   func FloatSize() -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return layout_scion.FloatSize(width: width_.float(), height: height_.float())
   }
 
   private var width_: LayoutUnit = LayoutUnit()
