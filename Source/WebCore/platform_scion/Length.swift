@@ -41,7 +41,11 @@ enum LengthType: UInt8 {
 
 struct LengthWrapper: Equatable {
   init(type: LengthType = .Auto) {
-    self.p = wk_interop.Length_new(type.rawValue)
+    self.p = wk_interop.Length_empty_new(type.rawValue)
+  }
+
+  init(value: LayoutUnit, type: LengthType, hasQuirk: Bool = false) {
+    self.p = wk_interop.Length_new(value.rawValue(), type.rawValue, hasQuirk)
   }
 
   init(p: UnsafeRawPointer) {
