@@ -95,8 +95,8 @@ struct Rect {
   }
 
   func FloatRect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasValidGeometry())
+    return rect.FloatRect()
   }
 
   private func hasValidPosition() -> Bool { return hasValidTop && hasValidLeft }
