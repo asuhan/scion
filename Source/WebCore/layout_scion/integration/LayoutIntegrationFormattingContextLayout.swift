@@ -40,14 +40,16 @@ extension LayoutIntegration {
   ) {
     let renderer = box.rendererForIntegration() as! RenderBoxWrapper
 
-    if widthConstraint != nil {
-      fatalError("Not implemented")
+    if let widthConstraint = widthConstraint {
+      renderer.setOverridingLogicalWidthLength(
+        height: LengthWrapper(value: widthConstraint, type: .Fixed))
+      renderer.setNeedsLayout(markParents: .MarkOnlyThis)
     }
 
     renderer.layoutIfNeeded()
 
     if widthConstraint != nil {
-      fatalError("Not implemented")
+      renderer.clearOverridingLogicalWidthLength()
     }
 
     let updater = BoxGeometryUpdater(
