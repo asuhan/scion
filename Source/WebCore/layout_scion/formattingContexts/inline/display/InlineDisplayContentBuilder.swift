@@ -343,7 +343,7 @@ struct InlineDisplayContentBuilder {
     } else {
       processNonBidiContent(lineLayoutResult: lineLayoutResult, boxes: &boxes)
     }
-    processRubyContent(displayBoxes: boxes, lineLayoutResult: lineLayoutResult)
+    processRubyContent(displayBoxes: &boxes, lineLayoutResult: lineLayoutResult)
 
     collectInkOverflowForTextDecorations(boxes: boxes)
     collectInkOverflowForInlineBoxes(boxes: boxes)
@@ -1215,7 +1215,7 @@ struct InlineDisplayContentBuilder {
   }
 
   private func processRubyContent(
-    displayBoxes: InlineDisplay.Boxes, lineLayoutResult: LineLayoutResult
+    displayBoxes: inout InlineDisplay.Boxes, lineLayoutResult: LineLayoutResult
   ) {
     if root().isRubyAnnotationBox() {
       RubyFormattingContext.applyAnnotationAlignmentOffset(
@@ -1274,7 +1274,7 @@ struct InlineDisplayContentBuilder {
         annotationBox: annotationBox, insertionPosition: baseIndex + 1,
         borderBoxRect: annotationBorderBoxVisualRect(
           annotationBox: annotationBox, lineBoxLogicalRect: lineBoxLogicalRect,
-          writingMode: writingMode), boxes: displayBoxes)
+          writingMode: writingMode), boxes: &displayBoxes)
     }
   }
 
@@ -1300,10 +1300,20 @@ struct InlineDisplayContentBuilder {
 
   private func insertRubyAnnotationBox(
     annotationBox: BoxWrapper, insertionPosition: UInt64, borderBoxRect: InlineRect,
-    boxes: InlineDisplay.Boxes
+    boxes: inout InlineDisplay.Boxes
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    boxes.insert(
+      InlineDisplay.Box(
+        lineIndex: lineIndex(),
+        type: .AtomicInlineBox,
+        layoutBox: annotationBox,
+        bidiLevel: UBiDiLevel.UBIDI_DEFAULT_LTR,
+        physicalRect: borderBoxRect.InlineLayoutRect(),
+        inkOverflow: borderBoxRect.InlineLayoutRect(),
+        expansion: InlineDisplay.Box.Expansion(),
+        text: nil,
+        hasContent: true, isFullyTruncated: isLineFullyTruncatedInBlockDirection()),
+      at: Int(insertionPosition))
   }
 
   private func processRubyBase(
