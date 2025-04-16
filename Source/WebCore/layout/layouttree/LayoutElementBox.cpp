@@ -120,6 +120,12 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isFieldset(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isFieldset();
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setNeedsLayout(void* object_raw_ptr, uint8_t marking_behavior)
+{
+    auto* object = static_cast<WebCore::RenderObject*>(object_raw_ptr);
+    object->setNeedsLayout(static_cast<WebCore::MarkingBehavior>(marking_behavior));
+}
+
 extern "C" WEBCORE_EXPORT void* RenderObject_containingBlock(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->containingBlock();

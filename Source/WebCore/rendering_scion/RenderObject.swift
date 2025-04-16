@@ -127,6 +127,10 @@ class RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
+    wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
+  }
+
   func hitTest(
     request: HitTestRequestWrapper, result: HitTestResultWrapper,
     locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,

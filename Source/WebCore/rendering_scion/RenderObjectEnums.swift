@@ -37,7 +37,7 @@ enum HitTestAction {
   case HitTestForeground
 }
 
-enum MarkingBehavior {
+enum MarkingBehavior: UInt8 {
   case MarkOnlyThis
   case MarkContainingBlockChain
 }
