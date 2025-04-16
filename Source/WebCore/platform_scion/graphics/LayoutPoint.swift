@@ -53,8 +53,7 @@ struct LayoutPointWrapper {
   }
 
   mutating func move(s: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    move(dx: s.width(), dy: s.height())
   }
 
   mutating func moveBy(offset: LayoutPointWrapper) {
