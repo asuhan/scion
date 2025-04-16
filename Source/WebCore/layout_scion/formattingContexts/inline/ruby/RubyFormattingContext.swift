@@ -674,7 +674,7 @@ class RubyFormattingContext {
   ) {
     let rootBox = inlineFormattingContext.root()
     var ancestor = rubyBaseLayoutBox.parent()
-    while ancestor !== rootBox {
+    while CPtrToInt(ancestor.p) != CPtrToInt(rootBox.p) {
       if ancestor.isRubyBase() {
         let ancestorInlineBox = lineBox.inlineLevelBoxFor(layoutBox: ancestor)
         if ancestorInlineBox == nil {
