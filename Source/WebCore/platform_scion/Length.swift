@@ -135,5 +135,5 @@ struct LengthWrapper: Equatable {
     return wk_interop.Length_eq(a.p, b.p)
   }
 
-  private var p: UnsafeRawPointer
+  var p: UnsafeRawPointer
 }

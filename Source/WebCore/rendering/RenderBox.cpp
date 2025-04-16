@@ -99,6 +99,13 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalWidthLength(void* box_raw_ptr, const void* length_raw_ptr)
+{
+    auto* renderer = static_cast<WebCore::RenderBox*>(static_cast<WebCore::RenderBox*>(box_raw_ptr));
+    auto* length = static_cast<const WebCore::Length*>(static_cast<const WebCore::Length*>(length_raw_ptr));
+    renderer->setOverridingLogicalWidthLength(*length);
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBox_availableLogicalWidth(const void* p)
 {
     return static_cast<const WebCore::RenderBox*>(p)->availableLogicalWidth().rawValue();

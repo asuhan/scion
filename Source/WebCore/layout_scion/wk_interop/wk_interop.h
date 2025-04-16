@@ -276,6 +276,7 @@ void* RenderObject_layoutBox(void*);
 void* RenderObject_parent(void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
+void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 int32_t RenderBox_availableLogicalWidth(const void*);
 int32_t RenderBox_contentWidth(const void*);
 int32_t RenderBox_contentHeight(const void*);
