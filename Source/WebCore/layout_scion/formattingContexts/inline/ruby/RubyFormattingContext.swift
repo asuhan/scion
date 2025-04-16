@@ -616,7 +616,8 @@ class RubyFormattingContext {
     // FIXME: The spec says annotation should not stretch the line unless line-height is not normal and annotation does not fit (i.e. line is sized too small for the annotation)
     // Legacy ruby behaves slightly differently by stretching the line box as needed.
     let isFirstFormattedLine = lineBox.lineIndex == 0
-    let descendantLayoutBounds = descendantRubySet[ObjectIdentifier(rubyBaseInlineBox)]!
+    let descendantLayoutBounds = descendantRubySet[
+      ObjectIdentifier(rubyBaseInlineBox), default: InlineLevelBox.AscentAndDescent()]
     let ascent = max(rubyBaseInlineBox.ascent(), descendantLayoutBounds.ascent)
     let descent = max(rubyBaseInlineBox.descent(), descendantLayoutBounds.descent)
 
