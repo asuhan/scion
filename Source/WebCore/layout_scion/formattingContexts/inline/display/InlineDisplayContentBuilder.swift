@@ -1318,7 +1318,7 @@ struct InlineDisplayContentBuilder {
       box: formattingContext.geometryForBox(layoutBox: rubyBaseLayoutBox))
 
     let annotationBox = rubyBaseLayoutBox.associatedRubyAnnotationBox()
-    if annotationBox == nil {
+    if annotationBox != nil {
       rubyBaseStartIndexListWithAnnotation.append(rubyBaseStart)
     }
 
