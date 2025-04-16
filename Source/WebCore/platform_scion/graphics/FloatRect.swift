@@ -32,6 +32,11 @@ struct FloatRectWrapper {
     self.m_size = FloatSize(width: width, height: height)
   }
 
+  init(location: FloatPoint, size: FloatSize) {
+    self.m_location = location
+    self.m_size = size
+  }
+
   func location() -> FloatPoint { return m_location }
 
   func size() -> FloatSize { return m_size }

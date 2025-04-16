@@ -112,6 +112,10 @@ struct LayoutRectWrapper {
     fatalError("Not implemented")
   }
 
+  func FloatRect() -> FloatRectWrapper {
+    return FloatRectWrapper(location: m_location.FloatPoint(), size: m_size.FloatSize())
+  }
+
   private mutating func setLocationAndSizeFromEdges(
     left: LayoutUnit, top: LayoutUnit, right: LayoutUnit, bottom: LayoutUnit
   ) {
