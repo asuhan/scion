@@ -1228,10 +1228,10 @@ struct InlineDisplayContentBuilder {
       return
     }
 
-    var lineSpanningRubyBaseList: Set<BoxWrapper> = []
+    var lineSpanningRubyBaseList: Set<UInt> = []
     for lineRun in lineLayoutResult.inlineContent {
       if lineRun.isLineSpanningInlineBoxStart() && lineRun.layoutBox.isRubyBase() {
-        lineSpanningRubyBaseList.insert(lineRun.layoutBox)
+        lineSpanningRubyBaseList.insert(CPtrToInt(lineRun.layoutBox.p))
       }
     }
 
@@ -1251,7 +1251,7 @@ struct InlineDisplayContentBuilder {
         index += 1
         continue
       }
-      if lineSpanningRubyBaseList.contains(displayBox.layoutBox) {
+      if lineSpanningRubyBaseList.contains(CPtrToInt(displayBox.layoutBox.p)) {
         // FIXME: Base content split across multiple lines don't affect annotation atm.
         index += 1
         continue
