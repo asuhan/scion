@@ -557,6 +557,9 @@ class RubyFormattingContext {
     rubyBasesMayNeedResizing: RubyBasesMayNeedResizing,
     inlineFormattingContext: InlineFormattingContext
   ) {
+    if alignmentOffsetList.isEmpty {
+      return
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
