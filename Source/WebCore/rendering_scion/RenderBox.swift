@@ -100,6 +100,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }
 
+  func clearOverridingLogicalWidthLength() {
+    wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
+  }
+
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
