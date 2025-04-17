@@ -40,6 +40,11 @@ extern "C" WEBCORE_EXPORT const void* ElementBox_firstInFlowChild(const void* p)
     return static_cast<const WebCore::Layout::ElementBox*>(p)->firstInFlowChild();
 }
 
+extern "C" WEBCORE_EXPORT const void* ElementBox_lastChild(const void* p)
+{
+    return static_cast<const WebCore::Layout::ElementBox*>(p)->lastChild();
+}
+
 extern "C" WEBCORE_EXPORT bool ElementBox_isListMarkerImage(const void* p)
 {
     return static_cast<const WebCore::Layout::ElementBox*>(p)->isListMarkerImage();

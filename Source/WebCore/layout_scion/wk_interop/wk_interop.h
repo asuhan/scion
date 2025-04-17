@@ -253,6 +253,7 @@ const void* InlineItemsBuilder_inlineContentCache(const void*);
 const void* InlineItemsBuilder_root(const void*);
 const void* InlineItemsBuilder_securityOrigin(const void*);
 const void* ElementBox_firstChild(const void*);
+const void* ElementBox_lastChild(const void*);
 const void* ElementBox_firstInFlowChild(const void*);
 bool ElementBox_isListMarkerImage(const void*);
 bool ElementBox_isListMarkerOutside(const void*);

@@ -65,8 +65,21 @@ class ElementBoxWrapper: BoxWrapper {
   }
 
   func lastChild() -> BoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      return nil
+    }
+    let unwrapped = wk_interop.ElementBox_lastChild(p)
+    if unwrapped == nil {
+      return nil
+    }
+    // TODO(asuhan): decide the type correctly
+    let styleUnwrapped = wk_interop.Box_style(unwrapped)!
+    let style = convert_render_style(p: styleUnwrapped)
+    let child =
+      wk_interop.Box_isInlineTextBox(unwrapped)
+      ? convert_inline_text_box(p: unwrapped!) : ElementBoxWrapper(style: style)
+    child.p = unwrapped
+    return child
   }
 
   func lastInFlowChild() -> BoxWrapper? {
