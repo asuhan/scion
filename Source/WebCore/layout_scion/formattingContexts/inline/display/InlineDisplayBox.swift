@@ -272,7 +272,7 @@ extension InlineDisplay {
       self.lineIndex = lineIndex
     }
 
-    var layoutBox = BoxWrapper()
+    var layoutBox: BoxWrapper
     var unflippedVisualRect = FloatRectWrapper()
     var inkOverflow = FloatRectWrapper()
 

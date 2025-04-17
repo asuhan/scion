@@ -520,8 +520,8 @@ class InlineContentBreaker {
         return offset + contentWidth
       }
 
-      var inlineItem = InlineItemWrapper()
-      var style = RenderStyleWrapper()
+      var inlineItem: InlineItemWrapper
+      var style: RenderStyleWrapper
       var offset = InlineLayoutUnit()
       var contentWidth = InlineLayoutUnit()
     }

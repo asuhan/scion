@@ -806,8 +806,8 @@ struct Line {
     }
 
     private var type: `Type` = .Text
-    var layoutBox = BoxWrapper()
-    var style = RenderStyleWrapper()
+    var layoutBox: BoxWrapper
+    var style: RenderStyleWrapper
     var logicalLeft = InlineLayoutUnit()
     var logicalWidth = InlineLayoutUnit()
     var expansion = InlineDisplay.Box.Expansion()

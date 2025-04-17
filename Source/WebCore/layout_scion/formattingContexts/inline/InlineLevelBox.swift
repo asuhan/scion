@@ -315,7 +315,7 @@ class InlineLevelBox {
     var below = InlineLayoutUnit()
   }
 
-  var layoutBox = BoxWrapper()
+  var layoutBox: BoxWrapper
   // This is the combination of margin and border boxes. Inline level boxes are vertically aligned using their margin boxes.
   var logicalRect = InlineRect()
   // See https://www.w3.org/TR/css-inline-3/#layout-bounds

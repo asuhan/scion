@@ -658,7 +658,7 @@ class InlineFormattingContext {
     return InlineItemPosition()
   }
 
-  var rootBlockContainer = ElementBoxWrapper()
+  var rootBlockContainer: ElementBoxWrapper
   var globalLayoutState = LayoutStateWrapper(p: nil)
   var floatingContext: FloatingContext? = nil
   var inlineFormattingUtils: InlineFormattingUtils? = nil

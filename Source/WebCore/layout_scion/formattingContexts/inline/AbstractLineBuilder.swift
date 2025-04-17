@@ -147,7 +147,7 @@ class AbstractLineBuilder {
   var previousLine: PreviousLine? = nil
 
   var inlineFormattingContext: InlineFormattingContext
-  var rootBox = ElementBoxWrapper()  // Note that this is not necessarily a block container (see range builder).
+  var rootBox: ElementBoxWrapper  // Note that this is not necessarily a block container (see range builder).
   var rootHorizontalConstraints = HorizontalConstraints()
 
   var inlineContentBreaker = InlineContentBreaker()
