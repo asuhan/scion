@@ -25,36 +25,6 @@
 
 import wk_interop
 
-@_cdecl("TextUtil_width_item")
-public func TextUtil_width_item(
-  inlineTextItemPtr: UnsafeRawPointer, fontCascadePtr: UnsafeRawPointer,
-  contentLogicalLeft: Float32
-)
-  -> InlineLayoutUnit
-{
-  let inlineTextItem = InlineTextItemWrapper()
-  let fontCascade = FontCascadeWrapper()
-  return TextUtil.width(
-    inlineTextItem: inlineTextItem, fontCascade: fontCascade, contentLogicalLeft: contentLogicalLeft
-  )
-}
-
-@_cdecl("TextUtil_width_item_slice")
-public func TextUtil_width_item_slice(
-  inlineTextItemPtr: UnsafeRawPointer, fontCascadePtr: UnsafeRawPointer, from: UInt32, to: UInt32,
-  contentLogicalLeft: Float32, useTrailingWhitespaceMeasuringOptimization: Bool
-)
-  -> InlineLayoutUnit
-{
-  let inlineTextItem = InlineTextItemWrapper()
-  let fontCascade = FontCascadeWrapper()
-  return TextUtil.width(
-    inlineTextItem: inlineTextItem, fontCascade: fontCascade, from: from, to: to,
-    contentLogicalLeft: contentLogicalLeft,
-    useTrailingWhitespaceMeasuringOptimization: useTrailingWhitespaceMeasuringOptimization
-      ? .Yes : .No)
-}
-
 @_cdecl("TextUtil_width_box")
 public func TextUtil_width_box(
   inlineTextBoxPtr: UnsafeRawPointer, fontCascadePtr: UnsafeRawPointer, from: UInt32, to: UInt32,
