@@ -40,8 +40,6 @@ extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_root(const void*);
 
 extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_securityOrigin(const void*);
 
-extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_contentRequiresVisualReordering(const void*);
-
 extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_isTextAndForcedLineBreakOnlyContent(const void*);
 
 extern "C" WEBCORE_EXPORT size_t InlineItemsBuilder_inlineBoxCount(const void*);
@@ -93,7 +91,6 @@ private:
     friend const void* ::InlineItemsBuilder_inlineContentCache(const void*);
     friend const void* ::InlineItemsBuilder_root(const void*);
     friend const void* ::InlineItemsBuilder_securityOrigin(const void*);
-    friend bool ::InlineItemsBuilder_contentRequiresVisualReordering(const void*);
     friend bool ::InlineItemsBuilder_isTextAndForcedLineBreakOnlyContent(const void*);
     friend size_t ::InlineItemsBuilder_inlineBoxCount(const void*);
     friend bool ::InlineItemsBuilder_hasTextAutospace(const void*);

@@ -53,11 +53,6 @@ extern "C" WEBCORE_EXPORT const void* InlineItemsBuilder_securityOrigin(const vo
     return &static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_securityOrigin;
 }
 
-extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_contentRequiresVisualReordering(const void* p)
-{
-    return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_contentRequiresVisualReordering;
-}
-
 extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_isTextAndForcedLineBreakOnlyContent(const void* p)
 {
     return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_isTextAndForcedLineBreakOnlyContent;
