@@ -1149,10 +1149,12 @@ struct InlineItemsBuilder {
   mutating func handleInlineBoxStart(inlineBox: BoxWrapper, inlineItemList: inout InlineItemList) {
     inlineItemList.append(
       InlineItemWrapper(layoutBox: inlineBox, type: InlineItemWrapper.Type_.InlineBoxStart))
+    contentRequiresVisualReordering =
+      contentRequiresVisualReordering || requiresVisualReordering(layoutBox: inlineBox)
     inlineBoxCount += 1
   }
 
-  func handleInlineBoxEnd(inlineBox: BoxWrapper, inlineItemList: inout InlineItemList) {
+  private func handleInlineBoxEnd(inlineBox: BoxWrapper, inlineItemList: inout InlineItemList) {
     inlineItemList.append(
       InlineItemWrapper(layoutBox: inlineBox, type: InlineItemWrapper.Type_.InlineBoxEnd))
     // Inline box end item itself can not trigger bidi content.
