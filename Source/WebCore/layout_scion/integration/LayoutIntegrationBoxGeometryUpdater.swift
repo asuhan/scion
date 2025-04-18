@@ -387,8 +387,16 @@ extension LayoutIntegration {
           vertical: BoxGeometry.VerticalEdges(before: borderTop, after: borderBottom))
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let borderLogicalLeft =
+        retainBorderStart
+        ? isLeftToRightInlineDirection ? borderTop : borderBottom : LayoutUnit(value: 0)
+      let borderLogicalRight =
+        retainBorderEnd
+        ? isLeftToRightInlineDirection ? borderBottom : borderTop : LayoutUnit(value: 0)
+      return BoxGeometry.Edges(
+        horizontal: BoxGeometry.HorizontalEdges(
+          start: borderLogicalLeft, end: borderLogicalRight),
+        vertical: BoxGeometry.VerticalEdges(before: borderRight, after: borderLeft))
     }
 
     private func logicalPadding(
