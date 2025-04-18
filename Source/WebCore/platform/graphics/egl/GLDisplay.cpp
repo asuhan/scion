@@ -159,6 +159,7 @@ static Vector<GLDisplay::DMABufFormat> queryDMABufFormats(EGLDisplay eglDisplay,
     if (!s_eglQueryDmaBufFormatsEXT(eglDisplay, formatsCount, reinterpret_cast<EGLint*>(formats.data()), &formatsCount))
         return { };
 
+    [[maybe_unused]]
     static PFNEGLQUERYDMABUFMODIFIERSEXTPROC s_eglQueryDmaBufModifiersEXT = supportModifiers ?
         reinterpret_cast<PFNEGLQUERYDMABUFMODIFIERSEXTPROC>(eglGetProcAddress("eglQueryDmaBufModifiersEXT")) : nullptr;
 
