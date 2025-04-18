@@ -384,7 +384,7 @@ func buildBidiParagraph(
                 ? inlineTextItem!.start()
                 : (inlineItem as! InlineSoftLineBreakItemWrapper).position())))
       } else if let inlineTextItem = inlineItem as? InlineTextItemWrapper {
-        inlineItemOffsetList.append(UInt64(inlineTextItem.length))
+        inlineItemOffsetList.append(UInt64(paragraphContentBuilder.length()))
         paragraphContentBuilder.append(
           string: StringWrapperView(s: inlineTextItem.inlineTextBox().content).substring(
             start: inlineTextItem.start(), length: inlineTextItem.length))
