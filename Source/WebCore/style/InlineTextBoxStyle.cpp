@@ -62,6 +62,18 @@ extern "C" WEBCORE_EXPORT GlyphOverflowRaw visualOverflowForDecorations(const vo
     };
 }
 
+extern "C" WEBCORE_EXPORT GlyphOverflowRaw visualOverflowForDecorationsByStyle(const void* style_ptr)
+{
+    const auto style = static_cast<const WebCore::RenderStyle*>(style_ptr);
+    const auto glyph_overflow = WebCore::visualOverflowForDecorations(*style);
+    return {
+        glyph_overflow.left.rawValue(),
+        glyph_overflow.right.rawValue(),
+        glyph_overflow.top.rawValue(),
+        glyph_overflow.bottom.rawValue()
+    };
+}
+
 namespace WebCore {
 
 struct UnderlineOffsetArguments {

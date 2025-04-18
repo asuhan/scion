@@ -33,8 +33,17 @@ struct TextUnderlinePositionUnder {
 }
 
 func visualOverflowForDecorations(style: RenderStyleWrapper) -> GlyphOverflow {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if style.p == nil {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  let glyphOverflowRaw = wk_interop.visualOverflowForDecorationsByStyle(style.p)
+  return GlyphOverflow(
+    left: LayoutUnit.fromRawValue(value: glyphOverflowRaw.left),
+    right: LayoutUnit.fromRawValue(value: glyphOverflowRaw.right),
+    top: LayoutUnit.fromRawValue(value: glyphOverflowRaw.top),
+    bottom: LayoutUnit.fromRawValue(value: glyphOverflowRaw.bottom)
+  )
 }
 
 func visualOverflowForDecorations(
