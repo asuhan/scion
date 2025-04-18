@@ -325,8 +325,20 @@ extension LayoutIntegration {
         return BoxGeometry.HorizontalEdges(start: logicalLeftValue, end: logicalRightValue)
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let logicalLeftValue =
+        retainMarginStart
+        ? usedValueOrZero(
+          length: isLeftToRightInlineDirection ? style.marginTop() : style.marginBottom(),
+          availableWidth: availableWidth)
+        : LayoutUnit(value: 0)
+      let logicalRightValue =
+        retainMarginEnd
+        ? usedValueOrZero(
+          length: isLeftToRightInlineDirection ? style.marginBottom() : style.marginTop(),
+          availableWidth: availableWidth)
+        : LayoutUnit(value: 0)
+
+      return BoxGeometry.HorizontalEdges(start: logicalLeftValue, end: logicalRightValue)
     }
 
     private func verticalLogicalMargin(
