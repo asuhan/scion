@@ -351,8 +351,9 @@ extension LayoutIntegration {
           before: usedValueOrZero(length: style.marginTop(), availableWidth: availableWidth),
           after: usedValueOrZero(length: style.marginBottom(), availableWidth: availableWidth))
       case .LeftToRight, .RightToLeft:
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        return BoxGeometry.VerticalEdges(
+          before: usedValueOrZero(length: style.marginRight(), availableWidth: availableWidth),
+          after: usedValueOrZero(length: style.marginLeft(), availableWidth: availableWidth))
       }
     }
 
