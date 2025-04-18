@@ -426,8 +426,16 @@ extension LayoutIntegration {
           vertical: BoxGeometry.VerticalEdges(before: paddingTop, after: paddingBottom))
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let paddingLogicalLeft =
+        retainPaddingStart
+        ? isLeftToRightInlineDirection ? paddingTop : paddingBottom : LayoutUnit(value: 0)
+      let paddingLogicalRight =
+        retainPaddingEnd
+        ? isLeftToRightInlineDirection ? paddingBottom : paddingTop : LayoutUnit(value: 0)
+      return BoxGeometry.Edges(
+        horizontal: BoxGeometry.HorizontalEdges(
+          start: paddingLogicalLeft, end: paddingLogicalRight),
+        vertical: BoxGeometry.VerticalEdges(before: paddingRight, after: paddingLeft))
     }
 
     private func blockFlowDirection() -> FlowDirection {
