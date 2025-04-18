@@ -622,14 +622,14 @@ struct InlineFormattingUtils {
     return (hasAboveTextEmphasis ? annotationSize : 0, hasAboveTextEmphasis ? 0 : annotationSize)
   }
 
-  static func enclosingRubyBase(layoutBox: BoxWrapper, rootBox: ElementBoxWrapper)
+  private static func enclosingRubyBase(layoutBox: BoxWrapper, rootBox: ElementBoxWrapper)
     -> ElementBoxWrapper?
   {
-    if layoutBox === rootBox {
+    if CPtrToInt(layoutBox.p) == CPtrToInt(rootBox.p) {
       return nil
     }
     var ancestor = layoutBox.parent()
-    while ancestor !== rootBox {
+    while CPtrToInt(ancestor.p) != CPtrToInt(rootBox.p) {
       if ancestor.isRubyBase() {
         return ancestor
       }
