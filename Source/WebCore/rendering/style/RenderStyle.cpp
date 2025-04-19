@@ -74,6 +74,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_fontDescription(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->fontDescription();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_computedFontSize(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->computedFontSize();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textOverflow(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textOverflow());

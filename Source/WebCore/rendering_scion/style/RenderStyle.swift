@@ -126,8 +126,11 @@ class RenderStyleWrapper {
   }
 
   func computedFontSize() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_computedFontSize(p)
   }
 
   func rtlOrdering() -> Order {
