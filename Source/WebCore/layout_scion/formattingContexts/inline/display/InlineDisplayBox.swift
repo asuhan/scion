@@ -113,10 +113,7 @@ extension InlineDisplay {
       return type == .WordSeparator
     }
 
-    func isEllipsis() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isEllipsis() -> Bool { return type == .Ellipsis }
 
     func isSoftLineBreak() -> Bool {
       return type == .SoftLineBreak
