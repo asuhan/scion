@@ -105,23 +105,15 @@ extension InlineDisplay {
       }
     }
 
-    func isText() -> Bool {
-      return type == .Text || isWordSeparator()
-    }
+    func isText() -> Bool { return type == .Text || isWordSeparator() }
 
-    func isWordSeparator() -> Bool {
-      return type == .WordSeparator
-    }
+    func isWordSeparator() -> Bool { return type == .WordSeparator }
 
     func isEllipsis() -> Bool { return type == .Ellipsis }
 
-    func isSoftLineBreak() -> Bool {
-      return type == .SoftLineBreak
-    }
+    func isSoftLineBreak() -> Bool { return type == .SoftLineBreak }
 
-    func isTextOrSoftLineBreak() -> Bool {
-      return isText() || isSoftLineBreak()
-    }
+    func isTextOrSoftLineBreak() -> Bool { return isText() || isSoftLineBreak() }
 
     func isLineBreak() -> Bool {
       // TODO(asuhan): implement this
@@ -158,9 +150,7 @@ extension InlineDisplay {
       fatalError("Not implemented")
     }
 
-    func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
-      return unflippedVisualRect
-    }
+    func visualRectIgnoringBlockDirection() -> FloatRectWrapper { return unflippedVisualRect }
 
     static func visibleRectIgnoringBlockDirection(box: Box, visibleLineRect: FloatRectWrapper)
       -> FloatRectWrapper
@@ -234,13 +224,9 @@ extension InlineDisplay {
       self.inkOverflow = inkOverflow
     }
 
-    func setHasContent() {
-      hasContent = true
-    }
+    func setHasContent() { hasContent = true }
 
-    func setIsFullyTruncated() {
-      isFullyTruncated = true
-    }
+    func setIsFullyTruncated() { isFullyTruncated = true }
 
     func text() -> Text {
       assert(isTextOrSoftLineBreak())
@@ -265,9 +251,7 @@ extension InlineDisplay {
       return lineIndex == 0 ? layoutBox.firstLineStyle() : layoutBox.style
     }
 
-    func moveToLine(lineIndex: UInt32) {
-      self.lineIndex = lineIndex
-    }
+    func moveToLine(lineIndex: UInt32) { self.lineIndex = lineIndex }
 
     var layoutBox: BoxWrapper
     var unflippedVisualRect = FloatRectWrapper()
