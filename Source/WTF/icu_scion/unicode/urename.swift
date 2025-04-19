@@ -23,8 +23,7 @@
 import wk_interop
 
 func u_getIntPropertyValue(character: UChar, property: UProperty) -> UInt32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return wk_interop.u_getIntPropertyValue_scion(character, property.rawValue)
 }
 
 internal func ubidi_close(ubidi: UBiDiWrapper) {
