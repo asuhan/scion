@@ -428,7 +428,7 @@ struct LineBoxBuilder {
 
         let parentInlineBox = lineBox.parentInlineBox(lineRun: run)
         var enclosingAscentDescentForInlineBox = inlineBoxBoundsMap[
-          ObjectIdentifier(parentInlineBox)]!
+          ObjectIdentifier(parentInlineBox), default: TextUtil.EnclosingAscentDescent()]
         enclosingAscentDescentForInlineBox.ascent = max(
           enclosingAscentDescentForInlineBox.ascent, -enclosingAscentDescentForRun.ascent)
         enclosingAscentDescentForInlineBox.descent = max(
