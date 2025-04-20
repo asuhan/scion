@@ -198,8 +198,31 @@ class InlineContentAligner {
     rubyAlign: RubyAlign, runs: Line.RunList, range: Range<UInt64>,
     spaceToDistribute: InlineLayoutUnit
   ) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if runs.isEmpty {
+      fatalError("Not reached")
+    }
+
+    if spaceToDistribute <= 0 {
+      return InlineLayoutUnit()
+    }
+
+    if !rangeHasInlineContent(runs: runs, range: range) {
+      return InlineLayoutUnit()
+    }
+
+    switch rubyAlign {
+    case .Start:
+      return InlineLayoutUnit()
+    case .Center:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .SpaceBetween:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .SpaceAround:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   static func applyRubyAnnotationAlignmentOffset(
@@ -211,6 +234,19 @@ class InlineContentAligner {
         displayBox: displayBox, offset: alignmentOffset,
         inlineFormattingContext: inlineFormattingContext)
     }
+  }
+
+  private static func rangeHasInlineContent(runs: Line.RunList, range: Range<UInt64>) -> Bool {
+    if range.upperBound - range.lowerBound == 0 {
+      return false
+    }
+    for index in range {
+      let run = runs[Int(index)]
+      if !run.isInlineBox() && !run.isOpaque() {
+        return true
+      }
+    }
+    return false
   }
 
   static func applyExpansionOnRange(
