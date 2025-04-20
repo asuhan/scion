@@ -1469,7 +1469,8 @@ struct InlineDisplayContentBuilder {
 
     let boxGeometry = formattingContext.geometryForBox(layoutBox: layoutBox)
     let isLeftToRightDirection = layoutBox.style.isLeftToRightDirection()
-    let isFirstLastIndexes = isFirstLastIndexesMap[CPtrToInt(layoutBox.p)]!
+    let isFirstLastIndexes = isFirstLastIndexesMap[
+      CPtrToInt(layoutBox.p), default: IsFirstLastIndex()]
     let isFirstBox =
       isFirstLastIndexes.first != nil && isFirstLastIndexes.first! == displayBoxNodeIndex
     let isLastBox =
