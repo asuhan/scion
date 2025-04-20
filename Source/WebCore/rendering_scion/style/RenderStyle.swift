@@ -748,8 +748,11 @@ class RenderStyleWrapper {
   }
 
   func isFlippedBlocksWritingMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_isFlippedBlocksWritingMode(p)
   }
 
   func blockFlowDirection() -> FlowDirection {
