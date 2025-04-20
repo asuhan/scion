@@ -28,7 +28,7 @@ struct LineContent {
   var endsWithHyphen = false
   var partialTrailingContentLength: UInt64 = 0
   var overflowLogicalWidth: InlineLayoutUnit? = nil
-  var rubyBaseAlignmentOffsetList: [BoxWrapper: InlineLayoutUnit] = [:]
+  var rubyBaseAlignmentOffsetList: [UInt: InlineLayoutUnit] = [:]
   var rubyAnnotationOffset = InlineLayoutUnit()
 }
 

@@ -78,7 +78,7 @@ struct LineLayoutResult {
   var isFirstLast = IsFirstLast()
 
   struct Ruby {
-    var baseAlignmentOffsetList: [BoxWrapper: InlineLayoutUnit] = [:]
+    var baseAlignmentOffsetList: [UInt: InlineLayoutUnit] = [:]
     var annotationAlignmentOffset = InlineLayoutUnit()
   }
   var ruby = Ruby()

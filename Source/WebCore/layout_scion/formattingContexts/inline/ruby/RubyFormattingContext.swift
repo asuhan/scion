@@ -268,10 +268,10 @@ class RubyFormattingContext {
   }
 
   static func applyRubyAlign(line: Line, inlineFormattingContext: InlineFormattingContext)
-    -> [BoxWrapper:
+    -> [UInt:
     InlineLayoutUnit]
   {
-    var alignmentOffsetList: [BoxWrapper: InlineLayoutUnit] = [:]
+    var alignmentOffsetList: [UInt: InlineLayoutUnit] = [:]
     // https://drafts.csswg.org/css-ruby/#interlinear-inline
     // Within each base and annotation box, how the extra space is distributed when its content is narrower than
     // the measure of the box is specified by its ruby-align property.
@@ -553,7 +553,7 @@ class RubyFormattingContext {
   }
 
   static func applyAlignmentOffsetList(
-    displayBoxes: InlineDisplay.Boxes, alignmentOffsetList: [BoxWrapper: InlineLayoutUnit],
+    displayBoxes: InlineDisplay.Boxes, alignmentOffsetList: [UInt: InlineLayoutUnit],
     rubyBasesMayNeedResizing: RubyBasesMayNeedResizing,
     inlineFormattingContext: InlineFormattingContext
   ) {
@@ -694,8 +694,8 @@ class RubyFormattingContext {
     }
   }
 
-  static func applyRubyAlignOnBaseContent(
-    rubyBaseStart: UInt64, line: Line, alignmentOffsetList: inout [BoxWrapper: InlineLayoutUnit],
+  private static func applyRubyAlignOnBaseContent(
+    rubyBaseStart: UInt64, line: Line, alignmentOffsetList: inout [UInt: InlineLayoutUnit],
     inlineFormattingContext: InlineFormattingContext
   ) -> UInt64 {
     let runs = line.runs
@@ -736,8 +736,8 @@ class RubyFormattingContext {
     rubyBaseEndRun.shrinkHorizontally(width: spaceToDistribute)
     rubyBaseEndRun.moveHorizontally(offset: 2 * alignmentOffset)
 
-    assert(!alignmentOffsetList.keys.contains(rubyBaseLayoutBox))
-    alignmentOffsetList[rubyBaseLayoutBox] = alignmentOffset
+    assert(!alignmentOffsetList.keys.contains(CPtrToInt(rubyBaseLayoutBox.p)))
+    alignmentOffsetList[CPtrToInt(rubyBaseLayoutBox.p)] = alignmentOffset
     return rubyBaseEnd
   }
 
