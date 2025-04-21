@@ -39,7 +39,7 @@ class TabSizeWrapper {
   }
 
   func bool() -> Bool {
-    return value == 0
+    return value != 0
   }
 
   var value: Float32
