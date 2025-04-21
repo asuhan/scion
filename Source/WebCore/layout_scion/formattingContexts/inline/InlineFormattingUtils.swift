@@ -99,6 +99,7 @@ internal func nearestCommonAncestor(
     if inserted {
       return descendant
     }
+    descendant = descendant.parent()
   }
   return rootBox
 }
@@ -667,7 +668,8 @@ struct InlineFormattingUtils {
     return false
   }
 
-  func isAtSoftWrapOpportunity(previous: InlineItemWrapper, next: InlineItemWrapper) -> Bool {
+  private func isAtSoftWrapOpportunity(previous: InlineItemWrapper, next: InlineItemWrapper) -> Bool
+  {
     // FIXME: Transition no-wrapping logic from InlineContentBreaker to here where we compute the soft wrap opportunity indexes.
     // "is at" simple means that there's a soft wrap opportunity right after the [previous].
     // [text][ ][text][inline box start]... (<div>text content<span>..</div>)
