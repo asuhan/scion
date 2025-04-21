@@ -1400,9 +1400,9 @@ struct InlineDisplayContentBuilder {
     -> Bool
   {
     var ancestor = baseContentLayoutBox.parent()
-    while ancestor !== root() {
+    while CPtrToInt(ancestor.p) != CPtrToInt(root().p) {
       if ancestor.isRubyBase() {
-        return ancestor === rubyBaseLayoutBox
+        return CPtrToInt(ancestor.p) == CPtrToInt(rubyBaseLayoutBox.p)
       }
       ancestor = ancestor.parent()
     }
