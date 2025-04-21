@@ -607,7 +607,9 @@ struct InlineItemsBuilder {
     }
   }
 
-  func setBidiLevelForOpaqueInlineItems(inlineItemList: InlineItemList, hasSeenOpaqueItem: Bool) {
+  private func setBidiLevelForOpaqueInlineItems(
+    inlineItemList: InlineItemList, hasSeenOpaqueItem: Bool
+  ) {
     if !hasSeenOpaqueItem {
       return
     }
@@ -655,7 +657,7 @@ struct InlineItemsBuilder {
     }
   }
 
-  static func computeInlineTextItemWidths(inlineItemList: InlineItemList) {
+  private static func computeInlineTextItemWidths(inlineItemList: InlineItemList) {
     for inlineItem in inlineItemList {
       let inlineTextItem = inlineItem as? InlineTextItemWrapper
       if inlineTextItem == nil {
@@ -679,7 +681,9 @@ struct InlineItemsBuilder {
     }
   }
 
-  func partialContentOffset(inlineTextBox: InlineTextBoxWrapper, startPosition: InlineItemPosition)
+  private func partialContentOffset(
+    inlineTextBox: InlineTextBoxWrapper, startPosition: InlineItemPosition
+  )
     -> UInt64?
   {
     // TODO(asuhan): implement this
@@ -707,7 +711,7 @@ struct InlineItemsBuilder {
     return nil
   }
 
-  mutating func collectInlineItems(startPosition: InlineItemPosition) -> InlineItemList {
+  private mutating func collectInlineItems(startPosition: InlineItemPosition) -> InlineItemList {
     // Traverse the tree and create inline items out of inline boxes and leaf nodes. This essentially turns the tree inline structure into a flat one.
     // <span>text<span></span><img></span> -> [InlineBoxStart][InlineLevelBox][InlineBoxStart][InlineBoxEnd][InlineLevelBox][InlineBoxEnd]
     var layoutQueue = initializeLayoutQueue(startPosition: startPosition)
@@ -767,9 +771,9 @@ struct InlineItemsBuilder {
     return inlineItemList
   }
 
-  typealias LayoutQueue = [BoxWrapper]
+  private typealias LayoutQueue = [BoxWrapper]
 
-  mutating func appendAndCheckForDamage(
+  private mutating func appendAndCheckForDamage(
     layoutBox: BoxWrapper, firstDamagedLayoutBox: BoxWrapper, queue: inout LayoutQueue
   ) -> Bool {
     queue.append(layoutBox)
@@ -787,7 +791,7 @@ struct InlineItemsBuilder {
     return layoutBox.p == firstDamagedLayoutBox.p
   }
 
-  mutating func traverseUntilDamaged(firstDamagedLayoutBox: BoxWrapper) -> LayoutQueue {
+  private mutating func traverseUntilDamaged(firstDamagedLayoutBox: BoxWrapper) -> LayoutQueue {
     var queue = LayoutQueue()
 
     if appendAndCheckForDamage(
@@ -833,7 +837,7 @@ struct InlineItemsBuilder {
     return queue
   }
 
-  mutating func initializeLayoutQueue(startPosition: InlineItemPosition) -> LayoutQueue {
+  private mutating func initializeLayoutQueue(startPosition: InlineItemPosition) -> LayoutQueue {
     if root.firstChild() == nil {
       assert(false)
       return []
@@ -860,7 +864,7 @@ struct InlineItemsBuilder {
     return traverseUntilDamaged(firstDamagedLayoutBox: firstDamagedLayoutBox)
   }
 
-  func handleSegmentBreak(
+  private func handleSegmentBreak(
     text: StringWrapper, inlineTextBox: InlineTextBoxWrapper, shouldPreserveNewline: Bool,
     inlineItemList: inout InlineItemList,
     currentPosition: inout UInt64
@@ -880,7 +884,7 @@ struct InlineItemsBuilder {
     return true
   }
 
-  func handleWhitespace(
+  private func handleWhitespace(
     inlineTextBox: InlineTextBoxWrapper, text: StringWrapper, style: RenderStyleWrapper,
     shouldPreserveSpacesAndTabs: Bool, shouldPreserveNewline: Bool,
     inlineItemList: inout InlineItemList, currentPosition: inout UInt64
@@ -926,7 +930,7 @@ struct InlineItemsBuilder {
     return true
   }
 
-  func handleNonBreakingSpace(
+  private func handleNonBreakingSpace(
     inlineTextBox: InlineTextBoxWrapper,
     text: StringWrapper, style: RenderStyleWrapper, contentLength: UInt32,
     inlineItemList: inout InlineItemList,
@@ -957,7 +961,7 @@ struct InlineItemsBuilder {
     return true
   }
 
-  func handleNonWhitespace(
+  private func handleNonWhitespace(
     inlineTextBox: InlineTextBoxWrapper,
     text: StringWrapper, contentLength: UInt32, style: RenderStyleWrapper,
     lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper,
@@ -996,7 +1000,7 @@ struct InlineItemsBuilder {
     return true
   }
 
-  mutating func handleTextContent(
+  private mutating func handleTextContent(
     inlineTextBox: InlineTextBoxWrapper,
     inlineItemList: inout InlineItemList,
     partialContentOffset: UInt64?
@@ -1075,7 +1079,7 @@ struct InlineItemsBuilder {
     }
   }
 
-  func buildInlineItemListForTextFromBreakingPositionsCache(
+  private func buildInlineItemListForTextFromBreakingPositionsCache(
     inlineTextBox: InlineTextBoxWrapper, inlineItemList: inout InlineItemList
   ) -> Bool {
     let text = inlineTextBox.content
@@ -1145,7 +1149,9 @@ struct InlineItemsBuilder {
     return true
   }
 
-  mutating func handleInlineBoxStart(inlineBox: BoxWrapper, inlineItemList: inout InlineItemList) {
+  private mutating func handleInlineBoxStart(
+    inlineBox: BoxWrapper, inlineItemList: inout InlineItemList
+  ) {
     inlineItemList.append(
       InlineItemWrapper(layoutBox: inlineBox, type: InlineItemWrapper.Type_.InlineBoxStart))
     contentRequiresVisualReordering =
@@ -1163,7 +1169,9 @@ struct InlineItemsBuilder {
         || inlineBox.style.rtlOrdering() == .Visual || inlineBox.style.unicodeBidi() == .Normal)
   }
 
-  mutating func handleInlineLevelBox(layoutBox: BoxWrapper, inlineItemList: inout InlineItemList) {
+  private mutating func handleInlineLevelBox(
+    layoutBox: BoxWrapper, inlineItemList: inout InlineItemList
+  ) {
     if layoutBox.isRubyAnnotationBox() {
       return inlineItemList.append(InlineItemWrapper(layoutBox: layoutBox, type: .Opaque))
     }
@@ -1186,7 +1194,7 @@ struct InlineItemsBuilder {
     assert(false)
   }
 
-  static func inlineTextBoxContentSpan(
+  private static func inlineTextBoxContentSpan(
     inlineItemList: InlineItemList, index: UInt64, inlineTextBox: InlineTextBoxWrapper
   ) -> ArraySlice<InlineItemWrapper> {
     var length: UInt64 = 0
@@ -1265,11 +1273,11 @@ struct InlineItemsBuilder {
     }
   }
 
-  var inlineContentCache: InlineContentCache
-  var root: ElementBoxWrapper
-  var securityOrigin = SecurityOriginWrapper(p: nil)
+  private var inlineContentCache: InlineContentCache
+  private var root: ElementBoxWrapper
+  private var securityOrigin = SecurityOriginWrapper(p: nil)
 
-  var contentRequiresVisualReordering = false
-  var isTextAndForcedLineBreakOnlyContent = true
-  var inlineBoxCount: UInt64 = 0
+  private var contentRequiresVisualReordering = false
+  private var isTextAndForcedLineBreakOnlyContent = true
+  private var inlineBoxCount: UInt64 = 0
 }
