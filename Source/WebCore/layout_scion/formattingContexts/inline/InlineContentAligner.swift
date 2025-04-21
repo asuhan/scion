@@ -43,8 +43,18 @@ internal func expandInlineBox(
   expansion: InlineLayoutUnit, displayBox: InlineDisplay.Box,
   inlineFormattingContext: InlineFormattingContext
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !displayBox.isInlineBox() {
+    fatalError("Not reached")
+  }
+  if expansion == 0 {
+    return
+  }
+  inlineFormattingContext.root().style.isHorizontalWritingMode()
+    ? displayBox.expandHorizontally(delta: expansion)
+    : displayBox.expandVertically(delta: expansion)
+  let boxGeometry = inlineFormattingContext.geometryForBox(layoutBox: displayBox.layoutBox)
+  boxGeometry.setContentBoxWidth(
+    width: boxGeometry.contentBoxWidth() + LayoutUnit(value: expansion))
 }
 
 internal func alignmentOffset(layoutBox: BoxWrapper, alignmentOffsetList: [UInt: InlineLayoutUnit])
