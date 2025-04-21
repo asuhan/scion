@@ -405,6 +405,7 @@ uint8_t ConstraintsForInlineContent_baseTypeFlags(const void*);
 void* LayoutState_ensureGeometryForBox(void*, const void*);
 void* LayoutState_geometryForBox(const void*, const void*);
 struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);
+bool InlineDamage_isInlineItemListDirty(const void*);
 void InlineDamage_setInlineItemListClean(void*);
 const void* CPtrArrElement(const void* const*, uint64_t);
 int32_t I32ArrElement(const void*, uint64_t);

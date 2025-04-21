@@ -70,8 +70,7 @@ struct InlineDamageWrapper {
   }
 
   func isInlineItemListDirty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.InlineDamage_isInlineItemListDirty(p)
   }
 
   func setInlineItemListClean() {

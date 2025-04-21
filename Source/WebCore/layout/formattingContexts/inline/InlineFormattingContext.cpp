@@ -133,6 +133,11 @@ extern "C" WEBCORE_EXPORT LayoutPositionRaw InlineDamage_layoutStartPosition(con
     };
 }
 
+extern "C" WEBCORE_EXPORT bool InlineDamage_isInlineItemListDirty(const void* p)
+{
+    return static_cast<const WebCore::Layout::InlineDamage*>(p)->isInlineItemListDirty();
+}
+
 extern "C" WEBCORE_EXPORT void InlineDamage_setInlineItemListClean(void* p)
 {
     static_cast<WebCore::Layout::InlineDamage*>(p)->setInlineItemListClean();
