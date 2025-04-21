@@ -29,12 +29,12 @@ func CPtrToInt(_ p: UnsafeRawPointer?) -> UInt {
   return UInt(bitPattern: p)
 }
 
-struct LayoutStateWrapper {
+class LayoutStateWrapper {
   init(p: UnsafeMutableRawPointer?) {
     self.p = p
   }
 
-  mutating func inlineContentCache(formattingContextRoot: ElementBoxWrapper) -> InlineContentCache {
+  func inlineContentCache(formattingContextRoot: ElementBoxWrapper) -> InlineContentCache {
     assert(formattingContextRoot.establishesInlineFormattingContext())
     let key = CPtrToInt(formattingContextRoot.p)
     if let cache = inlineContentCaches[key] {
