@@ -853,8 +853,7 @@ struct InlineItemsBuilder {
     // where we start processing the content at the new layout box and continue with whatever we have on the stack (layout queue).
     let existingInlineItems = inlineContentCache.inlineItems.content()
     if startPosition.index >= existingInlineItems.count {
-      assert(false)
-      return [root.firstChild()!]
+      fatalError("Not reached")
     }
 
     let firstDamagedLayoutBox = existingInlineItems[Int(startPosition.index)].layoutBox
