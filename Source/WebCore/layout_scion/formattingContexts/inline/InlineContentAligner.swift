@@ -39,6 +39,14 @@ struct BaseIndexAndOffset {
   var offset: InlineLayoutUnit = 0
 }
 
+internal func expandInlineBox(
+  expansion: InlineLayoutUnit, displayBox: InlineDisplay.Box,
+  inlineFormattingContext: InlineFormattingContext
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 internal func alignmentOffset(layoutBox: BoxWrapper, alignmentOffsetList: [UInt: InlineLayoutUnit])
   -> InlineLayoutUnit
 {
@@ -58,8 +66,35 @@ internal func expandInlineBoxWithDescendants(
   inlineBoxIndex: UInt64, displayBoxes: InlineDisplay.Boxes,
   alignmentOffsetList: [UInt: InlineLayoutUnit], inlineFormattingContext: InlineFormattingContext
 ) -> InlineBoxIndexAndExpansion {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if inlineBoxIndex >= displayBoxes.count || !displayBoxes[Int(inlineBoxIndex)].isInlineBox() {
+    fatalError("Not reached")
+  }
+  let inlineBox = displayBoxes[Int(inlineBoxIndex)].layoutBox
+  var descendantExpansion = InlineLayoutUnit()
+  var index = inlineBoxIndex + 1
+  while index < displayBoxes.count
+    && CPtrToInt(displayBoxes[Int(index)].layoutBox.parent().p) == CPtrToInt(inlineBox.p)
+  {
+    if displayBoxes[Int(index)].isInlineBox() {
+      let indexAndExpansion = expandInlineBoxWithDescendants(
+        inlineBoxIndex: index, displayBoxes: displayBoxes, alignmentOffsetList: alignmentOffsetList,
+        inlineFormattingContext: inlineFormattingContext)
+      index = indexAndExpansion.index
+      descendantExpansion += indexAndExpansion.expansion
+      continue
+    }
+    index += 1
+  }
+  let totalExpansion =
+    2 * alignmentOffset(layoutBox: inlineBox, alignmentOffsetList: alignmentOffsetList)
+    + descendantExpansion
+  if inlineBoxIndex != 0 {
+    // Root inline box has the correct (inflated) logical width.
+    expandInlineBox(
+      expansion: totalExpansion, displayBox: displayBoxes[Int(inlineBoxIndex)],
+      inlineFormattingContext: inlineFormattingContext)
+  }
+  return InlineBoxIndexAndExpansion(index: index, expansion: totalExpansion)
 }
 
 internal func isInsideCurrentRubyBase(
