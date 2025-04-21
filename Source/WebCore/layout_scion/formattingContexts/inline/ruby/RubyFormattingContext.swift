@@ -560,8 +560,10 @@ class RubyFormattingContext {
     if alignmentOffsetList.isEmpty {
       return
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    InlineContentAligner.applyRubyBaseAlignmentOffset(
+      displayBoxes: displayBoxes, alignmentOffsetList: alignmentOffsetList,
+      adjustContentOnlyInsideRubyBase: rubyBasesMayNeedResizing == .No ? .Yes : .No,
+      inlineFormattingContext: inlineFormattingContext)
   }
 
   // Miscellaneous helpers

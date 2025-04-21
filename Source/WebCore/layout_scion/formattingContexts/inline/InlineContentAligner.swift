@@ -27,8 +27,103 @@ internal func shiftDisplayBox(
   displayBox: InlineDisplay.Box, offset: InlineLayoutUnit,
   inlineFormattingContext: InlineFormattingContext
 ) {
+  if offset == 0 {
+    return
+  }
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+
+struct BaseIndexAndOffset {
+  var index: UInt64 = 0
+  var offset: InlineLayoutUnit = 0
+}
+
+internal func alignmentOffset(layoutBox: BoxWrapper, alignmentOffsetList: [UInt: InlineLayoutUnit])
+  -> InlineLayoutUnit
+{
+  if let alignmentOffsetForBox = alignmentOffsetList[CPtrToInt(layoutBox.p)] {
+    return alignmentOffsetForBox
+  }
+  return 0
+}
+
+struct InlineBoxIndexAndExpansion {
+  var index: UInt64 = 0
+  var expansion: InlineLayoutUnit = 0
+}
+
+@discardableResult
+internal func expandInlineBoxWithDescendants(
+  inlineBoxIndex: UInt64, displayBoxes: InlineDisplay.Boxes,
+  alignmentOffsetList: [UInt: InlineLayoutUnit], inlineFormattingContext: InlineFormattingContext
+) -> InlineBoxIndexAndExpansion {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+internal func isInsideCurrentRubyBase(
+  layoutBox: BoxWrapper, rubyBaseBox: BoxWrapper, rootBox: ElementBoxWrapper
+) -> Bool {
+  // Ruby content tends to produce flat structures.
+  var ancestor: ElementBoxWrapper? = layoutBox.parent()
+  while ancestor != nil {
+    if CPtrToInt(ancestor!.p) == CPtrToInt(rubyBaseBox.p) {
+      return true
+    }
+    if ancestor!.isRubyBase() || ancestor!.isRuby()
+      || CPtrToInt(ancestor!.p) == CPtrToInt(rootBox.p)
+    {
+      return false
+    }
+    ancestor = ancestor!.parent()
+  }
+  return false
+}
+
+internal func shiftRubyBaseContentByAlignmentOffset(
+  baseIndexAndOffset: BaseIndexAndOffset, displayBoxes: InlineDisplay.Boxes,
+  alignmentOffsetList: [UInt: InlineLayoutUnit],
+  adjustContentOnlyInsideRubyBase: InlineContentAligner.AdjustContentOnlyInsideRubyBase,
+  inlineFormattingContext: InlineFormattingContext
+)
+  -> BaseIndexAndOffset
+{
+  let baseIndex = baseIndexAndOffset.index
+  if baseIndex >= displayBoxes.count || !displayBoxes[Int(baseIndex)].layoutBox.isRubyBase() {
+    fatalError("Not reached")
+  }
+
+  // Shift base content within the base (no resize) as part of the alignment process.
+  let rootBox = inlineFormattingContext.root()
+  let rubyBaseBox = displayBoxes[Int(baseIndex)].layoutBox
+  let baseOffset = baseIndexAndOffset.offset
+  let baseContentOffset = alignmentOffset(
+    layoutBox: rubyBaseBox, alignmentOffsetList: alignmentOffsetList)
+  var baseContentIndex = baseIndex + 1
+
+  while baseContentIndex < displayBoxes.count {
+    let displayBox = displayBoxes[Int(baseContentIndex)]
+    let layoutBox = displayBox.layoutBox
+    if !isInsideCurrentRubyBase(layoutBox: layoutBox, rubyBaseBox: rubyBaseBox, rootBox: rootBox) {
+      break
+    }
+    if !layoutBox.isRubyAnnotationBox() {
+      shiftDisplayBox(
+        displayBox: displayBox, offset: baseOffset + baseContentOffset,
+        inlineFormattingContext: inlineFormattingContext)
+    }
+    if layoutBox.isRubyBase() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    baseContentIndex += 1
+  }
+  var accumulatedOffset = 2 * baseContentOffset
+  if adjustContentOnlyInsideRubyBase == .No {
+    accumulatedOffset += baseOffset
+  }
+  return BaseIndexAndOffset(index: baseContentIndex, offset: accumulatedOffset)
 }
 
 enum IgnoreRubyRange: UInt8 {
@@ -222,6 +317,52 @@ class InlineContentAligner {
     case .SpaceAround:
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+  }
+
+  enum AdjustContentOnlyInsideRubyBase {
+    case No
+    case Yes
+  }
+
+  static func applyRubyBaseAlignmentOffset(
+    displayBoxes: InlineDisplay.Boxes, alignmentOffsetList: [UInt: InlineLayoutUnit],
+    adjustContentOnlyInsideRubyBase: AdjustContentOnlyInsideRubyBase,
+    inlineFormattingContext: InlineFormattingContext
+  ) {
+    assert(!alignmentOffsetList.isEmpty)
+
+    var contentOffset = InlineLayoutUnit()
+    var index: UInt64 = 0
+    while index < displayBoxes.count {
+      let displayBox = displayBoxes[Int(index)]
+
+      if adjustContentOnlyInsideRubyBase == .No {
+        shiftDisplayBox(
+          displayBox: displayBox, offset: contentOffset,
+          inlineFormattingContext: inlineFormattingContext)
+      }
+
+      if displayBox.layoutBox.isRubyBase() {
+        let baseEndIndexAndAlignment = shiftRubyBaseContentByAlignmentOffset(
+          baseIndexAndOffset: BaseIndexAndOffset(index: index, offset: contentOffset),
+          displayBoxes: displayBoxes,
+          alignmentOffsetList: alignmentOffsetList,
+          adjustContentOnlyInsideRubyBase: adjustContentOnlyInsideRubyBase,
+          inlineFormattingContext: inlineFormattingContext)
+        index = baseEndIndexAndAlignment.index
+        if adjustContentOnlyInsideRubyBase == .No {
+          contentOffset = baseEndIndexAndAlignment.offset
+        }
+        continue
+      }
+      index += 1
+    }
+
+    if adjustContentOnlyInsideRubyBase == .No {
+      expandInlineBoxWithDescendants(
+        inlineBoxIndex: 0, displayBoxes: displayBoxes, alignmentOffsetList: alignmentOffsetList,
+        inlineFormattingContext: inlineFormattingContext)
     }
   }
 
