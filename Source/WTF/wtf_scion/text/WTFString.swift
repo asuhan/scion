@@ -83,6 +83,9 @@ class StringWrapper {
   }
 
   func substring(position: UInt32, length: UInt32) -> StringWrapper {
+    if self.p != nil {
+      return StringWrapper(p: wk_interop.String_substring(self.p!, position, length))
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -138,6 +138,7 @@ const void* InlineTextBox_style(const void*);
 unsigned String_length(const void*);
 unsigned StringView_length(const void*);
 uint16_t String_subscript(const void*, unsigned);
+const void* String_substring(const void* p, uint32_t position, uint32_t length);
 bool String_is8Bit(const void*);
 void String_convertTo16Bit(const void*);
 bool StringView_is8Bit(const void*);

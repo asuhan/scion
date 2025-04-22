@@ -234,6 +234,11 @@ extern "C" WEBCORE_EXPORT uint16_t String_subscript(const void* p, unsigned inde
     return (*static_cast<const String*>(p))[index];
 }
 
+extern "C" WEBCORE_EXPORT const void* String_substring(const void* p, uint32_t position, uint32_t length)
+{
+    return new String(static_cast<const String*>(p)->substring(position, length));
+}
+
 extern "C" WEBCORE_EXPORT bool String_is8Bit(const void* p)
 {
     return static_cast<const String*>(p)->is8Bit();
