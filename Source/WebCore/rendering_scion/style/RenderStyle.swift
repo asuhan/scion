@@ -819,6 +819,14 @@ class RenderStyleWrapper {
     return .Slice
   }
 
+  static func initialHyphenationLimitBefore() -> Int16 {
+    return -1
+  }
+
+  static func initialHyphenationLimitAfter() -> Int16 {
+    return -1
+  }
+
   static func initialHyphenationLimitLines() -> Int16 {
     return -1
   }
