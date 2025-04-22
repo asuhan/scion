@@ -229,8 +229,11 @@ class TextUtil {
     textWidth: InlineLayoutUnit, availableWidth: InlineLayoutUnit,
     contentLogicalLeft: InlineLayoutUnit
   ) -> WordBreakLeft {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return breakWord(
+      inlineTextBox: inlineTextItem.inlineTextBox(), startPosition: UInt64(inlineTextItem.start()),
+      length: UInt64(inlineTextItem.length), textWidth: textWidth,
+      availableWidth: availableWidth, contentLogicalLeft: contentLogicalLeft,
+      fontCascade: fontCascade)
   }
 
   static func mayBreakInBetween(
