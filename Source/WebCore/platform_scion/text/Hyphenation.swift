@@ -42,6 +42,9 @@ internal func canHyphenate(localeIdentifier: AtomStringWrapper) -> Bool {
 internal func lastHyphenLocation(
   string: StringWrapperView, beforeIndex: UInt64, localeIdentifier: AtomStringWrapper
 ) -> UInt64 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if string.p == nil || localeIdentifier.p == nil {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  return wk_interop.Hyphenation_lastHyphenLocation(string.p, beforeIndex, localeIdentifier.p)
 }

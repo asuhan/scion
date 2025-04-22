@@ -33,6 +33,13 @@ extern "C" WEBCORE_EXPORT bool Hyphenation_canHyphenate(const void* locale_ident
     return WebCore::canHyphenate(*localeIdentifier);
 }
 
+extern "C" WEBCORE_EXPORT uint64_t Hyphenation_lastHyphenLocation(const void* string_raw, uint64_t before_index, const void* locale_identifier_raw)
+{
+    const StringView* string = static_cast<const StringView*>(string_raw);
+    const AtomString* localeIdentifier = static_cast<const AtomString*>(locale_identifier_raw);
+    return WebCore::lastHyphenLocation(*string, before_index, *localeIdentifier);
+}
+
 #if USE(LIBHYPHEN)
 
 #include <hyphen.h>
