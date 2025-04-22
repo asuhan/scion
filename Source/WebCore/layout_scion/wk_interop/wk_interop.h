@@ -242,6 +242,7 @@ uint64_t TextUtil_firstUserPerceivedCharacterLength(
     const void* inline_text_box, uint64_t start_position, uint64_t length);
 struct EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(
     const void* text_content_raw, const void* style_raw);
+float TextUtil_hyphenWidth(const void*);
 bool AtomString_isNull(const void*);
 const void* AtomString_string(const void*);
 uint8_t Length_type(const void*);

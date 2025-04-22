@@ -384,8 +384,11 @@ class TextUtil {
   }
 
   static func hyphenWidth(style: RenderStyleWrapper) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style.p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.TextUtil_hyphenWidth(style.p)
   }
 
   static func firstUserPerceivedCharacterLength(inlineTextItem: InlineTextItemWrapper) -> UInt64 {

@@ -637,6 +637,12 @@ extern "C" WEBCORE_EXPORT struct EnclosingAscentDescentRaw TextUtil_enclosingGly
     return { enclosingAscentDescent.ascent, enclosingAscentDescent.descent };
 }
 
+extern "C" WEBCORE_EXPORT float TextUtil_hyphenWidth(const void* style_raw)
+{
+    const auto& style = *static_cast<const WebCore::RenderStyle*>(style_raw);
+    return WebCore::Layout::TextUtil::hyphenWidth(style);
+}
+
 extern "C" const void* AtomString_string(const void* p)
 {
     return &static_cast<const AtomString*>(p)->string();
