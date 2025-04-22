@@ -658,6 +658,22 @@ class RenderStyleWrapper {
     return rareInheritedData.hyphens
   }
 
+  func hyphenationLimitBefore() -> Int16 {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return RenderStyle_hyphenationLimitBefore(p)
+  }
+
+  func hyphenationLimitAfter() -> Int16 {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return RenderStyle_hyphenationLimitAfter(p)
+  }
+
   func computedLocale() -> AtomStringWrapper {
     if p == nil {
       fatalError("Not implemented")
