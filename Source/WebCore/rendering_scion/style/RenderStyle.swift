@@ -787,6 +787,14 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
   }
 
+  func hyphenString() -> AtomStringWrapper {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return AtomStringWrapper(p: wk_interop.RenderStyle_hyphenString(p))
+  }
+
   func isOriginalDisplayInlineType() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this

@@ -350,6 +350,7 @@ bool RenderStyle_isVerticalWritingMode(const void*);
 bool RenderStyle_isFlippedBlocksWritingMode(const void*);
 uint8_t RenderStyle_blockFlowDirection(const void*);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
+const void* RenderStyle_hyphenString(const void*);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);
 bool RenderStyle_isOriginalDisplayListItemType(const void*);
 float RenderStyle_letterSpacing(const void*);
