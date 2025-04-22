@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 internal func enoughWidthForHyphenation(availableWidth: Float32, fontSize: Float32) -> Bool {
   // If the maximum width available for the prefix before the hyphen is small, then it is very unlikely
   // that an hyphenation opportunity exists, so do not bother to look for it.
@@ -30,8 +32,11 @@ internal func enoughWidthForHyphenation(availableWidth: Float32, fontSize: Float
 }
 
 internal func canHyphenate(localeIdentifier: AtomStringWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if localeIdentifier.p == nil {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  return wk_interop.Hyphenation_canHyphenate(localeIdentifier.p)
 }
 
 internal func lastHyphenLocation(

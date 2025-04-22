@@ -27,6 +27,12 @@
 #include "config.h"
 #include "Hyphenation.h"
 
+extern "C" WEBCORE_EXPORT bool Hyphenation_canHyphenate(const void* locale_identifier_raw)
+{
+    const AtomString* localeIdentifier = static_cast<const AtomString*>(locale_identifier_raw);
+    return WebCore::canHyphenate(*localeIdentifier);
+}
+
 #if USE(LIBHYPHEN)
 
 #include <hyphen.h>
