@@ -247,13 +247,13 @@ internal func midWordBreak(
 }
 
 internal func limitBeforeValue(style: RenderStyleWrapper) -> UInt64 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return style.hyphenationLimitBefore() == RenderStyleWrapper.initialHyphenationLimitBefore()
+    ? 0 : UInt64(style.hyphenationLimitBefore())
 }
 
 internal func limitAfterValue(style: RenderStyleWrapper) -> UInt64 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return style.hyphenationLimitAfter() == RenderStyleWrapper.initialHyphenationLimitAfter()
+    ? 0 : UInt64(style.hyphenationLimitAfter())
 }
 
 internal func hasEnoughContentForHyphenation(contentLength: UInt64, style: RenderStyleWrapper)
