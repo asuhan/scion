@@ -259,8 +259,7 @@ internal func limitAfterValue(style: RenderStyleWrapper) -> UInt64 {
 internal func hasEnoughContentForHyphenation(contentLength: UInt64, style: RenderStyleWrapper)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return limitBeforeValue(style: style) + limitAfterValue(style: style) <= contentLength
 }
 
 internal func firstHyphenPosition(content: StringWrapperView, style: RenderStyleWrapper) -> UInt64?
