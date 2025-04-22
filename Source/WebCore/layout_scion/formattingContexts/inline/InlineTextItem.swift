@@ -118,8 +118,13 @@ class InlineTextItemWrapper: InlineItemWrapper {
   }
 
   func left(length: UInt32) -> InlineTextItemWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(length <= self.length)
+    assert(textItemType != .Undefined)
+    assert(length != 0)
+    return InlineTextItemWrapper(
+      inlineTextBox: inlineTextBox(), start: start(), length: length, bidiLevel: bidiLevel,
+      hasTrailingSoftHyphen: false,
+      isWordSeparator: isWordSeparator, width: nil, textItemType: textItemType)
   }
 
   func right(length: UInt32, width: InlineLayoutUnit?) -> InlineTextItemWrapper {
