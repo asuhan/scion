@@ -702,7 +702,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
     return nil
   }
 
-  func revertToTrailingItem(
+  private func revertToTrailingItem(
     rootStyle: RenderStyleWrapper, layoutRange: InlineItemRange,
     trailingInlineItem: InlineTextItemWrapper
   ) -> UInt64 {
@@ -747,7 +747,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
     line.appendTextFast(
       inlineTextItem: inlineTextItem, style: rootStyle, logicalWidth: logicalWidth)
     numberOfInlineItemsOnLine += 1
-    return inlineTextItem == trailingInlineItem
+    return ObjectIdentifier(inlineTextItem) == ObjectIdentifier(trailingInlineItem)
   }
 
   func revertToLastNonOverflowingItem(rootStyle: RenderStyleWrapper, layoutRange: InlineItemRange)
