@@ -256,6 +256,11 @@ extern "C" WEBCORE_EXPORT int16_t RenderStyle_hyphenationLimitLines(const void* 
     return static_cast<int16_t>(static_cast<const WebCore::RenderStyle*>(p)->hyphenationLimitLines());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_hyphens(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->hyphens());
+}
+
 extern "C" WEBCORE_EXPORT int16_t RenderStyle_hyphenationLimitBefore(const void* p)
 {
     return static_cast<uint16_t>(static_cast<const WebCore::RenderStyle*>(p)->hyphenationLimitBefore());

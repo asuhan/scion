@@ -655,7 +655,11 @@ class RenderStyleWrapper {
   }
 
   func hyphens() -> Hyphens {
-    return rareInheritedData.hyphens
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return Hyphens(rawValue: wk_interop.RenderStyle_hyphens(p))!
   }
 
   func hyphenationLimitBefore() -> Int16 {
