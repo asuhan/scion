@@ -484,7 +484,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
     }
 
     if lineBreakingResult.action == .WrapWithHyphen {
-      assert(line.trailingSoftHyphenWidth == nil)
+      assert(line.trailingSoftHyphenWidth != nil)
       line.addTrailingHyphen(hyphenLogicalWidth: line.trailingSoftHyphenWidth!)
       return TextOnlyLineBreakResult(isEndOfLine: .Yes)
     }
