@@ -24,6 +24,7 @@
  */
 
 import Foundation
+import wk_interop
 
 func marginLeftInInlineDirection(boxGeometry: BoxGeometry, isLeftToRightDirection: Bool)
   -> LayoutUnit
@@ -1008,7 +1009,8 @@ struct InlineDisplayContentBuilder {
         expansion: lineRun.expansion,
         text: InlineDisplay.Box.Text(
           start: text!.start, length: text!.length, originalContent: content,
-          adjustedContentToRender: InlineDisplayContentBuilder.adjustedContentToRender(text: text),
+          adjustedContentToRender: InlineDisplayContentBuilder.adjustedContentToRender(
+            text: text, content: content, style: style),
           hasHyphen: text!.needsHyphen),
         hasContent: isContentful,
         isFullyTruncated: isLineFullyTruncatedInBlockDirection()))
@@ -1084,10 +1086,16 @@ struct InlineDisplayContentBuilder {
       top: topOverflow, right: InlineLayoutUnit(), bottom: bottomOverflow, left: InlineLayoutUnit())
   }
 
-  private static func adjustedContentToRender(text: Line.Run.Text?) -> StringWrapper {
+  private static func adjustedContentToRender(
+    text: Line.Run.Text?, content: StringWrapper, style: RenderStyleWrapper
+  ) -> StringWrapper {
     if text!.needsHyphen {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let contentSlice = StringWrapperView(s: content).substring(
+        start: UInt32(text!.start), length: UInt32(text!.length))
+      assert(contentSlice.p != nil)
+      let hyphenString = style.hyphenString()
+      assert(hyphenString.p != nil)
+      return StringWrapper(p: wk_interop.makeString_scion(contentSlice.p, hyphenString.p))
     }
     return StringWrapper()
   }

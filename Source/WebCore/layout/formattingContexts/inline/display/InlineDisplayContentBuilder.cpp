@@ -39,6 +39,13 @@
 #include <wtf/Range.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT const void* makeString_scion(const void* string_view_raw, const void* atom_string_raw)
+{
+    const auto& string_view = *reinterpret_cast<const StringView*>(string_view_raw);
+    const auto& atom_string = *reinterpret_cast<const AtomString*>(atom_string_raw);
+    return new String(makeString(string_view, atom_string));
+}
+
 using WTF::Range;
 
 namespace WebCore {
