@@ -392,8 +392,10 @@ class TextUtil {
   }
 
   static func firstUserPerceivedCharacterLength(inlineTextItem: InlineTextItemWrapper) -> UInt64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let length = firstUserPerceivedCharacterLength(
+      inlineTextBox: inlineTextItem.inlineTextBox(), startPosition: UInt64(inlineTextItem.start()),
+      length: UInt64(inlineTextItem.length))
+    return min(UInt64(inlineTextItem.length), length)
   }
 
   static func firstUserPerceivedCharacterLength(
