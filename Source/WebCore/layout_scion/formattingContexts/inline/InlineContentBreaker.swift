@@ -580,7 +580,9 @@ class InlineContentBreaker {
     self.hyphenationIsDisabled = hyphenationIsDisabled
   }
 
-  func processOverflowingContent(continuousContent: ContinuousContent, lineStatus: LineStatus)
+  private func processOverflowingContent(
+    continuousContent: ContinuousContent, lineStatus: LineStatus
+  )
     -> Result
   {
     assert(!continuousContent.runs.isEmpty)
@@ -675,7 +677,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryBreakingContentWithText(
+  private func tryBreakingContentWithText(
     continuousContent: ContinuousContent, lineStatus: LineStatus, overflowingRunIndex: inout UInt64
   )
     -> Result?
@@ -716,7 +718,7 @@ class InlineContentBreaker {
             partialTrailingContent: Result.PartialTrailingContent(
               trailingRunIndex: runToBreakAfter, partialRun: nil, hyphenWidth: nil))
         }
-        return Result(action: .Break, isEndOfLine: .Yes)
+        return Result(action: .Keep, isEndOfLine: .Yes)
       }
 
       let firstCharacterWidth = TextUtil.width(
@@ -764,7 +766,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func shouldWrapUnbreakableContentToNextLine(
+  private func shouldWrapUnbreakableContentToNextLine(
     overflowingRunIndex: UInt64, continuousContent: ContinuousContent
   ) -> Bool {
     // The individual runs in this continuous content don't break, let's check if we are allowed to wrap this content to next line (e.g. pre would prevent us from wrapping).
