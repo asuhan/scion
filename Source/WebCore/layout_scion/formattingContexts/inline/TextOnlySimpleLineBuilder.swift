@@ -525,15 +525,14 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
     return TextOnlyLineBreakResult(isEndOfLine: .Yes)
   }
 
-  func processPartialContent(
+  private func processPartialContent(
     lineBreakingResult: InlineContentBreaker.Result,
     candidateContent: InlineContentBreaker.ContinuousContent
   )
     -> TextOnlyLineBreakResult
   {
     if lineBreakingResult.partialTrailingContent == nil {
-      assert(false)
-      return TextOnlyLineBreakResult(isEndOfLine: .Yes)
+      fatalError("Not reached")
     }
     let trailingRunIndex = lineBreakingResult.partialTrailingContent!.trailingRunIndex
     let runs = candidateContent.runs
