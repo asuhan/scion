@@ -628,7 +628,11 @@ class RenderStyleWrapper {
   }
 
   func overflowWrap() -> OverflowWrap {
-    return rareInheritedData.overflowWrap
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return OverflowWrap(rawValue: wk_interop.RenderStyle_overflowWrap(p))!
   }
 
   func wordSpacing() -> Float32 {
