@@ -452,8 +452,14 @@ class TextUtil {
   static func hangablePunctuationEndWidth(
     inlineTextItem: InlineTextItemWrapper, style: RenderStyleWrapper
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasHangablePunctuationEnd(inlineTextItem: inlineTextItem, style: style) {
+      return 0
+    }
+    assert(inlineTextItem.length != 0)
+    let trailingPosition = inlineTextItem.end() - 1
+    return width(
+      inlineTextItem: inlineTextItem, fontCascade: style.fontCascade(), from: trailingPosition,
+      to: trailingPosition + 1, contentLogicalLeft: 0)
   }
 
   static func hasHangableStopOrCommaEnd(
