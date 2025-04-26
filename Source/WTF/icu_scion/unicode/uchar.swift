@@ -25,6 +25,9 @@
 /// Data for enumerated Unicode general category types.
 /// See http://www.unicode.org/Public/UNIDATA/UnicodeData.html .
 /// @stable ICU 2.0
+
+import wk_interop
+
 struct UCharCategory {
   /** Ps @stable ICU 2.0 */
   static let U_START_PUNCTUATION: UInt32 = 20
@@ -50,9 +53,8 @@ struct UCharMasks {
   static let U_GC_PF_MASK = U_MASK(x: UCharCategory.U_FINAL_PUNCTUATION)
   static let U_GC_PO_MASK = U_MASK(x: UCharCategory.U_OTHER_PUNCTUATION)
 
-  static func U_GET_GC_MASK(c: UInt32) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  static func U_GET_GC_MASK(c: Int32) -> UInt32 {
+    return U_MASK(x: UInt32(wk_interop.u_charType_scion(c)))
   }
 }
 

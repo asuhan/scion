@@ -108,6 +108,11 @@ extern "C" WEBCORE_EXPORT void ubidi_reorderVisual_scion(const uint8_t* levels, 
     ubidi_reorderVisual(static_cast<const UBiDiLevel*>(levels), length, index_map);
 }
 
+extern "C" WEBCORE_EXPORT int8_t u_charType_scion(int32_t c)
+{
+    return u_charType(c);
+}
+
 struct NextU16Raw {
     uint32_t character;
     uint64_t position;

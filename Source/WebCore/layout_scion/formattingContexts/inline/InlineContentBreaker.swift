@@ -158,7 +158,7 @@ internal func canBreakBefore(character: UInt32, lineBreak: LineBreak) -> Bool {
     return false
   }
   let isPunctuation =
-    UCharMasks.U_GET_GC_MASK(c: character)
+    UCharMasks.U_GET_GC_MASK(c: Int32(character))
     & (UCharMasks.U_GC_PS_MASK | UCharMasks.U_GC_PE_MASK | UCharMasks.U_GC_PI_MASK
       | UCharMasks.U_GC_PF_MASK | UCharMasks.U_GC_PO_MASK)
   return character == CharacterNames.Unicode.reverseSolidus || isPunctuation == 0
