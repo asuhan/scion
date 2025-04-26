@@ -487,7 +487,13 @@ class TextUtil {
   static func hangableStopOrCommaEndWidth(
     inlineTextItem: InlineTextItemWrapper, style: RenderStyleWrapper
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasHangableStopOrCommaEnd(inlineTextItem: inlineTextItem, style: style) {
+      return 0
+    }
+    assert(inlineTextItem.length != 0)
+    let trailingPosition = inlineTextItem.end() - 1
+    return width(
+      inlineTextItem: inlineTextItem, fontCascade: style.fontCascade(), from: trailingPosition,
+      to: trailingPosition + 1, contentLogicalLeft: 0)
   }
 }
