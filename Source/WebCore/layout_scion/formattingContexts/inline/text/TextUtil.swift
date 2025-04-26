@@ -471,8 +471,17 @@ class TextUtil {
     {
       return false
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let trailingPosition = inlineTextItem.end() - 1
+    let trailingCharacter = inlineTextItem.inlineTextBox().content[trailingPosition]
+    let isHangableStopOrComma =
+      trailingCharacter == 0x002C
+      || trailingCharacter == 0x002E || trailingCharacter == 0x060C
+      || trailingCharacter == 0x06D4 || trailingCharacter == 0x3001
+      || trailingCharacter == 0x3002 || trailingCharacter == 0xFF0C
+      || trailingCharacter == 0xFF0E || trailingCharacter == 0xFE50
+      || trailingCharacter == 0xFE51 || trailingCharacter == 0xFE52
+      || trailingCharacter == 0xFF61 || trailingCharacter == 0xFF64
+    return isHangableStopOrComma
   }
 
   static func hangableStopOrCommaEndWidth(
