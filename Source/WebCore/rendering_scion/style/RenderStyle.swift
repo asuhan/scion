@@ -566,8 +566,11 @@ class RenderStyleWrapper {
   }
 
   func hangingPunctuation() -> HangingPunctuation {
-    // TODO(asuhan): implement this
-    return HangingPunctuation(rawValue: 0)
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p))
   }
 
   func order() -> Int {

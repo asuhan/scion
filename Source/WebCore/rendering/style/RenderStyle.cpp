@@ -390,6 +390,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingBottom(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingBottom();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_hangingPunctuation(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hangingPunctuation().toRaw();
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif
