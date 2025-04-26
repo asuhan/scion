@@ -428,8 +428,14 @@ class TextUtil {
   static func hangablePunctuationStartWidth(
     inlineTextItem: InlineTextItemWrapper, style: RenderStyleWrapper
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasHangablePunctuationStart(inlineTextItem: inlineTextItem, style: style) {
+      return 0
+    }
+    assert(inlineTextItem.length != 0)
+    let leadingPosition = inlineTextItem.start()
+    return width(
+      inlineTextItem: inlineTextItem, fontCascade: style.fontCascade(), from: leadingPosition,
+      to: leadingPosition + 1, contentLogicalLeft: 0)
   }
 
   static func hasHangablePunctuationEnd(
