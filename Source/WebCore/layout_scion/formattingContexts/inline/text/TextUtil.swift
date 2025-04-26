@@ -420,8 +420,9 @@ class TextUtil {
     if inlineTextItem.length == 0 || !style.hangingPunctuation().contains(.First) {
       return false
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let leadingCharacter = inlineTextItem.inlineTextBox().content[inlineTextItem.start()]
+    return UCharMasks.U_GET_GC_MASK(c: Int32(leadingCharacter))
+      & (UCharMasks.U_GC_PS_MASK | UCharMasks.U_GC_PI_MASK | UCharMasks.U_GC_PF_MASK) != 0
   }
 
   static func hangablePunctuationStartWidth(
