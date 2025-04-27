@@ -30,6 +30,5 @@ internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {
 }
 
 internal func U16_SET_CP_START(s: StringWrapper, start: UInt32, i: UInt32) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  wk_interop.U16_SET_CP_START_scion(s.p!, start, i)
 }
