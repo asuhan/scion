@@ -25,8 +25,7 @@ func U16_NEXT(s: CharSpanWrapper<UChar>, i: inout UInt64, length: UInt32) -> UIn
 }
 
 internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  i = wk_interop.U16_FWD_1_scion(s.p!, i, length)
 }
 
 internal func U16_SET_CP_START(s: StringWrapper, start: UInt32, i: UInt32) {
