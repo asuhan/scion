@@ -360,6 +360,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasOutlineInVisualOverflow(const void
     return static_cast<const WebCore::RenderStyle*>(p)->hasOutlineInVisualOverflow();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_clear(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->clear());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_textIndent(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->textIndent();

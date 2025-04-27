@@ -412,7 +412,10 @@ class RenderStyleWrapper {
   }
 
   func clear() -> Clear {
-    return nonInheritedFlags.clear
+    if p == nil {
+      fatalError("Not implemented")
+    }
+    return Clear(rawValue: wk_interop.RenderStyle_clear(p))!
   }
 
   func textIndent() -> LengthWrapper {

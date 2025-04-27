@@ -381,6 +381,7 @@ float RenderStyle_borderTopWidth(const void*);
 float RenderStyle_borderBottomWidth(const void*);
 float RenderStyle_outlineSize(const void*);
 bool RenderStyle_hasOutlineInVisualOverflow(const void*);
+uint8_t RenderStyle_clear(const void*);
 const void* RenderStyle_textIndent(const void*);
 const void* RenderStyle_marginTop(const void*);
 const void* RenderStyle_marginBottom(const void*);
