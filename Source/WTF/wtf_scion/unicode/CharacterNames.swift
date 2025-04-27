@@ -28,6 +28,7 @@ struct CharacterNames {
     static let enDash: UChar = 0x2013
     static let firstStrongIsolate: UChar = 0x2068
     static let hyphen: UChar = 0x2010
+    static let ideographicSpace: UChar = 0x3000
     static let leftToRightEmbed: UChar = 0x202A
     static let leftToRightIsolate: UChar = 0x2066
     static let leftToRightOverride: UChar = 0x202D

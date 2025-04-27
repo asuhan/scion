@@ -250,8 +250,21 @@ struct BreakLines {
     nonBreakingSpaceBehavior: NoBreakSpaceBehavior, string: CharSpanWrapper<CharacterType>,
     startPosition: UInt64
   ) -> UInt64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Use ICU instead.
+    for i in startPosition..<string.size() {
+      if isBreakableSpace(nonBreakingSpaceBehavior: nonBreakingSpaceBehavior, character: string[i])
+      {
+        return i
+      }
+      // FIXME: This should either be in isBreakableSpace (though previous attempts broke the world) or should use ICU instead.
+      if string[i] == CharacterNames.Unicode.zeroWidthSpace {
+        return i
+      }
+      if string[i] == CharacterNames.Unicode.ideographicSpace {
+        return i + 1
+      }
+    }
+    return string.size()
   }
 
   static func classify(nonBreakingSpaceBehavior: NoBreakSpaceBehavior, character: UChar)
