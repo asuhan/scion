@@ -627,7 +627,11 @@ class RenderStyleWrapper {
   }
 
   func wordBreak() -> WordBreak {
-    return rareInheritedData.wordBreak
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return WordBreak(rawValue: wk_interop.RenderStyle_wordBreak(p))!
   }
 
   func overflowWrap() -> OverflowWrap {

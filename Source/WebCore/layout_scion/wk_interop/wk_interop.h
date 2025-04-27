@@ -339,6 +339,7 @@ const void* RenderStyle_metricsOfPrimaryFont(const void*);
 const void* RenderStyle_fontDescription(const void*);
 float RenderStyle_computedFontSize(const void*);
 uint8_t RenderStyle_textOverflow(const void*);
+uint8_t RenderStyle_wordBreak(const void*);
 uint8_t RenderStyle_overflowWrap(const void*);
 const void* RenderStyle_computedLocale(const void*);
 const void* RenderStyle_textEmphasisMarkString(const void*);

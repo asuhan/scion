@@ -84,6 +84,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textOverflow(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textOverflow());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_wordBreak(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->wordBreak());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_overflowWrap(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->overflowWrap());
