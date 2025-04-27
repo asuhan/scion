@@ -43,6 +43,11 @@ extern "C" WEBCORE_EXPORT bool Box_isAnonymous(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->isAnonymous();
 }
 
+extern "C" WEBCORE_EXPORT bool Box_isBlockLevelBox(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->isBlockLevelBox();
+}
+
 extern "C" WEBCORE_EXPORT bool Box_isBlockContainer(const void* p)
 {
     return static_cast<const WebCore::Layout::Box*>(p)->isBlockContainer();

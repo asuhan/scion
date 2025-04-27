@@ -303,6 +303,7 @@ bool RenderListMarker_isInside(const void*);
 void* RenderListMarker_listItem(void*);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);
+bool Box_isBlockLevelBox(const void*);
 bool Box_isBlockContainer(const void*);
 bool Box_isInlineLevelBox(const void*);
 bool Box_isInlineBox(const void*);
