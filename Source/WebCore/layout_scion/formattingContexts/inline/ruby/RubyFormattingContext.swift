@@ -339,8 +339,9 @@ class RubyFormattingContext {
     line: Line, spaceToDistribute: InlineLayoutUnit,
     inlineFormattingContext: InlineFormattingContext
   ) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return InlineContentAligner.applyRubyAlign(
+      rubyAlign: inlineFormattingContext.root().style.rubyAlign(),
+      runs: line.runs, range: 0..<UInt64(line.runs.count), spaceToDistribute: spaceToDistribute)
   }
 
   static func rubyPosition(rubyBaseLayoutBox: BoxWrapper) -> RubyPosition {
