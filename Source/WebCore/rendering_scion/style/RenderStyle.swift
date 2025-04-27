@@ -614,8 +614,11 @@ class RenderStyleWrapper {
   }
 
   func boxDecorationBreak() -> BoxDecorationBreak {
-    // TODO(asuhan): implement this
-    return .Slice
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return BoxDecorationBreak(rawValue: wk_interop.RenderStyle_boxDecorationBreak(p))!
   }
 
   func textOverflow() -> TextOverflow {
