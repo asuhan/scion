@@ -143,7 +143,11 @@ class RenderStyleWrapper {
   }
 
   func display() -> DisplayType {
-    return nonInheritedFlags.effectiveDisplay
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return DisplayType(rawValue: wk_interop.RenderStyle_display(p))!
   }
 
   func top() -> LengthWrapper {
