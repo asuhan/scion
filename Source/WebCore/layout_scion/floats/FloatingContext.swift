@@ -402,7 +402,7 @@ class FloatingContext {
 
     // The return vertical position needs to be in the containing block's coordinate system.
     let containingBlock = FormattingContext.containingBlock(layoutBox: layoutBox)
-    if containingBlock === placedFloats.formattingContextRoot() {
+    if CPtrToInt(containingBlock.p) == CPtrToInt(placedFloats.formattingContextRoot().p) {
       return PositionWithClearance(
         position: logicalTopRelativeToPlacedFloatsRoot, clearance: clearance)
     }
