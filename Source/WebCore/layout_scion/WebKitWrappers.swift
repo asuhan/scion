@@ -240,4 +240,7 @@ public func InlineFormattingContext_layout(
     wk_interop.InlineLayoutResult_displayContent_addBox(layoutResultCPtr, boxC)
   }
   wk_interop.InlineLayoutResult_setRange(layoutResultCPtr, inlineLayoutResult.range.rawValue)
+  wk_interop.InlineFormattingContext_setClearGapAfterLastLine(
+    inlineFormattingContextCPtr,
+    inlineFormattingContext.layoutState().clearGapAfterLastLine)
 }

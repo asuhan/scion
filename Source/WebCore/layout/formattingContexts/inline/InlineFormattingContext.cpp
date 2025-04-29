@@ -69,6 +69,11 @@ extern "C" WEBCORE_EXPORT void* InlineFormattingContext_globalLayoutState(void* 
     return &static_cast<WebCore::Layout::InlineFormattingContext*>(p)->m_globalLayoutState;
 }
 
+extern "C" void InlineFormattingContext_setClearGapAfterLastLine(void* inline_formatting_context, float clear_gap_after_last_line)
+{
+    static_cast<WebCore::Layout::InlineFormattingContext*>(inline_formatting_context)->layoutState().setClearGapAfterLastLine(clear_gap_after_last_line);
+}
+
 extern "C" WEBCORE_EXPORT int32_t ConstraintsForInlineContent_horizontal_logicalLeft(const void* p)
 {
     return static_cast<const WebCore::Layout::ConstraintsForInlineContent*>(p)->horizontal().logicalLeft.rawValue();
