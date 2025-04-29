@@ -56,6 +56,13 @@ struct PlacedFloatsRaw {
     const uint64_t inline_items_count;
 };
 
+struct LineClampRaw {
+    uint64_t maximumLines;
+    bool shouldDiscardOverflow;
+    bool isLegacy;
+    bool isValid;
+};
+
 struct WordBreakLeftRaw {
     uint64_t length;
     float logicalWidth;

@@ -109,6 +109,15 @@ func convert_placed_floats(raw: PlacedFloatsRaw) -> PlacedFloats {
   return placedFloats
 }
 
+func convert_line_clamp_raw(raw: LineClampRaw) -> BlockLayoutState.LineClamp? {
+  if !raw.isValid {
+    return nil
+  }
+  return BlockLayoutState.LineClamp(
+    maximumLines: raw.maximumLines,
+    shouldDiscardOverflow: raw.shouldDiscardOverflow, isLegacy: raw.isLegacy)
+}
+
 @_cdecl("InlineFormattingContext_layout")
 public func InlineFormattingContext_layout(
   inlineFormattingContextCPtr: UnsafeMutableRawPointer,
@@ -118,6 +127,7 @@ public func InlineFormattingContext_layout(
   nestedListMarkerOffsetsCArr: UnsafeRawPointer?,
   nestedListMarkersCount: UInt64,
   placedFloatsRaw: PlacedFloatsRaw,
+  lineClampRaw: LineClampRaw,
   layoutResultCPtr: UnsafeMutableRawPointer
 ) {
   let rootLayoutBoxC = InlineFormattingContext_root(inlineFormattingContextCPtr)
@@ -127,7 +137,8 @@ public func InlineFormattingContext_layout(
   let layoutStateC = InlineFormattingContext_globalLayoutState(inlineFormattingContextCPtr)
   let layoutState = LayoutStateWrapper(p: layoutStateC)
   let parentBlockLayoutState = BlockLayoutState(
-    placedFloats: convert_placed_floats(raw: placedFloatsRaw))
+    placedFloats: convert_placed_floats(raw: placedFloatsRaw),
+    lineClamp: convert_line_clamp_raw(raw: lineClampRaw))
   let inlineFormattingContext = InlineFormattingContext(
     rootBlockContainer: rootLayoutBox, globalLayoutState: layoutState,
     parentBlockLayoutState: parentBlockLayoutState)

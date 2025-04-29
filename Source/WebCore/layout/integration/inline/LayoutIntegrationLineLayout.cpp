@@ -100,7 +100,14 @@ struct PlacedFloatsRaw {
     const uint64_t inline_items_count;
 };
 
-extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, void*);
+struct LineClampRaw {
+    uint64_t maximumLines;
+    bool shouldDiscardOverflow;
+    bool isLegacy;
+    bool isValid;
+};
+
+extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
 
 namespace {
 
@@ -153,6 +160,18 @@ PlacedFloatsRaw convertPlacedFloats(WebCore::Layout::PlacedFloats& placedFloats)
         itemsRaw,
         placedFloats.list().size()
     };
+}
+
+LineClampRaw convertLineClampRaw(const std::optional<WebCore::Layout::BlockLayoutState::LineClamp>& maybeLineClamp)
+{
+    LineClampRaw lineClampRaw;
+    if (maybeLineClamp) {
+        const auto lineClamp = *maybeLineClamp;
+        lineClampRaw = { lineClamp.maximumLines, lineClamp.shouldDiscardOverflow, lineClamp.isLegacy, true };
+    } else {
+        lineClampRaw = { 0, false, false, false };
+    }
+    return lineClampRaw;
 }
 
 namespace WebCore {
@@ -620,6 +639,7 @@ std::optional<LayoutRect> LineLayout::layout()
         nested_list_marker_offsets_raw.push_back(pair.value.rawValue());
     }
     const auto placedFloatsRaw = convertPlacedFloats(m_blockFormattingState.placedFloats());
+    const auto lineClampRaw = convertLineClampRaw(inlineFormattingContext.layoutState().parentBlockLayoutState().lineClamp());
     Layout::InlineLayoutResult layoutResult;
     InlineFormattingContext_layout(
         &inlineFormattingContext, &constraints, lineDamage,
@@ -627,6 +647,7 @@ std::optional<LayoutRect> LineLayout::layout()
         nested_list_marker_offsets_raw.empty() ? nullptr : &nested_list_marker_offsets_raw[0],
         static_cast<uint64_t>(nested_list_markers.size()),
         placedFloatsRaw,
+        lineClampRaw,
         &layoutResult);
 #endif
     auto repaintRect = LayoutRect { constructContent(inlineFormattingContext.layoutState(), WTFMove(layoutResult)) };
