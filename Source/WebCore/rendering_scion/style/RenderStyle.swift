@@ -47,7 +47,11 @@ class RenderStyleWrapper {
   }
 
   func pseudoElementType() -> PseudoId {
-    return nonInheritedFlags.pseudoElementType
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return PseudoId(rawValue: wk_interop.RenderStyle_pseudoElementType(p))!
   }
 
   func position() -> PositionType {

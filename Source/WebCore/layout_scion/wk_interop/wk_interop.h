@@ -336,6 +336,7 @@ const void* Box_firstLineStyle(const void*);
 const void* Box_associatedRubyAnnotationBox(const void*);
 const void* Box_style(const void*);
 const void* Box_shape(const void*);
+uint32_t RenderStyle_pseudoElementType(const void*);
 const void* RenderStyle_metricsOfPrimaryFont(const void*);
 const void* RenderStyle_fontDescription(const void*);
 float RenderStyle_computedFontSize(const void*);
