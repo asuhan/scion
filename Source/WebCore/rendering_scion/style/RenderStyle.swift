@@ -134,7 +134,11 @@ class RenderStyleWrapper {
   }
 
   func rtlOrdering() -> Order {
-    return inheritedFlags.rtlOrdering
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return Order(rawValue: wk_interop.RenderStyle_rtlOrdering(p))!
   }
 
   func hasPseudoStyle(pseudo: PseudoId) -> Bool {
