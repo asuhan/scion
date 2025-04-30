@@ -130,8 +130,7 @@ struct InlineFormattingUtils {
       if positionWithClearance == nil {
         return lineLogicalRect.bottom()
       }
-      return max(
-        lineLogicalRect.bottom(), InlineLayoutUnit(positionWithClearance!.position.float()))
+      return max(lineLogicalRect.bottom(), positionWithClearance!.position.float())
     }
 
     if let firstAvailableVerticalPosition = intrusiveFloatBottom(
