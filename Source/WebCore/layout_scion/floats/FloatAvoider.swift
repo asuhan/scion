@@ -26,6 +26,20 @@
 // Floating boxes intersect their margin box with the other floats in the context,
 // while other float avoiders (e.g. non-floating formatting context roots) intersect their border box.
 struct FloatAvoider {
+  init(
+    absoluteTopLeft: LayoutPointWrapper, borderBoxWidth: LayoutUnit, margin: BoxGeometry.Edges,
+    containingBlockAbsoluteContentBox: BoxGeometry.HorizontalEdges, isFloatingPositioned: Bool,
+    isLeftAligned: Bool
+  ) {
+    self.absoluteTopLeft = absoluteTopLeft
+    self.borderBoxWidth = borderBoxWidth
+    self.margin = margin
+    self.containingBlockAbsoluteContentBox = containingBlockAbsoluteContentBox
+    self.isFloatingPositioned = isFloatingPositioned
+    self.isLeftAligned = isLeftAligned
+    self.absoluteTopLeft.setX(x: initialHorizontalPosition())
+  }
+
   mutating func setHorizontalPosition(horizontalPosition: LayoutUnit) {
     var horizontalPositionMutable = horizontalPosition
     if isLeftAligned && isFloatingBox() {
