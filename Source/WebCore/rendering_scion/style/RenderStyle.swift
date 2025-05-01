@@ -739,7 +739,11 @@ class RenderStyleWrapper {
   }
 
   func rubyAlign() -> RubyAlign {
-    return rareInheritedData.rubyAlign
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return RubyAlign(rawValue: wk_interop.RenderStyle_rubyAlign(p))!
   }
 
   func rubyOverhang() -> RubyOverhang {

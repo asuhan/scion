@@ -357,6 +357,7 @@ const void* RenderStyle_computedLocale(const void*);
 const void* RenderStyle_textEmphasisMarkString(const void*);
 uint8_t RenderStyle_rubyPosition(const void*);
 bool RenderStyle_isInterCharacterRubyPosition(const void*);
+uint8_t RenderStyle_rubyAlign(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 uint8_t RenderStyle_writingMode(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
