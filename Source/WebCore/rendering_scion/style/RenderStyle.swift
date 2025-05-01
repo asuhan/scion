@@ -335,7 +335,7 @@ class RenderStyleWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    return TextEmphasisMark(rawValue: wk_interop.RenderStyle_textEmphasisFill(p))!
+    return TextEmphasisMark(rawValue: wk_interop.RenderStyle_textEmphasisMark(p))!
   }
 
   func textEmphasisPosition() -> TextEmphasisPosition {

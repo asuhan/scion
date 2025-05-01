@@ -413,7 +413,7 @@ uint8_t RenderStyle_hyphens(const void*);
 int16_t RenderStyle_hyphenationLimitBefore(const void*);
 int16_t RenderStyle_hyphenationLimitAfter(const void*);
 const void* RenderStyle_marginStart(const void*);
-uint8_t RenderStyle_textEmphasisFill(const void*);
+uint8_t RenderStyle_textEmphasisMark(const void*);
 uint8_t RenderStyle_textEmphasisPosition(const void*);
 bool RenderStyle_hasTextCombine(const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
