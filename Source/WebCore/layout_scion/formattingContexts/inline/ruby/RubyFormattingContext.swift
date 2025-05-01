@@ -319,7 +319,7 @@ class RubyFormattingContext {
   ) -> InlineLayoutUnit {
     if !hasInterCharacterAnnotation(rubyBaseLayoutBox: rubyBaseLayoutBox) {
       // FIXME: We may want to include interlinear annotations here too so that applyAlignmentOffsetList would not need to initiate resizing (only moving base content).
-      if baseContentWidth == 0 {
+      if baseContentWidth != 0 {
         return InlineLayoutUnit()
       }
       let annotationBox = rubyBaseLayoutBox.associatedRubyAnnotationBox()
