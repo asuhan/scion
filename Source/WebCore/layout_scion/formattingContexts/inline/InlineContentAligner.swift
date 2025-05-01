@@ -30,8 +30,13 @@ internal func shiftDisplayBox(
   if offset == 0 {
     return
   }
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let isHorizontalWritingMode = inlineFormattingContext.root().style.isHorizontalWritingMode()
+  isHorizontalWritingMode
+    ? displayBox.moveHorizontally(offset: offset) : displayBox.moveVertically(offset: offset)
+  if !displayBox.isTextOrSoftLineBreak() && !displayBox.isRootInlineBox() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 struct BaseIndexAndOffset {
