@@ -1559,12 +1559,11 @@ final class LineBuilder: AbstractLineBuilder {
         || lineHasOverflow(horizontalAvailableSpace: horizontalAvailableSpace))
   }
 
-  func applyRunBasedAlignmentIfApplicable(
+  private func applyRunBasedAlignmentIfApplicable(
     lineContent: inout LineContent,
     isLastInlineContent: Bool,
     horizontalAvailableSpace: InlineLayoutUnit, rootStyle: RenderStyleWrapper
   ) {
-    // TODO(asuhan): implement this
     if isInIntrinsicWidthMode() {
       return
     }
