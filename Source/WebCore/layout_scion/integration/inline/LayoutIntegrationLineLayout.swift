@@ -1071,7 +1071,7 @@ class LayoutIntegration {
     func constructContent(inlineLayoutState: InlineLayoutState, layoutResult: InlineLayoutResult)
       -> FloatRectWrapper
     {
-      let damagedRect = InlineContentBuilder(blockFlow: flow(), boxTree: boxTree).build(
+      var damagedRect = InlineContentBuilder(blockFlow: flow(), boxTree: boxTree).build(
         layoutResult: layoutResult, inlineContent: ensureInlineContent(), lineDamage: lineDamage)
 
       inlineContent!.clearGapBeforeFirstLine = inlineLayoutState.clearGapBeforeFirstLine

@@ -48,6 +48,13 @@ struct FloatSize {
     return FloatSize(width: height, height: width)
   }
 
+  @discardableResult
+  static func += (a: inout FloatSize, b: FloatSize) -> FloatSize {
+    a.setWidth(width: a.width + b.width)
+    a.setHeight(height: a.height + b.height)
+    return a
+  }
+
   var width: Float32 = 0
   var height: Float32 = 0
 }

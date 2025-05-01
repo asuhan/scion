@@ -77,10 +77,7 @@ struct FloatRectWrapper {
 
   mutating func move(dx: Float32, dy: Float32) { m_location.move(dx: dx, dy: dy) }
 
-  func expand(size: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func expand(size: FloatSize) { m_size += size }
 
   mutating func expand(dw: Float32, dh: Float32) { m_size.expand(width: dw, height: dh) }
 
