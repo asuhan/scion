@@ -177,8 +177,8 @@ extension InlineDisplay {
     }
 
     func moveHorizontally(offset: Float32) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      unflippedVisualRect.move(delta: FloatSize(width: offset, height: 0))
+      inkOverflow.move(delta: FloatSize(width: offset, height: 0))
     }
 
     func expandVertically(delta: Float32) {
