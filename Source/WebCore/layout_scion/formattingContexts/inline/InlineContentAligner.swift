@@ -360,8 +360,21 @@ class InlineContentAligner {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     case .SpaceAround:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var expansion = ExpansionInfo()
+      computedExpansions(
+        runs: runs, runRange: range, hangingTrailingWhitespaceLength: 0, expansionInfo: &expansion,
+        ignoreRuby: .No)
+      // Anything to distribute?
+      if expansion.opportunityCount == 0 {
+        return spaceToDistribute / 2
+      }
+      // As for space-between except that there exists an extra justification opportunities whose space is distributed half before and half after the ruby content.
+      let extraExpansionOpportunitySpace =
+        spaceToDistribute / Float32(expansion.opportunityCount + 1)
+      applyExpansionOnRange(
+        runs: runs, range: range, expansion: expansion,
+        spaceToDistribute: spaceToDistribute - extraExpansionOpportunitySpace)
+      return extraExpansionOpportunitySpace / 2
     }
   }
 
@@ -435,7 +448,8 @@ class InlineContentAligner {
     return false
   }
 
-  static func applyExpansionOnRange(
+  @discardableResult
+  private static func applyExpansionOnRange(
     runs: Line.RunList, range: Range<UInt64>, expansion: ExpansionInfo,
     spaceToDistribute: InlineLayoutUnit
   ) -> InlineLayoutUnit {
