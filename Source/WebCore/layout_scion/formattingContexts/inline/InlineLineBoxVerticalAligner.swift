@@ -200,7 +200,7 @@ struct LineBoxVerticalAligner {
       let inlineLevelBoxLogicalTop =
         parentInlineBox.layoutBounds.ascent - inlineBoxTopOffsetFromParentBaseline
       let parentInlineBoxAbsoluteTopAndBottom = inlineLevelBoxAbsoluteTopAndBottomMap[
-        ObjectIdentifier(parentInlineBox)]!
+        ObjectIdentifier(parentInlineBox), default: AbsoluteTopAndBottom()]
       let absoluteLogicalTop = parentInlineBoxAbsoluteTopAndBottom.top + inlineLevelBoxLogicalTop
       let absoluteLogicalBottom = absoluteLogicalTop + inlineLevelBox.layoutBounds.height()
       inlineLevelBoxAbsoluteTopAndBottomMap.updateValue(
