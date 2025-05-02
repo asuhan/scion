@@ -189,6 +189,9 @@ class ElementBoxWrapper: BoxWrapper {
     if wk_interop.RenderObject_isRenderListMarker(unwrapped!) {
       return RenderListMarkerWrapper(p: unwrapped!)
     }
+    if wk_interop.RenderObject_isRenderListBox(unwrapped!) {
+      return RenderListBoxWrapper(p: unwrapped!)
+    }
     if wk_interop.RenderObject_isRenderBlockFlow(unwrapped!) {
       return RenderBlockFlowWrapper(p: unwrapped!)
     }
