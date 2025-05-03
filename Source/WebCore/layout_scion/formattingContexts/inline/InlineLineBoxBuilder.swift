@@ -559,7 +559,8 @@ struct LineBoxBuilder {
     let shouldUseLineGapToAdjustAscentDescent =
       (inlineBox.isRootInlineBox() || isLineFitEdgeLeading(inlineBox: inlineBox))
       && !rootBox().isRubyAnnotationBox()
-    for font in fallbackFontsForContent {
+    for fontPtr in fallbackFontsForContent {
+      let font = FontWrapper(p: UnsafeRawPointer(bitPattern: fontPtr)!)
       let fontMetrics = font.fontMetrics()
       let ascentAndDescent = ascentAndDescentWithTextBoxEdgeForInlineBox(
         inlineBox: inlineBox, fontMetrics: fontMetrics, fontBaseline: fontBaseline)
@@ -601,10 +602,9 @@ struct LineBoxBuilder {
     var fallbackFontsForInlineBox = fallbackFontsForInlineBoxes[ObjectIdentifier(parentInlineBox)]!
     // FIXME(asuhan): computeSize
     let numberOfFallbackFontsForInlineBox = fallbackFontsForInlineBox.count
-    for font in fallbackFonts {
-      if !fallbackFontsForInlineBox.contains(font) {  // TODO(asuhan): optimize this
-        fallbackFontsForInlineBox.append(font)
-      }
+    for fontPtr in fallbackFonts {
+      let font = FontWrapper(p: UnsafeRawPointer(bitPattern: fontPtr)!)
+      fallbackFontsForInlineBox.update(with: fontPtr)
       fallbackFontRequiresIdeographicBaseline =
         fallbackFontRequiresIdeographicBaseline || font.hasVerticalGlyphs()
     }

@@ -171,7 +171,7 @@ class TextUtil {
         useTrailingWhitespaceMeasuringOptimization: .No)
   }
 
-  typealias FallbackFontList = [FontWrapper]
+  typealias FallbackFontList = Set<UInt>
   enum IncludeHyphen: UInt8 {
     case No
     case Yes
