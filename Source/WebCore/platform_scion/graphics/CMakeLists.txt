@@ -9,9 +9,11 @@ target_sources(layout_scion PRIVATE
     FontDescription.swift
     FontMetrics.swift
     IntSize.swift
+    Latin1TextIterator.swift
     LayoutPoint.swift
     LayoutRect.swift
     LayoutSize.swift
+    SurrogatePairAwareTextIterator.swift
     TabSize.swift
     TextRun.swift
 )
