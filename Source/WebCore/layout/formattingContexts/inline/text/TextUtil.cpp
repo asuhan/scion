@@ -377,6 +377,11 @@ extern "C" WEBCORE_EXPORT void StringBuilder_append_UChar(void* builder, uint16_
     static_cast<StringBuilder*>(builder)->append(static_cast<UChar>(ch));
 }
 
+extern "C" WEBCORE_EXPORT void StringBuilder_append_String(void* builder, const void* s)
+{
+    static_cast<StringBuilder*>(builder)->append(*static_cast<const String*>(s));
+}
+
 extern "C" WEBCORE_EXPORT void StringBuilder_append_StringView(void* builder, const void* s)
 {
     static_cast<StringBuilder*>(builder)->append(*static_cast<const StringView*>(s));

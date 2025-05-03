@@ -172,6 +172,7 @@ const void* String_new_span(const void*);
 const void* WTF_span_from_uchar(uint16_t);
 void* StringBuilder_new();
 void StringBuilder_append_UChar(void*, uint16_t);
+void StringBuilder_append_String(void*, const void*);
 void StringBuilder_append_StringView(void*, const void*);
 const void* Length_empty_new(uint8_t type);
 const void* Length_new(int32_t raw_value, uint8_t type, bool has_quirk);
