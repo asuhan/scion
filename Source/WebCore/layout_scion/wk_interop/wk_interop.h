@@ -481,6 +481,7 @@ struct GlyphOverflowRaw visualOverflowForDecorations(const void*, float, float);
 struct GlyphOverflowRaw visualOverflowForDecorationsByStyle(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);
+int32_t u_toupper_scion(int32_t);
 void ubidi_close_scion(void*);
 struct UBiDiLogicalRunRaw ubidi_getLogicalRun_scion(void* p, int32_t logical_position);
 void* ubidi_open_scion();

@@ -73,6 +73,11 @@ extern "C" WEBCORE_EXPORT uint32_t u_getIntPropertyValue_scion(uint16_t characte
     return u_getIntPropertyValue(character, static_cast<UProperty>(property));
 }
 
+extern "C" WEBCORE_EXPORT int32_t u_toupper_scion(int32_t c)
+{
+    return u_toupper(c);
+}
+
 extern "C" WEBCORE_EXPORT void ubidi_close_scion(void* p)
 {
     ubidi_close(static_cast<UBiDi*>(p));

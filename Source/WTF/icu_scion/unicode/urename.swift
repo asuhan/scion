@@ -26,6 +26,10 @@ func u_getIntPropertyValue(character: UChar, property: UProperty) -> UInt32 {
   return wk_interop.u_getIntPropertyValue_scion(character, property.rawValue)
 }
 
+func u_toupper(c: Int32) -> Int32 {
+  return wk_interop.u_toupper_scion(c)
+}
+
 internal func ubidi_close(ubidi: UBiDiWrapper) {
   wk_interop.ubidi_close_scion(ubidi.p)
 }
