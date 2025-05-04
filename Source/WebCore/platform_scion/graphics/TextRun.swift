@@ -40,6 +40,11 @@ class TextRunWrapper {
       directionalOverride: directionalOverride)
   }
 
+  func is8Bit() -> Bool {
+    assert(self.p != nil)
+    return wk_interop.TextRun_is8Bit(self.p!)
+  }
+
   func setTabSize(allow: Bool, size: TabSizeWrapper) {
     if self.p != nil {
       text_run_set_tab_size(textRunPtr: self.p!, allow: allow, tabSize: size)

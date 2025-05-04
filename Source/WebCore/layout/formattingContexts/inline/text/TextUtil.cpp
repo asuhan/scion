@@ -259,6 +259,11 @@ extern "C" WEBCORE_EXPORT bool StringView_is8Bit(const void* p)
     return static_cast<const StringView*>(p)->is8Bit();
 }
 
+extern "C" WEBCORE_EXPORT bool TextRun_is8Bit(const void* p)
+{
+    return static_cast<const WebCore::TextRun*>(p)->is8Bit();
+}
+
 extern "C" WEBCORE_EXPORT void TextRun_setTabSize(void* p, bool allow, float numOrLength, bool isSpaces)
 {
     WebCore::TabSize tabSize(numOrLength, static_cast<WebCore::TabSizeValueType>(isSpaces));
