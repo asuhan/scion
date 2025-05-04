@@ -179,8 +179,31 @@ class TextUtil {
   static func fallbackFontsForText(
     textContent: StringWrapperView, style: RenderStyleWrapper, includeHyphen: IncludeHyphen
   ) -> FallbackFontList {
+    var fallbackFonts = FallbackFontList()
+    if includeHyphen == .Yes {
+      collectFallbackFonts(
+        textRun: TextRunWrapper(
+          stringView: StringWrapperView(s: style.hyphenString().string()),
+          xpos: 0,
+          expansion: 0,
+          expansionBehavior: ExpansionBehaviorWrapper.defaultBehavior(),
+          direction: style.direction()),
+        style: style, fallbackFonts: &fallbackFonts)
+    }
+    collectFallbackFonts(
+      textRun: TextRunWrapper(
+        stringView: textContent,
+        xpos: 0,
+        expansion: 0,
+        expansionBehavior: ExpansionBehaviorWrapper.defaultBehavior(),
+        direction: style.direction()), style: style, fallbackFonts: &fallbackFonts)
+    return fallbackFonts
+  }
+
+  private static func collectFallbackFonts(
+    textRun: TextRunWrapper, style: RenderStyleWrapper, fallbackFonts: inout FallbackFontList
+  ) {
     // XXX: implement this
-    return []
   }
 
   struct EnclosingAscentDescent {
