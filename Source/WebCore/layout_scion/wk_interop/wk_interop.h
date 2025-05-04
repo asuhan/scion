@@ -487,6 +487,7 @@ int32_t BoxGeometry_left(const void*);
 struct GlyphOverflowRaw visualOverflowForDecorations(const void*, float, float);
 struct GlyphOverflowRaw visualOverflowForDecorationsByStyle(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
+bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);
 uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);
 int32_t u_toupper_scion(int32_t);
 void ubidi_close_scion(void*);

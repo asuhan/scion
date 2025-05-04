@@ -68,6 +68,11 @@ extern "C" WEBCORE_EXPORT bool InlineItemsBuilder_hasTextAutospace(const void* p
     return static_cast<const WebCore::Layout::InlineItemsBuilder*>(p)->m_hasTextAutospace;
 }
 
+extern "C" WEBCORE_EXPORT bool u_hasBinaryProperty_scion(int32_t c, uint32_t which)
+{
+    return u_hasBinaryProperty(c, static_cast<UProperty>(which));
+}
+
 extern "C" WEBCORE_EXPORT uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property)
 {
     return u_getIntPropertyValue(character, static_cast<UProperty>(property));
