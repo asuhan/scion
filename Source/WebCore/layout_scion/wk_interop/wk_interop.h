@@ -113,6 +113,7 @@ bool RenderStyle_direction(const void*);
 uint8_t RenderStyle_whiteSpaceCollapse(const void*);
 bool RenderStyle_textWrapMode(const void*);
 bool Font_hasVerticalGlyphs(const void*);
+float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion);
 const void* FontCascade_fontDescription(const void*);
 float FontCascade_size(const void*);
 float FontCascade_letterSpacing(const void*);

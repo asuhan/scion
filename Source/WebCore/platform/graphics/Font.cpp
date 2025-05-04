@@ -55,6 +55,11 @@ extern "C" WEBCORE_EXPORT bool Font_hasVerticalGlyphs(const void* font)
     return static_cast<const WebCore::Font*>(font)->hasVerticalGlyphs();
 }
 
+extern "C" WEBCORE_EXPORT float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion)
+{
+    return static_cast<const WebCore::Font*>(font)->widthForGlyph(glyph, static_cast<WebCore::Font::SyntheticBoldInclusion>(synthetic_bold_inclusion));
+}
+
 namespace WebCore {
 
 unsigned GlyphPage::s_count = 0;

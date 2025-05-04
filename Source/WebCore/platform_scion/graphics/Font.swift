@@ -51,5 +51,17 @@ class FontWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  // Should the result of this function include the results of synthetic bold?
+  enum SyntheticBoldInclusion: UInt8 {
+    case Incorporate
+    case Exclude
+  }
+
+  func widthForGlyph(glyph: Glyph, syntheticBoldInclusion: SyntheticBoldInclusion = .Incorporate)
+    -> Float32
+  {
+    return wk_interop.Font_widthForGlyph(p, glyph, syntheticBoldInclusion.rawValue)
+  }
+
   private var p: UnsafeRawPointer
 }
