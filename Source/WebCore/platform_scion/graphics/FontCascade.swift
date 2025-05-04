@@ -170,8 +170,9 @@ class FontCascadeWrapper {
   {
     let glyphDataRaw =
       wk_interop.FontCascade_glyphDataForCharacter(p, c, mirror, variant.rawValue)
+    let fontIsNil = CPtrToInt(glyphDataRaw.font) == 0
     return GlyphData(
-      glyph: glyphDataRaw.glyph, font: FontWrapper(p: glyphDataRaw.font),
+      glyph: glyphDataRaw.glyph, font: fontIsNil ? nil : FontWrapper(p: glyphDataRaw.font),
       colorGlyphType: ColorGlyphType(rawValue: glyphDataRaw.color_glyph_type)!)
   }
 
