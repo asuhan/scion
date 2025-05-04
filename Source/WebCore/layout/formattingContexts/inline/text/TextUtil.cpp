@@ -279,6 +279,11 @@ extern "C" WEBCORE_EXPORT bool TextRun_is8Bit(const void* p)
     return static_cast<const WebCore::TextRun*>(p)->is8Bit();
 }
 
+extern "C" WEBCORE_EXPORT bool TextRun_rtl(const void* p)
+{
+    return static_cast<const WebCore::TextRun*>(p)->rtl();
+}
+
 extern "C" WEBCORE_EXPORT uint32_t TextRun_length(const void* p)
 {
     return static_cast<const WebCore::TextRun*>(p)->length();
