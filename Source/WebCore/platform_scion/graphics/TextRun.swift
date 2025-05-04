@@ -50,6 +50,11 @@ class TextRunWrapper {
     return CharSpanWrapper<UChar>(p: wk_interop.TextRun_span16(self.p))
   }
 
+  func length() -> UInt32 {
+    assert(self.p != nil)
+    return wk_interop.TextRun_length(self.p!)
+  }
+
   func is8Bit() -> Bool {
     assert(self.p != nil)
     return wk_interop.TextRun_is8Bit(self.p!)

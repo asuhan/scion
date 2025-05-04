@@ -153,6 +153,7 @@ bool StringView_is8Bit(const void*);
 const void* TextRun_span8(const void*);
 const void* TextRun_span16(const void*);
 bool TextRun_is8Bit(const void*);
+uint32_t TextRun_length(const void*);
 void TextRun_setTabSize(void*, bool, float, bool);
 void TextRun_setTextSpacingState(void*, const void*);
 const void* TextRun_text(const void*);
