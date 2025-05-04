@@ -165,6 +165,16 @@ class FontCascadeWrapper {
     return FontWrapper(p: wk_interop.FontCascade_primaryFont(p))
   }
 
+  func glyphDataForCharacter(c: UInt32, mirror: Bool, variant: FontVariant = .AutoVariant)
+    -> GlyphData
+  {
+    let glyphDataRaw =
+      wk_interop.FontCascade_glyphDataForCharacter(p, c, mirror, variant.rawValue)
+    return GlyphData(
+      glyph: glyphDataRaw.glyph, font: FontWrapper(p: glyphDataRaw.font),
+      colorGlyphType: ColorGlyphType(rawValue: glyphDataRaw.color_glyph_type)!)
+  }
+
   static func expansionOpportunityCount(
     stringView: StringWrapperView, direction: TextDirection,
     expansionBehavior: ExpansionBehaviorWrapper

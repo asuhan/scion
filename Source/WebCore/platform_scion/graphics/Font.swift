@@ -21,6 +21,14 @@
 
 import wk_interop
 
+enum FontVariant: UInt8 {
+  case AutoVariant
+  case NormalVariant
+  case SmallCapsVariant
+  case EmphasisMarkVariant
+  case BrokenIdeographVariant
+}
+
 class FontWrapper: Hashable {
   init(p: UnsafeRawPointer) {
     self.p = p

@@ -174,6 +174,18 @@ extern "C" WEBCORE_EXPORT const void* FontCascade_primaryFont(const void* font_c
     return &static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->primaryFont();
 }
 
+struct GlyphDataRaw {
+    uint16_t glyph;
+    const void* font;
+    uint8_t color_glyph_type;
+};
+
+extern "C" WEBCORE_EXPORT struct GlyphDataRaw FontCascade_glyphDataForCharacter(const void* font_cascade_ptr, uint32_t c, bool mirror, uint8_t variant)
+{
+    const auto glyphData = static_cast<const WebCore::FontCascade*>(font_cascade_ptr)->glyphDataForCharacter(c, mirror, static_cast<WebCore::FontVariant>(variant));
+    return { glyphData.glyph, glyphData.font.get(), static_cast<uint8_t>(glyphData.colorGlyphType) };
+}
+
 struct ExpansionOpportunityCountRaw {
     uint32_t count;
     bool isAfterExpansion;

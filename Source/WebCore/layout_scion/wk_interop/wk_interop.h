@@ -98,6 +98,12 @@ struct NextU16Raw {
     uint64_t position;
 };
 
+struct GlyphDataRaw {
+    uint16_t glyph;
+    const void* font;
+    uint8_t color_glyph_type;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -136,6 +142,7 @@ const void* FontCascade_metricsOfPrimaryFont(const void*);
 float FontCascade_floatEmphasisMarkHeight(const void* font_cascade_ptr, const void* mark_ptr);
 bool FontCascade_isSmallCaps(const void*);
 const void* FontCascade_primaryFont(const void*);
+struct GlyphDataRaw FontCascade_glyphDataForCharacter(const void* font_cascade_ptr, uint32_t c, bool mirror, uint8_t variant);
 const void* InlineTextBox_content(const void*);
 bool InlineTextBox_isCombined(const void*);
 bool InlineTextBox_canUseSimplifiedContentMeasuring(const void*);

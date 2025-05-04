@@ -55,3 +55,8 @@ struct ExpansionBehaviorWrapper: Equatable {
   var left: Behavior
   var right: Behavior
 }
+
+enum ColorGlyphType: UInt8 {
+  case Outline
+  case Color
+}

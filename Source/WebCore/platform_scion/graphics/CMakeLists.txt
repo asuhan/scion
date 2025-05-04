@@ -8,6 +8,8 @@ target_sources(layout_scion PRIVATE
     FontCascadeDescription.swift
     FontDescription.swift
     FontMetrics.swift
+    Glyph.swift
+    GlyphPage.swift
     IntSize.swift
     Latin1TextIterator.swift
     LayoutPoint.swift
