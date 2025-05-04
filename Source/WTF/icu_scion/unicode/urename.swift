@@ -22,6 +22,10 @@
 
 import wk_interop
 
+func u_charType(c: Int32) -> Int8 {
+  return wk_interop.u_charType_scion(c)
+}
+
 func u_getIntPropertyValue(character: UChar, property: UProperty) -> UInt32 {
   return wk_interop.u_getIntPropertyValue_scion(character, property.rawValue)
 }
