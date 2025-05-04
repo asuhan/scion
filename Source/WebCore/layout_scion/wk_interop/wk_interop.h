@@ -151,6 +151,7 @@ void String_convertTo16Bit(const void*);
 bool StringView_is8Bit(const void*);
 void TextRun_setTabSize(void*, bool, float, bool);
 void TextRun_setTextSpacingState(void*, const void*);
+const void* TextRun_text(const void*);
 uint64_t span8_size(const void*);
 uint64_t span16_size(const void*);
 uint16_t span8_subscript(const void*, uint64_t);

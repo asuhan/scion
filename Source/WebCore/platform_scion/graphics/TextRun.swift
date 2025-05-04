@@ -21,6 +21,8 @@
  *
  */
 
+import wk_interop
+
 class TextRunWrapper {
   init(
     stringView: StringWrapperView, xpos: Float32 = 0, expansion: Float32 = 0,
@@ -50,6 +52,11 @@ class TextRunWrapper {
   func setTextSpacingState(spacingStatePtr: UnsafeRawPointer?) {
     assert(self.p != nil)
     text_run_set_text_spacing_state(textRunPtr: self.p!, spacingStatePtr: spacingStatePtr)
+  }
+
+  func text() -> StringWrapperView {
+    assert(self.p != nil)
+    return StringWrapperView(p: TextRun_text(self.p!))
   }
 
   var m_allow: Bool = false

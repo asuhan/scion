@@ -270,6 +270,11 @@ extern "C" WEBCORE_EXPORT void TextRun_setTextSpacingState(void* text_run_raw, c
     text_run->setTextSpacingState(*static_cast<const WebCore::TextSpacing::SpacingState*>(spacing_state));
 }
 
+extern "C" WEBCORE_EXPORT const void* TextRun_text(const void* textRun)
+{
+    return new StringView(static_cast<const WebCore::TextRun*>(textRun)->textAsString());
+}
+
 extern "C" WEBCORE_EXPORT uint64_t span8_size(const void* p)
 {
     return static_cast<const std::span<const LChar>*>(p)->size();
