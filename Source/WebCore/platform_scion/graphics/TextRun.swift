@@ -40,6 +40,11 @@ class TextRunWrapper {
       directionalOverride: directionalOverride)
   }
 
+  func span8() -> CharSpanWrapper<LChar> {
+    assert(self.p != nil)
+    return CharSpanWrapper<LChar>(p: wk_interop.TextRun_span8(self.p))
+  }
+
   func is8Bit() -> Bool {
     assert(self.p != nil)
     return wk_interop.TextRun_is8Bit(self.p!)

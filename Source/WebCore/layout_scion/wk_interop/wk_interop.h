@@ -150,6 +150,7 @@ const void* String_substring(const void* p, uint32_t position, uint32_t length);
 bool String_is8Bit(const void*);
 void String_convertTo16Bit(const void*);
 bool StringView_is8Bit(const void*);
+const void* TextRun_span8(const void*);
 bool TextRun_is8Bit(const void*);
 void TextRun_setTabSize(void*, bool, float, bool);
 void TextRun_setTextSpacingState(void*, const void*);
