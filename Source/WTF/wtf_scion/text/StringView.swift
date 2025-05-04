@@ -46,6 +46,14 @@ class StringWrapperView {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    if self.p != nil {
+      return wk_interop.StringView_isEmpty(self.p)
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func is8Bit() -> Bool {
     if self.p != nil {
       return wk_interop.StringView_is8Bit(self.p)

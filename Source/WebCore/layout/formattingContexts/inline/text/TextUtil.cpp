@@ -229,6 +229,11 @@ extern "C" WEBCORE_EXPORT unsigned StringView_length(const void* p)
     return static_cast<const StringView*>(p)->length();
 }
 
+extern "C" WEBCORE_EXPORT bool StringView_isEmpty(const void* p)
+{
+    return static_cast<const StringView*>(p)->isEmpty();
+}
+
 extern "C" WEBCORE_EXPORT uint16_t String_subscript(const void* p, unsigned index)
 {
     return (*static_cast<const String*>(p))[index];
