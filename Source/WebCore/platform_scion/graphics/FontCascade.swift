@@ -125,6 +125,14 @@ class FontCascadeWrapper {
     return font_cascade_widthOfSpaceString(p: p!)
   }
 
+  func isSmallCaps() -> Bool {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.FontCascade_isSmallCaps(p!)
+  }
+
   func wordSpacing() -> Float32 {
     if p == nil {
       // TODO(asuhan): implement this
