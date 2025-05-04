@@ -75,7 +75,11 @@ enum ULineBreak: UInt32 {
 }
 
 enum UProperty: UInt32 {
+  /** Binary property Default_Ignorable_Code_Point (new in Unicode 3.2).
+      Ignorable in most processing.
+      <2060..206F, FFF0..FFFB, E0000..E0FFF>+Other_Default_Ignorable_Code_Point+(Cf+Cc+Cs-White_Space) @stable ICU 2.1 */
+  case UCHAR_DEFAULT_IGNORABLE_CODE_POINT = 5
   /** Enumerated property Line_Break.
-        Returns ULineBreak values. @stable ICU 2.2 */
+      Returns ULineBreak values. @stable ICU 2.2 */
   case UCHAR_LINE_BREAK = 0x1008
 }
