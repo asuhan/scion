@@ -47,8 +47,7 @@ class FontWrapper: Hashable {
   }
 
   func fontMetrics() -> FontMetricsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FontMetricsWrapper(p: wk_interop.Font_fontMetrics(p))
   }
 
   // Should the result of this function include the results of synthetic bold?
