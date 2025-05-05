@@ -26,16 +26,17 @@
 import wk_interop
 
 class CharSpanWrapper<CharacterType> {
-  init(p: UnsafeRawPointer) {
+  init(p: UnsafeRawPointer, startOffset: UInt64 = 0) {
     self.p = p
+    self.startOffset = startOffset
   }
 
   func size() -> UInt64 {
     switch MemoryLayout<CharacterType>.size {
     case 1:
-      return wk_interop.span8_size(p)
+      return wk_interop.span8_size(p) - startOffset
     case 2:
-      return wk_interop.span16_size(p)
+      return wk_interop.span16_size(p) - startOffset
     default:
       fatalError("Not reached")
     }
@@ -44,13 +45,18 @@ class CharSpanWrapper<CharacterType> {
   subscript(index: UInt64) -> UChar {
     switch MemoryLayout<CharacterType>.size {
     case 1:
-      return wk_interop.span8_subscript(p, index)
+      return wk_interop.span8_subscript(p, index + startOffset)
     case 2:
-      return wk_interop.span16_subscript(p, index)
+      return wk_interop.span16_subscript(p, index + startOffset)
     default:
       fatalError("Not reached")
     }
   }
 
+  func subspan(startOffset: UInt64) -> CharSpanWrapper<CharacterType> {
+    return CharSpanWrapper<CharacterType>(p: p, startOffset: startOffset)
+  }
+
   var p: UnsafeRawPointer
+  private var startOffset: UInt64
 }
