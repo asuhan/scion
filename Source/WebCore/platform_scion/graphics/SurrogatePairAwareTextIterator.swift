@@ -22,17 +22,34 @@ struct SurrogatePairAwareTextIterator {
   // The passed in UChar pointer starts at 'currentIndex'. The iterator operates on the range [currentIndex, lastIndex].
   // 'endIndex' denotes the maximum length of the UChar array, which might exceed 'lastIndex'.
   init(characters: CharSpanWrapper<UChar>, currentIndex: UInt32, lastIndex: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.characters = characters
+    self.currentIndex = currentIndex
+    self.originalIndex = currentIndex
+    self.lastIndex = lastIndex
+    self.endIndex = UInt32(characters.size()) + currentIndex
   }
 
   func consume(character: inout UInt32, clusterLength: inout UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if currentIndex >= lastIndex {
+      return false
+    }
+
+    let relativeIndex = currentIndex - originalIndex
+    var clusterLengthOut: UInt64 = 0
+    character = U16_NEXT(
+      s: characters.subspan(startOffset: UInt64(relativeIndex)), i: &clusterLengthOut,
+      length: endIndex - currentIndex)
+    clusterLength = UInt32(clusterLengthOut)
+    return true
   }
 
   mutating func advance(advanceLength: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    currentIndex += advanceLength
   }
+
+  private let characters: CharSpanWrapper<UChar>
+  private var currentIndex: UInt32
+  private let originalIndex: UInt32
+  private let lastIndex: UInt32
+  private let endIndex: UInt32
 }
