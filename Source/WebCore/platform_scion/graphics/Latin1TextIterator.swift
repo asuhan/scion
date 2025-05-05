@@ -23,17 +23,29 @@ struct Latin1TextIterator {
   // The passed in LChar pointer starts at 'currentIndex'. The iterator operates on the range [currentIndex, lastIndex].
   // 'endCharacter' denotes the maximum length of the UChar array, which might exceed 'lastIndex'.
   init(characters: CharSpanWrapper<LChar>, currentIndex: UInt32, lastIndex: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.characters = characters
+    self.currentIndex = currentIndex
+    self.originalIndex = currentIndex
+    self.lastIndex = lastIndex
   }
 
   func consume(character: inout UInt32, clusterLength: inout UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if currentIndex >= lastIndex {
+      return false
+    }
+
+    let relativeIndex = currentIndex - originalIndex
+    character = UInt32(characters[UInt64(relativeIndex)])
+    clusterLength = 1
+    return true
   }
 
-  func advance(advanceLength: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func advance(advanceLength: UInt32) {
+    currentIndex += advanceLength
   }
+
+  private let characters: CharSpanWrapper<LChar>
+  private var currentIndex: UInt32
+  private let originalIndex: UInt32
+  private let lastIndex: UInt32
 }

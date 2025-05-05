@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Research In Motion Limited 2011. All rights reserved.
+ * Copyright (C) 2025 Scion authors. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,21 +18,7 @@
  *
  */
 
-struct SurrogatePairAwareTextIterator {
-  // The passed in UChar pointer starts at 'currentIndex'. The iterator operates on the range [currentIndex, lastIndex].
-  // 'endIndex' denotes the maximum length of the UChar array, which might exceed 'lastIndex'.
-  init(characters: CharSpanWrapper<UChar>, currentIndex: UInt32, lastIndex: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func consume(character: inout UInt32, clusterLength: inout UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  mutating func advance(advanceLength: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+protocol TextIterator {
+  func consume(character: inout UInt32, clusterLength: inout UInt32) -> Bool
+  mutating func advance(advanceLength: UInt32)
 }
