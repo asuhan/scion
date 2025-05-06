@@ -57,6 +57,17 @@ class CharSpanWrapper<CharacterType> {
     return CharSpanWrapper<CharacterType>(p: p, startOffset: startOffset)
   }
 
+  func data() -> UnsafePointer<CharacterType> {
+    switch MemoryLayout<CharacterType>.size {
+    case 1:
+      return wk_interop.span8_data(p).assumingMemoryBound(to: CharacterType.self)
+    case 2:
+      return wk_interop.span16_data(p).assumingMemoryBound(to: CharacterType.self)
+    default:
+      fatalError("Not reached")
+    }
+  }
+
   var p: UnsafeRawPointer
   private var startOffset: UInt64
 }

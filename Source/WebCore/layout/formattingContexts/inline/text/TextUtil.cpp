@@ -342,6 +342,16 @@ extern "C" WEBCORE_EXPORT uint16_t span16_subscript(const void* p, uint64_t inde
     return (*static_cast<const std::span<const UChar>*>(p))[index];
 }
 
+extern "C" WEBCORE_EXPORT const void* span8_data(const void* p)
+{
+    return static_cast<const std::span<const LChar>*>(p)->data();
+}
+
+extern "C" WEBCORE_EXPORT const void* span16_data(const void* p)
+{
+    return static_cast<const std::span<const UChar>*>(p)->data();
+}
+
 extern "C" bool StringBuilder_isEmpty(const void* builder)
 {
     return static_cast<const StringBuilder*>(builder)->isEmpty();
