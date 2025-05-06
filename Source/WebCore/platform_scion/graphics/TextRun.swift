@@ -36,7 +36,7 @@ class TextRunWrapper {
       return
     }
     self.p = text_run_from_string_view(
-      p: stringView.p!, xpos: xpos, expansion: expansion, direction: direction == .LTR,
+      p: stringView.p!, xpos: xpos, expansion: expansion, direction: direction == .RTL,
       directionalOverride: directionalOverride)
   }
 
