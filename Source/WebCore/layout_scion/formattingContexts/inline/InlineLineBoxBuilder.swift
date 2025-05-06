@@ -599,7 +599,8 @@ struct LineBoxBuilder {
       return []
     }
 
-    var fallbackFontsForInlineBox = fallbackFontsForInlineBoxes[ObjectIdentifier(parentInlineBox)]!
+    var fallbackFontsForInlineBox = fallbackFontsForInlineBoxes[
+      ObjectIdentifier(parentInlineBox), default: TextUtil.FallbackFontList()]
     // FIXME(asuhan): computeSize
     let numberOfFallbackFontsForInlineBox = fallbackFontsForInlineBox.count
     for fontPtr in fallbackFonts {
