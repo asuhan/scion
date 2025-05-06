@@ -136,6 +136,14 @@ extern "C" WEBCORE_EXPORT struct NextU16Raw U16_NEXT_scion(const void* character
     return { character, position };
 }
 
+extern "C" WEBCORE_EXPORT struct NextU16Raw U16_NEXT_buff_scion(const void* characters_raw, uint64_t position, uint32_t content_length)
+{
+    const auto characters = static_cast<const UChar*>(characters_raw);
+    char32_t character;
+    U16_NEXT(characters, position, content_length, character);
+    return { character, position };
+}
+
 extern "C" WEBCORE_EXPORT uint32_t U16_FWD_1_scion(const void* s_raw, uint32_t i, uint32_t length)
 {
     const auto& s = *static_cast<const String*>(s_raw);

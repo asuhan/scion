@@ -24,6 +24,12 @@ func U16_NEXT(s: CharSpanWrapper<UChar>, i: inout UInt64, length: UInt32) -> UIn
   return raw.character
 }
 
+func U16_NEXT_buff(s: UnsafePointer<UChar>, i: inout UInt64, length: UInt32) -> UInt32 {
+  let raw = wk_interop.U16_NEXT_buff_scion(s, i, length)
+  i = raw.position
+  return raw.character
+}
+
 internal func U16_FWD_1(s: StringWrapper, i: inout UInt32, length: UInt32) {
   i = wk_interop.U16_FWD_1_scion(s.p!, i, length)
 }
