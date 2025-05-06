@@ -62,5 +62,5 @@ class FontWrapper: Hashable {
     return wk_interop.Font_widthForGlyph(p, glyph, syntheticBoldInclusion.rawValue)
   }
 
-  private var p: UnsafeRawPointer
+  var p: UnsafeRawPointer
 }

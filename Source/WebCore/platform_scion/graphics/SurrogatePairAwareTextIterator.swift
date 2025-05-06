@@ -18,7 +18,7 @@
  *
  */
 
-struct SurrogatePairAwareTextIterator {
+struct SurrogatePairAwareTextIterator: TextIterator {
   // The passed in UChar pointer starts at 'currentIndex'. The iterator operates on the range [currentIndex, lastIndex].
   // 'endIndex' denotes the maximum length of the UChar array, which might exceed 'lastIndex'.
   init(characters: CharSpanWrapper<UChar>, currentIndex: UInt32, lastIndex: UInt32) {

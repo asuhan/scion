@@ -17,5 +17,6 @@ target_sources(layout_scion PRIVATE
     LayoutSize.swift
     SurrogatePairAwareTextIterator.swift
     TabSize.swift
+    TextIterator.swift
     TextRun.swift
 )

@@ -19,7 +19,7 @@
  *
  */
 
-struct Latin1TextIterator {
+struct Latin1TextIterator: TextIterator {
   // The passed in LChar pointer starts at 'currentIndex'. The iterator operates on the range [currentIndex, lastIndex].
   // 'endCharacter' denotes the maximum length of the UChar array, which might exceed 'lastIndex'.
   init(characters: CharSpanWrapper<LChar>, currentIndex: UInt32, lastIndex: UInt32) {

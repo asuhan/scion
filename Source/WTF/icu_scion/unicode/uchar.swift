@@ -29,6 +29,8 @@
 import wk_interop
 
 struct UCharCategory {
+  /** Mn @stable ICU 2.0 */
+  static let U_NON_SPACING_MARK: UInt32 = 6
   /** Ps @stable ICU 2.0 */
   static let U_START_PUNCTUATION: UInt32 = 20
   /** Pe @stable ICU 2.0 */
@@ -47,6 +49,7 @@ struct UCharMasks {
     return 1 << x
   }
 
+  static let U_GC_MN_MASK = U_MASK(x: UCharCategory.U_NON_SPACING_MARK)
   static let U_GC_PS_MASK = U_MASK(x: UCharCategory.U_START_PUNCTUATION)
   static let U_GC_PE_MASK = U_MASK(x: UCharCategory.U_END_PUNCTUATION)
   static let U_GC_PI_MASK = U_MASK(x: UCharCategory.U_INITIAL_PUNCTUATION)

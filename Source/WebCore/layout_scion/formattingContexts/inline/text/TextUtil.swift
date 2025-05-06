@@ -35,6 +35,56 @@ func spaceWidth(fontCascade: FontCascadeWrapper, canUseSimplifiedContentMeasurin
   return fontCascade.widthOfSpaceString()
 }
 
+func fallbackFontsForRunWithIterator(
+  fallbackFonts: inout Set<UInt>, fontCascade: FontCascadeWrapper, run: TextRunWrapper,
+  textIterator: inout TextIterator
+) {
+  let isRTL = run.rtl()
+  let isSmallCaps = fontCascade.isSmallCaps()
+  let primaryFont = fontCascade.primaryFont()
+
+  var currentCharacter: UInt32 = 0
+  var clusterLength: UInt32 = 0
+  while textIterator.consume(character: &currentCharacter, clusterLength: &clusterLength) {
+    addFallbackFontForCharacterIfApplicable(
+      characterIn: Int32(currentCharacter), fontCascade: fontCascade, primaryFont: primaryFont,
+      isSmallCaps: isSmallCaps, isRTL: isRTL, fallbackFonts: &fallbackFonts)
+    textIterator.advance(advanceLength: clusterLength)
+  }
+}
+
+func addFallbackFontForCharacterIfApplicable(
+  characterIn: Int32, fontCascade: FontCascadeWrapper, primaryFont: FontWrapper, isSmallCaps: Bool,
+  isRTL: Bool, fallbackFonts: inout Set<UInt>
+) {
+  var character = characterIn
+  if isSmallCaps {
+    character = u_toupper(c: character)
+  }
+
+  let glyphData = fontCascade.glyphDataForCharacter(c: UInt32(character), mirror: isRTL)
+  if glyphData.glyph != 0 && glyphData.font != nil
+    && CPtrToInt(glyphData.font!.p) != CPtrToInt(primaryFont.p)
+  {
+    let isNonSpacingMark =
+      (UCharMasks.U_MASK(x: UInt32(u_charType(c: Int32(character)))) & UCharMasks.U_GC_MN_MASK) != 0
+
+    // https://drafts.csswg.org/css-text-3/#white-space-processing
+    // "Unsupported Default_ignorable characters must be ignored for text rendering."
+    let isIgnored = isDefaultIgnorableCodePoint(character: UInt32(character))
+
+    // If we include the synthetic bold expansion, then even zero-width glyphs will have their fonts added.
+    if isNonSpacingMark
+      || glyphData.font!.widthForGlyph(glyph: glyphData.glyph, syntheticBoldInclusion: .Exclude)
+        != 0
+    {
+      if !isIgnored {
+        fallbackFonts.update(with: UInt(CPtrToInt(glyphData.font!.p)))
+      }
+    }
+  }
+}
+
 class TextUtil {
   enum UseTrailingWhitespaceMeasuringOptimization {
     case No
@@ -203,7 +253,23 @@ class TextUtil {
   private static func collectFallbackFonts(
     textRun: TextRunWrapper, style: RenderStyleWrapper, fallbackFonts: inout FallbackFontList
   ) {
-    // XXX: implement this
+    if textRun.text().isEmpty() {
+      return
+    }
+
+    if textRun.is8Bit() {
+      var textIterator: any TextIterator = Latin1TextIterator(
+        characters: textRun.span8(), currentIndex: 0, lastIndex: textRun.length())
+      fallbackFontsForRunWithIterator(
+        fallbackFonts: &fallbackFonts, fontCascade: style.fontCascade(), run: textRun,
+        textIterator: &textIterator)
+      return
+    }
+    var textIterator: any TextIterator = SurrogatePairAwareTextIterator(
+      characters: textRun.span16(), currentIndex: 0, lastIndex: textRun.length())
+    fallbackFontsForRunWithIterator(
+      fallbackFonts: &fallbackFonts, fontCascade: style.fontCascade(), run: textRun,
+      textIterator: &textIterator)
   }
 
   struct EnclosingAscentDescent {
