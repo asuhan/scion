@@ -800,9 +800,33 @@ struct Line {
       return trailingWhitespaceRun
     }
 
+    private init(
+      type: `Type`, layoutBox: BoxWrapper, style: RenderStyleWrapper,
+      logicalLeft: InlineLayoutUnit, logicalWidth: InlineLayoutUnit,
+      expansion: InlineDisplay.Box.Expansion, bidiLevel: UBiDiLevel,
+      trailingWhitespace: TrailingWhitespace?, lastNonWhitespaceContentStart: UInt64?,
+      textContent: Text?
+    ) {
+      self.type = type
+      self.layoutBox = layoutBox
+      self.style = style
+      self.logicalLeft = logicalLeft
+      self.logicalWidth = logicalWidth
+      self.expansion = expansion
+      self.bidiLevel = bidiLevel
+      self.trailingWhitespace = trailingWhitespace
+      self.lastNonWhitespaceContentStart = lastNonWhitespaceContentStart
+      self.textContent = textContent
+    }
+
     private func clone() -> Run {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return Line.Run(
+        type: type, layoutBox: layoutBox, style: style,
+        logicalLeft: logicalLeft, logicalWidth: logicalWidth,
+        expansion: expansion, bidiLevel: bidiLevel,
+        trailingWhitespace: trailingWhitespace,
+        lastNonWhitespaceContentStart: lastNonWhitespaceContentStart,
+        textContent: textContent)
     }
 
     private var type: `Type` = .Text
