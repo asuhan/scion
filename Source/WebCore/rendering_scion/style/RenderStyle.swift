@@ -673,7 +673,11 @@ class RenderStyleWrapper {
   }
 
   func lineBreak() -> LineBreak {
-    return rareInheritedData.lineBreak
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LineBreak(rawValue: wk_interop.RenderStyle_lineBreak(p))!
   }
 
   func hyphenationLimitLines() -> Int16 {

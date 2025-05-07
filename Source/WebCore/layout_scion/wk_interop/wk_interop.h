@@ -430,6 +430,7 @@ int32_t RenderStyle_textShadowExtent_right(const void*);
 int32_t RenderStyle_textShadowExtent_bottom(const void*);
 int32_t RenderStyle_textShadowExtent_left(const void*);
 bool RenderStyle_nbspMode(const void*);
+uint8_t RenderStyle_lineBreak(const void*);
 int16_t RenderStyle_hyphenationLimitLines(const void*);
 uint8_t RenderStyle_hyphens(const void*);
 int16_t RenderStyle_hyphenationLimitBefore(const void*);
