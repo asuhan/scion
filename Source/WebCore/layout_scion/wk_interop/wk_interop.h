@@ -439,6 +439,7 @@ const void* RenderStyle_marginStart(const void*);
 uint8_t RenderStyle_textEmphasisMark(const void*);
 uint8_t RenderStyle_textEmphasisPosition(const void*);
 bool RenderStyle_hasTextCombine(const void*);
+uint8_t RenderStyle_textAlignLast(const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
 uint16_t BreakLines_classify(uint16_t, uint8_t);
 bool LayoutState_inStandardsMode(const void*);

@@ -359,7 +359,11 @@ class RenderStyleWrapper {
   }
 
   func textAlignLast() -> TextAlignLast {
-    return rareInheritedData.textAlignLast
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return TextAlignLast(rawValue: wk_interop.RenderStyle_textAlignLast(p))!
   }
 
   func unicodeBidi() -> UnicodeBidi {
