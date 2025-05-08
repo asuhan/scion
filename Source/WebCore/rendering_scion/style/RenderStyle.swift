@@ -926,7 +926,11 @@ class RenderStyleWrapper {
   }
 
   func lineSnap() -> LineSnap {
-    return rareInheritedData.lineSnap
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p))!
   }
 
   struct NonInheritedFlags {

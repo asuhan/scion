@@ -427,6 +427,7 @@ const void* RenderStyle_paddingTop(const void*);
 const void* RenderStyle_paddingBottom(const void*);
 uint8_t RenderStyle_hangingPunctuation(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
+uint8_t RenderStyle_lineSnap(const void*);
 bool RenderStyle_autoWrap(const void*);
 int32_t RenderStyle_textShadowExtent_top(const void*);
 int32_t RenderStyle_textShadowExtent_right(const void*);
