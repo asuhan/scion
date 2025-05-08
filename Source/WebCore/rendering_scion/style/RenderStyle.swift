@@ -759,7 +759,11 @@ class RenderStyleWrapper {
   }
 
   func rubyOverhang() -> RubyOverhang {
-    return rareInheritedData.rubyOverhang
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return RubyOverhang(rawValue: wk_interop.RenderStyle_rubyOverhang(p))!
   }
 
   func lineBoxContain() -> LineBoxContain {
