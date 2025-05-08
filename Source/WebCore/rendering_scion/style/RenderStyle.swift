@@ -918,7 +918,11 @@ class RenderStyleWrapper {
   }
 
   func lineAlign() -> LineAlign {
-    return rareInheritedData.lineAlign
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LineAlign(rawValue: wk_interop.RenderStyle_lineAlign(p))!
   }
 
   func lineSnap() -> LineSnap {
