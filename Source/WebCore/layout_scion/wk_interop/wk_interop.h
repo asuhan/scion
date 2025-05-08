@@ -404,6 +404,7 @@ const void* InlineFormattingContext_root(const void*);
 void* InlineFormattingContext_globalLayoutState(void*);
 void InlineFormattingContext_setClearGapAfterLastLine(void*, float);
 uint16_t RenderStyle_lineFitEdge(const void*);
+uint8_t RenderStyle_textIndentType(const void*);
 uint8_t RenderStyle_textDecorationSkipInk(const void*);
 uint8_t RenderStyle_lineBoxContain(const void*);
 uint8_t RenderStyle_textDecorationsInEffect(const void*);

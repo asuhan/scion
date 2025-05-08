@@ -457,7 +457,11 @@ class RenderStyleWrapper {
   }
 
   func textIndentType() -> TextIndentType {
-    return rareInheritedData.textIndentType
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return TextIndentType(rawValue: wk_interop.RenderStyle_textIndentType(p))!
   }
 
   func textAlign() -> TextAlignMode {

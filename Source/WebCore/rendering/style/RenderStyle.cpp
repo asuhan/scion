@@ -338,6 +338,11 @@ extern "C" WEBCORE_EXPORT uint16_t RenderStyle_lineFitEdge(const void* p)
     return (static_cast<uint8_t>(lineFitEdge.over) * 256) | static_cast<uint8_t>(lineFitEdge.under);
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textIndentType(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textIndentType());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationSkipInk(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textDecorationSkipInk());
