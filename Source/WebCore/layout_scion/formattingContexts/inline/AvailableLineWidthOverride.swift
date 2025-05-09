@@ -25,8 +25,7 @@
 
 struct AvailableLineWidthOverride {
   init(individualLineWidthOverrides: [LayoutUnit]) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.individualLineWidthOverrides = individualLineWidthOverrides
   }
 
   init() {
