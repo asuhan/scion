@@ -37,14 +37,63 @@ internal func computeCost(candidateLineWidth: InlineLayoutUnit, idealLineWidth: 
   return difference * difference
 }
 
+internal func containsTrailingSoftHyphen(inlineItem: InlineItemWrapper) -> Bool {
+  if inlineItem.style().hyphens() == .None {
+    return false
+  }
+  if let textItem = inlineItem as? InlineTextItemWrapper {
+    return textItem.hasTrailingSoftHyphen
+  }
+  return false
+}
+
+internal func containsPreservedTab(inlineItem: InlineItemWrapper) -> Bool {
+  if let textItem = inlineItem as? InlineTextItemWrapper {
+    if !textItem.isWhitespace() {
+      return false
+    }
+    let textBox = textItem.inlineTextBox()
+    if !TextUtil.shouldPreserveSpacesAndTabs(layoutBox: textBox) {
+      return false
+    }
+    let start = textItem.start()
+    let length = textItem.length
+    let textContent = textBox.content
+    for index in start..<start + length {
+      if textContent[index] == CharacterNames.Unicode.tabCharacter {
+        return true
+      }
+    }
+    return false
+  }
+  return false
+}
+
+internal func cannotConstrainInlineItem(inlineItem: InlineItemWrapper) -> Bool {
+  if !inlineItem.layoutBox.isInlineLevelBox() {
+    return true
+  }
+  if containsTrailingSoftHyphen(inlineItem: inlineItem) {
+    return true
+  }
+  if containsPreservedTab(inlineItem: inlineItem) {
+    return true
+  }
+  if inlineItem.style().boxDecorationBreak() == .Clone {
+    return true
+  }
+  return false
+}
+
 struct InlineContentConstrainer {
   init(
     inlineFormattingContext: InlineFormattingContext, inlineItemList: InlineItemList,
     horizontalConstraints: HorizontalConstraints
   ) {
-    // TODO(asuhan): implement this
+    self.inlineFormattingContext = inlineFormattingContext
     self.inlineItemList = inlineItemList
-    fatalError("Not implemented")
+    self.horizontalConstraints = horizontalConstraints
+    self.initialize()
   }
 
   func computeParagraphLevelConstraints(wrapStyle: TextWrapStyle) -> [LayoutUnit]? {
@@ -90,7 +139,7 @@ struct InlineContentConstrainer {
   }
 
   // Constrain each chunk
-  func constrainChunk(chunkStart: UInt64, chunkSize: UInt64, wrapStyle: TextWrapStyle)
+  private func constrainChunk(chunkStart: UInt64, chunkSize: UInt64, wrapStyle: TextWrapStyle)
     -> [LayoutUnit]?
   {
     let isFirstChunk = (chunkStart == 0)
@@ -127,6 +176,106 @@ struct InlineContentConstrainer {
     }
 
     fatalError("Not reached")
+  }
+
+  private mutating func initialize() {
+    let lineClamp = inlineFormattingContext.layoutState().parentBlockLayoutState.lineClamp
+    let numberOfVisibleLinesAllowed = lineClamp != nil ? lineClamp!.maximumLines : nil
+
+    if !inlineFormattingContext.layoutState().placedFloats().isEmpty() {
+      cannotConstrainContent = true
+      return
+    }
+
+    // if we have a single line content, we don't have anything to be balanced.
+    if numberOfVisibleLinesAllowed == 1 {
+      hasSingleLineVisibleContent = true
+      return
+    }
+
+    numberOfInlineItems = UInt64(inlineItemList.count)
+    maximumLineWidth = horizontalConstraints.logicalWidth.double()
+
+    // Compute inline item widths beforehand to speed up later computations
+    inlineItemWidths.reserveCapacity(Int(numberOfInlineItems))
+    for item in inlineItemList {
+      if cannotConstrainInlineItem(inlineItem: item) {
+        cannotConstrainContent = true
+        return
+      }
+      inlineItemWidths.append(
+        inlineFormattingContext.formattingUtils().inlineItemWidth(
+          inlineItem: item, contentLogicalLeft: 0, useFirstLineStyle: false))
+      firstLineStyleInlineItemWidths.append(
+        inlineFormattingContext.formattingUtils().inlineItemWidth(
+          inlineItem: item, contentLogicalLeft: 0, useFirstLineStyle: true))
+    }
+
+    // Perform a line layout with `text-wrap: wrap` to compute useful metrics such as:
+    //  - the number of lines used
+    //  - the original widths of each line
+    //  - forced break locations
+    var layoutRange = InlineItemRange(
+      start: InlineItemPosition(index: 0),
+      end: InlineItemPosition(index: UInt64(inlineItemList.count)))
+    let lineBuilder = LineBuilder(
+      inlineFormattingContext: inlineFormattingContext,
+      rootHorizontalConstraints: horizontalConstraints, inlineItemList: inlineItemList)
+    var previousLineEnd: InlineItemPosition? = nil
+    var previousLine: PreviousLine? = nil
+    var lineIndex: UInt64 = 0
+    while !layoutRange.isEmpty() {
+      let lineInitialRect = InlineRect(
+        top: 0, left: horizontalConstraints.logicalLeft.float(),
+        width: horizontalConstraints.logicalWidth.float(),
+        height: 0)
+      let lineLayoutResult = lineBuilder.layoutInlineContent(
+        lineInput: LineInput(needsLayoutRange: layoutRange, initialLogicalRect: lineInitialRect),
+        previousLine: previousLine)
+
+      // Record relevant geometry measurements from one line layout
+      originalLineInlineItemRanges.append(lineLayoutResult.inlineItemRange)
+      originalLineEndsWithForcedBreak.append(
+        !lineLayoutResult.inlineContent.isEmpty
+          && lineLayoutResult.inlineContent.last!.isLineBreak())
+      let useFirstLineStyle = lineIndex == 0
+      let isFirstLineInChunk = lineIndex == 0 || originalLineEndsWithForcedBreak[Int(lineIndex) - 1]
+      let lineSlidingWidth = SlidingWidth(
+        inlineContentConstrainer: self, inlineItemList: inlineItemList,
+        start: lineLayoutResult.inlineItemRange.startIndex(),
+        end: lineLayoutResult.inlineItemRange.endIndex(), useFirstLineStyle: useFirstLineStyle,
+        isFirstLineInChunk: isFirstLineInChunk)
+      let previousLineEndsWithLineBreak =
+        lineIndex != 0 ? originalLineEndsWithForcedBreak[Int(lineIndex) - 1] : nil
+      let textIndent = computeTextIndent(
+        previousLineEndsWithLineBreak: previousLineEndsWithLineBreak)
+      originalLineWidths.append(textIndent + lineSlidingWidth.width())
+
+      // If next line count would match (or exceed) the number of visible lines due to line-clamp, we can bail out early.
+      if numberOfVisibleLinesAllowed != nil && lineIndex + 1 >= numberOfVisibleLinesAllowed! {
+        break
+      }
+
+      layoutRange.start = InlineFormattingUtils.leadingInlineItemPositionForNextLine(
+        lineContentEnd: lineLayoutResult.inlineItemRange.end,
+        previousLineContentEnd: previousLineEnd,
+        lineHasIntrusiveOrNewlyPlacedFloat: !lineLayoutResult.floatContent.hasIntrusiveFloat
+          .isEmpty
+          || !lineLayoutResult.floatContent.placedFloats.isEmpty, layoutRangeEnd: layoutRange.end)
+      previousLineEnd = layoutRange.start
+      previousLine = PreviousLine(
+        lineIndex: lineIndex,
+        trailingOverflowingContentWidth: lineLayoutResult.contentGeometry
+          .trailingOverflowingContentWidth,
+        endsWithLineBreak: !lineLayoutResult.inlineContent.isEmpty
+          && lineLayoutResult.inlineContent.last!.isLineBreak(),
+        hasInlineContent: !lineLayoutResult.inlineContent.isEmpty,
+        inlineBaseDirection: lineLayoutResult.directionality.inlineBaseDirection,
+        suspendedFloats: lineLayoutResult.floatContent.suspendedFloats)
+      lineIndex += 1
+    }
+
+    numberOfLinesInOriginalLayout = lineIndex
   }
 
   func balanceRangeWithLineRequirement(
@@ -517,20 +666,61 @@ struct InlineContentConstrainer {
   }
 
   func inlineItemWidth(inlineItemIndex: UInt64, useFirstLineStyle: Bool) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return useFirstLineStyle
+      ? firstLineStyleInlineItemWidths[Int(inlineItemIndex)]
+      : inlineItemWidths[Int(inlineItemIndex)]
   }
 
   func shouldTrimLeading(inlineItemIndex: UInt64, useFirstLineStyle: Bool, isFirstLineInChunk: Bool)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let inlineItem = inlineItemList[Int(inlineItemIndex)]
+    let style = useFirstLineStyle ? inlineItem.firstLineStyle() : inlineItem.style()
+
+    // Handle line break first so we can focus on other types of white space
+    if inlineItem.isLineBreak() {
+      return true
+    }
+
+    if let textItem = inlineItem as? InlineTextItemWrapper {
+      if textItem.isWhitespace() {
+        let isFirstLineLeadingPreservedWhiteSpace =
+          style.whiteSpaceCollapse() == .Preserve && isFirstLineInChunk
+        return !isFirstLineLeadingPreservedWhiteSpace && style.whiteSpaceCollapse() != .BreakSpaces
+      }
+      return false
+    }
+
+    if inlineItemWidth(inlineItemIndex: inlineItemIndex, useFirstLineStyle: useFirstLineStyle) <= 0
+    {
+      return true
+    }
+
+    return false
   }
 
   func shouldTrimTrailing(inlineItemIndex: UInt64, useFirstLineStyle: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let inlineItem = inlineItemList[Int(inlineItemIndex)]
+    let style = useFirstLineStyle ? inlineItem.firstLineStyle() : inlineItem.style()
+
+    // Handle line break first so we can focus on other types of white space
+    if inlineItem.isLineBreak() {
+      return true
+    }
+
+    if let textItem = inlineItem as? InlineTextItemWrapper {
+      if textItem.isWhitespace() {
+        return style.whiteSpaceCollapse() != .BreakSpaces
+      }
+      return false
+    }
+
+    if inlineItemWidth(inlineItemIndex: inlineItemIndex, useFirstLineStyle: useFirstLineStyle) <= 0
+    {
+      return true
+    }
+
+    return false
   }
 
   func computeBreakOpportunities(range: InlineItemRange) -> [UInt64] {
@@ -566,11 +756,10 @@ struct InlineContentConstrainer {
   }
 
   func computeTextIndent(previousLineEndsWithLineBreak: Bool?) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return inlineFormattingContext.formattingUtils().computedTextIndent(
+      isIntrinsicWidthMode: .No, previousLineEndsWithLineBreak: previousLineEndsWithLineBreak,
+      availableWidth: InlineLayoutUnit(maximumLineWidth))
   }
-
-  var inlineItemList: InlineItemList
 
   struct SlidingWidth {
     init(
@@ -689,11 +878,16 @@ struct InlineContentConstrainer {
   }
 
   var inlineFormattingContext: InlineFormattingContext
+  var inlineItemList: InlineItemList
+  private var horizontalConstraints: HorizontalConstraints
 
   var originalLineInlineItemRanges: [InlineItemRange] = []
   var originalLineWidths: [Float32] = []
   var originalLineEndsWithForcedBreak: [Bool] = []
+  private var inlineItemWidths: [InlineLayoutUnit] = []
+  private var firstLineStyleInlineItemWidths: [InlineLayoutUnit] = []
   var numberOfLinesInOriginalLayout: UInt64 = 0
+  private var numberOfInlineItems: UInt64 = 0
   var maximumLineWidth: Float64 = 0
   var cannotConstrainContent = false
   var hasSingleLineVisibleContent = false

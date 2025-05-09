@@ -48,9 +48,13 @@ struct LayoutUnit: Comparable {
 
   func toFloat() -> Float32 { return Float32(value) / Float32(kFixedPointDenominator) }
 
+  func toDouble() -> Float64 { return Float64(value) / Float64(kFixedPointDenominator) }
+
   func bool() -> Bool { return value != 0 }
 
   func float() -> Float32 { return toFloat() }
+
+  func double() -> Float64 { return toDouble() }
 
   func mightBeSaturated() -> Bool {
     return rawValue() == Int32.max || rawValue() == Int32.min
