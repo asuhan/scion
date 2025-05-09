@@ -38,8 +38,7 @@ class InlineLayoutState {
   }
 
   func setAvailableLineWidthOverride(availableLineWidthOverride: AvailableLineWidthOverride) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.availableLineWidthOverride = availableLineWidthOverride
   }
 
   func placedFloats() -> PlacedFloats {
