@@ -489,7 +489,11 @@ class RenderStyleWrapper {
   }
 
   func textWrapStyle() -> TextWrapStyle {
-    return inheritedFlags.textWrapStyle
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return TextWrapStyle(rawValue: wk_interop.RenderStyle_textWrapStyle(p))!
   }
 
   func marginTop() -> LengthWrapper {
