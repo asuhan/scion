@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 func clampTo(
   value: InlineLayoutUnit, min: InlineLayoutUnit = -Float32.greatestFiniteMagnitude,
   max: InlineLayoutUnit = Float32.greatestFiniteMagnitude
@@ -43,7 +45,6 @@ func clampToInteger(value: Float32) -> Int32 {
 
 extension WTF {
   static func areEssentiallyEqual(u: Float32, v: Float32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.WTF_areEssentiallyEqual(u, v)
   }
 }

@@ -32,6 +32,11 @@
 #include <wtf/MathExtras.h>
 #include <wtf/PriorityQueue.h>
 
+extern "C" WEBCORE_EXPORT bool WTF_areEssentiallyEqual(float u, float v)
+{
+    return WTF::areEssentiallyEqual(u, v);
+}
+
 namespace WebCore {
 namespace Layout {
 
