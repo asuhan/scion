@@ -16,6 +16,7 @@
 *   created by: Markus W. Scherer, updated by Matitiahu Allouche
 */
 
+// TODO(asuhan): rework to directly use raw values instead of this enum
 enum UBiDiLevel: UInt8 {
   case UBIDI_DEFAULT_LTR = 0xfe
   case UBIDI_LTR = 0
@@ -23,6 +24,8 @@ enum UBiDiLevel: UInt8 {
   case UBIDI_MIXED = 2
   case UBIDI_NEUTRAL = 3
   case UBIDI_OPTION_STREAMING = 4
+  case UBIDI_LEVEL_5 = 5
+  case UBIDI_LEVEL_6 = 6
   case OPAQUE = 0xff
   case UBIDI_MAX_EXPLICIT_LEVEL = 125
 }
