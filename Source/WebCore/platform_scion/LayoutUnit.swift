@@ -209,8 +209,8 @@ struct LayoutUnit: Comparable {
   }
 
   init(value: Float64) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): implement this correctly
+    self.value = Int32(value * Float64(kFixedPointDenominator))
   }
 
   static func * (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
