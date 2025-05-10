@@ -77,8 +77,11 @@ class FontMetricsWrapper {
   }
 
   func intCapHeight() -> Int {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return Int(wk_interop.FontMetrics_intCapHeight(p))
   }
 
   private var p: UnsafeRawPointer?

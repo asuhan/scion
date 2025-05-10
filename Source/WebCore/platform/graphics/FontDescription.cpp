@@ -80,6 +80,11 @@ extern "C" WEBCORE_EXPORT struct OptionalFloatRaw FontMetrics_xHeight(const void
     return xHeight ? OptionalFloatRaw{*xHeight, true} : OptionalFloatRaw{0, false};
 }
 
+extern "C" WEBCORE_EXPORT int32_t FontMetrics_intCapHeight(const void* p)
+{
+    return static_cast<const WebCore::FontMetrics*>(p)->intCapHeight();
+}
+
 namespace WebCore {
 
 FontDescription::FontDescription()

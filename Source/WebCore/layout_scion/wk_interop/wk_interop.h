@@ -140,6 +140,7 @@ int32_t FontMetrics_intDescent(const void*, uint8_t);
 float FontMetrics_lineSpacing(const void*);
 int32_t FontMetrics_intLineSpacing(const void*);
 struct OptionalFloatRaw FontMetrics_xHeight(const void*);
+int32_t FontMetrics_intCapHeight(const void*);
 const void* FontCascade_metricsOfPrimaryFont(const void*);
 float FontCascade_floatEmphasisMarkHeight(const void* font_cascade_ptr, const void* mark_ptr);
 bool FontCascade_isSmallCaps(const void*);
