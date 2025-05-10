@@ -52,7 +52,7 @@ extension LayoutIntegration {
       renderer.clearOverridingLogicalWidthLength()
     }
 
-    let updater = BoxGeometryUpdater(
+    var updater = BoxGeometryUpdater(
       layoutState: layoutState, rootLayoutBox: rootLayoutBox(box: box))
     updater.updateBoxGeometryAfterIntegrationLayout(
       layoutBox: box,

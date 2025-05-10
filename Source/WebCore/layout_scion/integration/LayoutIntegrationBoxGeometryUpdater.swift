@@ -151,7 +151,7 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
-    func updateBoxGeometryAfterIntegrationLayout(
+    mutating func updateBoxGeometryAfterIntegrationLayout(
       layoutBox: ElementBoxWrapper, availableWidth: LayoutUnit
     ) {
       let renderBox = layoutBox.rendererForIntegration() as! RenderBoxWrapper
@@ -254,7 +254,7 @@ extension LayoutIntegration {
       boxGeometry.setPadding(padding: padding)
     }
 
-    func setListMarkerOffsetForMarkerOutside(listMarker: RenderListMarkerWrapper) {
+    private mutating func setListMarkerOffsetForMarkerOutside(listMarker: RenderListMarkerWrapper) {
       let layoutBox = listMarker.layoutBox()!
       assert(layoutBox.isListMarkerOutside())
       var ancestor = listMarker.containingBlock()
@@ -267,8 +267,18 @@ extension LayoutIntegration {
         offsetFromParentListItem: offsetFromParentListItem)
 
       if offsetFromAssociatedListItem.bool() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let listMarkerGeometry = layoutState.ensureGeometryForBox(layoutBox: layoutBox)
+        // Make sure that the line content does not get pulled in to logical left direction due to
+        // the large negative margin (i.e. this ensures that logical left of the list content stays at the line start)
+        listMarkerGeometry.setHorizontalMargin(
+          margin: BoxGeometry.HorizontalEdges(
+            start: listMarkerGeometry.marginStart() + offsetFromParentListItem,
+            end: listMarkerGeometry.marginEnd() - offsetFromParentListItem))
+        let nestedOffset = offsetFromAssociatedListItem - offsetFromParentListItem
+        if nestedOffset.bool() {
+          nestedListMarkerOffsets.updateValue(
+            nestedOffset, forKey: CPtrToInt(layoutBox.p))
+        }
       }
     }
 
@@ -464,5 +474,6 @@ extension LayoutIntegration {
 
     private var layoutState: LayoutStateWrapper
     private var rootLayoutBox: ElementBoxWrapper
+    private var nestedListMarkerOffsets: [UInt: LayoutUnit] = [:]
   }
 }
