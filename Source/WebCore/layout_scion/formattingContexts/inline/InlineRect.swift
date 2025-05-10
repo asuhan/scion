@@ -192,8 +192,7 @@ struct InlineRect {
   }
 
   func intersects(other: InlineRect) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return rect!.intersects(other: other.InlineLayoutRect())
   }
 
   func isEmpty() -> Bool {
