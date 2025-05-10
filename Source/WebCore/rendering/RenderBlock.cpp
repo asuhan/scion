@@ -82,6 +82,12 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT int32_t RenderBlock_intrinsicBorderForFieldset(const void* p)
+{
+    const auto r = static_cast<const WebCore::RenderBlock*>(p)->intrinsicBorderForFieldset();
+    return r.rawValue();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

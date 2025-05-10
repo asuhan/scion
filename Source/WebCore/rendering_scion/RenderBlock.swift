@@ -20,10 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class RenderBlockWrapper: RenderBoxWrapper {
   func containsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Fieldset legends that are taller than the fieldset border add in intrinsic border
+  // in order to ensure that content gets properly pushed down across all layout systems
+  // (flexbox, block, etc.)
+  func intrinsicBorderForFieldset() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(p))
   }
 
   var floatingObjectSet: FloatingObjectSet? = nil
