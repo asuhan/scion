@@ -295,10 +295,11 @@ extension LayoutIntegration {
         }
         offset -= ancestor!.marginStart()
         if ancestor!.isFlexItem() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          offset -= ancestor!.logicalLeft()
+          hasAccountedForBorderAndPadding = true
+        } else {
+          hasAccountedForBorderAndPadding = false
         }
-        hasAccountedForBorderAndPadding = false
         ancestor = ancestor!.containingBlock()
       }
       return offset
