@@ -382,6 +382,7 @@ bool RenderStyle_isInterCharacterRubyPosition(const void*);
 uint8_t RenderStyle_rubyAlign(const void*);
 uint8_t RenderStyle_rubyOverhang(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
+int32_t RenderStyle_initialLetterHeight(const void*);
 uint8_t RenderStyle_writingMode(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
 bool RenderStyle_isVerticalWritingMode(const void*);

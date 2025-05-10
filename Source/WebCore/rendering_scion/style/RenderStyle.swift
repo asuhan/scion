@@ -792,8 +792,11 @@ class RenderStyleWrapper {
   }
 
   func initialLetterHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_initialLetterHeight(p)
   }
 
   func writingMode() -> WritingMode {
