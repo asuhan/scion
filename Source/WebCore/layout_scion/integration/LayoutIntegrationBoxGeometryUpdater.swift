@@ -37,7 +37,7 @@ func usedValueOrZero(length: LengthWrapper, availableWidth: LayoutUnit?) -> Layo
   return minimumValueForLength(length: length, maximumValue: availableWidth!)
 }
 
-func adjustBorderForTableAndFieldset(
+private func adjustBorderForTableAndFieldset(
   renderer: RenderBoxModelObjectWrapper, borderLeft: inout LayoutUnit,
   borderRight: inout LayoutUnit, borderTop: inout LayoutUnit, borderBottom: inout LayoutUnit
 ) {
@@ -52,8 +52,19 @@ func adjustBorderForTableAndFieldset(
   }
 
   if renderer.isFieldset() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustment = (renderer as! RenderBlockWrapper).intrinsicBorderForFieldset()
+    // Note that this adjustment is coming from _inside_ the fieldset so its own flow direction is what is relevant here.
+    let style = renderer.style()
+    switch style.blockFlowDirection() {
+    case .TopToBottom:
+      borderTop += adjustment
+    case .BottomToTop:
+      borderBottom += adjustment
+    case .LeftToRight:
+      borderLeft += adjustment
+    case .RightToLeft:
+      borderRight += adjustment
+    }
   }
 }
 
