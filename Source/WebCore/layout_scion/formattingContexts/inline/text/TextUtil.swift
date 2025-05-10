@@ -499,8 +499,13 @@ class TextUtil {
   }
 
   static func directionForTextContent(content: StringWrapperView) -> TextDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if content.is8Bit() {
+      return .LTR
+    }
+    let characters = content.span16()
+    return ubidi_getBaseDirection(text: characters.data(), length: Int32(characters.size()))
+      == .UBIDI_RTL
+      ? .RTL : .LTR
   }
 
   static func hasHangablePunctuationStart(
