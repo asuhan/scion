@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-internal func shiftDisplayBox(
+private func shiftDisplayBox(
   displayBox: InlineDisplay.Box, offset: InlineLayoutUnit,
   inlineFormattingContext: InlineFormattingContext
 ) {
@@ -34,8 +34,8 @@ internal func shiftDisplayBox(
   isHorizontalWritingMode
     ? displayBox.moveHorizontally(offset: offset) : displayBox.moveVertically(offset: offset)
   if !displayBox.isTextOrSoftLineBreak() && !displayBox.isRootInlineBox() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    inlineFormattingContext.geometryForBox(layoutBox: displayBox.layoutBox).moveHorizontally(
+      offset: LayoutUnit(value: offset))
   }
 }
 
