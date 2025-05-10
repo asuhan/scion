@@ -115,14 +115,15 @@ extension InlineDisplay {
 
     func isTextOrSoftLineBreak() -> Bool { return isText() || isSoftLineBreak() }
 
+    func isLineBreakBox() -> Bool { return type == .LineBreakBox }
+
     func isLineBreak() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
     func isInlineLevelBox() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return isAtomicInlineBox() || isLineBreakBox() || isInlineBox() || isGenericInlineLevelBox()
     }
 
     func isAtomicInlineBox() -> Bool { return type == .AtomicInlineBox }
