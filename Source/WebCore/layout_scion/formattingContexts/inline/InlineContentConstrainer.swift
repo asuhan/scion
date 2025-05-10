@@ -28,16 +28,16 @@
 // of break opportunities), and not caring about this ideal will allow us to use a more efficient algorithm.
 // Typically, if inline content spans many lines, the likelihood of someone caring about the vertical space
 // used decreases. So, we ignore this ideal number of lines requirement beyond this threshold.
-internal var maximumLinesToBalanceWithLineRequirement = UInt64(12)
+private var maximumLinesToBalanceWithLineRequirement = UInt64(12)
 
-internal func computeCost(candidateLineWidth: InlineLayoutUnit, idealLineWidth: InlineLayoutUnit)
+private func computeCost(candidateLineWidth: InlineLayoutUnit, idealLineWidth: InlineLayoutUnit)
   -> Float32
 {
   let difference = idealLineWidth - candidateLineWidth
   return difference * difference
 }
 
-internal func containsTrailingSoftHyphen(inlineItem: InlineItemWrapper) -> Bool {
+private func containsTrailingSoftHyphen(inlineItem: InlineItemWrapper) -> Bool {
   if inlineItem.style().hyphens() == .None {
     return false
   }
@@ -47,7 +47,7 @@ internal func containsTrailingSoftHyphen(inlineItem: InlineItemWrapper) -> Bool 
   return false
 }
 
-internal func containsPreservedTab(inlineItem: InlineItemWrapper) -> Bool {
+private func containsPreservedTab(inlineItem: InlineItemWrapper) -> Bool {
   if let textItem = inlineItem as? InlineTextItemWrapper {
     if !textItem.isWhitespace() {
       return false
@@ -69,7 +69,7 @@ internal func containsPreservedTab(inlineItem: InlineItemWrapper) -> Bool {
   return false
 }
 
-internal func cannotConstrainInlineItem(inlineItem: InlineItemWrapper) -> Bool {
+private func cannotConstrainInlineItem(inlineItem: InlineItemWrapper) -> Bool {
   if !inlineItem.layoutBox.isInlineLevelBox() {
     return true
   }
@@ -278,7 +278,7 @@ struct InlineContentConstrainer {
     numberOfLinesInOriginalLayout = lineIndex
   }
 
-  func balanceRangeWithLineRequirement(
+  private func balanceRangeWithLineRequirement(
     range: InlineItemRange, idealLineWidth: InlineLayoutUnit, numberOfLines: UInt64,
     isFirstChunk: Bool
   ) -> [LayoutUnit]? {
@@ -391,7 +391,7 @@ struct InlineContentConstrainer {
       inlineItems: range, breaks: breaks, isFirstChunk: isFirstChunk)
   }
 
-  func balanceRangeWithNoLineRequirement(
+  private func balanceRangeWithNoLineRequirement(
     range: InlineItemRange, idealLineWidth: InlineLayoutUnit, isFirstChunk: Bool
   ) -> [LayoutUnit]? {
     assert(range.startIndex() < range.endIndex())
@@ -495,7 +495,7 @@ struct InlineContentConstrainer {
       inlineItems: range, breaks: breaks, isFirstChunk: isFirstChunk)
   }
 
-  struct PrettifyRangeEntry: Comparable {
+  private struct PrettifyRangeEntry: Comparable {
     var accumulatedCost = Float32.infinity
     var previousBreakIndex: UInt64 = 0
     var lastLineWidth = InlineLayoutUnit()
@@ -513,7 +513,9 @@ struct InlineContentConstrainer {
     }
   }
 
-  func prettifyRange(range: InlineItemRange, idealLineWidth: InlineLayoutUnit, isFirstChunk: Bool)
+  private func prettifyRange(
+    range: InlineItemRange, idealLineWidth: InlineLayoutUnit, isFirstChunk: Bool
+  )
     -> [LayoutUnit]?
   {
     assert(range.startIndex() < range.endIndex())
@@ -647,7 +649,9 @@ struct InlineContentConstrainer {
       inlineItems: range, breaks: breaks, isFirstChunk: isFirstChunk)
   }
 
-  func minBestSolution(solutions: WTF.PriorityQueue<PrettifyRangeEntry>) -> PrettifyRangeEntry {
+  private func minBestSolution(solutions: WTF.PriorityQueue<PrettifyRangeEntry>)
+    -> PrettifyRangeEntry
+  {
     var bestSolution = solutions.first(where: { _ in true })!
     for solution in solutions {
       bestSolution = min(bestSolution, solution)
@@ -655,7 +659,7 @@ struct InlineContentConstrainer {
     return bestSolution
   }
 
-  func recordAndMaintainBestSolutions(
+  private func recordAndMaintainBestSolutions(
     breakIndex: Int, solution: PrettifyRangeEntry, state: [WTF.PriorityQueue<PrettifyRangeEntry>]
   ) {
     let numberOfBestSolutions = 3
@@ -665,13 +669,16 @@ struct InlineContentConstrainer {
     }
   }
 
-  func inlineItemWidth(inlineItemIndex: UInt64, useFirstLineStyle: Bool) -> InlineLayoutUnit {
+  private func inlineItemWidth(inlineItemIndex: UInt64, useFirstLineStyle: Bool) -> InlineLayoutUnit
+  {
     return useFirstLineStyle
       ? firstLineStyleInlineItemWidths[Int(inlineItemIndex)]
       : inlineItemWidths[Int(inlineItemIndex)]
   }
 
-  func shouldTrimLeading(inlineItemIndex: UInt64, useFirstLineStyle: Bool, isFirstLineInChunk: Bool)
+  private func shouldTrimLeading(
+    inlineItemIndex: UInt64, useFirstLineStyle: Bool, isFirstLineInChunk: Bool
+  )
     -> Bool
   {
     let inlineItem = inlineItemList[Int(inlineItemIndex)]
@@ -699,7 +706,7 @@ struct InlineContentConstrainer {
     return false
   }
 
-  func shouldTrimTrailing(inlineItemIndex: UInt64, useFirstLineStyle: Bool) -> Bool {
+  private func shouldTrimTrailing(inlineItemIndex: UInt64, useFirstLineStyle: Bool) -> Bool {
     let inlineItem = inlineItemList[Int(inlineItemIndex)]
     let style = useFirstLineStyle ? inlineItem.firstLineStyle() : inlineItem.style()
 
@@ -723,7 +730,7 @@ struct InlineContentConstrainer {
     return false
   }
 
-  func computeBreakOpportunities(range: InlineItemRange) -> [UInt64] {
+  private func computeBreakOpportunities(range: InlineItemRange) -> [UInt64] {
     var breakOpportunities: [UInt64] = []
     var currentIndex = range.startIndex()
     while currentIndex < range.endIndex() {
@@ -735,7 +742,7 @@ struct InlineContentConstrainer {
     return breakOpportunities
   }
 
-  func computeLineWidthsFromBreaks(
+  private func computeLineWidthsFromBreaks(
     inlineItems: InlineItemRange, breaks: [UInt64], isFirstChunk: Bool
   ) -> [LayoutUnit] {
     var lineWidths = [LayoutUnit](repeating: LayoutUnit(), count: breaks.count)
@@ -755,13 +762,13 @@ struct InlineContentConstrainer {
     return lineWidths
   }
 
-  func computeTextIndent(previousLineEndsWithLineBreak: Bool?) -> InlineLayoutUnit {
+  private func computeTextIndent(previousLineEndsWithLineBreak: Bool?) -> InlineLayoutUnit {
     return inlineFormattingContext.formattingUtils().computedTextIndent(
       isIntrinsicWidthMode: .No, previousLineEndsWithLineBreak: previousLineEndsWithLineBreak,
       availableWidth: InlineLayoutUnit(maximumLineWidth))
   }
 
-  struct SlidingWidth {
+  private struct SlidingWidth {
     init(
       inlineContentConstrainer: InlineContentConstrainer, inlineItemList: InlineItemList,
       start: UInt64, end: UInt64, useFirstLineStyle: Bool, isFirstLineInChunk: Bool
@@ -877,18 +884,18 @@ struct InlineContentConstrainer {
     var firstLeadingNonTrimmedItem: UInt64? = nil
   }
 
-  var inlineFormattingContext: InlineFormattingContext
-  var inlineItemList: InlineItemList
+  private var inlineFormattingContext: InlineFormattingContext
+  private var inlineItemList: InlineItemList
   private var horizontalConstraints: HorizontalConstraints
 
-  var originalLineInlineItemRanges: [InlineItemRange] = []
-  var originalLineWidths: [Float32] = []
-  var originalLineEndsWithForcedBreak: [Bool] = []
+  private var originalLineInlineItemRanges: [InlineItemRange] = []
+  private var originalLineWidths: [Float32] = []
+  private var originalLineEndsWithForcedBreak: [Bool] = []
   private var inlineItemWidths: [InlineLayoutUnit] = []
   private var firstLineStyleInlineItemWidths: [InlineLayoutUnit] = []
-  var numberOfLinesInOriginalLayout: UInt64 = 0
+  private var numberOfLinesInOriginalLayout: UInt64 = 0
   private var numberOfInlineItems: UInt64 = 0
-  var maximumLineWidth: Float64 = 0
-  var cannotConstrainContent = false
-  var hasSingleLineVisibleContent = false
+  private var maximumLineWidth: Float64 = 0
+  private var cannotConstrainContent = false
+  private var hasSingleLineVisibleContent = false
 }
