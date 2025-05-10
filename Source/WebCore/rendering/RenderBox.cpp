@@ -117,6 +117,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_availableLogicalWidth(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->availableLogicalWidth().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_logicalLeft(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->logicalLeft().rawValue();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBox_contentWidth(const void* p)
 {
     const auto width = static_cast<const WebCore::RenderBox*>(p)->contentWidth();
