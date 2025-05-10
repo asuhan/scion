@@ -30,6 +30,49 @@ enum UBiDiLevel: UInt8 {
   case UBIDI_MAX_EXPLICIT_LEVEL = 125
 }
 
+/// <code>UBiDiDirection</code> values indicate the text direction.
+/// @stable ICU 2.0
+enum UBiDiDirection: UInt8 {
+  /** Left-to-right text. This is a 0 value.
+   * <ul>
+   * <li>As return value for <code>ubidi_getDirection()</code>, it means
+   *     that the source string contains no right-to-left characters, or
+   *     that the source string is empty and the paragraph level is even.
+   * <li> As return value for <code>ubidi_getBaseDirection()</code>, it
+   *      means that the first strong character of the source string has
+   *      a left-to-right direction.
+   * </ul>
+   * @stable ICU 2.0
+   */
+  case UBIDI_LTR
+  /** Right-to-left text. This is a 1 value.
+   * <ul>
+   * <li>As return value for <code>ubidi_getDirection()</code>, it means
+   *     that the source string contains no left-to-right characters, or
+   *     that the source string is empty and the paragraph level is odd.
+   * <li> As return value for <code>ubidi_getBaseDirection()</code>, it
+   *      means that the first strong character of the source string has
+   *      a right-to-left direction.
+   * </ul>
+   * @stable ICU 2.0
+   */
+  case UBIDI_RTL
+  /** Mixed-directional text.
+   * <p>As return value for <code>ubidi_getDirection()</code>, it means
+   *    that the source string contains both left-to-right and
+   *    right-to-left characters.
+   * @stable ICU 2.0
+   */
+  case UBIDI_MIXED
+  /** No strongly directional text.
+   * <p>As return value for <code>ubidi_getBaseDirection()</code>, it means
+   *    that the source string is missing or empty, or contains neither left-to-right
+   *    nor right-to-left characters.
+   * @stable ICU 4.6
+   */
+  case UBIDI_NEUTRAL
+}
+
 struct UBiDiWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p

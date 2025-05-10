@@ -42,6 +42,11 @@ internal func ubidi_close(ubidi: UBiDiWrapper) {
   wk_interop.ubidi_close_scion(ubidi.p)
 }
 
+internal func ubidi_getBaseDirection(text: UnsafePointer<UChar>, length: Int32) -> UBiDiDirection {
+  return UBiDiDirection(
+    rawValue: wk_interop.ubidi_getBaseDirection_scion(text, length))!
+}
+
 internal func ubidi_getLogicalRun(
   pBiDi: UBiDiWrapper, logicalPosition: Int32, pLogicalLimit: inout Int32, pLevel: inout UBiDiLevel
 ) {
