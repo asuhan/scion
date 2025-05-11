@@ -82,8 +82,7 @@ class PlacedFloats {
     }
 
     func absoluteBorderBoxRect() -> Rect {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return BoxGeometry.borderBoxRect(box: absoluteBoxGeometry)
     }
 
     func horizontalMargin() -> BoxGeometry.HorizontalEdges {
