@@ -27,6 +27,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 struct LineSegment {
   init(logicalLeft: Float32, logicalRight: Float32) {
     self.logicalLeft = logicalLeft
@@ -50,8 +52,8 @@ class ShapeWrapper {
   }
 
   func lineOverlapsShapeMarginBounds(lineTop: LayoutUnit, lineHeight: LayoutUnit) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Shape_lineOverlapsShapeMarginBounds(
+      p, lineTop.rawValue(), lineHeight.rawValue())
   }
 
   var p: UnsafeRawPointer
