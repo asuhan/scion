@@ -687,7 +687,7 @@ class RubyFormattingContext {
           fatalError("Not reached")
         }
         let previousDescendantLayoutBounds = descendantRubySet[
-          ObjectIdentifier(ancestorInlineBox!)]!
+          ObjectIdentifier(ancestorInlineBox!), default: InlineLevelBox.AscentAndDescent()]
         descendantRubySet[ObjectIdentifier(ancestorInlineBox!)] = InlineLevelBox.AscentAndDescent(
           ascent: max(previousDescendantLayoutBounds.ascent, layoutBounds.ascent),
           descent: max(previousDescendantLayoutBounds.descent, layoutBounds.descent))
