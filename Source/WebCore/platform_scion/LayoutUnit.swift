@@ -93,8 +93,8 @@ struct LayoutUnit: Comparable {
   }
 
   static func / (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rawVal = Int64(kFixedPointDenominator) * Int64(a.rawValue()) / Int64(b.rawValue())
+    return fromRawValue(value: clampTo<Int32>(value: rawVal))
   }
 
   static func / (a: LayoutUnit, b: Int) -> LayoutUnit {

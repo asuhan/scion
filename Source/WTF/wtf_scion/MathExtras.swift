@@ -32,6 +32,17 @@ func clampTo(
   return Swift.max(min, Swift.min(value, max))
 }
 
+func clampTo<TargetType, SourceType>(value: SourceType) -> TargetType
+where TargetType: SignedInteger & FixedWidthInteger, SourceType: SignedInteger & FixedWidthInteger {
+  if value >= TargetType.max {
+    return TargetType.max
+  }
+  if value <= TargetType.min {
+    return TargetType.min
+  }
+  return TargetType(value)
+}
+
 func clampToInteger(value: Float32) -> Int32 {
   if value >= Float32(Int32.max) {
     return Int32.max
