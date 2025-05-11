@@ -104,6 +104,12 @@ struct GlyphDataRaw {
     uint8_t color_glyph_type;
 };
 
+struct LineSegmentRaw {
+    float logicalLeft;
+    float logicalRight;
+    bool isValid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -525,3 +531,4 @@ const void* makeString_scion(const void* string_view_raw, const void* atom_strin
 bool WTF_areEssentiallyEqual(float, float);
 const void* ShapeOutsideInfo_computedShape(const void*);
 bool Shape_lineOverlapsShapeMarginBounds(const void* p, int32_t line_top_raw, int32_t line_height_raw);
+struct LineSegmentRaw Shape_getExcludedInterval(const void* p, int32_t logical_top_raw, int32_t logical_height_raw);

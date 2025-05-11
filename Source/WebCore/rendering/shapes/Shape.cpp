@@ -42,6 +42,19 @@
 #include "RectangleShape.h"
 #include "WindRule.h"
 
+struct LineSegmentRaw {
+    float logicalLeft;
+    float logicalRight;
+    bool isValid;
+};
+
+extern "C" WEBCORE_EXPORT struct LineSegmentRaw Shape_getExcludedInterval(const void* p, int32_t logical_top_raw, int32_t logical_height_raw)
+{
+    const auto shape = static_cast<const WebCore::Shape*>(p);
+    const auto lineSegment = shape->getExcludedInterval(WebCore::LayoutUnit::fromRawValue(logical_top_raw), WebCore::LayoutUnit::fromRawValue(logical_height_raw));
+    return { lineSegment.logicalLeft, lineSegment.logicalRight, lineSegment.isValid };
+}
+
 extern "C" WEBCORE_EXPORT bool Shape_lineOverlapsShapeMarginBounds(const void* p, int32_t line_top_raw, int32_t line_height_raw)
 {
     const auto shape = static_cast<const WebCore::Shape*>(p);

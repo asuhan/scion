@@ -31,9 +31,13 @@ import wk_interop
 
 struct LineSegment {
   init(logicalLeft: Float32, logicalRight: Float32) {
+    self.init(logicalLeft: logicalLeft, logicalRight: logicalRight, isValid: true)
+  }
+
+  init(logicalLeft: Float32, logicalRight: Float32, isValid: Bool) {
     self.logicalLeft = logicalLeft
     self.logicalRight = logicalRight
-    self.isValid = true
+    self.isValid = isValid
   }
 
   var logicalLeft: Float32 = 0
@@ -47,8 +51,13 @@ class ShapeWrapper {
   }
 
   func getExcludedInterval(logicalTop: LayoutUnit, logicalHeight: LayoutUnit) -> LineSegment {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let lineSegmentRaw = wk_interop.Shape_getExcludedInterval(
+      p, logicalTop.rawValue(), logicalHeight.rawValue())
+    var lineSegment = LineSegment(
+      logicalLeft: lineSegmentRaw.logicalLeft,
+      logicalRight: lineSegmentRaw.logicalRight)
+    lineSegment.isValid = lineSegmentRaw.isValid
+    return lineSegment
   }
 
   func lineOverlapsShapeMarginBounds(lineTop: LayoutUnit, lineHeight: LayoutUnit) -> Bool {
