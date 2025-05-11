@@ -76,9 +76,9 @@ struct Rect {
     fatalError("Not implemented")
   }
 
-  func setWidth(width: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func setWidth(width: LayoutUnit) {
+    hasValidWidth = true
+    rect.setWidth(width: width)
   }
 
   mutating func expandToContain(rect: Rect) {

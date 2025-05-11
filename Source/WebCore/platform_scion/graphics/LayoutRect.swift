@@ -69,6 +69,8 @@ struct LayoutRectWrapper {
     fatalError("Not implemented")
   }
 
+  func setWidth(width: LayoutUnit) { m_size.setWidth(width: width) }
+
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
   func move(size: LayoutSizeWrapper) {
