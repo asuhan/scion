@@ -454,6 +454,14 @@ class BoxWrapper: Hashable {
     return nil
   }
 
+  func setShape(shape: ShapeWrapper) {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    wk_interop.Box_setShape(p, shape.p)
+  }
+
   static func == (lhs: BoxWrapper, rhs: BoxWrapper) -> Bool {
     return lhs.p == rhs.p
   }

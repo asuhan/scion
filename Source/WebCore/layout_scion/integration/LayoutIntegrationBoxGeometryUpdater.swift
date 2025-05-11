@@ -182,9 +182,8 @@ extension LayoutIntegration {
         updateLayoutBoxDimensions(renderBox: renderBox, availableWidth: availableWidth)
       }
 
-      if renderBox.shapeOutsideInfo() != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+      if let shapeOutsideInfo = renderBox.shapeOutsideInfo() {
+        layoutBox.setShape(shape: shapeOutsideInfo.computedShape())
       }
     }
 

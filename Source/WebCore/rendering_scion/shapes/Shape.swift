@@ -54,5 +54,5 @@ class ShapeWrapper {
     fatalError("Not implemented")
   }
 
-  private var p: UnsafeRawPointer
+  var p: UnsafeRawPointer
 }

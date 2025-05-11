@@ -208,6 +208,12 @@ extern "C" WEBCORE_EXPORT const void* Box_shape(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->shape();
 }
 
+extern "C" WEBCORE_EXPORT void Box_setShape(const void* box_raw, const void* shape)
+{
+    const auto box = static_cast<const WebCore::Layout::Box*>(box_raw);
+    const_cast<WebCore::Layout::Box*>(box)->setShape(static_cast<const WebCore::Shape*>(shape));
+}
+
 namespace WebCore {
 namespace Layout {
 
