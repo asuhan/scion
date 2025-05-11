@@ -98,8 +98,7 @@ struct LayoutUnit: Comparable {
   }
 
   static func / (a: LayoutUnit, b: Int) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return a / LayoutUnit(value: b)
   }
 
   static func / (a: LayoutUnit, b: UInt64) -> LayoutUnit {
