@@ -27,14 +27,15 @@
  * SUCH DAMAGE.
  */
 
+import wk_interop
+
 struct ShapeOutsideInfoWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func computedShape() -> ShapeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ShapeWrapper(p: wk_interop.ShapeOutsideInfo_computedShape(p))
   }
 
   private var p: UnsafeRawPointer

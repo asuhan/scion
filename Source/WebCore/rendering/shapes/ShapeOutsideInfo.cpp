@@ -42,6 +42,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/MakeString.h>
 
+extern "C" WEBCORE_EXPORT const void* ShapeOutsideInfo_computedShape(const void* p)
+{
+    return &static_cast<const WebCore::ShapeOutsideInfo*>(p)->computedShape();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ShapeOutsideDeltas);

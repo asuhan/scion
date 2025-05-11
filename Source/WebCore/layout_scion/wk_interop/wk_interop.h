@@ -523,3 +523,4 @@ bool Hyphenation_canHyphenate(const void*);
 uint64_t Hyphenation_lastHyphenLocation(const void* string_raw, uint64_t before_index, const void* locale_identifier_raw);
 const void* makeString_scion(const void* string_view_raw, const void* atom_string_raw);
 bool WTF_areEssentiallyEqual(float, float);
+const void* ShapeOutsideInfo_computedShape(const void*);
