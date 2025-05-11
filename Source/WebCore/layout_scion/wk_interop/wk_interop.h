@@ -469,6 +469,7 @@ int32_t BoxGeometry_marginBefore(const void*);
 int32_t BoxGeometry_marginStart(const void*);
 int32_t BoxGeometry_marginAfter(const void*);
 int32_t BoxGeometry_marginEnd(const void*);
+int32_t BoxGeometry_borderBefore(const void*);
 int32_t BoxGeometry_borderStart(const void*);
 int32_t BoxGeometry_borderEnd(const void*);
 int32_t BoxGeometry_paddingStart(const void*);

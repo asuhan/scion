@@ -113,8 +113,11 @@ struct BoxGeometry {
   }
 
   func borderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderBefore(p))
   }
 
   func borderAfter() -> LayoutUnit {
