@@ -157,8 +157,13 @@ class PlacedFloats {
   }
 
   func remove(floatBox: BoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let indexToRemove = list.firstIndex(where: { (placedFloatItem: Item) -> Bool in
+      CPtrToInt(placedFloatItem.layoutBox()?.p) == CPtrToInt(floatBox.p)
+    }) {
+      list.remove(at: indexToRemove)
+      return true
+    }
+    return false
   }
 
   func clear() {
