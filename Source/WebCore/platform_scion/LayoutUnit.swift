@@ -225,9 +225,8 @@ struct LayoutUnit: Comparable {
   }
 
   static func + (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this correctly
     var returnVal = LayoutUnit()
-    returnVal.value = a.rawValue() + b.rawValue()
+    returnVal.value = WTF.saturatedSum(a: a.rawValue(), b: b.rawValue())
     return returnVal
   }
 
