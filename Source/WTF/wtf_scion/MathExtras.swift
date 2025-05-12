@@ -43,12 +43,12 @@ where TargetType: SignedInteger & FixedWidthInteger, SourceType: SignedInteger &
   return TargetType(value)
 }
 
-func clampToInteger(value: Float32) -> Int32 {
-  if value >= Float32(Int32.max) {
+func clampToInteger<SourceType>(value: SourceType) -> Int32 where SourceType: BinaryFloatingPoint {
+  if value >= SourceType(Int32.max) {
     return Int32.max
   }
   // This will return min if value is NaN.
-  if !(value > Float32(Int32.min)) {
+  if !(value > SourceType(Int32.min)) {
     return Int32.min
   }
   return Int32(value)
