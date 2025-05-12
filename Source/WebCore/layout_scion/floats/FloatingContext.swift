@@ -931,8 +931,15 @@ struct FloatPair {
   }
 
   func containsFloatFromFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!floatPair.isEmpty())
+    return FloatPair.isInsideCurrentFormattingContext(floatBox: left())
+      || FloatPair.isInsideCurrentFormattingContext(floatBox: right())
+  }
+
+  private static func isInsideCurrentFormattingContext(floatBox: PlacedFloats.Item?) -> Bool {
+    // FIXME: This should be a tree traversal on the ancestor chain to see if this belongs to the
+    // FloatingContext's formatting context (e.g. float may come from parent and sibling formatting contexts)
+    return floatBox != nil && floatBox!.layoutBox() != nil
   }
 
   func verticalConstraint() -> PositionInContextRoot { return verticalPosition }
