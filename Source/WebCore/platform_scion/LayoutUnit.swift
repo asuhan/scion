@@ -198,8 +198,7 @@ struct LayoutUnit: Comparable {
   }
 
   init(value: Float32) {
-    // TODO(asuhan): implement this correctly
-    self.value = Int32(value * Float32(kFixedPointDenominator))
+    self.init(value: Float64(value))
   }
 
   init(value: Int) {
