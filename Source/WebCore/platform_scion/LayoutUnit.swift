@@ -251,8 +251,7 @@ struct LayoutUnit: Comparable {
 
   @discardableResult
   static func += (a: inout LayoutUnit, b: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this correctly
-    a.value = a.rawValue() + b.rawValue()
+    a.value = WTF.saturatedSum(a: a.rawValue(), b: b.rawValue())
     return a
   }
 
