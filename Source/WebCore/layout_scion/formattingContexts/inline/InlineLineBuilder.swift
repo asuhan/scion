@@ -467,7 +467,7 @@ final class LineBuilder: AbstractLineBuilder {
     var firstInlineTextItemIndex: UInt64? = nil
     var lastInlineTextItemIndex: UInt64? = nil
     var trailingSoftHyphenInlineTextItemIndex: UInt64? = nil
-    var inlineBoxListWithClonedDecorationEnd: Set<BoxWrapper> = []
+    var inlineBoxListWithClonedDecorationEnd: Set<UInt> = []
     var accumulatedDecorationEndWidth = InlineLayoutUnit()
     for index in currentInlineItemIndex..<softWrapOpportunityIndex {
       let inlineItem = inlineItemList[Int(index)]
@@ -536,8 +536,8 @@ final class LineBuilder: AbstractLineBuilder {
 
         if style.boxDecorationBreak() == .Clone {
           if inlineItem.isInlineBoxStart() {
-            inlineBoxListWithClonedDecorationEnd.insert(layoutBox)
-          } else if inlineBoxListWithClonedDecorationEnd.contains(layoutBox) {
+            inlineBoxListWithClonedDecorationEnd.insert(CPtrToInt(layoutBox.p))
+          } else if inlineBoxListWithClonedDecorationEnd.contains(CPtrToInt(layoutBox.p)) {
             accumulatedDecorationEndWidth += logicalWidth
           }
         }
