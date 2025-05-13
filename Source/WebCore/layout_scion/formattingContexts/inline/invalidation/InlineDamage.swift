@@ -64,6 +64,11 @@ struct InlineDamageWrapper {
     )
   }
 
+  func trailingContentForLine(lineIndex: UInt64) -> InlineDisplay.Box? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addDetachedBox(layoutBox: BoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

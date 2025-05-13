@@ -68,8 +68,17 @@ internal func isEmptyInlineContent(inlineItemList: InlineItemList) -> Bool {
 internal func mayExitFromPartialLayout(
   lineDamage: InlineDamageWrapper, lineIndex: UInt64, newContent: InlineDisplay.Boxes
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if lineDamage.layoutStartPosition()!.lineIndex == lineIndex {
+    // Never stop at the damaged line. Adding trailing overflowing content could easily produce the
+    // same set of display boxes for the first damaged line.
+    return false
+  }
+  if let trailingContentFromPreviousLayout = lineDamage.trailingContentForLine(lineIndex: lineIndex)
+  {
+    return !newContent.isEmpty
+      && ObjectIdentifier(trailingContentFromPreviousLayout) == ObjectIdentifier(newContent.last!)
+  }
+  return false
 }
 
 internal func computeNeedsLayoutRange(
