@@ -73,8 +73,20 @@ struct Line {
             lineSpanningInlineBoxItem: inlineBoxStartItem, logicalLeft: lastRunLogicalRight(),
             logicalWidth: InlineLayoutUnit()))
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // https://drafts.csswg.org/css-break/#break-decoration
+        // clone: Each box fragment is independently wrapped with the border, padding, and margin.
+        let inlineBoxGeometry = formattingContext().geometryForBox(
+          layoutBox: inlineBoxStartItem.layoutBox)
+        let marginBorderAndPaddingStart = inlineBoxGeometry.marginBorderAndPaddingStart()
+        let runLogicalLeft = lastRunLogicalRight()
+        runs.append(
+          Run(
+            lineSpanningInlineBoxItem: inlineBoxStartItem, logicalLeft: runLogicalLeft,
+            logicalWidth: marginBorderAndPaddingStart.float()))
+        // Do not let negative margin make the content shorter than it already is.
+        contentLogicalWidth = max(contentLogicalWidth, runLogicalLeft + marginBorderAndPaddingStart)
+        contentLogicalWidth += addBorderAndPaddingEndForInlineBoxDecorationClone(
+          inlineBoxStartItem: inlineBoxStartItem)
       }
     }
   }
