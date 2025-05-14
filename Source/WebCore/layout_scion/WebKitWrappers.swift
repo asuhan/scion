@@ -100,8 +100,10 @@ func convert_placed_floats_item(raw: wk_interop.PlacedFloatsItemRaw) -> PlacedFl
 }
 
 func convert_placed_floats(raw: PlacedFloatsRaw) -> PlacedFloats {
-  let blockFormattingContextRoot = ElementBoxWrapper()
-  blockFormattingContextRoot.p = raw.block_formatting_context_root
+  let root_raw_ptr = raw.block_formatting_context_root
+  let style = convert_render_style(p: Box_style(root_raw_ptr))
+  let blockFormattingContextRoot = ElementBoxWrapper(style: style)
+  blockFormattingContextRoot.p = root_raw_ptr
   let placedFloats = PlacedFloats(blockFormattingContextRoot: blockFormattingContextRoot)
   for i in 0..<raw.inline_items_count {
     placedFloats.list.append(convert_placed_floats_item(raw: raw.inline_items[Int(i)]))
