@@ -661,7 +661,7 @@ struct InlineFormattingUtils {
       if !lineClamp.shouldDiscardOverflow {
         return false
       }
-      assert(lineClamp.isLegacy)
+      assert(!lineClamp.isLegacy)
       return lineClamp.maximumLines == numberOfLinesWithInlineContent
     }
     return false
