@@ -470,6 +470,20 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineSnap(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->lineSnap());
 }
 
+struct BlockEllipsisRaw {
+    uint8_t type;
+    const void* string;
+};
+
+extern "C" WEBCORE_EXPORT struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void* p)
+{
+    const auto& blockEllipsis = static_cast<const WebCore::RenderStyle*>(p)->blockEllipsis();
+    return BlockEllipsisRaw {
+        static_cast<uint8_t>(blockEllipsis.type),
+        &blockEllipsis.string
+    };
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif

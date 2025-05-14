@@ -110,6 +110,11 @@ struct LineSegmentRaw {
     bool isValid;
 };
 
+struct BlockEllipsisRaw {
+    uint8_t type;
+    const void* string;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -439,6 +444,7 @@ const void* RenderStyle_paddingBottom(const void*);
 uint8_t RenderStyle_hangingPunctuation(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
+struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 bool RenderStyle_autoWrap(const void*);
 int32_t RenderStyle_textShadowExtent_top(const void*);
 int32_t RenderStyle_textShadowExtent_right(const void*);

@@ -779,8 +779,13 @@ class RenderStyleWrapper {
   }
 
   func blockEllipsis() -> BlockEllipsis {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    let blockEllipsisRaw = wk_interop.RenderStyle_blockEllipsis(p)
+    let type = BlockEllipsis.Type_(rawValue: blockEllipsisRaw.type)!
+    return BlockEllipsis(type: type, string: AtomStringWrapper(p: blockEllipsisRaw.string))
   }
 
   func initialLetterDrop() -> Int32 {

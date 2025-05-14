@@ -24,12 +24,12 @@
  */
 
 struct BlockEllipsis {
-  enum `Type`: UInt8 {
+  enum Type_: UInt8 {
     case None
     case Auto
     case String
   }
 
-  var type: `Type` = .None
+  var type: Type_ = .None
   var string = AtomStringWrapper()
 }
