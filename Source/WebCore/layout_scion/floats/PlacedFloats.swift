@@ -148,7 +148,9 @@ class PlacedFloats {
     list.insert(newFloatItem, at: 0)
   }
 
-  func isHorizontallyOrdered(isLeftPositioned: Bool, newFloatItem: Item, floatItem: Item) -> Bool {
+  private func isHorizontallyOrdered(isLeftPositioned: Bool, newFloatItem: Item, floatItem: Item)
+    -> Bool
+  {
     if newFloatItem.absoluteRectWithMargin().top() > floatItem.absoluteRectWithMargin().top() {
       // There's no more floats on this vertical position.
       return true
@@ -193,13 +195,13 @@ class PlacedFloats {
     self.isLeftToRightDirection = isLeftToRightDirection
   }
 
-  var blockFormattingContextRoot: ElementBoxWrapper
+  private var blockFormattingContextRoot: ElementBoxWrapper
   var list = List()
   struct PositionType: OptionSet {
     let rawValue: UInt8
     static let Left = PositionType(rawValue: 1 << 0)
     static let Right = PositionType(rawValue: 1 << 1)
   }
-  var positionTypes = PositionType()
+  private var positionTypes = PositionType()
   var isLeftToRightDirection = false
 }
