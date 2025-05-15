@@ -108,7 +108,6 @@ class PlacedFloats {
   func last() -> Item? { return list.isEmpty ? nil : list.last }
 
   func append(newFloatItem: Item) {
-    // TODO(asuhan): implement this
     let isLeftPositioned = newFloatItem.isLeftPositioned()
     positionTypes = positionTypes.union(isLeftPositioned ? .Left : .Right)
 
@@ -116,7 +115,13 @@ class PlacedFloats {
       return list.append(newFloatItem)
     }
 
-    // TODO(asuhan): add missing assertion
+    // The integration codepath does not construct a layout box for the float item.
+    if newFloatItem.layoutBox() != nil {
+      assert(
+        list.first(where: { entry in
+          CPtrToInt(entry.layoutBox()?.p) == CPtrToInt(newFloatItem.layoutBox()?.p)
+        }) == nil)
+    }
 
     // When adding a new float item to the list, we have to ensure that it is definitely the left(right)-most item.
     // Normally it is, but negative horizontal margins can push the float box beyond another float box.
