@@ -42,8 +42,11 @@ class BoxWrapper: Hashable {
   }
 
   func establishesBlockFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.Box_establishesBlockFormattingContext(p)
   }
 
   func establishesInlineFormattingContext() -> Bool {

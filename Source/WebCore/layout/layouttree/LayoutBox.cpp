@@ -173,6 +173,11 @@ extern "C" WEBCORE_EXPORT bool Box_establishesFormattingContext(const void* p)
     return static_cast<const WebCore::Layout::Box*>(p)->establishesFormattingContext();
 }
 
+extern "C" WEBCORE_EXPORT bool Box_establishesBlockFormattingContext(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->establishesBlockFormattingContext();
+}
+
 extern "C" WEBCORE_EXPORT bool Box_establishesInlineFormattingContext(const void* p)
 {
     return static_cast<const WebCore::Layout::Box*>(p)->establishesInlineFormattingContext();

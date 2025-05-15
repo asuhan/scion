@@ -28,10 +28,9 @@
 // are added to PlacledFloats as if they had matching inline direction (i.e. all boxes within PlacedFloats share the same writing mode)
 class PlacedFloats {
   init(blockFormattingContextRoot: ElementBoxWrapper) {
-    // TODO(asuhan): implement this
     self.blockFormattingContextRoot = blockFormattingContextRoot
     self.isLeftToRightDirection = blockFormattingContextRoot.style.isLeftToRightDirection()
-    // assert(blockFormattingContextRoot.establishesBlockFormattingContext())
+    assert(blockFormattingContextRoot.establishesBlockFormattingContext())
   }
 
   func formattingContextRoot() -> ElementBoxWrapper {

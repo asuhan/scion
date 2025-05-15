@@ -370,6 +370,7 @@ bool Box_isInlineIntegrationRoot(const void*);
 bool Box_isFirstChildForIntegration(const void*);
 bool Box_isElementBox(const void*);
 bool Box_establishesFormattingContext(const void*);
+bool Box_establishesBlockFormattingContext(const void*);
 bool Box_establishesInlineFormattingContext(const void*);
 const void* Box_parent(const void*);
 const void* Box_nextSibling(const void*);
