@@ -80,7 +80,6 @@ internal func toString(runs: Line.RunList) -> StringBuilderWrapper {
 internal func computedVisualOrder(
   lineRuns: Line.RunList, visualOrderList: inout [Int32]
 ) -> [Int32] {
-  // TODO(asuhan): implement this
   var runLevels: [UBiDiLevel] = []
   runLevels.reserveCapacity(lineRuns.count)
 
@@ -343,7 +342,6 @@ final class LineBuilder: AbstractLineBuilder {
   override func layoutInlineContent(lineInput: LineInput, previousLine: PreviousLine?)
     -> LineLayoutResult
   {
-    // TODO(asuhan): implement this
     let previousLineEndsWithLineBreak =
       previousLine == nil || !previousLine!.hasInlineContent ? nil : previousLine!.endsWithLineBreak
     initialize(
@@ -711,7 +709,6 @@ final class LineBuilder: AbstractLineBuilder {
 
   func tryPlacingFloatBox(floatBox: BoxWrapper, mayOverConstrainLine: MayOverConstrainLine) -> Bool
   {
-    // TODO(asuhan): implement this
     if isFloatLayoutSuspended() {
       return false
     }
@@ -1089,7 +1086,6 @@ final class LineBuilder: AbstractLineBuilder {
   func adjustedLineRectWithCandidateInlineContent(lineCandidate: LineCandidate)
     -> RectAndFloatConstraints
   {
-    // TODO(asuhan): implement this
     // Check if the candidate content would stretch the line and whether additional floats are getting in the way.
     let inlineContent = lineCandidate.inlineContent
     if isInIntrinsicWidthMode() {
@@ -1125,7 +1121,6 @@ final class LineBuilder: AbstractLineBuilder {
   )
     -> UInt64
   {
-    // TODO(asuhan): implement this
     assert(!wrapOpportunityList.isEmpty)
     var numberOfInlineItemsOnLine: UInt64 = 0
     var numberOfFloatsInRange: UInt64 = 0
@@ -1261,7 +1256,6 @@ final class LineBuilder: AbstractLineBuilder {
     initialLineLogicalRect: InlineRect, needsLayoutRange: InlineItemRange,
     previousLine: PreviousLine?, previousLineEndsWithLineBreak: Bool?
   ) {
-    // TODO(asuhan): implement this
     assert(
       !needsLayoutRange.isEmpty()
         || (previousLine != nil && !previousLine!.suspendedFloats.isEmpty))
@@ -1304,7 +1298,6 @@ final class LineBuilder: AbstractLineBuilder {
   }
 
   func placeInlineAndFloatContent(needsLayoutRange: InlineItemRange) -> LineContent {
-    // TODO(asuhan): implement this
     var resumedFloatCount: UInt64 = 0
     if !layoutPreviouslySuspendedFloats(resumedFloatCount: &resumedFloatCount) {
       // Couldn't even manage to place all suspended floats from previous line(s). -which also means we can't fit any inline content at this vertical position.
@@ -1600,7 +1593,6 @@ final class LineBuilder: AbstractLineBuilder {
   }
 
   func createLineSpanningInlineBoxes(needsLayoutRange: InlineItemRange) {
-    // TODO(asuhan): implement this
     if needsLayoutRange.isEmpty() {
       return
     }
@@ -1656,7 +1648,6 @@ final class LineBuilder: AbstractLineBuilder {
   func initializeLeadingContentFromOverflow(
     needsLayoutRange: InlineItemRange, previousLine: PreviousLine?
   ) {
-    // TODO(asuhan): implement this
     if previousLine == nil || needsLayoutRange.start.offset == 0 {
       return
     }
@@ -1754,7 +1745,6 @@ final class LineBuilder: AbstractLineBuilder {
   func isLastLineWithInlineContent(
     lineContent: LineContent, needsLayoutEnd: UInt64, lineRuns: Line.RunList
   ) -> Bool {
-    // TODO(asuhan): implement this
     if lineContent.partialTrailingContentLength != 0 {
       return false
     }
@@ -1794,7 +1784,6 @@ final class LineBuilder: AbstractLineBuilder {
     floatBox: BoxWrapper, floatBoxMarginBoxWidth: LayoutUnit,
     mayOverConstrainLine: MayOverConstrainLine
   ) -> Bool {
-    // TODO(asuhan): implement this
     switch mayOverConstrainLine {
     case .Yes:
       return true
