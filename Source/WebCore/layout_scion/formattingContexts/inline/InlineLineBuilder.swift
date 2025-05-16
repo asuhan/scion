@@ -590,8 +590,7 @@ final class LineBuilder: AbstractLineBuilder {
         inlineItemList: inlineItemList))
   }
 
-  // TODO(asuhan): Candiate -> Candidate
-  private func leadingPunctuationWidthForLineCandiate(
+  private func leadingPunctuationWidthForLineCandidate(
     firstInlineTextItemIndex: UInt64, candidateContentStartIndex: UInt64
   ) -> InlineLayoutUnit {
     let isFirstLineFirstContent = isFirstFormattedLine() && !line.hasContent()
@@ -619,8 +618,7 @@ final class LineBuilder: AbstractLineBuilder {
     return TextUtil.hangablePunctuationStartWidth(inlineTextItem: inlineTextItem, style: style)
   }
 
-  // TODO(asuhan): Candiate -> Candidate
-  private func trailingPunctuationOrStopOrCommaWidthForLineCandiate(
+  private func trailingPunctuationOrStopOrCommaWidthForLineCandidate(
     lastInlineTextItemIndex: UInt64, layoutRangeEnd: UInt64
   ) -> InlineLayoutUnit {
     let inlineTextItem = inlineItemList[Int(lastInlineTextItemIndex)] as! InlineTextItemWrapper
@@ -678,11 +676,11 @@ final class LineBuilder: AbstractLineBuilder {
     var hangingContentWidth = lineCandidate.inlineContent.continuousContent.hangingContentWidth()
     // Do not even try to check for trailing punctuation when the candidate content already has whitespace type of hanging content.
     if hangingContentWidth == 0 && lastInlineTextItemIndex != nil {
-      hangingContentWidth += trailingPunctuationOrStopOrCommaWidthForLineCandiate(
+      hangingContentWidth += trailingPunctuationOrStopOrCommaWidthForLineCandidate(
         lastInlineTextItemIndex: lastInlineTextItemIndex!, layoutRangeEnd: layoutRange.endIndex())
     }
     if firstInlineTextItemIndex != nil {
-      hangingContentWidth += leadingPunctuationWidthForLineCandiate(
+      hangingContentWidth += leadingPunctuationWidthForLineCandidate(
         firstInlineTextItemIndex: firstInlineTextItemIndex!,
         candidateContentStartIndex: currentInlineItemIndex)
     }
