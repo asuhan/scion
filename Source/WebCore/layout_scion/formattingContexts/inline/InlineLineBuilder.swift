@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct LineContent {
+private struct LineContent {
   var range = InlineItemRange()
   var endsWithHyphen = false
   var partialTrailingContentLength: UInt64 = 0
@@ -32,7 +32,7 @@ struct LineContent {
   var rubyAnnotationOffset = InlineLayoutUnit()
 }
 
-internal func isContentfulOrHasDecoration(
+private func isContentfulOrHasDecoration(
   inlineItem: InlineItemWrapper, formattingContext: InlineFormattingContext
 ) -> Bool {
   if inlineItem.isFloat() || inlineItem.isOpaque() {
@@ -60,7 +60,7 @@ internal func isContentfulOrHasDecoration(
   return inlineItem.isAtomicInlineBox() || inlineItem.isLineBreak()
 }
 
-internal func toString(runs: Line.RunList) -> StringBuilderWrapper {
+private func toString(runs: Line.RunList) -> StringBuilderWrapper {
   // FIXME: We could try to reuse the content builder in InlineItemsBuilder if this turns out to be a perf bottleneck.
   let lineContentBuilder = StringBuilderWrapper()
   for run in runs {
@@ -77,7 +77,7 @@ internal func toString(runs: Line.RunList) -> StringBuilderWrapper {
 }
 
 @discardableResult
-internal func computedVisualOrder(
+private func computedVisualOrder(
   lineRuns: Line.RunList, visualOrderList: inout [Int32]
 ) -> [Int32] {
   var runLevels: [UBiDiLevel] = []
@@ -119,7 +119,7 @@ internal func computedVisualOrder(
   return visualOrderList
 }
 
-internal func hasTrailingSoftWrapOpportunity(
+private func hasTrailingSoftWrapOpportunity(
   softWrapOpportunityIndex: UInt64, layoutRangeEnd: UInt64,
   inlineItemList: ArraySlice<InlineItemWrapper>
 ) -> Bool {
@@ -183,7 +183,7 @@ internal func hasTrailingSoftWrapOpportunity(
   fatalError("Not reached")
 }
 
-internal func inlineBaseDirectionForLineContent(
+private func inlineBaseDirectionForLineContent(
   runs: Line.RunList, rootStyle: RenderStyleWrapper, previousLine: PreviousLine?
 ) -> TextDirection {
   assert(!runs.isEmpty)
@@ -200,7 +200,7 @@ internal func inlineBaseDirectionForLineContent(
   return TextUtil.directionForTextContent(content: toString(runs: runs).view())
 }
 
-struct LineCandidate {
+private struct LineCandidate {
   mutating func reset() {
     floatItem = nil
     inlineContent.reset()
@@ -280,7 +280,7 @@ struct LineCandidate {
   var floatItem: InlineItemWrapper? = nil
 }
 
-internal func availableWidth(
+private func availableWidth(
   candidateContent: LineCandidate.InlineContent, line: Line, lineWidth: InlineLayoutUnit,
   intrinsicWidthMode: IntrinsicWidthMode?
 ) -> InlineLayoutUnit {
@@ -313,7 +313,7 @@ internal func availableWidth(
     ? maxInlineLayoutUnit() : (availableWidth + candidateContent.accumulatedClonedDecorationEnd)
 }
 
-internal func haveEnoughSpaceForFloatWithClear(
+private func haveEnoughSpaceForFloatWithClear(
   floatBoxMarginBox: LayoutRectWrapper, isLeftPositioned: Bool, lineLogicalRect: InlineRect,
   contentLogicalWidth: InlineLayoutUnit
 ) -> Bool {
@@ -430,7 +430,7 @@ final class LineBuilder: AbstractLineBuilder {
     )
   }
 
-  func candidateContentForLine(
+  private func candidateContentForLine(
     lineCandidate: inout LineCandidate, currentInlineItemIndexIn: UInt64,
     layoutRange: InlineItemRange,
     currentLogicalRightIn: InlineLayoutUnit
@@ -591,7 +591,7 @@ final class LineBuilder: AbstractLineBuilder {
   }
 
   // TODO(asuhan): Candiate -> Candidate
-  func leadingPunctuationWidthForLineCandiate(
+  private func leadingPunctuationWidthForLineCandiate(
     firstInlineTextItemIndex: UInt64, candidateContentStartIndex: UInt64
   ) -> InlineLayoutUnit {
     let isFirstLineFirstContent = isFirstFormattedLine() && !line.hasContent()
@@ -620,7 +620,7 @@ final class LineBuilder: AbstractLineBuilder {
   }
 
   // TODO(asuhan): Candiate -> Candidate
-  func trailingPunctuationOrStopOrCommaWidthForLineCandiate(
+  private func trailingPunctuationOrStopOrCommaWidthForLineCandiate(
     lastInlineTextItemIndex: UInt64, layoutRangeEnd: UInt64
   ) -> InlineLayoutUnit {
     let inlineTextItem = inlineItemList[Int(lastInlineTextItemIndex)] as! InlineTextItemWrapper
@@ -649,7 +649,7 @@ final class LineBuilder: AbstractLineBuilder {
     return InlineLayoutUnit()
   }
 
-  func setTrailingSoftHyphenWidth(
+  private func setTrailingSoftHyphenWidth(
     trailingSoftHyphenInlineTextItemIndex: UInt64?, softWrapOpportunityIndex: UInt64,
     lineCandidate: inout LineCandidate
   ) {
@@ -669,7 +669,7 @@ final class LineBuilder: AbstractLineBuilder {
       hyphenWidth: TextUtil.hyphenWidth(style: style))
   }
 
-  func setLeadingAndTrailingHangingPunctuation(
+  private func setLeadingAndTrailingHangingPunctuation(
     lineCandidate: inout LineCandidate, layoutRange: InlineItemRange,
     currentInlineItemIndex: UInt64,
     firstInlineTextItemIndex: UInt64?,
@@ -691,7 +691,7 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  struct Result {
+  private struct Result {
     var isEndOfLine: InlineContentBreaker.IsEndOfLine = .No
     struct CommittedContentCount {
       var value: UInt64 = 0
@@ -701,13 +701,14 @@ final class LineBuilder: AbstractLineBuilder {
     var partialTrailingContentLength: UInt64 = 0
     var overflowLogicalWidth: InlineLayoutUnit? = nil
   }
-  enum MayOverConstrainLine: UInt8 {
+  private enum MayOverConstrainLine: UInt8 {
     case No
     case Yes
     case OnlyWhenFirstFloatOnLine
   }
 
-  func tryPlacingFloatBox(floatBox: BoxWrapper, mayOverConstrainLine: MayOverConstrainLine) -> Bool
+  private func tryPlacingFloatBox(floatBox: BoxWrapper, mayOverConstrainLine: MayOverConstrainLine)
+    -> Bool
   {
     if isFloatLayoutSuspended() {
       return false
@@ -743,7 +744,7 @@ final class LineBuilder: AbstractLineBuilder {
     return true
   }
 
-  func computeFloatBoxPosition(
+  private func computeFloatBoxPosition(
     lineMarginBoxLeft: InlineLayoutUnit, floatBox: BoxWrapper, boxGeometry: BoxGeometry
   ) {
     // Set static position first.
@@ -766,7 +767,8 @@ final class LineBuilder: AbstractLineBuilder {
     boxGeometry.setTopLeft(topLeft: floatingPosition)
   }
 
-  func willFloatBoxShrinkLine(boxGeometry: BoxGeometry, lineMarginBoxLeft: InlineLayoutUnit) -> Bool
+  private func willFloatBoxShrinkLine(boxGeometry: BoxGeometry, lineMarginBoxLeft: InlineLayoutUnit)
+    -> Bool
   {
     // Float boxes don't get positioned higher than the line.
     let floatBoxMarginBox = BoxGeometry.marginBoxRect(box: boxGeometry)
@@ -782,7 +784,7 @@ final class LineBuilder: AbstractLineBuilder {
       || floatBoxMarginBox.top().float() < lineLogicalRect.bottom()
   }
 
-  func willFloatBoxWithClearFit(
+  private func willFloatBoxWithClearFit(
     boxGeometry: BoxGeometry, floatBox: BoxWrapper, willFloatBoxShrinkLine: Bool
   ) -> Bool {
     if !willFloatBoxShrinkLine {
@@ -802,7 +804,7 @@ final class LineBuilder: AbstractLineBuilder {
       contentLogicalWidth: contentLogicalWidth)
   }
 
-  func placeFloatBox(boxGeometry: BoxGeometry, floatBox: BoxWrapper) {
+  private func placeFloatBox(boxGeometry: BoxGeometry, floatBox: BoxWrapper) {
     let lineIndex = previousLine != nil ? (previousLine!.lineIndex + 1) : 0
     let floatItem = floatingContext.makeFloatItem(
       floatBox: floatBox, boxGeometry: boxGeometry, line: lineIndex)
@@ -810,7 +812,7 @@ final class LineBuilder: AbstractLineBuilder {
     placedFloats.append(floatItem)
   }
 
-  func adjustLineRectIfNeeded(willFloatBoxShrinkLine: Bool) {
+  private func adjustLineRectIfNeeded(willFloatBoxShrinkLine: Bool) {
     if !willFloatBoxShrinkLine {
       // This float is placed outside the line box. No need to shrink the current line.
       return
@@ -821,7 +823,9 @@ final class LineBuilder: AbstractLineBuilder {
     lineIsConstrainedByFloat = lineIsConstrainedByFloat.union(constraints.constrainedSideSet)
   }
 
-  func handleInlineContent(layoutRange: InlineItemRange, lineCandidate: LineCandidate) -> Result {
+  private func handleInlineContent(layoutRange: InlineItemRange, lineCandidate: LineCandidate)
+    -> Result
+  {
     var result = LineBuilder.Result()
     let inlineContent = lineCandidate.inlineContent
 
@@ -878,7 +882,7 @@ final class LineBuilder: AbstractLineBuilder {
     return result
   }
 
-  func availableWidthForCandidateContent(
+  private func availableWidthForCandidateContent(
     constraints: RectAndFloatConstraints, inlineContent: LineCandidate.InlineContent
   ) -> InlineLayoutUnit {
     let lineIndex = previousLine != nil ? (previousLine!.lineIndex + 1) : 0
@@ -894,7 +898,7 @@ final class LineBuilder: AbstractLineBuilder {
       intrinsicWidthMode: intrinsicWidthMode)
   }
 
-  func processLineBreakingResult(
+  private func processLineBreakingResult(
     lineCandidate: LineCandidate, layoutRange: InlineItemRange,
     lineBreakingResult: InlineContentBreaker.Result
   ) -> Result {
@@ -1028,12 +1032,12 @@ final class LineBuilder: AbstractLineBuilder {
     fatalError("Not reached")
   }
 
-  struct RectAndFloatConstraints {
+  private struct RectAndFloatConstraints {
     var logicalRect: InlineRect
     var constrainedSideSet = UsedFloat()
   }
 
-  func floatAvoidingRect(lineLogicalRect: InlineRect, lineMarginStart: InlineLayoutUnit)
+  private func floatAvoidingRect(lineLogicalRect: InlineRect, lineMarginStart: InlineLayoutUnit)
     -> RectAndFloatConstraints
   {
     var constraints = floatAvoidingRectConstraints(
@@ -1047,7 +1051,9 @@ final class LineBuilder: AbstractLineBuilder {
     return constraints
   }
 
-  func floatAvoidingRectConstraints(logicalRect: InlineRect, lineMarginStart: InlineLayoutUnit)
+  private func floatAvoidingRectConstraints(
+    logicalRect: InlineRect, lineMarginStart: InlineLayoutUnit
+  )
     -> RectAndFloatConstraints
   {
     if isInIntrinsicWidthMode() || floatingContext.isEmpty() {
@@ -1083,7 +1089,7 @@ final class LineBuilder: AbstractLineBuilder {
       logicalRect: lineLogicalRect, constrainedSideSet: constrainedSideSet)
   }
 
-  func adjustedLineRectWithCandidateInlineContent(lineCandidate: LineCandidate)
+  private func adjustedLineRectWithCandidateInlineContent(lineCandidate: LineCandidate)
     -> RectAndFloatConstraints
   {
     // Check if the candidate content would stretch the line and whether additional floats are getting in the way.
@@ -1116,7 +1122,7 @@ final class LineBuilder: AbstractLineBuilder {
         height: candidateContentHeight), lineMarginStart: lineMarginStart)
   }
 
-  func rebuildLineWithInlineContent(
+  private func rebuildLineWithInlineContent(
     layoutRange: InlineItemRange, lastInlineItemToAdd: InlineItemWrapper
   )
     -> UInt64
@@ -1182,14 +1188,14 @@ final class LineBuilder: AbstractLineBuilder {
     return numberOfInlineItemsOnLine + numberOfFloatsInRange
   }
 
-  func unplaceFloatBox(floatBox: BoxWrapper) -> Bool {
+  private func unplaceFloatBox(floatBox: BoxWrapper) -> Bool {
     if let indexToRemove = placedFloats.firstIndex(where: { $0.layoutBox() === floatBox }) {
       placedFloats.remove(at: indexToRemove)
     }
     return layoutState().placedFloats().remove(floatBox: floatBox)
   }
 
-  func rebuildLineForTrailingSoftHyphen(layoutRange: InlineItemRange) -> UInt64 {
+  private func rebuildLineForTrailingSoftHyphen(layoutRange: InlineItemRange) -> UInt64 {
     if wrapOpportunityList.isEmpty {
       // We are supposed to have a wrapping opportunity on the current line at this point.
       assert(false)
@@ -1221,7 +1227,7 @@ final class LineBuilder: AbstractLineBuilder {
     return committedCount
   }
 
-  func commitPartialContent(
+  private func commitPartialContent(
     runs: InlineContentBreaker.ContinuousContent.RunList,
     partialTrailingContent: InlineContentBreaker.Result.PartialTrailingContent
   ) {
@@ -1252,7 +1258,7 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  func initialize(
+  private func initialize(
     initialLineLogicalRect: InlineRect, needsLayoutRange: InlineItemRange,
     previousLine: PreviousLine?, previousLineEndsWithLineBreak: Bool?
   ) {
@@ -1297,7 +1303,7 @@ final class LineBuilder: AbstractLineBuilder {
       needsLayoutRange: needsLayoutRange, previousLine: previousLine)
   }
 
-  func placeInlineAndFloatContent(needsLayoutRange: InlineItemRange) -> LineContent {
+  private func placeInlineAndFloatContent(needsLayoutRange: InlineItemRange) -> LineContent {
     var resumedFloatCount: UInt64 = 0
     if !layoutPreviouslySuspendedFloats(resumedFloatCount: &resumedFloatCount) {
       // Couldn't even manage to place all suspended floats from previous line(s). -which also means we can't fit any inline content at this vertical position.
@@ -1324,7 +1330,7 @@ final class LineBuilder: AbstractLineBuilder {
     return lineContent
   }
 
-  func layoutPreviouslySuspendedFloats(resumedFloatCount: inout UInt64) -> Bool {
+  private func layoutPreviouslySuspendedFloats(resumedFloatCount: inout UInt64) -> Bool {
     if previousLine == nil {
       return true
     }
@@ -1352,7 +1358,7 @@ final class LineBuilder: AbstractLineBuilder {
     return true
   }
 
-  func layoutInlineAndFloatContent(
+  private func layoutInlineAndFloatContent(
     needsLayoutRange: InlineItemRange, resumedFloatCount: UInt64,
     lineContent: inout LineContent,
     placedInlineItemCount: inout UInt64
@@ -1427,7 +1433,7 @@ final class LineBuilder: AbstractLineBuilder {
     assert(placedInlineItemCount != 0 || resumedFloatCount != 0)
   }
 
-  func computePlacedInlineItemRange(
+  private func computePlacedInlineItemRange(
     needsLayoutRange: InlineItemRange, resumedFloatCount: UInt64, placedInlineItemCount: UInt64,
     lineContent: inout LineContent
   ) {
@@ -1458,7 +1464,7 @@ final class LineBuilder: AbstractLineBuilder {
       offset: UInt64(overflowingInlineTextItemLength) - lineContent.partialTrailingContentLength)
   }
 
-  func handleLineEnding(needsLayoutRange: InlineItemRange, lineContent: inout LineContent) {
+  private func handleLineEnding(needsLayoutRange: InlineItemRange, lineContent: inout LineContent) {
     let isLastInlineContent = isLastLineWithInlineContent(
       lineContent: lineContent, needsLayoutEnd: needsLayoutRange.endIndex(), lineRuns: line.runs)
     let horizontalAvailableSpace = lineLogicalRect.width()
@@ -1483,7 +1489,7 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  func handleTrailingContent(
+  private func handleTrailingContent(
     isLastInlineContent: Bool, rootStyle: RenderStyleWrapper,
     horizontalAvailableSpace: InlineLayoutUnit, lineContent: inout LineContent
   ) {
@@ -1529,7 +1535,8 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  func lineEndIndex(lineContent: LineContent, lastRemovedTrailingBox: BoxWrapper) -> UInt64 {
+  private func lineEndIndex(lineContent: LineContent, lastRemovedTrailingBox: BoxWrapper) -> UInt64
+  {
     for index in lineContent.range.start.index..<lineContent.range.end.index {
       if inlineItemList[Int(index)].layoutBox == lastRemovedTrailingBox {
         return index
@@ -1539,11 +1546,11 @@ final class LineBuilder: AbstractLineBuilder {
     return lineContent.range.end.index
   }
 
-  func lineHasOverflow(horizontalAvailableSpace: InlineLayoutUnit) -> Bool {
+  private func lineHasOverflow(horizontalAvailableSpace: InlineLayoutUnit) -> Bool {
     return horizontalAvailableSpace < line.contentLogicalWidth && line.hasContentOrListMarker()
   }
 
-  func isLineBreakAfterWhitespace(
+  private func isLineBreakAfterWhitespace(
     isLastInlineContent: Bool, rootStyle: RenderStyleWrapper,
     horizontalAvailableSpace: InlineLayoutUnit
   ) -> Bool {
@@ -1592,7 +1599,7 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  func createLineSpanningInlineBoxes(needsLayoutRange: InlineItemRange) {
+  private func createLineSpanningInlineBoxes(needsLayoutRange: InlineItemRange) {
     if needsLayoutRange.isEmpty() {
       return
     }
@@ -1645,7 +1652,7 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  func initializeLeadingContentFromOverflow(
+  private func initializeLeadingContentFromOverflow(
     needsLayoutRange: InlineItemRange, previousLine: PreviousLine?
   ) {
     if previousLine == nil || needsLayoutRange.start.offset == 0 {
@@ -1670,16 +1677,18 @@ final class LineBuilder: AbstractLineBuilder {
     overflowingLogicalWidth = previousLine!.trailingOverflowingContentWidth
   }
 
-  func isRootLayoutBox(elementBox: ElementBoxWrapper) -> Bool {
+  private func isRootLayoutBox(elementBox: ElementBoxWrapper) -> Bool {
     return elementBox.p == root().p
   }
 
-  struct InitialLetterOffsets {
+  private struct InitialLetterOffsets {
     var capHeightOffset: LayoutUnit
     var sunkenBelowFirstLineOffset: LayoutUnit
   }
 
-  func adjustLineRectForInitialLetterIfApplicable(floatBox: BoxWrapper) -> InitialLetterOffsets? {
+  private func adjustLineRectForInitialLetterIfApplicable(floatBox: BoxWrapper)
+    -> InitialLetterOffsets?
+  {
     let drop = floatBox.style.initialLetterDrop()
     let isInitialLetter =
       floatBox.isFloatingPositioned() && floatBox.style.pseudoElementType() == .FirstLetter
@@ -1742,7 +1751,7 @@ final class LineBuilder: AbstractLineBuilder {
     )
   }
 
-  func isLastLineWithInlineContent(
+  private func isLastLineWithInlineContent(
     lineContent: LineContent, needsLayoutEnd: UInt64, lineRuns: Line.RunList
   ) -> Bool {
     if lineContent.partialTrailingContentLength != 0 {
@@ -1767,7 +1776,7 @@ final class LineBuilder: AbstractLineBuilder {
     fatalError("Not reached")
   }
 
-  static func lineHasNonOutOfFlowRun(lineRuns: Line.RunList) -> Bool {
+  private static func lineHasNonOutOfFlowRun(lineRuns: Line.RunList) -> Bool {
     for lineRun in lineRuns.reversed() {
       if !lineRun.isOpaque() {
         return true
@@ -1776,11 +1785,11 @@ final class LineBuilder: AbstractLineBuilder {
     return false
   }
 
-  func isFloatLayoutSuspended() -> Bool {
+  private func isFloatLayoutSuspended() -> Bool {
     return !suspendedFloats.isEmpty
   }
 
-  func shouldTryToPlaceFloatBox(
+  private func shouldTryToPlaceFloatBox(
     floatBox: BoxWrapper, floatBoxMarginBoxWidth: LayoutUnit,
     mayOverConstrainLine: MayOverConstrainLine
   ) -> Bool {
@@ -1810,19 +1819,19 @@ final class LineBuilder: AbstractLineBuilder {
     }
   }
 
-  func isLineConstrainedByFloat() -> Bool {
+  private func isLineConstrainedByFloat() -> Bool {
     return !lineIsConstrainedByFloat.isEmpty
   }
 
-  var floatingContext: FloatingContext
-  var lineInitialLogicalRect = InlineRect()
-  var lineMarginStart = InlineLayoutUnit()
-  var initialIntrusiveFloatsWidth = InlineLayoutUnit()
-  var candidateContentMaximumHeight = InlineLayoutUnit()
-  var placedFloats = LineLayoutResult.PlacedFloatList()
-  var suspendedFloats = LineLayoutResult.SuspendedFloatList()
-  var overflowingLogicalWidth: InlineLayoutUnit? = nil
-  var lineSpanningInlineBoxes: [InlineItemWrapper] = []
-  var lineIsConstrainedByFloat = UsedFloat()
-  var initialLetterClearGap: InlineLayoutUnit? = nil
+  private var floatingContext: FloatingContext
+  private var lineInitialLogicalRect = InlineRect()
+  private var lineMarginStart = InlineLayoutUnit()
+  private var initialIntrusiveFloatsWidth = InlineLayoutUnit()
+  private var candidateContentMaximumHeight = InlineLayoutUnit()
+  private var placedFloats = LineLayoutResult.PlacedFloatList()
+  private var suspendedFloats = LineLayoutResult.SuspendedFloatList()
+  private var overflowingLogicalWidth: InlineLayoutUnit? = nil
+  private var lineSpanningInlineBoxes: [InlineItemWrapper] = []
+  private var lineIsConstrainedByFloat = UsedFloat()
+  private var initialLetterClearGap: InlineLayoutUnit? = nil
 }
