@@ -257,3 +257,148 @@ public func InlineFormattingContext_layout(
     inlineFormattingContextCPtr,
     inlineFormattingContext.layoutState().clearGapAfterLastLine)
 }
+
+@_cdecl("LineLayout_layout")
+public func LineLayout_layout(
+  inlineFormattingContextCPtr: UnsafeMutableRawPointer,
+  constraintsCPtr: UnsafeRawPointer,
+  lineDamageCPtr: UnsafeMutableRawPointer?,
+  nestedListedMarkersCArr: UnsafePointer<UnsafeRawPointer?>?,
+  nestedListMarkerOffsetsCArr: UnsafeRawPointer?,
+  nestedListMarkersCount: UInt64,
+  placedFloatsRaw: PlacedFloatsRaw,
+  lineClampRaw: LineClampRaw,
+  layoutResultCPtr: UnsafeMutableRawPointer,
+  lineLayoutRootFlowCPtr: UnsafeMutableRawPointer
+) {
+  let lineLayout = LayoutIntegration.LineLayout(
+    flow: RenderBlockFlowWrapper(p: lineLayoutRootFlowCPtr))
+  let rootLayoutBoxC = InlineFormattingContext_root(inlineFormattingContextCPtr)
+  let style = convert_render_style(p: Box_style(rootLayoutBoxC))
+  let rootLayoutBox = ElementBoxWrapper(style: style)
+  rootLayoutBox.p = rootLayoutBoxC
+  let layoutStateC = InlineFormattingContext_globalLayoutState(inlineFormattingContextCPtr)
+  let layoutState = LayoutStateWrapper(p: layoutStateC)
+  let parentBlockLayoutState = BlockLayoutState(
+    placedFloats: convert_placed_floats(raw: placedFloatsRaw),
+    lineClamp: convert_line_clamp_raw(raw: lineClampRaw))
+  let inlineFormattingContext = InlineFormattingContext(
+    rootBlockContainer: rootLayoutBox, globalLayoutState: layoutState,
+    parentBlockLayoutState: parentBlockLayoutState)
+  var nestedListMarkerOffsets: [UInt: LayoutUnit] = [:]
+  for idx in 0..<nestedListMarkersCount {
+    let key = CPtrToInt(CPtrArrElement(nestedListedMarkersCArr, idx))
+    let rawOffset = I32ArrElement(nestedListMarkerOffsetsCArr, idx)
+    nestedListMarkerOffsets.updateValue(LayoutUnit.fromRawValue(value: rawOffset), forKey: key)
+  }
+  inlineFormattingContext.layoutState().setNestedListMarkerOffsets(
+    nestedListMarkerOffsets: nestedListMarkerOffsets)
+  var lineDamage: InlineDamageWrapper? =
+    lineDamageCPtr != nil ? InlineDamageWrapper(p: lineDamageCPtr!) : nil
+  let constraints = convert_constraints(constraintsCPtr: constraintsCPtr)
+  let layoutResult = inlineFormattingContext.layout(
+    constraints: constraints, lineDamage: &lineDamage)
+  let repaintRect = LayoutRectWrapper(
+    r: lineLayout.constructContent(
+      inlineLayoutState: inlineFormattingContext.layoutState(), layoutResult: layoutResult))
+  print("repaintRect: \(repaintRect)")
+  for line in layoutResult.displayContent.lines {
+    let line_box_rect = wk_interop.FloatRect_new(
+      line.lineBoxRect.x(), line.lineBoxRect.y(), line.lineBoxRect.width(),
+      line.lineBoxRect.height())
+    let line_box_logical_rect = wk_interop.FloatRect_new(
+      line.lineBoxLogicalRect.x(), line.lineBoxLogicalRect.y(), line.lineBoxLogicalRect.width(),
+      line.lineBoxLogicalRect.height())
+    let scrollable_overflow = wk_interop.FloatRect_new(
+      line.scrollableOverflow.x(), line.scrollableOverflow.y(), line.scrollableOverflow.width(),
+      line.scrollableOverflow.height())
+    let content_overflow = wk_interop.FloatRect_new(
+      line.contentOverflow.x(), line.contentOverflow.y(), line.contentOverflow.width(),
+      line.contentOverflow.height())
+    let ink_overflow = wk_interop.FloatRect_new(
+      line.inkOverflow.x(), line.inkOverflow.y(), line.inkOverflow.width(),
+      line.inkOverflow.height())
+    let enclosing_logical_top_and_bottom = wk_interop.EnclosingTopAndBottom_new(
+      line.enclosingLogicalTopAndBottom.top, line.enclosingLogicalTopAndBottom.bottom)
+    var ellipsisC: UnsafeRawPointer? = nil
+    if let ellipsis = line.ellipsis {
+      if ellipsis.text.p == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      ellipsisC = wk_interop.Ellipsis_new(
+        ellipsis.type.rawValue, ellipsis.visualRect.x(),
+        ellipsis.visualRect.y(), ellipsis.visualRect.width(),
+        ellipsis.visualRect.height(), ellipsis.text.p)
+    }
+    let lineC = wk_interop.InlineDisplayLine_new(
+      0,  // first_box_index
+      0,  // box_count
+      line_box_rect,
+      line_box_logical_rect,
+      scrollable_overflow,
+      content_overflow,
+      ink_overflow,
+      enclosing_logical_top_and_bottom,
+      line.alignmentBaseline,
+      line.contentLogicalLeft,
+      line.contentLogicalLeftIgnoringInlineDirection,
+      line.contentLogicalWidth,
+      line.baselineType.rawValue,
+      line.isLeftToRightDirection,
+      line.isHorizontal,
+      line.isFirstAfterPageBreak,
+      line.isFullyTruncatedInBlockDirection,
+      line.hasContentAfterEllipsisBox,
+      ellipsisC
+    )
+    wk_interop.InlineLayoutResult_displayContent_addLine(layoutResultCPtr, lineC)
+  }
+  for box in layoutResult.displayContent.boxes {
+    let unflipped_visual_rect = wk_interop.FloatRect_new(
+      box.unflippedVisualRect.x(), box.unflippedVisualRect.y(), box.unflippedVisualRect.width(),
+      box.unflippedVisualRect.height())
+    let ink_overflow = wk_interop.FloatRect_new(
+      box.inkOverflow.x(), box.inkOverflow.y(), box.inkOverflow.width(), box.inkOverflow.height())
+    let expansion = box.expansion()
+    let expansionC = wk_interop.Expansion_new(
+      expansion.behavior.left.rawValue, expansion.behavior.right.rawValue,
+      expansion.horizontalExpansion)
+    let text =
+      box.isTextOrSoftLineBreak()
+      ? wk_interop.Text_new(
+        UInt64(box.text().start), UInt64(box.text().length),
+        box.text().partiallyVisibleContentLength,
+        box.text().hasPartiallyVisibleContentLength, box.text().originalContent.p,
+        box.text().adjustedContentToRender.p != nil
+          ? wk_interop.String_new_copy(box.text().adjustedContentToRender.p) : nil,
+        box.text().hasHyphen) : nil
+    var positionWithinInlineLevelBox = InlineDisplay.Box.PositionWithinInlineLevelBox()
+    if box.isFirstForLayoutBox {
+      positionWithinInlineLevelBox = positionWithinInlineLevelBox.union(
+        InlineDisplay.Box.PositionWithinInlineLevelBox.First)
+    }
+    if box.isLastForLayoutBox {
+      positionWithinInlineLevelBox = positionWithinInlineLevelBox.union(
+        InlineDisplay.Box.PositionWithinInlineLevelBox.Last)
+    }
+    let boxC = wk_interop.InlineDisplayBox_new(
+      box.layoutBox.p,
+      unflipped_visual_rect,
+      ink_overflow,
+      UInt64(box.lineIndex),
+      expansionC,
+      box.bidiLevel.rawValue,
+      box.type.rawValue,
+      box.hasContent,
+      positionWithinInlineLevelBox.rawValue,
+      box.isFullyTruncated,
+      text
+    )
+    wk_interop.InlineLayoutResult_displayContent_addBox(layoutResultCPtr, boxC)
+  }
+  wk_interop.InlineLayoutResult_setRange(layoutResultCPtr, layoutResult.range.rawValue)
+  wk_interop.InlineFormattingContext_setClearGapAfterLastLine(
+    inlineFormattingContextCPtr,
+    inlineFormattingContext.layoutState().clearGapAfterLastLine)
+}
