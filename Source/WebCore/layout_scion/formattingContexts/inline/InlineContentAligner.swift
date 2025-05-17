@@ -359,11 +359,21 @@ class InlineContentAligner {
     case .Start:
       return InlineLayoutUnit()
     case .Center:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return spaceToDistribute / 2
     case .SpaceBetween:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // The ruby content expands as defined for normal text justification (as defined by text-justify), except that if there are no
+      // justification opportunities the content is centered.
+      var expansion = ExpansionInfo()
+      computedExpansions(
+        runs: runs, runRange: range, hangingTrailingWhitespaceLength: 0, expansionInfo: &expansion,
+        ignoreRuby: .No)
+      // Anything to distribute?
+      if expansion.opportunityCount == 0 {
+        return spaceToDistribute / 2
+      }
+      applyExpansionOnRange(
+        runs: runs, range: range, expansion: expansion, spaceToDistribute: spaceToDistribute)
+      return 0
     case .SpaceAround:
       var expansion = ExpansionInfo()
       computedExpansions(
