@@ -123,8 +123,7 @@ class RenderObjectWrapper {
   }
 
   func view() -> RenderViewWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }
 
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {

@@ -89,6 +89,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderObject_view(const void* p)
+{
+    return &static_cast<const WebCore::RenderObject*>(p)->view();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
