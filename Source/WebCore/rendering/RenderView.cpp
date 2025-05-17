@@ -72,6 +72,11 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* RenderView_layoutState(void* p)
+{
+    return &static_cast<WebCore::RenderView*>(p)->layoutState();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderView);

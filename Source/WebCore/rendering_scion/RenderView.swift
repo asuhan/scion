@@ -19,8 +19,14 @@
  *
  */
 
+import wk_interop
+
 class RenderViewWrapper: RenderBlockFlowWrapper {
   func frameView() -> LocalFrameViewWrapper {
     fatalError("Not implemented")
+  }
+
+  func layoutState() -> LayoutStateWrapper {
+    return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
   }
 }
