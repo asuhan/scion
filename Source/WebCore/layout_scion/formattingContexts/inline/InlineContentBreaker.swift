@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-internal func hasLeadingTextContent(continuousContent: InlineContentBreaker.ContinuousContent)
+private func hasLeadingTextContent(continuousContent: InlineContentBreaker.ContinuousContent)
   -> Bool
 {
   for run in continuousContent.runs {
@@ -36,7 +36,7 @@ internal func hasLeadingTextContent(continuousContent: InlineContentBreaker.Cont
   return false
 }
 
-internal func nextTextRunIndex(
+private func nextTextRunIndex(
   runs: InlineContentBreaker.ContinuousContent.RunList, startIndex: UInt64
 ) -> UInt64? {
   for index in Int(startIndex + 1)..<runs.count {
@@ -47,14 +47,14 @@ internal func nextTextRunIndex(
   return nil
 }
 
-internal func inlineItemIsWhitespace(inlineItem: InlineItemWrapper) -> Bool {
+private func inlineItemIsWhitespace(inlineItem: InlineItemWrapper) -> Bool {
   if let textItem = inlineItem as? InlineTextItemWrapper {
     return textItem.isWhitespace()
   }
   return false
 }
 
-internal func isWhitespaceOnlyContent(continuousContent: InlineContentBreaker.ContinuousContent)
+private func isWhitespaceOnlyContent(continuousContent: InlineContentBreaker.ContinuousContent)
   -> Bool
 {
   // [<span></span> ] [<span> </span>] [ <span style="padding: 0px;"></span>] are all considered visually empty whitespace content.
@@ -75,7 +75,7 @@ internal func isWhitespaceOnlyContent(continuousContent: InlineContentBreaker.Co
   return hasWhitespace
 }
 
-internal func isNonContentRunsOnly(continuousContent: InlineContentBreaker.ContinuousContent)
+private func isNonContentRunsOnly(continuousContent: InlineContentBreaker.ContinuousContent)
   -> Bool
 {
   // <span></span> <- non content runs.
@@ -94,7 +94,7 @@ internal func isNonContentRunsOnly(continuousContent: InlineContentBreaker.Conti
   return true
 }
 
-internal func firstTextRunIndex(
+private func firstTextRunIndex(
   continuousContentRuns: InlineContentBreaker.ContinuousContent.RunList
 ) -> UInt64? {
   for (index, run) in continuousContentRuns.enumerated() {
@@ -105,7 +105,7 @@ internal func firstTextRunIndex(
   return nil
 }
 
-internal func findTrailingRunIndexBeforeBreakableRun(
+private func findTrailingRunIndexBeforeBreakableRun(
   runs: InlineContentBreaker.ContinuousContent.RunList, breakableRunIndex: UInt64
 ) -> UInt64? {
   // When the breaking position is at the beginning of the run, the trailing run is the previous one.
@@ -131,7 +131,7 @@ internal func findTrailingRunIndexBeforeBreakableRun(
   return nil
 }
 
-internal func isBreakableRun(run: InlineContentBreaker.ContinuousContent.Run) -> Bool {
+private func isBreakableRun(run: InlineContentBreaker.ContinuousContent.Run) -> Bool {
   if !run.inlineItem.isText() {
     // Can't break horizontal spacing -> e.g. <span style="padding-right: 100px;">textcontent</span>, if the [inline box end] is the overflown inline item
     // we need to check if there's another inline item beyond the [inline box end] to split.
@@ -141,7 +141,7 @@ internal func isBreakableRun(run: InlineContentBreaker.ContinuousContent.Run) ->
   return TextUtil.isWrappingAllowed(style: run.style)
 }
 
-internal func canBreakBefore(character: UInt32, lineBreak: LineBreak) -> Bool {
+private func canBreakBefore(character: UInt32, lineBreak: LineBreak) -> Bool {
   // FIXME: This should include all the cases from https://unicode.org/reports/tr14
   // Use a breaking matrix similar to lineBreakTable in BreakLines.cpp
   // Also see kBreakAllLineBreakClassTable in third_party/blink/renderer/platform/text/text_break_iterator.cc
@@ -164,7 +164,7 @@ internal func canBreakBefore(character: UInt32, lineBreak: LineBreak) -> Bool {
   return character == CharacterNames.Unicode.reverseSolidus || isPunctuation == 0
 }
 
-internal func lastValidBreakingPosition(
+private func lastValidBreakingPosition(
   runs: InlineContentBreaker.ContinuousContent.RunList, textRunIndex: UInt64
 ) -> UInt64? {
   let textRun = runs[Int(textRunIndex)]
@@ -202,7 +202,7 @@ internal func lastValidBreakingPosition(
   return nil
 }
 
-internal func midWordBreak(
+private func midWordBreak(
   textRun: InlineContentBreaker.ContinuousContent.Run, runLogicalLeft: InlineLayoutUnit,
   availableWidth: InlineLayoutUnit
 ) -> TextUtil.WordBreakLeft? {
@@ -246,24 +246,23 @@ internal func midWordBreak(
   )
 }
 
-internal func limitBeforeValue(style: RenderStyleWrapper) -> UInt64 {
+private func limitBeforeValue(style: RenderStyleWrapper) -> UInt64 {
   return style.hyphenationLimitBefore() == RenderStyleWrapper.initialHyphenationLimitBefore()
     ? 0 : UInt64(style.hyphenationLimitBefore())
 }
 
-internal func limitAfterValue(style: RenderStyleWrapper) -> UInt64 {
+private func limitAfterValue(style: RenderStyleWrapper) -> UInt64 {
   return style.hyphenationLimitAfter() == RenderStyleWrapper.initialHyphenationLimitAfter()
     ? 0 : UInt64(style.hyphenationLimitAfter())
 }
 
-internal func hasEnoughContentForHyphenation(contentLength: UInt64, style: RenderStyleWrapper)
+private func hasEnoughContentForHyphenation(contentLength: UInt64, style: RenderStyleWrapper)
   -> Bool
 {
   return limitBeforeValue(style: style) + limitAfterValue(style: style) <= contentLength
 }
 
-internal func firstHyphenPosition(content: StringWrapperView, style: RenderStyleWrapper) -> UInt64?
-{
+private func firstHyphenPosition(content: StringWrapperView, style: RenderStyleWrapper) -> UInt64? {
   // FIXME: We may produce slighly incorrect (less fine-grained) hyphenation here as the incoming content may just be a partial word.
   // (same applies to hyphenPosition below)
   let contentLength = UInt64(content.length())
@@ -288,7 +287,7 @@ internal func firstHyphenPosition(content: StringWrapperView, style: RenderStyle
   }
 }
 
-internal func lastHyphenPosition(content: StringWrapperView, style: RenderStyleWrapper) -> UInt64? {
+private func lastHyphenPosition(content: StringWrapperView, style: RenderStyleWrapper) -> UInt64? {
   let contentLength = UInt64(content.length())
   if !hasEnoughContentForHyphenation(contentLength: contentLength, style: style) {
     return nil
@@ -304,7 +303,7 @@ internal func lastHyphenPosition(content: StringWrapperView, style: RenderStyleW
   return nil
 }
 
-internal func hyphenPositionBefore(
+private func hyphenPositionBefore(
   content: StringWrapperView, style: RenderStyleWrapper, beforePosition: UInt64
 ) -> UInt64? {
   // Find the hyphen position as follows:
@@ -629,7 +628,9 @@ class InlineContentBreaker {
     return Result(action: .Keep, isEndOfLine: .No)
   }
 
-  func checkForTrailingContentFit(continuousContent: ContinuousContent, lineStatus: LineStatus)
+  private func checkForTrailingContentFit(
+    continuousContent: ContinuousContent, lineStatus: LineStatus
+  )
     -> Result?
   {
     if continuousContent.isFullyTrimmable {
@@ -745,7 +746,7 @@ class InlineContentBreaker {
     return Result(action: .Break, isEndOfLine: .Yes, partialTrailingContent: trailingPartialContent)
   }
 
-  func trailingRunIndex(leadingTextRunIndex: UInt64, continuousContent: ContinuousContent)
+  private func trailingRunIndex(leadingTextRunIndex: UInt64, continuousContent: ContinuousContent)
     -> UInt64?
   {
     // Keep the overflowing text content and the closing inline box runs together.
@@ -788,7 +789,7 @@ class InlineContentBreaker {
     return isWrappingAllowed
   }
 
-  struct OverflowingTextContent {
+  private struct OverflowingTextContent {
     var runIndex: UInt64 = 0  // Overflowing run index. There's always an overflowing run.
     struct BreakingPosition {
       var runIndex: UInt64 = 0
@@ -804,7 +805,7 @@ class InlineContentBreaker {
     var breakingPosition: BreakingPosition? = nil
   }
 
-  func processOverflowingContentWithText(
+  private func processOverflowingContentWithText(
     continuousContent: ContinuousContent, lineStatus: LineStatus
   ) -> OverflowingTextContent {
     let runs = continuousContent.runs
@@ -886,7 +887,7 @@ class InlineContentBreaker {
     return OverflowingTextContent(runIndex: UInt64(overflowingRunIndex))
   }
 
-  func simplifiedMinimumInstrinsicWidthBreak(
+  private func simplifiedMinimumInstrinsicWidthBreak(
     candidateContent: ContinuousContent, lineStatus: LineStatus
   ) -> Result? {
     if !isMinimumInIntrinsicWidthMode || !candidateContent.isTextOnlyContent {
@@ -937,13 +938,13 @@ class InlineContentBreaker {
         ? .Wrap : .RevertToLastNonOverflowingWrapOpportunity, isEndOfLine: .Yes)
   }
 
-  struct CandidateTextRunForBreaking {
+  private struct CandidateTextRunForBreaking {
     var index: UInt64 = 0
     var isOverflowingRun = true
     var logicalLeft = InlineLayoutUnit()
   }
 
-  func tryBreakingTextRun(
+  private func tryBreakingTextRun(
     runs: ContinuousContent.RunList, candidateTextRun: CandidateTextRunForBreaking,
     availableWidth: InlineLayoutUnit, lineStatus: LineStatus
   ) -> PartialRun? {
@@ -993,7 +994,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryBreakingAtArbitraryPositionWithinWords(
+  private func tryBreakingAtArbitraryPositionWithinWords(
     style: RenderStyleWrapper, inlineTextItem: InlineTextItemWrapper,
     candidateTextRun: CandidateTextRunForBreaking,
     candidateRun: ContinuousContent.Run, breakRules: InlineContentBreaker.WordBreakRule,
@@ -1064,7 +1065,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryBreakingAtHyphenationOpportunity(
+  private func tryBreakingAtHyphenationOpportunity(
     style: RenderStyleWrapper, inlineTextItem: InlineTextItemWrapper,
     fontCascade: FontCascadeWrapper, runs: ContinuousContent.RunList,
     candidateTextRun: CandidateTextRunForBreaking,
@@ -1090,7 +1091,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryBreakingAtArbitraryPosition(
+  private func tryBreakingAtArbitraryPosition(
     inlineTextItem: InlineTextItemWrapper, lineHasRoomForContent: Bool,
     fontCascade: FontCascadeWrapper,
     runs: ContinuousContent.RunList,
@@ -1137,7 +1138,7 @@ class InlineContentBreaker {
     return PartialRun(length: wordBreak.length, logicalWidth: wordBreak.logicalWidth)
   }
 
-  func hyphenLocation(
+  private func hyphenLocation(
     content: StringWrapper, style: RenderStyleWrapper, inlineTextItem: InlineTextItemWrapper,
     fontCascade: FontCascadeWrapper, runs: ContinuousContent.RunList,
     candidateTextRun: CandidateTextRunForBreaking,
@@ -1170,7 +1171,7 @@ class InlineContentBreaker {
       ? firstHyphenPosition(content: StringWrapperView(s: content), style: style) : nil
   }
 
-  func firstBreakablePosition(
+  private func firstBreakablePosition(
     style: RenderStyleWrapper, inlineTextItem: InlineTextItemWrapper,
     candidateTextRun: CandidateTextRunForBreaking, lineStatus: LineStatus
   )
@@ -1200,7 +1201,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryBreakingOverflowingRun(
+  private func tryBreakingOverflowingRun(
     lineStatus: LineStatus, runs: ContinuousContent.RunList, overflowingRunIndex: UInt64,
     nonOverflowingContentWidth: InlineLayoutUnit
   ) -> OverflowingTextContent.BreakingPosition? {
@@ -1239,7 +1240,7 @@ class InlineContentBreaker {
     return OverflowingTextContent.BreakingPosition()
   }
 
-  func tryBreakingPreviousNonOverflowingRuns(
+  private func tryBreakingPreviousNonOverflowingRuns(
     lineStatus: LineStatus, runs: ContinuousContent.RunList, overflowingRunIndex: UInt64,
     nonOverflowingContentWidth: InlineLayoutUnit
   ) -> OverflowingTextContent.BreakingPosition? {
@@ -1297,7 +1298,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryBreakingNextOverflowingRuns(
+  private func tryBreakingNextOverflowingRuns(
     lineStatus: LineStatus, runs: ContinuousContent.RunList, overflowingRunIndex: UInt64,
     nonOverflowingContentWidth: InlineLayoutUnit
   ) -> OverflowingTextContent.BreakingPosition? {
@@ -1349,7 +1350,7 @@ class InlineContentBreaker {
     return nil
   }
 
-  func tryHyphenationAcrossOverflowingInlineTextItems(
+  private func tryHyphenationAcrossOverflowingInlineTextItems(
     lineStatus: LineStatus, runs: ContinuousContent.RunList, overflowingRunIndex: UInt64
   ) -> OverflowingTextContent.BreakingPosition? {
     if runs.count == 1 {
@@ -1461,14 +1462,16 @@ class InlineContentBreaker {
       ))
   }
 
-  struct WordBreakRule: OptionSet {
+  private struct WordBreakRule: OptionSet {
     let rawValue: UInt8
     static let AtArbitraryPositionWithinWords = WordBreakRule(rawValue: 1 << 0)
     static let AtArbitraryPosition = WordBreakRule(rawValue: 1 << 1)
     static let AtHyphenationOpportunities = WordBreakRule(rawValue: 1 << 2)
   }
 
-  func wordBreakBehavior(style: RenderStyleWrapper, hasWrapOpportunityAtPreviousPosition: Bool)
+  private func wordBreakBehavior(
+    style: RenderStyleWrapper, hasWrapOpportunityAtPreviousPosition: Bool
+  )
     -> WordBreakRule
   {
     // Disregard any prohibition against line breaks mandated by the word-break property.
@@ -1504,7 +1507,7 @@ class InlineContentBreaker {
     return includeHyphenationIfAllowed(wordBreakRule: nil, style: style)
   }
 
-  func includeHyphenationIfAllowed(wordBreakRule: WordBreakRule?, style: RenderStyleWrapper)
+  private func includeHyphenationIfAllowed(wordBreakRule: WordBreakRule?, style: RenderStyleWrapper)
     -> WordBreakRule
   {
     let hyphenationIsAllowed =
@@ -1522,6 +1525,6 @@ class InlineContentBreaker {
     return WordBreakRule()
   }
 
-  var isMinimumInIntrinsicWidthMode = false
-  var hyphenationIsDisabled = false
+  private var isMinimumInIntrinsicWidthMode = false
+  private var hyphenationIsDisabled = false
 }
