@@ -48,6 +48,10 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    func rootLayoutBox() -> ElementBoxWrapper {
+      return rootRenderer.layoutBox()!
+    }
+
     func contains(rendererToFind: RenderElementWrapper) -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
