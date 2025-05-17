@@ -25,6 +25,12 @@
 
 extension LayoutIntegration {
   struct BoxTree {
+    init(rootRenderer: RenderBlockWrapper) {
+      self.rootRenderer = rootRenderer
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func updateContent(textRenderer: RenderTextWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -46,5 +52,7 @@ extension LayoutIntegration {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private var rootRenderer: RenderBlockWrapper
   }
 }

@@ -145,6 +145,7 @@ class LayoutIntegration {
 
   class LineLayout {
     init(flow: RenderBlockFlowWrapper) {
+      self.boxTree = BoxTree(rootRenderer: flow)
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -1327,7 +1328,7 @@ class LayoutIntegration {
       }
     }
 
-    var boxTree = BoxTree()
+    var boxTree: BoxTree
     var layoutState: LayoutStateWrapper?
     var blockFormattingState: BlockFormattingState
     var inlineContentCache: InlineContentCache? = nil
