@@ -45,6 +45,12 @@ class LayoutStateWrapper {
     return cache
   }
 
+  func ensureBlockFormattingState(formattingContextRoot: ElementBoxWrapper) -> BlockFormattingState
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func formattingStateForFormattingContext(formattingContextRoot: ElementBoxWrapper)
     -> FormattingState
   {

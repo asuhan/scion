@@ -146,8 +146,14 @@ class LayoutIntegration {
   class LineLayout {
     init(flow: RenderBlockFlowWrapper) {
       self.boxTree = BoxTree(rootRenderer: flow)
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.layoutState = flow.view().layoutState()
+      let formattingContextRoot = LineLayout.rootLayoutBox(boxTree: self.boxTree)
+      self.blockFormattingState = self.layoutState!.ensureBlockFormattingState(
+        formattingContextRoot: formattingContextRoot)
+      self.inlineContentCache = self.layoutState!.inlineContentCache(
+        formattingContextRoot: formattingContextRoot)
+      self.boxGeometryUpdater = BoxGeometryUpdater(
+        layoutState: flow.view().layoutState(), rootLayoutBox: boxTree.rootLayoutBox())
     }
 
     enum TypeOfChangeForInvalidation: UInt8 {
@@ -1295,7 +1301,11 @@ class LayoutIntegration {
       fatalError("Not implemented")
     }
 
-    func rootLayoutBox() -> ElementBoxWrapper {
+    private func rootLayoutBox() -> ElementBoxWrapper {
+      return LineLayout.rootLayoutBox(boxTree: boxTree)
+    }
+
+    private static func rootLayoutBox(boxTree: BoxTree) -> ElementBoxWrapper {
       return boxTree.rootLayoutBox()
     }
 
