@@ -1296,8 +1296,7 @@ class LayoutIntegration {
     }
 
     func rootLayoutBox() -> ElementBoxWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return boxTree.rootLayoutBox()
     }
 
     func clearInlineContent() {
