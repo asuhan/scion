@@ -320,6 +320,7 @@ const void* RenderObject_style(const void*);
 void* RenderObject_layoutBox(void*);
 void* RenderObject_parent(void*);
 void* RenderView_layoutState(void*);
+void* RenderElement_firstChild(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);

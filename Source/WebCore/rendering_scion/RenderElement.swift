@@ -24,8 +24,10 @@ import wk_interop
 
 class RenderElementWrapper: RenderObjectWrapper {
   func firstChild() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let childRaw = wk_interop.RenderElement_firstChild(p) {
+      return RenderObjectWrapper(p: childRaw)
+    }
+    return nil
   }
 
   override func layoutBox() -> ElementBoxWrapper? {

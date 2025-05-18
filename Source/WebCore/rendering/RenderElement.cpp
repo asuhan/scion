@@ -106,6 +106,11 @@
 #include "ContentChangeObserver.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderElement_firstChild(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->firstChild();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderElement);
