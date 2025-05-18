@@ -434,6 +434,14 @@ class BoxWrapper: Hashable {
     wk_interop.Box_setIsInlineIntegrationRoot(p)
   }
 
+  func setIsFirstChildForIntegration(value: Bool) {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    wk_interop.Box_setIsFirstChildForIntegration(p, value)
+  }
+
   func associatedRubyAnnotationBox() -> ElementBoxWrapper? {
     if p == nil {
       // TODO(asuhan): implement this

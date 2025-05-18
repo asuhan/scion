@@ -219,6 +219,12 @@ extern "C" WEBCORE_EXPORT void Box_setIsInlineIntegrationRoot(const void* p)
     const_cast<WebCore::Layout::Box*>(box)->setIsInlineIntegrationRoot();
 }
 
+extern "C" WEBCORE_EXPORT void Box_setIsFirstChildForIntegration(const void* p, bool value)
+{
+    const auto box = static_cast<const WebCore::Layout::Box*>(p);
+    const_cast<WebCore::Layout::Box*>(box)->setIsFirstChildForIntegration(value);
+}
+
 extern "C" WEBCORE_EXPORT void Box_setShape(const void* box_raw, const void* shape)
 {
     const auto box = static_cast<const WebCore::Layout::Box*>(box_raw);
