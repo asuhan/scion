@@ -27,8 +27,26 @@ extension LayoutIntegration {
   struct BoxTree {
     init(rootRenderer: RenderBlockWrapper) {
       self.rootRenderer = rootRenderer
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let rootBox = self.rootRenderer.layoutBox()
+      if rootBox == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if rootRenderer is RenderBlockFlowWrapper {
+        rootBox!.setIsInlineIntegrationRoot()
+      }
+      rootBox!.setIsFirstChildForIntegration(
+        value: rootRenderer.parent() == nil
+          || CPtrToInt(rootRenderer.parent()!.firstChild()?.p) == CPtrToInt(rootRenderer.p))
+
+      if rootRenderer is RenderBlockFlowWrapper {
+        buildTreeForInlineContent()
+      } else if rootRenderer is RenderFlexibleBoxWrapper {
+        buildTreeForFlexContent()
+      } else {
+        fatalError("Not implemented yet")
+      }
     }
 
     func updateContent(textRenderer: RenderTextWrapper) {
@@ -53,6 +71,16 @@ extension LayoutIntegration {
     }
 
     func contains(rendererToFind: RenderElementWrapper) -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func buildTreeForInlineContent() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func buildTreeForFlexContent() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
