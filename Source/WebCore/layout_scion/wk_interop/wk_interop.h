@@ -380,6 +380,7 @@ const void* Box_firstLineStyle(const void*);
 const void* Box_associatedRubyAnnotationBox(const void*);
 const void* Box_style(const void*);
 const void* Box_shape(const void*);
+void Box_setIsInlineIntegrationRoot(const void*);
 void Box_setShape(const void* box_raw, const void* shape);
 uint32_t RenderStyle_pseudoElementType(const void*);
 const void* RenderStyle_metricsOfPrimaryFont(const void*);

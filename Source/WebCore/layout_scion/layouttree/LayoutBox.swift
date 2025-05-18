@@ -426,6 +426,14 @@ class BoxWrapper: Hashable {
     return convert_render_style(p: unwrapped!)
   }
 
+  func setIsInlineIntegrationRoot() {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    wk_interop.Box_setIsInlineIntegrationRoot(p)
+  }
+
   func associatedRubyAnnotationBox() -> ElementBoxWrapper? {
     if p == nil {
       // TODO(asuhan): implement this
