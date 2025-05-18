@@ -1290,8 +1290,10 @@ class LayoutIntegration {
     }
 
     func ensureInlineContent() -> InlineContent {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if inlineContent == nil {
+        inlineContent = InlineContent(lineLayout: self)
+      }
+      return inlineContent!
     }
 
     func ensureLineDamage() -> InlineDamageWrapper {

@@ -25,6 +25,10 @@
 
 extension LayoutIntegration {
   struct InlineContent {
+    init(lineLayout: LayoutIntegration.LineLayout) {
+      self.lineLayout = lineLayout
+    }
+
     func hasContent() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -67,5 +71,7 @@ extension LayoutIntegration {
     var isPaginated = false
 
     var displayContent = InlineDisplay.Content()
+
+    private var lineLayout: LayoutIntegration.LineLayout? = nil
   }
 }
