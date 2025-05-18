@@ -37,6 +37,11 @@
 #include "TableFormattingState.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* LayoutState_ensureBlockFormattingState(void* p, const void* formatting_context_root)
+{
+    return &static_cast<WebCore::Layout::LayoutState*>(p)->ensureBlockFormattingState(*static_cast<const WebCore::Layout::ElementBox*>(formatting_context_root));
+}
+
 extern "C" WEBCORE_EXPORT bool LayoutState_inStandardsMode(const void* p)
 {
     return static_cast<const WebCore::Layout::LayoutState*>(p)->inStandardsMode();

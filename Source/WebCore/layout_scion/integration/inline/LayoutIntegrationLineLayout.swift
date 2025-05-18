@@ -519,7 +519,8 @@ class LayoutIntegration {
     }
 
     func computeIntrinsicWidthConstraints() -> (LayoutUnit, LayoutUnit) {
-      let parentBlockLayoutState = BlockLayoutState(placedFloats: blockFormattingState.placedFloats)
+      let parentBlockLayoutState = BlockLayoutState(
+        placedFloats: blockFormattingState.placedFloats!)
       let inlineFormattingContext = InlineFormattingContext(
         rootBlockContainer: rootLayoutBox(), globalLayoutState: layoutState!,
         parentBlockLayoutState: parentBlockLayoutState)
@@ -546,7 +547,7 @@ class LayoutIntegration {
       assert(inlineContentConstraints != nil)
 
       let parentBlockLayoutState = BlockLayoutState(
-        placedFloats: blockFormattingState.placedFloats,
+        placedFloats: blockFormattingState.placedFloats!,
         lineClamp: lineClamp(rootRenderer: flow()),
         textBoxTrim: textBoxTrim(rootRenderer: flow()),
         textBoxEdge: textBoxEdge(rootRenderer: flow()),
@@ -978,7 +979,7 @@ class LayoutIntegration {
     }
 
     func preparePlacedFloats() {
-      let placedFloats = blockFormattingState.placedFloats
+      let placedFloats = blockFormattingState.placedFloats!
       placedFloats.clear()
 
       if !flow().containsFloats() {
@@ -1112,7 +1113,7 @@ class LayoutIntegration {
 
       let allowLayoutRestart = !isPartialLayout
       let (adjustments, layoutRestartLine) = computeAdjustmentsForPagination(
-        inlineContent: inlineContent!, placedFloats: blockFormattingState.placedFloats,
+        inlineContent: inlineContent!, placedFloats: blockFormattingState.placedFloats!,
         allowLayoutRestart: allowLayoutRestart, blockLayoutState: blockLayoutState,
         flow: flow())
 
@@ -1142,7 +1143,7 @@ class LayoutIntegration {
 
       let blockFlow = flow()
       let rootStyle = blockFlow.style()
-      let isLeftToRightPlacedFloatsInlineDirection = blockFormattingState.placedFloats
+      let isLeftToRightPlacedFloatsInlineDirection = blockFormattingState.placedFloats!
         .isLeftToRightDirection
       let writingMode = rootStyle.writingMode()
       let isHorizontalWritingMode = isHorizontalWritingMode(writingMode: writingMode)
@@ -1168,7 +1169,7 @@ class LayoutIntegration {
 
       var floatPaginationOffsetMap: [BoxWrapper: LayoutSizeWrapper] = [:]
       if !lineAdjustments.isEmpty {
-        for floatItem in blockFormattingState.placedFloats.list {
+        for floatItem in blockFormattingState.placedFloats!.list {
           if floatItem.layoutBox() == nil || floatItem.placedByLine == nil {
             continue
           }

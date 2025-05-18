@@ -30,6 +30,11 @@ class BlockFormattingState: FormattingState {
     super.init(type: .Block, layoutState: layoutState)
   }
 
+  init(p: UnsafeMutableRawPointer) {
+    self.placedFloats = nil
+    super.init(type: .Block, layoutState: LayoutStateWrapper(p: p))
+  }
+
   // Since we layout the out-of-flow boxes at the end of the formatting context layout, it's okay to store them in the formatting state -as opposed to the containing block level.
   typealias OutOfFlowBoxList = [BoxWrapper]
 
@@ -67,6 +72,7 @@ class BlockFormattingState: FormattingState {
     fatalError("Not implemented")
   }
 
-  var placedFloats: PlacedFloats
+  var placedFloats: PlacedFloats?
   var outOfFlowBoxes = OutOfFlowBoxList()
+  private var p: UnsafeMutableRawPointer? = nil
 }

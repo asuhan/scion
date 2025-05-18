@@ -47,8 +47,8 @@ class LayoutStateWrapper {
 
   func ensureBlockFormattingState(formattingContextRoot: ElementBoxWrapper) -> BlockFormattingState
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BlockFormattingState(
+      p: wk_interop.LayoutState_ensureBlockFormattingState(p, formattingContextRoot.p))
   }
 
   func formattingStateForFormattingContext(formattingContextRoot: ElementBoxWrapper)

@@ -372,7 +372,7 @@ class FormattingGeometry {
           formattingContextRoot: formattingContext.root, layoutState: layoutState(),
           placedFloats: (layoutState().formattingStateForFormattingContext(
             formattingContextRoot: initialContainingBlock)
-            as! BlockFormattingState).placedFloats)
+            as! BlockFormattingState).placedFloats!)
         if let floatBottom = floatingContext.bottom() {
           bottom = max(floatBottom, bottom)
           let floatTop = floatingContext.top()!

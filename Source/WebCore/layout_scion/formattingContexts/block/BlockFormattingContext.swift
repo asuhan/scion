@@ -46,7 +46,7 @@ class BlockFormattingContext: FormattingContext {
     // Vertical margins between adjacent block-level boxes in a block formatting context collapse.
     let formattingRoot = root
     assert(formattingRoot.hasInFlowOrFloatingChild())
-    let placedFloats = formattingState().placedFloats
+    let placedFloats = formattingState().placedFloats!
     let floatingContext = FloatingContext(
       formattingContextRoot: root, layoutState: layoutState, placedFloats: placedFloats)
 
