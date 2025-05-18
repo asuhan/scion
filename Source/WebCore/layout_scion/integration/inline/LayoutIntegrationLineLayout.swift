@@ -963,10 +963,7 @@ class LayoutIntegration {
         ? borderBoxLogicalRect : borderBoxLogicalRect.transposedRect()
     }
 
-    func flow() -> RenderBlockFlowWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func flow() -> RenderBlockFlowWrapper { return boxTree.rootRenderer as! RenderBlockFlowWrapper }
 
     func contentNeedsVisualReordering() -> Bool {
       // TODO(asuhan): implement this

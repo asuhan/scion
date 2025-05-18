@@ -57,6 +57,6 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
-    private var rootRenderer: RenderBlockWrapper
+    var rootRenderer: RenderBlockWrapper
   }
 }
