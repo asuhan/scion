@@ -32,6 +32,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setNeedsVisualReordering() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setHasStrongDirectionalityContent(hasStrongDirectionalityContent: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

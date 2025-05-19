@@ -66,8 +66,40 @@ extension LayoutIntegration {
     private func computeIsFirstIsLastBoxAndBidiReorderingForInlineContent(
       boxes: InlineDisplay.Boxes
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if boxes.isEmpty {
+        // Line clamp may produce a completely empty IFC.
+        return
+      }
+
+      var lastDisplayBoxForLayoutBoxIndexes: [ObjectIdentifier: Int] = [:]
+
+      assert(boxes[0].isRootInlineBox())
+      boxes[0].isFirstForLayoutBox = true
+      var lastRootInlineBoxIndex: Int = 0
+
+      for index in 1..<boxes.count {
+        let displayBox = boxes[index]
+        if displayBox.isRootInlineBox() {
+          lastRootInlineBoxIndex = index
+          continue
+        }
+        let layoutBox = displayBox.layoutBox
+        if layoutBox is InlineTextBoxWrapper && displayBox.bidiLevel == UBiDiLevel.UBIDI_DEFAULT_LTR
+        {
+          (layoutBox.rendererForIntegration() as! RenderTextWrapper).setNeedsVisualReordering()
+        }
+
+        if lastDisplayBoxForLayoutBoxIndexes.updateValue(index, forKey: ObjectIdentifier(layoutBox))
+          == nil
+        {
+          displayBox.isFirstForLayoutBox = true
+        }
+      }
+      for index in lastDisplayBoxForLayoutBoxIndexes.values {
+        boxes[index].isLastForLayoutBox = true
+      }
+
+      boxes[lastRootInlineBoxIndex].isLastForLayoutBox = true
     }
 
     var blockFlow: RenderBlockFlowWrapper
