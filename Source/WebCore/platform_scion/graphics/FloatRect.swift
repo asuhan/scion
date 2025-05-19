@@ -115,6 +115,19 @@ struct FloatRectWrapper {
       && y() < other.maxY() && other.y() < maxY()
   }
 
+  mutating func unite(other: FloatRectWrapper) {
+    // Handle empty special cases first.
+    if other.isEmpty() {
+      return
+    }
+    if isEmpty() {
+      self = other
+      return
+    }
+
+    uniteEvenIfEmpty(other: other)
+  }
+
   mutating func uniteEvenIfEmpty(other: FloatRectWrapper) {
     let minX = min(x(), other.x())
     let minY = min(y(), other.y())
