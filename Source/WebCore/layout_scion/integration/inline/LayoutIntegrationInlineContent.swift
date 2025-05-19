@@ -24,7 +24,7 @@
  */
 
 extension LayoutIntegration {
-  struct InlineContent {
+  class InlineContent {
     init(lineLayout: LayoutIntegration.LineLayout) {
       self.lineLayout = lineLayout
     }

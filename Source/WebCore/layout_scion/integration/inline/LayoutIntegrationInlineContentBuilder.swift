@@ -34,6 +34,38 @@ extension LayoutIntegration {
       layoutResult: InlineLayoutResult, inlineContent: InlineContent,
       lineDamage: InlineDamageWrapper?
     ) -> FloatRectWrapper {
+      inlineContent.releaseCaches()
+      computeIsFirstIsLastBoxAndBidiReorderingForInlineContent(
+        boxes: layoutResult.displayContent.boxes)
+
+      if layoutResult.range == .Full {
+        var damagedRect = FloatRectWrapper()
+
+        for line in inlineContent.displayContent.lines {
+          damagedRect.unite(other: line.inkOverflow)
+        }
+
+        inlineContent.displayContent.set(newContent: layoutResult.displayContent)
+        adjustDisplayLines(inlineContent: inlineContent, startIndex: 0)
+
+        for line in inlineContent.displayContent.lines {
+          damagedRect.unite(other: line.inkOverflow)
+        }
+        return damagedRect
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func computeIsFirstIsLastBoxAndBidiReorderingForInlineContent(
+      boxes: InlineDisplay.Boxes
+    ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

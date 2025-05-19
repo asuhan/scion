@@ -28,6 +28,11 @@ struct InlineDisplay {
   typealias Lines = [Line]
 
   struct Content {
+    mutating func set(newContent: Content) {
+      lines = newContent.lines
+      boxes = newContent.boxes
+    }
+
     var lines: Lines = []
     var boxes: Boxes = []
   }
