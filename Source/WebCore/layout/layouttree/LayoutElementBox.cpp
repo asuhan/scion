@@ -86,6 +86,11 @@ extern "C" WEBCORE_EXPORT int32_t ElementBox_baselineForIntegration(const void* 
     return static_cast<const WebCore::Layout::ElementBox*>(p)->baselineForIntegration()->rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderText(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderText();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderListBox(const void* p) {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderListBox();
 }

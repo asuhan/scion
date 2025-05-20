@@ -231,6 +231,11 @@ extern "C" WEBCORE_EXPORT void Box_setShape(const void* box_raw, const void* sha
     const_cast<WebCore::Layout::Box*>(box)->setShape(static_cast<const WebCore::Shape*>(shape));
 }
 
+extern "C" WEBCORE_EXPORT void* Box_rendererForIntegration(const void* p)
+{
+    return static_cast<const WebCore::Layout::Box*>(p)->rendererForIntegration();
+}
+
 namespace WebCore {
 namespace Layout {
 
