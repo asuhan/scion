@@ -43,8 +43,8 @@ struct LayoutRectWrapper {
   }
 
   init(r: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.m_location = LayoutPointWrapper(size: r.location())
+    self.m_size = LayoutSizeWrapper(size: r.size())
   }
 
   func location() -> LayoutPointWrapper {
