@@ -78,6 +78,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void RenderText_setNeedsVisualReordering(void* p)
+{
+    static_cast<WebCore::RenderText*>(p)->setNeedsVisualReordering();
+}
+
 namespace WebCore {
 
 using namespace WTF::Unicode;

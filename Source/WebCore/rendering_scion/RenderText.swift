@@ -21,6 +21,8 @@
  *
  */
 
+import wk_interop
+
 class RenderTextWrapper: RenderObjectWrapper {
   override func layoutBox() -> InlineTextBoxWrapper? {
     // TODO(asuhan): implement this
@@ -33,8 +35,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setNeedsVisualReordering() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 
   func setHasStrongDirectionalityContent(hasStrongDirectionalityContent: Bool) {

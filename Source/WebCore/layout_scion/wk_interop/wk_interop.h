@@ -346,6 +346,7 @@ int32_t RenderBoxModelObject_marginStart(const void*, const void*);
 int32_t RenderBoxModelObject_baselinePosition(const void*, uint8_t, bool, uint8_t, uint8_t);
 bool RenderListMarker_isInside(const void*);
 void* RenderListMarker_listItem(void*);
+void RenderText_setNeedsVisualReordering(void*);
 bool Box_isContainingBlockForOutOfFlowPosition(const void*);
 bool Box_isAnonymous(const void*);
 bool Box_isBlockLevelBox(const void*);
