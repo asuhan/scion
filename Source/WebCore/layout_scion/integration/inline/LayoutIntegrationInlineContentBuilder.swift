@@ -23,6 +23,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func endPaddingQuirkValue(flow: RenderBlockFlowWrapper) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension LayoutIntegration {
   struct InlineContentBuilder {
     init(blockFlow: RenderBlockFlowWrapper, boxTree: BoxTree) {
@@ -59,8 +64,51 @@ extension LayoutIntegration {
     }
 
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let lines = inlineContent.displayContent.lines
+
+      let rootBoxStyle = blockFlow.style()
+      let isLeftToRightInlineDirection = rootBoxStyle.isLeftToRightDirection()
+      let isHorizontalWritingMode = rootBoxStyle.isHorizontalWritingMode()
+
+      for lineIndex in startIndex..<UInt64(lines.count) {
+        let line = lines[Int(lineIndex)]
+        var scrollableOverflowRect = line.contentOverflow
+        adjustOverflowLogicalWidthWithBlockFlowQuirk(
+          line: line,
+          isLeftToRightInlineDirection: isLeftToRightInlineDirection,
+          isHorizontalWritingMode: isHorizontalWritingMode,
+          scrollableOverflowRect: &scrollableOverflowRect)
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+
+    private func adjustOverflowLogicalWidthWithBlockFlowQuirk(
+      line: InlineDisplay.Line, isLeftToRightInlineDirection: Bool, isHorizontalWritingMode: Bool,
+      scrollableOverflowRect: inout FloatRectWrapper
+    ) {
+      let scrollableOverflowLogicalWidth =
+        isHorizontalWritingMode ? scrollableOverflowRect.width() : scrollableOverflowRect.height()
+      if !isLeftToRightInlineDirection
+        && line.contentLogicalWidth > scrollableOverflowLogicalWidth
+      {
+        // The only time when scrollable overflow here could be shorter than
+        // the content width is when hanging RTL trailing content is applied (and ignored as scrollable overflow. See LineBoxBuilder::build.
+        return
+      }
+      let adjustedOverflowLogicalWidth =
+        line.contentLogicalWidth + endPaddingQuirkValue(flow: blockFlow)
+      if adjustedOverflowLogicalWidth > scrollableOverflowLogicalWidth {
+        let overflowValue = adjustedOverflowLogicalWidth - scrollableOverflowLogicalWidth
+        if isHorizontalWritingMode {
+          isLeftToRightInlineDirection
+            ? scrollableOverflowRect.shiftMaxXEdgeBy(delta: overflowValue)
+            : scrollableOverflowRect.shiftXEdgeBy(delta: -overflowValue)
+        } else {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+      }
     }
 
     private func computeIsFirstIsLastBoxAndBidiReorderingForInlineContent(
