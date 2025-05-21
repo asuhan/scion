@@ -97,6 +97,12 @@ extension InlineDisplay {
       return alignmentBaseline
     }
 
+    func firstBoxIndex() -> UInt64 { return m_firstBoxIndex }
+
+    func lastBoxIndex() -> UInt64 { return firstBoxIndex() + boxCount() - 1 }
+
+    func boxCount() -> UInt64 { return m_boxCount }
+
     func moveInBlockDirection(offset: Float32, isHorizontalWritingMode: Bool) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -128,6 +134,10 @@ extension InlineDisplay {
     func setIsFirstAfterPageBreak() {
       isFirstAfterPageBreak = true
     }
+
+    // FIXME: Move these to a side structure.
+    private var m_firstBoxIndex: UInt64 = 0
+    private var m_boxCount: UInt64 = 0
 
     // This is line box geometry (see https://www.w3.org/TR/css-inline-3/#line-box).
     var lineBoxRect: FloatRectWrapper
