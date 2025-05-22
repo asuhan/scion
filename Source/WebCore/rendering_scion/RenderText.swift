@@ -35,10 +35,6 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setNeedsVisualReordering() {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 
