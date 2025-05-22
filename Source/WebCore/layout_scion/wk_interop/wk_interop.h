@@ -526,6 +526,7 @@ int32_t BoxGeometry_top(const void*);
 int32_t BoxGeometry_left(const void*);
 struct GlyphOverflowRaw visualOverflowForDecorations(const void*, float, float);
 struct GlyphOverflowRaw visualOverflowForDecorationsByStyle(const void*);
+int32_t RenderBlockFlow_endPaddingWidthForCaret(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 int32_t RenderBlock_intrinsicBorderForFieldset(const void*);
 bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);

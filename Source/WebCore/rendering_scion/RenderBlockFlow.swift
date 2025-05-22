@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class RenderBlockFlowWrapper: RenderBlockWrapper {
   func setStaticInlinePositionForChild(
     child: RenderBoxWrapper, blockOffset: LayoutUnit, inlinePosition: LayoutUnit
@@ -54,6 +56,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func updateMinimumPageHeight(offset: LayoutUnit, minHeight: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func endPaddingWidthForCaret() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(p))
   }
 
   func lowestInitialLetterLogicalBottom() -> LayoutUnit? {

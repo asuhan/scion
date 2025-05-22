@@ -75,6 +75,11 @@
 #include "VisiblePosition.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_endPaddingWidthForCaret(const void* p)
+{
+    return static_cast<const WebCore::RenderBlockFlow*>(p)->endPaddingWidthForCaret().rawValue();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBlockFlow);
