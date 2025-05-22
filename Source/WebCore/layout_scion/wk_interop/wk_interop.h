@@ -341,6 +341,7 @@ int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(const void*);
 bool RenderBox_isFlexItem(const void*);
 const void* RenderBox_shapeOutsideInfo(const void*);
 int32_t RenderBoxModelObject_paddingStart(const void*);
+int32_t RenderBoxModelObject_paddingEnd(const void*);
 int32_t RenderBoxModelObject_borderStart(const void*);
 int32_t RenderBoxModelObject_marginStart(const void*, const void*);
 int32_t RenderBoxModelObject_baselinePosition(const void*, uint8_t, bool, uint8_t, uint8_t);

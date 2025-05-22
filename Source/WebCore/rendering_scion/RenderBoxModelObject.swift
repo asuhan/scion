@@ -39,6 +39,10 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(p))
   }
 
+  func paddingEnd() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(p))
+  }
+
   func borderStart() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(p))
   }
