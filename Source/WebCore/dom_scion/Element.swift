@@ -22,4 +22,4 @@
  *
  */
 
-struct ElementWrapper: ContainerNodeWrapper {}
+class ElementWrapper: ContainerNodeWrapper {}

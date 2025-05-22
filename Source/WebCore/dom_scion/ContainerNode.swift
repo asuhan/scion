@@ -21,4 +21,4 @@
  *
  */
 
-struct ContainerNodeWrapper: NodeWrapper {}
+class ContainerNodeWrapper: NodeWrapper {}

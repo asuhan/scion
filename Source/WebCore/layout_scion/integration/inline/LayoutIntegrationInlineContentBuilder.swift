@@ -23,9 +23,21 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 private func endPaddingQuirkValue(flow: RenderBlockFlowWrapper) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // FIXME: It's the copy of the lets-adjust-overflow-for-the-caret behavior from LegacyLineLayout::addOverflowFromInlineChildren.
+  var endPadding = flow.hasNonVisibleOverflow() ? flow.paddingEnd() : LayoutUnit(value: 0)
+  if !endPadding.bool() {
+    endPadding = flow.endPaddingWidthForCaret()
+  }
+  if flow.hasNonVisibleOverflow() && !endPadding.bool() && flow.element() != nil
+    && flow.element()!.isRootEditableElement()
+    && flow.style().isLeftToRightDirection()
+  {
+    endPadding = LayoutUnit(value: 1)
+  }
+  return endPadding.float()
 }
 
 extension LayoutIntegration {

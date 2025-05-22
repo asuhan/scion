@@ -22,4 +22,9 @@
  *
  */
 
-struct NodeWrapper {}
+class NodeWrapper {
+  func isRootEditableElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

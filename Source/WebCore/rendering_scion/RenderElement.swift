@@ -23,6 +23,11 @@
 import wk_interop
 
 class RenderElementWrapper: RenderObjectWrapper {
+  func element() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func firstChild() -> RenderObjectWrapper? {
     if let childRaw = wk_interop.RenderElement_firstChild(p) {
       return RenderObjectWrapper(p: childRaw)
