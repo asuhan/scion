@@ -314,6 +314,7 @@ bool RenderObject_isRenderBlock(const void*);
 bool RenderObject_isRenderBox(const void*);
 bool RenderObject_isImage(const void*);
 bool RenderObject_isFieldset(const void*);
+bool RenderObject_hasNonVisibleOverflow(const void*);
 void* RenderObject_view(const void*);
 void RenderObject_setNeedsLayout(void*, uint8_t);
 void* RenderObject_containingBlock(const void*);
