@@ -236,6 +236,11 @@ extern "C" WEBCORE_EXPORT const void* InlineTextBox_style(const void* p)
     return &static_cast<const WebCore::Layout::InlineTextBox*>(p)->style();
 }
 
+extern "C" WEBCORE_EXPORT bool String_isNull(const void* p)
+{
+    return static_cast<const String*>(p)->isNull();
+}
+
 extern "C" WEBCORE_EXPORT unsigned String_length(const void* p)
 {
     return static_cast<const String*>(p)->length();

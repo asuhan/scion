@@ -34,6 +34,14 @@ class StringWrapper {
     self.p = wk_interop.String_new_span(characters.p)
   }
 
+  func isNull() -> Bool {
+    if self.p != nil {
+      return wk_interop.String_isNull(self.p)
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func length() -> UInt32 {
     if self.p != nil {
       return string_length(p: self.p!)
