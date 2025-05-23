@@ -77,7 +77,9 @@ extension LayoutIntegration {
 
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
       let lines = inlineContent.displayContent.lines
+      let boxes = inlineContent.displayContent.boxes
 
+      var boxIndex = startIndex == 0 ? 0 : lines[Int(startIndex - 1)].lastBoxIndex() + 1
       let rootBoxStyle = blockFlow.style()
       let isLeftToRightInlineDirection = rootBoxStyle.isLeftToRightDirection()
       let isHorizontalWritingMode = rootBoxStyle.isHorizontalWritingMode()
@@ -90,6 +92,51 @@ extension LayoutIntegration {
           isLeftToRightInlineDirection: isLeftToRightInlineDirection,
           isHorizontalWritingMode: isHorizontalWritingMode,
           scrollableOverflowRect: &scrollableOverflowRect)
+
+        var inkOverflowRect = scrollableOverflowRect
+        // Collect overflow from boxes.
+        // Note while we compute ink overflow for all type of boxes including atomic inline level boxes (e.g. <iframe> <img>) as part of constructing
+        // display boxes (see InlineDisplayContentBuilder) RenderBlockFlow expects visual overflow.
+        // Visual overflow propagation is slightly different from ink overflow when it comes to renderers with self painting layers.
+        // -and for now we consult atomic renderers for such visual overflow which is not how we are supposed to do in LFC.
+        // (visual overflow is computed during their ::layout() call which we issue right before running inline layout in RenderBlockFlow::layoutModernLines)
+        var firstTextBoxIndex: UInt64? = nil
+        var lastTextBoxIndex: UInt64? = nil
+        while boxIndex < boxes.count && boxes[Int(boxIndex)].lineIndex == lineIndex {
+          let box = boxes[Int(boxIndex)]
+          if box.isRootInlineBox() || box.isEllipsis() || box.isLineBreak() {
+            boxIndex += 1
+            continue
+          }
+
+          if box.isText() {
+            inkOverflowRect.unite(other: box.inkOverflow)
+            if box.isVisible() && box.text().renderedContent().length() != 0 {
+              firstTextBoxIndex = firstTextBoxIndex ?? boxIndex
+              lastTextBoxIndex = boxIndex
+            }
+            boxIndex += 1
+            continue
+          }
+
+          if box.isAtomicInlineBox() {
+            // TODO(asuhan): implement this
+            fatalError("Not implemented")
+          }
+
+          if box.isInlineBox() {
+            // TODO(asuhan): implement this
+            fatalError("Not implemented")
+          }
+
+          boxIndex += 1
+        }
+
+        if firstTextBoxIndex != nil && lastTextBoxIndex != nil {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
         // TODO(asuhan): implement this
         fatalError("Not implemented")
       }
