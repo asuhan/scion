@@ -37,7 +37,7 @@ extension InlineDisplay {
         start: UInt64, length: UInt64, originalContent: StringWrapper,
         adjustedContentToRender: StringWrapper = StringWrapper(), hasHyphen: Bool = false
       ) {
-        self.originalContent = originalContent
+        self.m_originalContent = originalContent
         self.adjustedContentToRender = adjustedContentToRender
         self.start = UInt32(start)
         self.length = UInt32(length)
@@ -53,7 +53,16 @@ extension InlineDisplay {
         return UInt64(start + length)
       }
 
-      var originalContent = StringWrapper()
+      func originalContent() -> StringWrapperView {
+        return StringWrapperView(s: m_originalContent).substring(start: start, length: length)
+      }
+
+      func renderedContent() -> StringWrapperView {
+        return adjustedContentToRender.isNull()
+          ? originalContent() : StringWrapperView(s: adjustedContentToRender)
+      }
+
+      var m_originalContent = StringWrapper()
       var adjustedContentToRender = StringWrapper()
 
       var start: UInt32 = 0

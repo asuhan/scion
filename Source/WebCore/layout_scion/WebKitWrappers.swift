@@ -224,7 +224,7 @@ public func InlineFormattingContext_layout(
       ? wk_interop.Text_new(
         UInt64(box.text().start), UInt64(box.text().length),
         box.text().partiallyVisibleContentLength,
-        box.text().hasPartiallyVisibleContentLength, box.text().originalContent.p,
+        box.text().hasPartiallyVisibleContentLength, box.text().m_originalContent.p,
         box.text().adjustedContentToRender.p != nil
           ? wk_interop.String_new_copy(box.text().adjustedContentToRender.p) : nil,
         box.text().hasHyphen) : nil
@@ -369,7 +369,7 @@ public func LineLayout_layout(
       ? wk_interop.Text_new(
         UInt64(box.text().start), UInt64(box.text().length),
         box.text().partiallyVisibleContentLength,
-        box.text().hasPartiallyVisibleContentLength, box.text().originalContent.p,
+        box.text().hasPartiallyVisibleContentLength, box.text().m_originalContent.p,
         box.text().adjustedContentToRender.p != nil
           ? wk_interop.String_new_copy(box.text().adjustedContentToRender.p) : nil,
         box.text().hasHyphen) : nil
