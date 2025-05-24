@@ -310,6 +310,12 @@ struct HangingPunctuation: OptionSet {
   static let ForceEnd = HangingPunctuation(rawValue: 1 << 3)
 }
 
+enum Visibility: UInt8 {
+  case Visible
+  case Hidden
+  case Collapse
+}
+
 enum DisplayType: UInt8 {
   case Inline
   case Block

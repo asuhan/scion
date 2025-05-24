@@ -218,6 +218,14 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func usedVisibility() -> Visibility {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return Visibility(rawValue: wk_interop.RenderStyle_usedVisibility(p))!
+  }
+
   func verticalAlign() -> VerticalAlign {
     if p == nil {
       fatalError("Not implemented")

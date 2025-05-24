@@ -424,6 +424,7 @@ int32_t RenderStyle_getBoxShadowVerticalExtentTop(const void*);
 int32_t RenderStyle_getBoxShadowVerticalExtentBottom(const void*);
 uint8_t RenderStyle_floating(const void*);
 uint8_t RenderStyle_overflowX(const void*);
+uint8_t RenderStyle_usedVisibility(const void*);
 uint8_t RenderStyle_verticalAlign(const void*);
 const void* RenderStyle_verticalAlignLength(const void*);
 const void* RenderStyle_lineHeight(const void*);
