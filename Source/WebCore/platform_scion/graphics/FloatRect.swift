@@ -159,6 +159,14 @@ struct FloatRectWrapper {
     setHeight(height: height() + deltaY + deltaMaxY)
   }
 
+  static func == (lhs: FloatRectWrapper, rhs: FloatRectWrapper) -> Bool {
+    return lhs.m_location == rhs.m_location && lhs.m_size == rhs.m_size
+  }
+
+  static func != (lhs: FloatRectWrapper, rhs: FloatRectWrapper) -> Bool {
+    return !(lhs == rhs)
+  }
+
   private mutating func setLocationAndSizeFromEdges(
     left: Float32, top: Float32, right: Float32, bottom: Float32
   ) {

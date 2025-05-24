@@ -60,6 +60,10 @@ struct FloatPoint {
     return FloatPoint(x: a.x + b.x, y: a.y + b.y)
   }
 
+  static func == (lhs: FloatPoint, rhs: FloatPoint) -> Bool {
+    return lhs.x == rhs.x && lhs.y == rhs.y
+  }
+
   var x: Float32 = 0
   var y: Float32 = 0
 }

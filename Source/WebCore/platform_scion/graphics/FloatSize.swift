@@ -55,6 +55,10 @@ struct FloatSize {
     return a
   }
 
+  static func == (lhs: FloatSize, rhs: FloatSize) -> Bool {
+    return lhs.width == rhs.width && lhs.height == rhs.height
+  }
+
   var width: Float32 = 0
   var height: Float32 = 0
 }
