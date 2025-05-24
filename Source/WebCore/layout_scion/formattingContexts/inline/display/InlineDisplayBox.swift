@@ -147,10 +147,7 @@ extension InlineDisplay {
       fatalError("Not implemented")
     }
 
-    func isVisible() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    func isVisible() -> Bool { return !isFullyTruncated && style().usedVisibility() == .Visible }
 
     func isVisibleIgnoringUsedVisibility() -> Bool {
       // TODO(asuhan): implement this
