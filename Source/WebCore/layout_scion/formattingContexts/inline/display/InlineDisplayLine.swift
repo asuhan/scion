@@ -137,6 +137,13 @@ extension InlineDisplay {
       isFirstAfterPageBreak = true
     }
 
+    func setFirstBoxIndex(firstBoxIndex: UInt64) { m_firstBoxIndex = firstBoxIndex }
+    func setBoxCount(boxCount: UInt64) { m_boxCount = boxCount }
+    func setInkOverflow(inkOverflowRect: FloatRectWrapper) { self.inkOverflow = inkOverflowRect }
+    func setScrollableOverflow(scrollableOverflow: FloatRectWrapper) {
+      self.scrollableOverflow = scrollableOverflow
+    }
+
     // FIXME: Move these to a side structure.
     private var m_firstBoxIndex: UInt64 = 0
     private var m_boxCount: UInt64 = 0
