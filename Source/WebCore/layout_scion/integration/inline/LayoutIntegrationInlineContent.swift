@@ -34,6 +34,8 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    func setHasVisualOverflow() { hasVisualOverflow = true }
+
     func boxesForRect(rect: LayoutRectWrapper) -> any Sequence<InlineDisplay.Box> {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -73,5 +75,6 @@ extension LayoutIntegration {
     var displayContent = InlineDisplay.Content()
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
+    var hasVisualOverflow = false
   }
 }
