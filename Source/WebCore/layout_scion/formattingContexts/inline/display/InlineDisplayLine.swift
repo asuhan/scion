@@ -97,6 +97,8 @@ extension InlineDisplay {
       return alignmentBaseline
     }
 
+    func isLeftToRightInlineDirection() -> Bool { return isLeftToRightDirection }
+
     func firstBoxIndex() -> UInt64 { return m_firstBoxIndex }
 
     func lastBoxIndex() -> UInt64 { return firstBoxIndex() + boxCount() - 1 }
