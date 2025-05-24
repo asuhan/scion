@@ -40,6 +40,14 @@ private func endPaddingQuirkValue(flow: RenderBlockFlowWrapper) -> Float32 {
   return endPadding.float()
 }
 
+private func glyphOverflowInInlineDirection(
+  firstTextBoxIndex: UInt64, lastTextBoxIndex: UInt64, boxes: InlineDisplay.Boxes,
+  inkOverflowRect: FloatRectWrapper, isLeftToRightDirection: Bool
+) -> (Float32, Float32) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension LayoutIntegration {
   struct InlineContentBuilder {
     init(blockFlow: RenderBlockFlowWrapper, boxTree: BoxTree) {
@@ -93,6 +101,7 @@ extension LayoutIntegration {
           isHorizontalWritingMode: isHorizontalWritingMode,
           scrollableOverflowRect: &scrollableOverflowRect)
 
+        let firstBoxIndex = boxIndex
         var inkOverflowRect = scrollableOverflowRect
         // Collect overflow from boxes.
         // Note while we compute ink overflow for all type of boxes including atomic inline level boxes (e.g. <iframe> <img>) as part of constructing
@@ -133,12 +142,27 @@ extension LayoutIntegration {
         }
 
         if firstTextBoxIndex != nil && lastTextBoxIndex != nil {
+          let (leadingOverflow, trailingOverflow) = glyphOverflowInInlineDirection(
+            firstTextBoxIndex: firstTextBoxIndex!, lastTextBoxIndex: lastTextBoxIndex!,
+            boxes: boxes,
+            inkOverflowRect: inkOverflowRect,
+            isLeftToRightDirection: line.isLeftToRightInlineDirection())
+          inkOverflowRect.inflate(
+            deltaX: leadingOverflow, deltaY: 0, deltaMaxX: trailingOverflow, deltaMaxY: 0)
+        }
+
+        line.setScrollableOverflow(scrollableOverflow: scrollableOverflowRect)
+        line.setInkOverflow(inkOverflowRect: inkOverflowRect)
+        line.setFirstBoxIndex(firstBoxIndex: firstBoxIndex)
+        line.setBoxCount(boxCount: boxIndex - firstBoxIndex)
+
+        if lineIndex == 0 {
           // TODO(asuhan): implement this
           fatalError("Not implemented")
         }
-
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        if !inlineContent.hasVisualOverflow && inkOverflowRect != scrollableOverflowRect {
+          inlineContent.setHasVisualOverflow()
+        }
       }
     }
 
