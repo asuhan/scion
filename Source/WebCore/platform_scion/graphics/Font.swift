@@ -50,6 +50,15 @@ class FontWrapper: Hashable {
     return FontMetricsWrapper(p: wk_interop.Font_fontMetrics(p))
   }
 
+  func boundsForGlyph(glyph: Glyph) -> FloatRectWrapper {
+    let raw = wk_interop.Font_boundsForGlyph(p, glyph)
+    return FloatRectWrapper(
+      x: raw.x,
+      y: raw.y,
+      width: raw.width,
+      height: raw.height)
+  }
+
   // Should the result of this function include the results of synthetic bold?
   enum SyntheticBoldInclusion: UInt8 {
     case Incorporate

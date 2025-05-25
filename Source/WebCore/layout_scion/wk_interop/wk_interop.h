@@ -115,6 +115,13 @@ struct BlockEllipsisRaw {
     const void* string;
 };
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -125,6 +132,7 @@ uint8_t RenderStyle_whiteSpaceCollapse(const void*);
 bool RenderStyle_textWrapMode(const void*);
 bool Font_hasVerticalGlyphs(const void*);
 const void* Font_fontMetrics(const void*);
+struct FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph);
 float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion);
 const void* FontCascade_fontDescription(const void*);
 float FontCascade_size(const void*);

@@ -60,6 +60,19 @@ extern "C" WEBCORE_EXPORT const void* Font_fontMetrics(const void* font)
     return &static_cast<const WebCore::Font*>(font)->fontMetrics();
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+extern "C" WEBCORE_EXPORT struct FloatRectRaw Font_boundsForGlyph(const void* font, uint16_t glyph)
+{
+    const auto bounds = static_cast<const WebCore::Font*>(font)->boundsForGlyph(WebCore::Glyph(glyph));
+    return { bounds.x(), bounds.y(), bounds.width(), bounds.height() };
+}
+
 extern "C" WEBCORE_EXPORT float Font_widthForGlyph(const void* font, uint16_t glyph, uint8_t synthetic_bold_inclusion)
 {
     return static_cast<const WebCore::Font*>(font)->widthForGlyph(glyph, static_cast<WebCore::Font::SyntheticBoldInclusion>(synthetic_bold_inclusion));
