@@ -217,7 +217,7 @@ extension LayoutIntegration {
         line.setFirstBoxIndex(firstBoxIndex: firstBoxIndex)
         line.setBoxCount(boxCount: boxIndex - firstBoxIndex)
 
-        if lineIndex == 0 {
+        if lineIndex != 0 {
           // TODO(asuhan): implement this
           fatalError("Not implemented")
         }
