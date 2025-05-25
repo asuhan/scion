@@ -40,12 +40,73 @@ private func endPaddingQuirkValue(flow: RenderBlockFlowWrapper) -> Float32 {
   return endPadding.float()
 }
 
+private func bounds(textBox: InlineDisplay.Box, isLeading: Bool, isLeftToRightDirection: Bool)
+  -> FloatRectWrapper
+{
+  let textContent = textBox.text().renderedContent()
+  if textContent.length() == 0 {
+    fatalError("Not reached")
+  }
+  let character = isLeading ? textContent[0] : textContent[textContent.length() - 1]
+  let fontCascade = textBox.style().fontCascade()
+  let glyphData = fontCascade.glyphDataForCharacter(
+    c: UInt32(character), mirror: !isLeftToRightDirection)
+  return (glyphData.font ?? fontCascade.primaryFont()).boundsForGlyph(glyph: glyphData.glyph)
+}
+
+private func leadingOverflow(
+  firstTextBoxIndex: UInt64, boxes: InlineDisplay.Boxes, inkOverflowRect: FloatRectWrapper,
+  isLeftToRightDirection: Bool
+) -> Float32 {
+  let firstTextBox = boxes[Int(firstTextBoxIndex)]
+  assert(firstTextBox.isText())
+  if (firstTextBox.layoutBox as! InlineTextBoxWrapper).canUseSimpleFontCodePath() {
+    return 0
+  }
+  let boundsX = bounds(
+    textBox: firstTextBox, isLeading: true, isLeftToRightDirection: isLeftToRightDirection
+  ).x()
+  if boundsX < 0 {
+    return max(0, inkOverflowRect.x() - (firstTextBox.left() + boundsX))
+  }
+  return 0
+}
+
+private func trailingOverflow(
+  lastTextBoxIndex: UInt64, boxes: InlineDisplay.Boxes, inkOverflowRect: FloatRectWrapper,
+  isLeftToRightDirection: Bool
+) -> Float32 {
+  let lastTextBox = boxes[Int(lastTextBoxIndex)]
+  assert(lastTextBox.isText())
+  if (lastTextBox.layoutBox as! InlineTextBoxWrapper).canUseSimpleFontCodePath() {
+    return 0
+  }
+  let boundsMaxX = bounds(
+    textBox: lastTextBox, isLeading: false, isLeftToRightDirection: isLeftToRightDirection
+  ).maxX()
+  if boundsMaxX > lastTextBox.width() {
+    return max(0, (lastTextBox.left() + boundsMaxX) - inkOverflowRect.maxX())
+  }
+  return 0
+}
+
 private func glyphOverflowInInlineDirection(
   firstTextBoxIndex: UInt64, lastTextBoxIndex: UInt64, boxes: InlineDisplay.Boxes,
   inkOverflowRect: FloatRectWrapper, isLeftToRightDirection: Bool
 ) -> (Float32, Float32) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // FIXME: This should be on the text box level and taking all characters into account (maybe consider utilizing the measuring pass if turns out to be a perf hit)
+  if firstTextBoxIndex >= boxes.count || lastTextBoxIndex >= boxes.count {
+    fatalError("Not reached")
+  }
+
+  return (
+    leadingOverflow(
+      firstTextBoxIndex: firstTextBoxIndex, boxes: boxes, inkOverflowRect: inkOverflowRect,
+      isLeftToRightDirection: isLeftToRightDirection),
+    trailingOverflow(
+      lastTextBoxIndex: lastTextBoxIndex, boxes: boxes, inkOverflowRect: inkOverflowRect,
+      isLeftToRightDirection: isLeftToRightDirection)
+  )
 }
 
 extension LayoutIntegration {
