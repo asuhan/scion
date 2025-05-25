@@ -54,6 +54,21 @@ class StringWrapperView {
     fatalError("Not implemented")
   }
 
+  func characterAt(index: UInt32) -> UChar {
+    if self.p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    if is8Bit() {
+      return span8()[UInt64(index)]
+    }
+    return span16()[UInt64(index)]
+  }
+
+  subscript(index: UInt32) -> UChar {
+    return characterAt(index: index)
+  }
+
   func is8Bit() -> Bool {
     if self.p != nil {
       return wk_interop.StringView_is8Bit(self.p)
