@@ -72,6 +72,11 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT const void* RenderView_frameView(const void* p)
+{
+    return &static_cast<const WebCore::RenderView*>(p)->frameView();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderView_layoutState(void* p)
 {
     return &static_cast<WebCore::RenderView*>(p)->layoutState();

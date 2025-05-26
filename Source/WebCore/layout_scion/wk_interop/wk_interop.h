@@ -330,6 +330,7 @@ void* RenderObject_containingBlock(const void*);
 const void* RenderObject_style(const void*);
 void* RenderObject_layoutBox(void*);
 void* RenderObject_parent(void*);
+const void* RenderView_frameView(const void*);
 void* RenderView_layoutState(void*);
 void* RenderElement_firstChild(const void*);
 void RenderElement_layoutIfNeeded(void*);
