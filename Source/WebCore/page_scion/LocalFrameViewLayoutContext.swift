@@ -24,8 +24,14 @@
  */
 
 class LocalFrameViewLayoutContextWrapper {
+  init(p: UnsafeRawPointer) {
+    self.p = p
+  }
+
   func layoutState() -> RenderLayoutStateWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var p: UnsafeRawPointer
 }

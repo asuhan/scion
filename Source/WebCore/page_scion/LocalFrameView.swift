@@ -22,14 +22,15 @@
    Boston, MA 02110-1301, USA.
 */
 
+import wk_interop
+
 class LocalFrameViewWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func layoutContext() -> LocalFrameViewLayoutContextWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
   }
 
   private var p: UnsafeRawPointer
