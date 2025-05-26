@@ -108,7 +108,7 @@ struct LineClampRaw {
 };
 
 extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
-extern "C" void LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*);
+extern "C" void LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool);
 
 namespace {
 

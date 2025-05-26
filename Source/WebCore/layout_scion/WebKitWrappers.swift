@@ -269,7 +269,8 @@ public func LineLayout_layout(
   placedFloatsRaw: PlacedFloatsRaw,
   lineClampRaw: LineClampRaw,
   layoutResultCPtr: UnsafeMutableRawPointer,
-  lineLayoutRootFlowCPtr: UnsafeMutableRawPointer
+  lineLayoutRootFlowCPtr: UnsafeMutableRawPointer,
+  isPartialLayout: Bool
 ) {
   let lineLayout = LayoutIntegration.LineLayout(
     flow: RenderBlockFlowWrapper(p: lineLayoutRootFlowCPtr))
