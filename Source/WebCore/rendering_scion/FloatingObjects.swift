@@ -21,9 +21,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 typealias FloatingObjectSet = Set<FloatingObjectWrapper>
 
 class FloatingObjectWrapper: Hashable {
+  init(p: UnsafeMutableRawPointer) {
+    self.p = p
+  }
+
   static func == (lhs: FloatingObjectWrapper, rhs: FloatingObjectWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -51,4 +57,5 @@ class FloatingObjectWrapper: Hashable {
 
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
+  private var p: UnsafeMutableRawPointer
 }

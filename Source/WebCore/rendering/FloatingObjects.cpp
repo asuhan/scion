@@ -31,6 +31,12 @@
 #include <wtf/HexNumber.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw)
+{
+    const auto floatingObject = static_cast<WebCore::RenderBlockFlow*>(floating_object_raw);
+    const auto floatBox = static_cast<WebCore::RenderBox*>(float_box_raw);
+    return &floatingObject->insertFloatingObjectForIFC(*floatBox);
+}
 
 namespace WebCore {
 

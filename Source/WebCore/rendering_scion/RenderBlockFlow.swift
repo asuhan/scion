@@ -41,8 +41,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func insertFloatingObjectForIFC(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FloatingObjectWrapper(
+      p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
 
   func inlineLayout() -> LayoutIntegration.LineLayout? {
