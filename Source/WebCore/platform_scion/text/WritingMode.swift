@@ -64,6 +64,10 @@ struct TextFlow {
   var blockDirection: FlowDirection
   var textDirection: TextDirection
 
+  func isFlipped() -> Bool {
+    return blockDirection == .BottomToTop || blockDirection == .RightToLeft
+  }
+
   func isVertical() -> Bool {
     return blockDirection == .LeftToRight || blockDirection == .RightToLeft
   }
@@ -89,8 +93,7 @@ func isVerticalWritingMode(writingMode: WritingMode) -> Bool {
 
 // Block progression increases in the opposite direction to normal; modes vertical-rl or horizontal-bt.
 func isFlippedWritingMode(writingMode: WritingMode) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return makeTextFlow(writingMode: writingMode, direction: .LTR).isFlipped()
 }
 
 // Lines have horizontal orientation; modes horizontal-tb or horizontal-bt.
