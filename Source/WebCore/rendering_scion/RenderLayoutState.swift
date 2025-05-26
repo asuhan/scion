@@ -24,8 +24,14 @@
  */
 
 class RenderLayoutStateWrapper {
+  init(p: UnsafeRawPointer) {
+    self.p = p
+  }
+
   func isPaginated() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var p: UnsafeRawPointer
 }

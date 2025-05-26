@@ -52,6 +52,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT const void* LocalFrameViewLayoutContext_layoutState(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutState();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(LocalFrameViewLayoutContext);

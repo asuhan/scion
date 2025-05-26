@@ -332,6 +332,7 @@ void* RenderObject_layoutBox(void*);
 void* RenderObject_parent(void*);
 const void* RenderView_frameView(const void*);
 void* RenderView_layoutState(void*);
+const void* LocalFrameViewLayoutContext_layoutState(const void*);
 const void* LocalFrameView_layoutContext(const void*);
 void* RenderElement_firstChild(const void*);
 void RenderElement_layoutIfNeeded(void*);

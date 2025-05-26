@@ -23,14 +23,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class LocalFrameViewLayoutContextWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func layoutState() -> RenderLayoutStateWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderLayoutStateWrapper(p: wk_interop.LocalFrameViewLayoutContext_layoutState(p))
   }
 
   private var p: UnsafeRawPointer
