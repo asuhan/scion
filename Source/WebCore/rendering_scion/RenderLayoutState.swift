@@ -23,14 +23,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class RenderLayoutStateWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func isPaginated() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderLayoutState_isPaginated(p)
   }
 
   private var p: UnsafeRawPointer

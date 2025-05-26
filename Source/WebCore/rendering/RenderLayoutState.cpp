@@ -37,6 +37,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/WeakPtr.h>
 
+extern "C" WEBCORE_EXPORT bool RenderLayoutState_isPaginated(const void* p)
+{
+    return static_cast<const WebCore::RenderLayoutState*>(p)->isPaginated();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayoutState);
