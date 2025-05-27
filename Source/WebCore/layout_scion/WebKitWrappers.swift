@@ -297,11 +297,19 @@ public func LineLayout_layout(
   var lineDamage: InlineDamageWrapper? =
     lineDamageCPtr != nil ? InlineDamageWrapper(p: lineDamageCPtr!) : nil
   let constraints = convert_constraints(constraintsCPtr: constraintsCPtr)
+  lineLayout.inlineContentConstraints = constraints
   let layoutResult = inlineFormattingContext.layout(
     constraints: constraints, lineDamage: &lineDamage)
   let repaintRect = LayoutRectWrapper(
     r: lineLayout.constructContent(
       inlineLayoutState: inlineFormattingContext.layoutState(), layoutResult: layoutResult))
+
+  let adjustments = lineLayout.adjustContentForPagination(
+    blockLayoutState: parentBlockLayoutState, isPartialLayout: isPartialLayout)
+
+  lineLayout.updateRenderTreePositions(
+    lineAdjustments: adjustments, inlineLayoutState: inlineFormattingContext.layoutState())
+
   print("repaintRect: \(repaintRect)")
   for line in layoutResult.displayContent.lines {
     let line_box_rect = wk_interop.FloatRect_new(
