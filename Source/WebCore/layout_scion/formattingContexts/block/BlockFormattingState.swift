@@ -69,7 +69,6 @@ class BlockFormattingState: FormattingState {
 
   func shrinkToFit() {
     // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   var placedFloats: PlacedFloats?

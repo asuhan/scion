@@ -45,7 +45,6 @@ class InlineContentCache {
 
     func shrinkToFit() {
       // TODO(asuhan): implement this
-      fatalError("Not implemented")
     }
 
     func replace(
