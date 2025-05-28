@@ -23,17 +23,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FormattingContextBoxIterator: LayoutDescendantIterator<BoxWrapper> {}
-
-class FormattingContextBoxIteratorAdapter: Sequence {
-  func makeIterator() -> FormattingContextBoxIterator {
+class FormattingContextBoxIterator: LayoutDescendantIterator<BoxWrapper> {
+  override func next() -> BoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 }
 
+class FormattingContextBoxIteratorAdapter: Sequence {
+  init(root: ElementBoxWrapper) { self.root = root }
+
+  func makeIterator() -> FormattingContextBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let root: ElementBoxWrapper
+}
+
 internal func formattingContextBoxes(root: ElementBoxWrapper) -> FormattingContextBoxIteratorAdapter
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(root.establishesFormattingContext())
+  return FormattingContextBoxIteratorAdapter(root: root)
 }
