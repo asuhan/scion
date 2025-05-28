@@ -274,6 +274,7 @@ public func LineLayout_layout(
 ) {
   let lineLayout = LayoutIntegration.LineLayout(
     flow: RenderBlockFlowWrapper(p: lineLayoutRootFlowCPtr))
+  lineLayout.blockFormattingState.placedFloats = convert_placed_floats(raw: placedFloatsRaw)
   let rootLayoutBoxC = InlineFormattingContext_root(inlineFormattingContextCPtr)
   let style = convert_render_style(p: Box_style(rootLayoutBoxC))
   let rootLayoutBox = ElementBoxWrapper(style: style)
