@@ -87,10 +87,7 @@ struct LayoutRectWrapper {
 
   mutating func move(dx: LayoutUnit, dy: LayoutUnit) { m_location.move(dx: dx, dy: dy) }
 
-  func expand<T, U>(dw: T, dh: U) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func expand(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: dw, height: dh) }
 
   func minXMinYCorner() -> LayoutPointWrapper { return m_location }
 
