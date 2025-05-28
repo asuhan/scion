@@ -64,6 +64,45 @@
 #include <wtf/Assertions.h>
 #include <wtf/Range.h>
 
+// TODO(asuhan): Fix leaks
+
+extern "C" WEBCORE_EXPORT void* FormattingContextBoxIteratorAdapter_new(const void* p)
+{
+    return new WebCore::Layout::FormattingContextBoxIteratorAdapter(*static_cast<const WebCore::Layout::ElementBox*>(p));
+}
+
+extern "C" WEBCORE_EXPORT void* FormattingContextBoxIteratorAdapter_begin(void* p)
+{
+    auto adapter = static_cast<WebCore::Layout::FormattingContextBoxIteratorAdapter*>(p);
+    return new WebCore::Layout::FormattingContextBoxIterator(adapter->begin());
+}
+
+extern "C" WEBCORE_EXPORT void* FormattingContextBoxIteratorAdapter_end(void* p)
+{
+    auto adapter = static_cast<WebCore::Layout::FormattingContextBoxIteratorAdapter*>(p);
+    return new WebCore::Layout::FormattingContextBoxIterator(adapter->end());
+}
+
+extern "C" WEBCORE_EXPORT const void* FormattingContextBoxIterator_deref(void* p)
+{
+    auto& it = *static_cast<WebCore::Layout::FormattingContextBoxIterator*>(p);
+    return &*it;
+}
+
+extern "C" WEBCORE_EXPORT void* FormattingContextBoxIterator_preinc(void* p)
+{
+    auto& it = *static_cast<WebCore::Layout::FormattingContextBoxIterator*>(p);
+    ++it;
+    return &it;
+}
+
+extern "C" WEBCORE_EXPORT bool FormattingContextBoxIterator_equal(const void* p1, const void* p2)
+{
+    auto& it1 = *static_cast<const WebCore::Layout::FormattingContextBoxIterator*>(p1);
+    auto& it2 = *static_cast<const WebCore::Layout::FormattingContextBoxIterator*>(p2);
+    return it1 == it2;
+}
+
 struct BoxGeometryHorizontalEdgesRaw {
     int32_t start;
     int32_t end;
