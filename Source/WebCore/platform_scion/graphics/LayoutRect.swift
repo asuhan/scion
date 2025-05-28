@@ -85,10 +85,7 @@ struct LayoutRectWrapper {
     fatalError("Not implemented")
   }
 
-  func move<T, U>(dx: T, dy: U) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func move(dx: LayoutUnit, dy: LayoutUnit) { m_location.move(dx: dx, dy: dy) }
 
   func expand<T, U>(dw: T, dh: U) {
     // TODO(asuhan): implement this

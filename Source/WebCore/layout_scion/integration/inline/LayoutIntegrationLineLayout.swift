@@ -97,7 +97,7 @@ class LayoutIntegration {
       location: borderBoxVisualTopLeft,
       size: isHorizontalWritingMode
         ? borderBoxLogicalRect.size() : borderBoxLogicalRect.size().transposedSize())
-    let marginBoxVisualRect = borderBoxVisualRect
+    var marginBoxVisualRect = borderBoxVisualRect
 
     marginBoxVisualRect.move(dx: -horizontalMargin.start, dy: -verticalMargin.before)
     marginBoxVisualRect.expand(
@@ -1197,7 +1197,7 @@ class LayoutIntegration {
             inlineContentConstraints!.visualLeft
             + inlineContentConstraints!.horizontal.logicalWidth
             + inlineContentConstraints!.horizontal.logicalLeft
-          let (marginBoxVisualRect, borderBoxVisualRect) =
+          var (marginBoxVisualRect, borderBoxVisualRect) =
             LayoutIntegration.toMarginAndBorderBoxVisualRect(
               logicalGeometry: logicalGeometry, containerLogicalWidth: containerLogicalWidth,
               writingMode: writingMode,
