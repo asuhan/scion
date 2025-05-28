@@ -52,6 +52,8 @@ struct LayoutRectWrapper {
     fatalError("Not implemented")
   }
 
+  func size() -> LayoutSizeWrapper { return m_size }
+
   func x() -> LayoutUnit { return m_location.x }
 
   func y() -> LayoutUnit { return m_location.y }

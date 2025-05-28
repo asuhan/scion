@@ -72,8 +72,8 @@ struct Rect {
   }
 
   func size() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasValidSize())
+    return rect.size()
   }
 
   mutating func setWidth(width: LayoutUnit) {
