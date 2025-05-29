@@ -122,6 +122,13 @@ struct FloatRectRaw {
     float height;
 };
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -342,6 +349,7 @@ void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
 int32_t RenderBox_availableLogicalWidth(const void*);
 int32_t RenderBox_logicalLeft(const void*);
+struct LayoutRectRaw RenderBox_frameRect(const void*);
 int32_t RenderBox_contentWidth(const void*);
 int32_t RenderBox_contentHeight(const void*);
 int32_t RenderBox_contentLogicalSize_width(const void*);

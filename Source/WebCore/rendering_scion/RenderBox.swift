@@ -53,8 +53,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func frameRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderBox_frameRect(p)
+    return LayoutRectWrapper(
+      x: LayoutUnit.fromRawValue(value: raw.x),
+      y: LayoutUnit.fromRawValue(value: raw.y),
+      width: LayoutUnit.fromRawValue(value: raw.width),
+      height: LayoutUnit.fromRawValue(value: raw.height))
   }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
