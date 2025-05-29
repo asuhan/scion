@@ -51,8 +51,10 @@ class FloatingObjectWrapper: Hashable {
   }
 
   func setFrameRect(frameRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FloatingObject_setFrameRect(
+      p, frameRect.x().rawValue(), frameRect.y().rawValue(),
+      frameRect.width().rawValue(),
+      frameRect.height().rawValue())
   }
 
   var renderer: RenderBoxWrapper? = nil

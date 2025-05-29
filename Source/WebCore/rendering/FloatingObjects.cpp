@@ -38,6 +38,15 @@ extern "C" WEBCORE_EXPORT void* RenderBlockFlow_insertFloatingObjectForIFC(void*
     return &floatingObject->insertFloatingObjectForIFC(*floatBox);
 }
 
+extern "C" WEBCORE_EXPORT void FloatingObject_setFrameRect(void* p, int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    static_cast<WebCore::FloatingObject*>(p)->setFrameRect(WebCore::LayoutRect(
+        WebCore::LayoutUnit::fromRawValue(x),
+        WebCore::LayoutUnit::fromRawValue(y),
+        WebCore::LayoutUnit::fromRawValue(width),
+        WebCore::LayoutUnit::fromRawValue(height)));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL_TEMPLATE(FloatingObjectTree);
