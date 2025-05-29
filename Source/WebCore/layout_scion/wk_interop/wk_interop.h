@@ -572,5 +572,6 @@ void* FormattingContextBoxIteratorAdapter_end(void*);
 const void* FormattingContextBoxIterator_deref(void*);
 void* FormattingContextBoxIterator_preinc(void*);
 bool FormattingContextBoxIterator_equal(const void*, const void*);
+void FloatingObject_setIsPlaced(void*, bool);
 void FloatingObject_setMarginOffset(void* p, int32_t width, int32_t height);
 void FloatingObject_setFrameRect(void* p, int32_t x, int32_t y, int32_t width, int32_t height);
