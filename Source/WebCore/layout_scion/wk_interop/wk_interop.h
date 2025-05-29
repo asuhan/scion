@@ -343,6 +343,7 @@ bool RenderLayoutState_isPaginated(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 const void* LocalFrameView_layoutContext(const void*);
 void* RenderElement_firstChild(const void*);
+bool RenderElement_checkForRepaintDuringLayout(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);

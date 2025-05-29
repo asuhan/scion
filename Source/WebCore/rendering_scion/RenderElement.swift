@@ -55,8 +55,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func checkForRepaintDuringLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
   }
 
   func isWritingModeRoot() -> Bool {

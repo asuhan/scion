@@ -111,6 +111,11 @@ extern "C" WEBCORE_EXPORT void* RenderElement_firstChild(const void* p)
     return static_cast<const WebCore::RenderElement*>(p)->firstChild();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_checkForRepaintDuringLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->checkForRepaintDuringLayout();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderElement);
