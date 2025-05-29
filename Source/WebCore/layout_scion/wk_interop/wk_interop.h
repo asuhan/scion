@@ -349,6 +349,7 @@ void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
 int32_t RenderBox_availableLogicalWidth(const void*);
 int32_t RenderBox_logicalLeft(const void*);
+void RenderBox_setLocation(void* p, int32_t x, int32_t y);
 struct LayoutRectRaw RenderBox_frameRect(const void*);
 int32_t RenderBox_contentWidth(const void*);
 int32_t RenderBox_contentHeight(const void*);

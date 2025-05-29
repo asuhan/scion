@@ -43,8 +43,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setLocation(p: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderBox_setLocation(self.p, p.x.rawValue(), p.y.rawValue())
   }
 
   func move(dx: LayoutUnit, dy: LayoutUnit) {

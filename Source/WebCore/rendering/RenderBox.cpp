@@ -122,6 +122,12 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_logicalLeft(const void* p)
     return static_cast<const WebCore::RenderBox*>(p)->logicalLeft().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_setLocation(void* p, int32_t x, int32_t y)
+{
+    static_cast<WebCore::RenderBox*>(p)->setLogicalLocation(WebCore::LayoutPoint(
+        WebCore::LayoutUnit::fromRawValue(x), WebCore::LayoutUnit::fromRawValue(y)));
+}
+
 struct LayoutRectRaw {
     int32_t x;
     int32_t y;
