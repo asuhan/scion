@@ -47,10 +47,7 @@ struct LayoutRectWrapper {
     self.m_size = LayoutSizeWrapper(size: r.size())
   }
 
-  func location() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func location() -> LayoutPointWrapper { return m_location }
 
   func size() -> LayoutSizeWrapper { return m_size }
 
