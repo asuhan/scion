@@ -38,6 +38,13 @@ extern "C" WEBCORE_EXPORT void* RenderBlockFlow_insertFloatingObjectForIFC(void*
     return &floatingObject->insertFloatingObjectForIFC(*floatBox);
 }
 
+extern "C" WEBCORE_EXPORT void FloatingObject_setMarginOffset(void* p, int32_t width, int32_t height)
+{
+    static_cast<WebCore::FloatingObject*>(p)->setMarginOffset(WebCore::LayoutSize(
+        WebCore::LayoutUnit::fromRawValue(width),
+        WebCore::LayoutUnit::fromRawValue(height)));
+}
+
 extern "C" WEBCORE_EXPORT void FloatingObject_setFrameRect(void* p, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     static_cast<WebCore::FloatingObject*>(p)->setFrameRect(WebCore::LayoutRect(

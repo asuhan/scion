@@ -46,8 +46,8 @@ class FloatingObjectWrapper: Hashable {
   }
 
   func setMarginOffset(offset: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.FloatingObject_setMarginOffset(
+      p, offset.width().rawValue(), offset.height().rawValue())
   }
 
   func setFrameRect(frameRect: LayoutRectWrapper) {
