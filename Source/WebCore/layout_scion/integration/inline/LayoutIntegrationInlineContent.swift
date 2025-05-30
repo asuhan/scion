@@ -70,6 +70,7 @@ extension LayoutIntegration {
     var firstLinePaginationOffset: Float32 = 0
 
     var isPaginated = false
+    var hasMultilinePaintOverlap = false
 
     var displayContent = InlineDisplay.Content()
 

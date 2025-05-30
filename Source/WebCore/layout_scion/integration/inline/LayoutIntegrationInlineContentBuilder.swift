@@ -218,8 +218,12 @@ extension LayoutIntegration {
         line.setBoxCount(boxCount: boxIndex - firstBoxIndex)
 
         if lineIndex != 0 {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          let lastInkOverflow = lines[Int(lineIndex - 1)].inkOverflow
+          if inkOverflowRect.y() <= lastInkOverflow.y()
+            || lastInkOverflow.maxY() >= inkOverflowRect.maxY()
+          {
+            inlineContent.hasMultilinePaintOverlap = true
+          }
         }
         if !inlineContent.hasVisualOverflow && inkOverflowRect != scrollableOverflowRect {
           inlineContent.setHasVisualOverflow()
