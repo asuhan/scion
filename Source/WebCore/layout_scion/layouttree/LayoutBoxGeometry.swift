@@ -31,7 +31,7 @@ struct BoxGeometry {
     fatalError("Not implemented")
   }
 
-  static func borderBoxLeft(box: BoxGeometry) -> LayoutUnit { return box.top() }
+  static func borderBoxLeft(box: BoxGeometry) -> LayoutUnit { return box.left() }
 
   static func borderBoxTopLeft(box: BoxGeometry) -> LayoutPointWrapper { return box.topLeft() }
 
