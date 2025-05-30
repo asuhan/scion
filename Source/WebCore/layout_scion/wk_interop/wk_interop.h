@@ -78,6 +78,11 @@ struct OptionalFloatRaw {
     bool is_valid;
 };
 
+struct OptionalIntRaw {
+    int32_t value;
+    bool is_valid;
+};
+
 struct EnclosingAscentDescentRaw {
     float ascent;
     float descent;

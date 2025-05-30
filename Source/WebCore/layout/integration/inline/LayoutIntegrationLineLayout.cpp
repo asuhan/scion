@@ -146,8 +146,13 @@ struct LineClampRaw {
     bool isValid;
 };
 
+struct OptionalIntRaw {
+    int32_t value;
+    bool is_valid;
+};
+
 extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
-extern "C" void LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool);
+extern "C" void LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool, struct OptionalIntRaw);
 
 namespace {
 
@@ -212,6 +217,13 @@ LineClampRaw convertLineClampRaw(const std::optional<WebCore::Layout::BlockLayou
         lineClampRaw = { 0, false, false, false };
     }
     return lineClampRaw;
+}
+
+OptionalIntRaw convertIntrusiveInitialLetterLogicalBottom(const std::optional<WebCore::LayoutUnit> intrusiveInitialLetterLogicalBottom)
+{
+    if (intrusiveInitialLetterLogicalBottom)
+        return { intrusiveInitialLetterLogicalBottom->rawValue(), true };
+    return { 0, false };
 }
 
 namespace WebCore {

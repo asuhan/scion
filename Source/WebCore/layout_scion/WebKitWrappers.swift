@@ -270,7 +270,8 @@ public func LineLayout_layout(
   lineClampRaw: LineClampRaw,
   layoutResultCPtr: UnsafeMutableRawPointer,
   lineLayoutRootFlowCPtr: UnsafeMutableRawPointer,
-  isPartialLayout: Bool
+  isPartialLayout: Bool,
+  intrusiveInitialLetterLogicalBottomRaw: OptionalIntRaw
 ) {
   let lineLayout = LayoutIntegration.LineLayout(
     flow: RenderBlockFlowWrapper(p: lineLayoutRootFlowCPtr))
@@ -283,7 +284,12 @@ public func LineLayout_layout(
   let layoutState = LayoutStateWrapper(p: layoutStateC)
   let parentBlockLayoutState = BlockLayoutState(
     placedFloats: convert_placed_floats(raw: placedFloatsRaw),
-    lineClamp: convert_line_clamp_raw(raw: lineClampRaw))
+    lineClamp: convert_line_clamp_raw(raw: lineClampRaw),
+    textBoxTrim: BlockLayoutState.TextBoxTrim(),  // TODO(asuhan): pass this correctly
+    textBoxEdge: TextEdge(),  // TODO(asuhan): pass this correctly
+    intrusiveInitialLetterLogicalBottom: intrusiveInitialLetterLogicalBottomRaw.is_valid
+      ? LayoutUnit.fromRawValue(value: intrusiveInitialLetterLogicalBottomRaw.value)
+      : nil)
   let inlineFormattingContext = InlineFormattingContext(
     rootBlockContainer: rootLayoutBox, globalLayoutState: layoutState,
     parentBlockLayoutState: parentBlockLayoutState)
