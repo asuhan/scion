@@ -26,10 +26,7 @@
 import wk_interop
 
 struct BoxGeometry {
-  static func borderBoxTop(box: BoxGeometry) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func borderBoxTop(box: BoxGeometry) -> LayoutUnit { return box.top() }
 
   static func borderBoxLeft(box: BoxGeometry) -> LayoutUnit { return box.left() }
 
