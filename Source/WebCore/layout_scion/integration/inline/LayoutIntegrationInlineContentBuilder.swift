@@ -195,8 +195,11 @@ extension LayoutIntegration {
           }
 
           if box.isInlineBox() {
-            // TODO(asuhan): implement this
-            fatalError("Not implemented")
+            if !(box.layoutBox.rendererForIntegration() as! RenderElementWrapper)
+              .hasSelfPaintingLayer()
+            {
+              inkOverflowRect.unite(other: box.inkOverflow)
+            }
           }
 
           boxIndex += 1
