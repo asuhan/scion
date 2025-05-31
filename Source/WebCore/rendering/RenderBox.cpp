@@ -206,6 +206,13 @@ extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_logicalVisualOverflowRe
     return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
 }
 
+extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_layoutOverflowRectForPropagation(const void* p, const void* style_raw)
+{
+    const auto style = static_cast<const WebCore::RenderStyle*>(style_raw);
+    const auto& rect = static_cast<const WebCore::RenderBox*>(p)->layoutOverflowRectForPropagation(style);
+    return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBox_isFlexItem(const void* p)
 {
     return static_cast<const WebCore::RenderBox*>(p)->isFlexItem();
