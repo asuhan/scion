@@ -54,6 +54,10 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasSelfPaintingLayer() -> Bool {
+    return wk_interop.RenderElement_hasSelfPaintingLayer(p)
+  }
+
   func checkForRepaintDuringLayout() -> Bool {
     return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
   }

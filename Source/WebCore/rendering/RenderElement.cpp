@@ -111,6 +111,11 @@ extern "C" WEBCORE_EXPORT void* RenderElement_firstChild(const void* p)
     return static_cast<const WebCore::RenderElement*>(p)->firstChild();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_hasSelfPaintingLayer(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->hasSelfPaintingLayer();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderElement_checkForRepaintDuringLayout(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->checkForRepaintDuringLayout();
