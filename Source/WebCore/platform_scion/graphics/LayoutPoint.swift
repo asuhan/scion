@@ -65,6 +65,11 @@ struct LayoutPointWrapper {
     y += dy
   }
 
+  mutating func move(dx: Float32, dy: Float32) {
+    x += dx
+    y += dy
+  }
+
   func FloatPoint() -> FloatPoint { return layout_scion.FloatPoint(x: x.float(), y: y.float()) }
 
   static func != (a: LayoutPointWrapper, b: LayoutPointWrapper) -> Bool {
