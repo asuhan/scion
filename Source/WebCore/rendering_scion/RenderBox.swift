@@ -135,6 +135,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalVisualOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
+    if style.p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    let raw = wk_interop.RenderBox_logicalVisualOverflowRectForPropagation(p, style.p)
+    return LayoutRectWrapper(
+      x: LayoutUnit.fromRawValue(value: raw.x),
+      y: LayoutUnit.fromRawValue(value: raw.y),
+      width: LayoutUnit.fromRawValue(value: raw.width),
+      height: LayoutUnit.fromRawValue(value: raw.height))
+  }
+
   func hasRelativeDimensions() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

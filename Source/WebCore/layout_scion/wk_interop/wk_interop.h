@@ -369,6 +369,7 @@ int32_t RenderBox_paddingBoxRectIncludingScrollbar_width(const void*);
 int32_t RenderBox_paddingBoxRectIncludingScrollbar_height(const void*);
 int32_t RenderBox_paddingBoxRectIncludingScrollbar_x(const void*);
 int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(const void*);
+struct LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw);
 bool RenderBox_isFlexItem(const void*);
 const void* RenderBox_shapeOutsideInfo(const void*);
 int32_t RenderBoxModelObject_paddingStart(const void*);
