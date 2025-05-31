@@ -272,7 +272,7 @@ public func LineLayout_layout(
   lineLayoutRootFlowCPtr: UnsafeMutableRawPointer,
   isPartialLayout: Bool,
   intrusiveInitialLetterLogicalBottomRaw: OptionalIntRaw
-) {
+) -> LayoutRectRaw {
   let lineLayout = LayoutIntegration.LineLayout(
     flow: RenderBlockFlowWrapper(p: lineLayoutRootFlowCPtr))
   lineLayout.blockFormattingState.placedFloats = convert_placed_floats(raw: placedFloatsRaw)
@@ -317,7 +317,6 @@ public func LineLayout_layout(
   lineLayout.updateRenderTreePositions(
     lineAdjustments: adjustments, inlineLayoutState: inlineFormattingContext.layoutState())
 
-  print("repaintRect: \(repaintRect)")
   for line in layoutResult.displayContent.lines {
     let line_box_rect = wk_interop.FloatRect_new(
       line.lineBoxRect.x(), line.lineBoxRect.y(), line.lineBoxRect.width(),
@@ -417,4 +416,8 @@ public func LineLayout_layout(
   wk_interop.InlineFormattingContext_setClearGapAfterLastLine(
     inlineFormattingContextCPtr,
     inlineFormattingContext.layoutState().clearGapAfterLastLine)
+  return LayoutRectRaw(
+    x: repaintRect.x().rawValue(), y: repaintRect.y().rawValue(),
+    width: repaintRect.width().rawValue(),
+    height: repaintRect.height().rawValue())
 }

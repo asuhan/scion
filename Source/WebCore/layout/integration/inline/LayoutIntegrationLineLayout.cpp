@@ -151,8 +151,15 @@ struct OptionalIntRaw {
     bool is_valid;
 };
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
 extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
-extern "C" void LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool, struct OptionalIntRaw);
+extern "C" struct LayoutRectRaw LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool, struct OptionalIntRaw);
 
 namespace {
 
@@ -224,6 +231,15 @@ OptionalIntRaw convertIntrusiveInitialLetterLogicalBottom(const std::optional<We
     if (intrusiveInitialLetterLogicalBottom)
         return { intrusiveInitialLetterLogicalBottom->rawValue(), true };
     return { 0, false };
+}
+
+WebCore::LayoutRect convertLayoutRect(const LayoutRectRaw& raw)
+{
+    return WebCore::LayoutRect(
+        WebCore::LayoutUnit::fromRawValue(raw.x),
+        WebCore::LayoutUnit::fromRawValue(raw.y),
+        WebCore::LayoutUnit::fromRawValue(raw.width),
+        WebCore::LayoutUnit::fromRawValue(raw.height));
 }
 
 namespace WebCore {
