@@ -190,8 +190,19 @@ extension LayoutIntegration {
           }
 
           if box.isAtomicInlineBox() {
-            // TODO(asuhan): implement this
-            fatalError("Not implemented")
+            let renderer = box.layoutBox.rendererForIntegration() as! RenderBoxWrapper
+            if !renderer.hasSelfPaintingLayer() {
+              var childInkOverflow = renderer.logicalVisualOverflowRectForPropagation(
+                style: renderer.parent()!.style())
+              childInkOverflow.move(dx: box.left(), dy: box.top())
+              inkOverflowRect.unite(other: childInkOverflow.FloatRect())
+            }
+            var childScrollableOverflow = renderer.layoutOverflowRectForPropagation(
+              style: renderer.parent()!.style())
+            childScrollableOverflow.move(dx: box.left(), dy: box.top())
+            scrollableOverflowRect.unite(other: childScrollableOverflow.FloatRect())
+            boxIndex += 1
+            continue
           }
 
           if box.isInlineBox() {
