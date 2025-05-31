@@ -332,6 +332,7 @@ bool RenderObject_isRenderListMarker(const void*);
 bool RenderObject_isRenderBlockFlow(const void*);
 bool RenderObject_isRenderFlexibleBox(const void*);
 bool RenderObject_isRenderBlock(const void*);
+bool RenderObject_isRenderInline(const void*);
 bool RenderObject_isRenderBox(const void*);
 bool RenderObject_isImage(const void*);
 bool RenderObject_isFieldset(const void*);

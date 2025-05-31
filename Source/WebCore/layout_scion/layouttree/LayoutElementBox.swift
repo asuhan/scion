@@ -204,6 +204,9 @@ class ElementBoxWrapper: BoxWrapper {
     if wk_interop.RenderObject_isRenderBox(unwrapped!) {
       return RenderBoxWrapper(p: unwrapped!)
     }
+    if wk_interop.RenderObject_isRenderInline(unwrapped!) {
+      return RenderInlineWrapper(p: unwrapped!)
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

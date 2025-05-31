@@ -119,6 +119,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderBlock(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderBlock();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderInline(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderInline();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderBox(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderBox();
