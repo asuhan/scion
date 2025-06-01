@@ -42,6 +42,8 @@
  * version of this file under any of the LGPL, the MPL or the GPL.
  */
 
+import wk_interop
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -68,8 +70,7 @@ class RenderLayerWrapper {
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
 
   private let p: UnsafeMutableRawPointer

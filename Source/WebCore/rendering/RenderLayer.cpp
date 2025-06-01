@@ -157,6 +157,11 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden)
+{
+    static_cast<WebCore::RenderLayer*>(p)->setIsHiddenByOverflowTruncation(is_hidden);
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
