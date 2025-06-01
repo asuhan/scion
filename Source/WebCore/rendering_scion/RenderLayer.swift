@@ -63,8 +63,7 @@ class RenderLayerWrapper {
   }
 
   func setStaticBlockPosition(position: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
