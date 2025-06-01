@@ -89,6 +89,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isHorizontalWritingMode(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isHorizontalWritingMode();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_hasNonVisibleOverflow(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->hasNonVisibleOverflow();
