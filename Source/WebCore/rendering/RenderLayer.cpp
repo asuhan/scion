@@ -169,6 +169,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticBlockPosition(const void* p)
     return position.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_setStaticInlinePosition(void* p, int32_t position)
+{
+    static_cast<WebCore::RenderLayer*>(p)->setStaticInlinePosition(WebCore::LayoutUnit::fromRawValue(position));
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_setStaticBlockPosition(void* p, int32_t position)
 {
     static_cast<WebCore::RenderLayer*>(p)->setStaticBlockPosition(WebCore::LayoutUnit::fromRawValue(position));

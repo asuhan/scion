@@ -599,5 +599,6 @@ void FloatingObject_setFrameRect(void* p, int32_t x, int32_t y, int32_t width, i
 void* RenderLayerModelObject_layer(const void*);
 int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);
+void RenderLayer_setStaticInlinePosition(void* p, int32_t position);
 void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
