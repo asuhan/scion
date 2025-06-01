@@ -157,6 +157,12 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticInlinePosition(const void* p)
+{
+    const auto position = static_cast<const WebCore::RenderLayer*>(p)->staticInlinePosition();
+    return position.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden)
 {
     static_cast<WebCore::RenderLayer*>(p)->setIsHiddenByOverflowTruncation(is_hidden);

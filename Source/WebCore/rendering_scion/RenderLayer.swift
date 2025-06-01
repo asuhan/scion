@@ -50,8 +50,7 @@ class RenderLayerWrapper {
   }
 
   func staticInlinePosition() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
   }
 
   func staticBlockPosition() -> LayoutUnit {

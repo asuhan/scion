@@ -595,4 +595,5 @@ void FloatingObject_setIsPlaced(void*, bool);
 void FloatingObject_setMarginOffset(void* p, int32_t width, int32_t height);
 void FloatingObject_setFrameRect(void* p, int32_t x, int32_t y, int32_t width, int32_t height);
 void* RenderLayerModelObject_layer(const void*);
+int32_t RenderLayer_staticInlinePosition(const void*);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
