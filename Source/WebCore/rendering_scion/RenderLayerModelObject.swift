@@ -20,9 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 class RenderLayerModelObjectWrapper: RenderElementWrapper {
   func layer() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let rawLayer = wk_interop.RenderLayerModelObject_layer(p) {
+      return RenderLayerWrapper(p: rawLayer)
+    }
+    return nil
   }
 }

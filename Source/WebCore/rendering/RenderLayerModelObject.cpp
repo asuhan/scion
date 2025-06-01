@@ -62,6 +62,11 @@
 #include <wtf/MathExtras.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* RenderLayerModelObject_layer(const void* p)
+{
+    return static_cast<const WebCore::RenderLayerModelObject*>(p)->layer();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderLayerModelObject);

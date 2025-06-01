@@ -43,6 +43,10 @@
  */
 
 class RenderLayerWrapper {
+  init(p: UnsafeMutableRawPointer) {
+    self.p = p
+  }
+
   func staticInlinePosition() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -67,4 +71,6 @@ class RenderLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
