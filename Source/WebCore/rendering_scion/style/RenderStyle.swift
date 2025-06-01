@@ -190,8 +190,11 @@ class RenderStyleWrapper {
 
   // Whether or not a positioned element requires normal flow x/y to be computed to determine its position.
   func hasStaticInlinePosition(horizontal: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_hasStaticInlinePosition(p, horizontal)
   }
 
   func hasStaticBlockPosition(horizontal: Bool) -> Bool {

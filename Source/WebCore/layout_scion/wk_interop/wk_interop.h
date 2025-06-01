@@ -454,6 +454,7 @@ int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentRight(const void*);
 int32_t RenderStyle_getBoxShadowVerticalExtentTop(const void*);
 int32_t RenderStyle_getBoxShadowVerticalExtentBottom(const void*);
+bool RenderStyle_hasStaticInlinePosition(const void*, bool);
 uint8_t RenderStyle_floating(const void*);
 uint8_t RenderStyle_overflowX(const void*);
 uint8_t RenderStyle_usedVisibility(const void*);
