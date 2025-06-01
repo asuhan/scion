@@ -56,10 +56,7 @@ class LayoutSizeWrapper {
 
   func isEmpty() -> Bool { return width_.rawValue() <= 0 || height_.rawValue() <= 0 }
 
-  func isZero() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isZero() -> Bool { return !width_.bool() && !height_.bool() }
 
   func expand(width: LayoutUnit, height: LayoutUnit) {
     width_ += width
