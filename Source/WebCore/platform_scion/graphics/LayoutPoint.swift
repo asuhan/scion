@@ -78,8 +78,7 @@ struct LayoutPointWrapper {
   }
 
   static func - (a: LayoutPointWrapper, b: LayoutPointWrapper) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutSizeWrapper(width: a.x - b.x, height: a.y - b.y)
   }
 
   static func - (a: LayoutPointWrapper, b: LayoutSizeWrapper) -> LayoutPointWrapper {
