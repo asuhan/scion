@@ -38,8 +38,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func location() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rawLocation = wk_interop.RenderBox_location(p)
+    return LayoutPointWrapper(
+      x: LayoutUnit.fromRawValue(value: rawLocation.x),
+      y: LayoutUnit.fromRawValue(value: rawLocation.y))
   }
 
   func setLocation(p: LayoutPointWrapper) {
