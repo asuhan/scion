@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct LayoutPointWrapper {
+struct LayoutPointWrapper: Equatable {
   init() {}
 
   init(x: LayoutUnit, y: LayoutUnit) {
@@ -71,11 +71,6 @@ struct LayoutPointWrapper {
   }
 
   func FloatPoint() -> FloatPoint { return layout_scion.FloatPoint(x: x.float(), y: y.float()) }
-
-  static func != (a: LayoutPointWrapper, b: LayoutPointWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
 
   static func - (a: LayoutPointWrapper, b: LayoutPointWrapper) -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: a.x - b.x, height: a.y - b.y)
