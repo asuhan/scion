@@ -75,6 +75,14 @@
 #include "VisiblePosition.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void RenderBlockFlow_setStaticInlinePositionForChild(void* p, void* child_raw, int32_t block_offset_raw, int32_t inline_position_raw)
+{
+    const auto child = static_cast<WebCore::RenderBox*>(child_raw);
+    const auto blockOffset = WebCore::LayoutUnit::fromRawValue(block_offset_raw);
+    const auto inlinePosition = WebCore::LayoutUnit::fromRawValue(inline_position_raw);
+    static_cast<WebCore::RenderBlockFlow*>(p)->setStaticInlinePositionForChild(*child, blockOffset, inlinePosition);
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_endPaddingWidthForCaret(const void* p)
 {
     return static_cast<const WebCore::RenderBlockFlow*>(p)->endPaddingWidthForCaret().rawValue();

@@ -563,6 +563,7 @@ int32_t BoxGeometry_top(const void*);
 int32_t BoxGeometry_left(const void*);
 struct GlyphOverflowRaw visualOverflowForDecorations(const void*, float, float);
 struct GlyphOverflowRaw visualOverflowForDecorationsByStyle(const void*);
+void RenderBlockFlow_setStaticInlinePositionForChild(void* p, void* child_raw, int32_t block_offset_raw, int32_t inline_position_raw);
 int32_t RenderBlockFlow_endPaddingWidthForCaret(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);

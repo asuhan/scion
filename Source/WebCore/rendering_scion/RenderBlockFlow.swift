@@ -26,8 +26,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func setStaticInlinePositionForChild(
     child: RenderBoxWrapper, blockOffset: LayoutUnit, inlinePosition: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
+      p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
   }
 
   func setBreakAtLineToAvoidWidow(lineToBreak: Int) {
