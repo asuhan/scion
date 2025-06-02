@@ -102,6 +102,11 @@
 #include "ContentChangeObserver.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool Node_isRootEditableElement(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isRootEditableElement();
+}
+
 namespace WebCore {
 
 WTF_MAKE_COMPACT_TZONE_OR_ISO_ALLOCATED_IMPL(Node);

@@ -603,3 +603,4 @@ int32_t RenderLayer_staticBlockPosition(const void*);
 void RenderLayer_setStaticInlinePosition(void* p, int32_t position);
 void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
+bool Node_isRootEditableElement(const void*);

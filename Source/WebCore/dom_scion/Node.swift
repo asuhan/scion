@@ -22,14 +22,15 @@
  *
  */
 
+import wk_interop
+
 class NodeWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func isRootEditableElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Node_isRootEditableElement(p)
   }
 
   let p: UnsafeRawPointer
