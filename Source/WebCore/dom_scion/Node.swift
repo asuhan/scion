@@ -23,8 +23,14 @@
  */
 
 class NodeWrapper {
+  init(p: UnsafeRawPointer) {
+    self.p = p
+  }
+
   func isRootEditableElement() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let p: UnsafeRawPointer
 }

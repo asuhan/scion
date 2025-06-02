@@ -349,6 +349,7 @@ void* RenderView_layoutState(void*);
 bool RenderLayoutState_isPaginated(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 const void* LocalFrameView_layoutContext(const void*);
+const void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 bool RenderElement_hasSelfPaintingLayer(const void*);
 bool RenderElement_checkForRepaintDuringLayout(const void*);

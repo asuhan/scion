@@ -24,8 +24,10 @@ import wk_interop
 
 class RenderElementWrapper: RenderObjectWrapper {
   func element() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let elementRaw = wk_interop.RenderElement_element(p) {
+      return ElementWrapper(p: elementRaw)
+    }
+    return nil
   }
 
   func firstChild() -> RenderObjectWrapper? {
