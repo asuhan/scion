@@ -267,8 +267,9 @@ extension LayoutIntegration {
             ? scrollableOverflowRect.shiftMaxXEdgeBy(delta: overflowValue)
             : scrollableOverflowRect.shiftXEdgeBy(delta: -overflowValue)
         } else {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          isLeftToRightInlineDirection
+            ? scrollableOverflowRect.shiftMaxYEdgeBy(delta: overflowValue)
+            : scrollableOverflowRect.shiftYEdgeBy(delta: -overflowValue)
         }
       }
     }
