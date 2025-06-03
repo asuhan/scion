@@ -210,6 +210,15 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_paddingBoxRectIncludingScrollbar_y(c
     return padding_box_rect.y().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_repaintDuringLayoutIfMoved(void* p, struct LayoutRectRaw rect)
+{
+    static_cast<WebCore::RenderBox*>(p)->repaintDuringLayoutIfMoved(WebCore::LayoutRect(
+        WebCore::LayoutUnit::fromRawValue(rect.x),
+        WebCore::LayoutUnit::fromRawValue(rect.y),
+        WebCore::LayoutUnit::fromRawValue(rect.width),
+        WebCore::LayoutUnit::fromRawValue(rect.height)));
+}
+
 extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw)
 {
     const auto style = static_cast<const WebCore::RenderStyle*>(style_raw);

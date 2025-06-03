@@ -114,8 +114,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderBox_repaintDuringLayoutIfMoved(
+      p,
+      LayoutRectRaw(
+        x: oldRect.x().rawValue(),
+        y: oldRect.y().rawValue(),
+        width: oldRect.width().rawValue(),
+        height: oldRect.height().rawValue()))
   }
 
   func availableLogicalWidth() -> LayoutUnit {
