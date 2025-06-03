@@ -106,6 +106,10 @@ struct FloatRectWrapper {
     shiftMaxXEdgeTo(edge: maxX() + delta)
   }
 
+  mutating func shiftMaxYEdgeBy(delta: Float32) {
+    shiftMaxYEdgeTo(edge: maxY() + delta)
+  }
+
   func minXMinYCorner() -> FloatPoint { return m_location }
 
   func intersects(other: FloatRectWrapper) -> Bool {
