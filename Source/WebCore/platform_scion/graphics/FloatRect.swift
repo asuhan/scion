@@ -106,6 +106,11 @@ struct FloatRectWrapper {
     shiftMaxXEdgeTo(edge: maxX() + delta)
   }
 
+  mutating func shiftYEdgeBy(delta: Float32) {
+    move(dx: 0, dy: delta)
+    setHeight(height: max(0, height() - delta))
+  }
+
   mutating func shiftMaxYEdgeBy(delta: Float32) {
     shiftMaxYEdgeTo(edge: maxY() + delta)
   }
