@@ -42,8 +42,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
 
   /* This function performs a layout only if one is needed. */
