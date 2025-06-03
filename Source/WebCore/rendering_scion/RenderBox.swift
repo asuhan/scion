@@ -49,8 +49,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func move(dx: LayoutUnit, dy: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderBox_move(p, dx.rawValue(), dy.rawValue())
   }
 
   func frameRect() -> LayoutRectWrapper {

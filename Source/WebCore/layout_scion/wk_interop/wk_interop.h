@@ -367,6 +367,7 @@ int32_t RenderBox_availableLogicalWidth(const void*);
 int32_t RenderBox_logicalLeft(const void*);
 struct LayoutPointRaw RenderBox_location(const void*);
 void RenderBox_setLocation(void* p, int32_t x, int32_t y);
+void RenderBox_move(void* p, int32_t dx, int32_t dy);
 struct LayoutRectRaw RenderBox_frameRect(const void*);
 int32_t RenderBox_contentWidth(const void*);
 int32_t RenderBox_contentHeight(const void*);

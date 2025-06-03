@@ -139,6 +139,11 @@ extern "C" WEBCORE_EXPORT void RenderBox_setLocation(void* p, int32_t x, int32_t
         WebCore::LayoutUnit::fromRawValue(x), WebCore::LayoutUnit::fromRawValue(y)));
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_move(void* p, int32_t dx, int32_t dy)
+{
+    static_cast<WebCore::RenderBox*>(p)->move(WebCore::LayoutUnit::fromRawValue(dx), WebCore::LayoutUnit::fromRawValue(dy));
+}
+
 struct LayoutRectRaw {
     int32_t x;
     int32_t y;
