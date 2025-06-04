@@ -177,6 +177,26 @@ extension LayoutIntegration {
       return nil
     }
 
+    private static func numberOfDamagedLines(
+      layoutResult: InlineLayoutResult, inlineContent: InlineContent, firstDamagedLineIndex: UInt64?
+    ) -> UInt64? {
+      if firstDamagedLineIndex == nil {
+        return nil
+      }
+      let displayContentFromPreviousLayout = inlineContent.displayContent
+      assert(layoutResult.range != .Full)
+      let candidateLineCount =
+        layoutResult.range == .FullFromDamage
+        ? UInt64(displayContentFromPreviousLayout.lines.count) - firstDamagedLineIndex!
+        : UInt64(layoutResult.displayContent.lines.count)
+
+      if firstDamagedLineIndex! + candidateLineCount > displayContentFromPreviousLayout.lines.count
+      {
+        fatalError("Not reached")
+      }
+      return candidateLineCount
+    }
+
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
       let lines = inlineContent.displayContent.lines
       let boxes = inlineContent.displayContent.boxes
