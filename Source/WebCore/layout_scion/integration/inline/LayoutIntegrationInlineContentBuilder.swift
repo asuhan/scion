@@ -144,6 +144,29 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    private static func firstDamagedLineIndex(
+      layoutResult: InlineLayoutResult, inlineContent: InlineContent,
+      lineDamage: InlineDamageWrapper?
+    ) -> UInt64? {
+      let displayContentFromPreviousLayout = inlineContent.displayContent
+      if lineDamage == nil || lineDamage!.layoutStartPosition() == nil
+        || displayContentFromPreviousLayout.lines.count == 0
+      {
+        return nil
+      }
+      let candidateLineIndex = lineDamage!.layoutStartPosition()!.lineIndex
+      if candidateLineIndex >= displayContentFromPreviousLayout.lines.count {
+        fatalError("Not reached")
+      }
+      if layoutResult.displayContent.boxes.count != 0
+        && candidateLineIndex > layoutResult.displayContent.boxes[0].lineIndex
+      {
+        // We should never generate lines _before_ the damaged line.
+        fatalError("Not reached")
+      }
+      return candidateLineIndex
+    }
+
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
       let lines = inlineContent.displayContent.lines
       let boxes = inlineContent.displayContent.boxes
