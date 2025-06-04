@@ -167,6 +167,16 @@ extension LayoutIntegration {
       return candidateLineIndex
     }
 
+    private static func firstDamagedBoxIndex(
+      inlineContent: InlineContent, firstDamagedLineIndex: UInt64?
+    ) -> UInt64? {
+      let displayContentFromPreviousLayout = inlineContent.displayContent
+      if let firstDamagedLineIndex = firstDamagedLineIndex {
+        return displayContentFromPreviousLayout.lines[Int(firstDamagedLineIndex)].firstBoxIndex()
+      }
+      return nil
+    }
+
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
       let lines = inlineContent.displayContent.lines
       let boxes = inlineContent.displayContent.boxes
