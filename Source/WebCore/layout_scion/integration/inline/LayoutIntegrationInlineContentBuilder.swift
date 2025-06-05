@@ -218,6 +218,18 @@ extension LayoutIntegration {
       return boxCount
     }
 
+    private static func adjustDamagedRectWithLineRange(
+      inlineContent: InlineContent, firstLineIndex: UInt64, lineCount: UInt64
+    ) -> FloatRectWrapper {
+      var damagedRect = FloatRectWrapper()
+      let lines = inlineContent.displayContent.lines
+      assert(firstLineIndex + lineCount <= lines.count)
+      for i in 0..<lineCount {
+        damagedRect.unite(other: lines[Int(firstLineIndex + i)].inkOverflow)
+      }
+      return damagedRect
+    }
+
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
       let lines = inlineContent.displayContent.lines
       let boxes = inlineContent.displayContent.boxes
