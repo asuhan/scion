@@ -140,6 +140,45 @@ extension LayoutIntegration {
         return damagedRect
       }
 
+      // Handle partial display content update.
+      let firstDamagedLineIndex = InlineContentBuilder.firstDamagedLineIndex(
+        layoutResult: layoutResult, inlineContent: inlineContent, lineDamage: lineDamage)
+
+      let firstDamagedBoxIndex = InlineContentBuilder.firstDamagedBoxIndex(
+        inlineContent: inlineContent, firstDamagedLineIndex: firstDamagedLineIndex)
+
+      let numberOfDamagedLines = InlineContentBuilder.numberOfDamagedLines(
+        layoutResult: layoutResult, inlineContent: inlineContent,
+        firstDamagedLineIndex: firstDamagedLineIndex)
+
+      let numberOfDamagedBoxes = InlineContentBuilder.numberOfDamagedBoxes(
+        inlineContent: inlineContent,
+        firstDamagedLineIndex: firstDamagedLineIndex,
+        firstDamagedBoxIndex: firstDamagedBoxIndex,
+        numberOfDamagedLines: numberOfDamagedLines)
+
+      if firstDamagedLineIndex == nil || numberOfDamagedLines == nil || firstDamagedBoxIndex == nil
+        || numberOfDamagedBoxes == nil
+      {
+        fatalError("Not reached")
+      }
+
+      // Repaint the damaged content boundary.
+      InlineContentBuilder.adjustDamagedRectWithLineRange(
+        inlineContent: inlineContent, firstLineIndex: firstDamagedLineIndex!,
+        lineCount: numberOfDamagedLines!
+      )
+
+      if layoutResult.range == .FullFromDamage {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else if layoutResult.range == .PartialFromDamage {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else {
+        fatalError("Not reached")
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -218,6 +257,7 @@ extension LayoutIntegration {
       return boxCount
     }
 
+    @discardableResult
     private static func adjustDamagedRectWithLineRange(
       inlineContent: InlineContent, firstLineIndex: UInt64, lineCount: UInt64
     ) -> FloatRectWrapper {
