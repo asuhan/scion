@@ -33,6 +33,13 @@ struct InlineDisplay {
       boxes = newContent.boxes
     }
 
+    mutating func remove(
+      firstLineIndex: UInt64, numberOfLines: UInt64, firstBoxIndex: UInt64, numberOfBoxes: UInt64
+    ) {
+      lines.removeSubrange(Int(firstLineIndex)..<Int(firstLineIndex + numberOfLines))
+      boxes.removeSubrange(Int(firstBoxIndex)..<Int(firstBoxIndex + numberOfBoxes))
+    }
+
     var lines: Lines = []
     var boxes: Boxes = []
   }
