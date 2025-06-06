@@ -163,15 +163,22 @@ extension LayoutIntegration {
         fatalError("Not reached")
       }
 
+      let numberOfNewLines = UInt64(layoutResult.displayContent.lines.count)
+
+      var damagedRect = FloatRectWrapper()
+
       // Repaint the damaged content boundary.
       InlineContentBuilder.adjustDamagedRectWithLineRange(
         inlineContent: inlineContent, firstLineIndex: firstDamagedLineIndex!,
-        lineCount: numberOfDamagedLines!
-      )
+        lineCount: numberOfDamagedLines!, damagedRect: &damagedRect)
 
       if layoutResult.range == .FullFromDamage {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        var displayContent = inlineContent.displayContent
+        displayContent.remove(
+          firstLineIndex: firstDamagedLineIndex!, numberOfLines: numberOfDamagedLines!,
+          firstBoxIndex: firstDamagedBoxIndex!,
+          numberOfBoxes: numberOfDamagedBoxes!)
+        displayContent.append(newContent: layoutResult.displayContent)
       } else if layoutResult.range == .PartialFromDamage {
         // TODO(asuhan): implement this
         fatalError("Not implemented")
@@ -179,8 +186,13 @@ extension LayoutIntegration {
         fatalError("Not reached")
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      adjustDisplayLines(inlineContent: inlineContent, startIndex: firstDamagedLineIndex!)
+      // Repaint the new content boundary.
+      InlineContentBuilder.adjustDamagedRectWithLineRange(
+        inlineContent: inlineContent, firstLineIndex: firstDamagedLineIndex!,
+        lineCount: numberOfNewLines, damagedRect: &damagedRect)
+
+      return damagedRect
     }
 
     private static func firstDamagedLineIndex(
@@ -257,17 +269,15 @@ extension LayoutIntegration {
       return boxCount
     }
 
-    @discardableResult
     private static func adjustDamagedRectWithLineRange(
-      inlineContent: InlineContent, firstLineIndex: UInt64, lineCount: UInt64
-    ) -> FloatRectWrapper {
-      var damagedRect = FloatRectWrapper()
+      inlineContent: InlineContent, firstLineIndex: UInt64, lineCount: UInt64,
+      damagedRect: inout FloatRectWrapper
+    ) {
       let lines = inlineContent.displayContent.lines
       assert(firstLineIndex + lineCount <= lines.count)
       for i in 0..<lineCount {
         damagedRect.unite(other: lines[Int(firstLineIndex + i)].inkOverflow)
       }
-      return damagedRect
     }
 
     private func adjustDisplayLines(inlineContent: InlineContent, startIndex: UInt64) {
