@@ -33,6 +33,11 @@ struct InlineDisplay {
       boxes = newContent.boxes
     }
 
+    mutating func append(newContent: Content) {
+      lines.append(contentsOf: newContent.lines)
+      boxes.append(contentsOf: newContent.boxes)
+    }
+
     mutating func remove(
       firstLineIndex: UInt64, numberOfLines: UInt64, firstBoxIndex: UInt64, numberOfBoxes: UInt64
     ) {
