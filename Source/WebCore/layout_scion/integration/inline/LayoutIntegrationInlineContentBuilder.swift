@@ -164,6 +164,7 @@ extension LayoutIntegration {
       }
 
       let numberOfNewLines = UInt64(layoutResult.displayContent.lines.count)
+      let numberOfNewBoxes = UInt64(layoutResult.displayContent.boxes.count)
 
       var damagedRect = FloatRectWrapper()
 
@@ -180,8 +181,19 @@ extension LayoutIntegration {
           numberOfBoxes: numberOfDamagedBoxes!)
         displayContent.append(newContent: layoutResult.displayContent)
       } else if layoutResult.range == .PartialFromDamage {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        var displayContent = inlineContent.displayContent
+        displayContent.remove(
+          firstLineIndex: firstDamagedLineIndex!, numberOfLines: numberOfDamagedLines!,
+          firstBoxIndex: firstDamagedBoxIndex!,
+          numberOfBoxes: numberOfDamagedBoxes!)
+        displayContent.insert(
+          newContent: layoutResult.displayContent, lineIndex: firstDamagedLineIndex!,
+          boxIndex: firstDamagedBoxIndex!)
+
+        InlineContentBuilder.adjustCachedBoxIndexesIfNeeded(
+          displayContent: displayContent,
+          firstDamagedLineIndex: firstDamagedLineIndex!, numberOfNewBoxes: numberOfNewBoxes,
+          numberOfDamagedBoxes: numberOfDamagedBoxes!, numberOfDamagedLines: numberOfDamagedLines!)
       } else {
         fatalError("Not reached")
       }
@@ -193,6 +205,23 @@ extension LayoutIntegration {
         lineCount: numberOfNewLines, damagedRect: &damagedRect)
 
       return damagedRect
+    }
+
+    private static func adjustCachedBoxIndexesIfNeeded(
+      displayContent: InlineDisplay.Content, firstDamagedLineIndex: UInt64,
+      numberOfNewBoxes: UInt64, numberOfDamagedBoxes: UInt64, numberOfDamagedLines: UInt64
+    ) {
+      if numberOfNewBoxes == numberOfDamagedBoxes {
+        return
+      }
+      let firstCleanLineIndex = firstDamagedLineIndex + numberOfDamagedLines
+      let offset = numberOfNewBoxes - numberOfDamagedBoxes
+      let lines = displayContent.lines
+      for line in lines[Int(firstCleanLineIndex)...] {
+        let adjustedFirstBoxIndex = line.firstBoxIndex() + offset
+        assert(adjustedFirstBoxIndex > 0)
+        line.setFirstBoxIndex(firstBoxIndex: adjustedFirstBoxIndex)
+      }
     }
 
     private static func firstDamagedLineIndex(
