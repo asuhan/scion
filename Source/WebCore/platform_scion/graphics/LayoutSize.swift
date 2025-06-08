@@ -67,11 +67,11 @@ class LayoutSizeWrapper {
     return LayoutSizeWrapper(width: height_, height: width_)
   }
 
-  // TODO(asuhan): implement this
   @discardableResult
   static func += (a: inout LayoutSizeWrapper, b: LayoutSizeWrapper) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    a.setWidth(width: a.width() + b.width())
+    a.setHeight(height: a.height() + b.height())
+    return a
   }
 
   prefix static func - (size: LayoutSizeWrapper) -> LayoutSizeWrapper {
