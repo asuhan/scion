@@ -72,10 +72,7 @@ struct LayoutRectWrapper {
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
-  func move(size: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func move(size: LayoutSizeWrapper) { m_location += size }
 
   func moveBy(offset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
