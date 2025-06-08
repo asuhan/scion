@@ -72,6 +72,12 @@ struct LayoutPointWrapper: Equatable {
 
   func FloatPoint() -> FloatPoint { return layout_scion.FloatPoint(x: x.float(), y: y.float()) }
 
+  @discardableResult
+  static func += (a: inout LayoutPointWrapper, b: LayoutSizeWrapper) -> LayoutPointWrapper {
+    a.move(dx: b.width(), dy: b.height())
+    return a
+  }
+
   static func - (a: LayoutPointWrapper, b: LayoutPointWrapper) -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: a.x - b.x, height: a.y - b.y)
   }
