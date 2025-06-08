@@ -936,7 +936,7 @@ class LayoutIntegration {
 
       // FIXME: We should be able to flip the display boxes soon after the root block
       // is finished sizing in one go.
-      let firstBoxRect = toLayoutRect(rect: firstBox!.visualRectIgnoringBlockDirection())
+      var firstBoxRect = toLayoutRect(rect: firstBox!.visualRectIgnoringBlockDirection())
       switch writingModeToBlockFlowDirection(writingMode: rootLayoutBox().style.writingMode()) {
       case .TopToBottom, .BottomToTop, .LeftToRight:
         return firstBoxRect

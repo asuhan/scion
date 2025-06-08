@@ -63,10 +63,7 @@ struct LayoutRectWrapper {
 
   func height() -> LayoutUnit { return m_size.height() }
 
-  func setX<T>(x: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setX(x: LayoutUnit) { m_location.setX(x: x) }
 
   func setWidth(width: LayoutUnit) { m_size.setWidth(width: width) }
 
