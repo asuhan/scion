@@ -779,7 +779,7 @@ class LayoutIntegration {
 
       let layoutBox = renderInline.layoutBox()!
 
-      let result = LayoutRectWrapper()
+      var result = LayoutRectWrapper()
       inlineContent!.traverseNonRootInlineBoxes(
         layoutBox: layoutBox,
         function: {
