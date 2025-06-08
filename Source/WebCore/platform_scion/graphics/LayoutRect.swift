@@ -74,10 +74,7 @@ struct LayoutRectWrapper {
 
   mutating func move(size: LayoutSizeWrapper) { m_location += size }
 
-  func moveBy(offset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func moveBy(offset: LayoutPointWrapper) { m_location.move(dx: offset.x, dy: offset.y) }
 
   mutating func move(dx: LayoutUnit, dy: LayoutUnit) { m_location.move(dx: dx, dy: dy) }
 

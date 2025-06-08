@@ -654,7 +654,7 @@ class LayoutIntegration {
         return false
       }
 
-      let hitTestBoundingBox = locationInContainer.boundingBox()
+      var hitTestBoundingBox = locationInContainer.boundingBox()
       hitTestBoundingBox.moveBy(offset: -accumulatedOffset)
       let boxRange = inlineContent!.boxesForRect(rect: hitTestBoundingBox)
 
@@ -686,7 +686,7 @@ class LayoutIntegration {
         }
 
         let currentLine = inlineContent!.displayContent.lines[Int(box.lineIndex)]
-        let boxRect = flippedRectForWritingMode(
+        var boxRect = flippedRectForWritingMode(
           root: flow(),
           rect: InlineDisplay.Box.visibleRectIgnoringBlockDirection(
             box: box, visibleLineRect: currentLine.visibleRectIgnoringBlockDirection()))
