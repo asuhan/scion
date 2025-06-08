@@ -75,8 +75,7 @@ class LayoutSizeWrapper {
   }
 
   prefix static func - (size: LayoutSizeWrapper) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutSizeWrapper(width: -size.width(), height: -size.height())
   }
 
   func FloatSize() -> FloatSize {
