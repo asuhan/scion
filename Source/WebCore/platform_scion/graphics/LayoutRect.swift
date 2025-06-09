@@ -104,8 +104,7 @@ struct LayoutRectWrapper {
   }
 
   func transposedRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutRectWrapper(location: m_location.transposedPoint(), size: m_size.transposedSize())
   }
 
   func FloatRect() -> FloatRectWrapper {
