@@ -36,7 +36,6 @@ struct InlineLayoutResult {
 internal func partialRangeForDamage(inlineItemList: InlineItemList, lineDamage: InlineDamageWrapper)
   -> InlineItemRange?
 {
-  // TODO(asuhan): implement this
   let layoutStartPosition = lineDamage.layoutStartPosition()!.inlineItemPosition
   if layoutStartPosition.index >= inlineItemList.count {
     assert(false)
@@ -86,7 +85,6 @@ internal func computeNeedsLayoutRange(
 )
   -> InlineItemRange
 {
-  // TODO(asuhan): implement this
   if !InlineInvalidation.mayOnlyNeedPartialLayout(inlineDamage: lineDamage) {
     return InlineItemRange(
       start: InlineItemPosition(),
@@ -375,7 +373,6 @@ class InlineFormattingContext {
   }
 
   func layoutFloatContentOnly(constraints: ConstraintsForInlineContent) {
-    // TODO(asuhan): implement this
     assert(!root().hasInFlowChild())
 
     let placedFloats = layoutState().placedFloats()
@@ -483,7 +480,6 @@ class InlineFormattingContext {
   func createDisplayContentForLineFromCachedContent(
     constraints: ConstraintsForInlineContent, layoutResult: inout InlineLayoutResult
   ) -> Bool {
-    // TODO(asuhan): implement this
     if inlineContentCache.maximumIntrinsicWidthLineContent == nil
       || inlineContentCache.maximumContentSize == nil
     {
@@ -530,7 +526,6 @@ class InlineFormattingContext {
   func restoreTrimmedTrailingWhitespaceIfApplicable(
     lineContent: inout LineLayoutResult, horizontalAvailableSpace: LayoutUnit
   ) -> Bool? {
-    // TODO(asuhan): implement this
     // Special 'line-break: after-white-space' behavior where min/max width trims trailing whitespace, while
     // layout should preserve _overflowing_ trailing whitespace.
     if root().style.lineBreak() != .AfterWhiteSpace
@@ -561,7 +556,6 @@ class InlineFormattingContext {
   func createDisplayContentForEmptyInlineContent(
     constraints: ConstraintsForInlineContent, layoutResult: inout InlineLayoutResult
   ) {
-    // TODO(asuhan): implement this
     var emptyLineBreakingResult = LineLayoutResult()
     emptyLineBreakingResult.lineGeometry = LineLayoutResult.LineGeometry(
       logicalTopLeft: InlineLayoutPoint(
@@ -603,7 +597,6 @@ class InlineFormattingContext {
   }
 
   func updateBoxGeometryForPlacedFloats(placedFloats: LineLayoutResult.PlacedFloatList) {
-    // TODO(asuhan): implement this
     for floatItem in placedFloats {
       if let layoutBox = floatItem.layoutBox() {
         let boxGeometry = geometryForBox(layoutBox: layoutBox)
@@ -612,9 +605,8 @@ class InlineFormattingContext {
         // Adopt trimmed inline direction margin.
         boxGeometry.setHorizontalMargin(margin: usedGeometry.horizontalMargin())
       } else {
-        assert(false)
         // We should not be placing intrusive floats coming from parent BFC.
-        continue
+        fatalError("Not reached")
       }
     }
   }
