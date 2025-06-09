@@ -66,13 +66,14 @@ struct UsedVerticalMargin {
 }
 
 func marginBefore(usedVerticalMargin: UsedVerticalMargin) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return usedVerticalMargin.collapsedValues.before ?? usedVerticalMargin.nonCollapsedValues.before
 }
 
 func marginAfter(usedVerticalMargin: UsedVerticalMargin) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if usedVerticalMargin.collapsedValues.isCollapsedThrough {
+    return LayoutUnit(value: 0)
+  }
+  return usedVerticalMargin.collapsedValues.after ?? usedVerticalMargin.nonCollapsedValues.after
 }
 
 struct ComputedHorizontalMargin {
