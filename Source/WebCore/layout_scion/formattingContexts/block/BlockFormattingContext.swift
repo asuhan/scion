@@ -721,10 +721,11 @@ class BlockFormattingContext: FormattingContext {
         point: BoxGeometry.borderBoxTopLeft(box: geometryForBox(layoutBox: ancestor)))
     }
     if let floatConstraintsLeft = floatConstraints.left {
-      floatConstraints.left = floatConstraintsLeft - offset
+      floatConstraints.left = PointInContextRoot(point: floatConstraintsLeft.LayoutPoint() - offset)
     }
     if let floatConstraintsRight = floatConstraints.right {
-      floatConstraints.right = floatConstraintsRight - offset
+      floatConstraints.right = PointInContextRoot(
+        point: floatConstraintsRight.LayoutPoint() - offset)
     }
     return floatConstraints
   }

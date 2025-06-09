@@ -533,12 +533,12 @@ class FloatingContext {
     }
 
     if coordinateMappingIsRequired {
-      if let left_point = constraints.left {
-        left_point.move(offset: -adjustingDelta)
+      if constraints.left != nil {
+        constraints.left!.move(offset: -adjustingDelta)
       }
 
-      if let right_point = constraints.right {
-        right_point.move(offset: -adjustingDelta)
+      if constraints.right != nil {
+        constraints.right!.move(offset: -adjustingDelta)
       }
     }
 

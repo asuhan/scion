@@ -46,8 +46,8 @@ struct Point {
   var y = LayoutUnit()  // top
 
   init(point: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.x = point.x
+    self.y = point.y
   }
 
   init(x: LayoutUnit, y: LayoutUnit) {
@@ -55,19 +55,18 @@ struct Point {
     self.y = y
   }
 
-  func move(offset: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func move(offset: LayoutSizeWrapper) {
+    x += offset.width()
+    y += offset.height()
   }
 
   mutating func moveBy(offset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    x += offset.x
+    y += offset.y
   }
 
-  static func - (a: Point, b: LayoutSizeWrapper) -> Point {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func LayoutPoint() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: x, y: y)
   }
 }
 
