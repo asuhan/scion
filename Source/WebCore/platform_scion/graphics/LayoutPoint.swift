@@ -70,6 +70,10 @@ struct LayoutPointWrapper: Equatable {
     y += dy
   }
 
+  func transposedPoint() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: y, y: x)
+  }
+
   func FloatPoint() -> FloatPoint { return layout_scion.FloatPoint(x: x.float(), y: y.float()) }
 
   @discardableResult
