@@ -35,7 +35,6 @@ internal func isWhitespaceCharacter(
 )
   -> Bool
 {
-  // TODO(asuhan): implement this
   // white space processing in CSS affects only the document white space characters: spaces (U+0020), tabs (U+0009), and segment breaks.
   let isTreatedAsSpaceCharacter =
     character == CharacterNames.Unicode.space
@@ -52,7 +51,6 @@ func moveToNextNonWhitespacePosition<CharacterType>(
 )
   -> WhitespaceContent? where CharacterType: BinaryInteger
 {
-  // TODO(asuhan): implement this
   var hasWordSeparatorCharacter = false
   var isWordSeparatorCharacter = false
   var nextNonWhiteSpacePosition = startPosition
@@ -189,8 +187,7 @@ func handleEnterExitBidiContext(
 ) {
   if enterExitType == .ExitingInlineBox && bidiContextStack.count == 1 {
     // Refuse to pop the initial block entry off of the stack. It indicates unbalanced InlineBoxStart/End pairs.
-    assert(false)
-    return
+    fatalError("Not reached")
   }
 
   let isEnteringBidi = enterExitType == .EnteringBlock || enterExitType == .EnteringInlineBox
@@ -260,10 +257,8 @@ internal func unwindBidiContextStack(
   paragraphContentBuilder: StringBuilderWrapper, bidiContextStack: inout BidiContextStack,
   copyOfBidiStack: BidiContextStack, blockLevelBidiContextIndex: inout UInt64
 ) {
-  // TODO(asuhan): implement this
   if bidiContextStack.isEmpty {
-    assert(false)
-    return
+    fatalError("Not reached")
   }
   // Unwind all the way up to the block entry.
   var unwindingIndex = bidiContextStack.count - 1
@@ -295,10 +290,8 @@ internal func rewindBidiContextStack(
   paragraphContentBuilder: StringBuilderWrapper, bidiContextStack: inout BidiContextStack,
   copyOfBidiStack: BidiContextStack, blockLevelBidiContextIndex: UInt64
 ) {
-  // TODO(asuhan): implement this
   if copyOfBidiStack.isEmpty {
-    assert(false)
-    return
+    fatalError("Not reached")
   }
 
   for blockLevelIndex in 0...Int(blockLevelBidiContextIndex) {
@@ -346,7 +339,6 @@ func buildBidiParagraph(
   paragraphContentBuilder: StringBuilderWrapper,
   inlineItemOffsetList: inout InlineItemOffsetList
 ) {
-  // TODO(asuhan): implement this
   var bidiContextStack = BidiContextStack()
   handleEnterExitBidiContext(
     paragraphContentBuilder: paragraphContentBuilder, unicodeBidi: rootStyle.unicodeBidi(),
@@ -394,13 +386,12 @@ func buildBidiParagraph(
           bidiContextStack: &bidiContextStack,
           inlineItemOffsetList: &inlineItemOffsetList)
       } else {
-        assert(false)
+        fatalError("Not reached")
       }
     } else if inlineItem.isAtomicInlineBox() {
       inlineItemOffsetList.append(UInt64(paragraphContentBuilder.length()))
       paragraphContentBuilder.append(character: CharacterNames.Unicode.objectReplacementCharacter)
     } else if inlineItem.isInlineBoxStart() || inlineItem.isInlineBoxEnd() {
-      // TODO(asuhan): implement this
       // https://drafts.csswg.org/css-writing-modes/#unicode-bidi
       let style = inlineItem.style()
       let initiatesControlCharacter =
@@ -439,7 +430,7 @@ func buildBidiParagraph(
         inlineItemOffsetList.append(nil)
       }
     } else {
-      assert(false)
+      fatalError("Not implemented yet")
     }
   }
 }
@@ -490,9 +481,7 @@ struct InlineItemsBuilder {
     }
     // Let's first remove the dirty inline items if there are any.
     if startPosition.index >= inlineItemCache.content().count {
-      assert(false, "There should not be dirty inline items.")
-      inlineItemCache.set(inlineItemList: inlineItemList, contentAttributes: contentAttributes)
-      return
+      fatalError("Not reached")
     }
     inlineItemCache.replace(
       insertionPosition: startPosition.index, inlineItemList: inlineItemList,
@@ -686,7 +675,6 @@ struct InlineItemsBuilder {
   )
     -> UInt64?
   {
-    // TODO(asuhan): implement this
     let inlineItemCache = inlineContentCache.inlineItems
 
     if !startPosition.bool() {
@@ -694,8 +682,7 @@ struct InlineItemsBuilder {
     }
     let currentInlineItems = inlineItemCache.content()
     if startPosition.index >= currentInlineItems.count {
-      assert(false)
-      return nil
+      fatalError("Not reached")
     }
     let damagedInlineItem = currentInlineItems[Int(startPosition.index)]
     if inlineTextBox !== damagedInlineItem.layoutBox {
@@ -707,8 +694,7 @@ struct InlineItemsBuilder {
     if let inlineSoftLineBreakItem = damagedInlineItem as? InlineSoftLineBreakItemWrapper {
       return UInt64(inlineSoftLineBreakItem.position())
     }
-    assert(false)
-    return nil
+    fatalError("Not reached")
   }
 
   private mutating func collectInlineItems(startPosition: InlineItemPosition) -> InlineItemList {
@@ -719,7 +705,6 @@ struct InlineItemsBuilder {
 
     while !layoutQueue.isEmpty {
       while true {
-        // TODO(asuhan): implement this
         let layoutBox = layoutQueue.last!
         let isInlineBoxWithInlineContent =
           layoutBox.isInlineBox() && !layoutBox.isInlineTextBox() && !layoutBox.isLineBreakBox()
@@ -737,7 +722,6 @@ struct InlineItemsBuilder {
       }
 
       while !layoutQueue.isEmpty {
-        // TODO(asuhan): implement this
         let layoutBox = layoutQueue.removeLast()
         if layoutBox.isOutOfFlowPositioned() {
           isTextAndForcedLineBreakOnlyContent = false
@@ -757,7 +741,7 @@ struct InlineItemsBuilder {
             InlineItemWrapper(layoutBox: layoutBox, type: InlineItemWrapper.Type_.Float))
           isTextAndForcedLineBreakOnlyContent = false
         } else {
-          assert(false)
+          fatalError("Not reached")
         }
 
         if let nextSibling = layoutBox.nextSibling() {
@@ -767,7 +751,6 @@ struct InlineItemsBuilder {
       }
     }
 
-    // TODO(asuhan): implement this
     return inlineItemList
   }
 
@@ -832,15 +815,13 @@ struct InlineItemsBuilder {
       }
     }
     // How did we miss the damaged box?
-    assert(false)
-    queue.append(root.firstChild()!)
-    return queue
+    fatalError("Not reached")
   }
 
   private mutating func initializeLayoutQueue(startPosition: InlineItemPosition) -> LayoutQueue {
     if root.firstChild() == nil {
-      assert(false)
-      return []
+      // There should always be at least one inflow child in this inline formatting context.
+      fatalError("Not reached")
     }
 
     if !startPosition.bool() {
@@ -889,7 +870,6 @@ struct InlineItemsBuilder {
     shouldPreserveSpacesAndTabs: Bool, shouldPreserveNewline: Bool,
     inlineItemList: inout InlineItemList, currentPosition: inout UInt64
   ) -> Bool {
-    // TODO(asuhan): implement this
     let stopAtWordSeparatorBoundary =
       shouldPreserveSpacesAndTabs && style.fontCascade().wordSpacing() > 0
     let whitespaceContent =
@@ -1005,7 +985,6 @@ struct InlineItemsBuilder {
     inlineItemList: inout InlineItemList,
     partialContentOffset: UInt64?
   ) {
-    // TODO(asuhan): implement this
     let text = inlineTextBox.content
     let contentLength = text.length()
     if contentLength == 0 {
@@ -1075,7 +1054,7 @@ struct InlineItemsBuilder {
         continue
       }
       // Unsupported content?
-      assert(false)
+      fatalError("Not reached")
     }
   }
 
@@ -1094,7 +1073,6 @@ struct InlineItemsBuilder {
     let shouldPreserveNewline = TextUtil.shouldPreserveNewline(layoutBox: inlineTextBox)
     let shouldPreserveSpacesAndTabs = TextUtil.shouldPreserveSpacesAndTabs(layoutBox: inlineTextBox)
 
-    let initialSize = inlineItemList.count
     let contentLength = text.length()
     assert(contentLength != 0)
     var previousPosition: UInt64 = 0
@@ -1102,16 +1080,7 @@ struct InlineItemsBuilder {
       let startPosition = previousPosition
       previousPosition = endPosition
       if endPosition > contentLength || startPosition >= endPosition {
-        assert(false)
-        if inlineItemList.count > initialSize {
-          // Revert.
-          if initialSize == 0 {
-            inlineItemList.removeAll()
-          } else {
-            inlineItemList.removeLast(inlineItemList.count - initialSize)
-          }
-        }
-        return false
+        fatalError("Not reached")
       }
 
       let character = text[UInt32(startPosition)]
@@ -1191,7 +1160,7 @@ struct InlineItemsBuilder {
         ))
     }
 
-    assert(false)
+    fatalError("Not reached")
   }
 
   private static func inlineTextBoxContentSpan(
@@ -1208,7 +1177,6 @@ struct InlineItemsBuilder {
   }
 
   func populateBreakingPositionCache(inlineItemList: InlineItemList, document: Document) {
-    // TODO(asuhan): implement this
     if inlineItemList.count < TextBreakingPositionCache.minimumRequiredContentBreaks {
       return
     }
@@ -1257,9 +1225,7 @@ struct InlineItemsBuilder {
         } else if let softLineBreakItem = inlineItem as? InlineSoftLineBreakItemWrapper {
           breakingPositionList.append(UInt64(softLineBreakItem.position() + 1))
         } else {
-          assert(false)
-          breakingPositionList.removeAll()
-          break
+          fatalError("Not reached")
         }
       }
 
