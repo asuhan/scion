@@ -129,6 +129,9 @@ public:
 #ifndef NDEBUG
     bool hasDetachedContent() const;
 #endif
+
+private:
+    RenderBlockFlow* m_flow;
 };
 
 }

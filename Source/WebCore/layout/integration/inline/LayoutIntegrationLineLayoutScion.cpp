@@ -24,3 +24,306 @@
  */
 
 #include "LayoutIntegrationLineLayoutScion.h"
+#include <wtf/Assertions.h>
+
+namespace WebCore {
+namespace LayoutIntegration {
+
+LineLayoutScion::LineLayoutScion(RenderBlockFlow&)
+{
+    ASSERT_NOT_REACHED();
+}
+
+LineLayoutScion::~LineLayoutScion()
+{
+    ASSERT_NOT_REACHED();
+}
+
+RenderBlockFlow* LineLayoutScion::blockContainer(const RenderObject&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LineLayoutScion* LineLayoutScion::containing(RenderObject&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+const LineLayoutScion* LineLayoutScion::containing(const RenderObject&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::canUseFor(const RenderBlockFlow&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::canUseForPreferredWidthComputation(const RenderBlockFlow&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::shouldInvalidateLineLayoutPathAfterContentChange(const RenderBlockFlow&, const RenderObject&, const LineLayoutScion&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::shouldInvalidateLineLayoutPathAfterTreeMutation(const RenderBlockFlow&, const RenderObject&, const LineLayoutScion&, bool)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+void LineLayoutScion::updateFormattingContexGeometries(LayoutUnit)
+{
+    ASSERT_NOT_REACHED();
+}
+
+void LineLayoutScion::updateOverflow()
+{
+    ASSERT_NOT_REACHED();
+}
+
+void LineLayoutScion::updateStyle(const RenderObject&)
+{
+    ASSERT_NOT_REACHED();
+}
+
+bool LineLayoutScion::insertedIntoTree(const RenderElement&, RenderObject&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::removedFromTree(const RenderElement&, RenderObject&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::updateTextContent(const RenderText&, size_t, int)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::rootStyleWillChange(const RenderBlockFlow&, const RenderStyle&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::styleWillChange(const RenderElement&, const RenderStyle&, StyleDifference)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::boxContentWillChange(const RenderBox&)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+std::pair<LayoutUnit, LayoutUnit> LineLayoutScion::computeIntrinsicWidthConstraints()
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+std::optional<LayoutRect> LineLayoutScion::layout()
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+void LineLayoutScion::paint(PaintInfo&, const LayoutPoint&, const RenderInline*)
+{
+    ASSERT_NOT_REACHED();
+}
+
+bool LineLayoutScion::hitTest(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&, HitTestAction, const RenderInline*)
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+void LineLayoutScion::adjustForPagination()
+{
+    ASSERT_NOT_REACHED();
+}
+
+void LineLayoutScion::shiftLinesBy(LayoutUnit)
+{
+    ASSERT_NOT_REACHED();
+}
+
+void LineLayoutScion::collectOverflow()
+{
+    ASSERT_NOT_REACHED();
+}
+
+LayoutRect LineLayoutScion::visualOverflowBoundingBoxRectFor(const RenderInline&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+Vector<FloatRect> LineLayoutScion::collectInlineBoxRects(const RenderInline&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+std::optional<LayoutUnit> LineLayoutScion::clampedContentLogicalHeight() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::contains(const RenderElement&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::isPaginated() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LayoutUnit LineLayoutScion::contentBoxLogicalHeight() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+size_t LineLayoutScion::lineCount() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::hasVisualOverflow() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LayoutUnit LineLayoutScion::firstLinePhysicalBaseline() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LayoutUnit LineLayoutScion::lastLinePhysicalBaseline() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LayoutUnit LineLayoutScion::lastLineLogicalBaseline() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LayoutRect LineLayoutScion::firstInlineBoxRect(const RenderInline&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+LayoutRect LineLayoutScion::enclosingBorderBoxRectFor(const RenderInline&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+InlineIterator::TextBoxIterator LineLayoutScion::textBoxesFor(const RenderText&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+InlineIterator::LeafBoxIterator LineLayoutScion::boxFor(const RenderElement&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+InlineIterator::InlineBoxIterator LineLayoutScion::firstInlineBoxFor(const RenderInline&) const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+InlineIterator::InlineBoxIterator LineLayoutScion::firstRootInlineBox() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+InlineIterator::LineBoxIterator LineLayoutScion::firstLineBox() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+InlineIterator::LineBoxIterator LineLayoutScion::lastLineBox() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+const RenderBlockFlow& LineLayoutScion::flow() const
+{
+    ASSERT_NOT_REACHED();
+    return *m_flow;
+}
+
+RenderBlockFlow& LineLayoutScion::flow()
+{
+    ASSERT_NOT_REACHED();
+    return *m_flow;
+}
+
+void LineLayoutScion::releaseCaches(RenderView&)
+{
+    ASSERT_NOT_REACHED();
+}
+
+bool LineLayoutScion::contentNeedsVisualReordering() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::isDamaged() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+const Layout::InlineDamage* LineLayoutScion::damage() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+bool LineLayoutScion::hasDetachedContent() const
+{
+    ASSERT_NOT_REACHED();
+    return {};
+}
+
+}
+}
