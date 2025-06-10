@@ -38,16 +38,14 @@ internal func partialRangeForDamage(inlineItemList: InlineItemList, lineDamage: 
 {
   let layoutStartPosition = lineDamage.layoutStartPosition()!.inlineItemPosition
   if layoutStartPosition.index >= inlineItemList.count {
-    assert(false)
-    return nil
+    fatalError("Not reached")
   }
   let damagedInlineTextItem =
     inlineItemList[Int(layoutStartPosition.index)] as? InlineTextItemWrapper
   if layoutStartPosition.offset != 0
     && (damagedInlineTextItem == nil || layoutStartPosition.offset >= damagedInlineTextItem!.length)
   {
-    assert(false)
-    return nil
+    fatalError("Not reached")
   }
   return InlineItemRange(
     start: layoutStartPosition,
@@ -96,12 +94,7 @@ internal func computeNeedsLayoutRange(
     return partialRange
   }
   // We should be able to produce partial range for partial layout.
-  assert(false)
-  // Let's turn this unexpected state to full layout.
-  lineDamage = nil
-  return InlineItemRange(
-    start: InlineItemPosition(),
-    end: InlineItemPosition(index: UInt64(inlineItemList.count), offset: UInt64(0)))
+  fatalError("Not reached")
 }
 
 internal func computePreviousLine(
@@ -111,8 +104,7 @@ internal func computePreviousLine(
     return nil
   }
   if lineDamage == nil || lineDamage!.layoutStartPosition() == nil {
-    assert(false)
-    return nil
+    fatalError("Not reached")
   }
   let lastLineIndex = lineDamage!.layoutStartPosition()!.lineIndex - 1
   // FIXME: We should be able to extract the last line information and provide it to layout as "previous line" (ends in line break and inline direction).
@@ -176,8 +168,7 @@ class InlineFormattingContext {
       inlineItemList: inlineItemList, lineDamage: &lineDamage)
 
     if needsLayoutRange.isEmpty() {
-      assert(false)
-      return InlineLayoutResult()
+      fatalError("Not reached")
     }
 
     let textWrapStyle = root().style.textWrapStyle()
@@ -402,7 +393,7 @@ class InlineFormattingContext {
             floatBox: floatBox, boxGeometry: floatBoxGeometry))
         continue
       }
-      assert(false)
+      fatalError("Not reached")
     }
   }
 
@@ -543,8 +534,7 @@ class InlineFormattingContext {
       trimmedTrailingWhitespaceWidth: lineContent.trimmedTrailingWhitespaceWidth,
       runs: lineContent.inlineContent)
     {
-      assert(false)
-      return false
+      fatalError("Not reached")
     }
     lineContent.contentGeometry.logicalWidth += lineContent.trimmedTrailingWhitespaceWidth
     lineContent.contentGeometry.logicalRightIncludingNegativeMargin +=
