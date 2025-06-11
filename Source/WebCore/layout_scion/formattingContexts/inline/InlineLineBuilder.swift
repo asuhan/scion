@@ -1196,8 +1196,7 @@ final class LineBuilder: AbstractLineBuilder {
   private func rebuildLineForTrailingSoftHyphen(layoutRange: InlineItemRange) -> UInt64 {
     if wrapOpportunityList.isEmpty {
       // We are supposed to have a wrapping opportunity on the current line at this point.
-      assert(false)
-      return 0
+      fatalError("Not reached")
     }
     // Revert all the way back to a wrap opportunity when either a soft hyphen fits or no hyphen is required.
     for i in (1..<wrapOpportunityList.count).reversed() {
@@ -1540,8 +1539,7 @@ final class LineBuilder: AbstractLineBuilder {
         return index
       }
     }
-    assert(false)
-    return lineContent.range.end.index
+    fatalError("Not reached")
   }
 
   private func lineHasOverflow(horizontalAvailableSpace: InlineLayoutUnit) -> Bool {
