@@ -516,8 +516,7 @@ struct InlineDisplayLineBuilder {
     if clampedLineIndex! >= displayLines.count
       || !displayLines[Int(clampedLineIndex!)].hasEllipsis()
     {
-      assert(false)
-      return
+      fatalError("Not reached")
     }
 
     var displayBoxes = displayContent.boxes
@@ -533,8 +532,7 @@ struct InlineDisplayLineBuilder {
     {
       // Unexpected cases where the insertion point is at the leading/trailing box. They both indicate incorrect line-clamp
       // position and would produce incorrect rendering.
-      assert(false)
-      return
+      fatalError("Not reached with security implication")
     }
     var clampedLine = displayLines[Int(clampedLineIndex!)]
     let linkContentWidth = displayBoxes[displayBoxes.count - 2]
