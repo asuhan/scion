@@ -48,7 +48,6 @@ struct LineBoxVerticalAligner {
   }
 
   func simplifiedVerticalAlignment(lineBox: LineBox) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
     let rootInlineBox = lineBox.rootInlineBox
     let rootInlineBoxAscent = rootInlineBox.ascent()
 
@@ -105,7 +104,6 @@ struct LineBoxVerticalAligner {
   func shouldUseSimplifiedAlignmentForInlineLevelBox(
     inlineLevelBox: InlineLevelBox, rootInlineBox: InlineLevelBox
   ) -> Bool {
-    // TODO(asuhan): implement this
     if inlineLevelBox.hasTextEmphasis() {
       return false
     }
@@ -249,7 +247,6 @@ struct LineBoxVerticalAligner {
   func computeRootInlineBoxVerticalPosition(
     lineBox: LineBox, lineBoxAlignmentContent: LineBoxAlignmentContent
   ) {
-    // TODO(asuhan): implement this
     let rootInlineBox = lineBox.rootInlineBox
     let formattingUtils = formattingUtils()
     var hasTopAlignedInlineLevelBox = false
@@ -353,7 +350,6 @@ struct LineBoxVerticalAligner {
   }
 
   func alignInlineLevelBoxes(lineBox: LineBox, lineBoxLogicalHeight: InlineLayoutUnit) {
-    // TODO(asuhan): implement this
     var lineBoxRelativeInlineLevelBoxes: [UInt64] = []
     let nonRootInlineLevelBoxes = lineBox.nonRootInlineLevelBoxes()
     for (index, inlineLevelBox) in nonRootInlineLevelBoxes.enumerated() {
@@ -540,7 +536,6 @@ struct LineBoxVerticalAligner {
     inlineLevelBox: InlineLevelBox, parentInlineBox: InlineLevelBox,
     isInlineLeveBoxAlignment: IsInlineLeveBoxAlignment = .No
   ) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
     assert(parentInlineBox.isInlineBox())
 
     let verticalAlign = inlineLevelBox.verticalAlign()

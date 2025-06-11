@@ -40,7 +40,6 @@ final class RangeBasedLineBuilder: AbstractLineBuilder {
   override func layoutInlineContent(lineInput: LineInput, previousLine: PreviousLine?)
     -> LineLayoutResult
   {
-    // TODO(asuhan): implement this
     // 1. Shrink the layout range that we can run text-only builder on (currently it's just the opening/closing inline box)
     // 2. Run text-only line builder
     // 3. Insert/append the missing inline box run
@@ -67,7 +66,6 @@ final class RangeBasedLineBuilder: AbstractLineBuilder {
 
   internal func adjustedNeedsLayoutRange(lineInput: LineInput, isFirstLine: Bool) -> InlineItemRange
   {
-    // TODO(asuhan): implement this
     var needsLayoutRange = lineInput.needsLayoutRange
     if isFirstLine {
       assert(inlineItemList.first!.isInlineBoxStart())
@@ -86,7 +84,6 @@ final class RangeBasedLineBuilder: AbstractLineBuilder {
     lineLayoutResult: inout LineLayoutResult, isFirstLine: Bool, lineInput: LineInput,
     previousLine: PreviousLine?
   ) {
-    // TODO(asuhan): implement this
     let leadingInlineItem = inlineItemList.first!
     assert(leadingInlineItem.isInlineBoxStart())
 
@@ -111,7 +108,6 @@ final class RangeBasedLineBuilder: AbstractLineBuilder {
     lineLayoutResult: inout LineLayoutResult, isFirstLine: Bool, lineInput: LineInput,
     needsLayoutRange: InlineItemRange
   ) {
-    // TODO(asuhan): implement this
     if lineLayoutResult.inlineItemRange.end != needsLayoutRange.end {
       return
     }
@@ -129,7 +125,6 @@ final class RangeBasedLineBuilder: AbstractLineBuilder {
     placedFloats:
       PlacedFloats
   ) -> Bool {
-    // TODO(asuhan): implement this
     if inlineItems.isEmpty() {
       return false
     }

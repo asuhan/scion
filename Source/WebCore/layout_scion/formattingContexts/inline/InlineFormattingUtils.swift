@@ -199,7 +199,6 @@ struct InlineFormattingUtils {
     isIntrinsicWidthMode: IsIntrinsicWidthMode, previousLineEndsWithLineBreak: Bool?,
     availableWidth: InlineLayoutUnit
   ) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
     let root = formattingContext().root()
 
     // text-indent property specifies the indentation applied to lines of inline content in a block.
@@ -311,7 +310,6 @@ struct InlineFormattingUtils {
     lineLogicalWidth: InlineLayoutUnit, hangingTrailingWidth: InlineLayoutUnit, runs: Line.RunList,
     isLastLine: Bool, inlineBaseDirectionOverride: TextDirection? = nil
   ) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
     var contentLogicalRight = contentLogicalRightIn
     // Depending on the line’s alignment/justification, the hanging glyph can be placed outside the line box.
     if hangingTrailingWidth != 0 {
