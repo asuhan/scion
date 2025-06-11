@@ -164,7 +164,6 @@ struct LineBoxBuilder {
   private func setVerticalPropertiesForInlineLevelBox(
     lineBox: LineBox, inlineLevelBox: InlineLevelBox
   ) {
-    // TODO(asuhan): implement this
     if inlineLevelBox.isInlineBox() {
       var ascentAndDescent = ascentAndDescentForInlineLevelBox(
         lineBox: lineBox, inlineLevelBox: inlineLevelBox)
@@ -254,7 +253,7 @@ struct LineBoxBuilder {
         ascentAndDescent: &ascentAndDescentInOut, applyLegacyRounding: false)
       return
     }
-    assert(false)
+    fatalError("Not reached")
   }
 
   private func setLayoutBoundsForInlineBox(inlineBox: InlineLevelBox, fontBaseline: FontBaseline) {
@@ -545,7 +544,6 @@ struct LineBoxBuilder {
     inlineBox: InlineLevelBox, fallbackFontsForContent: TextUtil.FallbackFontList,
     fontBaseline: FontBaseline
   ) -> InlineLevelBox.AscentAndDescent {
-    // TODO(asuhan): implement this
     // FIXME(asuhan): isEmptyIgnoringNullReferences
     assert(!fallbackFontsForContent.isEmpty)
     assert(inlineBox.isInlineBox())
@@ -693,7 +691,6 @@ struct LineBoxBuilder {
   private func textBoxEdgeOverForRootInlineBox(
     primaryFontMetrics: FontMetricsWrapper, textBoxEdge: TextEdge
   ) -> InlineLayoutUnit {
-    // TODO(asuhan): implement this
     switch textBoxEdge.over {
     case .Text:
       return 0
@@ -711,7 +708,6 @@ struct LineBoxBuilder {
   }
 
   private mutating func constructInlineLevelBoxes(lineBox: inout LineBox) {
-    // TODO(asuhan): implement this
     let formattingContext = formattingContext()
     let rootInlineBox = lineBox.rootInlineBox
     setVerticalPropertiesForInlineLevelBox(lineBox: lineBox, inlineLevelBox: rootInlineBox)
@@ -766,7 +762,6 @@ struct LineBoxBuilder {
         continue
       }
       if run.isAtomicInlineBox() {
-        // TODO(asuhan): implement this
         let inlineLevelBoxGeometry = formattingContext.geometryForBox(layoutBox: layoutBox)
         logicalLeft += max(0, inlineLevelBoxGeometry.marginStart().float())
         let atomicInlineBox = InlineLevelBox.createAtomicInlineBox(
@@ -969,7 +964,6 @@ struct LineBoxBuilder {
   }
 
   private func adjustOutsideListMarkersPosition(lineBox: LineBox) {
-    // TODO(asuhan): implement this
     let lineBoxRect = lineBox.logicalRect
     let floatConstraints = formattingContext().floatingContext!.constraints(
       candidateTop: LayoutUnit(value: lineBoxRect.top()),
