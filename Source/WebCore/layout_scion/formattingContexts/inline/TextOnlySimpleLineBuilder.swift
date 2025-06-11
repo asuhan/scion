@@ -250,7 +250,6 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
     inlineTextItem: InlineTextItemWrapper, layoutRange: InlineItemRange, nextItemIndex: UInt64,
     hasWrapOpportunityBeforeWhitespace: Bool
   ) -> Bool {
-    // TODO(asuhan): implement this
     if inlineTextItem.isWhitespace() {
       return true
     }
@@ -375,7 +374,6 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
   func placeNonWrappingInlineTextContent(
     rootStyle: RenderStyleWrapper, layoutRange: InlineItemRange
   ) -> InlineItemPosition {
-    // TODO(asuhan): implement this
     assert(!TextUtil.isWrappingAllowed(style: rootStyle))
     assert(partialLeadingTextItem == nil)
 
@@ -397,8 +395,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
       } else if inlineItem.isLineBreak() {
         trailingLineBreakIndex = nextItemIndex
       } else {
-        assert(false)
-        return layoutRange.end
+        fatalError("Not reached")
       }
       nextItemIndex += 1
       isEndOfLine = nextItemIndex >= layoutRange.endIndex() || trailingLineBreakIndex != nil
@@ -496,8 +493,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
 
     // Revert to a previous position cases.
     if wrapOpportunityList.isEmpty {
-      assert(false)
-      return TextOnlyLineBreakResult(isEndOfLine: .Yes)
+      fatalError("Not reached")
     }
 
     if lineBreakingResult.action == .RevertToLastWrapOpportunity {
@@ -521,8 +517,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
         isRevert: true)
     }
 
-    assert(false)
-    return TextOnlyLineBreakResult(isEndOfLine: .Yes)
+    fatalError("Not reached")
   }
 
   private func processPartialContent(
@@ -579,7 +574,6 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
     rootStyle: RenderStyleWrapper, candidateContent: CandidateTextContent,
     layoutRange: InlineItemRange
   ) -> TextOnlyLineBreakResult {
-    // TODO(asuhan): implement this
     let hasLeadingPartialContent =
       partialLeadingTextItem != nil && candidateContent.startIndex == layoutRange.startIndex()
 
@@ -683,7 +677,6 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
   func partialLeadingTextItem(layoutRange: InlineItemRange, previousLine: PreviousLine?)
     -> InlineTextItemWrapper?
   {
-    // TODO(asuhan): implement this
     if previousLine == nil || layoutRange.start.offset == 0 {
       return nil
     }
@@ -728,8 +721,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
         return numberOfInlineItemsOnLine
       }
     }
-    assert(false)
-    return 0
+    fatalError("Not reached")
   }
 
   func appendTextInlineItem(
@@ -768,8 +760,7 @@ final class TextOnlySimpleLineBuilder: AbstractLineBuilder {
         return committedCount
       }
     }
-    assert(false)
-    return 0
+    fatalError("Not reached")
   }
 
   func availableWidth() -> InlineLayoutUnit {
