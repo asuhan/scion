@@ -132,6 +132,7 @@ public:
 
 private:
     RenderBlockFlow* m_flow;
+    uint64_t m_handle;
 };
 
 }

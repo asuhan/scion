@@ -26,12 +26,15 @@
 #include "LayoutIntegrationLineLayoutScion.h"
 #include <wtf/Assertions.h>
 
+extern "C" uint64_t LineLayoutScion_create();
+
 namespace WebCore {
 namespace LayoutIntegration {
 
-LineLayoutScion::LineLayoutScion(RenderBlockFlow&)
+LineLayoutScion::LineLayoutScion(RenderBlockFlow& flow)
+    : m_flow(&flow)
+    , m_handle(LineLayoutScion_create())
 {
-    ASSERT_NOT_REACHED();
 }
 
 LineLayoutScion::~LineLayoutScion()

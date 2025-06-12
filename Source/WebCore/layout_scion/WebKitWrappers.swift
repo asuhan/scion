@@ -421,3 +421,12 @@ public func LineLayout_layout(
     width: repaintRect.width().rawValue(),
     height: repaintRect.height().rawValue())
 }
+
+// TODO(asuhan): support multiple LineLayout instances
+var globalLineLayout: LayoutIntegration.LineLayout? = nil
+
+@_cdecl("LineLayoutScion_create")
+func LineLayoutScion_create(flow: UnsafeMutableRawPointer) -> UInt64 {
+  globalLineLayout = LayoutIntegration.LineLayout(flow: RenderBlockFlowWrapper(p: flow))
+  return 0
+}
