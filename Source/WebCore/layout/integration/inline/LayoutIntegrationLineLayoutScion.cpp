@@ -28,6 +28,13 @@
 
 extern "C" uint64_t LineLayoutScion_create();
 
+struct OptionalLayoutRectRaw {
+    struct LayoutRectRaw rect;
+    bool is_valid;
+};
+
+extern "C" OptionalLayoutRectRaw LineLayoutScion_layout(uint64_t handle);
+
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -143,8 +150,15 @@ std::pair<LayoutUnit, LayoutUnit> LineLayoutScion::computeIntrinsicWidthConstrai
 
 std::optional<LayoutRect> LineLayoutScion::layout()
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    const auto raw = LineLayoutScion_layout(m_handle);
+    if (!raw.is_valid) {
+        return std::nullopt;
+    }
+    return LayoutRect(
+        LayoutUnit::fromRawValue(raw.rect.x),
+        LayoutUnit::fromRawValue(raw.rect.y),
+        LayoutUnit::fromRawValue(raw.rect.width),
+        LayoutUnit::fromRawValue(raw.rect.height));
 }
 
 void LineLayoutScion::paint(PaintInfo&, const LayoutPoint&, const RenderInline*)

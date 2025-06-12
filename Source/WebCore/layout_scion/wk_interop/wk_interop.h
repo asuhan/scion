@@ -139,6 +139,11 @@ struct LayoutRectRaw {
     int32_t height;
 };
 
+struct OptionalLayoutRectRaw {
+    struct LayoutRectRaw rect;
+    bool is_valid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

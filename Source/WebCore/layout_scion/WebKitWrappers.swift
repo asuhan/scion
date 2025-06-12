@@ -430,3 +430,16 @@ func LineLayoutScion_create(flow: UnsafeMutableRawPointer) -> UInt64 {
   globalLineLayout = LayoutIntegration.LineLayout(flow: RenderBlockFlowWrapper(p: flow))
   return 0
 }
+
+@_cdecl("LineLayoutScion_layout")
+func LineLayoutScion_layout(handle: UInt64) -> OptionalLayoutRectRaw {
+  if let layoutResultRect = globalLineLayout!.layout() {
+    return OptionalLayoutRectRaw(
+      rect: LayoutRectRaw(
+        x: layoutResultRect.x().rawValue(), y: layoutResultRect.y().rawValue(),
+        width: layoutResultRect.width().rawValue(), height: layoutResultRect.height().rawValue()),
+      is_valid: true)
+  }
+  return OptionalLayoutRectRaw(
+    rect: LayoutRectRaw(x: 0, y: 0, width: 0, height: 0), is_valid: false)
+}
