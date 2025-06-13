@@ -242,6 +242,7 @@ WebCore::LayoutRect convertLayoutRect(const LayoutRectRaw& raw)
         WebCore::LayoutUnit::fromRawValue(raw.height));
 }
 
+#if !USE_SCION_LAYOUT_INTEGRATION
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -1483,3 +1484,4 @@ void LineLayout::outputLineTree(WTF::TextStream& stream, size_t depth) const
 
 }
 }
+#endif  // USE_SCION_LAYOUT_INTEGRATION

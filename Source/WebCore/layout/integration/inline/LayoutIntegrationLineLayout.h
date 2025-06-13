@@ -25,6 +25,21 @@
 
 #pragma once
 
+#define USE_SCION_LAYOUT_INTEGRATION 0
+#include "LayoutIntegrationLineLayoutScion.h"
+
+#if USE_SCION_LAYOUT_INTEGRATION
+namespace WebCore {
+namespace LayoutIntegration {
+
+class LineLayout final: public LineLayoutScion {
+    public:
+        LineLayout(RenderBlockFlow& flow): LineLayoutScion(flow) {}
+};
+
+}
+}
+#else
 #include "FloatRect.h"
 #include "InlineDamage.h"
 #include "InlineFormattingConstraints.h"
@@ -171,4 +186,5 @@ private:
 
 }
 }
+#endif
 
