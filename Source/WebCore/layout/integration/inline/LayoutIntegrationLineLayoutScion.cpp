@@ -342,5 +342,12 @@ bool LineLayoutScion::hasDetachedContent() const
     return {};
 }
 
+#if ENABLE(TREE_DEBUGGING)
+void LineLayoutScion::outputLineTree(WTF::TextStream&, size_t) const
+{
+    ASSERT_NOT_REACHED();
+}
+#endif
+
 }
 }
