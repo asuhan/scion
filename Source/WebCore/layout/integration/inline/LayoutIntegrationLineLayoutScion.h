@@ -55,7 +55,11 @@ class InlineDamage;
 
 namespace LayoutIntegration {
 
-class LineLayoutScion final {
+DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(LayoutIntegration_LineLayoutScion);
+
+class LineLayoutScion : public CanMakeCheckedPtr<LineLayoutScion> {
+    WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(LayoutIntegration_LineLayoutScion);
+    WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(LineLayoutScion);
 public:
     LineLayoutScion(RenderBlockFlow&);
     ~LineLayoutScion();
