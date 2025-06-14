@@ -36,9 +36,14 @@ class RenderObjectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+    let styleUnwrapped = wk_interop.Box_style(unwrapped)!
+    let style = convert_render_style(p: styleUnwrapped)
+    if wk_interop.Box_isInlineTextBox(unwrapped) {
+      let box = convert_inline_text_box(p: unwrapped!)
+      box.p = UnsafeRawPointer(unwrapped!)
+      return box
+    }
     if wk_interop.Box_isElementBox(unwrapped) {
-      let styleUnwrapped = wk_interop.Box_style(unwrapped)!
-      let style = convert_render_style(p: styleUnwrapped)
       let box = ElementBoxWrapper(style: style)
       box.p = UnsafeRawPointer(unwrapped!)
       return box
