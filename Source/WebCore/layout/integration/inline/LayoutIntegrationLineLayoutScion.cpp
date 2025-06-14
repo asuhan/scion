@@ -82,10 +82,9 @@ const LineLayoutScion* LineLayoutScion::containing(const RenderObject&)
     return {};
 }
 
-bool LineLayoutScion::canUseFor(const RenderBlockFlow&)
+bool LineLayoutScion::canUseFor(const RenderBlockFlow& flow)
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    return canUseForLineLayout(flow);
 }
 
 bool LineLayoutScion::canUseForPreferredWidthComputation(const RenderBlockFlow&)
