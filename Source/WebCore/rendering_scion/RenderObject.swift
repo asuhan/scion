@@ -43,6 +43,11 @@ class RenderObjectWrapper {
       box.p = UnsafeRawPointer(unwrapped!)
       return box
     }
+    if wk_interop.Box_isInitialContainingBlock(unwrapped) {
+      let box = InitialContainingBlock(style: style)
+      box.p = UnsafeRawPointer(unwrapped!)
+      return box
+    }
     if wk_interop.Box_isElementBox(unwrapped) {
       let box = ElementBoxWrapper(style: style)
       box.p = UnsafeRawPointer(unwrapped!)
