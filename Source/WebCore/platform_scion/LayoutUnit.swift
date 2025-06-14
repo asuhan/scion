@@ -83,13 +83,11 @@ struct LayoutUnit: Comparable {
   }
 
   static func - (a: LayoutUnit, b: Int) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return a - LayoutUnit(value: b)
   }
 
   static func - (a: LayoutUnit, b: Float32) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return a.toFloat() - b
   }
 
   static func / (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
