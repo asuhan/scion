@@ -49,10 +49,25 @@ LineLayoutScion::~LineLayoutScion()
     ASSERT_NOT_REACHED();
 }
 
-RenderBlockFlow* LineLayoutScion::blockContainer(const RenderObject&)
+static inline bool isContentRendererScion(const RenderObject& renderer)
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    // FIXME: These fake renderers have their parent set but are not actually in the tree.
+    return !renderer.isRenderReplica() && !renderer.isRenderScrollbarPart();
+}
+
+RenderBlockFlow* LineLayoutScion::blockContainer(const RenderObject& renderer)
+{
+    if (!isContentRendererScion(renderer))
+        return nullptr;
+
+    for (auto* parent = renderer.parent(); parent; parent = parent->parent()) {
+        if (!parent->childrenInline())
+            return nullptr;
+        if (auto* renderBlockFlow = dynamicDowncast<RenderBlockFlow>(*parent))
+            return renderBlockFlow;
+    }
+
+    return nullptr;
 }
 
 LineLayoutScion* LineLayoutScion::containing(RenderObject&)
