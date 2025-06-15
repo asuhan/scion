@@ -26,7 +26,7 @@
 #include "LayoutIntegrationLineLayoutScion.h"
 #include <wtf/Assertions.h>
 
-extern "C" uint64_t LineLayoutScion_create();
+extern "C" uint64_t LineLayoutScion_create(void*);
 
 struct OptionalLayoutRectRaw {
     struct LayoutRectRaw rect;
@@ -40,7 +40,7 @@ namespace LayoutIntegration {
 
 LineLayoutScion::LineLayoutScion(RenderBlockFlow& flow)
     : m_flow(&flow)
-    , m_handle(LineLayoutScion_create())
+    , m_handle(LineLayoutScion_create(&flow))
 {
 }
 
