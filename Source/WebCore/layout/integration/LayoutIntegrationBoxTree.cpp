@@ -51,6 +51,17 @@
 #include "LayoutIntegrationLineLayout.h"
 #endif
 
+extern "C" WEBCORE_EXPORT const void* BoxTree_handleNullRootBox(void* root_renderer_raw)
+{
+    auto& rootRenderer = *static_cast<WebCore::RenderBlock*>(root_renderer_raw);
+    auto newRootBox = WebCore::LayoutIntegration::BoxTree::createLayoutBox(rootRenderer);
+    auto rootBox = downcast<WebCore::Layout::ElementBox>(newRootBox.ptr());
+    rootRenderer.setLayoutBox(*rootBox);
+    auto& initialContainingBlock = rootRenderer.view().initialContainingBlock();
+    initialContainingBlock.appendChild(WTFMove(newRootBox));
+    return rootBox;
+}
+
 namespace WebCore {
 namespace LayoutIntegration {
 

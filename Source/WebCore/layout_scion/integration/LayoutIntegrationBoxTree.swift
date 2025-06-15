@@ -23,14 +23,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 extension LayoutIntegration {
   struct BoxTree {
     init(rootRenderer: RenderBlockWrapper) {
       self.rootRenderer = rootRenderer
-      let rootBox = self.rootRenderer.layoutBox()
+      var rootBox = self.rootRenderer.layoutBox()
       if rootBox == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        rootBox = ElementBoxWrapper()
+        rootBox!.p = wk_interop.BoxTree_handleNullRootBox(rootRenderer.p)
       }
 
       if rootRenderer is RenderBlockFlowWrapper {

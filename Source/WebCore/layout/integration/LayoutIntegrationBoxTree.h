@@ -31,6 +31,8 @@
 #include <wtf/Vector.h>
 #include <wtf/WeakPtr.h>
 
+extern "C" WEBCORE_EXPORT const void* BoxTree_handleNullRootBox(void*);
+
 namespace WebCore {
 namespace LayoutIntegration {
 class BoxTree;
@@ -87,6 +89,8 @@ private:
     void insertChild(UniqueRef<Layout::Box>, RenderObject&, const RenderObject* beforeChild = nullptr);
 
     RenderBlock& m_rootRenderer;
+
+    friend const void* ::BoxTree_handleNullRootBox(void* root_renderer_raw);
 };
 
 #if ENABLE(TREE_DEBUGGING)
