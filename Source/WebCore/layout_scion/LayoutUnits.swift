@@ -122,8 +122,7 @@ func toLayoutSize(size: InlineLayoutSize) -> LayoutSizeWrapper {
 }
 
 func toLayoutRect(rect: InlineLayoutRect) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return LayoutRectWrapper(r: rect)
 }
 
 func maxInlineLayoutUnit() -> InlineLayoutUnit {
