@@ -33,8 +33,7 @@ class RenderObjectWrapper {
   func layoutBox() -> BoxWrapper? {
     let unwrapped = wk_interop.RenderObject_layoutBox(p)
     if unwrapped == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return nil
     }
     let styleUnwrapped = wk_interop.Box_style(unwrapped)!
     let style = convert_render_style(p: styleUnwrapped)
