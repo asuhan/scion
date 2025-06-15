@@ -128,8 +128,7 @@ struct LayoutUnit: Comparable {
   }
 
   static func < (lhs: Float32, rhs: LayoutUnit) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return lhs < rhs.toFloat()
   }
 
   static func <= (lhs: LayoutUnit, rhs: Float32) -> Bool {
@@ -141,8 +140,7 @@ struct LayoutUnit: Comparable {
   }
 
   static func > (lhs: LayoutUnit, rhs: Int) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return lhs > LayoutUnit(value: rhs)
   }
 
   func rawValue() -> Int32 { return value }
