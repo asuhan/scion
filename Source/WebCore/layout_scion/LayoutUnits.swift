@@ -110,8 +110,7 @@ internal func toLayoutUnit(value: InlineLayoutUnit) -> LayoutUnit {
 }
 
 internal func ceiledLayoutUnit(value: InlineLayoutUnit) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return LayoutUnit.fromFloatCeil(value: value)
 }
 
 func toLayoutPoint(point: InlineLayoutPoint) -> LayoutPointWrapper {
