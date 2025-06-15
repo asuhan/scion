@@ -100,13 +100,11 @@ struct LayoutUnit: Comparable {
   }
 
   static func / (a: LayoutUnit, b: UInt64) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return a / LayoutUnit(value: b)
   }
 
   static func / (a: Float32, b: LayoutUnit) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return a / b.toFloat()
   }
 
   static func == (a: LayoutUnit, b: LayoutUnit) -> Bool {
@@ -200,6 +198,10 @@ struct LayoutUnit: Comparable {
   init(value: Int) {
     // TODO(asuhan): implement this correctly
     self.value = Int32(value)
+  }
+
+  init(value: UInt64) {
+    self.value = clampTo<Int32>(value: value * UInt64(kFixedPointDenominator))
   }
 
   init(value: Float64) {

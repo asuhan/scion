@@ -33,7 +33,7 @@ func clampTo(
 }
 
 func clampTo<TargetType, SourceType>(value: SourceType) -> TargetType
-where TargetType: SignedInteger & FixedWidthInteger, SourceType: SignedInteger & FixedWidthInteger {
+where TargetType: BinaryInteger & FixedWidthInteger, SourceType: BinaryInteger & FixedWidthInteger {
   if value >= TargetType.max {
     return TargetType.max
   }
