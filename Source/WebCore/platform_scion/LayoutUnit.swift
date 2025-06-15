@@ -216,8 +216,7 @@ struct LayoutUnit: Comparable {
   }
 
   static func * (a: Float32, b: LayoutUnit) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return a * b.toFloat()
   }
 
   static func + (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
@@ -264,8 +263,8 @@ struct LayoutUnit: Comparable {
 
   @discardableResult
   static func *= (a: inout LayoutUnit, b: Float32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    a = LayoutUnit(value: a * b)
+    return a
   }
 
   @discardableResult
