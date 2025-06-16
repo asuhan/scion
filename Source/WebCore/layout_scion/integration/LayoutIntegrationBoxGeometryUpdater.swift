@@ -243,8 +243,43 @@ extension LayoutIntegration {
     }
 
     func formattingContextConstraints(availableWidth: LayoutUnit) -> ConstraintsForInlineContent {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let rootRenderer = self.rootRenderer()
+      let isLeftToRightInlineDirection = rootLayoutBox.style.isLeftToRightDirection()
+
+      var padding = logicalPadding(
+        renderer: rootRenderer, availableWidth: availableWidth,
+        isLeftToRightInlineDirection: isLeftToRightInlineDirection)
+      var border = logicalBorder(
+        renderer: rootRenderer, isLeftToRightInlineDirection: isLeftToRightInlineDirection)
+      if !isHorizontalWritingMode() && !rootLayoutBox.style.isFlippedBlocksWritingMode() {
+        padding.vertical = BoxGeometry.VerticalEdges(
+          before: padding.vertical.after, after: padding.vertical.before)
+        border.vertical = BoxGeometry.VerticalEdges(
+          before: border.vertical.after, after: border.vertical.before)
+      }
+      padding.vertical += intrinsicPaddingForTableCell(renderer: rootRenderer)
+
+      let scrollbarSize = scrollbarLogicalSize(renderer: rootRenderer)
+      let shouldPlaceVerticalScrollbarOnLeft = rootRenderer.shouldPlaceVerticalScrollbarOnLeft()
+
+      let contentBoxWidth =
+        isHorizontalWritingMode() ? rootRenderer.contentWidth() : rootRenderer.contentHeight()
+      let contentBoxLeft =
+        border.horizontal.start + padding.horizontal.start
+        + (isLeftToRightInlineDirection && shouldPlaceVerticalScrollbarOnLeft
+          ? scrollbarSize.width() : LayoutUnit(value: 0))
+      let contentBoxTop = border.vertical.before + padding.vertical.before
+
+      let horizontalConstraints = HorizontalConstraints(
+        logicalLeft: contentBoxLeft, logicalWidth: contentBoxWidth)
+      let visualLeft =
+        !isLeftToRightInlineDirection || shouldPlaceVerticalScrollbarOnLeft
+        ? border.horizontal.end + scrollbarSize.width() + padding.horizontal.end : contentBoxLeft
+
+      return ConstraintsForInlineContent(
+        genericContraints: ConstraintsForInFlowContent(
+          horizontal: horizontalConstraints, logicalTop: contentBoxTop),
+        visualLeft: visualLeft)
     }
 
     func takeNestedListMarkerOffsets() -> [UInt: LayoutUnit] {
