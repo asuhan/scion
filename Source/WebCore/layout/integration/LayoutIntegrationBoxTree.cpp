@@ -62,6 +62,20 @@ extern "C" WEBCORE_EXPORT const void* BoxTree_handleNullRootBox(void* root_rende
     return rootBox;
 }
 
+extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void* root_renderer_raw)
+{
+    auto& rootRenderer = *static_cast<WebCore::RenderBlock*>(root_renderer_raw);
+    for (auto walker = WebCore::InlineWalker(downcast<WebCore::RenderBlockFlow>(rootRenderer)); !walker.atEnd(); walker.advance()) {
+        auto& childRenderer = *walker.current();
+        auto childLayoutBox = [&] {
+            if (auto existingChildBox = childRenderer.layoutBox())
+                return existingChildBox->removeFromParent();
+            return WebCore::LayoutIntegration::BoxTree::createLayoutBox(childRenderer);
+        };
+        WebCore::LayoutIntegration::BoxTree::insertChild(childLayoutBox(), childRenderer, childRenderer.previousSibling());
+    }
+}
+
 namespace WebCore {
 namespace LayoutIntegration {
 

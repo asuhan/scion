@@ -620,3 +620,4 @@ void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
 bool Node_isRootEditableElement(const void*);
 const void* BoxTree_handleNullRootBox(void*);
+void BoxTree_buildTreeForInlineContent(void*);

@@ -32,6 +32,7 @@
 #include <wtf/WeakPtr.h>
 
 extern "C" WEBCORE_EXPORT const void* BoxTree_handleNullRootBox(void*);
+extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void*);
 
 namespace WebCore {
 namespace LayoutIntegration {
@@ -86,11 +87,12 @@ private:
 
     void buildTreeForInlineContent();
     void buildTreeForFlexContent();
-    void insertChild(UniqueRef<Layout::Box>, RenderObject&, const RenderObject* beforeChild = nullptr);
+    static void insertChild(UniqueRef<Layout::Box>, RenderObject&, const RenderObject* beforeChild = nullptr);
 
     RenderBlock& m_rootRenderer;
 
     friend const void* ::BoxTree_handleNullRootBox(void* root_renderer_raw);
+    friend void ::BoxTree_buildTreeForInlineContent(void* root_renderer_raw);
 };
 
 #if ENABLE(TREE_DEBUGGING)

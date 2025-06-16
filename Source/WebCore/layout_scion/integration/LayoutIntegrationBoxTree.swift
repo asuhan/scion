@@ -78,8 +78,7 @@ extension LayoutIntegration {
     }
 
     private func buildTreeForInlineContent() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      wk_interop.BoxTree_buildTreeForInlineContent(rootRenderer.p)
     }
 
     private func buildTreeForFlexContent() {
