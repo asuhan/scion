@@ -402,8 +402,12 @@ class LayoutIntegration {
     }
 
     func updateFormattingContexGeometries(availableLogicalWidth: LayoutUnit) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      boxGeometryUpdater.setFormattingContextRootGeometry(availableWidth: availableLogicalWidth)
+      inlineContentConstraints = boxGeometryUpdater.formattingContextConstraints(
+        availableWidth: availableLogicalWidth)
+      boxGeometryUpdater.setFormattingContextContentGeometry(
+        availableLogicalWidth: inlineContentConstraints!.horizontal.logicalWidth,
+        intrinsicWidthMode: nil)
     }
 
     // Partial invalidation.

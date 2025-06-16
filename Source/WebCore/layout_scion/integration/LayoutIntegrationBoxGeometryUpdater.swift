@@ -144,6 +144,11 @@ extension LayoutIntegration {
       self.rootLayoutBox = rootLayoutBox
     }
 
+    func setFormattingContextRootGeometry(availableWidth: LayoutUnit) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func setFormattingContextContentGeometry(
       availableLogicalWidth: LayoutUnit?, intrinsicWidthMode: IntrinsicWidthMode?
     ) {
@@ -206,6 +211,11 @@ extension LayoutIntegration {
         return true
       }
       return false
+    }
+
+    func formattingContextConstraints(availableWidth: LayoutUnit) -> ConstraintsForInlineContent {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     func takeNestedListMarkerOffsets() -> [UInt: LayoutUnit] {
