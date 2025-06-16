@@ -145,8 +145,37 @@ extension LayoutIntegration {
     }
 
     func setFormattingContextRootGeometry(availableWidth: LayoutUnit) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // FIXME: BFC should be responsible for creating the box geometry for this block box (IFC root) as part of the block layout.
+      // This is really only required by float layout as IFC does not consult the root geometry directly.
+      let rootRenderer = self.rootRenderer()
+      let isLeftToRightInlineDirection = rootLayoutBox.style.isLeftToRightDirection()
+
+      var padding = logicalPadding(
+        renderer: rootRenderer, availableWidth: availableWidth,
+        isLeftToRightInlineDirection: isLeftToRightInlineDirection)
+      var border = logicalBorder(
+        renderer: rootRenderer, isLeftToRightInlineDirection: isLeftToRightInlineDirection)
+      if !isHorizontalWritingMode() && !rootLayoutBox.style.isFlippedBlocksWritingMode() {
+        padding.vertical = BoxGeometry.VerticalEdges(
+          before: padding.vertical.after, after: padding.vertical.before)
+        border.vertical = BoxGeometry.VerticalEdges(
+          before: border.vertical.after, after: border.vertical.before)
+      }
+
+      var rootGeometry = layoutState.ensureGeometryForBox(layoutBox: rootLayoutBox)
+      rootGeometry.setContentBoxWidth(
+        width: isHorizontalWritingMode()
+          ? rootRenderer.contentWidth() : rootRenderer.contentHeight())
+      rootGeometry.setPadding(padding: padding)
+      rootGeometry.setBorder(border: border)
+      rootGeometry.setSpaceForScrollbar(scrollbarSize: scrollbarLogicalSize(renderer: rootRenderer))
+      rootGeometry.setHorizontalMargin(
+        margin:
+          horizontalLogicalMargin(
+            renderer: rootRenderer, availableWidth: availableWidth,
+            isLeftToRightInlineDirection: isLeftToRightInlineDirection))
+      rootGeometry.setVerticalMargin(
+        margin: verticalLogicalMargin(renderer: rootRenderer, availableWidth: availableWidth))
     }
 
     func setFormattingContextContentGeometry(
