@@ -431,6 +431,14 @@ func LineLayoutScion_create(flow: UnsafeMutableRawPointer) -> UInt64 {
   return 0
 }
 
+@_cdecl("LineLayoutScion_updateFormattingContexGeometries")
+func LineLayoutScion_updateFormattingContexGeometries(
+  handle: UInt64, rawAvailableLogicalWidth: Int32
+) {
+  globalLineLayout!.updateFormattingContexGeometries(
+    availableLogicalWidth: LayoutUnit.fromRawValue(value: rawAvailableLogicalWidth))
+}
+
 @_cdecl("LineLayoutScion_layout")
 func LineLayoutScion_layout(handle: UInt64) -> OptionalLayoutRectRaw {
   if let layoutResultRect = globalLineLayout!.layout() {

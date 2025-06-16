@@ -35,6 +35,8 @@ struct OptionalLayoutRectRaw {
 
 extern "C" OptionalLayoutRectRaw LineLayoutScion_layout(uint64_t handle);
 
+extern "C" void LineLayoutScion_updateFormattingContexGeometries(uint64_t handle, int32_t raw_available_logical_width_raw);
+
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -105,9 +107,9 @@ bool LineLayoutScion::shouldInvalidateLineLayoutPathAfterTreeMutation(const Rend
     return {};
 }
 
-void LineLayoutScion::updateFormattingContexGeometries(LayoutUnit)
+void LineLayoutScion::updateFormattingContexGeometries(LayoutUnit availableLogicalWidth)
 {
-    ASSERT_NOT_REACHED();
+    LineLayoutScion_updateFormattingContexGeometries(m_handle, availableLogicalWidth.rawValue());
 }
 
 void LineLayoutScion::updateOverflow()

@@ -401,6 +401,11 @@ class LayoutIntegration {
         typeOfChange: isRemoval ? .NodeRemoval : .NodeInsertion)
     }
 
+    func updateFormattingContexGeometries(availableLogicalWidth: LayoutUnit) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // Partial invalidation.
     func insertedIntoTree(parent: RenderElementWrapper, child: RenderObjectWrapper) -> Bool {
       if inlineContent == nil {
