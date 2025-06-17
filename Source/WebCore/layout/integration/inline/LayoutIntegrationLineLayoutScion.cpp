@@ -37,6 +37,8 @@ extern "C" OptionalLayoutRectRaw LineLayoutScion_layout(uint64_t handle);
 
 extern "C" void LineLayoutScion_updateFormattingContexGeometries(uint64_t handle, int32_t raw_available_logical_width_raw);
 
+extern "C" uint64_t LineLayoutScion_lineCount(uint64_t handle);
+
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -241,8 +243,7 @@ LayoutUnit LineLayoutScion::contentBoxLogicalHeight() const
 
 size_t LineLayoutScion::lineCount() const
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    return LineLayoutScion_lineCount(m_handle);
 }
 
 bool LineLayoutScion::hasVisualOverflow() const

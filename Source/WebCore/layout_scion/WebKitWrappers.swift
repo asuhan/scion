@@ -451,3 +451,8 @@ func LineLayoutScion_layout(handle: UInt64) -> OptionalLayoutRectRaw {
   return OptionalLayoutRectRaw(
     rect: LayoutRectRaw(x: 0, y: 0, width: 0, height: 0), is_valid: false)
 }
+
+@_cdecl("LineLayoutScion_lineCount")
+func LineLayoutScion_lineCount(handle: UInt64) -> UInt64 {
+  return globalLineLayout!.lineCount()
+}
