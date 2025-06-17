@@ -181,6 +181,20 @@ extension LayoutIntegration {
     func setFormattingContextContentGeometry(
       availableLogicalWidth: LayoutUnit?, intrinsicWidthMode: IntrinsicWidthMode?
     ) {
+      assert(availableLogicalWidth != nil || intrinsicWidthMode != nil)
+
+      if rootLayoutBox.establishesInlineFormattingContext() {
+        let walker = InlineWalker(root: self.rootRenderer() as! RenderBlockFlowWrapper)
+        while !walker.atEnd() {
+          if !(walker.current() is RenderTextWrapper) {
+            // TODO(asuhan): implement this
+            fatalError("Not implemented")
+          }
+          walker.advance()
+        }
+        return
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
