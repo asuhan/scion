@@ -76,6 +76,28 @@ extern "C" WEBCORE_EXPORT void BoxTree_buildTreeForInlineContent(void* root_rend
     }
 }
 
+extern "C" WEBCORE_EXPORT void* InlineWalker_new(const void* root_raw)
+{
+    auto& root = *static_cast<const WebCore::RenderBlockFlow*>(root_raw);
+    // TODO(asuhan): Fix leaks
+    return new WebCore::InlineWalker(root);
+}
+
+extern "C" WEBCORE_EXPORT void* InlineWalker_current(void* walker_raw)
+{
+    return static_cast<WebCore::InlineWalker*>(walker_raw)->current();
+}
+
+extern "C" WEBCORE_EXPORT bool InlineWalker_atEnd(void* walker_raw)
+{
+    return static_cast<WebCore::InlineWalker*>(walker_raw)->atEnd();
+}
+
+extern "C" WEBCORE_EXPORT void InlineWalker_advance(void* walker_raw)
+{
+    static_cast<WebCore::InlineWalker*>(walker_raw)->advance();
+}
+
 namespace WebCore {
 namespace LayoutIntegration {
 

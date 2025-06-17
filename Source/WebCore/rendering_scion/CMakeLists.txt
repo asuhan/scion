@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift
+    InlineWalker.swift
     PaintInfo.swift
     PaintPhase.swift
     BreakLines.swift

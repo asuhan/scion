@@ -466,32 +466,7 @@ class BoxWrapper: Hashable {
     if unwrapped == nil {
       return nil
     }
-    if wk_interop.RenderObject_isRenderListBox(unwrapped!) {
-      return RenderListBoxWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderListItem(unwrapped!) {
-      return RenderListItemWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderBlockFlow(unwrapped!) {
-      return RenderBlockFlowWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderFlexibleBox(unwrapped!) {
-      return RenderFlexibleBoxWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderBlock(unwrapped!) {
-      return RenderBlockWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderListMarker(unwrapped!) {
-      return RenderListMarkerWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderBox(unwrapped!) {
-      return RenderBoxWrapper(p: unwrapped!)
-    }
-    if wk_interop.RenderObject_isRenderText(unwrapped!) {
-      return RenderTextWrapper(p: unwrapped!)
-    }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderObjectWrapper.createFromRawPointer(p: unwrapped!)
   }
 
   func shape() -> ShapeWrapper? {
