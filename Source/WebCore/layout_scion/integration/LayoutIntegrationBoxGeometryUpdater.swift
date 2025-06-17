@@ -287,6 +287,28 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    private mutating func updateBoxGeometry(
+      renderer: RenderElementWrapper, availableWidth: LayoutUnit?,
+      intrinsicWidthMode: IntrinsicWidthMode?
+    ) {
+      assert(availableWidth != nil || intrinsicWidthMode != nil)
+
+      if let renderBox = renderer as? RenderBoxWrapper {
+        updateLayoutBoxDimensions(
+          renderBox: renderBox, availableWidth: availableWidth,
+          intrinsicWidthMode: intrinsicWidthMode)
+        if let renderListMarker = renderer as? RenderListMarkerWrapper {
+          if !renderListMarker.isInside() {
+            setListMarkerOffsetForMarkerOutside(listMarker: renderListMarker)
+          }
+        }
+        return
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private func updateLayoutBoxDimensions(
       renderBox: RenderBoxWrapper, availableWidth: LayoutUnit?,
       intrinsicWidthMode: IntrinsicWidthMode? = nil
