@@ -452,6 +452,12 @@ func LineLayoutScion_layout(handle: UInt64) -> OptionalLayoutRectRaw {
     rect: LayoutRectRaw(x: 0, y: 0, width: 0, height: 0), is_valid: false)
 }
 
+@_cdecl("LineLayoutScion_contentBoxLogicalHeightRaw")
+func LineLayoutScion_contentBoxLogicalHeightRaw(handle: UInt64) -> Int32 {
+  let height = globalLineLayout!.contentBoxLogicalHeight()
+  return height.rawValue()
+}
+
 @_cdecl("LineLayoutScion_lineCount")
 func LineLayoutScion_lineCount(handle: UInt64) -> UInt64 {
   return globalLineLayout!.lineCount()

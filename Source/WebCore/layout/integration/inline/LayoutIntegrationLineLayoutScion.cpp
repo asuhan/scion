@@ -37,6 +37,8 @@ extern "C" OptionalLayoutRectRaw LineLayoutScion_layout(uint64_t handle);
 
 extern "C" void LineLayoutScion_updateFormattingContexGeometries(uint64_t handle, int32_t raw_available_logical_width_raw);
 
+extern "C" int32_t LineLayoutScion_contentBoxLogicalHeightRaw(uint64_t handle);
+
 extern "C" uint64_t LineLayoutScion_lineCount(uint64_t handle);
 
 namespace WebCore {
@@ -237,8 +239,8 @@ bool LineLayoutScion::isPaginated() const
 
 LayoutUnit LineLayoutScion::contentBoxLogicalHeight() const
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    const auto rawHeight = LineLayoutScion_contentBoxLogicalHeightRaw(m_handle);
+    return LayoutUnit::fromRawValue(rawHeight);
 }
 
 size_t LineLayoutScion::lineCount() const
