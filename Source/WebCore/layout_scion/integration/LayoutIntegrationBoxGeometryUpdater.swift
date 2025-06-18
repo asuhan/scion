@@ -319,8 +319,15 @@ extension LayoutIntegration {
         return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let renderLineBreak = renderer as? RenderLineBreakWrapper {
+        return updateLineBreakBoxDimensions(lineBreakBox: renderLineBreak)
+      }
+
+      if let renderInline = renderer as? RenderInlineWrapper {
+        return updateInlineBoxDimensions(
+          renderInline: renderInline, availableWidth: availableWidth,
+          intrinsicWidthMode: intrinsicWidthMode)
+      }
     }
 
     private func updateLayoutBoxDimensions(
@@ -361,6 +368,19 @@ extension LayoutIntegration {
       boxGeometry.setHorizontalMargin(margin: inlineMargin)
       boxGeometry.setBorder(border: border)
       boxGeometry.setPadding(padding: padding)
+    }
+
+    private func updateLineBreakBoxDimensions(lineBreakBox: RenderLineBreakWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func updateInlineBoxDimensions(
+      renderInline: RenderInlineWrapper, availableWidth: LayoutUnit?,
+      intrinsicWidthMode: IntrinsicWidthMode? = nil
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     private mutating func setListMarkerOffsetForMarkerOutside(listMarker: RenderListMarkerWrapper) {
