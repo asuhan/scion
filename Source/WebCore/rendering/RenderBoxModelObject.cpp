@@ -106,6 +106,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_baselinePosition(const vo
         static_cast<WebCore::LinePositionMode>(line_position_mode)).rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderBoxModelObject_inlineContinuation(const void* p)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->inlineContinuation();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

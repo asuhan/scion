@@ -60,4 +60,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       value: wk_interop.RenderBoxModelObject_baselinePosition(
         p, baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
+
+  func inlineContinuation() -> RenderInlineWrapper? {
+    if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(p) {
+      return RenderInlineWrapper(p: raw)
+    }
+    return nil
+  }
 }
