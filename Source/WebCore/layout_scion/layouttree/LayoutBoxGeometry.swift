@@ -407,8 +407,18 @@ struct BoxGeometry {
     wk_interop.BoxGeometry_setVerticalMargin(p, margin.before.rawValue(), margin.after.rawValue())
   }
 
+  func setHorizontalBorder(horizontalBorder: HorizontalEdges) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func setBorder(border: Edges) {
     self.border = border
+  }
+
+  func setHorizontalPadding(horizontalPadding: HorizontalEdges) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   mutating func setPadding(padding: Edges) {

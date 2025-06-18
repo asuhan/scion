@@ -379,8 +379,42 @@ extension LayoutIntegration {
       renderInline: RenderInlineWrapper, availableWidth: LayoutUnit?,
       intrinsicWidthMode: IntrinsicWidthMode? = nil
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var boxGeometry = layoutState.ensureGeometryForBox(layoutBox: renderInline.layoutBox()!)
+
+      // Check if this renderer is part of a continuation and adjust horizontal margin/border/padding accordingly.
+      let shouldNotRetainBorderPaddingAndMarginStart = renderInline.isContinuation()
+      let shouldNotRetainBorderPaddingAndMarginEnd =
+        !renderInline.isContinuation() && renderInline.inlineContinuation() != nil
+      let isLeftToRightInlineDirection = renderInline.style().isLeftToRightDirection()
+
+      let inlineMargin = horizontalLogicalMargin(
+        renderer: renderInline, availableWidth: availableWidth,
+        isLeftToRightInlineDirection: isLeftToRightInlineDirection,
+        retainMarginStart: !shouldNotRetainBorderPaddingAndMarginStart,
+        retainMarginEnd: !shouldNotRetainBorderPaddingAndMarginEnd)
+      let border = logicalBorder(
+        renderer: renderInline, isLeftToRightInlineDirection: isLeftToRightInlineDirection,
+        isIntrinsicWidthMode: intrinsicWidthMode != nil,
+        retainBorderStart: !shouldNotRetainBorderPaddingAndMarginStart,
+        retainBorderEnd: !shouldNotRetainBorderPaddingAndMarginEnd)
+      let padding = logicalPadding(
+        renderer: renderInline, availableWidth: availableWidth,
+        isLeftToRightInlineDirection: isLeftToRightInlineDirection,
+        retainPaddingStart: !shouldNotRetainBorderPaddingAndMarginStart,
+        retainPaddingEnd: !shouldNotRetainBorderPaddingAndMarginEnd)
+
+      if intrinsicWidthMode != nil {
+        boxGeometry.setHorizontalMargin(margin: inlineMargin)
+        boxGeometry.setHorizontalBorder(horizontalBorder: border.horizontal)
+        boxGeometry.setHorizontalPadding(horizontalPadding: padding.horizontal)
+        return
+      }
+
+      boxGeometry.setHorizontalMargin(margin: inlineMargin)
+      boxGeometry.setVerticalMargin(
+        margin: verticalLogicalMargin(renderer: renderInline, availableWidth: availableWidth))
+      boxGeometry.setBorder(border: border)
+      boxGeometry.setPadding(padding: padding)
     }
 
     private mutating func setListMarkerOffsetForMarkerOutside(listMarker: RenderListMarkerWrapper) {
