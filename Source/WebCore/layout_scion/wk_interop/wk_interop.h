@@ -364,6 +364,7 @@ void* RenderElement_firstChild(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);
 bool RenderElement_hasSelfPaintingLayer(const void*);
 bool RenderElement_checkForRepaintDuringLayout(const void*);
+bool RenderElement_isContinuation(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);

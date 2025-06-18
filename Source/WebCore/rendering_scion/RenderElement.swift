@@ -63,6 +63,10 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
   }
 
+  func isContinuation() -> Bool {
+    return wk_interop.RenderElement_isContinuation(p)
+  }
+
   func isWritingModeRoot() -> Bool {
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }
