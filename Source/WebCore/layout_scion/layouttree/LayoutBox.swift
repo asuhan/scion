@@ -62,6 +62,10 @@ class BoxWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func establishesFlexFormattingContext() -> Bool {
+    return isFlexBox()
+  }
+
   func isInFlow() -> Bool { return !isFloatingOrOutOfFlowPositioned() }
 
   func isPositioned() -> Bool {

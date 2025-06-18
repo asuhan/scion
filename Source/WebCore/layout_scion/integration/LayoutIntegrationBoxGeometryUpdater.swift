@@ -178,7 +178,7 @@ extension LayoutIntegration {
         margin: verticalLogicalMargin(renderer: rootRenderer, availableWidth: availableWidth))
     }
 
-    func setFormattingContextContentGeometry(
+    mutating func setFormattingContextContentGeometry(
       availableLogicalWidth: LayoutUnit?, intrinsicWidthMode: IntrinsicWidthMode?
     ) {
       assert(availableLogicalWidth != nil || intrinsicWidthMode != nil)
@@ -187,16 +187,28 @@ extension LayoutIntegration {
         let walker = InlineWalker(root: self.rootRenderer() as! RenderBlockFlowWrapper)
         while !walker.atEnd() {
           if !(walker.current() is RenderTextWrapper) {
-            // TODO(asuhan): implement this
-            fatalError("Not implemented")
+            updateBoxGeometry(
+              renderer: walker.current() as! RenderElementWrapper,
+              availableWidth: availableLogicalWidth, intrinsicWidthMode: intrinsicWidthMode)
           }
           walker.advance()
         }
         return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if rootLayoutBox.establishesFlexFormattingContext() {
+        var flexItem = rootLayoutBox.firstInFlowChild()
+        while flexItem != nil {
+          updateBoxGeometry(
+            renderer: flexItem!.rendererForIntegration() as! RenderElementWrapper,
+            availableWidth: availableLogicalWidth,
+            intrinsicWidthMode: intrinsicWidthMode)
+          flexItem = flexItem!.nextInFlowSibling()
+        }
+        return
+      }
+
+      fatalError("Not implemented yet")
     }
 
     mutating func updateBoxGeometryAfterIntegrationLayout(
