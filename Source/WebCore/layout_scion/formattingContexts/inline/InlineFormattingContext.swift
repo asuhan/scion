@@ -458,12 +458,12 @@ class InlineFormattingContext {
       if !hasBoxGeometry {
         continue
       }
-      var boxGeometry = geometryForBox(layoutBox: inlineItem.layoutBox)
+      let boxGeometry = geometryForBox(layoutBox: inlineItem.layoutBox)
       boxGeometry.reset()
     }
 
     for floatBox in suspendedFloats {
-      var boxGeometry = geometryForBox(layoutBox: floatBox)
+      let boxGeometry = geometryForBox(layoutBox: floatBox)
       boxGeometry.reset()
     }
   }

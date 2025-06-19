@@ -1003,7 +1003,7 @@ class LayoutIntegration {
       for floatingObject in flow().floatingObjectSet! {
         let visualRect = floatingObject.frameRect
 
-        var boxGeometry = BoxGeometry()
+        let boxGeometry = BoxGeometry()
         let logicalRect = logicalRectForFloatingObject(
           visualRect: visualRect, isHorizontalWritingMode: isHorizontalWritingMode,
           placedFloatsIsLeftToRightInlineDirection: placedFloatsIsLeftToRightInlineDirection)

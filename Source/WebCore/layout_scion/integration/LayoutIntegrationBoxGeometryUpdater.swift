@@ -162,7 +162,7 @@ extension LayoutIntegration {
           before: border.vertical.after, after: border.vertical.before)
       }
 
-      var rootGeometry = layoutState.ensureGeometryForBox(layoutBox: rootLayoutBox)
+      let rootGeometry = layoutState.ensureGeometryForBox(layoutBox: rootLayoutBox)
       rootGeometry.setContentBoxWidth(
         width: isHorizontalWritingMode()
           ? rootRenderer.contentWidth() : rootRenderer.contentHeight())
@@ -215,7 +215,7 @@ extension LayoutIntegration {
       layoutBox: ElementBoxWrapper, availableWidth: LayoutUnit
     ) {
       let renderBox = layoutBox.rendererForIntegration() as! RenderBoxWrapper
-      var boxGeometry = layoutState.ensureGeometryForBox(layoutBox: layoutBox)
+      let boxGeometry = layoutState.ensureGeometryForBox(layoutBox: layoutBox)
       boxGeometry.setContentBoxSize(size: renderBox.contentLogicalSize())
       boxGeometry.setSpaceForScrollbar(scrollbarSize: scrollbarLogicalSize(renderer: renderBox))
 
@@ -347,7 +347,7 @@ extension LayoutIntegration {
       intrinsicWidthMode: IntrinsicWidthMode? = nil
     ) {
       let layoutBox = renderBox.layoutBox()!
-      var boxGeometry = layoutState.ensureGeometryForBox(layoutBox: layoutBox)
+      let boxGeometry = layoutState.ensureGeometryForBox(layoutBox: layoutBox)
       let isLeftToRightInlineDirection = renderBox.parent()!.style().isLeftToRightDirection()
 
       let inlineMargin = horizontalLogicalMargin(
@@ -394,15 +394,15 @@ extension LayoutIntegration {
     }
 
     private func updateLineBreakBoxDimensions(lineBreakBox: RenderLineBreakWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // This is just a box geometry reset (see InlineFormattingContext::layoutInFlowContent).
+      layoutState.ensureGeometryForBox(layoutBox: lineBreakBox.layoutBox()!).reset()
     }
 
     private func updateInlineBoxDimensions(
       renderInline: RenderInlineWrapper, availableWidth: LayoutUnit?,
       intrinsicWidthMode: IntrinsicWidthMode? = nil
     ) {
-      var boxGeometry = layoutState.ensureGeometryForBox(layoutBox: renderInline.layoutBox()!)
+      let boxGeometry = layoutState.ensureGeometryForBox(layoutBox: renderInline.layoutBox()!)
 
       // Check if this renderer is part of a continuation and adjust horizontal margin/border/padding accordingly.
       let shouldNotRetainBorderPaddingAndMarginStart = renderInline.isContinuation()

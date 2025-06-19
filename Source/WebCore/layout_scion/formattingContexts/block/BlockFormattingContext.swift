@@ -780,7 +780,7 @@ class BlockFormattingContext: FormattingContext {
   }
 
   func computeBorderAndPadding(layoutBox: BoxWrapper, horizontalConstraint: HorizontalConstraints) {
-    var boxGeometry = formattingState().boxGeometry(layoutBox: layoutBox)
+    let boxGeometry = formattingState().boxGeometry(layoutBox: layoutBox)
     boxGeometry.setBorder(border: formattingGeometry().computedBorder(layoutBox: layoutBox))
     boxGeometry.setPadding(
       padding: formattingGeometry().computedPadding(

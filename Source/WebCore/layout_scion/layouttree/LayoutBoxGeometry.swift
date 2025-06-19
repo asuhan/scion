@@ -25,7 +25,7 @@
 
 import wk_interop
 
-struct BoxGeometry {
+class BoxGeometry {
   static func borderBoxTop(box: BoxGeometry) -> LayoutUnit { return box.top() }
 
   static func borderBoxLeft(box: BoxGeometry) -> LayoutUnit { return box.left() }
@@ -412,7 +412,7 @@ struct BoxGeometry {
     fatalError("Not implemented")
   }
 
-  mutating func setBorder(border: Edges) {
+  func setBorder(border: Edges) {
     self.border = border
   }
 
@@ -421,11 +421,11 @@ struct BoxGeometry {
     fatalError("Not implemented")
   }
 
-  mutating func setPadding(padding: Edges) {
+  func setPadding(padding: Edges) {
     self.padding = padding
   }
 
-  mutating func setVerticalSpaceForScrollbar(scrollbarHeight: LayoutUnit) {
+  func setVerticalSpaceForScrollbar(scrollbarHeight: LayoutUnit) {
     if p != nil {
       wk_interop.BoxGeometry_setVerticalSpaceForScrollbar(p, scrollbarHeight.rawValue())
       return
@@ -433,7 +433,7 @@ struct BoxGeometry {
     verticalSpaceForScrollbar = scrollbarHeight
   }
 
-  mutating func setHorizontalSpaceForScrollbar(scrollbarWidth: LayoutUnit) {
+  func setHorizontalSpaceForScrollbar(scrollbarWidth: LayoutUnit) {
     if p != nil {
       wk_interop.BoxGeometry_setHorizontalSpaceForScrollbar(p, scrollbarWidth.rawValue())
       return
@@ -441,12 +441,12 @@ struct BoxGeometry {
     horizontalSpaceForScrollbar = scrollbarWidth
   }
 
-  mutating func setSpaceForScrollbar(scrollbarSize: LayoutSizeWrapper) {
+  func setSpaceForScrollbar(scrollbarSize: LayoutSizeWrapper) {
     setVerticalSpaceForScrollbar(scrollbarHeight: scrollbarSize.height())
     setHorizontalSpaceForScrollbar(scrollbarWidth: scrollbarSize.width())
   }
 
-  mutating func reset() {
+  func reset() {
     setTopLeft(topLeft: LayoutPointWrapper(x: LayoutUnit(), y: LayoutUnit()))
 
     setHorizontalMargin(margin: HorizontalEdges())

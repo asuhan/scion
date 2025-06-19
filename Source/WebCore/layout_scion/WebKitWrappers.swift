@@ -70,7 +70,7 @@ func convert_box_geometry_edges(raw: wk_interop.BoxGeometryEdgesRaw) -> BoxGeome
 }
 
 func convert_box_geometry(raw: wk_interop.BoxGeometryRaw) -> BoxGeometry {
-  var box = BoxGeometry()
+  let box = BoxGeometry()
   box.p = raw.orig_ptr
   box.padding = convert_box_geometry_edges(raw: raw.padding)
   box.verticalSpaceForScrollbar = LayoutUnit.fromRawValue(value: raw.vertical_space_for_scrollbar)

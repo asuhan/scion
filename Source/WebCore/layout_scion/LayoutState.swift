@@ -68,7 +68,7 @@ class LayoutStateWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    var boxGeometry = BoxGeometry()
+    let boxGeometry = BoxGeometry()
     boxGeometry.p = wk_interop.LayoutState_geometryForBox(p, layoutBox.p)
     return boxGeometry
   }
@@ -78,7 +78,7 @@ class LayoutStateWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    var boxGeometry = BoxGeometry()
+    let boxGeometry = BoxGeometry()
     boxGeometry.p = wk_interop.LayoutState_ensureGeometryForBox(p, layoutBox.p)
     return boxGeometry
   }
