@@ -135,6 +135,14 @@ class RenderObjectWrapper {
     return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }
 
+  func minPreferredLogicalWidth() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_minPreferredLogicalWidth(p))
+  }
+
+  func maxPreferredLogicalWidth() -> LayoutUnit {
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_maxPreferredLogicalWidth(p))
+  }
+
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
   }

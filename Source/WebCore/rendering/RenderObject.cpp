@@ -104,6 +104,18 @@ extern "C" WEBCORE_EXPORT void* RenderObject_view(const void* p)
     return &static_cast<const WebCore::RenderObject*>(p)->view();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderObject_minPreferredLogicalWidth(const void* p)
+{
+    const auto width = static_cast<const WebCore::RenderObject*>(p)->minPreferredLogicalWidth();
+    return width.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderObject_maxPreferredLogicalWidth(const void* p)
+{
+    const auto width = static_cast<const WebCore::RenderObject*>(p)->maxPreferredLogicalWidth();
+    return width.rawValue();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
