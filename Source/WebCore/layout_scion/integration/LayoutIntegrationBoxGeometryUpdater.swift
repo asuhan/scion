@@ -366,8 +366,19 @@ extension LayoutIntegration {
       let scrollbarSize = scrollbarLogicalSize(renderer: renderBox)
 
       if intrinsicWidthMode != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        boxGeometry.setHorizontalSpaceForScrollbar(scrollbarWidth: scrollbarSize.width())
+        let preferredWidth =
+          intrinsicWidthMode! == .Minimum
+          ? renderBox.minPreferredLogicalWidth() : renderBox.maxPreferredLogicalWidth()
+        let contentBoxLogicalWidth =
+          preferredWidth
+          - (border.horizontal.start + border.horizontal.end + padding.horizontal.start
+            + padding.horizontal.end)
+        boxGeometry.setContentBoxWidth(width: contentBoxLogicalWidth)
+        boxGeometry.setHorizontalMargin(margin: inlineMargin)
+        boxGeometry.setHorizontalBorder(horizontalBorder: border.horizontal)
+        boxGeometry.setHorizontalPadding(horizontalPadding: padding.horizontal)
+        return
       }
 
       boxGeometry.setSpaceForScrollbar(scrollbarSize: scrollbarSize)
