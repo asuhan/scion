@@ -148,7 +148,7 @@ class LayoutIntegration {
       self.boxTree = BoxTree(rootRenderer: flow)
       self.layoutState = flow.view().layoutState()
       let formattingContextRoot = LineLayout.rootLayoutBox(boxTree: self.boxTree)
-      self.blockFormattingState = self.layoutState!.ensureBlockFormattingState(
+      self.blockFormattingState = self.layoutState!.ensureBlockFormattingStateWrapper(
         formattingContextRoot: formattingContextRoot)
       self.inlineContentCache = self.layoutState!.inlineContentCache(
         formattingContextRoot: formattingContextRoot)

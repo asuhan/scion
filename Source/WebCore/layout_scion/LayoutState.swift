@@ -45,10 +45,24 @@ class LayoutStateWrapper {
     return cache
   }
 
-  func ensureBlockFormattingState(formattingContextRoot: ElementBoxWrapper) -> BlockFormattingState
+  func ensureBlockFormattingStateWrapper(formattingContextRoot: ElementBoxWrapper)
+    -> BlockFormattingState
   {
     return BlockFormattingState(
       p: wk_interop.LayoutState_ensureBlockFormattingState(p, formattingContextRoot.p))
+  }
+
+  func ensureBlockFormattingState(formattingContextRoot: ElementBoxWrapper) -> BlockFormattingState
+  {
+    assert(formattingContextRoot.establishesBlockFormattingContext())
+    let key = CPtrToInt(formattingContextRoot.p)
+    if let state = blockFormattingStates[key] {
+      return state
+    }
+    let state = BlockFormattingState(
+      layoutState: self, blockFormattingContextRoot: formattingContextRoot)
+    blockFormattingStates[key] = state
+    return state
   }
 
   func formattingStateForFormattingContext(formattingContextRoot: ElementBoxWrapper)
@@ -116,5 +130,6 @@ class LayoutStateWrapper {
   }
 
   private var inlineContentCaches: [UInt: InlineContentCache] = [:]
+  private var blockFormattingStates: [UInt: BlockFormattingState] = [:]
   var p: UnsafeMutableRawPointer?
 }
