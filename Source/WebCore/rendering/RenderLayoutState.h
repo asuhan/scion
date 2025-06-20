@@ -111,7 +111,7 @@ public:
 #endif
 
     void setLineClamp(std::optional<LineClamp> lineClamp) { m_lineClamp = lineClamp; }
-    std::optional<LineClamp> lineClamp() { return m_lineClamp; }
+    std::optional<LineClamp> lineClamp() const { return m_lineClamp; }
 
     void setLegacyLineClamp(std::optional<LegacyLineClamp> legacyLineClamp) { m_legacyLineClamp = legacyLineClamp; }
     std::optional<LegacyLineClamp> legacyLineClamp() const { return m_legacyLineClamp; }

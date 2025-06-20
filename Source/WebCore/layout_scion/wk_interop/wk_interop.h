@@ -144,6 +144,18 @@ struct OptionalLayoutRectRaw {
     bool is_valid;
 };
 
+struct OptionalLineClampRaw {
+    uint64_t maximumLines;
+    bool shouldDiscardOverflow;
+    bool isValid;
+};
+
+struct OptionalLegacyLineClampRaw {
+    uint64_t maximumLineCount;
+    uint64_t currentLineCount;
+    bool isValid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -359,6 +371,8 @@ void* RenderObject_parent(void*);
 const void* RenderView_frameView(const void*);
 void* RenderView_layoutState(void*);
 bool RenderLayoutState_isPaginated(const void*);
+struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
+struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 const void* LocalFrameView_layoutContext(const void*);
 const void* RenderElement_element(const void*);

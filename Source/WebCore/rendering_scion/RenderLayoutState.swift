@@ -27,13 +27,13 @@ import wk_interop
 
 class RenderLayoutStateWrapper {
   struct LineClamp {
-    let maximumLines: UInt64 = 0
-    let shouldDiscardOverflow = false
+    let maximumLines: UInt64
+    let shouldDiscardOverflow: Bool
   }
 
   struct LegacyLineClamp {
-    let maximumLineCount: UInt64 = 0
-    let currentLineCount: UInt64 = 0
+    let maximumLineCount: UInt64
+    let currentLineCount: UInt64
   }
 
   init(p: UnsafeRawPointer) {
@@ -45,13 +45,21 @@ class RenderLayoutStateWrapper {
   }
 
   func lineClamp() -> LineClamp? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderLayoutState_lineClamp(p)
+    if !raw.isValid {
+      return nil
+    }
+    return LineClamp(
+      maximumLines: raw.maximumLines, shouldDiscardOverflow: raw.shouldDiscardOverflow)
   }
 
   func legacyLineClamp() -> LegacyLineClamp? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderLayoutState_legacyLineClamp(p)
+    if !raw.isValid {
+      return nil
+    }
+    return LegacyLineClamp(
+      maximumLineCount: raw.maximumLineCount, currentLineCount: raw.currentLineCount)
   }
 
   private var p: UnsafeRawPointer

@@ -42,6 +42,36 @@ extern "C" WEBCORE_EXPORT bool RenderLayoutState_isPaginated(const void* p)
     return static_cast<const WebCore::RenderLayoutState*>(p)->isPaginated();
 }
 
+struct OptionalLineClampRaw {
+    uint64_t maximumLines;
+    bool shouldDiscardOverflow;
+    bool isValid;
+};
+
+extern "C" WEBCORE_EXPORT struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void* p)
+{
+    auto lineClamp = static_cast<const WebCore::RenderLayoutState*>(p)->lineClamp();
+    if (!lineClamp) {
+        return { 0, false, false };
+    }
+    return { lineClamp->maximumLines, lineClamp->shouldDiscardOverflow, true };
+}
+
+struct OptionalLegacyLineClampRaw {
+    uint64_t maximumLineCount;
+    uint64_t currentLineCount;
+    bool isValid;
+};
+
+extern "C" WEBCORE_EXPORT struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void* p)
+{
+    auto legacyLineClamp = static_cast<const WebCore::RenderLayoutState*>(p)->legacyLineClamp();
+    if (!legacyLineClamp) {
+        return { 0, 0, false };
+    }
+    return { legacyLineClamp->maximumLineCount, legacyLineClamp->currentLineCount, true };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayoutState);
