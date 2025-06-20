@@ -26,12 +26,32 @@
 import wk_interop
 
 class RenderLayoutStateWrapper {
+  struct LineClamp {
+    let maximumLines: UInt64 = 0
+    let shouldDiscardOverflow = false
+  }
+
+  struct LegacyLineClamp {
+    let maximumLineCount: UInt64 = 0
+    let currentLineCount: UInt64 = 0
+  }
+
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func isPaginated() -> Bool {
     return wk_interop.RenderLayoutState_isPaginated(p)
+  }
+
+  func lineClamp() -> LineClamp? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func legacyLineClamp() -> LegacyLineClamp? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private var p: UnsafeRawPointer

@@ -117,8 +117,18 @@ class LayoutIntegration {
   }
 
   static func lineClamp(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.LineClamp? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let layoutState = rootRenderer.view().frameView().layoutContext().layoutState()!
+    if let legacyLineClamp = layoutState.legacyLineClamp() {
+      return BlockLayoutState.LineClamp(
+        maximumLines: max(legacyLineClamp.maximumLineCount - legacyLineClamp.currentLineCount, 0),
+        shouldDiscardOverflow: false, isLegacy: true)
+    }
+    if let lineClamp = layoutState.lineClamp() {
+      return BlockLayoutState.LineClamp(
+        maximumLines: lineClamp.maximumLines,
+        shouldDiscardOverflow: lineClamp.shouldDiscardOverflow, isLegacy: false)
+    }
+    return nil
   }
 
   static func textBoxTrim(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.TextBoxTrim {
