@@ -1112,7 +1112,7 @@ class LayoutIntegration {
         return []
       }
 
-      let layoutState = flow().view().frameView().layoutContext().layoutState()
+      let layoutState = flow().view().frameView().layoutContext().layoutState()!
       if !layoutState.isPaginated() {
         return []
       }

@@ -30,8 +30,11 @@ class LocalFrameViewLayoutContextWrapper {
     self.p = p
   }
 
-  func layoutState() -> RenderLayoutStateWrapper {
-    return RenderLayoutStateWrapper(p: wk_interop.LocalFrameViewLayoutContext_layoutState(p))
+  func layoutState() -> RenderLayoutStateWrapper? {
+    if let raw = wk_interop.LocalFrameViewLayoutContext_layoutState(p) {
+      return RenderLayoutStateWrapper(p: raw)
+    }
+    return nil
   }
 
   private var p: UnsafeRawPointer
