@@ -585,6 +585,7 @@ void RenderBlockFlow_setStaticInlinePositionForChild(void* p, void* child_raw, i
 int32_t RenderBlockFlow_endPaddingWidthForCaret(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
+bool RenderBlock_containsFloats(const void*);
 int32_t RenderBlock_intrinsicBorderForFieldset(const void*);
 bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);
 uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);

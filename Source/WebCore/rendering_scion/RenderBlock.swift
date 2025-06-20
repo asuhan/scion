@@ -24,8 +24,7 @@ import wk_interop
 
 class RenderBlockWrapper: RenderBoxWrapper {
   func containsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderBlock_containsFloats(p)
   }
 
   // Fieldset legends that are taller than the fieldset border add in intrinsic border

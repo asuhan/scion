@@ -82,6 +82,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT bool RenderBlock_containsFloats(const void* p)
+{
+    return static_cast<const WebCore::RenderBlock*>(p)->containsFloats();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBlock_intrinsicBorderForFieldset(const void* p)
 {
     const auto r = static_cast<const WebCore::RenderBlock*>(p)->intrinsicBorderForFieldset();
