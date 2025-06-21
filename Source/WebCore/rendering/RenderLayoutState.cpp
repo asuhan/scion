@@ -77,6 +77,12 @@ extern "C" WEBCORE_EXPORT bool RenderLayoutState_hasTextBoxTrimStart(const void*
     return static_cast<const WebCore::RenderLayoutState*>(p)->hasTextBoxTrimStart();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw)
+{
+    const auto& candidate = *static_cast<const WebCore::RenderBlockFlow*>(candidate_raw);
+    return static_cast<const WebCore::RenderLayoutState*>(p)->hasTextBoxTrimEnd(candidate);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayoutState);

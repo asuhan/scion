@@ -374,6 +374,7 @@ bool RenderLayoutState_isPaginated(const void*);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
+bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 const void* LocalFrameView_layoutContext(const void*);
 const void* RenderElement_element(const void*);

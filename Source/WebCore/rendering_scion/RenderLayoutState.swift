@@ -66,5 +66,9 @@ class RenderLayoutStateWrapper {
     return wk_interop.RenderLayoutState_hasTextBoxTrimStart(p)
   }
 
+  func hasTextBoxTrimEnd(candidate: RenderBlockFlowWrapper) -> Bool {
+    return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, candidate.p)
+  }
+
   private var p: UnsafeRawPointer
 }
