@@ -132,8 +132,18 @@ class LayoutIntegration {
   }
 
   static func textBoxTrim(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.TextBoxTrim {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let layoutState = rootRenderer.view().frameView().layoutContext().layoutState() {
+      var textBoxTrimForIFC = BlockLayoutState.TextBoxTrim()
+      let isFlippedLinesWritingMode = rootRenderer.style().isFlippedLinesWritingMode()
+      if layoutState.hasTextBoxTrimStart() {
+        textBoxTrimForIFC.update(with: isFlippedLinesWritingMode ? .End : .Start)
+      }
+      if layoutState.hasTextBoxTrimEnd(candidate: rootRenderer) {
+        textBoxTrimForIFC.update(with: isFlippedLinesWritingMode ? .Start : .End)
+      }
+      return textBoxTrimForIFC
+    }
+    return BlockLayoutState.TextBoxTrim()
   }
 
   static func textBoxEdge(rootRenderer: RenderBlockFlowWrapper) -> TextEdge {
