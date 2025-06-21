@@ -72,6 +72,11 @@ extern "C" WEBCORE_EXPORT struct OptionalLegacyLineClampRaw RenderLayoutState_le
     return { legacyLineClamp->maximumLineCount, legacyLineClamp->currentLineCount, true };
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayoutState_hasTextBoxTrimStart(const void* p)
+{
+    return static_cast<const WebCore::RenderLayoutState*>(p)->hasTextBoxTrimStart();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayoutState);

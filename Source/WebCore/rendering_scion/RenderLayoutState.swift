@@ -62,5 +62,9 @@ class RenderLayoutStateWrapper {
       maximumLineCount: raw.maximumLineCount, currentLineCount: raw.currentLineCount)
   }
 
+  func hasTextBoxTrimStart() -> Bool {
+    return wk_interop.RenderLayoutState_hasTextBoxTrimStart(p)
+  }
+
   private var p: UnsafeRawPointer
 }
