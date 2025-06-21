@@ -147,8 +147,12 @@ class LayoutIntegration {
   }
 
   static func textBoxEdge(rootRenderer: RenderBlockFlowWrapper) -> TextEdge {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let layoutState = rootRenderer.view().frameView().layoutContext().layoutState() {
+      if let textBoxTrim = layoutState.textBoxTrim() {
+        return textBoxTrim.propagatedTextBoxEdge
+      }
+    }
+    return TextEdge()
   }
 
   static func lineGrid(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.LineGrid {
