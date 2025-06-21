@@ -116,7 +116,7 @@ public:
     void setLegacyLineClamp(std::optional<LegacyLineClamp> legacyLineClamp) { m_legacyLineClamp = legacyLineClamp; }
     std::optional<LegacyLineClamp> legacyLineClamp() const { return m_legacyLineClamp; }
 
-    std::optional<TextBoxTrim> textBoxTrim() { return m_textBoxTrim; }
+    std::optional<TextBoxTrim> textBoxTrim() const { return m_textBoxTrim; }
     void setTextBoxTrim(std::optional<TextBoxTrim> textBoxTrim) { m_textBoxTrim = textBoxTrim; }
 
     bool hasTextBoxTrimStart() const { return m_textBoxTrim && m_textBoxTrim->trimFirstFormattedLine; }

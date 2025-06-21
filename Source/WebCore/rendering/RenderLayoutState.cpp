@@ -72,6 +72,26 @@ extern "C" WEBCORE_EXPORT struct OptionalLegacyLineClampRaw RenderLayoutState_le
     return { legacyLineClamp->maximumLineCount, legacyLineClamp->currentLineCount, true };
 }
 
+struct TextEdgeRaw {
+    uint8_t over;
+    uint8_t under;
+};
+
+struct OptionalTextBoxTrimRaw {
+    bool trimFirstFormattedLine;
+    struct TextEdgeRaw propagatedTextBoxEdge;
+    bool isValid;
+};
+
+extern "C" WEBCORE_EXPORT struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void* p)
+{
+    auto textBoxTrim = static_cast<const WebCore::RenderLayoutState*>(p)->textBoxTrim();
+    if (!textBoxTrim) {
+        return { false, { 0, 0 }, false };
+    }
+    return { textBoxTrim->trimFirstFormattedLine, { static_cast<uint8_t>(textBoxTrim->propagatedTextBoxEdge.over), static_cast<uint8_t>(textBoxTrim->propagatedTextBoxEdge.under) }, true };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayoutState_hasTextBoxTrimStart(const void* p)
 {
     return static_cast<const WebCore::RenderLayoutState*>(p)->hasTextBoxTrimStart();

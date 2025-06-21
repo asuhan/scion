@@ -156,6 +156,17 @@ struct OptionalLegacyLineClampRaw {
     bool isValid;
 };
 
+struct TextEdgeRaw {
+    uint8_t over;
+    uint8_t under;
+};
+
+struct OptionalTextBoxTrimRaw {
+    bool trimFirstFormattedLine;
+    struct TextEdgeRaw propagatedTextBoxEdge;
+    bool isValid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -373,6 +384,7 @@ void* RenderView_layoutState(void*);
 bool RenderLayoutState_isPaginated(const void*);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
+struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);

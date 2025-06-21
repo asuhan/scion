@@ -26,6 +26,11 @@
 import wk_interop
 
 class RenderLayoutStateWrapper {
+  struct TextBoxTrim {
+    let trimFirstFormattedLine: Bool
+    let propagatedTextBoxEdge: TextEdge
+  }
+
   struct LineClamp {
     let maximumLines: UInt64
     let shouldDiscardOverflow: Bool
@@ -60,6 +65,20 @@ class RenderLayoutStateWrapper {
     }
     return LegacyLineClamp(
       maximumLineCount: raw.maximumLineCount, currentLineCount: raw.currentLineCount)
+  }
+
+  func textBoxTrim() -> TextBoxTrim? {
+    let raw = wk_interop.RenderLayoutState_textBoxTrim(p)
+    if !raw.isValid {
+      return nil
+    }
+    let propagatedTextBoxEdge = TextEdge(
+      over: TextEdgeType(rawValue: raw.propagatedTextBoxEdge.over)!,
+      under: TextEdgeType(rawValue: raw.propagatedTextBoxEdge.under)!
+    )
+    return TextBoxTrim(
+      trimFirstFormattedLine: raw.trimFirstFormattedLine,
+      propagatedTextBoxEdge: propagatedTextBoxEdge)
   }
 
   func hasTextBoxTrimStart() -> Bool {
