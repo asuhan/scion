@@ -839,6 +839,14 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_isVerticalWritingMode(p)
   }
 
+  func isFlippedLinesWritingMode() -> Bool {
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_isFlippedLinesWritingMode(p)
+  }
+
   func isFlippedBlocksWritingMode() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this
