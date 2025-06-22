@@ -30,8 +30,8 @@ extension LayoutIntegration {
     }
 
     func hasContent() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(displayContent.boxes.isEmpty || displayContent.boxes[0].isRootInlineBox())
+      return displayContent.boxes.count > 1
     }
 
     func setHasVisualOverflow() { hasVisualOverflow = true }
