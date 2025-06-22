@@ -166,6 +166,15 @@ extern "C" WEBCORE_EXPORT void RenderBox_addLayoutOverflow(void* p, struct Layou
     static_cast<WebCore::RenderBox*>(p)->addLayoutOverflow(rect);
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_addVisualOverflow(void* p, struct LayoutRectRaw rect_raw) {
+    WebCore::LayoutRect rect(
+        WebCore::LayoutUnit::fromRawValue(rect_raw.x),
+        WebCore::LayoutUnit::fromRawValue(rect_raw.y),
+        WebCore::LayoutUnit::fromRawValue(rect_raw.width),
+        WebCore::LayoutUnit::fromRawValue(rect_raw.height));
+    static_cast<WebCore::RenderBox*>(p)->addVisualOverflow(rect);
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBox_contentWidth(const void* p)
 {
     const auto width = static_cast<const WebCore::RenderBox*>(p)->contentWidth();
