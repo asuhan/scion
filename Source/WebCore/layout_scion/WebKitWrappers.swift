@@ -467,3 +467,8 @@ func LineLayoutScion_contentBoxLogicalHeightRaw(handle: UInt64) -> Int32 {
 func LineLayoutScion_lineCount(handle: UInt64) -> UInt64 {
   return globalLineLayout!.lineCount()
 }
+
+@_cdecl("LineLayoutScion_hasDetachedContent")
+func LineLayoutScion_hasDetachedContent(handle: UInt64) -> Bool {
+  return globalLineLayout!.hasDetachedContent()
+}

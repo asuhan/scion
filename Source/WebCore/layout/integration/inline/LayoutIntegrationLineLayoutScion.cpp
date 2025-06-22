@@ -43,6 +43,8 @@ extern "C" int32_t LineLayoutScion_contentBoxLogicalHeightRaw(uint64_t handle);
 
 extern "C" uint64_t LineLayoutScion_lineCount(uint64_t handle);
 
+extern "C" bool LineLayoutScion_hasDetachedContent(uint64_t handle);
+
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -359,8 +361,7 @@ const Layout::InlineDamage* LineLayoutScion::damage() const
 
 bool LineLayoutScion::hasDetachedContent() const
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    return LineLayoutScion_hasDetachedContent(m_handle);
 }
 
 #if ENABLE(TREE_DEBUGGING)

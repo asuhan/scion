@@ -1020,6 +1020,13 @@ class LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    func hasDetachedContent() -> Bool {
+      if let lineDamage = lineDamage {
+        return lineDamage.hasDetachedContent()
+      }
+      return false
+    }
+
     func preparePlacedFloats() {
       let placedFloats = blockFormattingState.placedFloats!
       placedFloats.clear()
