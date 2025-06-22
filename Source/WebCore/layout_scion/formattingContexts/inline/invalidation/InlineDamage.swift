@@ -82,6 +82,10 @@ struct InlineDamageWrapper {
     wk_interop.InlineDamage_setInlineItemListClean(p)
   }
 
+  func hasDetachedContent() -> Bool {
+    return wk_interop.InlineDamage_hasDetachedContent(p)
+  }
+
   var p: UnsafeMutableRawPointer
   var damageReasons = Reason(rawValue: 0)
 }
