@@ -37,6 +37,8 @@ extern "C" OptionalLayoutRectRaw LineLayoutScion_layout(uint64_t handle);
 
 extern "C" void LineLayoutScion_updateFormattingContexGeometries(uint64_t handle, int32_t raw_available_logical_width_raw);
 
+extern "C" void LineLayoutScion_collectOverflow(uint64_t handle);
+
 extern "C" int32_t LineLayoutScion_contentBoxLogicalHeightRaw(uint64_t handle);
 
 extern "C" uint64_t LineLayoutScion_lineCount(uint64_t handle);
@@ -204,7 +206,7 @@ void LineLayoutScion::shiftLinesBy(LayoutUnit)
 
 void LineLayoutScion::collectOverflow()
 {
-    ASSERT_NOT_REACHED();
+    LineLayoutScion_collectOverflow(m_handle);
 }
 
 LayoutRect LineLayoutScion::visualOverflowBoundingBoxRectFor(const RenderInline&) const

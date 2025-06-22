@@ -439,6 +439,11 @@ func LineLayoutScion_updateFormattingContexGeometries(
     availableLogicalWidth: LayoutUnit.fromRawValue(value: rawAvailableLogicalWidth))
 }
 
+@_cdecl("LineLayoutScion_collectOverflow")
+func LineLayoutScion_collectOverflow(handle: UInt64) {
+  globalLineLayout!.collectOverflow()
+}
+
 @_cdecl("LineLayoutScion_layout")
 func LineLayoutScion_layout(handle: UInt64) -> OptionalLayoutRectRaw {
   if let layoutResultRect = globalLineLayout!.layout() {
