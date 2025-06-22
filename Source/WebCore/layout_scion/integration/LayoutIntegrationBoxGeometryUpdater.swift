@@ -308,9 +308,10 @@ extension LayoutIntegration {
         visualLeft: visualLeft)
     }
 
-    func takeNestedListMarkerOffsets() -> [UInt: LayoutUnit] {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    mutating func takeNestedListMarkerOffsets() -> [UInt: LayoutUnit] {
+      let oldNestedListMarkerOffsets = nestedListMarkerOffsets
+      nestedListMarkerOffsets = [:]
+      return oldNestedListMarkerOffsets
     }
 
     private mutating func updateBoxGeometry(
