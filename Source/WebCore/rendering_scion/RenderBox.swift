@@ -62,8 +62,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.RenderBox_addLayoutOverflow(
+      p,
+      LayoutRectRaw(
+        x: rect.x().rawValue(),
+        y: rect.y().rawValue(),
+        width: rect.width().rawValue(),
+        height: rect.height().rawValue()))
   }
 
   func addVisualOverflow(rect: LayoutRectWrapper) {
