@@ -107,8 +107,15 @@ class LayoutIntegration {
   }
 
   static func lastLineWithInlineContent(lines: InlineDisplay.Lines) -> InlineDisplay.Line {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Out-of-flow/float content only don't produce lines with inline content. They should not be taken into
+    // account when computing content box height/baselines.
+    for line in lines.reversed() {
+      assert(line.boxCount() != 0)
+      if line.boxCount() > 1 {
+        return line
+      }
+    }
+    return lines.first!
   }
 
   static func isContentRenderer(renderer: RenderObjectWrapper) -> Bool {
