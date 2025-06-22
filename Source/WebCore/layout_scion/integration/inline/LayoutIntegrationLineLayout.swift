@@ -155,9 +155,14 @@ class LayoutIntegration {
     return TextEdge()
   }
 
-  static func lineGrid(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.LineGrid {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  static func lineGrid(rootRenderer: RenderBlockFlowWrapper) -> BlockLayoutState.LineGrid? {
+    let layoutState = rootRenderer.view().frameView().layoutContext().layoutState()!
+    if layoutState.lineGrid() != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    return nil
   }
 
   static func flippedRectForWritingMode(root: RenderBlockFlowWrapper, rect: FloatRectWrapper)
