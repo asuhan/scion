@@ -63,8 +63,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func lowestInitialLetterLogicalBottom() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderBlockFlow_lowestInitialLetterLogicalBottom(p)
+    if !raw.is_valid {
+      return nil
+    }
+    return LayoutUnit.fromRawValue(value: raw.value)
   }
 
   struct LinePaginationAdjustment {

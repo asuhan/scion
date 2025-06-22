@@ -83,6 +83,11 @@ struct OptionalIntRaw {
     bool is_valid;
 };
 
+struct OptionalLayoutUnitRaw {
+    int32_t value;
+    bool is_valid;
+};
+
 struct EnclosingAscentDescentRaw {
     float ascent;
     float descent;
@@ -612,6 +617,7 @@ struct GlyphOverflowRaw visualOverflowForDecorations(const void*, float, float);
 struct GlyphOverflowRaw visualOverflowForDecorationsByStyle(const void*);
 void RenderBlockFlow_setStaticInlinePositionForChild(void* p, void* child_raw, int32_t block_offset_raw, int32_t inline_position_raw);
 int32_t RenderBlockFlow_endPaddingWidthForCaret(const void*);
+struct OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
 bool RenderBlock_containsFloats(const void*);

@@ -88,6 +88,21 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_endPaddingWidthForCaret(const 
     return static_cast<const WebCore::RenderBlockFlow*>(p)->endPaddingWidthForCaret().rawValue();
 }
 
+struct OptionalLayoutUnitRaw {
+    int32_t value;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT struct OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void* p)
+{
+    const auto& block = *static_cast<const WebCore::RenderBlockFlow*>(p);
+    const auto lowestInitialLetterLogicalBottom = block.lowestInitialLetterLogicalBottom();
+    if (!lowestInitialLetterLogicalBottom) {
+        return { 0, false };
+    }
+    return { lowestInitialLetterLogicalBottom->rawValue(), true };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBlockFlow);
