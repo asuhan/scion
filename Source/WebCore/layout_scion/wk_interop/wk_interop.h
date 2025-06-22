@@ -387,6 +387,7 @@ void* RenderObject_parent(void*);
 const void* RenderView_frameView(const void*);
 void* RenderView_layoutState(void*);
 bool RenderLayoutState_isPaginated(const void*);
+void* RenderLayoutState_lineGrid(const void*);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);
 struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*);
 struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);

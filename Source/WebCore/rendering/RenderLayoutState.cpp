@@ -42,6 +42,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayoutState_isPaginated(const void* p)
     return static_cast<const WebCore::RenderLayoutState*>(p)->isPaginated();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderLayoutState_lineGrid(const void* p)
+{
+    return static_cast<const WebCore::RenderLayoutState*>(p)->lineGrid();
+}
+
 struct OptionalLineClampRaw {
     uint64_t maximumLines;
     bool shouldDiscardOverflow;

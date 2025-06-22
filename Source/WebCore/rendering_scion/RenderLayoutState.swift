@@ -49,6 +49,13 @@ class RenderLayoutStateWrapper {
     return wk_interop.RenderLayoutState_isPaginated(p)
   }
 
+  func lineGrid() -> RenderBlockFlowWrapper? {
+    if let raw = wk_interop.RenderLayoutState_lineGrid(p) {
+      return RenderBlockFlowWrapper(p: raw)
+    }
+    return nil
+  }
+
   func lineClamp() -> LineClamp? {
     let raw = wk_interop.RenderLayoutState_lineClamp(p)
     if !raw.isValid {
