@@ -34,7 +34,7 @@ extension LayoutIntegration {
   struct InlineContentPainter {
     init(
       paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
-      inlineBoxWithLayer: RenderInlineWrapper, inlineContent: InlineContent, boxTree: BoxTree
+      inlineBoxWithLayer: RenderInlineWrapper?, inlineContent: InlineContent, boxTree: BoxTree
     ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -47,7 +47,7 @@ extension LayoutIntegration {
   }
 
   struct LayerPaintScope {
-    init(boxTree: BoxTree, inlineBoxWithLayer: RenderInlineWrapper) {
+    init(boxTree: BoxTree, inlineBoxWithLayer: RenderInlineWrapper?) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

@@ -681,7 +681,7 @@ class LayoutIntegration {
       }
 
       InlineContentPainter(
-        paintInfo: paintInfo, paintOffset: paintOffset, inlineBoxWithLayer: layerRenderer!,
+        paintInfo: paintInfo, paintOffset: paintOffset, inlineBoxWithLayer: layerRenderer,
         inlineContent: inlineContent!, boxTree: boxTree
       ).paint()
     }
