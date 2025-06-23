@@ -45,6 +45,13 @@ extern "C" uint64_t LineLayoutScion_lineCount(uint64_t handle);
 
 extern "C" bool LineLayoutScion_hasDetachedContent(uint64_t handle);
 
+struct LayoutPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+extern "C" void LineLayoutScion_paint(uint64_t handle, void* paint_info_raw, struct LayoutPointRaw paint_offset_raw, const void* layer_renderer_raw);
+
 namespace WebCore {
 namespace LayoutIntegration {
 
@@ -185,9 +192,13 @@ std::optional<LayoutRect> LineLayoutScion::layout()
         LayoutUnit::fromRawValue(raw.rect.height));
 }
 
-void LineLayoutScion::paint(PaintInfo&, const LayoutPoint&, const RenderInline*)
+void LineLayoutScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset, const RenderInline* layerRenderer)
 {
-    ASSERT_NOT_REACHED();
+    LayoutPointRaw paint_offset_raw {
+        paintOffset.x().rawValue(),
+        paintOffset.y().rawValue()
+    };
+    LineLayoutScion_paint(m_handle, &paintInfo, paint_offset_raw, const_cast<void*>(static_cast<const void*>(layerRenderer)));
 }
 
 bool LineLayoutScion::hitTest(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&, HitTestAction, const RenderInline*)

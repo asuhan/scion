@@ -472,3 +472,17 @@ func LineLayoutScion_lineCount(handle: UInt64) -> UInt64 {
 func LineLayoutScion_hasDetachedContent(handle: UInt64) -> Bool {
   return globalLineLayout!.hasDetachedContent()
 }
+
+@_cdecl("LineLayoutScion_paint")
+func LineLayoutScion_paint(
+  handle: UInt64, paintInfoRaw: UnsafeMutableRawPointer, paintOffset: LayoutPointRaw,
+  layerRendererRaw: UnsafeMutableRawPointer?
+) {
+  let paintInfo = PaintInfoWrapper(p: paintInfoRaw)
+  let paintOffset = LayoutPointWrapper(
+    x: LayoutUnit.fromRawValue(value: paintOffset.x),
+    y: LayoutUnit.fromRawValue(value: paintOffset.y))
+  let layerRenderer = layerRendererRaw != nil ? RenderInlineWrapper(p: layerRendererRaw!) : nil
+  globalLineLayout!.paint(
+    paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: layerRenderer)
+}
