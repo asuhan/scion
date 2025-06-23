@@ -27,6 +27,13 @@
  * Paint the object and its children, clipped by (x|y|w|h).
  * (tx|ty) is the calculated position of the parent
  */
+
+import wk_interop
+
 struct PaintInfoWrapper {
-  var phase = PaintPhase.BlockBackground
+  var phase: PaintPhase {
+    return PaintPhase(rawValue: PaintInfo_phase(p))!
+  }
+
+  let p: UnsafeMutableRawPointer
 }

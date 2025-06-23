@@ -103,6 +103,11 @@ extern "C" WEBCORE_EXPORT struct OptionalLayoutUnitRaw RenderBlockFlow_lowestIni
     return { lowestInitialLetterLogicalBottom->rawValue(), true };
 }
 
+extern "C" WEBCORE_EXPORT uint16_t PaintInfo_phase(const void* p)
+{
+    return static_cast<uint16_t>(static_cast<const WebCore::PaintInfo*>(p)->phase);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBlockFlow);
