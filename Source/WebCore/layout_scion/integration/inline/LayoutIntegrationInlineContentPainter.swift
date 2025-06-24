@@ -46,6 +46,37 @@ extension LayoutIntegration {
     }
 
     func paint() {
+      let layerPaintScope = LayerPaintScope(
+        boxTree: boxTree, inlineBoxWithLayer: inlineBoxWithLayer)
+      var lastBoxLineIndex: UInt64? = nil
+
+      for box in inlineContent.boxesForRect(rect: damageRect) {
+        if shouldPaintBoxForPhase() && layerPaintScope.includes(box: box) {
+          paintLineEndingEllipsisIfApplicable(
+            currentLineIndex: UInt64(box.lineIndex), lastBoxLineIndex: lastBoxLineIndex)
+          paintDisplayBox(box: box)
+        }
+        lastBoxLineIndex = UInt64(box.lineIndex)
+      }
+      paintLineEndingEllipsisIfApplicable(currentLineIndex: nil, lastBoxLineIndex: lastBoxLineIndex)
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func paintLineEndingEllipsisIfApplicable(
+      currentLineIndex: UInt64?, lastBoxLineIndex: UInt64?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func shouldPaintBoxForPhase() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func paintDisplayBox(box: InlineDisplay.Box) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
