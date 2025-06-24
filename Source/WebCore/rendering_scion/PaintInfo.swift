@@ -31,6 +31,15 @@
 import wk_interop
 
 struct PaintInfoWrapper {
+  var rect: LayoutRectWrapper {
+    let raw = PaintInfo_rect(p)
+    return LayoutRectWrapper(
+      x: LayoutUnit.fromRawValue(value: raw.x),
+      y: LayoutUnit.fromRawValue(value: raw.y),
+      width: LayoutUnit.fromRawValue(value: raw.width),
+      height: LayoutUnit.fromRawValue(value: raw.height))
+  }
+
   var phase: PaintPhase {
     return PaintPhase(rawValue: PaintInfo_phase(p))!
   }

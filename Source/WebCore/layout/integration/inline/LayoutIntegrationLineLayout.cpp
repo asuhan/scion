@@ -160,6 +160,16 @@ struct LayoutRectRaw {
 
 extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
 extern "C" struct LayoutRectRaw LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool, struct OptionalIntRaw);
+extern "C" struct LayoutRectRaw PaintInfo_rect(const void* p)
+{
+    auto& paintInfo = *static_cast<const WebCore::PaintInfo*>(p);
+    return {
+        paintInfo.rect.x().rawValue(),
+        paintInfo.rect.y().rawValue(),
+        paintInfo.rect.width().rawValue(),
+        paintInfo.rect.height().rawValue()
+    };
+}
 
 namespace {
 
