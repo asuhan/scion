@@ -36,14 +36,26 @@ extension LayoutIntegration {
       paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
       inlineBoxWithLayer: RenderInlineWrapper?, inlineContent: InlineContent, boxTree: BoxTree
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.paintInfo = paintInfo
+      self.paintOffset = paintOffset
+      self.inlineBoxWithLayer = inlineBoxWithLayer
+      self.inlineContent = inlineContent
+      self.boxTree = boxTree
+      self.damageRect = paintInfo.rect
+      self.damageRect.moveBy(offset: -self.paintOffset)
     }
 
     func paint() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let paintInfo: PaintInfoWrapper
+    private let paintOffset: LayoutPointWrapper
+    private var damageRect: LayoutRectWrapper
+    private let inlineBoxWithLayer: RenderInlineWrapper?
+    private let inlineContent: InlineContent
+    private let boxTree: BoxTree
   }
 
   struct LayerPaintScope {
