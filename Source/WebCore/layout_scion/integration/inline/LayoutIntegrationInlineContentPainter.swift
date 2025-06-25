@@ -91,13 +91,21 @@ extension LayoutIntegration {
 
   struct LayerPaintScope {
     init(boxTree: BoxTree, inlineBoxWithLayer: RenderInlineWrapper?) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.boxTree = boxTree
+      if let inlineBoxWithLayer = inlineBoxWithLayer {
+        self.inlineBoxWithLayer = inlineBoxWithLayer.layoutBox()
+      } else {
+        self.inlineBoxWithLayer = nil
+      }
     }
 
     func includes(box: InlineDisplay.Box) -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let boxTree: BoxTree
+    private let inlineBoxWithLayer: ElementBoxWrapper?
+    private var currentExcludedInlineBox: ElementBoxWrapper? = nil
   }
 }
