@@ -67,8 +67,18 @@ extension LayoutIntegration {
     private func paintLineEndingEllipsisIfApplicable(
       currentLineIndex: UInt64?, lastBoxLineIndex: UInt64?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Since line ending ellipsis belongs to the line structure but we don't have the concept of painting the line itself
+      // let's paint it when we are either at the end of the content or finished painting a line with ellipsis.
+      // While normally ellipsis is on the last line, -webkit-line-clamp can make us put ellipsis on any line.
+      if inlineBoxWithLayer != nil {
+        // Line ending ellipsis is never on the inline box (with layer).
+        return
+      }
+      if let lastBoxLineIndex = lastBoxLineIndex {
+        if currentLineIndex == nil || lastBoxLineIndex != currentLineIndex! {
+          paintEllipsis(lineIndex: lastBoxLineIndex)
+        }
+      }
     }
 
     private func shouldPaintBoxForPhase(box: InlineDisplay.Box) -> Bool {
@@ -87,6 +97,11 @@ extension LayoutIntegration {
     }
 
     private func paintDisplayBox(box: InlineDisplay.Box) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func paintEllipsis(lineIndex: UInt64) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
