@@ -51,7 +51,7 @@ extension LayoutIntegration {
       var lastBoxLineIndex: UInt64? = nil
 
       for box in inlineContent.boxesForRect(rect: damageRect) {
-        if shouldPaintBoxForPhase() && layerPaintScope.includes(box: box) {
+        if shouldPaintBoxForPhase(box: box) && layerPaintScope.includes(box: box) {
           paintLineEndingEllipsisIfApplicable(
             currentLineIndex: UInt64(box.lineIndex), lastBoxLineIndex: lastBoxLineIndex)
           paintDisplayBox(box: box)
@@ -71,9 +71,19 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
-    private func shouldPaintBoxForPhase() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    private func shouldPaintBoxForPhase(box: InlineDisplay.Box) -> Bool {
+      switch paintInfo.phase {
+      case .ChildOutlines:
+        return box.isNonRootInlineBox()
+      case .SelfOutline:
+        return box.isRootInlineBox()
+      case .Outline:
+        return box.isInlineBox()
+      case .Mask:
+        return box.isInlineBox()
+      default:
+        return true
+      }
     }
 
     private func paintDisplayBox(box: InlineDisplay.Box) {
