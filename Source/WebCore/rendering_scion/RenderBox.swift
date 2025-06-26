@@ -146,6 +146,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
+    -> LayoutPointWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func flipForWritingMode(position: LayoutPointWrapper) -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

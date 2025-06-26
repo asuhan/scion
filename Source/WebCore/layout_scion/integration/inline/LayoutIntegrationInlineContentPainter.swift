@@ -24,13 +24,6 @@
  */
 
 extension LayoutIntegration {
-  static func flippedContentOffsetIfNeeded(
-    root: RenderBlockFlowWrapper, childRenderer: RenderBoxWrapper, contentOffset: LayoutPointWrapper
-  ) -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   struct InlineContentPainter {
     init(
       paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,

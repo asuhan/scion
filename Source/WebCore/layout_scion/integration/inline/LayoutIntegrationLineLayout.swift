@@ -172,6 +172,15 @@ class LayoutIntegration {
     return nil
   }
 
+  static func flippedContentOffsetIfNeeded(
+    root: RenderBlockFlowWrapper, childRenderer: RenderBoxWrapper, contentOffset: LayoutPointWrapper
+  ) -> LayoutPointWrapper {
+    if root.style().isFlippedBlocksWritingMode() {
+      return root.flipForWritingModeForChild(child: childRenderer, point: contentOffset)
+    }
+    return contentOffset
+  }
+
   static func flippedRectForWritingMode(root: RenderBlockFlowWrapper, rect: FloatRectWrapper)
     -> LayoutRectWrapper
   {
