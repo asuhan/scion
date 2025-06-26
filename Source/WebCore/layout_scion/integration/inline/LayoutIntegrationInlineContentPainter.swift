@@ -99,6 +99,16 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    private func flippedContentOffsetIfNeeded(childRenderer: RenderBoxWrapper) -> LayoutPointWrapper
+    {
+      if root().style().isFlippedBlocksWritingMode() {
+        return root().flipForWritingModeForChild(child: childRenderer, point: paintOffset)
+      }
+      return paintOffset
+    }
+
+    private func root() -> RenderBlockWrapper { return boxTree.rootRenderer }
+
     private let paintInfo: PaintInfoWrapper
     private let paintOffset: LayoutPointWrapper
     private var damageRect: LayoutRectWrapper
