@@ -703,7 +703,7 @@ class LayoutIntegration {
       hitTestBoundingBox.moveBy(offset: -accumulatedOffset)
       let boxRange = inlineContent!.boxesForRect(rect: hitTestBoundingBox)
 
-      let layerPaintScope = LayerPaintScope(boxTree: boxTree, inlineBoxWithLayer: layerRenderer)
+      var layerPaintScope = LayerPaintScope(boxTree: boxTree, inlineBoxWithLayer: layerRenderer)
 
       for box in boxRange.reversed() {
         let visibleForHitTesting =

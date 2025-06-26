@@ -46,7 +46,7 @@ extension LayoutIntegration {
     }
 
     func paint() {
-      let layerPaintScope = LayerPaintScope(
+      var layerPaintScope = LayerPaintScope(
         boxTree: boxTree, inlineBoxWithLayer: inlineBoxWithLayer)
       var lastBoxLineIndex: UInt64? = nil
 
@@ -124,9 +124,61 @@ extension LayoutIntegration {
       }
     }
 
-    func includes(box: InlineDisplay.Box) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    mutating func includes(box: InlineDisplay.Box) -> Bool {
+      if CPtrToInt(inlineBoxWithLayer?.p) == CPtrToInt(box.layoutBox.p) {
+        return true
+      }
+
+      if let inlineBoxWithLayer = inlineBoxWithLayer {
+        if !LayerPaintScope.displayBoxIsInsideInlineBox(
+          displayBox: box, inlineBox: inlineBoxWithLayer)
+        {
+          return false
+        }
+      }
+      if let currentExcludedInlineBox = currentExcludedInlineBox {
+        if LayerPaintScope.displayBoxIsInsideInlineBox(
+          displayBox: box, inlineBox: currentExcludedInlineBox)
+        {
+          return false
+        }
+      }
+
+      currentExcludedInlineBox = nil
+
+      if box.isRootInlineBox() || box.isText() || box.isLineBreak() {
+        return true
+      }
+
+      var hasSelfPaintingLayer = false
+      if let renderer = box.layoutBox.rendererForIntegration() as? RenderLayerModelObjectWrapper {
+        hasSelfPaintingLayer = renderer.hasSelfPaintingLayer()
+      }
+
+      if hasSelfPaintingLayer && box.isNonRootInlineBox() {
+        currentExcludedInlineBox = (box.layoutBox as! ElementBoxWrapper)
+      }
+
+      return !hasSelfPaintingLayer
+    }
+
+    private static func displayBoxIsInsideInlineBox(
+      displayBox: InlineDisplay.Box, inlineBox: ElementBoxWrapper
+    ) -> Bool {
+      assert(inlineBox.isInlineBox())
+
+      if displayBox.isRootInlineBox() {
+        return false
+      }
+
+      var box = displayBox.layoutBox.parent()
+      while box.isInlineBox() {
+        if CPtrToInt(box.p) == CPtrToInt(inlineBox.p) {
+          return true
+        }
+        box = box.parent()
+      }
+      return false
     }
 
     private let boxTree: BoxTree
