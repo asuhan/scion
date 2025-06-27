@@ -46,8 +46,7 @@ extension LayoutIntegration {
     }
 
     func formattingContextRoot() -> RenderBlockFlowWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return lineLayout!.flow()
     }
 
     func firstBoxForLayoutBox(layoutBox: BoxWrapper) -> InlineDisplay.Box? {
