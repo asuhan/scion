@@ -76,6 +76,10 @@ extension InlineDisplay {
       return lineBoxRect.y()
     }
 
+    func lineBoxBottom() -> Float32 {
+      return lineBoxRect.maxY()
+    }
+
     func lineBoxLeft() -> Float32 {
       return lineBoxRect.x()
     }
