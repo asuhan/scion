@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    EllipsisBoxPainter.swift
     FloatingObjects.swift
     HitTestLocation.swift
     HitTestRequest.swift

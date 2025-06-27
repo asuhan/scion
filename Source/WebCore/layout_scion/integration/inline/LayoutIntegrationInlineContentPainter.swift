@@ -95,8 +95,20 @@ extension LayoutIntegration {
     }
 
     private func paintEllipsis(lineIndex: UInt64) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if (paintInfo.phase != .Foreground && paintInfo.phase != .TextClip)
+        || root().style().usedVisibility() != .Visible
+      {
+        return
+      }
+      let lineBox = InlineIterator.LineBox(
+        path: InlineIterator.LineBoxIteratorModernPath(
+          inlineContent: inlineContent, lineIndex: lineIndex)
+      )
+      EllipsisBoxPainter(
+        lineBox: lineBox, paintInfo: paintInfo, paintOffset: paintOffset,
+        selectionForegroundColor: root().selectionForegroundColor(),
+        selectionBackgroundColor: root().selectionBackgroundColor()
+      ).paint()
     }
 
     private func flippedContentOffsetIfNeeded(childRenderer: RenderBoxWrapper) -> LayoutPointWrapper

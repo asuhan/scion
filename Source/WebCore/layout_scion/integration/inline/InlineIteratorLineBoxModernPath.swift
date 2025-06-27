@@ -23,35 +23,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class InlineIterator {
-  struct LineBox {
-    init(path: LineBoxIteratorModernPath) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+extension InlineIterator {
+
+  class LineBoxIteratorModernPath {
+    init(inlineContent: LayoutIntegration.InlineContent, lineIndex: UInt64) {
+      self.inlineContent = inlineContent
+      self.lineIndex = lineIndex
     }
 
-    func logicalBottom() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    private let inlineContent: LayoutIntegration.InlineContent?
+    private let lineIndex: UInt64
   }
 
-  class LineBoxIterator: IteratorProtocol {
-    func next() -> LineBox? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-  }
-
-  static func firstLineBoxFor(flow: RenderBlockFlowWrapper) -> LineBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func lineBoxFor(inlineContent: LayoutIntegration.InlineContent, lineIndex: UInt64)
-    -> LineBoxIterator
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
 }

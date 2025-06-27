@@ -41,6 +41,17 @@ class RenderElementWrapper: RenderObjectWrapper {
     return super.layoutBox() as? ElementBoxWrapper
   }
 
+  // Obtains the selection colors that should be used when painting a selection.
+  func selectionBackgroundColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func selectionForegroundColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
