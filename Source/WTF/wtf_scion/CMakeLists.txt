@@ -1,5 +1,6 @@
 target_sources(layout_scion PRIVATE
     ASCIICType.swift
+    IteratorRange.swift
     MathExtras.swift
     PriorityQueue.swift
     SaturatedArithmetic.swift
