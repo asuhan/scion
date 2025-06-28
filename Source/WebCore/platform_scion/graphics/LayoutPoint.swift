@@ -98,3 +98,13 @@ struct LayoutPointWrapper: Equatable {
 func toLayoutSize(point: LayoutPointWrapper) -> LayoutSizeWrapper {
   return LayoutSizeWrapper(width: point.x, height: point.y)
 }
+
+func flooredLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
+  return LayoutPointWrapper(
+    x: LayoutUnit.fromFloatFloor(value: p.x), y: LayoutUnit.fromFloatFloor(value: p.y))
+}
+
+func ceiledLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
+  return LayoutPointWrapper(
+    x: LayoutUnit.fromFloatCeil(value: p.x), y: LayoutUnit.fromFloatCeil(value: p.y))
+}

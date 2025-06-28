@@ -122,3 +122,10 @@ struct LayoutRectWrapper {
   private var m_location = LayoutPointWrapper()
   private var m_size = LayoutSizeWrapper()
 }
+
+func enclosingLayoutRect(rect: FloatRectWrapper) -> LayoutRectWrapper {
+  let location = flooredLayoutPoint(p: rect.minXMinYCorner())
+  let maxPoint = ceiledLayoutPoint(p: rect.maxXMaxYCorner())
+
+  return LayoutRectWrapper(location: location, size: maxPoint - location)
+}

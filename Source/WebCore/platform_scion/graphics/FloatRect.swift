@@ -117,6 +117,10 @@ struct FloatRectWrapper {
 
   func minXMinYCorner() -> FloatPoint { return m_location }
 
+  func maxXMaxYCorner() -> FloatPoint {
+    return FloatPoint(x: m_location.x + m_size.width, y: m_location.y + m_size.height)
+  }
+
   func intersects(other: FloatRectWrapper) -> Bool {
     // Checking emptiness handles negative widths and heights as well as zero.
     return !isEmpty() && !other.isEmpty()
