@@ -31,6 +31,11 @@
 import wk_interop
 
 struct PaintInfoWrapper {
+  func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var rect: LayoutRectWrapper {
     let raw = PaintInfo_rect(p)
     return LayoutRectWrapper(

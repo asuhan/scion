@@ -111,12 +111,26 @@ extension LayoutIntegration {
       }
 
       if box.isText() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let hasVisibleDamage = box.text().length != 0 && box.isVisible() && boxHasDamage(box: box)
+        if !hasVisibleDamage {
+          return
+        }
+        ModernTextBoxPainterWrapper(
+          inlineContent: inlineContent, box: box, paintInfo: paintInfo, paintOffset: paintOffset
+        ).paint()
+        return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let renderer = box.layoutBox.rendererForIntegration() as? RenderBoxWrapper {
+        if !renderer.isReplacedOrInlineBlock() {
+          return
+        }
+        if paintInfo.shouldPaintWithinRoot(renderer: renderer) {
+          // FIXME: Painting should not require a non-const renderer.
+          renderer.paintAsInlineBlock(
+            paintInfo: paintInfo, childPoint: flippedContentOffsetIfNeeded(childRenderer: renderer))
+        }
+      }
     }
 
     private func boxHasDamage(box: InlineDisplay.Box) -> Bool {

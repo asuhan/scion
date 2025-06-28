@@ -123,6 +123,11 @@ class RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isReplacedOrInlineBlock() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isHorizontalWritingMode() -> Bool {
     return wk_interop.RenderObject_isHorizontalWritingMode(p)
   }
