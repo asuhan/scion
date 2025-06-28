@@ -117,6 +117,12 @@ struct LayoutUnit: Comparable {
     return v
   }
 
+  static func fromFloatFloor(value: Float32) -> LayoutUnit {
+    var v = LayoutUnit()
+    v.value = clampToInteger(value: floorf(value * Float32(kFixedPointDenominator)))
+    return v
+  }
+
   static func < (lhs: LayoutUnit, rhs: LayoutUnit) -> Bool {
     return lhs.rawValue() < rhs.rawValue()
   }
