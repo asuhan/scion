@@ -90,6 +90,36 @@ extension LayoutIntegration {
     }
 
     private func paintDisplayBox(box: InlineDisplay.Box) {
+      if box.isFullyTruncated {
+        // Fully truncated boxes are visually empty and they don't show their descendants either (unlike visibility property).
+        return
+      }
+
+      if box.isLineBreak() {
+        return
+      }
+
+      if box.isInlineBox() {
+        if !box.isVisible() || !boxHasDamage(box: box) {
+          return
+        }
+
+        var inlineBoxPaintInfo = paintInfo.deepCopy()
+        inlineBoxPaintInfo.phase = paintInfo.phase == .ChildOutlines ? .Outline : paintInfo.phase
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if box.isText() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func boxHasDamage(box: InlineDisplay.Box) -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

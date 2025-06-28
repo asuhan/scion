@@ -41,7 +41,18 @@ struct PaintInfoWrapper {
   }
 
   var phase: PaintPhase {
-    return PaintPhase(rawValue: PaintInfo_phase(p))!
+    get {
+      return PaintPhase(rawValue: PaintInfo_phase(p))!
+    }
+    set {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  func deepCopy() -> PaintInfoWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   let p: UnsafeMutableRawPointer
