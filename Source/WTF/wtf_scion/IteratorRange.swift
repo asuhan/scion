@@ -24,7 +24,7 @@
  */
 
 class IteratorRange<Iterator: Equatable & IteratorProtocol>: Sequence, IteratorProtocol {
-  init(begin: Iterator, end: Iterator) {
+  init(begin: Iterator?, end: Iterator?) {
     self.begin = begin
     self.end = end
     self.current = begin
@@ -34,10 +34,10 @@ class IteratorRange<Iterator: Equatable & IteratorProtocol>: Sequence, IteratorP
     if current == end {
       return nil
     }
-    return current.next()
+    return current!.next()
   }
 
-  private let begin: Iterator
-  private let end: Iterator
-  private var current: Iterator
+  private let begin: Iterator?
+  private let end: Iterator?
+  private var current: Iterator?
 }

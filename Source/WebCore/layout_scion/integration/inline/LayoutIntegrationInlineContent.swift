@@ -37,6 +37,19 @@ extension LayoutIntegration {
     func setHasVisualOverflow() { hasVisualOverflow = true }
 
     func boxesForRect(rect: LayoutRectWrapper) -> any Sequence<InlineDisplay.Box> {
+      if displayContent.boxes.isEmpty {
+        return IteratorRange<InlineDisplayBoxIterator>(begin: nil, end: nil)
+      }
+
+      let boxes = displayContent.boxes
+
+      // FIXME: Do the flips.
+      if formattingContextRoot().style().isFlippedBlocksWritingMode() {
+        return IteratorRange(
+          begin: InlineDisplayBoxIterator.first(boxes: boxes),
+          end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -75,5 +88,22 @@ extension LayoutIntegration {
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
     var hasVisualOverflow = false
+  }
+
+  private struct InlineDisplayBoxIterator: IteratorProtocol, Equatable {
+    func next() -> InlineDisplay.Box? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static func first(boxes: [InlineDisplay.Box]) -> InlineDisplayBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static func pastLast(boxes: [InlineDisplay.Box]) -> InlineDisplayBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 }
