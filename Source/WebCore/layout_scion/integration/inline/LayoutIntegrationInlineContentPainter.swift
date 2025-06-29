@@ -110,8 +110,11 @@ extension LayoutIntegration {
         inlineBoxPaintInfo.phase = paintInfo.phase == .ChildOutlines ? .Outline : paintInfo.phase
         inlineBoxPaintInfo.outlineObjects = outlineObjects
 
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        InlineBoxPainter(
+          inlineContent: inlineContent, box: box, paintInfo: inlineBoxPaintInfo,
+          paintOffset: paintOffset
+        ).paint()
+        return
       }
 
       if box.isText() {
