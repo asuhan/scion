@@ -20,4 +20,9 @@
  *
  */
 
-class RenderInlineWrapper: RenderBoxModelObjectWrapper {}
+class RenderInlineWrapper: RenderBoxModelObjectWrapper {
+  func paintOutline(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -36,6 +36,7 @@ extension LayoutIntegration {
       self.boxTree = boxTree
       self.damageRect = paintInfo.rect
       self.damageRect.moveBy(offset: -self.paintOffset)
+      self.outlineObjects = ListSet<RenderInlineWrapper, UInt>()
     }
 
     func paint() {
@@ -53,8 +54,9 @@ extension LayoutIntegration {
       }
       paintLineEndingEllipsisIfApplicable(currentLineIndex: nil, lastBoxLineIndex: lastBoxLineIndex)
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      for renderInline in outlineObjects {
+        renderInline.paintOutline(paintInfo: paintInfo, paintOffset: paintOffset)
+      }
     }
 
     private func paintLineEndingEllipsisIfApplicable(
@@ -106,6 +108,8 @@ extension LayoutIntegration {
 
         var inlineBoxPaintInfo = paintInfo.deepCopy()
         inlineBoxPaintInfo.phase = paintInfo.phase == .ChildOutlines ? .Outline : paintInfo.phase
+        inlineBoxPaintInfo.outlineObjects = outlineObjects
+
         // TODO(asuhan): implement this
         fatalError("Not implemented")
       }
@@ -173,6 +177,7 @@ extension LayoutIntegration {
     private let inlineBoxWithLayer: RenderInlineWrapper?
     private let inlineContent: InlineContent
     private let boxTree: BoxTree
+    private let outlineObjects: ListSet<RenderInlineWrapper, UInt>
   }
 
   struct LayerPaintScope {

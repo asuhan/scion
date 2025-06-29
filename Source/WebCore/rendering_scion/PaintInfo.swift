@@ -60,5 +60,6 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
+  public var outlineObjects: ListSet<RenderInlineWrapper, UInt>?
   let p: UnsafeMutableRawPointer
 }
