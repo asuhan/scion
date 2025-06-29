@@ -41,10 +41,26 @@ extension LayoutIntegration {
         return IteratorRange<InlineDisplayBoxIterator>(begin: nil, end: nil)
       }
 
+      let lines = displayContent.lines
       let boxes = displayContent.boxes
 
       // FIXME: Do the flips.
       if formattingContextRoot().style().isFlippedBlocksWritingMode() {
+        return IteratorRange(
+          begin: InlineDisplayBoxIterator.first(boxes: boxes),
+          end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
+      }
+
+      if lines.first!.inkOverflow.maxY() > rect.y()
+        && lines.last!.inkOverflow.y() < rect.maxY()
+      {
+        return IteratorRange(
+          begin: InlineDisplayBoxIterator.first(boxes: boxes),
+          end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
+      }
+
+      // The optimization below relies on line paint bounds not exeeding those of the neighboring lines
+      if hasMultilinePaintOverlap {
         return IteratorRange(
           begin: InlineDisplayBoxIterator.first(boxes: boxes),
           end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
