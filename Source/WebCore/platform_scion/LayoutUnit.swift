@@ -147,6 +147,10 @@ struct LayoutUnit: Comparable {
     return lhs > LayoutUnit(value: rhs)
   }
 
+  static func > (lhs: Float32, rhs: LayoutUnit) -> Bool {
+    return lhs > rhs.toFloat()
+  }
+
   func rawValue() -> Int32 { return value }
 
   func ceil() -> Int32 {
