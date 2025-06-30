@@ -110,8 +110,10 @@ extension LayoutIntegration {
     }
 
     func firstBoxForLayoutBox(layoutBox: BoxWrapper) -> InlineDisplay.Box? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let index = firstBoxIndexForLayoutBox(layoutBox: layoutBox) {
+        return displayContent.boxes[Int(index)]
+      }
+      return nil
     }
 
     func traverseNonRootInlineBoxes<Function>(layoutBox: BoxWrapper, function: Function) {
