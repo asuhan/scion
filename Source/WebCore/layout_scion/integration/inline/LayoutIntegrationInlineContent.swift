@@ -119,6 +119,33 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    func firstBoxIndexForLayoutBox(layoutBox: BoxWrapper) -> UInt64? {
+      let boxes = displayContent.boxes
+
+      if boxes.count < InlineContent.cacheThreshold {
+        for (i, box) in boxes.enumerated() {
+          if CPtrToInt(box.layoutBox.p) == CPtrToInt(layoutBox.p) {
+            return UInt64(i)
+          }
+        }
+        return nil
+      }
+
+      if firstBoxIndexCache == nil {
+        firstBoxIndexCache = [:]
+        for (i, box) in boxes.enumerated() {
+          if box.isRootInlineBox() {
+            continue
+          }
+          let replacedValue = firstBoxIndexCache!.updateValue(
+            UInt64(i), forKey: CPtrToInt(box.layoutBox.p))
+          assert(replacedValue == nil)
+        }
+      }
+
+      return firstBoxIndexCache![CPtrToInt(layoutBox.p)]
+    }
+
     func releaseCaches() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -132,6 +159,8 @@ extension LayoutIntegration {
     var hasMultilinePaintOverlap = false
 
     var displayContent = InlineDisplay.Content()
+    private var firstBoxIndexCache: [UInt: UInt64]? = nil
+    private static var cacheThreshold = 16
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
     var hasVisualOverflow = false
