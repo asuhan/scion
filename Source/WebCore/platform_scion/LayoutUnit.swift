@@ -99,6 +99,10 @@ struct LayoutUnit: Comparable {
     return a / LayoutUnit(value: b)
   }
 
+  static func / (a: LayoutUnit, b: Float32) -> Float32 {
+    return a.toFloat() / b
+  }
+
   static func / (a: LayoutUnit, b: UInt64) -> LayoutUnit {
     return a / LayoutUnit(value: b)
   }

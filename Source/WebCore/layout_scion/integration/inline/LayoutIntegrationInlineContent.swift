@@ -66,8 +66,39 @@ extension LayoutIntegration {
           end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let height = lines.last!.lineBoxBottom() - lines.first!.lineBoxTop()
+      let averageLineHeight = height / Float32(lines.count)
+
+      var startLine = InlineContent.approximateLine(
+        y: rect.y(), averageLineHeight: averageLineHeight, lines: lines)
+      while startLine != 0 {
+        if lines[Int(startLine - 1)].inkOverflow.maxY() < rect.y() {
+          break
+        }
+        startLine -= 1
+      }
+
+      var endLine = InlineContent.approximateLine(
+        y: rect.maxY(), averageLineHeight: averageLineHeight, lines: lines)
+      while endLine < lines.count - 1 {
+        if lines[Int(endLine + 1)].inkOverflow.y() > rect.maxY() {
+          break
+        }
+        endLine += 1
+      }
+
+      let firstBox = lines[Int(startLine)].firstBoxIndex()
+      let lastBox = lines[Int(endLine)].firstBoxIndex() + lines[Int(endLine)].boxCount() - 1
+
+      return IteratorRange<InlineDisplayBoxIterator>(
+        begin: InlineDisplayBoxIterator.at(index: firstBox),
+        end: InlineDisplayBoxIterator.at(index: lastBox + 1))
+    }
+
+    private static func approximateLine(
+      y: LayoutUnit, averageLineHeight: Float32, lines: [InlineDisplay.Line]
+    ) -> UInt64 {
+      return UInt64(min(Int(max(y, LayoutUnit(value: 0)) / averageLineHeight), lines.count - 1))
     }
 
     func shrinkToFit() {
@@ -118,6 +149,11 @@ extension LayoutIntegration {
     }
 
     static func pastLast(boxes: [InlineDisplay.Box]) -> InlineDisplayBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static func at(index: UInt64) -> InlineDisplayBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
