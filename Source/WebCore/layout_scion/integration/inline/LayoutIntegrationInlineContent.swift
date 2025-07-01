@@ -148,9 +148,40 @@ extension LayoutIntegration {
       return firstBoxIndexCache![CPtrToInt(layoutBox.p)]
     }
 
+    func nonRootInlineBoxIndexesForLayoutBox(layoutBox: BoxWrapper) -> VectorRef<UInt64> {
+      assert(layoutBox.isElementBox())
+
+      if inlineBoxIndexCache == nil {
+        inlineBoxIndexCache = [:]
+        for (i, box) in displayContent.boxes.enumerated() {
+          if !box.isNonRootInlineBox() {
+            continue
+          }
+          let layoutBoxKey = CPtrToInt(box.layoutBox.p)
+          if let indices = inlineBoxIndexCache![layoutBoxKey] {
+            indices.v!.append(UInt64(i))
+          } else {
+            inlineBoxIndexCache![layoutBoxKey] = VectorRef(v: [UInt64(i)])
+          }
+        }
+      }
+
+      if let indices = inlineBoxIndexCache![CPtrToInt(layoutBox.p)] {
+        return indices
+      }
+
+      return InlineContent.emptyUInt64Vector
+    }
+
     func releaseCaches() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
+    }
+
+    public class VectorRef<T> {
+      public init(v: [T]) { self.v = v }
+
+      public var v: [T]? = nil
     }
 
     var clearGapBeforeFirstLine: Float32 = 0
@@ -162,6 +193,8 @@ extension LayoutIntegration {
 
     var displayContent = InlineDisplay.Content()
     private var firstBoxIndexCache: [UInt: UInt64]? = nil
+    private var inlineBoxIndexCache: [UInt: VectorRef<UInt64>]? = nil
+    private static let emptyUInt64Vector = VectorRef<UInt64>(v: [])
     private static var cacheThreshold = 16
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
