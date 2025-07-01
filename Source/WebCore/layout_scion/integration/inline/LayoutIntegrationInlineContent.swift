@@ -195,7 +195,7 @@ extension LayoutIntegration {
     private var firstBoxIndexCache: [UInt: UInt64]? = nil
     private var inlineBoxIndexCache: [UInt: VectorRef<UInt64>]? = nil
     private static let emptyUInt64Vector = VectorRef<UInt64>(v: [])
-    private static var cacheThreshold = 16
+    private static let cacheThreshold = 16
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
     var hasVisualOverflow = false
