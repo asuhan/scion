@@ -174,8 +174,8 @@ extension LayoutIntegration {
     }
 
     func releaseCaches() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      firstBoxIndexCache = nil
+      inlineBoxIndexCache = nil
     }
 
     public class VectorRef<T> {
