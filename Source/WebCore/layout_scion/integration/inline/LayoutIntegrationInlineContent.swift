@@ -116,9 +116,12 @@ extension LayoutIntegration {
       return nil
     }
 
-    func traverseNonRootInlineBoxes<Function>(layoutBox: BoxWrapper, function: Function) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    func traverseNonRootInlineBoxes(
+      layoutBox: BoxWrapper, function: (_ inlineBox: InlineDisplay.Box) -> Void
+    ) {
+      for index in nonRootInlineBoxIndexesForLayoutBox(layoutBox: layoutBox).v! {
+        function(displayContent.boxes[Int(index)])
+      }
     }
 
     func firstBoxIndexForLayoutBox(layoutBox: BoxWrapper) -> UInt64? {
