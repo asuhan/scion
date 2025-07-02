@@ -119,7 +119,7 @@ extension LayoutIntegration {
     func traverseNonRootInlineBoxes(
       layoutBox: BoxWrapper, function: (_ inlineBox: InlineDisplay.Box) -> Void
     ) {
-      for index in nonRootInlineBoxIndexesForLayoutBox(layoutBox: layoutBox).v! {
+      for index in nonRootInlineBoxIndexesForLayoutBox(layoutBox: layoutBox) {
         function(displayContent.boxes[Int(index)])
       }
     }
@@ -151,7 +151,7 @@ extension LayoutIntegration {
       return firstBoxIndexCache![CPtrToInt(layoutBox.p)]
     }
 
-    func nonRootInlineBoxIndexesForLayoutBox(layoutBox: BoxWrapper) -> VectorRef<UInt64> {
+    func nonRootInlineBoxIndexesForLayoutBox(layoutBox: BoxWrapper) -> ArraySlice<UInt64> {
       assert(layoutBox.isElementBox())
 
       if inlineBoxIndexCache == nil {
@@ -161,10 +161,10 @@ extension LayoutIntegration {
             continue
           }
           let layoutBoxKey = CPtrToInt(box.layoutBox.p)
-          if let indices = inlineBoxIndexCache![layoutBoxKey] {
-            indices.v!.append(UInt64(i))
+          if var indices = inlineBoxIndexCache![layoutBoxKey] {
+            indices.append(UInt64(i))
           } else {
-            inlineBoxIndexCache![layoutBoxKey] = VectorRef(v: [UInt64(i)])
+            inlineBoxIndexCache![layoutBoxKey] = [UInt64(i)]
           }
         }
       }
@@ -173,18 +173,12 @@ extension LayoutIntegration {
         return indices
       }
 
-      return InlineContent.emptyUInt64Vector
+      return InlineContent.emptyUInt64Slice
     }
 
     func releaseCaches() {
       firstBoxIndexCache = nil
       inlineBoxIndexCache = nil
-    }
-
-    public class VectorRef<T> {
-      public init(v: [T]) { self.v = v }
-
-      public var v: [T]? = nil
     }
 
     var clearGapBeforeFirstLine: Float32 = 0
@@ -196,8 +190,8 @@ extension LayoutIntegration {
 
     var displayContent = InlineDisplay.Content()
     private var firstBoxIndexCache: [UInt: UInt64]? = nil
-    private var inlineBoxIndexCache: [UInt: VectorRef<UInt64>]? = nil
-    private static let emptyUInt64Vector = VectorRef<UInt64>(v: [])
+    private var inlineBoxIndexCache: [UInt: ArraySlice<UInt64>]? = nil
+    private static let emptyUInt64Slice: ArraySlice<UInt64> = [][...]
     private static let cacheThreshold = 16
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
