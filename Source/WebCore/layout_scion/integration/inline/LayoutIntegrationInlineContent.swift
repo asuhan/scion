@@ -41,8 +41,8 @@ extension LayoutIntegration {
         return IteratorRange<InlineDisplayBoxIterator>(begin: nil, end: nil)
       }
 
-      let lines = displayContent.lines
-      let boxes = displayContent.boxes
+      let lines = displayContent.lines[...]
+      let boxes = displayContent.boxes[...]
 
       // FIXME: Do the flips.
       if formattingContextRoot().style().isFlippedBlocksWritingMode() {
@@ -96,7 +96,7 @@ extension LayoutIntegration {
     }
 
     private static func approximateLine(
-      y: LayoutUnit, averageLineHeight: Float32, lines: [InlineDisplay.Line]
+      y: LayoutUnit, averageLineHeight: Float32, lines: ArraySlice<InlineDisplay.Line>
     ) -> UInt64 {
       return UInt64(min(Int(max(y, LayoutUnit(value: 0)) / averageLineHeight), lines.count - 1))
     }
@@ -204,12 +204,12 @@ extension LayoutIntegration {
       fatalError("Not implemented")
     }
 
-    static func first(boxes: [InlineDisplay.Box]) -> InlineDisplayBoxIterator {
+    static func first(boxes: ArraySlice<InlineDisplay.Box>) -> InlineDisplayBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    static func pastLast(boxes: [InlineDisplay.Box]) -> InlineDisplayBoxIterator {
+    static func pastLast(boxes: ArraySlice<InlineDisplay.Box>) -> InlineDisplayBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
