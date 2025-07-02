@@ -91,8 +91,8 @@ extension LayoutIntegration {
       let lastBox = lines[Int(endLine)].firstBoxIndex() + lines[Int(endLine)].boxCount() - 1
 
       return IteratorRange<InlineDisplayBoxIterator>(
-        begin: InlineDisplayBoxIterator.at(index: firstBox),
-        end: InlineDisplayBoxIterator.at(index: lastBox + 1))
+        begin: InlineDisplayBoxIterator.at(boxes: boxes, index: firstBox),
+        end: InlineDisplayBoxIterator.at(boxes: boxes, index: lastBox + 1))
     }
 
     private static func approximateLine(
@@ -199,24 +199,38 @@ extension LayoutIntegration {
   }
 
   private struct InlineDisplayBoxIterator: IteratorProtocol, Equatable {
-    func next() -> InlineDisplay.Box? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    init(boxes: ArraySlice<InlineDisplay.Box>, currentIndex: Int = 0) {
+      self.currentIndex = currentIndex
+      self.boxes = boxes
+    }
+
+    static func == (lhs: InlineDisplayBoxIterator, rhs: InlineDisplayBoxIterator) -> Bool {
+      return lhs.currentIndex == rhs.currentIndex
+    }
+
+    mutating func next() -> InlineDisplay.Box? {
+      if self.currentIndex < boxes.count {
+        let box = boxes[currentIndex]
+        currentIndex += 1
+        return box
+      }
+      return nil
     }
 
     static func first(boxes: ArraySlice<InlineDisplay.Box>) -> InlineDisplayBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return InlineDisplayBoxIterator(boxes: boxes)
     }
 
     static func pastLast(boxes: ArraySlice<InlineDisplay.Box>) -> InlineDisplayBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return InlineDisplayBoxIterator(boxes: boxes, currentIndex: boxes.count)
     }
 
-    static func at(index: UInt64) -> InlineDisplayBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    static func at(boxes: ArraySlice<InlineDisplay.Box>, index: UInt64) -> InlineDisplayBoxIterator
+    {
+      return InlineDisplayBoxIterator(boxes: boxes, currentIndex: Int(index))
     }
+
+    private var currentIndex: Int
+    private var boxes: ArraySlice<InlineDisplay.Box>
   }
 }
