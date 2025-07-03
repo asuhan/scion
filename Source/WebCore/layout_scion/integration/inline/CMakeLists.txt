@@ -1,4 +1,6 @@
 target_sources(layout_scion PRIVATE
+    InlineIteratorBox.swift
+    InlineIteratorInlineBox.swift
     InlineIteratorLineBox.swift
     InlineIteratorLineBoxModernPath.swift
     LayoutIntegrationInlineContent.swift

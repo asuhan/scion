@@ -23,9 +23,19 @@
  */
 
 class InlineBoxPainter {
-  init(
+  convenience init(
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
+    self.init(
+      inlineBox: InlineIterator.inlineBoxFor(content: inlineContent, box: box).get(),
+      paintInfo: paintInfo,
+      paintOffset: paintOffset)
+  }
+
+  private init(
+    inlineBox: InlineIterator.InlineBox, paintInfo: PaintInfoWrapper,
+    paintOffset: LayoutPointWrapper
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
