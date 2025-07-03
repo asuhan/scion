@@ -406,6 +406,7 @@ bool RenderElement_isWritingModeRoot(const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
 void RenderBox_repaintDuringLayoutIfMoved(void*, struct LayoutRectRaw);
+void RenderBox_flipForWritingMode(void* p, struct LayoutPointRaw position);
 int32_t RenderBox_availableLogicalWidth(const void*);
 int32_t RenderBox_logicalLeft(const void*);
 struct LayoutPointRaw RenderBox_location(const void*);

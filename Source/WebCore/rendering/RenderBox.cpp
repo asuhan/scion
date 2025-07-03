@@ -242,6 +242,12 @@ extern "C" WEBCORE_EXPORT void RenderBox_repaintDuringLayoutIfMoved(void* p, str
         WebCore::LayoutUnit::fromRawValue(rect.height)));
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(void* p, struct LayoutPointRaw position)
+{
+    static_cast<WebCore::RenderBox*>(p)->flipForWritingMode(WebCore::LayoutPoint(
+        WebCore::LayoutUnit::fromRawValue(position.x), WebCore::LayoutUnit::fromRawValue(position.y)));
+}
+
 extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_logicalVisualOverflowRectForPropagation(const void* p, const void* style_raw)
 {
     const auto style = static_cast<const WebCore::RenderStyle*>(style_raw);
