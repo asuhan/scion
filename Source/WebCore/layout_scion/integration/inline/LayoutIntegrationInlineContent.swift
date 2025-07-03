@@ -36,9 +36,9 @@ extension LayoutIntegration {
 
     func setHasVisualOverflow() { hasVisualOverflow = true }
 
-    func boxesForRect(rect: LayoutRectWrapper) -> any Sequence<InlineDisplay.Box> {
+    func boxesForRect(rect: LayoutRectWrapper) -> ArraySlice<InlineDisplay.Box> {
       if displayContent.boxes.isEmpty {
-        return IteratorRange<InlineDisplayBoxIterator>(begin: nil, end: nil)
+        return [][...]
       }
 
       let lines = displayContent.lines[...]
@@ -46,24 +46,18 @@ extension LayoutIntegration {
 
       // FIXME: Do the flips.
       if formattingContextRoot().style().isFlippedBlocksWritingMode() {
-        return IteratorRange(
-          begin: InlineDisplayBoxIterator.first(boxes: boxes),
-          end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
+        return boxes[...]
       }
 
       if lines.first!.inkOverflow.maxY() > rect.y()
         && lines.last!.inkOverflow.y() < rect.maxY()
       {
-        return IteratorRange(
-          begin: InlineDisplayBoxIterator.first(boxes: boxes),
-          end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
+        return boxes[...]
       }
 
       // The optimization below relies on line paint bounds not exeeding those of the neighboring lines
       if hasMultilinePaintOverlap {
-        return IteratorRange(
-          begin: InlineDisplayBoxIterator.first(boxes: boxes),
-          end: InlineDisplayBoxIterator.pastLast(boxes: boxes))
+        return boxes[...]
       }
 
       let height = lines.last!.lineBoxBottom() - lines.first!.lineBoxTop()
@@ -90,9 +84,7 @@ extension LayoutIntegration {
       let firstBox = lines[Int(startLine)].firstBoxIndex()
       let lastBox = lines[Int(endLine)].firstBoxIndex() + lines[Int(endLine)].boxCount() - 1
 
-      return IteratorRange<InlineDisplayBoxIterator>(
-        begin: InlineDisplayBoxIterator.at(boxes: boxes, index: firstBox),
-        end: InlineDisplayBoxIterator.at(boxes: boxes, index: lastBox + 1))
+      return boxes[Int(firstBox)...Int(lastBox)]
     }
 
     private static func approximateLine(
@@ -196,41 +188,5 @@ extension LayoutIntegration {
 
     private var lineLayout: LayoutIntegration.LineLayout? = nil
     var hasVisualOverflow = false
-  }
-
-  private struct InlineDisplayBoxIterator: IteratorProtocol, Equatable {
-    init(boxes: ArraySlice<InlineDisplay.Box>, currentIndex: Int = 0) {
-      self.currentIndex = currentIndex
-      self.boxes = boxes
-    }
-
-    static func == (lhs: InlineDisplayBoxIterator, rhs: InlineDisplayBoxIterator) -> Bool {
-      return lhs.currentIndex == rhs.currentIndex
-    }
-
-    mutating func next() -> InlineDisplay.Box? {
-      if self.currentIndex < boxes.count {
-        let box = boxes[currentIndex]
-        currentIndex += 1
-        return box
-      }
-      return nil
-    }
-
-    static func first(boxes: ArraySlice<InlineDisplay.Box>) -> InlineDisplayBoxIterator {
-      return InlineDisplayBoxIterator(boxes: boxes)
-    }
-
-    static func pastLast(boxes: ArraySlice<InlineDisplay.Box>) -> InlineDisplayBoxIterator {
-      return InlineDisplayBoxIterator(boxes: boxes, currentIndex: boxes.count)
-    }
-
-    static func at(boxes: ArraySlice<InlineDisplay.Box>, index: UInt64) -> InlineDisplayBoxIterator
-    {
-      return InlineDisplayBoxIterator(boxes: boxes, currentIndex: Int(index))
-    }
-
-    private var currentIndex: Int
-    private var boxes: ArraySlice<InlineDisplay.Box>
   }
 }
