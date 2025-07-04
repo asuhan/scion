@@ -74,6 +74,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasOutline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSelfPaintingLayer() -> Bool {
     return wk_interop.RenderElement_hasSelfPaintingLayer(p)
   }

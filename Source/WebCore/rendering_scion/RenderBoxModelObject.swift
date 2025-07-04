@@ -61,6 +61,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
         p, baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
+  func continuation() -> RenderBoxModelObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func inlineContinuation() -> RenderInlineWrapper? {
     if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(p) {
       return RenderInlineWrapper(p: raw)

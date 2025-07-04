@@ -24,6 +24,16 @@
  */
 
 class ListSet<T, KeyType>: Sequence, IteratorProtocol {
+  struct AddResult {
+    let isNewEntry: Bool
+  }
+
+  @discardableResult
+  func add(value: T) -> AddResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

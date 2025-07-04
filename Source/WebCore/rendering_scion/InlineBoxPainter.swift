@@ -47,6 +47,51 @@ class InlineBoxPainter {
   }
 
   func paint() {
+    if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+      if renderer.style().usedVisibility() != .Visible || !renderer.hasOutline()
+        || isRootInlineBox
+      {
+        return
+      }
+
+      let inlineFlow = renderer as! RenderInlineWrapper
+
+      let containingBlockPaintsContinuationOutline =
+        inlineFlow.continuation() != nil || inlineFlow.isContinuation()
+      if containingBlockPaintsContinuationOutline {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if containingBlockPaintsContinuationOutline {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else if !inlineFlow.isContinuation() {
+        paintInfo.outlineObjects!.add(value: inlineFlow)
+      }
+
+      return
+    }
+
+    if paintInfo.phase == .Mask {
+      paintMask()
+      return
+    }
+
+    if paintInfo.phase == .Accessibility {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    paintDecorations()
+  }
+
+  private func paintMask() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintDecorations() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
