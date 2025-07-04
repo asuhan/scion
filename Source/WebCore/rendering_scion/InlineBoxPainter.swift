@@ -55,12 +55,29 @@ class InlineBoxPainter {
       }
 
       let inlineFlow = renderer as! RenderInlineWrapper
+      var containingBlock: RenderBlockWrapper? = nil
 
-      let containingBlockPaintsContinuationOutline =
+      var containingBlockPaintsContinuationOutline =
         inlineFlow.continuation() != nil || inlineFlow.isContinuation()
       if containingBlockPaintsContinuationOutline {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // FIXME: See https://bugs.webkit.org/show_bug.cgi?id=54690. We currently don't reconnect inline continuations
+        // after a child removal. As a result, those merged inlines do not get seperated and hence not get enclosed by
+        // anonymous blocks. In this case, it is better to bail out and paint it ourself.
+        let enclosingAnonymousBlock = renderer.containingBlock()!
+        if !enclosingAnonymousBlock.isAnonymousBlock() {
+          containingBlockPaintsContinuationOutline = false
+        } else {
+          containingBlock = enclosingAnonymousBlock.containingBlock()
+          let containingBlockPtr = CPtrToInt(containingBlock?.p)
+          var box = renderer
+          while CPtrToInt(box.p) != containingBlockPtr {
+            if box.hasSelfPaintingLayer() {
+              containingBlockPaintsContinuationOutline = false
+              break
+            }
+            box = box.parent()!.enclosingBoxModelObject()
+          }
+        }
       }
 
       if containingBlockPaintsContinuationOutline {

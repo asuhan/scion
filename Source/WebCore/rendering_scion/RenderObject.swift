@@ -75,6 +75,11 @@ class RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func enclosingBoxModelObject() -> RenderBoxModelObjectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFieldset() -> Bool {
     return wk_interop.RenderObject_isFieldset(p)
   }
@@ -104,6 +109,11 @@ class RenderObjectWrapper {
   }
 
   func isAnonymous() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isAnonymousBlock() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
