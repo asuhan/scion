@@ -25,7 +25,12 @@
 
 extension InlineIterator {
 
-  class InlineBox: Box {}
+  class InlineBox: Box {
+    func renderer() -> RenderBoxModelObjectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
     -> InlineBoxIterator

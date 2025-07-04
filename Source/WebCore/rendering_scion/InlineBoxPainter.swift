@@ -37,12 +37,25 @@ class InlineBoxPainter {
     inlineBox: InlineIterator.InlineBox, paintInfo: PaintInfoWrapper,
     paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.inlineBox = inlineBox
+    self.paintInfo = paintInfo
+    self.paintOffset = paintOffset
+    self.renderer = inlineBox.renderer()
+    self.isFirstLineBox = inlineBox.lineBox().get().isFirst()
+    self.isRootInlineBox = inlineBox.isRootInlineBox()
+    self.isHorizontal = inlineBox.isHorizontal()
   }
 
   func paint() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let inlineBox: InlineIterator.InlineBox
+  private let paintInfo: PaintInfoWrapper
+  private let paintOffset: LayoutPointWrapper
+  private let renderer: RenderBoxModelObjectWrapper
+  private let isFirstLineBox: Bool
+  private let isRootInlineBox: Bool
+  private let isHorizontal: Bool
 }

@@ -25,7 +25,22 @@
 
 extension InlineIterator {
 
-  class Box {}
+  class Box {
+    func isRootInlineBox() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func isHorizontal() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func lineBox() -> LineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
   class BoxIterator {
     func get() -> Box {
