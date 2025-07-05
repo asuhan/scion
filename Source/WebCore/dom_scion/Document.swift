@@ -26,6 +26,13 @@
  */
 
 struct Document {
+  func compositeOperatorForBackgroundColor(color: ColorWrapper, renderer: RenderObjectWrapper)
+    -> CompositeOperator
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func securityOrigin() -> SecurityOriginWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

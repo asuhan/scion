@@ -49,3 +49,28 @@ enum PaintPhase: UInt16 {
   case EventRegion = 4096
   case Accessibility = 8192
 }
+
+struct PaintBehavior: OptionSet {
+  let rawValue: UInt32
+  static let Normal: PaintBehavior = []
+  static let SelectionOnly = PaintBehavior(rawValue: 1)
+  static let SkipSelectionHighlight = PaintBehavior(rawValue: 2)
+  static let ForceBlackText = PaintBehavior(rawValue: 4)
+  static let ForceWhiteText = PaintBehavior(rawValue: 8)
+  static let ForceBlackBorder = PaintBehavior(rawValue: 16)
+  static let RenderingSVGClipOrMask = PaintBehavior(rawValue: 32)
+  static let SkipRootBackground = PaintBehavior(rawValue: 64)
+  static let RootBackgroundOnly = PaintBehavior(rawValue: 128)
+  static let SelectionAndBackgroundsOnly = PaintBehavior(rawValue: 256)
+  static let ExcludeSelection = PaintBehavior(rawValue: 512)
+  static let FlattenCompositingLayers = PaintBehavior(rawValue: 1024)  // Paint doesn't stop at compositing layer boundaries.
+  static let ForceSynchronousImageDecode = PaintBehavior(rawValue: 2048)  // Paint should always complete image decoding of painted images.
+  static let DefaultAsynchronousImageDecode = PaintBehavior(rawValue: 4096)  // Paint should always start asynchronous image decode of painted images, unless otherwise specified.
+  static let CompositedOverflowScrollContent = PaintBehavior(rawValue: 8192)
+  static let AnnotateLinks = PaintBehavior(rawValue: 16384)  // Collect all renderers with links to annotate their URLs (e.g. PDFs)
+  static let EventRegionIncludeForeground = PaintBehavior(rawValue: 32768)  // FIXME: Event region painting should use paint phases.
+  static let EventRegionIncludeBackground = PaintBehavior(rawValue: 65536)
+  static let Snapshotting = PaintBehavior(rawValue: 131072)  // Paint is updating external backing store and visits all content, including composited content and always completes image decoding of painted images. FIXME: Will be removed.
+  static let DontShowVisitedLinks = PaintBehavior(rawValue: 262144)
+  static let ExcludeReplacedContent = PaintBehavior(rawValue: 524288)
+}

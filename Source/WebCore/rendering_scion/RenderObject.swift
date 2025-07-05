@@ -155,6 +155,11 @@ class RenderObjectWrapper {
     return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }
 
+  func document() -> Document {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func minPreferredLogicalWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_minPreferredLogicalWidth(p))
   }

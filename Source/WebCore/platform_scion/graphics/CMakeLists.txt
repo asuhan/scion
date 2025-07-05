@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     FontMetrics.swift
     Glyph.swift
     GlyphPage.swift
+    GraphicsTypes.swift
     IntSize.swift
     Latin1TextIterator.swift
     LayoutPoint.swift

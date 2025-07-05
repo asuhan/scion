@@ -27,6 +27,10 @@ import wk_interop
 
 typealias LayoutBoxExtent = RectEdges<LayoutUnit>
 
+enum CSSPropertyID {
+  case CSSPropertyBackgroundColor
+}
+
 class RenderStyleWrapper {
   var p: UnsafeRawPointer?
 
@@ -135,6 +139,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_computedFontSize(p)
+  }
+
+  func hasVisibleBorderDecoration() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func rtlOrdering() -> Order {
@@ -505,6 +514,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return TextWrapStyle(rawValue: wk_interop.RenderStyle_textWrapStyle(p))!
+  }
+
+  func backgroundLayers() -> FillLayerWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func marginTop() -> LengthWrapper {
@@ -893,6 +907,18 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_isOriginalDisplayListItemType(p)
+  }
+
+  func visitedDependentColor(colorProperty: CSSPropertyID, paintBehavior: PaintBehavior)
+    -> ColorWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func colorByApplyingColorFilter(color: ColorWrapper) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func initialTextAlign() -> TextAlignMode {

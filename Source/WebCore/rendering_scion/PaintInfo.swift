@@ -45,6 +45,11 @@ struct PaintInfoWrapper {
       height: LayoutUnit.fromRawValue(value: raw.height))
   }
 
+  var paintBehavior: PaintBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var phase: PaintPhase {
     get {
       return PaintPhase(rawValue: PaintInfo_phase(p))!

@@ -140,6 +140,30 @@ class InlineBoxPainter {
       paintBoxShadow(shadowStyle: .Normal, paintRect: paintRect)
     }
 
+    var color = style.visitedDependentColor(
+      colorProperty: .CSSPropertyBackgroundColor, paintBehavior: paintInfo.paintBehavior)
+    let compositeOp = renderer.document().compositeOperatorForBackgroundColor(
+      color: color, renderer: renderer)
+
+    color = style.colorByApplyingColorFilter(color: color)
+
+    paintFillLayers(
+      color: color, fillLayer: style.backgroundLayers(), rect: paintRect, op: compositeOp)
+    paintBoxShadow(shadowStyle: .Inset, paintRect: paintRect)
+
+    // :first-line cannot be used to put borders on a line. Always paint borders with our
+    // non-first-line style.
+    if isRootInlineBox || !renderer.style().hasVisibleBorderDecoration() {
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintFillLayers(
+    color: ColorWrapper, fillLayer: FillLayerWrapper, rect: LayoutRectWrapper, op: CompositeOperator
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
