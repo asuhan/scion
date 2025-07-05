@@ -9,6 +9,7 @@ target_sources(layout_scion PRIVATE
     PaintInfo.swift
     PaintPhase.swift
     BackgroundPainter.swift
+    BorderPainter.swift
     BreakLines.swift
     RenderBlock.swift
     RenderBlockFlow.swift

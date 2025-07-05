@@ -30,6 +30,21 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func hasClosedLeftAndRightEdge() -> (Bool, Bool) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func nextInlineBox() -> InlineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func previousInlineBox() -> InlineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)

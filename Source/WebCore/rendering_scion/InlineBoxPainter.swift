@@ -166,6 +166,17 @@ class InlineBoxPainter {
       return  // Don't paint anything while we wait for the image to load.
     }
 
+    let borderPainter = BorderPainter(renderer: renderer, paintInfo: paintInfo)
+
+    let hasSingleLine = !inlineBox.previousInlineBox().bool() && !inlineBox.nextInlineBox().bool()
+    if !hasBorderImage || hasSingleLine {
+      let (hasClosedLeftEdge, hasClosedRightEdge) = inlineBox.hasClosedLeftAndRightEdge()
+      borderPainter.paintBorder(
+        rect: paintRect, style: style, bleedAvoidance: .BackgroundBleedNone,
+        includeLogicalLeftEdge: hasClosedLeftEdge, includeLogicalRightEdge: hasClosedRightEdge)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

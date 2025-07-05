@@ -48,6 +48,11 @@ extension InlineIterator {
   }
 
   class BoxIterator {
+    func bool() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func get() -> Box {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
