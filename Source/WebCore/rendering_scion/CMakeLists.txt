@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     InlineWalker.swift
     PaintInfo.swift
     PaintPhase.swift
+    BackgroundPainter.swift
     BreakLines.swift
     RenderBlock.swift
     RenderBlockFlow.swift

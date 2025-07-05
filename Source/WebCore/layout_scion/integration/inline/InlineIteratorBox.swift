@@ -31,6 +31,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func visualRect() -> FloatRectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isHorizontal() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

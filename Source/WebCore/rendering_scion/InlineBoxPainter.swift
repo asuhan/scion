@@ -109,6 +109,47 @@ class InlineBoxPainter {
   }
 
   private func paintDecorations() {
+    if !paintInfo.shouldPaintWithinRoot(renderer: renderer)
+      || renderer.style().usedVisibility() != .Visible || paintInfo.phase != .Foreground
+    {
+      return
+    }
+
+    if !isRootInlineBox && !renderer.hasVisibleBoxDecorations() {
+      return
+    }
+
+    let style = self.style()
+    // You can use p::first-line to specify a background. If so, the root inline boxes for
+    // a line may actually have to paint a background.
+    if isRootInlineBox
+      && (!isFirstLineBox || CPtrToInt(style.p) == CPtrToInt(renderer.style().p))
+    {
+      return
+    }
+
+    // Move x/y to our coordinates.
+    let localRect = LayoutRectWrapper(r: inlineBox.visualRect())
+    let adjustedPaintoffset = paintOffset + localRect.location()
+    let paintRect = LayoutRectWrapper(location: adjustedPaintoffset, size: localRect.size())
+    // Shadow comes first and is behind the background and border.
+    if !BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+      renderer: renderer, paintOffset: adjustedPaintoffset, bleedAvoidance: .BackgroundBleedNone,
+      inlineBox: InlineIterator.InlineBoxIterator(box: inlineBox))
+    {
+      paintBoxShadow(shadowStyle: .Normal, paintRect: paintRect)
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBoxShadow(shadowStyle: ShadowStyle, paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func style() -> RenderStyleWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -40,6 +40,11 @@ extension InlineIterator {
   }
 
   class InlineBoxIterator: BoxIterator {
+    init(box: InlineIterator.Box) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     override func get() -> InlineBox {
       return super.get() as! InlineBox
     }

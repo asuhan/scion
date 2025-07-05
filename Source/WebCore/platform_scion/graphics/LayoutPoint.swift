@@ -82,6 +82,10 @@ struct LayoutPointWrapper: Equatable {
     return a
   }
 
+  static func + (a: LayoutPointWrapper, b: LayoutPointWrapper) -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: a.x + b.x, y: a.y + b.y)
+  }
+
   static func - (a: LayoutPointWrapper, b: LayoutPointWrapper) -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: a.x - b.x, height: a.y - b.y)
   }

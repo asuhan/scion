@@ -34,6 +34,13 @@ enum LineDirectionMode: UInt8 {
   case VerticalLine
 }
 
+enum BackgroundBleedAvoidance {
+  case BackgroundBleedNone
+  case BackgroundBleedShrinkBackground
+  case BackgroundBleedUseTransparencyLayer
+  case BackgroundBleedBackgroundOverBorder
+}
+
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func paddingStart() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(p))
