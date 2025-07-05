@@ -218,6 +218,11 @@ class RenderStyleWrapper {
     return Float(rawValue: wk_interop.RenderStyle_floating(p))!
   }
 
+  func borderImage() -> NinePieceImage {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overflowX() -> Overflow {
     if p == nil {
       fatalError("Not implemented")
@@ -498,6 +503,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return TextDecorationSkipInk(rawValue: wk_interop.RenderStyle_textDecorationSkipInk(p))!
+  }
+
+  func usedZoom() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func whiteSpaceCollapse() -> WhiteSpaceCollapse {

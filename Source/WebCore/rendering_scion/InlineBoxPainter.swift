@@ -157,6 +157,15 @@ class InlineBoxPainter {
       return
     }
 
+    let borderImage = renderer.style().borderImage()
+    let borderImageSource = borderImage.image()
+    let hasBorderImage =
+      borderImageSource != nil
+      && borderImageSource!.canRender(renderer: renderer, multiplier: style.usedZoom())
+    if hasBorderImage && !borderImageSource!.isLoaded(renderer: renderer) {
+      return  // Don't paint anything while we wait for the image to load.
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
