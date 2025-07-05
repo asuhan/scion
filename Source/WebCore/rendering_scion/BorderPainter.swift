@@ -30,8 +30,9 @@ class BorderPainter {
   }
 
   func paintBorder(
-    rect: LayoutRectWrapper, style: RenderStyleWrapper, bleedAvoidance: BackgroundBleedAvoidance,
-    includeLogicalLeftEdge: Bool, includeLogicalRightEdge: Bool
+    rect: LayoutRectWrapper, style: RenderStyleWrapper,
+    bleedAvoidance: BackgroundBleedAvoidance = .BackgroundBleedNone,
+    includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

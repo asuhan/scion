@@ -31,6 +31,11 @@
 import wk_interop
 
 struct PaintInfoWrapper {
+  func context() -> GraphicsContextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

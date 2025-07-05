@@ -45,6 +45,11 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func iterator() -> InlineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
@@ -62,6 +67,18 @@ extension InlineIterator {
 
     override func get() -> InlineBox {
       return super.get() as! InlineBox
+    }
+
+    @discardableResult
+    func traverseNextInlineBox() -> InlineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    @discardableResult
+    func traversePreviousInlineBox() -> InlineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
   }
 }

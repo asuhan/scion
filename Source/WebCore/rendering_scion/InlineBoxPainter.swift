@@ -22,6 +22,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func clipRectForNinePieceImageStrip(
+  box: InlineIterator.InlineBox, image: NinePieceImage, paintRect: LayoutRectWrapper
+) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class InlineBoxPainter {
   convenience init(
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
@@ -131,6 +138,7 @@ class InlineBoxPainter {
     // Move x/y to our coordinates.
     let localRect = LayoutRectWrapper(r: inlineBox.visualRect())
     let adjustedPaintoffset = paintOffset + localRect.location()
+    let context = paintInfo.context()
     let paintRect = LayoutRectWrapper(location: adjustedPaintoffset, size: localRect.size())
     // Shadow comes first and is behind the background and border.
     if !BackgroundPainter.boxShadowShouldBeAppliedToBackground(
@@ -177,8 +185,40 @@ class InlineBoxPainter {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We have a border image that spans multiple lines.
+    // We need to adjust tx and ty by the width of all previous lines.
+    // Think of border image painting on inlines as though you had one long line, a single continuous
+    // strip. Even though that strip has been broken up across multiple lines, you still paint it
+    // as though you had one single line. This means each line has to pick up the image where
+    // the previous line left off.
+    // FIXME: What the heck do we do with RTL here? The math we're using is obviously not right,
+    // but it isn't even clear how this should work at all.
+    var logicalOffsetOnLine = LayoutUnit()
+    let box1 = inlineBox.previousInlineBox()
+    while box1.bool() {
+      logicalOffsetOnLine += box1.get().logicalWidth()
+      box1.traversePreviousInlineBox()
+    }
+    var totalLogicalWidth = logicalOffsetOnLine
+    let box2 = inlineBox.iterator()
+    while box2.bool() {
+      totalLogicalWidth += box2.get().logicalWidth()
+      box2.traverseNextInlineBox()
+    }
+
+    let stripX =
+      adjustedPaintoffset.x - (isHorizontal ? logicalOffsetOnLine : LayoutUnit(value: 0))
+    let stripY = adjustedPaintoffset.y - (isHorizontal ? LayoutUnit(value: 0) : logicalOffsetOnLine)
+    let stripWidth = isHorizontal ? totalLogicalWidth : localRect.width()
+    let stripHeight = isHorizontal ? localRect.height() : totalLogicalWidth
+
+    let clipRect = clipRectForNinePieceImageStrip(
+      box: inlineBox, image: borderImage, paintRect: paintRect)
+    let _ = GraphicsContextStateSaver(context: context)
+    context.clip(rect: clipRect.FloatRect())
+    borderPainter.paintBorder(
+      rect: LayoutRectWrapper(x: stripX, y: stripY, width: stripWidth, height: stripHeight),
+      style: style)
   }
 
   private func paintFillLayers(
