@@ -224,8 +224,16 @@ class InlineBoxPainter {
   private func paintFillLayers(
     color: ColorWrapper, fillLayer: FillLayerWrapper, rect: LayoutRectWrapper, op: CompositeOperator
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layers: [FillLayerWrapper] = []
+    var layer: FillLayerWrapper? = fillLayer
+    while layer != nil {
+      layers.append(layer!)
+      layer = layer!.next()
+    }
+
+    for layer in layers.reversed() {
+      paintFillLayer(color: color, fillLayer: layer, rect: rect, op: op)
+    }
   }
 
   private func paintFillLayer(
