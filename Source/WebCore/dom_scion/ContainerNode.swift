@@ -21,4 +21,9 @@
  *
  */
 
-class ContainerNodeWrapper: NodeWrapper {}
+class ContainerNodeWrapper: NodeWrapper {
+  func renderer() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
