@@ -247,6 +247,19 @@ class InlineBoxPainter {
       return
     }
 
+    if renderer.style().boxDecorationBreak() == .Clone {
+      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+      paintInfo.context().clip(
+        rect: FloatRectWrapper(
+          location: rect.location().FloatPoint(),
+          size: inlineBox.visualRectIgnoringBlockDirection().size()))
+      backgroundPainter.paintFillLayer(
+        color: color, bgLayer: fillLayer, rect: rect, bleedAvoidance: .BackgroundBleedNone,
+        inlineBoxIterator: InlineIterator.InlineBoxIterator(box: inlineBox),
+        backgroundImageStrip: LayoutRectWrapper(), op: op)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
