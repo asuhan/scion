@@ -22,6 +22,23 @@
  */
 
 class BackgroundPainter {
+  init(renderer: RenderBoxModelObjectWrapper, paintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintFillLayer(
+    color: ColorWrapper, bgLayer: FillLayerWrapper, rect: LayoutRectWrapper,
+    bleedAvoidance: BackgroundBleedAvoidance, inlineBoxIterator: InlineIterator.InlineBoxIterator,
+    backgroundImageStrip: LayoutRectWrapper = LayoutRectWrapper(),
+    op: CompositeOperator = .SourceOver,
+    backgroundObject: RenderElementWrapper? = nil,
+    baseBgColorUsage: BaseBackgroundColorUsage = .BaseBackgroundColorUse
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func boxShadowShouldBeAppliedToBackground(
     renderer: RenderBoxModelObjectWrapper, paintOffset: LayoutPointWrapper,
     bleedAvoidance: BackgroundBleedAvoidance, inlineBox: InlineIterator.InlineBoxIterator

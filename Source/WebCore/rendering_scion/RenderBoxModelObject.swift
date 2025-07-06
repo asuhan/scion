@@ -41,6 +41,12 @@ enum BackgroundBleedAvoidance {
   case BackgroundBleedBackgroundOverBorder
 }
 
+enum BaseBackgroundColorUsage {
+  case BaseBackgroundColorUse
+  case BaseBackgroundColorOnly
+  case BaseBackgroundColorSkip
+}
+
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func paddingStart() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(p))

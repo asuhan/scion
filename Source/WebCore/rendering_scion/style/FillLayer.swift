@@ -22,4 +22,9 @@
  *
  */
 
-struct FillLayerWrapper {}
+struct FillLayerWrapper {
+  func image() -> StyleImage? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

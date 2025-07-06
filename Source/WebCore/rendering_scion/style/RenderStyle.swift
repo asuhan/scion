@@ -223,6 +223,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasBorderRadius() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overflowX() -> Overflow {
     if p == nil {
       fatalError("Not implemented")

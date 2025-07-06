@@ -228,6 +228,29 @@ class InlineBoxPainter {
     fatalError("Not implemented")
   }
 
+  private func paintFillLayer(
+    color: ColorWrapper, fillLayer: FillLayerWrapper, rect: LayoutRectWrapper, op: CompositeOperator
+  ) {
+    let image = fillLayer.image()
+    let hasFillImage =
+      image != nil && image!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
+    let hasFillImageOrBorderRadious = hasFillImage || renderer.style().hasBorderRadius()
+    let hasSingleLine = !inlineBox.previousInlineBox().bool() && !inlineBox.nextInlineBox().bool()
+
+    let backgroundPainter = BackgroundPainter(renderer: renderer, paintInfo: paintInfo)
+
+    if !hasFillImageOrBorderRadious || hasSingleLine || isRootInlineBox {
+      backgroundPainter.paintFillLayer(
+        color: color, bgLayer: fillLayer, rect: rect, bleedAvoidance: .BackgroundBleedNone,
+        inlineBoxIterator: InlineIterator.InlineBoxIterator(box: inlineBox),
+        backgroundImageStrip: LayoutRectWrapper(), op: op)
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintBoxShadow(shadowStyle: ShadowStyle, paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
