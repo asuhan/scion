@@ -215,6 +215,11 @@ class RenderObjectWrapper {
     return convert_render_style(p: wk_interop.RenderObject_style(p))
   }
 
+  func firstLineStyle() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Repaint the entire object.  Called when, e.g., the color of a border changes, or when a border
   // style changes.
   enum ForceRepaint {

@@ -326,8 +326,7 @@ class InlineBoxPainter {
   }
 
   private func style() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isFirstLineBox ? renderer.firstLineStyle() : renderer.style()
   }
 
   private let inlineBox: InlineIterator.InlineBox
