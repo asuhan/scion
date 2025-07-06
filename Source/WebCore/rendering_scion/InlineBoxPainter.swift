@@ -260,6 +260,31 @@ class InlineBoxPainter {
       return
     }
 
+    // We have a fill image that spans multiple lines.
+    // We need to adjust tx and ty by the width of all previous lines.
+    // Think of background painting on inlines as though you had one long line, a single continuous
+    // strip. Even though that strip has been broken up across multiple lines, you still paint it
+    // as though you had one single line. This means each line has to pick up the background where
+    // the previous line left off.
+    var logicalOffsetOnLine = LayoutUnit()
+    var totalLogicalWidth = LayoutUnit()
+    if renderer.style().direction() == .LTR {
+      let box1 = inlineBox.previousInlineBox()
+      while box1.bool() {
+        logicalOffsetOnLine += box1.get().logicalWidth()
+        box1.traversePreviousInlineBox()
+      }
+      totalLogicalWidth = logicalOffsetOnLine
+      let box2 = inlineBox.iterator()
+      while box2.bool() {
+        totalLogicalWidth += box2.get().logicalWidth()
+        box2.traverseNextInlineBox()
+      }
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
