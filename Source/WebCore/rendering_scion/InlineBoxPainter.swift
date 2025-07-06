@@ -293,9 +293,23 @@ class InlineBoxPainter {
         box2.traversePreviousInlineBox()
       }
     }
+    let backgroundImageStrip = LayoutRectWrapper(
+      x: rect.x() - (isHorizontal ? logicalOffsetOnLine : LayoutUnit(value: 0)),
+      y: rect.y() - (isHorizontal ? LayoutUnit(value: 0) : logicalOffsetOnLine),
+      width: isHorizontal
+        ? totalLogicalWidth
+        : LayoutUnit(value: inlineBox.visualRectIgnoringBlockDirection().width()),
+      height: isHorizontal
+        ? LayoutUnit(value: inlineBox.visualRectIgnoringBlockDirection().height())
+        : totalLogicalWidth
+    )
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+    paintInfo.context().clip(rect: rect.FloatRect())
+    backgroundPainter.paintFillLayer(
+      color: color, bgLayer: fillLayer, rect: rect, bleedAvoidance: .BackgroundBleedNone,
+      inlineBoxIterator: InlineIterator.InlineBoxIterator(box: inlineBox),
+      backgroundImageStrip: backgroundImageStrip, op: op)
   }
 
   private func paintBoxShadow(shadowStyle: ShadowStyle, paintRect: LayoutRectWrapper) {
