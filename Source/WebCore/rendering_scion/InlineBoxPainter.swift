@@ -281,8 +281,17 @@ class InlineBoxPainter {
         box2.traverseNextInlineBox()
       }
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let box1 = inlineBox.nextInlineBox()
+      while box1.bool() {
+        logicalOffsetOnLine += box1.get().logicalWidth()
+        box1.traverseNextInlineBox()
+      }
+      totalLogicalWidth = logicalOffsetOnLine
+      let box2 = inlineBox.iterator()
+      while box2.bool() {
+        totalLogicalWidth += box2.get().logicalWidth()
+        box2.traversePreviousInlineBox()
+      }
     }
 
     // TODO(asuhan): implement this
