@@ -39,3 +39,24 @@ enum CompositeOperator: UInt8 {
   case PlusLighter
   case Difference
 }
+
+enum BlendMode: UInt8 {
+  case Normal = 1  // Start with 1 to match SVG's blendmode enumeration.
+  case Multiply
+  case Screen
+  case Darken
+  case Lighten
+  case Overlay
+  case ColorDodge
+  case ColorBurn
+  case HardLight
+  case SoftLight
+  case Difference
+  case Exclusion
+  case Hue
+  case Saturation
+  case Color
+  case Luminosity
+  case PlusDarker
+  case PlusLighter
+}

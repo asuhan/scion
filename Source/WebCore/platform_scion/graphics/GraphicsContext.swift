@@ -24,7 +24,17 @@
  */
 
 class GraphicsContextWrapper {
+  func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clip(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func beginTransparencyLayer(opacity: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

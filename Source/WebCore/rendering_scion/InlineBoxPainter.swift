@@ -119,6 +119,10 @@ class InlineBoxPainter {
       return
     }
 
+    // Move x/y to our coordinates.
+    let localRect = LayoutRectWrapper(r: inlineBox.visualRect())
+    let adjustedPaintOffset = paintOffset + localRect.location()
+
     let maskBorder = renderer.style().maskBorder().image()
 
     // Figure out if we need to push a transparency layer to render our mask.
@@ -126,6 +130,7 @@ class InlineBoxPainter {
     let compositedMask = renderer.hasLayer() && renderer.layer()!.hasCompositedMask()
     let flattenCompositingLayers = renderer.view().frameView().paintBehavior().contains(
       .FlattenCompositingLayers)
+    var compositeOp: CompositeOperator = .SourceOver
     if !compositedMask || flattenCompositingLayers {
       if (maskBorder != nil && renderer.style().maskLayers().hasImage())
         || renderer.style().maskLayers().next() != nil
@@ -133,11 +138,19 @@ class InlineBoxPainter {
         pushTransparencyLayer = true
       }
 
+      compositeOp = .DestinationIn
       if pushTransparencyLayer {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        paintInfo.context().setCompositeOperation(operation: .DestinationIn)
+        paintInfo.context().beginTransparencyLayer(opacity: 1)
+        compositeOp = .SourceOver
       }
     }
+
+    let paintRect = LayoutRectWrapper(location: adjustedPaintOffset, size: localRect.size())
+
+    paintFillLayers(
+      color: ColorWrapper(), fillLayer: renderer.style().maskLayers(), rect: paintRect,
+      op: compositeOp)
 
     // TODO(asuhan): implement this
     fatalError("Not implemented")
