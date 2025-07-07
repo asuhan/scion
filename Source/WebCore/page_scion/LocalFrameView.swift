@@ -33,5 +33,10 @@ class LocalFrameViewWrapper {
     return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
   }
 
+  func paintBehavior() -> PaintBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var p: UnsafeRawPointer
 }

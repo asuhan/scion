@@ -32,4 +32,9 @@ struct FillLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -113,6 +113,32 @@ class InlineBoxPainter {
   }
 
   private func paintMask() {
+    if !paintInfo.shouldPaintWithinRoot(renderer: renderer)
+      || renderer.style().usedVisibility() != .Visible || paintInfo.phase != .Mask
+    {
+      return
+    }
+
+    let maskBorder = renderer.style().maskBorder().image()
+
+    // Figure out if we need to push a transparency layer to render our mask.
+    var pushTransparencyLayer = false
+    let compositedMask = renderer.hasLayer() && renderer.layer()!.hasCompositedMask()
+    let flattenCompositingLayers = renderer.view().frameView().paintBehavior().contains(
+      .FlattenCompositingLayers)
+    if !compositedMask || flattenCompositingLayers {
+      if (maskBorder != nil && renderer.style().maskLayers().hasImage())
+        || renderer.style().maskLayers().next() != nil
+      {
+        pushTransparencyLayer = true
+      }
+
+      if pushTransparencyLayer {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

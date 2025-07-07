@@ -536,6 +536,16 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func maskLayers() -> FillLayerWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func maskBorder() -> NinePieceImage {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginTop() -> LengthWrapper {
     if p == nil {
       // TODO(asuhan): implement this

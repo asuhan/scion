@@ -142,6 +142,11 @@ class RenderObjectWrapper {
     return wk_interop.RenderObject_isHorizontalWritingMode(p)
   }
 
+  func hasLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasVisibleBoxDecorations() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
