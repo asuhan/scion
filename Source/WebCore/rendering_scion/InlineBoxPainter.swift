@@ -323,8 +323,22 @@ class InlineBoxPainter {
   }
 
   private func paintBoxShadow(shadowStyle: ShadowStyle, paintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let backgroundPainter = BackgroundPainter(renderer: renderer, paintInfo: paintInfo)
+
+    let hasSingleLine =
+      !inlineBox.previousInlineBox().bool() && !inlineBox.nextInlineBox().bool()
+    if hasSingleLine || isRootInlineBox {
+      backgroundPainter.paintBoxShadow(
+        paintRect: paintRect, style: style(), shadowStyle: shadowStyle)
+      return
+    }
+
+    // FIXME: We can do better here in the multi-line case. We want to push a clip so that the shadow doesn't
+    // protrude incorrectly at the edges, and we want to possibly include shadows cast from the previous/following lines
+    let (hasClosedLeftEdge, hasClosedRightEdge) = inlineBox.hasClosedLeftAndRightEdge()
+    backgroundPainter.paintBoxShadow(
+      paintRect: paintRect, style: style(), shadowStyle: shadowStyle,
+      includeLogicalLeftEdge: hasClosedLeftEdge, includeLogicalRightEdge: hasClosedRightEdge)
   }
 
   private func style() -> RenderStyleWrapper {

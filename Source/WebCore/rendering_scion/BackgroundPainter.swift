@@ -39,6 +39,14 @@ class BackgroundPainter {
     fatalError("Not implemented")
   }
 
+  func paintBoxShadow(
+    paintRect: LayoutRectWrapper, style: RenderStyleWrapper, shadowStyle: ShadowStyle,
+    includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func boxShadowShouldBeAppliedToBackground(
     renderer: RenderBoxModelObjectWrapper, paintOffset: LayoutPointWrapper,
     bleedAvoidance: BackgroundBleedAvoidance, inlineBox: InlineIterator.InlineBoxIterator
