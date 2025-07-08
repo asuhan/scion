@@ -107,6 +107,10 @@ func flooredIntPoint(point: LayoutPointWrapper) -> IntPoint {
   return IntPoint(x: Int32(point.x.floor()), y: Int32(point.y.floor()))
 }
 
+func roundedIntPoint(point: LayoutPointWrapper) -> IntPoint {
+  return IntPoint(x: Int32(point.x.round()), y: Int32(point.y.round()))
+}
+
 func flooredLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
   return LayoutPointWrapper(
     x: LayoutUnit.fromFloatFloor(value: p.x), y: LayoutUnit.fromFloatFloor(value: p.y))
