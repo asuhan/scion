@@ -65,7 +65,11 @@ struct LayoutRectWrapper {
 
   mutating func setX(x: LayoutUnit) { m_location.setX(x: x) }
 
+  mutating func setY(y: LayoutUnit) { m_location.setY(y: y) }
+
   func setWidth(width: LayoutUnit) { m_size.setWidth(width: width) }
+
+  func setHeight(height: LayoutUnit) { m_size.setHeight(height: height) }
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
