@@ -127,6 +127,16 @@ struct LayoutRectWrapper {
   private var m_size = LayoutSizeWrapper()
 }
 
+func enclosingIntRect(rect: LayoutRectWrapper) -> IntRect {
+  // Empty rects with fractional x, y values turn into non-empty rects when converting to enclosing.
+  // We need to ensure that empty rects stay empty after the conversion, because the selection code expects them to be empty.
+  let location = flooredIntPoint(point: rect.minXMinYCorner())
+  let maxPoint = IntPoint(
+    x: rect.width().bool() ? rect.maxX().ceil() : location.x,
+    y: rect.height().bool() ? rect.maxY().ceil() : location.y)
+  return IntRect(location: location, size: maxPoint - location)
+}
+
 func enclosingLayoutRect(rect: FloatRectWrapper) -> LayoutRectWrapper {
   let location = flooredLayoutPoint(p: rect.minXMinYCorner())
   let maxPoint = ceiledLayoutPoint(p: rect.maxXMaxYCorner())
