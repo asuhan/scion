@@ -14,6 +14,7 @@ target_sources(layout_scion PRIVATE
     GraphicsContext.swift
     GraphicsContextStateSaver.swift
     GraphicsTypes.swift
+    IntPoint.swift
     IntSize.swift
     Latin1TextIterator.swift
     LayoutPoint.swift

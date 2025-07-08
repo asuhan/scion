@@ -103,6 +103,10 @@ func toLayoutSize(point: LayoutPointWrapper) -> LayoutSizeWrapper {
   return LayoutSizeWrapper(width: point.x, height: point.y)
 }
 
+func flooredIntPoint(point: LayoutPointWrapper) -> IntPoint {
+  return IntPoint(x: Int32(point.x.floor()), y: Int32(point.y.floor()))
+}
+
 func flooredLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
   return LayoutPointWrapper(
     x: LayoutUnit.fromFloatFloor(value: p.x), y: LayoutUnit.fromFloatFloor(value: p.y))
