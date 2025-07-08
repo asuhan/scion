@@ -38,4 +38,9 @@ class GraphicsContextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func endTransparencyLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

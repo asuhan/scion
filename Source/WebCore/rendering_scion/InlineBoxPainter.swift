@@ -152,6 +152,16 @@ class InlineBoxPainter {
       color: ColorWrapper(), fillLayer: renderer.style().maskLayers(), rect: paintRect,
       op: compositeOp)
 
+    let hasBoxImage =
+      maskBorder != nil
+      && maskBorder!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
+    if !hasBoxImage || !maskBorder!.isLoaded(renderer: renderer) {
+      if pushTransparencyLayer {
+        paintInfo.context().endTransparencyLayer()
+      }
+      return  // Don't paint anything while we wait for the image to load.
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
