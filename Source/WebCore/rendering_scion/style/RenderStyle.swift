@@ -146,6 +146,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func imageOutsets(image: NinePieceImage) -> LayoutBoxExtent {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rtlOrdering() -> Order {
     if p == nil {
       // TODO(asuhan): implement this

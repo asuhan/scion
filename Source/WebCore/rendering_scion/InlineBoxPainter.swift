@@ -25,8 +25,32 @@
 private func clipRectForNinePieceImageStrip(
   box: InlineIterator.InlineBox, image: NinePieceImage, paintRect: LayoutRectWrapper
 ) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var clipRect = paintRect
+  let style = box.renderer().style()
+  let outsets = style.imageOutsets(image: image)
+  let (hasClosedLeftEdge, hasClosedRightEdge) = box.hasClosedLeftAndRightEdge()
+  if box.isHorizontal() {
+    clipRect.setY(y: paintRect.y() - outsets.top)
+    clipRect.setHeight(height: paintRect.height() + outsets.top + outsets.bottom)
+    if hasClosedLeftEdge {
+      clipRect.setX(x: paintRect.x() - outsets.left)
+      clipRect.setWidth(width: paintRect.width() + outsets.left)
+    }
+    if hasClosedRightEdge {
+      clipRect.setWidth(width: clipRect.width() + outsets.right)
+    }
+  } else {
+    clipRect.setX(x: paintRect.x() - outsets.left)
+    clipRect.setWidth(width: paintRect.width() + outsets.left + outsets.right)
+    if hasClosedLeftEdge {
+      clipRect.setY(y: paintRect.y() - outsets.top)
+      clipRect.setHeight(height: paintRect.height() + outsets.top)
+    }
+    if hasClosedRightEdge {
+      clipRect.setHeight(height: clipRect.height() + outsets.bottom)
+    }
+  }
+  return clipRect
 }
 
 class InlineBoxPainter {
