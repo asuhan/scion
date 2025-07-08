@@ -123,6 +123,7 @@ class InlineBoxPainter {
     let localRect = LayoutRectWrapper(r: inlineBox.visualRect())
     let adjustedPaintOffset = paintOffset + localRect.location()
 
+    let maskNinePieceImage = renderer.style().maskBorder()
     let maskBorder = renderer.style().maskBorder().image()
 
     // Figure out if we need to push a transparency layer to render our mask.
@@ -162,8 +163,50 @@ class InlineBoxPainter {
       return  // Don't paint anything while we wait for the image to load.
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hasSingleLine = !inlineBox.previousInlineBox().bool() && !inlineBox.nextInlineBox().bool()
+
+    let borderPainter = BorderPainter(renderer: renderer, paintInfo: paintInfo)
+
+    if hasSingleLine {
+      borderPainter.paintNinePieceImage(
+        rect: LayoutRectWrapper(location: adjustedPaintOffset, size: localRect.size()),
+        style: renderer.style(),
+        ninePieceImage: maskNinePieceImage, op: compositeOp)
+    } else {
+      // We have a mask image that spans multiple lines.
+      // We need to adjust _tx and _ty by the width of all previous lines.
+      var logicalOffsetOnLine = LayoutUnit()
+      let box1 = inlineBox.previousInlineBox()
+      while box1.bool() {
+        logicalOffsetOnLine += box1.get().logicalWidth()
+        box1.traversePreviousInlineBox()
+      }
+      var totalLogicalWidth = logicalOffsetOnLine
+      let box2 = inlineBox.iterator()
+      while box2.bool() {
+        totalLogicalWidth += box2.get().logicalWidth()
+        box2.traverseNextInlineBox()
+      }
+      let stripX =
+        adjustedPaintOffset.x - (isHorizontal ? logicalOffsetOnLine : LayoutUnit(value: 0))
+      let stripY =
+        adjustedPaintOffset.y - (isHorizontal ? LayoutUnit(value: 0) : logicalOffsetOnLine)
+      let stripWidth = isHorizontal ? totalLogicalWidth : localRect.width()
+      let stripHeight = isHorizontal ? localRect.height() : totalLogicalWidth
+
+      let clipRect = clipRectForNinePieceImageStrip(
+        box: inlineBox, image: maskNinePieceImage, paintRect: paintRect)
+      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+      paintInfo.context().clip(rect: clipRect.FloatRect())
+      borderPainter.paintNinePieceImage(
+        rect: LayoutRectWrapper(x: stripX, y: stripY, width: stripWidth, height: stripHeight),
+        style: renderer.style(), ninePieceImage: maskNinePieceImage,
+        op: compositeOp)
+    }
+
+    if pushTransparencyLayer {
+      paintInfo.context().endTransparencyLayer()
+    }
   }
 
   private func paintDecorations() {

@@ -38,6 +38,14 @@ class BorderPainter {
     fatalError("Not implemented")
   }
 
+  func paintNinePieceImage(
+    rect: LayoutRectWrapper, style: RenderStyleWrapper, ninePieceImage: NinePieceImage,
+    op: CompositeOperator
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let renderer: RenderElementWrapper
   private let paintInfo: PaintInfoWrapper
 }
