@@ -24,11 +24,10 @@
  */
 
 struct IntRect {
-  func moveBy(offset: IntPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func moveBy(offset: IntPoint) {
+    location.move(dx: offset.x, dy: offset.y)
   }
 
-  let location: IntPoint
+  var location: IntPoint
   let size: IntSize
 }

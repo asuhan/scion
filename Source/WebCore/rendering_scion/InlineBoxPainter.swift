@@ -130,7 +130,7 @@ class InlineBoxPainter {
 
     if paintInfo.phase == .Accessibility {
       if let renderInline = renderer as? RenderInlineWrapper {
-        let linesBoundingBox = enclosingIntRect(rect: renderInline.linesVisualOverflowBoundingBox())
+        var linesBoundingBox = enclosingIntRect(rect: renderInline.linesVisualOverflowBoundingBox())
         linesBoundingBox.moveBy(offset: roundedIntPoint(point: paintOffset))
         paintInfo.accessibilityRegionContext()!.takeBounds(
           renderInline: renderer as? RenderInlineWrapper,

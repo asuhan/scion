@@ -24,8 +24,13 @@
  */
 
 struct IntPoint {
-  let x: Int32
-  let y: Int32
+  var x: Int32
+  var y: Int32
+
+  mutating func move(dx: Int32, dy: Int32) {
+    x += dx
+    y += dy
+  }
 
   static func - (a: IntPoint, b: IntPoint) -> IntSize {
     return IntSize(width: a.x - b.x, height: a.y - b.y)
