@@ -21,6 +21,11 @@
  */
 
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
+  func linesVisualOverflowBoundingBox() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOutline(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

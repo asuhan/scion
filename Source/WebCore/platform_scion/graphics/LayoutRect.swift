@@ -42,6 +42,11 @@ struct LayoutRectWrapper {
       size: LayoutSizeWrapper(width: width, height: height))
   }
 
+  init(rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(r: FloatRectWrapper) {
     self.m_location = LayoutPointWrapper(size: r.location())
     self.m_size = LayoutSizeWrapper(size: r.size())

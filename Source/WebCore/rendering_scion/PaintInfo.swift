@@ -41,6 +41,11 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
+  func accessibilityRegionContext() -> AccessibilityRegionContext? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var rect: LayoutRectWrapper {
     let raw = PaintInfo_rect(p)
     return LayoutRectWrapper(

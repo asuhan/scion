@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     InlineWalker.swift
     PaintInfo.swift
     PaintPhase.swift
+    AccessibilityRegionContext.swift
     BackgroundPainter.swift
     BorderPainter.swift
     BreakLines.swift
@@ -16,6 +17,7 @@ target_sources(layout_scion PRIVATE
     RenderBox.swift
     RenderBoxModelObject.swift
     RenderButton.swift
+    RegionContext.swift
     RenderDeprecatedFlexibleBox.swift
     RenderElement.swift
     RenderFlexibleBox.swift

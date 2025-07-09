@@ -129,8 +129,14 @@ class InlineBoxPainter {
     }
 
     if paintInfo.phase == .Accessibility {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let renderInline = renderer as? RenderInlineWrapper {
+        let linesBoundingBox = enclosingIntRect(rect: renderInline.linesVisualOverflowBoundingBox())
+        linesBoundingBox.moveBy(offset: roundedIntPoint(point: paintOffset))
+        paintInfo.accessibilityRegionContext()!.takeBounds(
+          renderInline: renderer as? RenderInlineWrapper,
+          paintRect: LayoutRectWrapper(rect: linesBoundingBox))
+      }
+      return
     }
 
     paintDecorations()

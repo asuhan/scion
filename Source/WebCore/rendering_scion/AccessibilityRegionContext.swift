@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003, 2006, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,12 +23,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntRect {
-  func moveBy(offset: IntPoint) {
+final class AccessibilityRegionContext: RegionContext {
+  func takeBounds(renderInline: RenderInlineWrapper?, paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  let location: IntPoint
-  let size: IntSize
 }
