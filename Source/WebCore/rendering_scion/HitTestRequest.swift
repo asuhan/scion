@@ -21,6 +21,40 @@
 */
 
 struct HitTestRequestWrapper {
+  struct `Type`: OptionSet {
+    let rawValue: UInt32
+    static let ReadOnly = Type(rawValue: 1 << 0)
+    static let Active = Type(rawValue: 1 << 1)
+    static let Move = Type(rawValue: 1 << 2)
+    static let Release = Type(rawValue: 1 << 3)
+    static let IgnoreCSSPointerEventsProperty = Type(rawValue: 1 << 4)
+    static let IgnoreClipping = Type(rawValue: 1 << 5)
+    static let SVGClipContent = Type(rawValue: 1 << 6)
+    static let TouchEvent = Type(rawValue: 1 << 7)
+    static let DisallowUserAgentShadowContent = Type(rawValue: 1 << 8)
+    static let DisallowUserAgentShadowContentExceptForImageOverlays = Type(
+      rawValue: 1 << 9)
+    static let AllowFrameScrollbars = Type(rawValue: 1 << 10)
+    static let AllowChildFrameContent = Type(rawValue: 1 << 11)
+    static let AllowVisibleChildFrameContentOnly = Type(rawValue: 1 << 12)
+    static let ChildFrameHitTest = Type(rawValue: 1 << 13)
+    static let AccessibilityHitTest = Type(rawValue: 1 << 14)
+    // Collect a list of nodes instead of just one. Used for elementsFromPoint and rect-based tests.
+    static let CollectMultipleElements = Type(rawValue: 1 << 15)
+    // When using list-based testing, continue hit testing even after a hit has been found.
+    static let IncludeAllElementsUnderPoint = Type(rawValue: 1 << 16)
+    static let PenEvent = Type(rawValue: 1 << 17)
+  }
+
+  static let defaultTypes = `Type`([.ReadOnly, .Active, .DisallowUserAgentShadowContent])
+
+  // FIXME: This constructor should be phased out in favor of the `HitTestSource` version above, such that all call sites must
+  // consider whether the hit test request is user-triggered or bindings-triggered.
+  init(type: `Type` = defaultTypes) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func userTriggered() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

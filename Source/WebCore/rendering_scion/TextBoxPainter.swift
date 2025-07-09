@@ -22,16 +22,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ModernTextBoxPainterWrapper {
-  init(
-    inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
-    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
-  ) {
+class TextBoxPainter {
+  init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func paint() {
+    if paintInfo.phase == .Selection && !haveSelection {
+      return
+    }
+
+    if paintInfo.phase == .EventRegion {
+      if renderer.parent()!.visibleToHitTesting(
+        request: HitTestRequestWrapper(type: .IgnoreCSSPointerEventsProperty))
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let renderer: RenderTextWrapper
+  private let paintInfo: PaintInfoWrapper
+  private let haveSelection: Bool
+}
+
+class ModernTextBoxPainterWrapper: TextBoxPainter {
+  init(
+    inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
