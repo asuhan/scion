@@ -22,7 +22,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class TextBoxPainter {
+protocol BoxPath {
+  func isHorizontal() -> Bool
+}
+
+class TextBoxPainter<TextBoxPath: BoxPath> {
   init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -50,18 +54,26 @@ class TextBoxPainter {
       return
     }
 
+    let shouldRotate = !textBox.isHorizontal() && !isCombinedText
+    if shouldRotate {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private let textBox: TextBoxPath
   private let renderer: RenderTextWrapper
   private let style: RenderStyleWrapper
   private let paintInfo: PaintInfoWrapper
   private let paintRect: FloatRectWrapper
+  private let isCombinedText: Bool
   private let haveSelection: Bool
 }
 
-class ModernTextBoxPainterWrapper: TextBoxPainter {
+class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> {
   init(
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
