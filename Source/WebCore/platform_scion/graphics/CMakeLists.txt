@@ -2,6 +2,7 @@ target_sources(layout_scion PRIVATE
     Color.swift
     FloatPoint.swift
     FloatRect.swift
+    FloatRoundedRect.swift
     FloatSize.swift
     Font.swift
     FontBaseline.swift

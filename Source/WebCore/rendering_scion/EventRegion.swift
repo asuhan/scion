@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2019 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,16 +23,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class AccessibilityRegionContext: RegionContext {
-  func takeBounds(renderInline: RenderInlineWrapper?, paintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  // Note that this function takes the bounds of a textbox that is associated with a RenderText, and not the RenderText itself.
-  // RenderTexts are not painted atomically. Instead, they are painted as multiple `InlineIterator::TextBox`s, where a textbox might represent
-  // the text on a single line. This method takes the paint rect of a single textbox and unites it with the other textbox rects painted for |renderText|.
-  func takeBounds(renderText: RenderTextWrapper, paintRect: FloatRectWrapper) {
+final class EventRegionContext: RegionContext {
+  func unite(
+    roundedRect: FloatRoundedRect, renderer: RenderObjectWrapper, style: RenderStyleWrapper,
+    overrideUserModifyIsEditable: Bool = false
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

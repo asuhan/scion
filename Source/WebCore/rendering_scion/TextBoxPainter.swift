@@ -37,9 +37,16 @@ class TextBoxPainter {
       if renderer.parent()!.visibleToHitTesting(
         request: HitTestRequestWrapper(type: .IgnoreCSSPointerEventsProperty))
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        paintInfo.eventRegionContext()!.unite(
+          roundedRect: FloatRoundedRect(rect: paintRect), renderer: renderer, style: style)
+        return
       }
+      return
+    }
+
+    if paintInfo.phase == .Accessibility {
+      paintInfo.accessibilityRegionContext()!.takeBounds(
+        renderText: renderer, paintRect: paintRect)
       return
     }
 
@@ -48,7 +55,9 @@ class TextBoxPainter {
   }
 
   private let renderer: RenderTextWrapper
+  private let style: RenderStyleWrapper
   private let paintInfo: PaintInfoWrapper
+  private let paintRect: FloatRectWrapper
   private let haveSelection: Bool
 }
 
