@@ -22,8 +22,11 @@ target_sources(layout_scion PRIVATE
     LayoutPoint.swift
     LayoutRect.swift
     LayoutSize.swift
+    RotationDirection.swift
     SurrogatePairAwareTextIterator.swift
     TabSize.swift
     TextIterator.swift
     TextRun.swift
 )
+
+add_subdirectory(transforms)

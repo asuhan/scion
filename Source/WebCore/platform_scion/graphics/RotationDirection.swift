@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,29 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class GraphicsContextWrapper {
-  func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func clip(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func beginTransparencyLayer(opacity: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func endTransparencyLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func concatCTM(transform: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+enum RotationDirection {
+  case Counterclockwise
+  case Clockwise
 }

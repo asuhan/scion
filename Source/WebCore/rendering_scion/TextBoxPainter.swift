@@ -56,8 +56,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
     let shouldRotate = !textBox.isHorizontal() && !isCombinedText
     if shouldRotate {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      paintInfo.context().concatCTM(transform: rotation(boxRect: paintRect, direction: .Clockwise))
     }
 
     if paintInfo.phase == .Foreground {
@@ -80,8 +79,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
 
     if shouldRotate {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      paintInfo.context().concatCTM(
+        transform: rotation(boxRect: paintRect, direction: .Counterclockwise))
     }
   }
 

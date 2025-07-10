@@ -42,6 +42,7 @@ target_sources(layout_scion PRIVATE
     RenderTextControl.swift
     RenderTextControlMultiLine.swift
     TextBoxPainter.swift
+    TextPainter.swift
 )
 add_subdirectory(mathml)
 add_subdirectory(shapes)
