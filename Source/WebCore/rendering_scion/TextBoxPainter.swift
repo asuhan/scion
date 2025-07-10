@@ -60,6 +60,47 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       fatalError("Not implemented")
     }
 
+    if paintInfo.phase == .Foreground {
+      if !isPrinting {
+        paintBackground()
+      }
+
+      paintPlatformDocumentMarkers()
+    }
+
+    paintForegroundAndDecorations()
+
+    if paintInfo.phase == .Foreground {
+      if useCustomUnderlines {
+        paintCompositionUnderlines()
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if shouldRotate {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  func paintBackground() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintForegroundAndDecorations() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintCompositionUnderlines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintPlatformDocumentMarkers() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -70,7 +111,9 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let paintInfo: PaintInfoWrapper
   private let paintRect: FloatRectWrapper
   private let isCombinedText: Bool
+  private let isPrinting: Bool
   private let haveSelection: Bool
+  private let useCustomUnderlines: Bool
 }
 
 class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> {
