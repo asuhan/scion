@@ -7,6 +7,7 @@ target_sources(layout_scion PRIVATE
     HitTestResult.swift
     InlineBoxPainter.swift
     InlineWalker.swift
+    MarkedText.swift
     PaintInfo.swift
     PaintPhase.swift
     AccessibilityRegionContext.swift
@@ -42,6 +43,7 @@ target_sources(layout_scion PRIVATE
     RenderTextControl.swift
     RenderTextControlMultiLine.swift
     TextBoxPainter.swift
+    TextBoxSelectableRange.swift
     TextPainter.swift
 )
 add_subdirectory(mathml)

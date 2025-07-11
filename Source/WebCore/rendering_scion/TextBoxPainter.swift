@@ -90,6 +90,29 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   func paintForegroundAndDecorations() {
+    let shouldPaintSelectionForeground = haveSelection && !useCustomUnderlines
+    let hasTextDecoration = !style.textDecorationsInEffect().isEmpty
+    let hasHighlightDecoration =
+      document.hasHighlight()
+      && !MarkedText.collectForHighlights(
+        renderer: renderer, selectableRange: selectableRange, phase: .Decoration
+      ).isEmpty
+
+    let hasDecoration =
+      hasTextDecoration || hasHighlightDecoration || hasSpellingOrGrammarDecoration()
+
+    if !contentMayNeedStyledMarkedText(
+      hasDecoration: hasDecoration, shouldPaintSelectionForeground: shouldPaintSelectionForeground)
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasSpellingOrGrammarDecoration() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -129,6 +152,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let document: Document
   private let style: RenderStyleWrapper
   private let paintInfo: PaintInfoWrapper
+  private let selectableRange: TextBoxSelectableRange
   private let paintRect: FloatRectWrapper
   private let isCombinedText: Bool
   private let isPrinting: Bool
