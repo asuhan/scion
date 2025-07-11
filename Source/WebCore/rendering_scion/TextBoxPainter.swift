@@ -74,8 +74,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         paintCompositionUnderlines()
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      renderer.page().addRelevantRepaintedObject(
+        object: renderer, objectPaintRect: enclosingLayoutRect(rect: paintRect))
     }
 
     if shouldRotate {

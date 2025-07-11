@@ -165,6 +165,11 @@ class RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func page() -> PageWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func minPreferredLogicalWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_minPreferredLogicalWidth(p))
   }
