@@ -94,6 +94,26 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     fatalError("Not implemented")
   }
 
+  private func contentMayNeedStyledMarkedText(
+    hasDecoration: Bool, shouldPaintSelectionForeground: Bool
+  ) -> Bool {
+    if hasDecoration {
+      return true
+    }
+    if shouldPaintSelectionForeground {
+      return true
+    }
+    if let markers = document.markersIfExists() {
+      if markers.hasMarkers() {
+        return true
+      }
+    }
+    if document.hasHighlight() {
+      return true
+    }
+    return false
+  }
+
   func paintCompositionUnderlines() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -106,6 +126,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
   private let textBox: TextBoxPath
   private let renderer: RenderTextWrapper
+  private let document: Document
   private let style: RenderStyleWrapper
   private let paintInfo: PaintInfoWrapper
   private let paintRect: FloatRectWrapper
