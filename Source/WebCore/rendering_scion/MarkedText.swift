@@ -53,10 +53,17 @@ class MarkedText {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func collectForHighlights(
     renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
   ) -> [MarkedText] {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let type: `Type` = .Unmarked
 }

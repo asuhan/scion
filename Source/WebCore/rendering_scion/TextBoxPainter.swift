@@ -85,12 +85,12 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
   }
 
-  func paintBackground() {
+  private func paintBackground() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func paintForegroundAndDecorations() {
+  private func paintForegroundAndDecorations() {
     let shouldPaintSelectionForeground = haveSelection && !useCustomUnderlines
     let hasTextDecoration = !style.textDecorationsInEffect().isEmpty
     let hasHighlightDecoration =
@@ -119,6 +119,31 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
           renderer: renderer, lineStyle: lineStyle, isFirstLine: isFirstLine, paintInfo: paintInfo))
       paintCompositionForeground(markedText: styledMarkedText)
       return
+    }
+
+    var markedTexts: [MarkedText] = []
+    if paintInfo.phase != .Selection {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    // The selection marked text acts as a placeholder when computing the marked texts for the gaps...
+    if shouldPaintSelectionForeground {
+      assert(!isPrinting)
+      let selectionMarkedText = createMarkedTextFromSelectionInBox()
+      if !selectionMarkedText.isEmpty() {
+        markedTexts.append(selectionMarkedText)
+      }
+    }
+
+    var styledMarkedTexts = StyledMarkedText.subdivideAndResolve(
+      textsToSubdivide: markedTexts, renderer: renderer, isFirstLine: isFirstLine,
+      paintInfo: paintInfo)
+
+    // ... now remove the selection marked text if we are excluding selection.
+    if !isPrinting && paintInfo.paintBehavior.contains(.ExcludeSelection) {
+      styledMarkedTexts.removeAll(where: {
+        markedText in markedText.type == .Selection
+      })
     }
 
     // TODO(asuhan): implement this
@@ -160,17 +185,22 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     return false
   }
 
-  func paintCompositionUnderlines() {
+  private func paintCompositionUnderlines() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func paintCompositionForeground(markedText: StyledMarkedText) {
+  private func paintCompositionForeground(markedText: StyledMarkedText) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func paintPlatformDocumentMarkers() {
+  private func paintPlatformDocumentMarkers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func createMarkedTextFromSelectionInBox() -> MarkedText {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

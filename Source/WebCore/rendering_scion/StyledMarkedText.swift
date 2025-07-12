@@ -31,6 +31,14 @@ final class StyledMarkedText: MarkedText {
     fatalError("Not implemented")
   }
 
+  static func subdivideAndResolve(
+    textsToSubdivide: [MarkedText], renderer: RenderTextWrapper, isFirstLine: Bool,
+    paintInfo: PaintInfoWrapper
+  ) -> [StyledMarkedText] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func computeStyleForUnmarkedMarkedText(
     renderer: RenderTextWrapper, lineStyle: RenderStyleWrapper, isFirstLine: Bool,
     paintInfo: PaintInfoWrapper
