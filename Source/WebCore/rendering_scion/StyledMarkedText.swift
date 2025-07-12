@@ -39,6 +39,13 @@ final class StyledMarkedText: MarkedText {
     fatalError("Not implemented")
   }
 
+  static func coalesceAdjacentWithEqualForeground(markedTexts: [StyledMarkedText])
+    -> [StyledMarkedText]
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func computeStyleForUnmarkedMarkedText(
     renderer: RenderTextWrapper, lineStyle: RenderStyleWrapper, isFirstLine: Bool,
     paintInfo: PaintInfoWrapper

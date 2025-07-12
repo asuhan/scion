@@ -176,8 +176,22 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       })
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hasDecoration && paintInfo.phase != .Selection {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      // Coalesce styles of adjacent marked texts to minimize the number of drawing commands.
+      let coalescedStyledMarkedTexts = StyledMarkedText.coalesceAdjacentWithEqualForeground(
+        markedTexts: styledMarkedTexts)
+
+      if coalescedStyledMarkedTexts.isEmpty {
+        return
+      }
+
+      for markedText in coalescedStyledMarkedTexts {
+        paintCompositionForeground(markedText: markedText)
+      }
+    }
   }
 
   private func startPosition(hasBackwardTruncation: Bool) -> UInt32 {
