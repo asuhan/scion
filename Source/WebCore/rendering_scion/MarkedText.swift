@@ -58,8 +58,23 @@ class MarkedText {
     fatalError("Not implemented")
   }
 
+  static func collectForDocumentMarkers(
+    renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
+  ) -> [MarkedText] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func collectForHighlights(
     renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
+  ) -> [MarkedText] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func collectForDraggedAndTransparentContent(
+    type: DocumentMarker.`Type`, renderer: RenderTextWrapper,
+    selectableRange: TextBoxSelectableRange
   ) -> [MarkedText] {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

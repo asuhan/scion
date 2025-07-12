@@ -91,7 +91,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintForegroundAndDecorations() {
-    let shouldPaintSelectionForeground = haveSelection && !useCustomUnderlines
+    var shouldPaintSelectionForeground = haveSelection && !useCustomUnderlines
     let hasTextDecoration = !style.textDecorationsInEffect().isEmpty
     let hasHighlightDecoration =
       document.hasHighlight()
@@ -100,7 +100,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       ).isEmpty
     let hasMismatchingContentDirection =
       renderer.containingBlock()!.style().direction() != textBox.direction()
-    let hasBackwardTrunctation = selectableRange.truncation != nil && hasMismatchingContentDirection
+    let hasBackwardTruncation = selectableRange.truncation != nil && hasMismatchingContentDirection
 
     let hasDecoration =
       hasTextDecoration || hasHighlightDecoration || hasSpellingOrGrammarDecoration()
@@ -110,8 +110,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     {
       let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
       let markedText = MarkedText(
-        startOffset: startPosition(hasBackwardTrunctation: hasBackwardTrunctation),
-        endOffset: endPosition(hasBackwardTrunctation: hasBackwardTrunctation),
+        startOffset: startPosition(hasBackwardTruncation: hasBackwardTruncation),
+        endOffset: endPosition(hasBackwardTruncation: hasBackwardTruncation),
         type: .Unmarked)
       let styledMarkedText = StyledMarkedText(
         marker: markedText,
@@ -123,8 +123,38 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
     var markedTexts: [MarkedText] = []
     if paintInfo.phase != .Selection {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // The marked texts for the gaps between document markers and selection are implicitly created by subdividing the entire line.
+      markedTexts.append(
+        MarkedText(
+          startOffset: startPosition(hasBackwardTruncation: hasBackwardTruncation),
+          endOffset: endPosition(hasBackwardTruncation: hasBackwardTruncation),
+          type: .Unmarked))
+
+      if !isPrinting {
+        markedTexts.insert(
+          contentsOf: MarkedText.collectForDocumentMarkers(
+            renderer: renderer, selectableRange: selectableRange, phase: .Foreground),
+          at: markedTexts.count)
+        markedTexts.insert(
+          contentsOf: MarkedText.collectForHighlights(
+            renderer: renderer, selectableRange: selectableRange, phase: .Foreground),
+          at: markedTexts.count)
+
+        let shouldPaintDraggedContent = !(paintInfo.paintBehavior.contains(.ExcludeSelection))
+        if shouldPaintDraggedContent {
+          let markedTextsForDraggedContent = MarkedText.collectForDraggedAndTransparentContent(
+            type: .DraggedContent, renderer: renderer, selectableRange: selectableRange)
+          if !markedTextsForDraggedContent.isEmpty {
+            shouldPaintSelectionForeground = false
+            markedTexts.insert(contentsOf: markedTextsForDraggedContent, at: markedTexts.count)
+          }
+        }
+        let markedTextsForTransparentContent = MarkedText.collectForDraggedAndTransparentContent(
+          type: .TransparentContent, renderer: renderer, selectableRange: selectableRange)
+        if !markedTextsForTransparentContent.isEmpty {
+          markedTexts.insert(contentsOf: markedTextsForTransparentContent, at: markedTexts.count)
+        }
+      }
     }
     // The selection marked text acts as a placeholder when computing the marked texts for the gaps...
     if shouldPaintSelectionForeground {
@@ -150,12 +180,12 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     fatalError("Not implemented")
   }
 
-  private func startPosition(hasBackwardTrunctation: Bool) -> UInt32 {
+  private func startPosition(hasBackwardTruncation: Bool) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func endPosition(hasBackwardTrunctation: Bool) -> UInt32 {
+  private func endPosition(hasBackwardTruncation: Bool) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
