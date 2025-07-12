@@ -22,4 +22,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct TextBoxSelectableRange {}
+struct TextBoxSelectableRange {
+  // FIXME: Consider holding onto the truncation position instead. See webkit.org/b/164999
+  let truncation: UInt32? = nil
+}

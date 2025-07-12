@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Apple Inc. All rights reserved.
+ * Copyright (C) 2021 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,18 +23,19 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-extension InlineIterator {
+final class StyledMarkedText: MarkedText {
+  struct Style {}
 
-  class BoxModernPath: BoxPath {
-    func isHorizontal() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func direction() -> TextDirection {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+  init(marker: MarkedText, style: Style) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
+  static func computeStyleForUnmarkedMarkedText(
+    renderer: RenderTextWrapper, lineStyle: RenderStyleWrapper, isFirstLine: Bool,
+    paintInfo: PaintInfoWrapper
+  ) -> Style {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

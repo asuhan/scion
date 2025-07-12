@@ -23,12 +23,36 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct MarkedText {
+class MarkedText {
+  // Sorted by paint order
+  enum `Type` {
+    case Unmarked
+    case GrammarError
+    case Correction
+    case SpellingError
+    case TextMatch
+    case DictationAlternatives
+    case Highlight
+    case FragmentHighlight
+    case Selection
+    case DraggedContent
+    case TransparentContent
+  }
+
   enum PaintPhase {
     case Background
     case Foreground
     case Decoration
   }
+
+  init(
+    startOffset: UInt32, endOffset: UInt32, type: `Type`, marker: RenderedDocumentMarker? = nil,
+    highlightName: AtomStringWrapper = AtomStringWrapper(), priority: Int32 = 0
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func collectForHighlights(
     renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
   ) -> [MarkedText] {

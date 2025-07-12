@@ -42,6 +42,7 @@ target_sources(layout_scion PRIVATE
     RenderView.swift
     RenderTextControl.swift
     RenderTextControlMultiLine.swift
+    StyledMarkedText.swift
     TextBoxPainter.swift
     TextBoxSelectableRange.swift
     TextPainter.swift

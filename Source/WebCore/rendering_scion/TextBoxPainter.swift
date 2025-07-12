@@ -24,6 +24,7 @@
 
 protocol BoxPath {
   func isHorizontal() -> Bool
+  func direction() -> TextDirection
 }
 
 class TextBoxPainter<TextBoxPath: BoxPath> {
@@ -97,6 +98,9 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       && !MarkedText.collectForHighlights(
         renderer: renderer, selectableRange: selectableRange, phase: .Decoration
       ).isEmpty
+    let hasMismatchingContentDirection =
+      renderer.containingBlock()!.style().direction() != textBox.direction()
+    let hasBackwardTrunctation = selectableRange.truncation != nil && hasMismatchingContentDirection
 
     let hasDecoration =
       hasTextDecoration || hasHighlightDecoration || hasSpellingOrGrammarDecoration()
@@ -104,10 +108,29 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     if !contentMayNeedStyledMarkedText(
       hasDecoration: hasDecoration, shouldPaintSelectionForeground: shouldPaintSelectionForeground)
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+      let markedText = MarkedText(
+        startOffset: startPosition(hasBackwardTrunctation: hasBackwardTrunctation),
+        endOffset: endPosition(hasBackwardTrunctation: hasBackwardTrunctation),
+        type: .Unmarked)
+      let styledMarkedText = StyledMarkedText(
+        marker: markedText,
+        style: StyledMarkedText.computeStyleForUnmarkedMarkedText(
+          renderer: renderer, lineStyle: lineStyle, isFirstLine: isFirstLine, paintInfo: paintInfo))
+      paintCompositionForeground(markedText: styledMarkedText)
+      return
     }
 
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func startPosition(hasBackwardTrunctation: Bool) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func endPosition(hasBackwardTrunctation: Bool) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -142,6 +165,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     fatalError("Not implemented")
   }
 
+  func paintCompositionForeground(markedText: StyledMarkedText) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintPlatformDocumentMarkers() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -154,6 +182,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let paintInfo: PaintInfoWrapper
   private let selectableRange: TextBoxSelectableRange
   private let paintRect: FloatRectWrapper
+  private let isFirstLine: Bool
   private let isCombinedText: Bool
   private let isPrinting: Bool
   private let haveSelection: Bool
