@@ -208,8 +208,41 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         }
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Coalesce styles of adjacent marked texts to minimize the number of drawing commands.
+      let coalescedStyledMarkedTexts = StyledMarkedText.coalesceAdjacentWithEqualDecorations(
+        markedTexts: styledMarkedTexts)
+
+      for markedText in coalescedStyledMarkedTexts {
+        let startOffset = markedText.startOffset
+        let endOffset = markedText.endOffset
+        if startOffset < endOffset {
+          // Avoid measuring the text when the entire line box is selected as an optimization.
+          var snappedPaintRect = snapRectToDevicePixelsWithWritingDirection(
+            rect: LayoutRectWrapper(r: paintRect), deviceScaleFactor: document.deviceScaleFactor(),
+            ltr: paintTextRun.ltr())
+          if startOffset != 0 || endOffset != paintTextRun.length() {
+            let selectionRect = LayoutRectWrapper(
+              x: paintRect.x(), y: paintRect.y(), width: paintRect.width(),
+              height: paintRect.height())
+            fontCascade().adjustSelectionRectForText(
+              canUseSimplifiedTextMeasuring: renderer.canUseSimplifiedTextMeasuring() ?? false,
+              run: paintTextRun,
+              selectionRect: selectionRect, from: startOffset, to: endOffset)
+            snappedPaintRect = snapRectToDevicePixelsWithWritingDirection(
+              rect: selectionRect, deviceScaleFactor: document.deviceScaleFactor(),
+              ltr: paintTextRun.ltr())
+          }
+          let decorationPainter = createDecorationPainter(
+            markedText: markedText, clipOutRect: textDecorationSelectionClipOutRect)
+          paintBackgroundDecorations(
+            decorationPainter: decorationPainter, markedText: markedText,
+            textBoxPaintRect: snappedPaintRect)
+          paintCompositionForeground(markedText: markedText)
+          paintForegroundDecorations(
+            decorationPainter: decorationPainter, markedText: markedText,
+            textBoxPaintRect: snappedPaintRect)
+        }
+      }
     } else {
       // Coalesce styles of adjacent marked texts to minimize the number of drawing commands.
       let coalescedStyledMarkedTexts = StyledMarkedText.coalesceAdjacentWithEqualForeground(
@@ -271,6 +304,29 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintPlatformDocumentMarkers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func createDecorationPainter(markedText: StyledMarkedText, clipOutRect: FloatRectWrapper)
+    -> TextDecorationPainter
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBackgroundDecorations(
+    decorationPainter: TextDecorationPainter, markedText: StyledMarkedText,
+    textBoxPaintRect: FloatRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintForegroundDecorations(
+    decorationPainter: TextDecorationPainter, markedText: StyledMarkedText,
+    textBoxPaintRect: FloatRectWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

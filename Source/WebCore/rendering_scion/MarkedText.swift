@@ -80,5 +80,7 @@ class MarkedText {
     fatalError("Not implemented")
   }
 
+  let startOffset: UInt32 = 0
+  let endOffset: UInt32 = 0
   let type: `Type` = .Unmarked
 }

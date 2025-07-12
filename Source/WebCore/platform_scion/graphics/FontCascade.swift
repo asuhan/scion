@@ -133,6 +133,14 @@ class FontCascadeWrapper {
     return font_cascade_widthOfSpaceString(p: p!)
   }
 
+  func adjustSelectionRectForText(
+    canUseSimplifiedTextMeasuring: Bool, run: TextRunWrapper, selectionRect: LayoutRectWrapper,
+    from: UInt32 = 0, to: UInt32? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSmallCaps() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this

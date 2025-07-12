@@ -45,6 +45,7 @@ target_sources(layout_scion PRIVATE
     StyledMarkedText.swift
     TextBoxPainter.swift
     TextBoxSelectableRange.swift
+    TextDecorationPainter.swift
     TextPainter.swift
 )
 add_subdirectory(mathml)

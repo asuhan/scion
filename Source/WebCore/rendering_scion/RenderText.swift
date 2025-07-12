@@ -38,6 +38,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 
+  func canUseSimplifiedTextMeasuring() -> Bool? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setHasStrongDirectionalityContent(hasStrongDirectionalityContent: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

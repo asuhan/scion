@@ -74,6 +74,11 @@ class TextRunWrapper {
     return wk_interop.TextRun_rtl(self.p!)
   }
 
+  func ltr() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTextSpacingState(spacingStatePtr: UnsafeRawPointer?) {
     assert(self.p != nil)
     text_run_set_text_spacing_state(textRunPtr: self.p!, spacingStatePtr: spacingStatePtr)

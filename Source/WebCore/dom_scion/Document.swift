@@ -26,6 +26,11 @@
  */
 
 struct Document {
+  func deviceScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositeOperatorForBackgroundColor(color: ColorWrapper, renderer: RenderObjectWrapper)
     -> CompositeOperator
   {

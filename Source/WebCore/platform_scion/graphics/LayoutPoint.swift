@@ -36,6 +36,11 @@ struct LayoutPointWrapper: Equatable {
     self.y = y
   }
 
+  init(x: Float32, y: Float32) {
+    self.x = LayoutUnit(value: x)
+    self.y = LayoutUnit(value: y)
+  }
+
   init(size: FloatPoint) {
     self.x = LayoutUnit(value: size.x)
     self.y = LayoutUnit(value: size.y)

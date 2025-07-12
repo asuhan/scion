@@ -42,6 +42,12 @@ struct LayoutRectWrapper {
       size: LayoutSizeWrapper(width: width, height: height))
   }
 
+  init(x: Float32, y: Float32, width: Float32, height: Float32) {
+    self.init(
+      location: LayoutPointWrapper(x: x, y: y),
+      size: LayoutSizeWrapper(width: width, height: height))
+  }
+
   init(rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -147,4 +153,12 @@ func enclosingLayoutRect(rect: FloatRectWrapper) -> LayoutRectWrapper {
   let maxPoint = ceiledLayoutPoint(p: rect.maxXMaxYCorner())
 
   return LayoutRectWrapper(location: location, size: maxPoint - location)
+}
+
+// FIXME: This needs to take vertical centering into account too.
+func snapRectToDevicePixelsWithWritingDirection(
+  rect: LayoutRectWrapper, deviceScaleFactor: Float32, ltr: Bool
+) -> FloatRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
