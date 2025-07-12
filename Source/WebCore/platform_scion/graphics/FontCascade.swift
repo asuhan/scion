@@ -47,6 +47,14 @@ class FontCascadeWrapper {
     return font_cascade_size(p: p!)
   }
 
+  func widthOfTextRange(
+    run: TextRunWrapper, from: UInt32, to: UInt32, fallbackFonts: Set<UInt>?,
+    outWidthBeforeRange: inout Float32, outWidthAfterRange: inout Float32
+  ) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func width(run: TextRunWrapper) -> Float32 {
     if p != nil && run.p != nil {
       return font_cascade_width(fontCascadePtr: p!, textRunPtr: run.p!)

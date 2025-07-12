@@ -177,6 +177,37 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
 
     if hasDecoration && paintInfo.phase != .Selection {
+      let length = selectableRange.truncation ?? paintTextRun.length()
+      var selectionStart: UInt32 = 0
+      var selectionEnd: UInt32 = 0
+      if haveSelection {
+        (selectionStart, selectionEnd) = selectionStartEnd()
+      }
+
+      var textDecorationSelectionClipOutRect = FloatRectWrapper()
+      if paintInfo.paintBehavior.contains(.ExcludeSelection) && selectionStart < selectionEnd
+        && selectionEnd <= length
+      {
+        textDecorationSelectionClipOutRect = paintRect
+        var logicalWidthBeforeRange: Float32 = 0
+        var logicalWidthAfterRange: Float32 = 0
+        let logicalSelectionWidth = fontCascade().widthOfTextRange(
+          run: paintTextRun, from: selectionStart, to: selectionEnd, fallbackFonts: nil,
+          outWidthBeforeRange: &logicalWidthBeforeRange,
+          outWidthAfterRange: &logicalWidthAfterRange)
+        // FIXME: Do we need to handle vertical bottom to top text?
+        if !textBox.isHorizontal() {
+          textDecorationSelectionClipOutRect.move(dx: 0, dy: logicalWidthBeforeRange)
+          textDecorationSelectionClipOutRect.setHeight(height: logicalSelectionWidth)
+        } else if textBox.direction() == .RTL {
+          textDecorationSelectionClipOutRect.move(dx: logicalWidthAfterRange, dy: 0)
+          textDecorationSelectionClipOutRect.setWidth(width: logicalSelectionWidth)
+        } else {
+          textDecorationSelectionClipOutRect.move(dx: logicalWidthBeforeRange, dy: 0)
+          textDecorationSelectionClipOutRect.setWidth(width: logicalSelectionWidth)
+        }
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     } else {
@@ -244,7 +275,17 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     fatalError("Not implemented")
   }
 
+  private func selectionStartEnd() -> (UInt32, UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func createMarkedTextFromSelectionInBox() -> MarkedText {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func fontCascade() -> FontCascadeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -253,6 +294,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let renderer: RenderTextWrapper
   private let document: Document
   private let style: RenderStyleWrapper
+  private let paintTextRun: TextRunWrapper
   private let paintInfo: PaintInfoWrapper
   private let selectableRange: TextBoxSelectableRange
   private let paintRect: FloatRectWrapper
