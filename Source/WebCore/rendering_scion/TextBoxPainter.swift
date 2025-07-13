@@ -31,7 +31,7 @@ protocol BoxPath {
 }
 
 class TextBoxPainter<TextBoxPath: BoxPath> {
-  init() {
+  init(textBox: TextBoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
