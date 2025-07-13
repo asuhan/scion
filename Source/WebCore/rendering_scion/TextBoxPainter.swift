@@ -269,8 +269,30 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func hasSpellingOrGrammarDecoration() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let markedTexts = MarkedText.collectForDocumentMarkers(
+      renderer: renderer, selectableRange: selectableRange, phase: .Decoration)
+
+    let hasSpellingError = markedTexts.contains(where: { markedText in
+      markedText.type == .SpellingError
+    })
+
+    if hasSpellingError {
+      if let spellingErrorStyle = renderer.spellingErrorPseudoStyle() {
+        return !spellingErrorStyle.textDecorationsInEffect().isEmpty
+      }
+    }
+
+    let hasGrammarError = markedTexts.contains(where: { markedText in
+      markedText.type == .GrammarError
+    })
+
+    if hasGrammarError {
+      if let grammarErrorStyle = renderer.grammarErrorPseudoStyle() {
+        return !grammarErrorStyle.textDecorationsInEffect().isEmpty
+      }
+    }
+
+    return false
   }
 
   private func contentMayNeedStyledMarkedText(

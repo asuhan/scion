@@ -29,6 +29,16 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func grammarErrorPseudoStyle() -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func text() -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
