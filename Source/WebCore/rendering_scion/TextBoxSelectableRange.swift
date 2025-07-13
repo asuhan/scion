@@ -25,4 +25,9 @@
 struct TextBoxSelectableRange {
   // FIXME: Consider holding onto the truncation position instead. See webkit.org/b/164999
   let truncation: UInt32? = nil
+
+  func clamp(offset: UInt32) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

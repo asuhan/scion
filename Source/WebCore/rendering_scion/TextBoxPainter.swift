@@ -24,6 +24,9 @@
 
 protocol BoxPath {
   func isHorizontal() -> Bool
+  func start() -> UInt32
+  func end() -> UInt32
+  func length() -> UInt32
   func direction() -> TextDirection
 }
 
@@ -259,13 +262,13 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func startPosition(hasBackwardTruncation: Bool) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !hasBackwardTruncation
+      ? selectableRange.clamp(offset: textBox.start())
+      : textBox.length() - selectableRange.truncation!
   }
 
   private func endPosition(hasBackwardTruncation: Bool) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !hasBackwardTruncation ? selectableRange.clamp(offset: textBox.end()) : textBox.length()
   }
 
   private func hasSpellingOrGrammarDecoration() -> Bool {
