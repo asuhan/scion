@@ -28,4 +28,19 @@ struct CompositionHighlight {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var startOffset: UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var endOffset: UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var backgroundColor: ColorWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

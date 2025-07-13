@@ -39,4 +39,9 @@ final class EditorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func customCompositionHighlights() -> [CompositionHighlight] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

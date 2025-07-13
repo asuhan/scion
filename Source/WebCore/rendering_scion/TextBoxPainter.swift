@@ -385,8 +385,30 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for highlight in editor.customCompositionHighlights() {
+      if highlight.backgroundColor == nil {
+        continue
+      }
+
+      if highlight.endOffset <= textBox.start() {
+        continue
+      }
+
+      if highlight.startOffset >= textBox.end() {
+        break
+      }
+
+      let (clampedStart, clampedEnd) = selectableRange.clamp(
+        startOffset: highlight.startOffset, endOffset: highlight.endOffset)
+
+      paintBackground(
+        startOffset: clampedStart, endOffset: clampedEnd, color: highlight.backgroundColor!,
+        backgroundStyle: .Rounded)
+
+      if highlight.endOffset > textBox.end() {
+        break
+      }
+    }
   }
 
   private func paintCompositionUnderlines() {
