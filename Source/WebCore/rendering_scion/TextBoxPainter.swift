@@ -362,8 +362,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func createMarkedTextFromSelectionInBox() -> MarkedText {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (selectionStart, selectionEnd) = selectionStartEnd()
+    if selectionStart < selectionEnd {
+      return MarkedText(startOffset: selectionStart, endOffset: selectionEnd, type: .Selection)
+    }
+    return MarkedText()
   }
 
   private func fontCascade() -> FontCascadeWrapper {

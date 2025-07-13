@@ -53,6 +53,8 @@ class MarkedText {
     fatalError("Not implemented")
   }
 
+  init() {}
+
   func isEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
