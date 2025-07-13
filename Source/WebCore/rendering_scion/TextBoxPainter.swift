@@ -133,8 +133,18 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private func shouldPaintBackground(
     hasSelectionWithNonCustomUnderline: Bool, shouldPaintCompositionBackground: Bool
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hasSelectionWithNonCustomUnderline || shouldPaintCompositionBackground {
+      return true
+    }
+    if let markers = document.markersIfExists() {
+      if markers.hasMarkers() {
+        return true
+      }
+    }
+    if document.hasHighlight() {
+      return true
+    }
+    return false
   }
 
   private func paintForegroundAndDecorations() {
