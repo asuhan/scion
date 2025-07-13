@@ -89,6 +89,50 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintBackground() {
+    let shouldPaintCompositionBackground = containsComposition && !useCustomUnderlines
+    let hasSelectionWithNonCustomUnderline = haveSelection && !useCustomUnderlines
+
+    if !shouldPaintBackground(
+      hasSelectionWithNonCustomUnderline: hasSelectionWithNonCustomUnderline,
+      shouldPaintCompositionBackground: shouldPaintCompositionBackground)
+    {
+      return
+    }
+
+    if shouldPaintCompositionBackground {
+      paintCompositionBackground()
+    }
+
+    var markedTexts: [MarkedText] = MarkedText.collectForDocumentMarkers(
+      renderer: renderer, selectableRange: selectableRange, phase: .Background)
+    markedTexts.insert(
+      contentsOf: MarkedText.collectForHighlights(
+        renderer: renderer, selectableRange: selectableRange, phase: .Background),
+      at: markedTexts.count)
+
+    if hasSelectionWithNonCustomUnderline && !paintInfo.context().paintingDisabled() {
+      let selectionMarkedText = createMarkedTextFromSelectionInBox()
+      if !selectionMarkedText.isEmpty() {
+        markedTexts.append(selectionMarkedText)
+      }
+    }
+
+    let styledMarkedTexts = StyledMarkedText.subdivideAndResolve(
+      textsToSubdivide: markedTexts, renderer: renderer, isFirstLine: isFirstLine,
+      paintInfo: paintInfo)
+
+    // Coalesce styles of adjacent marked texts to minimize the number of drawing commands.
+    let coalescedStyledMarkedTexts = StyledMarkedText.coalesceAdjacentWithEqualBackground(
+      markedTexts: styledMarkedTexts)
+
+    for markedText in coalescedStyledMarkedTexts {
+      paintBackground(markedText: markedText)
+    }
+  }
+
+  private func shouldPaintBackground(
+    hasSelectionWithNonCustomUnderline: Bool, shouldPaintCompositionBackground: Bool
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -318,6 +362,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     return false
   }
 
+  private func paintCompositionBackground() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintCompositionUnderlines() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -329,6 +378,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintPlatformDocumentMarkers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBackground(markedText: StyledMarkedText) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -386,6 +440,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let isCombinedText: Bool
   private let isPrinting: Bool
   private let haveSelection: Bool
+  private let containsComposition: Bool
   private let useCustomUnderlines: Bool
 }
 

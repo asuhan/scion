@@ -24,6 +24,11 @@
  */
 
 class GraphicsContextWrapper {
+  func paintingDisabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
