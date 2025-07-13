@@ -373,6 +373,18 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintCompositionBackground() {
+    let editor = renderer.frame().editor()
+
+    if !editor.compositionUsesCustomHighlights() {
+      let (clampedStart, clampedEnd) = selectableRange.clamp(
+        startOffset: editor.compositionStart(), endOffset: editor.compositionEnd())
+
+      paintBackground(
+        startOffset: clampedStart, endOffset: clampedEnd,
+        color: CompositionHighlight.defaultCompositionFillColor)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -393,6 +405,19 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintBackground(markedText: StyledMarkedText) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private enum BackgroundStyle {
+    case Normal
+    case Rounded
+  }
+
+  private func paintBackground(
+    startOffset: UInt32, endOffset: UInt32, color: ColorWrapper,
+    backgroundStyle: BackgroundStyle = .Normal
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

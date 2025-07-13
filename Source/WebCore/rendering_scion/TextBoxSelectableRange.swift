@@ -30,4 +30,9 @@ struct TextBoxSelectableRange {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func clamp(startOffset: UInt32, endOffset: UInt32) -> (UInt32, UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

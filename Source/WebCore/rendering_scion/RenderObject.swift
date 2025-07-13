@@ -165,6 +165,11 @@ class RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func frame() -> LocalFrameWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func page() -> PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
