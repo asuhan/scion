@@ -28,7 +28,17 @@
  */
 
 struct FloatRoundedRect {
-  struct Radii {}
+  struct Radii {
+    init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    init(uniformRadius: Float32) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
   init(rect: FloatRectWrapper = FloatRectWrapper(), radii: Radii = Radii()) {
     // TODO(asuhan): implement this

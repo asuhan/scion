@@ -34,6 +34,17 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func fillRect(rect: FloatRectWrapper, color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillRoundedRect(rect: FloatRoundedRect, color: ColorWrapper, blendMode: BlendMode = .Normal)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clip(rect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

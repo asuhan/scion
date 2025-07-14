@@ -160,6 +160,13 @@ func enclosingLayoutRect(rect: FloatRectWrapper) -> LayoutRectWrapper {
   return LayoutRectWrapper(location: location, size: maxPoint - location)
 }
 
+func snapRectToDevicePixels(rect: LayoutRectWrapper, pixelSnappingFactor: Float32)
+  -> FloatRectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // FIXME: This needs to take vertical centering into account too.
 func snapRectToDevicePixelsWithWritingDirection(
   rect: LayoutRectWrapper, deviceScaleFactor: Float32, ltr: Bool

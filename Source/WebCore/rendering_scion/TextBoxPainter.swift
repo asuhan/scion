@@ -478,8 +478,20 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       adjustedSelectionRect.shiftMaxXEdgeTo(edge: visualRight)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Support painting combined text. See <https://bugs.webkit.org/show_bug.cgi?id=180993>.
+    var backgroundRect = snapRectToDevicePixels(
+      rect: adjustedSelectionRect, pixelSnappingFactor: document.deviceScaleFactor())
+    if backgroundStyle == .Rounded {
+      backgroundRect.expand(dw: -1, dh: -1)
+      backgroundRect.move(dx: 0.5, dy: 0.5)
+      context.fillRoundedRect(
+        rect: FloatRoundedRect(
+          rect: backgroundRect, radii: FloatRoundedRect.Radii(uniformRadius: 2)),
+        color: color)
+      return
+    }
+
+    context.fillRect(rect: backgroundRect, color: color)
   }
 
   private func createDecorationPainter(markedText: StyledMarkedText, clipOutRect: FloatRectWrapper)
