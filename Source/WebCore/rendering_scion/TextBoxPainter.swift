@@ -432,8 +432,9 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintBackground(markedText: StyledMarkedText) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    paintBackground(
+      startOffset: markedText.startOffset, endOffset: markedText.endOffset,
+      color: markedText.style.backgroundColor, backgroundStyle: .Normal)
   }
 
   private enum BackgroundStyle {

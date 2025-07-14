@@ -24,12 +24,16 @@
  */
 
 final class StyledMarkedText: MarkedText {
-  struct Style {}
+  struct Style {
+    let backgroundColor: ColorWrapper
+  }
 
   init(marker: MarkedText, style: Style) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let style: Style
 
   static func subdivideAndResolve(
     textsToSubdivide: [MarkedText], renderer: RenderTextWrapper, isFirstLine: Bool,
