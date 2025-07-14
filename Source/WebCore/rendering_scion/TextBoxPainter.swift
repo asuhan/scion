@@ -88,6 +88,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
   }
 
+  private func makeIterator() -> InlineIterator.TextBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintBackground() {
     let shouldPaintCompositionBackground = containsComposition && !useCustomUnderlines
     let hasSelectionWithNonCustomUnderline = haveSelection && !useCustomUnderlines
@@ -440,6 +445,39 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     startOffset: UInt32, endOffset: UInt32, color: ColorWrapper,
     backgroundStyle: BackgroundStyle = .Normal
   ) {
+    if startOffset >= endOffset {
+      return
+    }
+
+    let context = paintInfo.context()
+    let _ = GraphicsContextStateSaver(context: context)
+    updateGraphicsContext(context: context, paintStyle: TextPaintStyle(color: color))  // Don't draw text at all!
+
+    // Note that if the text is truncated, we let the thing being painted in the truncation
+    // draw its own highlight.
+    let lineBox = makeIterator().get().lineBox()
+    let selectionBottom = LineSelection.logicalBottom(lineBox: lineBox.get())
+    let selectionTop = LineSelection.logicalTopAdjustedForPrecedingBlock(lineBox: lineBox.get())
+    // Use same y positioning and height as for selection, so that when the selection and this subrange are on
+    // the same word there are no pieces sticking out.
+    let deltaY = LayoutUnit(
+      value: style.isFlippedLinesWritingMode()
+        ? selectionBottom - logicalRect.maxY() : logicalRect.y() - selectionTop)
+    let selectionHeight = LayoutUnit(value: max(0, selectionBottom - selectionTop))
+    let selectionRect = LayoutRectWrapper(
+      x: LayoutUnit(value: paintRect.x()), y: LayoutUnit(value: paintRect.y() - deltaY),
+      width: LayoutUnit(value: logicalRect.width()), height: selectionHeight)
+    var adjustedSelectionRect = selectionRect
+    fontCascade().adjustSelectionRectForText(
+      canUseSimplifiedTextMeasuring: renderer.canUseSimplifiedTextMeasuring() ?? false,
+      run: paintTextRun, selectionRect: adjustedSelectionRect,
+      from: startOffset, to: endOffset)
+    if paintTextRun.length() == endOffset - startOffset {
+      // FIXME: We should reconsider re-measuring the content when non-whitespace runs are joined together (see webkit.org/b/251318).
+      let visualRight = max(adjustedSelectionRect.maxX(), selectionRect.maxX())
+      adjustedSelectionRect.shiftMaxXEdgeTo(edge: visualRight)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -489,6 +527,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let renderer: RenderTextWrapper
   private let document: Document
   private let style: RenderStyleWrapper
+  private let logicalRect: FloatRectWrapper
   private let paintTextRun: TextRunWrapper
   private let paintInfo: PaintInfoWrapper
   private let selectableRange: TextBoxSelectableRange

@@ -94,6 +94,11 @@ struct LayoutRectWrapper {
 
   mutating func expand(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: dw, height: dh) }
 
+  mutating func shiftMaxXEdgeTo(edge: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func minXMinYCorner() -> LayoutPointWrapper { return m_location }
 
   mutating func unite(other: LayoutRectWrapper) {

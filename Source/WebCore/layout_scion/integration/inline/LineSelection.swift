@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 Apple Inc. All rights reserved.
+ * Copyright (C) 2022 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,52 +23,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-extension InlineIterator {
-
-  class Box {
-    func isRootInlineBox() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func visualRect() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func logicalWidth() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func isHorizontal() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func lineBox() -> LineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+struct LineSelection {
+  static func logicalBottom(lineBox: InlineIterator.LineBox) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
-  class BoxIterator {
-    func bool() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func get() -> Box {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+  static func logicalTopAdjustedForPrecedingBlock(lineBox: InlineIterator.LineBox) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
-
-  class LeafBoxIterator: BoxIterator {}
-
 }

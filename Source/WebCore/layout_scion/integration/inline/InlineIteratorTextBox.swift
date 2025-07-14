@@ -25,50 +25,6 @@
 
 extension InlineIterator {
 
-  class Box {
-    func isRootInlineBox() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func visualRect() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func logicalWidth() -> Float32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func isHorizontal() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func lineBox() -> LineBoxIterator {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-  }
-
-  class BoxIterator {
-    func bool() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func get() -> Box {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-  }
-
-  class LeafBoxIterator: BoxIterator {}
+  class TextBoxIterator: LeafBoxIterator {}
 
 }

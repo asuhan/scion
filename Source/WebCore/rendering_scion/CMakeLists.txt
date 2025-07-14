@@ -47,6 +47,7 @@ target_sources(layout_scion PRIVATE
     TextBoxSelectableRange.swift
     TextDecorationPainter.swift
     TextPainter.swift
+    TextPaintStyle.swift
 )
 add_subdirectory(mathml)
 add_subdirectory(shapes)
