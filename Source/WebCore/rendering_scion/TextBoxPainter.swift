@@ -30,6 +30,13 @@ protocol BoxPath {
   func direction() -> TextDirection
 }
 
+private func radiiForUnderline(
+  underline: CompositionUnderline, markedTextStartOffset: UInt32, markedTextEndOffset: UInt32
+) -> FloatRoundedRect.Radii {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class TextBoxPainter<TextBoxPath: BoxPath> {
   init(textBox: TextBoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
@@ -417,8 +424,56 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintCompositionUnderlines() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let underlines = renderer.frame().editor().customCompositionUnderlines()
+    let underlineCount = underlines.count
+
+    if underlineCount == 0 {
+      return
+    }
+
+    var hasLiveConversion = false
+
+    var markedTextStartOffset = underlines[0].startOffset
+    var markedTextEndOffset = underlines[0].endOffset
+
+    for underline in underlines {
+      if underline.thick {
+        hasLiveConversion = true
+      }
+
+      if underline.startOffset < markedTextStartOffset {
+        markedTextStartOffset = underline.startOffset
+      }
+
+      if underline.endOffset > markedTextEndOffset {
+        markedTextEndOffset = underline.endOffset
+      }
+    }
+
+    for underline in underlines {
+      if underline.endOffset <= textBox.start() {
+        // Underline is completely before this run. This might be an underline that sits
+        // before the first run we draw, or underlines that were within runs we skipped
+        // due to truncation.
+        continue
+      }
+
+      if underline.startOffset >= textBox.end() {
+        break  // Underline is completely after this run, bail. A later run will paint it.
+      }
+
+      let underlineRadii = radiiForUnderline(
+        underline: underline, markedTextStartOffset: markedTextStartOffset,
+        markedTextEndOffset: markedTextEndOffset)
+
+      // Underline intersects this run. Paint it.
+      paintCompositionUnderline(
+        underline: underline, radii: underlineRadii, hasLiveConversion: hasLiveConversion)
+
+      if underline.endOffset > textBox.end() {
+        break  // Underline also runs into the next run. Bail now, no more marker advancement.
+      }
+    }
   }
 
   private func paintCompositionForeground(markedText: StyledMarkedText) {
@@ -513,6 +568,13 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private func paintForegroundDecorations(
     decorationPainter: TextDecorationPainter, markedText: StyledMarkedText,
     textBoxPaintRect: FloatRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintCompositionUnderline(
+    underline: CompositionUnderline, radii: FloatRoundedRect.Radii, hasLiveConversion: Bool
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

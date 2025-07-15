@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2006-2024 Apple Inc. All rights reserved.
- * Copyright (C) 2008 Nokia Corporation and/or its subsidiary(-ies)
+ * Copyright (C) 2017-2020 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,29 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class EditorWrapper {
-  func compositionStart() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func compositionEnd() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func compositionUsesCustomHighlights() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func customCompositionUnderlines() -> [CompositionUnderline] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func customCompositionHighlights() -> [CompositionHighlight] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+struct CompositionUnderline {
+  let startOffset: UInt32 = 0
+  let endOffset: UInt32 = 0
+  let thick = false
 }
