@@ -514,8 +514,36 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         backgroundColor: nil,
         foregroundColor: nil))
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+
+    for highlight in highlightsWithForeground {
+      var style = StyledMarkedText.computeStyleForUnmarkedMarkedText(
+        renderer: renderer, lineStyle: lineStyle, isFirstLine: isFirstLine, paintInfo: paintInfo)
+
+      if highlight.endOffset <= textBox.start() {
+        continue
+      }
+
+      if highlight.startOffset >= textBox.end() {
+        break
+      }
+
+      let (clampedStart, clampedEnd) = selectableRange.clamp(
+        startOffset: highlight.startOffset, endOffset: highlight.endOffset)
+
+      if let highlightForegroundColor = highlight.foregroundColor {
+        style.textStyles.fillColor = highlightForegroundColor
+      }
+
+      paintForeground(
+        markedText: StyledMarkedText(
+          marker: MarkedText(startOffset: clampedStart, endOffset: clampedEnd, type: .Unmarked),
+          style: style))
+
+      if highlight.endOffset > textBox.end() {
+        break
+      }
+    }
   }
 
   private func paintPlatformDocumentMarkers() {

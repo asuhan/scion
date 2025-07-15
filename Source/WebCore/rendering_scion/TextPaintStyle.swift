@@ -34,7 +34,7 @@ struct TextPaintStyle {
     self.strokeColor = color
   }
 
-  let fillColor: ColorWrapper
+  var fillColor: ColorWrapper
   let strokeColor: ColorWrapper
 }
 

@@ -51,4 +51,9 @@ struct CompositionHighlight {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var foregroundColor: ColorWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
