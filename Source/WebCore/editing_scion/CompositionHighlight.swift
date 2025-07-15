@@ -24,6 +24,14 @@
  */
 
 struct CompositionHighlight {
+  init(
+    startOffset: UInt32, endOffset: UInt32, backgroundColor: ColorWrapper?,
+    foregroundColor: ColorWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static var defaultCompositionFillColor: ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

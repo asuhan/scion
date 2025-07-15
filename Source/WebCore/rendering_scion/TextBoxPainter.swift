@@ -477,6 +477,43 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintCompositionForeground(markedText: StyledMarkedText) {
+    let editor = renderer.frame().editor()
+
+    if !(editor.compositionUsesCustomHighlights() && containsComposition) {
+      paintForeground(markedText: markedText)
+      return
+    }
+
+    // The highlight ranges must be "packed" so that there is no non-empty interval between
+    // any two adjacent highlight ranges. This is needed since otherwise, `paintForeground`
+    // will not be called in those would-be non-empty intervals.
+    let highlights = editor.customCompositionHighlights()
+
+    var highlightsWithForeground: [CompositionHighlight] = []
+    highlightsWithForeground.append(
+      CompositionHighlight(
+        startOffset: textBox.start(), endOffset: highlights[0].startOffset, backgroundColor: nil,
+        foregroundColor: nil))
+
+    for (i, highlight) in highlights.enumerated() {
+      highlightsWithForeground.append(highlight)
+      if i != highlights.count - 1 {
+        highlightsWithForeground.append(
+          CompositionHighlight(
+            startOffset: highlights[i].endOffset,
+            endOffset: highlights[i + 1].startOffset,
+            backgroundColor: nil,
+            foregroundColor: nil))
+      }
+    }
+
+    highlightsWithForeground.append(
+      CompositionHighlight(
+        startOffset: highlights.last!.endOffset,
+        endOffset: textBox.end(),
+        backgroundColor: nil,
+        foregroundColor: nil))
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -490,6 +527,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     paintBackground(
       startOffset: markedText.startOffset, endOffset: markedText.endOffset,
       color: markedText.style.backgroundColor, backgroundStyle: .Normal)
+  }
+
+  private func paintForeground(markedText: StyledMarkedText) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private enum BackgroundStyle {
