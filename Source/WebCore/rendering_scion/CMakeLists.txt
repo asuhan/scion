@@ -7,6 +7,8 @@ target_sources(layout_scion PRIVATE
     HitTestResult.swift
     InlineBoxPainter.swift
     InlineWalker.swift
+    LegacyInlineBox.swift
+    LegacyInlineTextBox.swift
     MarkedText.swift
     PaintInfo.swift
     PaintPhase.swift

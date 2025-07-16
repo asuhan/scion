@@ -28,6 +28,7 @@ protocol BoxPath {
   func end() -> UInt32
   func length() -> UInt32
   func direction() -> TextDirection
+  func box() -> InlineDisplay.Box
 }
 
 private func radiiForUnderline(
@@ -605,8 +606,22 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
     updateGraphicsContext(context: context, paintStyle: markedText.style.textStyles)
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let boxPath = textBox as? InlineIterator.BoxLegacyPath {
+      textPainter.setGlyphDisplayListIfNeeded(
+        run: boxPath.legacyInlineBox()! as! LegacyInlineTextBox, paintInfo: paintInfo,
+        textRun: paintTextRun)
+    } else {
+      textPainter.setGlyphDisplayListIfNeeded(
+        run: (textBox as! InlineIterator.BoxModernPath).box(), paintInfo: paintInfo,
+        textRun: paintTextRun)
+    }
+
+    // TextPainter wants the box rectangle and text origin of the entire line box.
+    textPainter.paintRange(
+      textRun: paintTextRun, boxRect: paintRect,
+      textOrigin: textOriginFromPaintRect(paintRect: paintRect),
+      start: markedText.startOffset,
+      end: markedText.endOffset)
   }
 
   private enum BackgroundStyle {
@@ -711,6 +726,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func fontCascade() -> FontCascadeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func textOriginFromPaintRect(paintRect: FloatRectWrapper) -> FloatPoint {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

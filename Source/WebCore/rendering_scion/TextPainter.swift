@@ -57,4 +57,19 @@ struct TextPainter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func paintRange(
+    textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint, start: UInt32,
+    end: UInt32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setGlyphDisplayListIfNeeded<LayoutRun>(
+    run: LayoutRun, paintInfo: PaintInfoWrapper, textRun: TextRunWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

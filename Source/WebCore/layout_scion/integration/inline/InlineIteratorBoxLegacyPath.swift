@@ -25,33 +25,8 @@
 
 extension InlineIterator {
 
-  class BoxModernPath: BoxPath {
-    func isHorizontal() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func start() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func end() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func length() -> UInt32 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func direction() -> TextDirection {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func box() -> InlineDisplay.Box {
+  class BoxLegacyPath {
+    func legacyInlineBox() -> LegacyInlineBox? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
