@@ -24,3 +24,37 @@ func rotation(boxRect: FloatRectWrapper, direction: RotationDirection) -> Affine
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
+
+struct TextPainter {
+  init(context: GraphicsContextWrapper, font: FontCascadeWrapper, renderStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setStyle(textPaintStyle: TextPaintStyle) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setShadow(shadow: ShadowData?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setShadowColorFilter(colorFilter: FilterOperations) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setIsHorizontal(isHorizontal: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setEmphasisMark(
+    mark: AtomStringWrapper, offset: Float32, combinedText: RenderCombineTextWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

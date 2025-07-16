@@ -1,9 +1,5 @@
 /*
- * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
- *           (C) 2000 Antti Koivisto (koivisto@kde.org)
- *           (C) 2000 Dirk Mueller (mueller@kde.org)
- * Copyright (C) 2003, 2005, 2006, 2007, 2008, 2009 Apple Inc. All rights reserved.
- * Copyright (C) 2006 Graham Dennis (graham.dennis@gmail.com)
+ * Copyright (C) 2011 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,11 +18,4 @@
  *
  */
 
-enum ShadowStyle {
-  case Normal
-  case Inset
-}
-
-// This class holds information about shadows for the text-shadow and box-shadow properties.
-
-struct ShadowData {}
+final class RenderCombineTextWrapper: RenderTextWrapper {}

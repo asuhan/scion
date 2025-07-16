@@ -165,6 +165,16 @@ class FontCascadeWrapper {
     return FontMetricsWrapper(p: wk_interop.FontCascade_metricsOfPrimaryFont(p))
   }
 
+  func emphasisMarkAscent(mark: AtomStringWrapper) -> Int {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func emphasisMarkDescent(mark: AtomStringWrapper) -> Int {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func floatEmphasisMarkHeight(mark: AtomStringWrapper) -> Float32 {
     if p == nil || mark.p == nil {
       // TODO(asuhan): implement this

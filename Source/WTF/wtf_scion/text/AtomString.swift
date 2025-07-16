@@ -43,6 +43,11 @@ class AtomStringWrapper {
     return wk_interop.AtomString_isNull(p)
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var p: UnsafeRawPointer? = nil
 }
 

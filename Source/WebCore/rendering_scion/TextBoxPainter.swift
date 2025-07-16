@@ -558,6 +558,39 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintForeground(markedText: StyledMarkedText) {
+    if markedText.startOffset >= markedText.endOffset {
+      return
+    }
+
+    let context = paintInfo.context()
+    let font = fontCascade()
+
+    var emphasisMarkOffset: Float32 = 0
+    let emphasisMark =
+      emphasisMarkExistsAndIsAbove != nil ? style.textEmphasisMarkString() : nullAtom()
+    if !emphasisMark.isEmpty() {
+      emphasisMarkOffset =
+        Float32(
+          emphasisMarkExistsAndIsAbove!
+            ? -font.metricsOfPrimaryFont().intAscent()
+              - font.emphasisMarkDescent(mark: emphasisMark)
+            : font.metricsOfPrimaryFont().intDescent() + font.emphasisMarkAscent(mark: emphasisMark)
+        )
+    }
+
+    let textPainter = TextPainter(context: context, font: font, renderStyle: style)
+    textPainter.setStyle(textPaintStyle: markedText.style.textStyles)
+    textPainter.setIsHorizontal(isHorizontal: textBox.isHorizontal())
+    if markedText.style.textShadow != nil {
+      textPainter.setShadow(shadow: markedText.style.textShadow)
+      if style.hasAppleColorFilter() {
+        textPainter.setShadowColorFilter(colorFilter: style.appleColorFilter())
+      }
+    }
+    textPainter.setEmphasisMark(
+      mark: emphasisMark, offset: emphasisMarkOffset,
+      combinedText: isCombinedText ? (renderer as! RenderCombineTextWrapper) : nil
+    )
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -683,6 +716,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let haveSelection: Bool
   private let containsComposition: Bool
   private let useCustomUnderlines: Bool
+  private let emphasisMarkExistsAndIsAbove: Bool?
 }
 
 class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> {
