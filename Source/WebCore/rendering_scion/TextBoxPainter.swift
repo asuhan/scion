@@ -591,6 +591,20 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       mark: emphasisMark, offset: emphasisMarkOffset,
       combinedText: isCombinedText ? (renderer as! RenderCombineTextWrapper) : nil
     )
+    if let debugShadow = debugTextShadow() {
+      textPainter.setShadow(shadow: debugShadow)
+    }
+
+    let isTransparentMarkedText =
+      markedText.type == .DraggedContent || markedText.type == .TransparentContent
+    let _ = GraphicsContextStateSaver(
+      context: context,
+      saveAndRestore: markedText.style.textStyles.strokeWidth > 0 || isTransparentMarkedText)
+    if isTransparentMarkedText {
+      context.setAlpha(alpha: markedText.style.alpha)
+    }
+    updateGraphicsContext(context: context, paintStyle: markedText.style.textStyles)
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -697,6 +711,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func fontCascade() -> FontCascadeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func debugTextShadow() -> ShadowData? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

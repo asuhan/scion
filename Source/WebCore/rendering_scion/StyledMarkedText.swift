@@ -28,6 +28,7 @@ final class StyledMarkedText: MarkedText {
     let backgroundColor: ColorWrapper
     var textStyles: TextPaintStyle
     let textShadow: ShadowData?
+    let alpha: Float32 = 1
   }
 
   init(marker: MarkedText, style: Style) {
