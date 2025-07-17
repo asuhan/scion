@@ -27,6 +27,7 @@ final class StyledMarkedText: MarkedText {
   struct Style {
     let backgroundColor: ColorWrapper
     var textStyles: TextPaintStyle
+    let textDecorationStyles: TextDecorationPainter.Styles
     let textShadow: ShadowData?
     let alpha: Float32 = 1
   }

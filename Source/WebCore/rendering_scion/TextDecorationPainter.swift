@@ -20,4 +20,17 @@
  *
  */
 
-struct TextDecorationPainter {}
+struct TextDecorationPainter {
+  struct Styles {}
+
+  struct BackgroundDecorationGeometry {}
+
+  func paintBackgroundDecorations(
+    style: RenderStyleWrapper, textRun: TextRunWrapper,
+    decorationGeometry: BackgroundDecorationGeometry, decorationType: TextDecorationLine,
+    decorationStyle: Styles
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

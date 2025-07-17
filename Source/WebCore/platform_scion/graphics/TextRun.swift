@@ -40,6 +40,11 @@ class TextRunWrapper {
       directionalOverride: directionalOverride)
   }
 
+  func subRun(startOffset: UInt32, length: UInt32) -> TextRunWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func span8() -> CharSpanWrapper<LChar> {
     assert(self.p != nil)
     return CharSpanWrapper<LChar>(p: wk_interop.TextRun_span8(self.p))

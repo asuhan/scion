@@ -31,6 +31,15 @@ protocol BoxPath {
   func box() -> InlineDisplay.Box
 }
 
+private func computedTextDecorationType(
+  style: RenderStyleWrapper, textDecorationStyles: TextDecorationPainter.Styles
+)
+  -> TextDecorationLine
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func radiiForUnderline(
   underline: CompositionUnderline, markedTextStartOffset: UInt32, markedTextEndOffset: UInt32
 ) -> FloatRoundedRect.Radii {
@@ -693,6 +702,39 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     decorationPainter: TextDecorationPainter, markedText: StyledMarkedText,
     textBoxPaintRect: FloatRectWrapper
   ) {
+    if isCombinedText {
+      paintInfo.context().concatCTM(transform: rotation(boxRect: paintRect, direction: .Clockwise))
+    }
+
+    let textRun = paintTextRun.subRun(
+      startOffset: markedText.startOffset, length: markedText.endOffset - markedText.startOffset)
+
+    let textBox = makeIterator()
+    var decoratingBoxList = DecoratingBoxList()
+    collectDecoratingBoxesForTextBox(
+      decoratingBoxList: &decoratingBoxList, textBox: textBox,
+      textBoxLocation: textBoxPaintRect.location(),
+      overrideDecorationStyle: markedText.style.textDecorationStyles)
+
+    for decoratingBox in decoratingBoxList.reversed() {
+      let computedTextDecorationType = computedTextDecorationType(
+        style: decoratingBox.style, textDecorationStyles: decoratingBox.textDecorationStyles)
+
+      decorationPainter.paintBackgroundDecorations(
+        style: style, textRun: textRun, decorationGeometry: computedBackgroundDecorationGeometry(),
+        decorationType: computedTextDecorationType,
+        decorationStyle: decoratingBox.textDecorationStyles)
+    }
+
+    if isCombinedText {
+      paintInfo.context().concatCTM(
+        transform: rotation(boxRect: paintRect, direction: .Counterclockwise))
+    }
+  }
+
+  private func computedBackgroundDecorationGeometry()
+    -> TextDecorationPainter.BackgroundDecorationGeometry
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -731,6 +773,21 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func textOriginFromPaintRect(paintRect: FloatRectWrapper) -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  struct DecoratingBox {
+    let style: RenderStyleWrapper
+    let textDecorationStyles: TextDecorationPainter.Styles
+  }
+
+  typealias DecoratingBoxList = [DecoratingBox]
+
+  func collectDecoratingBoxesForTextBox(
+    decoratingBoxList: inout DecoratingBoxList, textBox: InlineIterator.TextBoxIterator,
+    textBoxLocation: FloatPoint, overrideDecorationStyle: TextDecorationPainter.Styles
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
