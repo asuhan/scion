@@ -31,6 +31,28 @@ protocol BoxPath {
   func box() -> InlineDisplay.Box
 }
 
+private func computedTextDecorationThickness(
+  styleToUse: RenderStyleWrapper, deviceScaleFactor: Float32
+) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func computedAutoTextDecorationThickness(
+  styleToUse: RenderStyleWrapper, deviceScaleFactor: Float32
+) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func computedLinethroughCenter(
+  styleToUse: RenderStyleWrapper, textDecorationThickness: Float32,
+  autoTextDecorationThickness: Float32
+) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func computedTextDecorationType(
   style: RenderStyleWrapper, textDecorationStyles: TextDecorationPainter.Styles
 )
@@ -743,8 +765,38 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     decorationPainter: TextDecorationPainter, markedText: StyledMarkedText,
     textBoxPaintRect: FloatRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleToUse = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+    let computedTextDecorationType = styleToUse.textDecorationsInEffect().union(
+      TextDecorationPainter.textDecorationsInEffectForStyle(
+        style: markedText.style.textDecorationStyles))
+
+    if !computedTextDecorationType.contains(.LineThrough) {
+      return
+    }
+
+    if isCombinedText {
+      paintInfo.context().concatCTM(transform: rotation(boxRect: paintRect, direction: .Clockwise))
+    }
+
+    let deviceScaleFactor = document.deviceScaleFactor()
+    let textDecorationThickness = computedTextDecorationThickness(
+      styleToUse: styleToUse, deviceScaleFactor: deviceScaleFactor)
+    let linethroughCenter = computedLinethroughCenter(
+      styleToUse: styleToUse, textDecorationThickness: textDecorationThickness,
+      autoTextDecorationThickness: computedAutoTextDecorationThickness(
+        styleToUse: styleToUse, deviceScaleFactor: deviceScaleFactor))
+    decorationPainter.paintForegroundDecorations(
+      foregroundDecorationGeometry: TextDecorationPainter.ForegroundDecorationGeometry(
+        boxOrigin: textBoxPaintRect.location(), textBoxWidth: textBoxPaintRect.width(),
+        textDecorationThickness: textDecorationThickness,
+        linethroughCenter: linethroughCenter,
+        wavyStrokeParameters: wavyStrokeParameters(fontSize: styleToUse.computedFontSize())),
+      decorationStyle: markedText.style.textDecorationStyles)
+
+    if isCombinedText {
+      paintInfo.context().concatCTM(
+        transform: rotation(boxRect: paintRect, direction: .Counterclockwise))
+    }
   }
 
   private func paintCompositionUnderline(

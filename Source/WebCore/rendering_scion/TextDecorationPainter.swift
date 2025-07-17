@@ -33,4 +33,24 @@ struct TextDecorationPainter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  struct ForegroundDecorationGeometry {
+    let boxOrigin: FloatPoint
+    let textBoxWidth: Float32
+    let textDecorationThickness: Float32
+    let linethroughCenter: Float32
+    let wavyStrokeParameters: WavyStrokeParameters
+  }
+
+  func paintForegroundDecorations(
+    foregroundDecorationGeometry: ForegroundDecorationGeometry, decorationStyle: Styles
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func textDecorationsInEffectForStyle(style: Styles) -> TextDecorationLine {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
