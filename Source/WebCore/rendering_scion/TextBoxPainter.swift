@@ -69,6 +69,13 @@ private func radiiForUnderline(
   fatalError("Not implemented")
 }
 
+private func mirrorRTLSegment(
+  logicalWidth: Float32, direction: TextDirection, start: inout Float32, width: Float32
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class TextBoxPainter<TextBoxPath: BoxPath> {
   init(textBox: TextBoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
@@ -802,6 +809,49 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private func paintCompositionUnderline(
     underline: CompositionUnderline, radii: FloatRoundedRect.Radii, hasLiveConversion: Bool
   ) {
+    var start: Float32 = 0  // start of line to draw, relative to tx
+    var width = logicalRect.width()  // how much line to draw
+    var useWholeWidth = true
+    var paintStart = textBox.start()
+    var paintEnd = textBox.end()
+    if paintStart <= underline.startOffset {
+      paintStart = underline.startOffset
+      useWholeWidth = false
+      start = renderer.width(
+        from: textBox.start(), len: paintStart - textBox.start(), xPos: textPosition(),
+        firstLine: isFirstLine)
+    }
+    if paintEnd != underline.endOffset {
+      paintEnd = min(paintEnd, underline.endOffset)
+      useWholeWidth = false
+    }
+    if let selectableRangeTruncation = selectableRange.truncation {
+      paintEnd = min(paintEnd, textBox.start() + selectableRangeTruncation)
+      useWholeWidth = false
+    }
+    if !useWholeWidth {
+      width = renderer.width(
+        from: paintStart, len: paintEnd - paintStart, xPos: textPosition() + start,
+        firstLine: isFirstLine)
+      mirrorRTLSegment(
+        logicalWidth: logicalRect.width(), direction: textBox().direction, start: &start,
+        width: width)
+    }
+
+    fillCompositionUnderline(
+      start: start, width: width, underline: underline, radii: radii,
+      hasLiveConversion: hasLiveConversion)
+  }
+
+  private func fillCompositionUnderline(
+    start: Float32, width: Float32, underline: CompositionUnderline, radii: FloatRoundedRect.Radii,
+    hasLiveConversion: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func textPosition() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -44,6 +44,15 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func width(
+    from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool = false,
+    fallbackFonts: Set<UInt>? = nil,
+    glyphOverflow: GlyphOverflow? = nil
+  ) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsVisualReordering() {
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
