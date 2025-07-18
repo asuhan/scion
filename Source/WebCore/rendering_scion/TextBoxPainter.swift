@@ -834,7 +834,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         from: paintStart, len: paintEnd - paintStart, xPos: textPosition() + start,
         firstLine: isFirstLine)
       mirrorRTLSegment(
-        logicalWidth: logicalRect.width(), direction: textBox().direction, start: &start,
+        logicalWidth: logicalRect.width(), direction: textBox.direction(), start: &start,
         width: width)
     }
 
