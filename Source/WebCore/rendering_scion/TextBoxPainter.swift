@@ -43,8 +43,10 @@ private func computedTextDecorationThickness(
 private func computedAutoTextDecorationThickness(
   styleToUse: RenderStyleWrapper, deviceScaleFactor: Float32
 ) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return ceilToDevicePixel(
+    value: TextDecorationThickness.createWithAuto().resolve(
+      fontSize: styleToUse.computedFontSize(), metrics: styleToUse.metricsOfPrimaryFont()),
+    pixelSnappingFactor: deviceScaleFactor)
 }
 
 private func computedLinethroughCenter(

@@ -24,8 +24,22 @@
  */
 
 struct TextDecorationThickness {
-  func resolve(fontSize: Float32, metrics: FontMetricsWrapper) -> Float32 {
+  public static func createWithAuto() -> TextDecorationThickness {
+    return TextDecorationThickness(type: .Auto)
+  }
+
+  public func resolve(fontSize: Float32, metrics: FontMetricsWrapper) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private enum `Type` {
+    case Auto
+    case FromFont
+    case Length
+  }
+
+  private init(type: `Type`) { self.type = type }
+
+  private let type: `Type`
 }
