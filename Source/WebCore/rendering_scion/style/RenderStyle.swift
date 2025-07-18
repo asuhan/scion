@@ -473,6 +473,11 @@ class RenderStyleWrapper {
     return LengthWrapper(p: wk_interop.RenderStyle_textIndent(p))
   }
 
+  func textDecorationThickness() -> TextDecorationThickness {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textIndentLine() -> TextIndentLine {
     return rareInheritedData.textIndentLine
   }

@@ -34,8 +34,10 @@ protocol BoxPath {
 private func computedTextDecorationThickness(
   styleToUse: RenderStyleWrapper, deviceScaleFactor: Float32
 ) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return ceilToDevicePixel(
+    value: styleToUse.textDecorationThickness().resolve(
+      fontSize: styleToUse.computedFontSize(), metrics: styleToUse.metricsOfPrimaryFont()),
+    pixelSnappingFactor: deviceScaleFactor)
 }
 
 private func computedAutoTextDecorationThickness(
