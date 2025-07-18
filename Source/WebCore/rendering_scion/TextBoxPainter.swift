@@ -839,16 +839,46 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
 
     fillCompositionUnderline(
-      start: start, width: width, underline: underline, radii: radii,
-      hasLiveConversion: hasLiveConversion)
+      startIn: start, widthIn: width, underline: underline, _radii: radii,
+      _hasLiveConversion: hasLiveConversion)
   }
 
   private func fillCompositionUnderline(
-    start: Float32, width: Float32, underline: CompositionUnderline, radii: FloatRoundedRect.Radii,
-    hasLiveConversion: Bool
+    startIn: Float32, widthIn: Float32, underline: CompositionUnderline,
+    _radii: FloatRoundedRect.Radii,
+    _hasLiveConversion: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Thick marked text underlines are 2px thick as long as there is room for the 2px line under the baseline.
+    // All other marked text underlines are 1px thick.
+    // If there's not enough space the underline will touch or overlap characters.
+    var lineThickness: Float32 = 1
+    let baseline = Float32(style.metricsOfPrimaryFont().intAscent())
+    if underline.thick && logicalRect.height() - baseline >= 2 {
+      lineThickness = 2
+    }
+
+    var start = startIn
+    var width = widthIn
+
+    // We need to have some space between underlines of subsequent clauses, because some input methods do not use different underline styles for those.
+    // We make each line shorter, which has a harmless side effect of shortening the first and last clauses, too.
+    start += 1
+    width -= 2
+
+    let style = renderer.style()
+    let underlineColor =
+      underline.compositionUnderlineColor == .TextColor
+      ? style.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyWebkitTextFillColor)
+      : style.colorByApplyingColorFilter(color: underline.color)
+
+    let context = paintInfo.context()
+    context.setStrokeColor(color: underlineColor)
+    context.setStrokeThickness(thickness: lineThickness)
+    context.drawLineForText(
+      rect: FloatRectWrapper(
+        x: paintRect.x() + start, y: paintRect.y() + logicalRect.height() - lineThickness,
+        width: width,
+        height: lineThickness), printing: isPrinting)
   }
 
   private func textPosition() -> Float32 {

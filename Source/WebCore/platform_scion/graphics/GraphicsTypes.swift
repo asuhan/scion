@@ -60,3 +60,12 @@ enum BlendMode: UInt8 {
   case PlusDarker
   case PlusLighter
 }
+
+enum StrokeStyle: UInt8 {
+  case NoStroke
+  case SolidStroke
+  case DottedStroke
+  case DashedStroke
+  case DoubleStroke
+  case WavyStroke
+}

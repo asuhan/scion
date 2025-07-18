@@ -29,6 +29,16 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setStrokeColor(color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setStrokeThickness(thickness: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -51,6 +61,14 @@ class GraphicsContextWrapper {
   }
 
   func clip(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawLineForText(
+    rect: FloatRectWrapper, printing: Bool, doubleUnderlines: Bool = false,
+    style: StrokeStyle = .SolidStroke
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

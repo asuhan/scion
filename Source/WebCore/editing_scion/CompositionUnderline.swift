@@ -23,8 +23,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum CompositionUnderlineColor {
+  case GivenColor
+  case TextColor
+}
+
 struct CompositionUnderline {
   let startOffset: UInt32 = 0
   let endOffset: UInt32 = 0
+  let compositionUnderlineColor: CompositionUnderlineColor = .TextColor
+  let color: ColorWrapper
   let thick = false
 }

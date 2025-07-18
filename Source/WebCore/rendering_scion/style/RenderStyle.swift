@@ -29,6 +29,7 @@ typealias LayoutBoxExtent = RectEdges<LayoutUnit>
 
 enum CSSPropertyID {
   case CSSPropertyBackgroundColor
+  case CSSPropertyWebkitTextFillColor
 }
 
 class RenderStyleWrapper {
@@ -952,6 +953,13 @@ class RenderStyleWrapper {
   func visitedDependentColor(colorProperty: CSSPropertyID, paintBehavior: PaintBehavior)
     -> ColorWrapper
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func visitedDependentColorWithColorFilter(
+    colorProperty: CSSPropertyID, paintBehavior: PaintBehavior = []
+  ) -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
