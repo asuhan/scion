@@ -291,13 +291,18 @@ struct LayoutUnit: Comparable {
   private var value: Int32
 }
 
-func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+func ceilToDevicePixel(value: LayoutUnit, pixelSnappingFactor: Float32) -> Float32 {
+  return ceilf((Float32(value.rawValue()) * pixelSnappingFactor) / Float32(kFixedPointDenominator))
+    / pixelSnappingFactor
 }
 
 internal func roundToInt(value: Float32) -> Int {
   return roundToInt(value: LayoutUnit(value: value))
+}
+
+func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 {
+  return ceilToDevicePixel(
+    value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor)
 }
 
 internal func roundToInt(value: LayoutUnit) -> Int {
