@@ -792,7 +792,9 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       underlineOffset: TextBoxPainter.underlineOffset(
         decoratingBox: decoratingBox, computedTextDecorationType: computedTextDecorationType),
       overlineOffset: TextBoxPainter.overlineOffset(
-        decoratingBox: decoratingBox, computedTextDecorationType: computedTextDecorationType),
+        decoratingBox: decoratingBox, computedTextDecorationType: computedTextDecorationType,
+        autoTextDecorationThickness: autoTextDecorationThickness,
+        textDecorationThickness: textDecorationThickness),
       linethroughCenter: computedLinethroughCenter(
         styleToUse: decoratingBox.style, textDecorationThickness: textDecorationThickness,
         autoTextDecorationThickness: autoTextDecorationThickness),
@@ -816,10 +818,19 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private static func overlineOffset(
-    decoratingBox: DecoratingBox, computedTextDecorationType: TextDecorationLine
+    decoratingBox: DecoratingBox, computedTextDecorationType: TextDecorationLine,
+    autoTextDecorationThickness: Float32, textDecorationThickness: Float32
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !computedTextDecorationType.contains(.Overline) {
+      return 0
+    }
+    var baseOffset = overlineOffsetForTextBoxPainting(
+      inlineBox: decoratingBox.inlineBox.get(), style: decoratingBox.style)
+    baseOffset += (autoTextDecorationThickness - textDecorationThickness)
+    let wavyOffset =
+      decoratingBox.textDecorationStyles.overline.decorationStyle == .Wavy
+      ? wavyOffsetFromDecoration() : 0
+    return baseOffset - wavyOffset
   }
 
   private func paintForegroundDecorations(

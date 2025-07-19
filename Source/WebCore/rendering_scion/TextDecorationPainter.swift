@@ -27,6 +27,7 @@ struct TextDecorationPainter {
       let decorationStyle: TextDecorationStyle = .Solid
     }
     let underline: DecorationStyleAndColor
+    let overline: DecorationStyleAndColor
   }
 
   struct BackgroundDecorationGeometry {

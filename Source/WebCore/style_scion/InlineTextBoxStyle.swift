@@ -91,3 +91,10 @@ func underlineOffsetForTextBoxPainting(
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
+
+func overlineOffsetForTextBoxPainting(
+  inlineBox: InlineIterator.InlineBox, style: RenderStyleWrapper
+) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
