@@ -29,4 +29,9 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   func layoutState() -> LayoutStateWrapper {
     return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
   }
+
+  func selection() -> RenderSelection {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

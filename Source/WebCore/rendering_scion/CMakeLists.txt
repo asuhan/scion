@@ -27,6 +27,7 @@ target_sources(layout_scion PRIVATE
     RenderElement.swift
     RenderFlexibleBox.swift
     RenderGrid.swift
+    RenderHighlight.swift
     RenderInline.swift
     RenderLayer.swift
     RenderLayerModelObject.swift
@@ -38,6 +39,7 @@ target_sources(layout_scion PRIVATE
     RenderObject.swift
     RenderObjectEnums.swift
     RenderReplaced.swift
+    RenderSelection.swift
     RenderSlider.swift
     RenderTable.swift
     RenderTableCell.swift

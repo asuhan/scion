@@ -957,8 +957,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func selectionStartEnd() -> (UInt32, UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer.view().selection().rangeForTextBox(
+      renderer: renderer, textBoxRange: selectableRange)
   }
 
   private func createMarkedTextFromSelectionInBox() -> MarkedText {
