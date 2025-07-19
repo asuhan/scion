@@ -948,8 +948,12 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func textPosition() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When computing the width of a text run, RenderBlock::computeInlineDirectionPositionsForLine() doesn't include the actual offset
+    // from the containing block edge in its measurement. textPosition() should be consistent so the text are rendered in the same width.
+    if logicalRect.x() == 0 {
+      return 0
+    }
+    return logicalRect.x() - makeIterator().get().lineBox().get().contentLogicalLeft()
   }
 
   private func selectionStartEnd() -> (UInt32, UInt32) {
