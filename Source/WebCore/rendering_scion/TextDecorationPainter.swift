@@ -23,7 +23,17 @@
 struct TextDecorationPainter {
   struct Styles {}
 
-  struct BackgroundDecorationGeometry {}
+  struct BackgroundDecorationGeometry {
+    let textOrigin: FloatPoint
+    let boxOrigin: FloatPoint
+    let textBoxWidth: Float32
+    let textDecorationThickness: Float32
+    let underlineOffset: Float32
+    let overlineOffset: Float32
+    let linethroughCenter: Float32
+    let clippingOffset: Float32
+    let wavyStrokeParameters: WavyStrokeParameters
+  }
 
   func paintBackgroundDecorations(
     style: RenderStyleWrapper, textRun: TextRunWrapper,

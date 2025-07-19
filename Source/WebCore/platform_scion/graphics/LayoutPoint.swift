@@ -125,3 +125,11 @@ func ceiledLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
   return LayoutPointWrapper(
     x: LayoutUnit.fromFloatCeil(value: p.x), y: LayoutUnit.fromFloatCeil(value: p.y))
 }
+
+func roundPointToDevicePixels(
+  point: LayoutPointWrapper, pixelSnappingFactor: Float32, directionalRoundingToRight: Bool = true,
+  directionalRoundingToBottom: Bool = true
+) -> FloatPoint {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

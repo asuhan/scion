@@ -756,7 +756,10 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         style: decoratingBox.style, textDecorationStyles: decoratingBox.textDecorationStyles)
 
       decorationPainter.paintBackgroundDecorations(
-        style: style, textRun: textRun, decorationGeometry: computedBackgroundDecorationGeometry(),
+        style: style, textRun: textRun,
+        decorationGeometry: computedBackgroundDecorationGeometry(
+          decoratingBox: decoratingBox, computedTextDecorationType: computedTextDecorationType,
+          textBoxPaintRect: textBoxPaintRect),
         decorationType: computedTextDecorationType,
         decorationStyle: decoratingBox.textDecorationStyles)
     }
@@ -767,9 +770,47 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
   }
 
-  private func computedBackgroundDecorationGeometry()
+  private func computedBackgroundDecorationGeometry(
+    decoratingBox: DecoratingBox, computedTextDecorationType: TextDecorationLine,
+    textBoxPaintRect: FloatRectWrapper
+  )
     -> TextDecorationPainter.BackgroundDecorationGeometry
   {
+    let textDecorationThickness = computedTextDecorationThickness(
+      styleToUse: decoratingBox.style, deviceScaleFactor: document.deviceScaleFactor())
+    let autoTextDecorationThickness = computedAutoTextDecorationThickness(
+      styleToUse: decoratingBox.style, deviceScaleFactor: document.deviceScaleFactor())
+
+    return TextDecorationPainter.BackgroundDecorationGeometry(
+      textOrigin: textOriginFromPaintRect(paintRect: textBoxPaintRect),
+      boxOrigin: roundPointToDevicePixels(
+        point: LayoutPointWrapper(size: decoratingBox.location),
+        pixelSnappingFactor: document.deviceScaleFactor(),
+        directionalRoundingToRight: paintTextRun.ltr()),
+      textBoxWidth: textBoxPaintRect.width(),
+      textDecorationThickness: textDecorationThickness,
+      underlineOffset: TextBoxPainter.underlineOffset(
+        decoratingBox: decoratingBox, computedTextDecorationType: computedTextDecorationType),
+      overlineOffset: TextBoxPainter.overlineOffset(
+        decoratingBox: decoratingBox, computedTextDecorationType: computedTextDecorationType),
+      linethroughCenter: computedLinethroughCenter(
+        styleToUse: decoratingBox.style, textDecorationThickness: textDecorationThickness,
+        autoTextDecorationThickness: autoTextDecorationThickness),
+      clippingOffset: Float32(decoratingBox.style.metricsOfPrimaryFont().intAscent()) + 2,
+      wavyStrokeParameters: wavyStrokeParameters(fontSize: decoratingBox.style.computedFontSize())
+    )
+  }
+
+  private static func underlineOffset(
+    decoratingBox: DecoratingBox, computedTextDecorationType: TextDecorationLine
+  ) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func overlineOffset(
+    decoratingBox: DecoratingBox, computedTextDecorationType: TextDecorationLine
+  ) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -918,6 +959,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   struct DecoratingBox {
     let style: RenderStyleWrapper
     let textDecorationStyles: TextDecorationPainter.Styles
+    let location: FloatPoint
   }
 
   typealias DecoratingBoxList = [DecoratingBox]
