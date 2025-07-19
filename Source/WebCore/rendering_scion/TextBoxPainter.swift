@@ -53,8 +53,8 @@ private func computedLinethroughCenter(
   styleToUse: RenderStyleWrapper, textDecorationThickness: Float32,
   autoTextDecorationThickness: Float32
 ) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let center = 2 * styleToUse.metricsOfPrimaryFont().ascent() / 3 + autoTextDecorationThickness / 2
+  return center - textDecorationThickness / 2
 }
 
 private func computedTextDecorationType(
