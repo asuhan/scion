@@ -62,8 +62,10 @@ private func computedTextDecorationType(
 )
   -> TextDecorationLine
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var textDecorations = style.textDecorationsInEffect()
+  textDecorations = textDecorations.union(
+    TextDecorationPainter.textDecorationsInEffectForStyle(style: textDecorationStyles))
+  return textDecorations
 }
 
 private func radiiForUnderline(
