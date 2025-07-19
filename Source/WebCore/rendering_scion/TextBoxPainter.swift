@@ -78,8 +78,10 @@ private func radiiForUnderline(
 private func mirrorRTLSegment(
   logicalWidth: Float32, direction: TextDirection, start: inout Float32, width: Float32
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if direction == .LTR {
+    return
+  }
+  start = logicalWidth - width - start
 }
 
 class TextBoxPainter<TextBoxPath: BoxPath> {
