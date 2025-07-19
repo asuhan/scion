@@ -25,6 +25,10 @@
 
 import wk_interop
 
+func wavyOffsetFromDecoration() -> Float32 {
+  return 1
+}
+
 struct WavyStrokeParameters {
   // Distance between decoration's axis and Bezier curve's control points.
   // The height of the curve is based on this distance. Increases the curve's height
@@ -79,4 +83,11 @@ func visualOverflowForDecorations(
     top: LayoutUnit.fromRawValue(value: glyphOverflowRaw.top),
     bottom: LayoutUnit.fromRawValue(value: glyphOverflowRaw.bottom)
   )
+}
+
+func underlineOffsetForTextBoxPainting(
+  inlineBox: InlineIterator.InlineBox, style: RenderStyleWrapper
+) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }

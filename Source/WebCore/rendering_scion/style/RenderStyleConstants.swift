@@ -266,6 +266,14 @@ struct TextDecorationLine: OptionSet {
   static let Blink = TextDecorationLine(rawValue: 1 << 3)
 }
 
+enum TextDecorationStyle: UInt8 {
+  case Solid
+  case Double
+  case Dotted
+  case Dashed
+  case Wavy
+}
+
 enum TextAlignLast: UInt8 {
   case Auto
   case Start

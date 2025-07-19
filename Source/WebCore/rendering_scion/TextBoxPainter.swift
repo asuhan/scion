@@ -804,8 +804,15 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private static func underlineOffset(
     decoratingBox: DecoratingBox, computedTextDecorationType: TextDecorationLine
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !computedTextDecorationType.contains(.Underline) {
+      return 0
+    }
+    let baseOffset = underlineOffsetForTextBoxPainting(
+      inlineBox: decoratingBox.inlineBox.get(), style: decoratingBox.style)
+    let wavyOffset =
+      decoratingBox.textDecorationStyles.underline.decorationStyle == .Wavy
+      ? wavyOffsetFromDecoration() : 0
+    return baseOffset + wavyOffset
   }
 
   private static func overlineOffset(
@@ -957,6 +964,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   struct DecoratingBox {
+    let inlineBox: InlineIterator.InlineBoxIterator
     let style: RenderStyleWrapper
     let textDecorationStyles: TextDecorationPainter.Styles
     let location: FloatPoint

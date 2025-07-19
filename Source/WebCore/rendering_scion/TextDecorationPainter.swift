@@ -21,7 +21,13 @@
  */
 
 struct TextDecorationPainter {
-  struct Styles {}
+  struct Styles {
+    struct DecorationStyleAndColor {
+      let color: ColorWrapper
+      let decorationStyle: TextDecorationStyle = .Solid
+    }
+    let underline: DecorationStyleAndColor
+  }
 
   struct BackgroundDecorationGeometry {
     let textOrigin: FloatPoint
