@@ -69,10 +69,9 @@ private func computedTextDecorationType(
 }
 
 private func radiiForUnderline(
-  underline: CompositionUnderline, markedTextStartOffset: UInt32, markedTextEndOffset: UInt32
+  _underline: CompositionUnderline, _markedTextStartOffset: UInt32, _markedTextEndOffset: UInt32
 ) -> FloatRoundedRect.Radii {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return FloatRoundedRect.Radii(uniformRadius: 0)
 }
 
 private func mirrorRTLSegment(
@@ -510,8 +509,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       }
 
       let underlineRadii = radiiForUnderline(
-        underline: underline, markedTextStartOffset: markedTextStartOffset,
-        markedTextEndOffset: markedTextEndOffset)
+        _underline: underline, _markedTextStartOffset: markedTextStartOffset,
+        _markedTextEndOffset: markedTextEndOffset)
 
       // Underline intersects this run. Paint it.
       paintCompositionUnderline(
