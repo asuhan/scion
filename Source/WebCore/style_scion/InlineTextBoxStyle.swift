@@ -29,17 +29,17 @@ struct WavyStrokeParameters {
   // Distance between decoration's axis and Bezier curve's control points.
   // The height of the curve is based on this distance. Increases the curve's height
   // as fontSize increases to make the curve look better.
-  let controlPointDistance: Float32 = 0
+  let controlPointDistance: Float32
 
   // Increment used to form the diamond shape between start point (p1), control
   // points and end point (p2) along the axis of the decoration. The curve gets
   // wider as font size increases.
-  let step: Float32 = 0
+  let step: Float32
 }
 
 func wavyStrokeParameters(fontSize: Float32) -> WavyStrokeParameters {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // More information is in the WavyStrokeParameters definition.
+  return WavyStrokeParameters(controlPointDistance: fontSize * 1.5 / 16, step: fontSize / 4.5)
 }
 
 struct TextUnderlinePositionUnder {
