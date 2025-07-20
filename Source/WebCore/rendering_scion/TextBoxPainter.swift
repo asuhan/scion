@@ -1070,7 +1070,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     decoratingBoxList: inout DecoratingBoxList, textBox: InlineIterator.TextBoxIterator,
     textBoxLocation: FloatPoint, overrideDecorationStyle: TextDecorationPainter.Styles
   ) {
-    let ancestorInlineBox = textBox.get().parentInlineBox()
+    var ancestorInlineBox = textBox.get().parentInlineBox()
     if !ancestorInlineBox.bool() {
       fatalError("Not reached")
     }
@@ -1095,6 +1095,28 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       return
     }
 
+    // FIXME: Figure out if the decoration styles coming from the styled marked text should be used only on the closest inline box (direct parent).
+    appendIfIsDecoratingBoxForBackground(
+      inlineBox: ancestorInlineBox, useOverriderDecorationStyle: .Yes)
+    while !ancestorInlineBox.get().isRootInlineBox() {
+      ancestorInlineBox = ancestorInlineBox.get().parentInlineBox()
+      if !ancestorInlineBox.bool() {
+        fatalError("Not reached")
+      }
+      appendIfIsDecoratingBoxForBackground(
+        inlineBox: ancestorInlineBox, useOverriderDecorationStyle: .No)
+    }
+  }
+
+  private enum UseOverriderDecorationStyle {
+    case No
+    case Yes
+  }
+
+  private func appendIfIsDecoratingBoxForBackground(
+    inlineBox: InlineIterator.InlineBoxIterator,
+    useOverriderDecorationStyle: UseOverriderDecorationStyle
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
