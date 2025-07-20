@@ -84,6 +84,14 @@ struct TextDecorationPainter {
     fatalError("Not implemented")
   }
 
+  static func stylesForRenderer(
+    renderer: RenderObjectWrapper, requestedDecorations: TextDecorationLine,
+    firstLineStyle: Bool = false, paintBehavior: PaintBehavior = [], pseudoId: PseudoId = .None
+  ) -> Styles {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func textDecorationsInEffectForStyle(style: Styles) -> TextDecorationLine {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

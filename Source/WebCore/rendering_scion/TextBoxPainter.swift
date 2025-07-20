@@ -1137,7 +1137,9 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
     if !isDecoratingBoxForBackground(inlineBox: inlineBox.get(), styleToUse: style) {
       // Some cases even non-decoration boxes may have some decoration pieces coming from the marked text (e.g. highlight).
-      if useOverriderDecorationStyle == .No || overrideDecorationStyle == computedDecorationStyle()
+      if useOverriderDecorationStyle == .No
+        || overrideDecorationStyle
+          == computedDecorationStyle(inlineBox: inlineBox.get(), style: style)
       {
         return
       }
@@ -1151,15 +1153,21 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         inlineBox: inlineBox,
         style: style,
         textDecorationStyles: useOverriderDecorationStyle == .Yes
-          ? overrideDecorationStyle : computedDecorationStyle(),
+          ? overrideDecorationStyle
+          : computedDecorationStyle(inlineBox: inlineBox.get(), style: style),
         location: FloatPoint(
           x: textBoxLocation.x,
           y: paintOffset.y + inlineBox.get().logicalTop() + borderAndPaddingBefore)))
   }
 
-  private func computedDecorationStyle() -> TextDecorationPainter.Styles {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func computedDecorationStyle(
+    inlineBox: InlineIterator.InlineBox, style: RenderStyleWrapper
+  )
+    -> TextDecorationPainter.Styles
+  {
+    return TextDecorationPainter.stylesForRenderer(
+      renderer: inlineBox.renderer(), requestedDecorations: style.textDecorationsInEffect(),
+      firstLineStyle: isFirstLine)
   }
 
   private func debugTextShadow() -> ShadowData? {
