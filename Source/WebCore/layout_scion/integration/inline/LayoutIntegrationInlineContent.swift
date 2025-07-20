@@ -101,6 +101,11 @@ extension LayoutIntegration {
       return lineLayout!.flow()
     }
 
+    func indexForBox(box: InlineDisplay.Box) -> UInt64 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func firstBoxForLayoutBox(layoutBox: BoxWrapper) -> InlineDisplay.Box? {
       if let index = firstBoxIndexForLayoutBox(layoutBox: layoutBox) {
         return displayContent.boxes[Int(index)]

@@ -1074,7 +1074,10 @@ class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> 
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(
+      textBox: InlineIterator.BoxModernPath(
+        inlineContent: inlineContent, startIndex: inlineContent.indexForBox(box: box)),
+      paintInfo: paintInfo,
+      paintOffset: paintOffset)
   }
 }

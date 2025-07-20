@@ -26,6 +26,11 @@
 extension InlineIterator {
 
   class BoxModernPath: BoxPath {
+    init(inlineContent: LayoutIntegration.InlineContent, startIndex: UInt64) {
+      self.inlineContent = inlineContent
+      self.boxIndex = startIndex
+    }
+
     func isHorizontal() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -59,6 +64,9 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let inlineContent: LayoutIntegration.InlineContent
+    private let boxIndex: UInt64
   }
 
 }
