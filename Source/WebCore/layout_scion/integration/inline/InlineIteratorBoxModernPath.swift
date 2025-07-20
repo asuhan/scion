@@ -46,6 +46,10 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func style() -> RenderStyleWrapper {
+      return box().style()
+    }
+
     func direction() -> TextDirection {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

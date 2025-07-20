@@ -27,6 +27,7 @@ protocol BoxPath {
   func start() -> UInt32
   func end() -> UInt32
   func length() -> UInt32
+  func style() -> RenderStyleWrapper
   func direction() -> TextDirection
   func box() -> InlineDisplay.Box
 }
@@ -996,8 +997,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func fontCascade() -> FontCascadeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isCombinedText {
+      return (renderer as! RenderCombineTextWrapper).textCombineFont()
+    }
+
+    return textBox.style().fontCascade()
   }
 
   private func textOriginFromPaintRect(paintRect: FloatRectWrapper) -> FloatPoint {
