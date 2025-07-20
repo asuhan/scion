@@ -18,4 +18,9 @@
  *
  */
 
-final class RenderCombineTextWrapper: RenderTextWrapper {}
+final class RenderCombineTextWrapper: RenderTextWrapper {
+  func computeTextOrigin(boxRect: FloatRectWrapper) -> FloatPoint? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

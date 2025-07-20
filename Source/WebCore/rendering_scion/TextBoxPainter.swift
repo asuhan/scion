@@ -975,8 +975,28 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func textOriginFromPaintRect(paintRect: FloatRectWrapper) -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var textOrigin = FloatPoint(
+      x: paintRect.x(), y: paintRect.y() + Float32(fontCascade().metricsOfPrimaryFont().intAscent())
+    )
+    if isCombinedText {
+      if let newOrigin = (renderer as! RenderCombineTextWrapper).computeTextOrigin(
+        boxRect: paintRect)
+      {
+        textOrigin = newOrigin
+      }
+    }
+    if textBox.isHorizontal() {
+      textOrigin.setY(
+        y: roundToDevicePixel(
+          value: LayoutUnit(value: textOrigin.y),
+          pixelSnappingFactor: renderer.document().deviceScaleFactor()))
+    } else {
+      textOrigin.setX(
+        x: roundToDevicePixel(
+          value: LayoutUnit(value: textOrigin.x),
+          pixelSnappingFactor: renderer.document().deviceScaleFactor()))
+    }
+    return textOrigin
   }
 
   struct DecoratingBox {

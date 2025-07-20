@@ -300,6 +300,13 @@ internal func roundToInt(value: Float32) -> Int {
   return roundToInt(value: LayoutUnit(value: value))
 }
 
+func roundToDevicePixel(
+  value: LayoutUnit, pixelSnappingFactor: Float32, needsDirectionalRounding: Bool = false
+) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 {
   return ceilToDevicePixel(
     value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor)
