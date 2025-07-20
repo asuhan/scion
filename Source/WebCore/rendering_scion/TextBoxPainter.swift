@@ -594,8 +594,24 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintPlatformDocumentMarkers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var markedTexts = MarkedText.collectForDocumentMarkers(
+      renderer: renderer, selectableRange: selectableRange, phase: .Decoration)
+
+    if let spellingErrorStyle = renderer.spellingErrorPseudoStyle() {
+      if !spellingErrorStyle.textDecorationsInEffect().isEmpty {
+        markedTexts.removeAll(where: { markedText in markedText.type == .SpellingError })
+      }
+    }
+
+    if let grammarErrorStyle = renderer.grammarErrorPseudoStyle() {
+      if !grammarErrorStyle.textDecorationsInEffect().isEmpty {
+        markedTexts.removeAll(where: { markedText in markedText.type == .GrammarError })
+      }
+    }
+
+    for markedText in MarkedText.subdivide(markedTexts: markedTexts, overlapStrategy: .Frontmost) {
+      paintPlatformDocumentMarker(markedText: markedText)
+    }
   }
 
   private func paintBackground(markedText: StyledMarkedText) {
@@ -972,6 +988,11 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         x: paintRect.x() + start, y: paintRect.y() + logicalRect.height() - lineThickness,
         width: width,
         height: lineThickness), printing: isPrinting)
+  }
+
+  private func paintPlatformDocumentMarker(markedText: MarkedText) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func textPosition() -> Float32 {

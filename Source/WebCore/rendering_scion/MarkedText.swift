@@ -45,6 +45,11 @@ class MarkedText {
     case Decoration
   }
 
+  enum OverlapStrategy {
+    case None
+    case Frontmost
+  }
+
   init(
     startOffset: UInt32, endOffset: UInt32, type: `Type`, marker: RenderedDocumentMarker? = nil,
     highlightName: AtomStringWrapper = AtomStringWrapper(), priority: Int32 = 0
@@ -56,6 +61,12 @@ class MarkedText {
   init() {}
 
   func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func subdivide(markedTexts: [MarkedText], overlapStrategy: OverlapStrategy) -> [MarkedText]
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
