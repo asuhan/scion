@@ -51,6 +51,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func parentInlineBox() -> InlineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func lineBox() -> LineBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

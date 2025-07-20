@@ -70,6 +70,13 @@ private func computedTextDecorationType(
   return textDecorations
 }
 
+private func decoratingBoxStyleForInlineBox(inlineBox: InlineIterator.InlineBox, isFirstLine: Bool)
+  -> RenderStyleWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func radiiForUnderline(
   _underline: CompositionUnderline, _markedTextStartOffset: UInt32, _markedTextEndOffset: UInt32
 ) -> FloatRoundedRect.Radii {
@@ -1050,19 +1057,44 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     return textOrigin
   }
 
-  struct DecoratingBox {
+  private struct DecoratingBox {
     let inlineBox: InlineIterator.InlineBoxIterator
     let style: RenderStyleWrapper
     let textDecorationStyles: TextDecorationPainter.Styles
     let location: FloatPoint
   }
 
-  typealias DecoratingBoxList = [DecoratingBox]
+  private typealias DecoratingBoxList = [DecoratingBox]
 
-  func collectDecoratingBoxesForTextBox(
+  private func collectDecoratingBoxesForTextBox(
     decoratingBoxList: inout DecoratingBoxList, textBox: InlineIterator.TextBoxIterator,
     textBoxLocation: FloatPoint, overrideDecorationStyle: TextDecorationPainter.Styles
   ) {
+    let ancestorInlineBox = textBox.get().parentInlineBox()
+    if !ancestorInlineBox.bool() {
+      fatalError("Not reached")
+    }
+
+    if ancestorInlineBox.get().isRootInlineBox() {
+      decoratingBoxList.append(
+        DecoratingBox(
+          inlineBox: ancestorInlineBox,
+          style: decoratingBoxStyleForInlineBox(
+            inlineBox: ancestorInlineBox.get(), isFirstLine: isFirstLine),
+          textDecorationStyles: overrideDecorationStyle, location: textBoxLocation))
+      return
+    }
+
+    if !textBox.get().isHorizontal() {
+      // FIXME: Vertical writing mode needs some coordinate space transformation for parent inline boxes as we rotate the content with m_paintRect (see ::paint)
+      decoratingBoxList.append(
+        DecoratingBox(
+          inlineBox: ancestorInlineBox,
+          style: isFirstLine ? renderer.firstLineStyle() : renderer.style(),
+          textDecorationStyles: overrideDecorationStyle, location: textBoxLocation))
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
