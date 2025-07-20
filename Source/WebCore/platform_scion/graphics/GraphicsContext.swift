@@ -49,6 +49,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func save(purpose: GraphicsContextState.Purpose = .SaveRestore) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fillRect(rect: FloatRectWrapper, color: ColorWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -61,6 +66,11 @@ class GraphicsContextWrapper {
   }
 
   func clip(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipOut(rect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

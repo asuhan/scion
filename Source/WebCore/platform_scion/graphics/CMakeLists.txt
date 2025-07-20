@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     Glyph.swift
     GlyphPage.swift
     GraphicsContext.swift
+    GraphicsContextState.swift
     GraphicsContextStateSaver.swift
     GraphicsTypes.swift
     IntPoint.swift

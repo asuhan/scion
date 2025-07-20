@@ -38,6 +38,11 @@ struct Document {
     fatalError("Not implemented")
   }
 
+  func printing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markersIfExists() -> DocumentMarkerControllerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

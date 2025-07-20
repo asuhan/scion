@@ -730,8 +730,34 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private func createDecorationPainter(markedText: StyledMarkedText, clipOutRect: FloatRectWrapper)
     -> TextDecorationPainter
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = paintInfo.context()
+
+    updateGraphicsContext(context: context, paintStyle: markedText.style.textStyles)
+
+    // Note that if the text is truncated, we let the thing being painted in the truncation
+    // draw its own decoration.
+    let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+    let isTransparentContent =
+      markedText.type == .DraggedContent || markedText.type == .TransparentContent
+    if isTransparentContent || !clipOutRect.isEmpty() {
+      stateSaver.save()
+      if isTransparentContent {
+        context.setAlpha(alpha: markedText.style.alpha)
+      }
+      if !clipOutRect.isEmpty() {
+        context.clipOut(rect: clipOutRect)
+      }
+    }
+
+    // Create painter
+    let shadow = markedText.style.textShadow
+    let colorFilter =
+      markedText.style.textShadow != nil && style.hasAppleColorFilter()
+      ? style.appleColorFilter() : nil
+    return TextDecorationPainter(
+      context: context, font: fontCascade(), shadow: shadow, colorFilter: colorFilter,
+      isPrinting: document.printing(),
+      isHorizontal: renderer.isHorizontalWritingMode())
   }
 
   private func paintBackgroundDecorations(

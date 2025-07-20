@@ -21,6 +21,14 @@
  */
 
 struct TextDecorationPainter {
+  init(
+    context: GraphicsContextWrapper, font: FontCascadeWrapper, shadow: ShadowData?,
+    colorFilter: FilterOperations?, isPrinting: Bool, isHorizontal: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct Styles {
     struct DecorationStyleAndColor {
       let color: ColorWrapper
