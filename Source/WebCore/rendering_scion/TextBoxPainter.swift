@@ -30,6 +30,7 @@ protocol BoxPath {
   func style() -> RenderStyleWrapper
   func direction() -> TextDirection
   func box() -> InlineDisplay.Box
+  func deepCopy() -> BoxPath
 }
 
 private func computedTextDecorationThickness(
@@ -143,8 +144,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func makeIterator() -> InlineIterator.TextBoxIterator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return InlineIterator.TextBoxIterator(pathVariant: textBox.deepCopy())
   }
 
   private func paintBackground() {

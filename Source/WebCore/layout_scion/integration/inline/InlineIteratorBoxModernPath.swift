@@ -65,6 +65,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func deepCopy() -> BoxPath {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private let inlineContent: LayoutIntegration.InlineContent
     private let boxIndex: UInt64
   }

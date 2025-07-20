@@ -25,6 +25,11 @@
 
 extension InlineIterator {
 
-  class TextBoxIterator: LeafBoxIterator {}
+  class TextBoxIterator: LeafBoxIterator {
+    init(pathVariant: BoxPath) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
 }
