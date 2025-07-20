@@ -30,12 +30,22 @@ struct TextDecorationPainter {
   }
 
   struct Styles {
-    struct DecorationStyleAndColor {
+    static func == (this: Styles, other: Styles) -> Bool {
+      return this.underline.color == other.underline.color
+        && this.overline.color == other.overline.color
+        && this.linethrough.color == other.linethrough.color
+        && this.underline.decorationStyle == other.underline.decorationStyle
+        && this.overline.decorationStyle == other.overline.decorationStyle
+        && this.linethrough.decorationStyle == other.linethrough.decorationStyle
+    }
+
+    struct DecorationStyleAndColor: Equatable {
       let color: ColorWrapper
       let decorationStyle: TextDecorationStyle = .Solid
     }
     let underline: DecorationStyleAndColor
     let overline: DecorationStyleAndColor
+    let linethrough: DecorationStyleAndColor
   }
 
   struct BackgroundDecorationGeometry {

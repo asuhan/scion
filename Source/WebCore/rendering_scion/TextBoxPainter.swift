@@ -77,6 +77,13 @@ private func decoratingBoxStyleForInlineBox(inlineBox: InlineIterator.InlineBox,
   fatalError("Not implemented")
 }
 
+private func isDecoratingBoxForBackground(
+  inlineBox: InlineIterator.InlineBox, styleToUse: RenderStyleWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func radiiForUnderline(
   _underline: CompositionUnderline, _markedTextStartOffset: UInt32, _markedTextEndOffset: UInt32
 ) -> FloatRoundedRect.Radii {
@@ -1097,14 +1104,20 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
     // FIXME: Figure out if the decoration styles coming from the styled marked text should be used only on the closest inline box (direct parent).
     appendIfIsDecoratingBoxForBackground(
-      inlineBox: ancestorInlineBox, useOverriderDecorationStyle: .Yes)
+      inlineBox: ancestorInlineBox, useOverriderDecorationStyle: .Yes,
+      textBoxLocation: textBoxLocation,
+      overrideDecorationStyle: overrideDecorationStyle,
+      decoratingBoxList: &decoratingBoxList)
     while !ancestorInlineBox.get().isRootInlineBox() {
       ancestorInlineBox = ancestorInlineBox.get().parentInlineBox()
       if !ancestorInlineBox.bool() {
         fatalError("Not reached")
       }
       appendIfIsDecoratingBoxForBackground(
-        inlineBox: ancestorInlineBox, useOverriderDecorationStyle: .No)
+        inlineBox: ancestorInlineBox, useOverriderDecorationStyle: .No,
+        textBoxLocation: textBoxLocation,
+        overrideDecorationStyle: overrideDecorationStyle,
+        decoratingBoxList: &decoratingBoxList)
     }
   }
 
@@ -1115,8 +1128,36 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
   private func appendIfIsDecoratingBoxForBackground(
     inlineBox: InlineIterator.InlineBoxIterator,
-    useOverriderDecorationStyle: UseOverriderDecorationStyle
+    useOverriderDecorationStyle: UseOverriderDecorationStyle,
+    textBoxLocation: FloatPoint,
+    overrideDecorationStyle: TextDecorationPainter.Styles,
+    decoratingBoxList: inout DecoratingBoxList
   ) {
+    let style = decoratingBoxStyleForInlineBox(inlineBox: inlineBox.get(), isFirstLine: isFirstLine)
+
+    if !isDecoratingBoxForBackground(inlineBox: inlineBox.get(), styleToUse: style) {
+      // Some cases even non-decoration boxes may have some decoration pieces coming from the marked text (e.g. highlight).
+      if useOverriderDecorationStyle == .No || overrideDecorationStyle == computedDecorationStyle()
+      {
+        return
+      }
+    }
+
+    let borderAndPaddingBefore =
+      !inlineBox.get().isRootInlineBox()
+      ? inlineBox.get().renderer().borderAndPaddingBefore() : LayoutUnit(value: 0)
+    decoratingBoxList.append(
+      DecoratingBox(
+        inlineBox: inlineBox,
+        style: style,
+        textDecorationStyles: useOverriderDecorationStyle == .Yes
+          ? overrideDecorationStyle : computedDecorationStyle(),
+        location: FloatPoint(
+          x: textBoxLocation.x,
+          y: paintOffset.y + inlineBox.get().logicalTop() + borderAndPaddingBefore)))
+  }
+
+  private func computedDecorationStyle() -> TextDecorationPainter.Styles {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1134,6 +1175,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let paintTextRun: TextRunWrapper
   private let paintInfo: PaintInfoWrapper
   private let selectableRange: TextBoxSelectableRange
+  private let paintOffset: FloatPoint
   private let paintRect: FloatRectWrapper
   private let isFirstLine: Bool
   private let isCombinedText: Bool

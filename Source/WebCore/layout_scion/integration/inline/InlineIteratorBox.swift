@@ -41,6 +41,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func logicalTop() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func logicalWidth() -> Float32 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

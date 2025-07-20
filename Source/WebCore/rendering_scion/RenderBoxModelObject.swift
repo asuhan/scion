@@ -60,6 +60,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(p))
   }
 
+  func borderAndPaddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderBoxModelObject_marginStart(p, otherStyle?.p))
