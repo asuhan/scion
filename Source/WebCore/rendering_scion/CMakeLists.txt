@@ -44,6 +44,7 @@ target_sources(layout_scion PRIVATE
     RenderTable.swift
     RenderTableCell.swift
     RenderText.swift
+    RenderTheme.swift
     RenderView.swift
     RenderTextControl.swift
     RenderTextControlMultiLine.swift

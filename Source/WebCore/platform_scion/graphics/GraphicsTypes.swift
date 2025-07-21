@@ -61,6 +61,19 @@ enum BlendMode: UInt8 {
   case PlusLighter
 }
 
+enum DocumentMarkerLineStyleMode: UInt8 {
+  case TextCheckingDictationPhraseWithAlternatives
+  case Spelling
+  case Grammar
+  case AutocorrectionReplacement
+  case DictationAlternatives
+}
+
+struct DocumentMarkerLineStyle {
+  let mode: DocumentMarkerLineStyleMode
+  let color: ColorWrapper
+}
+
 enum StrokeStyle: UInt8 {
   case NoStroke
   case SolidStroke

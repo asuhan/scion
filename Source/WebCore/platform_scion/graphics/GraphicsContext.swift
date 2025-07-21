@@ -83,6 +83,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func drawDotsForDocumentMarker(rect: FloatRectWrapper, style: DocumentMarkerLineStyle) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func beginTransparencyLayer(opacity: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

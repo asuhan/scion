@@ -23,4 +23,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct ColorWrapper: Equatable {}
+struct ColorWrapper: Equatable {
+  func colorWithAlphaMultipliedBy(amount: Float32) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -122,6 +122,13 @@ private func mirrorRTLSegment(
   start = logicalWidth - width - start
 }
 
+private func calculateDocumentMarkerBounds(
+  textBox: InlineIterator.TextBoxIterator, markedText: MarkedText
+) -> FloatRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class TextBoxPainter<TextBoxPath: BoxPath> {
   init(textBox: TextBoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
@@ -1028,8 +1035,39 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func paintPlatformDocumentMarker(markedText: MarkedText) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Never print document markers (rdar://5327887)
+    if document.printing() {
+      return
+    }
+
+    var bounds = calculateDocumentMarkerBounds(textBox: makeIterator(), markedText: markedText)
+    bounds.moveBy(delta: paintRect.location())
+
+    let lineStyleMode = TextBoxPainter.lineStyleMode(markedText: markedText)
+
+    var lineStyleColor = RenderTheme.singleton().documentMarkerLineColor(
+      renderer: renderer, mode: lineStyleMode)
+    if let marker = markedText.marker {
+      lineStyleColor = lineStyleColor.colorWithAlphaMultipliedBy(amount: marker.opacity())
+    }
+
+    paintInfo.context().drawDotsForDocumentMarker(
+      rect: bounds, style: DocumentMarkerLineStyle(mode: lineStyleMode, color: lineStyleColor))
+  }
+
+  private static func lineStyleMode(markedText: MarkedText) -> DocumentMarkerLineStyleMode {
+    switch markedText.type {
+    case .SpellingError:
+      return .Spelling
+    case .GrammarError:
+      return .Grammar
+    case .Correction:
+      return .AutocorrectionReplacement
+    case .DictationAlternatives:
+      return .DictationAlternatives
+    default:
+      fatalError("Not reached")
+    }
   }
 
   private func textPosition() -> Float32 {

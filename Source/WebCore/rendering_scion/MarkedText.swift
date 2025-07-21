@@ -96,4 +96,5 @@ class MarkedText {
   let startOffset: UInt32 = 0
   let endOffset: UInt32 = 0
   let type: `Type` = .Unmarked
+  let marker: RenderedDocumentMarker? = nil
 }
