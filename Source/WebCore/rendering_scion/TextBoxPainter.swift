@@ -73,8 +73,21 @@ private func computedTextDecorationType(
 private func decoratingBoxStyleForInlineBox(inlineBox: InlineIterator.InlineBox, isFirstLine: Bool)
   -> RenderStyleWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !inlineBox.isRootInlineBox() {
+    return inlineBox.style()
+  }
+  // "When specified on or propagated to a block container that establishes an inline formatting context, the decorations are propagated to an anonymous
+  // inline box that wraps all the in-flow inline-level children of the block container"
+  // https://drafts.csswg.org/css-text-decor-4/#line-decoration
+  // Sadly we don't have the concept of anonymous inline box for all inline-level chidren when content forces us to generate anonymous block containers.
+  var ancestor: RenderElementWrapper? = inlineBox.renderer()
+  while ancestor != nil {
+    if !ancestor!.isAnonymous() {
+      return isFirstLine ? ancestor!.firstLineStyle() : ancestor!.style()
+    }
+    ancestor = ancestor!.parent()
+  }
+  fatalError("Not reached")
 }
 
 private func isDecoratingBoxForBackground(
