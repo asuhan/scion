@@ -25,6 +25,11 @@
 
 extension InlineIterator {
 
+  enum TextRunMode {
+    case Painting
+    case Editing
+  }
+
   class BoxLegacyPath {
     func legacyInlineBox() -> LegacyInlineBox? {
       // TODO(asuhan): implement this

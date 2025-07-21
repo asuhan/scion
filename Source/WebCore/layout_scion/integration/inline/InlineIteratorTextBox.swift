@@ -25,8 +25,40 @@
 
 extension InlineIterator {
 
+  class TextBox: Box {
+    func end() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func selectableRange() -> TextBoxSelectableRange {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func fontCascade() -> FontCascadeWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func textRun(mode: TextRunMode = .Painting) -> TextRunWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func renderer() -> RenderTextWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   class TextBoxIterator: LeafBoxIterator {
     init(pathVariant: BoxPath) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    override func get() -> TextBox {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

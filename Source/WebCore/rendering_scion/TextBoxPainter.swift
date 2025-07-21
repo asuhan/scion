@@ -125,8 +125,23 @@ private func mirrorRTLSegment(
 private func calculateDocumentMarkerBounds(
   textBox: InlineIterator.TextBoxIterator, markedText: MarkedText
 ) -> FloatRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let font = textBox.get().fontCascade()
+  let (y, height) = DocumentMarkerControllerWrapper.markerYPositionAndHeightForFont(font: font)
+
+  // Avoid measuring the text when the entire line box is selected as an optimization.
+  if markedText.startOffset != 0
+    || markedText.endOffset != textBox.get().selectableRange().clamp(offset: textBox.get().end())
+  {
+    let run = textBox.get().textRun()
+    let selectionRect = LayoutRectWrapper(x: 0, y: y, width: 0, height: height)
+    font.adjustSelectionRectForText(
+      canUseSimplifiedTextMeasuring: textBox.get().renderer().canUseSimplifiedTextMeasuring()
+        ?? false, run: run, selectionRect: selectionRect,
+      from: markedText.startOffset, to: markedText.endOffset)
+    return selectionRect.FloatRect()
+  }
+
+  return FloatRectWrapper(x: 0, y: y, width: textBox.get().logicalWidth(), height: height)
 }
 
 class TextBoxPainter<TextBoxPath: BoxPath> {

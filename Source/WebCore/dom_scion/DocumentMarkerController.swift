@@ -29,4 +29,9 @@ class DocumentMarkerControllerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func markerYPositionAndHeightForFont(font: FontCascadeWrapper) -> (Float32, Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
