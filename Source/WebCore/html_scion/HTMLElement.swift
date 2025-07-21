@@ -1,9 +1,10 @@
 /*
  * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
  *           (C) 1999 Antti Koivisto (koivisto@kde.org)
- *           (C) 2001 Peter Kelly (pmk@post.com)
- *           (C) 2001 Dirk Mueller (mueller@kde.org)
- * Copyright (C) 2003-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2004-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2021 Google Inc. All rights reserved.
+ * Copyright (C) 2009 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
+ * Copyright (C) 2011 Motorola Mobility. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,9 +23,4 @@
  *
  */
 
-class ElementWrapper: ContainerNodeWrapper {
-  func hasFontTag() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+class HTMLElementWrapper: StyledElementWrapper {}

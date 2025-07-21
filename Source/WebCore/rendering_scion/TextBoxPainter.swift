@@ -93,8 +93,18 @@ private func decoratingBoxStyleForInlineBox(inlineBox: InlineIterator.InlineBox,
 private func isDecoratingBoxForBackground(
   inlineBox: InlineIterator.InlineBox, styleToUse: RenderStyleWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let element = inlineBox.renderer().element() {
+    if element is HTMLAnchorElementWrapper || element.hasFontTag() {
+      // <font> and <a> are always considered decorating boxes.
+      return true
+    }
+  }
+  let textDecorationLine = styleToUse.textDecorationLine()
+  let textDecorationsInEffect = styleToUse.textDecorationsInEffect()
+  return textDecorationLine.contains(.Underline) || textDecorationLine.contains(.Overline)
+    || (inlineBox.isRootInlineBox()
+      && (textDecorationsInEffect.contains(.Underline)
+        || textDecorationsInEffect.contains(.Overline)))
 }
 
 private func radiiForUnderline(

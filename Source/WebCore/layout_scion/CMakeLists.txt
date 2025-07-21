@@ -38,3 +38,5 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/dom_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/dom_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/editing_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/editing_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/html_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/html_scion)

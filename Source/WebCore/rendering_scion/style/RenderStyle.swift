@@ -413,6 +413,11 @@ class RenderStyleWrapper {
     return TextDecorationLine(rawValue: wk_interop.RenderStyle_textDecorationsInEffect(p))
   }
 
+  func textDecorationLine() -> TextDecorationLine {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderLeftWidth() -> Float32 {
     if p == nil {
       // TODO(asuhan): implement this
