@@ -252,6 +252,14 @@ class RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  enum HighlightState: UInt8 {
+    case None  // The object is not selected.
+    case Start  // The object either contains the start of a selection run or is the start of a run
+    case Inside  // The object is fully encompassed by a selection run
+    case End  // The object either contains the end of a selection run or is the end of a run
+    case Both  // The object contains an entire run or is the sole selected object in that run
+  }
+
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
     if wk_interop.RenderObject_isRenderListBox(p) {
       return RenderListBoxWrapper(p: p)

@@ -1148,8 +1148,12 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func computeHaveSelection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isPrinting || paintInfo.phase == .TextClip {
+      return false
+    }
+
+    return renderer.view().selection().highlightStateForTextBox(
+      renderer: renderer, textBoxRange: selectableRange) != .None
   }
 
   private func selectionStartEnd() -> (UInt32, UInt32) {
