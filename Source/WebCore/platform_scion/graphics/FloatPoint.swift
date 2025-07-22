@@ -46,6 +46,11 @@ struct FloatPoint {
     y += dy
   }
 
+  mutating func moveBy(a: FloatPoint) {
+    x += a.x
+    y += a.y
+  }
+
   func transposedPoint() -> FloatPoint {
     return FloatPoint(x: y, y: x)
   }
