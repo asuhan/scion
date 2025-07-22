@@ -31,6 +31,11 @@ extension InlineIterator {
       self.boxIndex = startIndex
     }
 
+    func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isHorizontal() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -51,11 +56,35 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func selectableRange() -> TextBoxSelectableRange {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func textRun(mode: InlineIterator.TextRunMode) -> TextRunWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func textRun() -> TextRunWrapper {
+      return self.textRun(mode: .Painting)
+    }
+
+    func renderer() -> RenderObjectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func style() -> RenderStyleWrapper {
       return box().style()
     }
 
     func direction() -> TextDirection {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func isFirstLine() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

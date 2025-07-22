@@ -7,4 +7,5 @@ target_sources(layout_scion PRIVATE
     Node.swift
     RenderedDocumentMarker.swift
     StyledElement.swift
+    Text.swift
 )

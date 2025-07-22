@@ -29,6 +29,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func textNode() -> TextWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -55,6 +60,13 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   func setNeedsVisualReordering() {
     wk_interop.RenderText_setNeedsVisualReordering(p)
+  }
+
+  static func emphasisMarkExistsAndIsAbove(renderer: RenderTextWrapper, style: RenderStyleWrapper)
+    -> Bool?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func canUseSimplifiedTextMeasuring() -> Bool? {

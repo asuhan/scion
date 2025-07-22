@@ -25,12 +25,23 @@
  */
 
 final class EditorWrapper {
+  // getting international text input composition state (for use by LegacyInlineTextBox)
+  func compositionNode() -> TextWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositionStart() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func compositionEnd() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func compositionUsesCustomUnderlines() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

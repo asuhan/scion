@@ -23,12 +23,17 @@
  */
 
 protocol BoxPath {
+  func visualRectIgnoringBlockDirection() -> FloatRectWrapper
   func isHorizontal() -> Bool
   func start() -> UInt32
   func end() -> UInt32
   func length() -> UInt32
+  func selectableRange() -> TextBoxSelectableRange
+  func textRun() -> TextRunWrapper
+  func renderer() -> RenderObjectWrapper
   func style() -> RenderStyleWrapper
   func direction() -> TextDirection
+  func isFirstLine() -> Bool
   func box() -> InlineDisplay.Box
   func deepCopy() -> BoxPath
 }
@@ -146,8 +151,41 @@ private func calculateDocumentMarkerBounds(
 
 class TextBoxPainter<TextBoxPath: BoxPath> {
   init(textBox: TextBoxPath, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.textBox = textBox
+    self.renderer = textBox.renderer() as! RenderTextWrapper
+    self.document = renderer.document()
+    self.style = textBox.style()
+    self.logicalRect =
+      textBox.isHorizontal()
+      ? textBox.visualRectIgnoringBlockDirection()
+      : textBox.visualRectIgnoringBlockDirection().transposedRect()
+    self.paintTextRun = textBox.textRun()
+    self.paintInfo = paintInfo
+    self.selectableRange = textBox.selectableRange()
+    self.paintOffset = paintOffset
+    self.paintRect = computePaintRect(paintOffset: paintOffset)
+    self.isFirstLine = textBox.isFirstLine()
+    self.isCombinedText = isCombinedTextInitValue()
+    self.isPrinting = document.printing()
+    self.haveSelection = computeHaveSelection()
+    self.containsComposition =
+      renderer.textNode() != nil
+      && renderer.frame().editor().compositionNode() == renderer.textNode()
+    self.useCustomUnderlines =
+      containsComposition && renderer.frame().editor().compositionUsesCustomUnderlines()
+    self.emphasisMarkExistsAndIsAbove = RenderTextWrapper.emphasisMarkExistsAndIsAbove(
+      renderer: renderer, style: style)
+    assert(
+      paintInfo.phase == .Foreground || paintInfo.phase == .Selection
+        || paintInfo.phase == .TextClip || paintInfo.phase == .EventRegion
+        || paintInfo.phase == .Accessibility)
+  }
+
+  private func isCombinedTextInitValue() -> Bool {
+    if let combineTextRenderer = renderer as? RenderCombineTextWrapper {
+      return combineTextRenderer.isCombined()
+    }
+    return false
   }
 
   func paint() {
@@ -1094,6 +1132,16 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     return logicalRect.x() - makeIterator().get().lineBox().get().contentLogicalLeft()
   }
 
+  private func computePaintRect(paintOffset: LayoutPointWrapper) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeHaveSelection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func selectionStartEnd() -> (UInt32, UInt32) {
     return renderer.view().selection().rangeForTextBox(
       renderer: renderer, textBoxRange: selectableRange)
@@ -1224,6 +1272,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     let borderAndPaddingBefore =
       !inlineBox.get().isRootInlineBox()
       ? inlineBox.get().renderer().borderAndPaddingBefore() : LayoutUnit(value: 0)
+    let paintOffsetShiftedY = paintOffset.y + inlineBox.get().logicalTop()
     decoratingBoxList.append(
       DecoratingBox(
         inlineBox: inlineBox,
@@ -1233,7 +1282,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
           : computedDecorationStyle(inlineBox: inlineBox.get(), style: style),
         location: FloatPoint(
           x: textBoxLocation.x,
-          y: paintOffset.y + inlineBox.get().logicalTop() + borderAndPaddingBefore)))
+          y: paintOffsetShiftedY + borderAndPaddingBefore)))
   }
 
   private func computedDecorationStyle(
@@ -1259,15 +1308,15 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let paintTextRun: TextRunWrapper
   private let paintInfo: PaintInfoWrapper
   private let selectableRange: TextBoxSelectableRange
-  private let paintOffset: FloatPoint
-  private let paintRect: FloatRectWrapper
-  private let isFirstLine: Bool
-  private let isCombinedText: Bool
-  private let isPrinting: Bool
-  private let haveSelection: Bool
-  private let containsComposition: Bool
-  private let useCustomUnderlines: Bool
-  private let emphasisMarkExistsAndIsAbove: Bool?
+  private let paintOffset: LayoutPointWrapper
+  private var paintRect: FloatRectWrapper = FloatRectWrapper()
+  private var isFirstLine: Bool = false
+  private var isCombinedText: Bool = false
+  private var isPrinting: Bool = false
+  private var haveSelection: Bool = false
+  private var containsComposition: Bool = false
+  private var useCustomUnderlines: Bool = false
+  private var emphasisMarkExistsAndIsAbove: Bool? = nil
 }
 
 class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> {

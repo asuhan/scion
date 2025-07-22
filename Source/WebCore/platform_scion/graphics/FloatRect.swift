@@ -172,6 +172,11 @@ struct FloatRectWrapper {
     setHeight(height: height() + deltaY + deltaMaxY)
   }
 
+  func transposedRect() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (lhs: FloatRectWrapper, rhs: FloatRectWrapper) -> Bool {
     return lhs.m_location == rhs.m_location && lhs.m_size == rhs.m_size
   }

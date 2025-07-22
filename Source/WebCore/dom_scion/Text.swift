@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2011 Apple Inc. All rights reserved.
+ * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
+ *           (C) 1999 Antti Koivisto (koivisto@kde.org)
+ * Copyright (C) 2003-2018 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,22 +17,17 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
  */
 
-final class RenderCombineTextWrapper: RenderTextWrapper {
-  func computeTextOrigin(boxRect: FloatRectWrapper) -> FloatPoint? {
+class TextWrapper: Equatable {
+  init(p: UnsafeRawPointer) {
+    self.p = p
+  }
+
+  static func == (lhs: TextWrapper, rhs: TextWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func isCombined() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func textCombineFont() -> FontCascadeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  private let p: UnsafeRawPointer
 }
