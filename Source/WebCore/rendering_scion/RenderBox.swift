@@ -163,6 +163,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       p, LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
   }
 
+  func flipForWritingMode(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalVisualOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
     if style.p == nil {
       // TODO(asuhan): implement this

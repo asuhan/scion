@@ -31,6 +31,7 @@ protocol BoxPath {
   func selectableRange() -> TextBoxSelectableRange
   func textRun() -> TextRunWrapper
   func renderer() -> RenderObjectWrapper
+  func formattingContextRoot() -> RenderBlockFlowWrapper
   func style() -> RenderStyleWrapper
   func direction() -> TextDirection
   func isFirstLine() -> Bool
@@ -1133,8 +1134,17 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   }
 
   private func computePaintRect(paintOffset: LayoutPointWrapper) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var localPaintOffset = paintOffset
+
+    localPaintOffset.move(dx: 0, dy: style.isHorizontalWritingMode() ? 0 : -logicalRect.height())
+    let visualRect = textBox.visualRectIgnoringBlockDirection()
+    textBox.formattingContextRoot().flipForWritingMode(rect: visualRect)
+
+    var boxOrigin = visualRect.location()
+    boxOrigin.moveBy(a: localPaintOffset.FloatPoint())
+    return FloatRectWrapper(
+      location: boxOrigin, size: FloatSize(width: logicalRect.width(), height: logicalRect.height())
+    )
   }
 
   private func computeHaveSelection() -> Bool {
