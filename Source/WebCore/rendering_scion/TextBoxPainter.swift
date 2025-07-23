@@ -739,7 +739,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
         )
     }
 
-    let textPainter = TextPainter(context: context, font: font, renderStyle: style)
+    var textPainter = TextPainter(context: context, font: font, renderStyle: style)
     textPainter.setStyle(textPaintStyle: markedText.style.textStyles)
     textPainter.setIsHorizontal(isHorizontal: textBox.isHorizontal())
     if markedText.style.textShadow != nil {

@@ -36,10 +36,7 @@ struct TextPainter {
     fatalError("Not implemented")
   }
 
-  func setStyle(textPaintStyle: TextPaintStyle) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setStyle(textPaintStyle: TextPaintStyle) { self.style = textPaintStyle }
 
   func setShadow(shadow: ShadowData?) {
     // TODO(asuhan): implement this
@@ -77,4 +74,6 @@ struct TextPainter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var style: TextPaintStyle
 }
