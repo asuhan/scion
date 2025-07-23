@@ -25,4 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class AffineTransform {}
+class AffineTransform {
+  init(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64) {
+    self.transform = [a, b, c, d, e, f]
+  }
+
+  // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
+  private let transform: [Float64]
+}

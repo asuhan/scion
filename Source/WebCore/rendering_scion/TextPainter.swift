@@ -21,8 +21,13 @@
  */
 
 func rotation(boxRect: FloatRectWrapper, direction: RotationDirection) -> AffineTransform {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return direction == .Clockwise
+    ? AffineTransform(
+      a: 0, b: 1, c: -1, d: 0, e: Float64(boxRect.x() + boxRect.maxY()),
+      f: Float64(boxRect.maxY() - boxRect.x()))
+    : AffineTransform(
+      a: 0, b: -1, c: 1, d: 0, e: Float64(boxRect.x() - boxRect.maxY()),
+      f: Float64(boxRect.x() + boxRect.maxY()))
 }
 
 struct TextPainter {
