@@ -173,8 +173,7 @@ struct FloatRectWrapper {
   }
 
   func transposedRect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FloatRectWrapper(location: m_location.transposedPoint(), size: m_size.transposedSize())
   }
 
   static func == (lhs: FloatRectWrapper, rhs: FloatRectWrapper) -> Bool {
