@@ -743,7 +743,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     textPainter.setStyle(textPaintStyle: markedText.style.textStyles)
     textPainter.setIsHorizontal(isHorizontal: textBox.isHorizontal())
     if markedText.style.textShadow != nil {
-      textPainter.setShadow(shadow: markedText.style.textShadow)
+      textPainter.setShadow(shadow: markedText.style.textShadow!)
       if style.hasAppleColorFilter() {
         textPainter.setShadowColorFilter(colorFilter: style.appleColorFilter())
       }

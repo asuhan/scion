@@ -38,26 +38,20 @@ struct TextPainter {
 
   mutating func setStyle(textPaintStyle: TextPaintStyle) { self.style = textPaintStyle }
 
-  func setShadow(shadow: ShadowData?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func setShadow(shadow: ShadowData) { self.shadow = shadow }
+
+  mutating func setShadowColorFilter(colorFilter: FilterOperations) {
+    shadowColorFilter = colorFilter
   }
 
-  func setShadowColorFilter(colorFilter: FilterOperations) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setIsHorizontal(isHorizontal: Bool) { textBoxIsHorizontal = isHorizontal }
 
-  func setIsHorizontal(isHorizontal: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setEmphasisMark(
+  mutating func setEmphasisMark(
     mark: AtomStringWrapper, offset: Float32, combinedText: RenderCombineTextWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.emphasisMark = mark
+    self.emphasisMarkOffset = offset
+    self.combinedText = combinedText
   }
 
   func paintRange(
@@ -76,4 +70,10 @@ struct TextPainter {
   }
 
   private var style: TextPaintStyle
+  private var emphasisMark: AtomStringWrapper
+  private var shadow: ShadowData
+  private var shadowColorFilter: FilterOperations
+  private var combinedText: RenderCombineTextWrapper?
+  private var emphasisMarkOffset: Float32
+  private var textBoxIsHorizontal: Bool
 }
