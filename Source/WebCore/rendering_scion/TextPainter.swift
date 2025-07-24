@@ -92,8 +92,37 @@ struct TextPainter {
         boxRect: boxRect, textOrigin: textOrigin, startOffset: startOffset, endOffset: endOffset,
         emphasisMark: nullAtom(), emphasisMarkOffset: 0, stroked: paintStyle.strokeWidth > 0)
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let textDrawingMode = context.textDrawingMode()
+      let paintOrder = RenderStyleWrapper.paintTypesForPaintOrder(order: paintStyle.paintOrder)
+      var shadowToUse = shadow
+
+      for order in paintOrder {
+        switch order {
+        case .Fill:
+          var textDrawingModeWithoutStroke = textDrawingMode
+          textDrawingModeWithoutStroke.remove(.Stroke)
+          context.setTextDrawingMode(textDrawingMode: textDrawingModeWithoutStroke)
+          paintTextWithShadows(
+            shadow: shadowToUse, colorFilter: shadowColorFilter, font: font, textRun: textRun,
+            boxRect: boxRect, textOrigin: textOrigin, startOffset: startOffset,
+            endOffset: endOffset, emphasisMark: nullAtom(), emphasisMarkOffset: 0, stroked: false)
+          shadowToUse = nil
+          context.setTextDrawingMode(textDrawingMode: textDrawingMode)
+        case .Stroke:
+          var textDrawingModeWithoutFill = textDrawingMode
+          textDrawingModeWithoutFill.remove(.Fill)
+          context.setTextDrawingMode(textDrawingMode: textDrawingModeWithoutFill)
+          paintTextWithShadows(
+            shadow: shadowToUse, colorFilter: shadowColorFilter, font: font, textRun: textRun,
+            boxRect: boxRect, textOrigin: textOrigin, startOffset: startOffset,
+            endOffset: endOffset, emphasisMark: nullAtom(), emphasisMarkOffset: 0,
+            stroked: paintStyle.strokeWidth > 0)
+          shadowToUse = nil
+          context.setTextDrawingMode(textDrawingMode: textDrawingMode)
+        case .Markers:
+          continue
+        }
+      }
     }
 
     // TODO(asuhan): implement this

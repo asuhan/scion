@@ -82,3 +82,10 @@ enum StrokeStyle: UInt8 {
   case DoubleStroke
   case WavyStroke
 }
+
+struct TextDrawingModeFlags: OptionSet {
+  let rawValue: UInt8
+
+  static let Fill = TextDrawingModeFlags(rawValue: 1)
+  static let Stroke = TextDrawingModeFlags(rawValue: 2)
+}

@@ -49,6 +49,16 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func textDrawingMode() -> TextDrawingModeFlags {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTextDrawingMode(textDrawingMode: TextDrawingModeFlags) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func save(purpose: GraphicsContextState.Purpose = .SaveRestore) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

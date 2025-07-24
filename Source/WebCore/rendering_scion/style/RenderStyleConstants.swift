@@ -451,3 +451,9 @@ enum PaintOrder: UInt8 {
   case Markers
   case MarkersStroke
 }
+
+enum PaintType: UInt8 {
+  case Fill
+  case Stroke
+  case Markers
+}

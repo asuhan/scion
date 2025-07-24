@@ -928,6 +928,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  static func paintTypesForPaintOrder(order: PaintOrder) -> ArraySlice<PaintType> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computedStrokeWidth(viewportSize: IntSize) -> Float32 {
     if p == nil {
       // TODO(asuhan): implement this
