@@ -70,6 +70,36 @@ struct TextPainter {
     fatalError("Not implemented")
   }
 
+  private func paintTextWithShadows(
+    shadow: ShadowData?, colorFilter: FilterOperations?, font: FontCascadeWrapper,
+    textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint,
+    startOffset: UInt32, endOffset: UInt32, emphasisMark: AtomStringWrapper,
+    emphasisMarkOffset: Float32, stroked: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintTextAndEmphasisMarksIfNeeded(
+    textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint, startOffset: UInt32,
+    endOffset: UInt32, paintStyle: TextPaintStyle, shadow: ShadowData?,
+    shadowColorFilter: FilterOperations?
+  ) {
+    if paintStyle.paintOrder == .Normal {
+      // FIXME: Truncate right-to-left text correctly.
+      paintTextWithShadows(
+        shadow: shadow, colorFilter: shadowColorFilter, font: font, textRun: textRun,
+        boxRect: boxRect, textOrigin: textOrigin, startOffset: startOffset, endOffset: endOffset,
+        emphasisMark: nullAtom(), emphasisMarkOffset: 0, stroked: paintStyle.strokeWidth > 0)
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let context: GraphicsContextWrapper
   private let font: FontCascadeWrapper
   private let renderStyle: RenderStyleWrapper

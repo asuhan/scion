@@ -440,3 +440,14 @@ enum TextIndentType: UInt8 {
   case Normal
   case Hanging
 }
+
+// These are all minimized combinations of paint-order.
+enum PaintOrder: UInt8 {
+  case Normal
+  case Fill
+  case FillMarkers
+  case Stroke
+  case StrokeMarkers
+  case Markers
+  case MarkersStroke
+}

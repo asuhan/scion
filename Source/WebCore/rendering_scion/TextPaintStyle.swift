@@ -37,6 +37,7 @@ struct TextPaintStyle {
   var fillColor: ColorWrapper
   let strokeColor: ColorWrapper
   let strokeWidth: Float32 = 0
+  let paintOrder: PaintOrder = .Normal
 }
 
 enum FillColorType {
