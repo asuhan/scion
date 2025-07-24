@@ -32,8 +32,9 @@ func rotation(boxRect: FloatRectWrapper, direction: RotationDirection) -> Affine
 
 struct TextPainter {
   init(context: GraphicsContextWrapper, font: FontCascadeWrapper, renderStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.context = context
+    self.font = font
+    self.renderStyle = renderStyle
   }
 
   mutating func setStyle(textPaintStyle: TextPaintStyle) { self.style = textPaintStyle }
@@ -69,11 +70,14 @@ struct TextPainter {
     fatalError("Not implemented")
   }
 
-  private var style: TextPaintStyle
-  private var emphasisMark: AtomStringWrapper
-  private var shadow: ShadowData
-  private var shadowColorFilter: FilterOperations
-  private var combinedText: RenderCombineTextWrapper?
-  private var emphasisMarkOffset: Float32
-  private var textBoxIsHorizontal: Bool
+  private let context: GraphicsContextWrapper
+  private let font: FontCascadeWrapper
+  private let renderStyle: RenderStyleWrapper
+  private var style = TextPaintStyle()
+  private var emphasisMark = AtomStringWrapper()
+  private var shadow = ShadowData()
+  private var shadowColorFilter = FilterOperations()
+  private var combinedText: RenderCombineTextWrapper? = nil
+  private var emphasisMarkOffset: Float32 = 0
+  private var textBoxIsHorizontal: Bool = true
 }
