@@ -125,8 +125,36 @@ struct TextPainter {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if emphasisMark.isEmpty() {
+      return
+    }
+
+    let boxOrigin = boxRect.location()
+    updateGraphicsContext(
+      context: context, paintStyle: paintStyle, fillColorType: .UseEmphasisMarkColor)
+    let emphasisMarkTextRun =
+      combinedText != nil ? TextPainter.objectReplacementCharacterTextRun : textRun
+    let emphasisMarkTextOrigin =
+      combinedText != nil
+      ? FloatPoint(
+        x: boxOrigin.x + boxRect.width() / 2,
+        y: boxOrigin.y + Float32(font.metricsOfPrimaryFont().intAscent())) : textOrigin
+    if combinedText != nil {
+      context.concatCTM(transform: rotation(boxRect: boxRect, direction: .Clockwise))
+    }
+
+    // FIXME: Truncate right-to-left text correctly.
+    paintTextWithShadows(
+      shadow: shadow, colorFilter: shadowColorFilter,
+      font: combinedText != nil ? combinedText!.originalFont() : font,
+      textRun: emphasisMarkTextRun, boxRect: boxRect, textOrigin: emphasisMarkTextOrigin,
+      startOffset: startOffset, endOffset: endOffset,
+      emphasisMark: emphasisMark, emphasisMarkOffset: emphasisMarkOffset,
+      stroked: paintStyle.strokeWidth > 0)
+
+    if combinedText != nil {
+      context.concatCTM(transform: rotation(boxRect: boxRect, direction: .Counterclockwise))
+    }
   }
 
   private let context: GraphicsContextWrapper
@@ -139,4 +167,9 @@ struct TextPainter {
   private var combinedText: RenderCombineTextWrapper? = nil
   private var emphasisMarkOffset: Float32 = 0
   private var textBoxIsHorizontal: Bool = true
+
+  private static var objectReplacementCharacterTextRun: TextRunWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

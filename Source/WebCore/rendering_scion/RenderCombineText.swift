@@ -29,6 +29,11 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  func originalFont() -> FontCascadeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textCombineFont() -> FontCascadeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
