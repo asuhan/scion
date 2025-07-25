@@ -59,8 +59,10 @@ struct TextPainter {
     textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint, start: UInt32,
     end: UInt32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(start < end)
+    paintTextAndEmphasisMarksIfNeeded(
+      textRun: textRun, boxRect: boxRect, textOrigin: textOrigin, startOffset: start,
+      endOffset: end, paintStyle: style, shadow: shadow, shadowColorFilter: shadowColorFilter)
   }
 
   mutating func setGlyphDisplayListIfNeeded<LayoutRun: DisplayTextBox>(
