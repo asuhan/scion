@@ -29,6 +29,16 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func fillColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFillColor(color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setStrokeColor(color: ColorWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

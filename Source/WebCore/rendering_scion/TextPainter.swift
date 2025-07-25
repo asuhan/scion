@@ -30,6 +30,21 @@ func rotation(boxRect: FloatRectWrapper, direction: RotationDirection) -> Affine
       f: Float64(boxRect.x() + boxRect.maxY()))
 }
 
+struct ShadowApplier {
+  init(
+    style: RenderStyleWrapper, context: GraphicsContextWrapper, shadow: ShadowData?,
+    colorFilter: FilterOperations?, textRect: FloatRectWrapper,
+    lastShadowIterationShouldDrawText: Bool = true, opaque: Bool = false,
+    orientation: FontOrientation = .Horizontal
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let extraOffset: FloatSize
+  let nothingToDraw: Bool
+}
+
 struct TextPainter {
   init(context: GraphicsContextWrapper, font: FontCascadeWrapper, renderStyle: RenderStyleWrapper) {
     self.context = context
@@ -80,14 +95,61 @@ struct TextPainter {
     return !paintInfo.context().paintingDisabled() && paintInfo.enclosingSelfPaintingLayer() != nil
   }
 
+  private func paintTextOrEmphasisMarks(
+    font: FontCascadeWrapper, textRun: TextRunWrapper, emphasisMark: AtomStringWrapper,
+    emphasisMarkOffset: Float32, textOrigin: FloatPoint, startOffset: UInt32, endOffset: UInt32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintTextWithShadows(
     shadow: ShadowData?, colorFilter: FilterOperations?, font: FontCascadeWrapper,
     textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint,
     startOffset: UInt32, endOffset: UInt32, emphasisMark: AtomStringWrapper,
     emphasisMarkOffset: Float32, stroked: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shadow == nil {
+      paintTextOrEmphasisMarks(
+        font: font, textRun: textRun, emphasisMark: emphasisMark,
+        emphasisMarkOffset: emphasisMarkOffset, textOrigin: textOrigin, startOffset: startOffset,
+        endOffset: endOffset)
+      return
+    }
+
+    let fillColor = context.fillColor()
+    let opaque = fillColor.isOpaque()
+    let lastShadowIterationShouldDrawText = !stroked && opaque
+    if !opaque {
+      context.setFillColor(color: ColorWrapper.black)
+    }
+    while shadow != nil {
+      let shadowApplier = ShadowApplier(
+        style: renderStyle, context: context, shadow: shadow, colorFilter: colorFilter,
+        textRect: boxRect, lastShadowIterationShouldDrawText: lastShadowIterationShouldDrawText,
+        opaque: opaque,
+        orientation: (textBoxIsHorizontal || combinedText != nil) ? .Horizontal : .Vertical
+      )
+      if !shadowApplier.nothingToDraw {
+        paintTextOrEmphasisMarks(
+          font: font, textRun: textRun, emphasisMark: emphasisMark,
+          emphasisMarkOffset: emphasisMarkOffset,
+          textOrigin: textOrigin + shadowApplier.extraOffset,
+          startOffset: startOffset, endOffset: endOffset)
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if !lastShadowIterationShouldDrawText {
+      if !opaque {
+        context.setFillColor(color: fillColor)
+      }
+      paintTextOrEmphasisMarks(
+        font: font, textRun: textRun, emphasisMark: emphasisMark,
+        emphasisMarkOffset: emphasisMarkOffset, textOrigin: textOrigin, startOffset: startOffset,
+        endOffset: endOffset)
+    }
   }
 
   private func paintTextAndEmphasisMarksIfNeeded(

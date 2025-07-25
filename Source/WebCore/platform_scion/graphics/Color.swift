@@ -24,7 +24,17 @@
  */
 
 struct ColorWrapper: Equatable {
+  func isOpaque() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func colorWithAlphaMultipliedBy(amount: Float32) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static var black: ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
