@@ -75,8 +75,7 @@ struct TextPainter {
   }
 
   static func shouldUseGlyphDisplayList(paintInfo: PaintInfoWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !paintInfo.context().paintingDisabled() && paintInfo.enclosingSelfPaintingLayer() != nil
   }
 
   private func paintTextWithShadows(

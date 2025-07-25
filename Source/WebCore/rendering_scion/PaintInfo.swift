@@ -41,6 +41,11 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
+  func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func eventRegionContext() -> EventRegionContext? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
