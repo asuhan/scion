@@ -63,9 +63,18 @@ struct TextPainter {
     fatalError("Not implemented")
   }
 
-  func setGlyphDisplayListIfNeeded<LayoutRun>(
+  mutating func setGlyphDisplayListIfNeeded<LayoutRun: DisplayTextBox>(
     run: LayoutRun, paintInfo: PaintInfoWrapper, textRun: TextRunWrapper
   ) {
+    if !TextPainter.shouldUseGlyphDisplayList(paintInfo: paintInfo) {
+      run.removeFromGlyphDisplayListCache()
+    } else {
+      glyphDisplayList = GlyphDisplayListCache.singleton.get(
+        run: run, font: font, context: context, textRun: textRun, paintInfo: paintInfo)
+    }
+  }
+
+  static func shouldUseGlyphDisplayList(paintInfo: PaintInfoWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -165,6 +174,7 @@ struct TextPainter {
   private var shadow = ShadowData()
   private var shadowColorFilter = FilterOperations()
   private var combinedText: RenderCombineTextWrapper? = nil
+  private var glyphDisplayList: DisplayList.DisplayListWrapper? = nil
   private var emphasisMarkOffset: Float32 = 0
   private var textBoxIsHorizontal: Bool = true
 

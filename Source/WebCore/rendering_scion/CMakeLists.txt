@@ -2,6 +2,7 @@ target_sources(layout_scion PRIVATE
     EllipsisBoxPainter.swift
     EventRegion.swift
     FloatingObjects.swift
+    GlyphDisplayListCache.swift
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift

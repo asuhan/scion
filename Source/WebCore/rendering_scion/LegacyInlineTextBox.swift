@@ -20,4 +20,9 @@
  *
  */
 
-class LegacyInlineTextBox: LegacyInlineBox {}
+class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
+  func removeFromGlyphDisplayListCache() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

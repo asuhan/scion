@@ -23,8 +23,12 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+protocol DisplayTextBox {
+  func removeFromGlyphDisplayListCache()
+}
+
 extension InlineDisplay {
-  class Box {
+  class Box: DisplayTextBox {
     init() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -256,6 +260,11 @@ extension InlineDisplay {
     }
 
     func moveToLine(lineIndex: UInt32) { self.lineIndex = lineIndex }
+
+    func removeFromGlyphDisplayListCache() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
 
     var layoutBox: BoxWrapper
     var unflippedVisualRect = FloatRectWrapper()
