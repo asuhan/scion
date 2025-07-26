@@ -26,6 +26,11 @@ func isASCIILower(character: UChar) -> Bool {
   return character >= Character("a").asciiValue! && character <= Character("z").asciiValue!
 }
 
+func isASCIIWhitespace(character: UChar) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func toASCIILowerUnchecked(character: UChar) -> UChar {
   // This function can be used for comparing any input character
   // to a lowercase English character. The isASCIIAlphaCaselessEqual

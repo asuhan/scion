@@ -29,6 +29,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func detectingContentfulPaint() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fillColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -95,6 +100,23 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func drawText(
+    font: FontCascadeWrapper, run: TextRunWrapper, point: FloatPoint,
+    from: UInt32 = 0, to: UInt32? = nil
+  ) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawEmphasisMarks(
+    font: FontCascadeWrapper, run: TextRunWrapper, mark: AtomStringWrapper, point: FloatPoint,
+    from: UInt32 = 0, to: UInt32? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func drawLineForText(
     rect: FloatRectWrapper, printing: Bool, doubleUnderlines: Bool = false,
     style: StrokeStyle = .SolidStroke
@@ -104,6 +126,15 @@ class GraphicsContextWrapper {
   }
 
   func drawDotsForDocumentMarker(rect: FloatRectWrapper, style: DocumentMarkerLineStyle) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // DisplayList
+  func drawDisplayListItems(
+    items: [DisplayList.ItemWrapper], resourceHeap: DisplayList.ResourceHeapWrapper,
+    controlFactory: ControlFactoryWrapper, destination: FloatPoint
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -119,6 +150,11 @@ class GraphicsContextWrapper {
   }
 
   func concatCTM(transform: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContentfulPaintDetected() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

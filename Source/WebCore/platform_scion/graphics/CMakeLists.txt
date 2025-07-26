@@ -30,6 +30,7 @@ target_sources(layout_scion PRIVATE
     TextRun.swift
 )
 
+add_subdirectory(controls)
 add_subdirectory(displaylists)
 add_subdirectory(filters)
 add_subdirectory(transforms)

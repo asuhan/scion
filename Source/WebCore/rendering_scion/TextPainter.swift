@@ -70,7 +70,7 @@ struct TextPainter {
     self.combinedText = combinedText
   }
 
-  func paintRange(
+  mutating func paintRange(
     textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint, start: UInt32,
     end: UInt32
   ) {
@@ -95,15 +95,38 @@ struct TextPainter {
     return !paintInfo.context().paintingDisabled() && paintInfo.enclosingSelfPaintingLayer() != nil
   }
 
-  private func paintTextOrEmphasisMarks(
+  private mutating func paintTextOrEmphasisMarks(
     font: FontCascadeWrapper, textRun: TextRunWrapper, emphasisMark: AtomStringWrapper,
     emphasisMarkOffset: Float32, textOrigin: FloatPoint, startOffset: UInt32, endOffset: UInt32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(startOffset < endOffset)
+
+    if context.detectingContentfulPaint() {
+      if !textRun.text().containsOnly(isSpecialCharacter: isASCIIWhitespace) {
+        context.setContentfulPaintDetected()
+      }
+      return
+    }
+
+    if !emphasisMark.isEmpty() {
+      context.drawEmphasisMarks(
+        font: font, run: textRun, mark: emphasisMark,
+        point: textOrigin + FloatSize(width: 0, height: emphasisMarkOffset), from: startOffset,
+        to: endOffset)
+    } else if startOffset != 0 || endOffset < textRun.length() || glyphDisplayList == nil {
+      context.drawText(
+        font: font, run: textRun, point: textOrigin, from: startOffset, to: endOffset)
+    } else {
+      // Replaying back a whole cached glyph run to the GraphicsContext.
+      context.drawDisplayListItems(
+        items: glyphDisplayList!.items(), resourceHeap: glyphDisplayList!.resourceHeap(),
+        controlFactory: ControlFactoryWrapper.shared(),
+        destination: textOrigin)
+    }
+    glyphDisplayList = nil
   }
 
-  private func paintTextWithShadows(
+  private mutating func paintTextWithShadows(
     shadow: ShadowData?, colorFilter: FilterOperations?, font: FontCascadeWrapper,
     textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint,
     startOffset: UInt32, endOffset: UInt32, emphasisMark: AtomStringWrapper,
@@ -152,7 +175,7 @@ struct TextPainter {
     }
   }
 
-  private func paintTextAndEmphasisMarksIfNeeded(
+  private mutating func paintTextAndEmphasisMarksIfNeeded(
     textRun: TextRunWrapper, boxRect: FloatRectWrapper, textOrigin: FloatPoint, startOffset: UInt32,
     endOffset: UInt32, paintStyle: TextPaintStyle, shadow: ShadowData?,
     shadowColorFilter: FilterOperations?

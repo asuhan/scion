@@ -116,5 +116,10 @@ class StringWrapperView {
     return UpconvertedCharactersWithSize(p: wk_interop.StringView_upconvertedCharacters(p))
   }
 
+  func containsOnly(isSpecialCharacter: (UChar) -> Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var p: UnsafeRawPointer?
 }
