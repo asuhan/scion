@@ -30,19 +30,45 @@ func rotation(boxRect: FloatRectWrapper, direction: RotationDirection) -> Affine
       f: Float64(boxRect.x() + boxRect.maxY()))
 }
 
-struct ShadowApplier {
+class ShadowApplier {
   init(
     style: RenderStyleWrapper, context: GraphicsContextWrapper, shadow: ShadowData?,
     colorFilter: FilterOperations?, textRect: FloatRectWrapper,
     lastShadowIterationShouldDrawText: Bool = true, opaque: Bool = false,
     orientation: FontOrientation = .Horizontal
   ) {
+    self.context = context
+    self.shadow = shadow
+    self.onlyDrawsShadow = !isLastShadowIteration() || !lastShadowIterationShouldDrawText
+    self.avoidDrawingShadow = shadowIsCompletelyCoveredByText(textIsOpaque: opaque)
+    self.nothingToDraw = (shadow != nil) && avoidDrawingShadow && onlyDrawsShadow
+    self.didSaveContext = false
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  let extraOffset: FloatSize
-  let nothingToDraw: Bool
+  deinit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isLastShadowIteration() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shadowIsCompletelyCoveredByText(textIsOpaque: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let extraOffset = FloatSize()
+  let context: GraphicsContextWrapper
+  let shadow: ShadowData?
+  var onlyDrawsShadow: Bool = false
+  var avoidDrawingShadow: Bool = false
+  var nothingToDraw: Bool = false
+  var didSaveContext: Bool = false
 }
 
 struct TextPainter {
