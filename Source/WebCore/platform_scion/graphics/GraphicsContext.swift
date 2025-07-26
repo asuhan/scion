@@ -54,6 +54,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setDropShadow(dropShadow: GraphicsDropShadow) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

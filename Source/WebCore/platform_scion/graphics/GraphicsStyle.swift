@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2022 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,9 +23,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FilterOperations {
-  func transformColor(color: ColorWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+// Legacy shadow blur radius is used for canvas, and -webkit-box-shadow.
+// It has different treatment of radii > 8px.
+enum ShadowRadiusMode {
+  case Default
+  case Legacy
+}
+
+struct GraphicsDropShadow {
+  let offset: FloatSize
+  let radius: Float32
+  let color: ColorWrapper
+  let radiusMode: ShadowRadiusMode = .Default
+  let opacity: Float32 = 1
 }

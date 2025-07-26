@@ -43,8 +43,29 @@ class ShadowApplier {
     self.avoidDrawingShadow = shadowIsCompletelyCoveredByText(textIsOpaque: opaque)
     self.nothingToDraw = (shadow != nil) && avoidDrawingShadow && onlyDrawsShadow
     self.didSaveContext = false
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+
+    let shadowX = orientation == .Horizontal ? shadow!.x().value() : shadow!.y().value()
+    let shadowY = orientation == .Horizontal ? shadow!.y().value() : -shadow!.x().value()
+    let shadowOffset = FloatSize(width: shadowX, height: shadowY)
+    let shadowRadius = shadow!.radius
+    let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color())
+    if let colorFilter = colorFilter {
+      colorFilter.transformColor(color: shadowColor)
+    }
+
+    // When drawing shadows, we usually clip the context to the area the shadow will reside, and then
+    // draw the text itself outside the clipped area (so only the shadow shows up). However, we can
+    // often draw the *last* shadow and the text itself in a single call.
+    if onlyDrawsShadow {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if !avoidDrawingShadow {
+      context.setDropShadow(
+        dropShadow: GraphicsDropShadow(
+          offset: shadowOffset, radius: shadowRadius.value(), color: shadowColor))
+    }
   }
 
   deinit {

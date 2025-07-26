@@ -15,6 +15,7 @@ target_sources(layout_scion PRIVATE
     GraphicsContext.swift
     GraphicsContextState.swift
     GraphicsContextStateSaver.swift
+    GraphicsStyle.swift
     GraphicsTypes.swift
     IntPoint.swift
     IntRect.swift
