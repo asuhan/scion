@@ -38,6 +38,11 @@ class ShadowData {
   func x() -> LengthWrapper { return location.x }
   func y() -> LengthWrapper { return location.y }
 
+  func paintingExtent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func color() -> StyleColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

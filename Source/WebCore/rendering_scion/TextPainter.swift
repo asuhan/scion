@@ -46,7 +46,7 @@ class ShadowApplier {
 
     let shadowX = orientation == .Horizontal ? shadow!.x().value() : shadow!.y().value()
     let shadowY = orientation == .Horizontal ? shadow!.y().value() : -shadow!.x().value()
-    let shadowOffset = FloatSize(width: shadowX, height: shadowY)
+    var shadowOffset = FloatSize(width: shadowX, height: shadowY)
     let shadowRadius = shadow!.radius
     let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color())
     if let colorFilter = colorFilter {
@@ -57,8 +57,17 @@ class ShadowApplier {
     // draw the text itself outside the clipped area (so only the shadow shows up). However, we can
     // often draw the *last* shadow and the text itself in a single call.
     if onlyDrawsShadow {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var shadowRect = textRect
+      shadowRect.inflate(d: shadow!.paintingExtent() + 3 * textRect.height())
+      shadowRect.move(delta: shadowOffset)
+      context.save()
+      context.clip(rect: shadowRect)
+
+      didSaveContext = true
+      extraOffset = FloatSize(
+        width: 0,
+        height: 2 * shadowRect.height() + max(0, shadowOffset.height) + shadowRadius.value())
+      shadowOffset -= extraOffset
     }
 
     if !avoidDrawingShadow {
@@ -83,7 +92,7 @@ class ShadowApplier {
     fatalError("Not implemented")
   }
 
-  let extraOffset = FloatSize()
+  var extraOffset = FloatSize()
   let context: GraphicsContextWrapper
   let shadow: ShadowData?
   var onlyDrawsShadow: Bool = false
