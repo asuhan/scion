@@ -48,7 +48,7 @@ class ShadowData {
     fatalError("Not implemented")
   }
 
-  private let location: LengthPoint
+  let location: LengthPoint
   let radius: LengthWrapper  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
   let next: ShadowData? = nil
 }

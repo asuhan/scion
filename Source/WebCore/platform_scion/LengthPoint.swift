@@ -26,4 +26,6 @@
 struct LengthPoint {
   let x: LengthWrapper
   let y: LengthWrapper
+
+  func isZero() -> Bool { return x.isZero() && y.isZero() }
 }

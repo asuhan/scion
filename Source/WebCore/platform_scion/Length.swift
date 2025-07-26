@@ -118,6 +118,15 @@ struct LengthWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  // FIXME calc: https://bugs.webkit.org/show_bug.cgi?id=80357. A calculated Length
+  // always contains a percentage, and without a maxValue passed to these functions
+  // it's impossible to determine the sign or zero-ness. The following three functions
+  // act as if all calculated values are positive.
+  func isZero() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isPercentOrCalculated() -> Bool {
     return isPercent() || isCalculated()
   }

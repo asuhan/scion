@@ -90,8 +90,10 @@ class ShadowApplier {
   }
 
   private func shadowIsCompletelyCoveredByText(textIsOpaque: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let shadow = shadow {
+      return textIsOpaque && shadow.location.isZero() && shadow.radius.isZero()
+    }
+    return false
   }
 
   var extraOffset = FloatSize()
