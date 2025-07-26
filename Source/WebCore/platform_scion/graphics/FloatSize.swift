@@ -55,6 +55,13 @@ struct FloatSize {
     return a
   }
 
+  @discardableResult
+  static func -= (a: inout FloatSize, b: FloatSize) -> FloatSize {
+    a.setWidth(width: a.width - b.width)
+    a.setHeight(height: a.height - b.height)
+    return a
+  }
+
   static func == (lhs: FloatSize, rhs: FloatSize) -> Bool {
     return lhs.width == rhs.width && lhs.height == rhs.height
   }
