@@ -26,9 +26,11 @@ func isASCIILower(character: UChar) -> Bool {
   return character >= Character("a").asciiValue! && character <= Character("z").asciiValue!
 }
 
+// Infra's "ASCII whitespace" <https://infra.spec.whatwg.org/#ascii-whitespace>
 func isASCIIWhitespace(character: UChar) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return character == Character(" ").asciiValue! || character == Character("\n").asciiValue!
+    || character == Character("\t").asciiValue! || character == Character("\r").asciiValue!
+    || character == 0x0C
 }
 
 func toASCIILowerUnchecked(character: UChar) -> UChar {
