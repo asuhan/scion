@@ -78,8 +78,14 @@ class ShadowApplier {
   }
 
   deinit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shadow == nil {
+      return
+    }
+    if onlyDrawsShadow {
+      context.restore()
+    } else if !avoidDrawingShadow {
+      context.clearDropShadow()
+    }
   }
 
   private func isLastShadowIteration() -> Bool {

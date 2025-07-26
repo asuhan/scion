@@ -59,6 +59,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func clearDropShadow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -80,6 +85,11 @@ class GraphicsContextWrapper {
   }
 
   func save(purpose: GraphicsContextState.Purpose = .SaveRestore) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func restore(purpose: GraphicsContextState.Purpose = .SaveRestore) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
