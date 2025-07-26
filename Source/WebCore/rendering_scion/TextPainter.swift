@@ -83,8 +83,10 @@ class ShadowApplier {
   }
 
   private func isLastShadowIteration() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let shadow = shadow {
+      return shadow.next == nil
+    }
+    return false
   }
 
   private func shadowIsCompletelyCoveredByText(textIsOpaque: Bool) -> Bool {
