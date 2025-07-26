@@ -123,9 +123,10 @@ struct TextPainter {
     if !opaque {
       context.setFillColor(color: ColorWrapper.black)
     }
-    while shadow != nil {
+    var crtShadow = shadow
+    while crtShadow != nil {
       let shadowApplier = ShadowApplier(
-        style: renderStyle, context: context, shadow: shadow, colorFilter: colorFilter,
+        style: renderStyle, context: context, shadow: crtShadow, colorFilter: colorFilter,
         textRect: boxRect, lastShadowIterationShouldDrawText: lastShadowIterationShouldDrawText,
         opaque: opaque,
         orientation: (textBoxIsHorizontal || combinedText != nil) ? .Horizontal : .Vertical
@@ -137,8 +138,7 @@ struct TextPainter {
           textOrigin: textOrigin + shadowApplier.extraOffset,
           startOffset: startOffset, endOffset: endOffset)
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      crtShadow = crtShadow!.next
     }
 
     if !lastShadowIterationShouldDrawText {

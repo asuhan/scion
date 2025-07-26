@@ -29,4 +29,6 @@ enum ShadowStyle {
 
 // This class holds information about shadows for the text-shadow and box-shadow properties.
 
-struct ShadowData {}
+class ShadowData {
+  let next: ShadowData? = nil
+}
