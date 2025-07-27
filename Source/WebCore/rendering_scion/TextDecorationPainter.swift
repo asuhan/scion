@@ -56,8 +56,21 @@ private func strokeWavyTextDecoration(
 }
 
 private func textDecorationStyleToStrokeStyle(decorationStyle: TextDecorationStyle) -> StrokeStyle {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var strokeStyle: StrokeStyle = .SolidStroke
+  switch decorationStyle {
+  case .Solid:
+    strokeStyle = .SolidStroke
+  case .Double:
+    strokeStyle = .DoubleStroke
+  case .Dotted:
+    strokeStyle = .DottedStroke
+  case .Dashed:
+    strokeStyle = .DashedStroke
+  case .Wavy:
+    strokeStyle = .WavyStroke
+  }
+
+  return strokeStyle
 }
 
 private func collectStylesForRenderer(
