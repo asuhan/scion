@@ -20,6 +20,46 @@
  *
  */
 
+/*
+ * Draw one cubic Bezier curve and repeat the same pattern along the the decoration's axis.
+ * The start point (p1), controlPoint1, controlPoint2 and end point (p2) of the Bezier curve
+ * form a diamond shape:
+ *
+ *                              step
+ *                         |-----------|
+ *
+ *                   controlPoint1
+ *                         +
+ *
+ *
+ *                  . .
+ *                .     .
+ *              .         .
+ * (x1, y1) p1 +           .            + p2 (x2, y2) - <--- Decoration's axis
+ *                          .         .               |
+ *                            .     .                 |
+ *                              . .                   | controlPointDistance
+ *                                                    |
+ *                                                    |
+ *                         +                          -
+ *                   controlPoint2
+ *
+ *             |-----------|
+ *                 step
+ */
+private func strokeWavyTextDecoration(
+  context: GraphicsContextWrapper, rect: FloatRectWrapper,
+  wavyStrokeParameters: WavyStrokeParameters
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func textDecorationStyleToStrokeStyle(decorationStyle: TextDecorationStyle) -> StrokeStyle {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func collectStylesForRenderer(
   result: inout TextDecorationPainter.Styles, renderer: RenderObjectWrapper,
   remainingDecorations: TextDecorationLine, firstLineStyle: Bool, paintBehavior: PaintBehavior,
@@ -91,8 +131,9 @@ struct TextDecorationPainter {
   func paintForegroundDecorations(
     foregroundDecorationGeometry: ForegroundDecorationGeometry, decorationStyle: Styles
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    paintLineThrough(
+      foregroundDecorationGeometry: foregroundDecorationGeometry,
+      color: decorationStyle.linethrough.color, decorationStyle: decorationStyle)
   }
 
   static func stylesForRenderer(
@@ -129,4 +170,33 @@ struct TextDecorationPainter {
     }
     return decorations
   }
+
+  private func paintLineThrough(
+    foregroundDecorationGeometry: ForegroundDecorationGeometry, color: ColorWrapper,
+    decorationStyle: Styles
+  ) {
+    var rect = FloatRectWrapper(
+      location: foregroundDecorationGeometry.boxOrigin,
+      size: FloatSize(
+        width: foregroundDecorationGeometry.textBoxWidth,
+        height: foregroundDecorationGeometry.textDecorationThickness))
+    rect.move(dx: 0, dy: foregroundDecorationGeometry.linethroughCenter)
+
+    context.setStrokeColor(color: color)
+
+    let style = decorationStyle.linethrough.decorationStyle
+    let strokeStyle = textDecorationStyleToStrokeStyle(decorationStyle: style)
+
+    if style == .Wavy {
+      strokeWavyTextDecoration(
+        context: context, rect: rect,
+        wavyStrokeParameters: foregroundDecorationGeometry.wavyStrokeParameters)
+    } else {
+      context.drawLineForText(
+        rect: rect, printing: isPrinting, doubleUnderlines: style == .Double, style: strokeStyle)
+    }
+  }
+
+  private let context: GraphicsContextWrapper
+  private let isPrinting = false
 }
