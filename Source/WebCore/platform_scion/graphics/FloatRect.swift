@@ -115,11 +115,15 @@ struct FloatRectWrapper {
     shiftMaxYEdgeTo(edge: maxY() + delta)
   }
 
-  func minXMinYCorner() -> FloatPoint { return m_location }
+  func minXMinYCorner() -> FloatPoint { return m_location }  // typically topLeft
+
+  func maxXMinYCorner() -> FloatPoint {
+    return FloatPoint(x: m_location.x + m_size.width, y: m_location.y)
+  }  // typically topRight
 
   func maxXMaxYCorner() -> FloatPoint {
     return FloatPoint(x: m_location.x + m_size.width, y: m_location.y + m_size.height)
-  }
+  }  // typically bottomRight
 
   func intersects(other: FloatRectWrapper) -> Bool {
     // Checking emptiness handles negative widths and heights as well as zero.
