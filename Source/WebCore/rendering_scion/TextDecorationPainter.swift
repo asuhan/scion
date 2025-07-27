@@ -20,6 +20,15 @@
  *
  */
 
+private func collectStylesForRenderer(
+  result: inout TextDecorationPainter.Styles, renderer: RenderObjectWrapper,
+  remainingDecorations: TextDecorationLine, firstLineStyle: Bool, paintBehavior: PaintBehavior,
+  pseudoId: PseudoId
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 struct TextDecorationPainter {
   init(
     context: GraphicsContextWrapper, font: FontCascadeWrapper, shadow: ShadowData?,
@@ -40,12 +49,14 @@ struct TextDecorationPainter {
     }
 
     struct DecorationStyleAndColor: Equatable {
-      let color: ColorWrapper
+      let color = ColorWrapper()
       let decorationStyle: TextDecorationStyle = .Solid
     }
-    let underline: DecorationStyleAndColor
-    let overline: DecorationStyleAndColor
-    let linethrough: DecorationStyleAndColor
+    let underline = DecorationStyleAndColor()
+    let overline = DecorationStyleAndColor()
+    let linethrough = DecorationStyleAndColor()
+
+    var skipInk: TextDecorationSkipInk = .None
   }
 
   struct BackgroundDecorationGeometry {
@@ -88,8 +99,21 @@ struct TextDecorationPainter {
     renderer: RenderObjectWrapper, requestedDecorations: TextDecorationLine,
     firstLineStyle: Bool = false, paintBehavior: PaintBehavior = [], pseudoId: PseudoId = .None
   ) -> Styles {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if requestedDecorations.isEmpty {
+      return Styles()
+    }
+
+    var result = Styles()
+    collectStylesForRenderer(
+      result: &result, renderer: renderer, remainingDecorations: requestedDecorations,
+      firstLineStyle: false, paintBehavior: paintBehavior, pseudoId: pseudoId)
+    if firstLineStyle {
+      collectStylesForRenderer(
+        result: &result, renderer: renderer, remainingDecorations: requestedDecorations,
+        firstLineStyle: true, paintBehavior: paintBehavior, pseudoId: pseudoId)
+    }
+    result.skipInk = renderer.style().textDecorationSkipInk()
+    return result
   }
 
   static func textDecorationsInEffectForStyle(style: Styles) -> TextDecorationLine {
