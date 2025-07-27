@@ -24,6 +24,11 @@
  */
 
 struct ColorWrapper: Equatable {
+  func isValid() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isOpaque() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

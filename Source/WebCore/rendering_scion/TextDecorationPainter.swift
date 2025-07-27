@@ -93,7 +93,16 @@ struct TextDecorationPainter {
   }
 
   static func textDecorationsInEffectForStyle(style: Styles) -> TextDecorationLine {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var decorations = TextDecorationLine()
+    if style.underline.color.isValid() {
+      decorations.insert(.Underline)
+    }
+    if style.overline.color.isValid() {
+      decorations.insert(.Overline)
+    }
+    if style.linethrough.color.isValid() {
+      decorations.insert(.LineThrough)
+    }
+    return decorations
   }
 }
