@@ -139,8 +139,12 @@ struct TextDecorationPainter {
     context: GraphicsContextWrapper, font: FontCascadeWrapper, shadow: ShadowData?,
     colorFilter: FilterOperations?, isPrinting: Bool, isHorizontal: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.context = context
+    self.isPrinting = isPrinting
+    self.isHorizontal = isHorizontal
+    self.shadow = shadow
+    self.shadowColorFilter = colorFilter
+    self.font = font
   }
 
   struct Styles {
@@ -303,7 +307,9 @@ struct TextDecorationPainter {
   }
 
   private let context: GraphicsContextWrapper
-  private let isPrinting = false
-  private let isHorizontal = true
+  private var isPrinting = false
+  private var isHorizontal = true
+  private var shadow: ShadowData? = nil
+  private var shadowColorFilter: FilterOperations? = nil
   private let font: FontCascadeWrapper
 }
