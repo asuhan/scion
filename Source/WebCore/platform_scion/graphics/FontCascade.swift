@@ -47,6 +47,13 @@ class FontCascadeWrapper {
     return font_cascade_size(p: p!)
   }
 
+  func dashesForIntersectionsWithRect(
+    run: TextRunWrapper, textOrigin: FloatPoint, lineExtents: FloatRectWrapper
+  ) -> DashArray {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func widthOfTextRange(
     run: TextRunWrapper, from: UInt32, to: UInt32, fallbackFonts: Set<UInt>?,
     outWidthBeforeRange: inout Float32, outWidthAfterRange: inout Float32

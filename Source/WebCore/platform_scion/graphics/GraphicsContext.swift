@@ -154,9 +154,22 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func computeUnderlineBoundsForText(rect: FloatRectWrapper, printing: Bool) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func drawLineForText(
     rect: FloatRectWrapper, printing: Bool, doubleUnderlines: Bool = false,
     style: StrokeStyle = .SolidStroke
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawLinesForText(
+    point: FloatPoint, thickness: Float32, widths: DashArray, printing: Bool,
+    doubleUnderlines: Bool, strokeStyle: StrokeStyle
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

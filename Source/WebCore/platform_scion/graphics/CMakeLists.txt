@@ -1,5 +1,6 @@
 target_sources(layout_scion PRIVATE
     Color.swift
+    DashArray.swift
     FloatPoint.swift
     FloatRect.swift
     FloatRoundedRect.swift

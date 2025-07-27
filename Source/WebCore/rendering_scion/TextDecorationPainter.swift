@@ -100,6 +100,13 @@ private func strokeWavyTextDecoration(
   context.strokePath(path: path)
 }
 
+private func translateIntersectionPointsToSkipInkBoundaries(
+  intersections: DashArray, dilationAmount: Float32, totalWidth: Float32
+) -> DashArray {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func textDecorationStyleToStrokeStyle(decorationStyle: TextDecorationStyle) -> StrokeStyle {
   var strokeStyle: StrokeStyle = .SolidStroke
   switch decorationStyle {
@@ -176,6 +183,46 @@ struct TextDecorationPainter {
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func paintDecoration(
+    decoration: TextDecorationLine, style: TextDecorationStyle, color: ColorWrapper,
+    rect: FloatRectWrapper, textRun: TextRunWrapper,
+    decorationGeometry: BackgroundDecorationGeometry,
+    decorationStyle: Styles
+  ) {
+    context.setStrokeColor(color: color)
+
+    let strokeStyle = textDecorationStyleToStrokeStyle(decorationStyle: style)
+
+    if style == .Wavy {
+      strokeWavyTextDecoration(
+        context: context, rect: rect, wavyStrokeParameters: decorationGeometry.wavyStrokeParameters)
+    } else if decoration == .Underline || decoration == .Overline {
+      if (decorationStyle.skipInk == .Auto || decorationStyle.skipInk == .All) && isHorizontal {
+        if !context.paintingDisabled() {
+          let underlineBoundingBox = context.computeUnderlineBoundsForText(
+            rect: rect, printing: isPrinting)
+          let intersections = font.dashesForIntersectionsWithRect(
+            run: textRun, textOrigin: decorationGeometry.textOrigin,
+            lineExtents: underlineBoundingBox)
+          let boundaries = translateIntersectionPointsToSkipInkBoundaries(
+            intersections: intersections, dilationAmount: underlineBoundingBox.height(),
+            totalWidth: rect.width())
+          assert(boundaries.count % 2 == 0)
+          // We don't use underlineBoundingBox here because drawLinesForText() will run computeUnderlineBoundsForText() internally.
+          context.drawLinesForText(
+            point: rect.location(), thickness: rect.height(), widths: boundaries,
+            printing: isPrinting, doubleUnderlines: style == .Double, strokeStyle: strokeStyle)
+        }
+      } else {
+        // FIXME: Need to support text-decoration-skip: none.
+        context.drawLineForText(
+          rect: rect, printing: isPrinting, doubleUnderlines: style == .Double, style: strokeStyle)
+      }
+    } else {
+      fatalError("Not reached")
+    }
   }
 
   struct ForegroundDecorationGeometry {
@@ -257,4 +304,6 @@ struct TextDecorationPainter {
 
   private let context: GraphicsContextWrapper
   private let isPrinting = false
+  private let isHorizontal = true
+  private let font: FontCascadeWrapper
 }
