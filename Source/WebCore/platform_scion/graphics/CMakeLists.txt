@@ -24,6 +24,7 @@ target_sources(layout_scion PRIVATE
     LayoutPoint.swift
     LayoutRect.swift
     LayoutSize.swift
+    Path.swift
     RotationDirection.swift
     SurrogatePairAwareTextIterator.swift
     TabSize.swift

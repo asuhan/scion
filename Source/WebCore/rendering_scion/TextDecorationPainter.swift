@@ -73,8 +73,31 @@ private func strokeWavyTextDecoration(
   context.adjustLineToPixelBoundaries(
     p1: p1, p2: p2, strokeWidth: rect.height(), penStyle: context.strokeStyle())
 
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let path = PathWrapper()
+  path.moveTo(point: p1)
+
+  assert(p1.y == p2.y)
+
+  let yAxis = p1.y
+  let x1 = min(p1.x, p2.x)
+  let x2 = max(p1.x, p2.x)
+
+  var controlPoint1 = FloatPoint(x: 0, y: yAxis + wavyStrokeParameters.controlPointDistance)
+  var controlPoint2 = FloatPoint(x: 0, y: yAxis - wavyStrokeParameters.controlPointDistance)
+
+  var x = x1
+  while x + 2 * wavyStrokeParameters.step <= x2 {
+    controlPoint1.setX(x: x + wavyStrokeParameters.step)
+    controlPoint2.setX(x: x + wavyStrokeParameters.step)
+    x += 2 * wavyStrokeParameters.step
+    path.addBezierCurveTo(
+      controlPoint1: controlPoint1, controlPoint2: controlPoint2,
+      endPoint: FloatPoint(x: x, y: yAxis))
+  }
+
+  context.setShouldAntialias(shouldAntialias: true)
+  context.setStrokeThickness(thickness: rect.height())
+  context.strokePath(path: path)
 }
 
 private func textDecorationStyleToStrokeStyle(decorationStyle: TextDecorationStyle) -> StrokeStyle {
