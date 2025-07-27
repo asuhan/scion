@@ -54,6 +54,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func strokeStyle() -> StrokeStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setDropShadow(dropShadow: GraphicsDropShadow) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -90,6 +95,13 @@ class GraphicsContextWrapper {
   }
 
   func restore(purpose: GraphicsContextState.Purpose = .SaveRestore) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func adjustLineToPixelBoundaries(
+    p1: FloatPoint, p2: FloatPoint, strokeWidth: Float32, penStyle: StrokeStyle
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

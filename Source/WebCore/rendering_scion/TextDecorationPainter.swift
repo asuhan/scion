@@ -51,6 +51,28 @@ private func strokeWavyTextDecoration(
   context: GraphicsContextWrapper, rect: FloatRectWrapper,
   wavyStrokeParameters: WavyStrokeParameters
 ) {
+  if rect.isEmpty() || wavyStrokeParameters.step == 0 {
+    return
+  }
+
+  var p1 = rect.minXMinYCorner()
+  var p2 = rect.maxXMinYCorner()
+
+  // Extent the wavy line before and after the text so it can cover the whole length.
+  p1.setX(x: p1.x - 2 * wavyStrokeParameters.step)
+  p2.setX(x: p2.x + 2 * wavyStrokeParameters.step)
+
+  var bounds = rect
+  // Offset the bounds and set extra height to ensure the whole wavy line is covered.
+  bounds.setY(y: bounds.y() - wavyStrokeParameters.controlPointDistance)
+  bounds.setHeight(height: bounds.height() + 2 * wavyStrokeParameters.controlPointDistance)
+  // Clip the extra wavy line added before
+  let _ = GraphicsContextStateSaver(context: context)
+  context.clip(rect: bounds)
+
+  context.adjustLineToPixelBoundaries(
+    p1: p1, p2: p2, strokeWidth: rect.height(), penStyle: context.strokeStyle())
+
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
