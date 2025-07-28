@@ -103,8 +103,52 @@ private func strokeWavyTextDecoration(
 private func translateIntersectionPointsToSkipInkBoundaries(
   intersections: DashArray, dilationAmount: Float32, totalWidth: Float32
 ) -> DashArray {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(intersections.count % 2 == 0)
+
+  // Step 1: Make pairs so we can sort based on range starting-point. We dilate the ranges in this step as well.
+  var tuples: [(Float32, Float32)] = []
+  for i in stride(from: 0, to: intersections.count, by: 2) {
+    tuples.append(
+      (Float32(intersections[i]) - dilationAmount, Float32(intersections[i + 1]) + dilationAmount))
+  }
+  tuples.sort(by: { l, r in l.0 < r.0 })
+
+  // Step 2: Deal with intersecting ranges.
+  var intermediateTuples: [(Float32, Float32)] = []
+  if tuples.count >= 2 {
+    intermediateTuples.append(tuples.first!)
+    for (secondStart, secondEnd) in intermediateTuples[1...] {
+      let (_, firstEnd) = intermediateTuples.last!
+      if secondStart <= firstEnd && secondEnd <= firstEnd {
+        // Ignore this range completely
+      } else if secondStart <= firstEnd {
+        let lastIdx = intermediateTuples.count - 1
+        let (lastStart, _) = intermediateTuples[lastIdx]
+        intermediateTuples[lastIdx] = (lastStart, secondEnd)
+      } else {
+        intermediateTuples.append((secondStart, secondEnd))
+      }
+    }
+  } else {
+    intermediateTuples = tuples
+  }
+
+  // Step 3: Output the space between the ranges, but only if the space warrants an underline.
+  var previous: Float32 = 0
+  var result = DashArray()
+  for (tupleFirst, tupleSecond) in intermediateTuples {
+    if tupleFirst - previous > dilationAmount {
+      result.append(Float64(previous))
+      result.append(Float64(tupleFirst))
+    }
+    previous = tupleSecond
+  }
+  if totalWidth - previous > dilationAmount {
+    result.append(Float64(previous))
+    result.append(Float64(totalWidth))
+  }
+
+  return result
 }
 
 private func textDecorationStyleToStrokeStyle(decorationStyle: TextDecorationStyle) -> StrokeStyle {
