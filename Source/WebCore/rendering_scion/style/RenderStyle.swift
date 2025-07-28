@@ -419,6 +419,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func textDecorationStyle() -> TextDecorationStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderLeftWidth() -> Float32 {
     if p == nil {
       // TODO(asuhan): implement this

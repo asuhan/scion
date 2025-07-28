@@ -178,6 +178,35 @@ private func collectStylesForRenderer(
   fatalError("Not implemented")
 }
 
+private func extractDecorations(
+  style: RenderStyleWrapper, decorations: TextDecorationLine, paintBehavior: PaintBehavior,
+  remainingDecorations: inout TextDecorationLine,
+  result: inout TextDecorationPainter.Styles
+) {
+  if decorations.isEmpty {
+    return
+  }
+
+  let color = TextDecorationPainter.decorationColor(style: style, paintBehavior: paintBehavior)
+  let decorationStyle = style.textDecorationStyle()
+
+  if decorations.contains(.Underline) {
+    remainingDecorations.remove(.Underline)
+    result.underline.color = color
+    result.underline.decorationStyle = decorationStyle
+  }
+  if decorations.contains(.Overline) {
+    remainingDecorations.remove(.Overline)
+    result.overline.color = color
+    result.overline.decorationStyle = decorationStyle
+  }
+  if decorations.contains(.LineThrough) {
+    remainingDecorations.remove(.LineThrough)
+    result.linethrough.color = color
+    result.linethrough.decorationStyle = decorationStyle
+  }
+}
+
 struct TextDecorationPainter {
   init(
     context: GraphicsContextWrapper, font: FontCascadeWrapper, shadow: ShadowData?,
@@ -202,12 +231,12 @@ struct TextDecorationPainter {
     }
 
     struct DecorationStyleAndColor: Equatable {
-      let color = ColorWrapper()
-      let decorationStyle: TextDecorationStyle = .Solid
+      var color = ColorWrapper()
+      var decorationStyle: TextDecorationStyle = .Solid
     }
-    let underline = DecorationStyleAndColor()
-    let overline = DecorationStyleAndColor()
-    let linethrough = DecorationStyleAndColor()
+    var underline = DecorationStyleAndColor()
+    var overline = DecorationStyleAndColor()
+    var linethrough = DecorationStyleAndColor()
 
     var skipInk: TextDecorationSkipInk = .None
   }
