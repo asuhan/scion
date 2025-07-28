@@ -289,6 +289,21 @@ struct TextDecorationPainter {
       color: decorationStyle.linethrough.color, decorationStyle: decorationStyle)
   }
 
+  static func decorationColor(style: RenderStyleWrapper, paintBehavior: PaintBehavior = [])
+    -> ColorWrapper
+  {
+    if paintBehavior.contains(.ForceBlackText) {
+      return ColorWrapper.black
+    }
+
+    if paintBehavior.contains(.ForceWhiteText) {
+      return ColorWrapper.white
+    }
+
+    return style.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyTextDecorationColor, paintBehavior: paintBehavior)
+  }
+
   static func stylesForRenderer(
     renderer: RenderObjectWrapper, requestedDecorations: TextDecorationLine,
     firstLineStyle: Bool = false, paintBehavior: PaintBehavior = [], pseudoId: PseudoId = .None
