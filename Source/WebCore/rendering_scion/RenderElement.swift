@@ -23,6 +23,16 @@
 import wk_interop
 
 class RenderElementWrapper: RenderObjectWrapper {
+  // The pseudo element style can be cached or uncached. Use the uncached method if the pseudo element
+  // has the concept of changing state (like ::-webkit-scrollbar-thumb:hover), or if it takes additional
+  // parameters (like ::highlight(name)).
+  func getCachedPseudoStyle(
+    pseudoElementIdentifier: Style.PseudoElementIdentifier, parentStyle: RenderStyleWrapper? = nil
+  ) -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func element() -> ElementWrapper? {
     if let elementRaw = wk_interop.RenderElement_element(p) {
       return ElementWrapper(p: elementRaw)

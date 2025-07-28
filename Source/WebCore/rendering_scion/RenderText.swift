@@ -34,6 +34,13 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func getCachedPseudoStyle(
+    pseudoElementIdentifier: Style.PseudoElementIdentifier, parentStyle: RenderStyleWrapper? = nil
+  ) -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -207,6 +207,22 @@ private func extractDecorations(
   }
 }
 
+private func styleForRenderer(
+  renderer: RenderObjectWrapper, pseudoId: PseudoId, firstLineStyle: Bool
+)
+  -> RenderStyleWrapper
+{
+  if pseudoId != .None && renderer.style().hasPseudoStyle(pseudo: pseudoId) {
+    if let textRenderer = renderer as? RenderTextWrapper {
+      return textRenderer.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: pseudoId))!
+    }
+    return (renderer as! RenderElementWrapper).getCachedPseudoStyle(
+      pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: pseudoId))!
+  }
+  return firstLineStyle ? renderer.firstLineStyle() : renderer.style()
+}
+
 struct TextDecorationPainter {
   init(
     context: GraphicsContextWrapper, font: FontCascadeWrapper, shadow: ShadowData?,
