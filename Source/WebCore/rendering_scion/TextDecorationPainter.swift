@@ -308,6 +308,38 @@ struct TextDecorationPainter {
     decorationGeometry: BackgroundDecorationGeometry, decorationType: TextDecorationLine,
     decorationStyle: Styles
   ) {
+    let areLinesOpaque =
+      !isPrinting
+      && (!decorationType.contains(.Underline) || decorationStyle.underline.color.isOpaque())
+      && (!decorationType.contains(.Overline) || decorationStyle.overline.color.isOpaque())
+      && (!decorationType.contains(.LineThrough) || decorationStyle.linethrough.color.isOpaque())
+
+    var extraOffset: Float32 = 0
+    var boxOrigin = decorationGeometry.boxOrigin
+    let clipping = shadow != nil && shadow!.next != nil && !areLinesOpaque
+    if clipping {
+      var clipRect = FloatRectWrapper(
+        location: boxOrigin,
+        size: FloatSize(
+          width: decorationGeometry.textBoxWidth, height: decorationGeometry.clippingOffset))
+      var shadow = self.shadow
+      while shadow != nil {
+        let shadowExtent = shadow!.paintingExtent()
+        var shadowRect = clipRect
+        shadowRect.inflate(d: shadowExtent.float())
+        let shadowX = isHorizontal ? shadow!.x().value() : shadow!.y().value()
+        let shadowY = isHorizontal ? shadow!.y().value() : -shadow!.x().value()
+        shadowRect.move(dx: shadowX, dy: shadowY)
+        clipRect.unite(other: shadowRect)
+        extraOffset = max(extraOffset, max(0, shadowY) + shadowExtent)
+        shadow = shadow!.next
+      }
+      context.save()
+      context.clip(rect: clipRect)
+      extraOffset += decorationGeometry.clippingOffset
+      boxOrigin.move(dx: 0, dy: extraOffset)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
