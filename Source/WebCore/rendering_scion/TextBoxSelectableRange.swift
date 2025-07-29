@@ -22,17 +22,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func clamp(value: UInt32, low: UInt32, high: UInt32) -> UInt32 {
+  return min(max(value, low), high)
+}
+
 struct TextBoxSelectableRange {
+  let start: UInt32
+  let length: UInt32
+  let additionalLengthAtEnd: UInt32 = 0
   // FIXME: Consider holding onto the truncation position instead. See webkit.org/b/164999
   let truncation: UInt32? = nil
 
   func clamp(offset: UInt32) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var clampedOffset = layout_scion.clamp(value: offset, low: start, high: start + length) - start
+
+    // FIXME: For some reason we allow the caret move to (invisible) fully truncated text. The zero test is to keep that behavior.
+    if let truncation = truncation {
+      return min(clampedOffset, truncation)
+    }
+
+    if clampedOffset == length {
+      clampedOffset += additionalLengthAtEnd
+    }
+
+    return clampedOffset
   }
 
   func clamp(startOffset: UInt32, endOffset: UInt32) -> (UInt32, UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return (clamp(offset: startOffset), clamp(offset: endOffset))
   }
 }
