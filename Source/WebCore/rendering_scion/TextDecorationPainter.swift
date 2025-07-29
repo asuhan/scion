@@ -171,11 +171,45 @@ private func textDecorationStyleToStrokeStyle(decorationStyle: TextDecorationSty
 
 private func collectStylesForRenderer(
   result: inout TextDecorationPainter.Styles, renderer: RenderObjectWrapper,
-  remainingDecorations: TextDecorationLine, firstLineStyle: Bool, paintBehavior: PaintBehavior,
+  remainingDecorationsIn: TextDecorationLine, firstLineStyle: Bool, paintBehavior: PaintBehavior,
   pseudoId: PseudoId
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var remainingDecorations = remainingDecorationsIn
+  var current: RenderObjectWrapper? = renderer
+  repeat {
+    let style = styleForRenderer(
+      renderer: current!, pseudoId: pseudoId, firstLineStyle: firstLineStyle)
+    extractDecorations(
+      style: style, decorations: style.textDecorationLine(), paintBehavior: paintBehavior,
+      remainingDecorations: &remainingDecorations, result: &result)
+
+    if current!.style().display() == .RubyAnnotation {
+      return
+    }
+
+    current = current!.parent()
+    if current != nil && current!.isAnonymousBlock() {
+      let currentBlock = current as! RenderBlockWrapper
+      if let continuation = currentBlock.continuation() {
+        current = continuation
+      }
+    }
+
+    if remainingDecorations.isEmpty {
+      break
+    }
+
+  } while current != nil && !(current!.node() is HTMLAnchorElementWrapper)
+
+  // If we bailed out, use the element we bailed out at (typically a <font> or <a> element).
+  if !remainingDecorations.isEmpty && current != nil {
+    extractDecorations(
+      style: styleForRenderer(
+        renderer: current!, pseudoId: pseudoId, firstLineStyle: firstLineStyle),
+      decorations: remainingDecorations,
+      paintBehavior: paintBehavior,
+      remainingDecorations: &remainingDecorations, result: &result)
+  }
 }
 
 private func extractDecorations(
@@ -359,11 +393,11 @@ struct TextDecorationPainter {
 
     var result = Styles()
     collectStylesForRenderer(
-      result: &result, renderer: renderer, remainingDecorations: requestedDecorations,
+      result: &result, renderer: renderer, remainingDecorationsIn: requestedDecorations,
       firstLineStyle: false, paintBehavior: paintBehavior, pseudoId: pseudoId)
     if firstLineStyle {
       collectStylesForRenderer(
-        result: &result, renderer: renderer, remainingDecorations: requestedDecorations,
+        result: &result, renderer: renderer, remainingDecorationsIn: requestedDecorations,
         firstLineStyle: true, paintBehavior: paintBehavior, pseudoId: pseudoId)
     }
     result.skipInk = renderer.style().textDecorationSkipInk()
