@@ -39,6 +39,11 @@ struct ColorWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  static var transparentBlack: ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static var black: ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

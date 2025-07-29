@@ -303,6 +303,7 @@ struct TextDecorationPainter {
     let wavyStrokeParameters: WavyStrokeParameters
   }
 
+  // Paint text-shadow, underline, overline
   func paintBackgroundDecorations(
     style: RenderStyleWrapper, textRun: TextRunWrapper,
     decorationGeometry: BackgroundDecorationGeometry, decorationType: TextDecorationLine,
@@ -340,8 +341,74 @@ struct TextDecorationPainter {
       boxOrigin.move(dx: 0, dy: extraOffset)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // These decorations should match the visual overflows computed in visualOverflowForDecorations().
+    var underlineRect = FloatRectWrapper(
+      location: boxOrigin,
+      size: FloatSize(
+        width: decorationGeometry.textBoxWidth, height: decorationGeometry.textDecorationThickness))
+    var overlineRect = underlineRect
+    if decorationType.contains(.Underline) {
+      underlineRect.move(dx: 0, dy: decorationGeometry.underlineOffset)
+    }
+    if decorationType.contains(.Overline) {
+      overlineRect.move(dx: 0, dy: decorationGeometry.overlineOffset)
+    }
+
+    var shadow = self.shadow
+    repeat {
+      if shadow != nil {
+        if shadow!.next != nil {
+          // The last set of lines paints normally inside the clip.
+          boxOrigin.move(dx: 0, dy: -extraOffset)
+          extraOffset = 0
+        }
+        let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color())
+        if let shadowColorFilter = shadowColorFilter {
+          shadowColorFilter.transformColor(color: shadowColor)
+        }
+
+        let shadowX = isHorizontal ? shadow!.x().value() : shadow!.y().value()
+        let shadowY = isHorizontal ? shadow!.y().value() : -shadow!.x().value()
+        context.setDropShadow(
+          dropShadow: GraphicsDropShadow(
+            offset: FloatSize(width: shadowX, height: shadowY - extraOffset),
+            radius: shadow!.radius.value(),
+            color: shadowColor))
+        shadow = shadow!.next
+      }
+
+      if decorationType.contains(.Underline) && !underlineRect.isEmpty() {
+        paintDecoration(
+          decoration: .Underline, style: decorationStyle.underline.decorationStyle,
+          color: decorationStyle.underline.color,
+          rect: underlineRect, textRun: textRun, decorationGeometry: decorationGeometry,
+          decorationStyle: decorationStyle)
+      }
+      if decorationType.contains(.Overline) && !overlineRect.isEmpty() {
+        paintDecoration(
+          decoration: .Overline, style: decorationStyle.overline.decorationStyle,
+          color: decorationStyle.overline.color,
+          rect: overlineRect, textRun: textRun, decorationGeometry: decorationGeometry,
+          decorationStyle: decorationStyle)
+      }
+      // We only want to paint the shadow, hence the transparent color, not the actual line-through,
+      // which will be painted in paintForegroundDecorations().
+      if shadow != nil && decorationType.contains(.LineThrough) {
+        paintLineThrough(
+          foregroundDecorationGeometry: ForegroundDecorationGeometry(
+            boxOrigin: boxOrigin, textBoxWidth: decorationGeometry.textBoxWidth,
+            textDecorationThickness: decorationGeometry.textDecorationThickness,
+            linethroughCenter: decorationGeometry.linethroughCenter,
+            wavyStrokeParameters: decorationGeometry.wavyStrokeParameters),
+          color: ColorWrapper.transparentBlack, decorationStyle: decorationStyle)
+      }
+    } while shadow != nil
+
+    if clipping {
+      context.restore()
+    } else if self.shadow != nil {
+      context.clearDropShadow()
+    }
   }
 
   private func paintDecoration(
