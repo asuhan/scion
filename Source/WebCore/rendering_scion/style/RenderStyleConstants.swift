@@ -457,3 +457,5 @@ enum PaintType: UInt8 {
   case Stroke
   case Markers
 }
+
+let defaultMiterLimit: Float32 = 4

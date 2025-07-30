@@ -36,8 +36,12 @@ struct TextPaintStyle {
 
   var fillColor: ColorWrapper
   let strokeColor: ColorWrapper
+  let emphasisMarkColor = ColorWrapper()
   let strokeWidth: Float32 = 0
   let paintOrder: PaintOrder = .Normal
+  let lineJoin: LineJoin = .Miter
+  let lineCap: LineCap = .Butt
+  let miterLimit: Float32 = defaultMiterLimit
 }
 
 enum FillColorType {
@@ -49,6 +53,33 @@ func updateGraphicsContext(
   context: GraphicsContextWrapper, paintStyle: TextPaintStyle,
   fillColorType: FillColorType = .UseNormalFillColor
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var mode = context.textDrawingMode()
+  var newMode = mode
+  if paintStyle.strokeWidth > 0 && paintStyle.strokeColor.isVisible() {
+    newMode = newMode.union(.Stroke)
+  }
+  if mode != newMode {
+    context.setTextDrawingMode(textDrawingMode: newMode)
+    mode = newMode
+  }
+
+  let fillColor =
+    fillColorType == .UseEmphasisMarkColor ? paintStyle.emphasisMarkColor : paintStyle.fillColor
+  if mode.contains(.Fill) && (fillColor != context.fillColor()) {
+    context.setFillColor(color: fillColor)
+  }
+
+  if mode.contains(.Stroke) {
+    if paintStyle.strokeColor != context.strokeColor() {
+      context.setStrokeColor(color: paintStyle.strokeColor)
+    }
+    if paintStyle.strokeWidth != context.strokeThickness() {
+      context.setStrokeThickness(thickness: paintStyle.strokeWidth)
+    }
+    context.setLineJoin(lineJoin: paintStyle.lineJoin)
+    context.setLineCap(lineCap: paintStyle.lineCap)
+    if paintStyle.lineJoin == .Miter {
+      context.setMiterLimit(miter: paintStyle.miterLimit)
+    }
+  }
 }

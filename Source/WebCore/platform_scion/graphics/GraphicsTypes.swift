@@ -74,6 +74,18 @@ struct DocumentMarkerLineStyle {
   let color: ColorWrapper
 }
 
+enum LineCap: UInt8 {
+  case Butt
+  case Round
+  case Square
+}
+
+enum LineJoin: UInt8 {
+  case Miter
+  case Round
+  case Bevel
+}
+
 enum StrokeStyle: UInt8 {
   case NoStroke
   case SolidStroke

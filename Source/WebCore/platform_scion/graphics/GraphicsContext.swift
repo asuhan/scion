@@ -44,7 +44,17 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func strokeColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setStrokeColor(color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokeThickness() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -123,6 +133,21 @@ class GraphicsContextWrapper {
 
   func fillRoundedRect(rect: FloatRoundedRect, color: ColorWrapper, blendMode: BlendMode = .Normal)
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLineCap(lineCap: LineCap) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLineJoin(lineJoin: LineJoin) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMiterLimit(miter: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
