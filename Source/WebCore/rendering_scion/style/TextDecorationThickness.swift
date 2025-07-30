@@ -41,8 +41,21 @@ struct TextDecorationThickness {
   }
 
   func resolve(fontSize: Float32, metrics: FontMetricsWrapper) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isAuto() {
+      return fontSize / Float32(TextDecorationThickness.textDecorationBaseFontSize)
+    }
+    if isFromFont() {
+      return metrics.underlineThickness() ?? 0
+    }
+
+    assert(isLength())
+    if length.isPercent() {
+      return fontSize * (length.percent() / 100)
+    }
+    if length.isCalculated() {
+      return length.nonNanCalculatedValue(maxValue: fontSize)
+    }
+    return length.value()
   }
 
   private enum `Type` {
@@ -55,4 +68,5 @@ struct TextDecorationThickness {
 
   private let type: `Type`
   private let length = LengthWrapper()
+  private static let textDecorationBaseFontSize = 16
 }

@@ -89,5 +89,11 @@ class FontMetricsWrapper {
     return Int(wk_interop.FontMetrics_intCapHeight(p))
   }
 
+  // TODO(asuhan): use a Markable equivalent instead
+  func underlineThickness() -> Float32? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var p: UnsafeRawPointer?
 }
