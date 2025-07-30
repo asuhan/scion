@@ -25,8 +25,7 @@
 
 struct TextPaintStyle {
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.init(color: ColorWrapper())
   }
 
   init(color: ColorWrapper) {
