@@ -24,6 +24,15 @@
  */
 
 struct LengthPoint {
+  init() {
+    self.init(x: LengthWrapper(), y: LengthWrapper())
+  }
+
+  init(x: LengthWrapper, y: LengthWrapper) {
+    self.x = x
+    self.y = y
+  }
+
   let x: LengthWrapper
   let y: LengthWrapper
 

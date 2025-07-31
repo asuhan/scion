@@ -32,11 +32,6 @@ enum ShadowStyle {
 // This class holds information about shadows for the text-shadow and box-shadow properties.
 
 class ShadowData {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func x() -> LengthWrapper { return location.x }
   func y() -> LengthWrapper { return location.y }
 
@@ -47,9 +42,9 @@ class ShadowData {
     return LayoutUnit(value: ceilf(radius.value() * ShadowData.radiusExtentMultiplier))
   }
 
-  let location: LengthPoint
-  let radius: LengthWrapper  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
-  var color: StyleColorWrapper
+  let location = LengthPoint()
+  let radius = LengthWrapper()  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
+  var color = StyleColorWrapper()
   let next: ShadowData? = nil
   private static let radiusExtentMultiplier: Float32 = 1.4
 }
