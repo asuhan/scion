@@ -22,6 +22,8 @@
  *
  */
 
+import Foundation
+
 enum ShadowStyle {
   case Normal
   case Inset
@@ -39,8 +41,10 @@ class ShadowData {
   func y() -> LengthWrapper { return location.y }
 
   func paintingExtent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Blurring uses a Gaussian function whose std. deviation is m_radius/2, and which in theory
+    // extends to infinity. In 8-bit contexts, however, rounding causes the effect to become
+    // undetectable at around 1.4x the radius.
+    return LayoutUnit(value: ceilf(radius.value() * ShadowData.radiusExtentMultiplier))
   }
 
   func color() -> StyleColorWrapper {
@@ -51,4 +55,5 @@ class ShadowData {
   let location: LengthPoint
   let radius: LengthWrapper  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
   let next: ShadowData? = nil
+  private static let radiusExtentMultiplier: Float32 = 1.4
 }
