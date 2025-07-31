@@ -38,9 +38,21 @@ func floatValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> Flo
   }
 }
 
-func valueForLength<T>(length: LengthWrapper, maximumValue: T) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+func valueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> LayoutUnit {
+  switch length.type() {
+  case .Fixed, .Percent, .Calculated:
+    return minimumValueForLength(length: length, maximumValue: maximumValue)
+  case .FillAvailable, .Auto, .Normal:
+    return maximumValue
+  case .Relative,
+    .Intrinsic,
+    .MinIntrinsic, .Content, .MinContent, .MaxContent, .FitContent, .Undefined:
+    fatalError("Not reached")
+  }
+}
+
+func valueForLength(length: LengthWrapper, maximumValue: Float32) -> LayoutUnit {
+  return valueForLength(length: length, maximumValue: LayoutUnit(value: maximumValue))
 }
 
 internal func minimumValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> LayoutUnit {
