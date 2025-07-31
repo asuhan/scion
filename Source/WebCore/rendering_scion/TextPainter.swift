@@ -48,7 +48,7 @@ class ShadowApplier {
     let shadowY = orientation == .Horizontal ? shadow!.y().value() : -shadow!.x().value()
     var shadowOffset = FloatSize(width: shadowX, height: shadowY)
     let shadowRadius = shadow!.radius
-    let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color())
+    let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color)
     if let colorFilter = colorFilter {
       colorFilter.transformColor(color: shadowColor)
     }

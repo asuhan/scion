@@ -362,7 +362,7 @@ struct TextDecorationPainter {
           boxOrigin.move(dx: 0, dy: -extraOffset)
           extraOffset = 0
         }
-        let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color())
+        let shadowColor = style.colorResolvingCurrentColor(color: shadow!.color)
         if let shadowColorFilter = shadowColorFilter {
           shadowColorFilter.transformColor(color: shadowColor)
         }

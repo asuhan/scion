@@ -47,13 +47,9 @@ class ShadowData {
     return LayoutUnit(value: ceilf(radius.value() * ShadowData.radiusExtentMultiplier))
   }
 
-  func color() -> StyleColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   let location: LengthPoint
   let radius: LengthWrapper  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
+  var color: StyleColorWrapper
   let next: ShadowData? = nil
   private static let radiusExtentMultiplier: Float32 = 1.4
 }
