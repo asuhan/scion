@@ -31,9 +31,10 @@
 
 import Foundation
 
-internal let kLayoutUnitFractionalBits = 6
-internal let kFixedPointDenominator: Int32 = 1 << kLayoutUnitFractionalBits
+private let kLayoutUnitFractionalBits = 6
+private let kFixedPointDenominator: Int32 = 1 << kLayoutUnitFractionalBits
 internal let intMaxForLayoutUnit = Int32.max / kFixedPointDenominator
+internal let intMinForLayoutUnit = Int32.min / kFixedPointDenominator
 
 struct LayoutUnit: Comparable {
   static func fromRawValue(value: Int32) -> LayoutUnit {
@@ -172,9 +173,11 @@ struct LayoutUnit: Comparable {
       + ((fraction().rawValue() + (kFixedPointDenominator / 2)) >> kLayoutUnitFractionalBits)
   }
 
-  func floor() -> Int {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func floor() -> Int32 {
+    if value <= Int32.min + kFixedPointDenominator - 1 {
+      return intMinForLayoutUnit
+    }
+    return value >> kLayoutUnitFractionalBits
   }
 
   func fraction() -> LayoutUnit {
@@ -212,6 +215,11 @@ struct LayoutUnit: Comparable {
   init(value: Int) {
     // TODO(asuhan): implement this correctly
     self.value = Int32(value)
+  }
+
+  init(value: Int32) {
+    // TODO(asuhan): implement this correctly
+    self.value = value
   }
 
   init(value: UInt64) {
