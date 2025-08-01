@@ -65,8 +65,7 @@ struct LengthWrapper: Equatable {
   }
 
   func isAuto() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .Auto
   }
 
   func isCalculated() -> Bool {
@@ -78,13 +77,11 @@ struct LengthWrapper: Equatable {
   }
 
   func isMaxContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .MaxContent
   }
 
   func isMinContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .MinContent
   }
 
   func isNormal() -> Bool { return type() == .Normal }
@@ -94,23 +91,19 @@ struct LengthWrapper: Equatable {
   }
 
   func isRelative() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .Relative
   }
 
   func isUndefined() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .Undefined
   }
 
   func isFitContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .FitContent
   }
 
   func isContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return type() == .Content
   }
 
   func hasQuirk() -> Bool {
@@ -132,8 +125,7 @@ struct LengthWrapper: Equatable {
   }
 
   func isSpecified() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isFixed() || isPercentOrCalculated()
   }
 
   func nonNanCalculatedValue(maxValue: Float32) -> Float32 {
