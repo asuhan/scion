@@ -58,4 +58,9 @@ extension WTF {
   static func areEssentiallyEqual(u: Float32, v: Float32) -> Bool {
     return wk_interop.WTF_areEssentiallyEqual(u, v)
   }
+
+  static func negate<T: BinaryInteger>(v: T) -> T {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

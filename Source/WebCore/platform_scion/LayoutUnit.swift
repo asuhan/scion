@@ -303,8 +303,24 @@ internal func roundToInt(value: Float32) -> Int {
 func roundToDevicePixel(
   value: LayoutUnit, pixelSnappingFactor: Float32, needsDirectionalRounding: Bool = false
 ) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var valueToRound = value.toDouble()
+  if needsDirectionalRounding {
+    valueToRound -= Float64(LayoutUnit.epsilon() / (2 * Float32(kFixedPointDenominator)))
+  }
+
+  let pixelSnappingFactor = Float64(pixelSnappingFactor)
+  if valueToRound >= 0 {
+    return Float32(round(valueToRound * pixelSnappingFactor) / pixelSnappingFactor)
+  }
+
+  // This adjusts directional rounding on negative halfway values. It produces the same direction for both negative and positive values.
+  // Instead of rounding negative halfway cases away from zero, we translate them to positive values before rounding.
+  // It helps snapping relative negative coordinates to the same position as if they were positive absolute coordinates.
+  let translateOrigin = Float64(WTF.negate(v: value.rawValue()))
+  return
+    Float32(
+      (round((valueToRound + translateOrigin) * pixelSnappingFactor) / pixelSnappingFactor)
+        - translateOrigin)
 }
 
 func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 {
