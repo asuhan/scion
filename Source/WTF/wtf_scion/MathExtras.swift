@@ -59,8 +59,8 @@ extension WTF {
     return wk_interop.WTF_areEssentiallyEqual(u, v)
   }
 
-  static func negate<T: BinaryInteger>(v: T) -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  // For use in places where we could negate T.min and would like to avoid overflow.
+  static func negate<T: FixedWidthInteger>(v: T) -> T {
+    return 0 &- v
   }
 }
