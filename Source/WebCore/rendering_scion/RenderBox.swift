@@ -141,6 +141,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func overflowClipRect(
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper? = nil
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markForPaginationRelayoutIfNeeded() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -192,6 +199,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       y: LayoutUnit.fromRawValue(value: raw.y),
       width: LayoutUnit.fromRawValue(value: raw.width),
       height: LayoutUnit.fromRawValue(value: raw.height))
+  }
+
+  func scrollPosition() -> ScrollPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func hasRelativeDimensions() -> Bool {

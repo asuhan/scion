@@ -48,12 +48,42 @@ enum BaseBackgroundColorUsage {
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
+  func paddingLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paddingRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paddingStart() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(p))
   }
 
   func paddingEnd() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(p))
+  }
+
+  func borderTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func borderStart() -> LayoutUnit {

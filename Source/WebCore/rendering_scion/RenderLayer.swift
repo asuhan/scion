@@ -49,6 +49,16 @@ class RenderLayerWrapper {
     self.p = p
   }
 
+  func scrollWidth() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func staticInlinePosition() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
   }

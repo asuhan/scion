@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2016 Apple Inc.  All rights reserved.
+ * Copyright (C) 2006 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,20 +23,5 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntPoint {
-  var x: Int32
-  var y: Int32
-
-  mutating func move(dx: Int32, dy: Int32) {
-    x += dx
-    y += dy
-  }
-
-  static func - (a: IntPoint, b: IntPoint) -> IntSize {
-    return IntSize(width: a.x - b.x, height: a.y - b.y)
-  }
-
-  static prefix func - (point: IntPoint) -> IntPoint {
-    return IntPoint(x: -point.x, y: -point.y)
-  }
-}
+// scrollPosition is in content coordinates (0,0 is at scrollOrigin), so may have negative components.
+typealias ScrollPosition = IntPoint

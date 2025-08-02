@@ -187,6 +187,28 @@ class BackgroundPainter {
       }
     }
 
+    let bLeft = includeLeftEdge ? renderer.borderLeft() : LayoutUnit(value: 0)
+    let bRight = includeRightEdge ? renderer.borderRight() : LayoutUnit(value: 0)
+    let /*pLeft*/ _ = includeLeftEdge ? renderer.paddingLeft() : LayoutUnit(value: 0)
+    let /*pRight*/ _ = includeRightEdge ? renderer.paddingRight() : LayoutUnit(value: 0)
+
+    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clippedWithLocalScrolling)
+    var scrolledPaintRect = rect
+    if clippedWithLocalScrolling {
+      // Clip to the overflow area.
+      let renderBox = renderer as! RenderBoxWrapper
+      context.clip(rect: renderBox.overflowClipRect(location: rect.location()).FloatRect())
+
+      // Adjust the paint rect to reflect a scrolled content box with borders at the ends.
+      scrolledPaintRect.moveBy(offset: LayoutPointWrapper(point: -renderBox.scrollPosition()))
+      scrolledPaintRect.setWidth(
+        width: bLeft + LayoutUnit(value: renderBox.layer()!.scrollWidth()) + bRight)
+      scrolledPaintRect.setHeight(
+        height: renderBox.borderTop() + LayoutUnit(value: renderBox.layer()!.scrollHeight())
+          + renderBox.borderBottom()
+      )
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

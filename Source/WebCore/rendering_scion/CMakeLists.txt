@@ -28,6 +28,7 @@ target_sources(layout_scion PRIVATE
     RenderDeprecatedFlexibleBox.swift
     RenderElement.swift
     RenderFlexibleBox.swift
+    RenderFragmentContainer.swift
     RenderGrid.swift
     RenderHighlight.swift
     RenderInline.swift
