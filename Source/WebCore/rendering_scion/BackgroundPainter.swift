@@ -41,6 +41,7 @@ class BackgroundPainter {
     backgroundObject: RenderElementWrapper? = nil,
     baseBgColorUsage: BaseBackgroundColorUsage = .BaseBackgroundColorUse
   ) {
+    var baseBgColorUsage = baseBgColorUsage
     let context = paintInfo.context()
 
     if (context.paintingDisabled() && !context.detectingContentfulPaint()) || rect.isEmpty() {
@@ -274,6 +275,17 @@ class BackgroundPainter {
       break
     }
 
+    var isOpaqueRoot = false
+    if isRoot {
+      let shouldPaintBaseBackground = view().rootElementShouldPaintBaseBackground()
+      isOpaqueRoot = bgLayer.next() != nil || bgColor.isOpaque() || shouldPaintBaseBackground
+      if !shouldPaintBaseBackground {
+        baseBgColorUsage = .BaseBackgroundColorSkip
+      }
+
+      view().frameView().setContentIsOpaque(contentIsOpaque: isOpaqueRoot)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -311,6 +323,11 @@ class BackgroundPainter {
   }
 
   private func document() -> Document {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func view() -> RenderViewWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

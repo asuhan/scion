@@ -33,6 +33,11 @@ class LocalFrameViewWrapper {
     return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
   }
 
+  func setContentIsOpaque(contentIsOpaque: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintBehavior() -> PaintBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
