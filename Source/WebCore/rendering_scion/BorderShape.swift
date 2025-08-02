@@ -30,4 +30,18 @@
 // BorderShape is used to fill and clip to the shape formed by the border and padding boxes with border-radius.
 // In future, this may be a more complex shape than a rounded rect, so accessors that return rounded rects
 // are deprecated.
-class BorderShape {}
+class BorderShape {
+  func fillOuterShape(
+    context: GraphicsContextWrapper, color: ColorWrapper, deviceScaleFactor: Float32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillInnerShape(
+    context: GraphicsContextWrapper, color: ColorWrapper, deviceScaleFactor: Float32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

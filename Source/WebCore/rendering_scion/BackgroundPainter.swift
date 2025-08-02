@@ -138,8 +138,25 @@ class BackgroundPainter {
       }
 
       if hasRoundedBorder && bleedAvoidance != .BackgroundBleedUseTransparencyLayer {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let borderShape = borderShapeRespectingBleedAvoidance(
+          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge)
+        let previousOperator = context.compositeOperation()
+        let saveRestoreCompositeOp = op != previousOperator
+        if saveRestoreCompositeOp {
+          context.setCompositeOperation(operation: op)
+        }
+
+        if bleedAvoidance == .BackgroundBleedBackgroundOverBorder {
+          borderShape.fillInnerShape(
+            context: context, color: bgColor, deviceScaleFactor: deviceScaleFactor)
+        } else {
+          borderShape.fillOuterShape(
+            context: context, color: bgColor, deviceScaleFactor: deviceScaleFactor)
+        }
+
+        if saveRestoreCompositeOp {
+          context.setCompositeOperation(operation: previousOperator)
+        }
       } else {
         context.fillRect(rect: pixelSnappedRect, color: bgColor, op: op)
       }
@@ -151,7 +168,9 @@ class BackgroundPainter {
     fatalError("Not implemented")
   }
 
-  private func borderShapeRespectingBleedAvoidance() -> BorderShape {
+  private func borderShapeRespectingBleedAvoidance(
+    includeLeftEdge: Bool, includeRightEdge: Bool, shrinkForBleedAvoidance: Bool = true
+  ) -> BorderShape {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
