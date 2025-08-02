@@ -321,11 +321,20 @@ class BackgroundPainter {
         let backgroundRectForPainting = snapRectToDevicePixels(
           rect: backgroundRect, pixelSnappingFactor: deviceScaleFactor)
         if baseColor.isVisible() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          if !baseBgColorOnly && bgColor.isVisible() {
+            baseColor = blendSourceOver(backdrop: baseColor, source: bgColor)
+          }
+          context.fillRect(rect: backgroundRectForPainting, color: baseColor, op: .Copy)
         } else if !baseBgColorOnly && bgColor.isVisible() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          var operation = context.compositeOperation()
+          if shouldClearBackground {
+            if op == .DestinationOut {  // We're punching out the background.
+              operation = op
+            } else {
+              operation = .Copy
+            }
+          }
+          context.fillRect(rect: backgroundRectForPainting, color: bgColor, op: operation)
         } else if shouldClearBackground {
           context.clearRect(rect: backgroundRectForPainting)
         }
