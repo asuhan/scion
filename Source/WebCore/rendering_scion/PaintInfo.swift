@@ -30,7 +30,26 @@
 
 import wk_interop
 
+typealias OverlapTestRequestMap = [ObjectIdentifier: IntRect]
+
 struct PaintInfoWrapper {
+  init(
+    newContext: GraphicsContextWrapper, newRect: LayoutRectWrapper, newPhase: PaintPhase,
+    newPaintBehavior: PaintBehavior, newSubtreePaintRoot: RenderObjectWrapper? = nil,
+    newOutlineObjects: ListSet<RenderInlineWrapper, UInt>? = nil,
+    overlapTestRequests: OverlapTestRequestMap? = nil,
+    newPaintContainer: RenderLayerModelObjectWrapper? = nil,
+    enclosingSelfPaintingLayer: RenderLayerWrapper? = nil,
+    newRequireSecurityOriginAccessForWidgets: Bool = false
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(p: UnsafeMutableRawPointer) {
+    self.p = p
+  }
+
   func context() -> GraphicsContextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

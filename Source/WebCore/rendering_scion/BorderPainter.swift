@@ -46,6 +46,14 @@ class BorderPainter {
     fatalError("Not implemented")
   }
 
+  static func pathForBorderArea(
+    rect: LayoutRectWrapper, style: RenderStyleWrapper, deviceScaleFactor: Float32,
+    includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
+  ) -> PathWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let renderer: RenderElementWrapper
   private let paintInfo: PaintInfoWrapper
 }

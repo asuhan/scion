@@ -250,8 +250,26 @@ class BackgroundPainter {
         }, backgroundClipOuterLayerScope: backgroundClipOuterLayerScope,
         backgroundClipInnerLayerScope: backgroundClipInnerLayerScope)
     case .BorderArea:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let borderAreaPath = BorderPainter.pathForBorderArea(
+        rect: rect, style: style, deviceScaleFactor: deviceScaleFactor,
+        includeLogicalLeftEdge: includeLeftEdge, includeLogicalRightEdge: includeRightEdge)
+      {
+        backgroundClipStateSaver.save()
+        context.clipPath(path: borderAreaPath)
+        break
+      }
+
+      BackgroundPainter.setupMaskingBackgroundClip(
+        borderRect: rect,
+        paintFunction: {
+          borderRect, paintRect in
+          let borderPaintInfo = PaintInfoWrapper(
+            newContext: context, newRect: LayoutRectWrapper(r: paintRect),
+            newPhase: .BlockBackground, newPaintBehavior: .ForceBlackBorder)
+          let borderPainter = BorderPainter(renderer: renderer, paintInfo: borderPaintInfo)
+          borderPainter.paintBorder(rect: borderRect, style: style)
+        }, backgroundClipOuterLayerScope: backgroundClipOuterLayerScope,
+        backgroundClipInnerLayerScope: backgroundClipInnerLayerScope)
     case .NoClip:
       break
     }

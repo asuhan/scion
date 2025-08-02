@@ -180,6 +180,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func clipPath(path: PathWrapper, clipRule: WindRule = .EvenOdd) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func drawText(
     font: FontCascadeWrapper, run: TextRunWrapper, point: FloatPoint,

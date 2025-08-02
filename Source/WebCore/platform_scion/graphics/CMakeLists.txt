@@ -31,6 +31,7 @@ target_sources(layout_scion PRIVATE
     TabSize.swift
     TextIterator.swift
     TextRun.swift
+    WindRule.swift
 )
 
 add_subdirectory(controls)
