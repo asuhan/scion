@@ -21,6 +21,12 @@
  *
  */
 
+private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style: RenderStyleWrapper)
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class BackgroundPainter {
   init(renderer: RenderBoxModelObjectWrapper, paintInfo: PaintInfoWrapper) {
     // TODO(asuhan): implement this
@@ -47,10 +53,10 @@ class BackgroundPainter {
     let style = renderer.style()
     let layerClip = overrideClip ?? bgLayer.clip
 
-    let /*hasRoundedBorder*/ _ = style.hasBorderRadius() && (includeLeftEdge || includeRightEdge)
-    let /*clippedWithLocalScrolling*/ _ =
+    let hasRoundedBorder = style.hasBorderRadius() && (includeLeftEdge || includeRightEdge)
+    let clippedWithLocalScrolling =
       renderer.hasNonVisibleOverflow() && bgLayer.attachment == .LocalBackground
-    let /*isBorderFill*/ _ = layerClip == .BorderBox
+    let isBorderFill = layerClip == .BorderBox
     let isRoot = renderer.isDocumentElementRenderer()
 
     var bgColor = color
@@ -109,6 +115,43 @@ class BackgroundPainter {
       return
     }
 
+    let colorVisible = bgColor.isVisible()
+    let deviceScaleFactor = document().deviceScaleFactor()
+    let pixelSnappedRect = snapRectToDevicePixels(
+      rect: rect, pixelSnappingFactor: deviceScaleFactor)
+
+    // Fast path for drawing simple color backgrounds.
+    if !isRoot && !clippedWithLocalScrolling && !shouldPaintBackgroundImage && isBorderFill
+      && bgLayer.next() == nil
+    {
+      if !colorVisible {
+        return
+      }
+
+      let applyBoxShadowToBackground = BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+        renderer: renderer, paintOffset: rect.location(), bleedAvoidance: bleedAvoidance,
+        inlineBox: inlineBoxIterator)
+      let _ = GraphicsContextStateSaver(
+        context: context, saveAndRestore: applyBoxShadowToBackground)
+      if applyBoxShadowToBackground {
+        applyBoxShadowForBackground(context: context, style: style)
+      }
+
+      if hasRoundedBorder && bleedAvoidance != .BackgroundBleedUseTransparencyLayer {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else {
+        context.fillRect(rect: pixelSnappedRect, color: bgColor, op: op)
+      }
+
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderShapeRespectingBleedAvoidance() -> BorderShape {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

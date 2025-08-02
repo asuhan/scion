@@ -16,6 +16,7 @@ target_sources(layout_scion PRIVATE
     AccessibilityRegionContext.swift
     BackgroundPainter.swift
     BorderPainter.swift
+    BorderShape.swift
     BreakLines.swift
     RenderBlock.swift
     RenderBlockFlow.swift
