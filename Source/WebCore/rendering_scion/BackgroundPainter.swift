@@ -35,6 +35,80 @@ class BackgroundPainter {
     backgroundObject: RenderElementWrapper? = nil,
     baseBgColorUsage: BaseBackgroundColorUsage = .BaseBackgroundColorUse
   ) {
+    let context = paintInfo.context()
+
+    if (context.paintingDisabled() && !context.detectingContentfulPaint()) || rect.isEmpty() {
+      return
+    }
+
+    let (includeLeftEdge, includeRightEdge) =
+      inlineBoxIterator.bool() ? inlineBoxIterator.get().hasClosedLeftAndRightEdge() : (true, true)
+
+    let style = renderer.style()
+    let layerClip = overrideClip ?? bgLayer.clip
+
+    let /*hasRoundedBorder*/ _ = style.hasBorderRadius() && (includeLeftEdge || includeRightEdge)
+    let /*clippedWithLocalScrolling*/ _ =
+      renderer.hasNonVisibleOverflow() && bgLayer.attachment == .LocalBackground
+    let /*isBorderFill*/ _ = layerClip == .BorderBox
+    let isRoot = renderer.isDocumentElementRenderer()
+
+    var bgColor = color
+    let bgImage = bgLayer.image()
+    var shouldPaintBackgroundImage =
+      bgImage != nil && bgImage!.canRender(renderer: renderer, multiplier: style.usedZoom())
+
+    if context.detectingContentfulPaint() {
+      if !context.contentfulPaintDetected() && shouldPaintBackgroundImage
+        && bgImage!.cachedImage() != nil
+      {
+        if style.backgroundSizeType() != .Size || !style.backgroundSizeLength().isEmpty() {
+          context.setContentfulPaintDetected()
+        }
+        return
+      }
+    }
+
+    if context.invalidatingImagesWithAsyncDecodes() {
+      if shouldPaintBackgroundImage
+        && bgImage!.cachedImage()!.isClientWaitingForAsyncDecoding(client: renderer)
+      {
+        bgImage!.cachedImage()!.removeAllClientsWaitingForAsyncDecoding()
+      }
+      return
+    }
+
+    var forceBackgroundToWhite = false
+    if document().printing() {
+      if style.printColorAdjust() == .Economy {
+        forceBackgroundToWhite = true
+      }
+      if document().settings().shouldPrintBackgrounds() {
+        forceBackgroundToWhite = false
+      }
+    }
+
+    // When printing backgrounds is disabled or using economy mode,
+    // change existing background colors and images to a solid white background.
+    // If there's no bg color or image, leave it untouched to avoid affecting transparency.
+    // We don't try to avoid loading the background images, because this style flag is only set
+    // when printing, and at that point we've already loaded the background images anyway. (To avoid
+    // loading the background images we'd have to do this check when applying styles rather than
+    // while rendering.)
+    if forceBackgroundToWhite {
+      // Note that we can't reuse this variable below because the bgColor might be changed
+      let shouldPaintBackgroundColor = bgLayer.next() == nil && bgColor.isVisible()
+      if shouldPaintBackgroundImage || shouldPaintBackgroundColor {
+        bgColor = .white
+        shouldPaintBackgroundImage = false
+      }
+    }
+
+    let baseBgColorOnly = (baseBgColorUsage == .BaseBackgroundColorOnly)
+    if baseBgColorOnly && (!isRoot || bgLayer.next() != nil || bgColor.isOpaque()) {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -54,4 +128,13 @@ class BackgroundPainter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func document() -> Document {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let renderer: RenderBoxModelObjectWrapper
+  private let paintInfo: PaintInfoWrapper
+  private let overrideClip: FillBox?
 }

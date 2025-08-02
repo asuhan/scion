@@ -29,6 +29,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func invalidatingImagesWithAsyncDecodes() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func detectingContentfulPaint() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -230,6 +235,11 @@ class GraphicsContextWrapper {
   }
 
   func setContentfulPaintDetected() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func contentfulPaintDetected() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -28,6 +28,16 @@ struct FillLayerWrapper {
     fatalError("Not implemented")
   }
 
+  var attachment: FillAttachment {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var clip: FillBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> FillLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

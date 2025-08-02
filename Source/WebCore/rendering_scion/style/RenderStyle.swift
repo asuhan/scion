@@ -553,6 +553,16 @@ class RenderStyleWrapper {
     return TextWrapStyle(rawValue: wk_interop.RenderStyle_textWrapStyle(p))!
   }
 
+  func backgroundSizeType() -> FillSizeType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func backgroundSizeLength() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func backgroundLayers() -> FillLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -930,6 +940,11 @@ class RenderStyleWrapper {
   }
 
   func hasAppleColorFilter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func printColorAdjust() -> PrintColorAdjust {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

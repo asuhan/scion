@@ -23,6 +23,11 @@
  *
  */
 
+enum PrintColorAdjust: UInt8 {
+  case Economy
+  case Exact
+}
+
 // The difference between two styles.  The following values are used:
 // - StyleDifference::Equal - The two styles are identical
 // - StyleDifference::RecompositeLayer - The layer needs its position and transform updated, but no repaint
@@ -141,6 +146,28 @@ enum Clear: UInt8 {
   case InlineStart
   case InlineEnd
   case Both
+}
+
+enum FillAttachment: UInt8 {
+  case ScrollBackground
+  case LocalBackground
+  case FixedBackground
+}
+
+enum FillBox: UInt8 {
+  case BorderBox
+  case PaddingBox
+  case ContentBox
+  case BorderArea
+  case Text
+  case NoClip
+}
+
+enum FillSizeType: UInt8 {
+  case Contain
+  case Cover
+  case Size
+  case None
 }
 
 enum FlexDirection: UInt8 {

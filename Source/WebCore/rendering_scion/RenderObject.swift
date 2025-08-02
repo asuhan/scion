@@ -25,7 +25,7 @@
 
 import wk_interop
 
-class RenderObjectWrapper {
+class RenderObjectWrapper: CachedImageClientWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
@@ -91,6 +91,11 @@ class RenderObjectWrapper {
 
   func isImage() -> Bool {
     return wk_interop.RenderObject_isImage(p)
+  }
+
+  func isDocumentElementRenderer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func everHadLayout() -> Bool {

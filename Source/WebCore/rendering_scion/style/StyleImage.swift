@@ -27,6 +27,13 @@ struct StyleImage {
     fatalError("Not implemented")
   }
 
+  // Image.
+  func cachedImage() -> CachedImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Rendering.
   func canRender(renderer: RenderElementWrapper, multiplier: Float32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

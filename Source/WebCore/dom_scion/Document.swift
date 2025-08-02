@@ -26,6 +26,11 @@
  */
 
 struct Document {
+  func settings() -> SettingsWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func deviceScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

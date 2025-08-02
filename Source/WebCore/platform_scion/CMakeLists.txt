@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     Length.swift
     LengthFunctions.swift
     LengthPoint.swift
+    LengthSize.swift
     RectEdges.swift
 )
 add_subdirectory(graphics)
