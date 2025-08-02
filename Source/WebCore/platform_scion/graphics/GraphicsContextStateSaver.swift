@@ -34,3 +34,10 @@ class GraphicsContextStateSaver {
     fatalError("Not implemented")
   }
 }
+
+class TransparencyLayerScope {
+  init(context: GraphicsContextWrapper, alpha: Float32, beginLayer: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

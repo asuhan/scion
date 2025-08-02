@@ -189,8 +189,8 @@ class BackgroundPainter {
 
     let bLeft = includeLeftEdge ? renderer.borderLeft() : LayoutUnit(value: 0)
     let bRight = includeRightEdge ? renderer.borderRight() : LayoutUnit(value: 0)
-    let /*pLeft*/ _ = includeLeftEdge ? renderer.paddingLeft() : LayoutUnit(value: 0)
-    let /*pRight*/ _ = includeRightEdge ? renderer.paddingRight() : LayoutUnit(value: 0)
+    let pLeft = includeLeftEdge ? renderer.paddingLeft() : LayoutUnit(value: 0)
+    let pRight = includeRightEdge ? renderer.paddingRight() : LayoutUnit(value: 0)
 
     let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clippedWithLocalScrolling)
     var scrolledPaintRect = rect
@@ -209,6 +209,62 @@ class BackgroundPainter {
       )
     }
 
+    let backgroundClipStateSaver = GraphicsContextStateSaver(
+      context: context, saveAndRestore: false)
+
+    let backgroundClipOuterLayerScope = TransparencyLayerScope(
+      context: context, alpha: 1, beginLayer: false)
+    let backgroundClipInnerLayerScope = TransparencyLayerScope(
+      context: context, alpha: 1, beginLayer: false)
+
+    switch layerClip {
+    case .BorderBox:
+      break
+    case .PaddingBox, .ContentBox:
+      // Clip to the padding or content boxes as necessary.
+      if !clipToBorderRadius {
+        let includePadding = layerClip == .ContentBox
+        let clipRect = LayoutRectWrapper(
+          x: scrolledPaintRect.x() + bLeft + (includePadding ? pLeft : LayoutUnit(value: 0)),
+          y: scrolledPaintRect.y() + renderer.borderTop()
+            + (includePadding ? renderer.paddingTop() : LayoutUnit(value: 0)),
+          width: scrolledPaintRect.width() - bLeft - bRight
+            - (includePadding ? pLeft + pRight : LayoutUnit(value: 0)),
+          height: scrolledPaintRect.height() - renderer.borderTop() - renderer.borderBottom()
+            - (includePadding
+              ? renderer.paddingTop() + renderer.paddingBottom() : LayoutUnit(value: 0)))
+        backgroundClipStateSaver.save()
+        context.clip(rect: clipRect.FloatRect())
+      }
+    case .Text:
+      // We have to draw our text into a mask that can then be used to clip background drawing.
+      // First figure out how big the mask has to be. It should be no bigger than what we need
+      // to actually render, so we should intersect the dirty rect with the border box of the background.
+      BackgroundPainter.setupMaskingBackgroundClip(
+        borderRect: rect,
+        paintFunction: {
+          _, paintRect in
+          renderer.paintMaskForTextFillBox(
+            context: context, paintRect: paintRect, inlineBox: inlineBoxIterator,
+            scrolledPaintRect: scrolledPaintRect)
+        }, backgroundClipOuterLayerScope: backgroundClipOuterLayerScope,
+        backgroundClipInnerLayerScope: backgroundClipInnerLayerScope)
+    case .BorderArea:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .NoClip:
+      break
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func setupMaskingBackgroundClip(
+    borderRect: LayoutRectWrapper, paintFunction: (LayoutRectWrapper, FloatRectWrapper) -> Void,
+    backgroundClipOuterLayerScope: TransparencyLayerScope,
+    backgroundClipInnerLayerScope: TransparencyLayerScope
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

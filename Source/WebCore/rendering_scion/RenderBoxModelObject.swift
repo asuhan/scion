@@ -48,6 +48,16 @@ enum BaseBackgroundColorUsage {
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
+  func paddingTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paddingBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paddingLeft() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -126,5 +136,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       return RenderInlineWrapper(p: raw)
     }
     return nil
+  }
+
+  func paintMaskForTextFillBox(
+    context: GraphicsContextWrapper, paintRect: FloatRectWrapper,
+    inlineBox: InlineIterator.InlineBoxIterator, scrolledPaintRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }
