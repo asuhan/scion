@@ -286,6 +286,52 @@ class BackgroundPainter {
       view().frameView().setContentIsOpaque(contentIsOpaque: isOpaqueRoot)
     }
 
+    // Paint the color first underneath all images, culled if background image occludes it.
+    // FIXME: In the bgLayer.hasFiniteBounds() case, we could improve the culling test
+    // by verifying whether the background image covers the entire layout rect.
+    if bgLayer.next() == nil {
+      var backgroundRect = scrolledPaintRect
+      let applyBoxShadowToBackground = BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+        renderer: renderer, paintOffset: rect.location(), bleedAvoidance: bleedAvoidance,
+        inlineBox: inlineBoxIterator)
+      if applyBoxShadowToBackground || !shouldPaintBackgroundImage
+        || !bgLayer.hasOpaqueImage(renderer: renderer) || !bgLayer.hasRepeatXY()
+        || bgLayer.isEmpty()
+      {
+        if !applyBoxShadowToBackground {
+          backgroundRect.intersect(other: paintInfo.rect)
+        }
+
+        // If we have an alpha and we are painting the root element, blend with the base background color.
+        var baseColor = ColorWrapper()
+        var shouldClearBackground = false
+        if (baseBgColorUsage != .BaseBackgroundColorSkip) && isOpaqueRoot {
+          baseColor = view().frameView().baseBackgroundColor()
+          if !baseColor.isVisible() {
+            shouldClearBackground = true
+          }
+        }
+
+        let _ = GraphicsContextStateSaver(
+          context: context, saveAndRestore: applyBoxShadowToBackground)
+        if applyBoxShadowToBackground {
+          applyBoxShadowForBackground(context: context, style: style)
+        }
+
+        let backgroundRectForPainting = snapRectToDevicePixels(
+          rect: backgroundRect, pixelSnappingFactor: deviceScaleFactor)
+        if baseColor.isVisible() {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else if !baseBgColorOnly && bgColor.isVisible() {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else if shouldClearBackground {
+          context.clearRect(rect: backgroundRectForPainting)
+        }
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

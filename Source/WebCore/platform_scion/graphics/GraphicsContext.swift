@@ -155,6 +155,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func clearRect(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLineCap(lineCap: LineCap) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

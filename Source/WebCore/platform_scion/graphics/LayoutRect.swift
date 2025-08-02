@@ -101,6 +101,11 @@ struct LayoutRectWrapper {
 
   func minXMinYCorner() -> LayoutPointWrapper { return m_location }
 
+  mutating func intersect(other: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func unite(other: LayoutRectWrapper) {
     // Handle empty special cases first.
     if other.isEmpty() {

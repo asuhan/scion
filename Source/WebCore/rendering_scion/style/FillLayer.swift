@@ -43,7 +43,22 @@ struct FillLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasOpaqueImage(renderer: RenderElementWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasRepeatXY() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
