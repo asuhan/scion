@@ -164,6 +164,29 @@ class BackgroundPainter {
       return
     }
 
+    // FillBox::BorderBox radius clipping is taken care of by BackgroundBleedUseTransparencyLayer
+    let clipToBorderRadius =
+      hasRoundedBorder && !(isBorderFill && bleedAvoidance == .BackgroundBleedUseTransparencyLayer)
+    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clipToBorderRadius)
+    if clipToBorderRadius {
+
+      switch layerClip {
+      case .BorderBox, .BorderArea, .Text, .NoClip:
+        let borderShape = borderShapeRespectingBleedAvoidance(
+          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge,
+          shrinkForBleedAvoidance: isBorderFill)
+        borderShape.clipToOuterShape(context: context, deviceScaleFactor: deviceScaleFactor)
+      case .PaddingBox:
+        let borderShape = borderShapeRespectingBleedAvoidance(
+          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge,
+          shrinkForBleedAvoidance: isBorderFill)
+        borderShape.clipToInnerShape(context: context, deviceScaleFactor: deviceScaleFactor)
+      case .ContentBox:
+        let borderShape = renderer.borderShapeForContentClipping(borderBoxRect: rect)
+        borderShape.clipToInnerShape(context: context, deviceScaleFactor: deviceScaleFactor)
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

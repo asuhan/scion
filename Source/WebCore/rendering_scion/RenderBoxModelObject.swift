@@ -70,6 +70,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       value: wk_interop.RenderBoxModelObject_marginStart(p, otherStyle?.p))
   }
 
+  func borderShapeForContentClipping(
+    borderBoxRect: LayoutRectWrapper, includeLeftEdge: Bool = true, includeRightEdge: Bool = true
+  ) -> BorderShape {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func baselinePosition(
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
