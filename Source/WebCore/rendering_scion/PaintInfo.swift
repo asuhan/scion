@@ -75,6 +75,11 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
+  func deepCopy() -> PaintInfoWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var rect: LayoutRectWrapper {
     let raw = PaintInfo_rect(p)
     return LayoutRectWrapper(
@@ -82,11 +87,6 @@ struct PaintInfoWrapper {
       y: LayoutUnit.fromRawValue(value: raw.y),
       width: LayoutUnit.fromRawValue(value: raw.width),
       height: LayoutUnit.fromRawValue(value: raw.height))
-  }
-
-  var paintBehavior: PaintBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   var phase: PaintPhase {
@@ -99,11 +99,28 @@ struct PaintInfoWrapper {
     }
   }
 
-  func deepCopy() -> PaintInfoWrapper {
+  var paintBehavior: PaintBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  public var outlineObjects: ListSet<RenderInlineWrapper, UInt>?
+  // used to list outlines that should be painted by a block with inline children
+  var outlineObjects: ListSet<RenderInlineWrapper, UInt>? {
+    get {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    set {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  // the layer object that originates the current painting
+  var paintContainer: RenderLayerModelObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let p: UnsafeMutableRawPointer
 }

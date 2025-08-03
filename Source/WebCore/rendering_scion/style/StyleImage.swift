@@ -21,7 +21,7 @@
  *
  */
 
-struct StyleImage {
+class StyleImage {
   func isLoaded(renderer: RenderElementWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -35,6 +35,13 @@ struct StyleImage {
 
   // Rendering.
   func canRender(renderer: RenderElementWrapper, multiplier: Float32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContainerContextForRenderer(
+    renderer: RenderElementWrapper, containerSize: FloatSize, containerZoom: Float32
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

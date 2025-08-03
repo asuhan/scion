@@ -27,6 +27,15 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
   fatalError("Not implemented")
 }
 
+struct BackgroundImageGeometry {
+  mutating func clip(clipRect: LayoutRectWrapper) {
+    destinationRect.intersect(other: clipRect)
+  }
+
+  var destinationRect: LayoutRectWrapper
+  let tileSizeWithoutPixelSnapping: LayoutSizeWrapper
+}
+
 class BackgroundPainter {
   init(renderer: RenderBoxModelObjectWrapper, paintInfo: PaintInfoWrapper) {
     // TODO(asuhan): implement this
@@ -341,8 +350,26 @@ class BackgroundPainter {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // no progressive loading of the background image
+    if !baseBgColorOnly && shouldPaintBackgroundImage {
+      // Multiline inline boxes paint like the image was one long strip spanning lines. The backgroundImageStrip is this fictional rectangle.
+      let imageRect = backgroundImageStrip.isEmpty() ? scrolledPaintRect : backgroundImageStrip
+      let paintOffset =
+        backgroundImageStrip.isEmpty() ? rect.location() : backgroundImageStrip.location()
+      var geometry = BackgroundPainter.calculateBackgroundImageGeometry(
+        renderer: renderer, paintContainer: paintInfo.paintContainer, fillLayer: bgLayer,
+        paintOffset: paintOffset, borderBoxRect: imageRect, overrideOrigin: overrideOrigin)
+
+      let clientForBackgroundImage = backgroundObject ?? renderer
+      bgImage!.setContainerContextForRenderer(
+        renderer: clientForBackgroundImage,
+        containerSize: geometry.tileSizeWithoutPixelSnapping.FloatSize(),
+        containerZoom: renderer.style().usedZoom())
+
+      geometry.clip(clipRect: LayoutRectWrapper(r: pixelSnappedRect))
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   private static func setupMaskingBackgroundClip(
@@ -369,6 +396,17 @@ class BackgroundPainter {
     fatalError("Not implemented")
   }
 
+  static func calculateBackgroundImageGeometry(
+    renderer: RenderBoxModelObjectWrapper, paintContainer: RenderLayerModelObjectWrapper?,
+    fillLayer: FillLayerWrapper, paintOffset: LayoutPointWrapper, borderBoxRect: LayoutRectWrapper,
+    overrideOrigin: FillBox? = nil
+  )
+    -> BackgroundImageGeometry
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func boxShadowShouldBeAppliedToBackground(
     renderer: RenderBoxModelObjectWrapper, paintOffset: LayoutPointWrapper,
     bleedAvoidance: BackgroundBleedAvoidance, inlineBox: InlineIterator.InlineBoxIterator
@@ -390,4 +428,5 @@ class BackgroundPainter {
   private let renderer: RenderBoxModelObjectWrapper
   private let paintInfo: PaintInfoWrapper
   private let overrideClip: FillBox?
+  private let overrideOrigin: FillBox?
 }
