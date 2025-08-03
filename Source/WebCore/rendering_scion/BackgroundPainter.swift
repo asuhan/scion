@@ -281,7 +281,7 @@ class BackgroundPainter {
       // We have to draw our text into a mask that can then be used to clip background drawing.
       // First figure out how big the mask has to be. It should be no bigger than what we need
       // to actually render, so we should intersect the dirty rect with the border box of the background.
-      BackgroundPainter.setupMaskingBackgroundClip(
+      setupMaskingBackgroundClip(
         borderRect: rect,
         paintFunction: {
           _, paintRect in
@@ -289,7 +289,9 @@ class BackgroundPainter {
             context: context, paintRect: paintRect, inlineBox: inlineBoxIterator,
             scrolledPaintRect: scrolledPaintRect)
         }, backgroundClipOuterLayerScope: backgroundClipOuterLayerScope,
-        backgroundClipInnerLayerScope: backgroundClipInnerLayerScope)
+        backgroundClipInnerLayerScope: backgroundClipInnerLayerScope, rect: rect,
+        deviceScaleFactor: deviceScaleFactor,
+        backgroundClipStateSaver: backgroundClipStateSaver, context: context)
     case .BorderArea:
       if let borderAreaPath = BorderPainter.pathForBorderArea(
         rect: rect, style: style, deviceScaleFactor: deviceScaleFactor,
@@ -300,7 +302,7 @@ class BackgroundPainter {
         break
       }
 
-      BackgroundPainter.setupMaskingBackgroundClip(
+      setupMaskingBackgroundClip(
         borderRect: rect,
         paintFunction: {
           borderRect, paintRect in
@@ -310,7 +312,9 @@ class BackgroundPainter {
           let borderPainter = BorderPainter(renderer: renderer, paintInfo: borderPaintInfo)
           borderPainter.paintBorder(rect: borderRect, style: style)
         }, backgroundClipOuterLayerScope: backgroundClipOuterLayerScope,
-        backgroundClipInnerLayerScope: backgroundClipInnerLayerScope)
+        backgroundClipInnerLayerScope: backgroundClipInnerLayerScope, rect: rect,
+        deviceScaleFactor: deviceScaleFactor,
+        backgroundClipStateSaver: backgroundClipStateSaver, context: context)
     case .NoClip:
       break
     }
@@ -438,13 +442,29 @@ class BackgroundPainter {
     }
   }
 
-  private static func setupMaskingBackgroundClip(
+  private func setupMaskingBackgroundClip(
     borderRect: LayoutRectWrapper, paintFunction: (LayoutRectWrapper, FloatRectWrapper) -> Void,
     backgroundClipOuterLayerScope: TransparencyLayerScope,
-    backgroundClipInnerLayerScope: TransparencyLayerScope
+    backgroundClipInnerLayerScope: TransparencyLayerScope,
+    rect: LayoutRectWrapper, deviceScaleFactor: Float32,
+    backgroundClipStateSaver: GraphicsContextStateSaver,
+    context: GraphicsContextWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var transparencyLayerBounds = snapRectToDevicePixels(
+      rect: rect, pixelSnappingFactor: deviceScaleFactor)
+    transparencyLayerBounds.intersect(
+      other: snapRectToDevicePixels(rect: paintInfo.rect, pixelSnappingFactor: deviceScaleFactor))
+    transparencyLayerBounds.inflate(d: 1)
+
+    backgroundClipStateSaver.save()
+    context.clip(rect: transparencyLayerBounds)
+
+    backgroundClipOuterLayerScope.beginLayer(alpha: 1)
+    paintFunction(borderRect, transparencyLayerBounds)
+
+    context.setCompositeOperation(operation: .SourceIn)
+    backgroundClipInnerLayerScope.beginLayer(alpha: 1)
+    context.setCompositeOperation(operation: .SourceOver)
   }
 
   private func borderShapeRespectingBleedAvoidance(

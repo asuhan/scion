@@ -40,4 +40,14 @@ class TransparencyLayerScope {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func beginLayer(alpha: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  deinit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

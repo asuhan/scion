@@ -132,6 +132,11 @@ struct FloatRectWrapper {
       && y() < other.maxY() && other.y() < maxY()
   }
 
+  mutating func intersect(other: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func unite(other: FloatRectWrapper) {
     // Handle empty special cases first.
     if other.isEmpty() {
