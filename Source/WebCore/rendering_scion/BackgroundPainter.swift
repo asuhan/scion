@@ -23,8 +23,17 @@
 
 private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style: RenderStyleWrapper)
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var boxShadow = style.boxShadow()!
+  while boxShadow.style != .Normal {
+    boxShadow = boxShadow.next!
+  }
+
+  let shadowOffset = FloatSize(width: boxShadow.x().value(), height: boxShadow.y().value())
+  context.setDropShadow(
+    dropShadow: GraphicsDropShadow(
+      offset: shadowOffset, radius: boxShadow.radius.value(),
+      color: style.colorWithColorFilter(color: boxShadow.color),
+      radiusMode: boxShadow.isWebkitBoxShadow ? .Legacy : .Default))
 }
 
 struct BackgroundImageGeometry {

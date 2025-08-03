@@ -31,9 +31,20 @@ enum ShadowRadiusMode {
 }
 
 struct GraphicsDropShadow {
+  init(
+    offset: FloatSize, radius: Float32, color: ColorWrapper,
+    radiusMode: ShadowRadiusMode = .Default, opacity: Float32 = 1
+  ) {
+    self.offset = offset
+    self.radius = radius
+    self.color = color
+    self.radiusMode = radiusMode
+    self.opacity = opacity
+  }
+
   let offset: FloatSize
   let radius: Float32
   let color: ColorWrapper
-  let radiusMode: ShadowRadiusMode = .Default
-  let opacity: Float32 = 1
+  let radiusMode: ShadowRadiusMode
+  let opacity: Float32
 }

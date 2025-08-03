@@ -45,6 +45,8 @@ class ShadowData {
   let location = LengthPoint()
   let radius = LengthWrapper()  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
   var color = StyleColorWrapper()
+  let style: ShadowStyle = .Normal
+  let isWebkitBoxShadow: Bool = false
   let next: ShadowData? = nil
   private static let radiusExtentMultiplier: Float32 = 1.4
 }

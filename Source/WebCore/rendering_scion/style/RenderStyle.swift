@@ -722,6 +722,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func boxShadow() -> ShadowData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxDecorationBreak() -> BoxDecorationBreak {
     if p == nil {
       // TODO(asuhan): implement this
@@ -1001,6 +1006,11 @@ class RenderStyleWrapper {
   }
 
   func colorByApplyingColorFilter(color: ColorWrapper) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func colorWithColorFilter(color: StyleColorWrapper) -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
