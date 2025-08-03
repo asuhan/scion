@@ -28,12 +28,19 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
 }
 
 struct BackgroundImageGeometry {
+  func relativePhase() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func clip(clipRect: LayoutRectWrapper) {
     destinationRect.intersect(other: clipRect)
   }
 
   var destinationRect: LayoutRectWrapper
   let tileSizeWithoutPixelSnapping: LayoutSizeWrapper
+  let tileSize: LayoutSizeWrapper
+  let spaceSize: LayoutSizeWrapper
 }
 
 class BackgroundPainter {
@@ -367,8 +374,43 @@ class BackgroundPainter {
         containerZoom: renderer.style().usedZoom())
 
       geometry.clip(clipRect: LayoutRectWrapper(r: pixelSnappedRect))
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if geometry.destinationRect.isEmpty() {
+        return
+      }
+      let isFirstLine =
+        inlineBoxIterator.bool() && inlineBoxIterator.get().lineBox().get().isFirst()
+      if let image = bgImage!.image(
+        renderer: backgroundObject ?? renderer, size: geometry.tileSize.FloatSize(),
+        isForFirstLine: isFirstLine
+      ) {
+        context.setDrawLuminanceMask(drawLuminanceMask: bgLayer.maskMode == .Luminance)
+
+        let options = ImagePaintingOptionsWrapper(
+          compositeOperator: op == .SourceOver ? bgLayer.compositeForPainting() : op,
+          blendMode: bgLayer.blendMode,
+          decodingMode: renderer.decodingModeForImageDraw(image: image, paintInfo: paintInfo),
+          orientation: .FromImage,
+          interpolationQuality: renderer.chooseInterpolationQuality(
+            context: context, image: image, layer: bgLayer, size: geometry.tileSize
+          ),
+          allowImageSubsampling: document().settings().imageSubsamplingEnabled() ? .Yes : .No,
+          showDebugBackground: document().settings().showDebugBorders() ? .Yes : .No
+        )
+
+        let drawResult = context.drawTiledImage(
+          image: image, destination: geometry.destinationRect.FloatRect(),
+          source: toLayoutPoint(size: geometry.relativePhase()).FloatPoint(),
+          tileSize: geometry.tileSize.FloatSize(), spacing: geometry.spaceSize.FloatSize(),
+          options: options)
+        if drawResult == .DidRequestDecoding {
+          assert(bgImage!.hasCachedImage())
+          bgImage!.cachedImage()!.addClientWaitingForAsyncDecoding(client: renderer)
+        }
+
+        if renderer.element() != nil && !context.paintingDisabled() {
+          renderer.element()!.setHasEverPaintedImages(hasEverPaintedImages: true)
+        }
+      }
     }
   }
 

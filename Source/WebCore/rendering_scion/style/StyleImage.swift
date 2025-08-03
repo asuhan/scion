@@ -33,6 +33,14 @@ class StyleImage {
     fatalError("Not implemented")
   }
 
+  // Image.
+  func image(renderer: RenderElementWrapper?, size: FloatSize, isForFirstLine: Bool = false)
+    -> ImageWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Rendering.
   func canRender(renderer: RenderElementWrapper, multiplier: Float32) -> Bool {
     // TODO(asuhan): implement this
@@ -42,6 +50,11 @@ class StyleImage {
   func setContainerContextForRenderer(
     renderer: RenderElementWrapper, containerSize: FloatSize, containerZoom: Float32
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasCachedImage() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

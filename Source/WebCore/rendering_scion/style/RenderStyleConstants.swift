@@ -170,6 +170,14 @@ enum FillSizeType: UInt8 {
   case None
 }
 
+// CSS3 Mask Mode
+
+enum MaskMode: UInt8 {
+  case Alpha
+  case Luminance
+  case MatchSource
+}
+
 enum FlexDirection: UInt8 {
   case Row
   case RowReverse

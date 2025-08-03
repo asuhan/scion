@@ -114,6 +114,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setDrawLuminanceMask(drawLuminanceMask: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func save(purpose: GraphicsContextState.Purpose = .SaveRestore) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -171,6 +176,14 @@ class GraphicsContextWrapper {
   }
 
   func setMiterLimit(miter: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawTiledImage(
+    image: ImageWrapper, destination: FloatRectWrapper, source: FloatPoint, tileSize: FloatSize,
+    spacing: FloatSize, options: ImagePaintingOptionsWrapper = ImagePaintingOptionsWrapper()
+  ) -> ImageDrawResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

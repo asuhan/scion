@@ -29,6 +29,11 @@ class NodeWrapper {
     self.p = p
   }
 
+  func setHasEverPaintedImages(hasEverPaintedImages: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRootEditableElement() -> Bool {
     return wk_interop.Node_isRootEditableElement(p)
   }

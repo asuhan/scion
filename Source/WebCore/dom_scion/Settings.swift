@@ -24,7 +24,17 @@
  */
 
 class SettingsWrapper {
+  func imageSubsamplingEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPrintBackgrounds() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func showDebugBorders() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -74,6 +74,26 @@ struct DocumentMarkerLineStyle {
   let color: ColorWrapper
 }
 
+// InterpolationQuality::Default
+// For ImagePaintingOptions, it means:
+//  - Use context image interpolation quality.
+// For GraphicsContext CG it means:
+//  - If the CGImage has shouldInterpolate == true, use High
+//  - Else use None
+// For GraphicsContext Cairo it means:
+//  - Use Medium
+//
+// FIXME: Remove InterpolationQuality::Default since it does not mean what it should
+// obviously mean and because the CG context behavior is unusable in general case where
+// the draw call sites cannot track where the native images are generated from.
+enum InterpolationQuality: UInt8 {
+  case Default
+  case DoNotInterpolate
+  case Low
+  case Medium
+  case High
+}
+
 enum LineCap: UInt8 {
   case Butt
   case Round

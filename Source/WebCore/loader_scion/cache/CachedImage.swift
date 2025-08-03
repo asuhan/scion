@@ -27,6 +27,11 @@ final class CachedImageWrapper {
     fatalError("Not implemented")
   }
 
+  func addClientWaitingForAsyncDecoding(client: CachedImageClientWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removeAllClientsWaitingForAsyncDecoding() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

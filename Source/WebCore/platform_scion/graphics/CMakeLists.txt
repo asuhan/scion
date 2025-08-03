@@ -2,6 +2,7 @@ target_sources(layout_scion PRIVATE
     Color.swift
     ColorBlending.swift
     DashArray.swift
+    DecodingOptions.swift
     FloatPoint.swift
     FloatRect.swift
     FloatRoundedRect.swift
@@ -19,6 +20,10 @@ target_sources(layout_scion PRIVATE
     GraphicsContextStateSaver.swift
     GraphicsStyle.swift
     GraphicsTypes.swift
+    Image.swift
+    ImageOrientation.swift
+    ImagePaintingOptions.swift
+    ImageTypes.swift
     IntPoint.swift
     IntRect.swift
     IntSize.swift

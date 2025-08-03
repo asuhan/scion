@@ -138,6 +138,19 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return nil
   }
 
+  func chooseInterpolationQuality(
+    context: GraphicsContextWrapper, image: ImageWrapper, layer: FillLayerWrapper,
+    size: LayoutSizeWrapper
+  ) -> InterpolationQuality {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func decodingModeForImageDraw(image: ImageWrapper, paintInfo: PaintInfoWrapper) -> DecodingMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintMaskForTextFillBox(
     context: GraphicsContextWrapper, paintRect: FloatRectWrapper,
     inlineBox: InlineIterator.InlineBoxIterator, scrolledPaintRect: LayoutRectWrapper

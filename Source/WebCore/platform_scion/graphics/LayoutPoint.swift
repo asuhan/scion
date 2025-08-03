@@ -109,6 +109,10 @@ struct LayoutPointWrapper: Equatable {
   }
 }
 
+func toLayoutPoint(size: LayoutSizeWrapper) -> LayoutPointWrapper {
+  return LayoutPointWrapper(x: size.width(), y: size.height())
+}
+
 func toLayoutSize(point: LayoutPointWrapper) -> LayoutSizeWrapper {
   return LayoutSizeWrapper(width: point.x, height: point.y)
 }
