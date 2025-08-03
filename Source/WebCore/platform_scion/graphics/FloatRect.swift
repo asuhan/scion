@@ -133,8 +133,20 @@ struct FloatRectWrapper {
   }
 
   mutating func intersect(other: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var l = max(x(), other.x())
+    var t = max(y(), other.y())
+    var r = min(maxX(), other.maxX())
+    var b = min(maxY(), other.maxY())
+
+    // Return a clean empty rectangle for non-intersecting cases.
+    if l >= r || t >= b {
+      l = 0
+      t = 0
+      r = 0
+      b = 0
+    }
+
+    setLocationAndSizeFromEdges(left: l, top: t, right: r, bottom: b)
   }
 
   mutating func unite(other: FloatRectWrapper) {
