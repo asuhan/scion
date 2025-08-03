@@ -29,8 +29,9 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
 
 struct BackgroundImageGeometry {
   func relativePhase() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var relativePhase = phase.deepCopy()
+    relativePhase += destinationRect.location() - destinationOrigin
+    return relativePhase
   }
 
   mutating func clip(clipRect: LayoutRectWrapper) {
@@ -38,8 +39,10 @@ struct BackgroundImageGeometry {
   }
 
   var destinationRect: LayoutRectWrapper
+  let destinationOrigin: LayoutPointWrapper
   let tileSizeWithoutPixelSnapping: LayoutSizeWrapper
   let tileSize: LayoutSizeWrapper
+  let phase: LayoutSizeWrapper
   let spaceSize: LayoutSizeWrapper
 }
 

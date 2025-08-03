@@ -82,6 +82,10 @@ class LayoutSizeWrapper {
     return layout_scion.FloatSize(width: width_.float(), height: height_.float())
   }
 
+  func deepCopy() -> LayoutSizeWrapper {
+    return LayoutSizeWrapper(width: width_, height: height_)
+  }
+
   private var width_: LayoutUnit = LayoutUnit()
   private var height_: LayoutUnit = LayoutUnit()
 }
