@@ -48,8 +48,17 @@ struct BackgroundImageGeometry {
 
 class BackgroundPainter {
   init(renderer: RenderBoxModelObjectWrapper, paintInfo: PaintInfoWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.renderer = renderer
+    self.paintInfo = paintInfo
+    // background-clip has no effect when painting the root background.
+    // https://www.w3.org/TR/css-backgrounds-3/#background-clip
+    if renderer.isDocumentElementRenderer() {
+      setOverrideClip(overrideClip: .BorderBox)
+    }
+  }
+
+  func setOverrideClip(overrideClip: FillBox) {
+    self.overrideClip = overrideClip
   }
 
   func paintFillLayer(
@@ -472,6 +481,6 @@ class BackgroundPainter {
 
   private let renderer: RenderBoxModelObjectWrapper
   private let paintInfo: PaintInfoWrapper
-  private let overrideClip: FillBox?
-  private let overrideOrigin: FillBox?
+  private var overrideClip: FillBox?
+  private let overrideOrigin: FillBox? = nil
 }
