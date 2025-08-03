@@ -29,6 +29,11 @@ class GraphicsContextStateSaver {
     fatalError("Not implemented")
   }
 
+  deinit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func save() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
