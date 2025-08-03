@@ -23,6 +23,13 @@
  *
  */
 
+func shrinkRectByOneDevicePixel(
+  context: GraphicsContextWrapper, rect: LayoutRectWrapper, devicePixelRatio: Float32
+) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class BorderPainter {
   init(renderer: RenderElementWrapper, paintInfo: PaintInfoWrapper) {
     self.renderer = renderer

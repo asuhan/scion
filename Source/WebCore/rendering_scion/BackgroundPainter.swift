@@ -168,7 +168,8 @@ class BackgroundPainter {
 
       if hasRoundedBorder && bleedAvoidance != .BackgroundBleedUseTransparencyLayer {
         let borderShape = borderShapeRespectingBleedAvoidance(
-          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge)
+          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge, rect: rect,
+          bleedAvoidance: bleedAvoidance, deviceScaleFactor: deviceScaleFactor, style: style)
         let previousOperator = context.compositeOperation()
         let saveRestoreCompositeOp = op != previousOperator
         if saveRestoreCompositeOp {
@@ -202,12 +203,14 @@ class BackgroundPainter {
       switch layerClip {
       case .BorderBox, .BorderArea, .Text, .NoClip:
         let borderShape = borderShapeRespectingBleedAvoidance(
-          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge,
+          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge, rect: rect,
+          bleedAvoidance: bleedAvoidance, deviceScaleFactor: deviceScaleFactor, style: style,
           shrinkForBleedAvoidance: isBorderFill)
         borderShape.clipToOuterShape(context: context, deviceScaleFactor: deviceScaleFactor)
       case .PaddingBox:
         let borderShape = borderShapeRespectingBleedAvoidance(
-          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge,
+          includeLeftEdge: includeLeftEdge, includeRightEdge: includeRightEdge, rect: rect,
+          bleedAvoidance: bleedAvoidance, deviceScaleFactor: deviceScaleFactor, style: style,
           shrinkForBleedAvoidance: isBorderFill)
         borderShape.clipToInnerShape(context: context, deviceScaleFactor: deviceScaleFactor)
       case .ContentBox:
@@ -436,10 +439,20 @@ class BackgroundPainter {
   }
 
   private func borderShapeRespectingBleedAvoidance(
-    includeLeftEdge: Bool, includeRightEdge: Bool, shrinkForBleedAvoidance: Bool = true
+    includeLeftEdge: Bool, includeRightEdge: Bool, rect: LayoutRectWrapper,
+    bleedAvoidance: BackgroundBleedAvoidance, deviceScaleFactor: Float32, style: RenderStyleWrapper,
+    shrinkForBleedAvoidance: Bool = true
   ) -> BorderShape {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var borderRect = rect
+    if shrinkForBleedAvoidance && bleedAvoidance == .BackgroundBleedShrinkBackground {
+      // Ideally we'd use the border rect, but add a device pixel of additional inset to preserve corner shape.
+      borderRect = shrinkRectByOneDevicePixel(
+        context: paintInfo.context(), rect: borderRect, devicePixelRatio: deviceScaleFactor)
+    }
+
+    return BorderShape.shapeForBorderRect(
+      style: style, borderRect: borderRect, includeLogicalLeftEdge: includeLeftEdge,
+      includeLogicalRightEdge: includeRightEdge)
   }
 
   func paintBoxShadow(

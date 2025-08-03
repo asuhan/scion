@@ -31,6 +31,14 @@
 // In future, this may be a more complex shape than a rounded rect, so accessors that return rounded rects
 // are deprecated.
 class BorderShape {
+  static func shapeForBorderRect(
+    style: RenderStyleWrapper, borderRect: LayoutRectWrapper, includeLogicalLeftEdge: Bool = true,
+    includeLogicalRightEdge: Bool = true
+  ) -> BorderShape {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clipToOuterShape(context: GraphicsContextWrapper, deviceScaleFactor: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
