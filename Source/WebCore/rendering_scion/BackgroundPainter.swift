@@ -512,13 +512,11 @@ class BackgroundPainter {
   }
 
   private func document() -> Document {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer.document()
   }
 
   private func view() -> RenderViewWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer.view()
   }
 
   private let renderer: RenderBoxModelObjectWrapper
