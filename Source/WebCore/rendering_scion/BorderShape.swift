@@ -39,6 +39,11 @@ class BorderShape {
     fatalError("Not implemented")
   }
 
+  func pathForBorderArea(deviceScaleFactor: Float32) -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clipToOuterShape(context: GraphicsContextWrapper, deviceScaleFactor: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

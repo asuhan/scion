@@ -23,6 +23,11 @@
  *
  */
 
+private func decorationHasAllSimpleEdges(edges: RectEdges<BorderEdge>) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func shrinkRectByOneDevicePixel(
   context: GraphicsContextWrapper, rect: LayoutRectWrapper, devicePixelRatio: Float32
 ) -> LayoutRectWrapper {
@@ -57,8 +62,18 @@ class BorderPainter {
     rect: LayoutRectWrapper, style: RenderStyleWrapper, deviceScaleFactor: Float32,
     includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
   ) -> PathWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): check these arguments
+    let edges = borderEdges(
+      style: style, deviceScaleFactor: deviceScaleFactor, setColorsToBlack: includeLogicalLeftEdge,
+      includeLogicalLeftEdge: includeLogicalRightEdge)
+    if !decorationHasAllSimpleEdges(edges: edges) {
+      return nil
+    }
+
+    let borderShape = BorderShape.shapeForBorderRect(
+      style: style, borderRect: rect, includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge)
+    return borderShape.pathForBorderArea(deviceScaleFactor: deviceScaleFactor)
   }
 
   private let renderer: RenderElementWrapper
