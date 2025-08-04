@@ -560,6 +560,26 @@ class BackgroundPainter {
       return false
     }
 
+    if inlineBox.bool() && !BackgroundPainter.applyToInlineBox() {
+      return false
+    }
+
+    if renderer.hasNonVisibleOverflow() && lastBackgroundLayer!.attachment == .LocalBackground {
+      return false
+    }
+
+    if renderer is RenderTableCellWrapper {
+      return false
+    }
+
+    if let imageRenderer = renderer as? RenderImageWrapper {
+      return !imageRenderer.backgroundIsKnownToBeObscured(paintOffset: paintOffset)
+    }
+
+    return true
+  }
+
+  private static func applyToInlineBox() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

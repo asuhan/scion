@@ -32,6 +32,7 @@ target_sources(layout_scion PRIVATE
     RenderFragmentContainer.swift
     RenderGrid.swift
     RenderHighlight.swift
+    RenderImage.swift
     RenderInline.swift
     RenderLayer.swift
     RenderLayerModelObject.swift

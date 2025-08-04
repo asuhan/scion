@@ -157,6 +157,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func backgroundIsKnownToBeObscured(paintOffset: LayoutPointWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasNonVisibleOverflow() -> Bool {
     return wk_interop.RenderObject_hasNonVisibleOverflow(p)
   }
