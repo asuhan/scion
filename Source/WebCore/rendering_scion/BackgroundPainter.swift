@@ -545,18 +545,18 @@ class BackgroundPainter {
       return false
     }
 
-    var lastBackgroundLayer: FillLayerWrapper? = style.backgroundLayers()
-    var next = lastBackgroundLayer!.next()
+    var lastBackgroundLayer = style.backgroundLayers()
+    var next = lastBackgroundLayer.next()
     while next != nil {
-      lastBackgroundLayer = next
-      next = lastBackgroundLayer!.next()
+      lastBackgroundLayer = next!
+      next = lastBackgroundLayer.next()
     }
 
-    if lastBackgroundLayer!.clip != .BorderBox {
+    if lastBackgroundLayer.clip != .BorderBox {
       return false
     }
 
-    if lastBackgroundLayer!.image() != nil && style.hasBorderRadius() {
+    if lastBackgroundLayer.image() != nil && style.hasBorderRadius() {
       return false
     }
 
@@ -564,7 +564,7 @@ class BackgroundPainter {
       return false
     }
 
-    if renderer.hasNonVisibleOverflow() && lastBackgroundLayer!.attachment == .LocalBackground {
+    if renderer.hasNonVisibleOverflow() && lastBackgroundLayer.attachment == .LocalBackground {
       return false
     }
 
