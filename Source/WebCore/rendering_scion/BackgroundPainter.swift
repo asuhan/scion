@@ -535,6 +535,31 @@ class BackgroundPainter {
       currentShadow = currentShadow!.next
     }
 
+    if !hasOneNormalBoxShadow {
+      return false
+    }
+
+    let backgroundColor = style.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor)
+    if !backgroundColor.isOpaque() {
+      return false
+    }
+
+    var lastBackgroundLayer: FillLayerWrapper? = style.backgroundLayers()
+    var next = lastBackgroundLayer!.next()
+    while next != nil {
+      lastBackgroundLayer = next
+      next = lastBackgroundLayer!.next()
+    }
+
+    if lastBackgroundLayer!.clip != .BorderBox {
+      return false
+    }
+
+    if lastBackgroundLayer!.image() != nil && style.hasBorderRadius() {
+      return false
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
