@@ -507,6 +507,34 @@ class BackgroundPainter {
     renderer: RenderBoxModelObjectWrapper, paintOffset: LayoutPointWrapper,
     bleedAvoidance: BackgroundBleedAvoidance, inlineBox: InlineIterator.InlineBoxIterator
   ) -> Bool {
+    if bleedAvoidance != .BackgroundBleedNone {
+      return false
+    }
+
+    let style = renderer.style()
+
+    if style.hasUsedAppearance() {
+      return false
+    }
+
+    var hasOneNormalBoxShadow = false
+    var currentShadow = style.boxShadow()
+    while currentShadow != nil {
+      if currentShadow!.style != .Normal {
+        continue
+      }
+
+      if hasOneNormalBoxShadow {
+        return false
+      }
+      hasOneNormalBoxShadow = true
+
+      if !currentShadow!.spread.isZero() {
+        return false
+      }
+      currentShadow = currentShadow!.next
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

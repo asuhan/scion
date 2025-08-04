@@ -148,6 +148,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasUsedAppearance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageOutsets(image: NinePieceImage) -> LayoutBoxExtent {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

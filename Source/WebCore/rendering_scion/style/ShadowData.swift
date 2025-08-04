@@ -43,6 +43,7 @@ class ShadowData {
   }
 
   let location = LengthPoint()
+  let spread = LengthWrapper()
   let radius = LengthWrapper()  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
   var color = StyleColorWrapper()
   let style: ShadowStyle = .Normal
