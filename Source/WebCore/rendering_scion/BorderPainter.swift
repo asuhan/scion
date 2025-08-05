@@ -57,10 +57,29 @@ class BorderPainter {
     fatalError("Not implemented")
   }
 
+  @discardableResult
   func paintNinePieceImage(
     rect: LayoutRectWrapper, style: RenderStyleWrapper, ninePieceImage: NinePieceImage,
     op: CompositeOperator
-  ) {
+  ) -> Bool {
+    let styleImage = ninePieceImage.image()
+    if styleImage == nil {
+      return false
+    }
+
+    if !styleImage!.isLoaded(renderer: renderer) {
+      return true  // Never paint a nine-piece image incrementally, but don't paint the fallback borders either.
+    }
+
+    if !styleImage!.canRender(renderer: renderer, multiplier: style.usedZoom()) {
+      return false
+    }
+
+    let modelObject = renderer as? RenderBoxModelObjectWrapper
+    if modelObject == nil {
+      return false
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
