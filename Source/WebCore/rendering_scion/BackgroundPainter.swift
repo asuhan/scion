@@ -560,7 +560,10 @@ class BackgroundPainter {
       return false
     }
 
-    if inlineBox.bool() && !BackgroundPainter.applyToInlineBox() {
+    if inlineBox.bool()
+      && !BackgroundPainter.applyToInlineBox(
+        inlineBox: inlineBox, lastBackgroundLayer: lastBackgroundLayer)
+    {
       return false
     }
 
@@ -579,9 +582,22 @@ class BackgroundPainter {
     return true
   }
 
-  private static func applyToInlineBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private static func applyToInlineBox(
+    inlineBox: InlineIterator.InlineBoxIterator, lastBackgroundLayer: FillLayerWrapper
+  ) -> Bool {
+    // The checks here match how paintFillLayer() decides whether to clip (if it does, the shadow
+    // would be clipped out, so it has to be drawn separately).
+    if inlineBox.get().isRootInlineBox() {
+      return true
+    }
+    if !inlineBox.get().previousInlineBox().bool() && !inlineBox.get().nextInlineBox().bool() {
+      return true
+    }
+    let image = lastBackgroundLayer.image()
+    let renderer = inlineBox.get().renderer()
+    let hasFillImage =
+      image != nil && image!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
+    return !hasFillImage && !renderer.style().hasBorderRadius()
   }
 
   private func document() -> Document {
