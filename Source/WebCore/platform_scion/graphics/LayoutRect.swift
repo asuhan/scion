@@ -128,14 +128,22 @@ struct LayoutRectWrapper {
     setLocationAndSizeFromEdges(left: minX, top: minY, right: maxX, bottom: maxY)
   }
 
+  mutating func inflateX(dx: LayoutUnit) {
+    m_location.setX(x: m_location.x - dx)
+    m_size.setWidth(width: m_size.width() + dx + dx)
+  }
+
+  mutating func inflateY(dy: LayoutUnit) {
+    m_location.setY(y: m_location.y - dy)
+    m_size.setHeight(height: m_size.height() + dy + dy)
+  }
+
   mutating func inflateX(dx: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    inflateX(dx: LayoutUnit(value: dx))
   }
 
   mutating func inflateY(dy: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    inflateY(dy: LayoutUnit(value: dy))
   }
 
   func transposedRect() -> LayoutRectWrapper {
