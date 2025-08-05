@@ -31,8 +31,15 @@ private func decorationHasAllSimpleEdges(edges: RectEdges<BorderEdge>) -> Bool {
 func shrinkRectByOneDevicePixel(
   context: GraphicsContextWrapper, rect: LayoutRectWrapper, devicePixelRatio: Float32
 ) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var shrunkRect = rect
+  let transform = context.getCTM()
+  shrunkRect.inflateX(
+    dx: -ceilToDevicePixel(
+      value: Float32(1.0 / transform.xScale()), pixelSnappingFactor: devicePixelRatio))
+  shrunkRect.inflateY(
+    dy: -ceilToDevicePixel(
+      value: Float32(1.0 / transform.yScale()), pixelSnappingFactor: devicePixelRatio))
+  return shrunkRect
 }
 
 class BorderPainter {

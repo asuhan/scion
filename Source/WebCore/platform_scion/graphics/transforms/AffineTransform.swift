@@ -30,6 +30,18 @@ class AffineTransform {
     self.transform = [a, b, c, d, e, f]
   }
 
+  // These functions get the length of an axis-aligned unit vector
+  // once it has been mapped through the transform
+  func xScale() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func yScale() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
   private let transform: [Float64]
 }
