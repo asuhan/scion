@@ -87,6 +87,21 @@ enum PseudoId: UInt32 {
   case AfterLastInternalPseudoId
 }
 
+// These have been defined in the order of their precedence for border-collapsing. Do
+// not change this order! This order also must match the order in CSSValueKeywords.in.
+enum BorderStyle: UInt8 {
+  case None
+  case Hidden
+  case Inset
+  case Groove
+  case Outset
+  case Ridge
+  case Dotted
+  case Dashed
+  case Solid
+  case Double
+}
+
 enum PositionType: UInt8 {
   case Static
   case Relative

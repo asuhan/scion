@@ -23,9 +23,22 @@
  *
  */
 
+private func borderStyleFillsBorderArea(style: BorderStyle) -> Bool {
+  switch style {
+  case .None, .Hidden, .Inset, .Groove, .Outset, .Ridge, .Solid:
+    return true
+  case .Dotted, .Dashed, .Double:
+    return false
+  }
+}
+
+private func edgeIsSimple(edge: BorderEdge) -> Bool {
+  return edge.widthForPainting() == 0 || borderStyleFillsBorderArea(style: edge.style)
+}
+
 private func decorationHasAllSimpleEdges(edges: RectEdges<BorderEdge>) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return edgeIsSimple(edge: edges.top) && edgeIsSimple(edge: edges.right)
+    && edgeIsSimple(edge: edges.bottom) && edgeIsSimple(edge: edges.left)
 }
 
 func shrinkRectByOneDevicePixel(

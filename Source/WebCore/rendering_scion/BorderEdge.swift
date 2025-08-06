@@ -23,7 +23,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct BorderEdge {}
+struct BorderEdge {
+  func widthForPainting() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let style: BorderStyle = .Hidden
+}
 
 typealias BorderEdges = RectEdges<BorderEdge>
 
