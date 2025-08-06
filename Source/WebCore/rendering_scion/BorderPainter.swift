@@ -102,6 +102,8 @@ class BorderPainter {
     return borderShape.pathForBorderArea(deviceScaleFactor: deviceScaleFactor)
   }
 
+  private func document() -> Document { return renderer.document() }
+
   private let renderer: RenderElementWrapper
   private let paintInfo: PaintInfoWrapper
 }
