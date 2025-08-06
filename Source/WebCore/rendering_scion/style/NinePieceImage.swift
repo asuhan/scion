@@ -26,4 +26,13 @@ struct NinePieceImage {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func paint(
+    graphicsContext: GraphicsContextWrapper, renderer: RenderElementWrapper?,
+    style: RenderStyleWrapper, destination: LayoutRectWrapper, source: LayoutSizeWrapper,
+    deviceScaleFactor: Float32, op: CompositeOperator
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

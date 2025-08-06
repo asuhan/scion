@@ -80,8 +80,26 @@ class BorderPainter {
       return false
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: border-image is broken with full page zooming when tiling has to happen, since the tiling function
+    // doesn't have any understanding of the zoom that is in effect on the tile.
+    let deviceScaleFactor = document().deviceScaleFactor()
+
+    var rectWithOutsets = rect
+    rectWithOutsets.expand(box: style.imageOutsets(image: ninePieceImage))
+    let destination = LayoutRectWrapper(
+      r: snapRectToDevicePixels(rect: rectWithOutsets, pixelSnappingFactor: deviceScaleFactor))
+
+    let source = modelObject!.calculateImageIntrinsicDimensions(
+      image: styleImage!, positioningAreaSize: destination.size(), scaleByUsedZoom: .No)
+
+    // If both values are ‘auto’ then the intrinsic width and/or height of the image should be used, if any.
+    styleImage!.setContainerContextForRenderer(
+      renderer: renderer, containerSize: source.FloatSize(), containerZoom: style.usedZoom())
+
+    ninePieceImage.paint(
+      graphicsContext: paintInfo.context(), renderer: renderer, style: style,
+      destination: destination, source: source, deviceScaleFactor: deviceScaleFactor, op: op)
+    return true
   }
 
   static func pathForBorderArea(

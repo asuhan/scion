@@ -158,4 +158,18 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  enum ScaleByUsedZoom {
+    case No
+    case Yes
+  }
+
+  func calculateImageIntrinsicDimensions(
+    image: StyleImage, positioningAreaSize: LayoutSizeWrapper, scaleByUsedZoom: ScaleByUsedZoom
+  )
+    -> LayoutSizeWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
