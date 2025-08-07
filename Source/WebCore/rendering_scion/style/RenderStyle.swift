@@ -235,6 +235,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func borderRadii() -> BorderDataRadii {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasBorderRadius() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

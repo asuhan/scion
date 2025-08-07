@@ -1,5 +1,6 @@
 target_sources(layout_scion PRIVATE
     BlockEllipsis.swift
+    BorderData.swift
     FillLayer.swift
     NinePieceImage.swift
     RenderStyle.swift

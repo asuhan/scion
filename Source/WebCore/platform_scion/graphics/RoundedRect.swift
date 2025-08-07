@@ -25,4 +25,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct RoundedRect {}
+struct RoundedRectRadii {}
+
+struct RoundedRect {
+  typealias Radii = RoundedRectRadii
+
+  func isRounded() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var radii = Radii()
+}

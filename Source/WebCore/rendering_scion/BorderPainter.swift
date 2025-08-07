@@ -55,6 +55,11 @@ func shrinkRectByOneDevicePixel(
   return shrunkRect
 }
 
+private func decorationHasAllSolidEdges(edges: RectEdges<BorderEdge>) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class BorderPainter {
   init(renderer: RenderElementWrapper, paintInfo: PaintInfoWrapper) {
     self.renderer = renderer
@@ -95,9 +100,9 @@ class BorderPainter {
       includeLogicalRightEdge: includeLogicalRightEdge)
 
     // To handle corner styles other than `round`, we'll have to plumb the borderShape through all the border painting functions.
-    let /*outerBorder*/ _ = borderShape.deprecatedRoundedRect()
+    var outerBorder = borderShape.deprecatedRoundedRect()
     var innerBorder = borderShape.deprecatedInnerRoundedRect()
-    let /*unadjustedInnerBorder*/ _ = innerBorder
+    let unadjustedInnerBorder = innerBorder
 
     switch bleedAvoidance {
     case .BackgroundBleedNone, .BackgroundBleedShrinkBackground,
@@ -112,8 +117,33 @@ class BorderPainter {
       innerBorder = shrunkBorderShape.deprecatedInnerRoundedRect()
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let edges = borderEdges(
+      style: style, deviceScaleFactor: document().deviceScaleFactor(),
+      setColorsToBlack: paintInfo.paintBehavior.contains(.ForceBlackBorder),
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge)
+    let haveAllSolidEdges = decorationHasAllSolidEdges(edges: edges)
+
+    if haveAllSolidEdges && outerBorder.isRounded()
+      && BorderPainter.allCornersClippedOut(border: outerBorder, clipRect: paintInfo.rect)
+    {
+      outerBorder.radii = RoundedRect.Radii()
+    }
+
+    paintSides(
+      sides: Sides(
+        outerBorder: outerBorder,
+        innerBorder: innerBorder,
+        unadjustedInnerBorder: unadjustedInnerBorder,
+        radii: style.hasBorderRadius() ? style.borderRadii() : nil,
+        edges: edges,
+        haveAllSolidEdges: haveAllSolidEdges,
+        bleedAvoidance: bleedAvoidance,
+        includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge,
+        appliedClipAlready: appliedClipAlready,
+        isHorizontal: style.isHorizontalWritingMode()
+      ))
   }
 
   private func paintsBorderImage(rect: LayoutRectWrapper, ninePieceImage: NinePieceImage) -> Bool {
@@ -182,6 +212,30 @@ class BorderPainter {
       style: style, borderRect: rect, includeLogicalLeftEdge: includeLogicalLeftEdge,
       includeLogicalRightEdge: includeLogicalRightEdge)
     return borderShape.pathForBorderArea(deviceScaleFactor: deviceScaleFactor)
+  }
+
+  static func allCornersClippedOut(border: RoundedRect, clipRect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  struct Sides {
+    let outerBorder: RoundedRect
+    let innerBorder: RoundedRect
+    let unadjustedInnerBorder: RoundedRect
+    let radii: BorderData.Radii?
+    let edges: BorderEdges
+    let haveAllSolidEdges: Bool
+    let bleedAvoidance: BackgroundBleedAvoidance
+    let includeLogicalLeftEdge: Bool
+    let includeLogicalRightEdge: Bool
+    let appliedClipAlready: Bool
+    let isHorizontal: Bool
+  }
+
+  private func paintSides(sides: Sides) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func borderRectAdjustedForBleedAvoidance(
