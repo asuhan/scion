@@ -96,8 +96,21 @@ class BorderPainter {
 
     // To handle corner styles other than `round`, we'll have to plumb the borderShape through all the border painting functions.
     let /*outerBorder*/ _ = borderShape.deprecatedRoundedRect()
-    let innerBorder = borderShape.deprecatedInnerRoundedRect()
+    var innerBorder = borderShape.deprecatedInnerRoundedRect()
     let /*unadjustedInnerBorder*/ _ = innerBorder
+
+    switch bleedAvoidance {
+    case .BackgroundBleedNone, .BackgroundBleedShrinkBackground,
+      .BackgroundBleedUseTransparencyLayer:
+      break
+    case .BackgroundBleedBackgroundOverBorder:
+      let shrunkBorderRect = borderRectAdjustedForBleedAvoidance(
+        rect: rect, bleedAvoidance: bleedAvoidance)
+      let shrunkBorderShape = BorderShape.shapeForBorderRect(
+        style: style, borderRect: shrunkBorderRect, includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge)
+      innerBorder = shrunkBorderShape.deprecatedInnerRoundedRect()
+    }
 
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -169,6 +182,13 @@ class BorderPainter {
       style: style, borderRect: rect, includeLogicalLeftEdge: includeLogicalLeftEdge,
       includeLogicalRightEdge: includeLogicalRightEdge)
     return borderShape.pathForBorderArea(deviceScaleFactor: deviceScaleFactor)
+  }
+
+  private func borderRectAdjustedForBleedAvoidance(
+    rect: LayoutRectWrapper, bleedAvoidance: BackgroundBleedAvoidance
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func document() -> Document { return renderer.document() }
