@@ -104,4 +104,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   func isWritingModeRoot() -> Bool {
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }
+
+  func paintRectToClipOutFromBorder(paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -66,6 +66,30 @@ class BorderPainter {
     bleedAvoidance: BackgroundBleedAvoidance = .BackgroundBleedNone,
     includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
   ) {
+    let graphicsContext = paintInfo.context()
+
+    if graphicsContext.paintingDisabled() {
+      return
+    }
+
+    if rect.isEmpty() && !paintsBorderImage(rect: rect, ninePieceImage: style.borderImage()) {
+      return
+    }
+
+    let rectToClipOut = renderer.paintRectToClipOutFromBorder(paintRect: rect)
+    let appliedClipAlready = !rectToClipOut.isEmpty()
+    let _ = GraphicsContextStateSaver(context: graphicsContext, saveAndRestore: appliedClipAlready)
+    if !rectToClipOut.isEmpty() {
+      graphicsContext.clipOut(
+        rect: snapRectToDevicePixels(
+          rect: rectToClipOut, pixelSnappingFactor: document().deviceScaleFactor()))
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintsBorderImage(rect: LayoutRectWrapper, ninePieceImage: NinePieceImage) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
