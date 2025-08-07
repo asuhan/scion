@@ -39,6 +39,16 @@ class BorderShape {
     fatalError("Not implemented")
   }
 
+  func deprecatedRoundedRect() -> RoundedRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func deprecatedInnerRoundedRect() -> RoundedRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pathForBorderArea(deviceScaleFactor: Float32) -> PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

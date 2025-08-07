@@ -85,6 +85,20 @@ class BorderPainter {
           rect: rectToClipOut, pixelSnappingFactor: document().deviceScaleFactor()))
     }
 
+    // border-image is not affected by border-radius.
+    if paintNinePieceImage(rect: rect, style: style, ninePieceImage: style.borderImage()) {
+      return
+    }
+
+    let borderShape = BorderShape.shapeForBorderRect(
+      style: style, borderRect: rect, includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge)
+
+    // To handle corner styles other than `round`, we'll have to plumb the borderShape through all the border painting functions.
+    let /*outerBorder*/ _ = borderShape.deprecatedRoundedRect()
+    let innerBorder = borderShape.deprecatedInnerRoundedRect()
+    let /*unadjustedInnerBorder*/ _ = innerBorder
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -97,7 +111,7 @@ class BorderPainter {
   @discardableResult
   func paintNinePieceImage(
     rect: LayoutRectWrapper, style: RenderStyleWrapper, ninePieceImage: NinePieceImage,
-    op: CompositeOperator
+    op: CompositeOperator = .SourceOver
   ) -> Bool {
     let styleImage = ninePieceImage.image()
     if styleImage == nil {

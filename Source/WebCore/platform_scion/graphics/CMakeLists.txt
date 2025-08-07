@@ -33,6 +33,7 @@ target_sources(layout_scion PRIVATE
     LayoutSize.swift
     Path.swift
     RotationDirection.swift
+    RoundedRect.swift
     SurrogatePairAwareTextIterator.swift
     TabSize.swift
     TextIterator.swift
