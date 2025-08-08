@@ -245,8 +245,13 @@ class BorderPainter {
   private func borderRectAdjustedForBleedAvoidance(
     rect: LayoutRectWrapper, bleedAvoidance: BackgroundBleedAvoidance
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if bleedAvoidance != .BackgroundBleedBackgroundOverBorder {
+      return rect
+    }
+
+    // We shrink the rectangle by one device pixel on each side to make it fully overlap the anti-aliased background border
+    return shrinkRectByOneDevicePixel(
+      context: paintInfo.context(), rect: rect, devicePixelRatio: document().deviceScaleFactor())
   }
 
   private func document() -> Document { return renderer.document() }
