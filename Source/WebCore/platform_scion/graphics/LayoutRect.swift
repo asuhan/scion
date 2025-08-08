@@ -107,13 +107,14 @@ struct LayoutRectWrapper {
   func minXMinYCorner() -> LayoutPointWrapper { return m_location }
 
   func intersects(other: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Checking emptiness handles negative widths as well as zero.
+    return !isEmpty() && !other.isEmpty()
+      && x() < other.maxX() && other.x() < maxX()
+      && y() < other.maxY() && other.y() < maxY()
   }
 
   func contains(other: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return x() <= other.x() && maxX() >= other.maxX() && y() <= other.y() && maxY() >= other.maxY()
   }
 
   mutating func intersect(other: LayoutRectWrapper) {
