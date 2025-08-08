@@ -219,8 +219,40 @@ class BorderPainter {
   }
 
   static func allCornersClippedOut(border: RoundedRect, clipRect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let boundingRect = border.rect
+    if clipRect.contains(other: boundingRect) {
+      return false
+    }
+
+    let radii = border.radii
+
+    let topLeftRect = LayoutRectWrapper(location: boundingRect.location(), size: radii.topLeft)
+    if clipRect.intersects(other: topLeftRect) {
+      return false
+    }
+
+    var topRightRect = LayoutRectWrapper(location: boundingRect.location(), size: radii.topRight)
+    topRightRect.setX(x: boundingRect.maxX() - topRightRect.width())
+    if clipRect.intersects(other: topRightRect) {
+      return false
+    }
+
+    var bottomLeftRect = LayoutRectWrapper(
+      location: boundingRect.location(), size: radii.bottomLeft)
+    bottomLeftRect.setY(y: boundingRect.maxY() - bottomLeftRect.height())
+    if clipRect.intersects(other: bottomLeftRect) {
+      return false
+    }
+
+    var bottomRightRect = LayoutRectWrapper(
+      location: boundingRect.location(), size: radii.bottomRight)
+    bottomRightRect.setX(x: boundingRect.maxX() - bottomRightRect.width())
+    bottomRightRect.setY(y: boundingRect.maxY() - bottomRightRect.height())
+    if clipRect.intersects(other: bottomRightRect) {
+      return false
+    }
+
+    return true
   }
 
   struct Sides {

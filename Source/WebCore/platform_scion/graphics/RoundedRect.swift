@@ -25,7 +25,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct RoundedRectRadii {}
+struct RoundedRectRadii {
+  var topLeft = LayoutSizeWrapper()
+  var topRight = LayoutSizeWrapper()
+  var bottomLeft = LayoutSizeWrapper()
+  var bottomRight = LayoutSizeWrapper()
+}
 
 struct RoundedRect {
   typealias Radii = RoundedRectRadii
@@ -35,5 +40,6 @@ struct RoundedRect {
     fatalError("Not implemented")
   }
 
+  var rect = LayoutRectWrapper()
   var radii = Radii()
 }
