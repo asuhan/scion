@@ -55,9 +55,13 @@ func shrinkRectByOneDevicePixel(
   return shrunkRect
 }
 
+private func edgeIsSolid(edge: BorderEdge) -> Bool {
+  return edge.presentButInvisible() || edge.widthForPainting() == 0 || edge.style == .Solid
+}
+
 private func decorationHasAllSolidEdges(edges: RectEdges<BorderEdge>) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return edgeIsSolid(edge: edges.top) && edgeIsSolid(edge: edges.right)
+    && edgeIsSolid(edge: edges.bottom) && edgeIsSolid(edge: edges.left)
 }
 
 class BorderPainter {

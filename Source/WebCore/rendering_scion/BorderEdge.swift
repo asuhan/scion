@@ -24,6 +24,11 @@
  */
 
 struct BorderEdge {
+  func presentButInvisible() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func widthForPainting() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
