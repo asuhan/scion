@@ -81,7 +81,9 @@ class BorderPainter {
       return
     }
 
-    if rect.isEmpty() && !paintsBorderImage(rect: rect, ninePieceImage: style.borderImage()) {
+    if rect.isEmpty()
+      && !paintsBorderImage(rect: rect, ninePieceImage: style.borderImage(), style: style)
+    {
       return
     }
 
@@ -150,9 +152,25 @@ class BorderPainter {
       ))
   }
 
-  private func paintsBorderImage(rect: LayoutRectWrapper, ninePieceImage: NinePieceImage) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func paintsBorderImage(
+    rect: LayoutRectWrapper, ninePieceImage: NinePieceImage, style: RenderStyleWrapper
+  ) -> Bool {
+    let styleImage = ninePieceImage.image()
+    if styleImage == nil {
+      return false
+    }
+
+    if !styleImage!.isLoaded(renderer: renderer) {
+      return false
+    }
+
+    if !styleImage!.canRender(renderer: renderer, multiplier: style.usedZoom()) {
+      return false
+    }
+
+    var rectWithOutsets = rect
+    rectWithOutsets.expand(box: style.imageOutsets(image: ninePieceImage))
+    return !rectWithOutsets.isEmpty()
   }
 
   @discardableResult
