@@ -59,3 +59,8 @@ struct ColorWrapper: Equatable {
     fatalError("Not implemented")
   }
 }
+
+func equalIgnoringSemanticColor(a: ColorWrapper, b: ColorWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

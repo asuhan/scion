@@ -288,6 +288,70 @@ class BorderPainter {
   }
 
   private func paintSides(sides: Sides) {
+    let graphicsContext = paintInfo.context()
+
+    assert(!graphicsContext.paintingDisabled())
+
+    // If no borders intersects with the dirty area, we can skip the painting.
+    if sides.innerBorder.contains(otherRect: paintInfo.rect) {
+      return
+    }
+
+    var haveAlphaColor = false
+    var haveAllDoubleEdges = true
+    var numEdgesVisible = 4
+    var allEdgesShareColor = true
+    var firstVisibleSide: BoxSide? = nil
+    var edgesToDraw = BoxSideSet()
+
+    for boxSide in allBoxSides {
+      let currEdge = sides.edges.at(side: boxSide)
+
+      if currEdge.shouldRender() {
+        edgesToDraw = edgesToDraw.union(edgeFlagForSide(side: boxSide))
+      }
+
+      if currEdge.presentButInvisible() {
+        numEdgesVisible -= 1
+        allEdgesShareColor = false
+        continue
+      }
+
+      if currEdge.widthForPainting() == 0 {
+        numEdgesVisible -= 1
+        continue
+      }
+
+      if firstVisibleSide == nil {
+        firstVisibleSide = boxSide
+      } else if !equalIgnoringSemanticColor(
+        a: currEdge.color, b: sides.edges.at(side: firstVisibleSide!).color)
+      {
+        allEdgesShareColor = false
+      }
+
+      if !currEdge.color.isOpaque() {
+        haveAlphaColor = true
+      }
+
+      if currEdge.style != .Double {
+        haveAllDoubleEdges = false
+      }
+    }
+
+    if (sides.haveAllSolidEdges || haveAllDoubleEdges) && allEdgesShareColor {
+      // Fast path for drawing all solid edges and all unrounded double edges
+      if numEdgesVisible == 4 && (sides.outerBorder.isRounded() || haveAlphaColor)
+        && (sides.haveAllSolidEdges
+          || (!sides.outerBorder.isRounded() && !sides.innerBorder.isRounded()))
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

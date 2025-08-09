@@ -40,6 +40,11 @@ struct RoundedRect {
     fatalError("Not implemented")
   }
 
+  func contains(otherRect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var rect = LayoutRectWrapper()
   var radii = Radii()
 }

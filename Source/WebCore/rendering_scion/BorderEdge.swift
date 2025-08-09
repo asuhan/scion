@@ -46,6 +46,11 @@ struct BorderEdge {
     return (style != .None && style != .Hidden) && !isTransparent
   }
 
+  func shouldRender() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func presentButInvisible() -> Bool {
     return widthForPainting() != 0 && !hasVisibleColorAndStyle()
   }
@@ -121,4 +126,17 @@ func borderEdges(
       style: style,
       deviceScaleFactor: deviceScaleFactor)
   )
+}
+
+func edgeFlagForSide(side: BoxSide) -> BoxSideFlag {
+  switch side {
+  case .Top:
+    return .Top
+  case .Right:
+    return .Right
+  case .Bottom:
+    return .Bottom
+  case .Left:
+    return .Left
+  }
 }

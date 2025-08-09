@@ -100,3 +100,12 @@ func isFlippedWritingMode(writingMode: WritingMode) -> Bool {
 func isHorizontalWritingMode(writingMode: WritingMode) -> Bool {
   return !isVerticalWritingMode(writingMode: writingMode)
 }
+
+enum BoxSide: UInt8 {
+  case Top
+  case Right
+  case Bottom
+  case Left
+}
+
+let allBoxSides: [BoxSide] = [.Top, .Right, .Bottom, .Left]
