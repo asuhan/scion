@@ -29,12 +29,11 @@ struct BorderEdge {
     fatalError("Not implemented")
   }
 
-  func widthForPainting() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func widthForPainting() -> Float32 { return isPresent ? flooredToDevicePixelWidth : 0 }
 
+  let flooredToDevicePixelWidth: Float32 = 0
   let style: BorderStyle = .Hidden
+  let isPresent: Bool = false
 }
 
 typealias BorderEdges = RectEdges<BorderEdge>
