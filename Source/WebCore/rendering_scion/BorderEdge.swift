@@ -23,13 +23,23 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
+
 struct BorderEdge {
   init(
     edgeWidth: Float32, edgeColor: ColorWrapper, edgeStyle: BorderStyle, edgeIsTransparent: Bool,
     edgeIsPresent: Bool, devicePixelRatio: Float32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.color = edgeColor
+    self.width = LayoutUnit(value: edgeWidth)
+    self.devicePixelRatio = devicePixelRatio
+    self.style = edgeStyle
+    self.isTransparent = edgeIsTransparent
+    self.isPresent = edgeIsPresent
+    if edgeStyle == .Double && edgeWidth < borderWidthInDevicePixel(logicalPixels: 3) {
+      style = .Solid
+    }
+    flooredToDevicePixelWidth = floorf(edgeWidth * devicePixelRatio) / devicePixelRatio
   }
 
   func hasVisibleColorAndStyle() -> Bool {
@@ -42,10 +52,17 @@ struct BorderEdge {
 
   func widthForPainting() -> Float32 { return isPresent ? flooredToDevicePixelWidth : 0 }
 
-  let flooredToDevicePixelWidth: Float32 = 0
-  let style: BorderStyle = .Hidden
-  let isTransparent: Bool = false
-  let isPresent: Bool = false
+  private func borderWidthInDevicePixel(logicalPixels: Int) -> Float32 {
+    return LayoutUnit(value: Float32(logicalPixels) / devicePixelRatio).toFloat()
+  }
+
+  let color: ColorWrapper
+  let width: LayoutUnit
+  var flooredToDevicePixelWidth: Float32 = 0
+  let devicePixelRatio: Float32
+  var style: BorderStyle = .Hidden
+  let isTransparent: Bool
+  let isPresent: Bool
 }
 
 typealias BorderEdges = RectEdges<BorderEdge>
