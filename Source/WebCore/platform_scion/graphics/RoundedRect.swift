@@ -45,6 +45,11 @@ struct RoundedRect {
     fatalError("Not implemented")
   }
 
+  func pixelSnappedRoundedRectForPainting(deviceScaleFactor: Float32) -> FloatRoundedRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var rect = LayoutRectWrapper()
   var radii = Radii()
 }

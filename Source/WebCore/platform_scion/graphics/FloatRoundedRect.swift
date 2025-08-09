@@ -44,4 +44,14 @@ struct FloatRoundedRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func rect() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRounded() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -32,6 +32,7 @@ target_sources(layout_scion PRIVATE
     LayoutRect.swift
     LayoutSize.swift
     Path.swift
+    PathSegmentData.swift
     RotationDirection.swift
     RoundedRect.swift
     SurrogatePairAwareTextIterator.swift

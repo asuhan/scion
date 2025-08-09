@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2003-2023 Apple Inc. All rights reserved.
- * Copyright (C) 2006 Rob Buis <buis@kde.org>
- * Copyright (C) 2007 Eric Seidel <eric@webkit.org>
- * Copyright (C) 2007-2008 Torch Mobile, Inc.
+ * Copyright (C) 2023 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,27 +23,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class PathWrapper {
-  func moveTo(point: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func addBezierCurveTo(controlPoint1: FloatPoint, controlPoint2: FloatPoint, endPoint: FloatPoint)
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func addRect(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func addRoundedRect(
-    roundedRect: FloatRoundedRect, strategy: PathRoundedRect.Strategy = .PreferNative
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+struct PathRoundedRect {
+  enum Strategy {
+    case PreferNative
+    case PreferBezier
   }
 }

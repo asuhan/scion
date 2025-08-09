@@ -339,11 +339,36 @@ class BorderPainter {
       }
     }
 
+    let deviceScaleFactor = document().deviceScaleFactor()
     if (sides.haveAllSolidEdges || haveAllDoubleEdges) && allEdgesShareColor {
       // Fast path for drawing all solid edges and all unrounded double edges
       if numEdgesVisible == 4 && (sides.outerBorder.isRounded() || haveAlphaColor)
         && (sides.haveAllSolidEdges
           || (!sides.outerBorder.isRounded() && !sides.innerBorder.isRounded()))
+      {
+        let path = PathWrapper()
+
+        let pixelSnappedOuterBorder = sides.outerBorder.pixelSnappedRoundedRectForPainting(
+          deviceScaleFactor: deviceScaleFactor)
+        if pixelSnappedOuterBorder.isRounded()
+          && sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer
+        {
+          path.addRoundedRect(roundedRect: pixelSnappedOuterBorder)
+        } else {
+          path.addRect(rect: pixelSnappedOuterBorder.rect())
+        }
+
+        if haveAllDoubleEdges {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      // Avoid creating transparent layers
+      if sides.haveAllSolidEdges && numEdgesVisible != 4 && !sides.outerBorder.isRounded()
+        && haveAlphaColor
       {
         // TODO(asuhan): implement this
         fatalError("Not implemented")
