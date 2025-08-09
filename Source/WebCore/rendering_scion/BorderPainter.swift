@@ -371,8 +371,52 @@ class BorderPainter {
         }
 
         if haveAllDoubleEdges {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          var innerThirdRect = sides.outerBorder.rect
+          var outerThirdRect = sides.outerBorder.rect
+          for side in allBoxSides {
+            let (outerWidth, innerWidth) = sides.edges.at(side: side).getDoubleBorderStripeWidths()
+            switch side {
+            case .Top:
+              innerThirdRect.shiftYEdgeTo(edge: innerThirdRect.y() + innerWidth)
+              outerThirdRect.shiftYEdgeTo(edge: outerThirdRect.y() + outerWidth)
+            case .Right:
+              innerThirdRect.setWidth(width: innerThirdRect.width() - innerWidth)
+              outerThirdRect.setWidth(width: outerThirdRect.width() - outerWidth)
+            case .Bottom:
+              innerThirdRect.setHeight(height: innerThirdRect.height() - innerWidth)
+              outerThirdRect.setHeight(height: outerThirdRect.height() - outerWidth)
+            case .Left:
+              innerThirdRect.shiftXEdgeTo(edge: innerThirdRect.x() + innerWidth)
+              outerThirdRect.shiftXEdgeTo(edge: outerThirdRect.x() + outerWidth)
+            }
+          }
+
+          var pixelSnappedOuterThird = sides.outerBorder.pixelSnappedRoundedRectForPainting(
+            deviceScaleFactor: deviceScaleFactor)
+          pixelSnappedOuterThird.setRect(
+            rect: snapRectToDevicePixels(
+              rect: outerThirdRect, pixelSnappingFactor: deviceScaleFactor))
+
+          if pixelSnappedOuterThird.isRounded()
+            && sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer
+          {
+            path.addRoundedRect(roundedRect: pixelSnappedOuterThird)
+          } else {
+            path.addRect(rect: pixelSnappedOuterThird.rect())
+          }
+
+          var pixelSnappedInnerThird = sides.innerBorder.pixelSnappedRoundedRectForPainting(
+            deviceScaleFactor: deviceScaleFactor)
+          pixelSnappedInnerThird.setRect(
+            rect: snapRectToDevicePixels(
+              rect: innerThirdRect, pixelSnappingFactor: deviceScaleFactor))
+          if pixelSnappedInnerThird.isRounded()
+            && sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer
+          {
+            path.addRoundedRect(roundedRect: pixelSnappedInnerThird)
+          } else {
+            path.addRect(rect: pixelSnappedInnerThird.rect())
+          }
         }
 
         let pixelSnappedInnerBorder = sides.innerBorder.pixelSnappedRoundedRectForPainting(
