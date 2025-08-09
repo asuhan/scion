@@ -24,6 +24,14 @@
  */
 
 struct BorderEdge {
+  init(
+    edgeWidth: Float32, edgeColor: ColorWrapper, edgeStyle: BorderStyle, edgeIsTransparent: Bool,
+    edgeIsPresent: Bool, devicePixelRatio: Float32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasVisibleColorAndStyle() -> Bool {
     return (style != .None && style != .Hidden) && !isTransparent
   }
@@ -42,10 +50,58 @@ struct BorderEdge {
 
 typealias BorderEdges = RectEdges<BorderEdge>
 
+private func constructBorderEdge(
+  width: Float32, borderColorProperty: CSSPropertyID, borderStyle: BorderStyle, isTransparent: Bool,
+  isPresent: Bool, setColorsToBlack: Bool, style: RenderStyleWrapper, deviceScaleFactor: Float32
+) -> BorderEdge {
+  let color =
+    setColorsToBlack
+    ? ColorWrapper.black
+    : style.visitedDependentColorWithColorFilter(colorProperty: borderColorProperty)
+  return BorderEdge(
+    edgeWidth: width, edgeColor: color, edgeStyle: borderStyle,
+    edgeIsTransparent: !setColorsToBlack && isTransparent, edgeIsPresent: isPresent,
+    devicePixelRatio: deviceScaleFactor)
+}
+
 func borderEdges(
   style: RenderStyleWrapper, deviceScaleFactor: Float32, setColorsToBlack: Bool = false,
   includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
 ) -> BorderEdges {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let horizontal = style.isHorizontalWritingMode()
+  return BorderEdges(
+    top: constructBorderEdge(
+      width: style.borderTopWidth(), borderColorProperty: .CSSPropertyBorderTopColor,
+      borderStyle: style.borderTopStyle(),
+      isTransparent: style.borderTopIsTransparent(),
+      isPresent: horizontal || includeLogicalLeftEdge,
+      setColorsToBlack: setColorsToBlack,
+      style: style,
+      deviceScaleFactor: deviceScaleFactor
+    ),
+    right: constructBorderEdge(
+      width: style.borderRightWidth(), borderColorProperty: .CSSPropertyBorderRightColor,
+      borderStyle: style.borderRightStyle(),
+      isTransparent: style.borderRightIsTransparent(),
+      isPresent: !horizontal || includeLogicalRightEdge,
+      setColorsToBlack: setColorsToBlack,
+      style: style,
+      deviceScaleFactor: deviceScaleFactor),
+    bottom: constructBorderEdge(
+      width: style.borderBottomWidth(), borderColorProperty: .CSSPropertyBorderBottomColor,
+      borderStyle: style.borderBottomStyle(),
+      isTransparent: style.borderBottomIsTransparent(),
+      isPresent: horizontal || includeLogicalRightEdge,
+      setColorsToBlack: setColorsToBlack,
+      style: style,
+      deviceScaleFactor: deviceScaleFactor),
+    left: constructBorderEdge(
+      width: style.borderLeftWidth(), borderColorProperty: .CSSPropertyBorderLeftColor,
+      borderStyle: style.borderLeftStyle(),
+      isTransparent: style.borderLeftIsTransparent(),
+      isPresent: !horizontal || includeLogicalLeftEdge,
+      setColorsToBlack: setColorsToBlack,
+      style: style,
+      deviceScaleFactor: deviceScaleFactor)
+  )
 }

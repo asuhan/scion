@@ -31,6 +31,10 @@ enum CSSPropertyID {
   case CSSPropertyBackgroundColor
   case CSSPropertyTextDecorationColor
   case CSSPropertyWebkitTextFillColor
+  case CSSPropertyBorderBottomColor
+  case CSSPropertyBorderLeftColor
+  case CSSPropertyBorderRightColor
+  case CSSPropertyBorderTopColor
 }
 
 class RenderStyleWrapper {
@@ -442,12 +446,32 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_borderLeftWidth(p)
   }
 
+  func borderLeftStyle() -> BorderStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderLeftIsTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderRightWidth() -> Float32 {
     if p == nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_borderRightWidth(p)
+  }
+
+  func borderRightStyle() -> BorderStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderRightIsTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func borderTopWidth() -> Float32 {
@@ -458,12 +482,32 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_borderTopWidth(p)
   }
 
+  func borderTopStyle() -> BorderStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderTopIsTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderBottomWidth() -> Float32 {
     if p == nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_borderBottomWidth(p)
+  }
+
+  func borderBottomStyle() -> BorderStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderBottomIsTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func outlineSize() -> Float32 {
