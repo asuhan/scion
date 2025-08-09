@@ -41,6 +41,13 @@ private func decorationHasAllSimpleEdges(edges: RectEdges<BorderEdge>) -> Bool {
     && edgeIsSimple(edge: edges.bottom) && edgeIsSimple(edge: edges.left)
 }
 
+private func calculateSideRect(outerBorder: RoundedRect, edges: BorderEdges, side: BoxSide)
+  -> LayoutRectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func shrinkRectByOneDevicePixel(
   context: GraphicsContextWrapper, rect: LayoutRectWrapper, devicePixelRatio: Float32
 ) -> LayoutRectWrapper {
@@ -380,8 +387,20 @@ class BorderPainter {
       if sides.haveAllSolidEdges && numEdgesVisible != 4 && !sides.outerBorder.isRounded()
         && haveAlphaColor
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let path = PathWrapper()
+
+        for side in allBoxSides {
+          if sides.edges.at(side: side).shouldRender() {
+            let sideRect = calculateSideRect(
+              outerBorder: sides.outerBorder, edges: sides.edges, side: side)
+            path.addRect(rect: sideRect.FloatRect())  // FIXME: Need pixel snapping here.
+          }
+        }
+
+        graphicsContext.setFillRule(fillRule: .NonZero)
+        graphicsContext.setFillColor(color: sides.edges.at(side: firstVisibleSide!).color)
+        graphicsContext.fillPath(path: path)
+        return
       }
     }
 
