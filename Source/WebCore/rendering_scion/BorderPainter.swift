@@ -280,6 +280,11 @@ class BorderPainter {
     return true
   }
 
+  static func shouldAntialiasLines(context: GraphicsContextWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct Sides {
     let outerBorder: RoundedRect
     let innerBorder: RoundedRect
@@ -404,6 +409,56 @@ class BorderPainter {
       }
     }
 
+    let clipToOuterBorder = sides.outerBorder.isRounded()
+    let _ = GraphicsContextStateSaver(
+      context: graphicsContext, saveAndRestore: clipToOuterBorder && !sides.appliedClipAlready)
+    if clipToOuterBorder {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // If only one edge visible antialiasing doesn't create seams
+    let antialias =
+      BorderPainter.shouldAntialiasLines(context: graphicsContext) || numEdgesVisible == 1
+    let innerBorderAdjustment = IntPoint(
+      x: (sides.innerBorder.rect.x() - sides.unadjustedInnerBorder.rect.x()).toInt(),
+      y: (sides.innerBorder.rect.y() - sides.unadjustedInnerBorder.rect.y()).toInt())
+    if haveAlphaColor {
+      paintTranslucentBorderSides(
+        outerBorder: sides.outerBorder, innerBorder: sides.unadjustedInnerBorder,
+        innerBorderAdjustment: innerBorderAdjustment, edges: sides.edges,
+        edgesToDraw: edgesToDraw, radii: sides.radii, bleedAvoidance: sides.bleedAvoidance,
+        includeLogicalLeftEdge: sides.includeLogicalLeftEdge,
+        includeLogicalRightEdge: sides.includeLogicalRightEdge, antialias: antialias,
+        isHorizontal: sides.isHorizontal)
+    } else {
+      paintBorderSides(
+        outerBorder: sides.outerBorder, innerBorder: sides.unadjustedInnerBorder,
+        innerBorderAdjustment: innerBorderAdjustment, edges: sides.edges,
+        edgeSet: edgesToDraw, radii: sides.radii, bleedAvoidance: sides.bleedAvoidance,
+        includeLogicalLeftEdge: sides.includeLogicalLeftEdge,
+        includeLogicalRightEdge: sides.includeLogicalRightEdge, antialias: antialias,
+        isHorizontal: sides.isHorizontal)
+    }
+  }
+
+  private func paintTranslucentBorderSides(
+    outerBorder: RoundedRect, innerBorder: RoundedRect, innerBorderAdjustment: IntPoint,
+    edges: BorderEdges, edgesToDraw: BoxSideSet, radii: BorderData.Radii?,
+    bleedAvoidance: BackgroundBleedAvoidance, includeLogicalLeftEdge: Bool,
+    includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBorderSides(
+    outerBorder: RoundedRect, innerBorder: RoundedRect, innerBorderAdjustment: IntPoint,
+    edges: BorderEdges, edgeSet: BoxSideSet, radii: BorderData.Radii?,
+    bleedAvoidance: BackgroundBleedAvoidance, includeLogicalLeftEdge: Bool,
+    includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool,
+    overrideColor: ColorWrapper? = nil
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
