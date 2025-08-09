@@ -24,15 +24,19 @@
  */
 
 struct BorderEdge {
+  func hasVisibleColorAndStyle() -> Bool {
+    return (style != .None && style != .Hidden) && !isTransparent
+  }
+
   func presentButInvisible() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return widthForPainting() != 0 && !hasVisibleColorAndStyle()
   }
 
   func widthForPainting() -> Float32 { return isPresent ? flooredToDevicePixelWidth : 0 }
 
   let flooredToDevicePixelWidth: Float32 = 0
   let style: BorderStyle = .Hidden
+  let isTransparent: Bool = false
   let isPresent: Bool = false
 }
 
