@@ -49,6 +49,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setFillRule(fillRule: WindRule) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func strokeColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -132,6 +137,11 @@ class GraphicsContextWrapper {
   func adjustLineToPixelBoundaries(
     p1: FloatPoint, p2: FloatPoint, strokeWidth: Float32, penStyle: StrokeStyle
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillPath(path: PathWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

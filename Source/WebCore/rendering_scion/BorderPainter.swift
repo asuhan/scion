@@ -363,8 +363,18 @@ class BorderPainter {
           fatalError("Not implemented")
         }
 
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let pixelSnappedInnerBorder = sides.innerBorder.pixelSnappedRoundedRectForPainting(
+          deviceScaleFactor: deviceScaleFactor)
+        if pixelSnappedInnerBorder.isRounded() {
+          path.addRoundedRect(roundedRect: pixelSnappedInnerBorder)
+        } else {
+          path.addRect(rect: pixelSnappedInnerBorder.rect())
+        }
+
+        graphicsContext.setFillRule(fillRule: .EvenOdd)
+        graphicsContext.setFillColor(color: sides.edges.at(side: firstVisibleSide!).color)
+        graphicsContext.fillPath(path: path)
+        return
       }
       // Avoid creating transparent layers
       if sides.haveAllSolidEdges && numEdgesVisible != 4 && !sides.outerBorder.isRounded()
@@ -373,8 +383,6 @@ class BorderPainter {
         // TODO(asuhan): implement this
         fatalError("Not implemented")
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
     }
 
     // TODO(asuhan): implement this
