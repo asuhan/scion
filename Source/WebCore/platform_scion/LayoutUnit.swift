@@ -299,6 +299,11 @@ struct LayoutUnit: Comparable {
   private var value: Int32
 }
 
+func floorToDevicePixel(value: LayoutUnit, pixelSnappingFactor: Float32) -> Float32 {
+  return floorf((Float32(value.rawValue()) * pixelSnappingFactor) / Float32(kFixedPointDenominator))
+    / pixelSnappingFactor
+}
+
 func ceilToDevicePixel(value: LayoutUnit, pixelSnappingFactor: Float32) -> Float32 {
   return ceilf((Float32(value.rawValue()) * pixelSnappingFactor) / Float32(kFixedPointDenominator))
     / pixelSnappingFactor

@@ -58,8 +58,11 @@ struct BorderEdge {
   func widthForPainting() -> Float32 { return isPresent ? flooredToDevicePixelWidth : 0 }
 
   func getDoubleBorderStripeWidths() -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fullWidth = LayoutUnit(value: widthForPainting())
+    let innerWidth = ceilToDevicePixel(
+      value: fullWidth * 2 / 3, pixelSnappingFactor: devicePixelRatio)
+    let outerWidth = floorToDevicePixel(value: fullWidth / 3, pixelSnappingFactor: devicePixelRatio)
+    return (LayoutUnit(value: outerWidth), LayoutUnit(value: innerWidth))
   }
 
   private func borderWidthInDevicePixel(logicalPixels: Int) -> Float32 {
