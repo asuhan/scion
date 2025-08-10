@@ -33,8 +33,12 @@ private func borderStyleFillsBorderArea(style: BorderStyle) -> Bool {
 }
 
 private func borderStyleHasInnerDetail(style: BorderStyle) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch style {
+  case .None, .Hidden, .Inset, .Outset, .Solid, .Dotted, .Dashed:
+    return false
+  case .Groove, .Ridge, .Double:
+    return true
+  }
 }
 
 private func edgeIsSimple(edge: BorderEdge) -> Bool {
