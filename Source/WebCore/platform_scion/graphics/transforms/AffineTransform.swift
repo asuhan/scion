@@ -42,6 +42,11 @@ class AffineTransform {
     fatalError("Not implemented")
   }
 
+  func isIdentityOrTranslationOrFlipped() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
   private let transform: [Float64]
 }

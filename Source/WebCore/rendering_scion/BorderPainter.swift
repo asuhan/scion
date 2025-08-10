@@ -294,8 +294,9 @@ class BorderPainter {
   }
 
   static func shouldAntialiasLines(context: GraphicsContextWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: We may want to not antialias when scaled by an integral value,
+    // and we may want to antialias when translated by a non-integral value.
+    return !context.getCTM().isIdentityOrTranslationOrFlipped()
   }
 
   struct Sides {
