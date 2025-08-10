@@ -349,7 +349,7 @@ class BorderPainter {
       let currEdge = sides.edges.at(side: boxSide)
 
       if currEdge.shouldRender() {
-        edgesToDraw = edgesToDraw.union(edgeFlagForSide(side: boxSide))
+        edgesToDraw.update(with: edgeFlagForSide(side: boxSide))
       }
 
       if currEdge.presentButInvisible() {
