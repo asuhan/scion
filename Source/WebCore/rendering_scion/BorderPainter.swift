@@ -457,8 +457,15 @@ class BorderPainter {
     let _ = GraphicsContextStateSaver(
       context: graphicsContext, saveAndRestore: clipToOuterBorder && !sides.appliedClipAlready)
     if clipToOuterBorder {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Clip to the inner and outer radii rects.
+      if sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer {
+        graphicsContext.clipRoundedRect(
+          rect: sides.outerBorder.pixelSnappedRoundedRectForPainting(
+            deviceScaleFactor: deviceScaleFactor))
+      }
+      graphicsContext.clipOutRoundedRect(
+        rect: sides.innerBorder.pixelSnappedRoundedRectForPainting(
+          deviceScaleFactor: deviceScaleFactor))
     }
 
     // If only one edge visible antialiasing doesn't create seams
