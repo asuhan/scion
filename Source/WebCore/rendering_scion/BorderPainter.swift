@@ -528,8 +528,53 @@ class BorderPainter {
     bleedAvoidance: BackgroundBleedAvoidance, includeLogicalLeftEdge: Bool,
     includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var edgesToDraw = edgesToDraw
+    while !edgesToDraw.isEmpty {
+      // Find undrawn edges sharing a color.
+      var commonColor = ColorWrapper()
+
+      var commonColorEdgeSet = BoxSideSet()
+      for side in BorderPainter.paintOrderSides {
+        if !edgesToDraw.contains(edgeFlagForSide(side: side)) {
+          continue
+        }
+
+        let edge = edges.at(side: side)
+        var includeEdge = false
+        if commonColorEdgeSet.isEmpty {
+          commonColor = edge.color
+          includeEdge = true
+        } else {
+          includeEdge = equalIgnoringSemanticColor(a: edge.color, b: commonColor)
+        }
+
+        if includeEdge {
+          commonColorEdgeSet.update(with: edgeFlagForSide(side: side))
+        }
+      }
+
+      let useTransparencyLayer =
+        includesAdjacentEdges(flags: commonColorEdgeSet) && !commonColor.isOpaque()
+      if useTransparencyLayer {
+        paintInfo.context().beginTransparencyLayer(opacity: commonColor.alphaAsFloat())
+        commonColor = commonColor.opaqueColor()
+      }
+
+      paintBorderSides(
+        outerBorder: outerBorder, innerBorder: innerBorder,
+        innerBorderAdjustment: innerBorderAdjustment, edges: edges, edgeSet: commonColorEdgeSet,
+        radii: radii,
+        bleedAvoidance: bleedAvoidance, includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge, antialias: antialias,
+        isHorizontal: isHorizontal,
+        overrideColor: commonColor)
+
+      if useTransparencyLayer {
+        paintInfo.context().endTransparencyLayer()
+      }
+
+      edgesToDraw.subtract(commonColorEdgeSet)
+    }
   }
 
   private func paintBorderSides(
@@ -664,4 +709,8 @@ class BorderPainter {
 
   private let renderer: RenderElementWrapper
   private let paintInfo: PaintInfoWrapper
+
+  // willBeOverdrawn assumes that we draw in order: top, bottom, left, right.
+  // This is different from BoxSide enum order.
+  private static let paintOrderSides: [BoxSide] = [.Top, .Bottom, .Left, .Right]
 }
