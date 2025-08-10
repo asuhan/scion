@@ -96,8 +96,7 @@ private func decorationHasAllSolidEdges(edges: RectEdges<BorderEdge>) -> Bool {
 private func borderWillArcInnerEdge(firstRadius: LayoutSizeWrapper, secondRadius: LayoutSizeWrapper)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return !firstRadius.isEmpty() || !secondRadius.isEmpty()
 }
 
 class BorderPainter {
