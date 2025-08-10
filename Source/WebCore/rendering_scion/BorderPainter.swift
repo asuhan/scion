@@ -44,8 +44,21 @@ private func decorationHasAllSimpleEdges(edges: RectEdges<BorderEdge>) -> Bool {
 private func calculateSideRect(outerBorder: RoundedRect, edges: BorderEdges, side: BoxSide)
   -> LayoutRectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var sideRect = outerBorder.rect
+  let width = edges.at(side: side).widthForPainting()
+
+  switch side {
+  case .Top:
+    sideRect.setHeight(height: width)
+  case .Right:
+    sideRect.shiftXEdgeTo(edge: sideRect.maxX() - width)
+  case .Bottom:
+    sideRect.shiftYEdgeTo(edge: sideRect.maxY() - width)
+  case .Left:
+    sideRect.setWidth(width: width)
+  }
+
+  return sideRect
 }
 
 func shrinkRectByOneDevicePixel(

@@ -52,7 +52,11 @@ class LayoutSizeWrapper {
 
   func setWidth(width: LayoutUnit) { width_ = width }
 
+  func setWidth(width: Float32) { width_ = LayoutUnit(value: width) }
+
   func setHeight(height: LayoutUnit) { height_ = height }
+
+  func setHeight(height: Float32) { height_ = LayoutUnit(value: height) }
 
   func isEmpty() -> Bool { return width_.rawValue() <= 0 || height_.rawValue() <= 0 }
 

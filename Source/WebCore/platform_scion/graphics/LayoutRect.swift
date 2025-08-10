@@ -80,7 +80,11 @@ struct LayoutRectWrapper {
 
   func setWidth(width: LayoutUnit) { m_size.setWidth(width: width) }
 
+  func setWidth(width: Float32) { m_size.setWidth(width: width) }
+
   func setHeight(height: LayoutUnit) { m_size.setHeight(height: height) }
+
+  func setHeight(height: Float32) { m_size.setHeight(height: height) }
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
@@ -99,7 +103,7 @@ struct LayoutRectWrapper {
     m_size.expand(width: box.left + box.right, height: box.top + box.bottom)
   }
 
-  mutating func shiftXEdgeTo(edge: LayoutUnit) {
+  mutating func shiftXEdgeTo<T>(edge: T) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -109,7 +113,7 @@ struct LayoutRectWrapper {
     fatalError("Not implemented")
   }
 
-  mutating func shiftYEdgeTo(edge: LayoutUnit) {
+  mutating func shiftYEdgeTo<T>(edge: T) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
