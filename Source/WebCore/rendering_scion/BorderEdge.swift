@@ -47,8 +47,7 @@ struct BorderEdge {
   }
 
   func shouldRender() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isPresent && widthForPainting() != 0 && hasVisibleColorAndStyle()
   }
 
   func presentButInvisible() -> Bool {
