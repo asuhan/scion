@@ -147,3 +147,9 @@ func edgeFlagForSide(side: BoxSide) -> BoxSideFlag {
     return .Left
   }
 }
+
+func includesAdjacentEdges(flags: BoxSideFlag) -> Bool {
+  // The set includes adjacent edges if and only if it contains at least one horizontal and one vertical edge.
+  return (flags.contains(.Top) || flags.contains(.Bottom))
+    && (flags.contains(.Left) || flags.contains(.Right))
+}
