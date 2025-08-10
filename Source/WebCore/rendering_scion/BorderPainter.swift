@@ -32,6 +32,11 @@ private func borderStyleFillsBorderArea(style: BorderStyle) -> Bool {
   }
 }
 
+private func borderStyleHasInnerDetail(style: BorderStyle) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func edgeIsSimple(edge: BorderEdge) -> Bool {
   return edge.widthForPainting() == 0 || borderStyleFillsBorderArea(style: edge.style)
 }
@@ -82,6 +87,13 @@ private func edgeIsSolid(edge: BorderEdge) -> Bool {
 private func decorationHasAllSolidEdges(edges: RectEdges<BorderEdge>) -> Bool {
   return edgeIsSolid(edge: edges.top) && edgeIsSolid(edge: edges.right)
     && edgeIsSolid(edge: edges.bottom) && edgeIsSolid(edge: edges.left)
+}
+
+private func borderWillArcInnerEdge(firstRadius: LayoutSizeWrapper, secondRadius: LayoutSizeWrapper)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 class BorderPainter {
@@ -536,13 +548,99 @@ class BorderPainter {
     // is only to be used for solid borders and the shape of the border painted by drawBoxSideFromPath
     // only depends on sideRect when painting solid borders.
 
-    paintOneSide(side: .Top, adjacentSide1: .Left, adjacentSide2: .Right)
-    paintOneSide(side: .Bottom, adjacentSide1: .Left, adjacentSide2: .Right)
-    paintOneSide(side: .Left, adjacentSide1: .Top, adjacentSide2: .Bottom)
-    paintOneSide(side: .Right, adjacentSide1: .Top, adjacentSide2: .Bottom)
+    paintOneSide(
+      side: .Top, adjacentSide1: .Left, adjacentSide2: .Right, outerBorder: outerBorder,
+      innerBorder: innerBorder, innerBorderAdjustment: innerBorderAdjustment, edges: edges,
+      edgeSet: edgeSet, radii: radii, bleedAvoidance: bleedAvoidance,
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge, antialias: antialias,
+      isHorizontal: isHorizontal, overrideColor: overrideColor, renderRadii: renderRadii,
+      roundedPath: roundedPath)
+    paintOneSide(
+      side: .Bottom, adjacentSide1: .Left, adjacentSide2: .Right, outerBorder: outerBorder,
+      innerBorder: innerBorder, innerBorderAdjustment: innerBorderAdjustment, edges: edges,
+      edgeSet: edgeSet, radii: radii, bleedAvoidance: bleedAvoidance,
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge, antialias: antialias,
+      isHorizontal: isHorizontal, overrideColor: overrideColor, renderRadii: renderRadii,
+      roundedPath: roundedPath)
+    paintOneSide(
+      side: .Left, adjacentSide1: .Top, adjacentSide2: .Bottom, outerBorder: outerBorder,
+      innerBorder: innerBorder, innerBorderAdjustment: innerBorderAdjustment, edges: edges,
+      edgeSet: edgeSet, radii: radii, bleedAvoidance: bleedAvoidance,
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge, antialias: antialias,
+      isHorizontal: isHorizontal, overrideColor: overrideColor, renderRadii: renderRadii,
+      roundedPath: roundedPath)
+    paintOneSide(
+      side: .Right, adjacentSide1: .Top, adjacentSide2: .Bottom, outerBorder: outerBorder,
+      innerBorder: innerBorder, innerBorderAdjustment: innerBorderAdjustment, edges: edges,
+      edgeSet: edgeSet, radii: radii, bleedAvoidance: bleedAvoidance,
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge, antialias: antialias,
+      isHorizontal: isHorizontal, overrideColor: overrideColor, renderRadii: renderRadii,
+      roundedPath: roundedPath)
   }
 
-  private func paintOneSide(side: BoxSide, adjacentSide1: BoxSide, adjacentSide2: BoxSide) {
+  private func paintOneSide(
+    side: BoxSide, adjacentSide1: BoxSide, adjacentSide2: BoxSide, outerBorder: RoundedRect,
+    innerBorder: RoundedRect, innerBorderAdjustment: IntPoint, edges: BorderEdges,
+    edgeSet: BoxSideSet, radii: BorderData.Radii?,
+    bleedAvoidance: BackgroundBleedAvoidance, includeLogicalLeftEdge: Bool,
+    includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool,
+    overrideColor: ColorWrapper?, renderRadii: Bool, roundedPath: PathWrapper
+  ) {
+    let edge = edges.at(side: side)
+    if !edge.shouldRender() || !edgeSet.contains(edgeFlagForSide(side: side)) {
+      return
+    }
+
+    var sideRect = outerBorder.rect
+    var firstRadius = LayoutSizeWrapper()
+    var secondRadius = LayoutSizeWrapper()
+
+    switch side {
+    case .Top:
+      sideRect.setHeight(height: edge.widthForPainting() + Float32(innerBorderAdjustment.y))
+      firstRadius = innerBorder.radii.topLeft
+      secondRadius = innerBorder.radii.topRight
+    case .Right:
+      sideRect.shiftXEdgeTo(
+        edge: sideRect.maxX() - edge.widthForPainting() - Float32(innerBorderAdjustment.x))
+      firstRadius = innerBorder.radii.bottomRight
+      secondRadius = innerBorder.radii.topRight
+    case .Bottom:
+      sideRect.shiftYEdgeTo(
+        edge: sideRect.maxY() - edge.widthForPainting() - Float32(innerBorderAdjustment.y))
+      firstRadius = innerBorder.radii.bottomLeft
+      secondRadius = innerBorder.radii.bottomRight
+    case .Left:
+      sideRect.setWidth(width: edge.widthForPainting() + Float32(innerBorderAdjustment.x))
+      firstRadius = innerBorder.radii.bottomLeft
+      secondRadius = innerBorder.radii.topLeft
+    }
+
+    let usePath =
+      renderRadii
+      && (borderStyleHasInnerDetail(style: edge.style)
+        || borderWillArcInnerEdge(firstRadius: firstRadius, secondRadius: secondRadius))
+    paintOneBorderSide(
+      outerBorder: outerBorder, innerBorder: innerBorder, sideRect: sideRect, side: side,
+      adjacentSide1: adjacentSide1, adjacentSide2: adjacentSide2, edges: edges, radii: radii,
+      path: usePath ? roundedPath : nil, bleedAvoidance: bleedAvoidance,
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge, antialias: antialias,
+      isHorizontal: isHorizontal, overrideColor: overrideColor)
+  }
+
+  private func paintOneBorderSide(
+    outerBorder: RoundedRect, innerBorder: RoundedRect,
+    sideRect: LayoutRectWrapper, side: BoxSide,
+    adjacentSide1: BoxSide, adjacentSide2: BoxSide,
+    edges: BorderEdges, radii: BorderData.Radii?, path: PathWrapper?,
+    bleedAvoidance: BackgroundBleedAvoidance, includeLogicalLeftEdge: Bool,
+    includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool, overrideColor: ColorWrapper?
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
