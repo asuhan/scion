@@ -524,6 +524,25 @@ class BorderPainter {
     includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool,
     overrideColor: ColorWrapper? = nil
   ) {
+    let renderRadii = outerBorder.isRounded()
+
+    let roundedPath = PathWrapper()
+    if renderRadii {
+      roundedPath.addRoundedRect(rect: outerBorder)
+    }
+
+    // The inner border adjustment for bleed avoidance mode BackgroundBleedBackgroundOverBorder
+    // is only applied to sideRect, which is okay since BackgroundBleedBackgroundOverBorder
+    // is only to be used for solid borders and the shape of the border painted by drawBoxSideFromPath
+    // only depends on sideRect when painting solid borders.
+
+    paintOneSide(side: .Top, adjacentSide1: .Left, adjacentSide2: .Right)
+    paintOneSide(side: .Bottom, adjacentSide1: .Left, adjacentSide2: .Right)
+    paintOneSide(side: .Left, adjacentSide1: .Top, adjacentSide2: .Bottom)
+    paintOneSide(side: .Right, adjacentSide1: .Top, adjacentSide2: .Bottom)
+  }
+
+  private func paintOneSide(side: BoxSide, adjacentSide1: BoxSide, adjacentSide2: BoxSide) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

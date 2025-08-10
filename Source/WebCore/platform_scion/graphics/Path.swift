@@ -49,4 +49,9 @@ class PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func addRoundedRect(rect: RoundedRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
