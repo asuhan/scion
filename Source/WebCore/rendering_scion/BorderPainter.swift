@@ -33,8 +33,13 @@ private func borderStyleFillsBorderArea(style: BorderStyle) -> Bool {
 }
 
 private func styleRequiresClipPolygon(style: BorderStyle) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch style {
+  case .None, .Hidden, .Inset, .Groove, .Outset, .Ridge, .Solid, .Double:
+    return false
+  case .Dotted, .Dashed:
+    // These are drawn with a stroke, so we have to clip to get corner miters.
+    return true
+  }
 }
 
 private func borderStyleHasInnerDetail(style: BorderStyle) -> Bool {
