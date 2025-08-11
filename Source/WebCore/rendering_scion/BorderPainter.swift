@@ -32,6 +32,11 @@ private func borderStyleFillsBorderArea(style: BorderStyle) -> Bool {
   }
 }
 
+private func styleRequiresClipPolygon(style: BorderStyle) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func borderStyleHasInnerDetail(style: BorderStyle) -> Bool {
   switch style {
   case .None, .Hidden, .Inset, .Outset, .Solid, .Dotted, .Dashed:
@@ -100,6 +105,13 @@ private func borderWillArcInnerEdge(firstRadius: LayoutSizeWrapper, secondRadius
 }
 
 private func colorsMatchAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func colorNeedsAntiAliasAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges)
+  -> Bool
+{
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
@@ -706,9 +718,9 @@ class BorderPainter {
     let adjacentEdge1 = edges.at(side: adjacentSide1)
     let adjacentEdge2 = edges.at(side: adjacentSide2)
 
-    let /*mitreAdjacentSide1*/ _ = joinRequiresMitre(
+    let mitreAdjacentSide1 = joinRequiresMitre(
       side: side, adjacentSide: adjacentSide1, edges: edges, allowOverdraw: !antialias)
-    let /*mitreAdjacentSide2*/ _ = joinRequiresMitre(
+    let mitreAdjacentSide2 = joinRequiresMitre(
       side: side, adjacentSide: adjacentSide2, edges: edges, allowOverdraw: !antialias)
 
     let adjacentSide1StylesMatch = colorsMatchAtCorner(
@@ -737,6 +749,22 @@ class BorderPainter {
         includeLogicalLeftEdge: includeLogicalLeftEdge,
         includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
     } else {
+      let clipForStyle =
+        styleRequiresClipPolygon(style: edgeToRender.style)
+        && (mitreAdjacentSide1 || mitreAdjacentSide2)
+      let clipAdjacentSide1 =
+        colorNeedsAntiAliasAtCorner(side: side, adjacentSide: adjacentSide1, edges: edges)
+        && mitreAdjacentSide1
+      let clipAdjacentSide2 =
+        colorNeedsAntiAliasAtCorner(side: side, adjacentSide: adjacentSide2, edges: edges)
+        && mitreAdjacentSide2
+      let shouldClip = clipForStyle || clipAdjacentSide1 || clipAdjacentSide2
+
+      let _ = GraphicsContextStateSaver(context: graphicsContext, saveAndRestore: shouldClip)
+      if shouldClip {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
