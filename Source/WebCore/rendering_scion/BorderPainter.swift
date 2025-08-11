@@ -99,6 +99,18 @@ private func borderWillArcInnerEdge(firstRadius: LayoutSizeWrapper, secondRadius
   return !firstRadius.isEmpty() || !secondRadius.isEmpty()
 }
 
+private func colorsMatchAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func joinRequiresMitre(
+  side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges, allowOverdraw: Bool
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class BorderPainter {
   init(renderer: RenderElementWrapper, paintInfo: PaintInfoWrapper) {
     self.renderer = renderer
@@ -688,6 +700,61 @@ class BorderPainter {
     edges: BorderEdges, radii: BorderData.Radii?, path: PathWrapper?,
     bleedAvoidance: BackgroundBleedAvoidance, includeLogicalLeftEdge: Bool,
     includeLogicalRightEdge: Bool, antialias: Bool, isHorizontal: Bool, overrideColor: ColorWrapper?
+  ) {
+    let edgeToRender = edges.at(side: side)
+    assert(edgeToRender.widthForPainting() != 0)
+    let adjacentEdge1 = edges.at(side: adjacentSide1)
+    let adjacentEdge2 = edges.at(side: adjacentSide2)
+
+    let /*mitreAdjacentSide1*/ _ = joinRequiresMitre(
+      side: side, adjacentSide: adjacentSide1, edges: edges, allowOverdraw: !antialias)
+    let /*mitreAdjacentSide2*/ _ = joinRequiresMitre(
+      side: side, adjacentSide: adjacentSide2, edges: edges, allowOverdraw: !antialias)
+
+    let adjacentSide1StylesMatch = colorsMatchAtCorner(
+      side: side, adjacentSide: adjacentSide1, edges: edges)
+    let adjacentSide2StylesMatch = colorsMatchAtCorner(
+      side: side, adjacentSide: adjacentSide2, edges: edges)
+
+    let colorToPaint = overrideColor != nil ? overrideColor! : edgeToRender.color
+
+    let graphicsContext = paintInfo.context()
+
+    if let path = path {
+      let _ = GraphicsContextStateSaver(context: graphicsContext)
+
+      clipBorderSidePolygon(
+        outerBorder: outerBorder, innerBorder: innerBorder, side: side,
+        firstEdgeMatches: adjacentSide1StylesMatch, secondEdgeMatches: adjacentSide2StylesMatch)
+
+      let thickness = max(
+        edgeToRender.widthForPainting(), adjacentEdge1.widthForPainting(),
+        adjacentEdge2.widthForPainting())
+      drawBoxSideFromPath(
+        borderRect: outerBorder.rect, borderPath: path, edges: edges, radii: radii,
+        thickness: edgeToRender.widthForPainting(), drawThickness: thickness, side: side,
+        color: colorToPaint, borderStyle: edgeToRender.style, bleedAvoidance: bleedAvoidance,
+        includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private func drawBoxSideFromPath(
+    borderRect: LayoutRectWrapper, borderPath: PathWrapper, edges: BorderEdges,
+    radii: BorderData.Radii?, thickness: Float32, drawThickness: Float32, side: BoxSide,
+    color: ColorWrapper, borderStyle: BorderStyle, bleedAvoidance: BackgroundBleedAvoidance,
+    includeLogicalLeftEdge: Bool, includeLogicalRightEdge: Bool, isHorizontal: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clipBorderSidePolygon(
+    outerBorder: RoundedRect, innerBorder: RoundedRect, side: BoxSide, firstEdgeMatches: Bool,
+    secondEdgeMatches: Bool
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
