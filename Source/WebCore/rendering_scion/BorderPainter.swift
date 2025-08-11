@@ -277,6 +277,15 @@ class BorderPainter {
     return true
   }
 
+  static func drawLineForBoxSide(
+    graphicsContext: GraphicsContextWrapper, document: Document, rect: FloatRectWrapper,
+    side: BoxSide, color: ColorWrapper, borderStyle: BorderStyle, adjacentWidth1: Float32,
+    adjacentWidth2: Float32, antialias: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func pathForBorderArea(
     rect: LayoutRectWrapper, style: RenderStyleWrapper, deviceScaleFactor: Float32,
     includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
@@ -718,9 +727,9 @@ class BorderPainter {
     let adjacentEdge1 = edges.at(side: adjacentSide1)
     let adjacentEdge2 = edges.at(side: adjacentSide2)
 
-    let mitreAdjacentSide1 = joinRequiresMitre(
+    var mitreAdjacentSide1 = joinRequiresMitre(
       side: side, adjacentSide: adjacentSide1, edges: edges, allowOverdraw: !antialias)
-    let mitreAdjacentSide2 = joinRequiresMitre(
+    var mitreAdjacentSide2 = joinRequiresMitre(
       side: side, adjacentSide: adjacentSide2, edges: edges, allowOverdraw: !antialias)
 
     let adjacentSide1StylesMatch = colorsMatchAtCorner(
@@ -762,11 +771,22 @@ class BorderPainter {
 
       let _ = GraphicsContextStateSaver(context: graphicsContext, saveAndRestore: shouldClip)
       if shouldClip {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let aliasAdjacentSide1 = clipAdjacentSide1 || (clipForStyle && mitreAdjacentSide1)
+        let aliasAdjacentSide2 = clipAdjacentSide2 || (clipForStyle && mitreAdjacentSide2)
+        clipBorderSidePolygon(
+          outerBorder: outerBorder, innerBorder: innerBorder, side: side,
+          firstEdgeMatches: !aliasAdjacentSide1, secondEdgeMatches: !aliasAdjacentSide2)
+        // Since we clipped, no need to draw with a mitre.
+        mitreAdjacentSide1 = false
+        mitreAdjacentSide2 = false
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      BorderPainter.drawLineForBoxSide(
+        graphicsContext: graphicsContext, document: document(), rect: sideRect.FloatRect(),
+        side: side,
+        color: colorToPaint, borderStyle: edgeToRender.style,
+        adjacentWidth1: mitreAdjacentSide1 ? adjacentEdge1.widthForPainting() : 0,
+        adjacentWidth2: mitreAdjacentSide2 ? adjacentEdge2.widthForPainting() : 0,
+        antialias: antialias)
     }
   }
 
