@@ -154,11 +154,43 @@ private func colorNeedsAntiAliasAtCorner(side: BoxSide, adjacentSide: BoxSide, e
     style: edge.style, side: side, adjacentSide: adjacentSide)
 }
 
-private func joinRequiresMitre(
-  side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges, allowOverdraw: Bool
+private func willBeOverdrawn(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func borderStylesRequireMitre(
+  side: BoxSide, adjacentSide: BoxSide, style: BorderStyle, adjacentStyle: BorderStyle
 ) -> Bool {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+
+private func joinRequiresMitre(
+  side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges, allowOverdraw: Bool
+) -> Bool {
+  let edge = edges.at(side: side)
+  let adjacentEdge = edges.at(side: adjacentSide)
+
+  if (edge.isTransparent && adjacentEdge.isTransparent) || !adjacentEdge.isPresent {
+    return false
+  }
+
+  if allowOverdraw && willBeOverdrawn(side: side, adjacentSide: adjacentSide, edges: edges) {
+    return false
+  }
+
+  if !edgesShareColor(firstEdge: edge, secondEdge: adjacentEdge) {
+    return true
+  }
+
+  if borderStylesRequireMitre(
+    side: side, adjacentSide: adjacentSide, style: edge.style, adjacentStyle: adjacentEdge.style)
+  {
+    return true
+  }
+
+  return false
 }
 
 class BorderPainter {
