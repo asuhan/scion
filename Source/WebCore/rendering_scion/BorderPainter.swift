@@ -135,8 +135,23 @@ private func colorsMatchAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: Bo
 private func colorNeedsAntiAliasAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let edge = edges.at(side: side)
+  let adjacentEdge = edges.at(side: adjacentSide)
+
+  if edge.color.isOpaque() {
+    return false
+  }
+
+  if edge.shouldRender() != adjacentEdge.shouldRender() {
+    return false
+  }
+
+  if !edgesShareColor(firstEdge: edge, secondEdge: adjacentEdge) {
+    return true
+  }
+
+  return borderStyleHasUnmatchedColorsAtCorner(
+    style: edge.style, side: side, adjacentSide: adjacentSide)
 }
 
 private func joinRequiresMitre(
