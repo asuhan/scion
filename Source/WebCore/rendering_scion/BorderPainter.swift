@@ -51,6 +51,10 @@ private func borderStyleHasInnerDetail(style: BorderStyle) -> Bool {
   }
 }
 
+private func borderStyleIsDottedOrDashed(style: BorderStyle) -> Bool {
+  return style == .Dotted || style == .Dashed
+}
+
 private func edgeIsSimple(edge: BorderEdge) -> Bool {
   return edge.widthForPainting() == 0 || borderStyleFillsBorderArea(style: edge.style)
 }
@@ -162,8 +166,22 @@ private func willBeOverdrawn(side: BoxSide, adjacentSide: BoxSide, edges: Border
 private func borderStylesRequireMitre(
   side: BoxSide, adjacentSide: BoxSide, style: BorderStyle, adjacentStyle: BorderStyle
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if style == .Double || adjacentStyle == .Double || adjacentStyle == .Groove
+    || adjacentStyle == .Ridge
+  {
+    return true
+  }
+
+  if borderStyleIsDottedOrDashed(style: style) != borderStyleIsDottedOrDashed(style: adjacentStyle)
+  {
+    return true
+  }
+
+  if style != adjacentStyle {
+    return true
+  }
+
+  return borderStyleHasUnmatchedColorsAtCorner(style: style, side: side, adjacentSide: adjacentSide)
 }
 
 private func joinRequiresMitre(
