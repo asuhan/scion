@@ -135,6 +135,10 @@ func borderEdges(
   )
 }
 
+func edgesShareColor(firstEdge: BorderEdge, secondEdge: BorderEdge) -> Bool {
+  return firstEdge.color == secondEdge.color
+}
+
 func edgeFlagForSide(side: BoxSide) -> BoxSideFlag {
   switch side {
   case .Top:

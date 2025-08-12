@@ -109,9 +109,27 @@ private func borderWillArcInnerEdge(firstRadius: LayoutSizeWrapper, secondRadius
   return !firstRadius.isEmpty() || !secondRadius.isEmpty()
 }
 
-private func colorsMatchAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
+private func borderStyleHasUnmatchedColorsAtCorner(
+  style: BorderStyle, side: BoxSide, adjacentSide: BoxSide
+) -> Bool {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+
+private func colorsMatchAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
+  let edge = edges.at(side: side)
+  let adjacentEdge = edges.at(side: adjacentSide)
+
+  if edge.shouldRender() != adjacentEdge.shouldRender() {
+    return false
+  }
+
+  if !edgesShareColor(firstEdge: edge, secondEdge: adjacentEdge) {
+    return false
+  }
+
+  return !borderStyleHasUnmatchedColorsAtCorner(
+    style: edge.style, side: side, adjacentSide: adjacentSide)
 }
 
 private func colorNeedsAntiAliasAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges)
