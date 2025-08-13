@@ -27,6 +27,16 @@
  */
 
 class PathWrapper {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(points: [FloatPoint]) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func moveTo(point: FloatPoint) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

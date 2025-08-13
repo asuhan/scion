@@ -923,6 +923,8 @@ class BorderPainter {
     outerBorder: RoundedRect, innerBorder: RoundedRect, side: BoxSide, firstEdgeMatches: Bool,
     secondEdgeMatches: Bool
   ) {
+    let graphicsContext = paintInfo.context()
+
     let deviceScaleFactor = document().deviceScaleFactor()
     let outerRect = snapRectToDevicePixels(
       rect: outerBorder.rect, pixelSnappingFactor: deviceScaleFactor)
@@ -1045,6 +1047,16 @@ class BorderPainter {
           quad[2] = intersection
         }
       }
+    }
+
+    // If the border matches both of its adjacent sides, don't anti-alias the clip, and
+    // if neither side matches, anti-alias the clip.
+    if firstEdgeMatches == secondEdgeMatches {
+      let wasAntialiased = graphicsContext.shouldAntialias()
+      graphicsContext.setShouldAntialias(shouldAntialias: !firstEdgeMatches)
+      graphicsContext.clipPath(path: PathWrapper(points: quad), clipRule: .NonZero)
+      graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
+      return
     }
 
     // TODO(asuhan): implement this
