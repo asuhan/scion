@@ -113,11 +113,20 @@ private func borderWillArcInnerEdge(firstRadius: LayoutSizeWrapper, secondRadius
   return !firstRadius.isEmpty() || !secondRadius.isEmpty()
 }
 
+// BorderStyle::Outset darkens the bottom and right (and maybe lightens the top and left)
+// BorderStyle::Inset darkens the top and left (and maybe lightens the bottom and right)
 private func borderStyleHasUnmatchedColorsAtCorner(
   style: BorderStyle, side: BoxSide, adjacentSide: BoxSide
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // These styles match at the top/left and bottom/right.
+  if style == .Inset || style == .Groove || style == .Ridge || style == .Outset {
+    let topRightSides: BoxSideSet = [.Top, .Right]
+    let bottomLeftSides: BoxSideSet = [.Bottom, .Left]
+
+    let usedSides: BoxSideSet = [edgeFlagForSide(side: side), edgeFlagForSide(side: adjacentSide)]
+    return usedSides == topRightSides || usedSides == bottomLeftSides
+  }
+  return false
 }
 
 private func colorsMatchAtCorner(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
