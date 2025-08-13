@@ -121,6 +121,10 @@ struct FloatRectWrapper {
     return FloatPoint(x: m_location.x + m_size.width, y: m_location.y)
   }  // typically topRight
 
+  func minXMaxYCorner() -> FloatPoint {
+    return FloatPoint(x: m_location.x, y: m_location.y + m_size.height)
+  }  // typically bottomLeft
+
   func maxXMaxYCorner() -> FloatPoint {
     return FloatPoint(x: m_location.x + m_size.width, y: m_location.y + m_size.height)
   }  // typically bottomRight

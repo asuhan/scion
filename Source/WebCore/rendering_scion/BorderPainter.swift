@@ -923,6 +923,86 @@ class BorderPainter {
     outerBorder: RoundedRect, innerBorder: RoundedRect, side: BoxSide, firstEdgeMatches: Bool,
     secondEdgeMatches: Bool
   ) {
+    let deviceScaleFactor = document().deviceScaleFactor()
+    let outerRect = snapRectToDevicePixels(
+      rect: outerBorder.rect, pixelSnappingFactor: deviceScaleFactor)
+    let innerRect = snapRectToDevicePixels(
+      rect: innerBorder.rect, pixelSnappingFactor: deviceScaleFactor)
+
+    // For each side, create a quad that encompasses all parts of that side that may draw,
+    // including areas inside the innerBorder.
+    //
+    //         0----------------3
+    //       0  \              /  0
+    //       |\  1----------- 2  /|
+    //       | 1                1 |
+    //       | |                | |
+    //       | |                | |
+    //       | 2                2 |
+    //       |/  1------------2  \|
+    //       3  /              \  3
+    //         0----------------3
+    //
+    var quad: [FloatPoint] = []
+    switch side {
+    case .Top:
+      quad = [
+        outerRect.minXMinYCorner(), innerRect.minXMinYCorner(), innerRect.maxXMinYCorner(),
+        outerRect.maxXMinYCorner(),
+      ]
+
+      if !innerBorder.radii.topLeft.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.minXMinYCorner(), p2: innerRect.minXMinYCorner(),
+          d1: innerRect.minXMaxYCorner(),
+          d2: innerRect.maxXMinYCorner())
+        {
+          quad[1] = intersection
+        }
+      }
+
+      if !innerBorder.radii.topRight.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.maxXMinYCorner(), p2: innerRect.maxXMinYCorner(),
+          d1: innerRect.minXMinYCorner(),
+          d2: innerRect.maxXMaxYCorner())
+        {
+          quad[2] = intersection
+        }
+      }
+    case .Left:
+      quad = [
+        outerRect.minXMinYCorner(), innerRect.minXMinYCorner(), innerRect.minXMaxYCorner(),
+        outerRect.minXMaxYCorner(),
+      ]
+
+      if !innerBorder.radii.topLeft.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.minXMinYCorner(), p2: innerRect.minXMinYCorner(),
+          d1: innerRect.minXMaxYCorner(),
+          d2: innerRect.maxXMinYCorner())
+        {
+          quad[1] = intersection
+        }
+      }
+
+      if !innerBorder.radii.bottomLeft.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.minXMaxYCorner(), p2: innerRect.minXMaxYCorner(),
+          d1: innerRect.minXMinYCorner(),
+          d2: innerRect.maxXMaxYCorner())
+        {
+          quad[2] = intersection
+        }
+      }
+    case .Bottom:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Right:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
