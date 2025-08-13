@@ -996,11 +996,55 @@ class BorderPainter {
         }
       }
     case .Bottom:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      quad = [
+        outerRect.minXMaxYCorner(), innerRect.minXMaxYCorner(), innerRect.maxXMaxYCorner(),
+        outerRect.maxXMaxYCorner(),
+      ]
+
+      if !innerBorder.radii.bottomLeft.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.minXMaxYCorner(), p2: innerRect.minXMaxYCorner(),
+          d1: innerRect.minXMinYCorner(),
+          d2: innerRect.maxXMaxYCorner())
+        {
+          quad[1] = intersection
+        }
+      }
+
+      if !innerBorder.radii.bottomRight.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.maxXMaxYCorner(), p2: innerRect.maxXMaxYCorner(),
+          d1: innerRect.maxXMinYCorner(),
+          d2: innerRect.minXMaxYCorner())
+        {
+          quad[2] = intersection
+        }
+      }
     case .Right:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      quad = [
+        outerRect.maxXMinYCorner(), innerRect.maxXMinYCorner(), innerRect.maxXMaxYCorner(),
+        outerRect.maxXMaxYCorner(),
+      ]
+
+      if !innerBorder.radii.topRight.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.maxXMinYCorner(), p2: innerRect.maxXMinYCorner(),
+          d1: innerRect.minXMinYCorner(),
+          d2: innerRect.maxXMaxYCorner())
+        {
+          quad[1] = intersection
+        }
+      }
+
+      if !innerBorder.radii.bottomRight.isZero() {
+        if let intersection = findIntersection(
+          p1: outerRect.maxXMaxYCorner(), p2: innerRect.maxXMaxYCorner(),
+          d1: innerRect.maxXMinYCorner(),
+          d2: innerRect.minXMaxYCorner())
+        {
+          quad[2] = intersection
+        }
+      }
     }
 
     // TODO(asuhan): implement this
