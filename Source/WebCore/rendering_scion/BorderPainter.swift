@@ -167,9 +167,31 @@ private func colorNeedsAntiAliasAtCorner(side: BoxSide, adjacentSide: BoxSide, e
     style: edge.style, side: side, adjacentSide: adjacentSide)
 }
 
+// This assumes that we draw in order: top, bottom, left, right.
 private func willBeOverdrawn(side: BoxSide, adjacentSide: BoxSide, edges: BorderEdges) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch side {
+  case .Top, .Bottom:
+    let edge = edges.at(side: side)
+    let adjacentEdge = edges.at(side: adjacentSide)
+
+    if adjacentEdge.presentButInvisible() {
+      return false
+    }
+
+    if !edgesShareColor(firstEdge: edge, secondEdge: adjacentEdge) && !adjacentEdge.color.isOpaque()
+    {
+      return false
+    }
+
+    if !borderStyleFillsBorderArea(style: adjacentEdge.style) {
+      return false
+    }
+
+    return true
+  case .Left, .Right:
+    // These draw last, so are never overdrawn.
+    return false
+  }
 }
 
 private func borderStylesRequireMitre(
