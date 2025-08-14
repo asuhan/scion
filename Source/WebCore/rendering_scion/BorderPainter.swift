@@ -915,8 +915,41 @@ class BorderPainter {
     color: ColorWrapper, borderStyle: BorderStyle, bleedAvoidance: BackgroundBleedAvoidance,
     includeLogicalLeftEdge: Bool, includeLogicalRightEdge: Bool, isHorizontal: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if thickness <= 0 {
+      return
+    }
+
+    let graphicsContext = paintInfo.context()
+
+    var borderStyle = borderStyle
+    if borderStyle == .Double && thickness < 3 {
+      borderStyle = .Solid
+    }
+
+    switch borderStyle {
+    case .None, .Hidden:
+      return
+    case .Dotted, .Dashed:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Double:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Ridge, .Groove:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Inset, .Outset:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Solid:
+      break
+    }
+
+    graphicsContext.setStrokeStyle(style: .NoStroke)
+    graphicsContext.setFillColor(color: color)
+    graphicsContext.drawRect(
+      rect: snapRectToDevicePixels(
+        rect: borderRect, pixelSnappingFactor: document().deviceScaleFactor()))
   }
 
   private func clipBorderSidePolygon(

@@ -79,6 +79,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setStrokeStyle(style: StrokeStyle) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setDropShadow(dropShadow: GraphicsDropShadow) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -142,6 +147,15 @@ class GraphicsContextWrapper {
   func adjustLineToPixelBoundaries(
     p1: FloatPoint, p2: FloatPoint, strokeWidth: Float32, penStyle: StrokeStyle
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // These draw methods will do both stroking and filling.
+  // FIXME: ...except drawRect(), which fills properly but always strokes
+  // using a 1-pixel stroke inset from the rect borders (of the correct
+  // stroke color).
+  func drawRect(rect: FloatRectWrapper, borderThickness: Float32 = 1) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
