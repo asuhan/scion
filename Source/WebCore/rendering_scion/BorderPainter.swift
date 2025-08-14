@@ -1059,8 +1059,32 @@ class BorderPainter {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Square off the end which shouldn't be affected by antialiasing, and clip.
+    let firstQuad = [
+      quad[0],
+      quad[1],
+      quad[2],
+      side == .Top || side == .Bottom
+        ? FloatPoint(x: quad[3].x, y: quad[2].y) : FloatPoint(x: quad[2].x, y: quad[3].y),
+      quad[3],
+    ]
+    let wasAntialiased = graphicsContext.shouldAntialias()
+    graphicsContext.setShouldAntialias(shouldAntialias: !firstEdgeMatches)
+    graphicsContext.clipPath(path: PathWrapper(points: firstQuad), clipRule: .NonZero)
+
+    let secondQuad = [
+      quad[0],
+      side == .Top || side == .Bottom
+        ? FloatPoint(x: quad[0].x, y: quad[1].y) : FloatPoint(x: quad[1].x, y: quad[0].y),
+      quad[1],
+      quad[2],
+      quad[3],
+    ]
+    // Antialiasing affects the second side.
+    graphicsContext.setShouldAntialias(shouldAntialias: !secondEdgeMatches)
+    graphicsContext.clipPath(path: PathWrapper(points: secondQuad), clipRule: .NonZero)
+
+    graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
   }
 
   private func borderRectAdjustedForBleedAvoidance(
