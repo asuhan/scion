@@ -199,6 +199,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setLineDash(dashArray: DashArray, dashOffset: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLineJoin(lineJoin: LineJoin) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

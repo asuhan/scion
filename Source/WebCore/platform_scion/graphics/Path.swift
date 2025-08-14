@@ -64,4 +64,9 @@ class PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func length() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

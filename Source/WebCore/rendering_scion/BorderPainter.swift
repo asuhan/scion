@@ -23,6 +23,8 @@
  *
  */
 
+import Foundation
+
 private func borderStyleFillsBorderArea(style: BorderStyle) -> Bool {
   switch style {
   case .None, .Hidden, .Inset, .Groove, .Outset, .Ridge, .Solid:
@@ -930,8 +932,42 @@ class BorderPainter {
     case .None, .Hidden:
       return
     case .Dotted, .Dashed:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      graphicsContext.setStrokeColor(color: color)
+
+      // The stroke is doubled here because the provided path is the
+      // outside edge of the border so half the stroke is clipped off.
+      // The extra multiplier is so that the clipping mask can antialias
+      // the edges to prevent jaggies.
+      graphicsContext.setStrokeThickness(thickness: drawThickness * 2 * 1.1)
+      graphicsContext.setStrokeStyle(style: borderStyle == .Dashed ? .DashedStroke : .DottedStroke)
+
+      // If the number of dashes that fit in the path is odd and non-integral then we
+      // will have an awkwardly-sized dash at the end of the path. To try to avoid that
+      // here, we simply make the whitespace dashes ever so slightly bigger.
+      // FIXME: This could be even better if we tried to manipulate the dash offset
+      // and possibly the gapLength to get the corners dash-symmetrical.
+      let dashLength = thickness * ((borderStyle == .Dashed) ? 3.0 : 1.0)
+      var gapLength = dashLength
+      let numberOfDashes = borderPath.length() / dashLength
+      // Don't try to show dashes if we have less than 2 dashes + 2 gaps.
+      // FIXME: should do this test per side.
+      if numberOfDashes >= 4 {
+        let evenNumberOfFullDashes = (Int(numberOfDashes) % 2 == 0)
+        let integralNumberOfDashes = (numberOfDashes - floorf(numberOfDashes) == 0)
+        if !evenNumberOfFullDashes && !integralNumberOfDashes {
+          let numberOfGaps = numberOfDashes / 2
+          gapLength += (dashLength / numberOfGaps)
+        }
+
+        let lineDash = [Float64(dashLength), Float64(gapLength)]
+        graphicsContext.setLineDash(dashArray: lineDash, dashOffset: dashLength)
+      }
+
+      // FIXME: stroking the border path causes issues with tight corners:
+      // https://bugs.webkit.org/show_bug.cgi?id=58711
+      // Also, to get the best appearance we should stroke a path between the two borders.
+      graphicsContext.strokePath(path: borderPath)
+      return
     case .Double:
       // TODO(asuhan): implement this
       fatalError("Not implemented")
