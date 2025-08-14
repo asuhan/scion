@@ -969,8 +969,61 @@ class BorderPainter {
       graphicsContext.strokePath(path: borderPath)
       return
     case .Double:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Get the inner border rects for both the outer border line and the inner border line
+      var (outerBorderTopWidth, innerBorderTopWidth) = edges.top.getDoubleBorderStripeWidths()
+      var (outerBorderRightWidth, innerBorderRightWidth) = edges.right.getDoubleBorderStripeWidths()
+      var (outerBorderBottomWidth, innerBorderBottomWidth) = edges.bottom
+        .getDoubleBorderStripeWidths()
+      var (outerBorderLeftWidth, innerBorderLeftWidth) = edges.left.getDoubleBorderStripeWidths()
+
+      // Draw inner border line
+      do {
+        let _ = GraphicsContextStateSaver(context: graphicsContext)
+        let innerClip = RenderStyleWrapper.getRoundedInnerBorderFor(
+          borderRect: borderRect,
+          topWidth: innerBorderTopWidth, bottomWidth: innerBorderBottomWidth,
+          leftWidth: innerBorderLeftWidth, rightWidth: innerBorderRightWidth,
+          radii: radii, isHorizontalWritingMode: isHorizontal,
+          includeLogicalLeftEdge: includeLogicalLeftEdge,
+          includeLogicalRightEdge: includeLogicalRightEdge)
+
+        graphicsContext.clipRoundedRect(rect: FloatRoundedRect(rect: innerClip))
+        drawBoxSideFromPath(
+          borderRect: borderRect, borderPath: borderPath, edges: edges, radii: radii,
+          thickness: thickness, drawThickness: drawThickness, side: side, color: color,
+          borderStyle: .Solid,
+          bleedAvoidance: bleedAvoidance, includeLogicalLeftEdge: includeLogicalLeftEdge,
+          includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
+      }
+
+      // Draw outer border line
+      do {
+        let _ = GraphicsContextStateSaver(context: graphicsContext)
+        var outerRect = borderRect
+        if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
+          outerRect.inflate(d: 1)
+          outerBorderTopWidth += 1
+          outerBorderBottomWidth += 1
+          outerBorderLeftWidth += 1
+          outerBorderRightWidth += 1
+        }
+
+        let outerClip = RenderStyleWrapper.getRoundedInnerBorderFor(
+          borderRect: outerRect,
+          topWidth: outerBorderTopWidth, bottomWidth: outerBorderBottomWidth,
+          leftWidth: outerBorderLeftWidth, rightWidth: outerBorderRightWidth,
+          radii: radii, isHorizontalWritingMode: isHorizontal,
+          includeLogicalLeftEdge: includeLogicalLeftEdge,
+          includeLogicalRightEdge: includeLogicalRightEdge)
+        graphicsContext.clipOutRoundedRect(rect: FloatRoundedRect(rect: outerClip))
+        drawBoxSideFromPath(
+          borderRect: borderRect, borderPath: borderPath, edges: edges, radii: radii,
+          thickness: thickness, drawThickness: drawThickness, side: side, color: color,
+          borderStyle: .Solid,
+          bleedAvoidance: bleedAvoidance, includeLogicalLeftEdge: includeLogicalLeftEdge,
+          includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
+      }
+      return
     case .Ridge, .Groove:
       // TODO(asuhan): implement this
       fatalError("Not implemented")

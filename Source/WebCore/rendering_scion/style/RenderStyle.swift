@@ -405,6 +405,15 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_hasTextCombine(p)
   }
 
+  static func getRoundedInnerBorderFor(
+    borderRect: LayoutRectWrapper, topWidth: LayoutUnit, bottomWidth: LayoutUnit,
+    leftWidth: LayoutUnit, rightWidth: LayoutUnit, radii: BorderData.Radii?,
+    isHorizontalWritingMode: Bool, includeLogicalLeftEdge: Bool, includeLogicalRightEdge: Bool
+  ) -> RoundedRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func tabSize() -> TabSizeWrapper {
     return rareInheritedData.tabSize
   }
