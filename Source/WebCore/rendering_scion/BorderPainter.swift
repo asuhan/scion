@@ -538,11 +538,49 @@ class BorderPainter {
             graphicsContext: graphicsContext, document: document, color: color, antialias: antialias
           )
         case .Bottom:
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          var paintBorderRect = snapRectToDevicePixels(
+            rect: LayoutRectWrapper(
+              x: x1 + mitreOffset2, y: y1, width: (x2 - mitreOffset4) - (x1 + mitreOffset2),
+              height: thirdOfThickness),
+            pixelSnappingFactor: deviceScaleFactor)
+          BorderPainter.drawLineFor(
+            rect: paintBorderRect, side: side, borderStyle: .Solid,
+            adjacent: FloatSize(width: adjacent1BigThird, height: adjacent2BigThird),
+            graphicsContext: graphicsContext, document: document, color: color, antialias: antialias
+          )
+
+          paintBorderRect = snapRectToDevicePixels(
+            rect: LayoutRectWrapper(
+              x: x1 + mitreOffset1, y: y2 - thirdOfThickness,
+              width: (x2 - mitreOffset3) - (x1 + mitreOffset1),
+              height: thirdOfThickness), pixelSnappingFactor: deviceScaleFactor)
+          BorderPainter.drawLineFor(
+            rect: paintBorderRect, side: side, borderStyle: .Solid,
+            adjacent: FloatSize(width: adjacent1BigThird, height: adjacent2BigThird),
+            graphicsContext: graphicsContext, document: document, color: color, antialias: antialias
+          )
         case .Right:
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          var paintBorderRect = snapRectToDevicePixels(
+            rect: LayoutRectWrapper(
+              x: x1, y: y1 + mitreOffset2, width: thirdOfThickness,
+              height: (y2 - mitreOffset4) - (y1 + mitreOffset2)),
+            pixelSnappingFactor: deviceScaleFactor)
+          BorderPainter.drawLineFor(
+            rect: paintBorderRect, side: side, borderStyle: .Solid,
+            adjacent: FloatSize(width: adjacent1BigThird, height: adjacent2BigThird),
+            graphicsContext: graphicsContext, document: document, color: color, antialias: antialias
+          )
+
+          paintBorderRect = snapRectToDevicePixels(
+            rect: LayoutRectWrapper(
+              x: x2 - thirdOfThickness, y: y1 + mitreOffset1, width: thirdOfThickness,
+              height: (y2 - mitreOffset3) - (y1 + mitreOffset1)),
+            pixelSnappingFactor: deviceScaleFactor)
+          BorderPainter.drawLineFor(
+            rect: paintBorderRect, side: side, borderStyle: .Solid,
+            adjacent: FloatSize(width: adjacent1BigThird, height: adjacent2BigThird),
+            graphicsContext: graphicsContext, document: document, color: color, antialias: antialias
+          )
         }
       }
     case .Ridge, .Groove:
