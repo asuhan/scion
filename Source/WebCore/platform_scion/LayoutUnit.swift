@@ -349,3 +349,11 @@ func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 
 internal func roundToInt(value: LayoutUnit) -> Int {
   return Int(value.round())
 }
+
+func roundToDevicePixel(
+  value: Float32, pixelSnappingFactor: Float32, needsDirectionalRounding: Bool = false
+) -> Float32 {
+  return roundToDevicePixel(
+    value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor,
+    needsDirectionalRounding: needsDirectionalRounding)
+}

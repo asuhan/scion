@@ -403,10 +403,10 @@ class BorderPainter {
     side: BoxSide, color: ColorWrapper, borderStyle: BorderStyle, adjacentWidth1: Float32,
     adjacentWidth2: Float32, antialias: Bool
   ) {
-    let x1 = rect.x()
-    let x2 = rect.maxX()
-    let y1 = rect.y()
-    let y2 = rect.maxY()
+    var x1 = rect.x()
+    var x2 = rect.maxX()
+    var y1 = rect.y()
+    var y2 = rect.maxY()
     let thickness = (side == .Top || side == .Bottom) ? y2 - y1 : x2 - x1
     let length = (side == .Top || side == .Bottom) ? x2 - x1 : y2 - y1
     // FIXME: We really would like this check to be an ASSERT as we don't want to draw empty borders. However
@@ -584,8 +584,140 @@ class BorderPainter {
         }
       }
     case .Ridge, .Groove:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let s1: BorderStyle = borderStyle == .Groove ? .Inset : .Outset
+      let s2: BorderStyle = borderStyle == .Groove ? .Outset : .Inset
+
+      let adjacent1BigHalf = ceilToDevicePixel(
+        value: adjacentWidth1 / 2, pixelSnappingFactor: deviceScaleFactor)
+      let adjacent2BigHalf = ceilToDevicePixel(
+        value: adjacentWidth2 / 2, pixelSnappingFactor: deviceScaleFactor)
+
+      let adjacent1SmallHalf = floorToDevicePixel(
+        value: adjacentWidth1 / 2, pixelSnappingFactor: deviceScaleFactor)
+      let adjacent2SmallHalf = floorToDevicePixel(
+        value: adjacentWidth2 / 2, pixelSnappingFactor: deviceScaleFactor)
+
+      var offset1: Float32 = 0
+      var offset2: Float32 = 0
+      var offset3: Float32 = 0
+      var offset4: Float32 = 0
+
+      if ((side == .Top || side == .Left) && adjacentWidth1 < 0)
+        || ((side == .Bottom || side == .Right) && adjacentWidth1 > 0)
+      {
+        offset1 = floorToDevicePixel(
+          value: adjacentWidth1 / 2, pixelSnappingFactor: deviceScaleFactor)
+      }
+
+      if ((side == .Top || side == .Left) && adjacentWidth2 < 0)
+        || ((side == .Bottom || side == .Right) && adjacentWidth2 > 0)
+      {
+        offset2 = ceilToDevicePixel(
+          value: adjacentWidth2 / 2, pixelSnappingFactor: deviceScaleFactor)
+      }
+
+      if ((side == .Top || side == .Left) && adjacentWidth1 > 0)
+        || ((side == .Bottom || side == .Right) && adjacentWidth1 < 0)
+      {
+        offset3 = floorToDevicePixel(
+          value: abs(adjacentWidth1) / 2, pixelSnappingFactor: deviceScaleFactor)
+      }
+
+      if ((side == .Top || side == .Left) && adjacentWidth2 > 0)
+        || ((side == .Bottom || side == .Right) && adjacentWidth2 < 0)
+      {
+        offset4 = ceilToDevicePixel(
+          value: adjacentWidth2 / 2, pixelSnappingFactor: deviceScaleFactor)
+      }
+
+      let adjustedX = ceilToDevicePixel(
+        value: (x1 + x2) / 2, pixelSnappingFactor: deviceScaleFactor)
+      let adjustedY = ceilToDevicePixel(
+        value: (y1 + y2) / 2, pixelSnappingFactor: deviceScaleFactor)
+      // Quads can't use the default snapping rect functions.
+      x1 = roundToDevicePixel(value: x1, pixelSnappingFactor: deviceScaleFactor)
+      x2 = roundToDevicePixel(value: x2, pixelSnappingFactor: deviceScaleFactor)
+      y1 = roundToDevicePixel(value: y1, pixelSnappingFactor: deviceScaleFactor)
+      y2 = roundToDevicePixel(value: y2, pixelSnappingFactor: deviceScaleFactor)
+
+      switch side {
+      case .Top:
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: x1 + offset1, y: y1),
+            bottomRight: FloatPoint(x: x2 - offset2, y: adjustedY)),
+          side: side,
+          borderStyle: s1,
+          adjacent: FloatSize(width: adjacent1BigHalf, height: adjacent2BigHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: x1 + offset3, y: adjustedY),
+            bottomRight: FloatPoint(x: x2 - offset4, y: y2)),
+          side: side,
+          borderStyle: s2,
+          adjacent: FloatSize(width: adjacent1SmallHalf, height: adjacent2SmallHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+      case .Left:
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: x1, y: y1 + offset1),
+            bottomRight: FloatPoint(x: adjustedX, y: y2 - offset2)),
+          side: side,
+          borderStyle: s1,
+          adjacent: FloatSize(width: adjacent1BigHalf, height: adjacent2BigHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: adjustedX, y: y1 + offset3),
+            bottomRight: FloatPoint(x: x2, y: y2 - offset4)),
+          side: side,
+          borderStyle: s2,
+          adjacent: FloatSize(width: adjacent1SmallHalf, height: adjacent2SmallHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+      case .Bottom:
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: x1 + offset1, y: y1),
+            bottomRight: FloatPoint(x: x2 - offset2, y: adjustedY)),
+          side: side,
+          borderStyle: s2,
+          adjacent: FloatSize(width: adjacent1BigHalf, height: adjacent2BigHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: x1 + offset3, y: adjustedY),
+            bottomRight: FloatPoint(x: x2 - offset4, y: y2)),
+          side: side,
+          borderStyle: s1,
+          adjacent: FloatSize(width: adjacent1SmallHalf, height: adjacent2SmallHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+      case .Right:
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: x1, y: y1 + offset1),
+            bottomRight: FloatPoint(x: adjustedX, y: y2 - offset2)),
+          side: side,
+          borderStyle: s2,
+          adjacent: FloatSize(width: adjacent1BigHalf, height: adjacent2BigHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+        drawLineFor(
+          rect: FloatRectWrapper(
+            topLeft: FloatPoint(x: adjustedX, y: y1 + offset3),
+            bottomRight: FloatPoint(x: x2, y: y2 - offset4)),
+          side: side,
+          borderStyle: s1,
+          adjacent: FloatSize(width: adjacent1SmallHalf, height: adjacent2SmallHalf),
+          graphicsContext: graphicsContext,
+          document: document, color: color, antialias: antialias)
+      }
     case .Inset, .Outset:
       // TODO(asuhan): implement this
       fatalError("Not implemented")
