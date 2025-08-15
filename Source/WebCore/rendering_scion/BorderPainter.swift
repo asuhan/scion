@@ -803,8 +803,13 @@ class BorderPainter {
     graphicsContext: GraphicsContextWrapper, document: Document, color: ColorWrapper,
     antialias: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if rect.isEmpty() {
+      return
+    }
+    drawLineForBoxSide(
+      graphicsContext: graphicsContext, document: document, rect: rect, side: side, color: color,
+      borderStyle: borderStyle, adjacentWidth1: adjacent.width,
+      adjacentWidth2: adjacent.height, antialias: antialias)
   }
 
   static func pathForBorderArea(
