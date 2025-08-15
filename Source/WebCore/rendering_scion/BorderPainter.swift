@@ -792,8 +792,10 @@ class BorderPainter {
   private static func drawBorderRect(
     rect: FloatRectWrapper, graphicsContext: GraphicsContextWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if rect.isEmpty() {
+      return
+    }
+    graphicsContext.drawRect(rect: rect)
   }
 
   private static func drawLineFor(
