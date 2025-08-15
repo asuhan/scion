@@ -740,8 +740,52 @@ class BorderPainter {
         return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // FIXME: These roundings should be replaced by ASSERT(device pixel positioned) when all the callers have transitioned to device pixels.
+      x1 = roundToDevicePixel(value: x1, pixelSnappingFactor: deviceScaleFactor)
+      y1 = roundToDevicePixel(value: y1, pixelSnappingFactor: deviceScaleFactor)
+      x2 = roundToDevicePixel(value: x2, pixelSnappingFactor: deviceScaleFactor)
+      y2 = roundToDevicePixel(value: y2, pixelSnappingFactor: deviceScaleFactor)
+
+      var quad: [FloatPoint] = []
+      switch side {
+      case .Top:
+        quad = [
+          FloatPoint(x: x1 + max(-adjacentWidth1, 0), y: y1),
+          FloatPoint(x: x1 + max(adjacentWidth1, 0), y: y2),
+          FloatPoint(x: x2 - max(adjacentWidth2, 0), y: y2),
+          FloatPoint(x: x2 - max(-adjacentWidth2, 0), y: y1),
+        ]
+      case .Bottom:
+        quad = [
+          FloatPoint(x: x1 + max(adjacentWidth1, 0), y: y1),
+          FloatPoint(x: x1 + max(-adjacentWidth1, 0), y: y2),
+          FloatPoint(x: x2 - max(-adjacentWidth2, 0), y: y2),
+          FloatPoint(x: x2 - max(adjacentWidth2, 0), y: y1),
+        ]
+      case .Left:
+        quad = [
+          FloatPoint(x: x1, y: y1 + max(-adjacentWidth1, 0)),
+          FloatPoint(x: x1, y: y2 - max(-adjacentWidth2, 0)),
+          FloatPoint(x: x2, y: y2 - max(adjacentWidth2, 0)),
+          FloatPoint(x: x2, y: y1 + max(adjacentWidth1, 0)),
+        ]
+      case .Right:
+        quad = [
+          FloatPoint(x: x1, y: y1 + max(adjacentWidth1, 0)),
+          FloatPoint(x: x1, y: y2 - max(adjacentWidth2, 0)),
+          FloatPoint(x: x2, y: y2 - max(-adjacentWidth2, 0)),
+          FloatPoint(x: x2, y: y1 + max(-adjacentWidth1, 0)),
+        ]
+      }
+
+      graphicsContext.setStrokeStyle(style: .NoStroke)
+      graphicsContext.setFillColor(color: color)
+      let wasAntialiased = graphicsContext.shouldAntialias()
+      graphicsContext.setShouldAntialias(shouldAntialias: antialias)
+      graphicsContext.fillPath(path: PathWrapper(points: quad))
+      graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
+
+      graphicsContext.setStrokeStyle(style: oldStrokeStyle)
     }
   }
 
