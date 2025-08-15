@@ -923,6 +923,7 @@ class BorderPainter {
 
     let graphicsContext = paintInfo.context()
 
+    var color = color
     var borderStyle = borderStyle
     if borderStyle == .Double && thickness < 3 {
       borderStyle = .Solid
@@ -1025,11 +1026,48 @@ class BorderPainter {
       }
       return
     case .Ridge, .Groove:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var s1: BorderStyle = .None
+      var s2: BorderStyle = .None
+      if borderStyle == .Groove {
+        s1 = .Inset
+        s2 = .Outset
+      } else {
+        s1 = .Outset
+        s2 = .Inset
+      }
+
+      // Paint full border
+      drawBoxSideFromPath(
+        borderRect: borderRect, borderPath: borderPath, edges: edges, radii: radii,
+        thickness: thickness, drawThickness: drawThickness, side: side, color: color,
+        borderStyle: s1,
+        bleedAvoidance: bleedAvoidance, includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
+
+      // Paint inner only
+      let _ = GraphicsContextStateSaver(context: graphicsContext)
+      let topWidth = LayoutUnit(value: edges.top.widthForPainting() / 2)
+      let bottomWidth = LayoutUnit(value: edges.bottom.widthForPainting() / 2)
+      let leftWidth = LayoutUnit(value: edges.left.widthForPainting() / 2)
+      let rightWidth = LayoutUnit(value: edges.right.widthForPainting() / 2)
+
+      let clipRect = RenderStyleWrapper.getRoundedInnerBorderFor(
+        borderRect: borderRect,
+        topWidth: topWidth, bottomWidth: bottomWidth, leftWidth: leftWidth, rightWidth: rightWidth,
+        radii: radii, isHorizontalWritingMode: isHorizontal,
+        includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge)
+
+      graphicsContext.clipRoundedRect(rect: FloatRoundedRect(rect: clipRect))
+      drawBoxSideFromPath(
+        borderRect: borderRect, borderPath: borderPath, edges: edges, radii: radii,
+        thickness: thickness, drawThickness: drawThickness, side: side, color: color,
+        borderStyle: s2,
+        bleedAvoidance: bleedAvoidance, includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
+      return
     case .Inset, .Outset:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      color = BorderPainter.calculateBorderStyleColor(style: borderStyle, side: side, color: color)
     case .Solid:
       break
     }
@@ -1219,6 +1257,13 @@ class BorderPainter {
     // We shrink the rectangle by one device pixel on each side to make it fully overlap the anti-aliased background border
     return shrinkRectByOneDevicePixel(
       context: paintInfo.context(), rect: rect, devicePixelRatio: document().deviceScaleFactor())
+  }
+
+  private static func calculateBorderStyleColor(
+    style: BorderStyle, side: BoxSide, color: ColorWrapper
+  ) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func document() -> Document { return renderer.document() }
