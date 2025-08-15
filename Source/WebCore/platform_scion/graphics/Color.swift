@@ -44,6 +44,21 @@ struct ColorWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func luminance() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lightened() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func darkened() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func colorWithAlphaMultipliedBy(amount: Float32) -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

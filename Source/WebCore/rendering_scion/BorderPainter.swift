@@ -1259,11 +1259,36 @@ class BorderPainter {
       context: paintInfo.context(), rect: rect, devicePixelRatio: document().deviceScaleFactor())
   }
 
+  // This never changes the alpha of the color, so it's OK that callers don't check for PaintBehavior::ForceBlackBorder.
   private static func calculateBorderStyleColor(
     style: BorderStyle, side: BoxSide, color: ColorWrapper
   ) -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(style == .Inset || style == .Outset)
+
+    enum Operation {
+      case Darken
+      case Lighten
+    }
+
+    let operation: Operation =
+      (side == .Top || side == .Left) == (style == .Inset) ? .Darken : .Lighten
+
+    let isVeryDarkColor = color.luminance() <= baseDarkColorLuminance
+    let isVeryLightColor = color.luminance() > baseLightColorLuminance
+
+    // Special case very dark colors to give them extra contrast.
+    if isVeryDarkColor {
+      return operation == .Darken ? color.lightened() : color.lightened().lightened()
+    }
+
+    // Here we will darken the border decoration color when needed.
+    if operation == .Darken {
+      return color.darkened()
+    }
+
+    assert(operation == .Lighten)
+
+    return isVeryLightColor ? color : color.lightened()
   }
 
   private func document() -> Document { return renderer.document() }
@@ -1274,4 +1299,8 @@ class BorderPainter {
   // willBeOverdrawn assumes that we draw in order: top, bottom, left, right.
   // This is different from BoxSide enum order.
   private static let paintOrderSides: [BoxSide] = [.Top, .Bottom, .Left, .Right]
+
+  // This values were derived empirically.
+  private static let baseDarkColorLuminance: Float64 = 0.014443844  // Luminance of SRGBA<uint8_t> { 32, 32, 32 }
+  private static let baseLightColorLuminance: Float64 = 0.83077  // Luminance of SRGBA<uint8_t> { 235, 235, 235 }
 }
