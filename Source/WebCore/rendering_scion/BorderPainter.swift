@@ -439,8 +439,47 @@ class BorderPainter {
       graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
       graphicsContext.setStrokeStyle(style: oldStrokeStyle)
     case .Double:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let thirdOfThickness = ceilToDevicePixel(
+        value: thickness / 3, pixelSnappingFactor: deviceScaleFactor)
+      assert(thirdOfThickness != 0)
+
+      if adjacentWidth1 == 0 && adjacentWidth2 == 0 {
+        let oldStrokeStyle = graphicsContext.strokeStyle()
+        graphicsContext.setStrokeStyle(style: .NoStroke)
+        graphicsContext.setFillColor(color: color)
+
+        let wasAntialiased = graphicsContext.shouldAntialias()
+        graphicsContext.setShouldAntialias(shouldAntialias: antialias)
+
+        switch side {
+        case .Top, .Bottom:
+          drawBorderRect(
+            rect: snapRectToDevicePixels(
+              rect: LayoutRectWrapper(x: x1, y: y1, width: length, height: thirdOfThickness),
+              pixelSnappingFactor: deviceScaleFactor), graphicsContext: graphicsContext)
+          drawBorderRect(
+            rect: snapRectToDevicePixels(
+              rect: LayoutRectWrapper(
+                x: x1, y: y2 - thirdOfThickness, width: length, height: thirdOfThickness),
+              pixelSnappingFactor: deviceScaleFactor), graphicsContext: graphicsContext)
+        case .Left, .Right:
+          drawBorderRect(
+            rect: snapRectToDevicePixels(
+              rect: LayoutRectWrapper(x: x1, y: y1, width: thirdOfThickness, height: length),
+              pixelSnappingFactor: deviceScaleFactor), graphicsContext: graphicsContext)
+          drawBorderRect(
+            rect: snapRectToDevicePixels(
+              rect: LayoutRectWrapper(
+                x: x2 - thirdOfThickness, y: y1, width: thirdOfThickness, height: length),
+              pixelSnappingFactor: deviceScaleFactor), graphicsContext: graphicsContext)
+        }
+
+        graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
+        graphicsContext.setStrokeStyle(style: oldStrokeStyle)
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
     case .Ridge, .Groove:
       // TODO(asuhan): implement this
       fatalError("Not implemented")
