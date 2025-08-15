@@ -403,6 +403,53 @@ class BorderPainter {
     side: BoxSide, color: ColorWrapper, borderStyle: BorderStyle, adjacentWidth1: Float32,
     adjacentWidth2: Float32, antialias: Bool
   ) {
+    let x1 = rect.x()
+    let x2 = rect.maxX()
+    let y1 = rect.y()
+    let y2 = rect.maxY()
+    let thickness = (side == .Top || side == .Bottom) ? y2 - y1 : x2 - x1
+    let length = (side == .Top || side == .Bottom) ? x2 - x1 : y2 - y1
+    // FIXME: We really would like this check to be an ASSERT as we don't want to draw empty borders. However
+    // nothing guarantees that the following recursive calls to drawLineForBoxSide will have non-null dimensions.
+    if thickness == 0 || length == 0 {
+      return
+    }
+
+    var borderStyle = borderStyle
+    let deviceScaleFactor = document.deviceScaleFactor()
+    if borderStyle == .Double && (thickness * deviceScaleFactor) < 3 {
+      borderStyle = .Solid
+    }
+
+    switch borderStyle {
+    case .None, .Hidden:
+      return
+    case .Dotted, .Dashed:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Double:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Ridge, .Groove:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Inset, .Outset:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Solid:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private static func drawBorderRect(
+    rect: FloatRectWrapper, graphicsContext: GraphicsContextWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func drawLineFor() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
