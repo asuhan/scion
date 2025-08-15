@@ -420,6 +420,7 @@ class BorderPainter {
     if borderStyle == .Double && (thickness * deviceScaleFactor) < 3 {
       borderStyle = .Solid
     }
+    var color = color
 
     switch borderStyle {
     case .None, .Hidden:
@@ -719,9 +720,26 @@ class BorderPainter {
           document: document, color: color, antialias: antialias)
       }
     case .Inset, .Outset:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      color = calculateBorderStyleColor(style: borderStyle, side: side, color: color)
+      fallthrough
     case .Solid:
+      let oldStrokeStyle = graphicsContext.strokeStyle()
+      assert(x2 >= x1)
+      assert(y2 >= y1)
+      if adjacentWidth1 == 0 && adjacentWidth2 == 0 {
+        graphicsContext.setStrokeStyle(style: .NoStroke)
+        graphicsContext.setFillColor(color: color)
+        let wasAntialiased = graphicsContext.shouldAntialias()
+        graphicsContext.setShouldAntialias(shouldAntialias: antialias)
+        drawBorderRect(
+          rect: snapRectToDevicePixels(
+            rect: LayoutRectWrapper(x: x1, y: y1, width: x2 - x1, height: y2 - y1),
+            pixelSnappingFactor: deviceScaleFactor), graphicsContext: graphicsContext)
+        graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
+        graphicsContext.setStrokeStyle(style: oldStrokeStyle)
+        return
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
