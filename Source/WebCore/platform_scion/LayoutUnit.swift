@@ -336,6 +336,11 @@ func roundToDevicePixel(
         - translateOrigin)
 }
 
+func floorToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 {
+  return floorToDevicePixel(
+    value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor)
+}
+
 func ceilToDevicePixel(value: Float32, pixelSnappingFactor: Float32) -> Float32 {
   return ceilToDevicePixel(
     value: LayoutUnit(value: value), pixelSnappingFactor: pixelSnappingFactor)
