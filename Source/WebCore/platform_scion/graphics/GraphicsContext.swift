@@ -160,6 +160,12 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  // This is only used to draw borders, so we should not draw shadows.
+  func drawLine(point1: FloatPoint, point2: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fillPath(path: PathWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

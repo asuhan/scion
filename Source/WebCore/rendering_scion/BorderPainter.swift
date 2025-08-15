@@ -425,8 +425,19 @@ class BorderPainter {
     case .None, .Hidden:
       return
     case .Dotted, .Dashed:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let wasAntialiased = graphicsContext.shouldAntialias()
+      let oldStrokeStyle = graphicsContext.strokeStyle()
+      graphicsContext.setShouldAntialias(shouldAntialias: antialias)
+      graphicsContext.setStrokeColor(color: color)
+      graphicsContext.setStrokeThickness(thickness: thickness)
+      graphicsContext.setStrokeStyle(style: borderStyle == .Dashed ? .DashedStroke : .DottedStroke)
+      graphicsContext.drawLine(
+        point1: roundPointToDevicePixels(
+          point: LayoutPointWrapper(x: x1, y: y1), pixelSnappingFactor: deviceScaleFactor),
+        point2: roundPointToDevicePixels(
+          point: LayoutPointWrapper(x: x2, y: y2), pixelSnappingFactor: deviceScaleFactor))
+      graphicsContext.setShouldAntialias(shouldAntialias: wasAntialiased)
+      graphicsContext.setStrokeStyle(style: oldStrokeStyle)
     case .Double:
       // TODO(asuhan): implement this
       fatalError("Not implemented")
