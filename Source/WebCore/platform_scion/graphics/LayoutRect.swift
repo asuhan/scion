@@ -103,6 +103,16 @@ struct LayoutRectWrapper {
     m_size.expand(width: box.left + box.right, height: box.top + box.bottom)
   }
 
+  mutating func shiftXEdgeBy(delta: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func shiftYEdgeBy(delta: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func shiftXEdgeTo<T>(edge: T) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

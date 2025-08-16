@@ -597,6 +597,39 @@ class BackgroundPainter {
           context.fillRect(rect: pixelSnappedFillRect, color: ColorWrapper.black)
         }
       } else {
+        // Inset shadow.
+        let borderRect = borderShape.deprecatedInnerRoundedRect()
+        var holeRect = borderRect.rect
+        holeRect.inflate(d: -shadowSpread)
+
+        let isHorizontal = style.isHorizontalWritingMode()
+        if !includeLogicalLeftEdge {
+          if isHorizontal {
+            holeRect.shiftXEdgeBy(
+              delta:
+                -(max(shadowOffset.width(), LayoutUnit(value: 0)) + shadowPaintingExtent
+                + shadowSpread))
+          } else {
+            holeRect.shiftYEdgeBy(
+              delta:
+                -(max(shadowOffset.height(), LayoutUnit(value: 0)) + shadowPaintingExtent
+                + shadowSpread))
+          }
+        }
+
+        if !includeLogicalRightEdge {
+          if isHorizontal {
+            holeRect.setWidth(
+              width: holeRect.width() - min(shadowOffset.width(), LayoutUnit(value: 0))
+                + shadowPaintingExtent + shadowSpread)
+          } else {
+            holeRect.setHeight(
+              height: holeRect.height() - min(shadowOffset.height(), LayoutUnit(value: 0))
+                + shadowPaintingExtent
+                + shadowSpread)
+          }
+        }
+
         // TODO(asuhan): implement this
         fatalError("Not implemented")
       }
