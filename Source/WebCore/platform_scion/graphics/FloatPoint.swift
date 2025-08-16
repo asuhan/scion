@@ -70,8 +70,7 @@ struct FloatPoint {
   }
 
   static func - (a: FloatPoint, b: FloatPoint) -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FloatSize(width: a.x - b.x, height: a.y - b.y)
   }
 
   static func == (lhs: FloatPoint, rhs: FloatPoint) -> Bool {
