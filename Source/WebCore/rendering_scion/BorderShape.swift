@@ -54,6 +54,21 @@ struct BorderShape {
     fatalError("Not implemented")
   }
 
+  func outerShapeContains(rect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func radii() -> RoundedRectRadii {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func setRadii(radii: RoundedRectRadii) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func snappedOuterRect(deviceScaleFactor: Float32) -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

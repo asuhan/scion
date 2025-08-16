@@ -507,6 +507,7 @@ class BackgroundPainter {
     var shadow = style.boxShadow()
     while shadow != nil {
       if shadow!.style != shadowStyle {
+        shadow = shadow!.next
         continue
       }
 
@@ -516,6 +517,7 @@ class BackgroundPainter {
       let shadowRadius = shadow!.radius.value()
 
       if shadowOffset.isZero() && shadowRadius == 0 && !shadowSpread.bool() {
+        shadow = shadow!.next
         continue
       }
 
@@ -525,6 +527,7 @@ class BackgroundPainter {
         var shadowShape = borderShape
         shadowShape.inflate(amount: shadowSpread)
         if shadowShape.isEmpty() {
+          shadow = shadow!.next
           continue
         }
 
@@ -577,11 +580,21 @@ class BackgroundPainter {
           context: context, deviceScaleFactor: deviceScaleFactor)
 
         if hasBorderRadius {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          var influenceShape = BorderShape.shapeForBorderRect(style: style, borderRect: shadowRect)
+          let influenceRadii = influenceShape.radii()
+          influenceRadii.expand(size: 2 * shadowPaintingExtent + shadowSpread)
+          influenceShape.setRadii(radii: influenceRadii)
+
+          if influenceShape.outerShapeContains(rect: paintInfo.rect) {
+            context.fillRect(
+              rect: shadowShape.snappedOuterRect(deviceScaleFactor: deviceScaleFactor),
+              color: ColorWrapper.black)
+          } else {
+            shadowShape.fillOuterShape(
+              context: context, color: ColorWrapper.black, deviceScaleFactor: deviceScaleFactor)
+          }
         } else {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          context.fillRect(rect: pixelSnappedFillRect, color: ColorWrapper.black)
         }
       } else {
         // TODO(asuhan): implement this
@@ -590,8 +603,6 @@ class BackgroundPainter {
 
       shadow = shadow!.next
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   private static func shouldInflateBorderRect(

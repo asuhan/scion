@@ -26,6 +26,11 @@
  */
 
 struct RoundedRectRadii {
+  func expand(size: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var topLeft = LayoutSizeWrapper()
   var topRight = LayoutSizeWrapper()
   var bottomLeft = LayoutSizeWrapper()
