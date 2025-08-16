@@ -78,6 +78,13 @@ class LayoutSizeWrapper {
     return a
   }
 
+  @discardableResult
+  static func -= (a: inout LayoutSizeWrapper, b: LayoutSizeWrapper) -> LayoutSizeWrapper {
+    a.setWidth(width: a.width() - b.width())
+    a.setHeight(height: a.height() - b.height())
+    return a
+  }
+
   prefix static func - (size: LayoutSizeWrapper) -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: -size.width(), height: -size.height())
   }
