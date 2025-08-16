@@ -93,8 +93,7 @@ struct LayoutPointWrapper: Equatable {
   }
 
   static func + (a: LayoutPointWrapper, b: LayoutSizeWrapper) -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutPointWrapper(x: a.x + b.width(), y: a.y + b.height())
   }
 
   static func + (a: LayoutPointWrapper, b: LayoutPointWrapper) -> LayoutPointWrapper {
