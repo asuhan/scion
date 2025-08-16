@@ -30,11 +30,16 @@
 // BorderShape is used to fill and clip to the shape formed by the border and padding boxes with border-radius.
 // In future, this may be a more complex shape than a rounded rect, so accessors that return rounded rects
 // are deprecated.
-class BorderShape {
+struct BorderShape {
   static func shapeForBorderRect(
     style: RenderStyleWrapper, borderRect: LayoutRectWrapper, includeLogicalLeftEdge: Bool = true,
     includeLogicalRightEdge: Bool = true
   ) -> BorderShape {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -45,6 +50,27 @@ class BorderShape {
   }
 
   func deprecatedInnerRoundedRect() -> RoundedRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func snappedOuterRect(deviceScaleFactor: Float32) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func move(offset: LayoutSizeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // This will inflate the m_borderRect, and scale the radii up accordingly. Note that this changes the meaning of "inner shape" which will no longer correspond to the padding box.
+  mutating func inflate(amount: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -60,6 +86,11 @@ class BorderShape {
   }
 
   func clipToInnerShape(context: GraphicsContextWrapper, deviceScaleFactor: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipOutOuterShape(context: GraphicsContextWrapper, deviceScaleFactor: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

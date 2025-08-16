@@ -488,6 +488,115 @@ class BackgroundPainter {
     paintRect: LayoutRectWrapper, style: RenderStyleWrapper, shadowStyle: ShadowStyle,
     includeLogicalLeftEdge: Bool = true, includeLogicalRightEdge: Bool = true
   ) {
+    // FIXME: Deal with border-image. Would be great to use border-image as a mask.
+    let context = paintInfo.context()
+    if context.paintingDisabled() || style.boxShadow() == nil {
+      return
+    }
+
+    let borderShape = BorderShape.shapeForBorderRect(
+      style: style, borderRect: paintRect, includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge)
+
+    let hasBorderRadius = style.hasBorderRadius()
+    let deviceScaleFactor = document().deviceScaleFactor()
+
+    let hasOpaqueBackground = style.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor
+    ).isOpaque()
+    var shadow = style.boxShadow()
+    while shadow != nil {
+      if shadow!.style != shadowStyle {
+        continue
+      }
+
+      var shadowOffset = LayoutSizeWrapper(width: shadow!.x().value(), height: shadow!.y().value())
+      let shadowPaintingExtent = shadow!.paintingExtent()
+      let shadowSpread = LayoutUnit(value: shadow!.spread.value())
+      let shadowRadius = shadow!.radius.value()
+
+      if shadowOffset.isZero() && shadowRadius == 0 && !shadowSpread.bool() {
+        continue
+      }
+
+      let shadowColor = style.colorWithColorFilter(color: shadow!.color)
+
+      if shadow!.style == .Normal {
+        var shadowShape = borderShape
+        shadowShape.inflate(amount: shadowSpread)
+        if shadowShape.isEmpty() {
+          continue
+        }
+
+        // If the box is opaque, it is unnecessary to clip it out. However, doing so saves time
+        // when painting the shadow. On the other hand, it introduces subpixel gaps along the
+        // corners. Those are avoided by insetting the clipping path by one pixel.
+        var adjustedBorderShape = borderShape
+        if BackgroundPainter.shouldInflateBorderRect(
+          hasOpaqueBackground: hasOpaqueBackground, context: context)
+        {
+          adjustedBorderShape.inflate(amount: -LayoutUnit(value: UInt64(1)))
+        }
+
+        var shadowRect = paintRect
+        shadowRect.inflate(d: shadowPaintingExtent + shadowSpread)
+        shadowRect.move(size: shadowOffset)
+        let pixelSnappedShadowRect = snapRectToDevicePixels(
+          rect: shadowRect, pixelSnappingFactor: deviceScaleFactor)
+
+        let _ = GraphicsContextStateSaver(context: context)
+        context.clip(rect: pixelSnappedShadowRect)
+
+        // Move the fill just outside the clip, adding at least 1 pixel of separation so that the fill does not
+        // bleed in (due to antialiasing) if the context is transformed.
+        let xOffset =
+          paintRect.width() + max(LayoutUnit(value: 0), shadowOffset.width()) + shadowPaintingExtent
+          + 2 * shadowSpread
+          + LayoutUnit(value: 1)
+        let extraOffset = LayoutSizeWrapper(width: xOffset.ceil(), height: 0)
+        shadowOffset -= extraOffset
+        shadowShape.move(offset: extraOffset)
+
+        let pixelSnappedFillRect = shadowShape.snappedOuterRect(
+          deviceScaleFactor: deviceScaleFactor)
+
+        let shadowRectOrigin = shadowShape.borderRect().location() + shadowOffset
+        let snappedShadowOrigin = FloatPoint(
+          x: roundToDevicePixel(
+            value: shadowRectOrigin.x, pixelSnappingFactor: deviceScaleFactor),
+          y: roundToDevicePixel(value: shadowRectOrigin.y, pixelSnappingFactor: deviceScaleFactor)
+        )
+        let snappedShadowOffset = snappedShadowOrigin - pixelSnappedFillRect.location()
+
+        context.setDropShadow(
+          dropShadow: GraphicsDropShadow(
+            offset: snappedShadowOffset, radius: shadowRadius, color: shadowColor,
+            radiusMode: shadow!.isWebkitBoxShadow ? .Legacy : .Default))
+
+        adjustedBorderShape.clipOutOuterShape(
+          context: context, deviceScaleFactor: deviceScaleFactor)
+
+        if hasBorderRadius {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      shadow = shadow!.next
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func shouldInflateBorderRect(
+    hasOpaqueBackground: Bool, context: GraphicsContextWrapper
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

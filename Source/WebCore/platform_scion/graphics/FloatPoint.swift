@@ -69,6 +69,11 @@ struct FloatPoint {
     return FloatPoint(x: a.x + b.width, y: a.y + b.height)
   }
 
+  static func - (a: FloatPoint, b: FloatPoint) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (lhs: FloatPoint, rhs: FloatPoint) -> Bool {
     return lhs.x == rhs.x && lhs.y == rhs.y
   }
