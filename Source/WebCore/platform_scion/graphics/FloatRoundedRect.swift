@@ -60,6 +60,11 @@ struct FloatRoundedRect {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func setRect(rect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

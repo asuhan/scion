@@ -630,6 +630,27 @@ class BackgroundPainter {
           }
         }
 
+        var roundedHoleRect = RoundedRect(rect: holeRect, radii: borderRect.radii)
+        if shadowSpread.bool() && roundedHoleRect.isRounded() {
+          let roundedRectCorrectingForSpread = BackgroundPainter.roundedRectCorrectingForSpread(
+            style: style, paintRect: paintRect)
+          roundedHoleRect.radii = roundedRectCorrectingForSpread.radii
+        }
+
+        let pixelSnappedHoleRect = roundedHoleRect.pixelSnappedRoundedRectForPainting(
+          deviceScaleFactor: deviceScaleFactor)
+        let pixelSnappedBorderRect = borderRect.pixelSnappedRoundedRectForPainting(
+          deviceScaleFactor: deviceScaleFactor)
+        if pixelSnappedHoleRect.isEmpty() {
+          if hasBorderRadius {
+            context.fillRoundedRect(rect: pixelSnappedBorderRect, color: shadowColor)
+          } else {
+            context.fillRect(rect: pixelSnappedBorderRect.rect(), color: shadowColor)
+          }
+          shadow = shadow!.next
+          continue
+        }
+
         // TODO(asuhan): implement this
         fatalError("Not implemented")
       }
@@ -641,6 +662,13 @@ class BackgroundPainter {
   private static func shouldInflateBorderRect(
     hasOpaqueBackground: Bool, context: GraphicsContextWrapper
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func roundedRectCorrectingForSpread(
+    style: RenderStyleWrapper, paintRect: LayoutRectWrapper
+  ) -> RoundedRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
