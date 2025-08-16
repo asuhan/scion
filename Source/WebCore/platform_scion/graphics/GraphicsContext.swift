@@ -195,6 +195,13 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func fillRectWithRoundedHole(
+    rect: FloatRectWrapper, roundedHoleRect: FloatRoundedRect, color: ColorWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearRect(rect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -311,6 +318,11 @@ class GraphicsContextWrapper {
   }
 
   func endTransparencyLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func translate(size: FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

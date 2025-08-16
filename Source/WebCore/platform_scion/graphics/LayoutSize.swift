@@ -109,3 +109,8 @@ class LayoutSizeWrapper {
 internal func ceiledIntSize(s: LayoutSizeWrapper) -> IntSize {
   return IntSize(width: s.width().ceil(), height: s.height().ceil())
 }
+
+func roundSizeToDevicePixels(size: LayoutSizeWrapper, pixelSnappingFactor: Float32) -> FloatSize {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

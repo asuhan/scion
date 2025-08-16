@@ -36,6 +36,14 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
       radiusMode: boxShadow.isWebkitBoxShadow ? .Legacy : .Default))
 }
 
+private func areaCastingShadowInHole(
+  holeRect: LayoutRectWrapper, shadowExtent: LayoutUnit, shadowSpread: LayoutUnit,
+  shadowOffset: LayoutSizeWrapper
+) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 struct BackgroundImageGeometry {
   func relativePhase() -> LayoutSizeWrapper {
     var relativePhase = phase.deepCopy()
@@ -651,8 +659,36 @@ class BackgroundPainter {
           continue
         }
 
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let fillColor = shadowColor.opaqueColor()
+        let shadowCastingRect = areaCastingShadowInHole(
+          holeRect: borderRect.rect, shadowExtent: shadowPaintingExtent, shadowSpread: shadowSpread,
+          shadowOffset: shadowOffset)
+        let pixelSnappedOuterRect = snapRectToDevicePixels(
+          rect: shadowCastingRect, pixelSnappingFactor: deviceScaleFactor)
+
+        let _ = GraphicsContextStateSaver(context: context)
+        if hasBorderRadius {
+          context.clipRoundedRect(rect: pixelSnappedBorderRect)
+        } else {
+          context.clip(rect: pixelSnappedBorderRect.rect())
+        }
+
+        let xOffset =
+          2 * paintRect.width() + max(LayoutUnit(value: 0), shadowOffset.width())
+          + shadowPaintingExtent - 2 * shadowSpread + LayoutUnit(value: 1)
+        let extraOffset = LayoutSizeWrapper(width: xOffset.ceil(), height: 0)
+
+        context.translate(size: extraOffset.FloatSize())
+        shadowOffset -= extraOffset
+
+        let snappedShadowOffset = roundSizeToDevicePixels(
+          size: shadowOffset, pixelSnappingFactor: deviceScaleFactor)
+        context.setDropShadow(
+          dropShadow: GraphicsDropShadow(
+            offset: snappedShadowOffset, radius: shadowRadius, color: shadowColor,
+            radiusMode: shadow!.isWebkitBoxShadow ? .Legacy : .Default))
+        context.fillRectWithRoundedHole(
+          rect: pixelSnappedOuterRect, roundedHoleRect: pixelSnappedHoleRect, color: fillColor)
       }
 
       shadow = shadow!.next
