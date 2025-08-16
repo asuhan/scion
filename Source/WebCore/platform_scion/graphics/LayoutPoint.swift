@@ -143,6 +143,11 @@ func roundPointToDevicePixels(
   point: LayoutPointWrapper, pixelSnappingFactor: Float32, directionalRoundingToRight: Bool = true,
   directionalRoundingToBottom: Bool = true
 ) -> FloatPoint {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return FloatPoint(
+    x: roundToDevicePixel(
+      value: point.x, pixelSnappingFactor: pixelSnappingFactor,
+      needsDirectionalRounding: !directionalRoundingToRight),
+    y: roundToDevicePixel(
+      value: point.y, pixelSnappingFactor: pixelSnappingFactor,
+      needsDirectionalRounding: !directionalRoundingToBottom))
 }
