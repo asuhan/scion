@@ -40,8 +40,17 @@ private func areaCastingShadowInHole(
   holeRect: LayoutRectWrapper, shadowExtent: LayoutUnit, shadowSpread: LayoutUnit,
   shadowOffset: LayoutSizeWrapper
 ) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var bounds = holeRect
+
+  bounds.inflate(d: shadowExtent)
+
+  if shadowSpread < 0 {
+    bounds.inflate(d: -shadowSpread)
+  }
+
+  var offsetBounds = bounds
+  offsetBounds.move(size: -shadowOffset)
+  return unionRect(a: bounds, b: offsetBounds)
 }
 
 struct BackgroundImageGeometry {
