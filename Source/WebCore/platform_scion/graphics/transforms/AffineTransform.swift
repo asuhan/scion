@@ -30,6 +30,11 @@ class AffineTransform {
     self.transform = [a, b, c, d, e, f]
   }
 
+  func a() -> Float64 { return transform[0] }
+  func b() -> Float64 { return transform[1] }
+  func c() -> Float64 { return transform[2] }
+  func d() -> Float64 { return transform[3] }
+
   // These functions get the length of an axis-aligned unit vector
   // once it has been mapped through the transform
   func xScale() -> Float64 {

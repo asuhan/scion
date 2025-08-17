@@ -707,8 +707,19 @@ class BackgroundPainter {
   private static func shouldInflateBorderRect(
     hasOpaqueBackground: Bool, context: GraphicsContextWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasOpaqueBackground {
+      return false
+    }
+
+    // FIXME: The function to decide on the policy based on the transform should be a named function.
+    // FIXME: It's not clear if this check is right. What about integral scale factors?
+    let transform = context.getCTM()
+    if transform.a() != 1 || (transform.d() != 1 && transform.d() != -1) || transform.b() != 0
+      || transform.c() != 0
+    {
+      return true
+    }
+    return false
   }
 
   private static func roundedRectCorrectingForSpread(
