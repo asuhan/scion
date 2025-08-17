@@ -58,6 +58,13 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  // Functions for querying the current scrolled position, negating the effects of overhang
+  // and adjusting for page scale.
+  func scrollPositionForFixedPosition() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintBehavior() -> PaintBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

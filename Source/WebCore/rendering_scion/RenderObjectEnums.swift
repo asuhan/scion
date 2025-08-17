@@ -41,3 +41,12 @@ enum MarkingBehavior: UInt8 {
   case MarkOnlyThis
   case MarkContainingBlockChain
 }
+
+struct MapCoordinatesMode: OptionSet {
+  let rawValue: UInt8
+
+  static let IsFixed = MapCoordinatesMode(rawValue: 1 << 0)
+  static let UseTransforms = MapCoordinatesMode(rawValue: 1 << 1)
+  static let ApplyContainerFlip = MapCoordinatesMode(rawValue: 1 << 2)
+  static let IgnoreStickyOffsets = MapCoordinatesMode(rawValue: 1 << 3)
+}

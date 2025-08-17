@@ -765,6 +765,7 @@ class BackgroundPainter {
       || (enclosingLayer != nil && enclosingLayer!.hasTransformedAncestor())
     let fixedAttachment = fillLayer.attachment == .FixedBackground && !isTransformed
 
+    var destinationRect = borderBoxRect
     let deviceScaleFactor = renderer.document().deviceScaleFactor()
     if !fixedAttachment {
       var right = LayoutUnit()
@@ -837,18 +838,37 @@ class BackgroundPainter {
             viewportRect.setLocation(location: LayoutPointWrapper(x: 0, y: -topContentInset))
           }
         } else if useFixedLayout || frameView.frameScaleFactor() != 1 {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          // scrollPositionForFixedPosition() is adjusted for page scale and it does not include
+          // topContentInset so do not add it to the calculation below.
+          viewportRect.setLocation(location: frameView.scrollPositionForFixedPosition())
         } else {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          // documentScrollPositionRelativeToViewOrigin() includes -topContentInset in its height
+          // so we need to account for that in calculating the phase size
+          topContentInset = frameView.topContentInset(
+            contentInsetTypeToReturn: .WebCoreOrPlatformContentInset)
+          viewportRect.setLocation(
+            location: LayoutPointWrapper(
+              point: frameView.documentScrollPositionRelativeToViewOrigin()))
         }
 
         top += topContentInset
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let paintContainer = paintContainer {
+        viewportRect.moveBy(
+          offset: LayoutPointWrapper(
+            size: -paintContainer.localToAbsolute(localPoint: FloatPoint()))
+        )
+      }
+
+      destinationRect = viewportRect
+      positioningAreaSize = destinationRect.size()
+      positioningAreaSize.setHeight(height: positioningAreaSize.height() - topContentInset)
+      positioningAreaSize = LayoutSizeWrapper(
+        size: snapRectToDevicePixels(
+          rect: LayoutRectWrapper(location: destinationRect.location(), size: positioningAreaSize),
+          pixelSnappingFactor: deviceScaleFactor
+        ).size())
     }
 
     // TODO(asuhan): implement this

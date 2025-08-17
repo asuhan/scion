@@ -52,4 +52,15 @@ class ScrollViewWrapper: ScrollableAreaWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // scrollPostion() anchors its (0,0) point at the ScrollableArea's origin. The top of the scrolling
+  // layer does not represent the top of the view when there is a topContentInset. Additionally, as
+  // detailed above, the origin of the scrolling layer also does not necessarily correspond with the
+  // top of the document anyway, since there could also be header. documentScrollPositionRelativeToViewOrigin()
+  // will return a version of the current scroll offset which tracks the top of the Document
+  // relative to the very top of the view.
+  func documentScrollPositionRelativeToViewOrigin() -> ScrollPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -256,6 +256,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Convert the given local point to absolute coordinates. If OptionSet<MapCoordinatesMode> includes UseTransforms, take transforms into account.
+  func localToAbsolute(
+    localPoint: FloatPoint = FloatPoint(), mode: MapCoordinatesMode = MapCoordinatesMode(),
+    wasFixed: Bool? = nil
+  ) -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func style() -> RenderStyleWrapper {
     return convert_render_style(p: wk_interop.RenderObject_style(p))
   }
