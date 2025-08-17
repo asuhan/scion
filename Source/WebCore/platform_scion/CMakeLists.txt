@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     LengthPoint.swift
     LengthSize.swift
     RectEdges.swift
+    ScrollableArea.swift
     ScrollTypes.swift
     ScrollView.swift
 )

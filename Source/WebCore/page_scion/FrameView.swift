@@ -23,4 +23,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FrameViewWrapper: ScrollViewWrapper {}
+class FrameViewWrapper: ScrollViewWrapper {
+  func topContentInset(contentInsetTypeToReturn: TopContentInsetType = .WebCoreContentInset)
+    -> Float32
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

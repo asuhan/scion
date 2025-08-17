@@ -813,7 +813,7 @@ class BackgroundPainter {
       }
     } else {
       var viewportRect = LayoutRectWrapper()
-      let topContentInset: Float32 = 0
+      var topContentInset: Float32 = 0
       if renderer.settings().fixedBackgroundsPaintRelativeToDocument() {
         viewportRect = LayoutRectWrapper(rect: view.unscaledDocumentRect())
       } else {
@@ -825,13 +825,17 @@ class BackgroundPainter {
           // down the frameView to to fit in the current viewport.
           viewportRect.setSize(size: LayoutSizeWrapper(size: frameView.fixedLayoutSize()))
         } else {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          viewportRect.setSize(size: LayoutSizeWrapper(size: frameView.sizeForVisibleContent()))
         }
 
         if renderer.fixedBackgroundPaintsInLocalCoordinates() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          if !useFixedLayout {
+            // Shifting location up by topContentInset is needed for layout tests which expect
+            // layout to be shifted down when calling window.internals.setTopContentInset().
+            topContentInset = frameView.topContentInset(
+              contentInsetTypeToReturn: .WebCoreOrPlatformContentInset)
+            viewportRect.setLocation(location: LayoutPointWrapper(x: 0, y: -topContentInset))
+          }
         } else if useFixedLayout || frameView.frameScaleFactor() != 1 {
           // TODO(asuhan): implement this
           fatalError("Not implemented")

@@ -24,7 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ScrollViewWrapper {
+class ScrollViewWrapper: ScrollableAreaWrapper {
+  // There are at least three types of contentInset. Usually we just care about WebCoreContentInset, which is the inset
+  // that is set on a Page that requires WebCore to move its layers to accomodate the inset. However, there are platform
+  // concepts that are similar on both iOS and Mac when there is a platformWidget(). Sometimes we need the Mac platform value
+  // for topContentInset, so when the TopContentInsetType is WebCoreOrPlatformContentInset, platformTopContentInset()
+  // will be returned instead of the value set on Page.
+  enum TopContentInsetType {
+    case WebCoreContentInset
+    case WebCoreOrPlatformContentInset
+  }
+
+  // Size available for view contents, including content inset areas. Not affected by zooming.
+  func sizeForVisibleContent(scrollbarInclusion: VisibleContentRectIncludesScrollbars = .No)
+    -> IntSize
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fixedLayoutSize() -> IntSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
