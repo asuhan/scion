@@ -650,7 +650,9 @@ class BackgroundPainter {
         var roundedHoleRect = RoundedRect(rect: holeRect, radii: borderRect.radii)
         if shadowSpread.bool() && roundedHoleRect.isRounded() {
           let roundedRectCorrectingForSpread = BackgroundPainter.roundedRectCorrectingForSpread(
-            style: style, paintRect: paintRect)
+            style: style, paintRect: paintRect, shadowSpread: shadowSpread,
+            includeLogicalLeftEdge: includeLogicalLeftEdge,
+            includeLogicalRightEdge: includeLogicalRightEdge)
           roundedHoleRect.radii = roundedRectCorrectingForSpread.radii
         }
 
@@ -723,10 +725,24 @@ class BackgroundPainter {
   }
 
   private static func roundedRectCorrectingForSpread(
-    style: RenderStyleWrapper, paintRect: LayoutRectWrapper
+    style: RenderStyleWrapper, paintRect: LayoutRectWrapper, shadowSpread: LayoutUnit,
+    includeLogicalLeftEdge: Bool,
+    includeLogicalRightEdge: Bool
   ) -> RoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let horizontal = style.isHorizontalWritingMode()
+    let leftWidth = LayoutUnit(
+      value: (!horizontal || includeLogicalLeftEdge) ? style.borderLeftWidth() + shadowSpread : 0)
+    let rightWidth = LayoutUnit(
+      value: (!horizontal || includeLogicalRightEdge) ? style.borderRightWidth() + shadowSpread : 0)
+    let topWidth = LayoutUnit(
+      value: (horizontal || includeLogicalLeftEdge) ? style.borderTopWidth() + shadowSpread : 0)
+    let bottomWidth = LayoutUnit(
+      value: (horizontal || includeLogicalRightEdge) ? style.borderBottomWidth() + shadowSpread : 0)
+
+    return style.getRoundedInnerBorderFor(
+      borderRect: paintRect, topWidth: topWidth, bottomWidth: bottomWidth, leftWidth: leftWidth,
+      rightWidth: rightWidth, includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge)
   }
 
   static func calculateBackgroundImageGeometry(

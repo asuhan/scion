@@ -405,6 +405,16 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_hasTextCombine(p)
   }
 
+  func getRoundedInnerBorderFor(
+    borderRect: LayoutRectWrapper, topWidth: LayoutUnit, bottomWidth: LayoutUnit,
+    leftWidth: LayoutUnit, rightWidth: LayoutUnit,
+    includeLogicalLeftEdge: Bool = true,
+    includeLogicalRightEdge: Bool = true
+  ) -> RoundedRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func getRoundedInnerBorderFor(
     borderRect: LayoutRectWrapper, topWidth: LayoutUnit, bottomWidth: LayoutUnit,
     leftWidth: LayoutUnit, rightWidth: LayoutUnit, radii: BorderData.Radii?,
