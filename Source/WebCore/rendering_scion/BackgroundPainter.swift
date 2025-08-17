@@ -38,6 +38,11 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
       radiusMode: boxShadow.isWebkitBoxShadow ? .Legacy : .Default))
 }
 
+private func getSpace(areaSize: LayoutUnit, tileSize: LayoutUnit) -> LayoutUnit? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func resolveEdgeRelativeLength(
   length: LengthWrapper, edge: Edge, availableSpace: LayoutUnit, areaSize: LayoutSizeWrapper,
   tileSize: LayoutSizeWrapper
@@ -884,13 +889,14 @@ class BackgroundPainter {
     let tileSize = calculateFillTileSize(
       renderer: renderer, fillLayer: fillLayer, positioningAreaSize: positioningAreaSize)
 
-    let backgroundRepeatX = fillLayer.repeat.x
+    var backgroundRepeatX = fillLayer.repeat.x
     let backgroundRepeatY = fillLayer.repeat.y
     let availableWidth = positioningAreaSize.width() - tileSize.width()
     let availableHeight = positioningAreaSize.height() - tileSize.height()
 
+    let spaceSize = LayoutSizeWrapper()
     let phase = LayoutSizeWrapper()
-    let computedXPosition = resolveEdgeRelativeLength(
+    var computedXPosition = resolveEdgeRelativeLength(
       length: fillLayer.xPosition, edge: fillLayer.backgroundXOrigin,
       availableSpace: availableWidth, areaSize: positioningAreaSize,
       tileSize: tileSize)
@@ -924,6 +930,27 @@ class BackgroundPainter {
         height: tileSize.height().bool()
           ? tileSize.height() - fmodf((computedYPosition + top).float(), tileSize.height().float())
           : 0)
+    }
+
+    if backgroundRepeatX == .Repeat {
+      phase.setWidth(
+        width: tileSize.width().bool()
+          ? tileSize.width()
+            - fmodf((computedXPosition + left).float(), tileSize.width().float()) : 0)
+      spaceSize.setWidth(width: 0)
+    } else if backgroundRepeatX == .Space && tileSize.width() > 0 {
+      if let space = getSpace(areaSize: positioningAreaSize.width(), tileSize: tileSize.width()) {
+        let actualWidth = tileSize.width() + space
+        computedXPosition = minimumValueForLength(
+          length: LengthWrapper(), maximumValue: availableWidth)
+        spaceSize.setWidth(width: space)
+        spaceSize.setHeight(height: 0)
+        phase.setWidth(
+          width: actualWidth.bool()
+            ? actualWidth - fmodf((computedXPosition + left).float(), actualWidth.float()) : 0)
+      } else {
+        backgroundRepeatX = .NoRepeat
+      }
     }
 
     // TODO(asuhan): implement this
