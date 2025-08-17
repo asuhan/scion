@@ -51,6 +51,13 @@ private func resolveEdgeRelativeLength(
   fatalError("Not implemented")
 }
 
+private func pixelSnapBackgroundImageGeometryForPainting(scaleFactor: Float32) -> (
+  LayoutRectWrapper, LayoutSizeWrapper, LayoutSizeWrapper, LayoutSizeWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func areaCastingShadowInHole(
   holeRect: LayoutRectWrapper, shadowExtent: LayoutUnit, shadowSpread: LayoutUnit,
   shadowOffset: LayoutSizeWrapper
@@ -69,6 +76,15 @@ private func areaCastingShadowInHole(
 }
 
 struct BackgroundImageGeometry {
+  init(
+    destinationRect: LayoutRectWrapper, tileSizeWithoutPixelSnapping: LayoutSizeWrapper,
+    tileSize: LayoutSizeWrapper, phase: LayoutSizeWrapper, spaceSize: LayoutSizeWrapper,
+    fixedAttachment: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func relativePhase() -> LayoutSizeWrapper {
     var relativePhase = phase.deepCopy()
     relativePhase += destinationRect.location() - destinationOrigin
@@ -886,7 +902,7 @@ class BackgroundPainter {
         ).size())
     }
 
-    let tileSize = calculateFillTileSize(
+    var tileSize = calculateFillTileSize(
       renderer: renderer, fillLayer: fillLayer, positioningAreaSize: positioningAreaSize)
 
     var backgroundRepeatX = fillLayer.repeat.x
@@ -894,8 +910,8 @@ class BackgroundPainter {
     let availableWidth = positioningAreaSize.width() - tileSize.width()
     let availableHeight = positioningAreaSize.height() - tileSize.height()
 
-    let spaceSize = LayoutSizeWrapper()
-    let phase = LayoutSizeWrapper()
+    var spaceSize = LayoutSizeWrapper()
+    var phase = LayoutSizeWrapper()
     var computedXPosition = resolveEdgeRelativeLength(
       length: fillLayer.xPosition, edge: fillLayer.backgroundXOrigin,
       availableSpace: availableWidth, areaSize: positioningAreaSize,
@@ -983,9 +999,33 @@ class BackgroundPainter {
         backgroundRepeatY = .NoRepeat
       }
     }
+    if backgroundRepeatY == .NoRepeat {
+      var yOffset = top + computedYPosition
+      if yOffset > 0 {
+        destinationRect.move(dx: LayoutUnit(value: 0), dy: yOffset)
+      }
+      yOffset = min(yOffset, LayoutUnit(value: 0))
+      phase.setHeight(height: -yOffset)
+      destinationRect.setHeight(height: tileSize.height() + yOffset)
+      spaceSize.setHeight(height: 0)
+    }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fixedAttachment {
+      let attachmentPoint = borderBoxRect.location()
+      phase.expand(
+        width: max(attachmentPoint.x - destinationRect.x(), LayoutUnit(value: 0)),
+        height: max(attachmentPoint.y - destinationRect.y(), LayoutUnit(value: 0)))
+    }
+
+    destinationRect.intersect(other: borderBoxRect)
+
+    let tileSizeWithoutPixelSnapping = tileSize.deepCopy()
+    (destinationRect, tileSize, phase, spaceSize) = pixelSnapBackgroundImageGeometryForPainting(
+      scaleFactor: deviceScaleFactor)
+
+    return BackgroundImageGeometry(
+      destinationRect: destinationRect, tileSizeWithoutPixelSnapping: tileSizeWithoutPixelSnapping,
+      tileSize: tileSize, phase: phase, spaceSize: spaceSize, fixedAttachment: fixedAttachment)
   }
 
   static func boxShadowShouldBeAppliedToBackground(
