@@ -148,6 +148,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return nil
   }
 
+  func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func chooseInterpolationQuality(
     context: GraphicsContextWrapper, image: ImageWrapper, layer: FillLayerWrapper,
     size: LayoutSizeWrapper

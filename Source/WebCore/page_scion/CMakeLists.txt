@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    FrameView.swift
     LocalFrame.swift
     LocalFrameView.swift
     LocalFrameViewLayoutContext.swift

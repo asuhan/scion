@@ -24,6 +24,11 @@
  */
 
 class SettingsWrapper {
+  func fixedBackgroundsPaintRelativeToDocument() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageSubsamplingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

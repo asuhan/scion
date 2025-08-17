@@ -31,6 +31,11 @@
 class LayoutSizeWrapper {
   init() {}
 
+  init(size: IntSize) {
+    width_ = LayoutUnit(value: size.width)
+    height_ = LayoutUnit(value: size.height)
+  }
+
   init(width: LayoutUnit, height: LayoutUnit) {
     width_ = width
     height_ = height

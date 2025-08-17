@@ -812,6 +812,37 @@ class BackgroundPainter {
           .size())
       }
     } else {
+      var viewportRect = LayoutRectWrapper()
+      let topContentInset: Float32 = 0
+      if renderer.settings().fixedBackgroundsPaintRelativeToDocument() {
+        viewportRect = LayoutRectWrapper(rect: view.unscaledDocumentRect())
+      } else {
+        let frameView = view.frameView()
+        let useFixedLayout = frameView.useFixedLayout() && !frameView.fixedLayoutSize().isEmpty()
+
+        if useFixedLayout {
+          // Use the fixedLayoutSize() when useFixedLayout() because the rendering will scale
+          // down the frameView to to fit in the current viewport.
+          viewportRect.setSize(size: LayoutSizeWrapper(size: frameView.fixedLayoutSize()))
+        } else {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        if renderer.fixedBackgroundPaintsInLocalCoordinates() {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else if useFixedLayout || frameView.frameScaleFactor() != 1 {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        top += topContentInset
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

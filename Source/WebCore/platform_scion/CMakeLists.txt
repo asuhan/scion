@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     LengthSize.swift
     RectEdges.swift
     ScrollTypes.swift
+    ScrollView.swift
 )
 add_subdirectory(graphics)
 add_subdirectory(text)

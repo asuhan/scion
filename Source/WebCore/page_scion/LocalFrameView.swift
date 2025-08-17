@@ -24,7 +24,7 @@
 
 import wk_interop
 
-class LocalFrameViewWrapper {
+class LocalFrameViewWrapper: FrameViewWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
@@ -49,6 +49,11 @@ class LocalFrameViewWrapper {
   }
 
   func setContentIsOpaque(contentIsOpaque: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func frameScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

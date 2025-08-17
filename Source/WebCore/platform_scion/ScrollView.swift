@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2003-2021 Apple Inc. All rights reserved.
+ * Copyright (C) 2004-2018 Apple Inc. All rights reserved.
+ * Copyright (C) 2009 Holger Hans Peter Freyther
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,9 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntSize {
-  func isEmpty() -> Bool { return width <= 0 || height <= 0 }
+class ScrollViewWrapper {
+  func fixedLayoutSize() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
-  var width: Int32 = 0
-  var height: Int32 = 0
+  func useFixedLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

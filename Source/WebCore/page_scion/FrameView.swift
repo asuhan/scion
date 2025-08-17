@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2021 Apple Inc. All rights reserved.
+ * Copyright (C) 2022-2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,9 +23,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntSize {
-  func isEmpty() -> Bool { return width <= 0 || height <= 0 }
-
-  var width: Int32 = 0
-  var height: Int32 = 0
-}
+class FrameViewWrapper: ScrollViewWrapper {}
