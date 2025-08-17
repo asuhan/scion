@@ -890,7 +890,7 @@ class BackgroundPainter {
       renderer: renderer, fillLayer: fillLayer, positioningAreaSize: positioningAreaSize)
 
     var backgroundRepeatX = fillLayer.repeat.x
-    let backgroundRepeatY = fillLayer.repeat.y
+    var backgroundRepeatY = fillLayer.repeat.y
     let availableWidth = positioningAreaSize.width() - tileSize.width()
     let availableHeight = positioningAreaSize.height() - tileSize.height()
 
@@ -914,7 +914,7 @@ class BackgroundPainter {
           : 0)
     }
 
-    let computedYPosition = resolveEdgeRelativeLength(
+    var computedYPosition = resolveEdgeRelativeLength(
       length: fillLayer.yPosition, edge: fillLayer.backgroundYOrigin,
       availableSpace: availableHeight, areaSize: positioningAreaSize,
       tileSize: tileSize)
@@ -950,6 +950,37 @@ class BackgroundPainter {
             ? actualWidth - fmodf((computedXPosition + left).float(), actualWidth.float()) : 0)
       } else {
         backgroundRepeatX = .NoRepeat
+      }
+    }
+
+    if backgroundRepeatX == .NoRepeat {
+      var xOffset = left + computedXPosition
+      if xOffset > 0 {
+        destinationRect.move(dx: xOffset, dy: LayoutUnit(value: 0))
+      }
+      xOffset = min(xOffset, LayoutUnit(value: 0))
+      phase.setWidth(width: -xOffset)
+      destinationRect.setWidth(width: tileSize.width() + xOffset)
+      spaceSize.setWidth(width: 0)
+    }
+
+    if backgroundRepeatY == .Repeat {
+      phase.setHeight(
+        height: tileSize.height().bool()
+          ? tileSize.height() - fmodf((computedYPosition + top).float(), tileSize.height().float())
+          : 0)
+      spaceSize.setHeight(height: 0)
+    } else if backgroundRepeatY == .Space && tileSize.height() > 0 {
+      if let space = getSpace(areaSize: positioningAreaSize.height(), tileSize: tileSize.height()) {
+        let actualHeight = tileSize.height() + space
+        computedYPosition = minimumValueForLength(
+          length: LengthWrapper(), maximumValue: availableHeight)
+        spaceSize.setHeight(height: space)
+        phase.setHeight(
+          height: actualHeight.bool()
+            ? actualHeight - fmodf((computedYPosition + top).float(), actualHeight.float()) : 0)
+      } else {
+        backgroundRepeatY = .NoRepeat
       }
     }
 
