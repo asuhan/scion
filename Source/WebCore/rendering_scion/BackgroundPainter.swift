@@ -21,6 +21,8 @@
  *
  */
 
+import Foundation
+
 private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style: RenderStyleWrapper)
 {
   var boxShadow = style.boxShadow()!
@@ -34,6 +36,14 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
       offset: shadowOffset, radius: boxShadow.radius.value(),
       color: style.colorWithColorFilter(color: boxShadow.color),
       radiusMode: boxShadow.isWebkitBoxShadow ? .Legacy : .Default))
+}
+
+private func resolveEdgeRelativeLength(
+  length: LengthWrapper, edge: Edge, availableSpace: LayoutUnit, areaSize: LayoutSizeWrapper,
+  tileSize: LayoutSizeWrapper
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 private func areaCastingShadowInHole(
@@ -871,6 +881,51 @@ class BackgroundPainter {
         ).size())
     }
 
+    let tileSize = calculateFillTileSize(
+      renderer: renderer, fillLayer: fillLayer, positioningAreaSize: positioningAreaSize)
+
+    let backgroundRepeatX = fillLayer.repeat.x
+    let backgroundRepeatY = fillLayer.repeat.y
+    let availableWidth = positioningAreaSize.width() - tileSize.width()
+    let availableHeight = positioningAreaSize.height() - tileSize.height()
+
+    let phase = LayoutSizeWrapper()
+    let computedXPosition = resolveEdgeRelativeLength(
+      length: fillLayer.xPosition, edge: fillLayer.backgroundXOrigin,
+      availableSpace: availableWidth, areaSize: positioningAreaSize,
+      tileSize: tileSize)
+    if backgroundRepeatX == .Round && positioningAreaSize.width() > 0 && tileSize.width() > 0 {
+      let numTiles = max(1, roundToInt(value: positioningAreaSize.width() / tileSize.width()))
+      if fillLayer.size().size.height.isAuto() && backgroundRepeatY != .Round {
+        tileSize.setHeight(
+          height: tileSize.height() * positioningAreaSize.width() / (numTiles * tileSize.width()))
+      }
+
+      tileSize.setWidth(width: positioningAreaSize.width() / numTiles)
+      phase.setWidth(
+        width: tileSize.width().bool()
+          ? tileSize.width() - fmodf((computedXPosition + left).float(), tileSize.width().float())
+          : 0)
+    }
+
+    let computedYPosition = resolveEdgeRelativeLength(
+      length: fillLayer.yPosition, edge: fillLayer.backgroundYOrigin,
+      availableSpace: availableHeight, areaSize: positioningAreaSize,
+      tileSize: tileSize)
+    if backgroundRepeatY == .Round && positioningAreaSize.height() > 0 && tileSize.height() > 0 {
+      let numTiles = max(1, roundToInt(value: positioningAreaSize.height() / tileSize.height()))
+      if fillLayer.size().size.width.isAuto() && backgroundRepeatX != .Round {
+        tileSize.setWidth(
+          width: tileSize.width() * positioningAreaSize.height() / (numTiles * tileSize.height()))
+      }
+
+      tileSize.setHeight(height: positioningAreaSize.height() / numTiles)
+      phase.setHeight(
+        height: tileSize.height().bool()
+          ? tileSize.height() - fmodf((computedYPosition + top).float(), tileSize.height().float())
+          : 0)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -970,6 +1025,14 @@ class BackgroundPainter {
     let hasFillImage =
       image != nil && image!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
     return !hasFillImage && !renderer.style().hasBorderRadius()
+  }
+
+  private static func calculateFillTileSize(
+    renderer: RenderBoxModelObjectWrapper, fillLayer: FillLayerWrapper,
+    positioningAreaSize: LayoutSizeWrapper
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func document() -> Document {

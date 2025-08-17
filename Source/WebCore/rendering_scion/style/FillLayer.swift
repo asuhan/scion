@@ -22,8 +22,38 @@
  *
  */
 
+struct FillSize {
+  let type: FillSizeType
+  let size: LengthSize
+}
+
+struct FillRepeatXY {
+  let x: FillRepeat = .Repeat
+  let y: FillRepeat = .Repeat
+}
+
 struct FillLayerWrapper {
   func image() -> StyleImage? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var xPosition: LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var yPosition: LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var backgroundXOrigin: Edge {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var backgroundYOrigin: Edge {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -43,7 +73,17 @@ struct FillLayerWrapper {
     fatalError("Not implemented")
   }
 
+  var `repeat`: FillRepeatXY {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var blendMode: BlendMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func size() -> FillSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

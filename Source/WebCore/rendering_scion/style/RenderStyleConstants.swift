@@ -178,11 +178,27 @@ enum FillBox: UInt8 {
   case NoClip
 }
 
+enum FillRepeat: UInt8 {
+  case Repeat
+  case NoRepeat
+  case Round
+  case Space
+}
+
+// CSS3 Background Values
 enum FillSizeType: UInt8 {
   case Contain
   case Cover
   case Size
   case None
+}
+
+// CSS3 <position>
+enum Edge: UInt8 {
+  case Top
+  case Right
+  case Bottom
+  case Left
 }
 
 // CSS3 Mask Mode
