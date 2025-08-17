@@ -38,6 +38,11 @@ struct FillLayerWrapper {
     fatalError("Not implemented")
   }
 
+  var origin: FillBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var blendMode: BlendMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

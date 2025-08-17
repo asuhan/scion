@@ -24,6 +24,9 @@
  */
 
 struct IntRect {
+  func x() -> Int32 { return location.x }
+  func y() -> Int32 { return location.y }
+
   mutating func moveBy(offset: IntPoint) {
     location.move(dx: offset.x, dy: offset.y)
   }

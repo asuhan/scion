@@ -75,6 +75,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func enclosingLayer() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingBoxModelObject() -> RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -164,6 +169,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func hasNonVisibleOverflow() -> Bool {
     return wk_interop.RenderObject_hasNonVisibleOverflow(p)
+  }
+
+  func isTransformed() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func view() -> RenderViewWrapper {

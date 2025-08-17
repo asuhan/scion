@@ -151,3 +151,10 @@ func roundPointToDevicePixels(
       value: point.y, pixelSnappingFactor: pixelSnappingFactor,
       needsDirectionalRounding: !directionalRoundingToBottom))
 }
+
+func snapSizeToDevicePixel(
+  size: LayoutSizeWrapper, location: LayoutPointWrapper, pixelSnappingFactor: Float32
+) -> FloatSize {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

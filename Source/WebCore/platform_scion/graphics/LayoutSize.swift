@@ -90,6 +90,10 @@ class LayoutSizeWrapper {
     return a
   }
 
+  static func - (a: LayoutSizeWrapper, b: LayoutSizeWrapper) -> LayoutSizeWrapper {
+    return LayoutSizeWrapper(width: a.width() - b.width(), height: a.height() - b.height())
+  }
+
   prefix static func - (size: LayoutSizeWrapper) -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: -size.width(), height: -size.height())
   }

@@ -75,6 +75,11 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
   }
 
+  func hasTransformedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasCompositedMask() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

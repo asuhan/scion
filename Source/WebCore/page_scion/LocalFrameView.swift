@@ -38,6 +38,16 @@ class LocalFrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func hasExtendedBackgroundRectForPainting() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func extendedBackgroundRectForPainting() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setContentIsOpaque(contentIsOpaque: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
