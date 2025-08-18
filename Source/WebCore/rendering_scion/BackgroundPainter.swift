@@ -50,8 +50,17 @@ private func resolveEdgeRelativeLength(
   length: LengthWrapper, edge: Edge, availableSpace: LayoutUnit, areaSize: LayoutSizeWrapper,
   tileSize: LayoutSizeWrapper
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let result = minimumValueForLength(length: length, maximumValue: availableSpace)
+
+  if edge == .Right {
+    return areaSize.width() - tileSize.width() - result
+  }
+
+  if edge == .Bottom {
+    return areaSize.height() - tileSize.height() - result
+  }
+
+  return result
 }
 
 private func pixelSnapBackgroundImageGeometryForPainting(scaleFactor: Float32) -> (
