@@ -110,8 +110,13 @@ struct BackgroundImageGeometry {
     tileSize: LayoutSizeWrapper, phase: LayoutSizeWrapper, spaceSize: LayoutSizeWrapper,
     fixedAttachment: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.destinationRect = destinationRect
+    self.destinationOrigin = destinationRect.location()
+    self.tileSizeWithoutPixelSnapping = tileSizeWithoutPixelSnapping
+    self.tileSize = tileSize
+    self.phase = phase
+    self.spaceSize = spaceSize
+    self.hasNonLocalGeometry = fixedAttachment
   }
 
   func relativePhase() -> LayoutSizeWrapper {
@@ -130,6 +135,7 @@ struct BackgroundImageGeometry {
   let tileSize: LayoutSizeWrapper
   let phase: LayoutSizeWrapper
   let spaceSize: LayoutSizeWrapper
+  let hasNonLocalGeometry: Bool  // Has background-attachment: fixed. Implies that we can't always cheaply compute destRect.
 }
 
 class BackgroundPainter {
