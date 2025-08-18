@@ -63,11 +63,28 @@ private func resolveEdgeRelativeLength(
   return result
 }
 
-private func pixelSnapBackgroundImageGeometryForPainting(scaleFactor: Float32) -> (
-  LayoutRectWrapper, LayoutSizeWrapper, LayoutSizeWrapper, LayoutSizeWrapper
+private func pixelSnapBackgroundImageGeometryForPainting(
+  destinationRect: inout LayoutRectWrapper, tileSize: inout LayoutSizeWrapper,
+  phase: inout LayoutSizeWrapper, space: inout LayoutSizeWrapper, scaleFactor: Float32
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  tileSize = LayoutSizeWrapper(
+    size: snapRectToDevicePixels(
+      rect: LayoutRectWrapper(location: destinationRect.location(), size: tileSize),
+      pixelSnappingFactor: scaleFactor
+    ).size())
+  phase = LayoutSizeWrapper(
+    size: snapRectToDevicePixels(
+      rect: LayoutRectWrapper(location: destinationRect.location(), size: phase),
+      pixelSnappingFactor: scaleFactor
+    )
+    .size())
+  space = LayoutSizeWrapper(
+    size: snapRectToDevicePixels(
+      rect: LayoutRectWrapper(location: LayoutPointWrapper(), size: space),
+      pixelSnappingFactor: scaleFactor
+    ).size())
+  destinationRect = LayoutRectWrapper(
+    r: snapRectToDevicePixels(rect: destinationRect, pixelSnappingFactor: scaleFactor))
 }
 
 private func areaCastingShadowInHole(
@@ -1032,7 +1049,8 @@ class BackgroundPainter {
     destinationRect.intersect(other: borderBoxRect)
 
     let tileSizeWithoutPixelSnapping = tileSize.deepCopy()
-    (destinationRect, tileSize, phase, spaceSize) = pixelSnapBackgroundImageGeometryForPainting(
+    pixelSnapBackgroundImageGeometryForPainting(
+      destinationRect: &destinationRect, tileSize: &tileSize, phase: &phase, space: &spaceSize,
       scaleFactor: deviceScaleFactor)
 
     return BackgroundImageGeometry(
