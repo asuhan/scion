@@ -39,8 +39,11 @@ private func applyBoxShadowForBackground(context: GraphicsContextWrapper, style:
 }
 
 private func getSpace(areaSize: LayoutUnit, tileSize: LayoutUnit) -> LayoutUnit? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let numberOfTiles = areaSize / tileSize
+  if numberOfTiles > 1 {
+    return (areaSize - numberOfTiles * tileSize) / (numberOfTiles - 1)
+  }
+  return nil
 }
 
 private func resolveEdgeRelativeLength(
