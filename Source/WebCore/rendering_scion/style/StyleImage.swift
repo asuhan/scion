@@ -39,15 +39,14 @@ class StyleImage {
   }
 
   // Image.
-  func cachedImage() -> CachedImageWrapper? {
+  func image(renderer: RenderElementWrapper?, size: FloatSize, isForFirstLine: Bool = false)
+    -> ImageWrapper?
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  // Image.
-  func image(renderer: RenderElementWrapper?, size: FloatSize, isForFirstLine: Bool = false)
-    -> ImageWrapper?
-  {
+  func cachedImage() -> CachedImageWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
