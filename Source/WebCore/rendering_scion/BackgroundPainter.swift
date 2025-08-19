@@ -1181,7 +1181,7 @@ class BackgroundPainter {
 
     switch type {
     case .Size:
-      let tileSize = positioningAreaSize.deepCopy()
+      var tileSize = positioningAreaSize.deepCopy()
 
       let layerWidth = fillLayer.size().size.width
       let layerHeight = fillLayer.size().size.height
@@ -1206,8 +1206,28 @@ class BackgroundPainter {
           height: !resolvedHeight.bool() ? resolvedHeight : max(devicePixelSize, resolvedHeight))
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // If one of the values is auto we have to use the appropriate
+      // scale to maintain our aspect ratio.
+      let hasNaturalAspectRatio = image != nil && image!.imageHasNaturalDimensions()
+      if layerWidth.isAuto() && !layerHeight.isAuto() {
+        if hasNaturalAspectRatio && imageIntrinsicSize.height().bool() {
+          tileSize.setWidth(
+            width:
+              imageIntrinsicSize.width() * tileSize.height() / imageIntrinsicSize.height())
+        }
+      } else if !layerWidth.isAuto() && layerHeight.isAuto() {
+        if hasNaturalAspectRatio && imageIntrinsicSize.width().bool() {
+          tileSize.setHeight(
+            height:
+              imageIntrinsicSize.height() * tileSize.width() / imageIntrinsicSize.width())
+        }
+      } else if layerWidth.isAuto() && layerHeight.isAuto() {
+        // If both width and height are auto, use the image's intrinsic size.
+        tileSize = imageIntrinsicSize
+      }
+
+      tileSize.clampNegativeToZero()
+      return tileSize
     case .None:
       // TODO(asuhan): implement this
       fatalError("Not implemented")

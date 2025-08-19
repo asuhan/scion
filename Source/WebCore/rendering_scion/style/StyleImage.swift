@@ -33,6 +33,11 @@ class StyleImage {
     fatalError("Not implemented")
   }
 
+  func imageHasNaturalDimensions() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Image.
   func cachedImage() -> CachedImageWrapper? {
     // TODO(asuhan): implement this

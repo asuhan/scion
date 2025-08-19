@@ -82,6 +82,11 @@ class LayoutSizeWrapper {
     height_ *= heightScale
   }
 
+  func clampNegativeToZero() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func transposedSize() -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: height_, height: width_)
   }
