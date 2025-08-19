@@ -1165,6 +1165,57 @@ class BackgroundPainter {
     renderer: RenderBoxModelObjectWrapper, fillLayer: FillLayerWrapper,
     positioningAreaSize: LayoutSizeWrapper
   ) -> LayoutSizeWrapper {
+    let image = fillLayer.image()
+    let type = fillLayer.size().type
+    let devicePixelSize = LayoutUnit(value: 1.0 / renderer.document().deviceScaleFactor())
+
+    var imageIntrinsicSize = LayoutSizeWrapper()
+    if let image = image {
+      imageIntrinsicSize = renderer.calculateImageIntrinsicDimensions(
+        image: image, positioningAreaSize: positioningAreaSize, scaleByUsedZoom: .Yes)
+      imageIntrinsicSize.scale(
+        widthScale: 1 / image.imageScaleFactor(), heightScale: 1 / image.imageScaleFactor())
+    } else {
+      imageIntrinsicSize = positioningAreaSize
+    }
+
+    switch type {
+    case .Size:
+      let tileSize = positioningAreaSize.deepCopy()
+
+      let layerWidth = fillLayer.size().size.width
+      let layerHeight = fillLayer.size().size.height
+
+      if layerWidth.isFixed() {
+        tileSize.setWidth(width: layerWidth.value())
+      } else if layerWidth.isPercentOrCalculated() {
+        let resolvedWidth = valueForLength(
+          length: layerWidth, maximumValue: positioningAreaSize.width())
+        // Non-zero resolved value should always produce some content.
+        tileSize.setWidth(
+          width: !resolvedWidth.bool() ? resolvedWidth : max(devicePixelSize, resolvedWidth))
+      }
+
+      if layerHeight.isFixed() {
+        tileSize.setHeight(height: layerHeight.value())
+      } else if layerHeight.isPercentOrCalculated() {
+        let resolvedHeight = valueForLength(
+          length: layerHeight, maximumValue: positioningAreaSize.height())
+        // Non-zero resolved value should always produce some content.
+        tileSize.setHeight(
+          height: !resolvedHeight.bool() ? resolvedHeight : max(devicePixelSize, resolvedHeight))
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .None:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .Contain, .Cover:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

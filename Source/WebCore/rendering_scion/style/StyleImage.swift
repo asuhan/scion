@@ -27,6 +27,12 @@ class StyleImage {
     fatalError("Not implemented")
   }
 
+  // Size / scale.
+  func imageScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Image.
   func cachedImage() -> CachedImageWrapper? {
     // TODO(asuhan): implement this
