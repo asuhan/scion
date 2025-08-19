@@ -1166,7 +1166,7 @@ class BackgroundPainter {
     positioningAreaSize: LayoutSizeWrapper
   ) -> LayoutSizeWrapper {
     let image = fillLayer.image()
-    let type = fillLayer.size().type
+    var type = fillLayer.size().type
     let devicePixelSize = LayoutUnit(value: 1.0 / renderer.document().deviceScaleFactor())
 
     var imageIntrinsicSize = LayoutSizeWrapper()
@@ -1229,15 +1229,38 @@ class BackgroundPainter {
       tileSize.clampNegativeToZero()
       return tileSize
     case .None:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    case .Contain, .Cover:
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+      // If both values are ‘auto’ then the intrinsic width and/or height of the image should be used, if any.
+      if !imageIntrinsicSize.isEmpty() {
+        return imageIntrinsicSize
+      }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+      // If the image has neither an intrinsic width nor an intrinsic height, its size is determined as for ‘contain’.
+      type = .Contain
+      fallthrough
+    case .Contain, .Cover:
+      // Scale computation needs higher precision than what LayoutUnit can offer.
+      let localImageIntrinsicSize = imageIntrinsicSize.FloatSize()
+      let localPositioningAreaSize = positioningAreaSize.FloatSize()
+
+      let horizontalScaleFactor =
+        localImageIntrinsicSize.width != 0
+        ? (localPositioningAreaSize.width / localImageIntrinsicSize.width) : 1
+      let verticalScaleFactor =
+        localImageIntrinsicSize.height != 0
+        ? (localPositioningAreaSize.height / localImageIntrinsicSize.height) : 1
+      let scaleFactor =
+        type == .Contain
+        ? min(horizontalScaleFactor, verticalScaleFactor)
+        : max(horizontalScaleFactor, verticalScaleFactor)
+
+      if localImageIntrinsicSize.isEmpty() {
+        return LayoutSizeWrapper()
+      }
+
+      return LayoutSizeWrapper(
+        size: localImageIntrinsicSize.scaled(s: scaleFactor).expandedTo(
+          other: FloatSize(width: devicePixelSize.float(), height: devicePixelSize.float())))
+    }
   }
 
   private func document() -> Document {
