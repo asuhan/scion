@@ -28,6 +28,7 @@ import wk_interop
 typealias LayoutBoxExtent = RectEdges<LayoutUnit>
 
 enum CSSPropertyID {
+  case CSSPropertyColor
   case CSSPropertyBackgroundColor
   case CSSPropertyTextDecorationColor
   case CSSPropertyWebkitTextFillColor

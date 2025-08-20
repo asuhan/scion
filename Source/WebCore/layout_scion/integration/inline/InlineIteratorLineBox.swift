@@ -65,6 +65,11 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func formattingContextRoot() -> RenderBlockFlowWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isFirst() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

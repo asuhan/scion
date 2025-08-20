@@ -89,8 +89,35 @@ struct EllipsisBoxPainter {
   }
 
   private func paintSelection() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = paintInfo.context()
+    let style = lineBox.style()
+
+    let textColor = style.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor)
+    var backgroundColor = selectionBackgroundColor
+    if !backgroundColor.isVisible() {
+      return
+    }
+
+    // If the text color ends up being the same as the selection background, invert the selection background.
+    if textColor == backgroundColor {
+      backgroundColor = backgroundColor.invertedColorWithAlpha(alpha: 1)
+    }
+
+    let _ = GraphicsContextStateSaver(context: context)
+
+    var visualRect = LayoutRectWrapper(r: lineBox.ellipsisVisualRect(adjustedForSelection: .Yes))
+    visualRect.move(dx: paintOffset.x, dy: paintOffset.y)
+
+    let ellipsisText = lineBox.ellipsisText()
+    let canUseSimplifiedTextMeasuring = false
+    style.fontCascade().adjustSelectionRectForText(
+      canUseSimplifiedTextMeasuring: canUseSimplifiedTextMeasuring, run: ellipsisText,
+      selectionRect: visualRect)
+    context.fillRect(
+      rect: snapRectToDevicePixelsWithWritingDirection(
+        rect: visualRect,
+        deviceScaleFactor: lineBox.formattingContextRoot().document().deviceScaleFactor(),
+        ltr: ellipsisText.ltr()), color: backgroundColor)
   }
 
   private let lineBox: InlineIterator.LineBox
