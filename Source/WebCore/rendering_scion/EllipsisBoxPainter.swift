@@ -27,12 +27,21 @@ struct EllipsisBoxPainter {
     lineBox: InlineIterator.LineBox, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
     selectionForegroundColor: ColorWrapper, selectionBackgroundColor: ColorWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.lineBox = lineBox
+    self.paintInfo = paintInfo
+    self.paintOffset = paintOffset
+    self.selectionForegroundColor = selectionForegroundColor
+    self.selectionBackgroundColor = selectionBackgroundColor
   }
 
   func paint() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let lineBox: InlineIterator.LineBox
+  private let paintInfo: PaintInfoWrapper
+  private let paintOffset: LayoutPointWrapper
+  private let selectionForegroundColor: ColorWrapper
+  private let selectionBackgroundColor: ColorWrapper
 }
