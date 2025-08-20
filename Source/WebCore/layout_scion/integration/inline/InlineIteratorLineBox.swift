@@ -45,6 +45,21 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    enum AdjustedForSelection {
+      case No
+      case Yes
+    }
+
+    func ellipsisVisualRect(adjustedForSelection: AdjustedForSelection = .No) -> FloatRectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func ellipsisText() -> TextRunWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func ellipsisSelectionState() -> RenderObjectWrapper.HighlightState {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

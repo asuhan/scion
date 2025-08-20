@@ -47,6 +47,11 @@ class FontCascadeWrapper {
     return font_cascade_size(p: p!)
   }
 
+  enum CustomFontNotReadyAction {
+    case DoNotPaintIfFontNotReady
+    case UseFallbackIfFontNotReady
+  }
+
   func dashesForIntersectionsWithRect(
     run: TextRunWrapper, textOrigin: FloatPoint, lineExtents: FloatRectWrapper
   ) -> DashArray {

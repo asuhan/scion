@@ -56,8 +56,36 @@ struct EllipsisBoxPainter {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if textColor != context.fillColor() {
+      context.setFillColor(color: textColor)
+    }
+
+    var setShadow = false
+    if let textShadow = style.textShadow() {
+      let shadowColor = style.colorWithColorFilter(color: textShadow.color)
+      context.setDropShadow(
+        dropShadow: GraphicsDropShadow(
+          offset: LayoutSizeWrapper(
+            width: textShadow.x().value(), height: textShadow.y().value()
+          ).FloatSize(),
+          radius: textShadow.radius.value(), color: shadowColor, radiusMode: .Default))
+      setShadow = true
+    }
+
+    let visualRect = lineBox.ellipsisVisualRect()
+    var textOrigin = visualRect.location()
+    textOrigin.move(
+      dx: paintOffset.x.float(),
+      dy: paintOffset.y.float() + Float32(style.metricsOfPrimaryFont().intAscent()))
+    context.drawBidiText(font: style.fontCascade(), run: lineBox.ellipsisText(), point: textOrigin)
+
+    if textColor != context.fillColor() {
+      context.setFillColor(color: textColor)
+    }
+
+    if setShadow {
+      context.clearDropShadow()
+    }
   }
 
   private func paintSelection() {

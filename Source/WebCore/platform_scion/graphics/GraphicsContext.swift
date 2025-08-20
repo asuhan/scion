@@ -269,6 +269,15 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func drawBidiText(
+    font: FontCascadeWrapper, run: TextRunWrapper, point: FloatPoint,
+    customFontNotReadyAction: FontCascadeWrapper.CustomFontNotReadyAction =
+      .DoNotPaintIfFontNotReady
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func drawEmphasisMarks(
     font: FontCascadeWrapper, run: TextRunWrapper, mark: AtomStringWrapper, point: FloatPoint,
     from: UInt32 = 0, to: UInt32? = nil

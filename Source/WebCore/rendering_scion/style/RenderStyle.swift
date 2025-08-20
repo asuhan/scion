@@ -333,6 +333,11 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_autoWrap(p)
   }
 
+  func textShadow() -> ShadowData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textShadowExtent() -> LayoutBoxExtent {
     if p == nil {
       fatalError("Not implemented")
