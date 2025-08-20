@@ -40,6 +40,16 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func style() -> RenderStyleWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func ellipsisSelectionState() -> RenderObjectWrapper.HighlightState {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isFirst() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

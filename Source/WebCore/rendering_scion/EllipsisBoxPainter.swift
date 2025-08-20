@@ -35,6 +35,32 @@ struct EllipsisBoxPainter {
   }
 
   func paint() {
+    // FIXME: Transition it to TextPainter.
+    let context = paintInfo.context()
+    let style = lineBox.style()
+    var textColor = style.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyWebkitTextFillColor)
+
+    if paintInfo.forceTextColor() {
+      textColor = paintInfo.forcedTextColor()
+    }
+
+    if lineBox.ellipsisSelectionState() != .None {
+      paintSelection()
+
+      // Select the correct color for painting the text.
+      let foreground =
+        paintInfo.forceTextColor() ? paintInfo.forcedTextColor() : selectionForegroundColor
+      if foreground.isValid() && foreground != textColor {
+        context.setFillColor(color: foreground)
+      }
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintSelection() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

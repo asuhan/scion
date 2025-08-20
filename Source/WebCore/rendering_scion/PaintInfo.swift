@@ -60,6 +60,16 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
+  func forceTextColor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func forcedTextColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
