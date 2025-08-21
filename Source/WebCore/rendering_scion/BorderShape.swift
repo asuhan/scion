@@ -131,7 +131,27 @@ struct BorderShape {
   }
 
   private func innerEdgeRoundedRect() -> RoundedRect {
+    var roundedRect = RoundedRect(rect: innerEdgeRect())
+    if m_borderRect.isRounded() {
+      let innerRadii = m_borderRect.radii
+      innerRadii.shrink(
+        topWidth: borderWidths.top, bottomWidth: borderWidths.bottom,
+        leftWidth: borderWidths.left, rightWidth: borderWidths.right)
+      roundedRect.radii = innerRadii
+    }
+
+    if !roundedRect.isRenderable() {
+      roundedRect.adjustRadii()
+    }
+
+    return roundedRect
+  }
+
+  private func innerEdgeRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_borderRect: RoundedRect
+  private let borderWidths: RectEdges<LayoutUnit>
 }

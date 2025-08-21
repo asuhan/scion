@@ -31,6 +31,13 @@ struct RoundedRectRadii {
     fatalError("Not implemented")
   }
 
+  func shrink(
+    topWidth: LayoutUnit, bottomWidth: LayoutUnit, leftWidth: LayoutUnit, rightWidth: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var topLeft = LayoutSizeWrapper()
   var topRight = LayoutSizeWrapper()
   var bottomLeft = LayoutSizeWrapper()
@@ -40,7 +47,22 @@ struct RoundedRectRadii {
 struct RoundedRect {
   typealias Radii = RoundedRectRadii
 
+  init(rect: LayoutRectWrapper, radii: Radii = Radii()) {
+    self.rect = rect
+    self.radii = radii
+  }
+
   func isRounded() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func adjustRadii() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
