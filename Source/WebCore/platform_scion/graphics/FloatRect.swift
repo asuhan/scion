@@ -38,8 +38,9 @@ struct FloatRectWrapper {
   }
 
   init(topLeft: FloatPoint, bottomRight: FloatPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.m_location = topLeft
+    self.m_size = FloatSize(
+      width: bottomRight.x - topLeft.x, height: bottomRight.y - topLeft.y)
   }
 
   func location() -> FloatPoint { return m_location }
