@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
+
 class AffineTransform {
   init(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64) {
     self.transform = [a, b, c, d, e, f]
@@ -38,13 +40,11 @@ class AffineTransform {
   // These functions get the length of an axis-aligned unit vector
   // once it has been mapped through the transform
   func xScale() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hypot(transform[0], transform[1])
   }
 
   func yScale() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hypot(transform[2], transform[3])
   }
 
   func isIdentityOrTranslationOrFlipped() -> Bool {
