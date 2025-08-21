@@ -48,8 +48,8 @@ class AffineTransform {
   }
 
   func isIdentityOrTranslationOrFlipped() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return transform[0] == 1 && transform[1] == 0 && transform[2] == 0
+      && (transform[3] == 1 || transform[3] == -1)
   }
 
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
