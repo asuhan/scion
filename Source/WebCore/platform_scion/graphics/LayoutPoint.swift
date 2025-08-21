@@ -155,6 +155,13 @@ func roundPointToDevicePixels(
 func snapSizeToDevicePixel(
   size: LayoutSizeWrapper, location: LayoutPointWrapper, pixelSnappingFactor: Float32
 ) -> FloatSize {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return FloatSize(
+    width: snap(a: size.width(), b: location.x, pixelSnappingFactor: pixelSnappingFactor),
+    height: snap(a: size.height(), b: location.y, pixelSnappingFactor: pixelSnappingFactor))
+}
+
+private func snap(a: LayoutUnit, b: LayoutUnit, pixelSnappingFactor: Float32) -> Float32 {
+  let fraction = b.fraction()
+  return roundToDevicePixel(value: fraction + a, pixelSnappingFactor: pixelSnappingFactor)
+    - roundToDevicePixel(value: fraction, pixelSnappingFactor: pixelSnappingFactor)
 }
