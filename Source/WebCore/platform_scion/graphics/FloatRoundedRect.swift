@@ -69,4 +69,9 @@ struct FloatRoundedRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isRenderable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -120,6 +120,17 @@ struct BorderShape {
   func fillInnerShape(
     context: GraphicsContextWrapper, color: ColorWrapper, deviceScaleFactor: Float32
   ) {
+    let pixelSnappedRect = innerEdgeRoundedRect().pixelSnappedRoundedRectForPainting(
+      deviceScaleFactor: deviceScaleFactor)
+    assert(pixelSnappedRect.isRenderable())
+    if pixelSnappedRect.isRounded() {
+      context.fillRoundedRect(rect: pixelSnappedRect, color: color)
+    } else {
+      context.fillRect(rect: pixelSnappedRect.rect(), color: color)
+    }
+  }
+
+  private func innerEdgeRoundedRect() -> RoundedRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
