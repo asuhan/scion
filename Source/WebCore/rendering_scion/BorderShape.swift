@@ -113,8 +113,13 @@ struct BorderShape {
   func fillOuterShape(
     context: GraphicsContextWrapper, color: ColorWrapper, deviceScaleFactor: Float32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let pixelSnappedRect = m_borderRect.pixelSnappedRoundedRectForPainting(
+      deviceScaleFactor: deviceScaleFactor)
+    if pixelSnappedRect.isRounded() {
+      context.fillRoundedRect(rect: pixelSnappedRect, color: color)
+    } else {
+      context.fillRect(rect: pixelSnappedRect.rect(), color: color)
+    }
   }
 
   func fillInnerShape(
