@@ -106,8 +106,17 @@ struct BorderShape {
   }
 
   func clipOutOuterShape(context: GraphicsContextWrapper, deviceScaleFactor: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let pixelSnappedRect = m_borderRect.pixelSnappedRoundedRectForPainting(
+      deviceScaleFactor: deviceScaleFactor)
+    if pixelSnappedRect.isEmpty() {
+      return
+    }
+
+    if (pixelSnappedRect.isRounded()) {
+      context.clipOutRoundedRect(rect: pixelSnappedRect)
+    } else {
+      context.clipOut(rect: pixelSnappedRect.rect())
+    }
   }
 
   func fillOuterShape(
