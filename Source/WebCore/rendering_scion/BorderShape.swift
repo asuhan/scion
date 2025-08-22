@@ -148,8 +148,17 @@ struct BorderShape {
   }
 
   private func innerEdgeRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let borderRect = m_borderRect.rect
+    let width = max(
+      LayoutUnit(value: 0), borderRect.width() - borderWidths.left - borderWidths.right)
+    let height = max(
+      LayoutUnit(value: 0), borderRect.height() - borderWidths.top - borderWidths.bottom)
+    return LayoutRectWrapper(
+      x: borderRect.x() + borderWidths.left,
+      y: borderRect.y() + borderWidths.top,
+      width: width,
+      height: height
+    )
   }
 
   private let m_borderRect: RoundedRect
