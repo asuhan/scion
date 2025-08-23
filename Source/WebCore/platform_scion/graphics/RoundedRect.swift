@@ -72,6 +72,8 @@ struct RoundedRect {
     fatalError("Not implemented")
   }
 
+  mutating func move(size: LayoutSizeWrapper) { rect.move(size: size) }
+
   func inflateWithRadii(amount: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

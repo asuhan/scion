@@ -152,8 +152,7 @@ struct BorderShape {
   func isEmpty() -> Bool { return m_borderRect.rect.isEmpty() }
 
   mutating func move(offset: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_borderRect.move(size: offset)
   }
 
   // This will inflate the m_borderRect, and scale the radii up accordingly. Note that this changes the meaning of "inner shape" which will no longer correspond to the padding box.
