@@ -60,8 +60,31 @@ struct BorderShape {
     overrideBorderWidths: RectEdges<LayoutUnit>, includeLogicalLeftEdge: Bool = true,
     includeLogicalRightEdge: Bool = true
   ) -> BorderShape {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isHorizontal = style.isHorizontalWritingMode()
+
+    // top, right, bottom, left.
+    let usedBorderWidths = RectEdges<LayoutUnit>(
+      top: (isHorizontal || includeLogicalLeftEdge)
+        ? overrideBorderWidths.top : LayoutUnit(value: 0),
+      right: (!isHorizontal || includeLogicalRightEdge)
+        ? overrideBorderWidths.right : LayoutUnit(value: 0),
+      bottom: (isHorizontal || includeLogicalRightEdge)
+        ? overrideBorderWidths.bottom : LayoutUnit(value: 0),
+      left: (!isHorizontal || includeLogicalLeftEdge)
+        ? overrideBorderWidths.left : LayoutUnit(value: 0)
+    )
+
+    if style.hasBorderRadius() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    return BorderShape(borderRect: borderRect, borderWidths: usedBorderWidths)
+  }
+
+  init(borderRect: LayoutRectWrapper, borderWidths: RectEdges<LayoutUnit>) {
+    self.m_borderRect = RoundedRect(rect: borderRect)
+    self.borderWidths = borderWidths
   }
 
   func borderRect() -> LayoutRectWrapper {
