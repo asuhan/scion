@@ -27,6 +27,14 @@
  * SUCH DAMAGE.
  */
 
+private func addRoundedRectToPath(roundedRect: FloatRoundedRect, path: inout PathWrapper) {
+  if roundedRect.isRounded() {
+    path.addRoundedRect(roundedRect: roundedRect)
+  } else {
+    path.addRect(rect: roundedRect.rect())
+  }
+}
+
 // BorderShape is used to fill and clip to the shape formed by the border and padding boxes with border-radius.
 // In future, this may be a more complex shape than a rounded rect, so accessors that return rounded rects
 // are deprecated.
@@ -91,8 +99,17 @@ struct BorderShape {
   }
 
   func pathForBorderArea(deviceScaleFactor: Float32) -> PathWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let pixelSnappedOuterRect = m_borderRect.pixelSnappedRoundedRectForPainting(
+      deviceScaleFactor: deviceScaleFactor)
+    let pixelSnappedInnerRect = innerEdgeRoundedRect().pixelSnappedRoundedRectForPainting(
+      deviceScaleFactor: deviceScaleFactor)
+
+    assert(pixelSnappedInnerRect.isRenderable())
+
+    var path = PathWrapper()
+    addRoundedRectToPath(roundedRect: pixelSnappedOuterRect, path: &path)
+    addRoundedRectToPath(roundedRect: pixelSnappedInnerRect, path: &path)
+    return path
   }
 
   func clipToOuterShape(context: GraphicsContextWrapper, deviceScaleFactor: Float32) {
