@@ -149,10 +149,7 @@ struct BorderShape {
     return snapRectToDevicePixels(rect: m_borderRect.rect, pixelSnappingFactor: deviceScaleFactor)
   }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return m_borderRect.rect.isEmpty() }
 
   mutating func move(offset: LayoutSizeWrapper) {
     // TODO(asuhan): implement this
