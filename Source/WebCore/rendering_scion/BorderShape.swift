@@ -94,8 +94,7 @@ struct BorderShape {
 
   // This will inflate the m_borderRect, and scale the radii up accordingly. Note that this changes the meaning of "inner shape" which will no longer correspond to the padding box.
   mutating func inflate(amount: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_borderRect.inflateWithRadii(amount: amount)
   }
 
   func pathForBorderArea(deviceScaleFactor: Float32) -> PathWrapper {

@@ -57,6 +57,11 @@ struct RoundedRect {
     fatalError("Not implemented")
   }
 
+  func inflateWithRadii(amount: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderable() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
