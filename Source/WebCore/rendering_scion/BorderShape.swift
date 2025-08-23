@@ -128,10 +128,7 @@ struct BorderShape {
     assert(m_borderRect.isRenderable())
   }
 
-  func borderRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func borderRect() -> LayoutRectWrapper { return m_borderRect.rect }
 
   func deprecatedRoundedRect() -> RoundedRect {
     // TODO(asuhan): implement this
