@@ -146,8 +146,7 @@ struct BorderShape {
   mutating func setRadii(radii: RoundedRectRadii) { m_borderRect.radii = radii }
 
   func snappedOuterRect(deviceScaleFactor: Float32) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return snapRectToDevicePixels(rect: m_borderRect.rect, pixelSnappingFactor: deviceScaleFactor)
   }
 
   func isEmpty() -> Bool {
