@@ -43,6 +43,23 @@ struct BorderShape {
     style: RenderStyleWrapper, borderRect: LayoutRectWrapper, includeLogicalLeftEdge: Bool = true,
     includeLogicalRightEdge: Bool = true
   ) -> BorderShape {
+    let borderWidths = RectEdges<LayoutUnit>(
+      top: LayoutUnit(value: style.borderTopWidth()),
+      right: LayoutUnit(value: style.borderRightWidth()),
+      bottom: LayoutUnit(value: style.borderBottomWidth()),
+      left: LayoutUnit(value: style.borderLeftWidth()))
+    return shapeForBorderRect(
+      style: style, borderRect: borderRect, overrideBorderWidths: borderWidths,
+      includeLogicalLeftEdge: includeLogicalLeftEdge,
+      includeLogicalRightEdge: includeLogicalRightEdge)
+  }
+
+  // overrideBorderWidths describe custom insets from the border box, used instead of the border widths from the style.
+  static func shapeForBorderRect(
+    style: RenderStyleWrapper, borderRect: LayoutRectWrapper,
+    overrideBorderWidths: RectEdges<LayoutUnit>, includeLogicalLeftEdge: Bool = true,
+    includeLogicalRightEdge: Bool = true
+  ) -> BorderShape {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
