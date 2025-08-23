@@ -141,15 +141,9 @@ struct BorderShape {
     return m_borderRect.contains(otherRect: rect)
   }
 
-  func radii() -> RoundedRectRadii {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func radii() -> RoundedRectRadii { return m_borderRect.radii }
 
-  mutating func setRadii(radii: RoundedRectRadii) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setRadii(radii: RoundedRectRadii) { m_borderRect.radii = radii }
 
   func snappedOuterRect(deviceScaleFactor: Float32) -> FloatRectWrapper {
     // TODO(asuhan): implement this
@@ -276,6 +270,6 @@ struct BorderShape {
     )
   }
 
-  private let m_borderRect: RoundedRect
+  private var m_borderRect: RoundedRect
   private let borderWidths: RectEdges<LayoutUnit>
 }
