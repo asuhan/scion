@@ -133,15 +133,9 @@ struct BorderShape {
 
   func borderRect() -> LayoutRectWrapper { return m_borderRect.rect }
 
-  func deprecatedRoundedRect() -> RoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func deprecatedRoundedRect() -> RoundedRect { return m_borderRect }
 
-  func deprecatedInnerRoundedRect() -> RoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func deprecatedInnerRoundedRect() -> RoundedRect { return innerEdgeRoundedRect() }
 
   func outerShapeContains(rect: LayoutRectWrapper) -> Bool {
     // TODO(asuhan): implement this
