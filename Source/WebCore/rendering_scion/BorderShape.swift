@@ -28,8 +28,11 @@
  */
 
 private func calcRadiiFor(radii: BorderData.Radii, size: LayoutSizeWrapper) -> RoundedRect.Radii {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return RoundedRect.Radii(
+    topLeft: sizeForLengthSize(length: radii.topLeft, maximumValue: size),
+    topRight: sizeForLengthSize(length: radii.topRight, maximumValue: size),
+    bottomLeft: sizeForLengthSize(length: radii.bottomLeft, maximumValue: size),
+    bottomRight: sizeForLengthSize(length: radii.bottomRight, maximumValue: size))
 }
 
 private func addRoundedRectToPath(roundedRect: FloatRoundedRect, path: inout PathWrapper) {

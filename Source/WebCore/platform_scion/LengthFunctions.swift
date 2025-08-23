@@ -38,6 +38,14 @@ func floatValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> Flo
   }
 }
 
+func sizeForLengthSize(length: LengthSize, maximumValue: LayoutSizeWrapper)
+  -> LayoutSizeWrapper
+{
+  return LayoutSizeWrapper(
+    width: valueForLength(length: length.width, maximumValue: maximumValue.width()),
+    height: valueForLength(length: length.height, maximumValue: maximumValue.height()))
+}
+
 func valueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> LayoutUnit {
   switch length.type() {
   case .Fixed, .Percent, .Calculated:

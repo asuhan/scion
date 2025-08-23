@@ -23,7 +23,12 @@
  *
  */
 
-struct BorderDataRadii {}
+struct BorderDataRadii {
+  let topLeft: LengthSize
+  let topRight: LengthSize
+  let bottomLeft: LengthSize
+  let bottomRight: LengthSize
+}
 
 struct BorderData {
   typealias Radii = BorderDataRadii
