@@ -27,6 +27,11 @@
  * SUCH DAMAGE.
  */
 
+private func calcRadiiFor(radii: BorderData.Radii, size: LayoutSizeWrapper) -> RoundedRect.Radii {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func addRoundedRectToPath(roundedRect: FloatRoundedRect, path: inout PathWrapper) {
   if roundedRect.isRounded() {
     path.addRoundedRect(roundedRect: roundedRect)
@@ -75,8 +80,36 @@ struct BorderShape {
     )
 
     if style.hasBorderRadius() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var radii = calcRadiiFor(radii: style.borderRadii(), size: borderRect.size())
+      radii.scale(
+        factor: calcBorderRadiiConstraintScaleFor(
+          rect: borderRect.FloatRect(), radii: FloatRoundedRect.Radii(intRadii: radii)))
+
+      if !includeLogicalLeftEdge {
+        radii.topLeft = LayoutSizeWrapper()
+
+        if isHorizontal {
+          radii.bottomLeft = LayoutSizeWrapper()
+        } else {
+          radii.topRight = LayoutSizeWrapper()
+        }
+      }
+
+      if !includeLogicalRightEdge {
+        radii.bottomRight = LayoutSizeWrapper()
+
+        if isHorizontal {
+          radii.topRight = LayoutSizeWrapper()
+        } else {
+          radii.bottomLeft = LayoutSizeWrapper()
+        }
+      }
+
+      if !radii.areRenderableInRect(rect: borderRect) {
+        radii.makeRenderableInRect(rect: borderRect)
+      }
+
+      return BorderShape(borderRect: borderRect, borderWidths: usedBorderWidths, radii: radii)
     }
 
     return BorderShape(borderRect: borderRect, borderWidths: usedBorderWidths)
@@ -85,6 +118,14 @@ struct BorderShape {
   init(borderRect: LayoutRectWrapper, borderWidths: RectEdges<LayoutUnit>) {
     self.m_borderRect = RoundedRect(rect: borderRect)
     self.borderWidths = borderWidths
+  }
+
+  init(borderRect: LayoutRectWrapper, borderWidths: RectEdges<LayoutUnit>, radii: RoundedRectRadii)
+  {
+    self.m_borderRect = RoundedRect(rect: borderRect, radii: radii)
+    self.borderWidths = borderWidths
+    // The caller should have adjusted the radii already.
+    assert(m_borderRect.isRenderable())
   }
 
   func borderRect() -> LayoutRectWrapper {

@@ -26,7 +26,22 @@
  */
 
 struct RoundedRectRadii {
+  func areRenderableInRect(rect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func makeRenderableInRect(rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func expand(size: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func scale(factor: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

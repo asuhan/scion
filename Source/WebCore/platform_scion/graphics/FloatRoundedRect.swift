@@ -34,6 +34,11 @@ struct FloatRoundedRect {
       fatalError("Not implemented")
     }
 
+    init(intRadii: RoundedRect.Radii) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     init(uniformRadius: Float32) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -74,4 +79,11 @@ struct FloatRoundedRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+}
+
+func calcBorderRadiiConstraintScaleFor(rect: FloatRectWrapper, radii: FloatRoundedRect.Radii)
+  -> Float32
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
