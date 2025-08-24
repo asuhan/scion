@@ -33,6 +33,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func getUncachedPseudoStyle(
+    pseudoElementRequest: Style.PseudoElementRequest, parentStyle: RenderStyleWrapper? = nil,
+    ownStyle: RenderStyleWrapper? = nil
+  )
+    -> RenderStyleWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func element() -> ElementWrapper? {
     if let elementRaw = wk_interop.RenderElement_element(p) {
       return ElementWrapper(p: elementRaw)

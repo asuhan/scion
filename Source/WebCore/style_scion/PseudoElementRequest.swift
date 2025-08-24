@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2020 Apple Inc. All rights reserved.
+ * Copyright (C) 2024 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,29 +23,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class SettingsWrapper {
-  func fixedBackgroundsPaintRelativeToDocument() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+extension Style {
+
+  class PseudoElementRequest {
+    init(pseudoId: PseudoId, nameArgument: AtomStringWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
-  func highlightAPIEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func imageSubsamplingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func shouldPrintBackgrounds() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func showDebugBorders() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
 }

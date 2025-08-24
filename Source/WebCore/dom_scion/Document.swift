@@ -62,4 +62,9 @@ struct Document {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func highlightRegistryIfExists() -> HighlightRegistryWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

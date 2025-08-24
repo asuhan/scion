@@ -171,6 +171,28 @@ class MarkedText {
   static func collectForHighlights(
     renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
   ) -> [MarkedText] {
+    if renderer.document().settings().highlightAPIEnabled() {
+      let parentRenderer = renderer.parent()!
+      let parentStyle = parentRenderer.style()
+      if let highlightRegistry = renderer.document().highlightRegistryIfExists() {
+        for highlightName in highlightRegistry.highlightNames() {
+          if let renderStyle = parentRenderer.getUncachedPseudoStyle(
+            pseudoElementRequest: Style.PseudoElementRequest(
+              pseudoId: .Highlight, nameArgument: highlightName),
+            parentStyle: parentStyle)
+          {
+            if renderStyle.textDecorationsInEffect().isEmpty && phase == .Decoration {
+              continue
+            }
+          } else {
+            continue
+          }
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
