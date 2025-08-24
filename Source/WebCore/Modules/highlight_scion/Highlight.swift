@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Apple Inc. All rights reserved.
+ * Copyright (C) 2019-2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,13 +23,10 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class HighlightRegistryWrapper {
-  func get(name: AtomStringWrapper) -> HighlightWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+class HighlightRangeWrapper {}
 
-  func highlightNames() -> [AtomStringWrapper] {
+class HighlightWrapper {
+  func highlightRanges() -> [HighlightRangeWrapper] {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

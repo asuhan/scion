@@ -29,6 +29,11 @@
  */
 
 class RenderHighlight {
+  func setRenderRange(highlightRange: HighlightRangeWrapper) -> Bool {  // Returns true if successful.
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
     -> RenderObjectWrapper.HighlightState
   {

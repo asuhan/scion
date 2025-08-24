@@ -171,6 +171,7 @@ class MarkedText {
   static func collectForHighlights(
     renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
   ) -> [MarkedText] {
+    let renderHighlight = RenderHighlight()
     if renderer.document().settings().highlightAPIEnabled() {
       let parentRenderer = renderer.parent()!
       let parentStyle = parentRenderer.style()
@@ -187,8 +188,13 @@ class MarkedText {
           } else {
             continue
           }
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          for highlightRange in highlightRegistry.get(name: highlightName).highlightRanges() {
+            if !renderHighlight.setRenderRange(highlightRange: highlightRange) {
+              continue
+            }
+            // TODO(asuhan): implement this
+            fatalError("Not implemented")
+          }
         }
       }
     }
