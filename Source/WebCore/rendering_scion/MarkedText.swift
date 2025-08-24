@@ -103,8 +103,62 @@ class MarkedText {
           && a.markedText.type.rawValue > b.markedText.type.rawValue)
     })
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // 3. Compute intersection.
+    var result: [MarkedText] = []
+    result.reserveCapacity(numberOfMarkedTexts)
+    var processedMarkedTexts: Set<ObjectIdentifier> = []
+    var offsetSoFar = offsets[0].value
+    for i in 1..<numberOfOffsets {
+      if offsets[i].value > offsets[i - 1].value {
+        if overlapStrategy == .Frontmost {
+          var frontmost: UInt32? = nil
+          for j in 0..<UInt32(i) {
+            if !processedMarkedTexts.contains(ObjectIdentifier(offsets[Int(j)].markedText))
+              && (frontmost == nil
+                || offsets[Int(j)].markedText.type.rawValue
+                  > offsets[Int(frontmost!)].markedText.type.rawValue)
+            {
+              frontmost = j
+            }
+          }
+          if frontmost != nil {
+            result.append(
+              MarkedText(
+                startOffset: offsetSoFar, endOffset: offsets[i].value,
+                type: offsets[Int(frontmost!)].markedText.type,
+                marker: offsets[Int(frontmost!)].markedText.marker,
+                highlightName: offsets[Int(frontmost!)].markedText.highlightName)
+            )
+          }
+        } else {
+          // The appended marked texts may not be in paint order. We will fix this up at the end of this function.
+          for j in 0..<i {
+            if !processedMarkedTexts.contains(ObjectIdentifier(offsets[j].markedText)) {
+              result.append(
+                MarkedText(
+                  startOffset: offsetSoFar, endOffset: offsets[i].value,
+                  type: offsets[j].markedText.type,
+                  marker: offsets[j].markedText.marker,
+                  highlightName: offsets[j].markedText.highlightName,
+                  priority: offsets[j].markedText.priority))
+            }
+          }
+        }
+        offsetSoFar = offsets[i].value
+      }
+      if offsets[i].kind == .End {
+        processedMarkedTexts.insert(ObjectIdentifier(offsets[i].markedText))
+      }
+    }
+    // Fix up; sort the marked texts so that they are in paint order.
+    if overlapStrategy == .None {
+      result.sort(by: {
+        a, b in
+        return a.startOffset < b.startOffset
+          || (a.startOffset == b.startOffset && a.type.rawValue < b.type.rawValue)
+      })
+    }
+    return result
   }
 
   static func collectForDocumentMarkers(
