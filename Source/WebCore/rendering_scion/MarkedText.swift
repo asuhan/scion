@@ -54,8 +54,12 @@ class MarkedText {
     startOffset: UInt32, endOffset: UInt32, type: `Type`, marker: RenderedDocumentMarker? = nil,
     highlightName: AtomStringWrapper = AtomStringWrapper(), priority: Int32 = 0
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.startOffset = startOffset
+    self.endOffset = endOffset
+    self.type = type
+    self.marker = marker
+    self.highlightName = highlightName
+    self.priority = priority
   }
 
   init() {}
@@ -93,8 +97,10 @@ class MarkedText {
     fatalError("Not implemented")
   }
 
-  let startOffset: UInt32 = 0
-  let endOffset: UInt32 = 0
-  let type: `Type` = .Unmarked
-  let marker: RenderedDocumentMarker? = nil
+  var startOffset: UInt32 = 0
+  var endOffset: UInt32 = 0
+  var type: `Type` = .Unmarked
+  var marker: RenderedDocumentMarker? = nil
+  var highlightName = AtomStringWrapper()
+  var priority: Int32 = 0
 }
