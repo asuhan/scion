@@ -31,6 +31,11 @@ class HighlightRangeWrapper {
 }
 
 class HighlightWrapper {
+  func priority() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func highlightRanges() -> [HighlightRangeWrapper] {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

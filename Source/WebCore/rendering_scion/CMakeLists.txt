@@ -60,6 +60,7 @@ target_sources(layout_scion PRIVATE
     TextPainter.swift
     TextPaintStyle.swift
 )
+add_subdirectory(algorithms)
 add_subdirectory(mathml)
 add_subdirectory(shapes)
 add_subdirectory(style)

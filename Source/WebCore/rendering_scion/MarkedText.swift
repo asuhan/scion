@@ -171,6 +171,7 @@ class MarkedText {
   static func collectForHighlights(
     renderer: RenderTextWrapper, selectableRange: TextBoxSelectableRange, phase: PaintPhase
   ) -> [MarkedText] {
+    var markedTexts: [MarkedText] = []
     let renderHighlight = RenderHighlight()
     if renderer.document().settings().highlightAPIEnabled() {
       let parentRenderer = renderer.parent()!
@@ -199,13 +200,50 @@ class MarkedText {
             } else {
               continue
             }
-            // TODO(asuhan): implement this
-            fatalError("Not implemented")
+            // FIXME: Potentially move this check elsewhere, to where we collect this range information.
+            let hasRenderer = MarkedText.hasRenderer()
+            if !hasRenderer {
+              continue
+            }
+
+            let (highlightStart, highlightEnd) = renderHighlight.rangeForTextBox(
+              renderer: renderer, textBoxRange: selectableRange)
+
+            if highlightStart < highlightEnd {
+              let currentPriority = highlightRegistry.get(name: highlightName).priority()
+              // If we can just append it to the end, do that instead.
+              if markedTexts.isEmpty || markedTexts.last!.priority <= currentPriority {
+                markedTexts.append(
+                  MarkedText(
+                    startOffset: highlightStart, endOffset: highlightEnd,
+                    type: .Highlight,
+                    marker: nil,
+                    highlightName: highlightName, priority: currentPriority)
+                )
+              } else {
+                // Gets the first place such that markedTexts[insertIndex] > currentPriority.
+                let insertIndex = markedTexts.partitioningIndex(where: { markedText in
+                  markedText.priority > currentPriority
+                })
+
+                markedTexts.insert(
+                  MarkedText(
+                    startOffset: highlightStart, endOffset: highlightEnd,
+                    type: .Highlight,
+                    marker: nil,
+                    highlightName: highlightName, priority: currentPriority), at: insertIndex)
+              }
+            }
           }
         }
       }
     }
 
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func hasRenderer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
