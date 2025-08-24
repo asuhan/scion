@@ -179,8 +179,31 @@ class MarkedText {
     type: DocumentMarker.`Type`, renderer: RenderTextWrapper,
     selectableRange: TextBoxSelectableRange
   ) -> [MarkedText] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let markerType = markerTypeForDocumentMarker(type: type)
+    if markerType == .Unmarked {
+      fatalError("Not reached")
+    }
+    let contentRanges = renderer.contentRangesBetweenOffsetsForType(
+      type: type, startOffset: selectableRange.start,
+      endOffset: selectableRange.start + selectableRange.length)
+
+    return contentRanges.map { first, second in
+      MarkedText(
+        startOffset: selectableRange.clamp(offset: first),
+        endOffset: selectableRange.clamp(offset: second), type: markerType)
+    }
+  }
+
+  private static func markerTypeForDocumentMarker(type: DocumentMarker.`Type`) -> MarkedText.`Type`
+  {
+    switch type {
+    case .DraggedContent:
+      return .DraggedContent
+    case .TransparentContent:
+      return .TransparentContent
+    default:
+      return .Unmarked
+    }
   }
 
   var startOffset: UInt32 = 0

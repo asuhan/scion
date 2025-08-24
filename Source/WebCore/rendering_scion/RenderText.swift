@@ -69,6 +69,13 @@ class RenderTextWrapper: RenderObjectWrapper {
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 
+  func contentRangesBetweenOffsetsForType(
+    type: DocumentMarker.`Type`, startOffset: UInt32, endOffset: UInt32
+  ) -> [(UInt32, UInt32)] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func emphasisMarkExistsAndIsAbove(renderer: RenderTextWrapper, style: RenderStyleWrapper)
     -> Bool?
   {
