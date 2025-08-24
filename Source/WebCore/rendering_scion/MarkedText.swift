@@ -68,6 +68,31 @@ class MarkedText {
 
   static func subdivide(markedTexts: [MarkedText], overlapStrategy: OverlapStrategy) -> [MarkedText]
   {
+    if markedTexts.isEmpty {
+      return []
+    }
+
+    struct Offset {
+      enum Kind {
+        case Begin
+        case End
+      }
+      let kind: Kind
+      let value: UInt32  // Copy of markedText.startOffset/endOffset to avoid the need to branch based on kind.
+      let markedText: MarkedText
+    }
+
+    // 1. Build table of all offsets.
+    var offsets: [Offset] = []
+    assert(markedTexts.count < UInt32.max / 2)
+    let numberOfMarkedTexts = markedTexts.count
+    let numberOfOffsets = 2 * numberOfMarkedTexts
+    offsets.reserveCapacity(numberOfOffsets)
+    for markedText in markedTexts {
+      offsets.append(Offset(kind: .Begin, value: markedText.startOffset, markedText: markedText))
+      offsets.append(Offset(kind: .End, value: markedText.endOffset, markedText: markedText))
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
