@@ -64,10 +64,7 @@ class MarkedText {
 
   init() {}
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return endOffset <= startOffset }
 
   static func subdivide(markedTexts: [MarkedText], overlapStrategy: OverlapStrategy) -> [MarkedText]
   {
