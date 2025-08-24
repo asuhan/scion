@@ -25,7 +25,7 @@
 
 class MarkedText {
   // Sorted by paint order
-  enum `Type` {
+  enum `Type`: UInt8 {
     case Unmarked
     case GrammarError
     case Correction
@@ -92,6 +92,16 @@ class MarkedText {
       offsets.append(Offset(kind: .Begin, value: markedText.startOffset, markedText: markedText))
       offsets.append(Offset(kind: .End, value: markedText.endOffset, markedText: markedText))
     }
+
+    // 2. Sort offsets such that begin offsets are in paint order and end offsets are in reverse paint order.
+    offsets.sort(by: {
+      a, b in
+      a.value < b.value
+        || (a.value == b.value && a.kind == b.kind && a.kind == .Begin
+          && a.markedText.type.rawValue < b.markedText.type.rawValue)
+        || (a.value == b.value && a.kind == b.kind && a.kind == .End
+          && a.markedText.type.rawValue > b.markedText.type.rawValue)
+    })
 
     // TODO(asuhan): implement this
     fatalError("Not implemented")
