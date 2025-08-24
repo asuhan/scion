@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    AbstractRange.swift
     ContainerNode.swift
     Document.swift
     DocumentMarker.swift
@@ -7,6 +8,7 @@ target_sources(layout_scion PRIVATE
     Node.swift
     RenderedDocumentMarker.swift
     Settings.swift
+    StaticRange.swift
     StyledElement.swift
     Text.swift
 )

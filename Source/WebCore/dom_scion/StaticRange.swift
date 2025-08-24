@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2016-2021 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,15 +23,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class HighlightRangeWrapper {
-  func range() -> AbstractRangeWrapper {
+class StaticRangeWrapper: AbstractRangeWrapper {
+  func collapsed() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-}
 
-class HighlightWrapper {
-  func highlightRanges() -> [HighlightRangeWrapper] {
+  // https://dom.spec.whatwg.org/#staticrange-valid
+  func computeValidity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -192,6 +192,13 @@ class MarkedText {
             if !renderHighlight.setRenderRange(highlightRange: highlightRange) {
               continue
             }
+            if let staticRange = highlightRange.range() as? StaticRangeWrapper {
+              if !staticRange.computeValidity() || staticRange.collapsed() {
+                continue
+              }
+            } else {
+              continue
+            }
             // TODO(asuhan): implement this
             fatalError("Not implemented")
           }
