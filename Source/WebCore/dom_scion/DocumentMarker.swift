@@ -54,6 +54,16 @@ class DocumentMarker {
     case TransparentContent = 131072
   }
 
+  func startOffset() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func endOffset() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var type: `Type` {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

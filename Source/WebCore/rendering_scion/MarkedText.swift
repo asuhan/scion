@@ -203,6 +203,17 @@ class MarkedText {
         continue
       }
 
+      if marker.endOffset() <= selectableRange.start {
+        // Marker is completely before this run. This might be a marker that sits before the
+        // first run we draw, or markers that were within runs we skipped due to truncation.
+        continue
+      }
+
+      if marker.startOffset() >= selectableRange.start + selectableRange.length {
+        // Marker is completely after this run, bail. A later run will paint it.
+        break
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
