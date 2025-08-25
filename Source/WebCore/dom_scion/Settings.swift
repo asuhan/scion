@@ -29,6 +29,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func grammarAndSpellingPseudoElementsEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func highlightAPIEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

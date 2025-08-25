@@ -53,4 +53,9 @@ class DocumentMarker {
     case DraggedContent = 16384
     case TransparentContent = 131072
   }
+
+  var type: `Type` {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

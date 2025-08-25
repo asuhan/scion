@@ -180,7 +180,29 @@ class MarkedText {
 
     // Give any document markers that touch this run a chance to draw before the text has been drawn.
     // Note end() points at the last char, not one past it like endOffset and ranges do.
-    for _ /*marker*/ in markers {
+    for marker in markers {
+      // Collect either the background markers or the foreground markers, but not both
+      switch marker.type {
+      case .Grammar, .Spelling:
+        if renderer.settings().grammarAndSpellingPseudoElementsEnabled() {
+          break
+        }
+        fallthrough
+      case .CorrectionIndicator, .Replacement, .DictationAlternatives:
+        if phase != .Decoration {
+          continue
+        }
+      case .TextMatch:
+        if !renderer.frame().editor().markedTextMatchesAreHighlighted() {
+          continue
+        }
+        if phase == .Decoration {
+          continue
+        }
+      default:
+        continue
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

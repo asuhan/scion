@@ -60,4 +60,9 @@ final class EditorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func markedTextMatchesAreHighlighted() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
