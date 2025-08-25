@@ -19,15 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class TextWrapper: Equatable {
-  init(p: UnsafeRawPointer) {
-    self.p = p
-  }
-
+class TextWrapper: CharacterDataWrapper, Equatable {
   static func == (lhs: TextWrapper, rhs: TextWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  private let p: UnsafeRawPointer
 }
