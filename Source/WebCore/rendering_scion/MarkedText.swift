@@ -239,8 +239,28 @@ class MarkedText {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.document().settings().scrollToTextFragmentEnabled() {
+      if let fragmentHighlightRegistry = renderer.document().fragmentHighlightRegistryIfExists() {
+        for highlightName in fragmentHighlightRegistry.highlightNames() {
+          for highlightRange in fragmentHighlightRegistry.get(name: highlightName).highlightRanges()
+          {
+            if !renderHighlight.setRenderRange(highlightRange: highlightRange) {
+              continue
+            }
+
+            let (highlightStart, highlightEnd) = renderHighlight.rangeForTextBox(
+              renderer: renderer, textBoxRange: selectableRange)
+            if highlightStart < highlightEnd {
+              markedTexts.append(
+                MarkedText(
+                  startOffset: highlightStart, endOffset: highlightEnd, type: .FragmentHighlight))
+            }
+          }
+        }
+      }
+    }
+
+    return markedTexts
   }
 
   private static func hasRenderer() -> Bool {

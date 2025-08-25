@@ -67,4 +67,9 @@ struct Document {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func fragmentHighlightRegistryIfExists() -> HighlightRegistryWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

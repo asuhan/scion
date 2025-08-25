@@ -39,6 +39,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollToTextFragmentEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPrintBackgrounds() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
