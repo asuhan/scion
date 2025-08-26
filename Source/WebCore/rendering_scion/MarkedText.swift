@@ -236,8 +236,20 @@ class MarkedText {
 
   private static func markedTextTypeForMarkerType(type: DocumentMarker.`Type`) -> MarkedText.`Type`
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch type {
+    case .Spelling:
+      return .SpellingError
+    case .Grammar:
+      return .GrammarError
+    case .CorrectionIndicator:
+      return .Correction
+    case .TextMatch:
+      return .TextMatch
+    case .DictationAlternatives:
+      return .DictationAlternatives
+    default:
+      return .Unmarked
+    }
   }
 
   static func collectForHighlights(
