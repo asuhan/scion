@@ -31,7 +31,7 @@ enum ShadowStyle {
 
 // This class holds information about shadows for the text-shadow and box-shadow properties.
 
-class ShadowData {
+class ShadowData: Equatable {
   func x() -> LengthWrapper { return location.x }
   func y() -> LengthWrapper { return location.y }
 
@@ -40,6 +40,11 @@ class ShadowData {
     // extends to infinity. In 8-bit contexts, however, rounding causes the effect to become
     // undetectable at around 1.4x the radius.
     return LayoutUnit(value: ceilf(radius.value() * ShadowData.radiusExtentMultiplier))
+  }
+
+  static func == (this: ShadowData, other: ShadowData) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   let location = LengthPoint()

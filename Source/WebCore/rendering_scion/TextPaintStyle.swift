@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct TextPaintStyle {
+struct TextPaintStyle: Equatable {
   init() {
     self.init(color: ColorWrapper())
   }

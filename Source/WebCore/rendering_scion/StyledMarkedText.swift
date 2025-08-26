@@ -23,6 +23,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func coalesceAdjacent(
+  textsToCoalesce: [StyledMarkedText],
+  equalityFunction: (StyledMarkedText.Style, StyledMarkedText.Style) -> Bool
+) -> [StyledMarkedText] {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class StyledMarkedText: MarkedText {
   struct Style {
     let backgroundColor: ColorWrapper
@@ -50,22 +58,32 @@ final class StyledMarkedText: MarkedText {
   static func coalesceAdjacentWithEqualBackground(markedTexts: [StyledMarkedText])
     -> [StyledMarkedText]
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return coalesceAdjacent(
+      textsToCoalesce: markedTexts,
+      equalityFunction: { (a: Style, b: Style) -> Bool in
+        return a.backgroundColor == b.backgroundColor
+      })
   }
 
   static func coalesceAdjacentWithEqualForeground(markedTexts: [StyledMarkedText])
     -> [StyledMarkedText]
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return coalesceAdjacent(
+      textsToCoalesce: markedTexts,
+      equalityFunction: { (a: Style, b: Style) -> Bool in
+        return a.textStyles == b.textStyles && a.textShadow == b.textShadow && a.alpha == b.alpha
+      })
   }
 
   static func coalesceAdjacentWithEqualDecorations(markedTexts: [StyledMarkedText])
     -> [StyledMarkedText]
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return coalesceAdjacent(
+      textsToCoalesce: markedTexts,
+      equalityFunction: { (a: Style, b: Style) -> Bool in
+        return a.textDecorationStyles == b.textDecorationStyles && a.textStyles == b.textStyles
+          && a.textShadow == b.textShadow && a.alpha == b.alpha
+      })
   }
 
   static func computeStyleForUnmarkedMarkedText(
