@@ -214,10 +214,30 @@ class MarkedText {
         break
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Marker intersects this run. Collect it.
+      switch marker.type {
+      case .Spelling, .CorrectionIndicator, .DictationAlternatives, .Grammar, .TextMatch:
+        let (clampedStart, clampedEnd) = selectableRange.clamp(
+          startOffset: marker.startOffset(), endOffset: marker.endOffset())
+
+        let markedTextType = markedTextTypeForMarkerType(type: marker.type)
+        markedTexts.append(
+          MarkedText(
+            startOffset: clampedStart, endOffset: clampedEnd, type: markedTextType, marker: marker)
+        )
+      case .Replacement:
+        break
+      default:
+        fatalError("Not reached")
+      }
     }
     return markedTexts
+  }
+
+  private static func markedTextTypeForMarkerType(type: DocumentMarker.`Type`) -> MarkedText.`Type`
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func collectForHighlights(
