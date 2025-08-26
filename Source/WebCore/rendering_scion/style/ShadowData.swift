@@ -32,6 +32,26 @@ enum ShadowStyle {
 // This class holds information about shadows for the text-shadow and box-shadow properties.
 
 class ShadowData: Equatable {
+  init() {
+    self.location = LengthPoint()
+    self.spread = LengthWrapper()
+    self.radius = LengthWrapper()
+    self.color = StyleColorWrapper()
+    self.style = .Normal
+    self.isWebkitBoxShadow = false
+    self.next = nil
+  }
+
+  init(o: ShadowData) {
+    self.location = LengthPoint(x: o.location.x, y: o.location.y)
+    self.spread = o.spread
+    self.radius = o.radius
+    self.color = o.color
+    self.style = o.style
+    self.isWebkitBoxShadow = o.isWebkitBoxShadow
+    self.next = o.next != nil ? ShadowData(o: o.next!) : nil
+  }
+
   func x() -> LengthWrapper { return location.x }
   func y() -> LengthWrapper { return location.y }
 
@@ -47,12 +67,12 @@ class ShadowData: Equatable {
     fatalError("Not implemented")
   }
 
-  let location = LengthPoint()
-  let spread = LengthWrapper()
-  let radius = LengthWrapper()  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
-  var color = StyleColorWrapper()
-  let style: ShadowStyle = .Normal
-  let isWebkitBoxShadow: Bool = false
-  let next: ShadowData? = nil
+  let location: LengthPoint
+  let spread: LengthWrapper
+  let radius: LengthWrapper  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
+  let color: StyleColorWrapper
+  let style: ShadowStyle
+  let isWebkitBoxShadow: Bool
+  let next: ShadowData?
   private static let radiusExtentMultiplier: Float32 = 1.4
 }
