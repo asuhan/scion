@@ -52,6 +52,13 @@ class ShadowData: Equatable {
     self.next = o.next != nil ? ShadowData(o: o.next!) : nil
   }
 
+  func clone(data: ShadowData?) -> ShadowData? {
+    if let data = data {
+      return ShadowData(o: data)
+    }
+    return nil
+  }
+
   func x() -> LengthWrapper { return location.x }
   func y() -> LengthWrapper { return location.y }
 
