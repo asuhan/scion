@@ -33,10 +33,10 @@ private func coalesceAdjacent(
 
 final class StyledMarkedText: MarkedText {
   struct Style {
-    let backgroundColor: ColorWrapper
-    var textStyles: TextPaintStyle
-    let textDecorationStyles: TextDecorationPainter.Styles
-    let textShadow: ShadowData?
+    let backgroundColor = ColorWrapper()
+    var textStyles = TextPaintStyle()
+    var textDecorationStyles = TextDecorationPainter.Styles()
+    var textShadow: ShadowData? = nil
     let alpha: Float32 = 1
   }
 
@@ -90,7 +90,14 @@ final class StyledMarkedText: MarkedText {
     renderer: RenderTextWrapper, lineStyle: RenderStyleWrapper, isFirstLine: Bool,
     paintInfo: PaintInfoWrapper
   ) -> Style {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var style = Style()
+    style.textDecorationStyles = TextDecorationPainter.stylesForRenderer(
+      renderer: renderer, requestedDecorations: lineStyle.textDecorationsInEffect(),
+      firstLineStyle: isFirstLine, paintBehavior: paintInfo.paintBehavior)
+    style.textStyles = computeTextPaintStyle(
+      frame: renderer.frame(), lineStyle: lineStyle, paintInfo: paintInfo)
+    style.textShadow = ShadowData.clone(
+      data: paintInfo.forceTextColor() ? nil : lineStyle.textShadow())
+    return style
   }
 }

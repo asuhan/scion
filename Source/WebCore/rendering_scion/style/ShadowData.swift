@@ -52,7 +52,7 @@ class ShadowData: Equatable {
     self.next = o.next != nil ? ShadowData(o: o.next!) : nil
   }
 
-  func clone(data: ShadowData?) -> ShadowData? {
+  static func clone(data: ShadowData?) -> ShadowData? {
     if let data = data {
       return ShadowData(o: data)
     }

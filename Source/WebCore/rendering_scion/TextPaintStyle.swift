@@ -43,6 +43,13 @@ struct TextPaintStyle: Equatable {
   let miterLimit: Float32 = defaultMiterLimit
 }
 
+func computeTextPaintStyle(
+  frame: LocalFrameWrapper, lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper
+) -> TextPaintStyle {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 enum FillColorType {
   case UseNormalFillColor
   case UseEmphasisMarkColor
