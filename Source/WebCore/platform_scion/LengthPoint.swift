@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct LengthPoint {
+struct LengthPoint: Equatable {
   init() {
     self.init(x: LengthWrapper(), y: LengthWrapper())
   }

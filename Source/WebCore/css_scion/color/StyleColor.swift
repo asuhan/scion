@@ -29,4 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class StyleColorWrapper {}
+class StyleColorWrapper {
+  static func == (a: StyleColorWrapper, b: StyleColorWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

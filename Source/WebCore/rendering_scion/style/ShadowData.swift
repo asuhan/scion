@@ -69,9 +69,32 @@ class ShadowData: Equatable {
     return LayoutUnit(value: ceilf(radius.value() * ShadowData.radiusExtentMultiplier))
   }
 
-  static func == (this: ShadowData, other: ShadowData) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  static func == (this: ShadowData, o: ShadowData) -> Bool {
+    if !comparison(a: this, b: o) {
+      return false
+    }
+
+    // Avoid relying on recursion in case the linked list is very long.
+    var next = this.next
+    var oNext = o.next
+    while next != nil || oNext != nil {
+      if next == nil || oNext == nil || !comparison(a: next!, b: oNext!) {
+        return false
+      }
+      next = next!.next
+      oNext = oNext!.next
+    }
+
+    return true
+  }
+
+  private static func comparison(a: ShadowData, b: ShadowData) -> Bool {
+    return a.location == b.location
+      && a.radius == b.radius
+      && a.spread == b.spread
+      && a.style == b.style
+      && a.color == b.color
+      && a.isWebkitBoxShadow == b.isWebkitBoxShadow
   }
 
   let location: LengthPoint
