@@ -27,8 +27,25 @@ private func coalesceAdjacent(
   textsToCoalesce: [StyledMarkedText],
   equalityFunction: (StyledMarkedText.Style, StyledMarkedText.Style) -> Bool
 ) -> [StyledMarkedText] {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if textsToCoalesce.count <= 1 {
+    return textsToCoalesce
+  }
+
+  var styledMarkedTexts: [StyledMarkedText] = []
+  styledMarkedTexts.reserveCapacity(textsToCoalesce.count)
+  styledMarkedTexts.append(textsToCoalesce[0])
+  for currentStyledMarkedText in textsToCoalesce[1...] {
+    let previousStyledMarkedText = styledMarkedTexts.last!
+    if previousStyledMarkedText.endOffset == currentStyledMarkedText.startOffset
+      && equalityFunction(previousStyledMarkedText.style, currentStyledMarkedText.style)
+    {
+      previousStyledMarkedText.endOffset = currentStyledMarkedText.endOffset
+      continue
+    }
+    styledMarkedTexts.append(currentStyledMarkedText)
+  }
+
+  return styledMarkedTexts
 }
 
 final class StyledMarkedText: MarkedText {
