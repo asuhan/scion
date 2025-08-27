@@ -57,17 +57,36 @@ final class StyledMarkedText: MarkedText {
     let alpha: Float32 = 1
   }
 
+  init(marker: MarkedText) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(marker: MarkedText, style: Style) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  let style: Style
+  var style: Style
 
   static func subdivideAndResolve(
     textsToSubdivide: [MarkedText], renderer: RenderTextWrapper, isFirstLine: Bool,
     paintInfo: PaintInfoWrapper
   ) -> [StyledMarkedText] {
+    if textsToSubdivide.isEmpty {
+      return []
+    }
+
+    let lineStyle = isFirstLine ? renderer.firstLineStyle() : renderer.style()
+    let baseStyle = computeStyleForUnmarkedMarkedText(
+      renderer: renderer, lineStyle: lineStyle, isFirstLine: isFirstLine, paintInfo: paintInfo)
+
+    if textsToSubdivide.count == 1 && textsToSubdivide[0].type == .Unmarked {
+      let styledMarkedText = StyledMarkedText(marker: textsToSubdivide[0])
+      styledMarkedText.style = baseStyle
+      return [styledMarkedText]
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
