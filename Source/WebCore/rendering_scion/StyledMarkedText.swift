@@ -136,8 +136,31 @@ final class StyledMarkedText: MarkedText {
       return coalesceAdjacentWithSameRanges(styledTexts: frontmostMarkedTexts)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Compute frontmost overlapping styled marked texts.
+    var frontmostMarkedTexts: [StyledMarkedText] = []
+    frontmostMarkedTexts.reserveCapacity(markedTexts.count)
+    frontmostMarkedTexts.append(
+      resolveStyleForMarkedText(
+        markedText: markedTexts[0], baseStyle: baseStyle, renderer: renderer, lineStyle: lineStyle,
+        paintInfo: paintInfo))
+    for currentStyledMarkedText in markedTexts[1...] {
+      var previousStyledMarkedText = frontmostMarkedTexts.last!
+      // Marked texts completely cover each other.
+      if previousStyledMarkedText.startOffset == currentStyledMarkedText.startOffset
+        && previousStyledMarkedText.endOffset == currentStyledMarkedText.endOffset
+      {
+        previousStyledMarkedText = resolveStyleForMarkedText(
+          markedText: currentStyledMarkedText, baseStyle: previousStyledMarkedText.style,
+          renderer: renderer, lineStyle: lineStyle, paintInfo: paintInfo)
+        continue
+      }
+      frontmostMarkedTexts.append(
+        resolveStyleForMarkedText(
+          markedText: currentStyledMarkedText, baseStyle: baseStyle, renderer: renderer,
+          lineStyle: lineStyle, paintInfo: paintInfo))
+    }
+
+    return frontmostMarkedTexts
   }
 
   static func coalesceAdjacentWithEqualBackground(markedTexts: [StyledMarkedText])
