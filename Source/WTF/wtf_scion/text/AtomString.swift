@@ -20,7 +20,7 @@
 
 import wk_interop
 
-class AtomStringWrapper {
+class AtomStringWrapper: Hashable {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
@@ -44,6 +44,16 @@ class AtomStringWrapper {
   }
 
   func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hash(into hasher: inout Hasher) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (lhs: AtomStringWrapper, rhs: AtomStringWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

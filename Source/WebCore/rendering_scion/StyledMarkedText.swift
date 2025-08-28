@@ -39,10 +39,33 @@ private func coalesceAdjacentWithSameRanges(styledTexts: [StyledMarkedText]) -> 
 }
 
 private func orderHighlights(
-  markedTextsNames: ListSet<AtomStringWrapper, AtomStringWrapper>, markedTexts: [MarkedText]
+  markedTextsNames: ListSet<AtomStringWrapper, AtomStringWrapper>, markedTexts: inout [MarkedText]
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if markedTexts.isEmpty {
+    return
+  }
+
+  var markedTextsNamesPriority: [AtomStringWrapper: Int] = [:]
+  var index: Int = 0
+  for highlightName in markedTextsNames {
+    markedTextsNamesPriority.updateValue(index, forKey: highlightName)
+    index += 1
+  }
+
+  index = 0
+  while index < markedTexts.count - 1 {
+    // If two adjacent highlights with same ranges are not in correct priority order, swap them and move on.
+    if !markedTexts[index].highlightName.isNull()
+      && !markedTexts[index + 1].highlightName.isNull()
+      && markedTextsNamesPriority[markedTexts[index].highlightName]!
+        > markedTextsNamesPriority[markedTexts[index + 1].highlightName]!
+      && markedTexts[index].startOffset == markedTexts[index + 1].startOffset
+      && markedTexts[index].endOffset == markedTexts[index + 1].endOffset
+    {
+      markedTexts.swapAt(index, index + 1)
+    }
+    index += 1
+  }
 }
 
 private func coalesceAdjacent(
@@ -117,7 +140,7 @@ final class StyledMarkedText: MarkedText {
       return [styledMarkedText]
     }
 
-    let markedTexts = MarkedText.subdivide(markedTexts: textsToSubdivide, overlapStrategy: .None)
+    var markedTexts = MarkedText.subdivide(markedTexts: textsToSubdivide, overlapStrategy: .None)
     assert(!markedTexts.isEmpty)
 
     // Check if vector contains custom highlights.
@@ -125,7 +148,7 @@ final class StyledMarkedText: MarkedText {
 
     // Sort custom highlights to follow correct priority/insertion order.
     if containsHighlights {
-      orderHighlights(markedTextsNames: markedTextsNames, markedTexts: markedTexts)
+      orderHighlights(markedTextsNames: markedTextsNames, markedTexts: &markedTexts)
 
       let frontmostMarkedTexts = markedTexts.map({ markedText in
         resolveStyleForMarkedText(
