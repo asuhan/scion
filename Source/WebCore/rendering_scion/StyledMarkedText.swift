@@ -29,8 +29,39 @@ private func resolveStyleForMarkedText(
 )
   -> StyledMarkedText
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let style = baseStyle
+  switch markedText.type {
+  case .Correction, .DictationAlternatives, .Unmarked:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .GrammarError:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .Highlight:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .SpellingError:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .FragmentHighlight:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .DraggedContent:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .TransparentContent:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .Selection:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  case .TextMatch:
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  let styledMarkedText = StyledMarkedText(marker: markedText)
+  styledMarkedText.style = style
+  return styledMarkedText
 }
 
 private func computeStylesForTextDecorations(
