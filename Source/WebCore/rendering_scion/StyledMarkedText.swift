@@ -23,26 +23,39 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func computeStyleForPseudoElementStyle(
+  style: inout StyledMarkedText.Style, pseudoElementStyle: RenderStyleWrapper?,
+  paintInfo: PaintInfoWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func resolveStyleForMarkedText(
   markedText: MarkedText, baseStyle: StyledMarkedText.Style, renderer: RenderTextWrapper,
   lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper
 )
   -> StyledMarkedText
 {
-  let style = baseStyle
+  var style = baseStyle
   switch markedText.type {
   case .Correction, .DictationAlternatives, .Unmarked:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    break
   case .GrammarError:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderStyle = renderer.grammarErrorPseudoStyle()
+    computeStyleForPseudoElementStyle(
+      style: &style, pseudoElementStyle: renderStyle, paintInfo: paintInfo)
   case .Highlight:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderStyle = renderer.parent()!.getUncachedPseudoStyle(
+      pseudoElementRequest: Style.PseudoElementRequest(
+        pseudoId: .Highlight, nameArgument: markedText.highlightName), parentStyle: renderer.style()
+    )
+    computeStyleForPseudoElementStyle(
+      style: &style, pseudoElementStyle: renderStyle, paintInfo: paintInfo)
   case .SpellingError:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderStyle = renderer.spellingErrorPseudoStyle()
+    computeStyleForPseudoElementStyle(
+      style: &style, pseudoElementStyle: renderStyle, paintInfo: paintInfo)
   case .FragmentHighlight:
     // TODO(asuhan): implement this
     fatalError("Not implemented")

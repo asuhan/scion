@@ -25,7 +25,7 @@
 
 extension Style {
 
-  class PseudoElementRequest {
+  struct PseudoElementRequest {
     init(pseudoId: PseudoId, nameArgument: AtomStringWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
