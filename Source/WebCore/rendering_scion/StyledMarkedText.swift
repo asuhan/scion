@@ -33,9 +33,67 @@ private func resolveStyleForMarkedText(
   fatalError("Not implemented")
 }
 
-private func coalesceAdjacentWithSameRanges(styledTexts: [StyledMarkedText]) -> [StyledMarkedText] {
+private func computeStylesForTextDecorations(
+  previousTextDecorationStyles: TextDecorationPainter.Styles,
+  currentTextDecorationStyles: TextDecorationPainter.Styles
+) -> TextDecorationPainter.Styles {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+
+private func coalesceAdjacentWithSameRanges(styledTexts: [StyledMarkedText]) -> [StyledMarkedText] {
+  assert(!styledTexts.isEmpty)
+  var frontmostMarkedTexts: [StyledMarkedText] = []
+  frontmostMarkedTexts.append(styledTexts[0])
+  for currentStyledMarkedText in styledTexts[1...] {
+    let previousStyledMarkedText = frontmostMarkedTexts.last!
+    // StyledMarkedTexts completely cover each other.
+    if previousStyledMarkedText.startOffset == currentStyledMarkedText.startOffset
+      && previousStyledMarkedText.endOffset == currentStyledMarkedText.endOffset
+    {
+      // If either background for two different custom highlight StyledMarkedTexts are not opaque, blend colors together.
+      if previousStyledMarkedText.highlightName != currentStyledMarkedText.highlightName
+        && (!previousStyledMarkedText.style.backgroundColor.isOpaque()
+          || !currentStyledMarkedText.style.backgroundColor.isOpaque()
+          || (currentStyledMarkedText.highlightName.isNull()
+            && currentStyledMarkedText.style.backgroundColor.isVisible()))
+      {
+        previousStyledMarkedText.style.backgroundColor = blendSourceOver(
+          backdrop: previousStyledMarkedText.style.backgroundColor,
+          source: currentStyledMarkedText.style.backgroundColor)
+      }
+      // Take text color of StyledMarkedText, maintaining insertion and priority order.
+      if currentStyledMarkedText.type != .Unmarked
+        && currentStyledMarkedText.style.textStyles.hasExplicitlySetFillColor
+      {
+        previousStyledMarkedText.style.textStyles.fillColor =
+          currentStyledMarkedText.style.textStyles.fillColor
+      }
+      // Take the highlightName of the latest StyledMarkedText, regardless of priority.
+      if !currentStyledMarkedText.highlightName.isNull() {
+        previousStyledMarkedText.highlightName = currentStyledMarkedText.highlightName
+      }
+
+      if previousStyledMarkedText.priority <= currentStyledMarkedText.priority {
+        previousStyledMarkedText.priority = currentStyledMarkedText.priority
+        // If highlight, combine textDecorationStyles accordingly.
+        // FIXME: Check for taking textDecorationStyles needs to accommodate other MarkedText type.
+        if !currentStyledMarkedText.highlightName.isNull() {
+          previousStyledMarkedText.style.textDecorationStyles = computeStylesForTextDecorations(
+            previousTextDecorationStyles: previousStyledMarkedText.style.textDecorationStyles,
+            currentTextDecorationStyles: currentStyledMarkedText.style.textDecorationStyles)
+        }
+        // If higher or same priority and opaque, override background color.
+        if currentStyledMarkedText.style.backgroundColor.isOpaque() {
+          previousStyledMarkedText.style.backgroundColor =
+            currentStyledMarkedText.style.backgroundColor
+        }
+      }
+      continue
+    }
+    frontmostMarkedTexts.append(currentStyledMarkedText)
+  }
+  return frontmostMarkedTexts
 }
 
 private func orderHighlights(
@@ -95,7 +153,7 @@ private func coalesceAdjacent(
 
 final class StyledMarkedText: MarkedText {
   struct Style {
-    let backgroundColor = ColorWrapper()
+    var backgroundColor = ColorWrapper()
     var textStyles = TextPaintStyle()
     var textDecorationStyles = TextDecorationPainter.Styles()
     var textShadow: ShadowData? = nil

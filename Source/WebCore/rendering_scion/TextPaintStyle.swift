@@ -37,6 +37,8 @@ struct TextPaintStyle: Equatable {
   let strokeColor: ColorWrapper
   let emphasisMarkColor = ColorWrapper()
   let strokeWidth: Float32 = 0
+  // This is not set for -webkit-text-fill-color.
+  let hasExplicitlySetFillColor: Bool = false
   let paintOrder: PaintOrder = .Normal
   let lineJoin: LineJoin = .Miter
   let lineCap: LineCap = .Butt
