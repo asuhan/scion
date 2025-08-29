@@ -37,8 +37,31 @@ private func computeStylesForTextDecorations(
   previousTextDecorationStyles: TextDecorationPainter.Styles,
   currentTextDecorationStyles: TextDecorationPainter.Styles
 ) -> TextDecorationPainter.Styles {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let textDecorations = TextDecorationPainter.textDecorationsInEffectForStyle(
+    style: currentTextDecorationStyles)
+
+  if textDecorations.isEmpty {
+    return previousTextDecorationStyles
+  }
+
+  var textDecorationStyles = previousTextDecorationStyles
+
+  if textDecorations.contains(.Underline) {
+    textDecorationStyles.underline.color = currentTextDecorationStyles.underline.color
+    textDecorationStyles.underline.decorationStyle =
+      currentTextDecorationStyles.underline.decorationStyle
+  }
+  if textDecorations.contains(.Overline) {
+    textDecorationStyles.overline.color = currentTextDecorationStyles.overline.color
+    textDecorationStyles.overline.decorationStyle =
+      currentTextDecorationStyles.overline.decorationStyle
+  }
+  if textDecorations.contains(.LineThrough) {
+    textDecorationStyles.linethrough.color = currentTextDecorationStyles.linethrough.color
+    textDecorationStyles.linethrough.decorationStyle =
+      currentTextDecorationStyles.linethrough.decorationStyle
+  }
+  return textDecorationStyles
 }
 
 private func coalesceAdjacentWithSameRanges(styledTexts: [StyledMarkedText]) -> [StyledMarkedText] {
