@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     Color.swift
     ColorBlending.swift
+    ColorLuminance.swift
     DashArray.swift
     DecodingOptions.swift
     FloatPoint.swift

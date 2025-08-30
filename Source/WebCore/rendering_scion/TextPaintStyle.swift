@@ -45,11 +45,27 @@ struct TextPaintStyle: Equatable {
   var miterLimit: Float32 = defaultMiterLimit
 }
 
+private func textColorIsLegibleAgainstBackgroundColor(
+  textColor: ColorWrapper, backgroundColor: ColorWrapper
+) -> Bool {
+  // Uses the WCAG 2.0 definition of legibility: a contrast ratio of 4.5:1 or greater.
+  // https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+  return contrastRatio(colorA: textColor, colorB: backgroundColor) >= 4.5
+}
+
 private func adjustColorForVisibilityOnBackground(
   textColor: ColorWrapper, backgroundColor: ColorWrapper
 ) -> ColorWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if textColorIsLegibleAgainstBackgroundColor(
+    textColor: textColor, backgroundColor: backgroundColor)
+  {
+    return textColor
+  }
+
+  if textColor.luminance() > 0.5 {
+    return textColor.darkened()
+  }
+  return textColor.lightened()
 }
 
 func computeTextPaintStyle(
