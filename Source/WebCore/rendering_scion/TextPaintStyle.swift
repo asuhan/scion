@@ -35,7 +35,7 @@ struct TextPaintStyle: Equatable {
 
   var fillColor: ColorWrapper
   var strokeColor: ColorWrapper
-  let emphasisMarkColor = ColorWrapper()
+  var emphasisMarkColor = ColorWrapper()
   let strokeWidth: Float32 = 0
   // This is not set for -webkit-text-fill-color.
   var hasExplicitlySetFillColor: Bool = false
@@ -57,8 +57,30 @@ func computeTextSelectionPaintStyle(
   lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper,
   selectionShadow: ShadowData?
 ) -> TextPaintStyle {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var selectionPaintStyle = textPaintStyle
+
+  let foreground =
+    paintInfo.forceTextColor() ? paintInfo.forcedTextColor() : renderer.selectionForegroundColor()
+  if foreground.isValid() && foreground != selectionPaintStyle.fillColor {
+    selectionPaintStyle.fillColor = foreground
+  }
+
+  let emphasisMarkForeground =
+    paintInfo.forceTextColor() ? paintInfo.forcedTextColor() : renderer.selectionEmphasisMarkColor()
+  if emphasisMarkForeground.isValid()
+    && emphasisMarkForeground != selectionPaintStyle.emphasisMarkColor
+  {
+    selectionPaintStyle.emphasisMarkColor = emphasisMarkForeground
+  }
+
+  if renderer.selectionPseudoStyle() != nil {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  } else {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  return selectionPaintStyle
 }
 
 enum FillColorType {

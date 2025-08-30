@@ -46,6 +46,21 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func selectionForegroundColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func selectionEmphasisMarkColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func selectionPseudoStyle() -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func spellingErrorPseudoStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
