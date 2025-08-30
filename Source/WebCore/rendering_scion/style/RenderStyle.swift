@@ -1163,7 +1163,27 @@ class RenderStyleWrapper {
     return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p))!
   }
 
+  func capStyle() -> LineCap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintOrder() -> PaintOrder {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func joinStyle() -> LineJoin {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computedStrokeColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokeMiterLimit() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

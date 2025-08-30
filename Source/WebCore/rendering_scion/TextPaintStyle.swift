@@ -39,15 +39,31 @@ struct TextPaintStyle: Equatable {
   var strokeWidth: Float32 = 0
   // This is not set for -webkit-text-fill-color.
   var hasExplicitlySetFillColor: Bool = false
-  let paintOrder: PaintOrder = .Normal
-  let lineJoin: LineJoin = .Miter
-  let lineCap: LineCap = .Butt
-  let miterLimit: Float32 = defaultMiterLimit
+  var paintOrder: PaintOrder = .Normal
+  var lineJoin: LineJoin = .Miter
+  var lineCap: LineCap = .Butt
+  var miterLimit: Float32 = defaultMiterLimit
 }
 
 func computeTextPaintStyle(
   frame: LocalFrameWrapper, lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper
 ) -> TextPaintStyle {
+  var paintStyle = TextPaintStyle()
+
+  let viewportSize = frame.view() != nil ? frame.view()!.size() : IntSize()
+  paintStyle.strokeWidth = lineStyle.computedStrokeWidth(viewportSize: viewportSize)
+  paintStyle.paintOrder = lineStyle.paintOrder()
+  paintStyle.lineJoin = lineStyle.joinStyle()
+  paintStyle.lineCap = lineStyle.capStyle()
+  paintStyle.miterLimit = lineStyle.strokeMiterLimit()
+
+  if paintInfo.forceTextColor() {
+    paintStyle.fillColor = paintInfo.forcedTextColor()
+    paintStyle.strokeColor = paintInfo.forcedTextColor()
+    paintStyle.emphasisMarkColor = paintInfo.forcedTextColor()
+    return paintStyle
+  }
+
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
