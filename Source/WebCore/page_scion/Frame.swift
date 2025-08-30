@@ -28,4 +28,9 @@ class FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func settings() -> SettingsWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

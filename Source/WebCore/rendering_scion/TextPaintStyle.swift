@@ -45,6 +45,13 @@ struct TextPaintStyle: Equatable {
   var miterLimit: Float32 = defaultMiterLimit
 }
 
+private func adjustColorForVisibilityOnBackground(
+  textColor: ColorWrapper, backgroundColor: ColorWrapper
+) -> ColorWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func computeTextPaintStyle(
   frame: LocalFrameWrapper, lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper
 ) -> TextPaintStyle {
@@ -65,20 +72,54 @@ func computeTextPaintStyle(
   }
 
   if lineStyle.insideDefaultButton() {
-    if let page = frame.page() {
-      if page.focusController().isActive() {
-        var options = StyleColorOptions()
-        if page.useSystemAppearance() {
-          options.update(with: .UseSystemAppearance)
-        }
-        paintStyle.fillColor = RenderTheme.singleton().defaultButtonTextColor(options: options)
-        return paintStyle
+    if let page = frame.page(), page.focusController().isActive() {
+      var options = StyleColorOptions()
+      if page.useSystemAppearance() {
+        options.update(with: .UseSystemAppearance)
       }
+      paintStyle.fillColor = RenderTheme.singleton().defaultButtonTextColor(options: options)
+      return paintStyle
     }
   }
 
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  paintStyle.fillColor = lineStyle.visitedDependentColorWithColorFilter(
+    colorProperty: .CSSPropertyWebkitTextFillColor, paintBehavior: paintInfo.paintBehavior)
+
+  var forceBackgroundToWhite = false
+  if let document = frame.document(), document.printing() {
+    if lineStyle.printColorAdjust() == .Economy {
+      forceBackgroundToWhite = true
+    }
+    if frame.settings().shouldPrintBackgrounds() {
+      forceBackgroundToWhite = false
+    }
+  }
+
+  // Make the text fill color legible against a white background
+  if forceBackgroundToWhite {
+    paintStyle.fillColor = adjustColorForVisibilityOnBackground(
+      textColor: paintStyle.fillColor, backgroundColor: ColorWrapper.white)
+  }
+
+  paintStyle.strokeColor = lineStyle.colorByApplyingColorFilter(
+    color: lineStyle.computedStrokeColor())
+
+  // Make the text stroke color legible against a white background
+  if forceBackgroundToWhite {
+    paintStyle.strokeColor = adjustColorForVisibilityOnBackground(
+      textColor: paintStyle.strokeColor, backgroundColor: ColorWrapper.white)
+  }
+
+  paintStyle.emphasisMarkColor = lineStyle.visitedDependentColorWithColorFilter(
+    colorProperty: .CSSPropertyTextEmphasisColor)
+
+  // Make the text stroke color legible against a white background
+  if forceBackgroundToWhite {
+    paintStyle.emphasisMarkColor = adjustColorForVisibilityOnBackground(
+      textColor: paintStyle.emphasisMarkColor, backgroundColor: ColorWrapper.white)
+  }
+
+  return paintStyle
 }
 
 func computeTextSelectionPaintStyle(

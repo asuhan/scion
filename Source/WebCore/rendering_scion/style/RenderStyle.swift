@@ -31,6 +31,7 @@ enum CSSPropertyID {
   case CSSPropertyColor
   case CSSPropertyBackgroundColor
   case CSSPropertyTextDecorationColor
+  case CSSPropertyTextEmphasisColor
   case CSSPropertyWebkitTextFillColor
   case CSSPropertyBorderBottomColor
   case CSSPropertyBorderLeftColor

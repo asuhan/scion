@@ -26,6 +26,11 @@
  */
 
 final class LocalFrameWrapper: FrameWrapper {
+  func document() -> Document? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func view() -> LocalFrameViewWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
