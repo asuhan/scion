@@ -38,6 +38,11 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func defaultButtonTextColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func documentMarkerLineColor(renderer: RenderTextWrapper, mode: DocumentMarkerLineStyleMode)
     -> ColorWrapper
   {

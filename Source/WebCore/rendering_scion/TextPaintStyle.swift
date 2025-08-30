@@ -64,6 +64,19 @@ func computeTextPaintStyle(
     return paintStyle
   }
 
+  if lineStyle.insideDefaultButton() {
+    if let page = frame.page() {
+      if page.focusController().isActive() {
+        var options = StyleColorOptions()
+        if page.useSystemAppearance() {
+          options.update(with: .UseSystemAppearance)
+        }
+        paintStyle.fillColor = RenderTheme.singleton().defaultButtonTextColor(options: options)
+        return paintStyle
+      }
+    }
+  }
+
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }

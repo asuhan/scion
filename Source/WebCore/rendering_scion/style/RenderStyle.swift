@@ -733,6 +733,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func insideDefaultButton() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func widows() -> UInt16 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

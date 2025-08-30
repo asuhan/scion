@@ -25,7 +25,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class LocalFrameWrapper {
+final class LocalFrameWrapper: FrameWrapper {
   func view() -> LocalFrameViewWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

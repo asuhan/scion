@@ -19,6 +19,16 @@
  */
 
 class PageWrapper {
+  func focusController() -> FocusControllerWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func useSystemAppearance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addRelevantRepaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
