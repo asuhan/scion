@@ -29,6 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct StyleColorOptions: OptionSet {
+  let rawValue: Int
+
+  static let ForVisitedLink = StyleColorOptions(rawValue: 1 << 0)
+  static let UseSystemAppearance = StyleColorOptions(rawValue: 1 << 1)
+  static let UseDarkAppearance = StyleColorOptions(rawValue: 1 << 2)
+  static let UseElevatedUserInterfaceLevel = StyleColorOptions(rawValue: 1 << 3)
+}
+
 class StyleColorWrapper {
   static func == (a: StyleColorWrapper, b: StyleColorWrapper) -> Bool {
     // TODO(asuhan): implement this

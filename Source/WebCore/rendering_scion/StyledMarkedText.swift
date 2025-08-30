@@ -57,20 +57,33 @@ private func resolveStyleForMarkedText(
     computeStyleForPseudoElementStyle(
       style: &style, pseudoElementStyle: renderStyle, paintInfo: paintInfo)
   case .FragmentHighlight:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderStyle = renderer.targetTextPseudoStyle() {
+      computeStyleForPseudoElementStyle(
+        style: &style, pseudoElementStyle: renderStyle, paintInfo: paintInfo)
+    } else {
+      let styleColorOptions: StyleColorOptions = .UseSystemAppearance
+      style.backgroundColor = renderer.theme().annotationHighlightColor(options: styleColorOptions)
+    }
   case .DraggedContent:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    style.alpha = 0.25
   case .TransparentContent:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    style.alpha = 0.0
   case .Selection:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    style.textStyles = computeTextSelectionPaintStyle(
+      textPaintStyle: style.textStyles, renderer: renderer, lineStyle: lineStyle,
+      paintInfo: paintInfo, selectionShadow: style.textShadow)
+
+    let selectionBackgroundColor = renderer.selectionBackgroundColor()
+    style.backgroundColor = selectionBackgroundColor
+    if selectionBackgroundColor.isValid() && selectionBackgroundColor.isVisible()
+      && style.textStyles.fillColor == selectionBackgroundColor
+    {
+      style.backgroundColor = selectionBackgroundColor.invertedColorWithAlpha(alpha: 1)
+    }
   case .TextMatch:
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Text matches always use the light system appearance.
+    let styleColorOptions: StyleColorOptions = .UseSystemAppearance
+    style.backgroundColor = renderer.theme().textSearchHighlightColor(options: styleColorOptions)
   }
   let styledMarkedText = StyledMarkedText(marker: markedText)
   styledMarkedText.style = style
@@ -224,7 +237,7 @@ final class StyledMarkedText: MarkedText {
     var textStyles = TextPaintStyle()
     var textDecorationStyles = TextDecorationPainter.Styles()
     var textShadow: ShadowData? = nil
-    let alpha: Float32 = 1
+    var alpha: Float32 = 1
   }
 
   init(marker: MarkedText) {

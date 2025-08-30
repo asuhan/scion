@@ -26,6 +26,18 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  // Highlighting color for search matches.
+  func textSearchHighlightColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Default highlighting color for app highlights.
+  func annotationHighlightColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func documentMarkerLineColor(renderer: RenderTextWrapper, mode: DocumentMarkerLineStyleMode)
     -> ColorWrapper
   {

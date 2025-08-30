@@ -56,6 +56,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func theme() -> RenderTheme {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func parent() -> RenderElementWrapper? {
     let unwrapped = wk_interop.RenderObject_parent(p)
     if unwrapped == nil {

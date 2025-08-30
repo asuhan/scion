@@ -52,6 +52,15 @@ func computeTextPaintStyle(
   fatalError("Not implemented")
 }
 
+func computeTextSelectionPaintStyle(
+  textPaintStyle: TextPaintStyle, renderer: RenderTextWrapper,
+  lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper,
+  selectionShadow: ShadowData?
+) -> TextPaintStyle {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 enum FillColorType {
   case UseNormalFillColor
   case UseEmphasisMarkColor
