@@ -266,14 +266,15 @@ final class StyledMarkedText: MarkedText {
     var alpha: Float32 = 1
   }
 
-  init(marker: MarkedText) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  convenience init(marker: MarkedText) {
+    self.init(marker: marker, style: Style())
   }
 
   init(marker: MarkedText, style: Style) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.style = style
+    super.init(
+      startOffset: marker.startOffset, endOffset: marker.endOffset, type: marker.type,
+      marker: marker.marker, highlightName: marker.highlightName, priority: marker.priority)
   }
 
   var style: Style
