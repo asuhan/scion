@@ -97,7 +97,7 @@ private func resolveStyleForMarkedText(
   case .Selection:
     style.textStyles = computeTextSelectionPaintStyle(
       textPaintStyle: style.textStyles, renderer: renderer, lineStyle: lineStyle,
-      paintInfo: paintInfo, selectionShadow: style.textShadow)
+      paintInfo: paintInfo, selectionShadow: &style.textShadow)
 
     let selectionBackgroundColor = renderer.selectionBackgroundColor()
     style.backgroundColor = selectionBackgroundColor

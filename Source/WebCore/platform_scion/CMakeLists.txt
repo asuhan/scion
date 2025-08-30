@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     ScrollableArea.swift
     ScrollTypes.swift
     ScrollView.swift
+    Widget.swift
 )
 add_subdirectory(graphics)
 add_subdirectory(text)

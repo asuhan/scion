@@ -36,7 +36,7 @@ struct TextPaintStyle: Equatable {
   var fillColor: ColorWrapper
   var strokeColor: ColorWrapper
   var emphasisMarkColor = ColorWrapper()
-  let strokeWidth: Float32 = 0
+  var strokeWidth: Float32 = 0
   // This is not set for -webkit-text-fill-color.
   var hasExplicitlySetFillColor: Bool = false
   let paintOrder: PaintOrder = .Normal
@@ -55,7 +55,7 @@ func computeTextPaintStyle(
 func computeTextSelectionPaintStyle(
   textPaintStyle: TextPaintStyle, renderer: RenderTextWrapper,
   lineStyle: RenderStyleWrapper, paintInfo: PaintInfoWrapper,
-  selectionShadow: ShadowData?
+  selectionShadow: inout ShadowData?
 ) -> TextPaintStyle {
   var selectionPaintStyle = textPaintStyle
 
@@ -73,12 +73,24 @@ func computeTextSelectionPaintStyle(
     selectionPaintStyle.emphasisMarkColor = emphasisMarkForeground
   }
 
-  if renderer.selectionPseudoStyle() != nil {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  if let pseudoStyle = renderer.selectionPseudoStyle() {
+    selectionPaintStyle.hasExplicitlySetFillColor = pseudoStyle.hasExplicitlySetColor()
+    selectionShadow = ShadowData.clone(
+      data: paintInfo.forceTextColor() ? nil : pseudoStyle.textShadow())
+    let viewportSize = renderer.frame().view() != nil ? renderer.frame().view()!.size() : IntSize()
+    let strokeWidth = pseudoStyle.computedStrokeWidth(viewportSize: viewportSize)
+    if strokeWidth != selectionPaintStyle.strokeWidth {
+      selectionPaintStyle.strokeWidth = strokeWidth
+    }
+
+    let stroke =
+      paintInfo.forceTextColor() ? paintInfo.forcedTextColor() : pseudoStyle.computedStrokeColor()
+    if stroke != selectionPaintStyle.strokeColor {
+      selectionPaintStyle.strokeColor = stroke
+    }
   } else {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    selectionShadow = ShadowData.clone(
+      data: paintInfo.forceTextColor() ? nil : lineStyle.textShadow())
   }
   return selectionPaintStyle
 }
