@@ -23,9 +23,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class AbstractRangeWrapper {}
+struct SimpleRange {}
 
-func makeSimpleRange(range: AbstractRangeWrapper) -> SimpleRange {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+struct IntersectingNodeRange: Sequence, IteratorProtocol {
+  init(range: SimpleRange) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func next() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

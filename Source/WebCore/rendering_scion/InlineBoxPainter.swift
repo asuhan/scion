@@ -115,7 +115,7 @@ class InlineBoxPainter {
         // Add ourselves to the containing block of the entire continuation so that it can
         // paint us atomically.
         containingBlock!.addContinuationWithOutline(
-          flow: renderer.element()!.renderer() as! RenderInlineWrapper)
+          flow: renderer.element()!.containerRenderer() as! RenderInlineWrapper)
       } else if !inlineFlow.isContinuation() {
         paintInfo.outlineObjects!.add(value: inlineFlow)
       }

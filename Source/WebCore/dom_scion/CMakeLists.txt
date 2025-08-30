@@ -9,6 +9,7 @@ target_sources(layout_scion PRIVATE
     Node.swift
     RenderedDocumentMarker.swift
     Settings.swift
+    SimpleRange.swift
     StaticRange.swift
     StyledElement.swift
     Text.swift

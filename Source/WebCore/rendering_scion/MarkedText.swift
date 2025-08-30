@@ -285,7 +285,7 @@ class MarkedText {
               continue
             }
             // FIXME: Potentially move this check elsewhere, to where we collect this range information.
-            let hasRenderer = MarkedText.hasRenderer()
+            let hasRenderer = MarkedText.hasRenderer(highlightRange: highlightRange)
             if !hasRenderer {
               continue
             }
@@ -347,9 +347,14 @@ class MarkedText {
     return markedTexts
   }
 
-  private static func hasRenderer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private static func hasRenderer(highlightRange: HighlightRangeWrapper) -> Bool {
+    let nodes = IntersectingNodeRange(range: makeSimpleRange(range: highlightRange.range()))
+    for node in nodes {
+      if node.renderer() != nil {
+        return true
+      }
+    }
+    return false
   }
 
   static func collectForDraggedAndTransparentContent(

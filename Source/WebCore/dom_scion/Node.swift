@@ -38,5 +38,14 @@ class NodeWrapper {
     return wk_interop.Node_isRootEditableElement(p)
   }
 
+  // -----------------------------------------------------------------------------
+  // Integration with rendering tree
+
+  // As renderer() includes a branch you should avoid calling it repeatedly in hot code paths.
+  func renderer() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let p: UnsafeRawPointer
 }
