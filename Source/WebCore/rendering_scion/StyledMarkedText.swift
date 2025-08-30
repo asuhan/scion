@@ -27,8 +27,34 @@ private func computeStyleForPseudoElementStyle(
   style: inout StyledMarkedText.Style, pseudoElementStyle: RenderStyleWrapper?,
   paintInfo: PaintInfoWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if pseudoElementStyle == nil {
+    return
+  }
+
+  let pseudoElementStyle = pseudoElementStyle!
+  style.backgroundColor = pseudoElementStyle.visitedDependentColorWithColorFilter(
+    colorProperty: .CSSPropertyBackgroundColor, paintBehavior: paintInfo.paintBehavior)
+  style.textStyles.fillColor = pseudoElementStyle.computedStrokeColor()
+  style.textStyles.strokeColor = pseudoElementStyle.computedStrokeColor()
+  style.textStyles.hasExplicitlySetFillColor = pseudoElementStyle.hasExplicitlySetColor()
+
+  let color = TextDecorationPainter.decorationColor(
+    style: pseudoElementStyle, paintBehavior: paintInfo.paintBehavior)
+  let decorationStyle = pseudoElementStyle.textDecorationStyle()
+  let decorations = pseudoElementStyle.textDecorationsInEffect()
+
+  if decorations.contains(.Underline) {
+    style.textDecorationStyles.underline.color = color
+    style.textDecorationStyles.underline.decorationStyle = decorationStyle
+  }
+  if decorations.contains(.Overline) {
+    style.textDecorationStyles.overline.color = color
+    style.textDecorationStyles.overline.decorationStyle = decorationStyle
+  }
+  if decorations.contains(.LineThrough) {
+    style.textDecorationStyles.linethrough.color = color
+    style.textDecorationStyles.linethrough.decorationStyle = decorationStyle
+  }
 }
 
 private func resolveStyleForMarkedText(

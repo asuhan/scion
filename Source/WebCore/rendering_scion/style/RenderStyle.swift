@@ -1163,6 +1163,16 @@ class RenderStyleWrapper {
     return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p))!
   }
 
+  func computedStrokeColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasExplicitlySetColor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Resolves the currentColor keyword, but must not be used for the "color" property which has a different semantic.
   func colorResolvingCurrentColor(color: StyleColorWrapper, visitedLink: Bool = false)
     -> ColorWrapper
