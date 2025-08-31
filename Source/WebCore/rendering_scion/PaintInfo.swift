@@ -149,26 +149,38 @@ struct PaintInfoWrapper {
   }
 
   var paintBehavior: PaintBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.paintBehavior
   }
 
   // used to list outlines that should be painted by a block with inline children
   var outlineObjects: ListSet<RenderInlineWrapper, UInt>? {
     get {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return n!.outlineObjects
     }
     set {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      n!.outlineObjects = newValue
     }
   }
 
   // the layer object that originates the current painting
   var paintContainer: RenderLayerModelObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.paintContainer
   }
 
   private struct native {
@@ -176,7 +188,7 @@ struct PaintInfoWrapper {
     var phase: PaintPhase
     let paintBehavior: PaintBehavior
     let subtreePaintRoot: RenderObjectWrapper?  // used to draw just one element and its visual children
-    let outlineObjects: WeakListSet<RenderInlineWrapper, UInt>?  // used to list outlines that should be painted by a block with inline children
+    var outlineObjects: WeakListSet<RenderInlineWrapper, UInt>?  // used to list outlines that should be painted by a block with inline children
     let overlapTestRequests: OverlapTestRequestMap?
     let paintContainer: RenderLayerModelObjectWrapper?  // the layer object that originates the current painting
     let requireSecurityOriginAccessForWidgets: Bool
