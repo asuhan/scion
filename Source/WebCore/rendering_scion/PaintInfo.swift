@@ -56,8 +56,11 @@ struct PaintInfoWrapper {
   }
 
   func context() -> GraphicsContextWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.context
   }
 
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
@@ -88,18 +91,27 @@ struct PaintInfoWrapper {
   }
 
   func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.enclosingSelfPaintingLayer
   }
 
   func eventRegionContext() -> EventRegionContext? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.regionContext as? EventRegionContext
   }
 
   func accessibilityRegionContext() -> AccessibilityRegionContext? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.regionContext as? AccessibilityRegionContext
   }
 
   func deepCopy() -> PaintInfoWrapper {
