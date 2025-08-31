@@ -65,9 +65,22 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
-  func forceTextColor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func forceTextColor() -> Bool { return forceBlackText() || forceWhiteText() }
+
+  func forceBlackText() -> Bool {
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.paintBehavior.contains(.ForceBlackText)
+  }
+
+  func forceWhiteText() -> Bool {
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.paintBehavior.contains(.ForceWhiteText)
   }
 
   func forcedTextColor() -> ColorWrapper {
