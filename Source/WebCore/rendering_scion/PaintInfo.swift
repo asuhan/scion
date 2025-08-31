@@ -55,6 +55,10 @@ struct PaintInfoWrapper {
     self.p = p
   }
 
+  private init(n: native) {
+    self.n = n
+  }
+
   func context() -> GraphicsContextWrapper {
     if n == nil {
       // TODO(asuhan): implement this
@@ -122,8 +126,11 @@ struct PaintInfoWrapper {
   }
 
   func deepCopy() -> PaintInfoWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return PaintInfoWrapper(n: n!)
   }
 
   var rect: LayoutRectWrapper {
