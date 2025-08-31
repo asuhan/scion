@@ -84,8 +84,7 @@ struct PaintInfoWrapper {
   }
 
   func forcedTextColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return forceBlackText() ? ColorWrapper.black : ColorWrapper.white
   }
 
   func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
