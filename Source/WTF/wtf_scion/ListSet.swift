@@ -39,3 +39,5 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 }
+
+typealias WeakListSet<T, KeyType> = ListSet<T, KeyType>

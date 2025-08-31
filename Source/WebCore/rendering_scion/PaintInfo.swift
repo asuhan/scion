@@ -42,8 +42,13 @@ struct PaintInfoWrapper {
     enclosingSelfPaintingLayer: RenderLayerWrapper? = nil,
     newRequireSecurityOriginAccessForWidgets: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.n = native(
+      rect: newRect, phase: newPhase, paintBehavior: newPaintBehavior,
+      subtreePaintRoot: newSubtreePaintRoot, outlineObjects: newOutlineObjects,
+      overlapTestRequests: overlapTestRequests, paintContainer: newPaintContainer,
+      requireSecurityOriginAccessForWidgets: newRequireSecurityOriginAccessForWidgets,
+      enclosingSelfPaintingLayer: enclosingSelfPaintingLayer,
+      context: newContext)
   }
 
   init(p: UnsafeMutableRawPointer) {
@@ -132,5 +137,20 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
-  private let p: UnsafeMutableRawPointer?
+  private struct native {
+    let rect: LayoutRectWrapper
+    let phase: PaintPhase
+    let paintBehavior: PaintBehavior
+    let subtreePaintRoot: RenderObjectWrapper?  // used to draw just one element and its visual children
+    let outlineObjects: WeakListSet<RenderInlineWrapper, UInt>?  // used to list outlines that should be painted by a block with inline children
+    let overlapTestRequests: OverlapTestRequestMap?
+    let paintContainer: RenderLayerModelObjectWrapper?  // the layer object that originates the current painting
+    let requireSecurityOriginAccessForWidgets: Bool
+    let enclosingSelfPaintingLayer: RenderLayerWrapper?
+    let regionContext: RegionContext? = nil  // For PaintPhase::EventRegion and PaintPhase::Accessibility.
+    let context: GraphicsContextWrapper
+  }
+
+  private var p: UnsafeMutableRawPointer? = nil
+  private var n: native? = nil
 }
