@@ -64,8 +64,15 @@ struct PaintInfoWrapper {
   }
 
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    if let subtreePaintRoot = n!.subtreePaintRoot {
+      // TODO(asuhan): use ObjectIdentifier for comparison once gone native
+      return CPtrToInt(subtreePaintRoot.p) == CPtrToInt(renderer.p)
+    }
+    return true
   }
 
   func forceTextColor() -> Bool { return forceBlackText() || forceWhiteText() }
