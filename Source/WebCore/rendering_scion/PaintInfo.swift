@@ -96,19 +96,29 @@ struct PaintInfoWrapper {
   }
 
   var rect: LayoutRectWrapper {
-    let raw = PaintInfo_rect(p)
-    return LayoutRectWrapper(
-      x: LayoutUnit.fromRawValue(value: raw.x),
-      y: LayoutUnit.fromRawValue(value: raw.y),
-      width: LayoutUnit.fromRawValue(value: raw.width),
-      height: LayoutUnit.fromRawValue(value: raw.height))
+    if let p = p {
+      let raw = PaintInfo_rect(p)
+      return LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: raw.x),
+        y: LayoutUnit.fromRawValue(value: raw.y),
+        width: LayoutUnit.fromRawValue(value: raw.width),
+        height: LayoutUnit.fromRawValue(value: raw.height))
+    }
+    return n!.rect
   }
 
   var phase: PaintPhase {
     get {
-      return PaintPhase(rawValue: PaintInfo_phase(p))!
+      if let p = p {
+        return PaintPhase(rawValue: PaintInfo_phase(p))!
+      }
+      return n!.phase
     }
     set {
+      if n != nil {
+        n!.phase = newValue
+        return
+      }
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -139,7 +149,7 @@ struct PaintInfoWrapper {
 
   private struct native {
     let rect: LayoutRectWrapper
-    let phase: PaintPhase
+    var phase: PaintPhase
     let paintBehavior: PaintBehavior
     let subtreePaintRoot: RenderObjectWrapper?  // used to draw just one element and its visual children
     let outlineObjects: WeakListSet<RenderInlineWrapper, UInt>?  // used to list outlines that should be painted by a block with inline children
