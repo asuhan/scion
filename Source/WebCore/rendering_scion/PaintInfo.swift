@@ -132,5 +132,5 @@ struct PaintInfoWrapper {
     fatalError("Not implemented")
   }
 
-  private let p: UnsafeMutableRawPointer
+  private let p: UnsafeMutableRawPointer?
 }
