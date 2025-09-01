@@ -203,9 +203,14 @@ struct LayoutRectWrapper {
     inflateY(dy: LayoutUnit(value: dy))
   }
 
-  mutating func inflate<T>(d: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func inflate(d: LayoutUnit) {
+    inflateX(dx: d)
+    inflateY(dy: d)
+  }
+
+  mutating func inflate(d: Float32) {
+    inflateX(dx: d)
+    inflateY(dy: d)
   }
 
   func transposedRect() -> LayoutRectWrapper {
