@@ -239,11 +239,16 @@ func enclosingLayoutRect(rect: FloatRectWrapper) -> LayoutRectWrapper {
   return LayoutRectWrapper(location: location, size: maxPoint - location)
 }
 
+// Device pixel snapping functions.
 func snapRectToDevicePixels(rect: LayoutRectWrapper, pixelSnappingFactor: Float32)
   -> FloatRectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return FloatRectWrapper(
+    location: FloatPoint(
+      x: roundToDevicePixel(value: rect.x(), pixelSnappingFactor: pixelSnappingFactor),
+      y: roundToDevicePixel(value: rect.y(), pixelSnappingFactor: pixelSnappingFactor)),
+    size: snapSizeToDevicePixel(
+      size: rect.size(), location: rect.location(), pixelSnappingFactor: pixelSnappingFactor))
 }
 
 // FIXME: This needs to take vertical centering into account too.
