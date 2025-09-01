@@ -133,7 +133,10 @@ struct LayoutRectWrapper {
     fatalError("Not implemented")
   }
 
-  func minXMinYCorner() -> LayoutPointWrapper { return m_location }
+  func minXMinYCorner() -> LayoutPointWrapper { return m_location }  // typically topLeft
+  func maxXMinYCorner() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: m_location.x + m_size.width(), y: m_location.y)
+  }  // typically topRight
 
   func intersects(other: LayoutRectWrapper) -> Bool {
     // Checking emptiness handles negative widths as well as zero.
@@ -255,6 +258,16 @@ func snapRectToDevicePixels(rect: LayoutRectWrapper, pixelSnappingFactor: Float3
 func snapRectToDevicePixelsWithWritingDirection(
   rect: LayoutRectWrapper, deviceScaleFactor: Float32, ltr: Bool
 ) -> FloatRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !ltr {
+    let snappedTopRight = roundPointToDevicePixels(
+      point: rect.maxXMinYCorner(), pixelSnappingFactor: deviceScaleFactor,
+      directionalRoundingToRight: ltr)
+    let snappedSize = snapSizeToDevicePixel(
+      size: rect.size(), location: rect.maxXMinYCorner(), pixelSnappingFactor: deviceScaleFactor)
+    return FloatRectWrapper(
+      x: snappedTopRight.x - snappedSize.width, y: snappedTopRight.y,
+      width: snappedSize.width,
+      height: snappedSize.height)
+  }
+  return snapRectToDevicePixels(rect: rect, pixelSnappingFactor: deviceScaleFactor)
 }
