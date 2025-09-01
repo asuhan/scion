@@ -150,8 +150,17 @@ struct LayoutRectWrapper {
   }
 
   mutating func intersect(other: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var newLocation = LayoutPointWrapper(x: max(x(), other.x()), y: max(y(), other.y()))
+    var newMaxPoint = LayoutPointWrapper(x: min(maxX(), other.maxX()), y: min(maxY(), other.maxY()))
+
+    // Return a clean empty rectangle for non-intersecting cases.
+    if newLocation.x >= newMaxPoint.x || newLocation.y >= newMaxPoint.y {
+      newLocation = LayoutPointWrapper(x: 0, y: 0)
+      newMaxPoint = LayoutPointWrapper(x: 0, y: 0)
+    }
+
+    m_location = newLocation
+    m_size = newMaxPoint - newLocation
   }
 
   mutating func unite(other: LayoutRectWrapper) {
