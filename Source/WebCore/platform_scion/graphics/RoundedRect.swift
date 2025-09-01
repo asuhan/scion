@@ -42,9 +42,29 @@ struct RoundedRectRadii {
     fatalError("Not implemented")
   }
 
+  func expand(
+    topWidth: LayoutUnit, bottomWidth: LayoutUnit, leftWidth: LayoutUnit, rightWidth: LayoutUnit
+  ) {
+    if topLeft.width() > 0 && topLeft.height() > 0 {
+      topLeft.setWidth(width: max(LayoutUnit(value: 0), topLeft.width() + leftWidth))
+      topLeft.setHeight(height: max(LayoutUnit(value: 0), topLeft.height() + topWidth))
+    }
+    if topRight.width() > 0 && topRight.height() > 0 {
+      topRight.setWidth(width: max(LayoutUnit(value: 0), topRight.width() + rightWidth))
+      topRight.setHeight(height: max(LayoutUnit(value: 0), topRight.height() + topWidth))
+    }
+    if bottomLeft.width() > 0 && bottomLeft.height() > 0 {
+      bottomLeft.setWidth(width: max(LayoutUnit(value: 0), bottomLeft.width() + leftWidth))
+      bottomLeft.setHeight(height: max(LayoutUnit(value: 0), bottomLeft.height() + bottomWidth))
+    }
+    if bottomRight.width() > 0 && bottomRight.height() > 0 {
+      bottomRight.setWidth(width: max(LayoutUnit(value: 0), bottomRight.width() + rightWidth))
+      bottomRight.setHeight(height: max(LayoutUnit(value: 0), bottomRight.height() + bottomWidth))
+    }
+  }
+
   func expand(size: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    expand(topWidth: size, bottomWidth: size, leftWidth: size, rightWidth: size)
   }
 
   mutating func scale(factor: Float32) {
