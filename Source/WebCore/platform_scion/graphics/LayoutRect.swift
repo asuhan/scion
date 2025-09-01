@@ -49,8 +49,9 @@ struct LayoutRectWrapper {
   }
 
   init(rect: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.init(
+      location: LayoutPointWrapper(point: rect.location),
+      size: LayoutSizeWrapper(size: rect.size))
   }
 
   init(r: FloatRectWrapper) {
