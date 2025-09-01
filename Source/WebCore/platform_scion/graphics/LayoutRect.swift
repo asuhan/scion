@@ -124,8 +124,8 @@ struct LayoutRectWrapper {
   }
 
   mutating func shiftMaxXEdgeTo(edge: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let delta = edge - maxX()
+    setWidth(width: max(LayoutUnit(value: 0), width() + delta))
   }
 
   mutating func shiftYEdgeTo<T>(edge: T) {
