@@ -27,6 +27,18 @@
 // Find point where lines through the two pairs of points intersect. Returns nil if the lines don't intersect.
 func findIntersection(p1: FloatPoint, p2: FloatPoint, d1: FloatPoint, d2: FloatPoint) -> FloatPoint?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let pxLength = p2.x - p1.x
+  let pyLength = p2.y - p1.y
+
+  let dxLength = d2.x - d1.x
+  let dyLength = d2.y - d1.y
+
+  let denom = pxLength * dyLength - pyLength * dxLength
+  if denom == 0 {
+    return nil
+  }
+
+  let param = ((d1.x - p1.x) * dyLength - (d1.y - p1.y) * dxLength) / denom
+
+  return FloatPoint(x: p1.x + param * pxLength, y: p1.y + param * pyLength)
 }
