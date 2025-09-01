@@ -118,9 +118,18 @@ struct LayoutRectWrapper {
     setHeight(height: max(LayoutUnit(value: 0), height() - delta))
   }
 
-  mutating func shiftXEdgeTo<T>(edge: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func shiftXEdgeTo(edge: Float32) {
+    shiftXEdgeTo(edge: LayoutUnit(value: edge))
+  }
+
+  mutating func shiftYEdgeTo(edge: Float32) {
+    shiftYEdgeTo(edge: LayoutUnit(value: edge))
+  }
+
+  mutating func shiftXEdgeTo(edge: LayoutUnit) {
+    let delta = edge - x()
+    setX(x: edge)
+    setWidth(width: max(LayoutUnit(value: 0), width() - delta))
   }
 
   mutating func shiftMaxXEdgeTo(edge: LayoutUnit) {
@@ -128,9 +137,10 @@ struct LayoutRectWrapper {
     setWidth(width: max(LayoutUnit(value: 0), width() + delta))
   }
 
-  mutating func shiftYEdgeTo<T>(edge: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func shiftYEdgeTo(edge: LayoutUnit) {
+    let delta = edge - y()
+    setY(y: edge)
+    setHeight(height: max(LayoutUnit(value: 0), height() - delta))
   }
 
   func minXMinYCorner() -> LayoutPointWrapper { return m_location }  // typically topLeft
