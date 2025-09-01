@@ -109,13 +109,13 @@ struct LayoutRectWrapper {
   }
 
   mutating func shiftXEdgeBy(delta: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    move(dx: delta, dy: LayoutUnit(value: 0))
+    setWidth(width: max(LayoutUnit(value: 0), width() - delta))
   }
 
   mutating func shiftYEdgeBy(delta: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    move(dx: LayoutUnit(value: 0), dy: delta)
+    setHeight(height: max(LayoutUnit(value: 0), height() - delta))
   }
 
   mutating func shiftXEdgeTo<T>(edge: T) {
