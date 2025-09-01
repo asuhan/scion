@@ -27,8 +27,14 @@
 
 struct RoundedRectRadii {
   func areRenderableInRect(rect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return topLeft.width() >= 0 && topLeft.height() >= 0
+      && bottomLeft.width() >= 0 && bottomLeft.height() >= 0
+      && topRight.width() >= 0 && topRight.height() >= 0
+      && bottomRight.width() >= 0 && bottomRight.height() >= 0
+      && topLeft.width() + topRight.width() <= rect.width()
+      && bottomLeft.width() + bottomRight.width() <= rect.width()
+      && topLeft.height() + bottomLeft.height() <= rect.height()
+      && topRight.height() + bottomRight.height() <= rect.height()
   }
 
   mutating func makeRenderableInRect(rect: LayoutRectWrapper) {
