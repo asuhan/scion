@@ -38,8 +38,19 @@ struct RoundedRectRadii {
   }
 
   mutating func makeRenderableInRect(rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let maxRadiusWidth = max(
+      topLeft.width() + topRight.width(), bottomLeft.width() + bottomRight.width())
+    let maxRadiusHeight = max(
+      topLeft.height() + bottomLeft.height(), topRight.height() + bottomRight.height())
+
+    if maxRadiusWidth <= 0 || maxRadiusHeight <= 0 {
+      scale(factor: 0)
+      return
+    }
+
+    let widthRatio = rect.width().float() / maxRadiusWidth
+    let heightRatio = rect.height().float() / maxRadiusHeight
+    scale(factor: widthRatio < heightRatio ? widthRatio : heightRatio)
   }
 
   func expand(
