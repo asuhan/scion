@@ -68,9 +68,37 @@ struct FloatRoundedRect {
       }
     }
 
-    func shrink(size: Float32) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    mutating func expand(
+      topWidth: Float32, bottomWidth: Float32, leftWidth: Float32, rightWidth: Float32
+    ) {
+      if topLeft.width > 0 && topLeft.height > 0 {
+        topLeft.setWidth(width: max(0, topLeft.width + leftWidth))
+        topLeft.setHeight(height: max(0, topLeft.height + topWidth))
+      }
+      if topRight.width > 0 && topRight.height > 0 {
+        topRight.setWidth(width: max(0, topRight.width + rightWidth))
+        topRight.setHeight(height: max(0, topRight.height + topWidth))
+      }
+      if bottomLeft.width > 0 && bottomLeft.height > 0 {
+        bottomLeft.setWidth(width: max(0, bottomLeft.width + leftWidth))
+        bottomLeft.setHeight(height: max(0, bottomLeft.height + bottomWidth))
+      }
+      if bottomRight.width > 0 && bottomRight.height > 0 {
+        bottomRight.setWidth(width: max(0, bottomRight.width + rightWidth))
+        bottomRight.setHeight(height: max(0, bottomRight.height + bottomWidth))
+      }
+    }
+
+    mutating func shrink(
+      topWidth: Float32, bottomWidth: Float32, leftWidth: Float32, rightWidth: Float32
+    ) {
+      expand(
+        topWidth: -topWidth, bottomWidth: -bottomWidth, leftWidth: -leftWidth,
+        rightWidth: -rightWidth)
+    }
+
+    mutating func shrink(size: Float32) {
+      shrink(topWidth: size, bottomWidth: size, leftWidth: size, rightWidth: size)
     }
 
     private var topLeft: FloatSize
