@@ -132,9 +132,25 @@ struct RoundedRect {
 
   mutating func move(size: LayoutSizeWrapper) { rect.move(size: size) }
 
-  func inflateWithRadii(amount: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func inflateWithRadii(amount: LayoutUnit) {
+    let old = rect
+
+    if amount < 0 {
+      rect.inflateX(dx: max(-rect.width() / 2, amount))
+      rect.inflateY(dy: max(-rect.height() / 2, amount))
+    } else {
+      rect.inflate(d: amount)
+    }
+
+    // Considering the inflation factor of shorter size to scale the radii seems appropriate here
+    var factor: Float32 = 0
+    if rect.width() < rect.height() {
+      factor = old.width().bool() ? rect.width().float() / old.width() : 0
+    } else {
+      factor = old.height().bool() ? rect.height().float() / old.height() : 0
+    }
+
+    radii.scale(factor: factor)
   }
 
   func isRenderable() -> Bool {
