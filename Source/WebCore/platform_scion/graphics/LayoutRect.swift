@@ -147,6 +147,12 @@ struct LayoutRectWrapper {
   func maxXMinYCorner() -> LayoutPointWrapper {
     return LayoutPointWrapper(x: m_location.x + m_size.width(), y: m_location.y)
   }  // typically topRight
+  func minXMaxYCorner() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: m_location.x, y: m_location.y + m_size.height())
+  }  // typically bottomLeft
+  func maxXMaxYCorner() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: m_location.x + m_size.width(), y: m_location.y + m_size.height())
+  }  // typically bottomRight
 
   func intersects(other: LayoutRectWrapper) -> Bool {
     // Checking emptiness handles negative widths as well as zero.

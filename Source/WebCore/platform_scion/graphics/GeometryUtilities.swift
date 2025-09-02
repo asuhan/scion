@@ -42,3 +42,8 @@ func findIntersection(p1: FloatPoint, p2: FloatPoint, d1: FloatPoint, d2: FloatP
 
   return FloatPoint(x: p1.x + param * pxLength, y: p1.y + param * pyLength)
 }
+
+func ellipseContainsPoint(center: FloatPoint, radii: FloatSize, point: FloatPoint) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

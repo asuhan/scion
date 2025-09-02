@@ -163,8 +163,67 @@ struct RoundedRect {
   }
 
   func contains(otherRect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !rect.contains(other: otherRect) || !isRenderable() {
+      return false
+    }
+
+    let topLeft = radii.topLeft
+    if !topLeft.isEmpty() {
+      let center = FloatPoint(
+        x: (rect.x() + topLeft.width()).float(), y: (rect.y() + topLeft.height()).float())
+      if otherRect.x() <= center.x && otherRect.y() <= center.y {
+        if !ellipseContainsPoint(
+          center: center, radii: topLeft.FloatSize(), point: otherRect.minXMinYCorner().FloatPoint()
+        ) {
+          return false
+        }
+      }
+    }
+
+    let topRight = radii.topRight
+    if !topRight.isEmpty() {
+      let center = FloatPoint(
+        x: (rect.maxX() - topRight.width()).float(), y: (rect.y() + topRight.height()).float())
+      if otherRect.maxX() >= center.x && otherRect.y() <= center.y {
+        if !ellipseContainsPoint(
+          center: center, radii: topRight.FloatSize(),
+          point: otherRect.maxXMinYCorner().FloatPoint())
+        {
+          return false
+        }
+      }
+    }
+
+    let bottomLeft = radii.bottomLeft
+    if !bottomLeft.isEmpty() {
+      let center = FloatPoint(
+        x: (rect.x() + bottomLeft.width()).float(), y: (rect.maxY() - bottomLeft.height()).float())
+      if otherRect.x() <= center.x && otherRect.maxY() >= center.y {
+        if !ellipseContainsPoint(
+          center: center, radii: bottomLeft.FloatSize(),
+          point: otherRect.minXMaxYCorner().FloatPoint())
+        {
+          return false
+        }
+      }
+    }
+
+    let bottomRight = radii.bottomRight
+    if !bottomRight.isEmpty() {
+      let center = FloatPoint(
+        x: (rect.maxX() - bottomRight.width()).float(),
+        y: (rect.maxY() - bottomRight.height()).float())
+      if otherRect.maxX() >= center.x && otherRect.maxY() >= center.y {
+        if !ellipseContainsPoint(
+          center: center, radii: bottomRight.FloatSize(),
+          point: otherRect.maxXMaxYCorner().FloatPoint())
+        {
+          return false
+        }
+      }
+    }
+
+    return true
   }
 
   func pixelSnappedRoundedRectForPainting(deviceScaleFactor: Float32) -> FloatRoundedRect {
