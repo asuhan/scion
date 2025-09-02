@@ -158,6 +158,19 @@ struct LayoutRectRaw {
     int32_t height;
 };
 
+struct PaintInfoRaw {
+    struct LayoutRectRaw rect;
+    uint16_t phase;
+    uint32_t paint_behavior;
+    void* subtree_paint_root;
+    void* outline_objects;
+    void* overlap_test_requests;
+    const void* paint_container;
+    bool require_security_origin_access_for_widgets;
+    const void* enclosing_self_painting_layer;
+    void* region_context;
+};
+
 extern "C" void InlineFormattingContext_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*);
 extern "C" struct LayoutRectRaw LineLayout_layout(void*, const void*, const void*, const void*, const void*, uint64_t, struct PlacedFloatsRaw, struct LineClampRaw, void*, const void*, bool, struct OptionalIntRaw);
 extern "C" struct LayoutRectRaw PaintInfo_rect(const void* p)

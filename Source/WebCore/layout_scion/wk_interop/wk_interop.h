@@ -172,6 +172,19 @@ struct OptionalTextBoxTrimRaw {
     bool isValid;
 };
 
+struct PaintInfoRaw {
+    struct LayoutRectRaw rect;
+    uint16_t phase;
+    uint32_t paint_behavior;
+    void* subtree_paint_root;
+    void* outline_objects;
+    void* overlap_test_requests;
+    const void* paint_container;
+    bool require_security_origin_access_for_widgets;
+    const void* enclosing_self_painting_layer;
+    void* region_context;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

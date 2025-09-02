@@ -50,7 +50,7 @@ struct LayoutPointRaw {
     int32_t y;
 };
 
-extern "C" void LineLayoutScion_paint(uint64_t handle, void* paint_info_raw, struct LayoutPointRaw paint_offset_raw, const void* layer_renderer_raw);
+extern "C" void LineLayoutScion_paint(uint64_t handle, void* paint_info_raw, struct PaintInfoRaw paint_info_raw_val, struct LayoutPointRaw paint_offset_raw, const void* layer_renderer_raw);
 
 namespace WebCore {
 namespace LayoutIntegration {
@@ -198,7 +198,24 @@ void LineLayoutScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset
         paintOffset.x().rawValue(),
         paintOffset.y().rawValue()
     };
-    LineLayoutScion_paint(m_handle, &paintInfo, paint_offset_raw, const_cast<void*>(static_cast<const void*>(layerRenderer)));
+    const auto paint_info_raw_val = PaintInfoRaw {
+        .rect = {
+            paintInfo.rect.x().rawValue(),
+            paintInfo.rect.y().rawValue(),
+            paintInfo.rect.width().rawValue(),
+            paintInfo.rect.height().rawValue()
+        },
+        .phase = static_cast<uint16_t>(paintInfo.phase),
+        .paint_behavior = paintInfo.paintBehavior.toRaw(),
+        .subtree_paint_root = paintInfo.subtreePaintRoot,
+        .outline_objects = paintInfo.outlineObjects,
+        .overlap_test_requests = paintInfo.overlapTestRequests,
+        .paint_container = paintInfo.paintContainer,
+        .require_security_origin_access_for_widgets = paintInfo.requireSecurityOriginAccessForWidgets,
+        .enclosing_self_painting_layer = paintInfo.m_enclosingSelfPaintingLayer,
+        .region_context = paintInfo.regionContext
+    };
+    LineLayoutScion_paint(m_handle, &paintInfo, paint_info_raw_val, paint_offset_raw, const_cast<void*>(static_cast<const void*>(layerRenderer)));
 }
 
 bool LineLayoutScion::hitTest(const HitTestRequest&, HitTestResult&, const HitTestLocation&, const LayoutPoint&, HitTestAction, const RenderInline*)

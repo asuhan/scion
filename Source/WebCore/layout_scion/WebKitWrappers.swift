@@ -475,7 +475,8 @@ func LineLayoutScion_hasDetachedContent(handle: UInt64) -> Bool {
 
 @_cdecl("LineLayoutScion_paint")
 func LineLayoutScion_paint(
-  handle: UInt64, paintInfoRaw: UnsafeMutableRawPointer, paintOffset: LayoutPointRaw,
+  handle: UInt64, paintInfoRaw: UnsafeMutableRawPointer, paintInfoRawVal: PaintInfoRaw,
+  paintOffset: LayoutPointRaw,
   layerRendererRaw: UnsafeMutableRawPointer?
 ) {
   let paintInfo = PaintInfoWrapper(p: paintInfoRaw)

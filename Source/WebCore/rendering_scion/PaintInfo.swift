@@ -51,6 +51,31 @@ struct PaintInfoWrapper {
       context: newContext)
   }
 
+  init(from: PaintInfoRaw) {
+    if from.outline_objects == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    self.n = native(
+      rect: LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: from.rect.x),
+        y: LayoutUnit.fromRawValue(value: from.rect.y),
+        width: LayoutUnit.fromRawValue(value: from.rect.width),
+        height: LayoutUnit.fromRawValue(value: from.rect.height)),
+      phase: PaintPhase(rawValue: from.phase)!,
+      paintBehavior: PaintBehavior(rawValue: from.paint_behavior),
+      subtreePaintRoot: from.subtree_paint_root != nil
+        ? RenderObjectWrapper(p: from.subtree_paint_root!) : nil,
+      outlineObjects: nil,
+      overlapTestRequests: nil,
+      paintContainer: nil,
+      requireSecurityOriginAccessForWidgets: from.require_security_origin_access_for_widgets,
+      enclosingSelfPaintingLayer: nil,
+      context: GraphicsContextWrapper())
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
