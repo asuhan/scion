@@ -168,8 +168,33 @@ struct RoundedRect {
   }
 
   func pixelSnappedRoundedRectForPainting(deviceScaleFactor: Float32) -> FloatRoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let originalRect = rect
+    if originalRect.isEmpty() {
+      return FloatRoundedRect(
+        rect: originalRect.FloatRect(), radii: FloatRoundedRect.Radii(intRadii: radii))
+    }
+
+    let pixelSnappedRect = snapRectToDevicePixels(
+      rect: originalRect, pixelSnappingFactor: deviceScaleFactor)
+
+    if !isRenderable() {
+      return FloatRoundedRect(
+        rect: pixelSnappedRect, radii: FloatRoundedRect.Radii(intRadii: radii))
+    }
+
+    // Snapping usually does not alter size, but when it does, we need to make sure that the final rect is still renderable by distributing the size delta proportionally.
+    let adjustedRadii = FloatRoundedRect.Radii(intRadii: radii)
+    adjustedRadii.scale(
+      horizontalFactor: pixelSnappedRect.width() / originalRect.width().toFloat(),
+      verticalFactor: pixelSnappedRect.height() / originalRect.height().toFloat())
+    var snappedRoundedRect = FloatRoundedRect(rect: pixelSnappedRect, radii: adjustedRadii)
+    if !snappedRoundedRect.isRenderable() {
+      // Floating point mantissa overflow can produce a non-renderable rounded rect.
+      adjustedRadii.shrink(size: 1 / deviceScaleFactor)
+      snappedRoundedRect.radii = adjustedRadii
+    }
+    assert(snappedRoundedRect.isRenderable())
+    return snappedRoundedRect
   }
 
   var rect = LayoutRectWrapper()

@@ -43,6 +43,16 @@ struct FloatRoundedRect {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func scale(horizontalFactor: Float32, verticalFactor: Float32) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func shrink(size: Float32) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   init(rect: FloatRectWrapper = FloatRectWrapper(), radii: Radii = Radii()) {
@@ -79,6 +89,8 @@ struct FloatRoundedRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var radii: Radii
 }
 
 func calcBorderRadiiConstraintScaleFor(rect: FloatRectWrapper, radii: FloatRoundedRect.Radii)
