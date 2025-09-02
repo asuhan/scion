@@ -26,6 +26,10 @@
  */
 
 struct RoundedRectRadii {
+  func isZero() -> Bool {
+    return topLeft.isZero() && topRight.isZero() && bottomLeft.isZero() && bottomRight.isZero()
+  }
+
   func areRenderableInRect(rect: LayoutRectWrapper) -> Bool {
     return topLeft.width() >= 0 && topLeft.height() >= 0
       && bottomLeft.width() >= 0 && bottomLeft.height() >= 0
@@ -124,10 +128,7 @@ struct RoundedRect {
     self.radii = radii
   }
 
-  func isRounded() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRounded() -> Bool { return !radii.isZero() }
 
   mutating func move(size: LayoutSizeWrapper) { rect.move(size: size) }
 
