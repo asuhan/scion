@@ -44,15 +44,39 @@ struct FloatRoundedRect {
       fatalError("Not implemented")
     }
 
-    func scale(horizontalFactor: Float32, verticalFactor: Float32) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    mutating func scale(horizontalFactor: Float32, verticalFactor: Float32) {
+      if horizontalFactor == 1 && verticalFactor == 1 {
+        return
+      }
+
+      // If either radius on a corner becomes zero, reset both radii on that corner.
+      topLeft.scale(scaleX: horizontalFactor, scaleY: verticalFactor)
+      if topLeft.width == 0 || topLeft.height == 0 {
+        topLeft = FloatSize()
+      }
+      topRight.scale(scaleX: horizontalFactor, scaleY: verticalFactor)
+      if topRight.width == 0 || topRight.height == 0 {
+        topRight = FloatSize()
+      }
+      bottomLeft.scale(scaleX: horizontalFactor, scaleY: verticalFactor)
+      if bottomLeft.width == 0 || bottomLeft.height == 0 {
+        bottomLeft = FloatSize()
+      }
+      bottomRight.scale(scaleX: horizontalFactor, scaleY: verticalFactor)
+      if bottomRight.width == 0 || bottomRight.height == 0 {
+        bottomRight = FloatSize()
+      }
     }
 
     func shrink(size: Float32) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private var topLeft: FloatSize
+    private var topRight: FloatSize
+    private var bottomLeft: FloatSize
+    private var bottomRight: FloatSize
   }
 
   init(rect: FloatRectWrapper = FloatRectWrapper(), radii: Radii = Radii()) {

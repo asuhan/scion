@@ -44,6 +44,11 @@ struct FloatSize {
     self.height += height
   }
 
+  mutating func scale(scaleX: Float32, scaleY: Float32) {
+    width *= scaleX
+    height *= scaleY
+  }
+
   func scaled(s: Float32) -> FloatSize {
     return FloatSize(width: width * s, height: height * s)
   }

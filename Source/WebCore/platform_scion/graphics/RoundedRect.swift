@@ -183,7 +183,7 @@ struct RoundedRect {
     }
 
     // Snapping usually does not alter size, but when it does, we need to make sure that the final rect is still renderable by distributing the size delta proportionally.
-    let adjustedRadii = FloatRoundedRect.Radii(intRadii: radii)
+    var adjustedRadii = FloatRoundedRect.Radii(intRadii: radii)
     adjustedRadii.scale(
       horizontalFactor: pixelSnappedRect.width() / originalRect.width().toFloat(),
       verticalFactor: pixelSnappedRect.height() / originalRect.height().toFloat())
