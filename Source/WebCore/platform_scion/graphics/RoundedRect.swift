@@ -79,8 +79,27 @@ struct RoundedRectRadii {
   }
 
   mutating func scale(factor: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if factor == 1 {
+      return
+    }
+
+    // If either radius on a corner becomes zero, reset both radii on that corner.
+    topLeft.scale(scale: factor)
+    if !topLeft.width().bool() || !topLeft.height().bool() {
+      topLeft = LayoutSizeWrapper()
+    }
+    topRight.scale(scale: factor)
+    if !topRight.width().bool() || !topRight.height().bool() {
+      topRight = LayoutSizeWrapper()
+    }
+    bottomLeft.scale(scale: factor)
+    if !bottomLeft.width().bool() || !bottomLeft.height().bool() {
+      bottomLeft = LayoutSizeWrapper()
+    }
+    bottomRight.scale(scale: factor)
+    if !bottomRight.width().bool() || !bottomRight.height().bool() {
+      bottomRight = LayoutSizeWrapper()
+    }
   }
 
   func shrink(
