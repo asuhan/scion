@@ -154,8 +154,7 @@ struct RoundedRect {
   }
 
   func isRenderable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return radii.areRenderableInRect(rect: rect)
   }
 
   func adjustRadii() {
