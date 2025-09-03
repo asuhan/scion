@@ -144,6 +144,35 @@ struct FloatRoundedRect {
 func calcBorderRadiiConstraintScaleFor(rect: FloatRectWrapper, radii: FloatRoundedRect.Radii)
   -> Float32
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Constrain corner radii using CSS3 rules:
+  // http://www.w3.org/TR/css3-background/#the-border-radius
+
+  var factor: Float32 = 1
+
+  // top
+  var radiiSum = radii.topLeft.width + radii.topRight.width  // Casts to avoid integer overflow.
+  if radiiSum > rect.width() {
+    factor = min(rect.width() / radiiSum, factor)
+  }
+
+  // bottom
+  radiiSum = radii.bottomLeft.width + radii.bottomRight.width
+  if radiiSum > rect.width() {
+    factor = min(rect.width() / radiiSum, factor)
+  }
+
+  // left
+  radiiSum = radii.topLeft.height + radii.bottomLeft.height
+  if radiiSum > rect.height() {
+    factor = min(rect.height() / radiiSum, factor)
+  }
+
+  // right
+  radiiSum = radii.topRight.height + radii.bottomRight.height
+  if radiiSum > rect.height() {
+    factor = min(rect.height() / radiiSum, factor)
+  }
+
+  assert(factor <= 1)
+  return factor
 }
