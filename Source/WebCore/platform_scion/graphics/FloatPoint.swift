@@ -51,6 +51,15 @@ struct FloatPoint {
     y += a.y
   }
 
+  mutating func scale(scaleX: Float32, scaleY: Float32) {
+    x *= scaleX
+    y *= scaleY
+  }
+
+  func lengthSquared() -> Float32 {
+    return x * x + y * y
+  }
+
   func transposedPoint() -> FloatPoint {
     return FloatPoint(x: y, y: x)
   }
