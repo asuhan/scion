@@ -157,9 +157,8 @@ struct RoundedRect {
     return radii.areRenderableInRect(rect: rect)
   }
 
-  func adjustRadii() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func adjustRadii() {
+    radii.makeRenderableInRect(rect: rect)
   }
 
   func contains(otherRect: LayoutRectWrapper) -> Bool {
