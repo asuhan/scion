@@ -955,7 +955,7 @@ class BorderPainter {
         {
           path.addRoundedRect(roundedRect: pixelSnappedOuterBorder)
         } else {
-          path.addRect(rect: pixelSnappedOuterBorder.rect())
+          path.addRect(rect: pixelSnappedOuterBorder.rect)
         }
 
         if haveAllDoubleEdges {
@@ -981,29 +981,27 @@ class BorderPainter {
 
           var pixelSnappedOuterThird = sides.outerBorder.pixelSnappedRoundedRectForPainting(
             deviceScaleFactor: deviceScaleFactor)
-          pixelSnappedOuterThird.setRect(
-            rect: snapRectToDevicePixels(
-              rect: outerThirdRect, pixelSnappingFactor: deviceScaleFactor))
+          pixelSnappedOuterThird.rect = snapRectToDevicePixels(
+            rect: outerThirdRect, pixelSnappingFactor: deviceScaleFactor)
 
           if pixelSnappedOuterThird.isRounded()
             && sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer
           {
             path.addRoundedRect(roundedRect: pixelSnappedOuterThird)
           } else {
-            path.addRect(rect: pixelSnappedOuterThird.rect())
+            path.addRect(rect: pixelSnappedOuterThird.rect)
           }
 
           var pixelSnappedInnerThird = sides.innerBorder.pixelSnappedRoundedRectForPainting(
             deviceScaleFactor: deviceScaleFactor)
-          pixelSnappedInnerThird.setRect(
-            rect: snapRectToDevicePixels(
-              rect: innerThirdRect, pixelSnappingFactor: deviceScaleFactor))
+          pixelSnappedInnerThird.rect = snapRectToDevicePixels(
+            rect: innerThirdRect, pixelSnappingFactor: deviceScaleFactor)
           if pixelSnappedInnerThird.isRounded()
             && sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer
           {
             path.addRoundedRect(roundedRect: pixelSnappedInnerThird)
           } else {
-            path.addRect(rect: pixelSnappedInnerThird.rect())
+            path.addRect(rect: pixelSnappedInnerThird.rect)
           }
         }
 
@@ -1012,7 +1010,7 @@ class BorderPainter {
         if pixelSnappedInnerBorder.isRounded() {
           path.addRoundedRect(roundedRect: pixelSnappedInnerBorder)
         } else {
-          path.addRect(rect: pixelSnappedInnerBorder.rect())
+          path.addRect(rect: pixelSnappedInnerBorder.rect)
         }
 
         graphicsContext.setFillRule(fillRule: .EvenOdd)

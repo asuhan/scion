@@ -39,7 +39,7 @@ private func addRoundedRectToPath(roundedRect: FloatRoundedRect, path: inout Pat
   if roundedRect.isRounded() {
     path.addRoundedRect(roundedRect: roundedRect)
   } else {
-    path.addRect(rect: roundedRect.rect())
+    path.addRect(rect: roundedRect.rect)
   }
 }
 
@@ -180,7 +180,7 @@ struct BorderShape {
     if pixelSnappedRect.isRounded() {
       context.clipRoundedRect(rect: pixelSnappedRect)
     } else {
-      context.clip(rect: pixelSnappedRect.rect())
+      context.clip(rect: pixelSnappedRect.rect)
     }
   }
 
@@ -191,7 +191,7 @@ struct BorderShape {
     if pixelSnappedRect.isRounded() {
       context.clipRoundedRect(rect: pixelSnappedRect)
     } else {
-      context.clip(rect: pixelSnappedRect.rect())
+      context.clip(rect: pixelSnappedRect.rect)
     }
   }
 
@@ -205,7 +205,7 @@ struct BorderShape {
     if pixelSnappedRect.isRounded() {
       context.clipOutRoundedRect(rect: pixelSnappedRect)
     } else {
-      context.clipOut(rect: pixelSnappedRect.rect())
+      context.clipOut(rect: pixelSnappedRect.rect)
     }
   }
 
@@ -217,7 +217,7 @@ struct BorderShape {
     if pixelSnappedRect.isRounded() {
       context.fillRoundedRect(rect: pixelSnappedRect, color: color)
     } else {
-      context.fillRect(rect: pixelSnappedRect.rect(), color: color)
+      context.fillRect(rect: pixelSnappedRect.rect, color: color)
     }
   }
 
@@ -230,7 +230,7 @@ struct BorderShape {
     if pixelSnappedRect.isRounded() {
       context.fillRoundedRect(rect: pixelSnappedRect, color: color)
     } else {
-      context.fillRect(rect: pixelSnappedRect.rect(), color: color)
+      context.fillRect(rect: pixelSnappedRect.rect, color: color)
     }
   }
 

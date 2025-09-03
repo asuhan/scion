@@ -730,7 +730,7 @@ class BackgroundPainter {
           if hasBorderRadius {
             context.fillRoundedRect(rect: pixelSnappedBorderRect, color: shadowColor)
           } else {
-            context.fillRect(rect: pixelSnappedBorderRect.rect(), color: shadowColor)
+            context.fillRect(rect: pixelSnappedBorderRect.rect, color: shadowColor)
           }
           shadow = shadow!.next
           continue
@@ -747,7 +747,7 @@ class BackgroundPainter {
         if hasBorderRadius {
           context.clipRoundedRect(rect: pixelSnappedBorderRect)
         } else {
-          context.clip(rect: pixelSnappedBorderRect.rect())
+          context.clip(rect: pixelSnappedBorderRect.rect)
         }
 
         let xOffset =

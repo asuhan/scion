@@ -117,11 +117,6 @@ struct FloatRoundedRect {
     fatalError("Not implemented")
   }
 
-  func rect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func isRounded() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -132,22 +127,18 @@ struct FloatRoundedRect {
     fatalError("Not implemented")
   }
 
-  mutating func setRect(rect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func isRenderable() -> Bool {
     return radii.topLeft.width >= 0 && radii.topLeft.height >= 0
       && radii.bottomLeft.width >= 0 && radii.bottomLeft.height >= 0
       && radii.topRight.width >= 0 && radii.topRight.height >= 0
       && radii.bottomRight.width >= 0 && radii.bottomRight.height >= 0
-      && radii.topLeft.width + radii.topRight.width <= rect().width()
-      && radii.bottomLeft.width + radii.bottomRight.width <= rect().width()
-      && radii.topLeft.height + radii.bottomLeft.height <= rect().height()
-      && radii.topRight.height + radii.bottomRight.height <= rect().height()
+      && radii.topLeft.width + radii.topRight.width <= rect.width()
+      && radii.bottomLeft.width + radii.bottomRight.width <= rect.width()
+      && radii.topLeft.height + radii.bottomLeft.height <= rect.height()
+      && radii.topRight.height + radii.bottomRight.height <= rect.height()
   }
 
+  var rect: FloatRectWrapper
   var radii: Radii
 }
 
