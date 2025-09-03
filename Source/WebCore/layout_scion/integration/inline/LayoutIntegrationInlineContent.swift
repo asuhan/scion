@@ -102,8 +102,14 @@ extension LayoutIntegration {
     }
 
     func indexForBox(box: InlineDisplay.Box) -> UInt64 {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // TODO(asuhan): implement this efficiently
+      let boxId = ObjectIdentifier(box)
+      if let index = displayContent.boxes.firstIndex(where: { currentBox in
+        ObjectIdentifier(currentBox) == boxId
+      }) {
+        return UInt64(index)
+      }
+      fatalError("Not reached")
     }
 
     func firstBoxForLayoutBox(layoutBox: BoxWrapper) -> InlineDisplay.Box? {
