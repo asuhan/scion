@@ -113,13 +113,13 @@ struct FloatRoundedRect {
   }
 
   init(rect: FloatRectWrapper = FloatRectWrapper(), radii: Radii = Radii()) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.rect = rect
+    self.radii = radii
   }
 
   init(rect: RoundedRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.rect = rect.rect.FloatRect()
+    self.radii = Radii(intRadii: rect.radii)
   }
 
   func isRounded() -> Bool { return !radii.isZero() }
