@@ -44,6 +44,10 @@ struct FloatRoundedRect {
       fatalError("Not implemented")
     }
 
+    func isZero() -> Bool {
+      return topLeft.isZero() && topRight.isZero() && bottomLeft.isZero() && bottomRight.isZero()
+    }
+
     mutating func scale(horizontalFactor: Float32, verticalFactor: Float32) {
       if horizontalFactor == 1 && verticalFactor == 1 {
         return
@@ -117,15 +121,9 @@ struct FloatRoundedRect {
     fatalError("Not implemented")
   }
 
-  func isRounded() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRounded() -> Bool { return !radii.isZero() }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return rect.isEmpty() }
 
   func isRenderable() -> Bool {
     return radii.topLeft.width >= 0 && radii.topLeft.height >= 0

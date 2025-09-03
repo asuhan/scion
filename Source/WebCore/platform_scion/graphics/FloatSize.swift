@@ -39,6 +39,10 @@ struct FloatSize {
 
   func isEmpty() -> Bool { return width <= 0 || height <= 0 }
 
+  func isZero() -> Bool {
+    return abs(width) < Float32.ulpOfOne && abs(height) < Float32.ulpOfOne
+  }
+
   mutating func expand(width: Float32, height: Float32) {
     self.width += width
     self.height += height
