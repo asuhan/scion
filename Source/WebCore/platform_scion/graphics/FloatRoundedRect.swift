@@ -101,10 +101,10 @@ struct FloatRoundedRect {
       shrink(topWidth: size, bottomWidth: size, leftWidth: size, rightWidth: size)
     }
 
-    private var topLeft: FloatSize
-    private var topRight: FloatSize
-    private var bottomLeft: FloatSize
-    private var bottomRight: FloatSize
+    var topLeft: FloatSize
+    var topRight: FloatSize
+    var bottomLeft: FloatSize
+    var bottomRight: FloatSize
   }
 
   init(rect: FloatRectWrapper = FloatRectWrapper(), radii: Radii = Radii()) {
@@ -138,8 +138,14 @@ struct FloatRoundedRect {
   }
 
   func isRenderable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return radii.topLeft.width >= 0 && radii.topLeft.height >= 0
+      && radii.bottomLeft.width >= 0 && radii.bottomLeft.height >= 0
+      && radii.topRight.width >= 0 && radii.topRight.height >= 0
+      && radii.bottomRight.width >= 0 && radii.bottomRight.height >= 0
+      && radii.topLeft.width + radii.topRight.width <= rect().width()
+      && radii.bottomLeft.width + radii.bottomRight.width <= rect().width()
+      && radii.topLeft.height + radii.bottomLeft.height <= rect().height()
+      && radii.topRight.height + radii.bottomRight.height <= rect().height()
   }
 
   var radii: Radii
