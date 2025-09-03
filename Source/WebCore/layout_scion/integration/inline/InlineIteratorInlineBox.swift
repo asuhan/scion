@@ -55,11 +55,23 @@ extension InlineIterator {
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
     -> InlineBoxIterator
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return inlineBoxFor(content: content, boxIndex: content.indexForBox(box: box))
+  }
+
+  static func inlineBoxFor(content: LayoutIntegration.InlineContent, boxIndex: UInt64)
+    -> InlineBoxIterator
+  {
+    assert(content.displayContent.boxes[Int(boxIndex)].isInlineBox())
+    return InlineBoxIterator(
+      pathVariant: InlineIterator.BoxModernPath(inlineContent: content, startIndex: boxIndex))
   }
 
   class InlineBoxIterator: BoxIterator {
+    init(pathVariant: BoxPath) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     init(box: InlineIterator.Box) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
