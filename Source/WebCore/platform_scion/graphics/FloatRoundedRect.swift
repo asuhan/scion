@@ -35,8 +35,10 @@ struct FloatRoundedRect {
     }
 
     init(intRadii: RoundedRect.Radii) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      topLeft = intRadii.topLeft.FloatSize()
+      topRight = intRadii.topRight.FloatSize()
+      bottomLeft = intRadii.bottomLeft.FloatSize()
+      bottomRight = intRadii.bottomRight.FloatSize()
     }
 
     init(uniformRadius: Float32) {
