@@ -52,7 +52,7 @@ struct PaintInfoWrapper {
   }
 
   init(from: PaintInfoRaw) {
-    if from.outline_objects == nil {
+    if from.outline_objects != nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
