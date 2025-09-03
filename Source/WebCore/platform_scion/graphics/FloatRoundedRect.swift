@@ -39,8 +39,10 @@ struct FloatRoundedRect {
     }
 
     init(uniformRadius: Float32) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      topLeft = FloatSize(width: uniformRadius, height: uniformRadius)
+      topRight = FloatSize(width: uniformRadius, height: uniformRadius)
+      bottomLeft = FloatSize(width: uniformRadius, height: uniformRadius)
+      bottomRight = FloatSize(width: uniformRadius, height: uniformRadius)
     }
 
     func isZero() -> Bool {
