@@ -29,10 +29,7 @@
 
 struct FloatRoundedRect {
   struct Radii {
-    init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
+    init() {}
 
     init(intRadii: RoundedRect.Radii) {
       topLeft = intRadii.topLeft.FloatSize()
@@ -107,10 +104,10 @@ struct FloatRoundedRect {
       shrink(topWidth: size, bottomWidth: size, leftWidth: size, rightWidth: size)
     }
 
-    var topLeft: FloatSize
-    var topRight: FloatSize
-    var bottomLeft: FloatSize
-    var bottomRight: FloatSize
+    var topLeft = FloatSize()
+    var topRight = FloatSize()
+    var bottomLeft = FloatSize()
+    var bottomRight = FloatSize()
   }
 
   init(rect: FloatRectWrapper = FloatRectWrapper(), radii: Radii = Radii()) {
