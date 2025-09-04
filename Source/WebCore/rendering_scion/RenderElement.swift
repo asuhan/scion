@@ -119,4 +119,9 @@ class RenderElementWrapper: RenderObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

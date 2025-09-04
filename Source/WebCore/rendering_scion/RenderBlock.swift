@@ -155,6 +155,19 @@ class RenderBlockWrapper: RenderBoxWrapper {
           || paintPhase == .Accessibility)
     }
 
+    // 5. paint outline.
+    if (paintPhase == .Outline || paintPhase == .SelfOutline) && hasOutline()
+      && style().usedVisibility() == .Visible
+    {
+      // Don't paint focus ring for anonymous block continuation because the
+      // inline element having outline-style:auto paints the whole focus ring.
+      let hasOutlineStyleAuto = style().outlineStyleIsAuto() == .On
+      if !hasOutlineStyleAuto || !isContinuation() {
+        paintOutline(
+          paintInfo: paintInfo, paintRect: LayoutRectWrapper(location: paintOffset, size: size()))
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

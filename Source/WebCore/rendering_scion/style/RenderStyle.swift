@@ -543,6 +543,11 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_outlineSize(p)
   }
 
+  func outlineStyleIsAuto() -> OutlineIsAuto {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasOutlineInVisualOverflow() -> Bool {
     if p == nil {
       fatalError("Not implemented")

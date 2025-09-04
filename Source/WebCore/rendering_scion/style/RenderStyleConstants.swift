@@ -102,6 +102,11 @@ enum BorderStyle: UInt8 {
   case Double
 }
 
+enum OutlineIsAuto: UInt8 {
+  case Off
+  case On
+}
+
 enum PositionType: UInt8 {
   case Static
   case Relative
