@@ -138,8 +138,7 @@ struct BorderShape {
   func deprecatedInnerRoundedRect() -> RoundedRect { return innerEdgeRoundedRect() }
 
   func deprecatedPixelSnappedRoundedRect(deviceScaleFactor: Float32) -> FloatRoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_borderRect.pixelSnappedRoundedRectForPainting(deviceScaleFactor: deviceScaleFactor)
   }
 
   func outerShapeContains(rect: LayoutRectWrapper) -> Bool {
