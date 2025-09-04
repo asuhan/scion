@@ -221,6 +221,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: LayoutUnit.fromRawValue(value: raw.height))
   }
 
+  func hasVisualOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollPosition() -> ScrollPosition {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

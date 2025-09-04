@@ -1,6 +1,9 @@
 /*
- * Copyright (C) 2006, 2007 Apple Inc. All rights reserved.
- *           (C) 2008 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
+ * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
+ *           (C) 1999 Antti Koivisto (koivisto@kde.org)
+ *           (C) 2000 Dirk Mueller (mueller@kde.org)
+ * Copyright (C) 2004-2018 Apple Inc. All rights reserved.
+ * Copyright (C) 2009, 2010, 2011 Google Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,8 +22,8 @@
  *
  */
 
-class RenderTextControlWrapper: RenderBlockFlowWrapper {
-  func textFormControlElement() -> HTMLTextFormControlElementWrapper {
+class HTMLTextFormControlElementWrapper: HTMLFormControlElementWrapper {
+  func isInnerTextElementEditable() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

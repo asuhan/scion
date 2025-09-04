@@ -30,6 +30,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
   }
 
+  func needsEventRegionUpdateForNonCompositedFrame() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func selection() -> RenderSelection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

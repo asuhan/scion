@@ -31,4 +31,9 @@ final class EventRegionContext: RegionContext {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func contains(rect: IntRect) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

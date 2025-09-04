@@ -103,6 +103,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isImage(p)
   }
 
+  func isRenderTextControl() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isDocumentElementRenderer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

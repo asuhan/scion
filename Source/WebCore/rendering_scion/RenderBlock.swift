@@ -86,8 +86,32 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     if paintPhase == .EventRegion {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let borderRect = LayoutRectWrapper(location: paintOffset, size: size())
+
+      if paintInfo.paintBehavior.contains(.EventRegionIncludeBackground) && visibleToHitTesting() {
+        let borderShape = BorderShape.shapeForBorderRect(style: style(), borderRect: borderRect)
+        let overrideUserModifyIsEditable =
+          isRenderTextControl()
+          && (self as! RenderTextControlWrapper).textFormControlElement()
+            .isInnerTextElementEditable()
+        paintInfo.eventRegionContext()!.unite(
+          roundedRect: borderShape.deprecatedPixelSnappedRoundedRect(
+            deviceScaleFactor: document().deviceScaleFactor()), renderer: self,
+          style: style(), overrideUserModifyIsEditable: overrideUserModifyIsEditable)
+      }
+
+      if !paintInfo.paintBehavior.contains(.EventRegionIncludeForeground) {
+        return
+      }
+
+      let needsTraverseDescendants =
+        hasVisualOverflow() || containsFloats()
+        || !paintInfo.eventRegionContext()!.contains(rect: enclosingIntRect(rect: borderRect))
+        || view().needsEventRegionUpdateForNonCompositedFrame()
+
+      if !needsTraverseDescendants {
+        return
+      }
     }
 
     // Adjust our painting position if we're inside a scrolled layer (e.g., an overflow:auto div).
