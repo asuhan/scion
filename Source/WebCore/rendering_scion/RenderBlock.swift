@@ -173,7 +173,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       if let inlineCont = inlineContinuation(), inlineCont.hasOutline(),
         inlineCont.style().usedVisibility() == .Visible
       {
-        let inlineRenderer = inlineCont.element()!.renderer() as! RenderInlineWrapper
+        let inlineRenderer = inlineCont.element()!.renderer() as! RenderInlineWrapper?
         let containingBlock = self.containingBlock()
 
         var inlineEnclosedInSelfPaintingLayer = false
@@ -190,21 +190,23 @@ class RenderBlockWrapper: RenderBoxWrapper {
         // anonymous block (i.e. have our own layer), paint them straightaway instead. This is because a block depends on renderers in its continuation table being
         // in the same layer.
         if !inlineEnclosedInSelfPaintingLayer && !hasLayer() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
-        } else if !InlineIterator.firstInlineBoxFor(renderInline: inlineRenderer).bool()
+          containingBlock!.addContinuationWithOutline(flow: inlineRenderer!)
+        } else if !InlineIterator.firstInlineBoxFor(renderInline: inlineRenderer!).bool()
           || (!inlineEnclosedInSelfPaintingLayer && hasLayer())
         {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          inlineRenderer!.paintOutline(
+            paintInfo: paintInfo,
+            paintOffset: paintOffset - locationOffset()
+              + inlineRenderer!.containingBlock()!.location())
         }
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      paintContinuationOutlines(info: paintInfo, paintOffset: paintOffset)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // 7. paint caret.
+    // If the caret's node's render object's containing block is this block, and the paint action is PaintPhase::Foreground,
+    // then paint the caret.
+    paintCarets(paintInfo: paintInfo, paintOffset: paintOffset)
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
@@ -220,6 +222,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {}
 
   private func paintSelection(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintCarets(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
