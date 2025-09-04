@@ -137,16 +137,41 @@ class RenderBlockWrapper: RenderBoxWrapper {
       paintContents(paintInfo: paintInfo, paintOffset: scrolledOffset)
     }
 
+    // 3. paint selection
+    // FIXME: Make this work with multi column layouts.  For now don't fill gaps.
+    let isPrinting = document().printing()
+    if !isPrinting {
+      paintSelection(paintInfo: paintInfo, paintOffset: scrolledOffset)  // Fill in gaps in selection on lines and between blocks.
+    }
+
+    // 4. paint floats.
+    if paintPhase == .Float || paintPhase == .Selection || paintPhase == .TextClip
+      || paintPhase == .EventRegion || paintPhase == .Accessibility
+    {
+      paintFloats(
+        paintInfo: paintInfo, paintOffset: scrolledOffset,
+        preservePhase: paintPhase == .Selection || paintPhase == .TextClip
+          || paintPhase == .EventRegion
+          || paintPhase == .Accessibility)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
+  func paintFloats(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
+  ) {}
 
   private func paintContents(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
+  func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {}
+
+  private func paintSelection(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -80,6 +80,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     var isFirstAfterPageBreak = false
   }
 
+  override func paintFloats(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeLineAdjustmentForPagination(
     lineBox: InlineIterator.LineBoxIterator, delta: LayoutUnit, floatMinimumBottom: LayoutUnit
   ) -> LinePaginationAdjustment {
