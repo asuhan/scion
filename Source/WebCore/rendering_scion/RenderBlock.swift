@@ -209,14 +209,47 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintCarets(paintInfo: paintInfo, paintOffset: paintOffset)
   }
 
+  func paintChildren(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
+    paintInfoForChild: PaintInfoWrapper, usePrintRect: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
   ) {}
 
   private func paintContents(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isSkippedContentRoot() {
+      return
+    }
+
+    if childrenInline() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      var newPhase = (paintInfo.phase == .ChildOutlines) ? .Outline : paintInfo.phase
+      newPhase = (newPhase == .ChildBlockBackgrounds) ? .ChildBlockBackground : newPhase
+
+      // We don't paint our own background, but we do let the kids paint their backgrounds.
+      var paintInfoForChild = paintInfo
+      paintInfoForChild.phase = newPhase
+      paintInfoForChild.updateSubtreePaintRootForChildren(renderer: self)
+
+      if paintInfo.eventRegionContext() != nil {
+        paintInfoForChild.paintBehavior.update(with: .EventRegionIncludeBackground)
+      }
+
+      // FIXME: Paint-time pagination is obsolete and is now only used by embedded WebViews inside AppKit
+      // NSViews. Do not add any more code for this.
+      let usePrintRect = !view().printRect().isEmpty()
+      paintChildren(
+        paintInfo: paintInfo, paintOffset: paintOffset, paintInfoForChild: paintInfoForChild,
+        usePrintRect: usePrintRect)
+    }
   }
 
   func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {}

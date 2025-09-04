@@ -92,6 +92,11 @@ struct PaintInfoWrapper {
     return n!.context
   }
 
+  func updateSubtreePaintRootForChildren(renderer: RenderObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {
     if n == nil {
       // TODO(asuhan): implement this
@@ -193,11 +198,17 @@ struct PaintInfoWrapper {
   }
 
   var paintBehavior: PaintBehavior {
-    if n == nil {
+    get {
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return n!.paintBehavior
+    }
+    set {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    return n!.paintBehavior
   }
 
   // used to list outlines that should be painted by a block with inline children

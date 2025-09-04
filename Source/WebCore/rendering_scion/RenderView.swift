@@ -40,6 +40,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func printRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unscaledDocumentRect() -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
