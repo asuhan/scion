@@ -23,6 +23,11 @@
 import wk_interop
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
+  override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setStaticInlinePositionForChild(
     child: RenderBoxWrapper, blockOffset: LayoutUnit, inlinePosition: LayoutUnit
   ) {

@@ -85,6 +85,44 @@ class RenderBlockWrapper: RenderBoxWrapper {
       paintInfo.accessibilityRegionContext()!.takeBounds(renderBox: self, paintOffset: paintOffset)
     }
 
+    if paintPhase == .EventRegion {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // Adjust our painting position if we're inside a scrolled layer (e.g., an overflow:auto div).
+    var scrolledOffset = paintOffset
+    scrolledOffset.moveBy(offset: LayoutPointWrapper(point: -scrollPosition()))
+
+    // Column rules need to account for scrolling and clipping.
+    // FIXME: Clipping of column rules does not work. We will need a separate paint phase for column rules I suspect in order to get
+    // clipping correct (since it has to paint as background but is still considered "contents").
+    if (paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground)
+      && style().usedVisibility() == .Visible
+    {
+      paintColumnRules(paintInfo: paintInfo, point: scrolledOffset)
+    }
+
+    // Done with backgrounds, borders and column rules.
+    if paintPhase == .BlockBackground {
+      return
+    }
+
+    // 2. paint contents
+    if paintPhase != .SelfOutline {
+      paintContents(paintInfo: paintInfo, paintOffset: scrolledOffset)
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintContents(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
