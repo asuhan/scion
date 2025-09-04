@@ -168,6 +168,41 @@ class RenderBlockWrapper: RenderBoxWrapper {
       }
     }
 
+    // 6. paint continuation outlines.
+    if paintPhase == .Outline || paintPhase == .ChildOutlines {
+      if let inlineCont = inlineContinuation(), inlineCont.hasOutline(),
+        inlineCont.style().usedVisibility() == .Visible
+      {
+        let inlineRenderer = inlineCont.element()!.renderer() as! RenderInlineWrapper
+        let containingBlock = self.containingBlock()
+
+        var inlineEnclosedInSelfPaintingLayer = false
+        var box: RenderBoxModelObjectWrapper? = inlineRenderer
+        while CPtrToInt(box?.p) != CPtrToInt(containingBlock?.p) {
+          if box!.hasSelfPaintingLayer() {
+            inlineEnclosedInSelfPaintingLayer = true
+            break
+          }
+          box = box!.parent()!.enclosingBoxModelObject()
+        }
+
+        // Do not add continuations for outline painting by our containing block if we are a relative positioned
+        // anonymous block (i.e. have our own layer), paint them straightaway instead. This is because a block depends on renderers in its continuation table being
+        // in the same layer.
+        if !inlineEnclosedInSelfPaintingLayer && !hasLayer() {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else if !InlineIterator.firstInlineBoxFor(renderInline: inlineRenderer).bool()
+          || (!inlineEnclosedInSelfPaintingLayer && hasLayer())
+        {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

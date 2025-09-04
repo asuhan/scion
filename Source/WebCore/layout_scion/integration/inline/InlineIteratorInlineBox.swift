@@ -52,6 +52,11 @@ extension InlineIterator {
     }
   }
 
+  static func firstInlineBoxFor(renderInline: RenderInlineWrapper) -> InlineBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
     -> InlineBoxIterator
   {
