@@ -36,6 +36,20 @@ private let kFixedPointDenominator: Int32 = 1 << kLayoutUnitFractionalBits
 internal let intMaxForLayoutUnit = Int32.max / kFixedPointDenominator
 internal let intMinForLayoutUnit = Int32.min / kFixedPointDenominator
 
+// For multiplication that's prone to overflow, this bounds it to LayoutUnit::max() and ::min()
+private func boundedMultiply(a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+  var result = Int64(a.rawValue()) * Int64(b.rawValue()) / Int64(kFixedPointDenominator)
+  let high = Int32(result >> 32)
+  let low = Int32(result & 0xFFFF_FFFF)
+  // If the higher 32 bits does not match the lower 32 with sign extension the operation overflowed.
+  if high != low >> 31 {
+    result = Int64(
+      (UInt32(bitPattern: a.rawValue() ^ b.rawValue()) >> 31) + UInt32(bitPattern: Int32.max))
+  }
+
+  return LayoutUnit.fromRawValue(value: Int32(result))
+}
+
 struct LayoutUnit: Comparable {
   static func fromRawValue(value: Int32) -> LayoutUnit {
     var v = LayoutUnit()
@@ -231,8 +245,7 @@ struct LayoutUnit: Comparable {
   }
 
   static func * (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return boundedMultiply(a: a, b: b)
   }
 
   static func * (a: LayoutUnit, b: Float32) -> Float32 {
