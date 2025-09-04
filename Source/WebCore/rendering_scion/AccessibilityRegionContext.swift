@@ -24,6 +24,12 @@
  */
 
 final class AccessibilityRegionContext: RegionContext {
+  // This group of methods takes paint-time geometry and uses it directly.
+  func takeBounds(renderBox: RenderBoxWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func takeBounds(renderInline: RenderInlineWrapper?, paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

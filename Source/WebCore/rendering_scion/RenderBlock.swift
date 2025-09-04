@@ -39,5 +39,62 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(p))
   }
 
+  func paintExcludedChildrenInBorder(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    let paintPhase = paintInfo.phase
+
+    // 1. paint background, borders etc
+    if (paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground)
+      && style().usedVisibility() == .Visible
+    {
+      if hasVisibleBoxDecorations() {
+        paintBoxDecorations(paintInfo: paintInfo, paintOffset: paintOffset)
+      }
+      paintDebugBoxShadowIfApplicable(
+        context: paintInfo.context(),
+        paintRect: LayoutRectWrapper(location: paintOffset, size: size()))
+    }
+
+    // Paint legends just above the border before we scroll or clip.
+    if paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground
+      || paintPhase == .Selection
+    {
+      paintExcludedChildrenInBorder(paintInfo: paintInfo, paintOffset: paintOffset)
+    }
+
+    if paintPhase == .Mask && style().usedVisibility() == .Visible {
+      paintMask(paintInfo: paintInfo, paintOffset: paintOffset)
+      return
+    }
+
+    if paintPhase == .ClippingMask && style().usedVisibility() == .Visible {
+      paintClippingMask(paintInfo: paintInfo, paintOffset: paintOffset)
+      return
+    }
+
+    // If just painting the root background, then return.
+    if paintInfo.paintRootBackgroundOnly() {
+      return
+    }
+
+    if paintPhase == .Accessibility {
+      paintInfo.accessibilityRegionContext()!.takeBounds(renderBox: self, paintOffset: paintOffset)
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintDebugBoxShadowIfApplicable(
+    context: GraphicsContextWrapper, paintRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var floatingObjectSet: FloatingObjectSet? = nil
 }
