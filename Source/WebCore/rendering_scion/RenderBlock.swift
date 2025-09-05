@@ -48,7 +48,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     let adjustedPaintOffset = paintOffset + location()
     let phase = paintInfo.phase
 
-    if visualContentIsClippedOut(paintingRect: paintInfo.rect) {
+    if visualContentIsClippedOut(paintInfo: paintInfo, adjustedPaintOffset: adjustedPaintOffset) {
       return
     }
 
@@ -76,9 +76,23 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   // FIXME: Could eliminate the isDocumentElementRenderer() check if we fix background painting so that the RenderView paints the root's background.
-  private func visualContentIsClippedOut(paintingRect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func visualContentIsClippedOut(
+    paintInfo: PaintInfoWrapper, adjustedPaintOffset: LayoutPointWrapper
+  ) -> Bool {
+    if isDocumentElementRenderer() {
+      return false
+    }
+
+    if paintInfo.paintBehavior.contains(.CompositedOverflowScrollContent) && hasLayer()
+      && layer()!.usesCompositedScrolling()
+    {
+      return false
+    }
+
+    var overflowBox = visualOverflowRect()
+    flipForWritingMode(rect: overflowBox)
+    overflowBox.moveBy(offset: adjustedPaintOffset)
+    return !overflowBox.intersects(other: paintInfo.rect)
   }
 
   private func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

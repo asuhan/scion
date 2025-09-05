@@ -90,6 +90,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func usesCompositedScrolling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
