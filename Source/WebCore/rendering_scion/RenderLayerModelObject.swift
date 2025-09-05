@@ -23,6 +23,11 @@
 import wk_interop
 
 class RenderLayerModelObjectWrapper: RenderElementWrapper {
+  func hasSelfPaintingLayerModelObject() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layer() -> RenderLayerWrapper? {
     if let rawLayer = wk_interop.RenderLayerModelObject_layer(p) {
       return RenderLayerWrapper(p: rawLayer)

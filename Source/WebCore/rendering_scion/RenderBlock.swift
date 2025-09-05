@@ -45,8 +45,18 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func paintExcludedChildrenInBorder(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isFieldset() || isSkippedContentRoot() {
+      return
+    }
+
+    if let box = findFieldsetLegend() {
+      if !box.isExcludedFromNormalLayout() || box.hasSelfPaintingLayerModelObject() {
+        return
+      }
+
+      let childPoint = flipForWritingModeForChild(child: box, point: paintOffset)
+      box.paintAsInlineBlock(paintInfo: paintInfo, childPoint: childPoint)
+    }
   }
 
   override func paint(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -346,6 +356,18 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     return true
+  }
+
+  enum FieldsetFindLegendOption {
+    case FieldsetIgnoreFloatingOrOutOfFlow
+    case FieldsetIncludeFloatingOrOutOfFlow
+  }
+
+  func findFieldsetLegend(option: FieldsetFindLegendOption = .FieldsetIgnoreFloatingOrOutOfFlow)
+    -> RenderBoxWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
