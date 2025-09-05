@@ -44,6 +44,30 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func paint(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    let adjustedPaintOffset = paintOffset + location()
+    let phase = paintInfo.phase
+
+    if visualContentIsClippedOut(paintingRect: paintInfo.rect) {
+      return
+    }
+
+    let pushedClip = pushContentsClip(paintInfo: paintInfo, accumulatedOffset: adjustedPaintOffset)
+    paintObject(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+    if pushedClip {
+      popContentsClip(
+        paintInfo: paintInfo, originalPhase: phase, accumulatedOffset: adjustedPaintOffset)
+    }
+
+    fatalError("Not reached")
+  }
+
+  // FIXME: Could eliminate the isDocumentElementRenderer() check if we fix background painting so that the RenderView paints the root's background.
+  private func visualContentIsClippedOut(paintingRect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     let paintPhase = paintInfo.phase
 

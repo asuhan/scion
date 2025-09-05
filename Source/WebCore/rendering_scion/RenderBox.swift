@@ -158,6 +158,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func pushContentsClip(paintInfo: PaintInfoWrapper, accumulatedOffset: LayoutPointWrapper) -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func popContentsClip(
+    paintInfo: PaintInfoWrapper, originalPhase: PaintPhase, accumulatedOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
