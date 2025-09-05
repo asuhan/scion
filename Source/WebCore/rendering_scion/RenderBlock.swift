@@ -59,7 +59,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
         paintInfo: paintInfo, originalPhase: phase, accumulatedOffset: adjustedPaintOffset)
     }
 
-    fatalError("Not reached")
+    // Our scrollbar widgets paint exactly when we tell them to, so that they work properly with
+    // z-index. We paint after we painted the background/border, so that the scrollbars will
+    // sit above the background/border.
+    if (phase != .BlockBackground && phase != .ChildBlockBackground) || !hasNonVisibleOverflow() {
+      return
+    }
+    if let layer = layer(), let scrollableArea = layer.scrollableArea(),
+      style().usedVisibility() == .Visible
+        && paintInfo.shouldPaintWithinRoot(renderer: self) && !paintInfo.paintRootBackgroundOnly()
+    {
+      scrollableArea.paintOverflowControls(
+        context: paintInfo.context(), paintOffset: roundedIntPoint(point: adjustedPaintOffset),
+        damageRect: snappedIntRect(rect: paintInfo.rect))
+    }
   }
 
   // FIXME: Could eliminate the isDocumentElementRenderer() check if we fix background painting so that the RenderView paints the root's background.

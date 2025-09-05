@@ -1,6 +1,8 @@
 /*
- * Copyright (C) 2003-2024 Apple Inc. All rights reserved.
- * Copyright (c) 2020 Igalia S.L.
+ * Copyright (C) 2006-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2019 Adobe. All rights reserved.
+ * Copyright (C) 2014 Google. All rights reserved.
+ * Copyright (C) 2020 Igalia S.L.
  *
  * Portions are Copyright (C) 1998 Netscape Communications Corporation.
  *
@@ -42,57 +44,12 @@
  * version of this file under any of the LGPL, the MPL or the GPL.
  */
 
-import wk_interop
-
-class RenderLayerWrapper {
-  init(p: UnsafeMutableRawPointer) {
-    self.p = p
-  }
-
-  func scrollableArea() -> RenderLayerScrollableArea? {
+final class RenderLayerScrollableArea: ScrollableAreaWrapper {
+  func paintOverflowControls(
+    context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect,
+    paintingOverlayControls: Bool = false
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  func scrollWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func scrollHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func staticInlinePosition() -> LayoutUnit {
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
-  }
-
-  func staticBlockPosition() -> LayoutUnit {
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticBlockPosition(p))
-  }
-
-  func setStaticInlinePosition(position: LayoutUnit) {
-    wk_interop.RenderLayer_setStaticInlinePosition(p, position.rawValue())
-  }
-
-  func setStaticBlockPosition(position: LayoutUnit) {
-    wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
-  }
-
-  func hasTransformedAncestor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hasCompositedMask() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setIsHiddenByOverflowTruncation(isHidden: Bool) {
-    wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
-  }
-
-  private let p: UnsafeMutableRawPointer
 }

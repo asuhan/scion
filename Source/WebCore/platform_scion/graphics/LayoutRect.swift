@@ -255,6 +255,12 @@ func unionRect(a: LayoutRectWrapper, b: LayoutRectWrapper) -> LayoutRectWrapper 
   return c
 }
 
+// Integral snapping functions.
+func snappedIntRect(rect: LayoutRectWrapper) -> IntRect {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func enclosingIntRect(rect: LayoutRectWrapper) -> IntRect {
   // Empty rects with fractional x, y values turn into non-empty rects when converting to enclosing.
   // We need to ensure that empty rects stay empty after the conversion, because the selection code expects them to be empty.
