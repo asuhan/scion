@@ -80,6 +80,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     var isFirstAfterPageBreak = false
   }
 
+  override func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
   ) {

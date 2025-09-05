@@ -222,14 +222,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
   ) {}
 
+  func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
+
   private func paintContents(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if isSkippedContentRoot() {
       return
     }
 
     if childrenInline() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      paintInlineChildren(paintInfo: paintInfo, paintOffset: paintOffset)
     } else {
       var newPhase = (paintInfo.phase == .ChildOutlines) ? .Outline : paintInfo.phase
       newPhase = (newPhase == .ChildBlockBackgrounds) ? .ChildBlockBackground : newPhase
