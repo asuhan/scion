@@ -764,6 +764,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func breakBefore() -> BreakBetween {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hangingPunctuation() -> HangingPunctuation {
     if p == nil {
       // TODO(asuhan): implement this

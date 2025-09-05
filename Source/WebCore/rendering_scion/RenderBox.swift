@@ -23,6 +23,11 @@
 import wk_interop
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
+  func y() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func width() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -268,6 +268,36 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  enum PaintBlockType {
+    case PaintAsBlock
+    case PaintAsInlineBlock
+  }
+
+  func paintChild(
+    child: RenderBoxWrapper, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
+    paintInfoForChild: PaintInfoWrapper, usePrintRect: Bool,
+    paintType: PaintBlockType = .PaintAsBlock
+  ) -> Bool {
+    if child.isExcludedAndPlacedInBorder() {
+      return true
+    }
+
+    // Check for page-break-before: always, and if it's set, break and bail.
+    let checkBeforeAlways =
+      !childrenInline() && (usePrintRect && alwaysPageBreak(between: child.style().breakBefore()))
+    let absoluteChildY = paintOffset.y + child.y()
+    if checkBeforeAlways
+      && absoluteChildY > paintInfo.rect.y()
+      && absoluteChildY < paintInfo.rect.maxY()
+    {
+      view().setBestTruncatedAt(y: absoluteChildY.int(), forRenderer: self, forcedBreak: true)
+      return false
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false

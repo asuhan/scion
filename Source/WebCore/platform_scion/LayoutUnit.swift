@@ -67,6 +67,8 @@ struct LayoutUnit: Comparable {
 
   func bool() -> Bool { return value != 0 }
 
+  func int() -> Int32 { return toInt() }
+
   func float() -> Float32 { return toFloat() }
 
   func double() -> Float64 { return toDouble() }

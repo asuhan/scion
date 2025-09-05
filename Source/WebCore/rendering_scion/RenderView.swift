@@ -40,6 +40,13 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setBestTruncatedAt(
+    y: Int32, forRenderer: RenderBoxModelObjectWrapper, forcedBreak: Bool = false
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func printRect() -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

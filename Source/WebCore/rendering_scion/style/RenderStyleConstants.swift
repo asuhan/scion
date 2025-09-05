@@ -374,6 +374,23 @@ enum TextEdgeType: UInt8 {
   case CJKIdeographicInk
 }
 
+enum BreakBetween: UInt8 {
+  case Auto
+  case Avoid
+  case AvoidColumn
+  case AvoidPage
+  case Column
+  case Page
+  case LeftPage
+  case RightPage
+  case RectoPage
+  case VersoPage
+}
+
+func alwaysPageBreak(between: BreakBetween) -> Bool {
+  return between.rawValue >= BreakBetween.Page.rawValue
+}
+
 enum BreakInside: UInt8 {
   case Auto
   case Avoid

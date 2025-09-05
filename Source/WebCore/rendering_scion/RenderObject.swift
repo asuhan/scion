@@ -162,6 +162,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isHorizontalWritingMode(p)
   }
 
+  func isExcludedAndPlacedInBorder() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
