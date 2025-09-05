@@ -33,6 +33,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func height() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalLeft() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(p))
   }

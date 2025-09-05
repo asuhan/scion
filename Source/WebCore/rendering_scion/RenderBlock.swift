@@ -294,6 +294,21 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return false
     }
 
+    if !child.isFloating() && child.isReplacedOrInlineBlock() && usePrintRect
+      && child.height() <= LayoutUnit(value: view().printRect().height())
+    {
+      // Paginate block-level replaced elements.
+      if absoluteChildY + child.height() > Int(view().printRect().maxY()) {
+        if absoluteChildY < LayoutUnit(value: view().truncatedAt()) {
+          view().setBestTruncatedAt(y: absoluteChildY.int(), forRenderer: child)
+        }
+        // If we were able to truncate, don't paint.
+        if absoluteChildY >= LayoutUnit(value: view().truncatedAt()) {
+          return false
+        }
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

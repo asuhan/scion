@@ -47,6 +47,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func truncatedAt() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func printRect() -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
