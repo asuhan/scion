@@ -22,6 +22,11 @@
 
 import wk_interop
 
+enum CaretType {
+  case CursorCaret
+  case DragCaret
+}
+
 class RenderBlockWrapper: RenderBoxWrapper {
   func containsFloats() -> Bool {
     return wk_interop.RenderBlock_containsFloats(p)
@@ -386,9 +391,18 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  private func paintCarets(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  private func paintCaret(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, type: CaretType
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func paintCarets(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if paintInfo.phase == .Foreground {
+      paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .CursorCaret)
+      paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .DragCaret)
+    }
   }
 
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
