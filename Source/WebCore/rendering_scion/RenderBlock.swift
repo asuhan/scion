@@ -264,8 +264,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
     paintInfoForChild: PaintInfoWrapper, usePrintRect: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = firstChildBox()
+    while child != nil {
+      if !paintChild(
+        child: child!, paintInfo: paintInfo, paintOffset: paintOffset,
+        paintInfoForChild: paintInfoForChild, usePrintRect: usePrintRect)
+      {
+        return
+      }
+      child = child!.nextSiblingBox()
+    }
   }
 
   enum PaintBlockType {
