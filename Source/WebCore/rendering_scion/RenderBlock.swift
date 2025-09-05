@@ -309,8 +309,30 @@ class RenderBlockWrapper: RenderBoxWrapper {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let childPoint = flipForWritingModeForChild(child: child, point: paintOffset)
+    if !child.hasSelfPaintingLayer() && !child.isFloating() {
+      if paintType == .PaintAsInlineBlock {
+        child.paintAsInlineBlock(paintInfo: paintInfoForChild, childPoint: childPoint)
+      } else {
+        child.paint(paintInfo: paintInfoForChild, paintOffset: childPoint)
+      }
+    }
+
+    // Check for page-break-after: always, and if it's set, break and bail.
+    let checkAfterAlways =
+      !childrenInline() && (usePrintRect && alwaysPageBreak(between: child.style().breakAfter()))
+    if checkAfterAlways
+      && (absoluteChildY + child.height()) > paintInfo.rect.y()
+      && (absoluteChildY + child.height()) < paintInfo.rect.maxY()
+    {
+      view().setBestTruncatedAt(
+        y: (absoluteChildY + child.height()
+          + max(LayoutUnit(value: 0), child.collapsedMarginAfter())).int(),
+        forRenderer: self, forcedBreak: true)
+      return false
+    }
+
+    return true
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow

@@ -139,6 +139,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     )
   }
 
+  func collapsedMarginAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }

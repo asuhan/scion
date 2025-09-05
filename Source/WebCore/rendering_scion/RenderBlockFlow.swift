@@ -23,6 +23,11 @@
 import wk_interop
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
+  override func collapsedMarginAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
