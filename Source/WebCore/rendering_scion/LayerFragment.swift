@@ -25,6 +25,8 @@
 
 class LayerFragment {
   var shouldPaintContent: Bool = false
+
+  let layerBounds = LayoutRectWrapper()
   let foregroundRect = ClipRect()
 }
 

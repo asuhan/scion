@@ -116,17 +116,18 @@ class RenderLayerWrapper {
     }
 
     let rootLayer: RenderLayerWrapper?
+    let subpixelOffset: LayoutSizeWrapper
     let overlapTestRequests: OverlapTestRequestMap?
     let requireSecurityOriginAccessForWidgets: Bool
     let clipToDirtyRect: Bool = true
     let regionContext: RegionContext? = nil
   }
 
-  private static func paintOffsetForRenderer(
+  private func paintOffsetForRenderer(
     fragment: LayerFragment, paintingInfo: LayerPaintingInfo
   ) -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return toLayoutPoint(
+      size: fragment.layerBounds.location() - rendererLocation() + paintingInfo.subpixelOffset)
   }
 
   private func clipToRect(
@@ -135,6 +136,11 @@ class RenderLayerWrapper {
     paintBehavior: PaintBehavior, clipRect: ClipRect,
     rule: BorderRadiusClippingRule = .IncludeSelfForBorderRadius
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func rendererLocation() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -175,8 +181,7 @@ class RenderLayerWrapper {
       }
       renderer().paint(
         paintInfo: paintInfo,
-        paintOffset: RenderLayerWrapper.paintOffsetForRenderer(
-          fragment: fragment, paintingInfo: localPaintingInfo))
+        paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
 

@@ -117,6 +117,10 @@ class LayoutSizeWrapper {
     return a
   }
 
+  static func + (a: LayoutSizeWrapper, b: LayoutSizeWrapper) -> LayoutSizeWrapper {
+    return LayoutSizeWrapper(width: a.width() + b.width(), height: a.height() + b.height())
+  }
+
   static func - (a: LayoutSizeWrapper, b: LayoutSizeWrapper) -> LayoutSizeWrapper {
     return LayoutSizeWrapper(width: a.width() - b.width(), height: a.height() - b.height())
   }
