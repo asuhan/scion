@@ -103,4 +103,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  enum LineLayout {
+    case None
+    case Integration(LayoutIntegration.LineLayout)
+    case Legacy(LegacyLineLayout)
+  }
+
+  let lineLayout: LineLayout = .None
 }

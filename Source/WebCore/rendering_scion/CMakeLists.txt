@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     InlineWalker.swift
     LegacyInlineBox.swift
     LegacyInlineTextBox.swift
+    LegacyLineLayout.swift
     MarkedText.swift
     PaintInfo.swift
     PaintPhase.swift
