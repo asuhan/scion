@@ -44,6 +44,11 @@
 
 import wk_interop
 
+private enum BorderRadiusClippingRule {
+  case IncludeSelfForBorderRadius
+  case DoNotIncludeSelfForBorderRadius
+}
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -97,6 +102,54 @@ class RenderLayerWrapper {
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
+  }
+
+  private struct LayerPaintingInfo {
+    init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    let clipToDirtyRect: Bool = true
+    let regionContext: RegionContext? = nil
+  }
+
+  private func clipToRect(
+    context: GraphicsContextWrapper, stateSaver: GraphicsContextStateSaver,
+    regionContextStateSaver: RegionContextStateSaver, paintingInfo: LayerPaintingInfo,
+    paintBehavior: PaintBehavior, clipRect: ClipRect,
+    rule: BorderRadiusClippingRule = .IncludeSelfForBorderRadius
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintForegroundForFragmentsWithPhase(
+    phase: PaintPhase, layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
+    subtreePaintRootForRenderer: RenderObjectWrapper
+  ) {
+    let shouldClip = localPaintingInfo.clipToDirtyRect && layerFragments.count > 1
+
+    for fragment in layerFragments {
+      if !fragment.shouldPaintContent || fragment.foregroundRect.isEmpty() {
+        continue
+      }
+
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(
+        context: localPaintingInfo.regionContext)
+
+      if shouldClip {
+        clipToRect(
+          context: context, stateSaver: stateSaver,
+          regionContextStateSaver: regionContextStateSaver, paintingInfo: localPaintingInfo,
+          paintBehavior: paintBehavior, clipRect: fragment.foregroundRect)
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   private let p: UnsafeMutableRawPointer

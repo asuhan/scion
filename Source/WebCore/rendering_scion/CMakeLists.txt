@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     HitTestResult.swift
     InlineBoxPainter.swift
     InlineWalker.swift
+    LayerFragment.swift
     LegacyInlineBox.swift
     LegacyInlineTextBox.swift
     LegacyLineLayout.swift
@@ -20,6 +21,7 @@ target_sources(layout_scion PRIVATE
     BorderPainter.swift
     BorderShape.swift
     BreakLines.swift
+    ClipRect.swift
     RenderBlock.swift
     RenderBlockFlow.swift
     RenderBox.swift
