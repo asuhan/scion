@@ -164,6 +164,29 @@ class RenderLayerWrapper {
     return LayoutPointWrapper()
   }
 
+  private func paintForegroundForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    contextForTransparencyLayer: GraphicsContextWrapper,
+    transparencyPaintDirtyRect: LayoutRectWrapper, haveTransparency: Bool,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
+    subtreePaintRootForRenderer: RenderObjectWrapper?
+  ) {
+    // Begin transparency if we have something to paint.
+    if haveTransparency {
+      for fragment in layerFragments {
+        if fragment.shouldPaintContent && !fragment.foregroundRect.isEmpty() {
+          beginTransparencyLayers(
+            context: contextForTransparencyLayer, paintingInfo: localPaintingInfo,
+            dirtyRect: transparencyPaintDirtyRect)
+          break
+        }
+      }
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintForegroundForFragmentsWithPhase(
     phase: PaintPhase, layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
@@ -202,6 +225,13 @@ class RenderLayerWrapper {
         paintInfo: paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
+  }
+
+  private func beginTransparencyLayers(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, dirtyRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private let p: UnsafeMutableRawPointer
