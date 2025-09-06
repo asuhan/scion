@@ -155,8 +155,13 @@ class RenderLayerWrapper {
   }
 
   private func rendererLocation() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = renderer() as? RenderBoxWrapper {
+      return box.location()
+    }
+    if let svgModelObject = renderer() as? RenderSVGModelObjectWrapper {
+      return svgModelObject.currentSVGLayoutLocation()
+    }
+    return LayoutPointWrapper()
   }
 
   private func paintForegroundForFragmentsWithPhase(
