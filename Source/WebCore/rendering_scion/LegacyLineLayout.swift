@@ -22,4 +22,11 @@
  *
  */
 
-class LegacyLineLayout {}
+class LegacyLineLayout {
+  init(flow: RenderBlockFlowWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let lineBoxes: RenderLineBoxList
+}

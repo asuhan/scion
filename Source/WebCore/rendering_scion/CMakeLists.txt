@@ -40,6 +40,7 @@ target_sources(layout_scion PRIVATE
     RenderLayerModelObject.swift
     RenderLayerScrollableArea.swift
     RenderLayoutState.swift
+    RenderLineBoxList.swift
     RenderLineBreak.swift
     RenderListBox.swift
     RenderListItem.swift

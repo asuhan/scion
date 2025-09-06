@@ -55,6 +55,15 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
 
+  func svgTextLayout() -> LegacyLineLayout? {
+    switch lineLayout {
+    case .Legacy(let layout):
+      return layout
+    default:
+      return nil
+    }
+  }
+
   func inlineLayout() -> LayoutIntegration.LineLayout? {
     switch lineLayout {
     case .Integration(let layout):
@@ -90,8 +99,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(childrenInline())
+
+    if let inlineLayout = inlineLayout() {
+      inlineLayout.paint(paintInfo: paintInfo, paintOffset: paintOffset)
+      return
+    }
+
+    if let svgTextLayout = svgTextLayout() {
+      svgTextLayout.lineBoxes.paint(
+        renderer: self, paintInfo: paintInfo, paintOffset: paintOffset)
+    }
   }
 
   override func paintFloats(
