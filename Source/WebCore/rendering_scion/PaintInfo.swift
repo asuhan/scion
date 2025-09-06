@@ -229,6 +229,17 @@ struct PaintInfoWrapper {
     }
   }
 
+  var overlapTestRequests: OverlapTestRequestMap? {
+    get {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    set {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   // the layer object that originates the current painting
   var paintContainer: RenderLayerModelObjectWrapper? {
     if n == nil {

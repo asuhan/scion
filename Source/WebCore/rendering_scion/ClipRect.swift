@@ -26,5 +26,5 @@
 class ClipRect {
   func isEmpty() -> Bool { return rect.isEmpty() }
 
-  private let rect = LayoutRectWrapper()
+  let rect = LayoutRectWrapper()
 }

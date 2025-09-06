@@ -59,6 +59,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func renderer() -> RenderLayerModelObjectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -110,8 +115,18 @@ class RenderLayerWrapper {
       fatalError("Not implemented")
     }
 
+    let rootLayer: RenderLayerWrapper?
+    let overlapTestRequests: OverlapTestRequestMap?
+    let requireSecurityOriginAccessForWidgets: Bool
     let clipToDirtyRect: Bool = true
     let regionContext: RegionContext? = nil
+  }
+
+  private static func paintOffsetForRenderer(
+    fragment: LayerFragment, paintingInfo: LayerPaintingInfo
+  ) -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func clipToRect(
@@ -147,8 +162,21 @@ class RenderLayerWrapper {
           paintBehavior: paintBehavior, clipRect: fragment.foregroundRect)
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var paintInfo = PaintInfoWrapper(
+        newContext: context, newRect: fragment.foregroundRect.rect, newPhase: phase,
+        newPaintBehavior: paintBehavior, newSubtreePaintRoot: subtreePaintRootForRenderer,
+        newOutlineObjects: nil, overlapTestRequests: nil,
+        newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
+        enclosingSelfPaintingLayer: self,
+        newRequireSecurityOriginAccessForWidgets: localPaintingInfo
+          .requireSecurityOriginAccessForWidgets)
+      if phase == .Foreground {
+        paintInfo.overlapTestRequests = localPaintingInfo.overlapTestRequests
+      }
+      renderer().paint(
+        paintInfo: paintInfo,
+        paintOffset: RenderLayerWrapper.paintOffsetForRenderer(
+          fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
 
