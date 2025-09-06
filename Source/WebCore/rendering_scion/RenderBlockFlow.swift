@@ -56,8 +56,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func inlineLayout() -> LayoutIntegration.LineLayout? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch lineLayout {
+    case .Integration(let layout):
+      return layout
+    default:
+      return nil
+    }
   }
 
   // Update minimum page height required to avoid fragmentation where it shouldn't occur (inside
