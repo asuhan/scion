@@ -110,14 +110,28 @@ class RenderLayerWrapper {
   }
 
   private struct LayerPaintingInfo {
-    init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    init(
+      inRootLayer: RenderLayerWrapper?, inDirtyRect: LayoutRectWrapper,
+      inPaintBehavior: PaintBehavior, inSubpixelOffset: LayoutSizeWrapper,
+      inSubtreePaintRoot: RenderObjectWrapper? = nil,
+      inOverlapTestRequests: OverlapTestRequestMap? = nil,
+      inRequireSecurityOriginAccessForWidgets: Bool = false
+    ) {
+      self.rootLayer = inRootLayer
+      self.subtreePaintRoot = inSubtreePaintRoot
+      self.paintDirtyRect = inDirtyRect
+      self.subpixelOffset = inSubpixelOffset
+      self.overlapTestRequests = inOverlapTestRequests
+      self.paintBehavior = inPaintBehavior
+      self.requireSecurityOriginAccessForWidgets = inRequireSecurityOriginAccessForWidgets
     }
 
     let rootLayer: RenderLayerWrapper?
+    let subtreePaintRoot: RenderObjectWrapper?  // Only paint descendants of this object.
+    let paintDirtyRect: LayoutRectWrapper  // Relative to rootLayer;
     let subpixelOffset: LayoutSizeWrapper
     let overlapTestRequests: OverlapTestRequestMap?
+    let paintBehavior: PaintBehavior
     let requireSecurityOriginAccessForWidgets: Bool
     let clipToDirtyRect: Bool = true
     let regionContext: RegionContext? = nil
