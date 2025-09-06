@@ -97,6 +97,15 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func hasInlineLayout() -> Bool {
+    switch lineLayout {
+    case .Integration:
+      return true
+    default:
+      return false
+    }
+  }
+
   func computeLineAdjustmentForPagination(
     lineBox: InlineIterator.LineBoxIterator, delta: LayoutUnit, floatMinimumBottom: LayoutUnit
   ) -> LinePaginationAdjustment {
