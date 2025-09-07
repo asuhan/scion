@@ -238,8 +238,32 @@ class RenderLayerWrapper {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !selectionOnly {
+      paintForegroundForFragmentsWithPhase(
+        phase: .ChildBlockBackgrounds, layerFragments: layerFragments, context: context,
+        localPaintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+    }
+
+    if selectionOnly || selectionAndBackgroundsOnly {
+      paintForegroundForFragmentsWithPhase(
+        phase: .Selection, layerFragments: layerFragments, context: context,
+        localPaintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+    } else {
+      paintForegroundForFragmentsWithPhase(
+        phase: .Float, layerFragments: layerFragments, context: context,
+        localPaintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+      paintForegroundForFragmentsWithPhase(
+        phase: .Foreground, layerFragments: layerFragments, context: context,
+        localPaintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+      paintForegroundForFragmentsWithPhase(
+        phase: .ChildOutlines, layerFragments: layerFragments, context: context,
+        localPaintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+    }
   }
 
   private func paintForegroundForFragmentsWithPhase(
