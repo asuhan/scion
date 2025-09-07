@@ -49,6 +49,27 @@ private enum BorderRadiusClippingRule {
   case DoNotIncludeSelfForBorderRadius
 }
 
+private enum TransparencyClipBoxBehavior {
+  case PaintingTransparencyClipBox
+  case HitTestingTransparencyClipBox
+}
+
+private enum TransparencyClipBoxMode {
+  case DescendantsOfTransparencyClipBox
+  case RootOfTransparencyClipBox
+}
+
+private func transparencyClipBox(
+  layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
+  transparencyBehavior: TransparencyClipBoxBehavior, transparencyMode: TransparencyClipBoxMode,
+  paintBehavior: PaintBehavior = [], paintDirtyRect: LayoutRectWrapper? = nil
+)
+  -> LayoutRectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -128,6 +149,11 @@ class RenderLayerWrapper {
   }
 
   func hasTransformedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasBlendMode() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -437,18 +463,43 @@ class RenderLayerWrapper {
         context.setAlpha(alpha: context.alpha() * renderer().opacity())
         return
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      context.save()
+      var adjustedClipRect = transparencyClipBox(
+        layer: self, rootLayer: paintingInfo.rootLayer,
+        transparencyBehavior: .PaintingTransparencyClipBox,
+        transparencyMode: .RootOfTransparencyClipBox,
+        paintBehavior: paintingInfo.paintBehavior, paintDirtyRect: dirtyRect)
+      adjustedClipRect.move(size: paintingInfo.subpixelOffset)
+      let snappedClipRect = snapRectToDevicePixelsIfNeeded(
+        rect: adjustedClipRect, renderer: renderer())
+      context.clip(rect: snappedClipRect)
+
+      let usesCompositeOperation =
+        hasBlendMode()
+        && !(renderer().isLegacyRenderSVGRoot() && parent() != nil && parent()!.isRenderViewLayer)
+      if usesCompositeOperation {
+        context.setCompositeOperation(operation: context.compositeOperation(), blendMode: blendMode)
+      }
+
+      context.beginTransparencyLayer(opacity: renderer().opacity())
+
+      if usesCompositeOperation {
+        context.setCompositeOperation(operation: context.compositeOperation(), blendMode: .Normal)
+      }
     }
   }
 
   private let p: UnsafeMutableRawPointer
   // Native fields below.
 
-  var savedAlphaForTransparency: Float32? = nil
+  private var savedAlphaForTransparency: Float32? = nil
+
+  private var isRenderViewLayer = false
 
   // Tracks whether we need to close a transparent layer, i.e., whether
   // we ended up painting this layer or any descendants (and therefore need to
   // blend).
-  private var usedTransparency: Bool = false
+  private var usedTransparency = false
+
+  private var blendMode: BlendMode = .Normal
 }
