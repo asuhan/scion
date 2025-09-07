@@ -204,6 +204,40 @@ class RenderLayerWrapper {
       localPaintBehavior.update(with: .DontShowVisitedLinks)
     }
 
+    let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+    let regionContextStateSaver = RegionContextStateSaver(context: localPaintingInfo.regionContext)
+
+    // Optimize clipping for the single fragment case.
+    let shouldClip =
+      localPaintingInfo.clipToDirtyRect && layerFragments.count == 1
+      && layerFragments[0].shouldPaintContent && !layerFragments[0].foregroundRect.isEmpty()
+    if shouldClip {
+      clipToRect(
+        context: context, stateSaver: stateSaver, regionContextStateSaver: regionContextStateSaver,
+        paintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        clipRect: layerFragments[0].foregroundRect)
+    }
+
+    // We have to loop through every fragment multiple times, since we have to repaint in each specific phase in order for
+    // interleaving of the fragments to work properly.
+    let selectionOnly = localPaintingInfo.paintBehavior.contains(.SelectionOnly)
+    let selectionAndBackgroundsOnly = localPaintingInfo.paintBehavior.contains(
+      .SelectionAndBackgroundsOnly)
+
+    if (renderer() is RenderSVGModelObjectWrapper) && !(renderer() is RenderSVGContainerWrapper) {
+      // SVG containers need to propagate paint phases. This could be saved if we remember somewhere if a SVG subtree
+      // contains e.g. LegacyRenderSVGForeignObject objects that do need the individual paint phases. For SVG shapes & SVG images
+      // we can avoid the multiple paintForegroundForFragmentsWithPhase() calls.
+      if selectionOnly || selectionAndBackgroundsOnly {
+        return
+      }
+      paintForegroundForFragmentsWithPhase(
+        phase: .Foreground, layerFragments: layerFragments, context: context,
+        localPaintingInfo: localPaintingInfo, paintBehavior: localPaintBehavior,
+        subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -211,7 +245,7 @@ class RenderLayerWrapper {
   private func paintForegroundForFragmentsWithPhase(
     phase: PaintPhase, layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
-    subtreePaintRootForRenderer: RenderObjectWrapper
+    subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
     let shouldClip = localPaintingInfo.clipToDirtyRect && layerFragments.count > 1
 
