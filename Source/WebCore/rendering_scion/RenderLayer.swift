@@ -93,8 +93,14 @@ class RenderLayerWrapper {
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
   // Not all stacking contexts are CSS stacking contexts.
   func isStackingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isCSSStackingContext() || isOpportunisticStackingContext
+  }
+
+  // isCSSStackingContext is true for layers that are stacking contexts from a CSS perspective.
+  // isCSSStackingContext() => isStackingContext().
+  // FIXME: m_forcedStackingContext should affect isStackingContext(), not isCSSStackingContext(), but doing so breaks media control mix-blend-mode.
+  func isCSSStackingContext() -> Bool {
+    return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
   func size() -> IntSize {
@@ -495,6 +501,10 @@ class RenderLayerWrapper {
   private var savedAlphaForTransparency: Float32? = nil
 
   private var isRenderViewLayer = false
+  private var forcedStackingContext = false
+  private var isOpportunisticStackingContext = false
+
+  private var m_isCSSStackingContext = false
 
   // Tracks whether we need to close a transparent layer, i.e., whether
   // we ended up painting this layer or any descendants (and therefore need to
