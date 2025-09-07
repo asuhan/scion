@@ -70,6 +70,16 @@ private func transparencyClipBox(
   fatalError("Not implemented")
 }
 
+// Returns the layer reached on the walk up towards the ancestor.
+private func accumulateOffsetTowardsAncestor(
+  layer: RenderLayerWrapper?, ancestorLayer: RenderLayerWrapper?,
+  location: inout LayoutPointWrapper,
+  adjustForColumns: RenderLayerWrapper.ColumnOffsetAdjustment
+) -> RenderLayerWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -130,12 +140,43 @@ class RenderLayerWrapper {
     case AdjustForColumns
   }
 
+  func convertToLayerCoords(
+    ancestorLayer: RenderLayerWrapper?, location: LayoutPointWrapper,
+    adjustForColumns: ColumnOffsetAdjustment = .DontAdjustForColumns
+  )
+    -> LayoutPointWrapper
+  {
+    if CPtrToInt(ancestorLayer?.p) == CPtrToInt(p) {
+      return location
+    }
+
+    var currLayer: RenderLayerWrapper? = self
+    var locationInLayerCoords = location
+    while currLayer != nil && CPtrToInt(currLayer?.p) != CPtrToInt(ancestorLayer?.p) {
+      currLayer = accumulateOffsetTowardsAncestor(
+        layer: currLayer, ancestorLayer: ancestorLayer, location: &locationInLayerCoords,
+        adjustForColumns: adjustForColumns)
+    }
+
+    // Pixel snap the whole SVG subtree as one "block" -- not individual layers down the SVG render tree.
+    if renderer().isRenderSVGRoot() {
+      return LayoutPointWrapper(
+        size: roundPointToDevicePixels(
+          point: locationInLayerCoords,
+          pixelSnappingFactor: renderer().document().deviceScaleFactor()))
+    }
+
+    return locationInLayerCoords
+  }
+
   func offsetFromAncestor(
     ancestorLayer: RenderLayerWrapper?,
     adjustForColumns: ColumnOffsetAdjustment = .DontAdjustForColumns
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return toLayoutSize(
+      point: convertToLayerCoords(
+        ancestorLayer: ancestorLayer, location: LayoutPointWrapper(),
+        adjustForColumns: adjustForColumns))
   }
 
   func staticInlinePosition() -> LayoutUnit {
