@@ -183,6 +183,27 @@ class RenderLayerWrapper {
       }
     }
 
+    var localPaintBehavior = PaintBehavior()
+    if localPaintingInfo.paintBehavior.contains(.ForceBlackText) {
+      localPaintBehavior = PaintBehavior.ForceBlackText
+    } else if localPaintingInfo.paintBehavior.contains(.ForceWhiteText) {
+      localPaintBehavior = PaintBehavior.ForceWhiteText
+    } else {
+      localPaintBehavior = paintBehavior
+    }
+
+    // FIXME: It's unclear if this flag copying is necessary.
+    let flagsToCopy = PaintBehavior([
+      .ExcludeSelection, .Snapshotting, .DefaultAsynchronousImageDecode,
+      .CompositedOverflowScrollContent, .ForceSynchronousImageDecode, .ExcludeReplacedContent,
+    ])
+    localPaintBehavior = localPaintBehavior.union(
+      localPaintingInfo.paintBehavior.intersection(flagsToCopy))
+
+    if localPaintingInfo.paintBehavior.contains(.DontShowVisitedLinks) {
+      localPaintBehavior.update(with: .DontShowVisitedLinks)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
