@@ -137,6 +137,10 @@ class LayoutSizeWrapper {
     return LayoutSizeWrapper(width: width_, height: height_)
   }
 
+  static func == (lhs: LayoutSizeWrapper, rhs: LayoutSizeWrapper) -> Bool {
+    return lhs.width_ == rhs.width_ && lhs.height_ == rhs.height_
+  }
+
   private var width_: LayoutUnit = LayoutUnit()
   private var height_: LayoutUnit = LayoutUnit()
 }

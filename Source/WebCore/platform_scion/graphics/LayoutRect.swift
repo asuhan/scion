@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct LayoutRectWrapper {
+struct LayoutRectWrapper: Equatable {
   init() {}
 
   init(location: LayoutPointWrapper, size: LayoutSizeWrapper) {
@@ -235,6 +235,10 @@ struct LayoutRectWrapper {
 
   func FloatRect() -> FloatRectWrapper {
     return FloatRectWrapper(location: m_location.FloatPoint(), size: m_size.FloatSize())
+  }
+
+  static func == (lhs: LayoutRectWrapper, rhs: LayoutRectWrapper) -> Bool {
+    return lhs.m_location == rhs.m_location && lhs.m_size == rhs.m_size
   }
 
   private mutating func setLocationAndSizeFromEdges(

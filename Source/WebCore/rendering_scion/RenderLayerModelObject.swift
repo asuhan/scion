@@ -39,3 +39,10 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }
 }
+
+func snapRectToDevicePixelsIfNeeded(
+  rect: LayoutRectWrapper, renderer: RenderLayerModelObjectWrapper
+) -> FloatRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

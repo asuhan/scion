@@ -226,3 +226,8 @@ struct FloatRectWrapper {
   private var m_location = FloatPoint()
   private var m_size = FloatSize()
 }
+
+func enclosingIntRect(rect: FloatRectWrapper) -> IntRect {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

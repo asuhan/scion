@@ -150,6 +150,21 @@ class RenderLayerWrapper {
     paintBehavior: PaintBehavior, clipRect: ClipRect,
     rule: BorderRadiusClippingRule = .IncludeSelfForBorderRadius
   ) {
+    let deviceScaleFactor = renderer().document().deviceScaleFactor()
+    let needsClipping = !clipRect.isInfinite() && clipRect.rect != paintingInfo.paintDirtyRect
+    if needsClipping || clipRect.affectedByRadius {
+      stateSaver.save()
+    }
+
+    if needsClipping {
+      var adjustedClipRect = clipRect.rect
+      adjustedClipRect.move(size: paintingInfo.subpixelOffset)
+      let snappedClipRect = snapRectToDevicePixelsIfNeeded(
+        rect: adjustedClipRect, renderer: renderer())
+      context.clip(rect: snappedClipRect)
+      regionContextStateSaver.pushClip(clipRect: enclosingIntRect(rect: snappedClipRect))
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

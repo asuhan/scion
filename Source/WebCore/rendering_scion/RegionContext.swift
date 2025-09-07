@@ -30,4 +30,9 @@ class RegionContextStateSaver {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func pushClip(clipRect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
