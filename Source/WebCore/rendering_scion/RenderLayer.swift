@@ -69,6 +69,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func size() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -82,6 +87,19 @@ class RenderLayerWrapper {
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  enum ColumnOffsetAdjustment {
+    case DontAdjustForColumns
+    case AdjustForColumns
+  }
+
+  func offsetFromAncestor(
+    ancestorLayer: RenderLayerWrapper?,
+    adjustForColumns: ColumnOffsetAdjustment = .DontAdjustForColumns
+  ) -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -162,7 +180,7 @@ class RenderLayerWrapper {
     paintBehavior: PaintBehavior, clipRect: ClipRect,
     rule: BorderRadiusClippingRule = .IncludeSelfForBorderRadius
   ) {
-    let _ /*deviceScaleFactor*/ = renderer().document().deviceScaleFactor()
+    let deviceScaleFactor = renderer().document().deviceScaleFactor()
     let needsClipping = !clipRect.isInfinite() && clipRect.rect != paintingInfo.paintDirtyRect
     if needsClipping || clipRect.affectedByRadius {
       stateSaver.save()
@@ -192,8 +210,22 @@ class RenderLayerWrapper {
         if layer!.renderer().hasNonVisibleOverflow() && layer!.renderer().style().hasBorderRadius()
           && ancestorLayerIsInContainingBlockChain(ancestor: layer!)
         {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          var adjustedClipRect = LayoutRectWrapper(
+            location: toLayoutPoint(
+              size: layer!.offsetFromAncestor(
+                ancestorLayer: paintingInfo.rootLayer, adjustForColumns: .AdjustForColumns)),
+            size: LayoutSizeWrapper(size: layer!.size()))
+          adjustedClipRect.move(size: paintingInfo.subpixelOffset)
+          let borderShape = BorderShape.shapeForBorderRect(
+            style: layer!.renderer().style(), borderRect: adjustedClipRect)
+          if borderShape.innerShapeContains(rect: paintingInfo.paintDirtyRect) {
+            context.clip(
+              rect: snapRectToDevicePixels(
+                rect: intersection(a: paintingInfo.paintDirtyRect, b: adjustedClipRect),
+                pixelSnappingFactor: deviceScaleFactor))
+          } else {
+            borderShape.clipToInnerShape(context: context, deviceScaleFactor: deviceScaleFactor)
+          }
         }
 
         if CPtrToInt(layer!.p) == CPtrToInt(paintingInfo.rootLayer?.p) {

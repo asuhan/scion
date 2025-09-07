@@ -141,6 +141,11 @@ struct BorderShape {
     return m_borderRect.pixelSnappedRoundedRectForPainting(deviceScaleFactor: deviceScaleFactor)
   }
 
+  // Returns true if the given rect is entirely inside the shape, without impinging on any of the corners.
+  func innerShapeContains(rect: LayoutRectWrapper) -> Bool {
+    return innerEdgeRoundedRect().contains(otherRect: rect)
+  }
+
   func outerShapeContains(rect: LayoutRectWrapper) -> Bool {
     return m_borderRect.contains(otherRect: rect)
   }

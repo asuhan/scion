@@ -253,6 +253,12 @@ struct LayoutRectWrapper: Equatable {
   private var m_size = LayoutSizeWrapper()
 }
 
+func intersection(a: LayoutRectWrapper, b: LayoutRectWrapper) -> LayoutRectWrapper {
+  var c = a
+  c.intersect(other: b)
+  return c
+}
+
 func unionRect(a: LayoutRectWrapper, b: LayoutRectWrapper) -> LayoutRectWrapper {
   var c = a
   c.unite(other: b)
