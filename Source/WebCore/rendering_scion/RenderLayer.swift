@@ -69,6 +69,13 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
+  // Not all stacking contexts are CSS stacking contexts.
+  func isStackingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func size() -> IntSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -131,6 +138,20 @@ class RenderLayerWrapper {
   }
 
   func usesCompositedScrolling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintsWithTransparency(paintBehavior: PaintBehavior) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // If we will only draw a single item, then we can just apply
+  // opacity to the drawing context rather than pushing a transparency
+  // layer. This currently only detects a single bitmap image, but could
+  // be extended to handle other cases.
+  func canPaintTransparencyWithSetOpacity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -389,12 +410,45 @@ class RenderLayerWrapper {
     }
   }
 
-  private func beginTransparencyLayers(
-    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, dirtyRect: LayoutRectWrapper
-  ) {
+  private func transparentPaintingAncestor(info: LayerPaintingInfo) -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private func beginTransparencyLayers(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, dirtyRect: LayoutRectWrapper
+  ) {
+    if context.paintingDisabled()
+      || (paintsWithTransparency(paintBehavior: paintingInfo.paintBehavior) && usedTransparency)
+    {
+      return
+    }
+
+    if let ancestor = transparentPaintingAncestor(info: paintingInfo) {
+      ancestor.beginTransparencyLayers(
+        context: context, paintingInfo: paintingInfo, dirtyRect: dirtyRect)
+    }
+
+    if paintsWithTransparency(paintBehavior: paintingInfo.paintBehavior) {
+      assert(isStackingContext())
+      usedTransparency = true
+      if canPaintTransparencyWithSetOpacity() {
+        savedAlphaForTransparency = context.alpha()
+        context.setAlpha(alpha: context.alpha() * renderer().opacity())
+        return
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   private let p: UnsafeMutableRawPointer
+  // Native fields below.
+
+  var savedAlphaForTransparency: Float32? = nil
+
+  // Tracks whether we need to close a transparent layer, i.e., whether
+  // we ended up painting this layer or any descendants (and therefore need to
+  // blend).
+  private var usedTransparency: Bool = false
 }

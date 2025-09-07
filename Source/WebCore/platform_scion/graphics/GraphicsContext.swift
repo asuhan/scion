@@ -104,6 +104,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func alpha() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setAlpha(alpha: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
