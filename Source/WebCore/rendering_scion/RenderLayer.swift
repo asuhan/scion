@@ -64,12 +64,24 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func parent() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func scrollHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ancestorLayerIsInContainingBlockChain(
+    ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -150,7 +162,7 @@ class RenderLayerWrapper {
     paintBehavior: PaintBehavior, clipRect: ClipRect,
     rule: BorderRadiusClippingRule = .IncludeSelfForBorderRadius
   ) {
-    let deviceScaleFactor = renderer().document().deviceScaleFactor()
+    let _ /*deviceScaleFactor*/ = renderer().document().deviceScaleFactor()
     let needsClipping = !clipRect.isInfinite() && clipRect.rect != paintingInfo.paintDirtyRect
     if needsClipping || clipRect.affectedByRadius {
       stateSaver.save()
@@ -165,8 +177,32 @@ class RenderLayerWrapper {
       regionContextStateSaver.pushClip(clipRect: enclosingIntRect(rect: snappedClipRect))
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if clipRect.affectedByRadius {
+      // If the clip rect has been tainted by a border radius, then we have to walk up our layer chain applying the clips from
+      // any layers with overflow. The condition for being able to apply these clips is that the overflow object be in our
+      // containing block chain so we check that also.
+      var layer: RenderLayerWrapper? = rule == .IncludeSelfForBorderRadius ? self : parent()
+      while layer != nil {
+        if paintBehavior.contains(.CompositedOverflowScrollContent)
+          && layer!.usesCompositedScrolling()
+        {
+          break
+        }
+
+        if layer!.renderer().hasNonVisibleOverflow() && layer!.renderer().style().hasBorderRadius()
+          && ancestorLayerIsInContainingBlockChain(ancestor: layer!)
+        {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        if CPtrToInt(layer!.p) == CPtrToInt(paintingInfo.rootLayer?.p) {
+          break
+        }
+
+        layer = layer!.parent()
+      }
+    }
   }
 
   private func rendererLocation() -> LayoutPointWrapper {
