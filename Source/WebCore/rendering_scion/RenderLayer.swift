@@ -227,6 +227,38 @@ class RenderLayerWrapper {
       }
     }
 
+    var parentLayer: RenderLayerWrapper? = nil
+    if position == .Absolute || position == .Fixed {
+      // Do what enclosingAncestorForPosition() does, but check for ancestorLayer along the way.
+      parentLayer = layer.parent()
+      var foundAncestorFirst = false
+      while parentLayer != nil {
+        // RenderFragmentedFlow is a positioned container, child of RenderView, positioned at (0,0).
+        // This implies that, for out-of-flow positioned elements inside a RenderFragmentedFlow,
+        // we are bailing out before reaching root layer.
+        if isContainerForPositioned(
+          layer: parentLayer!, position: position, establishesTopLayer: layer.establishesTopLayer())
+        {
+          break
+        }
+
+        if CPtrToInt(parentLayer?.p) == CPtrToInt(ancestorLayer?.p) {
+          foundAncestorFirst = true
+          break
+        }
+
+        parentLayer = parentLayer!.parent()
+      }
+
+      if foundAncestorFirst {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
