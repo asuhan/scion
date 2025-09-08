@@ -49,6 +49,13 @@ private enum BorderRadiusClippingRule {
   case DoNotIncludeSelfForBorderRadius
 }
 
+private func isContainerForPositioned(
+  layer: RenderLayerWrapper, position: PositionType, establishesTopLayer: Bool
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private enum TransparencyClipBoxBehavior {
   case PaintingTransparencyClipBox
   case HitTestingTransparencyClipBox
@@ -158,6 +165,51 @@ class RenderLayerWrapper {
       return ancestorLayer
     }
 
+    // For the fixed positioned elements inside a render flow thread, we should also skip the code path below
+    // Otherwise, for the case of ancestorLayer == rootLayer and fixed positioned element child of a transformed
+    // element in render flow thread, we will hit the fixed positioned container before hitting the ancestor layer.
+    if position == .Fixed {
+      // For a fixed layers, we need to walk up to the root to see if there's a fixed position container
+      // (e.g. a transformed layer). It's an error to call offsetFromAncestor() across a layer with a transform,
+      // so we should always find the ancestor at or before we find the fixed position container, if
+      // the container is transformed.
+      var fixedPositionContainerLayer: RenderLayerWrapper? = nil
+      var foundAncestor = false
+      var currLayer: RenderLayerWrapper? = layer.parent()
+      while currLayer != nil {
+        if CPtrToInt(currLayer?.p) == CPtrToInt(ancestorLayer?.p) {
+          foundAncestor = true
+        }
+
+        if isContainerForPositioned(
+          layer: currLayer!, position: .Fixed, establishesTopLayer: layer.establishesTopLayer())
+        {
+          fixedPositionContainerLayer = currLayer
+          // A layer that has a transform-related property but not a
+          // transform still acts as a fixed-position container.
+          // Accumulating offsets across such layers is allowed.
+          if currLayer!.transform() != nil {
+            assert(foundAncestor)
+          }
+          break
+        }
+        currLayer = currLayer!.parent()
+      }
+
+      assert(fixedPositionContainerLayer != nil)  // We should have hit the RenderView's layer at least.
+
+      if CPtrToInt(fixedPositionContainerLayer!.p) != CPtrToInt(ancestorLayer?.p) {
+        let fixedContainerCoords = layer.offsetFromAncestor(
+          ancestorLayer: fixedPositionContainerLayer)
+        let ancestorCoords =
+          foundAncestor
+          ? ancestorLayer!.offsetFromAncestor(ancestorLayer: fixedPositionContainerLayer)
+          : LayoutSizeWrapper()
+        location.move(s: fixedContainerCoords - ancestorCoords)
+        return foundAncestor ? ancestorLayer : fixedPositionContainerLayer
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -217,6 +269,12 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
   }
 
+  // Note that this transform has the transform-origin baked in.
+  func transform() -> TransformationMatrix? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasTransformedAncestor() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -247,6 +305,11 @@ class RenderLayerWrapper {
   // layer. This currently only detects a single bitmap image, but could
   // be extended to handle other cases.
   func canPaintTransparencyWithSetOpacity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func establishesTopLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
