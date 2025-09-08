@@ -90,6 +90,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Return our enclosing flow thread if we are contained inside one. Follows the containing block chain.
+  func enclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFieldset() -> Bool {
     return wk_interop.RenderObject_isFieldset(p)
   }

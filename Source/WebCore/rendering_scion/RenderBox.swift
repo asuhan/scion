@@ -243,6 +243,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // These represent your location relative to your container as a physical offset.
+  // In layout related methods you almost always want the logical location (e.g. x() and y()).
+  func topLeftLocation() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalVisualOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
     if style.p == nil {
       // TODO(asuhan): implement this

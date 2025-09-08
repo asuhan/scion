@@ -92,6 +92,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func renderBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func parent() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -133,6 +138,13 @@ class RenderLayerWrapper {
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Gets the nearest enclosing positioned ancestor layer (also includes
+  // the <html> layer and the root layer).
+  func enclosingAncestorForPosition(position: PositionType) -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -250,17 +262,45 @@ class RenderLayerWrapper {
         parentLayer = parentLayer!.parent()
       }
 
+      // We should not reach RenderView layer past the RenderFragmentedFlow layer for any
+      // children of the RenderFragmentedFlow.
+      if renderer.enclosingFragmentedFlow() != nil {
+        assert(CPtrToInt(parentLayer?.p) != CPtrToInt(renderer.view().layer()?.p))
+      }
+
       if foundAncestorFirst {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // Found ancestorLayer before the abs. positioned container, so compute offset of both relative
+        // to enclosingAncestorForPosition and subtract.
+        let positionedAncestor = parentLayer!.enclosingAncestorForPosition(position: position)
+        let thisCoords = layer.offsetFromAncestor(ancestorLayer: positionedAncestor)
+        let ancestorCoords = ancestorLayer!.offsetFromAncestor(ancestorLayer: positionedAncestor)
+        location.move(s: thisCoords - ancestorCoords)
+        return ancestorLayer
       }
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      parentLayer = layer.parent()
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if parentLayer == nil {
+      return nil
+    }
+
+    location.moveBy(offset: layer.location())
+
+    if adjustForColumns == .AdjustForColumns {
+      if let parentLayer = layer.parent(), CPtrToInt(parentLayer.p) != CPtrToInt(ancestorLayer?.p) {
+        if let multiColumnFlow = parentLayer.renderer() as? RenderMultiColumnFlowWrapper {
+          if let fragment = multiColumnFlow.physicalTranslationFromFlowToFragment(
+            physicalPoint: location)
+          {
+            location.move(
+              s: fragment.topLeftLocation() - parentLayer.renderBox()!.topLeftLocation())
+          }
+        }
+      }
+    }
+
+    return parentLayer
   }
 
   func convertToLayerCoords(

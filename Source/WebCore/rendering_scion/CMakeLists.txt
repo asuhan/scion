@@ -34,6 +34,7 @@ target_sources(layout_scion PRIVATE
     RenderFlexibleBox.swift
     RenderFragmentContainer.swift
     RenderFragmentContainerSet.swift
+    RenderFragmentedFlow.swift
     RenderGrid.swift
     RenderHighlight.swift
     RenderImage.swift
@@ -47,6 +48,7 @@ target_sources(layout_scion PRIVATE
     RenderListBox.swift
     RenderListItem.swift
     RenderListMarker.swift
+    RenderMultiColumnFlow.swift
     RenderMultiColumnSet.swift
     RenderObject.swift
     RenderObjectEnums.swift
