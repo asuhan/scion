@@ -110,6 +110,11 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
+  func location() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func size() -> IntSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -207,6 +212,18 @@ class RenderLayerWrapper {
           : LayoutSizeWrapper()
         location.move(s: fixedContainerCoords - ancestorCoords)
         return foundAncestor ? ancestorLayer : fixedPositionContainerLayer
+      }
+
+      assert(ancestorLayer != nil)
+      if CPtrToInt(ancestorLayer!.p) == CPtrToInt(renderer.view().layer()?.p) {
+        // Add location in flow thread coordinates.
+        location.moveBy(offset: layer.location())
+
+        // Add flow thread offset in view coordinates since the view may be scrolled.
+        location.moveBy(
+          offset: LayoutPointWrapper(
+            size: renderer.view().localToAbsolute(localPoint: FloatPoint(), mode: .IsFixed)))
+        return ancestorLayer
       }
     }
 
