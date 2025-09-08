@@ -70,16 +70,6 @@ private func transparencyClipBox(
   fatalError("Not implemented")
 }
 
-// Returns the layer reached on the walk up towards the ancestor.
-private func accumulateOffsetTowardsAncestor(
-  layer: RenderLayerWrapper?, ancestorLayer: RenderLayerWrapper?,
-  location: inout LayoutPointWrapper,
-  adjustForColumns: RenderLayerWrapper.ColumnOffsetAdjustment
-) -> RenderLayerWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
-}
-
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -140,6 +130,38 @@ class RenderLayerWrapper {
     case AdjustForColumns
   }
 
+  // Returns the layer reached on the walk up towards the ancestor.
+  private static func accumulateOffsetTowardsAncestor(
+    layer: RenderLayerWrapper, ancestorLayer: RenderLayerWrapper?,
+    location: inout LayoutPointWrapper,
+    adjustForColumns: RenderLayerWrapper.ColumnOffsetAdjustment
+  ) -> RenderLayerWrapper? {
+    assert(CPtrToInt(ancestorLayer?.p) != CPtrToInt(layer.p))
+
+    let renderer = layer.renderer()
+    let position = renderer.style().position()
+
+    // FIXME: Positioning of out-of-flow(fixed, absolute) elements collected in a RenderFragmentedFlow
+    // may need to be revisited in a future patch.
+    // If the fixed renderer is inside a RenderFragmentedFlow, we should not compute location using localToAbsolute,
+    // since localToAbsolute maps the coordinates from named flow to regions coordinates and regions can be
+    // positioned in a completely different place in the viewport (RenderView).
+    if position == .Fixed
+      && (ancestorLayer == nil
+        || CPtrToInt(ancestorLayer?.p) == CPtrToInt(renderer.view().layer()?.p))
+    {
+      // If the fixed layer's container is the root, just add in the offset of the view. We can obtain this by calling
+      // localToAbsolute() on the RenderView.
+      location.moveBy(
+        offset: LayoutPointWrapper(
+          size: renderer.localToAbsolute(localPoint: FloatPoint(), mode: .IsFixed)))
+      return ancestorLayer
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func convertToLayerCoords(
     ancestorLayer: RenderLayerWrapper?, location: LayoutPointWrapper,
     adjustForColumns: ColumnOffsetAdjustment = .DontAdjustForColumns
@@ -153,8 +175,8 @@ class RenderLayerWrapper {
     var currLayer: RenderLayerWrapper? = self
     var locationInLayerCoords = location
     while currLayer != nil && CPtrToInt(currLayer?.p) != CPtrToInt(ancestorLayer?.p) {
-      currLayer = accumulateOffsetTowardsAncestor(
-        layer: currLayer, ancestorLayer: ancestorLayer, location: &locationInLayerCoords,
+      currLayer = RenderLayerWrapper.accumulateOffsetTowardsAncestor(
+        layer: currLayer!, ancestorLayer: ancestorLayer, location: &locationInLayerCoords,
         adjustForColumns: adjustForColumns)
     }
 
