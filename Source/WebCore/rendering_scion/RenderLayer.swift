@@ -52,8 +52,20 @@ private enum BorderRadiusClippingRule {
 private func isContainerForPositioned(
   layer: RenderLayerWrapper, position: PositionType, establishesTopLayer: Bool
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if establishesTopLayer {
+    return layer.isRenderViewLayer
+  }
+
+  switch position {
+  case .Fixed:
+    return layer.renderer().canContainFixedPositionObjects()
+
+  case .Absolute:
+    return layer.renderer().canContainAbsolutelyPositionedObjects()
+
+  default:
+    fatalError("Not reached")
+  }
 }
 
 private enum TransparencyClipBoxBehavior {
@@ -715,7 +727,7 @@ class RenderLayerWrapper {
 
   private var savedAlphaForTransparency: Float32? = nil
 
-  private var isRenderViewLayer = false
+  var isRenderViewLayer = false
   private var forcedStackingContext = false
   private var isOpportunisticStackingContext = false
 

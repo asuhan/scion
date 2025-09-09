@@ -61,6 +61,17 @@ class RenderElementWrapper: RenderObjectWrapper {
     return super.layoutBox() as? ElementBoxWrapper
   }
 
+  // Note that even if these 2 "canContain" functions return true for a particular renderer, it does not necessarily mean the renderer is the containing block (see containingBlockForAbsolute(Fixed)Position).
+  func canContainFixedPositionObjects() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func canContainAbsolutelyPositionedObjects() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Obtains the selection colors that should be used when painting a selection.
   func selectionBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this

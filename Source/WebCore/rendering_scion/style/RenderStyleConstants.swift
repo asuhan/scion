@@ -108,12 +108,12 @@ enum OutlineIsAuto: UInt8 {
 }
 
 enum PositionType: UInt8 {
-  case Static
-  case Relative
-  case Absolute
-  case Sticky
+  case Static = 0
+  case Relative = 1
+  case Absolute = 2
+  case Sticky = 3
   // This value is required to pack our bits efficiently in RenderObject.
-  case Fixed
+  case Fixed = 6
 }
 
 enum Float: UInt8 {
