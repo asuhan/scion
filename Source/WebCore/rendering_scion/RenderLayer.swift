@@ -406,12 +406,16 @@ class RenderLayerWrapper {
   // layer. This currently only detects a single bitmap image, but could
   // be extended to handle other cases.
   func canPaintTransparencyWithSetOpacity() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isBitmapOnly() && !hasNonOpacityTransparency()
   }
 
   func establishesTopLayer() -> Bool {
     return isInTopLayerOrBackdrop(style: renderer().style(), element: renderer().element())
+  }
+
+  func isBitmapOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
@@ -719,6 +723,11 @@ class RenderLayerWrapper {
         context.setCompositeOperation(operation: context.compositeOperation(), blendMode: .Normal)
       }
     }
+  }
+
+  private func hasNonOpacityTransparency() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private let p: UnsafeMutableRawPointer
