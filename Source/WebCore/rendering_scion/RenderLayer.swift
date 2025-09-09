@@ -147,6 +147,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func hasVisibleBoxDecorationsOrBackground() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
@@ -414,8 +419,25 @@ class RenderLayerWrapper {
   }
 
   func isBitmapOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hasVisibleBoxDecorationsOrBackground() {
+      return false
+    }
+
+    if renderer() is RenderHTMLCanvasWrapper {
+      return true
+    }
+
+    if let imageRenderer = renderer() as? RenderImageWrapper {
+      if let cachedImage = imageRenderer.cachedImage() {
+        if !cachedImage.hasImage() {
+          return false
+        }
+        return cachedImage.imageForRenderer(renderer: imageRenderer) is BitmapImageWrapper
+      }
+      return false
+    }
+
+    return false
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {

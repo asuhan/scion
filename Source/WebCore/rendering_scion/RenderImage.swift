@@ -25,4 +25,9 @@
  *
  */
 
-class RenderImageWrapper: RenderReplacedWrapper {}
+class RenderImageWrapper: RenderReplacedWrapper {
+  func cachedImage() -> CachedImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

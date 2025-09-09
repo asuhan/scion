@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    BitmapImage.swift
     Color.swift
     ColorBlending.swift
     ColorLuminance.swift
