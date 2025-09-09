@@ -27,4 +27,13 @@ class ElementWrapper: ContainerNodeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isInTopLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+func isInTopLayerOrBackdrop(style: RenderStyleWrapper, element: ElementWrapper?) -> Bool {
+  return (element != nil && element!.isInTopLayer()) || style.pseudoElementType() == .Backdrop
 }

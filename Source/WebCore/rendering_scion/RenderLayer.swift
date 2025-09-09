@@ -411,8 +411,7 @@ class RenderLayerWrapper {
   }
 
   func establishesTopLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isInTopLayerOrBackdrop(style: renderer().style(), element: renderer().element())
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
