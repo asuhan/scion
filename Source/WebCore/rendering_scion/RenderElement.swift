@@ -127,6 +127,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
   }
 
+  func hasBlendMode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isContinuation() -> Bool {
     return wk_interop.RenderElement_isContinuation(p)
   }

@@ -387,8 +387,7 @@ class RenderLayerWrapper {
   }
 
   func hasBlendMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer().hasBlendMode()  // FIXME: Why ask the renderer this given we have blendMode?
   }
 
   func hasCompositedMask() -> Bool {
