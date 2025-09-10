@@ -27,4 +27,9 @@
  * SUCH DAMAGE.
  */
 
-class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {}
+class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
+  func fragmentsBoundingBox(layerBoundingBox: LayoutRectWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

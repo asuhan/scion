@@ -787,15 +787,18 @@ class RenderLayerWrapper {
         paintDirtyRect: paintDirtyRect)
       clipRect.expand(box: toLayoutBoxExtent(extent: layer.filterOutsets()))
       var result = transform.mapRect(r: clipRect)
-      if paginationLayer != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
-      } else {
-        if let paintDirtyRect = paintDirtyRect {
-          result = intersection(a: result, b: paintDirtyRect)
-        }
-        return result
+      if let paginationLayer = paginationLayer {
+        // We have to break up the transformed extent across our columns.
+        // Split our box up into the actual fragment boxes that render in the columns/pages and unite those together to
+        // get our true bounding box.
+        let enclosingFragmentedFlow = paginationLayer.renderer() as! RenderFragmentedFlowWrapper
+        result = enclosingFragmentedFlow.fragmentsBoundingBox(layerBoundingBox: result)
+        result.move(size: paginationLayer.offsetFromAncestor(ancestorLayer: rootLayer))
       }
+      if let paintDirtyRect = paintDirtyRect {
+        result = intersection(a: result, b: paintDirtyRect)
+      }
+      return result
     }
 
     // TODO(asuhan): implement this
