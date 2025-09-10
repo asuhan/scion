@@ -370,23 +370,24 @@ class RenderLayerWrapper {
   struct CalculateLayerBoundsFlag: OptionSet {
     let rawValue: UInt16
 
-    static let IncludeSelfTransform = 1
-    static let UseLocalClipRectIfPossible = 2
-    static let IncludeFilterOutsets = 4
-    static let IncludePaintedFilterOutsets = 8
-    static let ExcludeHiddenDescendants = 16
-    static let DontConstrainForMask = 32
-    static let IncludeCompositedDescendants = 64
-    static let UseFragmentBoxesExcludingCompositing = 128
-    static let UseFragmentBoxesIncludingCompositing = 256
-    static let IncludeRootBackgroundPaintingArea = 512
-    static let PreserveAncestorFlags = 1024
-    static let UseLocalClipRectExcludingCompositingIfPossible = 2048
+    static let IncludeSelfTransform = CalculateLayerBoundsFlag(rawValue: 1)
+    static let UseLocalClipRectIfPossible = CalculateLayerBoundsFlag(rawValue: 2)
+    static let IncludeFilterOutsets = CalculateLayerBoundsFlag(rawValue: 4)
+    static let IncludePaintedFilterOutsets = CalculateLayerBoundsFlag(rawValue: 8)
+    static let ExcludeHiddenDescendants = CalculateLayerBoundsFlag(rawValue: 16)
+    static let DontConstrainForMask = CalculateLayerBoundsFlag(rawValue: 32)
+    static let IncludeCompositedDescendants = CalculateLayerBoundsFlag(rawValue: 64)
+    static let UseFragmentBoxesExcludingCompositing = CalculateLayerBoundsFlag(rawValue: 128)
+    static let UseFragmentBoxesIncludingCompositing = CalculateLayerBoundsFlag(rawValue: 256)
+    static let IncludeRootBackgroundPaintingArea = CalculateLayerBoundsFlag(rawValue: 512)
+    static let PreserveAncestorFlags = CalculateLayerBoundsFlag(rawValue: 1024)
+    static let UseLocalClipRectExcludingCompositingIfPossible = CalculateLayerBoundsFlag(
+      rawValue: 2048)
   }
 
   // Bounding box relative to some ancestor layer. Pass offsetFromRoot if known.
   func boundingBox(
-    ancestorLayer: RenderLayerWrapper, offsetFromRoot: LayoutSizeWrapper = LayoutSizeWrapper(),
+    ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper = LayoutSizeWrapper(),
     flags: CalculateLayerBoundsFlag = []
   ) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
@@ -801,8 +802,24 @@ class RenderLayerWrapper {
       return result
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var flags: CalculateLayerBoundsFlag =
+      transparencyBehavior == .HitTestingTransparencyClipBox
+      ? .UseFragmentBoxesIncludingCompositing : .UseFragmentBoxesExcludingCompositing
+    flags.update(with: .IncludeRootBackgroundPaintingArea)
+    var clipRect = layer.boundingBox(
+      ancestorLayer: rootLayer, offsetFromRoot: layer.offsetFromAncestor(ancestorLayer: rootLayer),
+      flags: flags)
+    expandClipRectForDescendantsAndReflection(
+      clipRect: clipRect, layer: layer, rootLayer: rootLayer,
+      transparencyBehavior: transparencyBehavior, paintBehavior: paintBehavior,
+      paintDirtyRect: paintDirtyRect)
+    clipRect.expand(box: toLayoutBoxExtent(extent: layer.filterOutsets()))
+
+    if let paintDirtyRect = paintDirtyRect {
+      clipRect = intersection(a: clipRect, b: paintDirtyRect)
+    }
+
+    return clipRect
   }
 
   private func beginTransparencyLayers(
