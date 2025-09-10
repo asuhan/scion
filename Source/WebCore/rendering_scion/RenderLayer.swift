@@ -410,10 +410,7 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
   }
 
-  func isTransformed() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isTransformed() -> Bool { return renderer().isTransformed() }
 
   // Note that this transform has the transform-origin baked in.
   func transform() -> TransformationMatrix? {
