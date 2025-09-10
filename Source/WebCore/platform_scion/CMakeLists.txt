@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     LayoutUnit.swift
     Length.swift
+    LengthBox.swift
     LengthFunctions.swift
     LengthPoint.swift
     LengthSize.swift

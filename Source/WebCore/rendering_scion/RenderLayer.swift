@@ -78,13 +78,11 @@ private enum TransparencyClipBoxMode {
   case RootOfTransparencyClipBox
 }
 
-private func transparencyClipBox(
-  layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
-  transparencyBehavior: TransparencyClipBoxBehavior, transparencyMode: TransparencyClipBoxMode,
-  paintBehavior: PaintBehavior = [], paintDirtyRect: LayoutRectWrapper? = nil
-)
-  -> LayoutRectWrapper
-{
+private func expandClipRectForDescendantsAndReflection(
+  clipRect: LayoutRectWrapper, layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
+  transparencyBehavior: TransparencyClipBoxBehavior, paintBehavior: PaintBehavior,
+  paintDirtyRect: LayoutRectWrapper?
+) {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
@@ -143,6 +141,16 @@ class RenderLayerWrapper {
   }
 
   func scrollHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  enum PaginationInclusionMode {
+    case ExcludeCompositedPaginatedLayers
+    case IncludeCompositedPaginatedLayers
+  }
+
+  func enclosingPaginationLayer(mode: PaginationInclusionMode) -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -359,6 +367,32 @@ class RenderLayerWrapper {
         adjustForColumns: adjustForColumns))
   }
 
+  struct CalculateLayerBoundsFlag: OptionSet {
+    let rawValue: UInt16
+
+    static let IncludeSelfTransform = 1
+    static let UseLocalClipRectIfPossible = 2
+    static let IncludeFilterOutsets = 4
+    static let IncludePaintedFilterOutsets = 8
+    static let ExcludeHiddenDescendants = 16
+    static let DontConstrainForMask = 32
+    static let IncludeCompositedDescendants = 64
+    static let UseFragmentBoxesExcludingCompositing = 128
+    static let UseFragmentBoxesIncludingCompositing = 256
+    static let IncludeRootBackgroundPaintingArea = 512
+    static let PreserveAncestorFlags = 1024
+    static let UseLocalClipRectExcludingCompositingIfPossible = 2048
+  }
+
+  // Bounding box relative to some ancestor layer. Pass offsetFromRoot if known.
+  func boundingBox(
+    ancestorLayer: RenderLayerWrapper, offsetFromRoot: LayoutSizeWrapper = LayoutSizeWrapper(),
+    flags: CalculateLayerBoundsFlag = []
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func staticInlinePosition() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
   }
@@ -375,6 +409,11 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
   }
 
+  func isTransformed() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Note that this transform has the transform-origin baked in.
   func transform() -> TransformationMatrix? {
     // TODO(asuhan): implement this
@@ -382,6 +421,11 @@ class RenderLayerWrapper {
   }
 
   func hasTransformedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func filterOutsets() -> IntOutsets {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -411,6 +455,11 @@ class RenderLayerWrapper {
   // be extended to handle other cases.
   func canPaintTransparencyWithSetOpacity() -> Bool {
     return isBitmapOnly() && !hasNonOpacityTransparency()
+  }
+
+  func paintsWithTransform(paintBehavior: PaintBehavior) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func establishesTopLayer() -> Bool {
@@ -698,6 +747,61 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  private static func transparencyClipBox(
+    layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
+    transparencyBehavior: TransparencyClipBoxBehavior, transparencyMode: TransparencyClipBoxMode,
+    paintBehavior: PaintBehavior = [], paintDirtyRect: LayoutRectWrapper? = nil
+  )
+    -> LayoutRectWrapper
+  {
+    // FIXME: Although this function completely ignores CSS-imposed clipping, we did already intersect with the
+    // paintDirtyRect, and that should cut down on the amount we have to paint.  Still it
+    // would be better to respect clips.
+
+    if CPtrToInt(rootLayer?.p) == CPtrToInt(layer.p)
+      && ((transparencyBehavior == .PaintingTransparencyClipBox
+        && layer.paintsWithTransform(paintBehavior: paintBehavior))
+        || (transparencyBehavior == .HitTestingTransparencyClipBox && layer.isTransformed()))
+    {
+      // The best we can do here is to use enclosed bounding boxes to establish a "fuzzy" enough clip to encompass
+      // the transformed layer and all of its children.
+      let mode: PaginationInclusionMode =
+        transparencyBehavior == .HitTestingTransparencyClipBox
+        ? .IncludeCompositedPaginatedLayers : .ExcludeCompositedPaginatedLayers
+      let paginationLayer =
+        transparencyMode == .DescendantsOfTransparencyClipBox
+        ? layer.enclosingPaginationLayer(mode: mode) : nil
+      let rootLayerForTransform = paginationLayer != nil ? paginationLayer : rootLayer
+      let delta = layer.offsetFromAncestor(ancestorLayer: rootLayerForTransform)
+
+      let transform = TransformationMatrix()
+      transform.translate(tx: delta.width().double(), ty: delta.height().double())
+      transform.multiply(mat: layer.transform()!)
+
+      // We don't use fragment boxes when collecting a transformed layer's bounding box, since it always
+      // paints unfragmented.
+      var clipRect = layer.boundingBox(ancestorLayer: layer)
+      expandClipRectForDescendantsAndReflection(
+        clipRect: clipRect, layer: layer, rootLayer: layer,
+        transparencyBehavior: transparencyBehavior, paintBehavior: paintBehavior,
+        paintDirtyRect: paintDirtyRect)
+      clipRect.expand(box: toLayoutBoxExtent(extent: layer.filterOutsets()))
+      var result = transform.mapRect(r: clipRect)
+      if paginationLayer != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else {
+        if let paintDirtyRect = paintDirtyRect {
+          result = intersection(a: result, b: paintDirtyRect)
+        }
+        return result
+      }
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func beginTransparencyLayers(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, dirtyRect: LayoutRectWrapper
   ) {
@@ -721,7 +825,7 @@ class RenderLayerWrapper {
         return
       }
       context.save()
-      var adjustedClipRect = transparencyClipBox(
+      var adjustedClipRect = RenderLayerWrapper.transparencyClipBox(
         layer: self, rootLayer: paintingInfo.rootLayer,
         transparencyBehavior: .PaintingTransparencyClipBox,
         transparencyMode: .RootOfTransparencyClipBox,

@@ -24,4 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class TransformationMatrix {}
+class TransformationMatrix {
+  func mapRect(r: LayoutRectWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // this = mat * this.
+  @discardableResult
+  func multiply(mat: TransformationMatrix) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func translate(tx: Float64, ty: Float64) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
