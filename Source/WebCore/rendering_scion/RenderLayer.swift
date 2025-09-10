@@ -435,6 +435,11 @@ class RenderLayerWrapper {
     return renderer().hasBlendMode()  // FIXME: Why ask the renderer this given we have blendMode?
   }
 
+  func isolatesBlending() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasCompositedMask() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -871,8 +876,26 @@ class RenderLayerWrapper {
   }
 
   private func hasNonOpacityTransparency() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer().hasMask() {
+      return true
+    }
+
+    if hasBlendMode() || isolatesBlending() {
+      return true
+    }
+
+    if !renderer().document().settings().layerBasedSVGEngineEnabled() {
+      return false
+    }
+
+    // SVG clip-paths may use clipping masks, if so, flag this layer as transparent.
+    if let svgClipper = renderer().svgClipperResourceFromStyle(),
+      !svgClipper.shouldApplyPathClipping()
+    {
+      return true
+    }
+
+    return false
   }
 
   private let p: UnsafeMutableRawPointer
