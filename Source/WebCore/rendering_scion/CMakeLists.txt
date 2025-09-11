@@ -54,6 +54,7 @@ target_sources(layout_scion PRIVATE
     RenderObject.swift
     RenderObjectEnums.swift
     RenderReplaced.swift
+    RenderReplica.swift
     RenderSelection.swift
     RenderSlider.swift
     RenderTable.swift

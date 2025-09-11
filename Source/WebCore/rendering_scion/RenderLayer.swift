@@ -127,8 +127,10 @@ class RenderLayerWrapper {
   }
 
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let reflection = reflection {
+      return CPtrToInt(layer.p) == CPtrToInt(reflection.layer()?.p)
+    }
+    return false
   }
 
   func location() -> LayoutPointWrapper {
@@ -954,4 +956,7 @@ class RenderLayerWrapper {
   private var usedTransparency = false
 
   private var blendMode: BlendMode = .Normal
+
+  // May ultimately be extended to many replicas (with their own paint order).
+  let reflection: RenderReplicaWrapper? = nil
 }
