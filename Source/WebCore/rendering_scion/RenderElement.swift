@@ -104,6 +104,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_layoutIfNeeded(p)
   }
 
+  func isTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func opacity() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

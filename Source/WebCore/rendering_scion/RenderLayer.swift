@@ -126,10 +126,7 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
-  func isTransparent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
 
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
     if let reflection = reflection {
