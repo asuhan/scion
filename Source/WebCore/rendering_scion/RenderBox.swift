@@ -154,6 +154,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // Given a rect in the object's coordinate space, returns the corresponding rect in the reflection.
+  func reflectedRect(r: LayoutRectWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }

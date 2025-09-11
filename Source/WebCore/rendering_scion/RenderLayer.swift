@@ -78,15 +78,6 @@ private enum TransparencyClipBoxMode {
   case RootOfTransparencyClipBox
 }
 
-private func expandClipRectForDescendantsAndReflection(
-  clipRect: LayoutRectWrapper, layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
-  transparencyBehavior: TransparencyClipBoxBehavior, paintBehavior: PaintBehavior,
-  paintDirtyRect: LayoutRectWrapper?
-) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
-}
-
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -112,6 +103,16 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func nextSibling() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func firstChild() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
   // Not all stacking contexts are CSS stacking contexts.
   func isStackingContext() -> Bool {
@@ -123,6 +124,11 @@ class RenderLayerWrapper {
   // FIXME: m_forcedStackingContext should affect isStackingContext(), not isCSSStackingContext(), but doing so breaks media control mix-blend-mode.
   func isCSSStackingContext() -> Bool {
     return self.m_isCSSStackingContext || self.forcedStackingContext
+  }
+
+  func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func location() -> LayoutPointWrapper {
@@ -750,6 +756,42 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  private static func expandClipRectForDescendantsAndReflection(
+    clipRect: inout LayoutRectWrapper, layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
+    transparencyBehavior: TransparencyClipBoxBehavior, paintBehavior: PaintBehavior,
+    paintDirtyRect: LayoutRectWrapper?
+  ) {
+    // If we have a mask, then the clip is limited to the border box area (and there is
+    // no need to examine child layers).
+    if !layer.renderer().hasMask() {
+      // Note: we don't have to walk z-order lists since transparent elements always establish
+      // a stacking container. This means we can just walk the layer tree directly.
+      var curr = layer.firstChild()
+      while curr != nil {
+        if !layer.isReflectionLayer(layer: curr!) {
+          clipRect.unite(
+            other:
+              transparencyClipBox(
+                layer: curr!, rootLayer: rootLayer, transparencyBehavior: transparencyBehavior,
+                transparencyMode: .DescendantsOfTransparencyClipBox, paintBehavior: paintBehavior,
+                paintDirtyRect: paintDirtyRect))
+        }
+        curr = curr!.nextSibling()
+      }
+    }
+
+    // If we have a reflection, then we need to account for that when we push the clip.  Reflect our entire
+    // current transparencyClipBox to catch all child layers.
+    // FIXME: Accelerated compositing will eventually want to do something smart here to avoid incorporating this
+    // size into the parent layer.
+    if layer.renderer().isRenderBox() && layer.renderer().hasReflection() {
+      let delta = layer.offsetFromAncestor(ancestorLayer: rootLayer)
+      clipRect.move(size: -delta)
+      clipRect.unite(other: layer.renderBox()!.reflectedRect(r: clipRect))
+      clipRect.move(size: delta)
+    }
+  }
+
   private static func transparencyClipBox(
     layer: RenderLayerWrapper, rootLayer: RenderLayerWrapper?,
     transparencyBehavior: TransparencyClipBoxBehavior, transparencyMode: TransparencyClipBoxMode,
@@ -785,7 +827,7 @@ class RenderLayerWrapper {
       // paints unfragmented.
       var clipRect = layer.boundingBox(ancestorLayer: layer)
       expandClipRectForDescendantsAndReflection(
-        clipRect: clipRect, layer: layer, rootLayer: layer,
+        clipRect: &clipRect, layer: layer, rootLayer: layer,
         transparencyBehavior: transparencyBehavior, paintBehavior: paintBehavior,
         paintDirtyRect: paintDirtyRect)
       clipRect.expand(box: toLayoutBoxExtent(extent: layer.filterOutsets()))
@@ -812,7 +854,7 @@ class RenderLayerWrapper {
       ancestorLayer: rootLayer, offsetFromRoot: layer.offsetFromAncestor(ancestorLayer: rootLayer),
       flags: flags)
     expandClipRectForDescendantsAndReflection(
-      clipRect: clipRect, layer: layer, rootLayer: rootLayer,
+      clipRect: &clipRect, layer: layer, rootLayer: rootLayer,
       transparencyBehavior: transparencyBehavior, paintBehavior: paintBehavior,
       paintDirtyRect: paintDirtyRect)
     clipRect.expand(box: toLayoutBoxExtent(extent: layer.filterOutsets()))

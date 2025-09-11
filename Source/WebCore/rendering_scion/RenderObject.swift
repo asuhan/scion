@@ -164,6 +164,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderBox() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -176,6 +181,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isHorizontalWritingMode() -> Bool {
     return wk_interop.RenderObject_isHorizontalWritingMode(p)
+  }
+
+  func hasReflection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isExcludedFromNormalLayout() -> Bool {
