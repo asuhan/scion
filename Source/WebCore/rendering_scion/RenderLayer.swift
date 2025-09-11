@@ -155,14 +155,21 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func hasCompositedLayerInEnclosingPaginationChain() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum PaginationInclusionMode {
     case ExcludeCompositedPaginatedLayers
     case IncludeCompositedPaginatedLayers
   }
 
   func enclosingPaginationLayer(mode: PaginationInclusionMode) -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if mode == .ExcludeCompositedPaginatedLayers && hasCompositedLayerInEnclosingPaginationChain() {
+      return nil
+    }
+    return m_enclosingPaginationLayer
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
@@ -989,4 +996,7 @@ class RenderLayerWrapper {
 
   // May ultimately be extended to many replicas (with their own paint order).
   let reflection: RenderReplicaWrapper? = nil
+
+  // Pointer to the enclosing RenderLayer that caused us to be paginated. It is 0 if we are not paginated.
+  let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
 }
