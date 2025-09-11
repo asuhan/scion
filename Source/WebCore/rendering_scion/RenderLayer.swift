@@ -126,6 +126,11 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
+  func isTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
     if let reflection = reflection {
       return CPtrToInt(layer.p) == CPtrToInt(reflection.layer()?.p)
@@ -445,7 +450,17 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func isComposited() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasCompositedMask() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintsIntoProvidedBacking() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -754,8 +769,26 @@ class RenderLayerWrapper {
   }
 
   private func transparentPaintingAncestor(info: LayerPaintingInfo) -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(p) == CPtrToInt(info.rootLayer?.p) || isComposited() || paintsIntoProvidedBacking()
+    {
+      return nil
+    }
+    var ancestor = parent()
+    while ancestor != nil {
+      if ancestor!.isStackingContext() {
+        if ancestor!.isComposited() || ancestor!.paintsIntoProvidedBacking() {
+          return nil
+        }
+        if ancestor!.isTransparent() {
+          return ancestor
+        }
+      }
+      if CPtrToInt(ancestor?.p) == CPtrToInt(info.rootLayer?.p) {
+        return nil
+      }
+      ancestor = ancestor!.parent()
+    }
+    return nil
   }
 
   private static func expandClipRectForDescendantsAndReflection(
