@@ -1137,8 +1137,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     var localPaintOffset = paintOffset
 
     localPaintOffset.move(dx: 0, dy: style.isHorizontalWritingMode() ? 0 : -logicalRect.height())
-    let visualRect = textBox.visualRectIgnoringBlockDirection()
-    textBox.formattingContextRoot().flipForWritingMode(rect: visualRect)
+    var visualRect = textBox.visualRectIgnoringBlockDirection()
+    textBox.formattingContextRoot().flipForWritingMode(rect: &visualRect)
 
     var boxOrigin = visualRect.location()
     boxOrigin.moveBy(a: localPaintOffset.FloatPoint())

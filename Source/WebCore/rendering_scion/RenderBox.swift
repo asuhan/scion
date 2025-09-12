@@ -91,6 +91,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func layoutOverflowRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func visualOverflowRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -239,12 +244,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func flipForWritingMode(rect: LayoutRectWrapper) {
+  func flipForWritingMode(rect: inout LayoutRectWrapper) {
     wk_interop.RenderBox_flipForWritingMode(
       p, LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
   }
 
-  func flipForWritingMode(rect: FloatRectWrapper) {
+  func flipForWritingMode(rect: inout FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

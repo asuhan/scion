@@ -141,8 +141,8 @@ extension LayoutIntegration {
     }
 
     private func boxHasDamage(box: InlineDisplay.Box) -> Bool {
-      let rect = enclosingLayoutRect(rect: box.inkOverflow)
-      root().flipForWritingMode(rect: rect)
+      var rect = enclosingLayoutRect(rect: box.inkOverflow)
+      root().flipForWritingMode(rect: &rect)
       // FIXME: This should test for intersection but horizontal ink overflow is miscomputed in a few cases (like with negative letter-spacing).
       return damageRect.maxY() > rect.y() && damageRect.y() < rect.maxY()
     }

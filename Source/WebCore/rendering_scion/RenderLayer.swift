@@ -146,8 +146,14 @@ class RenderLayerWrapper {
   }
 
   func scrollWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollableArea = m_scrollableArea {
+      return scrollableArea.scrollWidth()
+    }
+
+    let box = renderBox()!
+    var overflowRect = box.layoutOverflowRect()
+    box.flipForWritingMode(rect: &overflowRect)
+    return Int32(roundToInt(value: overflowRect.maxX() - overflowRect.x()))
   }
 
   func scrollHeight() -> Int32 {
@@ -1038,4 +1044,6 @@ class RenderLayerWrapper {
 
   // Pointer to the enclosing RenderLayer that caused us to be paginated. It is 0 if we are not paginated.
   let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
+
+  let m_scrollableArea: RenderLayerScrollableArea? = nil
 }

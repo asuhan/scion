@@ -105,7 +105,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     var overflowBox = visualOverflowRect()
-    flipForWritingMode(rect: overflowBox)
+    flipForWritingMode(rect: &overflowBox)
     overflowBox.moveBy(offset: adjustedPaintOffset)
     return !overflowBox.intersects(other: paintInfo.rect)
   }

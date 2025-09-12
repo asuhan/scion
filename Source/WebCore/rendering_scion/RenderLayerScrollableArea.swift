@@ -45,6 +45,11 @@
  */
 
 final class RenderLayerScrollableArea: ScrollableAreaWrapper {
+  func scrollWidth() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOverflowControls(
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect,
     paintingOverlayControls: Bool = false
