@@ -181,8 +181,21 @@ class RenderLayerWrapper {
       return true
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For normal flow layers, we can recur up the layer tree.
+    if isNormalFlowOnly {
+      return parent()!.hasCompositedLayerInEnclosingPaginationChain()
+    }
+
+    // Otherwise we have to go up the containing block chain. Find the first enclosing
+    // containing block layer ancestor, and check that.
+    var containingBlock = renderer().containingBlock()
+    while containingBlock != nil && containingBlock is RenderViewWrapper {
+      if containingBlock!.hasLayer() {
+        return containingBlock!.layer()!.hasCompositedLayerInEnclosingPaginationChain()
+      }
+      containingBlock = containingBlock!.containingBlock()
+    }
+    return false
   }
 
   enum PaginationInclusionMode {
@@ -1008,9 +1021,10 @@ class RenderLayerWrapper {
 
   var isRenderViewLayer = false
   private var forcedStackingContext = false
-  private var isOpportunisticStackingContext = false
 
+  private var isNormalFlowOnly = false
   private var m_isCSSStackingContext = false
+  private var isOpportunisticStackingContext = false
 
   // Tracks whether we need to close a transparent layer, i.e., whether
   // we ended up painting this layer or any descendants (and therefore need to
