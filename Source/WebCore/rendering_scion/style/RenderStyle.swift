@@ -251,6 +251,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasOutline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overflowX() -> Overflow {
     if p == nil {
       fatalError("Not implemented")

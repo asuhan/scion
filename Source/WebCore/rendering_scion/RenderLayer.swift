@@ -78,6 +78,10 @@ private enum TransparencyClipBoxMode {
   case RootOfTransparencyClipBox
 }
 
+private func hasVisibleBoxDecorationsOrBackground(renderer: RenderElementWrapper) -> Bool {
+  return renderer.hasVisibleBoxDecorations() || renderer.style().hasOutline()
+}
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -223,8 +227,7 @@ class RenderLayerWrapper {
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return layout_scion.hasVisibleBoxDecorationsOrBackground(renderer: renderer())
   }
 
   func ancestorLayerIsInContainingBlockChain(
