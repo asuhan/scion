@@ -155,7 +155,32 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: This is terrible. Bring back a cached bit for this someday. This crawl is going to slow down all
+  // painting of content inside paginated layers.
   func hasCompositedLayerInEnclosingPaginationChain() -> Bool {
+    // No enclosing layer means no compositing in the chain.
+    if m_enclosingPaginationLayer == nil {
+      return false
+    }
+
+    // If the enclosing layer is composited, we don't have to check anything in between us and that
+    // layer.
+    if m_enclosingPaginationLayer!.isComposited() {
+      return true
+    }
+
+    // If we are the enclosing pagination layer, then we can't be composited or we'd have passed the
+    // previous check.
+    if CPtrToInt(m_enclosingPaginationLayer?.p) == CPtrToInt(p) {
+      return false
+    }
+
+    // The enclosing paginated layer is our ancestor and is not composited, so we have to check
+    // intermediate layers between us and the enclosing pagination layer. Start with our own layer.
+    if isComposited() {
+      return true
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
