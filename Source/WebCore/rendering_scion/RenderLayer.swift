@@ -157,8 +157,14 @@ class RenderLayerWrapper {
   }
 
   func scrollHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollableArea = m_scrollableArea {
+      return scrollableArea.scrollHeight()
+    }
+
+    let box = renderBox()!
+    var overflowRect = box.layoutOverflowRect()
+    box.flipForWritingMode(rect: &overflowRect)
+    return Int32(roundToInt(value: overflowRect.maxY() - overflowRect.y()))
   }
 
   // FIXME: This is terrible. Bring back a cached bit for this someday. This crawl is going to slow down all
