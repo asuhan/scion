@@ -541,8 +541,9 @@ class RenderLayerWrapper {
   }
 
   func paintsWithTransform(paintBehavior: PaintBehavior) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
+    return transform() != nil
+      && (paintBehavior.contains(.FlattenCompositingLayers) || paintsToWindow)
   }
 
   func establishesTopLayer() -> Bool {
@@ -1053,6 +1054,8 @@ class RenderLayerWrapper {
 
   // Pointer to the enclosing RenderLayer that caused us to be paginated. It is 0 if we are not paginated.
   let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
+
+  let backing: RenderLayerBacking? = nil
 
   let m_scrollableArea: RenderLayerScrollableArea? = nil
 }
