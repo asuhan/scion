@@ -107,6 +107,10 @@ struct LayoutUnit: Comparable {
     return a.toFloat() - b
   }
 
+  static func - (a: Int32, b: LayoutUnit) -> LayoutUnit {
+    return LayoutUnit(value: a) - b
+  }
+
   static func / (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
     let rawVal = Int64(kFixedPointDenominator) * Int64(a.rawValue()) / Int64(b.rawValue())
     return fromRawValue(value: clampTo<Int32>(value: rawVal))

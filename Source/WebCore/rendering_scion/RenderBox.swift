@@ -232,6 +232,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func maskClipRect(paintOffset: LayoutPointWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markForPaginationRelayoutIfNeeded() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

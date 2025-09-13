@@ -493,8 +493,24 @@ class RenderLayerWrapper {
         cell = cell!.nextCell()
       }
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let box = renderBox()!
+      if !flags.contains(.DontConstrainForMask) && box.hasMask() {
+        result = box.maskClipRect(paintOffset: LayoutPointWrapper())
+        box.flipForWritingMode(rect: &result)  // The mask clip rect is in physical coordinates, so we have to flip, since localBoundingBox is not.
+      } else {
+        result = box.visualOverflowRect()
+      }
+
+      if flags.contains(.IncludeRootBackgroundPaintingArea)
+        && renderer().isDocumentElementRenderer()
+      {
+        // If the root layer becomes composited (e.g. because some descendant with negative z-index is composited),
+        // then it has to be big enough to cover the viewport in order to display the background. This is akin
+        // to the code in RenderBox::paintRootBoxFillLayers().
+        let frameView = renderer().view().frameView()
+        result.setWidth(width: max(result.width(), frameView.contentsWidth() - result.x()))
+        result.setHeight(height: max(result.height(), frameView.contentsHeight() - result.y()))
+      }
     }
     return result
   }
