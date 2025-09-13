@@ -528,8 +528,10 @@ class RenderLayerWrapper {
   }
 
   func paintsWithTransparency(paintBehavior: PaintBehavior) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().isTransparent() && !hasNonOpacityTransparency() {
+      return false
+    }
+    return paintBehavior.contains(.FlattenCompositingLayers) || !isComposited()
   }
 
   // If we will only draw a single item, then we can just apply
