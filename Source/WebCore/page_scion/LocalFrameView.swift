@@ -70,5 +70,10 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func hasFlippedBlockRenderers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var p: UnsafeRawPointer
 }

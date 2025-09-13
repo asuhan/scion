@@ -460,6 +460,15 @@ class RenderLayerWrapper {
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper = LayoutSizeWrapper(),
     flags: CalculateLayerBoundsFlag = []
   ) -> LayoutRectWrapper {
+    var result = localBoundingBox(flags: flags)
+    if renderer().view().frameView().hasFlippedBlockRenderers() {
+      if renderer().isRenderBox() {
+        renderBox()!.flipForWritingMode(rect: &result)
+      } else {
+        renderer().containingBlock()!.flipForWritingMode(rect: &result)
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
