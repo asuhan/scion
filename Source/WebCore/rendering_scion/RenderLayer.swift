@@ -240,8 +240,18 @@ class RenderLayerWrapper {
   // Gets the nearest enclosing positioned ancestor layer (also includes
   // the <html> layer and the root layer).
   func enclosingAncestorForPosition(position: PositionType) -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var curr = parent()
+    while curr != nil
+      && !isContainerForPositioned(
+        layer: curr!, position: position, establishesTopLayer: establishesTopLayer())
+    {
+      curr = curr!.parent()
+    }
+
+    if establishesTopLayer() {
+      assert(curr == nil || CPtrToInt(curr!.p) == CPtrToInt(renderer().view().layer()!.p))
+    }
+    return curr
   }
 
   enum ColumnOffsetAdjustment {
