@@ -506,14 +506,13 @@ class RenderLayerWrapper {
     return hasNotIsolatedBlendingDescendants && isCSSStackingContext()
   }
 
-  func isComposited() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isComposited() -> Bool { return backing != nil }
 
   func hasCompositedMask() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let backing = backing {
+      return backing.hasMaskLayer()
+    }
+    return false
   }
 
   func paintsIntoProvidedBacking() -> Bool {

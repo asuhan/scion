@@ -30,6 +30,11 @@
 // There is one RenderLayerBacking for each RenderLayer that is composited.
 
 final class RenderLayerBacking: GraphicsLayerClientWrapper {
+  func hasMaskLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // RenderLayers with backing normally short-circuit paintLayer() because
   // their content is rendered via callbacks from GraphicsLayer. However, the document
   // layer is special, because it has a GraphicsLayer to act as a container for the GraphicsLayers
