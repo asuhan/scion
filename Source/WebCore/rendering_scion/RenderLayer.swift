@@ -503,8 +503,7 @@ class RenderLayerWrapper {
   }
 
   func isolatesBlending() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasNotIsolatedBlendingDescendants && isCSSStackingContext()
   }
 
   func isComposited() -> Bool {
@@ -1050,6 +1049,7 @@ class RenderLayerWrapper {
   private var usedTransparency = false
 
   private var blendMode: BlendMode = .Normal
+  private var hasNotIsolatedBlendingDescendants = false
 
   // May ultimately be extended to many replicas (with their own paint order).
   let reflection: RenderReplicaWrapper? = nil
