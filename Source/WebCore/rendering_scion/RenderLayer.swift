@@ -469,8 +469,41 @@ class RenderLayerWrapper {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var inclusionMode: PaginationInclusionMode = .ExcludeCompositedPaginatedLayers
+    if flags.contains(.UseFragmentBoxesIncludingCompositing) {
+      inclusionMode = .IncludeCompositedPaginatedLayers
+    }
+
+    var paginationLayer: RenderLayerWrapper? = nil
+    if flags.contains(.UseFragmentBoxesExcludingCompositing)
+      || flags.contains(.UseFragmentBoxesIncludingCompositing)
+    {
+      paginationLayer = enclosingPaginationLayerInSubtree(
+        rootLayer: ancestorLayer, mode: inclusionMode)
+    }
+
+    var childLayer: RenderLayerWrapper = self
+    let isPaginated = paginationLayer != nil
+    while paginationLayer != nil {
+      // Split our box up into the actual fragment boxes that render in the columns/pages and unite those together to
+      // get our true bounding box.
+      result.move(size: childLayer.offsetFromAncestor(ancestorLayer: paginationLayer))
+
+      let enclosingFragmentedFlow = paginationLayer!.renderer() as! RenderFragmentedFlowWrapper
+      result = enclosingFragmentedFlow.fragmentsBoundingBox(layerBoundingBox: result)
+
+      childLayer = paginationLayer!
+      paginationLayer = paginationLayer!.parent()!.enclosingPaginationLayerInSubtree(
+        rootLayer: ancestorLayer, mode: inclusionMode)
+    }
+
+    if isPaginated {
+      result.move(size: childLayer.offsetFromAncestor(ancestorLayer: ancestorLayer))
+      return result
+    }
+
+    result.move(size: offsetFromRoot)
+    return result
   }
 
   // Bounding box in the coordinates of this layer.
@@ -732,6 +765,13 @@ class RenderLayerWrapper {
         layer = layer!.parent()
       }
     }
+  }
+
+  private func enclosingPaginationLayerInSubtree(
+    rootLayer: RenderLayerWrapper?, mode: PaginationInclusionMode
+  ) -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func rendererLocation() -> LayoutPointWrapper {
