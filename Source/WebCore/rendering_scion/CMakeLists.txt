@@ -30,6 +30,7 @@ target_sources(layout_scion PRIVATE
     RenderCombineText.swift
     RegionContext.swift
     RenderDeprecatedFlexibleBox.swift
+    RenderLayerFilters.swift
     RenderElement.swift
     RenderFlexibleBox.swift
     RenderFragmentContainer.swift

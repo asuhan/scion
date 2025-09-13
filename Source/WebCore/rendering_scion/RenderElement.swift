@@ -124,6 +124,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasClipPath() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasOutline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

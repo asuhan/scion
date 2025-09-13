@@ -40,6 +40,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func printing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setBestTruncatedAt(
     y: Int32, forRenderer: RenderBoxModelObjectWrapper, forcedBreak: Bool = false
   ) {
@@ -63,6 +68,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func rootElementShouldPaintBaseBackground() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasRenderersWithOutline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

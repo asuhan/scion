@@ -130,6 +130,12 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
+  // Update our normal and z-index lists.
+  func updateLayerListsIfNeeded() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
 
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
@@ -672,6 +678,11 @@ class RenderLayerWrapper {
       && (paintBehavior.contains(.FlattenCompositingLayers) || paintsToWindow)
   }
 
+  func shouldApplyClipPath(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func establishesTopLayer() -> Bool {
     return isInTopLayerOrBackdrop(style: renderer().style(), element: renderer().element())
   }
@@ -839,6 +850,27 @@ class RenderLayerWrapper {
     return LayoutPointWrapper()
   }
 
+  private func setupFontSubpixelQuantization(context: GraphicsContextWrapper) -> (Bool, Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setupClipPath(
+    context: GraphicsContextWrapper, stateSaver: GraphicsContextStateSaver,
+    regionContextStateSaver: RegionContextStateSaver, paintingInfo: LayerPaintingInfo,
+    paintFlags: PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
+    -> RenderLayerFilters?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintLayerContents(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
@@ -848,6 +880,92 @@ class RenderLayerWrapper {
       return
     }
 
+    let localPaintFlags = paintFlags.subtracting(.AppliedTransform)
+
+    let haveTransparency = localPaintFlags.contains(.HaveTransparency)
+    let isPaintingOverlayScrollbars = localPaintFlags.contains(.PaintingOverlayScrollbars)
+    let isPaintingScrollingContent = localPaintFlags.contains(.PaintingCompositingScrollingPhase)
+    let isPaintingCompositedForeground = localPaintFlags.contains(
+      .PaintingCompositingForegroundPhase)
+    let isPaintingCompositedBackground = localPaintFlags.contains(
+      .PaintingCompositingBackgroundPhase)
+    let /*isPaintingOverflowContents*/ _ = localPaintFlags.contains(.PaintingOverflowContents)
+    let isCollectingEventRegion = localPaintFlags.contains(.CollectingEventRegion)
+    let isCollectingAccessibilityRegion = paintingInfo.regionContext is AccessibilityRegionContext
+
+    let isSelfPaintingLayer = self.isSelfPaintingLayer
+
+    // Outline always needs to be painted even if we have no visible content. Also,
+    // the outline is painted in the background phase during composited scrolling.
+    // If it were painted in the foreground phase, it would move with the scrolled
+    // content. When not composited scrolling, the outline is painted in the
+    // foreground phase. Since scrolled contents are moved by repainting in this
+    // case, the outline won't get 'dragged along'.
+    let /*shouldPaintOutline*/ _ =
+      isSelfPaintingLayer && !isPaintingOverlayScrollbars && !isCollectingEventRegion
+      && !isCollectingAccessibilityRegion
+      && (renderer().view().printing() || renderer().view().hasRenderersWithOutline())
+      && ((isPaintingScrollingContent && isPaintingCompositedBackground)
+        || (!isPaintingScrollingContent && isPaintingCompositedForeground))
+
+    let /*shouldPaintContent*/ _ =
+      paintLayerHasVisibleContent() && isSelfPaintingLayer && !isPaintingOverlayScrollbars
+      && !isCollectingEventRegion && !isCollectingAccessibilityRegion
+
+    if localPaintFlags.contains(.PaintingRootBackgroundOnly) && !renderer().isRenderView()
+      && !renderer().isDocumentElementRenderer()
+    {
+      // If beginTransparencyLayers was called prior to this, ensure the transparency state is cleaned up before returning.
+      if haveTransparency && usedTransparency && !paintingInsideReflection {
+        if let savedAlphaForTransparency = self.savedAlphaForTransparency {
+          context.setAlpha(alpha: savedAlphaForTransparency)
+          self.savedAlphaForTransparency = nil
+        } else {
+          context.endTransparencyLayer()
+          context.restore()
+        }
+        usedTransparency = false
+      }
+
+      return
+    }
+
+    updateLayerListsIfNeeded()
+
+    let offsetFromRoot = offsetFromAncestor(ancestorLayer: paintingInfo.rootLayer)
+
+    // FIXME: We shouldn't have to disable subpixel quantization for overflow clips or subframes once we scroll those
+    // things on the scrolling thread.
+    let /*(needToAdjustSubpixelQuantization, didQuantizeFonts)*/ _ = setupFontSubpixelQuantization(
+      context: context)
+
+    // Apply clip-path to context.
+    var columnAwareOffsetFromRoot = offsetFromRoot
+    if renderer().enclosingFragmentedFlow() != nil
+      && (renderer().hasClipPath()
+        || filtersForPainting(context: context, paintFlags: paintFlags) != nil)
+    {
+      columnAwareOffsetFromRoot = toLayoutSize(
+        point: convertToLayerCoords(
+          ancestorLayer: paintingInfo.rootLayer, location: LayoutPointWrapper(),
+          adjustForColumns: .AdjustForColumns))
+    }
+
+    let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+    let regionContextStateSaver = RegionContextStateSaver(context: paintingInfo.regionContext)
+
+    if shouldApplyClipPath(paintBehavior: paintingInfo.paintBehavior, paintFlags: localPaintFlags) {
+      setupClipPath(
+        context: context, stateSaver: stateSaver, regionContextStateSaver: regionContextStateSaver,
+        paintingInfo: paintingInfo, paintFlags: localPaintFlags,
+        offsetFromRoot: columnAwareOffsetFromRoot)
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintLayerHasVisibleContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1220,6 +1338,7 @@ class RenderLayerWrapper {
   // we ended up painting this layer or any descendants (and therefore need to
   // blend).
   private var usedTransparency = false
+  private let paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
 
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
