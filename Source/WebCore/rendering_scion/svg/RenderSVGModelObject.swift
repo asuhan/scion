@@ -34,4 +34,9 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func visualOverflowRectEquivalent() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

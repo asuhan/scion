@@ -60,6 +60,7 @@ target_sources(layout_scion PRIVATE
     RenderSlider.swift
     RenderTable.swift
     RenderTableCell.swift
+    RenderTableRow.swift
     RenderText.swift
     RenderTheme.swift
     RenderView.swift
