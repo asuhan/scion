@@ -770,8 +770,30 @@ class RenderLayerWrapper {
   private func enclosingPaginationLayerInSubtree(
     rootLayer: RenderLayerWrapper?, mode: PaginationInclusionMode
   ) -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we don't have an enclosing layer, or if the root layer is the same as the enclosing layer,
+    // then just return the enclosing pagination layer (it will be 0 in the former case and the rootLayer in the latter case).
+    let paginationLayer = enclosingPaginationLayer(mode: mode)
+    if paginationLayer == nil || CPtrToInt(rootLayer?.p) == CPtrToInt(paginationLayer!.p) {
+      return paginationLayer
+    }
+
+    // Walk up the layer tree and see which layer we hit first. If it's the root, then the enclosing pagination
+    // layer isn't in our subtree and we return nullptr. If we hit the enclosing pagination layer first, then
+    // we can return it.
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if CPtrToInt(layer!.p) == CPtrToInt(rootLayer?.p) {
+        return nil
+      }
+      if CPtrToInt(layer!.p) == CPtrToInt(paginationLayer?.p) {
+        return paginationLayer
+      }
+      layer = layer!.parent()
+    }
+
+    // This should never be reached, since an enclosing layer should always either be the rootLayer or be
+    // our enclosing pagination layer.
+    fatalError("Not reached")
   }
 
   private func rendererLocation() -> LayoutPointWrapper {
