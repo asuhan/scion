@@ -447,6 +447,29 @@ class RenderLayerWrapper {
         adjustForColumns: adjustForColumns))
   }
 
+  struct PaintLayerFlag: OptionSet {
+    let rawValue: UInt32
+
+    static let HaveTransparency = PaintLayerFlag(rawValue: 1)
+    static let AppliedTransform = PaintLayerFlag(rawValue: 2)
+    static let TemporaryClipRects = PaintLayerFlag(rawValue: 4)
+    static let PaintingReflection = PaintLayerFlag(rawValue: 8)
+    static let PaintingOverlayScrollbars = PaintLayerFlag(rawValue: 16)
+    static let PaintingCompositingBackgroundPhase = PaintLayerFlag(rawValue: 32)
+    static let PaintingCompositingForegroundPhase = PaintLayerFlag(rawValue: 64)
+    static let PaintingCompositingMaskPhase = PaintLayerFlag(rawValue: 128)
+    static let PaintingCompositingClipPathPhase = PaintLayerFlag(rawValue: 256)
+    static let PaintingCompositingScrollingPhase = PaintLayerFlag(rawValue: 512)
+    static let PaintingOverflowContents = PaintLayerFlag(rawValue: 1024)
+    static let PaintingRootBackgroundOnly = PaintLayerFlag(rawValue: 2048)
+    static let PaintingSkipRootBackground = PaintLayerFlag(rawValue: 4096)
+    static let PaintingChildClippingMaskPhase = PaintLayerFlag(rawValue: 8192)
+    static let PaintingSVGClippingMask = PaintLayerFlag(rawValue: 16384)
+    static let CollectingEventRegion = PaintLayerFlag(rawValue: 32768)
+    static let PaintingSkipDescendantViewTransition = PaintLayerFlag(rawValue: 65536)
+
+  }
+
   struct CalculateLayerBoundsFlag: OptionSet {
     let rawValue: UInt16
 
@@ -816,6 +839,19 @@ class RenderLayerWrapper {
     return LayoutPointWrapper()
   }
 
+  private func paintLayerContents(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
+  ) {
+    assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
+
+    if context.detectingContentfulPaint() && context.contentfulPaintDetected() {
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintForegroundForFragments(
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     contextForTransparencyLayer: GraphicsContextWrapper,
@@ -1173,6 +1209,12 @@ class RenderLayerWrapper {
   private var isNormalFlowOnly = false
   private var m_isCSSStackingContext = false
   private var isOpportunisticStackingContext = false
+
+  private let isSelfPaintingLayer = false
+
+  // If have no self-painting descendants, we don't have to walk our children during painting. This can lead to
+  // significant savings, especially if the tree has lots of non-self-painting layers grouped together (e.g. table cells).
+  private let hasSelfPaintingLayerDescendant = false
 
   // Tracks whether we need to close a transparent layer, i.e., whether
   // we ended up painting this layer or any descendants (and therefore need to
