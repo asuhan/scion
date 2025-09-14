@@ -92,6 +92,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func page() -> PageWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func renderer() -> RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -880,7 +885,7 @@ class RenderLayerWrapper {
       return
     }
 
-    let localPaintFlags = paintFlags.subtracting(.AppliedTransform)
+    var localPaintFlags = paintFlags.subtracting(.AppliedTransform)
 
     let haveTransparency = localPaintFlags.contains(.HaveTransparency)
     let isPaintingOverlayScrollbars = localPaintFlags.contains(.PaintingOverlayScrollbars)
@@ -908,7 +913,7 @@ class RenderLayerWrapper {
       && ((isPaintingScrollingContent && isPaintingCompositedBackground)
         || (!isPaintingScrollingContent && isPaintingCompositedForeground))
 
-    let /*shouldPaintContent*/ _ =
+    let shouldPaintContent =
       paintLayerHasVisibleContent() && isSelfPaintingLayer && !isPaintingOverlayScrollbars
       && !isCollectingEventRegion && !isCollectingAccessibilityRegion
 
@@ -959,6 +964,22 @@ class RenderLayerWrapper {
         context: context, stateSaver: stateSaver, regionContextStateSaver: regionContextStateSaver,
         paintingInfo: paintingInfo, paintFlags: localPaintFlags,
         offsetFromRoot: columnAwareOffsetFromRoot)
+    }
+
+    let applySVGClippingMask = localPaintFlags.contains(.PaintingSVGClippingMask)
+    if applySVGClippingMask {
+      localPaintFlags.remove(.PaintingSVGClippingMask)
+    }
+
+    let selectionAndBackgroundsOnly = paintingInfo.paintBehavior.contains(
+      .SelectionAndBackgroundsOnly)
+    let selectionOnly = paintingInfo.paintBehavior.contains(.SelectionOnly)
+
+    paintFrequencyTracker.track(timestamp: page().lastRenderingUpdateTimestamp())
+
+    if shouldPaintContent && !(selectionOnly || selectionAndBackgroundsOnly) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     // TODO(asuhan): implement this
@@ -1352,4 +1373,6 @@ class RenderLayerWrapper {
   let backing: RenderLayerBacking? = nil
 
   let m_scrollableArea: RenderLayerScrollableArea? = nil
+
+  let paintFrequencyTracker = PaintFrequencyTracker()
 }

@@ -33,4 +33,9 @@ class PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func lastRenderingUpdateTimestamp() -> MonotonicTime {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

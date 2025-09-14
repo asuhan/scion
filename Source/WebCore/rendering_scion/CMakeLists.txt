@@ -13,6 +13,8 @@ target_sources(layout_scion PRIVATE
     LegacyInlineTextBox.swift
     LegacyLineLayout.swift
     MarkedText.swift
+    OverlapTestRequestClient.swift
+    PaintFrequencyTracker.swift
     PaintInfo.swift
     PaintPhase.swift
     AccessibilityRegionContext.swift
