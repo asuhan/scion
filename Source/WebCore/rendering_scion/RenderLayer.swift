@@ -1164,23 +1164,34 @@ class RenderLayerWrapper {
       }
 
       if isPaintingCompositedForeground {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        if shouldPaintContent {
+          paintForegroundForFragments(
+            layerFragments: layerFragments, context: currentContext,
+            contextForTransparencyLayer: context,
+            transparencyPaintDirtyRect: paintingInfo.paintDirtyRect,
+            haveTransparency: haveTransparency,
+            localPaintingInfo: localPaintingInfo, paintBehavior: paintBehavior,
+            subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+        }
       }
 
       if isCollectingEventRegion {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        collectEventRegionForFragments(
+          layerFragments: layerFragments, context: currentContext,
+          localPaintingInfo: localPaintingInfo, paintBehavior: paintBehavior)
       }
 
       if isCollectingAccessibilityRegion {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        collectAccessibilityRegionsForFragments(
+          layerFragments: layerFragments, context: currentContext,
+          localPaintingInfo: localPaintingInfo, paintBehavior: paintBehavior)
       }
 
       if shouldPaintOutline {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        paintOutlineForFragments(
+          layerFragments: layerFragments, context: currentContext,
+          localPaintingInfo: localPaintingInfo, paintBehavior: paintBehavior,
+          subtreePaintRootForRenderer: subtreePaintRootForRenderer)
       }
 
       if isPaintingCompositedForeground {
@@ -1398,9 +1409,34 @@ class RenderLayerWrapper {
     }
   }
 
+  private func paintOutlineForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
+    subtreePaintRootForRenderer: RenderObjectWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintOverflowControlsForFragments(
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collectEventRegionForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collectAccessibilityRegionsForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
