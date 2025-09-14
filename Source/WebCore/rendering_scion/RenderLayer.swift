@@ -744,6 +744,11 @@ class RenderLayerWrapper {
       && (paintBehavior.contains(.FlattenCompositingLayers) || paintsToWindow)
   }
 
+  func shouldPaintMask(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldApplyClipPath(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1240,8 +1245,29 @@ class RenderLayerWrapper {
     }
 
     if shouldPaintContent && !(selectionOnly || selectionAndBackgroundsOnly) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if shouldPaintMask(paintBehavior: paintingInfo.paintBehavior, paintFlags: localPaintFlags) {
+        // Paint the mask for the fragments.
+        paintMaskForFragments(
+          layerFragments: layerFragments, context: context, localPaintingInfo: paintingInfo,
+          paintBehavior: paintBehavior, subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+      }
+
+      if applySVGClippingMask
+        || (!paintFlags.contains(.PaintingCompositingMaskPhase)
+          && paintFlags.contains(.PaintingCompositingClipPathPhase))
+      {
+        // Re-use paintChildClippingMaskForFragments to paint black for the compositing clipping mask.
+        paintChildClippingMaskForFragments(
+          layerFragments: layerFragments, context: context, localPaintingInfo: paintingInfo,
+          paintBehavior: paintBehavior, subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+      }
+
+      if localPaintFlags.contains(.PaintingChildClippingMaskPhase) {
+        // Paint the border radius mask for the fragments.
+        paintChildClippingMaskForFragments(
+          layerFragments: layerFragments, context: context, localPaintingInfo: paintingInfo,
+          paintBehavior: paintBehavior, subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+      }
     }
 
     // End our transparency layer
@@ -1447,6 +1473,24 @@ class RenderLayerWrapper {
   private func paintOverflowControlsForFragments(
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintMaskForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
+    subtreePaintRootForRenderer: RenderObjectWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintChildClippingMaskForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
+    subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
