@@ -134,6 +134,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setDrawLuminanceMask(drawLuminanceMask: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

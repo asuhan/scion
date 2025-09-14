@@ -941,7 +941,7 @@ class RenderLayerWrapper {
 
     // FIXME: We shouldn't have to disable subpixel quantization for overflow clips or subframes once we scroll those
     // things on the scrolling thread.
-    let /*(needToAdjustSubpixelQuantization, didQuantizeFonts)*/ _ = setupFontSubpixelQuantization(
+    let (needToAdjustSubpixelQuantization, didQuantizeFonts) = setupFontSubpixelQuantization(
       context: context)
 
     // Apply clip-path to context.
@@ -982,8 +982,16 @@ class RenderLayerWrapper {
       fatalError("Not implemented")
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // End our transparency layer
+    if haveTransparency && usedTransparency && !paintingInsideReflection {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // Re-set this to whatever it was before we painted the layer.
+    if needToAdjustSubpixelQuantization {
+      context.setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts: didQuantizeFonts)
+    }
   }
 
   private func paintLayerHasVisibleContent() -> Bool {
