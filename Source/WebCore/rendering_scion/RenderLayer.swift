@@ -49,6 +49,20 @@ private enum BorderRadiusClippingRule {
   case DoNotIncludeSelfForBorderRadius
 }
 
+enum ClipRectsType {
+  case PaintingClipRects  // Relative to painting ancestor. Used for painting.
+  case RootRelativeClipRects  // Relative to the ancestor treated as the root (e.g. transformed layer). Used for hit testing.
+  case AbsoluteClipRects  // Relative to the RenderView's layer. Used for compositing overlap testing.
+  case NumCachedClipRectsTypes
+  case AllClipRectTypes
+  case TemporaryClipRects
+}
+
+enum ShouldApplyRootOffsetToFragments {
+  case ApplyRootOffsetToFragments
+  case IgnoreRootOffsetForFragments
+}
+
 private func isContainerForPositioned(
   layer: RenderLayerWrapper, position: PositionType, establishesTopLayer: Bool
 ) -> Bool {
@@ -66,6 +80,14 @@ private func isContainerForPositioned(
   default:
     fatalError("Not reached")
   }
+}
+
+private func performOverlapTests(
+  overlapTestRequests: OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
+  layer: RenderLayerWrapper?
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 private enum TransparencyClipBoxBehavior {
@@ -481,6 +503,28 @@ class RenderLayerWrapper {
 
   }
 
+  struct ClipRectsOption: OptionSet {
+    let rawValue: UInt8
+
+    static let RespectOverflowClip = ClipRectsOption(rawValue: 1 << 0)
+    static let IncludeOverlayScrollbarSize = ClipRectsOption(rawValue: 1 << 1)
+  }
+
+  static let clipRectOptionsForPaintingOverflowControls: ClipRectsOption = []
+  static let clipRectDefaultOptions: ClipRectsOption = [.RespectOverflowClip]
+
+  // Public just for RenderTreeAsText.
+  func collectFragments(
+    fragments: inout LayerFragments, rootLayer: RenderLayerWrapper?, dirtyRect: LayoutRectWrapper,
+    inclusionMode: PaginationInclusionMode, clipRectsType: ClipRectsType,
+    clipRectOptions: ClipRectsOption, offsetFromRoot: LayoutSizeWrapper,
+    layerBoundingBox: LayoutRectWrapper? = nil,
+    applyRootOffsetToFragments: ShouldApplyRootOffsetToFragments = .IgnoreRootOffsetForFragments
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct CalculateLayerBoundsFlag: OptionSet {
     let rawValue: UInt16
 
@@ -740,7 +784,7 @@ class RenderLayerWrapper {
     let paintDirtyRect: LayoutRectWrapper  // Relative to rootLayer;
     let subpixelOffset: LayoutSizeWrapper
     let overlapTestRequests: OverlapTestRequestMap?
-    let paintBehavior: PaintBehavior
+    var paintBehavior: PaintBehavior
     let requireSecurityOriginAccessForWidgets: Bool
     let clipToDirtyRect: Bool = true
     let regionContext: RegionContext? = nil
@@ -876,6 +920,14 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  private func setupFilters(
+    destinationContext: GraphicsContextWrapper, paintingInfo: inout LayerPaintingInfo,
+    paintFlags: PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper, backgroundRect: ClipRect
+  ) -> GraphicsContextWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintLayerContents(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
@@ -894,7 +946,7 @@ class RenderLayerWrapper {
       .PaintingCompositingForegroundPhase)
     let isPaintingCompositedBackground = localPaintFlags.contains(
       .PaintingCompositingBackgroundPhase)
-    let /*isPaintingOverflowContents*/ _ = localPaintFlags.contains(.PaintingOverflowContents)
+    let isPaintingOverflowContents = localPaintFlags.contains(.PaintingOverflowContents)
     let isCollectingEventRegion = localPaintFlags.contains(.CollectingEventRegion)
     let isCollectingAccessibilityRegion = paintingInfo.regionContext is AccessibilityRegionContext
 
@@ -906,7 +958,7 @@ class RenderLayerWrapper {
     // content. When not composited scrolling, the outline is painted in the
     // foreground phase. Since scrolled contents are moved by repainting in this
     // case, the outline won't get 'dragged along'.
-    let /*shouldPaintOutline*/ _ =
+    let shouldPaintOutline =
       isSelfPaintingLayer && !isPaintingOverlayScrollbars && !isCollectingEventRegion
       && !isCollectingAccessibilityRegion
       && (renderer().view().printing() || renderer().view().hasRenderersWithOutline())
@@ -977,6 +1029,159 @@ class RenderLayerWrapper {
 
     paintFrequencyTracker.track(timestamp: page().lastRenderingUpdateTimestamp())
 
+    var layerFragments: LayerFragments = []
+    var subtreePaintRootForRenderer: RenderObjectWrapper? = nil
+
+    let paintBehavior = paintBehaviorForContents()
+
+    do {  // Scope for filter-related state changes.
+      var backgroundRect = ClipRect()
+
+      if filtersForPainting(context: context, paintFlags: paintFlags) != nil {
+        // When we called collectFragments() last time, paintDirtyRect was reset to represent the filter bounds.
+        // Now we need to compute the backgroundRect uncontaminated by filters, in order to clip the filtered result.
+        // Note that we also use paintingInfo here, not localPaintingInfo which filters also contaminated.
+        var layerFragments: LayerFragments = []
+        let clipRectOptions =
+          isPaintingOverflowContents
+          ? RenderLayerWrapper.clipRectOptionsForPaintingOverflowControls
+          : RenderLayerWrapper.clipRectDefaultOptions
+        collectFragments(
+          fragments: &layerFragments, rootLayer: paintingInfo.rootLayer,
+          dirtyRect: paintingInfo.paintDirtyRect,
+          inclusionMode: .ExcludeCompositedPaginatedLayers,
+          clipRectsType: localPaintFlags.contains(.TemporaryClipRects)
+            ? .TemporaryClipRects : .PaintingClipRects,
+          clipRectOptions: clipRectOptions, offsetFromRoot: offsetFromRoot)
+        updatePaintingInfoForFragments(
+          fragments: &layerFragments, localPaintingInfo: paintingInfo,
+          localPaintFlags: localPaintFlags, shouldPaintContent: shouldPaintContent,
+          offsetFromRoot: offsetFromRoot)
+
+        // FIXME: Handle more than one fragment.
+        backgroundRect = layerFragments.isEmpty ? ClipRect() : layerFragments[0].backgroundRect
+      }
+
+      var localPaintingInfo = paintingInfo
+      let filterContext = setupFilters(
+        destinationContext: context, paintingInfo: &localPaintingInfo, paintFlags: paintFlags,
+        offsetFromRoot: columnAwareOffsetFromRoot, backgroundRect: backgroundRect)
+      if filterContext != nil && haveTransparency {
+        // If we have a filter and transparency, we have to eagerly start a transparency layer here, rather than risk a child layer lazily starts one with the wrong context.
+        beginTransparencyLayers(
+          context: context, paintingInfo: localPaintingInfo, dirtyRect: paintingInfo.paintDirtyRect)
+      }
+      let currentContext = filterContext != nil ? filterContext! : context
+
+      if filterContext != nil {
+        localPaintingInfo.paintBehavior.update(with: .DontShowVisitedLinks)
+      }
+
+      // If this layer's renderer is a child of the subtreePaintRoot, we render unconditionally, which
+      // is done by passing a nil subtreePaintRoot down to our renderer (as if no subtreePaintRoot was ever set).
+      // Otherwise, our renderer tree may or may not contain the subtreePaintRoot root, so we pass that root along
+      // so it will be tested against as we descend through the renderers.
+      if localPaintingInfo.subtreePaintRoot != nil
+        && !renderer().isDescendantOf(ancestor: localPaintingInfo.subtreePaintRoot)
+      {
+        subtreePaintRootForRenderer = localPaintingInfo.subtreePaintRoot
+      }
+
+      if let overlapTestRequests = localPaintingInfo.overlapTestRequests, isSelfPaintingLayer {
+        performOverlapTests(
+          overlapTestRequests: overlapTestRequests,
+          rootLayer: localPaintingInfo.rootLayer, layer: self)
+      }
+
+      let paintDirtyRect = localPaintingInfo.paintDirtyRect
+      if shouldPaintContent || shouldPaintOutline || isPaintingOverlayScrollbars
+        || isCollectingEventRegion || isCollectingAccessibilityRegion
+      {
+        // Collect the fragments. This will compute the clip rectangles and paint offsets for each layer fragment, as well as whether or not the content of each
+        // fragment should paint. If the parent's filter dictates full repaint to ensure proper filter effect,
+        // use the overflow clip as dirty rect, instead of no clipping. It maintains proper clipping for overflow::scroll.
+        if !localPaintingInfo.clipToDirtyRect && renderer().hasNonVisibleOverflow() {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        let clipRectOptions =
+          isPaintingOverflowContents
+          ? RenderLayerWrapper.clipRectOptionsForPaintingOverflowControls
+          : RenderLayerWrapper.clipRectDefaultOptions
+        collectFragments(
+          fragments: &layerFragments, rootLayer: localPaintingInfo.rootLayer,
+          dirtyRect: paintDirtyRect,
+          inclusionMode: .ExcludeCompositedPaginatedLayers,
+          clipRectsType: localPaintFlags.contains(.TemporaryClipRects)
+            ? .TemporaryClipRects : .PaintingClipRects,
+          clipRectOptions: clipRectOptions, offsetFromRoot: offsetFromRoot)
+        updatePaintingInfoForFragments(
+          fragments: &layerFragments, localPaintingInfo: localPaintingInfo,
+          localPaintFlags: localPaintFlags, shouldPaintContent: shouldPaintContent,
+          offsetFromRoot: offsetFromRoot)
+      }
+
+      if isPaintingCompositedBackground {
+        // Paint only the backgrounds for all of the fragments of the layer.
+        if shouldPaintContent && !selectionOnly {
+          paintBackgroundForFragments(
+            layerFragments: layerFragments, context: currentContext,
+            contextForTransparencyLayer: context,
+            transparencyPaintDirtyRect: paintingInfo.paintDirtyRect,
+            haveTransparency: haveTransparency,
+            localPaintingInfo: localPaintingInfo, paintBehavior: paintBehavior,
+            subtreePaintRootForRenderer: subtreePaintRootForRenderer)
+        }
+      }
+
+      // Now walk the sorted list of children with negative z-indices.
+      if (isPaintingScrollingContent && isPaintingOverflowContents)
+        || (!isPaintingScrollingContent && isPaintingCompositedBackground)
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if isPaintingCompositedForeground {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if isCollectingEventRegion {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if isCollectingAccessibilityRegion {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if shouldPaintOutline {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if isPaintingCompositedForeground {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if let scrollableArea = m_scrollableArea {
+        if isPaintingOverlayScrollbars && scrollableArea.hasScrollbars() {
+          paintOverflowControlsForFragments(
+            layerFragments: layerFragments, context: currentContext,
+            localPaintingInfo: localPaintingInfo)
+        }
+      }
+
+      if filterContext != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+
     if shouldPaintContent && !(selectionOnly || selectionAndBackgroundsOnly) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -994,7 +1199,31 @@ class RenderLayerWrapper {
     }
   }
 
+  private func updatePaintingInfoForFragments(
+    fragments: inout LayerFragments, localPaintingInfo: LayerPaintingInfo,
+    localPaintFlags: PaintLayerFlag, shouldPaintContent: Bool, offsetFromRoot: LayoutSizeWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBackgroundForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    contextForTransparencyLayer: GraphicsContextWrapper,
+    transparencyPaintDirtyRect: LayoutRectWrapper, haveTransparency: Bool,
+    localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
+    subtreePaintRootForRenderer: RenderObjectWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintLayerHasVisibleContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBehaviorForContents() -> PaintBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1139,6 +1368,14 @@ class RenderLayerWrapper {
         paintInfo: paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
+  }
+
+  private func paintOverflowControlsForFragments(
+    layerFragments: LayerFragments, context: GraphicsContextWrapper,
+    localPaintingInfo: LayerPaintingInfo
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func transparentPaintingAncestor(info: LayerPaintingInfo) -> RenderLayerWrapper? {

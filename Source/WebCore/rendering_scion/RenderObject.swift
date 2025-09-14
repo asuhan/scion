@@ -70,6 +70,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return RenderElementWrapper(p: unwrapped!)
   }
 
+  func isDescendantOf(ancestor: RenderObjectWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func previousSibling() -> RenderObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
