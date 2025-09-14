@@ -1272,8 +1272,14 @@ class RenderLayerWrapper {
 
     // End our transparency layer
     if haveTransparency && usedTransparency && !paintingInsideReflection {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let savedAlphaForTransparency = self.savedAlphaForTransparency {
+        context.setAlpha(alpha: savedAlphaForTransparency)
+        self.savedAlphaForTransparency = nil
+      } else {
+        context.endTransparencyLayer()
+        context.restore()
+      }
+      usedTransparency = false
     }
 
     // Re-set this to whatever it was before we painted the layer.
