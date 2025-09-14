@@ -182,6 +182,11 @@ class RenderLayerWrapper {
 
   func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
 
+  func reflectionLayer() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
     if let reflection = reflection {
       return CPtrToInt(layer.p) == CPtrToInt(reflection.layer()?.p)
@@ -517,8 +522,11 @@ class RenderLayerWrapper {
     static let PaintingSVGClippingMask = PaintLayerFlag(rawValue: 16384)
     static let CollectingEventRegion = PaintLayerFlag(rawValue: 32768)
     static let PaintingSkipDescendantViewTransition = PaintLayerFlag(rawValue: 65536)
-
   }
+
+  static let paintLayerPaintingCompositingAllPhasesFlags: PaintLayerFlag = [
+    .PaintingCompositingBackgroundPhase, .PaintingCompositingForegroundPhase,
+  ]
 
   struct ClipRectsOption: OptionSet {
     let rawValue: UInt8
@@ -964,6 +972,36 @@ class RenderLayerWrapper {
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func paintLayer(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintLayerContentsAndReflection(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
+  ) {
+    assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
+
+    let localPaintFlags = paintFlags.subtracting(.AppliedTransform)
+
+    // Paint the reflection first if we have one.
+    if reflection != nil && !paintingInsideReflection {
+      // Mark that we are now inside replica painting.
+      paintingInsideReflection = true
+      reflectionLayer()!.paintLayer(
+        context: context, paintingInfo: paintingInfo,
+        paintFlags: localPaintFlags.union(.PaintingReflection))
+      paintingInsideReflection = false
+    }
+
+    paintLayerContents(
+      context: context, paintingInfo: paintingInfo,
+      paintFlags: localPaintFlags.union(
+        RenderLayerWrapper.paintLayerPaintingCompositingAllPhasesFlags))
   }
 
   private func paintLayerContents(
@@ -1744,7 +1782,7 @@ class RenderLayerWrapper {
   // we ended up painting this layer or any descendants (and therefore need to
   // blend).
   private var usedTransparency = false
-  private let paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
+  private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
 
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
