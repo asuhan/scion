@@ -159,6 +159,16 @@ class RenderLayerWrapper {
 
   struct LayerList {}
 
+  func normalFlowLayers() -> LayerList {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func positiveZOrderLayers() -> LayerList {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func negativeZOrderLayers() -> LayerList {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -943,6 +953,14 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  private func applyFilters(
+    originalContext: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
+    behavior: PaintBehavior, backgroundRect: ClipRect
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintLayerContents(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
@@ -1195,8 +1213,15 @@ class RenderLayerWrapper {
       }
 
       if isPaintingCompositedForeground {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // Paint any child layers that have overflow.
+        paintList(
+          layerIterator: normalFlowLayers(), context: currentContext, paintingInfo: paintingInfo,
+          paintFlags: localPaintFlags)
+
+        // Now walk the sorted list of children with positive z-indices.
+        paintList(
+          layerIterator: positiveZOrderLayers(), context: currentContext,
+          paintingInfo: localPaintingInfo, paintFlags: localPaintFlags)
       }
 
       if let scrollableArea = m_scrollableArea {
@@ -1208,8 +1233,9 @@ class RenderLayerWrapper {
       }
 
       if filterContext != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        applyFilters(
+          originalContext: context, paintingInfo: paintingInfo, behavior: paintBehavior,
+          backgroundRect: backgroundRect)
       }
     }
 
