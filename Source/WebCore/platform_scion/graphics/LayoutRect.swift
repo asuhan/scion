@@ -233,6 +233,11 @@ struct LayoutRectWrapper: Equatable {
     return LayoutRectWrapper(location: m_location.transposedPoint(), size: m_size.transposedSize())
   }
 
+  static func infiniteRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func FloatRect() -> FloatRectWrapper {
     return FloatRectWrapper(location: m_location.FloatPoint(), size: m_size.FloatSize())
   }

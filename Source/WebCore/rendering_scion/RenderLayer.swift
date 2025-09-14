@@ -157,6 +157,13 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
+  struct LayerList {}
+
+  func negativeZOrderLayers() -> LayerList {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Update our normal and z-index lists.
   func updateLayerListsIfNeeded() {
     // TODO(asuhan): implement this
@@ -786,7 +793,7 @@ class RenderLayerWrapper {
     let overlapTestRequests: OverlapTestRequestMap?
     var paintBehavior: PaintBehavior
     let requireSecurityOriginAccessForWidgets: Bool
-    let clipToDirtyRect: Bool = true
+    var clipToDirtyRect: Bool = true
     let regionContext: RegionContext? = nil
   }
 
@@ -795,6 +802,14 @@ class RenderLayerWrapper {
   ) -> LayoutPointWrapper {
     return toLayoutPoint(
       size: fragment.layerBounds.location() - rendererLocation() + paintingInfo.subpixelOffset)
+  }
+
+  private func clipRectRelativeToAncestor(
+    ancestor: RenderLayerWrapper?, offsetFromAncestor: LayoutSizeWrapper,
+    constrainingRect: LayoutRectWrapper, temporaryClipRects: Bool = false
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func clipToRect(
@@ -1093,7 +1108,7 @@ class RenderLayerWrapper {
           rootLayer: localPaintingInfo.rootLayer, layer: self)
       }
 
-      let paintDirtyRect = localPaintingInfo.paintDirtyRect
+      var paintDirtyRect = localPaintingInfo.paintDirtyRect
       if shouldPaintContent || shouldPaintOutline || isPaintingOverlayScrollbars
         || isCollectingEventRegion || isCollectingAccessibilityRegion
       {
@@ -1101,8 +1116,12 @@ class RenderLayerWrapper {
         // fragment should paint. If the parent's filter dictates full repaint to ensure proper filter effect,
         // use the overflow clip as dirty rect, instead of no clipping. It maintains proper clipping for overflow::scroll.
         if !localPaintingInfo.clipToDirtyRect && renderer().hasNonVisibleOverflow() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          // We can turn clipping back by requesting full repaint for the overflow area.
+          localPaintingInfo.clipToDirtyRect = true
+          paintDirtyRect = clipRectRelativeToAncestor(
+            ancestor: localPaintingInfo.rootLayer, offsetFromAncestor: offsetFromRoot,
+            constrainingRect: LayoutRectWrapper.infiniteRect(),
+            temporaryClipRects: localPaintFlags.contains(.TemporaryClipRects))
         }
 
         let clipRectOptions =
@@ -1139,8 +1158,9 @@ class RenderLayerWrapper {
       if (isPaintingScrollingContent && isPaintingOverflowContents)
         || (!isPaintingScrollingContent && isPaintingCompositedBackground)
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        paintList(
+          layerIterator: negativeZOrderLayers(), context: currentContext,
+          paintingInfo: paintingInfo, paintFlags: localPaintFlags)
       }
 
       if isPaintingCompositedForeground {
@@ -1197,6 +1217,14 @@ class RenderLayerWrapper {
     if needToAdjustSubpixelQuantization {
       context.setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts: didQuantizeFonts)
     }
+  }
+
+  private func paintList(
+    layerIterator: LayerList, context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
+    paintFlags: PaintLayerFlag
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updatePaintingInfoForFragments(
