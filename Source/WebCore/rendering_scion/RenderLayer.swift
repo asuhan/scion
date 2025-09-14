@@ -90,6 +90,11 @@ private func performOverlapTests(
   fatalError("Not implemented")
 }
 
+private func shouldSuppressPaintingLayer(layer: RenderLayerWrapper?) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private enum TransparencyClipBoxBehavior {
   case PaintingTransparencyClipBox
   case HitTestingTransparencyClipBox
@@ -979,6 +984,40 @@ class RenderLayerWrapper {
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func paintLayerWithEffects(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
+  ) {
+    // Non self-painting leaf layers don't need to be painted as their renderer() should properly paint itself.
+    if !isSelfPaintingLayer && !hasSelfPaintingLayerDescendant {
+      return
+    }
+
+    if shouldSuppressPaintingLayer(layer: self) {
+      return
+    }
+
+    // If this layer is totally invisible then there is nothing to paint.
+    if renderer().opacity() == 0 {
+      return
+    }
+
+    var paintFlags = paintFlags
+    if paintsWithTransparency(paintBehavior: paintingInfo.paintBehavior) {
+      paintFlags.update(with: .HaveTransparency)
+    }
+
+    // PaintLayerFlag::AppliedTransform is used in RenderReplica, to avoid applying the transform twice.
+    if paintsWithTransform(paintBehavior: paintingInfo.paintBehavior)
+      && !paintFlags.contains(.AppliedTransform)
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    paintLayerContentsAndReflection(
+      context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
   }
 
   private func paintLayerContentsAndReflection(
