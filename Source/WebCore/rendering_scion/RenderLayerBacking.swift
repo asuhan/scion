@@ -45,4 +45,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Returns true for a composited layer that has no backing store of its own, so
+  // paints into some ancestor layer.
+  func paintsIntoCompositedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

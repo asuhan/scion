@@ -90,6 +90,10 @@ private func performOverlapTests(
   fatalError("Not implemented")
 }
 
+private func shouldDoSoftwarePaint(layer: RenderLayerWrapper, paintingReflection: Bool) -> Bool {
+  return paintingReflection && !layer.has3DTransform()
+}
+
 private func shouldSuppressPaintingLayer(layer: RenderLayerWrapper?) -> Bool {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -716,6 +720,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func has3DTransform() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasTransformedAncestor() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -996,11 +1005,45 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  private static func paintForFixedRootBackground(
+    layer: RenderLayerWrapper, paintFlags: PaintLayerFlag
+  )
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintLayer(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    if paintsIntoDifferentCompositedDestination(paintFlags: paintFlags) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func shouldContinuePaint(paintFlags: PaintLayerFlag) -> Bool {
+    return backing!.paintsIntoWindow()
+      || backing!.paintsIntoCompositedAncestor()
+      || shouldDoSoftwarePaint(
+        layer: self, paintingReflection: paintFlags.contains(.PaintingReflection))
+      || RenderLayerWrapper.paintForFixedRootBackground(layer: self, paintFlags: paintFlags)
+  }
+
+  private func paintsIntoDifferentCompositedDestination(paintFlags: PaintLayerFlag) -> Bool {
+    if paintsIntoProvidedBacking() {
+      return true
+    }
+
+    if isComposited() && !shouldContinuePaint(paintFlags: paintFlags) {
+      return true
+    }
+
+    return false
   }
 
   private func paintLayerWithEffects(
