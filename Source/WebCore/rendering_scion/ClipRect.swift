@@ -23,13 +23,25 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ClipRect {
+struct ClipRect {
+  init() {}
+
+  init(rect: LayoutRectWrapper) {
+    self.rect = rect
+  }
+
+  func intersect(other: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isEmpty() -> Bool { return rect.isEmpty() }
+
   func isInfinite() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  let rect = LayoutRectWrapper()
+  var rect = LayoutRectWrapper()
   let affectedByRadius = false
 }

@@ -4,4 +4,5 @@ target_sources(layout_scion PRIVATE
     RenderSVGModelObject.swift
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
+    RenderSVGRoot.swift
 )

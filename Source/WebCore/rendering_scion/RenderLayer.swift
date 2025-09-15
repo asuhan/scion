@@ -543,6 +543,16 @@ class RenderLayerWrapper {
   static let clipRectOptionsForPaintingOverflowControls: ClipRectsOption = []
   static let clipRectDefaultOptions: ClipRectsOption = [.RespectOverflowClip]
 
+  struct ClipRectsContext {
+    init(
+      inRootLayer: RenderLayerWrapper?, inClipRectsType: ClipRectsType,
+      inOptions: ClipRectsOption = RenderLayerWrapper.clipRectDefaultOptions
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   // Public just for RenderTreeAsText.
   func collectFragments(
     fragments: inout LayerFragments, rootLayer: RenderLayerWrapper?, dirtyRect: LayoutRectWrapper,
@@ -1041,8 +1051,44 @@ class RenderLayerWrapper {
         return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Make sure the parent's clip rects have been calculated.
+      var clipRect = ClipRect(rect: paintingInfo.paintDirtyRect)
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(context: paintingInfo.regionContext)
+      if let parent = parent() {
+        let options =
+          paintFlags.contains(.PaintingOverflowContents)
+          ? RenderLayerWrapper.clipRectOptionsForPaintingOverflowControls
+          : RenderLayerWrapper.clipRectDefaultOptions
+        let clipRectsContext = ClipRectsContext(
+          inRootLayer: paintingInfo.rootLayer,
+          inClipRectsType: paintFlags.contains(.TemporaryClipRects)
+            ? .TemporaryClipRects : .PaintingClipRects,
+          inOptions: options)
+        clipRect = backgroundClipRect(clipRectsContext: clipRectsContext)
+        clipRect.intersect(other: paintingInfo.paintDirtyRect)
+
+        var paintBehavior: PaintBehavior = [.Normal]
+        if paintFlags.contains(.PaintingOverflowContents) {
+          paintBehavior.update(with: .CompositedOverflowScrollContent)
+        }
+
+        // Always apply SVG viewport clipping in coordinate system before the SVG viewBox transformation is applied.
+        if renderer() is RenderSVGRootWrapper {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        // Push the parent coordinate space's clip.
+        parent.clipToRect(
+          context: context, stateSaver: stateSaver,
+          regionContextStateSaver: regionContextStateSaver, paintingInfo: paintingInfo,
+          paintBehavior: paintBehavior, clipRect: clipRect)
+      }
+
+      paintLayerByApplyingTransform(
+        context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
+      return
     }
 
     paintLayerContentsAndReflection(
@@ -1070,6 +1116,14 @@ class RenderLayerWrapper {
       context: context, paintingInfo: paintingInfo,
       paintFlags: localPaintFlags.union(
         RenderLayerWrapper.paintLayerPaintingCompositingAllPhasesFlags))
+  }
+
+  private func paintLayerByApplyingTransform(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag,
+    translationOffset: LayoutSizeWrapper = LayoutSizeWrapper()
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func paintLayerContents(
@@ -1810,6 +1864,11 @@ class RenderLayerWrapper {
         context.setCompositeOperation(operation: context.compositeOperation(), blendMode: .Normal)
       }
     }
+  }
+
+  private func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func hasNonOpacityTransparency() -> Bool {
