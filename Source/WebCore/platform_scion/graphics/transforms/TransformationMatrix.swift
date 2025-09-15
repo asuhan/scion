@@ -42,4 +42,9 @@ class TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isInvertible() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

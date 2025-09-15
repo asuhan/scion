@@ -699,6 +699,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasTransformedAncestor() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1012,6 +1017,30 @@ class RenderLayerWrapper {
     if paintsWithTransform(paintBehavior: paintingInfo.paintBehavior)
       && !paintFlags.contains(.AppliedTransform)
     {
+      let layerTransform = renderableTransform(paintBehavior: paintingInfo.paintBehavior)
+      // If the transform can't be inverted, then don't paint anything.
+      if !layerTransform.isInvertible() {
+        return
+      }
+
+      // If we have a transparency layer enclosing us and we are the root of a transform, then we need to establish the transparency
+      // layer from the parent now, assuming there is a parent
+      if paintFlags.contains(.HaveTransparency) {
+        if CPtrToInt(p) != CPtrToInt(paintingInfo.rootLayer?.p), let parent = parent() {
+          parent.beginTransparencyLayers(
+            context: context, paintingInfo: paintingInfo, dirtyRect: paintingInfo.paintDirtyRect)
+        } else {
+          beginTransparencyLayers(
+            context: context, paintingInfo: paintingInfo, dirtyRect: paintingInfo.paintDirtyRect)
+        }
+      }
+
+      if enclosingPaginationLayer(mode: .ExcludeCompositedPaginatedLayers) != nil {
+        paintTransformedLayerIntoFragments(
+          context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
+        return
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -1574,6 +1603,13 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintTransformedLayerIntoFragments(
+    context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
