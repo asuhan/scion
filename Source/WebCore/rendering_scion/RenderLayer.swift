@@ -551,6 +551,8 @@ class RenderLayerWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    let rootLayer: RenderLayerWrapper?
   }
 
   // Public just for RenderTreeAsText.
@@ -1074,9 +1076,23 @@ class RenderLayerWrapper {
         }
 
         // Always apply SVG viewport clipping in coordinate system before the SVG viewBox transformation is applied.
-        if renderer() is RenderSVGRootWrapper {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+        if let svgRoot = renderer() as? RenderSVGRootWrapper {
+          if svgRoot.shouldApplyViewportClip() {
+            var newRect = svgRoot.borderBoxRect()
+
+            let offsetFromParent = offsetFromAncestor(ancestorLayer: clipRectsContext.rootLayer)
+            let offsetForThisLayer = offsetFromParent + paintingInfo.subpixelOffset
+            let devicePixelSnappedOffsetForThisLayer = toFloatSize(
+              a: roundPointToDevicePixels(
+                point: toLayoutPoint(size: offsetForThisLayer),
+                pixelSnappingFactor: renderer().document().deviceScaleFactor())
+            )
+            newRect.move(
+              dx: devicePixelSnappedOffsetForThisLayer.width,
+              dy: devicePixelSnappedOffsetForThisLayer.height)
+
+            clipRect.intersect(other: newRect)
+          }
         }
 
         // Push the parent coordinate space's clip.

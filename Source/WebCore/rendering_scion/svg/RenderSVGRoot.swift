@@ -22,4 +22,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderSVGRootWrapper: RenderReplacedWrapper {}
+final class RenderSVGRootWrapper: RenderReplacedWrapper {
+  func shouldApplyViewportClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

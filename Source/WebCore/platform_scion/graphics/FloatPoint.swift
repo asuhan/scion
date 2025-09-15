@@ -93,3 +93,7 @@ struct FloatPoint {
   var x: Float32 = 0
   var y: Float32 = 0
 }
+
+func toFloatSize(a: FloatPoint) -> FloatSize {
+  return FloatSize(width: a.x, height: a.y)
+}
