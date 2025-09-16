@@ -53,6 +53,11 @@ struct Document {
     fatalError("Not implemented")
   }
 
+  func visualUpdatesAllowed() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func securityOrigin() -> SecurityOriginWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

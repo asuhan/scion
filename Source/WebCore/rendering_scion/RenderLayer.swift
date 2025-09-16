@@ -75,9 +75,13 @@ private func shouldDoSoftwarePaint(layer: RenderLayerWrapper, paintingReflection
   return paintingReflection && !layer.has3DTransform()
 }
 
-private func shouldSuppressPaintingLayer(layer: RenderLayerWrapper?) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+private func shouldSuppressPaintingLayer(layer: RenderLayerWrapper) -> Bool {
+  // Avoid painting all layers if the document is in a state where visual updates aren't allowed.
+  // A full repaint will occur in Document::setVisualUpdatesAllowed(bool) if painting is suppressed here.
+  if !layer.renderer().document().visualUpdatesAllowed() {
+    return true
+  }
+  return false
 }
 
 private enum TransparencyClipBoxBehavior {
