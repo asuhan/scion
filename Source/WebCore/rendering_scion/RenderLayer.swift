@@ -63,25 +63,6 @@ enum ShouldApplyRootOffsetToFragments {
   case IgnoreRootOffsetForFragments
 }
 
-private func isContainerForPositioned(
-  layer: RenderLayerWrapper, position: PositionType, establishesTopLayer: Bool
-) -> Bool {
-  if establishesTopLayer {
-    return layer.isRenderViewLayer
-  }
-
-  switch position {
-  case .Fixed:
-    return layer.renderer().canContainFixedPositionObjects()
-
-  case .Absolute:
-    return layer.renderer().canContainAbsolutelyPositionedObjects()
-
-  default:
-    fatalError("Not reached")
-  }
-}
-
 private func performOverlapTests(
   overlapTestRequests: OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
   layer: RenderLayerWrapper?
@@ -294,6 +275,25 @@ class RenderLayerWrapper {
     return layout_scion.hasVisibleBoxDecorationsOrBackground(renderer: renderer())
   }
 
+  private static func isContainerForPositioned(
+    layer: RenderLayerWrapper, position: PositionType, establishesTopLayer: Bool
+  ) -> Bool {
+    if establishesTopLayer {
+      return layer.isRenderViewLayer
+    }
+
+    switch position {
+    case .Fixed:
+      return layer.renderer().canContainFixedPositionObjects()
+
+    case .Absolute:
+      return layer.renderer().canContainAbsolutelyPositionedObjects()
+
+    default:
+      fatalError("Not reached")
+    }
+  }
+
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
@@ -306,7 +306,7 @@ class RenderLayerWrapper {
   func enclosingAncestorForPosition(position: PositionType) -> RenderLayerWrapper? {
     var curr = parent()
     while curr != nil
-      && !isContainerForPositioned(
+      && !RenderLayerWrapper.isContainerForPositioned(
         layer: curr!, position: position, establishesTopLayer: establishesTopLayer())
     {
       curr = curr!.parent()
@@ -367,7 +367,7 @@ class RenderLayerWrapper {
           foundAncestor = true
         }
 
-        if isContainerForPositioned(
+        if RenderLayerWrapper.isContainerForPositioned(
           layer: currLayer!, position: .Fixed, establishesTopLayer: layer.establishesTopLayer())
         {
           fixedPositionContainerLayer = currLayer
@@ -417,7 +417,7 @@ class RenderLayerWrapper {
         // RenderFragmentedFlow is a positioned container, child of RenderView, positioned at (0,0).
         // This implies that, for out-of-flow positioned elements inside a RenderFragmentedFlow,
         // we are bailing out before reaching root layer.
-        if isContainerForPositioned(
+        if RenderLayerWrapper.isContainerForPositioned(
           layer: parentLayer!, position: position, establishesTopLayer: layer.establishesTopLayer())
         {
           break
@@ -1975,7 +1975,7 @@ class RenderLayerWrapper {
 
   private var savedAlphaForTransparency: Float32? = nil
 
-  var isRenderViewLayer = false
+  private var isRenderViewLayer = false
   private var forcedStackingContext = false
 
   private var isNormalFlowOnly = false
@@ -2001,17 +2001,17 @@ class RenderLayerWrapper {
   private var hasNotIsolatedBlendingDescendants = false
 
   // Note that this transform has the transform-origin baked in.
-  let transform: TransformationMatrix? = nil
+  private let transform: TransformationMatrix? = nil
 
   // May ultimately be extended to many replicas (with their own paint order).
-  let reflection: RenderReplicaWrapper? = nil
+  private let reflection: RenderReplicaWrapper? = nil
 
   // Pointer to the enclosing RenderLayer that caused us to be paginated. It is 0 if we are not paginated.
-  let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
+  private let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
 
-  let backing: RenderLayerBacking? = nil
+  private let backing: RenderLayerBacking? = nil
 
-  let m_scrollableArea: RenderLayerScrollableArea? = nil
+  private let m_scrollableArea: RenderLayerScrollableArea? = nil
 
-  let paintFrequencyTracker = PaintFrequencyTracker()
+  private let paintFrequencyTracker = PaintFrequencyTracker()
 }
