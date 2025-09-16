@@ -47,4 +47,9 @@ class TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isAffine() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

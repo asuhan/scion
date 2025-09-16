@@ -374,7 +374,7 @@ class RenderLayerWrapper {
           // A layer that has a transform-related property but not a
           // transform still acts as a fixed-position container.
           // Accumulating offsets across such layers is allowed.
-          if currLayer!.transform() != nil {
+          if currLayer!.transform != nil {
             assert(foundAncestor)
           }
           break
@@ -709,20 +709,16 @@ class RenderLayerWrapper {
 
   func isTransformed() -> Bool { return renderer().isTransformed() }
 
-  // Note that this transform has the transform-origin baked in.
-  func transform() -> TransformationMatrix? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func has3DTransform() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let transform = transform {
+      return !transform.isAffine()
+    }
+    return false
   }
 
   func hasTransformedAncestor() -> Bool {
@@ -779,7 +775,7 @@ class RenderLayerWrapper {
 
   func paintsWithTransform(paintBehavior: PaintBehavior) -> Bool {
     let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
-    return transform() != nil
+    return transform != nil
       && (paintBehavior.contains(.FlattenCompositingLayers) || paintsToWindow)
   }
 
@@ -1853,7 +1849,7 @@ class RenderLayerWrapper {
 
       let transform = TransformationMatrix()
       transform.translate(tx: delta.width().double(), ty: delta.height().double())
-      transform.multiply(mat: layer.transform()!)
+      transform.multiply(mat: layer.transform!)
 
       // We don't use fragment boxes when collecting a transformed layer's bounding box, since it always
       // paints unfragmented.
@@ -2003,6 +1999,9 @@ class RenderLayerWrapper {
 
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
+
+  // Note that this transform has the transform-origin baked in.
+  let transform: TransformationMatrix? = nil
 
   // May ultimately be extended to many replicas (with their own paint order).
   let reflection: RenderReplicaWrapper? = nil
