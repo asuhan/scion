@@ -819,6 +819,13 @@ class RenderLayerWrapper {
     return false
   }
 
+  enum ViewportConstrainedNotCompositedReason {
+    case NoNotCompositedReason
+    case NotCompositedForBoundsOutOfView
+    case NotCompositedForNonViewContainer
+    case NotCompositedForNoVisibleContent
+  }
+
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
@@ -1017,13 +1024,27 @@ class RenderLayerWrapper {
   private func paintLayer(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    var paintFlags = paintFlags
     if paintsIntoDifferentCompositedDestination(paintFlags: paintFlags) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !context.performingPaintInvalidation()
+        && !paintingInfo.paintBehavior.contains(.FlattenCompositingLayers)
+      {
+        return
+      }
+
+      paintFlags.update(with: .TemporaryClipRects)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if viewportConstrainedNotCompositedReason == .NotCompositedForBoundsOutOfView
+      && !paintingInfo.paintBehavior.contains(.Snapshotting)
+    {
+      // Don't paint out-of-view viewport constrained layers (when doing prepainting) because they will never be visible
+      // unless their position or viewport size is changed.
+      assert(renderer().isFixedPositioned())
+      return
+    }
+
+    paintLayerWithEffects(context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
   }
 
   private func shouldContinuePaint(paintFlags: PaintLayerFlag) -> Bool {
@@ -1976,6 +1997,9 @@ class RenderLayerWrapper {
   // blend).
   private var usedTransparency = false
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
+
+  private let viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =
+    .NoNotCompositedReason
 
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false

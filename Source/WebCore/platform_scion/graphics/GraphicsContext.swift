@@ -29,6 +29,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func performingPaintInvalidation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidatingImagesWithAsyncDecodes() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
