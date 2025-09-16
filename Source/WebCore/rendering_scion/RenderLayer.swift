@@ -1547,8 +1547,44 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for fragment in layerFragments {
+      if !fragment.shouldPaintContent {
+        continue
+      }
+
+      // Begin transparency layers lazily now that we know we have to paint something.
+      if haveTransparency {
+        beginTransparencyLayers(
+          context: contextForTransparencyLayer, paintingInfo: localPaintingInfo,
+          dirtyRect: transparencyPaintDirtyRect)
+      }
+
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(
+        context: localPaintingInfo.regionContext)
+
+      if localPaintingInfo.clipToDirtyRect {
+        // Paint our background first, before painting any child layers.
+        // Establish the clip used to paint our background.
+        clipToRect(
+          context: context, stateSaver: stateSaver,
+          regionContextStateSaver: regionContextStateSaver, paintingInfo: localPaintingInfo,
+          paintBehavior: paintBehavior,
+          clipRect: fragment.backgroundRect, rule: .DoNotIncludeSelfForBorderRadius)  // Background painting will handle clipping to self.
+      }
+
+      // Paint the background.
+      // FIXME: Eventually we will collect the region from the fragment itself instead of just from the paint info.
+      let paintInfo = PaintInfoWrapper(
+        newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .BlockBackground,
+        newPaintBehavior: paintBehavior,
+        newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
+        overlapTestRequests: nil, newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
+        enclosingSelfPaintingLayer: self)
+      renderer().paint(
+        paintInfo: paintInfo,
+        paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
+    }
   }
 
   private func paintLayerHasVisibleContent() -> Bool {
