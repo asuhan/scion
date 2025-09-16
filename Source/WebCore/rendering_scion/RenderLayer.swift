@@ -1017,8 +1017,8 @@ class RenderLayerWrapper {
   )
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return layer.renderer().isDocumentElementRenderer()
+      && paintFlags.contains(.PaintingRootBackgroundOnly)
   }
 
   private func paintLayer(
