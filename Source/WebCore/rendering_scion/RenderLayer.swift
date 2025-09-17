@@ -1789,8 +1789,24 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(localPaintingInfo.regionContext is EventRegionContext)
+    for fragment in layerFragments {
+      var paintInfo = PaintInfoWrapper(
+        newContext: context, newRect: fragment.foregroundRect.rect, newPhase: .EventRegion,
+        newPaintBehavior: paintBehavior)
+      paintInfo.regionContext = localPaintingInfo.regionContext
+      if localPaintingInfo.clipToDirtyRect {  // clip-path?
+        paintInfo.regionContext!.pushClip(
+          clipRect: enclosingIntRect(rect: fragment.backgroundRect.rect))
+      }
+
+      renderer().paint(
+        paintInfo: paintInfo,
+        paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
+      if localPaintingInfo.clipToDirtyRect {
+        paintInfo.regionContext!.popClip()
+      }
+    }
   }
 
   private func collectAccessibilityRegionsForFragments(

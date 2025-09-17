@@ -23,7 +23,17 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RegionContext {}
+class RegionContext {
+  func pushClip(clipRect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func popClip() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
 
 class RegionContextStateSaver {
   init(context: RegionContext?) {

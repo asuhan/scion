@@ -249,6 +249,24 @@ struct PaintInfoWrapper {
     return n!.paintContainer
   }
 
+  // For PaintPhase::EventRegion and PaintPhase::Accessibility.
+  var regionContext: RegionContext? {
+    get {
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return n!.regionContext
+    }
+    set {
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      n!.regionContext = newValue
+    }
+  }
+
   private struct native {
     let rect: LayoutRectWrapper
     var phase: PaintPhase
@@ -259,7 +277,7 @@ struct PaintInfoWrapper {
     let paintContainer: RenderLayerModelObjectWrapper?  // the layer object that originates the current painting
     let requireSecurityOriginAccessForWidgets: Bool
     let enclosingSelfPaintingLayer: RenderLayerWrapper?
-    let regionContext: RegionContext? = nil  // For PaintPhase::EventRegion and PaintPhase::Accessibility.
+    var regionContext: RegionContext? = nil  // For PaintPhase::EventRegion and PaintPhase::Accessibility.
     let context: GraphicsContextWrapper
   }
 
