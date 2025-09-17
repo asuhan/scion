@@ -1780,8 +1780,27 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_scrollableArea != nil)
+
+    for fragment in layerFragments {
+      if fragment.backgroundRect.isEmpty() {
+        continue
+      }
+
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(
+        context: localPaintingInfo.regionContext)
+
+      clipToRect(
+        context: context, stateSaver: stateSaver, regionContextStateSaver: regionContextStateSaver,
+        paintingInfo: localPaintingInfo, paintBehavior: [], clipRect: fragment.backgroundRect)
+      m_scrollableArea!.paintOverflowControls(
+        context: context,
+        paintOffset: roundedIntPoint(
+          point: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo)),
+        damageRect: snappedIntRect(rect: fragment.backgroundRect.rect),
+        paintingOverlayControls: true)
+    }
   }
 
   private func paintMaskForFragments(
