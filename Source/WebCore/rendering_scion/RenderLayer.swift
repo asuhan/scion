@@ -1748,8 +1748,32 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for fragment in layerFragments {
+      if fragment.backgroundRect.isEmpty() {
+        continue
+      }
+
+      // Paint our own outline
+      let paintInfo = PaintInfoWrapper(
+        newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .SelfOutline,
+        newPaintBehavior: paintBehavior,
+        newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
+        overlapTestRequests: nil, newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
+        enclosingSelfPaintingLayer: self)
+
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(
+        context: localPaintingInfo.regionContext)
+
+      clipToRect(
+        context: context, stateSaver: stateSaver,
+        regionContextStateSaver: regionContextStateSaver, paintingInfo: localPaintingInfo,
+        paintBehavior: paintBehavior,
+        clipRect: fragment.backgroundRect, rule: .DoNotIncludeSelfForBorderRadius)
+      renderer().paint(
+        paintInfo: paintInfo,
+        paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
+    }
   }
 
   private func paintOverflowControlsForFragments(
