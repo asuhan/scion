@@ -1813,8 +1813,16 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(localPaintingInfo.regionContext is AccessibilityRegionContext)
+    for fragment in layerFragments {
+      var paintInfo = PaintInfoWrapper(
+        newContext: context, newRect: fragment.foregroundRect.rect, newPhase: .Accessibility,
+        newPaintBehavior: paintBehavior)
+      paintInfo.regionContext = localPaintingInfo.regionContext
+      renderer().paint(
+        paintInfo: paintInfo,
+        paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
+    }
   }
 
   private func transparentPaintingAncestor(info: LayerPaintingInfo) -> RenderLayerWrapper? {
