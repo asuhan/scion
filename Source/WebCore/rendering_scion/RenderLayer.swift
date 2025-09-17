@@ -1774,8 +1774,34 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for fragment in layerFragments {
+      if !fragment.shouldPaintContent {
+        continue
+      }
+
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(
+        context: localPaintingInfo.regionContext)
+
+      if localPaintingInfo.clipToDirtyRect {
+        clipToRect(
+          context: context, stateSaver: stateSaver,
+          regionContextStateSaver: regionContextStateSaver, paintingInfo: localPaintingInfo,
+          paintBehavior: paintBehavior,
+          clipRect: fragment.foregroundRect, rule: .IncludeSelfForBorderRadius)  // Child clipping mask painting will handle clipping to self.
+      }
+
+      // Paint the clipped mask.
+      let paintInfo = PaintInfoWrapper(
+        newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .ClippingMask,
+        newPaintBehavior: paintBehavior,
+        newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
+        overlapTestRequests: nil, newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
+        enclosingSelfPaintingLayer: self)
+      renderer().paint(
+        paintInfo: paintInfo,
+        paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
+    }
   }
 
   private func paintTransformedLayerIntoFragments(
