@@ -842,8 +842,17 @@ class RenderLayerWrapper {
   }
 
   func shouldApplyClipPath(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().hasClipPath() {
+      return false
+    }
+
+    let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
+    if paintsToWindow || paintBehavior.contains(.FlattenCompositingLayers) {
+      return true
+    }
+
+    return paintFlags.contains(.PaintingCompositingClipPathPhase)
+      || paintFlags.contains(.CollectingEventRegion)
   }
 
   func establishesTopLayer() -> Bool {
