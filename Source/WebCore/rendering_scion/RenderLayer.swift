@@ -98,6 +98,27 @@ private func hasVisibleBoxDecorationsOrBackground(renderer: RenderElementWrapper
   return renderer.hasVisibleBoxDecorations() || renderer.style().hasOutline()
 }
 
+class ClipRects {
+  var fixed = false
+  let overflowClipRect = ClipRect()
+  let fixedClipRect = ClipRect()
+  let posClipRect = ClipRect()
+}
+
+private func backgroundClipRectForPosition(parentRects: ClipRects, position: PositionType)
+  -> ClipRect
+{
+  if position == .Fixed {
+    return parentRects.fixedClipRect
+  }
+
+  if position == .Absolute {
+    return parentRects.posClipRect
+  }
+
+  return parentRects.overflowClipRect
+}
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -2102,9 +2123,26 @@ class RenderLayerWrapper {
     }
   }
 
-  private func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
+  private func parentClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
+    assert(parent() != nil)
+    let parentRects = parentClipRects(clipRectsContext: clipRectsContext)
+    var backgroundClipRect = backgroundClipRectForPosition(
+      parentRects: parentRects, position: renderer().style().position())
+    let view = renderer().view()
+    // Note: infinite clipRects should not be scrolled here, otherwise they will accidentally no longer be considered infinite.
+    if parentRects.fixed
+      && CPtrToInt(clipRectsContext.rootLayer!.renderer().p) == CPtrToInt(view.p)
+      && !backgroundClipRect.isInfinite()
+    {
+      backgroundClipRect.moveBy(point: view.frameView().scrollPositionForFixedPosition())
+    }
+
+    return backgroundClipRect
   }
 
   private func hasNonOpacityTransparency() -> Bool {
