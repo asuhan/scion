@@ -606,6 +606,20 @@ class RenderLayerWrapper {
     var clipRectsType: ClipRectsType
   }
 
+  // This method figures out our layerBounds in coordinates relative to
+  // |rootLayer|. It also computes our background and foreground clip rects
+  // for painting/event handling.
+  // Pass offsetFromRoot if known.
+  func calculateRects(
+    clipRectsContext: ClipRectsContext, paintDirtyRect: LayoutRectWrapper,
+    layerBounds: inout LayoutRectWrapper, backgroundRect: inout ClipRect,
+    foregroundRect: inout ClipRect,
+    offsetFromRoot: LayoutSizeWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Public just for RenderTreeAsText.
   func collectFragments(
     fragments: inout LayerFragments, rootLayer: RenderLayerWrapper?, dirtyRect: LayoutRectWrapper,
@@ -932,6 +946,7 @@ class RenderLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
   // Compute and return the clip rects. If useCached is true, will used previously computed clip rects on ancestors
   // (rather than computing them all from scratch up the parent chain).
   private func calculateClipRects(clipRectsContext: ClipRectsContext, clipRects: inout ClipRects) {
@@ -943,8 +958,21 @@ class RenderLayerWrapper {
     ancestor: RenderLayerWrapper?, offsetFromAncestor: LayoutSizeWrapper,
     constrainingRect: LayoutRectWrapper, temporaryClipRects: Bool = false
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layerBounds = LayoutRectWrapper()
+    var backgroundRect = ClipRect()
+    var foregroundRect = ClipRect()
+    let clipRectType: ClipRectsType =
+      (m_enclosingPaginationLayer == nil
+        || CPtrToInt(m_enclosingPaginationLayer!.p) == CPtrToInt(ancestor?.p))
+        && !temporaryClipRects
+      ? .PaintingClipRects : .TemporaryClipRects
+    let clipRectsContext = ClipRectsContext(inRootLayer: ancestor, inClipRectsType: clipRectType)
+    calculateRects(
+      clipRectsContext: clipRectsContext, paintDirtyRect: constrainingRect,
+      layerBounds: &layerBounds,
+      backgroundRect: &backgroundRect, foregroundRect: &foregroundRect,
+      offsetFromRoot: offsetFromAncestor)
+    return backgroundRect.rect
   }
 
   private func clipToRect(
