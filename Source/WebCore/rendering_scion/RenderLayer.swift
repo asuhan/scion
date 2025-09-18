@@ -326,8 +326,25 @@ class RenderLayerWrapper {
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(ancestor.p) == CPtrToInt(p) {
+      return true
+    }
+
+    var currentBlock = renderer().containingBlock()
+    while currentBlock != nil && !(currentBlock! is RenderViewWrapper) {
+      let currLayer = currentBlock!.layer()
+      if CPtrToInt(currLayer?.p) == CPtrToInt(ancestor.p) {
+        return true
+      }
+
+      if currLayer != nil && CPtrToInt(currLayer?.p) == CPtrToInt(checkLimit?.p) {
+        return false
+      }
+
+      currentBlock = currentBlock!.containingBlock()
+    }
+
+    return false
   }
 
   // Gets the nearest enclosing positioned ancestor layer (also includes
