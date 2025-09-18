@@ -800,10 +800,7 @@ class RenderLayerWrapper {
     return false
   }
 
-  func paintsIntoProvidedBacking() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
 
   func usesCompositedScrolling() -> Bool {
     // TODO(asuhan): implement this
@@ -2259,6 +2256,8 @@ class RenderLayerWrapper {
 
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
+
+  private let backingProviderLayer: RenderLayerWrapper? = nil
 
   // Note that this transform has the transform-origin baked in.
   private let transform: TransformationMatrix? = nil
