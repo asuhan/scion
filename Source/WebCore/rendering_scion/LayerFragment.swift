@@ -25,10 +25,14 @@
 
 class LayerFragment {
   var shouldPaintContent: Bool = false
+  let boundingBox: LayoutRectWrapper? = nil
 
   let layerBounds = LayoutRectWrapper()
   let backgroundRect = ClipRect()
   let foregroundRect = ClipRect()
+
+  // Unique to paginated fragments. The physical translation to apply to shift the layer when painting/hit-testing.
+  let paginationOffset = LayoutSizeWrapper()
 }
 
 typealias LayerFragments = [LayerFragment]

@@ -637,6 +637,15 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // Pass offsetFromRoot if known.
+  func intersectsDamageRect(
+    layerBounds: LayoutRectWrapper, damageRect: LayoutRectWrapper, rootLayer: RenderLayerWrapper?,
+    offsetFromRoot: LayoutSizeWrapper, cachedBoundingBox: LayoutRectWrapper? = nil
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct CalculateLayerBoundsFlag: OptionSet {
     let rawValue: UInt16
 
@@ -1642,8 +1651,20 @@ class RenderLayerWrapper {
     fragments: inout LayerFragments, localPaintingInfo: LayerPaintingInfo,
     localPaintFlags: PaintLayerFlag, shouldPaintContent: Bool, offsetFromRoot: LayoutSizeWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for fragment in fragments {
+      fragment.shouldPaintContent = shouldPaintContent
+      if CPtrToInt(p) != CPtrToInt(localPaintingInfo.rootLayer?.p)
+        || !localPaintFlags.contains(.PaintingOverflowContents)
+      {
+        let newOffsetFromRoot = offsetFromRoot + fragment.paginationOffset
+        fragment.shouldPaintContent =
+          fragment.shouldPaintContent
+          && intersectsDamageRect(
+            layerBounds: fragment.layerBounds, damageRect: fragment.backgroundRect.rect,
+            rootLayer: localPaintingInfo.rootLayer,
+            offsetFromRoot: newOffsetFromRoot, cachedBoundingBox: fragment.boundingBox)
+      }
+    }
   }
 
   private func paintBackgroundForFragments(
