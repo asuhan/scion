@@ -829,8 +829,16 @@ class RenderLayerWrapper {
   }
 
   func shouldPaintMask(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().hasMask() {
+      return false
+    }
+
+    let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
+    if paintsToWindow || paintBehavior.contains(.FlattenCompositingLayers) {
+      return true
+    }
+
+    return paintFlags.contains(.PaintingCompositingMaskPhase)
   }
 
   func shouldApplyClipPath(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
