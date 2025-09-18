@@ -99,6 +99,10 @@ private func hasVisibleBoxDecorationsOrBackground(renderer: RenderElementWrapper
 }
 
 class ClipRects {
+  static func create() -> ClipRects {
+    return ClipRects()
+  }
+
   var fixed = false
   let overflowClipRect = ClipRect()
   let fixedClipRect = ClipRect()
@@ -582,6 +586,7 @@ class RenderLayerWrapper {
     }
 
     let rootLayer: RenderLayerWrapper?
+    var clipRectsType: ClipRectsType
   }
 
   // Public just for RenderTreeAsText.
@@ -592,6 +597,11 @@ class RenderLayerWrapper {
     layerBoundingBox: LayoutRectWrapper? = nil,
     applyRootOffsetToFragments: ShouldApplyRootOffsetToFragments = .IgnoreRootOffsetForFragments
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipCrossesPaintingBoundary() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -884,6 +894,18 @@ class RenderLayerWrapper {
   ) -> LayoutPointWrapper {
     return toLayoutPoint(
       size: fragment.layerBounds.location() - rendererLocation() + paintingInfo.subpixelOffset)
+  }
+
+  // Compute, cache and return clip rects computed with the given layer as the root.
+  private func updateClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  // Compute and return the clip rects. If useCached is true, will used previously computed clip rects on ancestors
+  // (rather than computing them all from scratch up the parent chain).
+  private func calculateClipRects(clipRectsContext: ClipRectsContext, clipRects: inout ClipRects) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func clipRectRelativeToAncestor(
@@ -2124,8 +2146,31 @@ class RenderLayerWrapper {
   }
 
   private func parentClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(parent() != nil)
+
+    let containerLayer = parent()!
+
+    if clipRectsContext.clipRectsType == .TemporaryClipRects {
+      return RenderLayerWrapper.temporaryParentClipRects(
+        clipContext: clipRectsContext, containerLayer: containerLayer)
+    }
+
+    if clipRectsContext.clipRectsType != .AbsoluteClipRects && clipCrossesPaintingBoundary() {
+      var tempClipRectsContext = clipRectsContext
+      tempClipRectsContext.clipRectsType = .TemporaryClipRects
+      return RenderLayerWrapper.temporaryParentClipRects(
+        clipContext: tempClipRectsContext, containerLayer: containerLayer)
+    }
+
+    return containerLayer.updateClipRects(clipRectsContext: clipRectsContext)
+  }
+
+  private static func temporaryParentClipRects(
+    clipContext: ClipRectsContext, containerLayer: RenderLayerWrapper
+  ) -> ClipRects {
+    var parentClipRects = ClipRects.create()
+    containerLayer.calculateClipRects(clipRectsContext: clipContext, clipRects: &parentClipRects)
+    return parentClipRects
   }
 
   private func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
