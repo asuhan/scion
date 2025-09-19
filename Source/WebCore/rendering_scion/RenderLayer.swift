@@ -628,6 +628,21 @@ class RenderLayerWrapper {
     layerBoundingBox: LayoutRectWrapper? = nil,
     applyRootOffsetToFragments: ShouldApplyRootOffsetToFragments = .IgnoreRootOffsetForFragments
   ) {
+    let paginationLayer = enclosingPaginationLayerInSubtree(
+      rootLayer: rootLayer, mode: inclusionMode)
+    if paginationLayer == nil || isTransformed() {
+      // For unpaginated layers, there is only one fragment.
+      let fragment = LayerFragment()
+      let clipRectsContext = ClipRectsContext(
+        inRootLayer: rootLayer, inClipRectsType: clipRectsType, inOptions: clipRectOptions)
+      calculateRects(
+        clipRectsContext: clipRectsContext, paintDirtyRect: dirtyRect,
+        layerBounds: &fragment.layerBounds, backgroundRect: &fragment.backgroundRect,
+        foregroundRect: &fragment.foregroundRect, offsetFromRoot: offsetFromRoot)
+      fragments.append(fragment)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
