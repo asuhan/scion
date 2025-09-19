@@ -1421,7 +1421,12 @@ class RenderLayerWrapper {
     var layerFragments: LayerFragments = []
     var subtreePaintRootForRenderer: RenderObjectWrapper? = nil
 
-    let paintBehavior = paintBehaviorForContents()
+    let paintBehavior = paintBehaviorForContents(
+      paintingInfo: paintingInfo, localPaintFlags: localPaintFlags,
+      isPaintingOverflowContents: isPaintingOverflowContents,
+      isCollectingEventRegion: isCollectingEventRegion,
+      isPaintingCompositedForeground: isPaintingCompositedForeground,
+      isPaintingCompositedBackground: isPaintingCompositedBackground)
 
     do {  // Scope for filter-related state changes.
       var backgroundRect = ClipRect()
@@ -1639,6 +1644,49 @@ class RenderLayerWrapper {
     }
   }
 
+  private func paintLayerHasVisibleContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintBehaviorForContents(
+    paintingInfo: LayerPaintingInfo, localPaintFlags: PaintLayerFlag,
+    isPaintingOverflowContents: Bool, isCollectingEventRegion: Bool,
+    isPaintingCompositedForeground: Bool, isPaintingCompositedBackground: Bool
+  ) -> PaintBehavior {
+    let flagsToCopy: PaintBehavior = [
+      .FlattenCompositingLayers, .Snapshotting, .ExcludeSelection, .ExcludeReplacedContent,
+    ]
+    var paintBehavior = paintingInfo.paintBehavior.intersection(flagsToCopy)
+
+    if localPaintFlags.contains(.PaintingSkipRootBackground) {
+      paintBehavior.update(with: .SkipRootBackground)
+    } else if localPaintFlags.contains(.PaintingRootBackgroundOnly) {
+      paintBehavior.update(with: .RootBackgroundOnly)
+    }
+
+    // FIXME: This seems wrong. We should retain the DefaultAsynchronousImageDecode flag for all RenderLayers painted into the root tile cache.
+    if paintingInfo.paintBehavior.contains(.DefaultAsynchronousImageDecode) && isRenderViewLayer {
+      paintBehavior.update(with: .DefaultAsynchronousImageDecode)
+    }
+
+    if isPaintingOverflowContents {
+      paintBehavior.update(with: .CompositedOverflowScrollContent)
+    }
+
+    if isCollectingEventRegion {
+      paintBehavior = paintBehavior.intersection([.CompositedOverflowScrollContent])
+      if isPaintingCompositedForeground {
+        paintBehavior.update(with: .EventRegionIncludeForeground)
+      }
+      if isPaintingCompositedBackground {
+        paintBehavior.update(with: .EventRegionIncludeBackground)
+      }
+    }
+
+    return paintBehavior
+  }
+
   private func paintList(
     layerIterator: LayerList, context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
     paintFlags: PaintLayerFlag
@@ -1712,16 +1760,6 @@ class RenderLayerWrapper {
         paintInfo: paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
-  }
-
-  private func paintLayerHasVisibleContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func paintBehaviorForContents() -> PaintBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   private func paintForegroundForFragments(
