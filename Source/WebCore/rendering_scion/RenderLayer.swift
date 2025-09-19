@@ -660,6 +660,37 @@ class RenderLayerWrapper {
       foregroundRect: &foregroundRectInFragmentedFlow,
       offsetFromRoot: offsetWithinPaginatedLayer)
 
+    // Take our bounding box within the flow thread and clip it.
+    var layerBoundingBoxInFragmentedFlow =
+      layerBoundingBox != nil
+      ? layerBoundingBox!
+      : boundingBox(ancestorLayer: paginationLayer, offsetFromRoot: offsetWithinPaginatedLayer)
+    layerBoundingBoxInFragmentedFlow.intersect(other: backgroundRectInFragmentedFlow.rect)
+
+    let enclosingFragmentedFlow = paginationLayer!.renderer() as! RenderFragmentedFlowWrapper
+    let parentPaginationLayer = paginationLayer!.parent()!.enclosingPaginationLayerInSubtree(
+      rootLayer: rootLayer, mode: inclusionMode)
+    if parentPaginationLayer != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // Shift the dirty rect into flow thread coordinates.
+    let offsetOfPaginationLayerFromRoot = enclosingPaginationLayer(mode: inclusionMode)!
+      .offsetFromAncestor(ancestorLayer: rootLayer)
+    var dirtyRectInFragmentedFlow = dirtyRect
+    dirtyRectInFragmentedFlow.move(size: -offsetOfPaginationLayerFromRoot)
+
+    // Tell the flow thread to collect the fragments. We pass enough information to create a minimal number of fragments based off the pages/columns
+    // that intersect the actual dirtyRect as well as the pages/columns that intersect our layer's bounding box.
+    enclosingFragmentedFlow.collectLayerFragments(
+      layerFragments: &fragments, layerBoundingBox: layerBoundingBoxInFragmentedFlow,
+      dirtyRect: dirtyRectInFragmentedFlow)
+
+    if fragments.isEmpty {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
