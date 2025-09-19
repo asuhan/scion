@@ -643,6 +643,23 @@ class RenderLayerWrapper {
       return
     }
 
+    // Compute our offset within the enclosing pagination layer.
+    let offsetWithinPaginatedLayer = offsetFromAncestor(ancestorLayer: paginationLayer)
+
+    // Calculate clip rects relative to the enclosingPaginationLayer. The purpose of this call is to determine our bounds clipped to intermediate
+    // layers between us and the pagination context. It's important to minimize the number of fragments we need to create and this helps with that.
+    let paginationClipRectsContext = ClipRectsContext(
+      inRootLayer: paginationLayer, inClipRectsType: clipRectsType, inOptions: clipRectOptions)
+    var layerBoundsInFragmentedFlow = LayoutRectWrapper()
+    var backgroundRectInFragmentedFlow = ClipRect()
+    var foregroundRectInFragmentedFlow = ClipRect()
+    calculateRects(
+      clipRectsContext: paginationClipRectsContext,
+      paintDirtyRect: LayoutRectWrapper.infiniteRect(), layerBounds: &layerBoundsInFragmentedFlow,
+      backgroundRect: &backgroundRectInFragmentedFlow,
+      foregroundRect: &foregroundRectInFragmentedFlow,
+      offsetFromRoot: offsetWithinPaginatedLayer)
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
