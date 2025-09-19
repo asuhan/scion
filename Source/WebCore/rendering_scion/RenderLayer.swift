@@ -1645,8 +1645,22 @@ class RenderLayerWrapper {
   }
 
   private func paintLayerHasVisibleContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasVisibleContent {
+      return false
+    }
+
+    if enclosingSVGHiddenOrResourceContainer == nil {
+      return true
+    }
+
+    // Hidden SVG containers (<defs> / <symbol> ...) and their children are never painted directly.
+    if !(enclosingSVGHiddenOrResourceContainer is RenderSVGResourceContainerWrapper) {
+      return false
+    }
+
+    // SVG resource layers and their children are only painted indirectly, via paintSVGResourceLayer().
+    assert(enclosingSVGHiddenOrResourceContainer!.hasLayer())
+    return enclosingSVGHiddenOrResourceContainer!.layer()!.isPaintingSVGResourceLayer
   }
 
   private func paintBehaviorForContents(
@@ -2355,6 +2369,10 @@ class RenderLayerWrapper {
   private var usedTransparency = false
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
 
+  private let hasVisibleContent = false
+
+  private let isPaintingSVGResourceLayer = false
+
   private let viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =
     .NoNotCompositedReason
 
@@ -2371,6 +2389,9 @@ class RenderLayerWrapper {
 
   // Pointer to the enclosing RenderLayer that caused us to be paginated. It is 0 if we are not paginated.
   private let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
+
+  // Pointer to the enclosing RenderSVGHiddenContainer or RenderSVGResourceContainer, if present.
+  private let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
 
   private let backing: RenderLayerBacking? = nil
 
