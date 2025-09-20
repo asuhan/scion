@@ -1018,8 +1018,7 @@ class RenderLayerWrapper {
   func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
 
   func usesCompositedScrolling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_scrollableArea?.usesCompositedScrolling() ?? false
   }
 
   func paintsWithTransparency(paintBehavior: PaintBehavior) -> Bool {

@@ -67,4 +67,9 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func usesCompositedScrolling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
