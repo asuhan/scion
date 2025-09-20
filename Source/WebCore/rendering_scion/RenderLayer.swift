@@ -700,8 +700,29 @@ class RenderLayerWrapper {
       ancestorClipRect.intersect(other: dirtyRect)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for fragment in fragments {
+      // Set our four rects with all clipping applied that was internal to the flow thread.
+      fragment.setRects(
+        bounds: layerBoundsInFragmentedFlow, background: backgroundRectInFragmentedFlow,
+        foreground: foregroundRectInFragmentedFlow,
+        bbox: layerBoundingBoxInFragmentedFlow)
+
+      // Shift to the root-relative physical position used when painting the flow thread in this fragment.
+      fragment.moveBy(
+        offset: toLayoutPoint(size: fragment.paginationOffset + offsetOfPaginationLayerFromRoot))
+
+      // Intersect the fragment with our ancestor's background clip so that e.g., columns in an overflow:hidden block are
+      // properly clipped by the overflow.
+      fragment.intersect(clipRect: ancestorClipRect)
+
+      // Now intersect with our pagination clip. This will typically mean we're just intersecting the dirty rect with the column
+      // clip, so the column clip ends up being all we apply.
+      fragment.intersect(rect: fragment.paginationClip)
+
+      if applyRootOffsetToFragments == .ApplyRootOffsetToFragments {
+        fragment.paginationOffset = fragment.paginationOffset + offsetOfPaginationLayerFromRoot
+      }
+    }
   }
 
   func clipCrossesPaintingBoundary() -> Bool {

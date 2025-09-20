@@ -24,15 +24,43 @@
  */
 
 class LayerFragment {
+  func setRects(
+    bounds: LayoutRectWrapper, background: ClipRect, foreground: ClipRect, bbox: LayoutRectWrapper?
+  ) {
+    layerBounds = bounds
+    backgroundRect = background
+    foregroundRect = foreground
+    boundingBox = bbox
+  }
+
+  func moveBy(offset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intersect(rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intersect(clipRect: ClipRect) {
+    backgroundRect.intersect(other: clipRect)
+    foregroundRect.intersect(other: clipRect)
+  }
+
   var shouldPaintContent: Bool = false
-  let boundingBox: LayoutRectWrapper? = nil
+  var boundingBox: LayoutRectWrapper? = nil
 
   var layerBounds = LayoutRectWrapper()
   var backgroundRect = ClipRect()
   var foregroundRect = ClipRect()
 
   // Unique to paginated fragments. The physical translation to apply to shift the layer when painting/hit-testing.
-  let paginationOffset = LayoutSizeWrapper()
+  var paginationOffset = LayoutSizeWrapper()
+
+  // Also unique to paginated fragments. An additional clip that applies to the layer. It is in layer-local
+  // (physical) coordinates.
+  let paginationClip = LayoutRectWrapper()
 }
 
 typealias LayerFragments = [LayerFragment]

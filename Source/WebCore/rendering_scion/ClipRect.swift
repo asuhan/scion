@@ -35,6 +35,11 @@ struct ClipRect {
     fatalError("Not implemented")
   }
 
+  func intersect(other: ClipRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func moveBy(point: LayoutPointWrapper) { rect.moveBy(offset: point) }
 
   func isEmpty() -> Bool { return rect.isEmpty() }
