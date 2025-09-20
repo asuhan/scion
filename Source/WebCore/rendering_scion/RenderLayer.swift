@@ -691,6 +691,15 @@ class RenderLayerWrapper {
       return
     }
 
+    // Get the parent clip rects of the pagination layer, since we need to intersect with that when painting column contents.
+    var ancestorClipRect = ClipRect(rect: dirtyRect)
+    if paginationLayer!.parent() != nil {
+      let clipRectsContext = ClipRectsContext(
+        inRootLayer: rootLayer, inClipRectsType: clipRectsType, inOptions: clipRectOptions)
+      ancestorClipRect = paginationLayer!.backgroundClipRect(clipRectsContext: clipRectsContext)
+      ancestorClipRect.intersect(other: dirtyRect)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
