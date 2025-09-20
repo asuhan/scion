@@ -670,7 +670,31 @@ class RenderLayerWrapper {
     let enclosingFragmentedFlow = paginationLayer!.renderer() as! RenderFragmentedFlowWrapper
     let parentPaginationLayer = paginationLayer!.parent()!.enclosingPaginationLayerInSubtree(
       rootLayer: rootLayer, mode: inclusionMode)
+    var ancestorFragments: LayerFragments = []
     if parentPaginationLayer != nil {
+      // Compute a bounding box accounting for fragments.
+      var layerFragmentBoundingBoxInParentPaginationLayer =
+        enclosingFragmentedFlow.fragmentsBoundingBox(
+          layerBoundingBox: layerBoundingBoxInFragmentedFlow)
+
+      // Convert to be in the ancestor pagination context's coordinate space.
+      let offsetWithinParentPaginatedLayer = paginationLayer!.offsetFromAncestor(
+        ancestorLayer: parentPaginationLayer)
+      layerFragmentBoundingBoxInParentPaginationLayer.move(size: offsetWithinParentPaginatedLayer)
+
+      // Now collect ancestor fragments.
+      parentPaginationLayer!.collectFragments(
+        fragments: &ancestorFragments, rootLayer: rootLayer, dirtyRect: dirtyRect,
+        inclusionMode: inclusionMode, clipRectsType: clipRectsType,
+        clipRectOptions: clipRectOptions,
+        offsetFromRoot: offsetFromAncestor(ancestorLayer: rootLayer),
+        layerBoundingBox: layerFragmentBoundingBoxInParentPaginationLayer,
+        applyRootOffsetToFragments: .ApplyRootOffsetToFragments)
+
+      if ancestorFragments.isEmpty {
+        return
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
