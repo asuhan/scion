@@ -695,8 +695,56 @@ class RenderLayerWrapper {
         return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      for ancestorFragment in ancestorFragments {
+        // Shift the dirty rect into flow thread coordinates.
+        var dirtyRectInFragmentedFlow = dirtyRect
+        dirtyRectInFragmentedFlow.move(
+          size:
+            -offsetWithinParentPaginatedLayer - ancestorFragment.paginationOffset)
+
+        let oldSize = fragments.count
+
+        // Tell the flow thread to collect the fragments. We pass enough information to create a minimal number of fragments based off the pages/columns
+        // that intersect the actual dirtyRect as well as the pages/columns that intersect our layer's bounding box.
+        enclosingFragmentedFlow.collectLayerFragments(
+          layerFragments: &fragments, layerBoundingBox: layerBoundingBoxInFragmentedFlow,
+          dirtyRect: dirtyRectInFragmentedFlow)
+
+        let newSize = fragments.count
+
+        if oldSize == newSize {
+          continue
+        }
+
+        for fragment in fragments[oldSize..<newSize] {
+          // Set our four rects with all clipping applied that was internal to the flow thread.
+          fragment.setRects(
+            bounds: layerBoundsInFragmentedFlow, background: backgroundRectInFragmentedFlow,
+            foreground: foregroundRectInFragmentedFlow,
+            bbox: layerBoundingBoxInFragmentedFlow)
+
+          // Shift to the root-relative physical position used when painting the flow thread in this fragment.
+          fragment.moveBy(
+            offset:
+              toLayoutPoint(
+                size: ancestorFragment.paginationOffset + fragment.paginationOffset
+                  + offsetWithinParentPaginatedLayer))
+
+          // Intersect the fragment with our ancestor's background clip so that e.g., columns in an overflow:hidden block are
+          // properly clipped by the overflow.
+          fragment.intersect(rect: ancestorFragment.paginationClip)
+
+          // Now intersect with our pagination clip. This will typically mean we're just intersecting the dirty rect with the column
+          // clip, so the column clip ends up being all we apply.
+          fragment.intersect(rect: fragment.paginationClip)
+
+          if applyRootOffsetToFragments == .ApplyRootOffsetToFragments {
+            fragment.paginationOffset = fragment.paginationOffset + offsetWithinParentPaginatedLayer
+          }
+        }
+      }
+
+      return
     }
 
     // Shift the dirty rect into flow thread coordinates.
