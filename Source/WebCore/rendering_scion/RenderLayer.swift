@@ -63,6 +63,11 @@ enum ShouldApplyRootOffsetToFragments {
   case IgnoreRootOffsetForFragments
 }
 
+private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: Bool) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func performOverlapTests(
   overlapTestRequests: OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
   layer: RenderLayerWrapper?
@@ -977,8 +982,16 @@ class RenderLayerWrapper {
   func isTransformed() -> Bool { return renderer().isTransformed() }
 
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let matrix = transform {
+      if paintBehavior.contains(.FlattenCompositingLayers) {
+        makeMatrixRenderable(matrix: matrix, has3DRendering: false)
+        return matrix
+      }
+
+      return matrix
+    }
+
+    return TransformationMatrix()
   }
 
   func has3DTransform() -> Bool {
