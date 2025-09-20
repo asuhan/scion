@@ -34,8 +34,13 @@ class LayerFragment {
   }
 
   func moveBy(offset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    layerBounds.moveBy(offset: offset)
+    backgroundRect.moveBy(point: offset)
+    foregroundRect.moveBy(point: offset)
+    paginationClip.moveBy(offset: offset)
+    if boundingBox != nil {
+      boundingBox!.moveBy(offset: offset)
+    }
   }
 
   func intersect(rect: LayoutRectWrapper) {
@@ -63,7 +68,7 @@ class LayerFragment {
 
   // Also unique to paginated fragments. An additional clip that applies to the layer. It is in layer-local
   // (physical) coordinates.
-  let paginationClip = LayoutRectWrapper()
+  var paginationClip = LayoutRectWrapper()
 }
 
 typealias LayerFragments = [LayerFragment]
