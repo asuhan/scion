@@ -2244,8 +2244,64 @@ class RenderLayerWrapper {
   private func paintTransformedLayerIntoFragments(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let paginatedLayer = enclosingPaginationLayer(mode: .ExcludeCompositedPaginatedLayers)!
+    let transformedExtent = RenderLayerWrapper.transparencyClipBox(
+      layer: self, rootLayer: paginatedLayer, transparencyBehavior: .PaintingTransparencyClipBox,
+      transparencyMode: .RootOfTransparencyClipBox,
+      paintBehavior: paintingInfo.paintBehavior)
+
+    let clipRectOptions =
+      paintFlags.contains(.PaintingOverflowContents)
+      ? RenderLayerWrapper.clipRectOptionsForPaintingOverflowControls
+      : RenderLayerWrapper.clipRectDefaultOptions
+    var enclosingPaginationFragments: LayerFragments = []
+    paginatedLayer.collectFragments(
+      fragments: &enclosingPaginationFragments, rootLayer: paintingInfo.rootLayer,
+      dirtyRect: paintingInfo.paintDirtyRect,
+      inclusionMode: .ExcludeCompositedPaginatedLayers,
+      clipRectsType: paintFlags.contains(.TemporaryClipRects)
+        ? .TemporaryClipRects : .PaintingClipRects,
+      clipRectOptions: clipRectOptions, offsetFromRoot: LayoutSizeWrapper(),
+      layerBoundingBox: transformedExtent)
+
+    var offsetOfPaginationLayerFromRoot = LayoutSizeWrapper()
+    for fragment in enclosingPaginationFragments {
+      // Apply the page/column clip for this fragment, as well as any clips established by layers in between us and
+      // the enclosing pagination layer.
+      var clipRect = fragment.backgroundRect.rect
+
+      // Now compute the clips within a given fragment
+      if CPtrToInt(parent()?.p) != CPtrToInt(paginatedLayer.p) {
+        offsetOfPaginationLayerFromRoot = toLayoutSize(
+          point: paginatedLayer.convertToLayerCoords(
+            ancestorLayer: paintingInfo.rootLayer,
+            location: toLayoutPoint(size: offsetOfPaginationLayerFromRoot)))
+
+        let clipRectsContext = ClipRectsContext(
+          inRootLayer: paginatedLayer,
+          inClipRectsType: paintFlags.contains(.TemporaryClipRects)
+            ? .TemporaryClipRects : .PaintingClipRects, inOptions: clipRectOptions)
+        var parentClipRect = backgroundClipRect(clipRectsContext: clipRectsContext).rect
+        parentClipRect.move(size: fragment.paginationOffset + offsetOfPaginationLayerFromRoot)
+        clipRect.intersect(other: parentClipRect)
+      }
+
+      var paintBehavior: PaintBehavior = .Normal
+      if paintFlags.contains(.PaintingOverflowContents) {
+        paintBehavior.update(with: .CompositedOverflowScrollContent)
+      }
+
+      let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+      let regionContextStateSaver = RegionContextStateSaver(context: paintingInfo.regionContext)
+
+      parent()!.clipToRect(
+        context: context, stateSaver: stateSaver, regionContextStateSaver: regionContextStateSaver,
+        paintingInfo: paintingInfo, paintBehavior: paintBehavior, clipRect: ClipRect(rect: clipRect)
+      )
+      paintLayerByApplyingTransform(
+        context: context, paintingInfo: paintingInfo, paintFlags: paintFlags,
+        translationOffset: fragment.paginationOffset)
+    }
   }
 
   private func collectEventRegionForFragments(
