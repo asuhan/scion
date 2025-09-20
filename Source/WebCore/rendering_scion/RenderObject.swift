@@ -101,6 +101,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderInline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFieldset() -> Bool {
     return wk_interop.RenderObject_isFieldset(p)
   }

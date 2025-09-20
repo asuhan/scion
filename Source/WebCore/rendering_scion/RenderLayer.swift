@@ -807,8 +807,35 @@ class RenderLayerWrapper {
     layerBounds: LayoutRectWrapper, damageRect: LayoutRectWrapper, rootLayer: RenderLayerWrapper?,
     offsetFromRoot: LayoutSizeWrapper, cachedBoundingBox: LayoutRectWrapper? = nil
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Always examine the canvas and the root.
+    // FIXME: Could eliminate the isDocumentElementRenderer() check if we fix background painting so that the RenderView
+    // paints the root's background.
+    if isRenderViewLayer || renderer().isDocumentElementRenderer() {
+      return true
+    }
+
+    if damageRect.isInfinite() {
+      return true
+    }
+
+    if damageRect.isEmpty() {
+      return false
+    }
+
+    // If we aren't an inline flow, and our layer bounds do intersect the damage rect, then we can return true.
+    if !renderer().isRenderInline() && layerBounds.intersects(other: damageRect) {
+      return true
+    }
+
+    // Otherwise we need to compute the bounding box of this single layer and see if it intersects
+    // the damage rect. It's possible the fragment computed the bounding box already, in which case we
+    // can use the cached value.
+    if let cachedBoundingBox = cachedBoundingBox {
+      return cachedBoundingBox.intersects(other: damageRect)
+    }
+
+    return boundingBox(ancestorLayer: rootLayer, offsetFromRoot: offsetFromRoot).intersects(
+      other: damageRect)
   }
 
   struct CalculateLayerBoundsFlag: OptionSet {
