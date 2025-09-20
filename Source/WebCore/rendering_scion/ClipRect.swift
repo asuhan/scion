@@ -30,14 +30,22 @@ struct ClipRect {
     self.rect = rect
   }
 
-  func intersect(other: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func intersect(other: LayoutRectWrapper) {
+    if other.isInfinite() {
+      return
+    }
+    if isInfinite() {
+      rect = other
+    } else {
+      rect.intersect(other: other)
+    }
   }
 
-  func intersect(other: ClipRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func intersect(other: ClipRect) {
+    intersect(other: other.rect)
+    if other.affectedByRadius {
+      affectedByRadius = true
+    }
   }
 
   mutating func moveBy(point: LayoutPointWrapper) { rect.moveBy(offset: point) }
@@ -50,5 +58,5 @@ struct ClipRect {
   }
 
   var rect = LayoutRectWrapper()
-  let affectedByRadius = false
+  var affectedByRadius = false
 }

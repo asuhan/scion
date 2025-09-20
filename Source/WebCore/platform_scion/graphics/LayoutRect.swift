@@ -233,6 +233,10 @@ struct LayoutRectWrapper: Equatable {
     return LayoutRectWrapper(location: m_location.transposedPoint(), size: m_size.transposedSize())
   }
 
+  func isInfinite() -> Bool {
+    return self == LayoutRectWrapper.infiniteRect()
+  }
+
   static func infiniteRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
