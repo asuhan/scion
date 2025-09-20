@@ -39,8 +39,11 @@ class LayerFragment {
   }
 
   func intersect(rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    backgroundRect.intersect(other: rect)
+    foregroundRect.intersect(other: rect)
+    if boundingBox != nil {
+      boundingBox!.intersect(other: rect)
+    }
   }
 
   func intersect(clipRect: ClipRect) {
