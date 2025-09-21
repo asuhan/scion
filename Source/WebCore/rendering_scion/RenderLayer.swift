@@ -1391,8 +1391,12 @@ class RenderLayerWrapper {
             coordinateSystemOriginTranslation =
               (toLayoutPoint(size: offsetFromRoot) - boundingBoxTopLeftCorner).FloatSize()
           } else {
-            // TODO(asuhan): implement this
-            fatalError("Not implemented")
+            let clipPathObjectBoundingBox = referenceBoxRectForClipPath(
+              boxType: .BorderBox, offsetFromRoot: offsetFromRoot,
+              rootRelativeBounds: clippedContentBounds)
+            svgReferenceBox = snapRectToDevicePixels(
+              rect: LayoutRectWrapper(r: clipPathObjectBoundingBox),
+              pixelSnappingFactor: renderer().document().deviceScaleFactor())
           }
 
           if !coordinateSystemOriginTranslation.isZero() {
