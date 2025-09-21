@@ -17,6 +17,7 @@ target_sources(layout_scion PRIVATE
     PaintFrequencyTracker.swift
     PaintInfo.swift
     PaintPhase.swift
+    PathOperation.swift
     AccessibilityRegionContext.swift
     BackgroundPainter.swift
     BorderEdge.swift

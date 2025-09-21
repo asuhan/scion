@@ -1298,8 +1298,30 @@ class RenderLayerWrapper {
   private func setupClipPath(
     context: GraphicsContextWrapper, stateSaver: GraphicsContextStateSaver,
     regionContextStateSaver: RegionContextStateSaver, paintingInfo: LayerPaintingInfo,
-    paintFlags: PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper
+    paintFlags: inout PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper
   ) {
+    let isCollectingRegions =
+      paintFlags.contains(.CollectingEventRegion)
+      || (paintingInfo.regionContext is AccessibilityRegionContext)
+    if !renderer().hasClipPath() || (context.paintingDisabled() && !isCollectingRegions)
+      || paintingInfo.paintDirtyRect.isEmpty()
+    {
+      return
+    }
+
+    // Applying clip-path on <clipPath> enforces us to use mask based clipping, so return false here to disable path based clipping.
+    // Furthermore if we're the child of a resource container (<clipPath> / <mask> / ...) disabled path based clipping.
+    if enclosingSVGHiddenOrResourceContainer is RenderSVGResourceClipperWrapper {
+      // If isPaintingSVGResourceLayer is true, this function was invoked via paintSVGResourceLayer() -- clipping on <clipPath> is already
+      // handled in RenderSVGResourceClipper::applyMaskClipping(), so do not set paintSVGClippingMask to true here.
+      if isPaintingSVGResourceLayer {
+        paintFlags.remove(.PaintingSVGClippingMask)
+      } else {
+        paintFlags.update(with: .PaintingSVGClippingMask)
+      }
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1661,7 +1683,7 @@ class RenderLayerWrapper {
     if shouldApplyClipPath(paintBehavior: paintingInfo.paintBehavior, paintFlags: localPaintFlags) {
       setupClipPath(
         context: context, stateSaver: stateSaver, regionContextStateSaver: regionContextStateSaver,
-        paintingInfo: paintingInfo, paintFlags: localPaintFlags,
+        paintingInfo: paintingInfo, paintFlags: &localPaintFlags,
         offsetFromRoot: columnAwareOffsetFromRoot)
     }
 
