@@ -154,6 +154,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isSVGLayerAwareRenderer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Per SVG 1.1 objectBoundingBox ignores clipping, masking, filter effects, opacity and stroke-width.
+  // This is used for all computation of objectBoundingBox relative units and by SVGLocatable::getBBox().
+  // NOTE: Markers are not specifically ignored here by SVG 1.1 spec, but we ignore them
+  // since stroke-width is ignored (and marker size can depend on stroke-width).
+  // objectBoundingBox is returned local coordinates.
+  // The name objectBoundingBox is taken from the SVG 1.1 spec.
+  func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isAnonymous() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

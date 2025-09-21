@@ -1372,9 +1372,33 @@ class RenderLayerWrapper {
 
     if style.clipPath() is ReferencePathOperation {
       if let svgClipper = renderer().svgClipperResourceFromStyle() {
-        if svgClipper.shouldApplyPathClipping() != nil {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+        if let graphicsElement = svgClipper.shouldApplyPathClipping() {
+          stateSaver.save()
+          var svgReferenceBox = FloatRectWrapper()
+          var coordinateSystemOriginTranslation = FloatSize()
+          if renderer().isSVGLayerAwareRenderer() {
+            assert(paintingInfo.subpixelOffset.isZero())
+            let boundingBoxTopLeftCorner = renderer().nominalSVGLayoutLocation()
+            svgReferenceBox = renderer().objectBoundingBox()
+            coordinateSystemOriginTranslation =
+              (toLayoutPoint(size: offsetFromRoot) - boundingBoxTopLeftCorner).FloatSize()
+          } else {
+            // TODO(asuhan): implement this
+            fatalError("Not implemented")
+          }
+
+          if !coordinateSystemOriginTranslation.isZero() {
+            context.translate(size: coordinateSystemOriginTranslation)
+          }
+
+          svgClipper.applyPathClipping(
+            context: context, targetRenderer: renderer(), objectBoundingBox: svgReferenceBox,
+            graphicsElement: graphicsElement)
+
+          if !coordinateSystemOriginTranslation.isZero() {
+            context.translate(size: -coordinateSystemOriginTranslation)
+          }
+          return
         } else {
           paintFlags.update(with: .PaintingSVGClippingMask)
           return

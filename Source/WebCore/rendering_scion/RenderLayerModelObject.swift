@@ -39,6 +39,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }
 
+  func nominalSVGLayoutLocation() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func svgClipperResourceFromStyle() -> RenderSVGResourceClipperWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

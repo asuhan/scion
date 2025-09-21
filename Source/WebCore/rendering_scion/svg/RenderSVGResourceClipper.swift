@@ -26,4 +26,12 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func applyPathClipping(
+    context: GraphicsContextWrapper, targetRenderer: RenderLayerModelObjectWrapper,
+    objectBoundingBox: FloatRectWrapper, graphicsElement: SVGGraphicsElementWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

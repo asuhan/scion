@@ -81,6 +81,10 @@ struct FloatSize {
     return a
   }
 
+  static prefix func - (size: FloatSize) -> FloatSize {
+    return FloatSize(width: -size.width, height: -size.height)
+  }
+
   static func == (lhs: FloatSize, rhs: FloatSize) -> Bool {
     return lhs.width == rhs.width && lhs.height == rhs.height
   }
