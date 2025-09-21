@@ -49,6 +49,11 @@ private enum BorderRadiusClippingRule {
   case DoNotIncludeSelfForBorderRadius
 }
 
+enum IncludeSelfOrNot {
+  case IncludeSelf
+  case ExcludeSelf
+}
+
 enum ClipRectsType {
   case PaintingClipRects  // Relative to painting ancestor. Used for painting.
   case RootRelativeClipRects  // Relative to the ancestor treated as the root (e.g. transformed layer). Used for hit testing.
@@ -367,6 +372,18 @@ class RenderLayerWrapper {
       assert(curr == nil || CPtrToInt(curr!.p) == CPtrToInt(renderer().view().layer()!.p))
     }
     return curr
+  }
+
+  struct EnclosingCompositingLayerStatus {
+    let fullRepaintAlreadyScheduled = false
+    let layer: RenderLayerWrapper? = nil
+  }
+
+  func enclosingCompositingLayerForRepaint(includeSelf: IncludeSelfOrNot = .IncludeSelf)
+    -> EnclosingCompositingLayerStatus
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   enum ColumnOffsetAdjustment {
@@ -803,8 +820,10 @@ class RenderLayerWrapper {
   }
 
   func clipCrossesPaintingBoundary() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CPtrToInt(parent()!.enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.p)
+      != CPtrToInt(enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.p)
+      || CPtrToInt(parent()!.enclosingCompositingLayerForRepaint().layer?.p)
+        != CPtrToInt(enclosingCompositingLayerForRepaint().layer?.p)
   }
 
   // Pass offsetFromRoot if known.
