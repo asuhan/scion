@@ -45,6 +45,12 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 }
 
+// Pixel-snapping (== 'device pixel alignment') helpers.
+func rendererNeedsPixelSnapping(renderer: RenderLayerModelObjectWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func snapRectToDevicePixelsIfNeeded(
   rect: LayoutRectWrapper, renderer: RenderLayerModelObjectWrapper
 ) -> FloatRectWrapper {

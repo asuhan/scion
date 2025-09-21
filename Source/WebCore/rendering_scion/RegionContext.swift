@@ -24,6 +24,16 @@
  */
 
 class RegionContext {
+  func pushTransform(transform: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func popTransform() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pushClip(clipRect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

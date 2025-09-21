@@ -1136,10 +1136,10 @@ class RenderLayerWrapper {
       self.requireSecurityOriginAccessForWidgets = inRequireSecurityOriginAccessForWidgets
     }
 
-    let rootLayer: RenderLayerWrapper?
+    var rootLayer: RenderLayerWrapper?
     let subtreePaintRoot: RenderObjectWrapper?  // Only paint descendants of this object.
-    let paintDirtyRect: LayoutRectWrapper  // Relative to rootLayer;
-    let subpixelOffset: LayoutSizeWrapper
+    var paintDirtyRect: LayoutRectWrapper  // Relative to rootLayer;
+    var subpixelOffset: LayoutSizeWrapper
     let overlapTestRequests: OverlapTestRequestMap?
     var paintBehavior: PaintBehavior
     let requireSecurityOriginAccessForWidgets: Bool
@@ -1517,8 +1517,62 @@ class RenderLayerWrapper {
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag,
     translationOffset: LayoutSizeWrapper = LayoutSizeWrapper()
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This involves subtracting out the position of the layer in our current coordinate space, but preserving
+    // the accumulated error for sub-pixel layout.
+    // Note: The pixel-snapping logic is disabled for the whole SVG render tree, except the outermost <svg>.
+    let deviceScaleFactor = renderer().document().deviceScaleFactor()
+    var offsetFromParent = offsetFromAncestor(ancestorLayer: paintingInfo.rootLayer)
+    offsetFromParent += translationOffset
+    let transform = renderableTransform(paintBehavior: paintingInfo.paintBehavior).deepCopy()
+    // Add the subpixel accumulation to the current layer's offset so that we can always snap the translateRight value to where the renderer() is supposed to be painting.
+    let offsetForThisLayer = offsetFromParent + paintingInfo.subpixelOffset
+    let alignedOffsetForThisLayer =
+      rendererNeedsPixelSnapping(renderer: renderer())
+      ? toFloatSize(
+        a: roundPointToDevicePixels(
+          point: toLayoutPoint(size: offsetForThisLayer), pixelSnappingFactor: deviceScaleFactor))
+      : offsetForThisLayer.FloatSize()
+    // We handle accumulated subpixels through nested layers here. Since the context gets translated to device pixels,
+    // all we need to do is add the delta to the accumulated pixels coming from ancestor layers.
+    // Translate the graphics context to the snapping position to avoid off-device-pixel positing.
+    transform.translateRight(
+      tx: Float64(alignedOffsetForThisLayer.width), ty: Float64(alignedOffsetForThisLayer.height))
+    // Apply the transform.
+    let oldTransform = context.getCTM()
+    let affineTransform = transform.toAffineTransform()
+    context.concatCTM(transform: affineTransform)
+
+    if let regionContext = paintingInfo.regionContext {
+      regionContext.pushTransform(transform: affineTransform)
+    }
+
+    // Only propagate the subpixel offsets to the descendant layers, if we're not the root
+    // of a SVG subtree, where no pixel snapping is applied -- only the outermost <svg> layer
+    // is pixel-snapped "as whole", if it's part of a compound document, e.g. inline SVG in HTML.
+    let adjustedSubpixelOffset =
+      rendererNeedsPixelSnapping(renderer: renderer()) && !renderer().isRenderSVGRoot()
+      ? offsetForThisLayer - LayoutSizeWrapper(size: alignedOffsetForThisLayer)
+      : LayoutSizeWrapper()
+
+    // Now do a paint with the root layer shifted to be us.
+    var transformedPaintingInfo = paintingInfo
+    transformedPaintingInfo.rootLayer = self
+    if !transformedPaintingInfo.paintDirtyRect.isInfinite() {
+      transformedPaintingInfo.paintDirtyRect = LayoutRectWrapper(
+        r: encloseRectToDevicePixels(
+          rect: (transform.inverse() ?? TransformationMatrix()).mapRect(
+            r: paintingInfo.paintDirtyRect),
+          pixelSnappingFactor: deviceScaleFactor))
+    }
+    transformedPaintingInfo.subpixelOffset = adjustedSubpixelOffset
+    paintLayerContentsAndReflection(
+      context: context, paintingInfo: transformedPaintingInfo, paintFlags: paintFlags)
+
+    if let regionContext = paintingInfo.regionContext {
+      regionContext.popTransform()
+    }
+
+    context.setCTM(transform: oldTransform)
   }
 
   private func paintLayerContents(

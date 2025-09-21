@@ -43,12 +43,34 @@ class TransformationMatrix {
     fatalError("Not implemented")
   }
 
+  // translation added with a post-multiply
+  @discardableResult
+  func translateRight(tx: Float64, ty: Float64) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInvertible() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  func inverse() -> TransformationMatrix? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isAffine() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func toAffineTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func deepCopy() -> TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

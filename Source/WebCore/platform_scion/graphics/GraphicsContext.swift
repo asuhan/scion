@@ -356,6 +356,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setCTM(transform: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum IncludeDeviceScale {
     case DefinitelyIncludeDeviceScale
     case PossiblyIncludeDeviceScale
