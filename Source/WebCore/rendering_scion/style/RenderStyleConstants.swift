@@ -529,6 +529,18 @@ enum TextIndentType: UInt8 {
   case Hanging
 }
 
+// Fill, Stroke, ViewBox are just used for SVG.
+enum CSSBoxType: UInt8 {
+  case BoxMissing
+  case MarginBox
+  case BorderBox
+  case PaddingBox
+  case ContentBox
+  case FillBox
+  case StrokeBox
+  case ViewBox
+}
+
 // These are all minimized combinations of paint-order.
 enum PaintOrder: UInt8 {
   case Normal

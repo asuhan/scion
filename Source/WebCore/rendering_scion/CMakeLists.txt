@@ -18,6 +18,7 @@ target_sources(layout_scion PRIVATE
     PaintInfo.swift
     PaintPhase.swift
     PathOperation.swift
+    ReferencedSVGResources.swift
     AccessibilityRegionContext.swift
     BackgroundPainter.swift
     BorderEdge.swift

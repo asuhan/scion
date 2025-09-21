@@ -968,6 +968,14 @@ class RenderLayerWrapper {
     return result
   }
 
+  // Returns the 'reference box' used for clip-path handling (different rules for inlines, wrt. to boxes).
+  func referenceBoxRectForClipPath(
+    boxType: CSSBoxType, offsetFromRoot: LayoutSizeWrapper, rootRelativeBounds: LayoutRectWrapper
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Can pass offsetFromRoot if known.
   func calculateLayerBounds(
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper,
@@ -1370,7 +1378,7 @@ class RenderLayerWrapper {
       return
     }
 
-    if style.clipPath() is ReferencePathOperation {
+    if let referenceClipPathOperation = style.clipPath() as? ReferencePathOperation {
       if let svgClipper = renderer().svgClipperResourceFromStyle() {
         if let graphicsElement = svgClipper.shouldApplyPathClipping() {
           stateSaver.save()
@@ -1405,8 +1413,32 @@ class RenderLayerWrapper {
         }
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let clipperRenderer = ReferencedSVGResources.referencedClipperRenderer(
+        treeScope: renderer().treeScopeForSVGReferences(), clipPath: referenceClipPathOperation)
+      {
+        // Use the border box as the reference box, even though this is not clearly specified: https://github.com/w3c/csswg-drafts/issues/5786.
+        // clippedContentBounds is used as the reference box for inlines, which is also poorly specified: https://github.com/w3c/csswg-drafts/issues/6383.
+        let referenceBox = referenceBoxRectForClipPath(
+          boxType: .BorderBox, offsetFromRoot: offsetFromRoot,
+          rootRelativeBounds: clippedContentBounds)
+        let snappedReferenceBox = snapRectToDevicePixelsIfNeeded(
+          rect: referenceBox, renderer: renderer())
+        let offset = snappedReferenceBox.location()
+
+        var snappedClippingBounds = snapRectToDevicePixelsIfNeeded(
+          rect: clippedContentBounds, renderer: renderer())
+        snappedClippingBounds.moveBy(delta: -offset)
+
+        stateSaver.save()
+        context.translate(p: offset)
+        clipperRenderer.applyClippingToContext(
+          context: context, renderer: renderer(),
+          objectBoundingBox: FloatRectWrapper(location: FloatPoint(), size: referenceBox.size()),
+          clippedContentBounds: snappedClippingBounds, usedZoom: renderer().style().usedZoom())
+        context.translate(p: -offset)
+
+        // FIXME: Support event regions.
+      }
     }
   }
 

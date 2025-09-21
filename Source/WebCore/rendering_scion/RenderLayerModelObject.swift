@@ -62,3 +62,10 @@ func snapRectToDevicePixelsIfNeeded(
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
+
+func snapRectToDevicePixelsIfNeeded(
+  rect: FloatRectWrapper, renderer: RenderLayerModelObjectWrapper
+) -> FloatRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

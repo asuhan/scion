@@ -351,6 +351,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func translate(p: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func concatCTM(transform: AffineTransform) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

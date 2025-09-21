@@ -6,3 +6,4 @@ target_sources(layout_scion PRIVATE
     RenderSVGResourceContainer.swift
     RenderSVGRoot.swift
 )
+add_subdirectory(legacy)
