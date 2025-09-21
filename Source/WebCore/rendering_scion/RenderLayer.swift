@@ -1370,8 +1370,20 @@ class RenderLayerWrapper {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style.clipPath() is ReferencePathOperation {
+      if let svgClipper = renderer().svgClipperResourceFromStyle() {
+        if svgClipper.shouldApplyPathClipping() != nil {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        } else {
+          paintFlags.update(with: .PaintingSVGClippingMask)
+          return
+        }
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
@@ -2721,7 +2733,7 @@ class RenderLayerWrapper {
 
     // SVG clip-paths may use clipping masks, if so, flag this layer as transparent.
     if let svgClipper = renderer().svgClipperResourceFromStyle(),
-      !svgClipper.shouldApplyPathClipping()
+      svgClipper.shouldApplyPathClipping() == nil
     {
       return true
     }
