@@ -835,6 +835,17 @@ class RenderLayerWrapper {
     }
   }
 
+  enum LocalClipRectMode {
+    case IncludeCompositingState
+    case ExcludeCompositingState
+  }
+  func localClipRect(
+    clipExceedsBounds: inout Bool, mode: LocalClipRectMode = .IncludeCompositingState
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clipCrossesPaintingBoundary() -> Bool {
     return CPtrToInt(parent()!.enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.p)
       != CPtrToInt(enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.p)
@@ -1033,6 +1044,69 @@ class RenderLayerWrapper {
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper,
     flags: CalculateLayerBoundsFlag = RenderLayerWrapper.defaultCalculateLayerBoundsFlags
   ) -> LayoutRectWrapper {
+    if !isSelfPaintingLayer {
+      return LayoutRectWrapper()
+    }
+
+    // FIXME: This could be improved to do a check like hasVisibleNonCompositingDescendantLayers() (bug 92580).
+    if flags.contains(.ExcludeHiddenDescendants) && CPtrToInt(p) != CPtrToInt(ancestorLayer?.p)
+      && !hasVisibleContent && !hasVisibleDescendant
+    {
+      return LayoutRectWrapper()
+    }
+
+    if isRenderViewLayer {
+      // The root layer is always just the size of the document.
+      return LayoutRectWrapper(rect: renderer().view().unscaledDocumentRect())
+    }
+
+    var boundingBoxRect = localBoundingBox(flags: flags.union([.IncludeRootBackgroundPaintingArea]))
+    if renderer().view().frameView().hasFlippedBlockRenderers() {
+      if let box = renderer() as? RenderBoxWrapper {
+        box.flipForWritingMode(rect: &boundingBoxRect)
+      } else {
+        renderer().containingBlock()!.flipForWritingMode(rect: &boundingBoxRect)
+      }
+    }
+
+    var unionBounds = boundingBoxRect
+
+    if flags.contains(.UseLocalClipRectIfPossible)
+      || flags.contains(.UseLocalClipRectExcludingCompositingIfPossible)
+    {
+      var clipExceedsBounds = false
+      var localClipRect = self.localClipRect(
+        clipExceedsBounds: &clipExceedsBounds,
+        mode: flags.contains(.UseLocalClipRectExcludingCompositingIfPossible)
+          ? .ExcludeCompositingState : .IncludeCompositingState)
+      if !localClipRect.isInfinite() && !clipExceedsBounds {
+        if flags.contains(.IncludeSelfTransform) && paintsWithTransform(paintBehavior: .Normal) {
+          localClipRect = transform!.mapRect(r: localClipRect)
+        }
+
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+
+    // FIXME: should probably just pass 'flags' down to descendants.
+    let descendantFlags =
+      flags.contains(.PreserveAncestorFlags)
+      ? flags
+      : RenderLayerWrapper.defaultCalculateLayerBoundsFlags.union(
+        flags.intersection([.ExcludeHiddenDescendants, .IncludeCompositedDescendants]))
+
+    updateLayerListsIfNeeded()
+
+    if let reflection = reflectionLayer() {
+      if !reflection.isComposited() {
+        let childUnionBounds = reflection.calculateLayerBounds(
+          ancestorLayer: self, offsetFromRoot: reflection.offsetFromAncestor(ancestorLayer: self),
+          flags: descendantFlags)
+        unionBounds.unite(other: childUnionBounds)
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2878,6 +2952,7 @@ class RenderLayerWrapper {
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
 
   private let hasVisibleContent = false
+  private let hasVisibleDescendant = false
 
   private let isPaintingSVGResourceLayer = false
 
