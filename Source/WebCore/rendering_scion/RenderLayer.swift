@@ -972,8 +972,25 @@ class RenderLayerWrapper {
   func referenceBoxRectForClipPath(
     boxType: CSSBoxType, offsetFromRoot: LayoutSizeWrapper, rootRelativeBounds: LayoutRectWrapper
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var isReferenceBox = false
+
+    if renderer().document().settings().layerBasedSVGEngineEnabled()
+      && renderer().isSVGLayerAwareRenderer()
+    {
+      isReferenceBox = true
+    } else {
+      isReferenceBox = renderer().isRenderBox()
+    }
+
+    // FIXME: Support different reference boxes for inline content.
+    // https://bugs.webkit.org/show_bug.cgi?id=129047
+    if !isReferenceBox {
+      return rootRelativeBounds.FloatRect()
+    }
+
+    var referenceBoxRect = renderer().referenceBoxRect(boxType: boxType)
+    referenceBoxRect.move(delta: offsetFromRoot.FloatSize())
+    return referenceBoxRect
   }
 
   // Can pass offsetFromRoot if known.

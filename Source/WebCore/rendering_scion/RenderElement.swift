@@ -151,6 +151,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_isContinuation(p)
   }
 
+  // https://www.w3.org/TR/css-transforms-1/#reference-box
+  func referenceBoxRect(boxType: CSSBoxType) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isWritingModeRoot() -> Bool {
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }
