@@ -74,11 +74,27 @@ private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: 
 }
 
 private func performOverlapTests(
-  overlapTestRequests: OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
-  layer: RenderLayerWrapper?
+  overlapTestRequests: inout OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
+  layer: RenderLayerWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if overlapTestRequests.isEmpty {
+    return
+  }
+
+  var overlappedRequestClients: [OverlapTestRequestClient] = []
+  let boundingBox = layer.boundingBox(
+    ancestorLayer: rootLayer, offsetFromRoot: layer.offsetFromAncestor(ancestorLayer: rootLayer))
+  for (client, clientRect) in overlapTestRequests {
+    if !boundingBox.intersects(other: LayoutRectWrapper(rect: clientRect)) {
+      continue
+    }
+
+    client.setOverlapTestResult(isOverlapped: true)
+    overlappedRequestClients.append(client)
+  }
+  for client in overlappedRequestClients {
+    overlapTestRequests.removeValue(forKey: client)
+  }
 }
 
 private func shouldDoSoftwarePaint(layer: RenderLayerWrapper, paintingReflection: Bool) -> Bool {
@@ -1917,9 +1933,9 @@ class RenderLayerWrapper {
         subtreePaintRootForRenderer = localPaintingInfo.subtreePaintRoot
       }
 
-      if let overlapTestRequests = localPaintingInfo.overlapTestRequests, isSelfPaintingLayer {
+      if var overlapTestRequests = localPaintingInfo.overlapTestRequests, isSelfPaintingLayer {
         performOverlapTests(
-          overlapTestRequests: overlapTestRequests,
+          overlapTestRequests: &overlapTestRequests,
           rootLayer: localPaintingInfo.rootLayer, layer: self)
       }
 

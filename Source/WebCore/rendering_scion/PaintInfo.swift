@@ -30,7 +30,7 @@
 
 import wk_interop
 
-typealias OverlapTestRequestMap = [ObjectIdentifier: IntRect]
+typealias OverlapTestRequestMap = [OverlapTestRequestClient: IntRect]
 
 struct PaintInfoWrapper {
   init(
