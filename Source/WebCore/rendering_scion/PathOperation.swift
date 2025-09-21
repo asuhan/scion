@@ -27,3 +27,11 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+class PathOperation {}
+
+final class ReferencePathOperation: PathOperation {}
+
+final class ShapePathOperation: PathOperation {}
+
+final class BoxPathOperation: PathOperation {}

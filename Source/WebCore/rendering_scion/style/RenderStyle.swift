@@ -1072,6 +1072,11 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
   }
 
+  func clipPath() -> PathOperation? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hyphenString() -> AtomStringWrapper {
     if p == nil {
       // TODO(asuhan): implement this

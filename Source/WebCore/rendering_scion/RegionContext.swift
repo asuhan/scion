@@ -55,4 +55,9 @@ class RegionContextStateSaver {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func pushClip(path: PathWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

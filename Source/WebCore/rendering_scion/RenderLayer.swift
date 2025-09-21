@@ -861,6 +861,11 @@ class RenderLayerWrapper {
       rawValue: 2048)
   }
 
+  private static let defaultCalculateLayerBoundsFlags: CalculateLayerBoundsFlag = [
+    .IncludeSelfTransform, .UseLocalClipRectIfPossible, .IncludePaintedFilterOutsets,
+    .UseFragmentBoxesExcludingCompositing,
+  ]
+
   // Bounding box relative to some ancestor layer. Pass offsetFromRoot if known.
   func boundingBox(
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper = LayoutSizeWrapper(),
@@ -961,6 +966,15 @@ class RenderLayerWrapper {
       }
     }
     return result
+  }
+
+  // Can pass offsetFromRoot if known.
+  func calculateLayerBounds(
+    ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper,
+    flags: CalculateLayerBoundsFlag = RenderLayerWrapper.defaultCalculateLayerBoundsFlags
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func staticInlinePosition() -> LayoutUnit {
@@ -1295,6 +1309,13 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeClipPath(
+    offsetFromRoot: LayoutSizeWrapper, rootRelativeBoundsForNonBoxes: LayoutRectWrapper
+  ) -> (PathWrapper, WindRule) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setupClipPath(
     context: GraphicsContextWrapper, stateSaver: GraphicsContextStateSaver,
     regionContextStateSaver: RegionContextStateSaver, paintingInfo: LayerPaintingInfo,
@@ -1319,6 +1340,33 @@ class RenderLayerWrapper {
       } else {
         paintFlags.update(with: .PaintingSVGClippingMask)
       }
+      return
+    }
+
+    let clippedContentBounds = calculateLayerBounds(
+      ancestorLayer: paintingInfo.rootLayer, offsetFromRoot: offsetFromRoot,
+      flags: [.UseLocalClipRectIfPossible])
+
+    let style = renderer().style()
+    let paintingOffsetFromRoot = LayoutSizeWrapper(
+      size: snapSizeToDevicePixel(
+        size: offsetFromRoot + paintingInfo.subpixelOffset, location: LayoutPointWrapper(),
+        pixelSnappingFactor: renderer().document().deviceScaleFactor()))
+    let clipPath = style.clipPath()!
+    if (clipPath is ShapePathOperation)
+      || (clipPath is BoxPathOperation && renderer() is RenderBoxWrapper)
+    {
+      // clippedContentBounds is used as the reference box for inlines, which is also poorly specified: https://github.com/w3c/csswg-drafts/issues/6383.
+      let (path, windRule) = computeClipPath(
+        offsetFromRoot: paintingOffsetFromRoot, rootRelativeBoundsForNonBoxes: clippedContentBounds)
+
+      if isCollectingRegions {
+        regionContextStateSaver.pushClip(path: path)
+        return
+      }
+
+      stateSaver.save()
+      context.clipPath(path: path, clipRule: windRule)
       return
     }
 
