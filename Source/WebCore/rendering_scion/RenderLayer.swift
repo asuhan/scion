@@ -202,7 +202,17 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
-  struct LayerList {}
+  struct LayerList: Sequence, IteratorProtocol {
+    func next() -> RenderLayerWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func size() -> UInt64 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
   func normalFlowLayers() -> LayerList {
     // TODO(asuhan): implement this
@@ -1107,6 +1117,34 @@ class RenderLayerWrapper {
       }
     }
 
+    assert(isStackingContext() || positiveZOrderLayers().size() == 0)
+
+    for childLayer in negativeZOrderLayers() {
+      computeLayersUnion(
+        childLayer: childLayer, unionBounds: &unionBounds, flags: flags,
+        descendantFlags: descendantFlags)
+    }
+
+    for childLayer in positiveZOrderLayers() {
+      computeLayersUnion(
+        childLayer: childLayer, unionBounds: &unionBounds, flags: flags,
+        descendantFlags: descendantFlags)
+    }
+
+    for childLayer in normalFlowLayers() {
+      computeLayersUnion(
+        childLayer: childLayer, unionBounds: &unionBounds, flags: flags,
+        descendantFlags: descendantFlags)
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeLayersUnion(
+    childLayer: RenderLayerWrapper, unionBounds: inout LayoutRectWrapper,
+    flags: CalculateLayerBoundsFlag, descendantFlags: CalculateLayerBoundsFlag
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
