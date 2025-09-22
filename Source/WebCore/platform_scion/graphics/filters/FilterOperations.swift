@@ -24,6 +24,16 @@
  */
 
 class FilterOperations {
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isReferenceFilter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func transformColor(color: ColorWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

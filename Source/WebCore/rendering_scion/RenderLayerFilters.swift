@@ -28,4 +28,9 @@
  * SUCH DAMAGE.
  */
 
-final class RenderLayerFilters: CachedSVGDocumentClientWrapper {}
+final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
+  static func isIdentity(renderer: RenderElementWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

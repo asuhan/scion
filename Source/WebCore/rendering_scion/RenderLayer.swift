@@ -1288,8 +1288,24 @@ class RenderLayerWrapper {
   }
 
   func paintsWithFilters() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let filter = renderer().style().filter()
+    if filter.isEmpty() {
+      return false
+    }
+
+    if renderer().isRenderOrLegacyRenderSVGRoot() && filter.isReferenceFilter() {
+      return false
+    }
+
+    if RenderLayerFilters.isIdentity(renderer: renderer()) {
+      return false
+    }
+
+    if !isComposited() {
+      return true
+    }
+
+    return !backing!.canCompositeFilters()
   }
 
   func establishesTopLayer() -> Bool {

@@ -52,4 +52,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func canCompositeFilters() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

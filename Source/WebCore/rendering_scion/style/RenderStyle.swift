@@ -1044,6 +1044,11 @@ class RenderStyleWrapper {
     return FlowDirection(rawValue: wk_interop.RenderStyle_blockFlowDirection(p))!
   }
 
+  func filter() -> FilterOperations {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func appleColorFilter() -> FilterOperations {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
