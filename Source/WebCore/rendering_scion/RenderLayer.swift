@@ -1137,8 +1137,18 @@ class RenderLayerWrapper {
         descendantFlags: descendantFlags)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if flags.contains(.IncludeFilterOutsets)
+      || (flags.contains(.IncludePaintedFilterOutsets) && paintsWithFilters())
+    {
+      unionBounds.expand(box: toLayoutBoxExtent(extent: filterOutsets()))
+    }
+
+    if flags.contains(.IncludeSelfTransform) && paintsWithTransform(paintBehavior: .Normal) {
+      boundingBoxRect = transform!.mapRect(r: boundingBoxRect)
+      unionBounds = transform!.mapRect(r: unionBounds)
+    }
+    unionBounds.move(size: offsetFromRoot)
+    return unionBounds
   }
 
   private func computeLayersUnion(
@@ -1266,6 +1276,11 @@ class RenderLayerWrapper {
 
     return paintFlags.contains(.PaintingCompositingClipPathPhase)
       || paintFlags.contains(.CollectingEventRegion)
+  }
+
+  func paintsWithFilters() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func establishesTopLayer() -> Bool {
