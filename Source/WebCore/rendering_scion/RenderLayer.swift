@@ -1084,8 +1084,8 @@ class RenderLayerWrapper {
           localClipRect = transform!.mapRect(r: localClipRect)
         }
 
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        localClipRect.move(size: offsetFromAncestor(ancestorLayer: ancestorLayer))
+        return localClipRect
       }
     }
 
