@@ -1155,8 +1155,17 @@ class RenderLayerWrapper {
     childLayer: RenderLayerWrapper, unionBounds: inout LayoutRectWrapper,
     flags: CalculateLayerBoundsFlag, descendantFlags: CalculateLayerBoundsFlag
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !flags.contains(.IncludeCompositedDescendants)
+      && (childLayer.isComposited() || childLayer.paintsIntoProvidedBacking())
+    {
+      return
+    }
+    let childBounds = childLayer.calculateLayerBounds(
+      ancestorLayer: self, offsetFromRoot: childLayer.offsetFromAncestor(ancestorLayer: self),
+      flags: descendantFlags)
+    // Ignore child layer (and behave as if we had overflow: hidden) when it is positioned off the parent layer so much
+    // that we hit the max LayoutUnit value.
+    unionBounds.checkedUnite(other: childBounds)
   }
 
   func staticInlinePosition() -> LayoutUnit {

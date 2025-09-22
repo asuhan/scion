@@ -201,6 +201,12 @@ struct LayoutRectWrapper: Equatable {
     setLocationAndSizeFromEdges(left: minX, top: minY, right: maxX, bottom: maxY)
   }
 
+  @discardableResult
+  mutating func checkedUnite(other: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func inflateX(dx: LayoutUnit) {
     m_location.setX(x: m_location.x - dx)
     m_size.setWidth(width: m_size.width() + dx + dx)
