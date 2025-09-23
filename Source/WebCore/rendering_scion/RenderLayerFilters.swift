@@ -29,7 +29,17 @@
  */
 
 final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
+  func hasSourceImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func isIdentity(renderer: RenderElementWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func applyFilterEffect(destinationContext: GraphicsContextWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

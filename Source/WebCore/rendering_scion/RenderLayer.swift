@@ -1709,8 +1709,20 @@ class RenderLayerWrapper {
     originalContext: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
     behavior: PaintBehavior, backgroundRect: ClipRect
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let stateSaver = GraphicsContextStateSaver(context: originalContext, saveAndRestore: false)
+    let needsClipping = filters!.hasSourceImage()
+
+    if needsClipping {
+      let regionContextStateSaver = RegionContextStateSaver(context: paintingInfo.regionContext)
+
+      clipToRect(
+        context: originalContext, stateSaver: stateSaver,
+        regionContextStateSaver: regionContextStateSaver, paintingInfo: paintingInfo,
+        paintBehavior: behavior, clipRect: backgroundRect
+      )
+    }
+
+    filters!.applyFilterEffect(destinationContext: originalContext)
   }
 
   private static func paintForFixedRootBackground(
