@@ -400,6 +400,12 @@ class RenderLayerWrapper {
     return curr
   }
 
+  // The layer relative to which clipping rects for this layer are computed.
+  func clippingRootForPainting() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct EnclosingCompositingLayerStatus {
     let fullRepaintAlreadyScheduled = false
     let layer: RenderLayerWrapper? = nil
@@ -849,11 +855,34 @@ class RenderLayerWrapper {
     case IncludeCompositingState
     case ExcludeCompositingState
   }
+
   func localClipRect(
     clipExceedsBounds: inout Bool, mode: LocalClipRectMode = .IncludeCompositingState
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    clipExceedsBounds = false
+    // FIXME: border-radius not accounted for.
+    // FIXME: Regions not accounted for.
+    let clippingRootLayer = mode == .ExcludeCompositingState ? self : clippingRootForPainting()
+    let offsetFromRoot = offsetFromAncestor(ancestorLayer: clippingRootLayer)
+    var clipRect = clipRectRelativeToAncestor(
+      ancestor: clippingRootLayer, offsetFromAncestor: offsetFromRoot,
+      constrainingRect: LayoutRectWrapper.infiniteRect())
+    if clipRect.isInfinite() {
+      return clipRect
+    }
+
+    if renderer().hasClip() {
+      if let box = renderer() as? RenderBoxWrapper {
+        // CSS clip may be larger than our border box.
+        let cssClipRect = box.clipRect(location: LayoutPointWrapper(), fragment: nil)
+        clipExceedsBounds =
+          !cssClipRect.isEmpty()
+          && (clipRect.width() < cssClipRect.width() || clipRect.height() < cssClipRect.height())
+      }
+    }
+
+    clipRect.move(size: -offsetFromRoot)
+    return clipRect
   }
 
   func clipCrossesPaintingBoundary() -> Bool {

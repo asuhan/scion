@@ -210,6 +210,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clipRect(location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func popContentsClip(
     paintInfo: PaintInfoWrapper, originalPhase: PaintPhase, accumulatedOffset: LayoutPointWrapper
   ) {
