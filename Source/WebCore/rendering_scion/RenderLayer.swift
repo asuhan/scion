@@ -1418,7 +1418,7 @@ class RenderLayerWrapper {
     var subpixelOffset: LayoutSizeWrapper
     let overlapTestRequests: OverlapTestRequestMap?
     var paintBehavior: PaintBehavior
-    let requireSecurityOriginAccessForWidgets: Bool
+    var requireSecurityOriginAccessForWidgets: Bool
     var clipToDirtyRect: Bool = true
     let regionContext: RegionContext? = nil
   }
@@ -1722,8 +1722,38 @@ class RenderLayerWrapper {
     destinationContext: GraphicsContextWrapper, paintingInfo: inout LayerPaintingInfo,
     paintFlags: PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper, backgroundRect: ClipRect
   ) -> GraphicsContextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let paintingFilters = filtersForPainting(context: destinationContext, paintFlags: paintFlags)
+    {
+      var filterRepaintRect = paintingFilters.dirtySourceRect
+      filterRepaintRect.move(size: offsetFromRoot)
+
+      let rootRelativeBounds = calculateLayerBounds(
+        ancestorLayer: paintingInfo.rootLayer, offsetFromRoot: offsetFromRoot, flags: [])
+
+      if let filterContext =
+        paintingFilters.beginFilterEffect(
+          renderer: renderer(), context: destinationContext,
+          filterBoxRect: LayoutRectWrapper(rect: enclosingIntRect(rect: rootRelativeBounds)),
+          dirtyRect: LayoutRectWrapper(rect: enclosingIntRect(rect: paintingInfo.paintDirtyRect)),
+          layerRepaintRect: LayoutRectWrapper(rect: enclosingIntRect(rect: filterRepaintRect)),
+          clipRect: backgroundRect.rect)
+      {
+        paintingInfo.paintDirtyRect = paintingFilters.repaintRect
+
+        // If the filter needs the full source image, we need to avoid using the clip rectangles.
+        // Otherwise, if for example this layer has overflow:hidden, a drop shadow will not compute correctly.
+        // Note that we will still apply the clipping on the final rendering of the filter.
+        paintingInfo.clipToDirtyRect = !paintingFilters.hasFilterThatMovesPixels()
+
+        paintingInfo.requireSecurityOriginAccessForWidgets =
+          paintingFilters.hasFilterThatShouldBeRestrictedBySecurityOrigin()
+
+        return filterContext
+      }
+
+      return nil
+    }
+    return nil
   }
 
   private func applyFilters(
