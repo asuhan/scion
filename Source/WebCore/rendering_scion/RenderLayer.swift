@@ -231,6 +231,17 @@ class RenderLayerWrapper {
 
   // Update our normal and z-index lists.
   func updateLayerListsIfNeeded() {
+    updateDescendantDependentFlags()
+    updateZOrderLists()
+    updateNormalFlowList()
+
+    if let reflectionLayer = self.reflectionLayer() {
+      reflectionLayer.updateZOrderLists()
+      reflectionLayer.updateNormalFlowList()
+    }
+  }
+
+  func updateDescendantDependentFlags() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1372,6 +1383,16 @@ class RenderLayerWrapper {
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
+  }
+
+  private func updateZOrderLists() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateNormalFlowList() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private struct LayerPaintingInfo {
