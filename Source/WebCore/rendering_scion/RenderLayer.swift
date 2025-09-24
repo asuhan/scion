@@ -73,6 +73,11 @@ private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: 
   fatalError("Not implemented")
 }
 
+private func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func performOverlapTests(
   overlapTestRequests: inout OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
   layer: RenderLayerWrapper
@@ -200,6 +205,11 @@ class RenderLayerWrapper {
   // FIXME: m_forcedStackingContext should affect isStackingContext(), not isCSSStackingContext(), but doing so breaks media control mix-blend-mode.
   func isCSSStackingContext() -> Bool {
     return self.m_isCSSStackingContext || self.forcedStackingContext
+  }
+
+  func paintOrderParent() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   struct LayerList: Sequence, IteratorProtocol {
@@ -413,8 +423,31 @@ class RenderLayerWrapper {
 
   // The layer relative to which clipping rects for this layer are computed.
   func clippingRootForPainting() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isComposited() {
+      return self
+    }
+
+    if paintsIntoProvidedBacking() {
+      return backingProviderLayer
+    }
+
+    var current: RenderLayerWrapper? = self
+    while current != nil {
+      if current!.isRenderViewLayer {
+        return current
+      }
+
+      current = current!.paintOrderParent()
+      assert(current != nil)
+      if current!.transform != nil || compositedWithOwnBackingStore(layer: current!) {
+        return current
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    fatalError("Not reached")
   }
 
   struct EnclosingCompositingLayerStatus {
