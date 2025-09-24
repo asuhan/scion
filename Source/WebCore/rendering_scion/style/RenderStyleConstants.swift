@@ -442,6 +442,11 @@ enum DisplayType: UInt8 {
   case None
 }
 
+enum BackfaceVisibility: UInt8 {
+  case Visible
+  case Hidden
+}
+
 enum Hyphens: UInt8 {
   case None
   case Manual

@@ -24,6 +24,11 @@
  */
 
 class SettingsWrapper {
+  func css3DTransformBackfaceVisibilityInteroperabilityEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fixedBackgroundsPaintRelativeToDocument() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

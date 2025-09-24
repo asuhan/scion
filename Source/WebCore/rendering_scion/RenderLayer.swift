@@ -443,8 +443,16 @@ class RenderLayerWrapper {
         return current
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if renderer().settings().css3DTransformBackfaceVisibilityInteroperabilityEnabled()
+        && current!.participatesInPreserve3D()
+        && current!.renderer().style().backfaceVisibility() == .Hidden
+      {
+        return current
+      }
+
+      if current!.paintsIntoProvidedBacking() {
+        return current!.backingProviderLayer
+      }
     }
 
     fatalError("Not reached")
@@ -1280,6 +1288,11 @@ class RenderLayerWrapper {
   }
 
   func hasTransformedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func participatesInPreserve3D() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

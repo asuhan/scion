@@ -962,6 +962,11 @@ class RenderStyleWrapper {
     return RubyOverhang(rawValue: wk_interop.RenderStyle_rubyOverhang(p))!
   }
 
+  func backfaceVisibility() -> BackfaceVisibility {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lineBoxContain() -> LineBoxContain {
     if p == nil {
       // TODO(asuhan): implement this
