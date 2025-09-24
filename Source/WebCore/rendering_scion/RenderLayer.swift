@@ -704,12 +704,14 @@ class RenderLayerWrapper {
       inRootLayer: RenderLayerWrapper?, inClipRectsType: ClipRectsType,
       inOptions: ClipRectsOption = RenderLayerWrapper.clipRectDefaultOptions
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      rootLayer = inRootLayer
+      clipRectsType = inClipRectsType
+      options = inOptions
     }
 
     let rootLayer: RenderLayerWrapper?
     var clipRectsType: ClipRectsType
+    let options: ClipRectsOption
   }
 
   // This method figures out our layerBounds in coordinates relative to
