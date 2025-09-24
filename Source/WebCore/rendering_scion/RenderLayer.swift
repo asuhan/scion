@@ -1386,6 +1386,25 @@ class RenderLayerWrapper {
   }
 
   private func updateZOrderLists() {
+    if !zOrderListsDirty {
+      return
+    }
+
+    if !isStackingContext() {
+      clearZOrderLists()
+      zOrderListsDirty = false
+      return
+    }
+
+    rebuildZOrderLists()
+  }
+
+  private func rebuildZOrderLists() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clearZOrderLists() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -3119,6 +3138,8 @@ class RenderLayerWrapper {
   private var isNormalFlowOnly = false
   private var m_isCSSStackingContext = false
   private var isOpportunisticStackingContext = false
+
+  private var zOrderListsDirty = false
 
   private let isSelfPaintingLayer = false
 
