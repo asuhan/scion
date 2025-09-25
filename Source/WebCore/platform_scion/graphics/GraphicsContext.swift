@@ -139,6 +139,13 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  // Normally CG enables subpixel-quantization because it improves the performance of aligning glyphs.
+  // In some cases we have to disable to to ensure a high-quality output of the glyphs.
+  func shouldSubpixelQuantizeFonts() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

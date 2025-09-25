@@ -1634,8 +1634,15 @@ class RenderLayerWrapper {
   }
 
   private func setupFontSubpixelQuantization(context: GraphicsContextWrapper) -> (Bool, Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if context.paintingDisabled() {
+      return (false, true)
+    }
+
+    // FIXME: We shouldn't have to disable subpixel quantization for overflow clips or subframes once we scroll those
+    // things on the scrolling thread.
+    let didQuantizeFonts = context.shouldSubpixelQuantizeFonts()
+    context.setShouldSubpixelQuantizeFonts(shouldSubpixelQuantizeFonts: false)
+    return (true, didQuantizeFonts)
   }
 
   private func computeClipPath(
