@@ -126,6 +126,8 @@ struct FloatRoundedRect {
 
   func isEmpty() -> Bool { return rect.isEmpty() }
 
+  mutating func move(size: FloatSize) { rect.move(delta: size) }
+
   func isRenderable() -> Bool {
     return radii.topLeft.width >= 0 && radii.topLeft.height >= 0
       && radii.bottomLeft.width >= 0 && radii.bottomLeft.height >= 0

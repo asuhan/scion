@@ -46,4 +46,9 @@ final class ShapePathOperation: PathOperation {
   }
 }
 
-final class BoxPathOperation: PathOperation {}
+final class BoxPathOperation: PathOperation {
+  func pathForReferenceRect(boundingRect: FloatRoundedRect) -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

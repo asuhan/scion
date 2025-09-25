@@ -1654,8 +1654,20 @@ class RenderLayerWrapper {
       )
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let clipPath = style.clipPath()! as? BoxPathOperation,
+      let box = renderer() as? RenderBoxWrapper
+    {
+      var shapeRect = computeRoundedRectForBoxShape(box: clipPath.referenceBox, renderer: box)
+        .pixelSnappedRoundedRectForPainting(
+          deviceScaleFactor: renderer().document().deviceScaleFactor())
+      shapeRect.move(size: offsetFromRoot.FloatSize())
+
+      return (
+        clipPath.pathForReferenceRect(boundingRect: shapeRect), .NonZero
+      )
+    }
+
+    return (PathWrapper(), .NonZero)
   }
 
   private func setupClipPath(
