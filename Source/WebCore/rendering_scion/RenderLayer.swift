@@ -1641,6 +1641,19 @@ class RenderLayerWrapper {
   private func computeClipPath(
     offsetFromRoot: LayoutSizeWrapper, rootRelativeBoundsForNonBoxes: LayoutRectWrapper
   ) -> (PathWrapper, WindRule) {
+    let style = renderer().style()
+
+    if let clipPath = style.clipPath()! as? ShapePathOperation {
+      let referenceBoxRect = referenceBoxRectForClipPath(
+        boxType: clipPath.referenceBox, offsetFromRoot: offsetFromRoot,
+        rootRelativeBounds: rootRelativeBoundsForNonBoxes)
+      let snappedReferenceBoxRect = snapRectToDevicePixelsIfNeeded(
+        rect: referenceBoxRect, renderer: renderer())
+      return (
+        clipPath.pathForReferenceRect(boundingRect: snappedReferenceBoxRect), clipPath.windRule()
+      )
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

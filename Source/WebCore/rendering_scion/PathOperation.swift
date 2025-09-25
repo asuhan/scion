@@ -28,10 +28,22 @@
  * SUCH DAMAGE.
  */
 
-class PathOperation {}
+class PathOperation {
+  let referenceBox: CSSBoxType = .BoxMissing
+}
 
 final class ReferencePathOperation: PathOperation {}
 
-final class ShapePathOperation: PathOperation {}
+final class ShapePathOperation: PathOperation {
+  func windRule() -> WindRule {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pathForReferenceRect(boundingRect: FloatRectWrapper) -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
 
 final class BoxPathOperation: PathOperation {}
