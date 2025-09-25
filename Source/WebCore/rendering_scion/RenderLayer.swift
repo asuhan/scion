@@ -724,8 +724,43 @@ class RenderLayerWrapper {
     foregroundRect: inout ClipRect,
     offsetFromRoot: LayoutSizeWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(clipRectsContext.rootLayer?.p) != CPtrToInt(p) && parent() != nil {
+      backgroundRect = backgroundClipRect(clipRectsContext: clipRectsContext)
+      backgroundRect.intersect(other: paintDirtyRect)
+    } else {
+      backgroundRect = ClipRect(rect: paintDirtyRect)
+    }
+
+    let offsetFromRootLocal = offsetFromRoot
+
+    layerBounds = LayoutRectWrapper(
+      location: toLayoutPoint(size: offsetFromRootLocal), size: LayoutSizeWrapper(size: size()))
+
+    foregroundRect = backgroundRect
+
+    // Update the clip rects that will be passed to child layers.
+    if renderer().hasClipOrNonVisibleOverflow() {
+      // This layer establishes a clip of some kind.
+      if renderer().hasNonVisibleOverflow() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if renderer().hasClip() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      // If we establish a clip at all, then make sure our background rect is intersected with our layer's bounds including our visual overflow,
+      // since any visual overflow like box-shadow or border-outset is not clipped by overflow:auto/hidden.
+      if rendererHasVisualOverflow() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
   }
 
   // Public just for RenderTreeAsText.
@@ -1631,6 +1666,11 @@ class RenderLayerWrapper {
       return svgModelObject.currentSVGLayoutLocation()
     }
     return LayoutPointWrapper()
+  }
+
+  private func rendererHasVisualOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func setupFontSubpixelQuantization(context: GraphicsContextWrapper) -> (Bool, Bool) {
