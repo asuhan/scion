@@ -762,9 +762,12 @@ class RenderLayerWrapper {
         }
       }
 
-      if renderer().hasClip() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+      if renderer().hasClip(), let box = renderer() as? RenderBoxWrapper {
+        // Clip applies to *us* as well, so update the damageRect.
+        let newPosClip = box.clipRect(
+          location: toLayoutPoint(size: offsetFromRootLocal), fragment: nil)
+        backgroundRect.intersect(other: newPosClip)
+        foregroundRect.intersect(other: newPosClip)
       }
 
       // If we establish a clip at all, then make sure our background rect is intersected with our layer's bounds including our visual overflow,
