@@ -188,6 +188,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     case DoNotCacheRenderBoxFragmentInfo
   }
 
+  func borderBoxRectInFragment(
+    fragment: RenderFragmentContainerWrapper?,
+    flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
       p,

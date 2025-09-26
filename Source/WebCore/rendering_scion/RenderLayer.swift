@@ -1708,8 +1708,13 @@ class RenderLayerWrapper {
     fragment: RenderFragmentContainerWrapper?,
     flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = renderer() as? RenderBoxWrapper {
+      return box.borderBoxRectInFragment(fragment: fragment, flags: flags)
+    }
+    if let svgModelObject = renderer() as? RenderSVGModelObjectWrapper {
+      return svgModelObject.borderBoxRectInFragmentEquivalent(fragment: fragment, flags: flags)
+    }
+    return LayoutRectWrapper()
   }
 
   private func rendererVisualOverflowRect() -> LayoutRectWrapper {

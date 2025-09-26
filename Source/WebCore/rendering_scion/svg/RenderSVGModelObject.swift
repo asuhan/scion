@@ -45,6 +45,14 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func borderBoxRectInFragmentEquivalent(
+    fragment: RenderFragmentContainerWrapper?,
+    flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overflowClipRect(
     location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper? = nil,
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
