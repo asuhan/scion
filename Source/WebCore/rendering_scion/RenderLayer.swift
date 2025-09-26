@@ -773,11 +773,28 @@ class RenderLayerWrapper {
       // If we establish a clip at all, then make sure our background rect is intersected with our layer's bounds including our visual overflow,
       // since any visual overflow like box-shadow or border-outset is not clipped by overflow:auto/hidden.
       if rendererHasVisualOverflow() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // FIXME: Does not do the right thing with CSS regions yet, since we don't yet factor in the
+        // individual region boxes as overflow.
+        var layerBoundsWithVisualOverflow = rendererVisualOverflowRect()
+        if renderer().isRenderBox() {
+          renderBox()!.flipForWritingMode(rect: &layerBoundsWithVisualOverflow)  // Layers are in physical coordinates, so the overflow has to be flipped.
+        }
+        layerBoundsWithVisualOverflow.move(size: offsetFromRootLocal)
+        if CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)
+          || clipRectsContext.respectOverflowClip()
+        {
+          backgroundRect.intersect(other: layerBoundsWithVisualOverflow)
+        }
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // Shift the bounds to be for our region only.
+        var bounds = rendererBorderBoxRectInFragment(fragment: nil)
+
+        bounds.move(size: offsetFromRootLocal)
+        if CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)
+          || clipRectsContext.respectOverflowClip()
+        {
+          backgroundRect.intersect(other: bounds)
+        }
       }
     }
   }
@@ -1685,6 +1702,19 @@ class RenderLayerWrapper {
       return svgModelObject.currentSVGLayoutLocation()
     }
     return LayoutPointWrapper()
+  }
+
+  private func rendererBorderBoxRectInFragment(
+    fragment: RenderFragmentContainerWrapper?,
+    flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func rendererVisualOverflowRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func rendererOverflowClipRect(

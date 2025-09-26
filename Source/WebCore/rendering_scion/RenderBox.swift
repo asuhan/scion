@@ -183,6 +183,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
   }
 
+  enum RenderBoxFragmentInfoFlags {
+    case CacheRenderBoxFragmentInfo
+    case DoNotCacheRenderBoxFragmentInfo
+  }
+
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
       p,
