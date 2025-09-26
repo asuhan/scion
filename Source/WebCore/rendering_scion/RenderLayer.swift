@@ -709,6 +709,13 @@ class RenderLayerWrapper {
       options = inOptions
     }
 
+    func respectOverflowClip() -> Bool { return options.contains(.RespectOverflowClip) }
+
+    func overlayScrollbarSizeRelevancy() -> OverlayScrollbarSizeRelevancy {
+      return options.contains(.IncludeOverlayScrollbarSize)
+        ? .IncludeOverlayScrollbarSize : .IgnoreOverlayScrollbarSize
+    }
+
     let rootLayer: RenderLayerWrapper?
     var clipRectsType: ClipRectsType
     let options: ClipRectsOption
@@ -742,8 +749,17 @@ class RenderLayerWrapper {
     if renderer().hasClipOrNonVisibleOverflow() {
       // This layer establishes a clip of some kind.
       if renderer().hasNonVisibleOverflow() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        if CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)
+          || clipRectsContext.respectOverflowClip()
+        {
+          let overflowClipRect = rendererOverflowClipRect(
+            location: toLayoutPoint(size: offsetFromRootLocal), fragment: nil,
+            relevancy: clipRectsContext.overlayScrollbarSizeRelevancy())
+          foregroundRect.intersect(other: overflowClipRect)
+          foregroundRect.affectedByRadius = true
+        } else if transform != nil && renderer().style().hasBorderRadius() {
+          foregroundRect.affectedByRadius = true
+        }
       }
 
       if renderer().hasClip() {
@@ -1666,6 +1682,14 @@ class RenderLayerWrapper {
       return svgModelObject.currentSVGLayoutLocation()
     }
     return LayoutPointWrapper()
+  }
+
+  private func rendererOverflowClipRect(
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
+    relevancy: OverlayScrollbarSizeRelevancy
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func rendererHasVisualOverflow() -> Bool {

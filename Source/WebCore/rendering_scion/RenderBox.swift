@@ -22,6 +22,11 @@
 
 import wk_interop
 
+enum OverlayScrollbarSizeRelevancy {
+  case IgnoreOverlayScrollbarSize
+  case IncludeOverlayScrollbarSize
+}
+
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func y() -> LayoutUnit {
     // TODO(asuhan): implement this
