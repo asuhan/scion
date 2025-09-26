@@ -1732,8 +1732,13 @@ class RenderLayerWrapper {
   }
 
   private func rendererHasVisualOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = renderer() as? RenderBoxWrapper {
+      return box.hasVisualOverflow()
+    }
+    if let svgModelObject = renderer() as? RenderSVGModelObjectWrapper {
+      return svgModelObject.hasVisualOverflow()
+    }
+    return false
   }
 
   private func setupFontSubpixelQuantization(context: GraphicsContextWrapper) -> (Bool, Bool) {

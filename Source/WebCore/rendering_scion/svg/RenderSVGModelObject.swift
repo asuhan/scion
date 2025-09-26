@@ -40,6 +40,11 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasVisualOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overflowClipRect(
     location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper? = nil,
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
