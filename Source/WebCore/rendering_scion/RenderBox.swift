@@ -208,7 +208,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func overflowClipRect(
-    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper? = nil
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper? = nil,
+    relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
+    phase: PaintPhase = .BlockBackground
   ) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
