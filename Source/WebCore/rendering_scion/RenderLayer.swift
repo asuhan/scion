@@ -134,10 +134,17 @@ class ClipRects {
     return ClipRects()
   }
 
+  func reset() {
+    overflowClipRect.reset()
+    fixedClipRect.reset()
+    posClipRect.reset()
+    fixed = false
+  }
+
   var fixed = false
-  let overflowClipRect = ClipRect()
-  let fixedClipRect = ClipRect()
-  let posClipRect = ClipRect()
+  var overflowClipRect = ClipRect()
+  var fixedClipRect = ClipRect()
+  var posClipRect = ClipRect()
 }
 
 private func backgroundClipRectForPosition(parentRects: ClipRects, position: PositionType)
@@ -1595,6 +1602,54 @@ class RenderLayerWrapper {
   // Compute and return the clip rects. If useCached is true, will used previously computed clip rects on ancestors
   // (rather than computing them all from scratch up the parent chain).
   private func calculateClipRects(clipRectsContext: ClipRectsContext, clipRects: inout ClipRects) {
+    if parent() == nil {
+      // The root layer's clip rect is always infinite.
+      clipRects.reset()
+      return
+    }
+
+    let clipRectsType = clipRectsContext.clipRectsType
+    let useCached = clipRectsType != .TemporaryClipRects
+
+    // For transformed layers, the root layer was shifted to be us, so there is no need to
+    // examine the parent. We want to cache clip rects with us as the root.
+
+    // Ensure that our parent's clip has been calculated so that we can examine the values.
+    if let parentLayer = CPtrToInt(clipRectsContext.rootLayer?.p) != CPtrToInt(p) ? parent() : nil {
+      if useCached, let parentClipRects = parentLayer.clipRects(context: clipRectsContext) {
+        clipRects = parentClipRects
+      } else {
+        var parentContext = clipRectsContext
+
+        if (parentContext.clipRectsType != .TemporaryClipRects
+          && parentContext.clipRectsType != .AbsoluteClipRects) && clipCrossesPaintingBoundary()
+        {
+          parentContext.clipRectsType = .TemporaryClipRects
+        }
+
+        parentLayer.calculateClipRects(clipRectsContext: parentContext, clipRects: &clipRects)
+      }
+    } else {
+      clipRects.reset()
+    }
+
+    // A fixed object is essentially the root of its containing block hierarchy, so when
+    // we encounter such an object, we reset our clip rects to the fixedClipRect.
+    if renderer().isFixedPositioned() {
+      clipRects.posClipRect = clipRects.fixedClipRect
+      clipRects.overflowClipRect = clipRects.fixedClipRect
+      clipRects.fixed = true
+    } else if renderer().isInFlowPositioned() {
+      clipRects.posClipRect = clipRects.overflowClipRect
+    } else if renderer().shouldUsePositionedClipping() {
+      clipRects.overflowClipRect = clipRects.posClipRect
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clipRects(context: ClipRectsContext) -> ClipRects? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

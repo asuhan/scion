@@ -190,12 +190,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isInFlowPositioned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isOutOfFlowPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func isFixedPositioned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shouldUsePositionedClipping() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

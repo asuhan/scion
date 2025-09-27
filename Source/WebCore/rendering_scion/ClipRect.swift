@@ -30,6 +30,8 @@ struct ClipRect {
     self.rect = rect
   }
 
+  mutating func reset() { rect = LayoutRectWrapper.infiniteRect() }
+
   mutating func intersect(other: LayoutRectWrapper) {
     if other.isInfinite() {
       return
