@@ -141,6 +141,8 @@ class ClipRects {
     fixed = false
   }
 
+  func setOverflowClipRectAffectedByRadius() { overflowClipRect.affectedByRadius = true }
+
   var fixed = false
   var overflowClipRect = ClipRect()
   var fixedClipRect = ClipRect()
@@ -1645,8 +1647,18 @@ class RenderLayerWrapper {
       clipRects.overflowClipRect = clipRects.posClipRect
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if (renderer().hasNonVisibleOverflow()
+      && (clipRectsContext.respectOverflowClip()
+        || CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)))
+      || renderer().hasClip()
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else if renderer().hasNonVisibleOverflow() && transform != nil
+      && renderer().style().hasBorderRadius()
+    {
+      clipRects.setOverflowClipRectAffectedByRadius()
+    }
   }
 
   private func clipRects(context: ClipRectsContext) -> ClipRects? {
