@@ -1529,8 +1529,26 @@ class RenderLayerWrapper {
   }
 
   private func updateNormalFlowList() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !normalFlowListDirty {
+      return
+    }
+
+    var child = firstChild()
+    while child != nil {
+      // Ignore non-overflow layers and reflections.
+      if child!.isNormalFlowOnly && !isReflectionLayer(layer: child!) {
+        if normalFlowList == nil {
+          normalFlowList = []
+        }
+        normalFlowList!.append(child!)
+        child!.setWasIncludedInZOrderTree()
+      }
+      child = child!.nextSibling()
+    }
+
+    // TODO(asuhan): shrink capacity to size
+
+    normalFlowListDirty = false
   }
 
   private struct LayerPaintingInfo {
@@ -3325,6 +3343,8 @@ class RenderLayerWrapper {
     return false
   }
 
+  private func setWasIncludedInZOrderTree() { wasOmittedFromZOrderTree = false }
+
   private let p: UnsafeMutableRawPointer
   // Native fields below.
 
@@ -3338,6 +3358,7 @@ class RenderLayerWrapper {
   private var isOpportunisticStackingContext = false
 
   private var zOrderListsDirty = false
+  private var normalFlowListDirty = false
 
   private let isSelfPaintingLayer = false
 
@@ -3362,7 +3383,12 @@ class RenderLayerWrapper {
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
 
+  private var wasOmittedFromZOrderTree = false
+
   private let backingProviderLayer: RenderLayerWrapper? = nil
+
+  // This list contains child layers that cannot create stacking contexts and appear in normal flow order.
+  private var normalFlowList: [RenderLayerWrapper]? = nil
 
   // Note that this transform has the transform-origin baked in.
   private let transform: TransformationMatrix? = nil
