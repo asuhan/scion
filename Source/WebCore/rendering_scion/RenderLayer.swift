@@ -244,6 +244,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func dirtyHiddenStackingContextAncestorZOrderLists() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct LayerList: Sequence, IteratorProtocol {
     func next() -> RenderLayerWrapper? {
       // TODO(asuhan): implement this
@@ -326,8 +331,32 @@ class RenderLayerWrapper {
       self.hasNotIsolatedBlendingDescendants = hasNotIsolatedBlendingDescendants
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if visibleContentStatusDirty {
+      //  We need the parent to know if we have skipped content or content-visibility root.
+      if renderer().style().hasSkippedContent() && renderer().parent() == nil {
+        return
+      }
+      let hasVisibleContent = computeHasVisibleContent()
+      if hasVisibleContent != self.hasVisibleContent {
+        self.hasVisibleContent = hasVisibleContent
+        if !isNormalFlowOnly {
+          // We don't collect invisible layers in z-order lists if they are not composited.
+          // As we change visibility, we need to dirty our stacking containers ancestors to be properly
+          // collected.
+          dirtyHiddenStackingContextAncestorZOrderLists()
+        }
+      }
+      visibleContentStatusDirty = false
+    }
+
+    assert(!descendantDependentFlagsAreDirty())
+  }
+
+  func descendantDependentFlagsAreDirty() -> Bool {
+    return visibleDescendantStatusDirty || visibleContentStatusDirty
+      || hasSelfPaintingLayerDescendantDirty
+      || hasNotIsolatedBlendingDescendantsStatusDirty
+      || hasIntrinsicallyCompositedDescendantsStatusDirty
   }
 
   func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
@@ -3587,6 +3616,11 @@ class RenderLayerWrapper {
     }
   }
 
+  private func computeHasVisibleContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func isIntrinsicallyComposited() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3691,7 +3725,8 @@ class RenderLayerWrapper {
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
   private let repaintStatus: RepaintStatus = .NeedsNormalRepaint
 
-  private let hasVisibleContent = false
+  private var visibleContentStatusDirty = false
+  private var hasVisibleContent = false
   private var visibleDescendantStatusDirty = false
   private var hasVisibleDescendant = false
 

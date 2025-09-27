@@ -787,6 +787,12 @@ class RenderStyleWrapper {
     return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p))
   }
 
+  // Returns true for skipped content roots and skipped content itself.
+  func hasSkippedContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func order() -> Int {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
