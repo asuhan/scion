@@ -284,6 +284,48 @@ class RenderLayerWrapper {
   }
 
   func updateDescendantDependentFlags() {
+    if visibleDescendantStatusDirty || hasSelfPaintingLayerDescendantDirty
+      || hasNotIsolatedBlendingDescendantsStatusDirty
+      || hasIntrinsicallyCompositedDescendantsStatusDirty
+    {
+      var hasVisibleDescendant = false
+      var hasSelfPaintingLayerDescendant = false
+      var hasNotIsolatedBlendingDescendants = false
+      var hasIntrinsicallyCompositedDescendants = false
+
+      if hasNotIsolatedBlendingDescendantsStatusDirty {
+        hasNotIsolatedBlendingDescendantsStatusDirty = false
+        updateSelfPaintingLayer()
+      }
+
+      var child = firstChild()
+      while child != nil {
+        child!.updateDescendantDependentFlags()
+
+        hasVisibleDescendant =
+          hasVisibleDescendant || child!.hasVisibleContent || child!.hasVisibleDescendant
+        hasSelfPaintingLayerDescendant =
+          hasSelfPaintingLayerDescendant || child!.isSelfPaintingLayer
+          || child!.hasSelfPaintingLayerDescendant
+        hasNotIsolatedBlendingDescendants =
+          hasNotIsolatedBlendingDescendants || child!.hasBlendMode()
+          || (child!.hasNotIsolatedBlendingDescendants && !child!.isolatesBlending())
+        hasIntrinsicallyCompositedDescendants =
+          hasIntrinsicallyCompositedDescendants || child!.isIntrinsicallyComposited()
+          || child!.hasIntrinsicallyCompositedDescendants
+        child = child!.nextSibling()
+      }
+
+      self.hasVisibleDescendant = hasVisibleDescendant
+      self.visibleDescendantStatusDirty = false
+      self.hasSelfPaintingLayerDescendant = hasSelfPaintingLayerDescendant
+      self.hasSelfPaintingLayerDescendantDirty = false
+      self.hasIntrinsicallyCompositedDescendants = hasIntrinsicallyCompositedDescendants
+      self.hasIntrinsicallyCompositedDescendantsStatusDirty = false
+
+      self.hasNotIsolatedBlendingDescendants = hasNotIsolatedBlendingDescendants
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1931,6 +1973,11 @@ class RenderLayerWrapper {
     }
   }
 
+  private func updateSelfPaintingLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func enclosingPaginationLayerInSubtree(
     rootLayer: RenderLayerWrapper?, mode: PaginationInclusionMode
   ) -> RenderLayerWrapper? {
@@ -3540,6 +3587,11 @@ class RenderLayerWrapper {
     }
   }
 
+  private func isIntrinsicallyComposited() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func parentClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
     assert(parent() != nil)
 
@@ -3629,7 +3681,8 @@ class RenderLayerWrapper {
 
   // If have no self-painting descendants, we don't have to walk our children during painting. This can lead to
   // significant savings, especially if the tree has lots of non-self-painting layers grouped together (e.g. table cells).
-  private let hasSelfPaintingLayerDescendant = false
+  private var hasSelfPaintingLayerDescendant = false
+  private var hasSelfPaintingLayerDescendantDirty = false
 
   // Tracks whether we need to close a transparent layer, i.e., whether
   // we ended up painting this layer or any descendants (and therefore need to
@@ -3639,7 +3692,8 @@ class RenderLayerWrapper {
   private let repaintStatus: RepaintStatus = .NeedsNormalRepaint
 
   private let hasVisibleContent = false
-  private let hasVisibleDescendant = false
+  private var visibleDescendantStatusDirty = false
+  private var hasVisibleDescendant = false
 
   private let m_hasTransformedAncestor = false
 
@@ -3650,6 +3704,10 @@ class RenderLayerWrapper {
 
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
+  private var hasNotIsolatedBlendingDescendantsStatusDirty = false
+
+  private var hasIntrinsicallyCompositedDescendants = false
+  private var hasIntrinsicallyCompositedDescendantsStatusDirty = true
 
   private var wasOmittedFromZOrderTree = false
 
