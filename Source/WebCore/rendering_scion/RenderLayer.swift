@@ -1711,9 +1711,20 @@ class RenderLayerWrapper {
           clipRects.fixedClipRect = intersection(a: newOverflowClip, b: clipRects.fixedClipRect)
         }
       }
-      if renderer().hasClip() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+      if renderer().hasClip(), let box = renderer() as? RenderBoxWrapper {
+        var newPosClip = box.clipRect(location: LayoutPointWrapper(), fragment: nil)
+        if needsTransform {
+          newPosClip = LayoutRectWrapper(
+            r: renderer().localToContainerQuad(
+              localQuad: FloatQuad(inRect: newPosClip.FloatRect()),
+              container: clipRectsContext.rootLayer!.renderer()
+            ).boundingBox())
+        }
+        newPosClip.moveBy(offset: offset)
+        let newPosClipCR = ClipRect(rect: newPosClip)
+        clipRects.posClipRect = intersection(a: newPosClipCR, b: clipRects.posClipRect)
+        clipRects.overflowClipRect = intersection(a: newPosClipCR, b: clipRects.overflowClipRect)
+        clipRects.fixedClipRect = intersection(a: newPosClipCR, b: clipRects.fixedClipRect)
       }
     } else if renderer().hasNonVisibleOverflow() && transform != nil
       && renderer().style().hasBorderRadius()
