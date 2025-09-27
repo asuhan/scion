@@ -61,4 +61,12 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func overflowClipRectForChildLayers(
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
+    relevancy: OverlayScrollbarSizeRelevancy
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
