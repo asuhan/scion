@@ -1718,8 +1718,13 @@ class RenderLayerWrapper {
   }
 
   private func rendererVisualOverflowRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = renderer() as? RenderBoxWrapper {
+      return box.visualOverflowRect()
+    }
+    if let svgModelObject = renderer() as? RenderSVGModelObjectWrapper {
+      return svgModelObject.visualOverflowRectEquivalent()
+    }
+    return LayoutRectWrapper()
   }
 
   private func rendererOverflowClipRect(
