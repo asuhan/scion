@@ -479,6 +479,16 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func canUseOffsetFromAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func canUseOffsetFromAncestor(ancestor: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum ColumnOffsetAdjustment {
     case DontAdjustForColumns
     case AdjustForColumns
@@ -1652,6 +1662,31 @@ class RenderLayerWrapper {
         || CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)))
       || renderer().hasClip()
     {
+      // This layer establishes a clip of some kind.
+
+      // FIXME: Transforming a clip doesn't make a whole lot of sense, since it we have to round out to the
+      // bounding box of the transformed quad.
+      // It would be better for callers to transform rects into the coordinate space of the nearest clipped layer, apply
+      // the clip in local space, and then repeat until the required coordinate space is reached.
+      let needsTransform =
+        clipRectsType == .AbsoluteClipRects
+        ? m_hasTransformedAncestor || !canUseOffsetFromAncestor()
+        : !canUseOffsetFromAncestor(ancestor: clipRectsContext.rootLayer!)
+
+      var offset = LayoutPointWrapper()
+      if !needsTransform {
+        offset = toLayoutPoint(
+          size: offsetFromAncestor(
+            ancestorLayer: clipRectsContext.rootLayer, adjustForColumns: .AdjustForColumns))
+      }
+
+      if clipRects.fixed
+        && CPtrToInt(clipRectsContext.rootLayer!.renderer().p) == CPtrToInt(renderer().view().p)
+      {
+        offset -= toLayoutSize(
+          point: renderer().view().frameView().scrollPositionForFixedPosition())
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     } else if renderer().hasNonVisibleOverflow() && transform != nil
@@ -3441,6 +3476,8 @@ class RenderLayerWrapper {
 
   private let hasVisibleContent = false
   private let hasVisibleDescendant = false
+
+  private let m_hasTransformedAncestor = false
 
   private let isPaintingSVGResourceLayer = false
 
