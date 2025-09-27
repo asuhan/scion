@@ -1780,8 +1780,11 @@ class RenderLayerWrapper {
   }
 
   private func clipRects(context: ClipRectsContext) -> ClipRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let clipRectsCache = clipRectsCache {
+      return clipRectsCache.getClipRects(
+        clipRectsType: context.clipRectsType, respectOverflowClip: context.respectOverflowClip())
+    }
+    return nil
   }
 
   private func clipRectRelativeToAncestor(
