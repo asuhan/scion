@@ -129,7 +129,7 @@ private func hasVisibleBoxDecorationsOrBackground(renderer: RenderElementWrapper
   return renderer.hasVisibleBoxDecorations() || renderer.style().hasOutline()
 }
 
-class ClipRects {
+class ClipRects: Equatable {
   static func create() -> ClipRects {
     return ClipRects()
   }
@@ -143,10 +143,27 @@ class ClipRects {
 
   func setOverflowClipRectAffectedByRadius() { overflowClipRect.affectedByRadius = true }
 
+  static func == (this: ClipRects, other: ClipRects) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var fixed = false
   var overflowClipRect = ClipRect()
   var fixedClipRect = ClipRect()
   var posClipRect = ClipRect()
+}
+
+class ClipRectsCache {
+  func getClipRects(clipRectsType: ClipRectsType, respectOverflowClip: Bool) -> ClipRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setClipRects(clipRectsType: ClipRectsType, respectOverflowClip: Bool, clipRects: ClipRects) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 private func backgroundClipRectForPosition(parentRects: ClipRects, position: PositionType)
@@ -1607,8 +1624,37 @@ class RenderLayerWrapper {
 
   // Compute, cache and return clip rects computed with the given layer as the root.
   private func updateClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let clipRectsType = clipRectsContext.clipRectsType
+    if let clipRectsCache = clipRectsCache,
+      let clipRects = clipRectsCache.getClipRects(
+        clipRectsType: clipRectsType, respectOverflowClip: clipRectsContext.respectOverflowClip())
+    {
+      return clipRects
+    }
+
+    if clipRectsCache == nil {
+      clipRectsCache = ClipRectsCache()
+    }
+
+    // For transformed layers, the root layer was shifted to be us, so there is no need to
+    // examine the parent. We want to cache clip rects with us as the root.
+    let parentClipRects =
+      (CPtrToInt(clipRectsContext.rootLayer?.p) != CPtrToInt(p) && parent() != nil)
+      ? self.parentClipRects(clipRectsContext: clipRectsContext) : nil
+
+    var clipRects = ClipRects.create()
+    calculateClipRects(clipRectsContext: clipRectsContext, clipRects: &clipRects)
+
+    if parentClipRects != nil && parentClipRects! == clipRects {
+      clipRectsCache!.setClipRects(
+        clipRectsType: clipRectsType, respectOverflowClip: clipRectsContext.respectOverflowClip(),
+        clipRects: parentClipRects!)
+      return parentClipRects!
+    }
+    clipRectsCache!.setClipRects(
+      clipRectsType: clipRectsType, respectOverflowClip: clipRectsContext.respectOverflowClip(),
+      clipRects: clipRects)
+    return clipRects
   }
 
   // Compute and return the clip rects. If useCached is true, will used previously computed clip rects on ancestors
@@ -3540,6 +3586,8 @@ class RenderLayerWrapper {
 
   // This list contains child layers that cannot create stacking contexts and appear in normal flow order.
   private var normalFlowList: [RenderLayerWrapper]? = nil
+
+  private var clipRectsCache: ClipRectsCache? = nil
 
   // Note that this transform has the transform-origin baked in.
   private let transform: TransformationMatrix? = nil
