@@ -497,13 +497,19 @@ class RenderLayerWrapper {
   }
 
   func canUseOffsetFromAncestor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: This really needs to know if there are transforms on this layer and any of the layers between it and the ancestor in question.
+    return !isTransformed() && !renderer().isRenderOrLegacyRenderSVGRoot()
   }
 
   func canUseOffsetFromAncestor(ancestor: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer: RenderLayerWrapper? = self
+    while layer != nil && CPtrToInt(layer?.p) != CPtrToInt(ancestor.p) {
+      if !layer!.canUseOffsetFromAncestor() {
+        return false
+      }
+      layer = layer!.parent()
+    }
+    return true
   }
 
   enum ColumnOffsetAdjustment {
