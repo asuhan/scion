@@ -268,6 +268,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_hasNonVisibleOverflow(p)
   }
 
+  func hasPotentiallyScrollableOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTransformed() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

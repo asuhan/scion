@@ -54,6 +54,12 @@ enum IncludeSelfOrNot {
   case ExcludeSelf
 }
 
+enum RepaintStatus {
+  case NeedsNormalRepaint
+  case NeedsFullRepaint
+  case NeedsFullRepaintForPositionedMovementLayout
+}
+
 enum ClipRectsType {
   case PaintingClipRects  // Relative to painting ancestor. Used for painting.
   case RootRelativeClipRects  // Relative to the ancestor treated as the root (e.g. transformed layer). Used for hit testing.
@@ -485,15 +491,58 @@ class RenderLayerWrapper {
   }
 
   struct EnclosingCompositingLayerStatus {
-    let fullRepaintAlreadyScheduled = false
-    let layer: RenderLayerWrapper? = nil
+    init(fullRepaintAlreadyScheduled: Bool = false, layer: RenderLayerWrapper? = nil) {
+      self.fullRepaintAlreadyScheduled = fullRepaintAlreadyScheduled
+      self.layer = layer
+    }
+
+    let fullRepaintAlreadyScheduled: Bool
+    let layer: RenderLayerWrapper?
   }
 
   func enclosingCompositingLayerForRepaint(includeSelf: IncludeSelfOrNot = .IncludeSelf)
     -> EnclosingCompositingLayerStatus
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var fullRepaintAlreadyScheduled =
+      RenderLayerWrapper.isEligibleForFullRepaintCheck(layer: self) && needsFullRepaint()
+    if includeSelf == .IncludeSelf,
+      let repaintTarget = RenderLayerWrapper.repaintTargetForLayer(layer: self)
+    {
+      return EnclosingCompositingLayerStatus(
+        fullRepaintAlreadyScheduled: fullRepaintAlreadyScheduled, layer: repaintTarget)
+    }
+
+    var curr = paintOrderParent()
+    while curr != nil {
+      fullRepaintAlreadyScheduled =
+        fullRepaintAlreadyScheduled
+        || (RenderLayerWrapper.isEligibleForFullRepaintCheck(layer: curr!)
+          && curr!.needsFullRepaint())
+      if let repaintTarget = RenderLayerWrapper.repaintTargetForLayer(layer: curr!) {
+        return EnclosingCompositingLayerStatus(
+          fullRepaintAlreadyScheduled: fullRepaintAlreadyScheduled, layer: repaintTarget)
+      }
+      curr = curr!.paintOrderParent()
+    }
+
+    return EnclosingCompositingLayerStatus()
+  }
+
+  private static func repaintTargetForLayer(layer: RenderLayerWrapper) -> RenderLayerWrapper? {
+    if compositedWithOwnBackingStore(layer: layer) {
+      return layer
+    }
+
+    if layer.paintsIntoProvidedBacking() {
+      return layer.backingProviderLayer
+    }
+
+    return nil
+  }
+
+  private static func isEligibleForFullRepaintCheck(layer: RenderLayerWrapper) -> Bool {
+    return layer.isSelfPaintingLayer && !layer.renderer().hasPotentiallyScrollableOverflow()
+      && !(layer.renderer() is RenderViewWrapper)
   }
 
   func canUseOffsetFromAncestor() -> Bool {
@@ -1362,6 +1411,11 @@ class RenderLayerWrapper {
     // Ignore child layer (and behave as if we had overflow: hidden) when it is positioned off the parent layer so much
     // that we hit the max LayoutUnit value.
     unionBounds.checkedUnite(other: childBounds)
+  }
+
+  func needsFullRepaint() -> Bool {
+    return repaintStatus == .NeedsFullRepaint
+      || repaintStatus == .NeedsFullRepaintForPositionedMovementLayout
   }
 
   func staticInlinePosition() -> LayoutUnit {
@@ -3582,6 +3636,7 @@ class RenderLayerWrapper {
   // blend).
   private var usedTransparency = false
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
+  private let repaintStatus: RepaintStatus = .NeedsNormalRepaint
 
   private let hasVisibleContent = false
   private let hasVisibleDescendant = false
