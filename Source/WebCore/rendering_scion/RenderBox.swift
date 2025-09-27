@@ -349,6 +349,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func isFlexItem() -> Bool { return wk_interop.RenderBox_isFlexItem(p) }
 
+  func updateFloatPainterAfterSelfPaintingLayerChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shapeOutsideInfo() -> ShapeOutsideInfoWrapper? {
     if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(p) {
       return ShapeOutsideInfoWrapper(p: unwrapped)

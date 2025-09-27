@@ -1918,6 +1918,21 @@ class RenderLayerWrapper {
     return nil
   }
 
+  private func setAncestorChainHasSelfPaintingLayerDescendant() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func dirtyAncestorChainHasSelfPaintingLayerDescendantStatus() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clearRepaintRects() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func clipRectRelativeToAncestor(
     ancestor: RenderLayerWrapper?, offsetFromAncestor: LayoutSizeWrapper,
     constrainingRect: LayoutRectWrapper, temporaryClipRects: Bool = false
@@ -2003,8 +2018,25 @@ class RenderLayerWrapper {
   }
 
   private func updateSelfPaintingLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isSelfPaintingLayer = shouldBeSelfPaintingLayer()
+    if self.isSelfPaintingLayer == isSelfPaintingLayer {
+      return
+    }
+
+    self.isSelfPaintingLayer = isSelfPaintingLayer
+    if parent() == nil {
+      return
+    }
+
+    if isSelfPaintingLayer {
+      parent()!.setAncestorChainHasSelfPaintingLayerDescendant()
+    } else {
+      parent()!.dirtyAncestorChainHasSelfPaintingLayerDescendantStatus()
+      clearRepaintRects()
+      if let renderBox = self.renderBox(), renderBox.isFloating() {
+        renderBox.updateFloatPainterAfterSelfPaintingLayerChange()
+      }
+    }
   }
 
   private func enclosingPaginationLayerInSubtree(
@@ -3616,6 +3648,11 @@ class RenderLayerWrapper {
     }
   }
 
+  private func shouldBeSelfPaintingLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeHasVisibleContent() -> Bool {
     if renderer().isAnonymous() && renderer() is RenderSVGViewportContainerWrapper {
       return false
@@ -3750,7 +3787,7 @@ class RenderLayerWrapper {
   private var zOrderListsDirty = false
   private var normalFlowListDirty = false
 
-  private let isSelfPaintingLayer = false
+  private var isSelfPaintingLayer = false
 
   // If have no self-painting descendants, we don't have to walk our children during painting. This can lead to
   // significant savings, especially if the tree has lots of non-self-painting layers grouped together (e.g. table cells).
