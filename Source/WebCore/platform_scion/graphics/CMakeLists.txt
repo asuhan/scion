@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     DashArray.swift
     DecodingOptions.swift
     FloatPoint.swift
+    FloatQuad.swift
     FloatRect.swift
     FloatRoundedRect.swift
     FloatSize.swift

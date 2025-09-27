@@ -62,3 +62,9 @@ struct ClipRect {
   var rect = LayoutRectWrapper()
   var affectedByRadius = false
 }
+
+func intersection(a: ClipRect, b: ClipRect) -> ClipRect {
+  var c = a
+  c.intersect(other: b)
+  return c
+}

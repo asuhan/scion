@@ -1687,8 +1687,34 @@ class RenderLayerWrapper {
           point: renderer().view().frameView().scrollPositionForFixedPosition())
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if renderer().hasNonVisibleOverflow() {
+        var newOverflowClip = ClipRect(
+          rect: rendererOverflowClipRectForChildLayers(
+            location: LayoutPointWrapper(), fragment: nil,
+            relevancy: clipRectsContext.overlayScrollbarSizeRelevancy()))
+        if needsTransform {
+          newOverflowClip = ClipRect(
+            rect: LayoutRectWrapper(
+              r: renderer().localToContainerQuad(
+                localQuad: FloatQuad(inRect: newOverflowClip.rect.FloatRect()),
+                container: clipRectsContext.rootLayer!.renderer()
+              ).boundingBox()))
+        }
+        newOverflowClip.moveBy(point: offset)
+        newOverflowClip.affectedByRadius = renderer().style().hasBorderRadius()
+        clipRects.overflowClipRect = intersection(
+          a: newOverflowClip, b: clipRects.overflowClipRect)
+        if renderer().canContainAbsolutelyPositionedObjects() {
+          clipRects.posClipRect = intersection(a: newOverflowClip, b: clipRects.posClipRect)
+        }
+        if renderer().canContainFixedPositionObjects() {
+          clipRects.fixedClipRect = intersection(a: newOverflowClip, b: clipRects.fixedClipRect)
+        }
+      }
+      if renderer().hasClip() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
     } else if renderer().hasNonVisibleOverflow() && transform != nil
       && renderer().style().hasBorderRadius()
     {
@@ -1859,6 +1885,16 @@ class RenderLayerWrapper {
         location: location, fragment: fragment, relevancy: relevancy)
     }
     return LayoutRectWrapper()
+  }
+
+  private func rendererOverflowClipRectForChildLayers(
+    location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
+    relevancy: OverlayScrollbarSizeRelevancy
+  )
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func rendererHasVisualOverflow() -> Bool {
