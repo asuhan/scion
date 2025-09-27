@@ -85,6 +85,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Use RenderElement versions instead.
+  func firstChildSlow() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -413,6 +419,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case Inside  // The object is fully encompassed by a selection run
     case End  // The object either contains the end of a selection run or is the end of a run
     case Both  // The object contains an entire run or is the sole selected object in that run
+  }
+
+  func isSkippedContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {

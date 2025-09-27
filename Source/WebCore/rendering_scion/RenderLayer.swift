@@ -3617,8 +3617,47 @@ class RenderLayerWrapper {
   }
 
   private func computeHasVisibleContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer().isAnonymous() && renderer() is RenderSVGViewportContainerWrapper {
+      return false
+    }
+
+    if isHiddenByOverflowTruncation {
+      return false
+    }
+
+    if renderer().isSkippedContent() {
+      return false
+    }
+
+    if renderer().style().usedVisibility() == .Visible {
+      return true
+    }
+
+    // Layer's renderer has visibility:hidden, but some non-layer child may have visibility:visible.
+    var r = renderer().firstChild()
+    while r != nil {
+      if r!.style().usedVisibility() == .Visible && !r!.hasLayer() {
+        return true
+      }
+
+      if !r!.hasLayer(), let child = r!.firstChildSlow() {
+        r = child
+      } else if r!.nextSibling() != nil {
+        r = r!.nextSibling()
+      } else {
+        repeat {
+          r = r!.parent()
+          if CPtrToInt(r?.p) == CPtrToInt(renderer().p) {
+            r = nil
+          }
+        } while r != nil && r!.nextSibling() == nil
+        if r != nil {
+          r = r!.nextSibling()
+        }
+      }
+    }
+
+    return false
   }
 
   private func isIntrinsicallyComposited() -> Bool {
@@ -3732,6 +3771,7 @@ class RenderLayerWrapper {
 
   private let m_hasTransformedAncestor = false
 
+  private let isHiddenByOverflowTruncation = false
   private let isPaintingSVGResourceLayer = false
 
   private let viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =

@@ -5,5 +5,6 @@ target_sources(layout_scion PRIVATE
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
     RenderSVGRoot.swift
+    RenderSVGViewportContainer.swift
 )
 add_subdirectory(legacy)
