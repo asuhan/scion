@@ -333,9 +333,13 @@ class RenderLayerWrapper {
     setRequirementsTraversalDirtyBit(v: .DescendantsNeedRequirementsTraversal)
   }
 
+  private func setBackingAndHierarchyTraversalDirtyBit(v: Compositing) {
+    compositingDirtyBits.update(with: v)
+    setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingBackingOrHierarchyTraversal)
+  }
+
   func setDescendantsNeedUpdateBackingAndHierarchyTraversal() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setBackingAndHierarchyTraversalDirtyBit(v: .DescendantsNeedBackingAndHierarchyTraversal)
   }
 
   func normalFlowLayers() -> LayerList {
