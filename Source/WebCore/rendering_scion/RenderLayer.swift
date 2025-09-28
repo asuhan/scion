@@ -242,9 +242,22 @@ class RenderLayerWrapper {
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
+  // Gets the enclosing stacking context for this layer, excluding this layer itself.
+  func stackingContext() -> RenderLayerWrapper? {
+    var layer = parent()
+    while layer != nil && !layer!.isStackingContext() {
+      layer = layer!.parent()
+    }
+
+    assert(layer == nil || layer!.isStackingContext())
+    if establishesTopLayer() {
+      assert(layer == nil || CPtrToInt(layer!.p) == CPtrToInt(renderer().view().layer()!.p))
+    }
+    return layer
+  }
+
   func paintOrderParent() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isNormalFlowOnly ? m_parent : stackingContext()
   }
 
   func dirtyHiddenStackingContextAncestorZOrderLists() {
@@ -4196,6 +4209,8 @@ class RenderLayerWrapper {
   private var hasIntrinsicallyCompositedDescendantsStatusDirty = true
 
   private var wasOmittedFromZOrderTree = false
+
+  private let m_parent: RenderLayerWrapper? = nil
 
   private let backingProviderLayer: RenderLayerWrapper? = nil
 
