@@ -324,9 +324,13 @@ class RenderLayerWrapper {
     }
   }
 
+  private func setRequirementsTraversalDirtyBit(v: Compositing) {
+    compositingDirtyBits.update(with: v)
+    setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingRequirementsTraversal)
+  }
+
   func setDescendantsNeedCompositingRequirementsTraversal() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setRequirementsTraversalDirtyBit(v: .DescendantsNeedRequirementsTraversal)
   }
 
   func setDescendantsNeedUpdateBackingAndHierarchyTraversal() {
