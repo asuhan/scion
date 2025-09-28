@@ -1916,8 +1916,10 @@ class RenderLayerWrapper {
   }
 
   private func clearZOrderLists() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isStackingContext())
+
+    posZOrderList = nil
+    negZOrderList = nil
   }
 
   private func updateNormalFlowList() {
