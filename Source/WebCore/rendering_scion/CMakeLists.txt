@@ -47,6 +47,7 @@ target_sources(layout_scion PRIVATE
     RenderInline.swift
     RenderLayer.swift
     RenderLayerBacking.swift
+    RenderLayerCompositor.swift
     RenderLayerModelObject.swift
     RenderLayerScrollableArea.swift
     RenderLayoutState.swift

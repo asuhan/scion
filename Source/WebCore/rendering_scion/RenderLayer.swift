@@ -478,6 +478,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func compositor() -> RenderLayerCompositorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: This is terrible. Bring back a cached bit for this someday. This crawl is going to slow down all
   // painting of content inside paginated layers.
   func hasCompositedLayerInEnclosingPaginationChain() -> Bool {
@@ -4016,11 +4021,37 @@ class RenderLayerWrapper {
   }
 
   private func setWasOmittedFromZOrderTree() {
+    if wasOmittedFromZOrderTree {
+      return
+    }
+
+    assert(!isNormalFlowOnly)
+    removeSelfFromCompositor()
+
+    // Omitting a stacking context removes the whole subtree, otherwise collectLayers will
+    // visit and omit/include descendants separately.
+    if isStackingContext() {
+      removeDescendantsFromCompositor()
+    }
+
+    if compositor().hasContentCompositingLayers() && parent() != nil {
+      parent()!.setDescendantsNeedCompositingRequirementsTraversal()
+    }
+
+    wasOmittedFromZOrderTree = true
+  }
+
+  private func setWasIncludedInZOrderTree() { wasOmittedFromZOrderTree = false }
+
+  private func removeSelfFromCompositor() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func setWasIncludedInZOrderTree() { wasOmittedFromZOrderTree = false }
+  private func removeDescendantsFromCompositor() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   private let p: UnsafeMutableRawPointer
   // Native fields below.
