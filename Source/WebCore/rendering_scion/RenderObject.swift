@@ -112,6 +112,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderEmbeddedObject() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFieldset() -> Bool {
     return wk_interop.RenderObject_isFieldset(p)
   }
@@ -125,7 +130,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isImage(p)
   }
 
+  func isRenderIFrame() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderTextControl() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderVideo() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderHTMLCanvas() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -221,6 +241,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderTableRow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderView() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -241,6 +266,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasReflection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderFragmentedFlow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

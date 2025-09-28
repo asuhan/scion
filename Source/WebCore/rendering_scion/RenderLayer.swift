@@ -405,6 +405,17 @@ class RenderLayerWrapper {
     return Int32(roundToInt(value: overflowRect.maxY() - overflowRect.y()))
   }
 
+  // Returns true when there is actually scrollable overflow (requires layout to be up-to-date).
+  func hasCompositedScrollableOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasOverlayScrollbars() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: This is terrible. Bring back a cached bit for this someday. This crawl is going to slow down all
   // painting of content inside paginated layers.
   func hasCompositedLayerInEnclosingPaginationChain() -> Bool {
@@ -3649,8 +3660,18 @@ class RenderLayerWrapper {
   }
 
   private func shouldBeSelfPaintingLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isNormalFlowOnly {
+      return true
+    }
+
+    return hasOverlayScrollbars()
+      || hasCompositedScrollableOverflow()
+      || renderer().isRenderTableRow()
+      || renderer().isRenderHTMLCanvas()
+      || renderer().isRenderVideo()
+      || renderer().isRenderEmbeddedObject()
+      || renderer().isRenderIFrame()
+      || renderer().isRenderFragmentedFlow()
   }
 
   private func computeHasVisibleContent() -> Bool {
