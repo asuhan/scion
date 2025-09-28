@@ -1684,6 +1684,8 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
 
+  private func isDirtyStackingContext() -> Bool { return zOrderListsDirty && isStackingContext() }
+
   private func updateZOrderLists() {
     if !zOrderListsDirty {
       return
