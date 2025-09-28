@@ -313,6 +313,17 @@ class RenderLayerWrapper {
     .DescendantsNeedBackingAndHierarchyTraversal,
   ]
 
+  private func setAncestorsHaveCompositingDirtyFlag(flag: Compositing) {
+    var layer = paintOrderParent()
+    while layer != nil {
+      if layer!.compositingDirtyBits.contains(flag) {
+        break
+      }
+      layer!.compositingDirtyBits.update(with: flag)
+      layer = layer!.paintOrderParent()
+    }
+  }
+
   func setDescendantsNeedCompositingRequirementsTraversal() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -4088,7 +4099,7 @@ class RenderLayerWrapper {
   private let p: UnsafeMutableRawPointer
   // Native fields below.
 
-  private let compositingDirtyBits = Compositing()
+  private var compositingDirtyBits = Compositing()
 
   private var savedAlphaForTransparency: Float32? = nil
 
