@@ -72,6 +72,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldApplyPaintContainment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Obtains the selection colors that should be used when painting a selection.
   func selectionBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this

@@ -1930,8 +1930,21 @@ class RenderLayerWrapper {
   }
 
   private func setAncestorChainHasSelfPaintingLayerDescendant() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if renderer().shouldApplyPaintContainment() {
+        hasSelfPaintingLayerDescendant = true
+        hasSelfPaintingLayerDescendantDirty = false
+        break
+      }
+      if !layer!.hasSelfPaintingLayerDescendantDirty && layer!.hasSelfPaintingLayerDescendant {
+        break
+      }
+
+      layer!.hasSelfPaintingLayerDescendantDirty = false
+      layer!.hasSelfPaintingLayerDescendant = true
+      layer = layer!.parent()
+    }
   }
 
   private func dirtyAncestorChainHasSelfPaintingLayerDescendantStatus() {
