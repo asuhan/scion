@@ -4049,8 +4049,12 @@ class RenderLayerWrapper {
   }
 
   private func removeDescendantsFromCompositor() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = firstChild()
+    while child != nil {
+      child!.removeSelfFromCompositor()
+      child!.removeDescendantsFromCompositor()
+      child = child!.nextSibling()
+    }
   }
 
   private let p: UnsafeMutableRawPointer
