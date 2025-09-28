@@ -950,6 +950,43 @@ class RenderLayerWrapper {
     .PaintingCompositingBackgroundPhase, .PaintingCompositingForegroundPhase,
   ]
 
+  enum SecurityOriginPaintPolicy {
+    case AnyOrigin
+    case AccessibleOriginOnly
+  }
+
+  // The two main functions that use the layer system.  The paint method
+  // paints the layers that intersect the damage rect from back to
+  // front.  The hitTest method looks for mouse events by walking
+  // layers that intersect the point from front to back.
+  func paint(
+    context: GraphicsContextWrapper, damageRect: LayoutRectWrapper,
+    subpixelOffset: LayoutSizeWrapper = LayoutSizeWrapper(), paintBehavior: PaintBehavior = .Normal,
+    subtreePaintRoot: RenderObjectWrapper? = nil, paintFlags: PaintLayerFlag = [],
+    paintPolicy: SecurityOriginPaintPolicy = .AnyOrigin, regionContext: RegionContext? = nil
+  ) {
+    let overlapTestRequests = OverlapTestRequestMap()
+
+    var paintingInfo = LayerPaintingInfo(
+      inRootLayer: self, inDirtyRect: LayoutRectWrapper(rect: enclosingIntRect(rect: damageRect)),
+      inPaintBehavior: paintBehavior, inSubpixelOffset: subpixelOffset,
+      inSubtreePaintRoot: subtreePaintRoot,
+      inOverlapTestRequests: overlapTestRequests,
+      inRequireSecurityOriginAccessForWidgets: paintPolicy == .AccessibleOriginOnly)
+    var paintFlags = paintFlags
+    if regionContext != nil {
+      paintingInfo.regionContext = regionContext
+      if regionContext! is EventRegionContext {
+        paintFlags.update(with: .CollectingEventRegion)
+      }
+    }
+    paintLayer(context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
+
+    for widget in overlapTestRequests.keys {
+      widget.setOverlapTestResult(isOverlapped: false)
+    }
+  }
+
   struct ClipRectsOption: OptionSet {
     let rawValue: UInt8
 
@@ -2008,7 +2045,7 @@ class RenderLayerWrapper {
     var paintBehavior: PaintBehavior
     var requireSecurityOriginAccessForWidgets: Bool
     var clipToDirtyRect: Bool = true
-    let regionContext: RegionContext? = nil
+    var regionContext: RegionContext? = nil
   }
 
   private func paintOffsetForRenderer(
