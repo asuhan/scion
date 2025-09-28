@@ -1935,8 +1935,15 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainHasSelfPaintingLayerDescendantStatus() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if layer!.hasSelfPaintingLayerDescendantDirty {
+        break
+      }
+
+      layer!.hasSelfPaintingLayerDescendantDirty = true
+      layer = layer!.parent()
+    }
   }
 
   private func clearRepaintRects() {
