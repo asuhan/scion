@@ -1720,8 +1720,27 @@ class RenderLayerWrapper {
   }
 
   static func topLayerRenderLayers(renderView: RenderViewWrapper) -> [RenderLayerWrapper] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layers: [RenderLayerWrapper] = []
+    for element in renderView.document().topLayerElements() {
+      let renderer = element.containerRenderer()
+      if renderer == nil {
+        continue
+      }
+
+      if let backdropRenderer = renderer!.backdropRenderer(),
+        backdropRenderer.hasLayer() && backdropRenderer.layer()!.parent() != nil
+      {
+        layers.append(backdropRenderer.layer()!)
+      }
+
+      if renderer!.hasLayer() {
+        let modelObject = renderer! as! RenderLayerModelObjectWrapper
+        if modelObject.layer()!.parent() != nil {
+          layers.append(modelObject.layer()!)
+        }
+      }
+    }
+    return layers
   }
 
   func establishesTopLayer() -> Bool {

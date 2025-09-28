@@ -63,6 +63,11 @@ struct Document {
     fatalError("Not implemented")
   }
 
+  func topLayerElements() -> ListSet<ElementWrapper, ElementWrapper> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasTopLayerElement() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
