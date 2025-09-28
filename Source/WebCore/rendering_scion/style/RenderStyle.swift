@@ -1075,6 +1075,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func usedZIndex() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func paintTypesForPaintOrder(order: PaintOrder) -> ArraySlice<PaintType> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

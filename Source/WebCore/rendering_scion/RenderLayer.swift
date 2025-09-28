@@ -898,6 +898,8 @@ class RenderLayerWrapper {
         adjustForColumns: adjustForColumns))
   }
 
+  func zIndex() -> Int32 { return renderer().style().usedZIndex() }
+
   struct PaintLayerFlag: OptionSet {
     let rawValue: UInt32
 
@@ -1707,6 +1709,11 @@ class RenderLayerWrapper {
     return !backing!.canCompositeFilters()
   }
 
+  static func topLayerRenderLayers(renderView: RenderViewWrapper) -> [RenderLayerWrapper] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func establishesTopLayer() -> Bool {
     return isInTopLayerOrBackdrop(style: renderer().style(), element: renderer().element())
   }
@@ -1764,8 +1771,49 @@ class RenderLayerWrapper {
     posZOrderList: inout [RenderLayerWrapper]?, negZOrderList: inout [RenderLayerWrapper]?,
     accumulatedDirtyFlags: inout Compositing
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = firstChild()
+    while child != nil {
+      if !isReflectionLayer(layer: child!) {
+        child!.collectLayers(
+          positiveZOrderList: &posZOrderList, negativeZOrderList: &negZOrderList,
+          accumulatedDirtyFlags: &accumulatedDirtyFlags)
+      }
+      child = child!.nextSibling()
+    }
+
+    // Sort the two lists.
+    // TODO(asuhan): use a guaranteed stable sort
+    if posZOrderList != nil {
+      posZOrderList!.sort { first, second in first.zIndex() < second.zIndex() }
+      // TODO(asuhan): shrink capacity to size
+    }
+
+    if negZOrderList != nil {
+      negZOrderList!.sort { first, second in first.zIndex() < second.zIndex() }
+      // TODO(asuhan): shrink capacity to size
+    }
+
+    if isRenderViewLayer && renderer().document().hasTopLayerElement() {
+      let topLayerLayers = RenderLayerWrapper.topLayerRenderLayers(renderView: renderer().view())
+      if topLayerLayers.isEmpty {
+        return
+      }
+      if posZOrderList == nil {
+        posZOrderList = []
+      }
+
+      var viewTransitionLayer: RenderLayerWrapper? = nil
+      if !posZOrderList!.isEmpty
+        && posZOrderList!.last!.renderer().style().pseudoElementType() == .ViewTransition
+      {
+        viewTransitionLayer = posZOrderList!.removeLast()
+      }
+
+      posZOrderList!.append(contentsOf: topLayerLayers)
+      if let viewTransitionLayer = viewTransitionLayer {
+        posZOrderList!.append(viewTransitionLayer)
+      }
+    }
   }
 
   private func rebuildZOrderLists() {
@@ -1803,6 +1851,14 @@ class RenderLayerWrapper {
     if childDirtyFlags.containsAny(other: RenderLayerWrapper.updateBackingOrHierarchyFlags) {
       setDescendantsNeedUpdateBackingAndHierarchyTraversal()
     }
+  }
+
+  private func collectLayers(
+    positiveZOrderList: inout [RenderLayerWrapper]?,
+    negativeZOrderList: inout [RenderLayerWrapper]?, accumulatedDirtyFlags: inout Compositing
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func clearZOrderLists() {
