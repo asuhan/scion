@@ -75,8 +75,9 @@ enum ShouldApplyRootOffsetToFragments {
 }
 
 private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: Bool) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !has3DRendering {
+    matrix.makeAffine()
+  }
 }
 
 private func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
