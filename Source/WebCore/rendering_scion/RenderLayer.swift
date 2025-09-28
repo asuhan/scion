@@ -150,8 +150,10 @@ class ClipRects: Equatable {
   func setOverflowClipRectAffectedByRadius() { overflowClipRect.affectedByRadius = true }
 
   static func == (this: ClipRects, other: ClipRects) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return this.overflowClipRect == other.overflowClipRect
+      && this.fixedClipRect == other.fixedClipRect
+      && this.posClipRect == other.posClipRect
+      && this.fixed == other.fixed
   }
 
   var fixed = false

@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct ClipRect {
+struct ClipRect: Equatable {
   init() {}
 
   init(rect: LayoutRectWrapper) {
