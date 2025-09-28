@@ -1641,6 +1641,11 @@ class RenderLayerWrapper {
 
   func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
 
+  func clearBacking(layerBeingDestroyed: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usesCompositedScrolling() -> Bool {
     return m_scrollableArea?.usesCompositedScrolling() ?? false
   }
@@ -4044,8 +4049,10 @@ class RenderLayerWrapper {
   private func setWasIncludedInZOrderTree() { wasOmittedFromZOrderTree = false }
 
   private func removeSelfFromCompositor() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let parent = parent() {
+      compositor().layerWillBeRemoved(parent: parent, child: self)
+    }
+    clearBacking()
   }
 
   private func removeDescendantsFromCompositor() {

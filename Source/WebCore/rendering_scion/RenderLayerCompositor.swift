@@ -35,4 +35,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Notify us that a layer has been removed
+  func layerWillBeRemoved(parent: RenderLayerWrapper, child: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
