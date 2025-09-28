@@ -251,6 +251,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func setNeedsCompositingConfigurationUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct LayerList: Sequence, IteratorProtocol {
     func next() -> RenderLayerWrapper? {
       // TODO(asuhan): implement this
@@ -261,6 +266,61 @@ class RenderLayerWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+  }
+
+  private struct Compositing: OptionSet {
+    let rawValue: UInt8
+
+    static let HasDescendantNeedingRequirementsTraversal = Compositing(rawValue: 1 << 0)  // Need to do the overlap-testing tree walk because hierarchy or geometry changed.
+    static let HasDescendantNeedingBackingOrHierarchyTraversal = Compositing(rawValue: 1 << 1)  // Need to update geometry, configuration and update the GraphicsLayer tree.
+
+    // Things that trigger HasDescendantNeedingRequirementsTraversal
+    static let NeedsPaintOrderChildrenUpdate = Compositing(rawValue: 1 << 2)  // The paint order children of this layer changed (gained/lost child, order change).
+    static let NeedsPostLayoutUpdate = Compositing(rawValue: 1 << 3)  // Needs compositing to be re-evaluated after layout (it depends on geometry).
+    static let DescendantsNeedRequirementsTraversal = Compositing(rawValue: 1 << 4)  // Something changed that forces computeCompositingRequirements to traverse all descendant layers.
+    static let SubsequentLayersNeedRequirementsTraversal = Compositing(rawValue: 1 << 5)  // Something changed that forces computeCompositingRequirements to traverse all layers later in paint order.
+
+    // Things that trigger HasDescendantNeedingBackingOrHierarchyTraversal
+    static let NeedsGeometryUpdate = Compositing(rawValue: 1 << 6)  // This layer needs a geometry update.
+    static let NeedsConfigurationUpdate = Compositing(rawValue: 1 << 7)  // This layer needs a configuration update (updating its internal compositing hierarchy).
+    static let NeedsScrollingTreeUpdate = Compositing(rawValue: 1 << 8)  // Something changed that requires this layer's scrolling tree node to be updated.
+    static let NeedsLayerConnection = Compositing(rawValue: 1 << 9)  // This layer needs hookup with its parents or children.
+    static let ChildrenNeedGeometryUpdate = Compositing(rawValue: 1 << 10)  // This layer's composited children need a geometry update.
+    static let DescendantsNeedBackingAndHierarchyTraversal = Compositing(rawValue: 1 << 11)  // Something changed that forces us to traverse all descendant layers in updateBackingAndHierarchy.
+
+    func containsAll(other: Compositing) -> Bool {
+      return self.intersection(other) == other
+    }
+
+    func containsAny(other: Compositing) -> Bool {
+      return !self.intersection(other).isEmpty
+    }
+  }
+
+  private static let computeCompositingRequirementsFlags: Compositing = [
+    .NeedsPaintOrderChildrenUpdate,
+    .NeedsPostLayoutUpdate,
+    .DescendantsNeedRequirementsTraversal,
+    .SubsequentLayersNeedRequirementsTraversal,
+  ]
+
+  private static let updateBackingOrHierarchyFlags: Compositing = [
+    .NeedsLayerConnection,
+    .NeedsGeometryUpdate,
+    .NeedsConfigurationUpdate,
+    .NeedsScrollingTreeUpdate,
+    .ChildrenNeedGeometryUpdate,
+    .DescendantsNeedBackingAndHierarchyTraversal,
+  ]
+
+  func setDescendantsNeedCompositingRequirementsTraversal() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setDescendantsNeedUpdateBackingAndHierarchyTraversal() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func normalFlowLayers() -> LayerList {
@@ -1700,9 +1760,49 @@ class RenderLayerWrapper {
     rebuildZOrderLists()
   }
 
-  private func rebuildZOrderLists() {
+  private func rebuildZOrderLists(
+    posZOrderList: inout [RenderLayerWrapper]?, negZOrderList: inout [RenderLayerWrapper]?,
+    accumulatedDirtyFlags: inout Compositing
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func rebuildZOrderLists() {
+    // TODO(asuhan): check layerListMutationAllowed() as well
+    assert(isDirtyStackingContext())
+
+    var childDirtyFlags = Compositing()
+    rebuildZOrderLists(
+      posZOrderList: &posZOrderList, negZOrderList: &negZOrderList,
+      accumulatedDirtyFlags: &childDirtyFlags)
+    zOrderListsDirty = false
+
+    let hasNegativeZOrderList = negZOrderList != nil && negZOrderList!.count != 0
+    // Having negative z-order lists affect whether a compositing layer needs a foreground layer.
+    // Ideally we'd only trigger this when having z-order children changes, but we blow away the old z-order
+    // lists on dirtying so we don't know the old state.
+    if hasNegativeZOrderList != hadNegativeZOrderList {
+      hadNegativeZOrderList = hasNegativeZOrderList
+      if isComposited() {
+        setNeedsCompositingConfigurationUpdate()
+      }
+    }
+
+    // Building lists may have added layers with dirty flags, so make sure we propagate dirty bits up the tree.
+    if compositingDirtyBits.containsAll(other: [
+      .DescendantsNeedRequirementsTraversal, .DescendantsNeedBackingAndHierarchyTraversal,
+    ]) {
+      return
+    }
+
+    if childDirtyFlags.containsAny(other: RenderLayerWrapper.computeCompositingRequirementsFlags) {
+      setDescendantsNeedCompositingRequirementsTraversal()
+    }
+
+    if childDirtyFlags.containsAny(other: RenderLayerWrapper.updateBackingOrHierarchyFlags) {
+      setDescendantsNeedUpdateBackingAndHierarchyTraversal()
+    }
   }
 
   private func clearZOrderLists() {
@@ -3820,6 +3920,8 @@ class RenderLayerWrapper {
   private let p: UnsafeMutableRawPointer
   // Native fields below.
 
+  private let compositingDirtyBits = Compositing()
+
   private var savedAlphaForTransparency: Float32? = nil
 
   private var isRenderViewLayer = false
@@ -3831,6 +3933,7 @@ class RenderLayerWrapper {
 
   private var zOrderListsDirty = false
   private var normalFlowListDirty = false
+  private var hadNegativeZOrderList = false
 
   private var isSelfPaintingLayer = false
 
@@ -3869,6 +3972,13 @@ class RenderLayerWrapper {
   private var wasOmittedFromZOrderTree = false
 
   private let backingProviderLayer: RenderLayerWrapper? = nil
+
+  // For layers that establish stacking contexts, m_posZOrderList holds a sorted list of all the
+  // descendant layers within the stacking context that have z-indices of 0 or greater
+  // (auto will count as 0). m_negZOrderList holds descendants within our stacking context with negative
+  // z-indices.
+  private var posZOrderList: [RenderLayerWrapper]? = nil
+  private var negZOrderList: [RenderLayerWrapper]? = nil
 
   // This list contains child layers that cannot create stacking contexts and appear in normal flow order.
   private var normalFlowList: [RenderLayerWrapper]? = nil
