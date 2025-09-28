@@ -38,4 +38,9 @@ class PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasEverSetVisibilityAdjustment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

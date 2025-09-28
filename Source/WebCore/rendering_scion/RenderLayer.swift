@@ -1857,8 +1857,52 @@ class RenderLayerWrapper {
     positiveZOrderList: inout [RenderLayerWrapper]?,
     negativeZOrderList: inout [RenderLayerWrapper]?, accumulatedDirtyFlags: inout Compositing
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!descendantDependentFlagsAreDirty())
+    if establishesTopLayer() {
+      return
+    }
+
+    let isStacking = isStackingContext()
+    // Overflow layers are just painted by their enclosing layers, so they don't get put in zorder lists.
+    var layerOrDescendantsAreVisible =
+      (hasVisibleContent || intrinsicallyComposited)
+      || ((hasVisibleDescendant || hasIntrinsicallyCompositedDescendants) && isStacking)
+    layerOrDescendantsAreVisible =
+      layerOrDescendantsAreVisible || page().hasEverSetVisibilityAdjustment()
+    if !isNormalFlowOnly {
+      if layerOrDescendantsAreVisible {
+        if zIndex() >= 0 {
+          if positiveZOrderList == nil {
+            positiveZOrderList = []
+          }
+          positiveZOrderList!.append(self)
+        } else {
+          if negativeZOrderList == nil {
+            negativeZOrderList = []
+          }
+          negativeZOrderList!.append(self)
+        }
+        accumulatedDirtyFlags.update(with: compositingDirtyBits)
+        setWasIncludedInZOrderTree()
+      } else {
+        setWasOmittedFromZOrderTree()
+      }
+    }
+
+    // Recur into our children to collect more layers, but only if we don't establish
+    // a stacking context/container.
+    if !isStacking {
+      var child = firstChild()
+      while child != nil {
+        // Ignore reflections.
+        if !isReflectionLayer(layer: child!) {
+          child!.collectLayers(
+            positiveZOrderList: &positiveZOrderList, negativeZOrderList: &negativeZOrderList,
+            accumulatedDirtyFlags: &accumulatedDirtyFlags)
+        }
+        child = child!.nextSibling()
+      }
+    }
   }
 
   private func clearZOrderLists() {
@@ -3971,6 +4015,11 @@ class RenderLayerWrapper {
     return false
   }
 
+  private func setWasOmittedFromZOrderTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setWasIncludedInZOrderTree() { wasOmittedFromZOrderTree = false }
 
   private let p: UnsafeMutableRawPointer
@@ -4022,6 +4071,7 @@ class RenderLayerWrapper {
   private var hasNotIsolatedBlendingDescendants = false
   private var hasNotIsolatedBlendingDescendantsStatusDirty = false
 
+  private let intrinsicallyComposited = false
   private var hasIntrinsicallyCompositedDescendants = false
   private var hasIntrinsicallyCompositedDescendantsStatusDirty = true
 
