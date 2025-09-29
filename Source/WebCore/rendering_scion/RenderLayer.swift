@@ -2683,6 +2683,11 @@ class RenderLayerWrapper {
     }
   }
 
+  private func ensureLayerFilters() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
     -> RenderLayerFilters?
   {
@@ -4083,8 +4088,28 @@ class RenderLayerWrapper {
   }
 
   private func updateFilterPaintingStrategy() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // RenderLayerFilters is only used to render the filters in software mode,
+    // so we always need to run updateFilterPaintingStrategy() after the composited
+    // mode might have changed for this layer.
+    if !paintsWithFilters() {
+      // Don't delete the whole filter info here, because we might use it
+      // for loading SVG reference filter files.
+      if filters != nil {
+        filters!.clearFilter()
+      }
+
+      // Early-return only if we *don't* have reference filters.
+      // For reference filters, we still want the FilterEffect graph built
+      // for us, even if we're composited.
+      if !renderer().style().filter().hasReferenceFilter() {
+        return
+      }
+    }
+
+    ensureLayerFilters()
+    filters!.preferredFilterRenderingModes = renderer().page().preferredFilterRenderingModes()
+    filters!.filterScale = FloatSize(
+      width: page().deviceScaleFactor(), height: page().deviceScaleFactor())
   }
 
   private func isIntrinsicallyComposited() -> Bool {

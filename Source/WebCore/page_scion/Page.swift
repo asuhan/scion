@@ -24,7 +24,17 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func deviceScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func useSystemAppearance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func preferredFilterRenderingModes() -> FilterRenderingMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

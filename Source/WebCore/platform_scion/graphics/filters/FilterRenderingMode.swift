@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2022 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,24 +23,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FilterOperations {
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+struct FilterRenderingMode: OptionSet {
+  let rawValue: UInt8
 
-  func hasReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func transformColor(color: ColorWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static let Software = FilterRenderingMode(rawValue: 1 << 0)
+  static let Accelerated = FilterRenderingMode(rawValue: 1 << 1)
+  static let GraphicsContext = FilterRenderingMode(rawValue: 1 << 2)
 }

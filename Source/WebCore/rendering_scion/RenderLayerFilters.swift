@@ -29,12 +29,22 @@
  */
 
 final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
+  func clearFilter() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFilterThatMovesPixels() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func hasFilterThatShouldBeRestrictedBySecurityOrigin() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasReferenceFilter() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -65,4 +75,7 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
 
   let dirtySourceRect = LayoutRectWrapper()
   let repaintRect = LayoutRectWrapper()
+
+  var preferredFilterRenderingModes: FilterRenderingMode = [.Software]
+  var filterScale = FloatSize(width: 1.0, height: 1.0)
 }
