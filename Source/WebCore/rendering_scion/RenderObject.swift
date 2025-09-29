@@ -451,6 +451,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case Both  // The object contains an entire run or is the sole selected object in that run
   }
 
+  // When performing a global document tear-down, or when going into the back/forward cache, the renderer of the document is cleared.
+  func renderTreeBeingDestroyed() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSkippedContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

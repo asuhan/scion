@@ -30,6 +30,12 @@
 // There is one RenderLayerBacking for each RenderLayer that is composited.
 
 final class RenderLayerBacking: GraphicsLayerClientWrapper {
+  // Do cleanup while layer->backing() is still valid.
+  func willBeDestroyed() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasMaskLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

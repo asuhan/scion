@@ -1739,8 +1739,20 @@ class RenderLayerWrapper {
   func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
 
   func clearBacking(layerBeingDestroyed: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if backing == nil {
+      return
+    }
+
+    if !renderer().renderTreeBeingDestroyed() {
+      compositor().layerBecameNonComposited(layer: self)
+    }
+
+    backing!.willBeDestroyed()
+    backing = nil
+
+    if !layerBeingDestroyed {
+      updateFilterPaintingStrategy()
+    }
   }
 
   func usesCompositedScrolling() -> Bool {
@@ -4070,6 +4082,11 @@ class RenderLayerWrapper {
     return false
   }
 
+  private func updateFilterPaintingStrategy() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func isIntrinsicallyComposited() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -4268,7 +4285,7 @@ class RenderLayerWrapper {
   private let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
 
   private let filters: RenderLayerFilters? = nil
-  private let backing: RenderLayerBacking? = nil
+  private var backing: RenderLayerBacking? = nil
 
   private let m_scrollableArea: RenderLayerScrollableArea? = nil
 
