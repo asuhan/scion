@@ -260,9 +260,20 @@ class RenderLayerWrapper {
     return isNormalFlowOnly ? m_parent : stackingContext()
   }
 
-  func dirtyHiddenStackingContextAncestorZOrderLists() {
+  func dirtyZOrderLists() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func dirtyHiddenStackingContextAncestorZOrderLists() {
+    var sc = stackingContext()
+    while sc != nil {
+      sc!.dirtyZOrderLists()
+      if sc!.hasVisibleContent {
+        break
+      }
+      sc = sc!.stackingContext()
+    }
   }
 
   func setNeedsCompositingConfigurationUpdate() {
