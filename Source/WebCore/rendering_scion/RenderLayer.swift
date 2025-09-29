@@ -261,8 +261,20 @@ class RenderLayerWrapper {
   }
 
   func dirtyZOrderLists() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isStackingContext())
+
+    if posZOrderList != nil {
+      posZOrderList!.removeAll()
+    }
+    if negZOrderList != nil {
+      negZOrderList!.removeAll()
+    }
+    zOrderListsDirty = true
+
+    // FIXME: Ideally, we'd only dirty if the lists changed.
+    if hasCompositingDescendant {
+      setNeedsCompositingPaintOrderChildrenUpdate()
+    }
   }
 
   func dirtyHiddenStackingContextAncestorZOrderLists() {
@@ -352,6 +364,10 @@ class RenderLayerWrapper {
   private func setRequirementsTraversalDirtyBit(v: Compositing) {
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingRequirementsTraversal)
+  }
+
+  func setNeedsCompositingPaintOrderChildrenUpdate() {
+    setRequirementsTraversalDirtyBit(v: .NeedsPaintOrderChildrenUpdate)
   }
 
   func setDescendantsNeedCompositingRequirementsTraversal() {
@@ -4202,6 +4218,8 @@ class RenderLayerWrapper {
   private var hasVisibleContent = false
   private var visibleDescendantStatusDirty = false
   private var hasVisibleDescendant = false
+
+  private let hasCompositingDescendant = false  // In the z-order tree.
 
   private let m_hasTransformedAncestor = false
 
