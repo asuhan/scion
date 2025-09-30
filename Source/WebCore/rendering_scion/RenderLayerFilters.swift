@@ -89,6 +89,19 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
       return nil
     }
 
+    if filter == nil || self.targetBoundingBox != targetBoundingBox {
+      self.targetBoundingBox = targetBoundingBox
+      // FIXME: This rebuilds the entire effects chain even if the filter style didn't change.
+      filter = CSSFilter.create(
+        renderer: renderer, operations: renderer.style().filter(),
+        preferredFilterRenderingModes: preferredFilterRenderingModes, filterScale: filterScale,
+        targetBoundingBox: self.targetBoundingBox.FloatRect(), destinationContext: context)
+    }
+
+    if filter == nil {
+      return nil
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -98,11 +111,13 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     fatalError("Not implemented")
   }
 
+  var targetBoundingBox = LayoutRectWrapper()
   let dirtySourceRect = LayoutRectWrapper()
   let repaintRect = LayoutRectWrapper()
 
   var preferredFilterRenderingModes: FilterRenderingMode = [.Software]
   var filterScale = FloatSize(width: 1.0, height: 1.0)
 
+  private var filter: CSSFilter? = nil
   private var targetSwitcher: GraphicsContextSwitcher? = nil
 }
