@@ -54,11 +54,41 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     fatalError("Not implemented")
   }
 
+  static func calculateOutsets(renderer: RenderElementWrapper, targetBoundingBox: FloatRectWrapper)
+    -> IntOutsets
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func beginFilterEffect(
     renderer: RenderElementWrapper, context: GraphicsContextWrapper,
     filterBoxRect: LayoutRectWrapper, dirtyRect: LayoutRectWrapper,
     layerRepaintRect: LayoutRectWrapper, clipRect: LayoutRectWrapper
   ) -> GraphicsContextWrapper? {
+    var expandedDirtyRect = dirtyRect
+    var targetBoundingBox = intersection(a: filterBoxRect, b: dirtyRect)
+
+    let outsets = RenderLayerFilters.calculateOutsets(
+      renderer: renderer, targetBoundingBox: targetBoundingBox.FloatRect())
+    if !outsets.isZero() {
+      let flippedOutsets = LayoutBoxExtent(
+        top: LayoutUnit(value: outsets.bottom), right: LayoutUnit(value: outsets.left),
+        bottom: LayoutUnit(value: outsets.top), left: LayoutUnit(value: outsets.right))
+      expandedDirtyRect.expand(box: flippedOutsets)
+    }
+
+    if renderer is RenderSVGShapeWrapper {
+      targetBoundingBox = enclosingLayoutRect(rect: renderer.objectBoundingBox())
+    } else {
+      // Calculate targetBoundingBox since it will be used if the filter is created.
+      targetBoundingBox = intersection(a: filterBoxRect, b: expandedDirtyRect)
+    }
+
+    if targetBoundingBox.isEmpty() {
+      return nil
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -73,4 +103,6 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
 
   var preferredFilterRenderingModes: FilterRenderingMode = [.Software]
   var filterScale = FloatSize(width: 1.0, height: 1.0)
+
+  private var targetSwitcher: GraphicsContextSwitcher? = nil
 }

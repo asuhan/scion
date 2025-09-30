@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2022-2023 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,38 +23,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct BoxSideFlag: OptionSet {
-  let rawValue: UInt8
-
-  static let Top = BoxSideFlag(rawValue: 1)
-  static let Right = BoxSideFlag(rawValue: 2)
-  static let Bottom = BoxSideFlag(rawValue: 4)
-  static let Left = BoxSideFlag(rawValue: 8)
-}
-
-typealias BoxSideSet = BoxSideFlag
-
-struct RectEdges<T> {
-  func at(side: BoxSide) -> T {
-    switch side {
-    case .Top:
-      return top
-    case .Right:
-      return right
-    case .Bottom:
-      return bottom
-    case .Left:
-      return left
-    }
-  }
-
-  func isZero() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  var top: T
-  var right: T
-  var bottom: T
-  var left: T
-}
+class GraphicsContextSwitcher {}
