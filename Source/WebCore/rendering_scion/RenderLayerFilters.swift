@@ -102,6 +102,19 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
       return nil
     }
 
+    var filterRegion = targetBoundingBox
+
+    if filter!.hasFilterThatMovesPixels {
+      // For CSSFilter, filterRegion = targetBoundingBox + filter->outsets()
+      filterRegion.expand(box: toLayoutBoxExtent(extent: outsets))
+    } else if let shape = renderer as? RenderSVGShapeWrapper {
+      filterRegion = shape.currentSVGLayoutRect()
+    }
+
+    if filterRegion.isEmpty() {
+      return nil
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

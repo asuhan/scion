@@ -30,6 +30,11 @@
  */
 
 class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
+  func currentSVGLayoutRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func currentSVGLayoutLocation() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -33,4 +33,6 @@ final class CSSFilter: FilterWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let hasFilterThatMovesPixels = false
 }
