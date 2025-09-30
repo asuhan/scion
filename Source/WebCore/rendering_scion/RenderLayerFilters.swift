@@ -44,11 +44,6 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     fatalError("Not implemented")
   }
 
-  func hasReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func hasSourceImage() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
