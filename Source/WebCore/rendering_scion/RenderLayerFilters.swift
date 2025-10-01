@@ -115,6 +115,25 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
       return nil
     }
 
+    // For CSSFilter, sourceImageRect = filterRegion.
+    var hasUpdatedBackingStore = false
+    if self.filterRegion != filterRegion.FloatRect() {
+      self.filterRegion = filterRegion.FloatRect()
+      hasUpdatedBackingStore = true
+    }
+
+    filter!.setFilterRegion(filterRegion: self.filterRegion)
+
+    if !filter!.hasFilterThatMovesPixels {
+      repaintRect = dirtyRect
+    } else if hasUpdatedBackingStore || !hasSourceImage() {
+      repaintRect = filterRegion
+    } else {
+      repaintRect = dirtyRect
+      repaintRect.unite(other: layerRepaintRect)
+      repaintRect.intersect(other: filterRegion)
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -126,10 +145,11 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
 
   var targetBoundingBox = LayoutRectWrapper()
   let dirtySourceRect = LayoutRectWrapper()
-  let repaintRect = LayoutRectWrapper()
+  var repaintRect = LayoutRectWrapper()
 
   var preferredFilterRenderingModes: FilterRenderingMode = [.Software]
   var filterScale = FloatSize(width: 1.0, height: 1.0)
+  var filterRegion = FloatRectWrapper()
 
   private var filter: CSSFilter? = nil
   private var targetSwitcher: GraphicsContextSwitcher? = nil

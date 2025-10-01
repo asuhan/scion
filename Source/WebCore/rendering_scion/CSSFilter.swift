@@ -34,5 +34,10 @@ final class CSSFilter: FilterWrapper {
     fatalError("Not implemented")
   }
 
+  func setFilterRegion(filterRegion: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let hasFilterThatMovesPixels = false
 }
