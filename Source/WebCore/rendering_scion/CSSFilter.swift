@@ -24,6 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func isIdentityReferenceFilter(
+  filterOperation: ReferenceFilterOperationWrapper, renderer: RenderElementWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class CSSFilter: FilterWrapper {
   static func create(
     renderer: RenderElementWrapper, operations: FilterOperations,
@@ -37,6 +44,27 @@ final class CSSFilter: FilterWrapper {
   func setFilterRegion(filterRegion: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func isIdentity(renderer: RenderElementWrapper, operations: FilterOperations) -> Bool {
+    if operations.hasFilterThatShouldBeRestrictedBySecurityOrigin() {
+      return false
+    }
+
+    for operation in operations {
+      if let referenceOperation = operation as? ReferenceFilterOperationWrapper {
+        if !isIdentityReferenceFilter(filterOperation: referenceOperation, renderer: renderer) {
+          return false
+        }
+        continue
+      }
+
+      if !operation.isIdentity() {
+        return false
+      }
+    }
+
+    return true
   }
 
   static func calculateOutsets(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2011-2020 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,38 +23,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FilterOperations: Sequence, IteratorProtocol {
-  func next() -> FilterOperationWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+class FilterOperationWrapper {
+  func isIdentity() -> Bool { return false }
+}
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hasFilterThatMovesPixels() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hasFilterThatShouldBeRestrictedBySecurityOrigin() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hasReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func transformColor(color: ColorWrapper) {
+class ReferenceFilterOperationWrapper: FilterOperationWrapper {
+  override func isIdentity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

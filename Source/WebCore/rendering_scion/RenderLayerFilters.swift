@@ -50,8 +50,8 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
   }
 
   static func isIdentity(renderer: RenderElementWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let operations = renderer.style().filter()
+    return CSSFilter.isIdentity(renderer: renderer, operations: operations)
   }
 
   static func calculateOutsets(renderer: RenderElementWrapper, targetBoundingBox: FloatRectWrapper)
