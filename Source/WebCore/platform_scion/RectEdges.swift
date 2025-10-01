@@ -35,6 +35,18 @@ struct BoxSideFlag: OptionSet {
 typealias BoxSideSet = BoxSideFlag
 
 struct RectEdges<T> {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(top: T, right: T, bottom: T, left: T) {
+    self.top = top
+    self.right = right
+    self.bottom = bottom
+    self.left = left
+  }
+
   func at(side: BoxSide) -> T {
     switch side {
     case .Top:

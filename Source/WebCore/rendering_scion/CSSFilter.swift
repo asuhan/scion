@@ -39,5 +39,13 @@ final class CSSFilter: FilterWrapper {
     fatalError("Not implemented")
   }
 
+  static func calculateOutsets(
+    renderer: RenderElementWrapper, operations: FilterOperations,
+    targetBoundingBox: FloatRectWrapper
+  ) -> IntOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let hasFilterThatMovesPixels = false
 }

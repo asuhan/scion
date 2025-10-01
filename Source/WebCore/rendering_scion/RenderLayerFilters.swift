@@ -57,8 +57,14 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
   static func calculateOutsets(renderer: RenderElementWrapper, targetBoundingBox: FloatRectWrapper)
     -> IntOutsets
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let operations = renderer.style().filter()
+
+    if !operations.hasFilterThatMovesPixels() {
+      return IntOutsets()
+    }
+
+    return CSSFilter.calculateOutsets(
+      renderer: renderer, operations: operations, targetBoundingBox: targetBoundingBox)
   }
 
   func beginFilterEffect(

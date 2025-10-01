@@ -29,6 +29,11 @@ class FilterOperations {
     fatalError("Not implemented")
   }
 
+  func hasFilterThatMovesPixels() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasReferenceFilter() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
