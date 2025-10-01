@@ -23,28 +23,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class GraphicsContextSwitcher {
-  static func create(
-    destinationContext: GraphicsContextWrapper, sourceImageRect: FloatRectWrapper,
-    colorSpace: DestinationColorSpace, filter: FilterWrapper? = nil,
-    results: FilterResultsWrapper? = nil
-  )
-    -> GraphicsContextSwitcher
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func drawingContext(destinationContext: GraphicsContextWrapper) -> GraphicsContextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func beginClipAndDrawSourceImage(
-    destinationContext: GraphicsContextWrapper, repaintRect: FloatRectWrapper,
-    clipRect: FloatRectWrapper
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not reached")
-  }
-}
+class FilterResultsWrapper {}

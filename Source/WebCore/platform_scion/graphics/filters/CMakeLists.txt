@@ -3,4 +3,5 @@ target_sources(layout_scion PRIVATE
     FilterFunction.swift
     FilterOperations.swift
     FilterRenderingMode.swift
+    FilterResults.swift
 )

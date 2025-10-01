@@ -134,8 +134,29 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
       repaintRect.intersect(other: filterRegion)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    resetDirtySourceRect()
+
+    if targetSwitcher == nil || hasUpdatedBackingStore {
+      var sourceImageRect = FloatRectWrapper()
+      if renderer is RenderSVGShapeWrapper {
+        sourceImageRect = renderer.strokeBoundingBox()
+      } else {
+        sourceImageRect = targetBoundingBox.FloatRect()
+      }
+      targetSwitcher = GraphicsContextSwitcher.create(
+        destinationContext: context, sourceImageRect: sourceImageRect,
+        colorSpace: DestinationColorSpace.SRGB(), filter: filter)
+    }
+
+    if targetSwitcher == nil {
+      return nil
+    }
+
+    targetSwitcher!.beginClipAndDrawSourceImage(
+      destinationContext: context, repaintRect: repaintRect.FloatRect(),
+      clipRect: clipRect.FloatRect())
+
+    return targetSwitcher!.drawingContext(destinationContext: context)
   }
 
   func applyFilterEffect(destinationContext: GraphicsContextWrapper) {
@@ -143,8 +164,10 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func resetDirtySourceRect() { dirtySourceRect = LayoutRectWrapper() }
+
   var targetBoundingBox = LayoutRectWrapper()
-  let dirtySourceRect = LayoutRectWrapper()
+  var dirtySourceRect = LayoutRectWrapper()
   var repaintRect = LayoutRectWrapper()
 
   var preferredFilterRenderingModes: FilterRenderingMode = [.Software]

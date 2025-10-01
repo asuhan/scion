@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     ColorLuminance.swift
     DashArray.swift
     DecodingOptions.swift
+    DestinationColorSpace.swift
     FloatPoint.swift
     FloatQuad.swift
     FloatRect.swift

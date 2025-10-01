@@ -201,6 +201,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func strokeBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isAnonymous() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
