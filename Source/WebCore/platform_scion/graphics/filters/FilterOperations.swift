@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FilterOperations: Sequence, IteratorProtocol {
+class FilterOperations: Sequence, IteratorProtocol, CustomStringConvertible {
   func next() -> FilterOperationWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -55,6 +55,11 @@ class FilterOperations: Sequence, IteratorProtocol {
   }
 
   func transformColor(color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  public var description: String {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

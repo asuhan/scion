@@ -71,14 +71,34 @@ private func calculateReferenceFilterOutsets(
   return IntOutsets()
 }
 
-final class CSSFilter: FilterWrapper {
+final class CSSFilter: FilterWrapper, CustomStringConvertible {
   static func create(
     renderer: RenderElementWrapper, operations: FilterOperations,
     preferredFilterRenderingModes: FilterRenderingMode, filterScale: FloatSize,
     targetBoundingBox: FloatRectWrapper, destinationContext: GraphicsContextWrapper
-  ) -> CSSFilter {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  ) -> CSSFilter? {
+    let hasFilterThatMovesPixels = operations.hasFilterThatMovesPixels()
+    let hasFilterThatShouldBeRestrictedBySecurityOrigin =
+      operations.hasFilterThatShouldBeRestrictedBySecurityOrigin()
+
+    let filter = CSSFilter(
+      filterScale: filterScale, hasFilterThatMovesPixels: hasFilterThatMovesPixels,
+      hasFilterThatShouldBeRestrictedBySecurityOrigin:
+        hasFilterThatShouldBeRestrictedBySecurityOrigin)
+
+    if !filter.buildFilterFunctions(
+      renderer: renderer, operations: operations,
+      preferredFilterRenderingModes: preferredFilterRenderingModes,
+      targetBoundingBox: targetBoundingBox, destinationContext: destinationContext)
+    {
+      print("CSSFilter::create: failed to build filters \(operations)")
+      return nil
+    }
+
+    print("CSSFilter::create built filter \(filter) for \(operations)")
+
+    filter.setFilterRenderingModes(preferredFilterRenderingModes: preferredFilterRenderingModes)
+    return filter
   }
 
   func setFilterRegion(filterRegion: FloatRectWrapper) {
@@ -125,6 +145,28 @@ final class CSSFilter: FilterWrapper {
     }
 
     return outsets
+  }
+
+  private init(
+    filterScale: FloatSize, hasFilterThatMovesPixels: Bool,
+    hasFilterThatShouldBeRestrictedBySecurityOrigin: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func buildFilterFunctions(
+    renderer: RenderElementWrapper, operations: FilterOperations,
+    preferredFilterRenderingModes: FilterRenderingMode, targetBoundingBox: FloatRectWrapper,
+    destinationContext: GraphicsContextWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  public var description: String {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   let hasFilterThatMovesPixels = false

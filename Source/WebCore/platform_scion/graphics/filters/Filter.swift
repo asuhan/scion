@@ -19,4 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class FilterWrapper: FilterFunctionWrapper {}
+class FilterWrapper: FilterFunctionWrapper {
+  func setFilterRenderingModes(preferredFilterRenderingModes: FilterRenderingMode) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
