@@ -65,6 +65,12 @@ struct RectEdges<T> {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  static func += (lhs: inout RectEdges<T>, rhs: RectEdges<T>) -> RectEdges<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var top: T
   var right: T
   var bottom: T

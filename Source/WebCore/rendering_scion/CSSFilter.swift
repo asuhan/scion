@@ -55,6 +55,16 @@ private func isIdentityReferenceFilter(
   return false
 }
 
+private func calculateReferenceFilterOutsets(
+  filterOperation: ReferenceFilterOperationWrapper, renderer: RenderElementWrapper,
+  targetBoundingBox: FloatRectWrapper
+)
+  -> IntOutsets
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class CSSFilter: FilterWrapper {
   static func create(
     renderer: RenderElementWrapper, operations: FilterOperations,
@@ -95,8 +105,20 @@ final class CSSFilter: FilterWrapper {
     renderer: RenderElementWrapper, operations: FilterOperations,
     targetBoundingBox: FloatRectWrapper
   ) -> IntOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var outsets = IntOutsets()
+
+    for operation in operations {
+      if let referenceOperation = operation as? ReferenceFilterOperationWrapper {
+        outsets += calculateReferenceFilterOutsets(
+          filterOperation: referenceOperation, renderer: renderer,
+          targetBoundingBox: targetBoundingBox)
+        continue
+      }
+
+      outsets += operation.outsets()
+    }
+
+    return outsets
   }
 
   let hasFilterThatMovesPixels = false

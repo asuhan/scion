@@ -25,6 +25,8 @@
 
 class FilterOperationWrapper {
   func isIdentity() -> Bool { return false }
+
+  func outsets() -> IntOutsets { return IntOutsets() }
 }
 
 class ReferenceFilterOperationWrapper: FilterOperationWrapper {
@@ -34,6 +36,11 @@ class ReferenceFilterOperationWrapper: FilterOperationWrapper {
   }
 
   override func isIdentity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func outsets() -> IntOutsets {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
