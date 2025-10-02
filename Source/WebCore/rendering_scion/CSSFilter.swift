@@ -24,11 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func referenceFilterElement(
+  filterOperation: ReferenceFilterOperationWrapper, renderer: RenderElementWrapper
+) -> SVGFilterElementWrapper? {
+  let filterElement = ReferencedSVGResources.referencedFilterElement(
+    treeScope: renderer.treeScopeForSVGReferences(), referenceFilter: filterOperation)
+
+  if filterElement == nil {
+    print(
+      "building reference filter: failed to find filter renderer, adding pending resource \(filterOperation.fragment())"
+    )
+    // Although we did not find the referenced filter, it might exist later in the document.
+    // FIXME: This skips anonymous RenderObjects. <https://webkit.org/b/131085>
+    // FIXME: Unclear if this does anything.
+    return nil
+  }
+
+  return filterElement
+}
+
 private func isIdentityReferenceFilter(
   filterOperation: ReferenceFilterOperationWrapper, renderer: RenderElementWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let filterElement = referenceFilterElement(
+    filterOperation: filterOperation, renderer: renderer)
+  {
+    return SVGFilterWrapper.isIdentity(filterElement: filterElement)
+  }
+
+  return false
 }
 
 final class CSSFilter: FilterWrapper {

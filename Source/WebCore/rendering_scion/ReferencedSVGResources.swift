@@ -32,4 +32,11 @@ class ReferencedSVGResources {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func referencedFilterElement(
+    treeScope: TreeScopeWrapper, referenceFilter: ReferenceFilterOperationWrapper
+  ) -> SVGFilterElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

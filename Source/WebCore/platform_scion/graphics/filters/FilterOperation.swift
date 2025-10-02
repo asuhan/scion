@@ -28,6 +28,11 @@ class FilterOperationWrapper {
 }
 
 class ReferenceFilterOperationWrapper: FilterOperationWrapper {
+  func fragment() -> AtomStringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func isIdentity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

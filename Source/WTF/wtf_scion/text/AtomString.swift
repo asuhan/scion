@@ -20,7 +20,7 @@
 
 import wk_interop
 
-class AtomStringWrapper: Hashable {
+class AtomStringWrapper: Hashable, CustomStringConvertible {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
@@ -54,6 +54,11 @@ class AtomStringWrapper: Hashable {
   }
 
   static func == (lhs: AtomStringWrapper, rhs: AtomStringWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  public var description: String {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
