@@ -61,8 +61,14 @@ private func calculateReferenceFilterOutsets(
 )
   -> IntOutsets
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let filterElement = referenceFilterElement(
+    filterOperation: filterOperation, renderer: renderer)
+  {
+    return SVGFilterWrapper.calculateOutsets(
+      filterElement: filterElement, targetBoundingBox: targetBoundingBox)
+  }
+
+  return IntOutsets()
 }
 
 final class CSSFilter: FilterWrapper {

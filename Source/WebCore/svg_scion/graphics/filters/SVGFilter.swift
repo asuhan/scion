@@ -25,4 +25,11 @@ final class SVGFilterWrapper: FilterWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func calculateOutsets(
+    filterElement: SVGFilterElementWrapper, targetBoundingBox: FloatRectWrapper
+  ) -> IntOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
