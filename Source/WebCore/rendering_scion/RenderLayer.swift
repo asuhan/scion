@@ -2304,8 +2304,7 @@ class RenderLayerWrapper {
   }
 
   private func clearRepaintRects() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    repaintRectsValid = false
   }
 
   private func clipRectRelativeToAncestor(
@@ -4274,6 +4273,7 @@ class RenderLayerWrapper {
   private var blendMode: BlendMode = .Normal
   private var hasNotIsolatedBlendingDescendants = false
   private var hasNotIsolatedBlendingDescendantsStatusDirty = false
+  private var repaintRectsValid = false
 
   private let intrinsicallyComposited = false
   private var hasIntrinsicallyCompositedDescendants = false
