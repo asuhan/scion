@@ -501,8 +501,8 @@ class RenderLayerWrapper {
   }
 
   func size() -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!renderer().view().frameView().layerAccessPrevented())
+    return layerSize
   }
 
   func scrollWidth() -> Int32 {
@@ -4291,6 +4291,9 @@ class RenderLayerWrapper {
 
   // This list contains child layers that cannot create stacking contexts and appear in normal flow order.
   private var normalFlowList: [RenderLayerWrapper]? = nil
+
+  // The layer's width/height
+  private let layerSize = IntSize()
 
   private var clipRectsCache: ClipRectsCache? = nil
 
