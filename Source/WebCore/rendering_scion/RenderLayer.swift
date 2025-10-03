@@ -1704,10 +1704,7 @@ class RenderLayerWrapper {
     return false
   }
 
-  func hasTransformedAncestor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasTransformedAncestor() -> Bool { return m_hasTransformedAncestor }
 
   func participatesInPreserve3D() -> Bool {
     // TODO(asuhan): implement this
