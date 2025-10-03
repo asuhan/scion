@@ -24,6 +24,29 @@
  */
 
 class FilterOperationWrapper {
+  enum `Type`: UInt8 {
+    case Reference  // url(#somefilter)
+    case Grayscale
+    case Sepia
+    case Saturate
+    case HueRotate
+    case Invert
+    case AppleInvertLightness
+    case Opacity
+    case Brightness
+    case Contrast
+    case Blur
+    case DropShadow
+    case Passthrough
+    case Default
+    case None
+  }
+
+  func type() -> `Type` {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isIdentity() -> Bool { return false }
 
   func outsets() -> IntOutsets { return IntOutsets() }
@@ -45,3 +68,14 @@ class ReferenceFilterOperationWrapper: FilterOperationWrapper {
     fatalError("Not implemented")
   }
 }
+
+// Grayscale, Sepia, Saturate and HueRotate are variations on a basic color matrix effect.
+// For HueRotate, the angle of rotation is stored in m_amount.
+class BasicColorMatrixFilterOperationWrapper: FilterOperationWrapper {}
+
+// Invert, Brightness, Contrast and Opacity are variations on a basic component transfer effect.
+class BasicComponentTransferFilterOperationWrapper: FilterOperationWrapper {}
+
+class BlurFilterOperationWrapper: FilterOperationWrapper {}
+
+class DropShadowFilterOperationWrapper: FilterOperationWrapper {}

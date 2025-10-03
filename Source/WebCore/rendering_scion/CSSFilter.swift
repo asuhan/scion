@@ -24,6 +24,83 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func createBlurEffect(blurOperation: BlurFilterOperationWrapper) -> FilterEffectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createBrightnessEffect(
+  componentTransferOperation: BasicComponentTransferFilterOperationWrapper
+) -> FilterEffectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createContrastEffect(
+  componentTransferOperation: BasicComponentTransferFilterOperationWrapper
+) -> FilterEffectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createDropShadowEffect(dropShadowOperation: DropShadowFilterOperationWrapper)
+  -> FilterEffectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createGrayScaleEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
+  -> FilterEffectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createHueRotateEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
+  -> FilterEffectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createInvertEffect(
+  componentTransferOperation: BasicComponentTransferFilterOperationWrapper
+) -> FilterEffectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createOpacityEffect(
+  componentTransferOperation: BasicComponentTransferFilterOperationWrapper
+) -> FilterEffectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createSaturateEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
+  -> FilterEffectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createSepiaEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
+  -> FilterEffectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createReferenceFilter(
+  filter: CSSFilter, filterOperation: ReferenceFilterOperationWrapper,
+  renderer: RenderElementWrapper, preferredFilterRenderingModes: FilterRenderingMode,
+  targetBoundingBox: FloatRectWrapper, destinationContext: GraphicsContextWrapper
+) -> SVGFilterWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func referenceFilterElement(
   filterOperation: ReferenceFilterOperationWrapper, renderer: RenderElementWrapper
 ) -> SVGFilterElementWrapper? {
@@ -160,8 +237,69 @@ final class CSSFilter: FilterWrapper, CustomStringConvertible {
     preferredFilterRenderingModes: FilterRenderingMode, targetBoundingBox: FloatRectWrapper,
     destinationContext: GraphicsContextWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var function: FilterFunctionWrapper? = nil
+
+    for operation in operations {
+      switch operation.type() {
+      case .AppleInvertLightness:
+        fatalError("Not reached")  // AppleInvertLightness is only used in -apple-color-filter.
+      case .Blur:
+        function = createBlurEffect(blurOperation: operation as! BlurFilterOperationWrapper)
+      case .Brightness:
+        function = createBrightnessEffect(
+          componentTransferOperation: operation as! BasicComponentTransferFilterOperationWrapper)
+      case .Contrast:
+        function = createContrastEffect(
+          componentTransferOperation: operation as! BasicComponentTransferFilterOperationWrapper)
+      case .DropShadow:
+        function = createDropShadowEffect(
+          dropShadowOperation: operation as! DropShadowFilterOperationWrapper)
+      case .Grayscale:
+        function = createGrayScaleEffect(
+          colorMatrixOperation: operation as! BasicColorMatrixFilterOperationWrapper)
+      case .HueRotate:
+        function = createHueRotateEffect(
+          colorMatrixOperation: operation as! BasicColorMatrixFilterOperationWrapper)
+      case .Invert:
+        function = createInvertEffect(
+          componentTransferOperation: operation as! BasicComponentTransferFilterOperationWrapper)
+      case .Opacity:
+        function = createOpacityEffect(
+          componentTransferOperation: operation as! BasicComponentTransferFilterOperationWrapper)
+      case .Saturate:
+        function = createSaturateEffect(
+          colorMatrixOperation: operation as! BasicColorMatrixFilterOperationWrapper)
+      case .Sepia:
+        function = createSepiaEffect(
+          colorMatrixOperation: operation as! BasicColorMatrixFilterOperationWrapper)
+      case .Reference:
+        function = createReferenceFilter(
+          filter: self, filterOperation: operation as! ReferenceFilterOperationWrapper,
+          renderer: renderer, preferredFilterRenderingModes: preferredFilterRenderingModes,
+          targetBoundingBox: targetBoundingBox,
+          destinationContext: destinationContext)
+      default:
+        break
+      }
+
+      if function == nil {
+        continue
+      }
+
+      if functions.isEmpty {
+        functions.append(SourceGraphicWrapper.create())
+      }
+
+      functions.append(function!)
+    }
+
+    // If we didn't make any effects, tell our caller we are not valid.
+    if functions.isEmpty {
+      return false
+    }
+
+    // TODO(asuhan): shrink functions to size
+    return true
   }
 
   public var description: String {
@@ -170,4 +308,6 @@ final class CSSFilter: FilterWrapper, CustomStringConvertible {
   }
 
   let hasFilterThatMovesPixels = false
+
+  private var functions: [FilterFunctionWrapper] = []
 }
