@@ -65,13 +65,18 @@ enum RepaintStatus {
   case NeedsFullRepaintForPositionedMovementLayout
 }
 
-enum ClipRectsType {
+enum ClipRectsType: UInt8 {
   case PaintingClipRects  // Relative to painting ancestor. Used for painting.
   case RootRelativeClipRects  // Relative to the ancestor treated as the root (e.g. transformed layer). Used for hit testing.
   case AbsoluteClipRects  // Relative to the RenderView's layer. Used for compositing overlap testing.
   case NumCachedClipRectsTypes
   case AllClipRectTypes
   case TemporaryClipRects
+}
+
+enum ShouldRespectOverflowClip {
+  case IgnoreOverflowClip
+  case RespectOverflowClip
 }
 
 enum ShouldApplyRootOffsetToFragments {
@@ -173,7 +178,8 @@ class ClipRectsCache {
     fatalError("Not implemented")
   }
 
-  func setClipRects(clipRectsType: ClipRectsType, respectOverflowClip: Bool, clipRects: ClipRects) {
+  func setClipRects(clipRectsType: ClipRectsType, respectOverflowClip: Bool, clipRects: ClipRects?)
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -767,8 +773,15 @@ class RenderLayerWrapper {
   }
 
   func clearClipRects(typeToClear: ClipRectsType = .AllClipRectTypes) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if typeToClear == .AllClipRectTypes {
+      clipRectsCache = nil
+    } else {
+      assert(typeToClear.rawValue < ClipRectsType.NumCachedClipRectsTypes.rawValue)
+      clipRectsCache!.setClipRects(
+        clipRectsType: typeToClear, respectOverflowClip: true, clipRects: nil)
+      clipRectsCache!.setClipRects(
+        clipRectsType: typeToClear, respectOverflowClip: false, clipRects: nil)
+    }
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
