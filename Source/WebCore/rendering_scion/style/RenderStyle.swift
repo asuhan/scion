@@ -787,6 +787,14 @@ class RenderStyleWrapper {
     return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p))
   }
 
+  // usedContentVisibility will return ContentVisibility::Hidden in a content-visibility: hidden subtree (overriding
+  // content-visibility: auto at all times), ContentVisibility::Auto in a content-visibility: auto subtree (when the
+  // content is not user relevant and thus skipped), and ContentVisibility::Visible otherwise.
+  func usedContentVisibility() -> ContentVisibility {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true for skipped content roots and skipped content itself.
   func hasSkippedContent() -> Bool {
     // TODO(asuhan): implement this

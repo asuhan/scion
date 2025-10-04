@@ -507,6 +507,35 @@ class RenderLayerWrapper {
 
     updateLayerScrollableArea()
 
+    // FIXME: RenderLayer already handles visibility changes through our visibility dirty bits. This logic could
+    // likely be folded along with the rest.
+    if let oldStyle = oldStyle {
+      let visibilityChanged = oldStyle.usedVisibility() != renderer().style().usedVisibility()
+      if oldStyle.usedZIndex() != renderer().style().usedZIndex()
+        || oldStyle.usedContentVisibility() != renderer().style().usedContentVisibility()
+        || visibilityChanged
+      {
+        dirtyStackingContextZOrderLists()
+        if isStackingContext() {
+          dirtyZOrderLists()
+        }
+      }
+
+      // Visibility and scrollability are input to canUseCompositedScrolling().
+      if m_scrollableArea != nil {
+        if oldStyle.direction() != renderer().style().direction() {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+        if visibilityChanged
+          || oldStyle.isOverflowVisible() != renderer().style().isOverflowVisible()
+        {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

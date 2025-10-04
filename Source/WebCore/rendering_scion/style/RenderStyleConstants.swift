@@ -563,4 +563,10 @@ enum PaintType: UInt8 {
   case Markers
 }
 
+enum ContentVisibility: UInt8 {
+  case Visible
+  case Auto
+  case Hidden
+}
+
 let defaultMiterLimit: Float32 = 4
