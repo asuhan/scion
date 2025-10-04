@@ -72,8 +72,14 @@ private func createDropShadowEffect(dropShadowOperation: DropShadowFilterOperati
 private func createGrayScaleEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
   -> FilterEffectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let grayscaleMatrix = grayscaleColorMatrix(amount: Float32(colorMatrixOperation.amount()))
+  let inputParameters: [Float32] = [
+    grayscaleMatrix.at(0, 0), grayscaleMatrix.at(0, 1), grayscaleMatrix.at(0, 2), 0, 0,
+    grayscaleMatrix.at(1, 0), grayscaleMatrix.at(1, 1), grayscaleMatrix.at(1, 2), 0, 0,
+    grayscaleMatrix.at(2, 0), grayscaleMatrix.at(2, 1), grayscaleMatrix.at(2, 2), 0, 0,
+    0, 0, 0, 1, 0,
+  ]
+  return FEColorMatrixWrapper.create(type: .FECOLORMATRIX_TYPE_MATRIX, values: inputParameters)
 }
 
 private func createHueRotateEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)

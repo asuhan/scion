@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    FEColorMatrix.swift
     FEComponentTransfer.swift
     FEConvolveMatrix.swift
     FEDropShadow.swift

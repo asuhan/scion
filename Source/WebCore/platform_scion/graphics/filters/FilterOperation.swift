@@ -71,7 +71,12 @@ class ReferenceFilterOperationWrapper: FilterOperationWrapper {
 
 // Grayscale, Sepia, Saturate and HueRotate are variations on a basic color matrix effect.
 // For HueRotate, the angle of rotation is stored in m_amount.
-class BasicColorMatrixFilterOperationWrapper: FilterOperationWrapper {}
+class BasicColorMatrixFilterOperationWrapper: FilterOperationWrapper {
+  func amount() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
 
 // Invert, Brightness, Contrast and Opacity are variations on a basic component transfer effect.
 class BasicComponentTransferFilterOperationWrapper: FilterOperationWrapper {
