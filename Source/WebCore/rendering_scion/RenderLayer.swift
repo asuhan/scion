@@ -4344,8 +4344,16 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainHasBlendingDescendants() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if layer!.hasNotIsolatedBlendingDescendantsStatusDirty {
+        break
+      }
+
+      layer!.hasNotIsolatedBlendingDescendantsStatusDirty = true
+
+      layer = layer!.parent()
+    }
   }
 
   private func isIntrinsicallyComposited() -> Bool {
