@@ -88,4 +88,24 @@ class BlurFilterOperationWrapper: FilterOperationWrapper {
   }
 }
 
-class DropShadowFilterOperationWrapper: FilterOperationWrapper {}
+class DropShadowFilterOperationWrapper: FilterOperationWrapper {
+  func x() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func y() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func stdDeviation() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func color() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

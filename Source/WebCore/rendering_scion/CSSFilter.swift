@@ -62,8 +62,11 @@ private func createContrastEffect(
 private func createDropShadowEffect(dropShadowOperation: DropShadowFilterOperationWrapper)
   -> FilterEffectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let std = Float32(dropShadowOperation.stdDeviation())
+  return FEDropShadowWrapper.create(
+    stdX: std, stdY: std, dx: Float32(dropShadowOperation.x()),
+    dy: Float32(dropShadowOperation.y()),
+    shadowColor: dropShadowOperation.color(), shadowOpacity: 1)
 }
 
 private func createGrayScaleEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
