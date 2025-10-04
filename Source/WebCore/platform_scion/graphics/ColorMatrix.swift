@@ -34,3 +34,8 @@ func grayscaleColorMatrix(amount: Float32) -> ColorMatrix3x3 {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
+
+func sepiaColorMatrix(amount: Float32) -> ColorMatrix3x3 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

@@ -129,8 +129,15 @@ private func createSaturateEffect(colorMatrixOperation: BasicColorMatrixFilterOp
 private func createSepiaEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
   -> FilterEffectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let sepiaMatrix = sepiaColorMatrix(amount: Float32(colorMatrixOperation.amount()))
+  let inputParameters: [Float32] = [
+    sepiaMatrix.at(0, 0), sepiaMatrix.at(0, 1), sepiaMatrix.at(0, 2), 0, 0,
+    sepiaMatrix.at(1, 0), sepiaMatrix.at(1, 1), sepiaMatrix.at(1, 2), 0, 0,
+    sepiaMatrix.at(2, 0), sepiaMatrix.at(2, 1), sepiaMatrix.at(2, 2), 0, 0,
+    0, 0, 0, 1, 0,
+  ]
+
+  return FEColorMatrixWrapper.create(type: .FECOLORMATRIX_TYPE_MATRIX, values: inputParameters)
 }
 
 private func createReferenceFilter(
