@@ -1845,6 +1845,11 @@ class RenderLayerWrapper {
     return TransformationMatrix()
   }
 
+  func preserves3D() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func has3DTransform() -> Bool {
     if let transform = transform {
       return !transform.isAffine()
@@ -4273,8 +4278,17 @@ class RenderLayerWrapper {
   }
 
   func dirty3DTransformedDescendantStatus() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var curr: RenderLayerWrapper? = stackingContext()
+    if curr != nil {
+      curr!.m_3DTransformedDescendantStatusDirty = true
+    }
+
+    // This propagates up through preserve-3d hierarchies to the enclosing flattening layer.
+    // Note that preserves3D() creates stacking context, so we can just run up the stacking containers.
+    while curr != nil && curr!.preserves3D() {
+      curr!.m_3DTransformedDescendantStatusDirty = true
+      curr = curr!.stackingContext()
+    }
   }
 
   private func createReflection() {
@@ -4505,6 +4519,7 @@ class RenderLayerWrapper {
   private var visibleDescendantStatusDirty = false
   private var hasVisibleDescendant = false
 
+  private var m_3DTransformedDescendantStatusDirty = false
   private let hasCompositingDescendant = false  // In the z-order tree.
 
   private let m_hasTransformedAncestor = false
