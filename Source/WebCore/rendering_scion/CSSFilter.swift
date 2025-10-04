@@ -33,8 +33,15 @@ private func createBlurEffect(blurOperation: BlurFilterOperationWrapper) -> Filt
 private func createBrightnessEffect(
   componentTransferOperation: BasicComponentTransferFilterOperationWrapper
 ) -> FilterEffectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var transferFunction = ComponentTransferFunction()
+  transferFunction.type = .FECOMPONENTTRANSFER_TYPE_LINEAR
+  transferFunction.slope = narrowPrecisionToFloat(componentTransferOperation.amount())
+  transferFunction.intercept = 0
+
+  let nullFunction = ComponentTransferFunction()
+  return FEComponentTransferWrapper.create(
+    redFunction: transferFunction, greenFunction: transferFunction, blueFunction: transferFunction,
+    alphaFunction: nullFunction)
 }
 
 private func createContrastEffect(

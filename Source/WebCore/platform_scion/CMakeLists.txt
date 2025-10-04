@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    FloatConversion.swift
     LayoutUnit.swift
     Length.swift
     LengthBox.swift

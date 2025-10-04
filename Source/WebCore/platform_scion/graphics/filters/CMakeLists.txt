@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    FEComponentTransfer.swift
     FEConvolveMatrix.swift
     FEGaussianBlur.swift
     Filter.swift
