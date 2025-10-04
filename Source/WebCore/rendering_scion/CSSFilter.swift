@@ -107,8 +107,16 @@ private func createInvertEffect(
 private func createOpacityEffect(
   componentTransferOperation: BasicComponentTransferFilterOperationWrapper
 ) -> FilterEffectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var transferFunction = ComponentTransferFunction()
+  transferFunction.type = .FECOMPONENTTRANSFER_TYPE_LINEAR
+  let amount = narrowPrecisionToFloat(componentTransferOperation.amount())
+  transferFunction.slope = amount
+  transferFunction.intercept = 0
+
+  let nullFunction = ComponentTransferFunction()
+  return FEComponentTransferWrapper.create(
+    redFunction: nullFunction, greenFunction: nullFunction, blueFunction: nullFunction,
+    alphaFunction: transferFunction)
 }
 
 private func createSaturateEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
