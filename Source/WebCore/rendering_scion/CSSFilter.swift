@@ -122,8 +122,8 @@ private func createOpacityEffect(
 private func createSaturateEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
   -> FilterEffectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let inputParameters: [Float32] = [narrowPrecisionToFloat(colorMatrixOperation.amount())]
+  return FEColorMatrixWrapper.create(type: .FECOLORMATRIX_TYPE_SATURATE, values: inputParameters)
 }
 
 private func createSepiaEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
