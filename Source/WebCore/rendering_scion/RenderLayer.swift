@@ -383,6 +383,10 @@ class RenderLayerWrapper {
     setRequirementsTraversalDirtyBit(v: .DescendantsNeedRequirementsTraversal)
   }
 
+  private func setNeedsPostLayoutCompositingUpdateOnAncestors() {
+    setAncestorsHaveCompositingDirtyFlag(flag: .NeedsPostLayoutUpdate)
+  }
+
   private func setBackingAndHierarchyTraversalDirtyBit(v: Compositing) {
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingBackingOrHierarchyTraversal)
@@ -694,11 +698,41 @@ class RenderLayerWrapper {
   }
 
   func updateTransform() {
+    let hasTransform = renderer().isTransformed()
+    let had3DTransform = has3DTransform()
+
+    let hadTransform = transform != nil
+    if hasTransform != hadTransform {
+      if hasTransform {
+        transform = TransformationMatrix()
+      } else {
+        transform = nil
+      }
+
+      // Layers with transforms act as clip rects roots, so clear the cached clip rects here.
+      clearClipRectsIncludingDescendants()
+    }
+
+    if hasTransform {
+      transform!.makeIdentity()
+      updateTransformFromStyle(
+        transform: &transform!, style: renderer().style(),
+        options: RenderStyleWrapper.allTransformOperations)
+    }
+
+    if had3DTransform != has3DTransform() {
+      dirty3DTransformedDescendantStatus()
+      // Having a 3D transform affects whether enclosing perspective and preserve-3d layers composite, so trigger an update.
+      setNeedsPostLayoutCompositingUpdateOnAncestors()
+    }
+  }
+
+  func updateBlendMode() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func updateBlendMode() {
+  func clearClipRectsIncludingDescendants(typeToClear: ClipRectsType = .AllClipRectTypes) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1788,6 +1822,15 @@ class RenderLayerWrapper {
   }
 
   func isTransformed() -> Bool { return renderer().isTransformed() }
+
+  // updateTransformFromStyle computes a transform according to the passed options (e.g. transform-origin baked in or excluded) and the given style.
+  func updateTransformFromStyle(
+    transform: inout TransformationMatrix, style: RenderStyleWrapper,
+    options: RenderStyleWrapper.TransformOperationOption
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
     if let matrix = transform {
@@ -4229,6 +4272,11 @@ class RenderLayerWrapper {
     return false
   }
 
+  func dirty3DTransformedDescendantStatus() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func createReflection() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -4474,7 +4522,7 @@ class RenderLayerWrapper {
   private var clipRectsCache: ClipRectsCache? = nil
 
   // Note that this transform has the transform-origin baked in.
-  private let transform: TransformationMatrix? = nil
+  private var transform: TransformationMatrix? = nil
 
   // May ultimately be extended to many replicas (with their own paint order).
   private let reflection: RenderReplicaWrapper? = nil

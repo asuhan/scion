@@ -25,6 +25,12 @@
  */
 
 class TransformationMatrix {
+  @discardableResult
+  func makeIdentity() -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func mapRect(r: LayoutRectWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

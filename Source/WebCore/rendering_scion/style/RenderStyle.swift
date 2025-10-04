@@ -976,6 +976,20 @@ class RenderStyleWrapper {
     return RubyOverhang(rawValue: wk_interop.RenderStyle_rubyOverhang(p))!
   }
 
+  struct TransformOperationOption: OptionSet {
+    let rawValue: UInt8
+
+    static let TransformOrigin = TransformOperationOption(rawValue: 1 << 0)
+    static let Translate = TransformOperationOption(rawValue: 1 << 1)
+    static let Rotate = TransformOperationOption(rawValue: 1 << 2)
+    static let Scale = TransformOperationOption(rawValue: 1 << 3)
+    static let Offset = TransformOperationOption(rawValue: 1 << 4)
+  }
+
+  static let allTransformOperations: TransformOperationOption = [
+    .TransformOrigin, .Translate, .Rotate, .Scale, .Offset,
+  ]
+
   func backfaceVisibility() -> BackfaceVisibility {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
