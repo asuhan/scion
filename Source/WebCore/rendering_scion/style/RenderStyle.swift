@@ -1092,6 +1092,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func blendMode() -> BlendMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func printColorAdjust() -> PrintColorAdjust {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

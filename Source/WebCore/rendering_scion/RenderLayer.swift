@@ -733,8 +733,16 @@ class RenderLayerWrapper {
   }
 
   func updateBlendMode() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hadBlendMode = blendMode != .Normal
+    if let parent = parent(), hadBlendMode != hasBlendMode() {
+      if hasBlendMode() {
+        parent.updateAncestorChainHasBlendingDescendants()
+      } else {
+        parent.dirtyAncestorChainHasBlendingDescendants()
+      }
+    }
+
+    blendMode = renderer().style().blendMode()
   }
 
   func clearClipRectsIncludingDescendants(typeToClear: ClipRectsType = .AllClipRectTypes) {
