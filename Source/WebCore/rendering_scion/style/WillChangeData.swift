@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2020 Apple Inc. All rights reserved.
+ * Copyright (C) 2015 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,53 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class SettingsWrapper {
-  func css3DTransformBackfaceVisibilityInteroperabilityEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func cssUnprefixedBackdropFilterEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func fixedBackgroundsPaintRelativeToDocument() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func grammarAndSpellingPseudoElementsEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func highlightAPIEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func imageSubsamplingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func layerBasedSVGEngineEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func scrollToTextFragmentEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func shouldPrintBackgrounds() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func showDebugBorders() -> Bool {
+class WillChangeData {
+  func canBeBackdropRoot() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

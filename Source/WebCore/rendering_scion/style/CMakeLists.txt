@@ -13,4 +13,5 @@ target_sources(layout_scion PRIVATE
     StyleSelfAlignmentData.swift
     StyleTextEdge.swift
     TextDecorationThickness.swift
+    WillChangeData.swift
 )

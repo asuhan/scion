@@ -152,6 +152,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func requiresRenderingConsolidationForViewTransition() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasOutline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -163,6 +168,16 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func checkForRepaintDuringLayout() -> Bool {
     return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
+  }
+
+  func hasFilter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasBackdropFilter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func hasBlendMode() -> Bool {
