@@ -20,6 +20,15 @@
  */
 
 class FilterWrapper: FilterFunctionWrapper {
+  init(
+    filterType: FilterWrapper.`Type`, filterScale: FloatSize,
+    filterRegion: FloatRectWrapper = FloatRectWrapper(),
+    renderingResourceIdentifier: RenderingResourceIdentifier? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setFilterRenderingModes(preferredFilterRenderingModes: FilterRenderingMode) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

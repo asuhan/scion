@@ -276,8 +276,10 @@ final class CSSFilter: FilterWrapper, CustomStringConvertible {
     filterScale: FloatSize, hasFilterThatMovesPixels: Bool,
     hasFilterThatShouldBeRestrictedBySecurityOrigin: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(filterType: .CSSFilter, filterScale: filterScale)
+    self.hasFilterThatMovesPixels = hasFilterThatMovesPixels
+    self.hasFilterThatShouldBeRestrictedBySecurityOrigin =
+      hasFilterThatShouldBeRestrictedBySecurityOrigin
   }
 
   private func buildFilterFunctions(
@@ -355,7 +357,8 @@ final class CSSFilter: FilterWrapper, CustomStringConvertible {
     fatalError("Not implemented")
   }
 
-  let hasFilterThatMovesPixels = false
+  var hasFilterThatMovesPixels = false
+  var hasFilterThatShouldBeRestrictedBySecurityOrigin = false
 
   private var functions: [FilterFunctionWrapper] = []
 }

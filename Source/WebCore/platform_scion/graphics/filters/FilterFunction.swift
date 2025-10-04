@@ -23,4 +23,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FilterFunctionWrapper: RenderingResourceWrapper {}
+class FilterFunctionWrapper: RenderingResourceWrapper {
+  enum `Type`: UInt8 {
+    case CSSFilter
+    case SVGFilter
+
+    // These are filter effects
+    case FEBlend
+    case FEColorMatrix
+    case FEComponentTransfer
+    case FEComposite
+    case FEConvolveMatrix
+    case FEDiffuseLighting
+    case FEDisplacementMap
+    case FEDropShadow
+    case FEFlood
+    case FEGaussianBlur
+    case FEImage
+    case FEMerge
+    case FEMorphology
+    case FEOffset
+    case FESpecularLighting
+    case FETile
+    case FETurbulence
+    case SourceAlpha
+    case SourceGraphic
+  }
+}
