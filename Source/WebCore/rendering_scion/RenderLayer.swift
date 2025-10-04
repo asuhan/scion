@@ -4323,8 +4323,24 @@ class RenderLayerWrapper {
   }
 
   private func updateAncestorChainHasBlendingDescendants() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if !layer!.hasNotIsolatedBlendingDescendantsStatusDirty
+        && layer!.hasNotIsolatedBlendingDescendants
+      {
+        break
+      }
+      layer!.hasNotIsolatedBlendingDescendants = true
+      layer!.hasNotIsolatedBlendingDescendantsStatusDirty = false
+
+      layer!.updateSelfPaintingLayer()
+
+      if layer!.isCSSStackingContext() {
+        break
+      }
+
+      layer = layer!.parent()
+    }
   }
 
   private func dirtyAncestorChainHasBlendingDescendants() {
