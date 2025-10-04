@@ -23,6 +23,14 @@
 import wk_interop
 
 class RenderElementWrapper: RenderObjectWrapper {
+  // Calling with minimalStyleDifference > StyleDifference::Equal indicates that
+  // out-of-band state (e.g. animations) requires that styleDidChange processing
+  // continue even if the style isn't different from the current style.
+  func setStyle(style: RenderStyleWrapper, minimalStyleDifference: StyleDifference = .Equal) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The pseudo element style can be cached or uncached. Use the uncached method if the pseudo element
   // has the concept of changing state (like ::-webkit-scrollbar-thumb:hover), or if it takes additional
   // parameters (like ::highlight(name)).

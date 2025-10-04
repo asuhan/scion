@@ -548,11 +548,24 @@ class RenderLayerWrapper {
     // to recompute the bit once scrollbars have been updated.
     updateSelfPaintingLayer()
 
+    if !hasReflection() && reflection != nil {
+      removeReflection()
+    } else if hasReflection() {
+      if let reflection = reflection {
+        reflection.setStyle(style: createReflectionStyle())
+      } else {
+        createReflection()
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
   func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
+
+  func hasReflection() -> Bool { return renderer().hasReflection() }
 
   func reflectionLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
@@ -4193,6 +4206,21 @@ class RenderLayerWrapper {
     }
 
     return false
+  }
+
+  private func createReflection() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func removeReflection() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func createReflectionStyle() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updateFilterPaintingStrategy() {
