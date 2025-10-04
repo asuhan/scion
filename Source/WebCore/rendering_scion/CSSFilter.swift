@@ -92,8 +92,16 @@ private func createHueRotateEffect(colorMatrixOperation: BasicColorMatrixFilterO
 private func createInvertEffect(
   componentTransferOperation: BasicComponentTransferFilterOperationWrapper
 ) -> FilterEffectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var transferFunction = ComponentTransferFunction()
+  transferFunction.type = .FECOMPONENTTRANSFER_TYPE_LINEAR
+  let amount = narrowPrecisionToFloat(componentTransferOperation.amount())
+  transferFunction.slope = 1 - 2 * amount
+  transferFunction.intercept = amount
+
+  let nullFunction = ComponentTransferFunction()
+  return FEComponentTransferWrapper.create(
+    redFunction: transferFunction, greenFunction: transferFunction, blueFunction: transferFunction,
+    alphaFunction: nullFunction)
 }
 
 private func createOpacityEffect(
