@@ -558,8 +558,19 @@ class RenderLayerWrapper {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Need to detect a swap from custom to native scrollbars (and vice versa).
+    if let scrollableArea = m_scrollableArea {
+      scrollableArea.updateAllScrollbarRelatedStyle()
+    }
+
+    updateDescendantDependentFlags()
+    updateTransform()
+    updateBlendMode()
+    updateFiltersAfterStyleChange(diff: diff, oldStyle: oldStyle)
+
+    compositor().layerStyleChanged(diff: diff, layer: self, oldStyle: oldStyle)
+
+    updateFilterPaintingStrategy()
   }
 
   // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
@@ -680,6 +691,16 @@ class RenderLayerWrapper {
       return nil
     }
     return m_enclosingPaginationLayer
+  }
+
+  func updateTransform() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateBlendMode() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
@@ -4219,6 +4240,11 @@ class RenderLayerWrapper {
   }
 
   private func createReflectionStyle() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateFiltersAfterStyleChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

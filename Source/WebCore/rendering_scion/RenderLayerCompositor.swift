@@ -42,6 +42,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func layerStyleChanged(
+    diff: StyleDifference, layer: RenderLayerWrapper, oldStyle: RenderStyleWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

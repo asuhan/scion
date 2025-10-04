@@ -83,6 +83,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func updateAllScrollbarRelatedStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeHasCompositedScrollableOverflow(layoutUpToDate: LayoutUpToDate) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
