@@ -76,6 +76,11 @@ class BasicColorMatrixFilterOperationWrapper: FilterOperationWrapper {}
 // Invert, Brightness, Contrast and Opacity are variations on a basic component transfer effect.
 class BasicComponentTransferFilterOperationWrapper: FilterOperationWrapper {}
 
-class BlurFilterOperationWrapper: FilterOperationWrapper {}
+class BlurFilterOperationWrapper: FilterOperationWrapper {
+  func stdDeviation() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
 
 class DropShadowFilterOperationWrapper: FilterOperationWrapper {}

@@ -25,8 +25,9 @@
  */
 
 private func createBlurEffect(blurOperation: BlurFilterOperationWrapper) -> FilterEffectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let stdDeviation = floatValueForLength(
+    length: blurOperation.stdDeviation(), maximumValue: LayoutUnit(value: 0))
+  return FEGaussianBlurWrapper.create(x: stdDeviation, y: stdDeviation, edgeMode: .None)
 }
 
 private func createBrightnessEffect(
