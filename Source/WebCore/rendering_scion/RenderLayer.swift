@@ -264,6 +264,11 @@ class RenderLayerWrapper {
     return isNormalFlowOnly ? m_parent : stackingContext()
   }
 
+  func dirtyNormalFlowList() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func dirtyZOrderLists() {
     assert(isStackingContext())
 
@@ -2057,8 +2062,17 @@ class RenderLayerWrapper {
   // Return true if changed.
   @discardableResult
   private func setIsNormalFlowOnly(isNormalFlowOnly: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isNormalFlowOnly == self.isNormalFlowOnly {
+      return false
+    }
+
+    self.isNormalFlowOnly = isNormalFlowOnly
+
+    if let p = parent() {
+      p.dirtyNormalFlowList()
+    }
+    dirtyStackingContextZOrderLists()
+    return true
   }
 
   private func setIsCSSStackingContext(isCSSStackingContext: Bool) -> Bool {
