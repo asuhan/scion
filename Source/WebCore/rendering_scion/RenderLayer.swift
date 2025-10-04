@@ -265,8 +265,14 @@ class RenderLayerWrapper {
   }
 
   func dirtyNormalFlowList() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if normalFlowList != nil {
+      normalFlowList!.removeAll()
+    }
+    normalFlowListDirty = true
+
+    if hasCompositingDescendant {
+      setNeedsCompositingPaintOrderChildrenUpdate()
+    }
   }
 
   func dirtyZOrderLists() {
