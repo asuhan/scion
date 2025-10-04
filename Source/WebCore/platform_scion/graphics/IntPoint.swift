@@ -24,8 +24,15 @@
  */
 
 struct IntPoint {
-  var x: Int32
-  var y: Int32
+  init() {
+    x = 0
+    y = 0
+  }
+
+  init(x: Int32, y: Int32) {
+    self.x = x
+    self.y = y
+  }
 
   mutating func move(dx: Int32, dy: Int32) {
     x += dx
@@ -39,4 +46,7 @@ struct IntPoint {
   static prefix func - (point: IntPoint) -> IntPoint {
     return IntPoint(x: -point.x, y: -point.y)
   }
+
+  var x: Int32
+  var y: Int32
 }

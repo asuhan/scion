@@ -24,6 +24,16 @@
  */
 
 struct IntRect {
+  init() {
+    location = IntPoint()
+    size = IntSize()
+  }
+
+  init(location: IntPoint, size: IntSize) {
+    self.location = location
+    self.size = size
+  }
+
   func x() -> Int32 { return location.x }
   func y() -> Int32 { return location.y }
   func maxY() -> Int32 { return y() + height() }

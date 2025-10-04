@@ -45,6 +45,11 @@
  */
 
 final class RenderLayerScrollableArea: ScrollableAreaWrapper {
+  func createOrDestroyMarquee() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -69,6 +74,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func usesCompositedScrolling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateScrollbarsAfterStyleChange(oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeHasCompositedScrollableOverflow(layoutUpToDate: LayoutUpToDate) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

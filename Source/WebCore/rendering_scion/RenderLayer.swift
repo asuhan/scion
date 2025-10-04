@@ -54,6 +54,11 @@ enum IncludeSelfOrNot {
   case ExcludeSelf
 }
 
+enum LayoutUpToDate {
+  case No
+  case Yes
+}
+
 enum RepaintStatus {
   case NeedsNormalRepaint
   case NeedsFullRepaint
@@ -522,19 +527,26 @@ class RenderLayerWrapper {
       }
 
       // Visibility and scrollability are input to canUseCompositedScrolling().
-      if m_scrollableArea != nil {
+      if let scrollableArea = m_scrollableArea {
         if oldStyle.direction() != renderer().style().direction() {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          scrollableArea.invalidateScrollCornerRect(rect: IntRect())
         }
         if visibilityChanged
           || oldStyle.isOverflowVisible() != renderer().style().isOverflowVisible()
         {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          scrollableArea.computeHasCompositedScrollableOverflow(
+            layoutUpToDate: diff.rawValue <= StyleDifference.RepaintLayer.rawValue ? .Yes : .No)
         }
       }
     }
+
+    if let scrollableArea = m_scrollableArea {
+      scrollableArea.createOrDestroyMarquee()
+      scrollableArea.updateScrollbarsAfterStyleChange(oldStyle: oldStyle)
+    }
+    // Overlay scrollbars can make this layer self-painting so we need
+    // to recompute the bit once scrollbars have been updated.
+    updateSelfPaintingLayer()
 
     // TODO(asuhan): implement this
     fatalError("Not implemented")

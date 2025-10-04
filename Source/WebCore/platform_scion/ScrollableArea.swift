@@ -34,4 +34,9 @@ class ScrollableAreaWrapper {
     case No
     case Yes
   }
+
+  func invalidateScrollCornerRect(rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
