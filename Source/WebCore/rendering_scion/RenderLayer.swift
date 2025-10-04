@@ -81,8 +81,7 @@ private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: 
 }
 
 private func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return layer.isComposited() && !layer.backing!.paintsIntoCompositedAncestor()
 }
 
 private func performOverlapTests(
@@ -4310,7 +4309,7 @@ class RenderLayerWrapper {
   private let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
 
   private let filters: RenderLayerFilters? = nil
-  private var backing: RenderLayerBacking? = nil
+  var backing: RenderLayerBacking? = nil
 
   private let m_scrollableArea: RenderLayerScrollableArea? = nil
 
