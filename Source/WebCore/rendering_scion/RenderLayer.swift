@@ -276,6 +276,11 @@ class RenderLayerWrapper {
     }
   }
 
+  func dirtyStackingContextZOrderLists() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func dirtyHiddenStackingContextAncestorZOrderLists() {
     var sc = stackingContext()
     while sc != nil {
@@ -478,6 +483,32 @@ class RenderLayerWrapper {
       || hasSelfPaintingLayerDescendantDirty
       || hasNotIsolatedBlendingDescendantsStatusDirty
       || hasIntrinsicallyCompositedDescendantsStatusDirty
+  }
+
+  func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
+    setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
+
+    if setIsCSSStackingContext(isCSSStackingContext: shouldBeCSSStackingContext()) {
+      if let parent = parent() {
+        if isCSSStackingContext() {
+          if !hasNotIsolatedBlendingDescendantsStatusDirty && hasNotIsolatedBlendingDescendants {
+            parent.dirtyAncestorChainHasBlendingDescendants()
+          }
+        } else {
+          if hasNotIsolatedBlendingDescendantsStatusDirty {
+            parent.dirtyAncestorChainHasBlendingDescendants()
+          } else if hasNotIsolatedBlendingDescendants {
+            parent.updateAncestorChainHasBlendingDescendants()
+          }
+        }
+      }
+    }
+
+    updateLayerScrollableArea()
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
@@ -1885,6 +1916,39 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
 
+  private func shouldBeNormalFlowOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldBeCSSStackingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeCanBeBackdropRoot() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Return true if changed.
+  @discardableResult
+  private func setIsNormalFlowOnly(isNormalFlowOnly: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setIsCSSStackingContext(isCSSStackingContext: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  private func setCanBeBackdropRoot(canBeBackdropRoot: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func isDirtyStackingContext() -> Bool { return zOrderListsDirty && isStackingContext() }
 
   private func updateZOrderLists() {
@@ -2684,6 +2748,11 @@ class RenderLayerWrapper {
     }
 
     filters = RenderLayerFilters(layer: self)
+  }
+
+  private func updateLayerScrollableArea() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
@@ -4108,6 +4177,16 @@ class RenderLayerWrapper {
     filters!.preferredFilterRenderingModes = renderer().page().preferredFilterRenderingModes()
     filters!.filterScale = FloatSize(
       width: page().deviceScaleFactor(), height: page().deviceScaleFactor())
+  }
+
+  private func updateAncestorChainHasBlendingDescendants() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func dirtyAncestorChainHasBlendingDescendants() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func isIntrinsicallyComposited() -> Bool {
