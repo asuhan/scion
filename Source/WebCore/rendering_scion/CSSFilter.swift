@@ -85,8 +85,8 @@ private func createGrayScaleEffect(colorMatrixOperation: BasicColorMatrixFilterO
 private func createHueRotateEffect(colorMatrixOperation: BasicColorMatrixFilterOperationWrapper)
   -> FilterEffectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let inputParameters = [narrowPrecisionToFloat(colorMatrixOperation.amount())]
+  return FEColorMatrixWrapper.create(type: .FECOLORMATRIX_TYPE_HUEROTATE, values: inputParameters)
 }
 
 private func createInvertEffect(
