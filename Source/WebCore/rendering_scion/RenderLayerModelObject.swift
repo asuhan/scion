@@ -48,6 +48,14 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func applyTransform(
+    transform: inout TransformationMatrix, style: RenderStyleWrapper, boundingBox: FloatRectWrapper,
+    options: RenderStyleWrapper.TransformOperationOption
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 // Pixel-snapping (== 'device pixel alignment') helpers.

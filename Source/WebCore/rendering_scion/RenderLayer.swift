@@ -659,6 +659,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func canRender3DTransforms() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: This is terrible. Bring back a cached bit for this someday. This crawl is going to slow down all
   // painting of content inside paginated layers.
   func hasCompositedLayerInEnclosingPaginationChain() -> Bool {
@@ -1875,8 +1880,11 @@ class RenderLayerWrapper {
     transform: inout TransformationMatrix, style: RenderStyleWrapper,
     options: RenderStyleWrapper.TransformOperationOption
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let referenceBoxRect = snapRectToDevicePixelsIfNeeded(
+      rect: renderer().transformReferenceBoxRect(style: style), renderer: renderer())
+    renderer().applyTransform(
+      transform: &transform, style: style, boundingBox: referenceBoxRect, options: options)
+    makeMatrixRenderable(matrix: transform, has3DRendering: canRender3DTransforms())
   }
 
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
