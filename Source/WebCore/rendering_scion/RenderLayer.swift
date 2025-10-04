@@ -738,6 +738,21 @@ class RenderLayerWrapper {
   }
 
   func clearClipRectsIncludingDescendants(typeToClear: ClipRectsType = .AllClipRectTypes) {
+    // FIXME: it's not clear how this layer not having clip rects guarantees that no descendants have any.
+    if clipRectsCache == nil {
+      return
+    }
+
+    clearClipRects(typeToClear: typeToClear)
+
+    var l = firstChild()
+    while l != nil {
+      l!.clearClipRectsIncludingDescendants(typeToClear: typeToClear)
+      l = l!.nextSibling()
+    }
+  }
+
+  func clearClipRects(typeToClear: ClipRectsType = .AllClipRectTypes) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
