@@ -47,8 +47,16 @@ private func createBrightnessEffect(
 private func createContrastEffect(
   componentTransferOperation: BasicComponentTransferFilterOperationWrapper
 ) -> FilterEffectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var transferFunction = ComponentTransferFunction()
+  transferFunction.type = .FECOMPONENTTRANSFER_TYPE_LINEAR
+  let amount = narrowPrecisionToFloat(componentTransferOperation.amount())
+  transferFunction.slope = amount
+  transferFunction.intercept = -0.5 * amount + 0.5
+
+  let nullFunction = ComponentTransferFunction()
+  return FEComponentTransferWrapper.create(
+    redFunction: transferFunction, greenFunction: transferFunction, blueFunction: transferFunction,
+    alphaFunction: nullFunction)
 }
 
 private func createDropShadowEffect(dropShadowOperation: DropShadowFilterOperationWrapper)
