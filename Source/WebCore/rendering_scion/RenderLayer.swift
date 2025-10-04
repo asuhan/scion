@@ -2679,8 +2679,11 @@ class RenderLayerWrapper {
   }
 
   private func ensureLayerFilters() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if filters != nil {
+      return
+    }
+
+    filters = RenderLayerFilters(layer: self)
   }
 
   private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
@@ -4308,7 +4311,7 @@ class RenderLayerWrapper {
   // Pointer to the enclosing RenderSVGHiddenContainer or RenderSVGResourceContainer, if present.
   private let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
 
-  private let filters: RenderLayerFilters? = nil
+  private var filters: RenderLayerFilters? = nil
   var backing: RenderLayerBacking? = nil
 
   private let m_scrollableArea: RenderLayerScrollableArea? = nil

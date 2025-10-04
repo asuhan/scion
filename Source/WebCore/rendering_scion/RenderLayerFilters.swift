@@ -29,6 +29,11 @@
  */
 
 final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
+  init(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearFilter() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
