@@ -26,4 +26,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class RenderReplicaWrapper: RenderBoxWrapper {}
+final class RenderReplicaWrapper: RenderBoxWrapper {
+  init(document: Document, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

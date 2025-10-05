@@ -4477,8 +4477,12 @@ class RenderLayerWrapper {
   }
 
   private func createReflection() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(reflection == nil)
+    reflection = RenderReplicaWrapper(
+      document: renderer().document(), style: createReflectionStyle())
+    // FIXME: A renderer should be a child of its parent!
+    reflection!.setParent(parent: renderer())  // We create a 1-way connection.
+    reflection!.initializeStyle()
   }
 
   private func removeReflection() {
@@ -4811,7 +4815,7 @@ class RenderLayerWrapper {
   private var transform: TransformationMatrix? = nil
 
   // May ultimately be extended to many replicas (with their own paint order).
-  private let reflection: RenderReplicaWrapper? = nil
+  private var reflection: RenderReplicaWrapper? = nil
 
   // Pointer to the enclosing RenderLayer that caused us to be paginated. It is 0 if we are not paginated.
   private let m_enclosingPaginationLayer: RenderLayerWrapper? = nil

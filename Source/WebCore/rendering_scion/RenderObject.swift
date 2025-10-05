@@ -30,6 +30,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     self.p = p
   }
 
+  func initializeStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutBox() -> BoxWrapper? {
     let unwrapped = wk_interop.RenderObject_layoutBox(p)
     if unwrapped == nil {
@@ -481,6 +486,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  //////////////////////////////////////////
+  // Helper functions. Dangerous to use!
+  func setParent(parent: RenderElementWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  //////////////////////////////////////////
 
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
     if wk_interop.RenderObject_isRenderListBox(p) {
