@@ -2211,8 +2211,16 @@ class RenderLayerWrapper {
   private func setPreviousSibling(prev: RenderLayerWrapper?) { m_previous = prev }
 
   private func dirtyPaintOrderListsOnChildChange(child: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if child.isNormalFlowOnly {
+      dirtyNormalFlowList()
+    }
+
+    if !child.isNormalFlowOnly || child.firstChild() != nil {
+      // Dirty the z-order list in which we are contained. The stackingContext() can be null in the
+      // case where we're building up generated content layers. This is ok, since the lists will start
+      // off dirty in that case anyway.
+      child.dirtyStackingContextZOrderLists()
+    }
   }
 
   private func shouldBeNormalFlowOnly() -> Bool {
