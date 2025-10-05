@@ -2183,14 +2183,29 @@ class RenderLayerWrapper {
   }
 
   private func setIsCSSStackingContext(isCSSStackingContext: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let wasStacking = isStackingContext()
+    m_isCSSStackingContext = isCSSStackingContext
+    if wasStacking == isStackingContext() {
+      return false
+    }
+
+    isStackingContextChanged()
+    return true
   }
 
   @discardableResult
   private func setCanBeBackdropRoot(canBeBackdropRoot: Bool) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func isStackingContextChanged() {
+    dirtyStackingContextZOrderLists()
+    if isStackingContext() {
+      dirtyZOrderLists()
+    } else {
+      clearZOrderLists()
+    }
   }
 
   private func isDirtyStackingContext() -> Bool { return zOrderListsDirty && isStackingContext() }
