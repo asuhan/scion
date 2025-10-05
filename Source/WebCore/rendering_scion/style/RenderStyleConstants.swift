@@ -321,6 +321,13 @@ enum WhiteSpaceCollapse: UInt8 {
   case BreakSpaces
 }
 
+enum ReflectionDirection: UInt8 {
+  case Below
+  case Above
+  case Left
+  case Right
+}
+
 // The order of this enum must match the order of the text align values in CSSValueKeywords.in.
 enum TextAlignMode: UInt8 {
   case Left

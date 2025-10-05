@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     StyleImage.swift
     StyleInheritedData.swift
     StyleRareInheritedData.swift
+    StyleReflection.swift
     StyleSelfAlignmentData.swift
     StyleTextEdge.swift
     TextDecorationThickness.swift

@@ -4487,8 +4487,69 @@ class RenderLayerWrapper {
   }
 
   private func createReflectionStyle() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let newStyle = RenderStyleWrapper.create()
+    newStyle.inheritFrom(inheritParent: renderer().style())
+
+    // Map in our transform.
+    var operations: [TransformOperation] = []
+
+    switch renderer().style().boxReflect()!.direction() {
+    case .Below:
+      operations = [
+        TranslateTransformOperation.create(
+          tx: LengthWrapper(value: Int32(0), type: .Fixed),
+          ty: LengthWrapper(value: 100.0, type: .Percent),
+          type: .Translate),
+        TranslateTransformOperation.create(
+          tx: LengthWrapper(value: Int32(0), type: .Fixed),
+          ty: renderer().style().boxReflect()!.offset(),
+          type: .Translate),
+        ScaleTransformOperation.create(sx: 1.0, sy: -1.0, type: .Scale),
+      ]
+    case .Above:
+      operations = [
+        ScaleTransformOperation.create(sx: 1.0, sy: -1.0, type: .Scale),
+        TranslateTransformOperation.create(
+          tx: LengthWrapper(value: Int32(0), type: .Fixed),
+          ty: LengthWrapper(value: 100.0, type: .Percent),
+          type: .Translate),
+        TranslateTransformOperation.create(
+          tx: LengthWrapper(value: Int32(0), type: .Fixed),
+          ty: renderer().style().boxReflect()!.offset(),
+          type: .Translate),
+      ]
+    case .Right:
+      operations = [
+        TranslateTransformOperation.create(
+          tx: LengthWrapper(value: 100.0, type: .Percent),
+          ty: LengthWrapper(value: Int32(0), type: .Fixed),
+          type: .Translate),
+        TranslateTransformOperation.create(
+          tx: renderer().style().boxReflect()!.offset(),
+          ty: LengthWrapper(value: Int32(0), type: .Fixed), type: .Translate),
+        ScaleTransformOperation.create(sx: -1.0, sy: 1.0, type: .Scale),
+      ]
+    case .Left:
+      operations = [
+        ScaleTransformOperation.create(sx: -1.0, sy: 1.0, type: .Scale),
+        TranslateTransformOperation.create(
+          tx: LengthWrapper(value: 100.0, type: .Percent),
+          ty: LengthWrapper(value: Int32(0), type: .Fixed),
+          type: .Translate),
+        TranslateTransformOperation.create(
+          tx: renderer().style().boxReflect()!.offset(),
+          ty: LengthWrapper(value: Int32(0), type: .Fixed), type: .Translate),
+      ]
+    }
+    newStyle.setTransform(operations: TransformOperations(operations: operations))
+
+    // Map in our mask.
+    newStyle.setMaskBorder(image: renderer().style().boxReflect()!.mask())
+
+    // Style has transform and mask, so needs to be stacking context.
+    newStyle.setUsedZIndex(index: 0)
+
+    return newStyle
   }
 
   private func updateFiltersAfterStyleChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

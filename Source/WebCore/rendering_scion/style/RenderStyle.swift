@@ -58,6 +58,16 @@ class RenderStyleWrapper {
     inheritedFlags.textWrapMode = textWrapMode
   }
 
+  static func create() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inheritFrom(inheritParent: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pseudoElementType() -> PseudoId {
     if p == nil {
       // TODO(asuhan): implement this
@@ -859,6 +869,11 @@ class RenderStyleWrapper {
     return BoxDecorationBreak(rawValue: wk_interop.RenderStyle_boxDecorationBreak(p))!
   }
 
+  func boxReflect() -> StyleReflection? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textOverflow() -> TextOverflow {
     if p == nil {
       // TODO(asuhan): implement this
@@ -1112,6 +1127,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func setMaskBorder(image: NinePieceImage) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func printColorAdjust() -> PrintColorAdjust {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1123,6 +1143,16 @@ class RenderStyleWrapper {
   }
 
   func hasAutoUsedZIndex() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setUsedZIndex(index: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTransform(operations: TransformOperations) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
