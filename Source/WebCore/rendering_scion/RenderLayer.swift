@@ -90,6 +90,11 @@ private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: 
   }
 }
 
+private func canCreateStackingContext(layer: RenderLayerWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
   return layer.isComposited() && !layer.backing!.paintsIntoCompositedAncestor()
 }
@@ -2095,8 +2100,17 @@ class RenderLayerWrapper {
   }
 
   private func shouldBeNormalFlowOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if canCreateStackingContext(layer: self) {
+      return false
+    }
+
+    return renderer().hasNonVisibleOverflow()
+      || renderer().isRenderHTMLCanvas()
+      || renderer().isRenderVideo()
+      || renderer().isRenderEmbeddedObject()
+      || renderer().isRenderIFrame()
+      || (renderer().style().specifiesColumns() && !isRenderViewLayer)
+      || renderer().isRenderFragmentedFlow()
   }
 
   private func shouldBeCSSStackingContext() -> Bool {

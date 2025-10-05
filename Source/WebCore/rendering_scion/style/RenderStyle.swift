@@ -936,6 +936,11 @@ class RenderStyleWrapper {
     return AtomStringWrapper(p: wk_interop.RenderStyle_computedLocale(p))
   }
 
+  func specifiesColumns() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textEmphasisMarkString() -> AtomStringWrapper {
     if p == nil {
       // TODO(asuhan): implement this
