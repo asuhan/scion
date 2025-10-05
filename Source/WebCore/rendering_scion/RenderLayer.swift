@@ -206,6 +206,11 @@ class ClipRectsCache {
   }
 }
 
+private func flattenedParent(element: ElementWrapper?) -> ElementWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func backgroundClipRectForPosition(parentRects: ClipRects, position: PositionType)
   -> ClipRect
 {
@@ -2125,8 +2130,19 @@ class RenderLayerWrapper {
   }
 
   func ancestorLayerIsDOMParent(ancestor: RenderLayerWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if ancestor == nil {
+      return false
+    }
+    if let parent = flattenedParent(element: renderer().element()) {
+      if CPtrToInt(ancestor!.renderer().element()?.p) == CPtrToInt(parent.p) {
+        return true
+      }
+    }
+
+    if let parentPseudoId = parentPseudoElement(pseudoId: renderer().style().pseudoElementType()) {
+      return parentPseudoId == ancestor!.renderer().style().pseudoElementType()
+    }
+    return false
   }
 
   private func shouldBeNormalFlowOnly() -> Bool {
