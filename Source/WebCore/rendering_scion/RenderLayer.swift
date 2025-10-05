@@ -271,6 +271,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func removeChild(oldChild: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
   // Not all stacking contexts are CSS stacking contexts.
   func isStackingContext() -> Bool {
@@ -4486,8 +4491,12 @@ class RenderLayerWrapper {
   }
 
   private func removeReflection() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !reflection!.renderTreeBeingDestroyed(), let layer = reflection!.layer() {
+      removeChild(oldChild: layer)
+    }
+
+    reflection!.setParent(parent: nil)
+    reflection = nil
   }
 
   private func createReflectionStyle() -> RenderStyleWrapper {
