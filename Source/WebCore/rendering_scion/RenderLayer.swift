@@ -246,8 +246,21 @@ class RenderLayerWrapper {
 
   @discardableResult
   func ensureLayerScrollableArea() -> RenderLayerScrollableArea? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hadScrollableArea = scrollableArea() != nil
+
+    if m_scrollableArea == nil {
+      m_scrollableArea = RenderLayerScrollableArea(layer: self)
+    }
+
+    if !hadScrollableArea {
+      if renderer().settings().asyncOverflowScrollingEnabled() {
+        setNeedsCompositingConfigurationUpdate()
+      }
+
+      m_scrollableArea!.restoreScrollPosition()
+    }
+
+    return m_scrollableArea
   }
 
   func page() -> PageWrapper {
