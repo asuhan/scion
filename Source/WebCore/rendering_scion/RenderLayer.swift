@@ -1933,8 +1933,7 @@ class RenderLayerWrapper {
   }
 
   func preserves3D() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer().style().preserves3D()
   }
 
   func has3DTransform() -> Bool {
