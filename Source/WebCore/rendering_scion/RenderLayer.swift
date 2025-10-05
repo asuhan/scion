@@ -3042,8 +3042,10 @@ class RenderLayerWrapper {
   }
 
   private func clearLayerScrollableArea() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollableArea = m_scrollableArea {
+      scrollableArea.clear()
+      m_scrollableArea = nil
+    }
   }
 
   private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
@@ -4744,7 +4746,7 @@ class RenderLayerWrapper {
   private var filters: RenderLayerFilters? = nil
   var backing: RenderLayerBacking? = nil
 
-  private let m_scrollableArea: RenderLayerScrollableArea? = nil
+  private var m_scrollableArea: RenderLayerScrollableArea? = nil
 
   private let paintFrequencyTracker = PaintFrequencyTracker()
 }
