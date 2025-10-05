@@ -1102,6 +1102,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasIsolation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func printColorAdjust() -> PrintColorAdjust {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

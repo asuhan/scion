@@ -226,6 +226,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isPositioned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInFlowPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -315,6 +320,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasPotentiallyScrollableOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasTransformRelatedProperty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

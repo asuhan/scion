@@ -24,6 +24,11 @@
  */
 
 class WillChangeData {
+  func canCreateStackingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canBeBackdropRoot() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

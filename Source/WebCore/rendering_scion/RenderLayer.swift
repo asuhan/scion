@@ -91,8 +91,24 @@ private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: 
 }
 
 private func canCreateStackingContext(layer: RenderLayerWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let renderer = layer.renderer()
+  return renderer.hasTransformRelatedProperty()
+    || renderer.hasClipPath()
+    || renderer.hasFilter()
+    || renderer.hasMask()
+    || renderer.hasBackdropFilter()
+    || renderer.hasBlendMode()
+    || renderer.isTransparent()
+    || renderer.requiresRenderingConsolidationForViewTransition()
+    || renderer.isRenderViewTransitionCapture()
+    || renderer.isPositioned()  // Note that this only creates stacking context in conjunction with explicit z-index.
+    || renderer.hasReflection()
+    || renderer.style().hasIsolation()
+    || renderer.shouldApplyPaintContainment()
+    || !renderer.style().hasAutoUsedZIndex()
+    || (renderer.style().willChange() != nil
+      && renderer.style().willChange()!.canCreateStackingContext())
+    || layer.establishesTopLayer()
 }
 
 private func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
