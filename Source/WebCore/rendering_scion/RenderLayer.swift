@@ -2114,8 +2114,10 @@ class RenderLayerWrapper {
   }
 
   private func shouldBeCSSStackingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !renderer().style().hasAutoUsedZIndex()
+      || renderer().shouldApplyLayoutOrPaintContainment()
+      || renderer().requiresRenderingConsolidationForViewTransition()
+      || renderer().isRenderViewTransitionCapture() || isRenderViewLayer
   }
 
   private func computeCanBeBackdropRoot() -> Bool {
