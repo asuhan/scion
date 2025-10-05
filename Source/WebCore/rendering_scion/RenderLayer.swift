@@ -1941,8 +1941,11 @@ class RenderLayerWrapper {
   }
 
   func filterOutsets() -> IntOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if filters != nil {
+      return RenderLayerFilters.calculateOutsets(
+        renderer: renderer(), targetBoundingBox: localBoundingBox().FloatRect())
+    }
+    return renderer().style().filterOutsets()
   }
 
   func hasBlendMode() -> Bool {

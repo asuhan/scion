@@ -164,6 +164,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func filterOutsets() -> IntOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rtlOrdering() -> Order {
     if p == nil {
       // TODO(asuhan): implement this
