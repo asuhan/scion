@@ -2195,8 +2195,11 @@ class RenderLayerWrapper {
 
   @discardableResult
   private func setCanBeBackdropRoot(canBeBackdropRoot: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if self.canBeBackdropRoot == canBeBackdropRoot {
+      return false
+    }
+    self.canBeBackdropRoot = canBeBackdropRoot
+    return true
   }
 
   private func isStackingContextChanged() {
@@ -4630,6 +4633,7 @@ class RenderLayerWrapper {
 
   private var isNormalFlowOnly = false
   private var m_isCSSStackingContext = false
+  private var canBeBackdropRoot = false
   private var isOpportunisticStackingContext = false
 
   private var zOrderListsDirty = false
