@@ -230,6 +230,12 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func ensureLayerScrollableArea() -> RenderLayerScrollableArea? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func page() -> PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3013,6 +3019,29 @@ class RenderLayerWrapper {
   }
 
   private func updateLayerScrollableArea() {
+    let hasScrollableArea = scrollableArea() != nil
+    var needsScrollableArea = false
+    if let box = renderer() as? RenderBoxWrapper {
+      needsScrollableArea = box.requiresLayerWithScrollableArea()
+    }
+
+    if needsScrollableArea == hasScrollableArea {
+      return
+    }
+
+    if needsScrollableArea {
+      ensureLayerScrollableArea()
+    } else {
+      clearLayerScrollableArea()
+      if renderer().settings().asyncOverflowScrollingEnabled() {
+        setNeedsCompositingConfigurationUpdate()
+      }
+    }
+
+    InspectorInstrumentationWrapper.didAddOrRemoveScrollbars(renderer: renderer())
+  }
+
+  private func clearLayerScrollableArea() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

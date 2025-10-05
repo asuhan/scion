@@ -40,6 +40,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/editing_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/editing_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/html_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/html_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/inspector_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/inspector_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/loader_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/loader_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/svg_scion

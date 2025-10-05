@@ -24,6 +24,11 @@
  */
 
 class SettingsWrapper {
+  func asyncOverflowScrollingEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func css3DTransformBackfaceVisibilityInteroperabilityEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

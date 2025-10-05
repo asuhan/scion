@@ -28,6 +28,11 @@ enum OverlayScrollbarSizeRelevancy {
 }
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
+  func requiresLayerWithScrollableArea() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func y() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
