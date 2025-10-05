@@ -23,7 +23,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FilterOperations: Sequence, IteratorProtocol, CustomStringConvertible {
+class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConvertible {
+  static func == (lhs: FilterOperations, rhs: FilterOperations) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> FilterOperationWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

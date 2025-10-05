@@ -54,6 +54,16 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     fatalError("Not implemented")
   }
 
+  func updateReferenceFilterClients(operations: FilterOperations) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeReferenceFilterClients() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func isIdentity(renderer: RenderElementWrapper) -> Bool {
     let operations = renderer.style().filter()
     return CSSFilter.isIdentity(renderer: renderer, operations: operations)

@@ -3038,6 +3038,11 @@ class RenderLayerWrapper {
     filters = RenderLayerFilters(layer: self)
   }
 
+  private func clearLayerFilters() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateLayerScrollableArea() {
     let hasScrollableArea = scrollableArea() != nil
     var needsScrollableArea = false
@@ -4566,8 +4571,20 @@ class RenderLayerWrapper {
   }
 
   private func updateFiltersAfterStyleChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer().style().filter().hasReferenceFilter() {
+      ensureLayerFilters()
+      filters!.updateReferenceFilterClients(operations: renderer().style().filter())
+    } else if !paintsWithFilters() {
+      clearLayerFilters()
+    } else if let filters = filters {
+      filters.removeReferenceFilterClients()
+    }
+
+    if diff.rawValue >= StyleDifference.RepaintLayer.rawValue && oldStyle != nil
+      && oldStyle!.filter() != renderer().style().filter()
+    {
+      clearLayerFilters()
+    }
   }
 
   private func updateFilterPaintingStrategy() {
