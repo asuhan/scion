@@ -4495,8 +4495,15 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainVisibleDescendantStatus() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if layer!.visibleDescendantStatusDirty {
+        break
+      }
+
+      layer!.visibleDescendantStatusDirty = true
+      layer = layer!.parent()
+    }
   }
 
   private func computeHasVisibleContent() -> Bool {
