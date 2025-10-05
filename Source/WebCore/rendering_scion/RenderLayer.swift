@@ -261,10 +261,9 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
-  func nextSibling() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func previousSibling() -> RenderLayerWrapper? { return m_previous }
+
+  func nextSibling() -> RenderLayerWrapper? { return m_next }
 
   func firstChild() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
@@ -272,8 +271,52 @@ class RenderLayerWrapper {
   }
 
   func removeChild(oldChild: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().renderTreeBeingDestroyed() {
+      compositor().layerWillBeRemoved(parent: self, child: oldChild)
+    }
+
+    // remove the child
+    if let prevSibling = oldChild.previousSibling() {
+      prevSibling.setNextSibling(next: oldChild.nextSibling())
+    }
+    if let nextSibling = oldChild.nextSibling() {
+      nextSibling.setPreviousSibling(prev: oldChild.previousSibling())
+    }
+
+    if CPtrToInt(m_first?.p) == CPtrToInt(oldChild.p) {
+      m_first = oldChild.nextSibling()
+    }
+    if CPtrToInt(m_last?.p) == CPtrToInt(oldChild.p) {
+      m_last = oldChild.previousSibling()
+    }
+
+    dirtyPaintOrderListsOnChildChange(child: oldChild)
+
+    oldChild.setPreviousSibling(prev: nil)
+    oldChild.setNextSibling(next: nil)
+    oldChild.m_parent = nil
+
+    oldChild.updateDescendantDependentFlags()
+    if oldChild.hasVisibleContent || oldChild.hasVisibleDescendant {
+      dirtyAncestorChainVisibleDescendantStatus()
+    }
+
+    if oldChild.isSelfPaintingLayer || oldChild.hasSelfPaintingLayerDescendant {
+      dirtyAncestorChainHasSelfPaintingLayerDescendantStatus()
+    }
+
+    if compositor().hasContentCompositingLayers() {
+      setDescendantsNeedCompositingRequirementsTraversal()
+    }
+
+    if oldChild.hasBlendMode()
+      || (oldChild.hasNotIsolatedBlendingDescendants && !oldChild.isolatesBlending())
+    {
+      dirtyAncestorChainHasBlendingDescendants()
+    }
+    if renderer().style().usedVisibility() != .Visible {
+      dirtyVisibleContentStatus()
+    }
   }
 
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
@@ -824,6 +867,11 @@ class RenderLayerWrapper {
       clipRectsCache!.setClipRects(
         clipRectsType: typeToClear, respectOverflowClip: false, clipRects: nil)
     }
+  }
+
+  func dirtyVisibleContentStatus() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
@@ -2147,6 +2195,15 @@ class RenderLayerWrapper {
       return parentPseudoId == ancestor!.renderer().style().pseudoElementType()
     }
     return false
+  }
+
+  private func setNextSibling(next: RenderLayerWrapper?) { m_next = next }
+
+  private func setPreviousSibling(prev: RenderLayerWrapper?) { m_previous = prev }
+
+  private func dirtyPaintOrderListsOnChildChange(child: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func shouldBeNormalFlowOnly() -> Bool {
@@ -4428,6 +4485,11 @@ class RenderLayerWrapper {
       || renderer().isRenderFragmentedFlow()
   }
 
+  private func dirtyAncestorChainVisibleDescendantStatus() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeHasVisibleContent() -> Bool {
     if renderer().isAnonymous() && renderer() is RenderSVGViewportContainerWrapper {
       return false
@@ -4818,7 +4880,11 @@ class RenderLayerWrapper {
 
   private var wasOmittedFromZOrderTree = false
 
-  private let m_parent: RenderLayerWrapper? = nil
+  private var m_parent: RenderLayerWrapper? = nil
+  private var m_previous: RenderLayerWrapper? = nil
+  private var m_next: RenderLayerWrapper? = nil
+  private var m_first: RenderLayerWrapper? = nil
+  private var m_last: RenderLayerWrapper? = nil
 
   private let backingProviderLayer: RenderLayerWrapper? = nil
 
