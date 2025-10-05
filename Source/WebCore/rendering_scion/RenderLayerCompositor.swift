@@ -36,6 +36,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  struct RequiresCompositingData {
+    var layoutUpToDate: LayoutUpToDate = .Yes
+    let nonCompositedForPositionReason: RenderLayerWrapper.ViewportConstrainedNotCompositedReason =
+      .NoNotCompositedReason
+    let reevaluateAfterLayout = false
+    let intrinsic = false
+  }
+
   // Notify us that a layer has been removed
   func layerWillBeRemoved(parent: RenderLayerWrapper, child: RenderLayerWrapper) {
     // TODO(asuhan): implement this
@@ -45,11 +53,68 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func layerStyleChanged(
     diff: StyleDifference, layer: RenderLayerWrapper, oldStyle: RenderStyleWrapper?
   ) {
+    if diff == .Equal {
+      return
+    }
+
+    // Create or destroy backing here so that code that runs during layout can reliably use isComposited() (though this
+    // is only true for layers composited for direct reasons).
+    // Also, it allows us to avoid a tree walk in updateCompositingLayers() when no layer changed its compositing state.
+    var queryData = RequiresCompositingData()
+    queryData.layoutUpToDate = .No
+
+    let layerChanged = updateBacking(layer: layer, queryData: queryData)
+    if layerChanged {
+      layer.setChildrenNeedCompositingGeometryUpdate()
+      layer.setNeedsCompositingLayerConnection()
+      layer.setSubsequentLayersNeedCompositingRequirementsTraversal()
+      // Ancestor layers that composited for indirect reasons (things listed in styleChangeMayAffectIndirectCompositingReasons()) need to get updated.
+      // This could be optimized by only setting this flag on layers with the relevant styles.
+      layer.setNeedsPostLayoutCompositingUpdateOnAncestors()
+    }
+    layer.setIntrinsicallyComposited(composited: queryData.intrinsic)
+
+    if queryData.reevaluateAfterLayout {
+      layer.setNeedsPostLayoutCompositingUpdate()
+    }
+
+    if hasContentCompositingLayers() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if diff.rawValue >= StyleDifference.Repaint.rawValue && oldStyle != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if let backing = layer.backing {
+      backing.updateConfigurationAfterStyleChange()
+    } else {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  class BackingSharingState {}
+
+  enum BackingRequired {
+    case No
+    case Yes
+    case Unknown
+  }
+
+  private func updateBacking(
+    layer: RenderLayerWrapper, queryData: RequiresCompositingData,
+    backingSharingState: BackingSharingState? = nil, backingRequired: BackingRequired = .Unknown
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

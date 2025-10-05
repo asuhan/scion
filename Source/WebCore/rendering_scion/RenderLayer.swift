@@ -498,17 +498,33 @@ class RenderLayerWrapper {
     setRequirementsTraversalDirtyBit(v: .NeedsPaintOrderChildrenUpdate)
   }
 
+  func setNeedsPostLayoutCompositingUpdate() {
+    setRequirementsTraversalDirtyBit(v: .NeedsPostLayoutUpdate)
+  }
+
   func setDescendantsNeedCompositingRequirementsTraversal() {
     setRequirementsTraversalDirtyBit(v: .DescendantsNeedRequirementsTraversal)
   }
 
-  private func setNeedsPostLayoutCompositingUpdateOnAncestors() {
+  func setSubsequentLayersNeedCompositingRequirementsTraversal() {
+    setRequirementsTraversalDirtyBit(v: .SubsequentLayersNeedRequirementsTraversal)
+  }
+
+  func setNeedsPostLayoutCompositingUpdateOnAncestors() {
     setAncestorsHaveCompositingDirtyFlag(flag: .NeedsPostLayoutUpdate)
   }
 
   private func setBackingAndHierarchyTraversalDirtyBit(v: Compositing) {
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingBackingOrHierarchyTraversal)
+  }
+
+  func setNeedsCompositingLayerConnection() {
+    setBackingAndHierarchyTraversalDirtyBit(v: .NeedsLayerConnection)
+  }
+
+  func setChildrenNeedCompositingGeometryUpdate() {
+    setBackingAndHierarchyTraversalDirtyBit(v: .ChildrenNeedGeometryUpdate)
   }
 
   func setDescendantsNeedUpdateBackingAndHierarchyTraversal() {
@@ -4746,6 +4762,11 @@ class RenderLayerWrapper {
   }
 
   private func isIntrinsicallyComposited() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setIntrinsicallyComposited(composited: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

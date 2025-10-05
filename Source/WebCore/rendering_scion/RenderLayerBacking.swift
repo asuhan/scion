@@ -36,6 +36,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func updateConfigurationAfterStyleChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasMaskLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
