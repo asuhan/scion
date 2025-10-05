@@ -207,8 +207,17 @@ class ClipRectsCache {
 }
 
 private func flattenedParent(element: ElementWrapper?) -> ElementWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if element == nil {
+    return nil
+  }
+  var parent = element!.parentElementInComposedTree()
+  while parent != nil {
+    if parent!.computedStyle()!.display() != .Contents {
+      break
+    }
+    parent = parent!.parentElementInComposedTree()
+  }
+  return parent
 }
 
 private func backgroundClipRectForPosition(parentRects: ClipRects, position: PositionType)

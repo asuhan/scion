@@ -34,6 +34,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func parentElementInComposedTree() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRootEditableElement() -> Bool {
     return wk_interop.Node_isRootEditableElement(p)
   }
@@ -43,6 +48,11 @@ class NodeWrapper {
 
   // As renderer() includes a branch you should avoid calling it repeatedly in hot code paths.
   func renderer() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computedStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
