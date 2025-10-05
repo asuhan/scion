@@ -87,8 +87,19 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
   }
 
   func removeReferenceFilterClients() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for resourceHandle in externalSVGReferences {
+      resourceHandle.get()!.removeClient(client: self)
+    }
+
+    externalSVGReferences.removeAll()
+
+    for filterElement in internalSVGReferences {
+      if let renderer = filterElement.renderer() {
+        (renderer as! LegacyRenderSVGResourceContainer).removeClientRenderLayer(client: layer)
+      }
+    }
+
+    internalSVGReferences.removeAll()
   }
 
   static func isIdentity(renderer: RenderElementWrapper) -> Bool {

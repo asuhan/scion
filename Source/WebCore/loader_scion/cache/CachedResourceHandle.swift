@@ -30,4 +30,9 @@ class CachedResourceHandleWrapper<R>: CachedResourceHandleBaseWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func get() -> R? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

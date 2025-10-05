@@ -26,4 +26,9 @@ class CachedResourceWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func removeClient(client: CachedResourceClientWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

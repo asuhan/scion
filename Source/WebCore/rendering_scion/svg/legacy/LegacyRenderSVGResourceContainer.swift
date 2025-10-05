@@ -23,4 +23,9 @@ class LegacyRenderSVGResourceContainer: LegacyRenderSVGHiddenContainer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func removeClientRenderLayer(client: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
