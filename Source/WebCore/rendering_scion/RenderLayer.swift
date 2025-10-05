@@ -1936,8 +1936,8 @@ class RenderLayerWrapper {
   func hasTransformedAncestor() -> Bool { return m_hasTransformedAncestor }
 
   func participatesInPreserve3D() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ancestorLayerIsDOMParent(ancestor: parent()) && parent()!.preserves3D()
+      && (transform != nil || renderer().style().backfaceVisibility() == .Hidden || preserves3D())
   }
 
   func filterOutsets() -> IntOutsets {
@@ -2113,6 +2113,11 @@ class RenderLayerWrapper {
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
+  }
+
+  func ancestorLayerIsDOMParent(ancestor: RenderLayerWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func shouldBeNormalFlowOnly() -> Bool {
