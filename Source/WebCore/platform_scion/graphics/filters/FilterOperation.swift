@@ -58,6 +58,11 @@ class ReferenceFilterOperationWrapper: FilterOperationWrapper {
     fatalError("Not implemented")
   }
 
+  func cachedSVGDocumentReference() -> CachedSVGDocumentReferenceWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func isIdentity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

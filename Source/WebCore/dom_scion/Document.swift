@@ -25,7 +25,8 @@
  *
  */
 
-struct Document {
+// TODO(asuhan): inherit from all bases
+class Document: TreeScopeWrapper {
   func settings() -> SettingsWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

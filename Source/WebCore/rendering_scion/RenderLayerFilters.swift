@@ -55,8 +55,35 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
   }
 
   func updateReferenceFilterClients(operations: FilterOperations) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    removeReferenceFilterClients()
+
+    for operation in operations {
+      let referenceOperation = operation as? ReferenceFilterOperationWrapper
+      if referenceOperation == nil {
+        continue
+      }
+
+      let documentReference = referenceOperation!.cachedSVGDocumentReference()
+      if let cachedSVGDocument = documentReference != nil ? documentReference!.document() : nil {
+        // Reference is external; wait for notifyFinished().
+        cachedSVGDocument.addClient(client: self)
+        externalSVGReferences.append(
+          CachedResourceHandleWrapper<CachedSVGDocumentWrapper>(res: cachedSVGDocument))
+      } else {
+        // Reference is internal; add layer as a client so we can trigger filter repaint on SVG attribute change.
+        let filterElement = layer.renderer().document().getElementById(
+          elementId: referenceOperation!.fragment())
+        if filterElement == nil {
+          continue
+        }
+        let renderer = filterElement!.renderer() as? LegacyRenderSVGResourceFilter
+        if renderer == nil {
+          continue
+        }
+        renderer!.addClientRenderLayer(client: layer)
+        internalSVGReferences.append(filterElement!)
+      }
+    }
   }
 
   func removeReferenceFilterClients() {
@@ -186,6 +213,10 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
   }
 
   private func resetDirtySourceRect() { dirtySourceRect = LayoutRectWrapper() }
+
+  let layer: RenderLayerWrapper
+  var internalSVGReferences: [ElementWrapper] = []
+  var externalSVGReferences: [CachedResourceHandleWrapper<CachedSVGDocumentWrapper>] = []
 
   var targetBoundingBox = LayoutRectWrapper()
   var dirtySourceRect = LayoutRectWrapper()

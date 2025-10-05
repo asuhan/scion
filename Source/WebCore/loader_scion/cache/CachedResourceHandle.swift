@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2011 Google Inc. All Rights Reserved.
- * Copyright (C) 2006-2023 Apple Inc. All rights reserved.
- * Copyright (C) 2006 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2007 Rob Buis <buis@kde.org>
+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,8 +23,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class TreeScopeWrapper {
-  func getElementById(elementId: AtomStringWrapper) -> ElementWrapper? {
+class CachedResourceHandleBaseWrapper {}
+
+class CachedResourceHandleWrapper<R>: CachedResourceHandleBaseWrapper {
+  init(res: R) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
