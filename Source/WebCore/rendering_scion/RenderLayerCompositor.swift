@@ -321,6 +321,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func updateRootContentLayerClipping() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   class BackingSharingState {
     // Add a layer that would repaint into a layer in m_backingSharingLayers.
     // That repaint has to wait until we've set the provider's backing-sharing layers.
@@ -346,6 +351,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, queryData: RequiresCompositingData,
     backingSharingState: BackingSharingState? = nil, backingRequired: BackingRequired = .Unknown
   ) -> Bool {
+    var layerChanged = false
     var backingRequired = backingRequired
     if backingRequired == .Unknown {
       backingRequired = needsToBeComposited(layer: layer, queryData: queryData) ? .Yes : .No
@@ -369,14 +375,35 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         layer.ensureBacking()
 
         if layer.isRenderViewLayer && useCoordinatedScrollingForLayer(layer: layer) {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          let frameView = m_renderView.frameView()
+          if let scrollingCoordinator = scrollingCoordinator() {
+            scrollingCoordinator.frameViewRootLayerDidChange(frameView: frameView)
+          }
+          updateRootContentLayerClipping()
+
+          if let tiledBacking = layer.backing!.tiledBacking() {
+            tiledBacking.setTopContentInset(topContentInset: frameView.topContentInset())
+          }
         }
 
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // This layer and all of its descendants have cached repaints rects that are relative to
+        // the repaint container, so change when compositing changes; we need to update them here.
+        if layer.parent() != nil {
+          layer.computeRepaintRectsIncludingDescendants()
+        }
+
+        layer.setNeedsCompositingGeometryUpdate()
+        layer.setNeedsCompositingConfigurationUpdate()
+        layer.setNeedsCompositingPaintOrderChildrenUpdate()
+
+        layerChanged = true
       }
     } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if layerChanged {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -405,6 +432,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func layerRepaintTargetsBackingSharingLayer(
     layer: RenderLayerWrapper, sharingState: BackingSharingState
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func scrollingCoordinator() -> ScrollingCoordinatorWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

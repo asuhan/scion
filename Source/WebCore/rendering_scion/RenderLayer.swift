@@ -2784,6 +2784,11 @@ class RenderLayerWrapper {
     }
   }
 
+  func computeRepaintRectsIncludingDescendants() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func clearRepaintRects() {
     repaintRectsValid = false
   }

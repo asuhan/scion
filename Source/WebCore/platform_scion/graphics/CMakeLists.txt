@@ -50,6 +50,7 @@ target_sources(layout_scion PRIVATE
     TabSize.swift
     TextIterator.swift
     TextRun.swift
+    TiledBacking.swift
     WindRule.swift
 )
 
