@@ -244,6 +244,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasViewportConstrainedPosition() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func floating() -> Float {
     if p == nil {
       fatalError("Not implemented")

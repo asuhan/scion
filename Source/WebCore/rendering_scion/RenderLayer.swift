@@ -523,6 +523,10 @@ class RenderLayerWrapper {
     setBackingAndHierarchyTraversalDirtyBit(v: .NeedsLayerConnection)
   }
 
+  func setNeedsCompositingGeometryUpdate() {
+    setBackingAndHierarchyTraversalDirtyBit(v: .NeedsGeometryUpdate)
+  }
+
   func setChildrenNeedCompositingGeometryUpdate() {
     setBackingAndHierarchyTraversalDirtyBit(v: .ChildrenNeedGeometryUpdate)
   }

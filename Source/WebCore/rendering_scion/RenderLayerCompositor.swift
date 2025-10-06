@@ -23,6 +23,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func clippingChanged(oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -78,9 +83,46 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       layer.setNeedsPostLayoutCompositingUpdate()
     }
 
+    let newStyle = layer.renderer().style()
+
     if hasContentCompositingLayers() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if diff.rawValue >= StyleDifference.LayoutPositionedMovementOnly.rawValue {
+        layer.setNeedsPostLayoutCompositingUpdate()
+        layer.setNeedsCompositingGeometryUpdate()
+      }
+
+      if diff.rawValue >= StyleDifference.Layout.rawValue {
+        // FIXME: only set flags here if we know we have a composited descendant, but we might not know at this point.
+        if oldStyle != nil && clippingChanged(oldStyle: oldStyle!, newStyle: newStyle) {
+          if layer.isStackingContext() {
+            layer.setNeedsPostLayoutCompositingUpdate()  // Layer needs to become composited if it has composited descendants.
+            layer.setNeedsCompositingConfigurationUpdate()  // If already composited, layer needs to create/destroy clipping layer.
+            layer.setChildrenNeedCompositingGeometryUpdate()  // Clipping layers on this layer affect descendant layer geometry.
+          } else {
+            // Descendant (in containing block order) compositing layers need to re-evaluate their clipping,
+            // but they might be siblings in z-order so go up to our stacking context.
+            if let stackingContext = layer.stackingContext() {
+              stackingContext.setDescendantsNeedUpdateBackingAndHierarchyTraversal()
+            }
+          }
+        }
+
+        if RenderLayerCompositorWrapper.styleChangeAffectsAnchorLayer(
+          oldStyle: oldStyle, newStyle: newStyle)
+        {
+          layer.setNeedsCompositingConfigurationUpdate()
+        }
+
+        // These properties trigger compositing if some descendant is composited.
+        if oldStyle != nil
+          && RenderLayerCompositorWrapper.styleChangeMayAffectIndirectCompositingReasons(
+            oldStyle: oldStyle!, newStyle: newStyle)
+        {
+          layer.setNeedsPostLayoutCompositingUpdate()
+        }
+
+        layer.setNeedsCompositingGeometryUpdate()
+      }
     }
 
     if diff.rawValue >= StyleDifference.Repaint.rawValue && oldStyle != nil {
@@ -96,6 +138,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // This ensures that the viewport anchor layer will be updated when updating compositing layers upon style change
+  private static func styleChangeAffectsAnchorLayer(
+    oldStyle: RenderStyleWrapper?, newStyle: RenderStyleWrapper
+  ) -> Bool {
+    if oldStyle == nil {
+      return false
+    }
+
+    return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
@@ -114,6 +167,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func updateBacking(
     layer: RenderLayerWrapper, queryData: RequiresCompositingData,
     backingSharingState: BackingSharingState? = nil, backingRequired: BackingRequired = .Unknown
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func styleChangeMayAffectIndirectCompositingReasons(
+    oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
