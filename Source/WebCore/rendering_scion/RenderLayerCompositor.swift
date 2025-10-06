@@ -95,6 +95,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Return true if this RenderView is in "compositing mode" (i.e. has one or more
+  // composited RenderLayers)
+  func usesCompositing() -> Bool { return m_compositing }
+
   // This will make a compositing layer at the root automatically, and hook up to
   // the native view/window system.
   func enableCompositingMode(enable: Bool = true) {
@@ -311,7 +315,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
+  func updateRootLayerAttachment() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func frameContentsCompositor(renderer: RenderWidgetWrapper) -> RenderLayerCompositorWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -427,8 +441,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if layerChanged {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let renderWidget = layer.renderer() as? RenderWidgetWrapper {
+        if let innerCompositor = frameContentsCompositor(renderer: renderWidget),
+          innerCompositor.usesCompositing()
+        {
+          innerCompositor.updateRootLayerAttachment()
+        }
+      }
+    }
+
+    if layerChanged {
+      layer.clearClipRectsIncludingDescendants(typeToClear: .PaintingClipRects)
     }
 
     // TODO(asuhan): implement this
@@ -500,4 +523,6 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private let m_renderView: RenderViewWrapper
+
+  private let m_compositing = false
 }
