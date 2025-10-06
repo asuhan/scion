@@ -30,6 +30,6 @@ struct BorderDataRadii {
   let bottomRight: LengthSize
 }
 
-struct BorderData {
+struct BorderData: Equatable {
   typealias Radii = BorderDataRadii
 }

@@ -131,6 +131,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func border() -> BorderData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fontCascade() -> FontCascadeWrapper {
     return inheritedData.fontCascade
   }

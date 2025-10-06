@@ -126,8 +126,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if diff.rawValue >= StyleDifference.Repaint.rawValue && oldStyle != nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // This ensures that we update border-radius clips on layers that are descendants in containing-block order but not paint order. This is necessary even when
+      // the current layer is not composited.
+      let changeAffectsClippingOfNonPaintOrderDescendants =
+        !layer.isStackingContext() && layer.renderer().hasNonVisibleOverflow()
+        && oldStyle!.border() != newStyle.border()
+      if changeAffectsClippingOfNonPaintOrderDescendants, let parent = layer.paintOrderParent() {
+        parent.setChildrenNeedCompositingGeometryUpdate()
+      }
     }
 
     if let backing = layer.backing {
@@ -136,8 +142,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if diff.rawValue >= StyleDifference.Repaint.rawValue {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if diff.rawValue >= StyleDifference.RecompositeLayer.rawValue {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   // This ensures that the viewport anchor layer will be updated when updating compositing layers upon style change
