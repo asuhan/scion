@@ -373,6 +373,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Returns the object containing this one. Can be different from parent for positioned elements.
+  // If repaintContainer and repaintContainerSkipped are not null, on return *repaintContainerSkipped
+  // is true if the renderer returned is an ancestor of repaintContainer.
+  func container() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Convert a local quad into the coordinate system of container, taking transforms into account.
   func localToContainerQuad(
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,

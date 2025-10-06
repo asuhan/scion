@@ -959,6 +959,14 @@ class RenderLayerWrapper {
     }
   }
 
+  struct PaintedContentRequest {}
+
+  // Returns true if this layer has visible content (ignoring any child layers).
+  func isVisuallyNonEmpty(request: PaintedContentRequest? = nil) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
@@ -4958,7 +4966,7 @@ class RenderLayerWrapper {
   private var visibleContentStatusDirty = false
   private var hasVisibleContent = false
   private var visibleDescendantStatusDirty = false
-  private var hasVisibleDescendant = false
+  var hasVisibleDescendant = false
 
   private var m_3DTransformedDescendantStatusDirty = false
   private let hasCompositingDescendant = false  // In the z-order tree.

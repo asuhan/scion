@@ -114,10 +114,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   struct RequiresCompositingData {
     var layoutUpToDate: LayoutUpToDate = .Yes
-    let nonCompositedForPositionReason: RenderLayerWrapper.ViewportConstrainedNotCompositedReason =
+    var nonCompositedForPositionReason: RenderLayerWrapper.ViewportConstrainedNotCompositedReason =
       .NoNotCompositedReason
-    let reevaluateAfterLayout = false
+    var reevaluateAfterLayout = false
     let intrinsic = false
+  }
+
+  func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
@@ -179,7 +184,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var queryData = RequiresCompositingData()
     queryData.layoutUpToDate = .No
 
-    let layerChanged = updateBacking(layer: layer, queryData: queryData)
+    let layerChanged = updateBacking(layer: layer, queryData: &queryData)
     if layerChanged {
       layer.setChildrenNeedCompositingGeometryUpdate()
       layer.setNeedsCompositingLayerConnection()
@@ -362,7 +367,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateBacking(
-    layer: RenderLayerWrapper, queryData: RequiresCompositingData,
+    layer: RenderLayerWrapper, queryData: inout RequiresCompositingData,
     backingSharingState: BackingSharingState? = nil, backingRequired: BackingRequired = .Unknown
   ) -> Bool {
     var layerChanged = false
@@ -372,7 +377,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     } else {
       // Need to fetch viewportConstrainedNotCompositedReason, but without doing all the work that needsToBeComposited does.
       requiresCompositingForPosition(
-        renderer: rendererForCompositingTests(layer: layer), layer: layer, queryData: queryData)
+        renderer: rendererForCompositingTests(layer: layer), layer: layer, queryData: &queryData)
     }
 
     if backingRequired == .Yes {
@@ -506,12 +511,67 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
   private func requiresCompositingForPosition(
     renderer: RenderLayerModelObjectWrapper, layer: RenderLayerWrapper,
-    queryData: RequiresCompositingData
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    queryData: inout RequiresCompositingData
+  ) -> Bool {
+    // position:fixed elements that create their own stacking context (e.g. have an explicit z-index,
+    // opacity, transform) can get their own composited layer. A stacking context is required otherwise
+    // z-index and clipping will be broken.
+    if !renderer.isPositioned() {
+      return false
+    }
+
+    let position = renderer.style().position()
+    let isFixed = renderer.isFixedPositioned()
+    if isFixed && !layer.isStackingContext() {
+      return false
+    }
+
+    let isSticky = renderer.isInFlowPositioned() && position == .Sticky
+    if !isFixed && !isSticky {
+      return false
+    }
+
+    // FIXME: acceleratedCompositingForFixedPositionEnabled should probably be renamed acceleratedCompositingForViewportConstrainedPositionEnabled().
+    if !m_renderView.settings().acceleratedCompositingForFixedPositionEnabled() {
+      return false
+    }
+
+    if isSticky {
+      return isAsyncScrollableStickyLayer(layer: layer)
+    }
+
+    if queryData.layoutUpToDate == .No {
+      queryData.reevaluateAfterLayout = true
+      return layer.isComposited()
+    }
+
+    let container = renderer.container()
+    assert(container != nil)
+
+    // Don't promote fixed position elements that are descendants of a non-view container, e.g. transformed elements.
+    // They will stay fixed wrt the container rather than the enclosing frame.
+    if CPtrToInt(container!.p) != CPtrToInt(m_renderView.p) {
+      queryData.nonCompositedForPositionReason = .NotCompositedForNonViewContainer
+      return false
+    }
+
+    let paintsContent = layer.isVisuallyNonEmpty() || layer.hasVisibleDescendant
+    if !paintsContent {
+      queryData.nonCompositedForPositionReason = .NotCompositedForNoVisibleContent
+      return false
+    }
+
+    let intersectsViewport = fixedLayerIntersectsViewport(layer: layer)
+    if !intersectsViewport {
+      queryData.nonCompositedForPositionReason = .NotCompositedForBoundsOutOfView
+      print("Layer \(layer) is outside the viewport")
+      return false
+    }
+
+    return true
   }
 
   private static func styleChangeMayAffectIndirectCompositingReasons(
@@ -539,6 +599,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  // FIXME: make the coordinated/async terminology consistent.
+  func isAsyncScrollableStickyLayer(layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private let m_renderView: RenderViewWrapper

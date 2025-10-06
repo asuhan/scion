@@ -24,6 +24,11 @@
  */
 
 class SettingsWrapper {
+  func acceleratedCompositingForFixedPositionEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func asyncOverflowScrollingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
