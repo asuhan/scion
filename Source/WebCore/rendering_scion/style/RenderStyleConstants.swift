@@ -581,6 +581,11 @@ enum TextIndentType: UInt8 {
   case Hanging
 }
 
+enum Isolation {
+  case Auto
+  case Isolate
+}
+
 // Fill, Stroke, ViewBox are just used for SVG.
 enum CSSBoxType: UInt8 {
   case BoxMissing

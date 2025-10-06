@@ -1006,6 +1006,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasTransform() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func transformOriginX() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1223,6 +1228,11 @@ class RenderStyleWrapper {
   }
 
   func blendMode() -> BlendMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isolation() -> Isolation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

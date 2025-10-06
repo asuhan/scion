@@ -296,7 +296,27 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private static func styleChangeMayAffectIndirectCompositingReasons(
     oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if RenderElementWrapper.createsGroupForStyle(style: newStyle)
+      != RenderElementWrapper.createsGroupForStyle(style: oldStyle)
+    {
+      return true
+    }
+    if newStyle.isolation() != oldStyle.isolation() {
+      return true
+    }
+    if newStyle.hasTransform() != oldStyle.hasTransform() {
+      return true
+    }
+    if optEq(newStyle.boxReflect(), oldStyle.boxReflect()) {
+      return true
+    }
+    if newStyle.usedTransformStyle3D() != oldStyle.usedTransformStyle3D() {
+      return true
+    }
+    if newStyle.hasPerspective() != oldStyle.hasPerspective() {
+      return true
+    }
+
+    return false
   }
 }

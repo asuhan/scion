@@ -122,6 +122,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_layoutIfNeeded(p)
   }
 
+  // Returns true if this renderer requires a new stacking context.
+  static func createsGroupForStyle(style: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTransparent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
