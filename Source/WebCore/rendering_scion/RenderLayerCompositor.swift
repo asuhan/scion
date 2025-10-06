@@ -76,6 +76,13 @@ private func recompositeChangeRequiresChildrenGeometryUpdate(
     || oldStyle.usedTransformStyle3D() != newStyle.usedTransformStyle3D()
 }
 
+// FIXME: remove and never ask questions about reflection layers.
+private func rendererForCompositingTests(layer: RenderLayerWrapper) -> RenderLayerModelObjectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -298,7 +305,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   class BackingSharingState {}
 
-  enum BackingRequired {
+  // Whether the given RL needs a compositing layer.
+  func needsToBeComposited(layer: RenderLayerWrapper, queryData: RequiresCompositingData) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private enum BackingRequired {
     case No
     case Yes
     case Unknown
@@ -308,6 +321,23 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, queryData: RequiresCompositingData,
     backingSharingState: BackingSharingState? = nil, backingRequired: BackingRequired = .Unknown
   ) -> Bool {
+    var backingRequired = backingRequired
+    if backingRequired == .Unknown {
+      backingRequired = needsToBeComposited(layer: layer, queryData: queryData) ? .Yes : .No
+    } else {
+      // Need to fetch viewportConstrainedNotCompositedReason, but without doing all the work that needsToBeComposited does.
+      requiresCompositingForPosition(
+        renderer: rendererForCompositingTests(layer: layer), layer: layer, queryData: queryData)
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForPosition(
+    renderer: RenderLayerModelObjectWrapper, layer: RenderLayerWrapper,
+    queryData: RequiresCompositingData
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
