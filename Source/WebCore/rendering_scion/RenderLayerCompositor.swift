@@ -417,8 +417,24 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Whether the layer could ever be composited.
   private func canBeComposited(layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_hasAcceleratedCompositing && layer.isSelfPaintingLayer {
+      if layer.renderer().isSkippedContent() {
+        return false
+      }
+
+      if !layer.isInsideFragmentedFlow() {
+        return true
+      }
+
+      // CSS Regions flow threads do not need to be composited as we use composited RenderFragmentContainers
+      // to render the background of the RenderFragmentedFlow.
+      if layer.isRenderFragmentedFlow() {
+        return false
+      }
+
+      return true
+    }
+    return false
   }
 
   // Make or destroy the backing for this layer; returns true if backing changed.
@@ -761,6 +777,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private let m_renderView: RenderViewWrapper
+
+  private let m_hasAcceleratedCompositing = true
 
   private let m_showDebugBorders = false
   private let m_showRepaintCounter = false

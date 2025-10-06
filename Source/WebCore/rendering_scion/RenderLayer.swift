@@ -2274,6 +2274,16 @@ class RenderLayerWrapper {
     viewportConstrainedNotCompositedReason = reason
   }
 
+  func isRenderFragmentedFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isInsideFragmentedFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
@@ -4963,7 +4973,7 @@ class RenderLayerWrapper {
   private var normalFlowListDirty = false
   private var hadNegativeZOrderList = false
 
-  private var isSelfPaintingLayer = false
+  var isSelfPaintingLayer = false
 
   // If have no self-painting descendants, we don't have to walk our children during painting. This can lead to
   // significant savings, especially if the tree has lots of non-self-painting layers grouped together (e.g. table cells).
