@@ -24,6 +24,18 @@
  */
 
 class GraphicsLayer {
+  // The given layer will replicate this layer and its children; the replica renders behind this layer.
+  func setReplicatedByLayer(layer: GraphicsLayer?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // The layer that replicates this layer (if any).
+  func replicaLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum ShouldClipToLayer {
     case DoNotClipToLayer
     case ClipToLayer

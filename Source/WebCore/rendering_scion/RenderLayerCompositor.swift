@@ -399,8 +399,31 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         layerChanged = true
       }
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if layer.backing != nil {
+        // If we're removing backing on a reflection, clear the source GraphicsLayer's pointer to
+        // its replica GraphicsLayer. In practice this should never happen because reflectee and reflection
+        // are both either composited, or not composited.
+        if layer.isReflection() {
+          let sourceLayer = (layer.renderer().parent()! as! RenderLayerModelObjectWrapper).layer()
+          if let backing = sourceLayer!.backing {
+            assert(optEq(backing.graphicsLayer()!.replicaLayer(), layer.backing!.graphicsLayer()))
+            backing.graphicsLayer()!.setReplicatedByLayer(layer: nil)
+          }
+        }
+
+        layer.clearBacking()
+        layerChanged = true
+
+        // This layer and all of its descendants have cached repaints rects that are relative to
+        // the repaint container, so change when compositing changes; we need to update them here,
+        // as long as shared backing isn't going to change our repaint container.
+        if !repaintTargetsSharedBacking(layer: layer, backingSharingState: backingSharingState) {
+          layer.computeRepaintRectsIncludingDescendants()
+        }
+
+        // If we need to repaint, do so now that we've removed the backing.
+        repaintLayer(layer: layer, backingSharingState: backingSharingState)
+      }
     }
 
     if layerChanged {
