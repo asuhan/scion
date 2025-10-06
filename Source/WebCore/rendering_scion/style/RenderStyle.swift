@@ -381,6 +381,11 @@ class RenderStyleWrapper {
     return LayoutBoxExtent(top: top, right: right, bottom: bottom, left: left)
   }
 
+  func opacity() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collapseWhiteSpace(mode: WhiteSpace) -> Bool {
     // Pre and prewrap do not collapse whitespace.
     return mode != .Pre && mode != .PreWrap && mode != .BreakSpaces
@@ -1310,6 +1315,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p))!
+  }
+
+  func usedPointerEvents() -> PointerEvents {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func preserves3D() -> Bool {

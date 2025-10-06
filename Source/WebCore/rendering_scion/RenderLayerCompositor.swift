@@ -32,6 +32,20 @@ private func styleAffectsLayerGeometry(style: RenderStyleWrapper) -> Bool {
   return style.hasClip() || style.clipPath() != nil || style.hasBorderRadius()
 }
 
+private func recompositeChangeRequiresGeometryUpdate(
+  oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func recompositeChangeRequiresChildrenGeometryUpdate(
+  oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -167,8 +181,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if diff.rawValue >= StyleDifference.RecompositeLayer.rawValue {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if layer.isComposited() {
+        let hitTestingStateChanged =
+          oldStyle != nil && (oldStyle!.usedPointerEvents() != newStyle.usedPointerEvents())
+        if layer.renderer() is RenderWidgetWrapper || hitTestingStateChanged {
+          // For RenderWidgets this is necessary to get iframe layers hooked up in response to scheduleInvalidateStyleAndLayerComposition().
+          layer.setNeedsCompositingConfigurationUpdate()
+        }
+        // If we're changing to/from 0 opacity, then we need to reconfigure the layer since we try to
+        // skip backing store allocation for opacity:0.
+        if oldStyle != nil && oldStyle!.opacity() != newStyle.opacity()
+          && (oldStyle!.opacity() == 0 || newStyle.opacity() == 0)
+        {
+          layer.setNeedsCompositingConfigurationUpdate()
+        }
+      }
+      if oldStyle != nil
+        && recompositeChangeRequiresGeometryUpdate(oldStyle: oldStyle!, newStyle: newStyle)
+      {
+        // FIXME: transform changes really need to trigger layout. See RenderElement::adjustStyleDifference().
+        layer.setNeedsPostLayoutCompositingUpdate()
+        layer.setNeedsCompositingGeometryUpdate()
+      }
+      if oldStyle != nil
+        && recompositeChangeRequiresChildrenGeometryUpdate(oldStyle: oldStyle!, newStyle: newStyle)
+      {
+        layer.setChildrenNeedCompositingGeometryUpdate()
+      }
     }
   }
 

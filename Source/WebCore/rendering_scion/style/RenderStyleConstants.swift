@@ -454,6 +454,20 @@ enum DisplayType: UInt8 {
   case None
 }
 
+enum PointerEvents: UInt8 {
+  case None
+  case Auto
+  case Stroke
+  case Fill
+  case Painted
+  case Visible
+  case VisibleStroke
+  case VisibleFill
+  case VisiblePainted
+  case BoundingBox
+  case All
+}
+
 enum BackfaceVisibility: UInt8 {
   case Visible
   case Hidden

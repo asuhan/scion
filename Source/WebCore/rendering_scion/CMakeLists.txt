@@ -71,6 +71,7 @@ target_sources(layout_scion PRIVATE
     RenderText.swift
     RenderTheme.swift
     RenderView.swift
+    RenderWidget.swift
     RenderTextControl.swift
     RenderTextControlMultiLine.swift
     StyledMarkedText.swift
