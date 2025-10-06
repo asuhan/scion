@@ -36,6 +36,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func removeBackingSharingLayer(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateConfigurationAfterStyleChange() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -60,6 +65,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // Returns true for a composited layer that has no backing store of its own, so
   // paints into some ancestor layer.
   func paintsIntoCompositedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func compositedBounds() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

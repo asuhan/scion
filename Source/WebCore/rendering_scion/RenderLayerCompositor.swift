@@ -97,10 +97,30 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     let intrinsic = false
   }
 
-  // Notify us that a layer has been removed
-  func layerWillBeRemoved(parent: RenderLayerWrapper, child: RenderLayerWrapper) {
+  // This method assumes that layout is up-to-date, unlike repaintOnCompositingChange().
+  func repaintInCompositedAncestor(layer: RenderLayerWrapper, rect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Notify us that a layer has been removed
+  func layerWillBeRemoved(parent: RenderLayerWrapper, child: RenderLayerWrapper) {
+    if parent.renderer().renderTreeBeingDestroyed() {
+      return
+    }
+
+    if child.isComposited() {
+      repaintInCompositedAncestor(layer: child, rect: child.backing!.compositedBounds())  // FIXME: do via dirty bits?
+    } else if child.paintsIntoProvidedBacking() {
+      let backingProviderLayer = child.backingProviderLayer!
+      // FIXME: Optimize this repaint.
+      backingProviderLayer.setBackingNeedsRepaint()
+      backingProviderLayer.backing!.removeBackingSharingLayer(layer: child)
+    } else {
+      return
+    }
+
+    child.setNeedsCompositingLayerConnection()
   }
 
   func layerStyleChanged(

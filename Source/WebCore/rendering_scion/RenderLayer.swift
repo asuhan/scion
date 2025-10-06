@@ -633,6 +633,13 @@ class RenderLayerWrapper {
       || hasIntrinsicallyCompositedDescendantsStatusDirty
   }
 
+  // Indicate that the layer contents need to be repainted. Only has an effect
+  // if layer compositing is being used.
+  func setBackingNeedsRepaint(shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
@@ -4948,7 +4955,7 @@ class RenderLayerWrapper {
   private var m_first: RenderLayerWrapper? = nil
   private var m_last: RenderLayerWrapper? = nil
 
-  private let backingProviderLayer: RenderLayerWrapper? = nil
+  let backingProviderLayer: RenderLayerWrapper? = nil
 
   // For layers that establish stacking contexts, m_posZOrderList holds a sorted list of all the
   // descendant layers within the stacking context that have z-indices of 0 or greater

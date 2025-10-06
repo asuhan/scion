@@ -25,6 +25,7 @@ target_sources(layout_scion PRIVATE
     GraphicsContextState.swift
     GraphicsContextStateSaver.swift
     GraphicsContextSwitcher.swift
+    GraphicsLayer.swift
     GraphicsLayerClient.swift
     GraphicsStyle.swift
     GraphicsTypes.swift
