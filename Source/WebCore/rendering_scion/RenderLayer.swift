@@ -2085,7 +2085,18 @@ class RenderLayerWrapper {
     return false
   }
 
+  func disconnectFromBackingProviderLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
+
+  @discardableResult
+  func ensureBacking() -> RenderLayerBacking? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func clearBacking(layerBeingDestroyed: Bool = false) {
     if backing == nil {

@@ -95,6 +95,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  // This will make a compositing layer at the root automatically, and hook up to
+  // the native view/window system.
+  func enableCompositingMode(enable: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // True when some content element other than the root is composited.
   func hasContentCompositingLayers() -> Bool {
     // TODO(asuhan): implement this
@@ -107,6 +114,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       .NoNotCompositedReason
     let reevaluateAfterLayout = false
     let intrinsic = false
+  }
+
+  // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
+  func repaintOnCompositingChange(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // This method assumes that layout is up-to-date, unlike repaintOnCompositingChange().
@@ -303,7 +316,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  class BackingSharingState {}
+  func useCoordinatedScrollingForLayer(layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  class BackingSharingState {
+    // Add a layer that would repaint into a layer in m_backingSharingLayers.
+    // That repaint has to wait until we've set the provider's backing-sharing layers.
+    func addLayerNeedingRepaint(layer: RenderLayerWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
   // Whether the given RL needs a compositing layer.
   func needsToBeComposited(layer: RenderLayerWrapper, queryData: RequiresCompositingData) -> Bool {
@@ -330,6 +355,56 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         renderer: rendererForCompositingTests(layer: layer), layer: layer, queryData: queryData)
     }
 
+    if backingRequired == .Yes {
+      // If we need to repaint, do so before making backing and disconnecting from the backing provider layer.
+      if layer.backing == nil {
+        repaintLayer(layer: layer, backingSharingState: backingSharingState)
+      }
+
+      layer.disconnectFromBackingProviderLayer()
+
+      enableCompositingMode()
+
+      if layer.backing == nil {
+        layer.ensureBacking()
+
+        if layer.isRenderViewLayer && useCoordinatedScrollingForLayer(layer: layer) {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func repaintTargetsSharedBacking(
+    layer: RenderLayerWrapper, backingSharingState: BackingSharingState?
+  ) -> Bool {
+    return backingSharingState != nil
+      && layerRepaintTargetsBackingSharingLayer(layer: layer, sharingState: backingSharingState!)
+  }
+
+  private func repaintLayer(layer: RenderLayerWrapper, backingSharingState: BackingSharingState?) {
+    if repaintTargetsSharedBacking(layer: layer, backingSharingState: backingSharingState) {
+      print(
+        "Layer \(layer)  needs to repaint into potential backing-sharing layer, postponing repaint")
+      backingSharingState!.addLayerNeedingRepaint(layer: layer)
+    } else {
+      repaintOnCompositingChange(layer: layer)
+    }
+  }
+
+  private func layerRepaintTargetsBackingSharingLayer(
+    layer: RenderLayerWrapper, sharingState: BackingSharingState
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
