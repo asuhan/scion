@@ -24,6 +24,12 @@
  */
 
 class ScrollingCoordinatorWrapper {
+  // Should be called whenever the set of fixed objects changes.
+  func frameViewFixedObjectsDidChange(frameView: LocalFrameViewWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Should be called whenever the root layer for the given frame view changes.
   func frameViewRootLayerDidChange(frameView: LocalFrameViewWrapper) {
     // TODO(asuhan): implement this

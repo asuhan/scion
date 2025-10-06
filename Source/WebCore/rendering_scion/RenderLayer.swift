@@ -2250,6 +2250,10 @@ class RenderLayerWrapper {
     case NotCompositedForNoVisibleContent
   }
 
+  func setViewportConstrainedNotCompositedReason(reason: ViewportConstrainedNotCompositedReason) {
+    viewportConstrainedNotCompositedReason = reason
+  }
+
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
@@ -4964,7 +4968,7 @@ class RenderLayerWrapper {
   private let isHiddenByOverflowTruncation = false
   private let isPaintingSVGResourceLayer = false
 
-  private let viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =
+  var viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =
     .NoNotCompositedReason
 
   private var blendMode: BlendMode = .Normal

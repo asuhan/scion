@@ -454,8 +454,27 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       layer.clearClipRectsIncludingDescendants(typeToClear: .PaintingClipRects)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If a fixed position layer gained/lost a backing or the reason not compositing it changed,
+    // the scrolling coordinator needs to recalculate whether it can do fast scrolling.
+    if layer.renderer().isFixedPositioned() {
+      if layer.viewportConstrainedNotCompositedReason != queryData.nonCompositedForPositionReason {
+        layer.setViewportConstrainedNotCompositedReason(
+          reason: queryData.nonCompositedForPositionReason)
+        layerChanged = true
+      }
+      if layerChanged, let scrollingCoordinator = scrollingCoordinator() {
+        scrollingCoordinator.frameViewFixedObjectsDidChange(frameView: m_renderView.frameView())
+      }
+    } else {
+      layer.setViewportConstrainedNotCompositedReason(reason: .NoNotCompositedReason)
+    }
+
+    if let layerBacking = layer.backing {
+      layerBacking.updateDebugIndicators(
+        showBorder: m_showDebugBorders, showRepaintCounter: m_showRepaintCounter)
+    }
+
+    return layerChanged
   }
 
   private func repaintTargetsSharedBacking(
@@ -523,6 +542,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private let m_renderView: RenderViewWrapper
+
+  private let m_showDebugBorders = false
+  private let m_showRepaintCounter = false
 
   private let m_compositing = false
 }
