@@ -468,9 +468,22 @@ enum PointerEvents: UInt8 {
   case All
 }
 
+enum TransformStyle3D: UInt8 {
+  case Flat
+  case Preserve3D
+}
+
 enum BackfaceVisibility: UInt8 {
   case Visible
   case Hidden
+}
+
+enum TransformBox: UInt8 {
+  case StrokeBox
+  case ContentBox
+  case BorderBox
+  case FillBox
+  case ViewBox
 }
 
 enum Hyphens: UInt8 {

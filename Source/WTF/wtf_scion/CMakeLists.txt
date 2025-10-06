@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     ListSet.swift
     MathExtras.swift
     MonotonicTime.swift
+    OptionalComparison.swift
     PriorityQueue.swift
     SaturatedArithmetic.swift
 )

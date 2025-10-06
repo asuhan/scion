@@ -25,3 +25,9 @@
 
 // scrollPosition is in content coordinates (0,0 is at scrollOrigin), so may have negative components.
 typealias ScrollPosition = IntPoint
+
+enum OverscrollBehavior: UInt8 {
+  case Auto
+  case Contain
+  case None
+}

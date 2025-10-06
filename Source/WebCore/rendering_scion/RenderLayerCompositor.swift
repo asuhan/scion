@@ -32,11 +32,40 @@ private func styleAffectsLayerGeometry(style: RenderStyleWrapper) -> Bool {
   return style.hasClip() || style.clipPath() != nil || style.hasBorderRadius()
 }
 
+private func optEq<T: AnyObject>(_ a: T?, _ b: T?) -> Bool {
+  if a != nil && b != nil {
+    return ObjectIdentifier(a!) == ObjectIdentifier(b!)
+  }
+  if a == nil && b == nil {
+    return true
+  }
+  return false
+}
+
 private func recompositeChangeRequiresGeometryUpdate(
   oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return oldStyle.transform() != newStyle.transform()
+    || optEq(oldStyle.translate(), newStyle.translate())
+    || optEq(oldStyle.scale(), newStyle.scale())
+    || optEq(oldStyle.rotate(), newStyle.rotate())
+    || oldStyle.transformBox() != newStyle.transformBox()
+    || oldStyle.transformOriginX() != newStyle.transformOriginX()
+    || oldStyle.transformOriginY() != newStyle.transformOriginY()
+    || oldStyle.transformOriginZ() != newStyle.transformOriginZ()
+    || oldStyle.usedTransformStyle3D() != newStyle.usedTransformStyle3D()
+    || oldStyle.perspective() != newStyle.perspective()
+    || oldStyle.perspectiveOriginX() != newStyle.perspectiveOriginX()
+    || oldStyle.perspectiveOriginY() != newStyle.perspectiveOriginY()
+    || oldStyle.backfaceVisibility() != newStyle.backfaceVisibility()
+    || !arePointingToEqualData(oldStyle.offsetPath(), newStyle.offsetPath())
+    || oldStyle.offsetAnchor() != newStyle.offsetAnchor()
+    || oldStyle.offsetPosition() != newStyle.offsetPosition()
+    || oldStyle.offsetDistance() != newStyle.offsetDistance()
+    || oldStyle.offsetRotate() != newStyle.offsetRotate()
+    || !arePointingToEqualData(oldStyle.clipPath(), newStyle.clipPath())
+    || oldStyle.overscrollBehaviorX() != newStyle.overscrollBehaviorX()
+    || oldStyle.overscrollBehaviorY() != newStyle.overscrollBehaviorY()
 }
 
 private func recompositeChangeRequiresChildrenGeometryUpdate(

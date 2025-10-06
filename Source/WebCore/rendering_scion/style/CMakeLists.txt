@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     BorderData.swift
     FillLayer.swift
     NinePieceImage.swift
+    OffsetRotation.swift
     RenderStyle.swift
     RenderStyleConstants.swift
     ShadowData.swift

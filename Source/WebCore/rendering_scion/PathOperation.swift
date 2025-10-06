@@ -28,8 +28,13 @@
  * SUCH DAMAGE.
  */
 
-class PathOperation {
+class PathOperation: Equatable {
   let referenceBox: CSSBoxType = .BoxMissing
+
+  static func == (lhs: PathOperation, rhs: PathOperation) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 final class ReferencePathOperation: PathOperation {}

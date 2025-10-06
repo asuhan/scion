@@ -1,10 +1,9 @@
 /*
  * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
- *           (C) 2000 Antti Koivisto (koivisto@kde.org)
+ *           (C) 1999-2000 Antti Koivisto (koivisto@kde.org)
  *           (C) 2000 Dirk Mueller (mueller@kde.org)
- * Copyright (C) 2003-2008 Apple Inc. All rights reserved.
+ * Copyright (C) 2003-2008, 2017 Apple Inc. All rights reserved.
  * Copyright (C) 2006 Graham Dennis (graham.dennis@gmail.com)
- * Copyright (C) 1999 Antti Koivisto (koivisto@kde.org)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,16 +19,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
+ *
  */
 
-class TransformOperations: Equatable {
-  init(operations: [TransformOperation]) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func == (a: TransformOperations, b: TransformOperations) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+final class RotateTransformOperation: TransformOperation {}

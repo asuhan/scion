@@ -293,6 +293,16 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func overscrollBehaviorX() -> OverscrollBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func overscrollBehaviorY() -> OverscrollBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usedVisibility() -> Visibility {
     if p == nil {
       // TODO(asuhan): implement this
@@ -981,6 +991,46 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func transform() -> TransformOperations {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformOriginX() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformOriginY() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformOriginZ() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformBox() -> TransformBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func rotate() -> RotateTransformOperation? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scale() -> ScaleTransformOperation? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func translate() -> TranslateTransformOperation? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textEmphasisMarkString() -> AtomStringWrapper {
     if p == nil {
       // TODO(asuhan): implement this
@@ -1036,6 +1086,21 @@ class RenderStyleWrapper {
   ]
 
   func backfaceVisibility() -> BackfaceVisibility {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func perspective() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func perspectiveOriginX() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func perspectiveOriginY() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1322,6 +1387,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func usedTransformStyle3D() -> TransformStyle3D {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func preserves3D() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1366,6 +1436,31 @@ class RenderStyleWrapper {
   func colorResolvingCurrentColor(color: StyleColorWrapper, visitedLink: Bool = false)
     -> ColorWrapper
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func offsetPath() -> PathOperation? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func offsetDistance() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func offsetPosition() -> LengthPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func offsetAnchor() -> LengthPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func offsetRotate() -> OffsetRotation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
