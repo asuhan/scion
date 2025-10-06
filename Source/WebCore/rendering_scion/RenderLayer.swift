@@ -640,6 +640,14 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // The rect is in the coordinate space of the layer's render object.
+  func setBackingNeedsRepaintInRect(
+    r: LayoutRectWrapper, shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
@@ -4896,7 +4904,7 @@ class RenderLayerWrapper {
 
   private var savedAlphaForTransparency: Float32? = nil
 
-  private var isRenderViewLayer = false
+  var isRenderViewLayer = false
   private var forcedStackingContext = false
 
   private var isNormalFlowOnly = false

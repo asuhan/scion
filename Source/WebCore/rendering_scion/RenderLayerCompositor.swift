@@ -83,6 +83,11 @@ private func recompositeChangeRequiresChildrenGeometryUpdate(
 //
 // There is one RenderLayerCompositor per RenderView.
 final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
+  init(renderView: RenderViewWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // True when some content element other than the root is composited.
   func hasContentCompositingLayers() -> Bool {
     // TODO(asuhan): implement this
@@ -99,8 +104,22 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // This method assumes that layout is up-to-date, unlike repaintOnCompositingChange().
   func repaintInCompositedAncestor(layer: RenderLayerWrapper, rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let compositedAncestor = layer.enclosingCompositingLayerForRepaint(includeSelf: .ExcludeSelf)
+      .layer
+    if compositedAncestor == nil {
+      return
+    }
+
+    assert(compositedAncestor!.backing != nil)
+    var repaintRect = rect
+    repaintRect.move(size: layer.offsetFromAncestor(ancestorLayer: compositedAncestor))
+    compositedAncestor!.setBackingNeedsRepaintInRect(r: repaintRect)
+
+    // The contents of this layer may be moving from a GraphicsLayer to the window,
+    // so we need to make sure the window system synchronizes those changes on the screen.
+    if compositedAncestor!.isRenderViewLayer {
+      m_renderView.frameView().setNeedsOneShotDrawingSynchronization()
+    }
   }
 
   // Notify us that a layer has been removed
@@ -319,4 +338,6 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     return false
   }
+
+  private let m_renderView: RenderViewWrapper
 }

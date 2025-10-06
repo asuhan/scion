@@ -33,6 +33,13 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
   }
 
+  // Called when changes to the GraphicsLayer hierarchy have to be synchronized with
+  // content rendered via the normal painting path.
+  func setNeedsOneShotDrawingSynchronization() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func baseBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
