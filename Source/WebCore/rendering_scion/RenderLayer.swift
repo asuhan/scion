@@ -84,6 +84,18 @@ enum ShouldApplyRootOffsetToFragments {
   case IgnoreRootOffsetForFragments
 }
 
+enum IndirectCompositingReason {
+  case None
+  case Clipping
+  case Stacking
+  case OverflowScrollPositioning
+  case Overlap
+  case BackgroundLayer
+  case GraphicalEffect  // opacity mask filter transform etc.
+  case Perspective
+  case Preserve3D
+}
+
 private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: Bool) {
   if !has3DRendering {
     matrix.makeAffine()
@@ -4930,6 +4942,8 @@ class RenderLayerWrapper {
     }
   }
 
+  func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
+
   private let p: UnsafeMutableRawPointer
   // Native fields below.
 
@@ -4976,6 +4990,7 @@ class RenderLayerWrapper {
   private let isHiddenByOverflowTruncation = false
   private let isPaintingSVGResourceLayer = false
 
+  private let indirectCompositingReason: IndirectCompositingReason = .None
   var viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =
     .NoNotCompositedReason
 

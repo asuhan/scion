@@ -369,10 +369,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Whether the given RL needs a compositing layer.
   func needsToBeComposited(layer: RenderLayerWrapper, queryData: RequiresCompositingData) -> Bool {
+    if !canBeComposited(layer: layer) {
+      return false
+    }
+
+    return requiresCompositingLayer(layer: layer, queryData: queryData)
+      || layer.mustCompositeForIndirectReasons()
+      || (usesCompositing() && layer.isRenderViewLayer)
+  }
+
+  // Whether the layer has an intrinsic need for compositing layer.
+  // Note: this specifies whether the RL needs a compositing layer for intrinsic reasons.
+  // Use needsToBeComposited() to determine if a RL actually needs a compositing layer.
+  // FIXME: is clipsCompositingDescendants() an intrinsic reason?
+  func requiresCompositingLayer(layer: RenderLayerWrapper, queryData: RequiresCompositingData)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  // Whether the layer could ever be composited.
+  private func canBeComposited(layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Make or destroy the backing for this layer; returns true if backing changed.
   private enum BackingRequired {
     case No
     case Yes
