@@ -346,12 +346,25 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   class BackingSharingState {
+    struct Provider {
+      let providerLayer: RenderLayerWrapper? = nil
+      let sharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
+      let absoluteBounds = LayoutRectWrapper()
+    }
+
+    func backingProviderForLayer(layer: RenderLayerWrapper) -> Provider? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // Add a layer that would repaint into a layer in m_backingSharingLayers.
     // That repaint has to wait until we've set the provider's backing-sharing layers.
     func addLayerNeedingRepaint(layer: RenderLayerWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    let backingProviderCandidates: [Provider] = []
   }
 
   // Whether the given RL needs a compositing layer.
@@ -502,8 +515,28 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func layerRepaintTargetsBackingSharingLayer(
     layer: RenderLayerWrapper, sharingState: BackingSharingState
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if sharingState.backingProviderCandidates.isEmpty {
+      return false
+    }
+
+    var currLayer: RenderLayerWrapper? = layer
+    while currLayer != nil {
+      if compositedWithOwnBackingStore(layer: currLayer!) {
+        return false
+      }
+
+      if currLayer!.paintsIntoProvidedBacking() {
+        return false
+      }
+
+      if sharingState.backingProviderForLayer(layer: currLayer!) != nil {
+        return true
+      }
+
+      currLayer = currLayer!.paintOrderParent()
+    }
+
+    return false
   }
 
   private func scrollingCoordinator() -> ScrollingCoordinatorWrapper? {

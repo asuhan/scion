@@ -111,7 +111,7 @@ private func canCreateStackingContext(layer: RenderLayerWrapper) -> Bool {
     || layer.establishesTopLayer()
 }
 
-private func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
+func compositedWithOwnBackingStore(layer: RenderLayerWrapper) -> Bool {
   return layer.isComposited() && !layer.backing!.paintsIntoCompositedAncestor()
 }
 
