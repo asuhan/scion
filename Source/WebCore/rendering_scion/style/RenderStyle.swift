@@ -473,6 +473,11 @@ class RenderStyleWrapper {
     return TextAlignLast(rawValue: wk_interop.RenderStyle_textAlignLast(p))!
   }
 
+  func hasClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unicodeBidi() -> UnicodeBidi {
     return nonInheritedFlags.unicodeBidi
   }
@@ -1110,6 +1115,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return FlowDirection(rawValue: wk_interop.RenderStyle_blockFlowDirection(p))!
+  }
+
+  func imageRendering() -> ImageRendering {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func filter() -> FilterOperations {

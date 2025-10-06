@@ -28,6 +28,10 @@ private func clippingChanged(oldStyle: RenderStyleWrapper, newStyle: RenderStyle
   fatalError("Not implemented")
 }
 
+private func styleAffectsLayerGeometry(style: RenderStyleWrapper) -> Bool {
+  return style.hasClip() || style.clipPath() != nil || style.hasBorderRadius()
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -143,8 +147,23 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if diff.rawValue >= StyleDifference.Repaint.rawValue {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Visibility change may affect geometry of the enclosing composited layer.
+      if oldStyle != nil && oldStyle!.usedVisibility() != newStyle.usedVisibility() {
+        layer.setNeedsCompositingGeometryUpdate()
+      }
+
+      // We'll get a diff of Repaint when things like clip-path change; these might affect layer or inner-layer geometry.
+      if layer.isComposited() && oldStyle != nil {
+        if styleAffectsLayerGeometry(style: oldStyle!) || styleAffectsLayerGeometry(style: newStyle)
+        {
+          layer.setNeedsCompositingGeometryUpdate()
+        }
+      }
+
+      // image rendering mode can determine whether we use device pixel ratio for the backing store.
+      if oldStyle != nil && oldStyle!.imageRendering() != newStyle.imageRendering() {
+        layer.setNeedsCompositingConfigurationUpdate()
+      }
     }
 
     if diff.rawValue >= StyleDifference.RecompositeLayer.rawValue {

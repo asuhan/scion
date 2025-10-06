@@ -501,6 +501,14 @@ enum TextWrapStyle: UInt8 {
   case Stable
 }
 
+enum ImageRendering: UInt8 {
+  case Auto
+  case OptimizeSpeed
+  case OptimizeQuality
+  case CrispEdges
+  case Pixelated
+}
+
 enum Order: UInt8 {
   case Logical = 0
   case Visual = 1
