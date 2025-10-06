@@ -117,7 +117,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var nonCompositedForPositionReason: RenderLayerWrapper.ViewportConstrainedNotCompositedReason =
       .NoNotCompositedReason
     var reevaluateAfterLayout = false
-    let intrinsic = false
+    var intrinsic = false
   }
 
   func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
@@ -368,12 +368,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   // Whether the given RL needs a compositing layer.
-  func needsToBeComposited(layer: RenderLayerWrapper, queryData: RequiresCompositingData) -> Bool {
+  func needsToBeComposited(layer: RenderLayerWrapper, queryData: inout RequiresCompositingData)
+    -> Bool
+  {
     if !canBeComposited(layer: layer) {
       return false
     }
 
-    return requiresCompositingLayer(layer: layer, queryData: queryData)
+    return requiresCompositingLayer(layer: layer, queryData: &queryData)
       || layer.mustCompositeForIndirectReasons()
       || (usesCompositing() && layer.isRenderViewLayer)
   }
@@ -382,11 +384,35 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Note: this specifies whether the RL needs a compositing layer for intrinsic reasons.
   // Use needsToBeComposited() to determine if a RL actually needs a compositing layer.
   // FIXME: is clipsCompositingDescendants() an intrinsic reason?
-  func requiresCompositingLayer(layer: RenderLayerWrapper, queryData: RequiresCompositingData)
+  func requiresCompositingLayer(layer: RenderLayerWrapper, queryData: inout RequiresCompositingData)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = rendererForCompositingTests(layer: layer)
+
+    if renderer.layer() == nil {
+      fatalError("Not reached")
+    }
+
+    // The root layer always has a compositing layer, but it may not have backing.
+    if requiresCompositingForTransform(renderer: renderer)
+      || requiresCompositingForAnimation(renderer: renderer)
+      || requiresCompositingForPosition(
+        renderer: renderer, layer: renderer.layer()!, queryData: &queryData)
+      || requiresCompositingForCanvas(renderer: renderer)
+      || requiresCompositingForFilters(renderer: renderer)
+      || requiresCompositingForWillChange(renderer: renderer)
+      || requiresCompositingForBackfaceVisibility(renderer: renderer)
+      || requiresCompositingForViewTransition(renderer: renderer)
+      || requiresCompositingForVideo(renderer: renderer)
+      || requiresCompositingForModel(renderer: renderer)
+      || requiresCompositingForFrame(renderer: renderer, queryData: queryData)
+      || requiresCompositingForPlugin(renderer: renderer, queryData: queryData)
+      || requiresCompositingForOverflowScrolling(layer: renderer.layer()!, queryData: queryData)
+    {
+      queryData.intrinsic = true
+      return true
+    }
+    return false
   }
 
   // Whether the layer could ever be composited.
@@ -409,7 +435,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var layerChanged = false
     var backingRequired = backingRequired
     if backingRequired == .Unknown {
-      backingRequired = needsToBeComposited(layer: layer, queryData: queryData) ? .Yes : .No
+      backingRequired = needsToBeComposited(layer: layer, queryData: &queryData) ? .Yes : .No
     } else {
       // Need to fetch viewportConstrainedNotCompositedReason, but without doing all the work that needsToBeComposited does.
       requiresCompositingForPosition(
@@ -563,6 +589,77 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func scrollingCoordinator() -> ScrollingCoordinatorWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Non layout-dependent
+  private func requiresCompositingForAnimation(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForTransform(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForBackfaceVisibility(renderer: RenderLayerModelObjectWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForViewTransition(renderer: RenderLayerModelObjectWrapper) -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForVideo(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForCanvas(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForFilters(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForWillChange(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForModel(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Layout-dependent
+  private func requiresCompositingForPlugin(
+    renderer: RenderLayerModelObjectWrapper, queryData: RequiresCompositingData
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForFrame(
+    renderer: RenderLayerModelObjectWrapper, queryData: RequiresCompositingData
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresCompositingForOverflowScrolling(
+    layer: RenderLayerWrapper, queryData: RequiresCompositingData
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
