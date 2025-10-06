@@ -1095,6 +1095,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasPerspective() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func perspectiveOriginX() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

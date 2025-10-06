@@ -71,8 +71,8 @@ private func recompositeChangeRequiresGeometryUpdate(
 private func recompositeChangeRequiresChildrenGeometryUpdate(
   oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return oldStyle.hasPerspective() != newStyle.hasPerspective()
+    || oldStyle.usedTransformStyle3D() != newStyle.usedTransformStyle3D()
 }
 
 // RenderLayerCompositor manages the hierarchy of
