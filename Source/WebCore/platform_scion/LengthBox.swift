@@ -19,6 +19,15 @@
     Boston, MA 02110-1301, USA.
 */
 
+class LengthBox: Equatable {
+  static func == (lhs: LengthBox, rhs: LengthBox) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let base = RectEdges<LengthWrapper>()
+}
+
 typealias IntBoxExtent = RectEdges<Int32>
 
 typealias IntOutsets = IntBoxExtent

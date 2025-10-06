@@ -288,6 +288,11 @@ class RenderStyleWrapper {
     return Overflow(rawValue: wk_interop.RenderStyle_overflowX(p))!
   }
 
+  func overflowY() -> Overflow {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isOverflowVisible() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -486,6 +491,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return TextAlignLast(rawValue: wk_interop.RenderStyle_textAlignLast(p))!
+  }
+
+  func clip() -> LengthBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func hasClip() -> Bool {

@@ -24,8 +24,9 @@
  */
 
 private func clippingChanged(oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return oldStyle.overflowX() != newStyle.overflowX()
+    || oldStyle.overflowY() != newStyle.overflowY()
+    || oldStyle.hasClip() != newStyle.hasClip() || oldStyle.clip() != newStyle.clip()
 }
 
 private func styleAffectsLayerGeometry(style: RenderStyleWrapper) -> Bool {
