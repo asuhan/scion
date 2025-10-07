@@ -122,8 +122,18 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // This will make a compositing layer at the root automatically, and hook up to
   // the native view/window system.
   func enableCompositingMode(enable: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if enable != m_compositing {
+      m_compositing = enable
+
+      if m_compositing {
+        ensureRootLayer()
+        notifyIFramesOfCompositingChange()
+      } else {
+        destroyRootLayer()
+      }
+
+      m_renderView.layer()!.setNeedsPostLayoutCompositingUpdate()
+    }
   }
 
   // True when some content element other than the root is composited.
@@ -651,6 +661,21 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func ensureRootLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func destroyRootLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func notifyIFramesOfCompositingChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func scrollingCoordinator() -> ScrollingCoordinatorWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -974,5 +999,5 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private let m_showDebugBorders = false
   private let m_showRepaintCounter = false
 
-  private let m_compositing = false
+  private var m_compositing = false
 }
