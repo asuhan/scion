@@ -94,3 +94,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 }
+
+enum CanvasCompositingStrategy {
+  case CanvasPaintedToEnclosingLayer
+  case CanvasPaintedToLayer
+  case CanvasAsLayerContents
+}
+
+func canvasCompositingStrategy(renderer: RenderObjectWrapper) -> CanvasCompositingStrategy {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

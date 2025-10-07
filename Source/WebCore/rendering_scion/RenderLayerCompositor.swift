@@ -684,8 +684,24 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForCanvas(renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_compositingTriggers.contains(.CanvasTrigger) {
+      return false
+    }
+
+    if !renderer.isRenderHTMLCanvas() {
+      return false
+    }
+
+    let compositingStrategy = canvasCompositingStrategy(renderer: renderer)
+    if compositingStrategy == .CanvasAsLayerContents {
+      return true
+    }
+
+    if m_compositingPolicy == .Normal {
+      return compositingStrategy == .CanvasPaintedToLayer
+    }
+
+    return false
   }
 
   private func requiresCompositingForFilters(renderer: RenderLayerModelObjectWrapper) -> Bool {
