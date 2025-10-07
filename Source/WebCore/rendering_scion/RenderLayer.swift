@@ -4996,6 +4996,7 @@ class RenderLayerWrapper {
   private let hasCompositingDescendant = false  // In the z-order tree.
 
   private let m_hasTransformedAncestor = false
+  let has3DTransformedAncestor = false
 
   private let isHiddenByOverflowTruncation = false
   private let isPaintingSVGResourceLayer = false

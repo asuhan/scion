@@ -651,8 +651,26 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForBackfaceVisibility(renderer: RenderLayerModelObjectWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_compositingTriggers.contains(.ThreeDTransformTrigger) {
+      return false
+    }
+
+    if renderer.style().backfaceVisibility() != .Hidden {
+      return false
+    }
+
+    if renderer.layer()!.has3DTransformedAncestor {
+      return true
+    }
+
+    // FIXME: workaround for webkit.org/b/132801
+    if let stackingContext = renderer.layer()!.stackingContext(),
+      stackingContext.renderer().style().preserves3D()
+    {
+      return true
+    }
+
+    return false
   }
 
   private func requiresCompositingForViewTransition(renderer: RenderLayerModelObjectWrapper) -> Bool
