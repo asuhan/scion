@@ -32,4 +32,11 @@ class TransformOperations: Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Return true if any of the operation types are 3D operation types (even if the
+  // values describe affine transforms)
+  func has3DOperation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

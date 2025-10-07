@@ -51,4 +51,9 @@ enum TransformOperationType {
 
 class TransformOperation {
   typealias `Type` = TransformOperationType
+
+  func is3DOperation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

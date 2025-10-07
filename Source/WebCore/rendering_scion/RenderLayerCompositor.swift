@@ -84,8 +84,10 @@ private func rendererForCompositingTests(layer: RenderLayerWrapper) -> RenderLay
 }
 
 private func styleHas3DTransformOperation(style: RenderStyleWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return style.transform().has3DOperation()
+    || (style.translate() != nil && style.translate()!.is3DOperation())
+    || (style.scale() != nil && style.scale()!.is3DOperation())
+    || (style.rotate() != nil && style.rotate()!.is3DOperation())
 }
 
 private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrapper) -> Bool {
