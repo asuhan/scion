@@ -24,6 +24,12 @@
  */
 
 class ScrollingCoordinatorWrapper {
+  // Return whether this scrolling coordinator handles scrolling for the given overflow scroll layer.
+  func coordinatesScrollingForOverflowLayer(layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Should be called whenever the set of fixed objects changes.
   func frameViewFixedObjectsDidChange(frameView: LocalFrameViewWrapper) {
     // TODO(asuhan): implement this

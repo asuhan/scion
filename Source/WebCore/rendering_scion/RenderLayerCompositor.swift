@@ -419,8 +419,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func useCoordinatedScrollingForLayer(layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layer.isRenderViewLayer && hasCoordinatedScrolling() {
+      return true
+    }
+
+    if let scrollingCoordinator = scrollingCoordinator() {
+      return scrollingCoordinator.coordinatesScrollingForOverflowLayer(layer: layer)
+    }
+
+    return false
   }
 
   func updateRootContentLayerClipping() {
