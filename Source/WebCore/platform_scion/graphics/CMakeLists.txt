@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     DecodingOptions.swift
     DestinationColorSpace.swift
     FloatPoint.swift
+    FloatPoint3D.swift
     FloatQuad.swift
     FloatRect.swift
     FloatRoundedRect.swift

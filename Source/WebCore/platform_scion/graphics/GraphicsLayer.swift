@@ -53,6 +53,12 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // Add child layers. If the child is already parented, it will be removed from its old parent.
+  func addChild(childLayer: GraphicsLayer) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The given layer will replicate this layer and its children; the replica renders behind this layer.
   func setReplicatedByLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
@@ -70,7 +76,17 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setAnchorPoint(p: FloatPoint3D) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setSize(size: FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMasksToBounds(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

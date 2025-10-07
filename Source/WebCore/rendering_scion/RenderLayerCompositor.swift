@@ -684,6 +684,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func scheduleRenderingUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func ensureRootLayer() {
     let expectedAttachment: RootLayerAttachment =
       isRootFrameCompositor()
@@ -695,8 +700,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     if m_rootContentsLayer == nil {
       m_rootContentsLayer = GraphicsLayer.create(factory: graphicsLayerFactory(), client: self)
       let overflowRect = snappedIntRect(rect: m_renderView.layoutOverflowRect())
-      // TODO(asuhan): use a static string
-      m_rootContentsLayer!.setName(name: "content root")
+      m_rootContentsLayer!.setName(name: "content root")  // TODO(asuhan): use a static string
       m_rootContentsLayer!.setSize(
         size: FloatSize(width: Float32(overflowRect.maxX()), height: Float32(overflowRect.maxY())))
       m_rootContentsLayer!.setPosition(p: FloatPoint())
@@ -706,8 +710,43 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if requiresScrollLayer(attachment: expectedAttachment) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if m_overflowControlsHostLayer == nil {
+        assert(m_scrolledContentsLayer == nil)
+        assert(m_clipLayer == nil)
+
+        // Create a layer to host the clipping layer and the overflow controls layers.
+        m_overflowControlsHostLayer = GraphicsLayer.create(
+          factory: graphicsLayerFactory(), client: self)
+        m_overflowControlsHostLayer!.setName(name: "overflow controls host")  // TODO(asuhan): use a static string
+
+        m_scrolledContentsLayer = GraphicsLayer.create(
+          factory: graphicsLayerFactory(), client: self, layerType: .ScrolledContents)
+        m_scrolledContentsLayer!.setName(name: "frame scrolled contents")  // TODO(asuhan): use a static string
+        m_scrolledContentsLayer!.setAnchorPoint(p: FloatPoint3D())
+
+        // FIXME: m_scrollContainerLayer and m_clipLayer have similar roles here, but m_clipLayer has some special positioning to
+        // account for clipping and top content inset (see LocalFrameView::yPositionForInsetClipLayer()).
+        if m_scrollContainerLayer == nil {
+          m_clipLayer = GraphicsLayer.create(factory: graphicsLayerFactory(), client: self)
+          m_clipLayer!.setName(name: "frame clipping")  // TODO(asuhan): use a static string
+          m_clipLayer!.setMasksToBounds(b: true)
+          m_clipLayer!.setAnchorPoint(p: FloatPoint3D())
+
+          m_clipLayer!.addChild(childLayer: m_scrolledContentsLayer!)
+          m_overflowControlsHostLayer!.addChild(childLayer: m_clipLayer!)
+        }
+
+        m_scrolledContentsLayer!.addChild(childLayer: m_rootContentsLayer!)
+
+        updateScrollLayerClipping()
+        updateOverflowControlsLayers()
+
+        if hasCoordinatedScrolling() {
+          scheduleRenderingUpdate()
+        } else {
+          updateScrollLayerPosition()
+        }
+      }
     } else {
       if m_overflowControlsHostLayer != nil {
         GraphicsLayer.unparentAndClear(layer: m_overflowControlsHostLayer)
@@ -736,6 +775,21 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func detachRootLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOverflowControlsLayers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollLayerPosition() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollLayerClipping() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
