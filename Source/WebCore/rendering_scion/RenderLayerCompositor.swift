@@ -399,6 +399,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func layerForClipping() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum RootLayerAttachment {
     case RootLayerUnattached
     case RootLayerAttachedViaChromeClient
@@ -1016,6 +1021,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollLayerClipping() {
+    let layerForClipping = layerForClipping()
+    if layerForClipping == nil {
+      return
+    }
+
+    let layerSize = m_renderView.frameView().sizeForVisibleContent()
+    layerForClipping!.setSize(size: FloatSize(size: layerSize))
+    layerForClipping!.setPosition(p: positionForClipLayer())
+  }
+
+  private func positionForClipLayer() -> FloatPoint {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

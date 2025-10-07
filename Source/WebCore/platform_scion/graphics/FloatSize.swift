@@ -34,6 +34,11 @@ struct FloatSize {
     self.height = height
   }
 
+  init(size: IntSize) {
+    width = Float32(size.width)
+    height = Float32(size.height)
+  }
+
   mutating func setWidth(width: Float32) { self.width = width }
   mutating func setHeight(height: Float32) { self.height = height }
 
