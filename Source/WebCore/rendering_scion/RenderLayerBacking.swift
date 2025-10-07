@@ -99,6 +99,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let isFrameLayerWithTiledBacking = false
 }
 
 enum CanvasCompositingStrategy {

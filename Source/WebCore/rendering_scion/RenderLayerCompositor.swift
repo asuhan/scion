@@ -1413,8 +1413,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func documentUsesTiledBacking() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let layer = m_renderView.layer()
+    if layer == nil {
+      return false
+    }
+
+    if let backing = layer!.backing {
+      return backing.isFrameLayerWithTiledBacking
+    }
+
+    return false
   }
 
   private func isRootFrameCompositor() -> Bool {
