@@ -22,4 +22,9 @@
  *
  */
 
-final class RotateTransformOperation: TransformOperation {}
+final class RotateTransformOperation: TransformOperation {
+  func isRepresentableIn2D() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

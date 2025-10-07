@@ -91,8 +91,10 @@ private func styleHas3DTransformOperation(style: RenderStyleWrapper) -> Bool {
 }
 
 private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return style.transform().isRepresentableIn2D()
+    && (style.translate() != nil || style.translate()!.isRepresentableIn2D())
+    && (style.scale() != nil || style.scale()!.isRepresentableIn2D())
+    && (style.rotate() != nil || style.rotate()!.isRepresentableIn2D())
 }
 
 // RenderLayerCompositor manages the hierarchy of

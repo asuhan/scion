@@ -30,4 +30,9 @@ final class ScaleTransformOperation: TransformOperation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isRepresentableIn2D() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
