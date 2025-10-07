@@ -131,8 +131,30 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(layer.renderer().isFixedPositioned())
+
+    // Fixed position elements that are invisible in the current view don't get their own layer.
+    // FIXME: We shouldn't have to check useFixedLayout() here; one of the viewport rects needs to give the correct answer.
+    var viewBounds = LayoutRectWrapper()
+    if m_renderView.frameView().useFixedLayout() {
+      viewBounds = LayoutRectWrapper(rect: m_renderView.unscaledDocumentRect())
+    } else {
+      viewBounds = m_renderView.frameView().rectForFixedPositionLayout()
+    }
+
+    let layerBounds = layer.calculateLayerBounds(
+      ancestorLayer: layer, offsetFromRoot: LayoutSizeWrapper(),
+      flags: [
+        .UseLocalClipRectIfPossible, .IncludeFilterOutsets, .UseFragmentBoxesExcludingCompositing,
+        .ExcludeHiddenDescendants, .DontConstrainForMask, .IncludeCompositedDescendants,
+      ])
+    // Map to m_renderView to ignore page scale.
+    let absoluteBounds = layer.renderer().localToContainerQuad(
+      localQuad: FloatQuad(inRect: layerBounds.FloatRect()), container: m_renderView
+    )
+    .boundingBox()
+    return viewBounds.intersects(
+      other: LayoutRectWrapper(rect: enclosingIntRect(rect: absoluteBounds)))
   }
 
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.

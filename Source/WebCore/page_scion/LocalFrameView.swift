@@ -55,6 +55,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func rectForFixedPositionLayout() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setContentIsOpaque(contentIsOpaque: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
