@@ -420,7 +420,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       || requiresCompositingForViewTransition(renderer: renderer)
       || requiresCompositingForVideo(renderer: renderer)
       || requiresCompositingForModel(renderer: renderer)
-      || requiresCompositingForFrame(renderer: renderer, queryData: queryData)
+      || requiresCompositingForFrame(renderer: renderer, queryData: &queryData)
       || requiresCompositingForPlugin(renderer: renderer, queryData: &queryData)
       || requiresCompositingForOverflowScrolling(layer: renderer.layer()!, queryData: queryData)
     {
@@ -760,10 +760,28 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForFrame(
-    renderer: RenderLayerModelObjectWrapper, queryData: RequiresCompositingData
+    renderer: RenderLayerModelObjectWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let frameRenderer = renderer as? RenderWidgetWrapper
+    if frameRenderer == nil {
+      return false
+    }
+
+    if frameRenderer!.style().usedVisibility() != .Visible {
+      return false
+    }
+
+    if !frameRenderer!.requiresAcceleratedCompositing() {
+      return false
+    }
+
+    if queryData.layoutUpToDate == .No {
+      queryData.reevaluateAfterLayout = true
+      return frameRenderer!.isComposited()
+    }
+
+    // Don't go into compositing mode if height or width are zero.
+    return !snappedIntRect(rect: frameRenderer!.contentBoxRect()).isEmpty()
   }
 
   private func requiresCompositingForOverflowScrolling(

@@ -21,4 +21,9 @@
  */
 
 // TODO(asuhan): inherit from OverlapTestRequestClient as well
-class RenderWidgetWrapper: RenderReplacedWrapper {}
+class RenderWidgetWrapper: RenderReplacedWrapper {
+  func requiresAcceleratedCompositing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
