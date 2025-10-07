@@ -79,8 +79,14 @@ private func recompositeChangeRequiresChildrenGeometryUpdate(
 // FIXME: remove and never ask questions about reflection layers.
 private func rendererForCompositingTests(layer: RenderLayerWrapper) -> RenderLayerModelObjectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var renderer = layer.renderer()
+
+  // The compositing state of a reflection should match that of its reflected layer.
+  if layer.isReflection() {
+    renderer = renderer.parent() as! RenderLayerModelObjectWrapper  // The RenderReplica's parent is the object being reflected.
+  }
+
+  return renderer
 }
 
 private func styleHas3DTransformOperation(style: RenderStyleWrapper) -> Bool {
