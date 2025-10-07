@@ -1357,8 +1357,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // True if the FrameView uses a ScrollingCoordinator.
   private func hasCoordinatedScrolling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollingCoordinator = scrollingCoordinator() {
+      return scrollingCoordinator.coordinatesScrollingForFrameView(
+        frameView: m_renderView.frameView())
+    }
+    return false
   }
 
   // FIXME: make the coordinated/async terminology consistent.

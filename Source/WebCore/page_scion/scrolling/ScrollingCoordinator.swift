@@ -24,6 +24,12 @@
  */
 
 class ScrollingCoordinatorWrapper {
+  // Return whether this scrolling coordinator handles scrolling for the given frame view.
+  func coordinatesScrollingForFrameView(frameView: LocalFrameViewWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Return whether this scrolling coordinator handles scrolling for the given overflow scroll layer.
   func coordinatesScrollingForOverflowLayer(layer: RenderLayerWrapper) -> Bool {
     // TODO(asuhan): implement this
