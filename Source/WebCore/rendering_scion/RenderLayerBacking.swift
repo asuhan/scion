@@ -46,6 +46,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Update contents and clipping structure.
+  func updateDrawsContent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func graphicsLayer() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

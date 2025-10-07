@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Apple Inc. All rights reserved.
+ * Copyright (C) 2014-2017 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,18 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FrameWrapper {
-  func page() -> PageWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func settings() -> SettingsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isMainFrame() -> Bool {
+final class PageOverlayControllerWrapper: GraphicsLayerClientWrapper {
+  func layerWithDocumentOverlays() -> GraphicsLayer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

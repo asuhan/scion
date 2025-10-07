@@ -909,8 +909,25 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func rootLayerAttachmentChanged() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The document-relative page overlay layer (which is pinned to the main frame's layer tree)
+    // is moved between different RenderLayerCompositors' layer trees, and needs to be
+    // reattached whenever we swap in a new RenderLayerCompositor.
+    if m_rootLayerAttachment == .RootLayerUnattached {
+      return
+    }
+
+    // The attachment can affect whether the RenderView layer's paintsIntoWindow() behavior,
+    // so call updateDrawsContent() to update that.
+    if let backing = m_renderView.layer()?.backing {
+      backing.updateDrawsContent()
+    }
+
+    if !m_renderView.frameView().frame().isMainFrame() {
+      return
+    }
+
+    let overlayHost = page().pageOverlayController().layerWithDocumentOverlays()
+    m_rootContentsLayer!.addChild(childLayer: overlayHost)
   }
 
   private func updateOverflowControlsLayers() {

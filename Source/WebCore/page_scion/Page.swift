@@ -49,6 +49,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func pageOverlayController() -> PageOverlayControllerWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addRelevantRepaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

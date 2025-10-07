@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     LocalFrameView.swift
     LocalFrameViewLayoutContext.swift
     Page.swift
+    PageOverlayController.swift
     SecurityOrigin.swift
     SecurityOriginData.swift
 )
