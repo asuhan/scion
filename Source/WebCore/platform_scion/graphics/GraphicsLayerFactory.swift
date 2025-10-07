@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003, 2006, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2012 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,30 +23,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntRect {
-  init() {
-    location = IntPoint()
-    size = IntSize()
+class GraphicsLayerFactory {
+  func createGraphicsLayer(layerType: GraphicsLayer.`Type`, client: GraphicsLayerClientWrapper)
+    -> GraphicsLayer
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
-
-  init(location: IntPoint, size: IntSize) {
-    self.location = location
-    self.size = size
-  }
-
-  func x() -> Int32 { return location.x }
-  func y() -> Int32 { return location.y }
-  func maxX() -> Int32 { return x() + width() }
-  func maxY() -> Int32 { return y() + height() }
-  func width() -> Int32 { return size.width }
-  func height() -> Int32 { return size.height }
-
-  func isEmpty() -> Bool { return size.isEmpty() }
-
-  mutating func moveBy(offset: IntPoint) {
-    location.move(dx: offset.x, dy: offset.y)
-  }
-
-  var location: IntPoint
-  let size: IntSize
 }

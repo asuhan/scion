@@ -693,16 +693,28 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if m_rootContentsLayer == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      m_rootContentsLayer = GraphicsLayer.create(factory: graphicsLayerFactory(), client: self)
+      let overflowRect = snappedIntRect(rect: m_renderView.layoutOverflowRect())
+      // TODO(asuhan): use a static string
+      m_rootContentsLayer!.setName(name: "content root")
+      m_rootContentsLayer!.setSize(
+        size: FloatSize(width: Float32(overflowRect.maxX()), height: Float32(overflowRect.maxY())))
+      m_rootContentsLayer!.setPosition(p: FloatPoint())
+
+      // Need to clip to prevent transformed content showing outside this frame
+      updateRootContentLayerClipping()
     }
 
     if requiresScrollLayer(attachment: expectedAttachment) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if m_overflowControlsHostLayer != nil {
+        GraphicsLayer.unparentAndClear(layer: m_overflowControlsHostLayer)
+        GraphicsLayer.unparentAndClear(layer: m_clipLayer)
+        GraphicsLayer.unparentAndClear(layer: m_scrollContainerLayer)
+        GraphicsLayer.unparentAndClear(layer: m_scrolledContentsLayer)
+      }
     }
 
     // Check to see if we have to change the attachment
@@ -729,6 +741,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func notifyIFramesOfCompositingChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func graphicsLayerFactory() -> GraphicsLayerFactory? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1070,5 +1087,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private let m_rootLayerAttachment: RootLayerAttachment = .RootLayerUnattached
 
-  private let m_rootContentsLayer: GraphicsLayer? = nil
+  private var m_rootContentsLayer: GraphicsLayer? = nil
+
+  // Enclosing clipping layer for iframe content
+  private var m_clipLayer: GraphicsLayer? = nil
+  private var m_scrollContainerLayer: GraphicsLayer? = nil
+  private var m_scrolledContentsLayer: GraphicsLayer? = nil
+
+  // Enclosing layer for overflow controls and the clipping layer
+  private var m_overflowControlsHostLayer: GraphicsLayer? = nil
 }

@@ -24,6 +24,35 @@
  */
 
 class GraphicsLayer {
+  enum `Type`: UInt8 {
+    case Normal
+    case Structural  // Supports position and transform only, and doesn't flatten (i.e. behaves like preserves3D is true). Uses CATransformLayer on Cocoa platforms.
+    case PageTiledBacking
+    case TiledBacking
+    case ScrollContainer
+    case ScrolledContents
+    case Shape
+  }
+
+  // Unparent, clear the client, and clear the RefPtr.
+  static func unparentAndClear(layer: GraphicsLayer?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func create(
+    factory: GraphicsLayerFactory?, client: GraphicsLayerClientWrapper,
+    layerType: GraphicsLayer.`Type` = .Normal
+  ) -> GraphicsLayer {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setName(name: String) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The given layer will replicate this layer and its children; the replica renders behind this layer.
   func setReplicatedByLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
@@ -32,6 +61,16 @@ class GraphicsLayer {
 
   // The layer that replicates this layer (if any).
   func replicaLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setPosition(p: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setSize(size: FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
