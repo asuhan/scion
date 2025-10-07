@@ -37,6 +37,7 @@ target_sources(layout_scion PRIVATE
     RenderDeprecatedFlexibleBox.swift
     RenderLayerFilters.swift
     RenderElement.swift
+    RenderEmbeddedObject.swift
     RenderFlexibleBox.swift
     RenderFragmentContainer.swift
     RenderFragmentContainerSet.swift

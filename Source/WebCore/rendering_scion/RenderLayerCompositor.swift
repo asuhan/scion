@@ -406,8 +406,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderEmbeddedObject = renderer as? RenderEmbeddedObjectWrapper {
+      return renderEmbeddedObject.requiresAcceleratedCompositing()
+    }
+
+    return false
   }
 
   func frameContentsCompositor(renderer: RenderWidgetWrapper) -> RenderLayerCompositorWrapper? {
