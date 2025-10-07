@@ -980,8 +980,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if requiresScrollCornerLayer() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if m_layerForScrollCorner == nil {
+        m_layerForScrollCorner = GraphicsLayer.create(factory: graphicsLayerFactory(), client: self)
+        m_layerForScrollCorner!.setAllowsBackingStoreDetaching(allowDetaching: false)
+        m_layerForScrollCorner!.setShowDebugBorder(show: m_showDebugBorders)
+        m_layerForScrollCorner!.setName(name: "scroll corner")  // TODO(asuhan): use a static string
+        m_overflowControlsHostLayer!.addChild(childLayer: m_layerForScrollCorner!)
+      }
     } else {
       GraphicsLayer.unparentAndClear(layer: m_layerForScrollCorner)
     }
