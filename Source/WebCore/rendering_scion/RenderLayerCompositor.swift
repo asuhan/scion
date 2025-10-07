@@ -1341,13 +1341,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresHorizontalScrollbarLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return shouldCompositeOverflowControls()
+      && m_renderView.frameView().horizontalScrollbar() != nil
   }
 
   private func requiresVerticalScrollbarLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return shouldCompositeOverflowControls() && m_renderView.frameView().verticalScrollbar() != nil
   }
 
   private func requiresScrollCornerLayer() -> Bool {
