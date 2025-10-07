@@ -29,6 +29,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     self.p = p
   }
 
+  func frame() -> LocalFrameWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutContext() -> LocalFrameViewLayoutContextWrapper {
     return LocalFrameViewLayoutContextWrapper(p: wk_interop.LocalFrameView_layoutContext(p))
   }

@@ -24,6 +24,11 @@ enum CompositingPolicy {
 }
 
 class PageWrapper {
+  func chrome() -> ChromeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func focusController() -> FocusControllerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

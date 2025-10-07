@@ -49,6 +49,13 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  // Returns the owning element in the parent document.
+  // Returns nullptr if this is the top level document.
+  func ownerElement() -> HTMLFrameOwnerElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markersIfExists() -> DocumentMarkerControllerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

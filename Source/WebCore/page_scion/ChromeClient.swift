@@ -20,6 +20,12 @@
  */
 
 class ChromeClient {
+  // Pass nullptr as the GraphicsLayer to detatch the root layer.
+  func attachRootGraphicsLayer(frame: LocalFrameWrapper, layer: GraphicsLayer?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct CompositingTriggerFlags: OptionSet {
     let rawValue: UInt32
 

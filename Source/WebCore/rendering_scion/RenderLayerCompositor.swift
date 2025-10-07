@@ -389,6 +389,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
+  func rootGraphicsLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum RootLayerAttachment {
     case RootLayerUnattached
     case RootLayerAttachedViaChromeClient
@@ -830,11 +835,41 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func attachRootLayer(attachment: RootLayerAttachment) {
+    if m_rootContentsLayer == nil {
+      return
+    }
+
+    print("RenderLayerCompositor \(self) attachRootLayer \(attachment)")
+
+    switch attachment {
+    case .RootLayerUnattached:
+      fatalError("Not reached")
+    case .RootLayerAttachedViaChromeClient:
+      page().chrome().client().attachRootGraphicsLayer(
+        frame: m_renderView.frameView().frame(), layer: rootGraphicsLayer())
+    case .RootLayerAttachedViaEnclosingFrame:
+      // The layer will get hooked up via RenderLayerBacking::updateConfiguration()
+      // for the frame's renderer in the parent document.
+      if let ownerElement = m_renderView.document().ownerElement() {
+        ownerElement.scheduleInvalidateStyleAndLayerComposition()
+      }
+    }
+
+    m_rootLayerAttachment = attachment
+    rootLayerAttachmentChanged()
+
+    if m_shouldFlushOnReattach {
+      scheduleRenderingUpdate()
+      m_shouldFlushOnReattach = false
+    }
+  }
+
+  private func detachRootLayer() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func detachRootLayer() {
+  private func rootLayerAttachmentChanged() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -855,6 +890,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func notifyIFramesOfCompositingChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func page() -> PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1198,8 +1238,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private let m_showRepaintCounter = false
 
   private var m_compositing = false
+  private var m_shouldFlushOnReattach = false
 
-  private let m_rootLayerAttachment: RootLayerAttachment = .RootLayerUnattached
+  private var m_rootLayerAttachment: RootLayerAttachment = .RootLayerUnattached
 
   private var m_rootContentsLayer: GraphicsLayer? = nil
 
