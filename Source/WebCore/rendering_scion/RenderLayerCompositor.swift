@@ -83,6 +83,16 @@ private func rendererForCompositingTests(layer: RenderLayerWrapper) -> RenderLay
   fatalError("Not implemented")
 }
 
+private func styleHas3DTransformOperation(style: RenderStyleWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -616,8 +626,26 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForTransform(renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_compositingTriggers.contains(.ThreeDTransformTrigger) {
+      return false
+    }
+
+    // Note that we ask the renderer if it has a transform, because the style may have transforms,
+    // but the renderer may be an inline that doesn't suppport them.
+    if !renderer.isTransformed() {
+      return false
+    }
+
+    switch m_compositingPolicy {
+    case .Normal:
+      return styleHas3DTransformOperation(style: renderer.style())
+    case .Conservative:
+      // Continue to allow pages to avoid the very slow software filter path.
+      if styleHas3DTransformOperation(style: renderer.style()) && renderer.hasFilter() {
+        return true
+      }
+      return styleTransformOperationsAreRepresentableIn2D(style: renderer.style()) ? false : true
+    }
   }
 
   private func requiresCompositingForBackfaceVisibility(renderer: RenderLayerModelObjectWrapper)
@@ -778,7 +806,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private let m_renderView: RenderViewWrapper
 
+  private let m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
   private let m_hasAcceleratedCompositing = true
+
+  private let m_compositingPolicy: CompositingPolicy = .Normal
 
   private let m_showDebugBorders = false
   private let m_showRepaintCounter = false

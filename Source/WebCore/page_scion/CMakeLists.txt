@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    ChromeClient.swift
     FocusController.swift
     Frame.swift
     FrameView.swift

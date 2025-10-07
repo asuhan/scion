@@ -18,6 +18,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+enum CompositingPolicy {
+  case Normal
+  case Conservative  // Used in low memory situations.
+}
+
 class PageWrapper {
   func focusController() -> FocusControllerWrapper {
     // TODO(asuhan): implement this
