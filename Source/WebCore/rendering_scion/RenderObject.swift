@@ -339,6 +339,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // When the document element is captured, the captured contents uses the RenderView
+  // instead. Returns the capture state with this adjustment applied.
+  func effectiveCapturedInViewTransition() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func view() -> RenderViewWrapper {
     return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }

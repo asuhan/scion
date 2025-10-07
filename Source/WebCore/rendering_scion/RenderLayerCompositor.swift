@@ -675,8 +675,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private func requiresCompositingForViewTransition(renderer: RenderLayerModelObjectWrapper) -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return renderer.effectiveCapturedInViewTransition() || renderer.isRenderViewTransitionCapture()
   }
 
   private func requiresCompositingForVideo(renderer: RenderLayerModelObjectWrapper) -> Bool {
