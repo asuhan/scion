@@ -422,7 +422,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       || requiresCompositingForModel(renderer: renderer)
       || requiresCompositingForFrame(renderer: renderer, queryData: &queryData)
       || requiresCompositingForPlugin(renderer: renderer, queryData: &queryData)
-      || requiresCompositingForOverflowScrolling(layer: renderer.layer()!, queryData: queryData)
+      || requiresCompositingForOverflowScrolling(layer: renderer.layer()!, queryData: &queryData)
     {
       queryData.intrinsic = true
       return true
@@ -785,10 +785,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForOverflowScrolling(
-    layer: RenderLayerWrapper, queryData: RequiresCompositingData
+    layer: RenderLayerWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !layer.canUseCompositedScrolling() {
+      return false
+    }
+
+    if queryData.layoutUpToDate == .No {
+      queryData.reevaluateAfterLayout = true
+      return layer.isComposited()
+    }
+
+    layer.computeHasCompositedScrollableOverflow(layoutUpToDate: .Yes)
+    return layer.hasCompositedScrollableOverflow()
   }
 
   @discardableResult
