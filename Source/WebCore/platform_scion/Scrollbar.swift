@@ -24,6 +24,11 @@
  */
 
 class Scrollbar: Widget {
+  func platformWidget() -> PlatformWidget {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func size() -> IntSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

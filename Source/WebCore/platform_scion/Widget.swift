@@ -39,6 +39,11 @@
 // Scrollbar - Mac, Gtk
 // Plugin - Mac, Windows (windowed only), Qt (windowed only, widget is an HWND on windows), Gtk (windowed only)
 //
+
+typealias PlatformWidget = UnsafeMutableRawPointer?
+
 protocol Widget {
+  func platformWidget() -> PlatformWidget
+
   func size() -> IntSize
 }

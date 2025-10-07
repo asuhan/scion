@@ -1336,8 +1336,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let frameView = m_renderView.frameView()
+
+    // This applies when the application UI handles scrolling, in which case RenderLayerCompositor doesn't need to manage it.
+    if frameView.delegatedScrollingMode() == .DelegatedToNativeScrollView && isMainFrameCompositor()
+    {
+      return false
+    }
+
+    // We need to handle our own scrolling if we're:
+    return m_renderView.frameView().platformWidget() == nil  // viewless (i.e. non-Mac, or Mac in WebKit2)
+      || attachment == .RootLayerAttachedViaEnclosingFrame  // a composited frame on Mac
   }
 
   private func requiresHorizontalScrollbarLayer() -> Bool {
@@ -1391,6 +1400,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isRootFrameCompositor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isMainFrameCompositor() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

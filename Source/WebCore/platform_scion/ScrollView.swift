@@ -24,8 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum DelegatedScrollingMode: UInt8 {
+  case NotDelegated
+  case DelegatedToNativeScrollView
+  case DelegatedToWebKit
+}
+
 class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   func positionScrollbarLayers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // By default scrolling is handled by WebCore, but some WebKit implementations take over scrolling,
+  // delegating it to a native scrolling widget or the UI process.
+  func delegatedScrollingMode() -> DelegatedScrollingMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -75,6 +88,11 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   // will return a version of the current scroll offset which tracks the top of the Document
   // relative to the very top of the view.
   func documentScrollPositionRelativeToViewOrigin() -> ScrollPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
