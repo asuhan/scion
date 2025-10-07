@@ -37,6 +37,7 @@ struct IntRect {
   func x() -> Int32 { return location.x }
   func y() -> Int32 { return location.y }
   func maxY() -> Int32 { return y() + height() }
+  func width() -> Int32 { return size.width }
   func height() -> Int32 { return size.height }
 
   func isEmpty() -> Bool { return size.isEmpty() }

@@ -388,6 +388,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isComposited() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Convert a local quad into the coordinate system of container, taking transforms into account.
   func localToContainerQuad(
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,

@@ -96,6 +96,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
+  func contentBoxRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func firstChildBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

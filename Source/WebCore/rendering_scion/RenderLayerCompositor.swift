@@ -340,6 +340,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func frameContentsCompositor(renderer: RenderWidgetWrapper) -> RenderLayerCompositorWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -416,7 +421,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       || requiresCompositingForVideo(renderer: renderer)
       || requiresCompositingForModel(renderer: renderer)
       || requiresCompositingForFrame(renderer: renderer, queryData: queryData)
-      || requiresCompositingForPlugin(renderer: renderer, queryData: queryData)
+      || requiresCompositingForPlugin(renderer: renderer, queryData: &queryData)
       || requiresCompositingForOverflowScrolling(layer: renderer.layer()!, queryData: queryData)
     {
       queryData.intrinsic = true
@@ -728,10 +733,30 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Layout-dependent
   private func requiresCompositingForPlugin(
-    renderer: RenderLayerModelObjectWrapper, queryData: RequiresCompositingData
+    renderer: RenderLayerModelObjectWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_compositingTriggers.contains(.PluginTrigger) {
+      return false
+    }
+
+    if !isCompositedPlugin(renderer: renderer) {
+      return false
+    }
+
+    let pluginRenderer = renderer as! RenderWidgetWrapper
+    if pluginRenderer.style().usedVisibility() != .Visible {
+      return false
+    }
+
+    // If we can't reliably know the size of the plugin yet, don't change compositing state.
+    if queryData.layoutUpToDate == .No {
+      queryData.reevaluateAfterLayout = true
+      return pluginRenderer.isComposited()
+    }
+
+    // Don't go into compositing mode if height or width are zero, or size is 1x1.
+    let contentBox = snappedIntRect(rect: pluginRenderer.contentBoxRect())
+    return (contentBox.height() * contentBox.width() > 1)
   }
 
   private func requiresCompositingForFrame(
