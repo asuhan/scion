@@ -1395,6 +1395,24 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func shouldCompositeOverflowControls() -> Bool {
+    let frameView = m_renderView.frameView()
+
+    if !frameView.managesScrollbars() {
+      return false
+    }
+
+    if documentUsesTiledBacking() {
+      return true
+    }
+
+    if m_overflowControlsHostLayer != nil && isMainFrameCompositor() {
+      return true
+    }
+
+    return true
+  }
+
+  private func documentUsesTiledBacking() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
