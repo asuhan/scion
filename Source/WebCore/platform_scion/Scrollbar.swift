@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Apple Inc.  All rights reserved.
+ * Copyright (C) 2004, 2006, 2008, 2014-2015 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,16 +23,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// scrollPosition is in content coordinates (0,0 is at scrollOrigin), so may have negative components.
-typealias ScrollPosition = IntPoint
+class Scrollbar: Widget {
+  func size() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
-enum OverscrollBehavior: UInt8 {
-  case Auto
-  case Contain
-  case None
-}
-
-enum ScrollbarOrientation: UInt8 {
-  case Horizontal
-  case Vertical
+  func frameRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

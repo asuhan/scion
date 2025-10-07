@@ -769,8 +769,54 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func destroyRootLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_rootContentsLayer == nil {
+      return
+    }
+
+    detachRootLayer()
+
+    if m_layerForHorizontalScrollbar != nil {
+      GraphicsLayer.unparentAndClear(layer: m_layerForHorizontalScrollbar)
+      if let scrollingCoordinator = scrollingCoordinator() {
+        scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+          scrollableArea: m_renderView.frameView(), orientation: .Horizontal)
+      }
+      if let horizontalScrollbar = m_renderView.frameView().horizontalScrollbar() {
+        m_renderView.frameView().invalidateScrollbar(
+          scrollbar: horizontalScrollbar,
+          rect: IntRect(
+            location: IntPoint(x: 0, y: 0), size: horizontalScrollbar.frameRect().size))
+      }
+    }
+
+    if m_layerForVerticalScrollbar != nil {
+      GraphicsLayer.unparentAndClear(layer: m_layerForVerticalScrollbar)
+      if let scrollingCoordinator = scrollingCoordinator() {
+        scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+          scrollableArea: m_renderView.frameView(), orientation: .Vertical)
+      }
+      if let verticalScrollbar = m_renderView.frameView().verticalScrollbar() {
+        m_renderView.frameView().invalidateScrollbar(
+          scrollbar: verticalScrollbar,
+          rect: IntRect(
+            location: IntPoint(x: 0, y: 0), size: verticalScrollbar.frameRect().size))
+      }
+    }
+
+    if m_layerForScrollCorner != nil {
+      GraphicsLayer.unparentAndClear(layer: m_layerForScrollCorner)
+      m_renderView.frameView().invalidateScrollCorner(
+        rect: m_renderView.frameView().scrollCornerRect())
+    }
+
+    if m_overflowControlsHostLayer != nil {
+      GraphicsLayer.unparentAndClear(layer: m_overflowControlsHostLayer)
+      GraphicsLayer.unparentAndClear(layer: m_clipLayer)
+      GraphicsLayer.unparentAndClear(layer: m_scrollContainerLayer)
+      GraphicsLayer.unparentAndClear(layer: m_scrolledContentsLayer)
+    }
+    assert(m_scrolledContentsLayer == nil)
+    GraphicsLayer.unparentAndClear(layer: m_rootContentsLayer)
   }
 
   private func attachRootLayer(attachment: RootLayerAttachment) {
@@ -1154,4 +1200,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Enclosing layer for overflow controls and the clipping layer
   private var m_overflowControlsHostLayer: GraphicsLayer? = nil
+
+  // Layers for overflow controls
+  private var m_layerForHorizontalScrollbar: GraphicsLayer? = nil
+  private var m_layerForVerticalScrollbar: GraphicsLayer? = nil
+  private var m_layerForScrollCorner: GraphicsLayer? = nil
 }

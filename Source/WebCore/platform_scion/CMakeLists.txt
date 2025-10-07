@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     LengthSize.swift
     RectEdges.swift
     ScrollableArea.swift
+    Scrollbar.swift
     ScrollTypes.swift
     ScrollView.swift
     Widget.swift

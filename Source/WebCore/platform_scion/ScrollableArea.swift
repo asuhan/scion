@@ -30,6 +30,31 @@
  */
 
 class ScrollableAreaWrapper {
+  func invalidateScrollbar(scrollbar: Scrollbar, rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollCornerRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func invalidateScrollCorner(rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func horizontalScrollbar() -> Scrollbar? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func verticalScrollbar() -> Scrollbar? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum VisibleContentRectIncludesScrollbars {
     case No
     case Yes

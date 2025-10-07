@@ -35,4 +35,11 @@ class ScrollingCoordinatorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func scrollableAreaScrollbarLayerDidChange(
+    scrollableArea: ScrollableAreaWrapper, orientation: ScrollbarOrientation
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
