@@ -25,6 +25,11 @@
  */
 
 class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
+  func positionScrollbarLayers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // There are at least three types of contentInset. Usually we just care about WebCoreContentInset, which is the inset
   // that is set on a Page that requires WebCore to move its layers to accomodate the inset. However, there are platform
   // concepts that are similar on both iOS and Mac when there is a platformWidget(). Sometimes we need the Mac platform value

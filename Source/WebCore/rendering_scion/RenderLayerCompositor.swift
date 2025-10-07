@@ -931,8 +931,30 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateOverflowControlsLayers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if requiresHorizontalScrollbarLayer() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else if m_layerForHorizontalScrollbar != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if requiresVerticalScrollbarLayer() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else if m_layerForVerticalScrollbar != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if requiresScrollCornerLayer() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      GraphicsLayer.unparentAndClear(layer: m_layerForScrollCorner)
+    }
+
+    m_renderView.frameView().positionScrollbarLayers()
   }
 
   private func updateScrollLayerPosition() {
@@ -1245,6 +1267,21 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresHorizontalScrollbarLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresVerticalScrollbarLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresScrollCornerLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
