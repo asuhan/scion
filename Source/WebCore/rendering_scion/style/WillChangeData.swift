@@ -33,4 +33,14 @@ class WillChangeData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func canTriggerCompositing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func canTriggerCompositingOnInline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

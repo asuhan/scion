@@ -722,8 +722,21 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForWillChange(renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.style().willChange() == nil
+      || !renderer.style().willChange()!.canTriggerCompositing()
+    {
+      return false
+    }
+
+    if m_compositingPolicy == .Conservative {
+      return false
+    }
+
+    if renderer is RenderBoxWrapper {
+      return true
+    }
+
+    return renderer.style().willChange()!.canTriggerCompositingOnInline()
   }
 
   private func requiresCompositingForModel(renderer: RenderLayerModelObjectWrapper) -> Bool {
