@@ -389,6 +389,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
+  enum RootLayerAttachment {
+    case RootLayerUnattached
+    case RootLayerAttachedViaChromeClient
+    case RootLayerAttachedViaEnclosingFrame
+  }
+
   func updateRootLayerAttachment() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -679,11 +685,45 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func ensureRootLayer() {
+    let expectedAttachment: RootLayerAttachment =
+      isRootFrameCompositor()
+      ? .RootLayerAttachedViaChromeClient : .RootLayerAttachedViaEnclosingFrame
+    if expectedAttachment == m_rootLayerAttachment {
+      return
+    }
+
+    if m_rootContentsLayer == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if requiresScrollLayer(attachment: expectedAttachment) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // Check to see if we have to change the attachment
+    if m_rootLayerAttachment != .RootLayerUnattached {
+      detachRootLayer()
+    }
+
+    attachRootLayer(attachment: expectedAttachment)
+  }
+
+  private func destroyRootLayer() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func destroyRootLayer() {
+  private func attachRootLayer(attachment: RootLayerAttachment) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func detachRootLayer() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -977,14 +1017,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // True if the FrameView uses a ScrollingCoordinator.
-  func hasCoordinatedScrolling() -> Bool {
+  private func hasCoordinatedScrolling() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   // FIXME: make the coordinated/async terminology consistent.
-  func isAsyncScrollableStickyLayer(layer: RenderLayerWrapper) -> Bool {
+  private func isAsyncScrollableStickyLayer(layer: RenderLayerWrapper) -> Bool {
     assert(layer.renderer().isStickilyPositioned())
 
     let enclosingOverflowLayer = layer.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf)
@@ -1006,6 +1051,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func isRootFrameCompositor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let m_renderView: RenderViewWrapper
 
   private let m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
@@ -1017,4 +1067,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private let m_showRepaintCounter = false
 
   private var m_compositing = false
+
+  private let m_rootLayerAttachment: RootLayerAttachment = .RootLayerUnattached
+
+  private let m_rootContentsLayer: GraphicsLayer? = nil
 }
