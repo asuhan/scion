@@ -1068,6 +1068,11 @@ class RenderLayerWrapper {
     fatalError("Not reached")
   }
 
+  func enclosingOverflowClipLayer(includeSelf: IncludeSelfOrNot) -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct EnclosingCompositingLayerStatus {
     init(fullRepaintAlreadyScheduled: Bool = false, layer: RenderLayerWrapper? = nil) {
       self.fullRepaintAlreadyScheduled = fullRepaintAlreadyScheduled

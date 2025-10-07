@@ -251,6 +251,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isStickilyPositioned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldUsePositionedClipping() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

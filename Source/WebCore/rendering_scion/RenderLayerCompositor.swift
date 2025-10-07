@@ -903,10 +903,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
-  // FIXME: make the coordinated/async terminology consistent.
-  func isAsyncScrollableStickyLayer(layer: RenderLayerWrapper) -> Bool {
+  // True if the FrameView uses a ScrollingCoordinator.
+  func hasCoordinatedScrolling() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // FIXME: make the coordinated/async terminology consistent.
+  func isAsyncScrollableStickyLayer(layer: RenderLayerWrapper) -> Bool {
+    assert(layer.renderer().isStickilyPositioned())
+
+    let enclosingOverflowLayer = layer.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf)
+
+    if enclosingOverflowLayer != nil && enclosingOverflowLayer!.hasCompositedScrollableOverflow() {
+      return true
+    }
+
+    // If the layer is inside normal overflow, it's not async-scrollable.
+    if enclosingOverflowLayer != nil {
+      return false
+    }
+
+    // No overflow ancestor, so see if the frame supports async scrolling.
+    if hasCoordinatedScrolling() {
+      return true
+    }
+
+    return false
   }
 
   private let m_renderView: RenderViewWrapper
