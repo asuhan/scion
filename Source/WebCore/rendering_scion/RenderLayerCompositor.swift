@@ -179,8 +179,25 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
   func repaintOnCompositingChange(layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the renderer is not attached yet, no need to repaint.
+    if CPtrToInt(layer.renderer().p) != CPtrToInt(m_renderView.p)
+      && layer.renderer().parent() == nil
+    {
+      return
+    }
+
+    var repaintContainer = layer.renderer().containerForRepaint().renderer
+    if repaintContainer == nil {
+      repaintContainer = m_renderView
+    }
+
+    layer.repaintIncludingNonCompositingDescendants(repaintContainer: repaintContainer)
+    if CPtrToInt(repaintContainer?.p) == CPtrToInt(m_renderView.p) {
+      // The contents of this layer may be moving between the window
+      // and a GraphicsLayer, so we need to make sure the window system
+      // synchronizes those changes on the screen.
+      m_renderView.frameView().setNeedsOneShotDrawingSynchronization()
+    }
   }
 
   // This method assumes that layout is up-to-date, unlike repaintOnCompositingChange().

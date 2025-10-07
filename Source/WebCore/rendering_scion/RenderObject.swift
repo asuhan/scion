@@ -476,6 +476,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Return the RenderLayerModelObject in the container chain which is responsible for painting this object, or nullptr
+  // if painting is root-relative. This is the container that should be passed to the 'forRepaint' functions.
+  struct RepaintContainerStatus {
+    let fullRepaintIsScheduled = false  // Either the repaint container or a layer in-between has already been scheduled for full repaint.
+    let renderer: RenderLayerModelObjectWrapper? = nil
+  }
+
+  func containerForRepaint() -> RepaintContainerStatus {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Repaint the entire object.  Called when, e.g., the color of a border changes, or when a border
   // style changes.
   enum ForceRepaint {

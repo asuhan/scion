@@ -660,6 +660,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func repaintIncludingNonCompositingDescendants(repaintContainer: RenderLayerModelObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
