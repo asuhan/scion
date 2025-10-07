@@ -59,6 +59,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func removeFromParent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The given layer will replicate this layer and its children; the replica renders behind this layer.
   func setReplicatedByLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this

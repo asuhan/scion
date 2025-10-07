@@ -42,6 +42,17 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  func frameViewWillBeDetached(frameView: LocalFrameViewWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Node will be unparented, but not destroyed. It's the client's responsibility to either re-parent or destroy this node.
+  func unparentNode(nodeID: ScrollingNodeIDWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollableAreaScrollbarLayerDidChange(
     scrollableArea: ScrollableAreaWrapper, orientation: ScrollbarOrientation
   ) {

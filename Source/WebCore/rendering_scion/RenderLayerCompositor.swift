@@ -865,8 +865,47 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func detachRootLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_rootContentsLayer == nil || m_rootLayerAttachment == .RootLayerUnattached {
+      return
+    }
+
+    if let scrollingCoordinator = scrollingCoordinator() {
+      scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView.frameView())
+    }
+
+    switch m_rootLayerAttachment {
+    case .RootLayerAttachedViaEnclosingFrame:
+      // The layer will get unhooked up via RenderLayerBacking::updateConfiguration()
+      // for the frame's renderer in the parent document.
+      if m_overflowControlsHostLayer != nil {
+        m_overflowControlsHostLayer!.removeFromParent()
+      } else {
+        m_rootContentsLayer!.removeFromParent()
+      }
+
+      if let ownerElement = m_renderView.document().ownerElement() {
+        ownerElement.scheduleInvalidateStyleAndLayerComposition()
+      }
+
+      let frameRootScrollingNodeID = m_renderView.frameView().scrollingNodeID()
+      if frameRootScrollingNodeID.bool() {
+        if let scrollingCoordinator = scrollingCoordinator() {
+          scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView.frameView())
+          scrollingCoordinator.unparentNode(nodeID: frameRootScrollingNodeID)
+        }
+      }
+    case .RootLayerAttachedViaChromeClient:
+      if let scrollingCoordinator = scrollingCoordinator() {
+        scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView.frameView())
+      }
+      page().chrome().client().attachRootGraphicsLayer(
+        frame: m_renderView.frameView().frame(), layer: nil)
+    case .RootLayerUnattached:
+      break
+    }
+
+    m_rootLayerAttachment = .RootLayerUnattached
+    rootLayerAttachmentChanged()
   }
 
   private func rootLayerAttachmentChanged() {

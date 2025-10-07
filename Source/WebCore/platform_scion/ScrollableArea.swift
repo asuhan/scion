@@ -30,6 +30,11 @@
  */
 
 class ScrollableAreaWrapper {
+  func scrollingNodeID() -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateScrollbar(scrollbar: Scrollbar, rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
