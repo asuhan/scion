@@ -448,7 +448,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   // Whether the given RL needs a compositing layer.
-  func needsToBeComposited(layer: RenderLayerWrapper, queryData: inout RequiresCompositingData)
+  private func needsToBeComposited(
+    layer: RenderLayerWrapper, queryData: inout RequiresCompositingData
+  )
     -> Bool
   {
     if !canBeComposited(layer: layer) {
@@ -464,7 +466,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Note: this specifies whether the RL needs a compositing layer for intrinsic reasons.
   // Use needsToBeComposited() to determine if a RL actually needs a compositing layer.
   // FIXME: is clipsCompositingDescendants() an intrinsic reason?
-  func requiresCompositingLayer(layer: RenderLayerWrapper, queryData: inout RequiresCompositingData)
+  private func requiresCompositingLayer(
+    layer: RenderLayerWrapper, queryData: inout RequiresCompositingData
+  )
     -> Bool
   {
     let renderer = rendererForCompositingTests(layer: layer)
