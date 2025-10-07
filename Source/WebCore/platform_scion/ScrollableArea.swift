@@ -40,6 +40,11 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func isScrollCornerVisible() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollCornerRect() -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

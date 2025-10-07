@@ -1351,8 +1351,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollCornerLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return shouldCompositeOverflowControls() && m_renderView.frameView().isScrollCornerVisible()
   }
 
   // True if the FrameView uses a ScrollingCoordinator.
@@ -1385,6 +1384,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  private func shouldCompositeOverflowControls() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func isRootFrameCompositor() -> Bool {
