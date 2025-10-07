@@ -100,4 +100,20 @@ class GraphicsLayer {
     case DoNotClipToLayer
     case ClipToLayer
   }
+
+  func setShowDebugBorder(show: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Whether this layer can throw away backing store to save memory. False for layers that can be revealed by async scrolling.
+  func setAllowsBackingStoreDetaching(allowDetaching: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAllowsTiling(allowsTiling: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

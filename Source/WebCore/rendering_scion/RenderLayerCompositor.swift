@@ -932,11 +932,27 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private func updateOverflowControlsLayers() {
     if requiresHorizontalScrollbarLayer() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if m_layerForHorizontalScrollbar == nil {
+        m_layerForHorizontalScrollbar = GraphicsLayer.create(
+          factory: graphicsLayerFactory(), client: self)
+        m_layerForHorizontalScrollbar!.setAllowsBackingStoreDetaching(allowDetaching: false)
+        m_layerForHorizontalScrollbar!.setAllowsTiling(allowsTiling: false)
+        m_layerForHorizontalScrollbar!.setShowDebugBorder(show: m_showDebugBorders)
+        m_layerForHorizontalScrollbar!.setName(name: "horizontal scrollbar container")  // TODO(asuhan): use a static string
+        m_overflowControlsHostLayer!.addChild(childLayer: m_layerForHorizontalScrollbar!)
+
+        if let scrollingCoordinator = scrollingCoordinator() {
+          scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+            scrollableArea: m_renderView.frameView(), orientation: .Horizontal)
+        }
+      }
     } else if m_layerForHorizontalScrollbar != nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      GraphicsLayer.unparentAndClear(layer: m_layerForHorizontalScrollbar)
+
+      if let scrollingCoordinator = scrollingCoordinator() {
+        scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+          scrollableArea: m_renderView.frameView(), orientation: .Horizontal)
+      }
     }
 
     if requiresVerticalScrollbarLayer() {
