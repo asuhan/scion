@@ -177,6 +177,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       other: LayoutRectWrapper(rect: enclosingIntRect(rect: absoluteBounds)))
   }
 
+  func fixedRootBackgroundLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
   func repaintOnCompositingChange(layer: RenderLayerWrapper) {
     // If the renderer is not attached yet, no need to repaint.
@@ -995,8 +1000,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollLayerPosition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!hasCoordinatedScrolling())
+    assert(m_scrolledContentsLayer != nil)
+
+    let frameView = m_renderView.frameView()
+    let scrollPosition = frameView.scrollPosition()
+
+    // We use scroll position here because the root content layer is offset to account for scrollOrigin (see LocalFrameView::positionForRootContentLayer).
+    m_scrolledContentsLayer!.setPosition(
+      p: FloatPoint(x: Float32(-scrollPosition.x), y: Float32(-scrollPosition.y)))
+
+    if let fixedBackgroundLayer = fixedRootBackgroundLayer() {
+      fixedBackgroundLayer.setPosition(p: frameView.scrollPositionForFixedPosition().FloatPoint())
+    }
   }
 
   private func updateScrollLayerClipping() {
