@@ -705,8 +705,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForFilters(renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.hasBackdropFilter() {
+      return true
+    }
+
+    if !m_compositingTriggers.contains(.FilterTrigger) {
+      return false
+    }
+
+    return renderer.hasFilter()
   }
 
   private func requiresCompositingForWillChange(renderer: RenderLayerModelObjectWrapper) -> Bool {
