@@ -956,11 +956,27 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if requiresVerticalScrollbarLayer() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if m_layerForVerticalScrollbar == nil {
+        m_layerForVerticalScrollbar = GraphicsLayer.create(
+          factory: graphicsLayerFactory(), client: self)
+        m_layerForVerticalScrollbar!.setAllowsBackingStoreDetaching(allowDetaching: false)
+        m_layerForVerticalScrollbar!.setAllowsTiling(allowsTiling: false)
+        m_layerForVerticalScrollbar!.setShowDebugBorder(show: m_showDebugBorders)
+        m_layerForVerticalScrollbar!.setName(name: "vertical scrollbar container")  // TODO(asuhan): use a static string
+        m_overflowControlsHostLayer!.addChild(childLayer: m_layerForVerticalScrollbar!)
+
+        if let scrollingCoordinator = scrollingCoordinator() {
+          scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+            scrollableArea: m_renderView.frameView(), orientation: .Vertical)
+        }
+      }
     } else if m_layerForVerticalScrollbar != nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      GraphicsLayer.unparentAndClear(layer: m_layerForVerticalScrollbar)
+
+      if let scrollingCoordinator = scrollingCoordinator() {
+        scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+          scrollableArea: m_renderView.frameView(), orientation: .Vertical)
+      }
     }
 
     if requiresScrollCornerLayer() {
