@@ -70,8 +70,8 @@ private func clearBackingSharingLayerProviders(
 
 // FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.
 private func hasVisibleBoxDecorations(style: RenderStyleWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return style.hasVisibleBorder() || style.hasBorderRadius() || style.hasOutline()
+    || style.hasUsedAppearance() || style.boxShadow() != nil || style.hasFilter()
 }
 
 private func canDirectlyCompositeBackgroundBackgroundImage(renderer: RenderElementWrapper) -> Bool {

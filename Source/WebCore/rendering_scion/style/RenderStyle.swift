@@ -169,6 +169,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasVisibleBorder() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasBackgroundImage() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1218,6 +1223,11 @@ class RenderStyleWrapper {
   }
 
   func filter() -> FilterOperations {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasFilter() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
