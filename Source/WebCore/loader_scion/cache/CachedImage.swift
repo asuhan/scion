@@ -22,6 +22,11 @@
 */
 
 final class CachedImageWrapper {
+  func image() -> ImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageForRenderer(renderer: RenderObjectWrapper?) -> ImageWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

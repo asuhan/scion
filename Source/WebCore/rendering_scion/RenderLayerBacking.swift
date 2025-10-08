@@ -75,8 +75,45 @@ private func hasVisibleBoxDecorations(style: RenderStyleWrapper) -> Bool {
 }
 
 private func canDirectlyCompositeBackgroundBackgroundImage(renderer: RenderElementWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let style = renderer.style()
+
+  if !GraphicsLayer.supportsContentsTiling() {
+    return false
+  }
+
+  let fillLayer = style.backgroundLayers()
+  if fillLayer.next() != nil {
+    return false
+  }
+
+  if !fillLayer.imagesAreLoaded(renderer: renderer) {
+    return false
+  }
+
+  if fillLayer.attachment != .ScrollBackground {
+    return false
+  }
+
+  // FIXME: Allow color+image compositing when it makes sense.
+  // For now bailing out.
+  if style.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyBackgroundColor)
+    .isVisible()
+  {
+    return false
+  }
+
+  // FIXME: support gradients with isGeneratedImage.
+  let styleImage = fillLayer.image()!
+  if !styleImage.hasCachedImage() {
+    return false
+  }
+
+  let image = styleImage.cachedImage()!.image()!
+  if !image.isBitmapImage() {
+    return false
+  }
+
+  return true
 }
 
 private func hasPaintedBoxDecorationsOrBackgroundImage(renderer: RenderElementWrapper) -> Bool {

@@ -178,4 +178,9 @@ class GraphicsLayer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func supportsContentsTiling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
