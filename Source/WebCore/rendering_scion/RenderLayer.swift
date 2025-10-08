@@ -976,6 +976,11 @@ class RenderLayerWrapper {
     return layout_scion.hasVisibleBoxDecorationsOrBackground(renderer: renderer())
   }
 
+  func hasVisibleBoxDecorations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private static func isContainerForPositioned(
     layer: RenderLayerWrapper, position: PositionType, establishesTopLayer: Bool
   ) -> Bool {

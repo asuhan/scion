@@ -68,6 +68,59 @@ private func clearBackingSharingLayerProviders(
   }
 }
 
+// FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.
+private func hasVisibleBoxDecorations(style: RenderStyleWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func canDirectlyCompositeBackgroundBackgroundImage(renderer: RenderElementWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func hasPaintedBoxDecorationsOrBackgroundImage(renderer: RenderElementWrapper) -> Bool {
+  let style = renderer.style()
+
+  if hasVisibleBoxDecorations(style: style) {
+    return true
+  }
+
+  if !style.hasBackgroundImage() {
+    return false
+  }
+
+  return !canDirectlyCompositeBackgroundBackgroundImage(renderer: renderer)
+}
+
+private func hasPerspectiveOrPreserves3D(style: RenderStyleWrapper) -> Bool {
+  return style.hasPerspective() || style.preserves3D()
+}
+
+private func supportsDirectlyCompositedBoxDecorations(renderer: RenderLayerModelObjectWrapper)
+  -> Bool
+{
+  if renderer.hasClip() {
+    return false
+  }
+
+  if hasPaintedBoxDecorationsOrBackgroundImage(renderer: renderer) {
+    return false
+  }
+
+  let style = renderer.style()
+  // FIXME: We can't create a directly composited background if this
+  // layer will have children that intersect with the background layer.
+  // A better solution might be to introduce a flattening layer if
+  // we do direct box decoration composition.
+  // https://bugs.webkit.org/show_bug.cgi?id=119461
+  if hasPerspectiveOrPreserves3D(style: style) {
+    return false
+  }
+
+  return true
+}
+
 // RenderLayerBacking controls the compositing behavior for a single RenderLayer.
 // It holds the various GraphicsLayers, and makes decisions about intra-layer rendering
 // optimizations.
@@ -366,8 +419,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func paintsBoxDecorations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !owningLayer.hasVisibleBoxDecorations() {
+      return false
+    }
+
+    return !supportsDirectlyCompositedBoxDecorations(renderer: renderer())
   }
 
   private func updateDrawsContent(contentsInfo: inout PaintedContentsInfo) {

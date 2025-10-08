@@ -169,6 +169,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasBackgroundImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasUsedAppearance() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
