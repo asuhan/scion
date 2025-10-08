@@ -708,6 +708,11 @@ class RenderStyleWrapper {
     return TextWrapStyle(rawValue: wk_interop.RenderStyle_textWrapStyle(p))!
   }
 
+  func backgroundClip() -> FillBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func backgroundSizeType() -> FillSizeType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

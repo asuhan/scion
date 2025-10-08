@@ -2136,6 +2136,10 @@ class RenderLayerWrapper {
     return renderer().hasBlendMode()  // FIXME: Why ask the renderer this given we have blendMode?
   }
 
+  func isolatesCompositedBlending() -> Bool {
+    return hasNotIsolatedCompositedBlendingDescendants && isCSSStackingContext()
+  }
+
   func isolatesBlending() -> Bool {
     return hasNotIsolatedBlendingDescendants && isCSSStackingContext()
   }
@@ -5057,6 +5061,7 @@ class RenderLayerWrapper {
     .NoNotCompositedReason
 
   private var blendMode: BlendMode = .Normal
+  private let hasNotIsolatedCompositedBlendingDescendants = false
   private var hasNotIsolatedBlendingDescendants = false
   private var hasNotIsolatedBlendingDescendantsStatusDirty = false
   private var repaintRectsValid = false

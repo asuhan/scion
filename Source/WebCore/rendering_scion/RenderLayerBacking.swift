@@ -72,7 +72,7 @@ struct PaintedContentsInfo {
       return contentsType
     }
 
-    if backing.isSimpleContainerCompositingLayer(contentsInfo: self) {
+    if backing.isSimpleContainerCompositingLayer(contentsInfo: &self) {
       contentsType = .SimpleContainer
     } else if backing.isDirectlyCompositedImage() {
       contentsType = .DirectlyCompositedImage
@@ -198,6 +198,11 @@ private func supportsDirectlyCompositedBoxDecorations(renderer: RenderLayerModel
   }
 
   return true
+}
+
+private func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 // RenderLayerBacking controls the compositing behavior for a single RenderLayer.
@@ -547,9 +552,36 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // A "simple container layer" is a RenderLayer which has no visible content to render.
   // It may have no children, or all its children may be themselves composited.
   // This is a useful optimization, because it allows us to avoid allocating backing store.
-  func isSimpleContainerCompositingLayer(contentsInfo: PaintedContentsInfo) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func isSimpleContainerCompositingLayer(contentsInfo: inout PaintedContentsInfo) -> Bool {
+    if owningLayer.isRenderViewLayer {
+      return false
+    }
+
+    if hasBackingSharingLayers() {
+      return false
+    }
+
+    if renderer().isRenderReplaced() && !isCompositedPlugin(renderer: renderer()) {
+      return false
+    }
+
+    if renderer().isRenderTextControl() {
+      return false
+    }
+
+    if contentsInfo.paintsBoxDecorations() || contentsInfo.paintsContent() {
+      return false
+    }
+
+    if renderer().style().backgroundClip() == .Text {
+      return false
+    }
+
+    if renderer().isDocumentElementRenderer() && owningLayer.isolatesCompositedBlending() {
+      return false
+    }
+
+    return true
   }
 
   // Returns true if this layer has content that needs to be rendered by painting into the backing store.
