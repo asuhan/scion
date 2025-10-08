@@ -40,6 +40,11 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

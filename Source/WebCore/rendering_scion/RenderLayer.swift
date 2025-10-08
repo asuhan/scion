@@ -4987,7 +4987,7 @@ class RenderLayerWrapper {
 
   func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
 
-  private let p: UnsafeMutableRawPointer
+  let p: UnsafeMutableRawPointer
   // Native fields below.
 
   private var compositingDirtyBits = Compositing()

@@ -23,6 +23,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func clearBackingSharingLayerProviders(
+  sharingLayers: ListSet<RenderLayerWrapper, UInt>, providerLayer: RenderLayerWrapper
+) {
+  for layer in sharingLayers {
+    if CPtrToInt(layer.backingProviderLayer?.p) == CPtrToInt(providerLayer.p) {
+      layer.setBackingProviderLayer(backingProvider: nil)
+    }
+  }
+}
+
 // RenderLayerBacking controls the compositing behavior for a single RenderLayer.
 // It holds the various GraphicsLayers, and makes decisions about intra-layer rendering
 // optimizations.
@@ -49,8 +59,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func clearBackingSharingLayers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    clearBackingSharingLayerProviders(
+      sharingLayers: backingSharingLayers, providerLayer: owningLayer)
+    backingSharingLayers.clear()
   }
 
   func updateConfigurationAfterStyleChange() {
@@ -125,7 +136,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private let owningLayer: RenderLayerWrapper
 
   // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
-  private let backingSharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
+  private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
 
   let isFrameLayerWithTiledBacking = false
 }
