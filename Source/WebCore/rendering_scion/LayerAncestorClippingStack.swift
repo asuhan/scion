@@ -32,6 +32,7 @@ class LayerAncestorClippingStack {
   }
 
   struct ClippingStackEntry {
+    let overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
     let clippingLayer: GraphicsLayer? = nil
   }
 

@@ -1424,8 +1424,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     role: ScrollCoordinationRole
   ) {
     if role == .ScrollingProxy {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(layer.isComposited())
+      let clippingStack = layer.backing!.ancestorClippingStack
+      if clippingStack == nil {
+        return
+      }
+
+      for entry in clippingStack!.stack {
+        if entry.overflowScrollProxyNodeID.bool() {
+          unregisterNode(
+            nodeID: entry.overflowScrollProxyNodeID, scrollingCoordinator: scrollingCoordinator)
+        }
+      }
+      return
     }
 
     let nodeID = layer.backing!.scrollingNodeIDForRole(role: role)

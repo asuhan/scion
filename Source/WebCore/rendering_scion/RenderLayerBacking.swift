@@ -632,7 +632,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
   private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
 
-  private let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
+  let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
   private let m_graphicsLayer: GraphicsLayer? = nil
   private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
