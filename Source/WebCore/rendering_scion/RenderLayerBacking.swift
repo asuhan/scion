@@ -24,7 +24,19 @@
  */
 
 // This acts as a cache of what we know about what is painting into this RenderLayerBacking.
-private struct PaintedContentsInfo {
+struct PaintedContentsInfo {
+  enum ContentsTypeDetermination {
+    case Unknown
+    case SimpleContainer
+    case DirectlyCompositedImage
+    case UnscaledBitmapOnly
+    case Painted
+  }
+
+  init(inBacking: RenderLayerBacking) {
+    backing = inBacking
+  }
+
   mutating func paintsBoxDecorationsDetermination() -> RequestState {
     if boxDecorations != .Unknown {
       return boxDecorations
@@ -44,18 +56,37 @@ private struct PaintedContentsInfo {
     fatalError("Not implemented")
   }
 
+  mutating func contentsTypeDetermination() -> ContentsTypeDetermination {
+    if contentsType != .Unknown {
+      return contentsType
+    }
+
+    if backing.isSimpleContainerCompositingLayer(contentsInfo: self) {
+      contentsType = .SimpleContainer
+    } else if backing.isDirectlyCompositedImage() {
+      contentsType = .DirectlyCompositedImage
+    } else if backing.isUnscaledBitmapOnly() {
+      contentsType = .UnscaledBitmapOnly
+    } else {
+      contentsType = .Painted
+    }
+
+    return contentsType
+  }
+
   func isSimpleContainer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func isDirectlyCompositedImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func isDirectlyCompositedImage() -> Bool {
+    return contentsTypeDetermination() == .DirectlyCompositedImage
   }
 
   let backing: RenderLayerBacking
   var boxDecorations: RequestState = .Unknown
+
+  private var contentsType: ContentsTypeDetermination = .Unknown
 }
 
 private func clearBackingSharingLayerProviders(
@@ -220,7 +251,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Update contents and clipping structure.
   func updateDrawsContent() {
-    var contentsInfo = PaintedContentsInfo(backing: self)
+    var contentsInfo = PaintedContentsInfo(inBacking: self)
     updateDrawsContent(contentsInfo: &contentsInfo)
   }
 
@@ -481,7 +512,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       return
     }
 
-    let hasPaintedContent = containsPaintedContent(contentsInfo: contentsInfo)
+    let hasPaintedContent = containsPaintedContent(contentsInfo: &contentsInfo)
 
     // FIXME: we could refine this to only allocate backing for one of these layers if possible.
     m_graphicsLayer!.setDrawsContent(b: hasPaintedContent)
@@ -496,8 +527,17 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  // Returns true if this compositing layer has no visible content.
+  // A "simple container layer" is a RenderLayer which has no visible content to render.
+  // It may have no children, or all its children may be themselves composited.
+  // This is a useful optimization, because it allows us to avoid allocating backing store.
+  func isSimpleContainerCompositingLayer(contentsInfo: PaintedContentsInfo) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true if this layer has content that needs to be rendered by painting into the backing store.
-  private func containsPaintedContent(contentsInfo: PaintedContentsInfo) -> Bool {
+  private func containsPaintedContent(contentsInfo: inout PaintedContentsInfo) -> Bool {
     if contentsInfo.isSimpleContainer() || paintsIntoWindow() || paintsIntoCompositedAncestor()
       || artificiallyInflatedBounds || owningLayer.isReflection()
     {
@@ -521,6 +561,17 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
 
     return true
+  }
+
+  // Returns true if the RenderLayer just contains an image that we can composite directly.
+  func isDirectlyCompositedImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isUnscaledBitmapOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private let owningLayer: RenderLayerWrapper
