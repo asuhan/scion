@@ -46,9 +46,9 @@ struct PaintedContentsInfo {
     return boxDecorations
   }
 
-  func paintsBoxDecorations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func paintsBoxDecorations() -> Bool {
+    let state = paintsBoxDecorationsDetermination()
+    return state == .True || state == .Undetermined
   }
 
   func paintsContent() -> Bool {
@@ -74,9 +74,8 @@ struct PaintedContentsInfo {
     return contentsType
   }
 
-  func isSimpleContainer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func isSimpleContainer() -> Bool {
+    return contentsTypeDetermination() == .SimpleContainer
   }
 
   mutating func isDirectlyCompositedImage() -> Bool {
