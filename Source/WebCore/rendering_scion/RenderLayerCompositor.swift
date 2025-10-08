@@ -198,8 +198,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func fixedRootBackgroundLayer() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Get the fixed root background from the RenderView layer's backing.
+    let viewLayer = m_renderView.layer()
+    if viewLayer == nil {
+      return nil
+    }
+
+    if viewLayer!.isComposited() && viewLayer!.backing!.backgroundLayerPaintsFixedRootBackground {
+      return viewLayer!.backing!.backgroundLayer
+    }
+
+    return nil
   }
 
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.

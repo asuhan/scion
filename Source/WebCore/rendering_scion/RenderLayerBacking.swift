@@ -631,7 +631,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   private let m_graphicsLayer: GraphicsLayer? = nil
   private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
-  private let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
+  let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
 
   private let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
