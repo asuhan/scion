@@ -1423,6 +1423,22 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, scrollingCoordinator: ScrollingCoordinatorWrapper,
     role: ScrollCoordinationRole
   ) {
+    if role == .ScrollingProxy {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    let nodeID = layer.backing!.scrollingNodeIDForRole(role: role)
+    if !nodeID.bool() {
+      return
+    }
+
+    unregisterNode(nodeID: nodeID, scrollingCoordinator: scrollingCoordinator)
+  }
+
+  private func unregisterNode(
+    nodeID: ScrollingNodeIDWrapper, scrollingCoordinator: ScrollingCoordinatorWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
