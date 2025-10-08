@@ -45,6 +45,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func isTransparent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func baseBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -83,6 +88,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func paintBehavior() -> PaintBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func documentBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

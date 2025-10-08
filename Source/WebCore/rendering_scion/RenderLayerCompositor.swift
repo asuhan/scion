@@ -478,9 +478,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     detachScrollCoordinatedLayer(layer: layer, roles: allScrollCoordinationRoles)
   }
 
-  func viewHasTransparentBackground(backgroundColor: ColorWrapper? = nil) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func viewHasTransparentBackground() -> Bool {
+    if m_renderView.frameView().isTransparent() {
+      return true
+    }
+
+    var documentBackgroundColor = m_renderView.frameView().documentBackgroundColor()
+    if !documentBackgroundColor.isValid() {
+      documentBackgroundColor = m_renderView.frameView().baseBackgroundColor()
+    }
+
+    assert(documentBackgroundColor.isValid())
+
+    return !documentBackgroundColor.isOpaque()
   }
 
   func updateRootContentLayerClipping() {
