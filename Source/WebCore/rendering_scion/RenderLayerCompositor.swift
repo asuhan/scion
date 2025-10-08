@@ -53,7 +53,7 @@ private func styleAffectsLayerGeometry(style: RenderStyleWrapper) -> Bool {
   return style.hasClip() || style.clipPath() != nil || style.hasBorderRadius()
 }
 
-private func optEq<T: AnyObject>(_ a: T?, _ b: T?) -> Bool {
+func optEq<T: AnyObject>(_ a: T?, _ b: T?) -> Bool {
   if a != nil && b != nil {
     return ObjectIdentifier(a!) == ObjectIdentifier(b!)
   }

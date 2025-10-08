@@ -44,8 +44,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func removeBackingSharingLayer(layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    layer.setBackingProviderLayer(backingProvider: nil)
+    backingSharingLayers.remove(value: layer)
   }
 
   func clearBackingSharingLayers() {
@@ -123,6 +123,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private let owningLayer: RenderLayerWrapper
+
+  // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
+  private let backingSharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
 
   let isFrameLayerWithTiledBacking = false
 }

@@ -2131,6 +2131,18 @@ class RenderLayerWrapper {
     return false
   }
 
+  func setBackingProviderLayer(backingProvider: RenderLayerWrapper?) {
+    if optEq(backingProvider, backingProviderLayer) {
+      return
+    }
+
+    if !renderer().renderTreeBeingDestroyed() {
+      clearClipRectsIncludingDescendants()
+    }
+
+    backingProviderLayer = backingProvider
+  }
+
   func disconnectFromBackingProviderLayer() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -5043,7 +5055,7 @@ class RenderLayerWrapper {
   private var m_first: RenderLayerWrapper? = nil
   private var m_last: RenderLayerWrapper? = nil
 
-  let backingProviderLayer: RenderLayerWrapper? = nil
+  var backingProviderLayer: RenderLayerWrapper? = nil
 
   // For layers that establish stacking contexts, m_posZOrderList holds a sorted list of all the
   // descendant layers within the stacking context that have z-indices of 0 or greater

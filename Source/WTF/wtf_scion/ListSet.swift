@@ -34,6 +34,12 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func remove(value: T) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
