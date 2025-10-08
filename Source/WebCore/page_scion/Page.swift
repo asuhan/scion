@@ -34,6 +34,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollingCoordinator() -> ScrollingCoordinatorWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func deviceScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

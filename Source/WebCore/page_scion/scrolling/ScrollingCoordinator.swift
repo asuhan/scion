@@ -59,6 +59,12 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  // Node will be destroyed, and its children left unparented.
+  func unparentChildrenAndDestroyNode(nodeID: ScrollingNodeIDWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollableAreaScrollbarLayerDidChange(
     scrollableArea: ScrollableAreaWrapper, orientation: ScrollbarOrientation
   ) {

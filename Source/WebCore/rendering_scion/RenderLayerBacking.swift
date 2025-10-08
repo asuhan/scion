@@ -120,8 +120,53 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func detachFromScrollingCoordinator(roles: ScrollCoordinationRole) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !scrollingNodeID.bool() && ancestorClippingStack != nil && !frameHostingNodeID.bool()
+      && !pluginHostingNodeID.bool() && !viewportConstrainedNodeID.bool()
+      && !positioningNodeID.bool()
+    {
+      return
+    }
+
+    let scrollingCoordinator = owningLayer.page().scrollingCoordinator()
+    if scrollingCoordinator == nil {
+      return
+    }
+
+    if roles.contains(.Scrolling) && scrollingNodeID.bool() {
+      print("Compositing: Detaching Scrolling node \(scrollingNodeID)")
+      scrollingCoordinator!.unparentChildrenAndDestroyNode(nodeID: scrollingNodeID)
+      scrollingNodeID = ScrollingNodeIDWrapper()
+    }
+
+    if roles.contains(.ScrollingProxy) && ancestorClippingStack != nil {
+      ancestorClippingStack!.detachFromScrollingCoordinator(
+        scrollingCoordinator: scrollingCoordinator!)
+      print("Compositing: Detaching nodes in ancestor clipping stack")
+    }
+
+    if roles.contains(.FrameHosting) && frameHostingNodeID.bool() {
+      print("Compositing: Detaching FrameHosting node \(frameHostingNodeID)")
+      scrollingCoordinator!.unparentChildrenAndDestroyNode(nodeID: frameHostingNodeID)
+      frameHostingNodeID = ScrollingNodeIDWrapper()
+    }
+
+    if roles.contains(.PluginHosting) && pluginHostingNodeID.bool() {
+      print("Compositing: Detaching PluginHosting node \(pluginHostingNodeID)")
+      scrollingCoordinator!.unparentChildrenAndDestroyNode(nodeID: pluginHostingNodeID)
+      pluginHostingNodeID = ScrollingNodeIDWrapper()
+    }
+
+    if roles.contains(.ViewportConstrained) && viewportConstrainedNodeID.bool() {
+      print("Compositing: Detaching ViewportConstrained node \(viewportConstrainedNodeID)")
+      scrollingCoordinator!.unparentChildrenAndDestroyNode(nodeID: viewportConstrainedNodeID)
+      viewportConstrainedNodeID = ScrollingNodeIDWrapper()
+    }
+
+    if roles.contains(.Positioning) && positioningNodeID.bool() {
+      print("Compositing: Detaching Positioned node \(positioningNodeID)")
+      scrollingCoordinator!.unparentChildrenAndDestroyNode(nodeID: positioningNodeID)
+      positioningNodeID = ScrollingNodeIDWrapper()
+    }
   }
 
   func hasMaskLayer() -> Bool {
@@ -353,6 +398,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   private let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
   private let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+
+  private var viewportConstrainedNodeID = ScrollingNodeIDWrapper()
+  private var scrollingNodeID = ScrollingNodeIDWrapper()
+  private var frameHostingNodeID = ScrollingNodeIDWrapper()
+  private var pluginHostingNodeID = ScrollingNodeIDWrapper()
+  private var positioningNodeID = ScrollingNodeIDWrapper()
 
   let isFrameLayerWithTiledBacking = false
   let backgroundLayerPaintsFixedRootBackground = false
