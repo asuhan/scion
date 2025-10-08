@@ -147,6 +147,18 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func willDestroyLayer(layer: GraphicsLayer?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func createGraphicsLayer(name: String, layerType: GraphicsLayer.`Type` = .Normal)
+    -> GraphicsLayer
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func renderer() -> RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -158,9 +170,49 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   // Masking layer is used for masks or clip-path.
-  private func updateMaskingLayer(hasMask: Bool, hasClipPath: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  @discardableResult
+  private func updateMaskingLayer(hasMask: Bool, hasClipPath: Bool) -> Bool {
+    var layerChanged = false
+    if hasMask || hasClipPath {
+      var maskPhases: GraphicsLayerPaintingPhase = []
+      if hasMask {
+        maskPhases = .Mask
+      }
+
+      if hasClipPath {
+        // If we have a mask, we need to paint the combined clip-path and mask into the mask layer.
+        if hasMask || renderer().style().clipPath()!.type == .Reference
+          || !GraphicsLayer.supportsLayerType(type: .Shape)
+        {
+          maskPhases.update(with: .ClipPath)
+        }
+      }
+
+      let paintsContent = !maskPhases.isEmpty
+      let requiredLayerType: GraphicsLayer.`Type` = paintsContent ? .Normal : .Shape
+      if maskLayer != nil && maskLayer!.type() != requiredLayerType {
+        m_graphicsLayer!.setMaskLayer(layer: nil)
+        willDestroyLayer(layer: maskLayer)
+        GraphicsLayer.clear(layer: maskLayer)
+      }
+
+      if maskLayer == nil {
+        maskLayer = createGraphicsLayer(name: "mask", layerType: requiredLayerType)
+        layerChanged = true
+        m_graphicsLayer!.setMaskLayer(layer: maskLayer)
+        // We need a geometry update to size the new mask layer.
+        owningLayer.setNeedsCompositingGeometryUpdate()
+      }
+      maskLayer!.setDrawsContent(b: paintsContent)
+      maskLayer!.setPaintingPhase(phase: maskPhases)
+    } else if maskLayer != nil {
+      m_graphicsLayer!.setMaskLayer(layer: nil)
+      willDestroyLayer(layer: maskLayer)
+      GraphicsLayer.clear(layer: maskLayer)
+      layerChanged = true
+    }
+
+    return layerChanged
   }
 
   private func updateOpacity(style: RenderStyleWrapper) {
@@ -236,6 +288,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
   private let m_graphicsLayer: GraphicsLayer? = nil
+  private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
 
   let isFrameLayerWithTiledBacking = false
 }

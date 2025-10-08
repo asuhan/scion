@@ -23,4 +23,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct GraphicsLayerPaintingPhase: OptionSet {
+  let rawValue: UInt8
+
+  static let Background = GraphicsLayerPaintingPhase(rawValue: 1 << 0)
+  static let Foreground = GraphicsLayerPaintingPhase(rawValue: 1 << 1)
+  static let Mask = GraphicsLayerPaintingPhase(rawValue: 1 << 2)
+  static let ClipPath = GraphicsLayerPaintingPhase(rawValue: 1 << 3)
+  static let OverflowContents = GraphicsLayerPaintingPhase(rawValue: 1 << 4)
+  static let CompositedScroll = GraphicsLayerPaintingPhase(rawValue: 1 << 5)
+  static let ChildClippingMask = GraphicsLayerPaintingPhase(rawValue: 1 << 6)
+}
+
 class GraphicsLayerClientWrapper {}

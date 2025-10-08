@@ -40,10 +40,21 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // Clear the client, and clear the RefPtr, but leave parented.
+  static func clear(layer: GraphicsLayer?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func create(
     factory: GraphicsLayerFactory?, client: GraphicsLayerClientWrapper,
     layerType: GraphicsLayer.`Type` = .Normal
   ) -> GraphicsLayer {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func type() -> `Type` {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -60,6 +71,11 @@ class GraphicsLayer {
   }
 
   func removeFromParent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMaskLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -106,7 +122,17 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setDrawsContent(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setBlendMode(blendMode: BlendMode) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setPaintingPhase(phase: GraphicsLayerPaintingPhase) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -144,6 +170,11 @@ class GraphicsLayer {
   }
 
   func setAllowsTiling(allowsTiling: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func supportsLayerType(type: `Type`) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

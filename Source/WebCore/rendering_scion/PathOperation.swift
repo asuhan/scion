@@ -29,6 +29,14 @@
  */
 
 class PathOperation: Equatable {
+  enum `Type`: UInt8 {
+    case Reference
+    case Shape
+    case Box
+    case Ray
+  }
+
+  let type: `Type` = .Reference
   let referenceBox: CSSBoxType = .BoxMissing
 
   static func == (lhs: PathOperation, rhs: PathOperation) -> Bool {
