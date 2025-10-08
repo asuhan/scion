@@ -25,6 +25,15 @@
 
 // This acts as a cache of what we know about what is painting into this RenderLayerBacking.
 private struct PaintedContentsInfo {
+  mutating func paintsBoxDecorationsDetermination() -> RequestState {
+    if boxDecorations != .Unknown {
+      return boxDecorations
+    }
+
+    boxDecorations = backing.paintsBoxDecorations() ? .True : .False
+    return boxDecorations
+  }
+
   func paintsBoxDecorations() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -46,6 +55,7 @@ private struct PaintedContentsInfo {
   }
 
   let backing: RenderLayerBacking
+  var boxDecorations: RequestState = .Unknown
 }
 
 private func clearBackingSharingLayerProviders(
@@ -353,6 +363,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
     m_graphicsLayer!.setContentsMinificationFilter(filter: minificationFilter)
     m_graphicsLayer!.setContentsMagnificationFilter(filter: magnificationFilter)
+  }
+
+  func paintsBoxDecorations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updateDrawsContent(contentsInfo: inout PaintedContentsInfo) {

@@ -84,6 +84,14 @@ enum ShouldApplyRootOffsetToFragments {
   case IgnoreRootOffsetForFragments
 }
 
+enum RequestState {
+  case Unknown
+  case DontCare
+  case False
+  case True
+  case Undetermined
+}
+
 enum IndirectCompositingReason {
   case None
   case Clipping
