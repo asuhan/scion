@@ -1,5 +1,12 @@
 /*
- * Copyright (C) 2004, 2006, 2007, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2004-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2008, 2010 Nokia Corporation and/or its subsidiary(-ies)
+ * Copyright (C) 2007 Alp Toker <alp@atoker.com>
+ * Copyright (C) 2008 Eric Seidel <eric@webkit.org>
+ * Copyright (C) 2008 Dirk Schulze <krit@webkit.org>
+ * Copyright (C) 2010 Torch Mobile (Beijing) Co. Ltd. All rights reserved.
+ * Copyright (C) 2012 Intel Corporation. All rights reserved.
+ * Copyright (C) 2013, 2014 Adobe Systems Incorporated. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,8 +30,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
-  func canvasElement() -> HTMLCanvasElementWrapper {
+class CanvasRenderingContext2DBaseWrapper: CanvasRenderingContextWrapper {
+  func isAccelerated() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -448,6 +448,16 @@ enum CanvasCompositingStrategy {
 }
 
 func canvasCompositingStrategy(renderer: RenderObjectWrapper) -> CanvasCompositingStrategy {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(renderer.isRenderHTMLCanvas())
+  let context = (renderer as! RenderHTMLCanvasWrapper).canvasElement().renderingContext()
+  if context == nil {
+    return .CanvasPaintedToEnclosingLayer
+  }
+  if context!.delegatesDisplay() {
+    return .CanvasAsLayerContents
+  }
+  if let context2D = context as? CanvasRenderingContext2DBaseWrapper, context2D.isAccelerated() {
+    return .CanvasPaintedToLayer
+  }
+  return .CanvasPaintedToEnclosingLayer
 }
