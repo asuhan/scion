@@ -27,12 +27,16 @@
 // but not in its paint order ancestry.
 class LayerAncestorClippingStack {
   func detachFromScrollingCoordinator(scrollingCoordinator: ScrollingCoordinatorWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for var entry in stack {
+      if entry.overflowScrollProxyNodeID.bool() {
+        scrollingCoordinator.unparentChildrenAndDestroyNode(nodeID: entry.overflowScrollProxyNodeID)
+        entry.overflowScrollProxyNodeID = ScrollingNodeIDWrapper()
+      }
+    }
   }
 
   struct ClippingStackEntry {
-    let overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
+    var overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
     let clippingLayer: GraphicsLayer? = nil
   }
 
