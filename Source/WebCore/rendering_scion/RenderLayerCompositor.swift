@@ -506,8 +506,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     func backingProviderForLayer(layer: RenderLayerWrapper) -> Provider? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      for candidate in backingProviderCandidates {
+        if candidate.sharingLayers.contains(value: layer) {
+          return candidate
+        }
+      }
+
+      return nil
     }
 
     // Add a layer that would repaint into a layer in m_backingSharingLayers.

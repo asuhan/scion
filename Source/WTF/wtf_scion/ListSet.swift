@@ -28,6 +28,11 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     let isNewEntry: Bool
   }
 
+  func contains(value: T) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func add(value: T) -> AddResult {
     // TODO(asuhan): implement this
