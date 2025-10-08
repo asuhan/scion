@@ -178,9 +178,24 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  private func updateBackdropRoot() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  @discardableResult
+  private func updateBackdropRoot() -> Bool {
+    // Don't try to make the RenderView's layer a backdrop root if it's going to
+    // paint into the window since it won't work (WebKitLegacy only).
+    var willBeBackdropRoot = owningLayer.isBackdropRoot() && !paintsIntoWindow()
+
+    // If the RenderView is opaque, then that will occlude any pixels behind it and we don't need
+    // to isolate it as a backdrop root.
+    if owningLayer.isRenderViewLayer && !compositor().viewHasTransparentBackground() {
+      willBeBackdropRoot = false
+    }
+
+    if m_graphicsLayer!.isBackdropRoot() == willBeBackdropRoot {
+      return false
+    }
+
+    m_graphicsLayer!.setIsBackdropRoot(isBackdropRoot: willBeBackdropRoot)
+    return true
   }
 
   private func updateBlendMode(style: RenderStyleWrapper) {

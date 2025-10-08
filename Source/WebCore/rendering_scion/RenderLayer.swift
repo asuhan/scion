@@ -2114,6 +2114,11 @@ class RenderLayerWrapper {
     return renderer().style().filterOutsets()
   }
 
+  func isBackdropRoot() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasBlendMode() -> Bool {
     return renderer().hasBlendMode()  // FIXME: Why ask the renderer this given we have blendMode?
   }

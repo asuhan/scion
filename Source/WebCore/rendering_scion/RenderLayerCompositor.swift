@@ -469,6 +469,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     detachScrollCoordinatedLayer(layer: layer, roles: allScrollCoordinationRoles)
   }
 
+  func viewHasTransparentBackground(backgroundColor: ColorWrapper? = nil) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateRootContentLayerClipping() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -64,6 +64,16 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setIsBackdropRoot(isBackdropRoot: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isBackdropRoot() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The given layer will replicate this layer and its children; the replica renders behind this layer.
   func setReplicatedByLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
