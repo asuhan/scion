@@ -23,6 +23,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// This acts as a cache of what we know about what is painting into this RenderLayerBacking.
+private struct PaintedContentsInfo {
+  func paintsBoxDecorations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintsContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let backing: RenderLayerBacking
+}
+
 private func clearBackingSharingLayerProviders(
   sharingLayers: ListSet<RenderLayerWrapper, UInt>, providerLayer: RenderLayerWrapper
 ) {
@@ -51,6 +66,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     compositor().removeFromScrollCoordinatedLayers(layer: owningLayer)
 
     clearBackingSharingLayers()
+  }
+
+  func hasBackingSharingLayers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func removeBackingSharingLayer(layer: RenderLayerWrapper) {
@@ -90,8 +110,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Update contents and clipping structure.
   func updateDrawsContent() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var contentsInfo = PaintedContentsInfo(backing: self)
+    updateDrawsContent(contentsInfo: &contentsInfo)
   }
 
   func graphicsLayer() -> GraphicsLayer? {
@@ -280,6 +300,45 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     m_graphicsLayer!.setContentsMagnificationFilter(filter: magnificationFilter)
   }
 
+  private func updateDrawsContent(contentsInfo: inout PaintedContentsInfo) {
+    if scrollContainerLayer != nil {
+      // We don't have to consider overflow controls, because we know that the scrollbars are drawn elsewhere.
+      // m_graphicsLayer only needs backing store if the non-scrolling parts (background, outlines, borders, shadows etc) need to paint.
+      // m_scrollContainerLayer never has backing store.
+      // m_scrolledContentsLayer only needs backing store if the scrolled contents need to paint.
+      let hasNonScrollingPaintedContent =
+        owningLayer.hasVisibleContent && owningLayer.hasVisibleBoxDecorationsOrBackground()
+      m_graphicsLayer!.setDrawsContent(b: hasNonScrollingPaintedContent)
+
+      let hasScrollingPaintedContent =
+        hasBackingSharingLayers()
+        || (owningLayer.hasVisibleContent
+          && (renderer().hasBackground() || contentsInfo.paintsContent()))
+      scrolledContentsLayer!.setDrawsContent(b: hasScrollingPaintedContent)
+      return
+    }
+
+    let hasPaintedContent = containsPaintedContent(contentsInfo: contentsInfo)
+
+    // FIXME: we could refine this to only allocate backing for one of these layers if possible.
+    m_graphicsLayer!.setDrawsContent(b: hasPaintedContent)
+    if foregroundLayer != nil {
+      foregroundLayer!.setDrawsContent(b: hasPaintedContent)
+    }
+
+    if backgroundLayer != nil {
+      backgroundLayer!.setDrawsContent(
+        b: backgroundLayerPaintsFixedRootBackground
+          ? hasPaintedContent : contentsInfo.paintsBoxDecorations())
+    }
+  }
+
+  // Returns true if this layer has content that needs to be rendered by painting into the backing store.
+  private func containsPaintedContent(contentsInfo: PaintedContentsInfo) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let owningLayer: RenderLayerWrapper
 
   // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
@@ -288,9 +347,15 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
   private let m_graphicsLayer: GraphicsLayer? = nil
+  private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
+  private let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
 
+  private let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+  private let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+
   let isFrameLayerWithTiledBacking = false
+  let backgroundLayerPaintsFixedRootBackground = false
 }
 
 enum CanvasCompositingStrategy {

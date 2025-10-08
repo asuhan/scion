@@ -5026,7 +5026,7 @@ class RenderLayerWrapper {
   private let repaintStatus: RepaintStatus = .NeedsNormalRepaint
 
   private var visibleContentStatusDirty = false
-  private var hasVisibleContent = false
+  var hasVisibleContent = false
   private var visibleDescendantStatusDirty = false
   var hasVisibleDescendant = false
 
