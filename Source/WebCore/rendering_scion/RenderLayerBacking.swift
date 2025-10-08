@@ -35,6 +35,16 @@ private struct PaintedContentsInfo {
     fatalError("Not implemented")
   }
 
+  func isSimpleContainer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isDirectlyCompositedImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let backing: RenderLayerBacking
 }
 
@@ -380,8 +390,29 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Returns true if this layer has content that needs to be rendered by painting into the backing store.
   private func containsPaintedContent(contentsInfo: PaintedContentsInfo) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if contentsInfo.isSimpleContainer() || paintsIntoWindow() || paintsIntoCompositedAncestor()
+      || artificiallyInflatedBounds || owningLayer.isReflection()
+    {
+      return false
+    }
+
+    if contentsInfo.isDirectlyCompositedImage() {
+      return false
+    }
+
+    if let styleable = StyleableWrapper.fromRenderer(renderer: renderer()) {
+      if !styleable.mayHaveNonZeroOpacity() {
+        return false
+      }
+    }
+
+    if renderer() is RenderHTMLCanvasWrapper
+      && canvasCompositingStrategy(renderer: renderer()) == .CanvasAsLayerContents
+    {
+      return owningLayer.hasVisibleBoxDecorationsOrBackground()
+    }
+
+    return true
   }
 
   private let owningLayer: RenderLayerWrapper
@@ -405,6 +436,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var pluginHostingNodeID = ScrollingNodeIDWrapper()
   private var positioningNodeID = ScrollingNodeIDWrapper()
 
+  private let artificiallyInflatedBounds = false  // bounds had to be made non-zero to make transform-origin work
   let isFrameLayerWithTiledBacking = false
   let backgroundLayerPaintsFixedRootBackground = false
 }
