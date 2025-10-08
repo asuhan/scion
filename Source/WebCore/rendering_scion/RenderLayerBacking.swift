@@ -51,9 +51,20 @@ struct PaintedContentsInfo {
     return state == .True || state == .Undetermined
   }
 
-  func paintsContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func paintsContentDetermination() -> RequestState {
+    if content != .Unknown {
+      return content
+    }
+
+    let contentRequest = RenderLayerWrapper.PaintedContentRequest()
+    content = backing.paintsContent(request: contentRequest) ? .True : .False
+
+    return content
+  }
+
+  mutating func paintsContent() -> Bool {
+    let state = paintsContentDetermination()
+    return state == .True || state == .Undetermined
   }
 
   mutating func contentsTypeDetermination() -> ContentsTypeDetermination {
@@ -84,6 +95,7 @@ struct PaintedContentsInfo {
 
   let backing: RenderLayerBacking
   var boxDecorations: RequestState = .Unknown
+  var content: RequestState = .Unknown
 
   private var contentsType: ContentsTypeDetermination = .Unknown
 }
@@ -491,6 +503,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
 
     return !supportsDirectlyCompositedBoxDecorations(renderer: renderer())
+  }
+
+  func paintsContent(request: RenderLayerWrapper.PaintedContentRequest) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updateDrawsContent(contentsInfo: inout PaintedContentsInfo) {
