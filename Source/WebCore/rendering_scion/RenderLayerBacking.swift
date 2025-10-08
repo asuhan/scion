@@ -199,8 +199,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateBlendMode(style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: where is the blend mode updated when m_ancestorClippingStacks come and go?
+    if ancestorClippingStack != nil {
+      ancestorClippingStack!.stack.first!.clippingLayer!.setBlendMode(blendMode: style.blendMode())
+      m_graphicsLayer!.setBlendMode(blendMode: .Normal)
+    } else {
+      m_graphicsLayer!.setBlendMode(blendMode: style.blendMode())
+    }
   }
 
   private func updateContentsScalingFilters(style: RenderStyleWrapper) {
@@ -227,6 +232,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
   private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
+
+  private let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
   private let m_graphicsLayer: GraphicsLayer? = nil
 

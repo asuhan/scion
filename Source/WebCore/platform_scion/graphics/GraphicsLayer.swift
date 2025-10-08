@@ -106,6 +106,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setBlendMode(blendMode: BlendMode) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum ShouldClipToLayer {
     case DoNotClipToLayer
     case ClipToLayer

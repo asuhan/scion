@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     HitTestResult.swift
     InlineBoxPainter.swift
     InlineWalker.swift
+    LayerAncestorClippingStack.swift
     LayerFragment.swift
     LegacyInlineBox.swift
     LegacyInlineTextBox.swift
