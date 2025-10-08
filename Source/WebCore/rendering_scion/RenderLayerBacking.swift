@@ -64,9 +64,28 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     backingSharingLayers.clear()
   }
 
+  // This can only update things that don't require up-to-date layout.
   func updateConfigurationAfterStyleChange() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    updateMaskingLayer(hasMask: renderer().hasMask(), hasClipPath: renderer().hasClipPath())
+
+    if owningLayer.hasReflection() {
+      if let backing = owningLayer.reflectionLayer()!.backing {
+        let reflectionLayer = backing.graphicsLayer()
+        m_graphicsLayer!.setReplicatedByLayer(layer: reflectionLayer)
+      }
+    } else {
+      m_graphicsLayer!.setReplicatedByLayer(layer: nil)
+    }
+
+    // FIXME: do we care if opacity is animating?
+    let style = renderer().style()
+    updateOpacity(style: style)
+    updateFilters(style: style)
+
+    updateBackdropFilters(style: style)
+    updateBackdropRoot()
+    updateBlendMode(style: style)
+    updateContentsScalingFilters(style: style)
   }
 
   // Update contents and clipping structure.
@@ -128,7 +147,48 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func renderer() -> RenderLayerModelObjectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func compositor() -> RenderLayerCompositorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Masking layer is used for masks or clip-path.
+  private func updateMaskingLayer(hasMask: Bool, hasClipPath: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOpacity(style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateFilters(style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateBackdropFilters(style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateBackdropRoot() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateBlendMode(style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateContentsScalingFilters(style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -137,6 +197,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
   private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
+
+  private let m_graphicsLayer: GraphicsLayer? = nil
 
   let isFrameLayerWithTiledBacking = false
 }
