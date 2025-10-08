@@ -23,6 +23,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct ScrollCoordinationRole: OptionSet {
+  let rawValue: UInt8
+
+  static let ViewportConstrained = ScrollCoordinationRole(rawValue: 1 << 0)
+  static let Scrolling = ScrollCoordinationRole(rawValue: 1 << 1)
+  static let ScrollingProxy = ScrollCoordinationRole(rawValue: 1 << 2)
+  static let FrameHosting = ScrollCoordinationRole(rawValue: 1 << 3)
+  static let PluginHosting = ScrollCoordinationRole(rawValue: 1 << 4)
+  static let Positioning = ScrollCoordinationRole(rawValue: 1 << 5)
+}
+
+private let allScrollCoordinationRoles: ScrollCoordinationRole = [
+  .Scrolling,
+  .ScrollingProxy,
+  .ViewportConstrained,
+  .FrameHosting,
+  .PluginHosting,
+  .Positioning,
+]
+
 private func clippingChanged(oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper) -> Bool {
   return oldStyle.overflowX() != newStyle.overflowX()
     || oldStyle.overflowY() != newStyle.overflowY()
@@ -443,6 +463,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  func removeFromScrollCoordinatedLayers(layer: RenderLayerWrapper) {
+    detachScrollCoordinatedLayer(layer: layer, roles: allScrollCoordinationRoles)
   }
 
   func updateRootContentLayerClipping() {
@@ -1333,6 +1357,60 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  private func detachScrollCoordinatedLayer(
+    layer: RenderLayerWrapper, roles: ScrollCoordinationRole
+  ) {
+    let backing = layer.backing
+    if backing == nil {
+      return
+    }
+
+    let scrollingCoordinator = scrollingCoordinator()
+    if scrollingCoordinator == nil {
+      return
+    }
+
+    if roles.contains(.Scrolling) {
+      detachScrollCoordinatedLayerWithRole(
+        layer: layer, scrollingCoordinator: scrollingCoordinator!, role: .Scrolling)
+    }
+
+    if roles.contains(.ScrollingProxy) {
+      detachScrollCoordinatedLayerWithRole(
+        layer: layer, scrollingCoordinator: scrollingCoordinator!, role: .ScrollingProxy)
+    }
+
+    if roles.contains(.FrameHosting) {
+      detachScrollCoordinatedLayerWithRole(
+        layer: layer, scrollingCoordinator: scrollingCoordinator!, role: .FrameHosting)
+    }
+
+    if roles.contains(.PluginHosting) {
+      detachScrollCoordinatedLayerWithRole(
+        layer: layer, scrollingCoordinator: scrollingCoordinator!, role: .PluginHosting)
+    }
+
+    if roles.contains(.ViewportConstrained) {
+      detachScrollCoordinatedLayerWithRole(
+        layer: layer, scrollingCoordinator: scrollingCoordinator!, role: .ViewportConstrained)
+    }
+
+    if roles.contains(.Positioning) {
+      detachScrollCoordinatedLayerWithRole(
+        layer: layer, scrollingCoordinator: scrollingCoordinator!, role: .Positioning)
+    }
+
+    backing!.detachFromScrollingCoordinator(roles: roles)
+  }
+
+  private func detachScrollCoordinatedLayerWithRole(
+    layer: RenderLayerWrapper, scrollingCoordinator: ScrollingCoordinatorWrapper,
+    role: ScrollCoordinationRole
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {

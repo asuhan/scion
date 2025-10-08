@@ -30,13 +30,25 @@
 // There is one RenderLayerBacking for each RenderLayer that is composited.
 
 final class RenderLayerBacking: GraphicsLayerClientWrapper {
-  // Do cleanup while layer->backing() is still valid.
-  func willBeDestroyed() {
+  init(layer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  // Do cleanup while layer->backing() is still valid.
+  func willBeDestroyed() {
+    assert(ObjectIdentifier(owningLayer.backing!) == ObjectIdentifier(self))
+    compositor().removeFromScrollCoordinatedLayers(layer: owningLayer)
+
+    clearBackingSharingLayers()
+  }
+
   func removeBackingSharingLayer(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearBackingSharingLayers() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -53,6 +65,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func graphicsLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func detachFromScrollingCoordinator(roles: ScrollCoordinationRole) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -99,6 +116,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func compositor() -> RenderLayerCompositorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let owningLayer: RenderLayerWrapper
 
   let isFrameLayerWithTiledBacking = false
 }
