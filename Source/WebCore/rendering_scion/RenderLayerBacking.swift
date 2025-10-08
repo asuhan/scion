@@ -204,8 +204,23 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateContentsScalingFilters(style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().isRenderHTMLCanvas()
+      || canvasCompositingStrategy(renderer: renderer()) != .CanvasAsLayerContents
+    {
+      return
+    }
+    var minificationFilter: GraphicsLayer.ScalingFilter = .Linear
+    var magnificationFilter: GraphicsLayer.ScalingFilter = .Linear
+    switch style.imageRendering() {
+    case .CrispEdges, .Pixelated:
+      // FIXME: In order to match other code-paths, we treat these the same.
+      minificationFilter = .Nearest
+      magnificationFilter = .Nearest
+    default:
+      break
+    }
+    m_graphicsLayer!.setContentsMinificationFilter(filter: minificationFilter)
+    m_graphicsLayer!.setContentsMagnificationFilter(filter: magnificationFilter)
   }
 
   private let owningLayer: RenderLayerWrapper

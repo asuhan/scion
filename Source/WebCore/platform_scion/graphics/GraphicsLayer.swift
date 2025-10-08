@@ -111,6 +111,22 @@ class GraphicsLayer {
     case ClipToLayer
   }
 
+  enum ScalingFilter {
+    case Linear
+    case Nearest
+    case Trilinear
+  }
+
+  func setContentsMinificationFilter(filter: ScalingFilter) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContentsMagnificationFilter(filter: ScalingFilter) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setShowDebugBorder(show: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
