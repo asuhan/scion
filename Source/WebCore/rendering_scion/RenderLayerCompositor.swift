@@ -1090,8 +1090,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func notifyIFramesOfCompositingChange() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Compositing affects the answer to RenderIFrame::requiresAcceleratedCompositing(), so
+    // we need to schedule a style recalc in our parent document.
+    if let ownerElement = m_renderView.document().ownerElement() {
+      ownerElement.scheduleInvalidateStyleAndLayerComposition()
+    }
   }
 
   private func page() -> PageWrapper {
