@@ -278,8 +278,16 @@ private func intersectsWithAncestor(
   child: RenderLayerWrapper, ancestor: RenderLayerWrapper,
   ancestorCompositedBounds: LayoutRectWrapper
 ) -> Bool? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // If any layers between child and ancestor are transformed, then adjusting the offset is
+  // insufficient to convert coordinates into ancestor's coordinate space.
+  if !child.canUseOffsetFromAncestor(ancestor: ancestor) {
+    return nil
+  }
+
+  let overlap = child.boundingBox(
+    ancestorLayer: ancestor, offsetFromRoot: child.offsetFromAncestor(ancestorLayer: ancestor),
+    flags: .UseFragmentBoxesExcludingCompositing)
+  return overlap.intersects(other: ancestorCompositedBounds)
 }
 
 // RenderLayerBacking controls the compositing behavior for a single RenderLayer.
