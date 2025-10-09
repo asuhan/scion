@@ -138,8 +138,27 @@ private func computePageTiledBackingCoverage(layer: RenderLayerWrapper)
 private func computeOverflowTiledBackingCoverage(layer: RenderLayerWrapper)
   -> TiledBackingWrapper.TileCoverage
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // If the page is non-visible, don't incur the cost of keeping extra tiles for scrolling.
+  if !layer.page().isVisible() {
+    return .CoverageForVisibleArea
+  }
+
+  let frameView = layer.renderer().view().frameView()
+
+  var tileCoverage: TiledBackingWrapper.TileCoverage = .CoverageForVisibleArea
+  let useMinimalTilesDuringLiveResize = frameView.inLiveResize()
+  if !useMinimalTilesDuringLiveResize {
+    if let scrollableArea = layer.scrollableArea() {
+      if scrollableArea.hasScrollableHorizontalOverflow() {
+        tileCoverage |= .CoverageForHorizontalScrolling
+      }
+
+      if scrollableArea.hasScrollableVerticalOverflow() {
+        tileCoverage |= .CoverageForVerticalScrolling
+      }
+    }
+  }
+  return tileCoverage
 }
 
 // FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.

@@ -75,6 +75,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func hasScrollableHorizontalOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasScrollableVerticalOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasScrollbars() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
