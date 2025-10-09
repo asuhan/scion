@@ -30,6 +30,21 @@
  */
 
 class ScrollableAreaWrapper {
+  func horizontalScrollbarMode() -> ScrollbarMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func verticalScrollbarMode() -> ScrollbarMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inLiveResize() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollingNodeID() -> ScrollingNodeIDWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

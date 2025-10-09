@@ -87,6 +87,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func speculativeTilingEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintBehavior() -> PaintBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -98,6 +103,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func hasFlippedBlockRenderers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func viewExposedRect() -> FloatRectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

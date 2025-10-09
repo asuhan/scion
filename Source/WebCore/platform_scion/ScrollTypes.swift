@@ -36,3 +36,9 @@ enum ScrollbarOrientation: UInt8 {
   case Horizontal
   case Vertical
 }
+
+enum ScrollbarMode: UInt8 {
+  case Auto
+  case AlwaysOff
+  case AlwaysOn
+}

@@ -209,6 +209,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setTileCoverage(coverage: TiledBackingWrapper.TileCoverage) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func supportsLayerType(type: `Type`) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

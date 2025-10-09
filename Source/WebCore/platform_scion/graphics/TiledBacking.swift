@@ -39,6 +39,24 @@ class TiledBackingWrapper {
     fatalError("Not implemented")
   }
 
+  enum TileCoverage: UInt8 {
+    case CoverageForVisibleArea = 0
+    case CoverageForVerticalScrolling = 1
+    case CoverageForHorizontalScrolling = 2
+    case CoverageForScrolling = 3
+
+    @discardableResult
+    static func |= (a: inout TileCoverage, b: TileCoverage) -> TileCoverage {
+      a = TileCoverage(rawValue: a.rawValue | b.rawValue)!
+      return a
+    }
+  }
+
+  func setTileCoverage(coverage: TileCoverage) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setScrollingPerformanceTestingEnabled(flag: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

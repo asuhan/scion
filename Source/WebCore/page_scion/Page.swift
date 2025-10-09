@@ -59,6 +59,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func isVisible() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInWindow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
