@@ -380,8 +380,64 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func updateDebugIndicators(showBorder: Bool, showRepaintCounter: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_graphicsLayer!.setShowDebugBorder(show: showBorder)
+    m_graphicsLayer!.setShowRepaintCounter(show: showRepaintCounter)
+
+    // m_viewportAnchorLayer can't show layer borders becuase it's a structural layer.
+
+    if ancestorClippingStack != nil {
+      for entry in ancestorClippingStack!.stack {
+        entry.clippingLayer!.setShowDebugBorder(show: showBorder)
+      }
+    }
+
+    if foregroundLayer != nil {
+      foregroundLayer!.setShowDebugBorder(show: showBorder)
+      foregroundLayer!.setShowRepaintCounter(show: showRepaintCounter)
+    }
+
+    if contentsContainmentLayer != nil {
+      contentsContainmentLayer!.setShowDebugBorder(show: showBorder)
+    }
+
+    if childContainmentLayer != nil {
+      childContainmentLayer!.setShowDebugBorder(show: showBorder)
+    }
+
+    if backgroundLayer != nil {
+      backgroundLayer!.setShowDebugBorder(show: showBorder)
+      backgroundLayer!.setShowRepaintCounter(show: showRepaintCounter)
+    }
+
+    if maskLayer != nil {
+      maskLayer!.setShowDebugBorder(show: showBorder)
+      maskLayer!.setShowRepaintCounter(show: showRepaintCounter)
+    }
+
+    if layerForHorizontalScrollbar != nil {
+      layerForHorizontalScrollbar!.setShowDebugBorder(show: showBorder)
+    }
+
+    if layerForVerticalScrollbar != nil {
+      layerForVerticalScrollbar!.setShowDebugBorder(show: showBorder)
+    }
+
+    if layerForScrollCorner != nil {
+      layerForScrollCorner!.setShowDebugBorder(show: showBorder)
+    }
+
+    if scrollContainerLayer != nil {
+      scrollContainerLayer!.setShowDebugBorder(show: showBorder)
+    }
+
+    if scrolledContentsLayer != nil {
+      scrolledContentsLayer!.setShowDebugBorder(show: showBorder)
+      scrolledContentsLayer!.setShowRepaintCounter(show: showRepaintCounter)
+    }
+
+    if overflowControlsContainer != nil {
+      overflowControlsContainer!.setShowDebugBorder(show: showBorder)
+    }
   }
 
   func canCompositeFilters() -> Bool {
@@ -649,10 +705,17 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
+  private let contentsContainmentLayer: GraphicsLayer?  // Only used if we have a background layer; takes the transform.
   private let m_graphicsLayer: GraphicsLayer? = nil
   private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
+  private let childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
+
+  private let layerForHorizontalScrollbar: GraphicsLayer? = nil
+  private let layerForVerticalScrollbar: GraphicsLayer? = nil
+  private let layerForScrollCorner: GraphicsLayer? = nil
+  private let overflowControlsContainer: GraphicsLayer? = nil
 
   private let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
   private let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
