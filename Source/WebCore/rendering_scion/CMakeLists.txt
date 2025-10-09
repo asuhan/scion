@@ -28,6 +28,7 @@ target_sources(layout_scion PRIVATE
     BreakLines.swift
     ClipRect.swift
     CSSFilter.swift
+    RenderAncestorIterator.swift
     RenderBlock.swift
     RenderBlockFlow.swift
     RenderBox.swift

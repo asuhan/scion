@@ -1005,10 +1005,22 @@ class RenderLayerWrapper {
     }
   }
 
-  struct PaintedContentRequest {}
+  struct PaintedContentRequest {
+    mutating func setHasPaintedContent() { hasPaintedContent = .True }
+
+    func isSatisfied() -> Bool { return hasPaintedContent != .Unknown }
+
+    var hasPaintedContent: RequestState = .Unknown
+  }
 
   // Returns true if this layer has visible content (ignoring any child layers).
   func isVisuallyNonEmpty(request: PaintedContentRequest? = nil) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // True if this layer container renderers that paint.
+  func hasNonEmptyChildRenderers(request: PaintedContentRequest) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

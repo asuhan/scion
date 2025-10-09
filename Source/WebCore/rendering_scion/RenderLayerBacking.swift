@@ -56,8 +56,8 @@ struct PaintedContentsInfo {
       return content
     }
 
-    let contentRequest = RenderLayerWrapper.PaintedContentRequest()
-    content = backing.paintsContent(request: contentRequest) ? .True : .False
+    var contentRequest = RenderLayerWrapper.PaintedContentRequest()
+    content = backing.paintsContent(request: &contentRequest) ? .True : .False
 
     return content
   }
@@ -670,9 +670,47 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return !supportsDirectlyCompositedBoxDecorations(renderer: renderer())
   }
 
-  func paintsContent(request: RenderLayerWrapper.PaintedContentRequest) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func paintsContent(request: inout RenderLayerWrapper.PaintedContentRequest) -> Bool {
+    owningLayer!.updateDescendantDependentFlags()
+
+    var paintsContent = false
+
+    if owningLayer!.hasVisibleContent && owningLayer!.hasNonEmptyChildRenderers(request: request) {
+      paintsContent = true
+    }
+
+    if request.isSatisfied() {
+      return paintsContent
+    }
+
+    if isPaintDestinationForDescendantLayers(request: request) {
+      paintsContent = true
+    }
+
+    if request.isSatisfied() {
+      return paintsContent
+    }
+
+    if owningLayer!.renderer() is RenderSVGModelObjectWrapper {
+      // FIXME: [LBSE] Eventually cache if we're part of a RenderSVGHiddenContainer subtree to avoid tree walks.
+      // FIXME: [LBSE] Eventually refine the logic to end up with a narrower set of conditions (webkit.org/b/243417).
+      paintsContent =
+        owningLayer!.hasVisibleContent
+        && RenderAncestorIteratorAdapter<RenderSVGHiddenContainerWrapper>.lineageOfType(
+          first: owningLayer!.renderer()
+        ).first() == nil
+      request.setHasPaintedContent()
+    }
+
+    if request.isSatisfied() {
+      return paintsContent
+    }
+
+    if request.hasPaintedContent == .Unknown {
+      request.hasPaintedContent = .False
+    }
+
+    return paintsContent
   }
 
   private func updateDrawsContent(contentsInfo: inout PaintedContentsInfo) {
@@ -778,6 +816,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func isUnscaledBitmapOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isPaintDestinationForDescendantLayers(request: RenderLayerWrapper.PaintedContentRequest)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
