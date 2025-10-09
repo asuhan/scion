@@ -25,4 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class BitmapImageWrapper: ImageWrapper {}
+final class BitmapImageWrapper: ImageWrapper {
+  func currentFrameOrientation() -> ImageOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

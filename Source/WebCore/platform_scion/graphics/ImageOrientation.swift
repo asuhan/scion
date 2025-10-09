@@ -24,7 +24,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct ImageOrientation {
+struct ImageOrientation: Equatable {
   enum Orientation: UInt8 {
     case FromImage = 0  // Orientation from the image should be respected.
 
@@ -42,5 +42,10 @@ struct ImageOrientation {
     static var None: Orientation {
       return .OriginTopLeft
     }
+  }
+
+  init(orientation: Orientation) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }

@@ -29,4 +29,9 @@ class ImageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func size(orientation: ImageOrientation.Orientation = .FromImage) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -31,4 +31,10 @@ final class HTMLCanvasElementWrapper: HTMLElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // TODO(asuhan): should come from CanvasBase
+  func size() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

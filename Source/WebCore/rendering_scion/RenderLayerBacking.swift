@@ -549,6 +549,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  func pageScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func contentsBox() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canCompositeFilters() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -901,8 +911,54 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func isUnscaledBitmapOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !(renderer() is RenderImageWrapper) && !(renderer() is RenderHTMLCanvasWrapper) {
+      return false
+    }
+
+    if owningLayer!.hasVisibleBoxDecorationsOrBackground() {
+      return false
+    }
+
+    if pageScaleFactor() < 1 {
+      return false
+    }
+
+    let contents = contentsBox()
+    if contents.location() != LayoutPointWrapper(x: 0, y: 0) {
+      return false
+    }
+
+    if let imageRenderer = renderer() as? RenderImageWrapper {
+      if let cachedImage = imageRenderer.cachedImage() {
+        if !cachedImage.hasImage() {
+          return false
+        }
+
+        if let image = cachedImage.imageForRenderer(renderer: imageRenderer) as? BitmapImageWrapper
+        {
+          if image.currentFrameOrientation() != ImageOrientation(orientation: .None) {
+            return false
+          }
+
+          return contents.size().FloatSize() == image.size()
+        }
+
+        return false
+      }
+      return false
+    }
+
+    if renderer().style().imageRendering() == .CrispEdges
+      || renderer().style().imageRendering() == .Pixelated
+    {
+      return false
+    }
+
+    let canvasRenderer = renderer() as! RenderHTMLCanvasWrapper
+    if snappedIntRect(rect: contents).size == canvasRenderer.canvasElement().size() {
+      return true
+    }
+    return false
   }
 
   // Conservative test for having no rendered children.

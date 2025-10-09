@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntSize {
+struct IntSize: Equatable {
   func isEmpty() -> Bool { return width <= 0 || height <= 0 }
 
   var width: Int32 = 0
