@@ -27,11 +27,105 @@
  */
 
 class RenderLineBoxList {
+  func firstLegacyLineBox() -> LegacyInlineFlowBox? { return firstLineBox }
+
   func paint(
     renderer: RenderBoxModelObjectWrapper, paintInfo: PaintInfoWrapper,
     paintOffset: LayoutPointWrapper
   ) {
+    assert(renderer.isRenderBlock() || (renderer.isRenderInline() && renderer.hasLayer()))  // The only way an inline could paint like this is if it has a layer.
+
+    // If we have no lines then we have no work to do.
+    if firstLegacyLineBox() == nil {
+      return
+    }
+
+    // FIXME: Paint-time pagination is obsolete and is now only used by embedded WebViews inside AppKit
+    // NSViews.  Do not add any more code for this.
+    let v = renderer.view()
+    let usePrintRect = !v.printRect().isEmpty()
+    if !anyLineIntersectsRect(
+      renderer: renderer, rect: paintInfo.rect, offset: paintOffset, usePrintRect: usePrintRect)
+    {
+      return
+    }
+
+    var info = paintInfo
+    let outlineObjects = WeakListSet<RenderInlineWrapper, UInt>()
+    info.outlineObjects = outlineObjects
+
+    // See if our root lines intersect with the dirty rect.  If so, then we paint
+    // them.  Note that boxes can easily overlap, so we can't make any assumptions
+    // based off positions of our first line box or our last line box.
+    var curr = firstLegacyLineBox()
+    while curr != nil {
+      if usePrintRect {
+        // FIXME: This is the deprecated pagination model that is still needed
+        // for embedded views inside AppKit.  AppKit is incapable of paginating vertical
+        // text pages, so we don't have to deal with vertical lines at all here.
+        let rootBox = curr!.root()
+        var topForPaginationCheck = curr!.logicalTopVisualOverflow(lineTop: rootBox.lineTop)
+        var bottomForPaginationCheck = curr!.logicalLeftVisualOverflow()
+        if curr!.parent() == nil {
+          // We're a root box.  Use lineTop and lineBottom as well here.
+          topForPaginationCheck = min(topForPaginationCheck, rootBox.lineTop)
+          bottomForPaginationCheck = max(bottomForPaginationCheck, rootBox.lineBottom)
+        }
+        if bottomForPaginationCheck - topForPaginationCheck <= v.printRect().height() {
+          if paintOffset.y + bottomForPaginationCheck > Int(v.printRect().maxY()) {
+            if let nextRootBox = rootBox.nextRootBox() {
+              bottomForPaginationCheck = min(
+                bottomForPaginationCheck, nextRootBox.logicalTopVisualOverflow(),
+                nextRootBox.lineTop)
+            }
+          }
+          if paintOffset.y + bottomForPaginationCheck > Int(v.printRect().maxY()) {
+            if paintOffset.y + topForPaginationCheck < v.truncatedAt() {
+              v.setBestTruncatedAt(
+                y: (paintOffset.y + topForPaginationCheck).int(), forRenderer: renderer)
+            }
+            // If we were able to truncate, don't paint.
+            if paintOffset.y + topForPaginationCheck >= v.truncatedAt() {
+              break
+            }
+          }
+        }
+      }
+
+      if lineIntersectsDirtyRect(
+        renderer: renderer, box: curr, paintInfo: info, offset: paintOffset)
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      curr = curr!.nextLineBox()
+    }
+
+    if info.phase == .Outline || info.phase == .SelfOutline || info.phase == .ChildOutlines {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private func anyLineIntersectsRect(
+    renderer: RenderBoxModelObjectWrapper, rect: LayoutRectWrapper, offset: LayoutPointWrapper,
+    usePrintRect: Bool = false
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func lineIntersectsDirtyRect(
+    renderer: RenderBoxModelObjectWrapper, box: LegacyInlineFlowBox?, paintInfo: PaintInfoWrapper,
+    offset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // For block flows, each box represents the root inline box for a line in the paragraph.
+  // For inline flows, each box represents a portion of that inline.
+  private let firstLineBox: LegacyInlineFlowBox? = nil
+  private let lastLineBox: LegacyInlineFlowBox? = nil
 }

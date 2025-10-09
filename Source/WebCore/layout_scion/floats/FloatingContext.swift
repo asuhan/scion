@@ -387,7 +387,7 @@ class FloatingContext {
       layoutBox: layoutBox, borderBoxTopLeft: BoxGeometry.borderBoxTopLeft(box: boxGeometry)
     ).y
     let clearance = floatBottom! - logicalTopRelativeToPlacedFloatsRoot
-    if clearance <= 0 {
+    if clearance <= Int32(0) {
       return nil
     }
 

@@ -787,7 +787,7 @@ struct FlexLayout {
     }
 
     let spaceToDistrubute = availableMainSpace - lineContentOuterMainSize
-    if autoMarginCount == 0 || spaceToDistrubute <= 0 {
+    if autoMarginCount == 0 || spaceToDistrubute <= Int32(0) {
       return
     }
 
@@ -1106,7 +1106,7 @@ struct FlexLayout {
         return LayoutUnit()
       case .SpaceAround:
         let extraCrossSpace = flexContainerUsedCrossSize - flexLinesCrossSize
-        if extraCrossSpace <= 0 {
+        if extraCrossSpace <= Int32(0) {
           return LayoutUnit()
         }
         return extraCrossSpace / lineRanges.count / 2
@@ -1123,7 +1123,7 @@ struct FlexLayout {
     -> LayoutUnit
   {
     let extraCrossSpace = flexContainerUsedCrossSize - flexLinesCrossSize
-    if extraCrossSpace <= 0 {
+    if extraCrossSpace <= Int32(0) {
       return LayoutUnit()
     }
     switch flexContainerStyle().alignContent().distribution {

@@ -152,6 +152,10 @@ struct LayoutUnit: Comparable {
     return lhs.rawValue() < rhs.rawValue()
   }
 
+  static func < (a: LayoutUnit, b: Int32) -> Bool {
+    return a < LayoutUnit(value: b)
+  }
+
   static func < (lhs: LayoutUnit, rhs: Float32) -> Bool {
     return lhs.toFloat() < rhs
   }
@@ -166,6 +170,14 @@ struct LayoutUnit: Comparable {
 
   static func <= (lhs: LayoutUnit, rhs: Float32) -> Bool {
     return lhs.toFloat() <= rhs
+  }
+
+  static func <= (a: LayoutUnit, b: Int32) -> Bool {
+    return a <= LayoutUnit(value: b)
+  }
+
+  static func >= (a: LayoutUnit, b: Int32) -> Bool {
+    return a >= LayoutUnit(value: b)
   }
 
   static func >= (lhs: LayoutUnit, rhs: Float32) -> Bool {

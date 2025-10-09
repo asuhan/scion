@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003, 2004, 2005, 2006, 2007 Apple Inc. All rights reserved.
+ * Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,15 +17,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// LegacyInlineBox represents a rectangle that occurs on a line. It corresponds to
-// some RenderObject (i.e., it represents a portion of that RenderObject).
-class LegacyInlineBox {
-  func parent() -> LegacyInlineFlowBox? {
+class LegacyInlineFlowBox: LegacyInlineBox {
+  func nextLineBox() -> LegacyInlineFlowBox? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func root() -> LegacyRootInlineBox {
+  func logicalLeftVisualOverflow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalTopVisualOverflow(lineTop: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

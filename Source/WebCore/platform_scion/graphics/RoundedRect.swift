@@ -47,7 +47,7 @@ struct RoundedRectRadii {
     let maxRadiusHeight = max(
       topLeft.height() + bottomLeft.height(), topRight.height() + bottomRight.height())
 
-    if maxRadiusWidth <= 0 || maxRadiusHeight <= 0 {
+    if maxRadiusWidth <= Int32(0) || maxRadiusHeight <= Int32(0) {
       scale(factor: 0)
       return
     }

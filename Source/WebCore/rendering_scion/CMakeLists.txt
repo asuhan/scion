@@ -11,8 +11,10 @@ target_sources(layout_scion PRIVATE
     LayerAncestorClippingStack.swift
     LayerFragment.swift
     LegacyInlineBox.swift
+    LegacyInlineFlowBox.swift
     LegacyInlineTextBox.swift
     LegacyLineLayout.swift
+    LegacyRootInlineBox.swift
     MarkedText.swift
     OverlapTestRequestClient.swift
     PaintFrequencyTracker.swift
