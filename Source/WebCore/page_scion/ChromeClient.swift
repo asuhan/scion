@@ -39,4 +39,9 @@ class ChromeClient {
     static let AnimatedOpacityTrigger = CompositingTriggerFlags(rawValue: 1 << 7)
     static let AllTriggers = CompositingTriggerFlags(rawValue: 0xFFFF_FFFF)
   }
+
+  func shouldUseTiledBackingForFrameView(frameView: LocalFrameViewWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

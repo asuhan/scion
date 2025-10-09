@@ -213,14 +213,33 @@ private func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
 
 final class RenderLayerBacking: GraphicsLayerClientWrapper {
   init(layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init()
+    owningLayer = layer
+
+    if layer.isRenderViewLayer {
+      isMainFrameRenderViewLayer = renderer().frame().isMainFrame()
+      isRootFrameRenderViewLayer = renderer().frame().isRootFrame()
+      isFrameLayerWithTiledBacking = renderer().page().chrome().client()
+        .shouldUseTiledBackingForFrameView(frameView: renderer().view().frameView())
+    }
+
+    createPrimaryGraphicsLayer()
+
+    if let tiledBacking = tiledBacking() {
+      tiledBacking.setIsInWindow(isInWindow: renderer().page().isInWindow())
+
+      if isFrameLayerWithTiledBacking {
+        tiledBacking.setScrollingPerformanceTestingEnabled(
+          flag: renderer().settings().scrollingPerformanceTestingEnabled())
+        adjustTiledBackingCoverage()
+      }
+    }
   }
 
   // Do cleanup while layer->backing() is still valid.
   func willBeDestroyed() {
-    assert(ObjectIdentifier(owningLayer.backing!) == ObjectIdentifier(self))
-    compositor().removeFromScrollCoordinatedLayers(layer: owningLayer)
+    assert(ObjectIdentifier(owningLayer!.backing!) == ObjectIdentifier(self))
+    compositor().removeFromScrollCoordinatedLayers(layer: owningLayer!)
 
     clearBackingSharingLayers()
   }
@@ -237,7 +256,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   func clearBackingSharingLayers() {
     clearBackingSharingLayerProviders(
-      sharingLayers: backingSharingLayers, providerLayer: owningLayer)
+      sharingLayers: backingSharingLayers, providerLayer: owningLayer!)
     backingSharingLayers.clear()
   }
 
@@ -245,8 +264,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   func updateConfigurationAfterStyleChange() {
     updateMaskingLayer(hasMask: renderer().hasMask(), hasClipPath: renderer().hasClipPath())
 
-    if owningLayer.hasReflection() {
-      if let backing = owningLayer.reflectionLayer()!.backing {
+    if owningLayer!.hasReflection() {
+      if let backing = owningLayer!.reflectionLayer()!.backing {
         let reflectionLayer = backing.graphicsLayer()
         m_graphicsLayer!.setReplicatedByLayer(layer: reflectionLayer)
       }
@@ -284,7 +303,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       return
     }
 
-    let scrollingCoordinator = owningLayer.page().scrollingCoordinator()
+    let scrollingCoordinator = owningLayer!.page().scrollingCoordinator()
     if scrollingCoordinator == nil {
       return
     }
@@ -379,6 +398,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func adjustTiledBackingCoverage() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateDebugIndicators(showBorder: Bool, showRepaintCounter: Bool) {
     m_graphicsLayer!.setShowDebugBorder(show: showBorder)
     m_graphicsLayer!.setShowRepaintCounter(show: showRepaintCounter)
@@ -445,6 +469,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func createPrimaryGraphicsLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func willDestroyLayer(layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -499,7 +528,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
         layerChanged = true
         m_graphicsLayer!.setMaskLayer(layer: maskLayer)
         // We need a geometry update to size the new mask layer.
-        owningLayer.setNeedsCompositingGeometryUpdate()
+        owningLayer!.setNeedsCompositingGeometryUpdate()
       }
       maskLayer!.setDrawsContent(b: paintsContent)
       maskLayer!.setPaintingPhase(phase: maskPhases)
@@ -532,11 +561,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func updateBackdropRoot() -> Bool {
     // Don't try to make the RenderView's layer a backdrop root if it's going to
     // paint into the window since it won't work (WebKitLegacy only).
-    var willBeBackdropRoot = owningLayer.isBackdropRoot() && !paintsIntoWindow()
+    var willBeBackdropRoot = owningLayer!.isBackdropRoot() && !paintsIntoWindow()
 
     // If the RenderView is opaque, then that will occlude any pixels behind it and we don't need
     // to isolate it as a backdrop root.
-    if owningLayer.isRenderViewLayer && !compositor().viewHasTransparentBackground() {
+    if owningLayer!.isRenderViewLayer && !compositor().viewHasTransparentBackground() {
       willBeBackdropRoot = false
     }
 
@@ -579,7 +608,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func paintsBoxDecorations() -> Bool {
-    if !owningLayer.hasVisibleBoxDecorations() {
+    if !owningLayer!.hasVisibleBoxDecorations() {
       return false
     }
 
@@ -598,12 +627,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       // m_scrollContainerLayer never has backing store.
       // m_scrolledContentsLayer only needs backing store if the scrolled contents need to paint.
       let hasNonScrollingPaintedContent =
-        owningLayer.hasVisibleContent && owningLayer.hasVisibleBoxDecorationsOrBackground()
+        owningLayer!.hasVisibleContent && owningLayer!.hasVisibleBoxDecorationsOrBackground()
       m_graphicsLayer!.setDrawsContent(b: hasNonScrollingPaintedContent)
 
       let hasScrollingPaintedContent =
         hasBackingSharingLayers()
-        || (owningLayer.hasVisibleContent
+        || (owningLayer!.hasVisibleContent
           && (renderer().hasBackground() || contentsInfo.paintsContent()))
       scrolledContentsLayer!.setDrawsContent(b: hasScrollingPaintedContent)
       return
@@ -629,7 +658,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // It may have no children, or all its children may be themselves composited.
   // This is a useful optimization, because it allows us to avoid allocating backing store.
   func isSimpleContainerCompositingLayer(contentsInfo: inout PaintedContentsInfo) -> Bool {
-    if owningLayer.isRenderViewLayer {
+    if owningLayer!.isRenderViewLayer {
       return false
     }
 
@@ -653,7 +682,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       return false
     }
 
-    if renderer().isDocumentElementRenderer() && owningLayer.isolatesCompositedBlending() {
+    if renderer().isDocumentElementRenderer() && owningLayer!.isolatesCompositedBlending() {
       return false
     }
 
@@ -663,7 +692,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // Returns true if this layer has content that needs to be rendered by painting into the backing store.
   private func containsPaintedContent(contentsInfo: inout PaintedContentsInfo) -> Bool {
     if contentsInfo.isSimpleContainer() || paintsIntoWindow() || paintsIntoCompositedAncestor()
-      || artificiallyInflatedBounds || owningLayer.isReflection()
+      || artificiallyInflatedBounds || owningLayer!.isReflection()
     {
       return false
     }
@@ -681,7 +710,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     if renderer() is RenderHTMLCanvasWrapper
       && canvasCompositingStrategy(renderer: renderer()) == .CanvasAsLayerContents
     {
-      return owningLayer.hasVisibleBoxDecorationsOrBackground()
+      return owningLayer!.hasVisibleBoxDecorationsOrBackground()
     }
 
     return true
@@ -698,14 +727,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  private let owningLayer: RenderLayerWrapper
+  private var owningLayer: RenderLayerWrapper? = nil
 
   // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
   private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
 
   let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
-  private let contentsContainmentLayer: GraphicsLayer?  // Only used if we have a background layer; takes the transform.
+  private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
   private let m_graphicsLayer: GraphicsLayer? = nil
   private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
@@ -727,7 +756,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var positioningNodeID = ScrollingNodeIDWrapper()
 
   private let artificiallyInflatedBounds = false  // bounds had to be made non-zero to make transform-origin work
-  let isFrameLayerWithTiledBacking = false
+  private var isMainFrameRenderViewLayer = false
+  private var isRootFrameRenderViewLayer = false
+  var isFrameLayerWithTiledBacking = false
   let backgroundLayerPaintsFixedRootBackground = false
 }
 

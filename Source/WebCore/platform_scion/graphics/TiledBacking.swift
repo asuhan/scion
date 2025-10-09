@@ -28,4 +28,19 @@ class TiledBackingWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setIsInWindow(isInWindow: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isInWindow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setScrollingPerformanceTestingEnabled(flag: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
