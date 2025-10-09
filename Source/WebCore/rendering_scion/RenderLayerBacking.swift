@@ -201,8 +201,10 @@ private func supportsDirectlyCompositedBoxDecorations(renderer: RenderLayerModel
 }
 
 private func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let embeddedObject = renderer as? RenderEmbeddedObjectWrapper {
+    return embeddedObject.requiresAcceleratedCompositing()
+  }
+  return false
 }
 
 // Returning true stops the traversal.
