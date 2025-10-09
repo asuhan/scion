@@ -937,9 +937,33 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   // Returns true if the RenderLayer just contains an image that we can composite directly.
+  // An image can be directly compositing if it's the sole content of the layer, and has no box decorations
+  // that require painting. Direct compositing saves backing store.
   func isDirectlyCompositedImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let imageRenderer = renderer() as? RenderImageWrapper
+    if imageRenderer == nil || owningLayer!.hasVisibleBoxDecorationsOrBackground()
+      || owningLayer!.paintsWithFilters() || renderer().hasClip()
+    {
+      return false
+    }
+
+    if let cachedImage = imageRenderer!.cachedImage() {
+      if !cachedImage.hasImage() {
+        return false
+      }
+
+      if let image = cachedImage.imageForRenderer(renderer: imageRenderer) as? BitmapImageWrapper {
+        if image.currentFrameOrientation() != ImageOrientation(orientation: .None) {
+          return false
+        }
+
+        return m_graphicsLayer!.shouldDirectlyCompositeImage(image: image)
+      } else {
+        return false
+      }
+    }
+
+    return false
   }
 
   func isUnscaledBitmapOnly() -> Bool {

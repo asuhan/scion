@@ -152,6 +152,11 @@ class GraphicsLayer {
     case ClipToLayer
   }
 
+  func shouldDirectlyCompositeImage(image: ImageWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum ScalingFilter {
     case Linear
     case Nearest
