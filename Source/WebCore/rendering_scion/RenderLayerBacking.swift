@@ -496,8 +496,15 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // This returns false for other layers, and when the document layer actually needs to paint into its backing store
   // for some reason.
   func paintsIntoWindow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isFrameLayerWithTiledBacking {
+      return false
+    }
+
+    if owningLayer!.isRenderViewLayer {
+      return compositor().rootLayerAttachment() != .RootLayerAttachedViaEnclosingFrame
+    }
+
+    return false
   }
 
   // Returns true for a composited layer that has no backing store of its own, so

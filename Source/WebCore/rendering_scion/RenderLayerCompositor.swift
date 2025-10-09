@@ -439,6 +439,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     case RootLayerAttachedViaEnclosingFrame
   }
 
+  func rootLayerAttachment() -> RootLayerAttachment { return m_rootLayerAttachment }
+
   func updateRootLayerAttachment() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
