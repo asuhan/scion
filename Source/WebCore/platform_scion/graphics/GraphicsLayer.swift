@@ -194,6 +194,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setShouldUpdateRootRelativeScaleFactor(value: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func supportsLayerType(type: `Type`) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

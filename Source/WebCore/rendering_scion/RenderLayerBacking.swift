@@ -615,8 +615,20 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func createGraphicsLayer(name: String, layerType: GraphicsLayer.`Type` = .Normal)
     -> GraphicsLayer
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let graphicsLayerFactory = renderer().page().chrome().client().graphicsLayerFactory()
+
+    let graphicsLayer = GraphicsLayer.create(
+      factory: graphicsLayerFactory, client: self, layerType: layerType)
+
+    graphicsLayer.setName(name: name)
+
+    if renderer().isSVGLayerAwareRenderer()
+      && renderer().document().settings().layerBasedSVGEngineEnabled()
+    {
+      graphicsLayer.setShouldUpdateRootRelativeScaleFactor(value: true)
+    }
+
+    return graphicsLayer
   }
 
   private func renderer() -> RenderLayerModelObjectWrapper {

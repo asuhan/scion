@@ -20,6 +20,12 @@
  */
 
 class ChromeClient {
+  // Allows ports to customize the type of graphics layers created by this page.
+  func graphicsLayerFactory() -> GraphicsLayerFactory? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Pass nullptr as the GraphicsLayer to detatch the root layer.
   func attachRootGraphicsLayer(frame: LocalFrameWrapper, layer: GraphicsLayer?) {
     // TODO(asuhan): implement this
