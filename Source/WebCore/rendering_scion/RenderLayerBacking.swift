@@ -470,8 +470,31 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func createPrimaryGraphicsLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let layerName = owningLayer!.name()
+    m_graphicsLayer = createGraphicsLayer(
+      name: layerName, layerType: isFrameLayerWithTiledBacking ? .PageTiledBacking : .Normal)
+
+    if isFrameLayerWithTiledBacking {
+      childContainmentLayer = createGraphicsLayer(name: "Page TiledBacking containment")
+      m_graphicsLayer!.addChild(childLayer: childContainmentLayer!)
+    }
+
+    if isMainFrameRenderViewLayer {
+      m_graphicsLayer!.setContentsOpaque(b: !compositor().viewHasTransparentBackground())
+    }
+    // Page scale is applied above the RenderView on iOS.
+    if isRootFrameRenderViewLayer {
+      m_graphicsLayer!.setAppliesPageScale()
+    }
+
+    let style = renderer().style()
+    updateOpacity(style: style)
+    updateTransform(style: style)
+    updateFilters(style: style)
+    updateBackdropFilters(style: style)
+    updateBackdropRoot()
+    updateBlendMode(style: style)
+    updateContentsScalingFilters(style: style)
   }
 
   private func willDestroyLayer(layer: GraphicsLayer?) {
@@ -543,6 +566,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateOpacity(style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateTransform(style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -729,16 +757,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   private var owningLayer: RenderLayerWrapper? = nil
 
-  // A list other layers that paint into this backing store, later than m_owningLayer in paint order.
+  // A list other layers that paint into this backing store, later than owningLayer in paint order.
   private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
 
   let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
 
   private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
-  private let m_graphicsLayer: GraphicsLayer? = nil
+  private var m_graphicsLayer: GraphicsLayer? = nil
   private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
-  private let childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
+  private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
 
   private let layerForHorizontalScrollbar: GraphicsLayer? = nil

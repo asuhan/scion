@@ -127,6 +127,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setContentsOpaque(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setBlendMode(blendMode: BlendMode) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -164,6 +169,11 @@ class GraphicsLayer {
   }
 
   func setShowRepaintCounter(show: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAppliesPageScale(appliesScale: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
