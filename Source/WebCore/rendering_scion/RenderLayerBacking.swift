@@ -205,6 +205,83 @@ private func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
   fatalError("Not implemented")
 }
 
+// Returning true stops the traversal.
+enum LayerTraversal {
+  case Continue
+  case Stop
+}
+
+@discardableResult
+private func traverseVisibleNonCompositedDescendantLayers(
+  parent: RenderLayerWrapper, layerFunc: (RenderLayerWrapper) -> LayerTraversal
+) -> LayerTraversal {
+  // FIXME: We shouldn't be called with a stale z-order lists. See bug 85512.
+  parent.updateLayerListsIfNeeded()
+
+  for childLayer in parent.normalFlowLayers() {
+    if compositedWithOwnBackingStore(layer: childLayer) {
+      continue
+    }
+
+    if layerFunc(childLayer) == .Stop {
+      return .Stop
+    }
+
+    if traverseVisibleNonCompositedDescendantLayers(parent: childLayer, layerFunc: layerFunc)
+      == .Stop
+    {
+      return .Stop
+    }
+  }
+
+  if parent.isStackingContext() && !parent.hasVisibleDescendant {
+    return .Continue
+  }
+
+  // Use the m_hasCompositingDescendant bit to optimize?
+  for childLayer in parent.negativeZOrderLayers() {
+    if compositedWithOwnBackingStore(layer: childLayer) {
+      continue
+    }
+
+    if layerFunc(childLayer) == .Stop {
+      return .Stop
+    }
+
+    if traverseVisibleNonCompositedDescendantLayers(parent: childLayer, layerFunc: layerFunc)
+      == .Stop
+    {
+      return .Stop
+    }
+  }
+
+  for childLayer in parent.positiveZOrderLayers() {
+    if compositedWithOwnBackingStore(layer: childLayer) {
+      continue
+    }
+
+    if layerFunc(childLayer) == .Stop {
+      return .Stop
+    }
+
+    if traverseVisibleNonCompositedDescendantLayers(parent: childLayer, layerFunc: layerFunc)
+      == .Stop
+    {
+      return .Stop
+    }
+  }
+
+  return .Continue
+}
+
+private func intersectsWithAncestor(
+  child: RenderLayerWrapper, ancestor: RenderLayerWrapper,
+  ancestorCompositedBounds: LayoutRectWrapper
+) -> Bool? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderLayerBacking controls the compositing behavior for a single RenderLayer.
 // It holds the various GraphicsLayers, and makes decisions about intra-layer rendering
 // optimizations.
@@ -683,7 +760,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       return paintsContent
     }
 
-    if isPaintDestinationForDescendantLayers(request: request) {
+    if isPaintDestinationForDescendantLayers(request: &request) {
       paintsContent = true
     }
 
@@ -820,11 +897,31 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  func isPaintDestinationForDescendantLayers(request: RenderLayerWrapper.PaintedContentRequest)
+  // Conservative test for having no rendered children.
+  func isPaintDestinationForDescendantLayers(
+    request: inout RenderLayerWrapper.PaintedContentRequest
+  )
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var hasPaintingDescendant = false
+    traverseVisibleNonCompositedDescendantLayers(
+      parent: owningLayer!,
+      layerFunc: { layer in
+        let localRequest = RenderLayerWrapper.PaintedContentRequest()
+        if layer.isVisuallyNonEmpty(request: localRequest) {
+          let mayIntersect =
+            intersectsWithAncestor(
+              child: layer, ancestor: owningLayer!, ancestorCompositedBounds: compositedBounds())
+            ?? true
+          if mayIntersect {
+            hasPaintingDescendant = true
+            request.setHasPaintedContent()
+          }
+        }
+        return (hasPaintingDescendant && request.isSatisfied()) ? .Stop : .Continue
+      })
+
+    return hasPaintingDescendant
   }
 
   private var owningLayer: RenderLayerWrapper? = nil
