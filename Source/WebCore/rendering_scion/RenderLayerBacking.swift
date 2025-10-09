@@ -693,8 +693,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateOpacity(style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_graphicsLayer!.setOpacity(opacity: compositingOpacity(rendererOpacity: style.opacity()))
   }
 
   private func updateTransform(style: RenderStyleWrapper) {
@@ -787,6 +786,25 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
     m_graphicsLayer!.setContentsMinificationFilter(filter: minificationFilter)
     m_graphicsLayer!.setContentsMagnificationFilter(filter: magnificationFilter)
+  }
+
+  // Return the opacity value that this layer should use for compositing.
+  func compositingOpacity(rendererOpacity: Float32) -> Float32 {
+    var finalOpacity = rendererOpacity
+
+    var curr = owningLayer!.stackingContext()
+    while curr != nil {
+      // If we found a compositing layer, we want to compute opacity
+      // relative to it. So we can break here.
+      if curr!.isComposited() {
+        break
+      }
+
+      finalOpacity *= curr!.renderer().opacity()
+      curr = curr!.stackingContext()
+    }
+
+    return finalOpacity
   }
 
   func paintsBoxDecorations() -> Bool {
