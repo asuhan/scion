@@ -1115,6 +1115,10 @@ class RenderStyleWrapper {
     .TransformOrigin, .Translate, .Rotate, .Scale, .Offset,
   ]
 
+  static let individualTransformOperations: TransformOperationOption = [
+    .Translate, .Rotate, .Scale, .Offset,
+  ]
+
   func backfaceVisibility() -> BackfaceVisibility {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

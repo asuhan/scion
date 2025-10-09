@@ -73,6 +73,7 @@ target_sources(layout_scion PRIVATE
     RenderText.swift
     RenderTheme.swift
     RenderView.swift
+    RenderViewTransitionCapture.swift
     RenderWidget.swift
     RenderTextControl.swift
     RenderTextControlMultiLine.swift

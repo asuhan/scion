@@ -117,6 +117,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setTransform(matrix: TransformationMatrix) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMasksToBounds(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

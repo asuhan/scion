@@ -14,4 +14,5 @@ target_sources(layout_scion PRIVATE
     StyledElement.swift
     Text.swift
     TreeScope.swift
+    ViewTransition.swift
 )

@@ -571,8 +571,35 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateTransform(style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var t = TransformationMatrix()
+    if renderer().effectiveCapturedInViewTransition() {
+      if let activeViewTransition = renderer().document().activeViewTransition() {
+        if let viewTransitionCapture =
+          activeViewTransition.viewTransitionNewPseudoForCapturedElement(renderer: renderer())
+        {
+          t.scaleNonUniform(
+            sx: Float64(viewTransitionCapture.scale.width),
+            sy: Float64(viewTransitionCapture.scale.height))
+          t.translate(
+            tx: viewTransitionCapture.captureContentInset().x.double(),
+            ty: viewTransitionCapture.captureContentInset().y.double())
+        }
+        if owningLayer!.isRenderViewLayer {
+          let scrollPosition = renderer().view().frameView().scrollPosition()
+          t.translate(tx: Float64(-scrollPosition.x), ty: Float64(-scrollPosition.y))
+        }
+      }
+    } else if owningLayer!.isTransformed() {
+      owningLayer!.updateTransformFromStyle(
+        transform: &t, style: style, options: RenderStyleWrapper.individualTransformOperations)
+    }
+
+    if contentsContainmentLayer != nil {
+      contentsContainmentLayer!.setTransform(matrix: t)
+      m_graphicsLayer!.setTransform(matrix: TransformationMatrix())
+    } else {
+      m_graphicsLayer!.setTransform(matrix: t)
+    }
   }
 
   private func updateFilters(style: RenderStyleWrapper) {
