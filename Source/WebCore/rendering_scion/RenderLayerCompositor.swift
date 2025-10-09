@@ -464,6 +464,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func layerTiledBackingUsageChanged(graphicsLayer: GraphicsLayer?, usingTiledBacking: Bool) {
+    if usingTiledBacking {
+      m_layersWithTiledBackingCount += 1
+      graphicsLayer!.tiledBacking()!.setIsInWindow(isInWindow: page().isInWindow())
+    } else {
+      assert(m_layersWithTiledBackingCount > 0)
+      m_layersWithTiledBackingCount -= 1
+    }
+  }
+
   func useCoordinatedScrollingForLayer(layer: RenderLayerWrapper) -> Bool {
     if layer.isRenderViewLayer && hasCoordinatedScrolling() {
       return true
@@ -1586,6 +1596,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private var m_compositing = false
   private var m_shouldFlushOnReattach = false
+
+  private var m_layersWithTiledBackingCount: UInt32 = 0
 
   private var m_rootLayerAttachment: RootLayerAttachment = .RootLayerUnattached
 

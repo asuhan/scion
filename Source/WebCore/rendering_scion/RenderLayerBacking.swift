@@ -677,8 +677,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func willDestroyLayer(layer: GraphicsLayer?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layer != nil && layer!.type() == .Normal && layer!.tiledBacking() != nil {
+      compositor().layerTiledBackingUsageChanged(graphicsLayer: layer, usingTiledBacking: false)
+    }
   }
 
   private func createGraphicsLayer(name: String, layerType: GraphicsLayer.`Type` = .Normal)
