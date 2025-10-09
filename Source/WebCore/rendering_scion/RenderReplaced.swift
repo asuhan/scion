@@ -19,4 +19,9 @@
  *
  */
 
-class RenderReplacedWrapper: RenderBoxWrapper {}
+class RenderReplacedWrapper: RenderBoxWrapper {
+  func replacedContentRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

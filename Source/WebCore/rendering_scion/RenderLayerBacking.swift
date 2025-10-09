@@ -555,8 +555,23 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func contentsBox() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderBox = renderer() as? RenderBoxWrapper
+    if renderBox == nil {
+      return LayoutRectWrapper()
+    }
+
+    var contentsRect = LayoutRectWrapper()
+
+    if let renderReplaced = renderBox as? RenderReplacedWrapper,
+      !(renderReplaced is RenderWidgetWrapper)
+    {
+      contentsRect = renderReplaced.replacedContentRect()
+    } else {
+      contentsRect = renderBox!.contentBoxRect()
+    }
+
+    contentsRect.move(size: contentOffsetInCompositingLayer())
+    return contentsRect
   }
 
   func canCompositeFilters() -> Bool {
@@ -658,6 +673,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
 
     return layerChanged
+  }
+
+  private func contentOffsetInCompositingLayer() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updateOpacity(style: RenderStyleWrapper) {
