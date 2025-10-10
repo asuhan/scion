@@ -50,6 +50,12 @@ class RegionContext {
     }
   }
 
+  func pushClip(path: PathWrapper) {
+    // FIXME: Approximate paths better.
+    let pathBounds = enclosingIntRect(rect: path.boundingRect())
+    pushClip(clipRect: pathBounds)
+  }
+
   func popClip() {
     if clipStack.isEmpty {
       fatalError("Not reached")
@@ -63,17 +69,35 @@ class RegionContext {
 
 class RegionContextStateSaver {
   init(context: RegionContext?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.context = context
+  }
+
+  deinit {
+    if context == nil {
+      return
+    }
+
+    if pushedClip {
+      context!.popClip()
+    }
   }
 
   func pushClip(clipRect: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!pushedClip)
+    if let context = context {
+      context.pushClip(clipRect: clipRect)
+    }
+    pushedClip = true
   }
 
   func pushClip(path: PathWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!pushedClip)
+    if let context = context {
+      context.pushClip(path: path)
+    }
+    pushedClip = true
   }
+
+  private var context: RegionContext?
+  private var pushedClip = false
 }

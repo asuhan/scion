@@ -69,4 +69,9 @@ class PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func boundingRect() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
