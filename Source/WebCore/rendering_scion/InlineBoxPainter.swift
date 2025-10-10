@@ -54,6 +54,12 @@ private func clipRectForNinePieceImageStrip(
 }
 
 class InlineBoxPainter {
+  init(inlineBox: LegacyInlineFlowBox, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   convenience init(
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper

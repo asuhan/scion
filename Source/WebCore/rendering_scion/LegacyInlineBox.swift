@@ -25,10 +25,21 @@ class LegacyInlineBox {
     lineBottom: LayoutUnit
   ) {
     // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func isHorizontal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nextOnLine() -> LegacyInlineBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: Hide this once all callers are using tighter types.
+  func rendererObject() -> RenderObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -39,6 +50,17 @@ class LegacyInlineBox {
   }
 
   func root() -> LegacyRootInlineBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Use with caution! The type is not checked!
+  func boxModelObject() -> RenderBoxModelObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func flipForWritingMode(rect: inout LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

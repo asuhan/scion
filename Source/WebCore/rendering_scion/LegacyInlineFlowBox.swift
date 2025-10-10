@@ -28,6 +28,69 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  func firstChild() -> LegacyInlineBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func paint(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit
+  ) {
+    if paintInfo.phase != .Foreground && paintInfo.phase != .Selection
+      && paintInfo.phase != .Outline && paintInfo.phase != .SelfOutline
+      && paintInfo.phase != .ChildOutlines && paintInfo.phase != .TextClip
+      && paintInfo.phase != .Mask && paintInfo.phase != .EventRegion
+      && paintInfo.phase != .Accessibility
+    {
+      return
+    }
+
+    var overflowRect = visualOverflowRect(lineTop: lineTop, lineBottom: lineBottom)
+    flipForWritingMode(rect: &overflowRect)
+    overflowRect.moveBy(offset: paintOffset)
+
+    if !paintInfo.rect.intersects(
+      other: LayoutRectWrapper(rect: snappedIntRect(rect: overflowRect)))
+    {
+      return
+    }
+
+    if paintInfo.phase != .ChildOutlines {
+      let painter = InlineBoxPainter(
+        inlineBox: self, paintInfo: paintInfo, paintOffset: paintOffset)
+      painter.paint()
+    }
+
+    if paintInfo.phase == .Mask {
+      return
+    }
+
+    let paintPhase = paintInfo.phase == .ChildOutlines ? .Outline : paintInfo.phase
+    var childInfo = paintInfo
+    childInfo.phase = paintPhase
+    childInfo.updateSubtreePaintRootForChildren(renderer: renderer())
+
+    // Paint our children.
+    if paintPhase != .SelfOutline {
+      var curr = firstChild()
+      while curr != nil {
+        if curr!.rendererObject().isRenderText() || !curr!.boxModelObject()!.hasSelfPaintingLayer()
+        {
+          curr!.paint(
+            paintInfo: childInfo, paintOffset: paintOffset, lineTop: lineTop, lineBottom: lineBottom
+          )
+        }
+        curr = curr!.nextOnLine()
+      }
+    }
+  }
+
+  func visualOverflowRect(lineTop: LayoutUnit, lineBottom: LayoutUnit) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalLeftVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
