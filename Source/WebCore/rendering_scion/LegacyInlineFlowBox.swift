@@ -41,8 +41,11 @@ class LegacyInlineFlowBox: LegacyInlineBox {
   }
 
   func logicalBottomVisualOverflow(lineBottom: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let overflow = overflow {
+      return isHorizontal()
+        ? overflow.visualOverflowRect().maxY() : overflow.visualOverflowRect().maxX()
+    }
+    return lineBottom
   }
 
   private let overflow: RenderOverflow? = nil
