@@ -50,3 +50,8 @@ struct IntRect {
   var location: IntPoint
   let size: IntSize
 }
+
+func intersection(a: IntRect, b: IntRect) -> IntRect {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

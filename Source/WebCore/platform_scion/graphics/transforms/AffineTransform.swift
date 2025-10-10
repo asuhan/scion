@@ -32,6 +32,13 @@ class AffineTransform {
     self.transform = [a, b, c, d, e, f]
   }
 
+  // Rounds the resulting mapped rectangle out. This is helpful for bounding
+  // box computations but may not be what is wanted in other contexts.
+  func mapRect(rect: IntRect) -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func a() -> Float64 { return transform[0] }
   func b() -> Float64 { return transform[1] }
   func c() -> Float64 { return transform[2] }

@@ -40,8 +40,14 @@ class RegionContext {
   }
 
   func pushClip(clipRect: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let transformedClip =
+      transformStack.isEmpty ? clipRect : transformStack.last!.mapRect(rect: clipRect)
+
+    if clipStack.isEmpty {
+      clipStack.append(transformedClip)
+    } else {
+      clipStack.append(intersection(a: clipStack.last!, b: transformedClip))
+    }
   }
 
   func popClip() {
@@ -50,6 +56,7 @@ class RegionContext {
   }
 
   private var transformStack: [AffineTransform] = []
+  private var clipStack: [IntRect] = []
 }
 
 class RegionContextStateSaver {
