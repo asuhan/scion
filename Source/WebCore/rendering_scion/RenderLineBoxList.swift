@@ -29,6 +29,8 @@
 class RenderLineBoxList {
   func firstLegacyLineBox() -> LegacyInlineFlowBox? { return firstLineBox }
 
+  func lastLegacyLineBox() -> LegacyInlineFlowBox? { return lastLineBox }
+
   func paint(
     renderer: RenderBoxModelObjectWrapper, paintInfo: PaintInfoWrapper,
     paintOffset: LayoutPointWrapper
@@ -116,13 +118,39 @@ class RenderLineBoxList {
     renderer: RenderBoxModelObjectWrapper, rect: LayoutRectWrapper, offset: LayoutPointWrapper,
     usePrintRect: Bool = false
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We can check the first box and last box and avoid painting/hit testing if we don't
+    // intersect.  This is a quick short-circuit that we can take to avoid walking any lines.
+    // FIXME: This check is flawed in the following extremely obscure way:
+    // if some line in the middle has a huge overflow, it might actually extend below the last line.
+    let firstRootBox = firstLegacyLineBox()!.root()
+    let lastRootBox = lastLegacyLineBox()!.root()
+    var firstLineTop = firstLegacyLineBox()!.logicalTopVisualOverflow(
+      lineTop: firstRootBox.lineTop)
+    if usePrintRect && firstLegacyLineBox()!.parent() == nil {
+      firstLineTop = min(firstLineTop, firstRootBox.lineTop)
+    }
+    var lastLineBottom = lastLegacyLineBox()!.logicalBottomVisualOverflow(
+      lineBottom: lastRootBox.lineBottom)
+    if usePrintRect && lastLegacyLineBox()!.parent() == nil {
+      lastLineBottom = max(lastLineBottom, lastRootBox.lineBottom)
+    }
+    return rangeIntersectsRect(
+      renderer: renderer, logicalTop: firstLineTop, logicalBottom: lastLineBottom, rect: rect,
+      offset: offset)
   }
 
   private func lineIntersectsDirtyRect(
     renderer: RenderBoxModelObjectWrapper, box: LegacyInlineFlowBox?, paintInfo: PaintInfoWrapper,
     offset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: This should take a RenderBoxModelObject&.
+  private func rangeIntersectsRect(
+    renderer: RenderBoxModelObjectWrapper, logicalTop: LayoutUnit, logicalBottom: LayoutUnit,
+    rect: LayoutRectWrapper, offset: LayoutPointWrapper
   ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

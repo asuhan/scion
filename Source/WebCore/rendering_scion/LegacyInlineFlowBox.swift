@@ -32,4 +32,9 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func logicalBottomVisualOverflow(lineBottom: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
