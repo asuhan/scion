@@ -189,6 +189,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func maskBorderOutsets() -> LayoutBoxExtent {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func filterOutsets() -> IntOutsets {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

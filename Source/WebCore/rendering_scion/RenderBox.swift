@@ -550,8 +550,30 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func maskClipRect(paintOffset: LayoutPointWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let maskBorder = style().maskBorder()
+    if maskBorder.image() != nil {
+      var borderImageRect = borderBoxRect()
+
+      // Apply outsets to the border box.
+      borderImageRect.expand(box: style().maskBorderOutsets())
+      return borderImageRect
+    }
+
+    var result = LayoutRectWrapper()
+    let borderBox = borderBoxRect()
+    var maskLayer: FillLayerWrapper? = style().maskLayers()
+    while maskLayer != nil {
+      if maskLayer!.image() != nil {
+        // Masks should never have fixed attachment, so it's OK for paintContainer to be null.
+        result.unite(
+          other: BackgroundPainter.calculateBackgroundImageGeometry(
+            renderer: self, paintContainer: nil, fillLayer: maskLayer!, paintOffset: paintOffset,
+            borderBoxRect: borderBox
+          ).destinationRect)
+      }
+      maskLayer = maskLayer!.next()
+    }
+    return result
   }
 
   func markForPaginationRelayoutIfNeeded() {
