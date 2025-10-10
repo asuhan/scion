@@ -23,6 +23,11 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
+  func selectionTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalTopVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

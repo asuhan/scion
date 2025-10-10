@@ -95,7 +95,7 @@ class RenderLineBoxList {
       }
 
       if lineIntersectsDirtyRect(
-        renderer: renderer, box: curr, paintInfo: info, offset: paintOffset)
+        renderer: renderer, box: curr!, paintInfo: info, offset: paintOffset)
       {
         let rootBox = curr!.root()
         curr!.paint(
@@ -140,11 +140,16 @@ class RenderLineBoxList {
   }
 
   private func lineIntersectsDirtyRect(
-    renderer: RenderBoxModelObjectWrapper, box: LegacyInlineFlowBox?, paintInfo: PaintInfoWrapper,
+    renderer: RenderBoxModelObjectWrapper, box: LegacyInlineFlowBox, paintInfo: PaintInfoWrapper,
     offset: LayoutPointWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rootBox = box.root()
+    let logicalTop = min(
+      box.logicalTopVisualOverflow(lineTop: rootBox.lineTop), rootBox.selectionTop())
+    let logicalBottom = box.logicalBottomVisualOverflow(lineBottom: rootBox.lineBottom)
+    return rangeIntersectsRect(
+      renderer: renderer, logicalTop: logicalTop, logicalBottom: logicalBottom,
+      rect: paintInfo.rect, offset: offset)
   }
 
   // FIXME: This should take a RenderBoxModelObject&.
