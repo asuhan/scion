@@ -95,16 +95,20 @@ class RenderLineBoxList {
       if lineIntersectsDirtyRect(
         renderer: renderer, box: curr, paintInfo: info, offset: paintOffset)
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let rootBox = curr!.root()
+        curr!.paint(
+          paintInfo: info, paintOffset: paintOffset, lineTop: rootBox.lineTop,
+          lineBottom: rootBox.lineBottom)
       }
 
       curr = curr!.nextLineBox()
     }
 
     if info.phase == .Outline || info.phase == .SelfOutline || info.phase == .ChildOutlines {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      for flow in info.outlineObjects! {
+        flow.paintOutline(paintInfo: info, paintOffset: paintOffset)
+      }
+      info.outlineObjects!.clear()
     }
   }
 
