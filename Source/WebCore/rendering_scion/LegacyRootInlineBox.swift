@@ -23,7 +23,29 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
+  func prevRootBox() -> LegacyRootInlineBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func selectionTop() -> LayoutUnit {
+    let selectionTop = lineTop
+
+    if renderer().style().isFlippedLinesWritingMode() {
+      return selectionTop
+    }
+
+    var prevBottom = LayoutUnit()
+    if let previousBox = prevRootBox() {
+      prevBottom = previousBox.selectionBottom()
+    } else {
+      prevBottom = selectionTop
+    }
+
+    return prevBottom
+  }
+
+  func selectionBottom() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
