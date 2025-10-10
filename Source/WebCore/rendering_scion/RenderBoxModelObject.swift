@@ -48,6 +48,13 @@ enum BaseBackgroundColorUsage {
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
+  // These functions are used during layout. Table cells and the MathML
+  // code override them to include some extra intrinsic padding.
+  func padding() -> RectEdges<LayoutUnit> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paddingTop() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -74,6 +81,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func paddingEnd() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(p))
+  }
+
+  func borderWidths() -> RectEdges<LayoutUnit> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func borderTop() -> LayoutUnit {

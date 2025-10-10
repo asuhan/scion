@@ -29,4 +29,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class RenderListBoxWrapper: RenderBlockFlowWrapper {}
+final class RenderListBoxWrapper: RenderBlockFlowWrapper {
+  override func verticalScrollbarWidth() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func horizontalScrollbarHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

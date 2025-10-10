@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     OffsetRotation.swift
     RenderStyle.swift
     RenderStyleConstants.swift
+    ScrollbarGutter.swift
     ShadowData.swift
     StyleContentAlignmentData.swift
     StyleImage.swift

@@ -114,8 +114,44 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
   func contentBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var verticalScrollbarWidth = LayoutUnit(value: UInt64(0))
+    var horizontalScrollbarHeight = LayoutUnit(value: UInt64(0))
+    var leftScrollbarSpace = LayoutUnit(value: UInt64(0))
+    var topScrollbarSpace = LayoutUnit(value: UInt64(0))
+
+    if hasNonVisibleOverflow() {
+      verticalScrollbarWidth = LayoutUnit(value: self.verticalScrollbarWidth())
+      horizontalScrollbarHeight = LayoutUnit(value: self.horizontalScrollbarHeight())
+
+      let bothEdgeScrollbarGutters = style().scrollbarGutter().bothEdges
+
+      if shouldPlaceVerticalScrollbarOnLeft() || bothEdgeScrollbarGutters {
+        leftScrollbarSpace = verticalScrollbarWidth
+      }
+      // FIXME: It's wrong that scrollbar-gutter: both-edges affects height: webkit.org/b/266938
+      if bothEdgeScrollbarGutters {
+        topScrollbarSpace = horizontalScrollbarHeight
+      }
+    }
+
+    let padding = self.padding()
+    let borderWidths = self.borderWidths()
+    let location = LayoutPointWrapper(
+      x: borderWidths.left + padding.left + leftScrollbarSpace,
+      y: borderWidths.top + padding.top + topScrollbarSpace)
+
+    let zero = LayoutUnit(value: UInt64(0))
+    let paddingBoxWidth = max(
+      zero, width() - borderWidths.left - borderWidths.right - verticalScrollbarWidth)
+    let paddingBoxHeight = max(
+      zero, height() - borderWidths.top - borderWidths.bottom - horizontalScrollbarHeight)
+
+    let width = max(zero, paddingBoxWidth - padding.left - padding.right - leftScrollbarSpace)
+    let height = max(zero, paddingBoxHeight - padding.top - padding.bottom - topScrollbarSpace)
+
+    let size = LayoutSizeWrapper(width: width, height: height)
+
+    return LayoutRectWrapper(location: location, size: size)
   }
 
   func firstChildBox() -> RenderBoxWrapper? {
@@ -235,6 +271,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func availableLogicalWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(p))
+  }
+
+  func verticalScrollbarWidth() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func horizontalScrollbarHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isUnsplittableForPagination() -> Bool {

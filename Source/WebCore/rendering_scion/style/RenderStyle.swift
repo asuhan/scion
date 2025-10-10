@@ -1188,6 +1188,11 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_initialLetterHeight(p)
   }
 
+  func scrollbarGutter() -> ScrollbarGutter {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func writingMode() -> WritingMode {
     if p == nil {
       // TODO(asuhan): implement this
