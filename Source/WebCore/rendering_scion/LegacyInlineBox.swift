@@ -28,6 +28,11 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  func isHorizontal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func parent() -> LegacyInlineFlowBox? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

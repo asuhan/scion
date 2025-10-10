@@ -66,6 +66,7 @@ target_sources(layout_scion PRIVATE
     RenderMultiColumnSet.swift
     RenderObject.swift
     RenderObjectEnums.swift
+    RenderOverflow.swift
     RenderReplaced.swift
     RenderReplica.swift
     RenderSelection.swift

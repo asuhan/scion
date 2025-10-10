@@ -51,8 +51,7 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
   }
 
   func logicalTopVisualOverflow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return super.logicalTopVisualOverflow(lineTop: lineTop)
   }
 
   var lineTop = LayoutUnit()
