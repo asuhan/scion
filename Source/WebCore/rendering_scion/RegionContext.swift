@@ -33,8 +33,10 @@ class RegionContext {
   }
 
   func popTransform() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if transformStack.isEmpty {
+      fatalError("Not reached")
+    }
+    transformStack.removeLast()
   }
 
   func pushClip(clipRect: IntRect) {
