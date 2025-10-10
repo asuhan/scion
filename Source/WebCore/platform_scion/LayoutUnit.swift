@@ -194,6 +194,12 @@ struct LayoutUnit: Comparable {
 
   func rawValue() -> Int32 { return value }
 
+  func abs() -> LayoutUnit {
+    var returnValue = LayoutUnit()
+    returnValue.value = SwiftGlibc.abs(value)
+    return returnValue
+  }
+
   func ceil() -> Int32 {
     if value >= Int32.max - kFixedPointDenominator + 1 {
       return intMaxForLayoutUnit

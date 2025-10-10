@@ -152,8 +152,30 @@ class RenderLineBoxList {
     renderer: RenderBoxModelObjectWrapper, logicalTop: LayoutUnit, logicalBottom: LayoutUnit,
     rect: LayoutRectWrapper, offset: LayoutPointWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var physicalStart = logicalTop
+    var physicalEnd = logicalBottom
+    if renderer.view().frameView().hasFlippedBlockRenderers() {
+      let block = (renderer as? RenderBoxWrapper ?? renderer.containingBlock())!
+      physicalStart = block.flipForWritingMode(position: logicalTop)
+      physicalEnd = block.flipForWritingMode(position: logicalBottom)
+    }
+
+    let physicalExtent = (physicalEnd - physicalStart).abs()
+    physicalStart = min(physicalStart, physicalEnd)
+
+    if renderer.style().isHorizontalWritingMode() {
+      physicalStart += offset.y
+      if physicalStart >= rect.maxY() || physicalStart + physicalExtent <= rect.y() {
+        return false
+      }
+    } else {
+      physicalStart += offset.x
+      if physicalStart >= rect.maxX() || physicalStart + physicalExtent <= rect.x() {
+        return false
+      }
+    }
+
+    return true
   }
 
   // For block flows, each box represents the root inline box for a line in the paragraph.
