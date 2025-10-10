@@ -604,13 +604,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(position: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().isFlippedBlocksWritingMode() {
+      return position
+    }
+    return logicalHeight() - position
   }
 
   func flipForWritingMode(position: LayoutPointWrapper) -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().isFlippedBlocksWritingMode() {
+      return position
+    }
+    return isHorizontalWritingMode()
+      ? LayoutPointWrapper(x: position.x, y: height() - position.y)
+      : LayoutPointWrapper(x: width() - position.x, y: position.y)
   }
 
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
