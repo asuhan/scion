@@ -518,8 +518,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) || style().usedVisibility() != .Visible
+      || paintInfo.phase != .Mask || paintInfo.context().paintingDisabled()
+    {
+      return
+    }
+
+    let paintRect = LayoutRectWrapper(location: paintOffset, size: size())
+    adjustBorderBoxRectForPainting(paintRect: paintRect)
+    paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
   }
 
   func paintClippingMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -629,6 +636,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return ShapeOutsideInfoWrapper(p: unwrapped)
     }
     return nil
+  }
+
+  private func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // --------------------- painting stuff -------------------------------
