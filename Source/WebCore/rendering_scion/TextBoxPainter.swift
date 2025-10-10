@@ -1333,6 +1333,13 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private var emphasisMarkExistsAndIsAbove: Bool? = nil
 }
 
+class LegacyTextBoxPainter: TextBoxPainter<InlineIterator.BoxLegacyPath> {
+  init(textBox: LegacyInlineTextBox, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 class ModernTextBoxPainterWrapper: TextBoxPainter<InlineIterator.BoxModernPath> {
   init(
     inlineContent: LayoutIntegration.InlineContent, box: InlineDisplay.Box,

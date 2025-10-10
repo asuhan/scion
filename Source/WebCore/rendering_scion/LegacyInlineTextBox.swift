@@ -21,8 +21,63 @@
  */
 
 class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
+  func renderer() -> RenderTextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasTextContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalLeftVisualOverflow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalRightVisualOverflow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removeFromGlyphDisplayListCache() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func isLineBreak() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func paint(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit
+  ) {
+    if isLineBreak() || !paintInfo.shouldPaintWithinRoot(renderer: renderer())
+      || renderer().style().usedVisibility() != .Visible
+      || paintInfo.phase == .Outline || !hasTextContent()
+    {
+      return
+    }
+
+    assert(paintInfo.phase != .SelfOutline && paintInfo.phase != .ChildOutlines)
+
+    let logicalLeftSide = logicalLeftVisualOverflow()
+    let logicalRightSide = logicalRightVisualOverflow()
+    let logicalStart = logicalLeftSide + (isHorizontal() ? paintOffset.x : paintOffset.y)
+    let logicalExtent = logicalRightSide - logicalLeftSide
+
+    let paintEnd = isHorizontal() ? paintInfo.rect.maxX() : paintInfo.rect.maxY()
+    let paintStart = isHorizontal() ? paintInfo.rect.x() : paintInfo.rect.y()
+
+    if logicalStart >= paintEnd || logicalStart + logicalExtent <= paintStart {
+      return
+    }
+
+    let textBoxPainter = LegacyTextBoxPainter(
+      textBox: self, paintInfo: paintInfo, paintOffset: paintOffset)
+    textBoxPainter.paint()
   }
 }

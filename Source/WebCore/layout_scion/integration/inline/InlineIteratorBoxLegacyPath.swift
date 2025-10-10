@@ -30,7 +30,77 @@ extension InlineIterator {
     case Editing
   }
 
-  class BoxLegacyPath {
+  class BoxLegacyPath: BoxPath {
+    func visualRectIgnoringBlockDirection() -> FloatRectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func isHorizontal() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func start() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func end() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func length() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func selectableRange() -> TextBoxSelectableRange {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func textRun() -> TextRunWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func renderer() -> RenderObjectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func formattingContextRoot() -> RenderBlockFlowWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func style() -> RenderStyleWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func direction() -> TextDirection {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func isFirstLine() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func box() -> InlineDisplay.Box {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func deepCopy() -> BoxPath {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func legacyInlineBox() -> LegacyInlineBox? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
