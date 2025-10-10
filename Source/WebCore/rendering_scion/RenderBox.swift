@@ -232,10 +232,40 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func reflectionOffset() -> Int32 {
+    if style().boxReflect() == nil {
+      return 0
+    }
+    if style().boxReflect()!.direction() == .Left || style().boxReflect()!.direction() == .Right {
+      return valueForLength(
+        length: style().boxReflect()!.offset(), maximumValue: borderBoxRect().width()
+      ).int()
+    }
+    return valueForLength(
+      length: style().boxReflect()!.offset(), maximumValue: borderBoxRect().height()
+    ).int()
+  }
+
   // Given a rect in the object's coordinate space, returns the corresponding rect in the reflection.
   func reflectedRect(r: LayoutRectWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().boxReflect() == nil {
+      return LayoutRectWrapper()
+    }
+
+    let box = borderBoxRect()
+    var result = r
+    switch style().boxReflect()!.direction() {
+    case .Below:
+      result.setY(y: box.maxY() + reflectionOffset() + (box.maxY() - r.maxY()))
+    case .Above:
+      result.setY(y: box.y() - reflectionOffset() - box.height() + (box.maxY() - r.maxY()))
+    case .Left:
+      result.setX(x: box.x() - reflectionOffset() - box.width() + (box.maxX() - r.maxX()))
+    case .Right:
+      result.setX(x: box.maxX() + reflectionOffset() + (box.maxX() - r.maxX()))
+      break
+    }
+    return result
   }
 
   func setOverridingLogicalWidthLength(height: LengthWrapper) {

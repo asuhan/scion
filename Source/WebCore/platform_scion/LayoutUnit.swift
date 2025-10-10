@@ -99,6 +99,10 @@ struct LayoutUnit: Comparable {
     return a - b.toFloat()
   }
 
+  static func - (a: LayoutUnit, b: Int32) -> LayoutUnit {
+    return a - LayoutUnit(value: b)
+  }
+
   static func - (a: LayoutUnit, b: Int) -> LayoutUnit {
     return a - LayoutUnit(value: b)
   }
@@ -292,6 +296,10 @@ struct LayoutUnit: Comparable {
     var returnVal = LayoutUnit()
     returnVal.value = WTF.saturatedSum(a: a.rawValue(), b: b.rawValue())
     return returnVal
+  }
+
+  static func + (a: LayoutUnit, b: Int32) -> LayoutUnit {
+    return a + LayoutUnit(value: b)
   }
 
   static func + (a: LayoutUnit, b: Int) -> LayoutUnit {
