@@ -1205,7 +1205,7 @@ struct Line {
     nonSpanningInlineLevelBoxCount += 1
     let marginStart = formattingContext().geometryForBox(layoutBox: inlineItem.layoutBox)
       .marginStart()
-    if marginStart >= 0 {
+    if marginStart >= Int32(0) {
       runs.append(
         Run(
           inlineItem: inlineItem, style: style, logicalLeft: lastRunLogicalRight(),
@@ -1241,7 +1241,7 @@ struct Line {
     contentLogicalWidth = max(contentLogicalWidth, logicalLeft + logicalWidth)
 
     let marginStart = inlineBoxGeometry.marginStart()
-    if marginStart < 0 {
+    if marginStart < Int32(0) {
       // Negative margin-start pulls the content to the logical left direction.
       logicalLeft += marginStart.float()
       logicalWidth -= marginStart.float()

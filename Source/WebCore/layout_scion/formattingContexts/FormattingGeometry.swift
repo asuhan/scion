@@ -789,7 +789,7 @@ class FormattingGeometry {
       let marginStartAndEnd =
         containingBlockWidth
         - (left! + borderLeft + paddingLeft + width + paddingRight + borderRight + right!)
-      if marginStartAndEnd >= 0 {
+      if marginStartAndEnd >= Int32(0) {
         usedMarginStart = marginStartAndEnd / 2
         usedMarginEnd = usedMarginStart
       } else {
@@ -1131,7 +1131,7 @@ class FormattingGeometry {
         let marginStartAndEnd =
           containingBlockWidth
           - (left! + borderLeft + paddingLeft + width! + paddingRight + borderRight + right!)
-        if marginStartAndEnd >= 0 {
+        if marginStartAndEnd >= Int32(0) {
           usedHorizontalMargin = UsedHorizontalMargin(
             start: marginStartAndEnd / 2, end: marginStartAndEnd / 2)
         } else {

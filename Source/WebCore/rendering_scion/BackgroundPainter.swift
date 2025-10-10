@@ -95,7 +95,7 @@ private func areaCastingShadowInHole(
 
   bounds.inflate(d: shadowExtent)
 
-  if shadowSpread < 0 {
+  if shadowSpread < Int32(0) {
     bounds.inflate(d: -shadowSpread)
   }
 

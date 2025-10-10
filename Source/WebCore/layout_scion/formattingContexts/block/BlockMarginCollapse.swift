@@ -600,7 +600,7 @@ struct BlockMarginCollapse {
       nonCollapsedBefore = UsedVerticalMargin.PositiveAndNegativePair.Values(
         positive: nonCollapsedValues.before, negative: nil,
         isQuirk: layoutBox.style.marginBefore().hasQuirk())
-    } else if nonCollapsedValues.before < 0 {
+    } else if nonCollapsedValues.before < Int32(0) {
       nonCollapsedBefore = UsedVerticalMargin.PositiveAndNegativePair.Values(
         positive: nil, negative: nonCollapsedValues.before,
         isQuirk: layoutBox.style.marginBefore().hasQuirk())
@@ -639,7 +639,7 @@ struct BlockMarginCollapse {
       nonCollapsedAfter = UsedVerticalMargin.PositiveAndNegativePair.Values(
         positive: nonCollapsedValues.after, negative: nil,
         isQuirk: layoutBox.style.marginAfter().hasQuirk())
-    } else if nonCollapsedValues.after < 0 {
+    } else if nonCollapsedValues.after < Int32(0) {
       nonCollapsedAfter = UsedVerticalMargin.PositiveAndNegativePair.Values(
         positive: nil, negative: nonCollapsedValues.after,
         isQuirk: layoutBox.style.marginAfter().hasQuirk())
@@ -684,7 +684,7 @@ struct BlockMarginCollapse {
       nonCollapsedBefore = UsedVerticalMargin.PositiveAndNegativePair.Values(
         positive: nonCollapsedValues.before, negative: nil,
         isQuirk: layoutBox.style.marginBefore().hasQuirk())
-    } else if nonCollapsedValues.before < 0 {
+    } else if nonCollapsedValues.before < Int32(0) {
       nonCollapsedBefore = UsedVerticalMargin.PositiveAndNegativePair.Values(
         positive: nil, negative: nonCollapsedValues.before,
         isQuirk: layoutBox.style.marginBefore().hasQuirk())

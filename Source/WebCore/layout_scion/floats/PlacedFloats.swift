@@ -128,8 +128,8 @@ class PlacedFloats {
     // Float items in m_list list should stay in horizontal position order (left/right edge) on the same vertical position.
     let horizontalMargin = newFloatItem.horizontalMargin()
     let hasNegativeHorizontalMargin =
-      (isLeftPositioned && horizontalMargin.start < 0)
-      || (!isLeftPositioned && horizontalMargin.end < 0)
+      (isLeftPositioned && horizontalMargin.start < Int32(0))
+      || (!isLeftPositioned && horizontalMargin.end < Int32(0))
     if !hasNegativeHorizontalMargin {
       return list.append(newFloatItem)
     }

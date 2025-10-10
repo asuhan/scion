@@ -434,7 +434,7 @@ class BlockFormattingGeometry: FormattingGeometry {
         - ((computedHorizontalMargin.start ?? LayoutUnit(value: 0)) + borderLeft + paddingLeft
           + width! + paddingRight + borderRight
           + (computedHorizontalMargin.end ?? LayoutUnit(value: 0)))
-      if horizontalSpaceForMargin < 0 {
+      if horizontalSpaceForMargin < Int32(0) {
         usedHorizontalMargin = UsedHorizontalMargin(
           start: computedHorizontalMargin.start ?? LayoutUnit(value: 0),
           end: computedHorizontalMargin.end ?? LayoutUnit(value: 0))

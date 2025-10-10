@@ -31,10 +31,10 @@ struct RoundedRectRadii {
   }
 
   func areRenderableInRect(rect: LayoutRectWrapper) -> Bool {
-    return topLeft.width() >= 0 && topLeft.height() >= 0
-      && bottomLeft.width() >= 0 && bottomLeft.height() >= 0
-      && topRight.width() >= 0 && topRight.height() >= 0
-      && bottomRight.width() >= 0 && bottomRight.height() >= 0
+    return topLeft.width() >= Int32(0) && topLeft.height() >= Int32(0)
+      && bottomLeft.width() >= Int32(0) && bottomLeft.height() >= Int32(0)
+      && topRight.width() >= Int32(0) && topRight.height() >= Int32(0)
+      && bottomRight.width() >= Int32(0) && bottomRight.height() >= Int32(0)
       && topLeft.width() + topRight.width() <= rect.width()
       && bottomLeft.width() + bottomRight.width() <= rect.width()
       && topLeft.height() + bottomLeft.height() <= rect.height()
@@ -135,7 +135,7 @@ struct RoundedRect {
   mutating func inflateWithRadii(amount: LayoutUnit) {
     let old = rect
 
-    if amount < 0 {
+    if amount < Int32(0) {
       rect.inflateX(dx: max(-rect.width() / 2, amount))
       rect.inflateY(dy: max(-rect.height() / 2, amount))
     } else {
