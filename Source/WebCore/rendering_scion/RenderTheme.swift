@@ -26,6 +26,41 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  // These methods are called to paint the widget as a background of the RenderObject. A widget's foreground, e.g., the
+  // text of a button, is always rendered by the engine itself. The boolean return value indicates
+  // whether the CSS border/background should also be painted.
+  @discardableResult
+  func paint(
+    box: RenderBoxWrapper, part: ControlPartWrapper, paintInfo: PaintInfoWrapper,
+    rect: LayoutRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func paint(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintBorderOnly(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintDecorations(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func adjustedPaintRect(box: RenderBoxWrapper, paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
+    return paintRect
+  }
+
   // Highlighting color for search matches.
   func textSearchHighlightColor(options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this

@@ -22,4 +22,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderTableWrapper: RenderBlockWrapper {}
+class RenderTableWrapper: RenderBlockWrapper {
+  override func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -153,6 +153,11 @@ class BackgroundPainter {
     self.overrideClip = overrideClip
   }
 
+  func paintBackground(paintRect: LayoutRectWrapper, bleedAvoidance: BackgroundBleedAvoidance) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintFillLayer(
     color: ColorWrapper, bgLayer: FillLayerWrapper, rect: LayoutRectWrapper,
     bleedAvoidance: BackgroundBleedAvoidance, inlineBoxIterator: InlineIterator.InlineBoxIterator,

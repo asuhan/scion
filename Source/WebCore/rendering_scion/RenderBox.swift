@@ -403,13 +403,118 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  func ensureControlPartForRenderer() -> ControlPartWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ensureControlPartForBorderOnly() -> ControlPartWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ensureControlPartForDecorations() -> ControlPartWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     fatalError("Not reached")
   }
 
   func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    var paintRect = borderBoxRectInFragment(fragment: nil)
+    paintRect.moveBy(offset: paintOffset)
+    adjustBorderBoxRectForPainting(paintRect: paintRect)
+
+    paintRect = theme().adjustedPaintRect(box: self, paintRect: paintRect)
+    let bleedAvoidance = determineBackgroundBleedAvoidance(context: paintInfo.context())
+
+    let backgroundPainter = BackgroundPainter(renderer: self, paintInfo: paintInfo)
+
+    // FIXME: Should eventually give the theme control over whether the box shadow should paint, since controls could have
+    // custom shadows of their own.
+    if !BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+      renderer: self, paintOffset: paintRect.location(), bleedAvoidance: bleedAvoidance,
+      inlineBox: InlineIterator.InlineBoxIterator())
+    {
+      backgroundPainter.paintBoxShadow(paintRect: paintRect, style: style(), shadowStyle: .Normal)
+    }
+
+    let stateSaver = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: false)
+    if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
+      // To avoid the background color bleeding out behind the border, we'll render background and border
+      // into a transparency layer, and then clip that in one go (which requires setting up the clip before
+      // beginning the layer).
+      stateSaver.save()
+      let borderShape = BorderShape.shapeForBorderRect(style: style(), borderRect: paintRect)
+      borderShape.clipToOuterShape(
+        context: paintInfo.context(), deviceScaleFactor: document().deviceScaleFactor())
+      paintInfo.context().beginTransparencyLayer(opacity: 1)
+    }
+
+    // If we have a native theme appearance, paint that before painting our background.
+    // The theme will tell us whether or not we should also paint the CSS background.
+    var borderOrBackgroundPaintingIsNeeded = true
+    if style().hasUsedAppearance() {
+      if let control = ensureControlPartForRenderer() {
+        borderOrBackgroundPaintingIsNeeded = theme().paint(
+          box: self, part: control, paintInfo: paintInfo, rect: paintRect)
+      } else {
+        borderOrBackgroundPaintingIsNeeded = theme().paint(
+          box: self, paintInfo: paintInfo, rect: paintRect)
+      }
+    }
+
+    let borderPainter = BorderPainter(renderer: self, paintInfo: paintInfo)
+
+    if borderOrBackgroundPaintingIsNeeded {
+      if bleedAvoidance == .BackgroundBleedBackgroundOverBorder {
+        borderPainter.paintBorder(rect: paintRect, style: style(), bleedAvoidance: bleedAvoidance)
+      }
+
+      backgroundPainter.paintBackground(paintRect: paintRect, bleedAvoidance: bleedAvoidance)
+
+      if style().hasUsedAppearance() {
+        if let control = ensureControlPartForDecorations() {
+          theme().paint(
+            box: self, part: control, paintInfo: paintInfo, rect: paintRect)
+        } else {
+          theme().paintDecorations(box: self, paintInfo: paintInfo, rect: paintRect)
+        }
+      }
+    }
+
+    backgroundPainter.paintBoxShadow(paintRect: paintRect, style: style(), shadowStyle: .Inset)
+
+    if bleedAvoidance != .BackgroundBleedBackgroundOverBorder {
+      var paintCSSBorder = false
+
+      if !style().hasUsedAppearance() {
+        paintCSSBorder = true
+      } else if borderOrBackgroundPaintingIsNeeded {
+        // The theme will tell us whether or not we should also paint the CSS border.
+        if let control = ensureControlPartForBorderOnly() {
+          paintCSSBorder = theme().paint(
+            box: self, part: control, paintInfo: paintInfo, rect: paintRect)
+        } else {
+          paintCSSBorder = theme().paintBorderOnly(box: self, paintInfo: paintInfo, rect: paintRect)
+        }
+      }
+
+      if paintCSSBorder && style().hasVisibleBorderDecoration() {
+        borderPainter.paintBorder(
+          rect: paintRect, style: style(), bleedAvoidance: bleedAvoidance)
+      }
+    }
+
+    if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
+      paintInfo.context().endTransparencyLayer()
+    }
   }
 
   func paintMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -509,6 +614,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func isFlexItem() -> Bool { return wk_interop.RenderBox_isFlexItem(p) }
 
+  func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateFloatPainterAfterSelfPaintingLayerChange() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -519,5 +629,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return ShapeOutsideInfoWrapper(p: unwrapped)
     }
     return nil
+  }
+
+  // --------------------- painting stuff -------------------------------
+
+  private func determineBackgroundBleedAvoidance(context: GraphicsContextWrapper)
+    -> BackgroundBleedAvoidance
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }
