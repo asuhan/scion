@@ -219,6 +219,15 @@ enum MaskMode: UInt8 {
   case MatchSource
 }
 
+// CSS3 Marquee Properties
+
+enum MarqueeBehavior: UInt8 {
+  case None
+  case Scroll
+  case Slide
+  case Alternate
+}
+
 enum FlexDirection: UInt8 {
   case Row
   case RowReverse
@@ -303,6 +312,15 @@ enum LineBreak: UInt8 {
   case Strict
   case AfterWhiteSpace
   case Anywhere
+}
+
+enum Resize: UInt8 {
+  case None
+  case Both
+  case Horizontal
+  case Vertical
+  case Block
+  case Inline
 }
 
 enum WhiteSpace {

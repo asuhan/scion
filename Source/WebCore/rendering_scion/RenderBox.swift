@@ -29,8 +29,24 @@ enum OverlayScrollbarSizeRelevancy {
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func requiresLayerWithScrollableArea() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
+    if isRenderView() || isDocumentElementRenderer() {
+      return true
+    }
+
+    if hasPotentiallyScrollableOverflow() {
+      return true
+    }
+
+    if style().resize() != .None {
+      return true
+    }
+
+    if isHTMLMarquee() && style().marqueeBehavior() != .None {
+      return true
+    }
+
+    return false
   }
 
   func y() -> LayoutUnit {

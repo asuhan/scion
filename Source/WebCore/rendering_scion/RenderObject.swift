@@ -175,6 +175,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isHTMLMarquee() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func everHadLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

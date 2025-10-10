@@ -929,6 +929,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func marqueeBehavior() -> MarqueeBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textOverflow() -> TextOverflow {
     if p == nil {
       // TODO(asuhan): implement this
@@ -1009,6 +1014,11 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return AtomStringWrapper(p: wk_interop.RenderStyle_computedLocale(p))
+  }
+
+  func resize() -> Resize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func specifiesColumns() -> Bool {
