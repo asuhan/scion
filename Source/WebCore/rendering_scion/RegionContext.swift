@@ -51,8 +51,10 @@ class RegionContext {
   }
 
   func popClip() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if clipStack.isEmpty {
+      fatalError("Not reached")
+    }
+    clipStack.removeLast()
   }
 
   private var transformStack: [AffineTransform] = []
