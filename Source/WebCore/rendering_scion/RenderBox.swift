@@ -530,8 +530,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintClippingMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) || style().usedVisibility() != .Visible
+      || paintInfo.phase != .ClippingMask || paintInfo.context().paintingDisabled()
+    {
+      return
+    }
+
+    let paintRect = LayoutRectWrapper(location: paintOffset, size: size())
+
+    if document().settings().layerBasedSVGEngineEnabled() && style().clipPath() != nil
+      && style().clipPath()!.type == .Reference
+    {
+      paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: paintRect.FloatRect())
+      return
+    }
+
+    paintInfo.context().fillRect(
+      rect: FloatRectWrapper(r: snappedIntRect(rect: paintRect)), color: ColorWrapper.black)
   }
 
   func maskClipRect(paintOffset: LayoutPointWrapper) -> LayoutRectWrapper {

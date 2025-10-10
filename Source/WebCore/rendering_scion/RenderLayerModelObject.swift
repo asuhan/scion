@@ -49,6 +49,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  func paintSVGClippingMask(paintInfo: PaintInfoWrapper, objectBoundingBox: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func applyTransform(
     transform: inout TransformationMatrix, style: RenderStyleWrapper, boundingBox: FloatRectWrapper,
     options: RenderStyleWrapper.TransformOperationOption
