@@ -625,6 +625,26 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_hasOutlineInVisualOverflow(p)
   }
 
+  func clipLeft() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipRight() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipTop() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipBottom() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clear() -> Clear {
     if p == nil {
       fatalError("Not implemented")

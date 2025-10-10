@@ -344,8 +344,38 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func clipRect(location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let borderBoxRect = borderBoxRectInFragment(fragment: fragment)
+    var clipRect = LayoutRectWrapper(
+      location: borderBoxRect.location() + location, size: borderBoxRect.size())
+
+    let zero = LayoutUnit(value: UInt64(0))
+    if !style().clipLeft().isAuto() {
+      let c = valueForLength(length: style().clipLeft(), maximumValue: borderBoxRect.width())
+      clipRect.move(dx: c, dy: zero)
+      clipRect.contract(dw: c, dh: zero)
+    }
+
+    // We don't use the fragment-specific border box's width and height since clip offsets are (stupidly) specified
+    // from the left and top edges. Therefore it's better to avoid constraining to smaller widths and heights.
+
+    if !style().clipRight().isAuto() {
+      clipRect.contract(
+        dw: width() - valueForLength(length: style().clipRight(), maximumValue: width()), dh: zero)
+    }
+
+    if !style().clipTop().isAuto() {
+      let c = valueForLength(length: style().clipTop(), maximumValue: borderBoxRect.height())
+      clipRect.move(dx: zero, dy: c)
+      clipRect.contract(dw: zero, dh: c)
+    }
+
+    if !style().clipBottom().isAuto() {
+      clipRect.contract(
+        dw: zero,
+        dh: height() - valueForLength(length: style().clipBottom(), maximumValue: height()))
+    }
+
+    return clipRect
   }
 
   func popContentsClip(

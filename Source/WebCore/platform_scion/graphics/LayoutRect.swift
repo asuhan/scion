@@ -118,6 +118,8 @@ struct LayoutRectWrapper: Equatable {
     setHeight(height: max(LayoutUnit(value: 0), height() - delta))
   }
 
+  func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
+
   mutating func shiftXEdgeTo(edge: Float32) {
     shiftXEdgeTo(edge: LayoutUnit(value: edge))
   }
