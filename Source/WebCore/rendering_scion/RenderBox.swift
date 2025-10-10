@@ -49,6 +49,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  func x() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func y() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -584,8 +589,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().isFlippedBlocksWritingMode() {
+      return point
+    }
+
+    // The child is going to add in its x() and y(), so we have to make sure it ends up in
+    // the right place.
+    if isHorizontalWritingMode() {
+      return LayoutPointWrapper(
+        x: point.x, y: point.y + height() - child.height() - (2 * child.y()))
+    }
+    return LayoutPointWrapper(
+      x: point.x + width() - child.width() - (2 * child.x()), y: point.y)
   }
 
   func flipForWritingMode(position: LayoutUnit) -> LayoutUnit {
