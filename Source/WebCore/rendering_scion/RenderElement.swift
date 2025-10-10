@@ -105,7 +105,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
 
-  func paint(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     fatalError("Not reached")
   }
 

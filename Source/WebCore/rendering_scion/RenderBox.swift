@@ -378,11 +378,33 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return clipRect
   }
 
-  func popContentsClip(
-    paintInfo: PaintInfoWrapper, originalPhase: PaintPhase, accumulatedOffset: LayoutPointWrapper
-  ) {
+  func hasControlClip() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func popContentsClip(
+    paintInfo: inout PaintInfoWrapper, originalPhase: PaintPhase,
+    accumulatedOffset: LayoutPointWrapper
+  ) {
+    assert(hasControlClip() || (hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer))
+
+    if paintInfo.phase == .EventRegion || paintInfo.phase == .Accessibility {
+      paintInfo.regionContext!.popClip()
+    }
+
+    paintInfo.context().restore()
+    if originalPhase == .Outline {
+      paintInfo.phase = .SelfOutline
+      paintObject(paintInfo: paintInfo, paintOffset: accumulatedOffset)
+      paintInfo.phase = originalPhase
+    } else if originalPhase == .ChildBlockBackground {
+      paintInfo.phase = originalPhase
+    }
+  }
+
+  func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    fatalError("Not reached")
   }
 
   func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

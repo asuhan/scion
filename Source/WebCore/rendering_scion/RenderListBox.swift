@@ -30,6 +30,11 @@
  */
 
 final class RenderListBoxWrapper: RenderBlockFlowWrapper {
+  override func hasControlClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func verticalScrollbarWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

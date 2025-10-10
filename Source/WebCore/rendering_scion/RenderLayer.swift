@@ -4093,14 +4093,14 @@ class RenderLayerWrapper {
 
       // Paint the background.
       // FIXME: Eventually we will collect the region from the fragment itself instead of just from the paint info.
-      let paintInfo = PaintInfoWrapper(
+      var paintInfo = PaintInfoWrapper(
         newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .BlockBackground,
         newPaintBehavior: paintBehavior,
         newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
         overlapTestRequests: nil, newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
         enclosingSelfPaintingLayer: self)
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
@@ -4242,7 +4242,7 @@ class RenderLayerWrapper {
         paintInfo.overlapTestRequests = localPaintingInfo.overlapTestRequests
       }
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
@@ -4258,7 +4258,7 @@ class RenderLayerWrapper {
       }
 
       // Paint our own outline
-      let paintInfo = PaintInfoWrapper(
+      var paintInfo = PaintInfoWrapper(
         newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .SelfOutline,
         newPaintBehavior: paintBehavior,
         newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
@@ -4275,7 +4275,7 @@ class RenderLayerWrapper {
         paintBehavior: paintBehavior,
         clipRect: fragment.backgroundRect, rule: .DoNotIncludeSelfForBorderRadius)
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
@@ -4331,14 +4331,14 @@ class RenderLayerWrapper {
 
       // Paint the mask.
       // FIXME: Eventually we will collect the region from the fragment itself instead of just from the paint info.
-      let paintInfo = PaintInfoWrapper(
+      var paintInfo = PaintInfoWrapper(
         newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .Mask,
         newPaintBehavior: paintBehavior,
         newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
         overlapTestRequests: nil, newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
         enclosingSelfPaintingLayer: self)
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
@@ -4366,14 +4366,14 @@ class RenderLayerWrapper {
       }
 
       // Paint the clipped mask.
-      let paintInfo = PaintInfoWrapper(
+      var paintInfo = PaintInfoWrapper(
         newContext: context, newRect: fragment.backgroundRect.rect, newPhase: .ClippingMask,
         newPaintBehavior: paintBehavior,
         newSubtreePaintRoot: subtreePaintRootForRenderer, newOutlineObjects: nil,
         overlapTestRequests: nil, newPaintContainer: localPaintingInfo.rootLayer!.renderer(),
         enclosingSelfPaintingLayer: self)
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }
@@ -4457,7 +4457,7 @@ class RenderLayerWrapper {
       }
 
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
       if localPaintingInfo.clipToDirtyRect {
         paintInfo.regionContext!.popClip()
@@ -4476,7 +4476,7 @@ class RenderLayerWrapper {
         newPaintBehavior: paintBehavior)
       paintInfo.regionContext = localPaintingInfo.regionContext
       renderer().paint(
-        paintInfo: paintInfo,
+        paintInfo: &paintInfo,
         paintOffset: paintOffsetForRenderer(fragment: fragment, paintingInfo: localPaintingInfo))
     }
   }

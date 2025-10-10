@@ -19,4 +19,9 @@
  *
  */
 
-final class RenderButtonWrapper: RenderFlexibleBoxWrapper {}
+final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
+  override func hasControlClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

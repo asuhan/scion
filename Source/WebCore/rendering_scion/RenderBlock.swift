@@ -59,7 +59,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
-  override func paint(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     let adjustedPaintOffset = paintOffset + location()
     let phase = paintInfo.phase
 
@@ -71,7 +71,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintObject(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
     if pushedClip {
       popContentsClip(
-        paintInfo: paintInfo, originalPhase: phase, accumulatedOffset: adjustedPaintOffset)
+        paintInfo: &paintInfo, originalPhase: phase, accumulatedOffset: adjustedPaintOffset)
     }
 
     // Our scrollbar widgets paint exactly when we tell them to, so that they work properly with
@@ -110,7 +110,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return !overflowBox.intersects(other: paintInfo.rect)
   }
 
-  private func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  override func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     let paintPhase = paintInfo.phase
 
     // 1. paint background, borders etc
@@ -277,13 +277,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   func paintChildren(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
-    paintInfoForChild: PaintInfoWrapper, usePrintRect: Bool
+    paintInfoForChild: inout PaintInfoWrapper, usePrintRect: Bool
   ) {
     var child = firstChildBox()
     while child != nil {
       if !paintChild(
         child: child!, paintInfo: paintInfo, paintOffset: paintOffset,
-        paintInfoForChild: paintInfoForChild, usePrintRect: usePrintRect)
+        paintInfoForChild: &paintInfoForChild, usePrintRect: usePrintRect)
       {
         return
       }
@@ -298,7 +298,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   func paintChild(
     child: RenderBoxWrapper, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
-    paintInfoForChild: PaintInfoWrapper, usePrintRect: Bool,
+    paintInfoForChild: inout PaintInfoWrapper, usePrintRect: Bool,
     paintType: PaintBlockType = .PaintAsBlock
   ) -> Bool {
     if child.isExcludedAndPlacedInBorder() {
@@ -337,7 +337,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       if paintType == .PaintAsInlineBlock {
         child.paintAsInlineBlock(paintInfo: paintInfoForChild, childPoint: childPoint)
       } else {
-        child.paint(paintInfo: paintInfoForChild, paintOffset: childPoint)
+        child.paint(paintInfo: &paintInfoForChild, paintOffset: childPoint)
       }
     }
 
@@ -401,7 +401,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       // NSViews. Do not add any more code for this.
       let usePrintRect = !view().printRect().isEmpty()
       paintChildren(
-        paintInfo: paintInfo, paintOffset: paintOffset, paintInfoForChild: paintInfoForChild,
+        paintInfo: paintInfo, paintOffset: paintOffset, paintInfoForChild: &paintInfoForChild,
         usePrintRect: usePrintRect)
     }
   }
