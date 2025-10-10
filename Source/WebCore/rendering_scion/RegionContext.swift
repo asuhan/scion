@@ -25,8 +25,11 @@
 
 class RegionContext {
   func pushTransform(transform: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if transformStack.isEmpty {
+      transformStack.append(transform)
+    } else {
+      transformStack.append(transformStack.last! * transform)
+    }
   }
 
   func popTransform() {
@@ -43,6 +46,8 @@ class RegionContext {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var transformStack: [AffineTransform] = []
 }
 
 class RegionContextStateSaver {

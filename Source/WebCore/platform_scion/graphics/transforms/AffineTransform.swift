@@ -52,6 +52,12 @@ class AffineTransform {
       && (transform[3] == 1 || transform[3] == -1)
   }
 
+  // result = this * t (i.e., a multRight)
+  static func * (this: AffineTransform, t: AffineTransform) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
   private let transform: [Float64]
 }
