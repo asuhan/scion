@@ -56,12 +56,10 @@ class RenderTreeUpdater {
 
       let node = *it
 
-      if node.renderer() != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+      if let renderer = node.renderer() {
+        renderTreePosition().invalidateNextSibling(siblingRenderer: renderer)
       } else if let element = node as? ElementWrapper, element.hasDisplayContents() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        renderTreePosition().invalidateNextSibling()
       }
 
       if let text = node as? TextWrapper {
@@ -82,8 +80,7 @@ class RenderTreeUpdater {
 
       let needsSVGRendererUpdate = element.needsSVGRendererUpdate()
       if needsSVGRendererUpdate {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        updateSVGRenderer(element: element)
       }
 
       let elementUpdate = styleUpdate!.elementUpdate(element: element)
@@ -133,6 +130,11 @@ class RenderTreeUpdater {
   }
 
   private func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateSVGRenderer(element: ElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
