@@ -24,6 +24,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/rendering_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/rendering_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/platform_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/platform_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/accessibility_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/accessibility_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/css_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/css_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/style_scion

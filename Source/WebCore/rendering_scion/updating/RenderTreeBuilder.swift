@@ -29,4 +29,12 @@ class RenderTreeBuilder {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func attach(
+    parent: RenderElementWrapper, child: RenderObjectWrapper?,
+    beforeChild: RenderObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

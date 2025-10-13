@@ -23,6 +23,11 @@
 import wk_interop
 
 class RenderElementWrapper: RenderObjectWrapper {
+  func initializeStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Calling with minimalStyleDifference > StyleDifference::Equal indicates that
   // out-of-band state (e.g. animations) requires that styleDidChange processing
   // continue even if the style isn't different from the current style.

@@ -311,8 +311,21 @@ class RenderTreeUpdater {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    element.setRenderer(renderer: newRenderer)
+
+    newRenderer!.initializeStyle()
+
+    builder!.attach(
+      parent: insertionPosition.parent, child: newRenderer,
+      beforeChild: insertionPosition.nextSibling())
+
+    if let textManipulationController = document.textManipulationControllerIfExists() {
+      textManipulationController.didAddOrCreateRendererForNode(node: element)
+    }
+
+    if let cache = document.axObjectCache() {
+      cache.onRendererCreated(element: element)
+    }
   }
 
   private func textRendererIsNeeded(textNode: TextWrapper) -> Bool {

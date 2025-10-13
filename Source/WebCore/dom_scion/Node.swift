@@ -62,6 +62,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func setRenderer(renderer: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Use these two methods with caution.
   func renderBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this

@@ -30,11 +30,6 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     self.p = p
   }
 
-  func initializeStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func layoutBox() -> BoxWrapper? {
     let unwrapped = wk_interop.RenderObject_layoutBox(p)
     if unwrapped == nil {

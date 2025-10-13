@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Apple Inc. All rights reserved.
+ * Copyright (C) 2019 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,30 +23,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderTreePosition {
-  init(parent: RenderElementWrapper) {
-    self.parent = parent
-  }
-
-  func nextSibling() -> RenderObjectWrapper? {
+final class TextManipulationControllerWrapper {
+  func didAddOrCreateRendererForNode(node: NodeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  func computeNextSibling(node: NodeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func invalidateNextSibling() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func invalidateNextSibling(siblingRenderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  let parent: RenderElementWrapper
 }

@@ -44,6 +44,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func axObjectCache() -> AXObjectCacheWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func printing() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -92,6 +97,11 @@ class Document: TreeScopeWrapper {
   }
 
   func hasTopLayerElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func textManipulationControllerIfExists() -> TextManipulationControllerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
