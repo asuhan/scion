@@ -427,8 +427,12 @@ class RenderTreeUpdater {
   private func parent() -> Parent { return parentStack.last! }
 
   private func renderingParent() -> Parent {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for parent in parentStack.reversed() {
+      if parent.renderTreePosition != nil {
+        return parent
+      }
+    }
+    fatalError("Not reached")
   }
 
   private func renderTreePosition() -> RenderTreePosition {
