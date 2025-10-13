@@ -345,6 +345,11 @@ class RenderTreeUpdater {
     }
   }
 
+  private func updateBeforeDescendants(element: ElementWrapper, update: Style.ElementUpdate?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateAfterDescendants(element: ElementWrapper, update: Style.ElementUpdate?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -428,6 +433,11 @@ class RenderTreeUpdater {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    init(element: ElementWrapper, update: Style.ElementUpdate?) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   private func parent() -> Parent { return parentStack.last! }
@@ -447,8 +457,9 @@ class RenderTreeUpdater {
   }
 
   private func pushParent(element: ElementWrapper, update: Style.ElementUpdate?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    parentStack.append(Parent(element: element, update: update))
+
+    updateBeforeDescendants(element: element, update: update)
   }
 
   private func popParent() {
