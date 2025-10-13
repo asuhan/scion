@@ -31,12 +31,64 @@ class RenderTreeUpdater {
     self.builder = RenderTreeBuilder(view: renderView())
   }
 
+  private func updateRenderTree(root: ContainerNodeWrapper) {
+    assert(root.renderer() != nil)
+    assert(parentStack.isEmpty)
+
+    parentStack.append(Parent(root: root))
+
+    let descendants = composedTreeDescendants(parent: root)
+    let it = descendants.begin()
+    let end = descendants.end()
+
+    // FIXME: https://bugs.webkit.org/show_bug.cgi?id=156172
+    it.dropAssertions()
+
+    while it != end {
+      popParentsToDepth(depth: it.depth())
+
+      let node = *it
+
+      if node.renderer() != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else if let element = node as? ElementWrapper, element.hasDisplayContents() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if node is TextWrapper {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    popParentsToDepth(depth: 0)
+  }
+
+  private struct Parent {
+    init(root: ContainerNodeWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private func popParentsToDepth(depth: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func renderView() -> RenderViewWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private let document: Document
+
+  private var parentStack: [Parent] = []
 
   private var generatedContent: GeneratedContent? = nil
   private var viewTransition: ViewTransition? = nil

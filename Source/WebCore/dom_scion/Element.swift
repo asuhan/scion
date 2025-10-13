@@ -32,6 +32,11 @@ class ElementWrapper: ContainerNodeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasDisplayContents() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 func isInTopLayerOrBackdrop(style: RenderStyleWrapper, element: ElementWrapper?) -> Bool {

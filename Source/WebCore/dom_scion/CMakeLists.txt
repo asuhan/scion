@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     AbstractRange.swift
     CharacterData.swift
+    ComposedTreeIterator.swift
     ContainerNode.swift
     Document.swift
     DocumentMarker.swift
