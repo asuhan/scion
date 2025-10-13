@@ -307,8 +307,9 @@ class RenderTreeUpdater {
     renderer: RenderElementWrapper, newStyle: RenderStyleWrapper,
     minimalStyleDifference: StyleDifference
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldStyle = RenderStyleWrapper.clone(style: renderer.style())
+    renderer.setStyle(style: newStyle, minimalStyleDifference: minimalStyleDifference)
+    builder!.normalizeTreeAfterStyleChange(renderer: renderer, oldStyle: oldStyle)
   }
 
   private func createRenderer(element: ElementWrapper, style: RenderStyleWrapper) {

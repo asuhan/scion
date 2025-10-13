@@ -63,6 +63,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  static func clone(style: RenderStyleWrapper) -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func cloneIncludingPseudoElements(style: RenderStyleWrapper) -> RenderStyleWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
