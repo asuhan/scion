@@ -291,6 +291,26 @@ class RenderTreeUpdater {
   }
 
   private func createRenderer(element: ElementWrapper, style: RenderStyleWrapper) {
+    if !shouldCreateRenderer(element: element, parentRenderer: renderTreePosition().parent) {
+      return
+    }
+
+    if !element.rendererIsNeeded(style: style) {
+      return
+    }
+
+    renderTreePosition().computeNextSibling(node: element)
+    let insertionPosition = renderTreePosition()
+    let newRenderer = element.createElementRenderer(
+      style: style, insertionPosition: insertionPosition)
+    if newRenderer == nil {
+      return
+    }
+
+    if !insertionPosition.parent.isChildAllowed(child: newRenderer!, style: newRenderer!.style()) {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

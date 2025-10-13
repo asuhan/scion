@@ -28,6 +28,13 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func createElementRenderer(style: RenderStyleWrapper, insertionPosition: RenderTreePosition)
+    -> RenderElementWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rendererIsNeeded(style: RenderStyleWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

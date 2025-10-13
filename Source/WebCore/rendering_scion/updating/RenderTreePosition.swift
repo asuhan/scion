@@ -28,6 +28,11 @@ class RenderTreePosition {
     self.parent = parent
   }
 
+  func computeNextSibling(node: NodeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateNextSibling() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -101,6 +101,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isChildAllowed(child: RenderObjectWrapper, style: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
