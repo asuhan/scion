@@ -107,6 +107,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // RenderObject tree manipulation
+  //////////////////////////////////////////
+  func canHaveChildren() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+  //////////////////////////////////////////
+
   func isRenderReplaced() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -140,7 +148,27 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isImage(p)
   }
 
+  func isRenderButton() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderIFrame() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderTable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderTableCol() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderTableSection() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -161,6 +189,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderHTMLCanvas() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderGrid() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -272,6 +305,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderText() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isBR() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -530,6 +568,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // When performing a global document tear-down, or when going into the back/forward cache, the renderer of the document is cleared.
   func renderTreeBeingDestroyed() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Virtual function helper for the new FlexibleBox Layout (display: -webkit-flex).
+  func isRenderFlexibleBox() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -25,6 +25,11 @@ class CharacterDataWrapper: NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func length() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containsOnlyASCIIWhitespace() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

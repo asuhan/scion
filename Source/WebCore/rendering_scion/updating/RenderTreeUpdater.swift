@@ -329,8 +329,63 @@ class RenderTreeUpdater {
   }
 
   private func textRendererIsNeeded(textNode: TextWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderingParent = renderingParent()
+    let parentRenderer = renderingParent.renderTreePosition!.parent
+    if !parentRenderer.canHaveChildren() {
+      return false
+    }
+    if parentRenderer.element() != nil
+      && !parentRenderer.element()!.childShouldCreateRenderer(child: textNode)
+    {
+      return false
+    }
+    if textNode.isEditingText() {
+      return true
+    }
+    if textNode.length() == 0 {
+      return false
+    }
+    if !textNode.containsOnlyASCIIWhitespace() {
+      return true
+    }
+    if renderingParent.previousChildRenderer is RenderTextWrapper {
+      return true
+    }
+    // This text node has nothing but white space. We may still need a renderer in some cases.
+    if parentRenderer.isRenderTable() || parentRenderer.isRenderTableRow()
+      || parentRenderer.isRenderTableSection() || parentRenderer.isRenderTableCol()
+      || parentRenderer.isRenderFrameSet() || parentRenderer.isRenderGrid()
+      || (parentRenderer.isRenderFlexibleBox() && !parentRenderer.isRenderButton())
+    {
+      return false
+    }
+    if parentRenderer.style().preserveNewline() {  // pre/pre-wrap/pre-line always make renderers.
+      return true
+    }
+
+    let previousRenderer = renderingParent.previousChildRenderer
+    if previousRenderer != nil && previousRenderer!.isBR() {  // <span><br/> <br/></span>
+      return false
+    }
+
+    if parentRenderer.isRenderInline() {
+      // <span><div/> <div/></span>
+      if previousRenderer != nil && !previousRenderer!.isInline()
+        && !previousRenderer!.isOutOfFlowPositioned()
+      {
+        return false
+      }
+
+      return true
+    }
+
+    if parentRenderer.isRenderBlock() && !parentRenderer.childrenInline()
+      && (previousRenderer == nil || !previousRenderer!.isInline())
+    {
+      return false
+    }
+
+    return renderingParent.hasPrecedingInFlowChild
   }
 
   private func storePreviousRenderer(node: NodeWrapper) {
@@ -340,8 +395,11 @@ class RenderTreeUpdater {
 
   private class Parent {
     let update: Style.ElementUpdate? = nil
+    let renderTreePosition: RenderTreePosition? = nil
 
     var didCreateOrDestroyChildRenderer = false
+    var previousChildRenderer: RenderObjectWrapper? = nil
+    let hasPrecedingInFlowChild = false
 
     init(root: ContainerNodeWrapper) {
       // TODO(asuhan): implement this

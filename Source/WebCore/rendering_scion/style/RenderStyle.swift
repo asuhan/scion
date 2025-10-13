@@ -400,6 +400,11 @@ class RenderStyleWrapper {
     return wk_interop.RenderStyle_autoWrap(p)
   }
 
+  func preserveNewline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textShadow() -> ShadowData? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

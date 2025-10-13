@@ -40,6 +40,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func childShouldCreateRenderer(child: NodeWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInTopLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
