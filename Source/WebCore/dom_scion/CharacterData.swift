@@ -19,4 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class CharacterDataWrapper: NodeWrapper {}
+class CharacterDataWrapper: NodeWrapper {
+  func containsOnlyASCIIWhitespace() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

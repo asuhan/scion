@@ -3,5 +3,6 @@ target_sources(layout_scion PRIVATE
     PseudoElementIdentifier.swift
     PseudoElementRequest.swift
     Styleable.swift
+    StyleChange.swift
     StyleUpdate.swift
 )

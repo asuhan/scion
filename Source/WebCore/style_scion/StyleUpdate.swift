@@ -25,10 +25,19 @@
 
 extension Style {
 
-  struct ElementUpdate {}
+  struct ElementUpdate {
+    let change: Change = .None
+  }
+
+  struct TextUpdate {}
 
   final class Update {
     func elementUpdate(element: ElementWrapper) -> ElementUpdate? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func textUpdate(text: TextWrapper) -> TextUpdate? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

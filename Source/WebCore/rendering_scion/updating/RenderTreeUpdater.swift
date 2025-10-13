@@ -64,9 +64,18 @@ class RenderTreeUpdater {
         fatalError("Not implemented")
       }
 
-      if node is TextWrapper {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+      if let text = node as? TextWrapper {
+        let textUpdate = styleUpdate!.textUpdate(text: text)
+        let didCreateParent = parent().update != nil && parent().update!.change == .Renderer
+        let mayNeedUpdateWhitespaceOnlyRenderer =
+          renderingParent().didCreateOrDestroyChildRenderer && text.containsOnlyASCIIWhitespace()
+        if didCreateParent || textUpdate != nil || mayNeedUpdateWhitespaceOnlyRenderer {
+          updateTextRenderer(text: text, textUpdate: textUpdate, root: nil)
+        }
+
+        storePreviousRenderer(node: text)
+        it.traverseNextSkippingChildren()
+        continue
       }
 
       let element = node as! ElementWrapper
@@ -82,8 +91,9 @@ class RenderTreeUpdater {
       // We hop through display: contents elements in findRenderingRoot, so
       // there may be other updates down the tree.
       if elementUpdate == nil && !element.hasDisplayContents() && !needsSVGRendererUpdate {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        storePreviousRenderer(node: element)
+        it.traverseNextSkippingChildren()
+        continue
       }
 
       if elementUpdate != nil {
@@ -115,6 +125,13 @@ class RenderTreeUpdater {
       && shouldCreateRenderer(element: element, parentRenderer: renderTreePosition().parent)
   }
 
+  private func updateTextRenderer(
+    text: TextWrapper, textUpdate: Style.TextUpdate?, root: ContainerNodeWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -126,10 +143,21 @@ class RenderTreeUpdater {
   }
 
   private struct Parent {
+    let update: Style.ElementUpdate? = nil
+
+    let didCreateOrDestroyChildRenderer = false
+
     init(root: ContainerNodeWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+  }
+
+  private func parent() -> Parent { return parentStack.last! }
+
+  private func renderingParent() -> Parent {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func renderTreePosition() -> RenderTreePosition {
