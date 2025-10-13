@@ -23,6 +23,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func shouldCreateRenderer(element: ElementWrapper, parentRenderer: RenderElementWrapper)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderTreeUpdater {
   init(document: Document) {
     self.document = document
@@ -62,11 +69,60 @@ class RenderTreeUpdater {
         fatalError("Not implemented")
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let element = node as! ElementWrapper
+
+      let needsSVGRendererUpdate = element.needsSVGRendererUpdate()
+      if needsSVGRendererUpdate {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      let elementUpdate = styleUpdate!.elementUpdate(element: element)
+
+      // We hop through display: contents elements in findRenderingRoot, so
+      // there may be other updates down the tree.
+      if elementUpdate == nil && !element.hasDisplayContents() && !needsSVGRendererUpdate {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if elementUpdate != nil {
+        updateElementRenderer(element: element, elementUpdate: elementUpdate!)
+      }
+
+      storePreviousRenderer(node: element)
+
+      let mayHaveRenderedDescendants = mayHaveRenderedDescendants(element: element)
+
+      if !mayHaveRenderedDescendants {
+        it.traverseNextSkippingChildren()
+        continue
+      }
+
+      pushParent(element: element, update: elementUpdate)
+
+      it.traverseNext()
     }
 
     popParentsToDepth(depth: 0)
+  }
+
+  private func mayHaveRenderedDescendants(element: ElementWrapper) -> Bool {
+    if element.renderer() != nil {
+      return !(element.isInTopLayer() && element.renderer()!.isSkippedContent())
+    }
+    return element.hasDisplayContents()
+      && shouldCreateRenderer(element: element, parentRenderer: renderTreePosition().parent)
+  }
+
+  private func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func storePreviousRenderer(node: NodeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private struct Parent {
@@ -74,6 +130,16 @@ class RenderTreeUpdater {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+  }
+
+  private func renderTreePosition() -> RenderTreePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func pushParent(element: ElementWrapper, update: Style.ElementUpdate?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func popParentsToDepth(depth: UInt32) {
@@ -87,6 +153,7 @@ class RenderTreeUpdater {
   }
 
   private let document: Document
+  private let styleUpdate: Style.Update? = nil
 
   private var parentStack: [Parent] = []
 

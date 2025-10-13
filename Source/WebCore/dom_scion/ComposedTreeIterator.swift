@@ -34,6 +34,18 @@ class ComposedTreeIterator: Equatable {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func traverseNext() -> ComposedTreeIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func traverseNextSkippingChildren() -> ComposedTreeIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func depth() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

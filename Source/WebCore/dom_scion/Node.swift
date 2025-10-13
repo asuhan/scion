@@ -29,6 +29,11 @@ class NodeWrapper {
     self.p = p
   }
 
+  func needsSVGRendererUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setHasEverPaintedImages(hasEverPaintedImages: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
