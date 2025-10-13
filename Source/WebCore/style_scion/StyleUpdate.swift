@@ -29,7 +29,11 @@ extension Style {
     let change: Change = .None
   }
 
-  struct TextUpdate {}
+  struct TextUpdate {
+    let offset: UInt32 = 0
+    let length: UInt32 = UInt32.max
+    let inheritedDisplayContentsStyle: RenderStyleWrapper?? = nil
+  }
 
   final class Update {
     func elementUpdate(element: ElementWrapper) -> ElementUpdate? {

@@ -81,6 +81,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setTextWithOffset(newText: StringWrapper, offset: UInt32, force: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func width(
     from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool = false,
     fallbackFonts: Set<UInt>? = nil,
@@ -97,6 +102,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   func contentRangesBetweenOffsetsForType(
     type: DocumentMarker.`Type`, startOffset: UInt32, endOffset: UInt32
   ) -> [(UInt32, UInt32)] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inlineWrapperForDisplayContents() -> RenderInlineWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

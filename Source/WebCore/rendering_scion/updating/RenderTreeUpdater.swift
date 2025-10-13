@@ -125,6 +125,41 @@ class RenderTreeUpdater {
   private func updateTextRenderer(
     text: TextWrapper, textUpdate: Style.TextUpdate?, root: ContainerNodeWrapper? = nil
   ) {
+    var existingRenderer = text.renderer()
+    let needsRenderer = textRendererIsNeeded(textNode: text)
+
+    if existingRenderer != nil && textUpdate != nil
+      && textUpdate!.inheritedDisplayContentsStyle != nil
+    {
+      if existingRenderer!.inlineWrapperForDisplayContents() != nil
+        || textUpdate!.inheritedDisplayContentsStyle! != nil
+      {
+        // FIXME: We could update without teardown.
+        RenderTreeUpdater.tearDownTextRenderer(text: text, root: root, builder: builder!)
+        existingRenderer = nil
+      }
+    }
+
+    if existingRenderer != nil {
+      if needsRenderer {
+        if let textUpdate = textUpdate {
+          existingRenderer!.setTextWithOffset(
+            newText: text.data(), offset: textUpdate.offset, force: textUpdate.length != 0)
+        }
+        return
+      }
+      RenderTreeUpdater.tearDownTextRenderer(text: text, root: root, builder: builder!)
+      renderingParent().didCreateOrDestroyChildRenderer = true
+      return
+    }
+    if !needsRenderer {
+      return
+    }
+    createTextRenderer(textNode: text, textUpdate: textUpdate)
+    renderingParent().didCreateOrDestroyChildRenderer = true
+  }
+
+  private func createTextRenderer(textNode: TextWrapper, textUpdate: Style.TextUpdate?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -139,15 +174,20 @@ class RenderTreeUpdater {
     fatalError("Not implemented")
   }
 
+  private func textRendererIsNeeded(textNode: TextWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func storePreviousRenderer(node: NodeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private struct Parent {
+  private class Parent {
     let update: Style.ElementUpdate? = nil
 
-    let didCreateOrDestroyChildRenderer = false
+    var didCreateOrDestroyChildRenderer = false
 
     init(root: ContainerNodeWrapper) {
       // TODO(asuhan): implement this
@@ -173,6 +213,19 @@ class RenderTreeUpdater {
   }
 
   private func popParentsToDepth(depth: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private enum NeedsRepaintAndLayout {
+    case No
+    case Yes
+  }
+
+  private static func tearDownTextRenderer(
+    text: TextWrapper, root: ContainerNodeWrapper?, builder: RenderTreeBuilder,
+    needsRepaintAndLayout: NeedsRepaintAndLayout = .Yes
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -20,6 +20,11 @@
  */
 
 class CharacterDataWrapper: NodeWrapper {
+  func data() -> StringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containsOnlyASCIIWhitespace() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
