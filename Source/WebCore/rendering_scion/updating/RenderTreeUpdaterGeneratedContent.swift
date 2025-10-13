@@ -29,6 +29,13 @@ extension RenderTreeUpdater {
       self.updater = updater
     }
 
+    func updatePseudoElement(
+      current: ElementWrapper, elementUpdate: Style.ElementUpdate, pseudoId: PseudoId
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private let updater: RenderTreeUpdater
   }
 }

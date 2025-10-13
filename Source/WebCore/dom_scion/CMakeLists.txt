@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     DocumentMarkerController.swift
     Element.swift
     Node.swift
+    PseudoElement.swift
     RenderedDocumentMarker.swift
     Settings.swift
     SimpleRange.swift

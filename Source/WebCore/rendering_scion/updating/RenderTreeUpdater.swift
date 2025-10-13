@@ -346,8 +346,14 @@ class RenderTreeUpdater {
   }
 
   private func updateBeforeDescendants(element: ElementWrapper, update: Style.ElementUpdate?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let update = update {
+      generatedContent!.updatePseudoElement(
+        current: element, elementUpdate: update, pseudoId: .Before)
+    }
+
+    if let before = element.beforePseudoElement() {
+      storePreviousRenderer(node: before)
+    }
   }
 
   private func updateAfterDescendants(element: ElementWrapper, update: Style.ElementUpdate?) {
