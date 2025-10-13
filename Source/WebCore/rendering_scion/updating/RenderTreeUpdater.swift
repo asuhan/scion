@@ -345,6 +345,11 @@ class RenderTreeUpdater {
     }
   }
 
+  private func updateAfterDescendants(element: ElementWrapper, update: Style.ElementUpdate?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func textRendererIsNeeded(textNode: TextWrapper) -> Bool {
     let renderingParent = renderingParent()
     let parentRenderer = renderingParent.renderTreePosition!.parent
@@ -411,6 +416,7 @@ class RenderTreeUpdater {
   }
 
   private class Parent {
+    let element: ElementWrapper? = nil
     let update: Style.ElementUpdate? = nil
     let renderTreePosition: RenderTreePosition? = nil
 
@@ -445,9 +451,25 @@ class RenderTreeUpdater {
     fatalError("Not implemented")
   }
 
+  private func popParent() {
+    let parent = parentStack.last!
+    if parent.element != nil {
+      updateAfterDescendants(element: parent.element!, update: parent.update)
+    }
+
+    if ObjectIdentifier(parent) != ObjectIdentifier(renderingParent()) {
+      renderTreePosition().invalidateNextSibling()
+    }
+
+    parentStack.removeLast()
+  }
+
   private func popParentsToDepth(depth: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(parentStack.count >= depth)
+
+    while parentStack.count > depth {
+      popParent()
+    }
   }
 
   // FIXME: Use OptionSet.
