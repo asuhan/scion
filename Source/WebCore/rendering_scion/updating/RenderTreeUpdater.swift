@@ -190,7 +190,8 @@ class RenderTreeUpdater {
     let elementUpdateStyle = RenderStyleWrapper.cloneIncludingPseudoElements(
       style: elementUpdate.style!)
 
-    let shouldTearDownRenderers = RenderTreeUpdater.shouldTearDownRenderers(element: element)
+    let shouldTearDownRenderers = RenderTreeUpdater.shouldTearDownRenderers(
+      element: element, elementUpdate: elementUpdate)
 
     if shouldTearDownRenderers {
       if element.renderer() == nil {
@@ -281,9 +282,16 @@ class RenderTreeUpdater {
     fatalError("Not implemented")
   }
 
-  private static func shouldTearDownRenderers(element: ElementWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private static func shouldTearDownRenderers(
+    element: ElementWrapper, elementUpdate: Style.ElementUpdate
+  ) -> Bool {
+    if element.isInTopLayer() && elementUpdate.change == .Inherited
+      && elementUpdate.style!.hasSkippedContent()
+    {
+      return true
+    }
+    return elementUpdate.change == .Renderer
+      && (element.renderer() != nil || element.hasDisplayContents())
   }
 
   private func updateSVGRenderer(element: ElementWrapper) {
