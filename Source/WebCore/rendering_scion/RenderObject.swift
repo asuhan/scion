@@ -113,6 +113,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func canHaveGeneratedChildren() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
   //////////////////////////////////////////
 
   func isRenderReplaced() -> Bool {

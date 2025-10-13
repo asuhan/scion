@@ -26,8 +26,17 @@
 private func shouldCreateRenderer(element: ElementWrapper, parentRenderer: RenderElementWrapper)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !parentRenderer.canHaveChildren()
+    && !(element.isPseudoElement() && parentRenderer.canHaveGeneratedChildren())
+  {
+    return false
+  }
+  if parentRenderer.element() != nil
+    && !parentRenderer.element()!.childShouldCreateRenderer(child: element)
+  {
+    return false
+  }
+  return true
 }
 
 private func pseudoStyleCacheIsInvalid(
