@@ -210,14 +210,23 @@ class RenderTreeUpdater {
     }
 
     if !hasDisplayContentsOrNone {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !elementUpdateStyle.containIntrinsicLogicalWidthHasAuto() {
+        element.clearLastRememberedLogicalWidth()
+      }
+      if !elementUpdateStyle.containIntrinsicLogicalHeightHasAuto() {
+        element.clearLastRememberedLogicalHeight()
+      }
     }
 
     defer {
       if !hasDisplayContentsOrNone {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        if let box = element.renderBox(),
+          box.style().hasAutoLengthContainIntrinsicSize() && !box.isSkippedContentRoot()
+        {
+          document.observeForContainIntrinsicSize(element: element)
+        } else {
+          document.unobserveForContainIntrinsicSize(element: element)
+        }
       }
     }
 
@@ -225,8 +234,13 @@ class RenderTreeUpdater {
       element.renderer() == nil && !hasDisplayContentsOrNone
       && !(element.isInTopLayer() && renderTreePosition().parent.style().hasSkippedContent())
     if shouldCreateNewRenderer {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if element.hasCustomStyleResolveCallbacks() {
+        element.willAttachRenderers()
+      }
+      createRenderer(element: element, style: elementUpdateStyle)
+
+      renderingParent().didCreateOrDestroyChildRenderer = true
+      return
     }
 
     if element.containerRenderer() == nil {
@@ -272,6 +286,11 @@ class RenderTreeUpdater {
     renderer: RenderElementWrapper, newStyle: RenderStyleWrapper,
     minimalStyleDifference: StyleDifference
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func createRenderer(element: ElementWrapper, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

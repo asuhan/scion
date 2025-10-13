@@ -901,6 +901,21 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func containIntrinsicLogicalWidthHasAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containIntrinsicLogicalHeightHasAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAutoLengthContainIntrinsicSize() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func order() -> Int {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

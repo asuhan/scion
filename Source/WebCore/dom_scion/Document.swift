@@ -71,6 +71,16 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func observeForContainIntrinsicSize(element: ElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func unobserveForContainIntrinsicSize(element: ElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func activeViewTransition() -> ViewTransitionWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

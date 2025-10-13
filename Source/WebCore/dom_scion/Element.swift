@@ -38,6 +38,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func willAttachRenderers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasDisplayContents() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -49,6 +54,16 @@ class ElementWrapper: ContainerNodeWrapper {
   }
 
   func clearDisplayContentsOrNoneStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearLastRememberedLogicalWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearLastRememberedLogicalHeight() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

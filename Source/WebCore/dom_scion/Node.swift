@@ -29,6 +29,11 @@ class NodeWrapper {
     self.p = p
   }
 
+  func hasCustomStyleResolveCallbacks() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func needsSVGRendererUpdate() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -53,6 +58,12 @@ class NodeWrapper {
 
   // As renderer() includes a branch you should avoid calling it repeatedly in hot code paths.
   func renderer() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Use these two methods with caution.
+  func renderBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
