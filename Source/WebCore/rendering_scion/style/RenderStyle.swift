@@ -217,6 +217,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  func hasDisplayAffectedByAnimations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func display() -> DisplayType {
     if p == nil {
       // TODO(asuhan): implement this

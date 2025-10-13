@@ -278,8 +278,12 @@ class RenderTreeUpdater {
   }
 
   private static func teardownType(elementUpdate: Style.ElementUpdate) -> TeardownType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !elementUpdate.style!.hasDisplayAffectedByAnimations()
+      && elementUpdate.style!.display() == .None
+    {
+      return .RendererUpdateCancelingAnimations
+    }
+    return .RendererUpdate
   }
 
   private static func shouldTearDownRenderers(
