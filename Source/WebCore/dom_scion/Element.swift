@@ -28,12 +28,27 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func rendererIsNeeded(style: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInTopLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func hasDisplayContents() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func storeDisplayContentsOrNoneStyle(style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearDisplayContentsOrNoneStyle() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

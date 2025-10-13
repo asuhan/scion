@@ -30,6 +30,15 @@ private func shouldCreateRenderer(element: ElementWrapper, parentRenderer: Rende
   fatalError("Not implemented")
 }
 
+private func pseudoStyleCacheIsInvalid(
+  renderer: RenderElementWrapper, newStyle: RenderStyleWrapper?
+)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderTreeUpdater {
   init(document: Document) {
     self.document = document
@@ -165,11 +174,104 @@ class RenderTreeUpdater {
   }
 
   private func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
+    if elementUpdate.style == nil {
+      return
+    }
+
+    let elementUpdateStyle = RenderStyleWrapper.cloneIncludingPseudoElements(
+      style: elementUpdate.style!)
+
+    let shouldTearDownRenderers = RenderTreeUpdater.shouldTearDownRenderers(element: element)
+
+    if shouldTearDownRenderers {
+      if element.renderer() == nil {
+        // We may be tearing down a descendant renderer cached in renderTreePosition.
+        renderTreePosition().invalidateNextSibling()
+      }
+
+      // display:none cancels animations.
+      let teardownType = RenderTreeUpdater.teardownType(elementUpdate: elementUpdate)
+
+      RenderTreeUpdater.tearDownRenderers(
+        root: element, teardownType: teardownType, builder: builder!)
+
+      renderingParent().didCreateOrDestroyChildRenderer = true
+    }
+
+    let hasDisplayContents = elementUpdate.style!.display() == .Contents
+    let hasDisplayNonePreventingRendererCreation =
+      elementUpdate.style!.display() == .None
+      && !element.rendererIsNeeded(style: elementUpdateStyle)
+    let hasDisplayContentsOrNone = hasDisplayContents || hasDisplayNonePreventingRendererCreation
+    if hasDisplayContentsOrNone {
+      element.storeDisplayContentsOrNoneStyle(style: elementUpdateStyle)
+    } else {
+      element.clearDisplayContentsOrNoneStyle()
+    }
+
+    if !hasDisplayContentsOrNone {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    defer {
+      if !hasDisplayContentsOrNone {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+
+    let shouldCreateNewRenderer =
+      element.renderer() == nil && !hasDisplayContentsOrNone
+      && !(element.isInTopLayer() && renderTreePosition().parent.style().hasSkippedContent())
+    if shouldCreateNewRenderer {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if element.containerRenderer() == nil {
+      return
+    }
+    let renderer = element.containerRenderer()!
+
+    if elementUpdate.recompositeLayer {
+      updateRendererStyle(
+        renderer: renderer, newStyle: elementUpdateStyle, minimalStyleDifference: .RecompositeLayer)
+      return
+    }
+
+    if elementUpdate.change == .None {
+      if pseudoStyleCacheIsInvalid(renderer: renderer, newStyle: elementUpdateStyle) {
+        updateRendererStyle(
+          renderer: renderer, newStyle: elementUpdateStyle, minimalStyleDifference: .Equal)
+        return
+      }
+      return
+    }
+
+    updateRendererStyle(
+      renderer: renderer, newStyle: elementUpdateStyle, minimalStyleDifference: .Equal)
+  }
+
+  private static func teardownType(elementUpdate: Style.ElementUpdate) -> TeardownType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func shouldTearDownRenderers(element: ElementWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private func updateSVGRenderer(element: ElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateRendererStyle(
+    renderer: RenderElementWrapper, newStyle: RenderStyleWrapper,
+    minimalStyleDifference: StyleDifference
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -213,6 +315,21 @@ class RenderTreeUpdater {
   }
 
   private func popParentsToDepth(depth: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: Use OptionSet.
+  private enum TeardownType {
+    case Full
+    case FullAfterSlotOrShadowRootChange
+    case RendererUpdate
+    case RendererUpdateCancelingAnimations
+  }
+
+  private static func tearDownRenderers(
+    root: ElementWrapper, teardownType: TeardownType, builder: RenderTreeBuilder
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
