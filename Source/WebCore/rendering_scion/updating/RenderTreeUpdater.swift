@@ -78,8 +78,86 @@ enum DidRepaintAndMarkContainingBlock {
 private func repaintAndMarkContainingBlockDirtyBeforeTearDown(
   root: ElementWrapper, composedTreeDescendantsIterator: ComposedTreeDescendantAdapter
 ) -> DidRepaintAndMarkContainingBlock? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let destroyRootRenderer = root.containerRenderer()
+  if destroyRootRenderer != nil && destroyRootRenderer!.renderTreeBeingDestroyed() {
+    return nil
+  }
+
+  if destroyRootRenderer != nil {
+    repaintRoot(renderer: destroyRootRenderer!)
+    repaintBackdropIfApplicable(renderer: destroyRootRenderer!)
+    markContainingBlockDirty(renderer: destroyRootRenderer!)
+  }
+
+  let it = composedTreeDescendantsIterator.begin()
+  while it != composedTreeDescendantsIterator.end() {
+    let element = *it as? ElementWrapper
+    if element == nil || element!.containerRenderer() == nil {
+      ++it
+      continue
+    }
+    let renderer = element!.containerRenderer()!
+    if shouldRepaint(renderer: renderer, destroyRootRenderer: destroyRootRenderer) {
+      renderer.repaint()
+    }
+    repaintBackdropIfApplicable(renderer: renderer)
+    if renderer.isOutOfFlowPositioned() {
+      // FIXME: Ideally we would check if containing block is the destory root or a descendent of the destroy root.
+      markContainingBlockDirty(renderer: renderer)
+    }
+    ++it
+  }
+  return destroyRootRenderer != nil ? .Yes : .No
+}
+
+private func markContainingBlockDirty(renderer: RenderElementWrapper) {
+  if let container = renderer.container() {
+    if !renderer.isOutOfFlowPositioned() {
+      container.setChildNeedsLayout()
+      container.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+      return
+    }
+    container.setNeedsSimplifiedNormalFlowLayout()
+  } else {
+    fatalError("Not reached")
+  }
+}
+
+private func repaintBackdropIfApplicable(renderer: RenderElementWrapper) {
+  if let backdropRenderer = renderer.backdropRenderer() {
+    backdropRenderer.repaint(forceRepaint: .Yes)
+  }
+}
+
+private func repaintRoot(renderer: RenderElementWrapper) {
+  if renderer.isBody() {
+    renderer.view().repaintRootContents()
+    return
+  }
+  // When repaint is propagated to our layer, we have to force it here on destroy as this layer will no be around to issue it _affter_ layout.
+  let rendererLayerObject = renderer as? RenderLayerModelObjectWrapper
+  if rendererLayerObject == nil || rendererLayerObject!.layer() == nil
+    || !rendererLayerObject!.layer()!.needsFullRepaint()
+  {
+    renderer.repaint()
+    return
+  }
+  renderer.repaint(forceRepaint: .Yes)
+}
+
+private func shouldRepaint(
+  renderer: RenderElementWrapper, destroyRootRenderer: RenderElementWrapper?
+) -> Bool {
+  if !renderer.everHadLayout() {
+    return false
+  }
+  if renderer.isOutOfFlowPositioned() {
+    return true
+  }
+  if renderer.isFloating() || renderer.isPositioned() {
+    return destroyRootRenderer == nil || !destroyRootRenderer!.hasNonVisibleOverflow()
+  }
+  return false
 }
 
 class RenderTreeUpdater {

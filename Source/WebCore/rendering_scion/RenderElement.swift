@@ -115,6 +115,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
 
+  func setNeedsSimplifiedNormalFlowLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // paintOffset is the offset from the origin of the GraphicsContext at which to paint the current object.
   func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     fatalError("Not reached")
   }

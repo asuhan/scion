@@ -35,6 +35,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func repaintRootContents() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func selection() -> RenderSelection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
