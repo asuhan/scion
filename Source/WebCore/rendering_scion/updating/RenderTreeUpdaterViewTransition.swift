@@ -29,6 +29,15 @@ extension RenderTreeUpdater {
       self.updater = updater
     }
 
+    // The contents and ordering of the named elements map should remain stable during the duration of the transition.
+    // We should only need to handle changes in the `display` CSS property by recreating / deleting renderers as needed.
+    func updatePseudoElementTree(
+      documentElementRenderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private let updater: RenderTreeUpdater
   }
 }

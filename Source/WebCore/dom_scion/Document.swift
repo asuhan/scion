@@ -27,6 +27,11 @@
 
 // TODO(asuhan): inherit from all bases
 class Document: TreeScopeWrapper {
+  func documentElement() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func settings() -> SettingsWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -362,8 +362,35 @@ class RenderTreeUpdater {
   }
 
   private func updateAfterDescendants(element: ElementWrapper, update: Style.ElementUpdate?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if update != nil {
+      generatedContent!.updatePseudoElement(
+        current: element, elementUpdate: update!, pseudoId: .After)
+    }
+
+    let renderer = element.containerRenderer()
+    if renderer == nil {
+      return
+    }
+
+    var minimalStyleDifference: StyleDifference = .Equal
+    if update != nil, update!.recompositeLayer {
+      minimalStyleDifference = .RecompositeLayer
+    }
+
+    generatedContent!.updateBackdropRenderer(
+      renderer: renderer!, minimalStyleDifference: minimalStyleDifference)
+    generatedContent!.updateWritingSuggestionsRenderer(
+      renderer: renderer!, minimalStyleDifference: minimalStyleDifference)
+    if CPtrToInt(element.p) == CPtrToInt(element.document().documentElement()?.p) {
+      viewTransition!.updatePseudoElementTree(
+        documentElementRenderer: renderer!, minimalStyleDifference: minimalStyleDifference)
+    }
+
+    builder!.updateAfterDescendants(renderer: renderer!)
+
+    if element.hasCustomStyleResolveCallbacks() && update != nil && update!.change == .Renderer {
+      element.didAttachRenderers()
+    }
   }
 
   private func textRendererIsNeeded(textNode: TextWrapper) -> Bool {

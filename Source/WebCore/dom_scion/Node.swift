@@ -63,6 +63,12 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  // Returns the document associated with this node. A document node returns itself.
+  func document() -> Document {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // -----------------------------------------------------------------------------
   // Integration with rendering tree
 

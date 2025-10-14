@@ -29,8 +29,22 @@ extension RenderTreeUpdater {
       self.updater = updater
     }
 
+    func updateBackdropRenderer(
+      renderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func updatePseudoElement(
       current: ElementWrapper, elementUpdate: Style.ElementUpdate, pseudoId: PseudoId
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func updateWritingSuggestionsRenderer(
+      renderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
     ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

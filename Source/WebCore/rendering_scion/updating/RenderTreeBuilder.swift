@@ -38,6 +38,11 @@ class RenderTreeBuilder {
     fatalError("Not implemented")
   }
 
+  func updateAfterDescendants(renderer: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func normalizeTreeAfterStyleChange(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
