@@ -602,8 +602,13 @@ class RenderTreeUpdater {
   }
 
   private func storePreviousRenderer(node: NodeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderer = node.renderer() {
+      assert(CPtrToInt(renderingParent().previousChildRenderer?.p) != CPtrToInt(renderer.p))
+      renderingParent().previousChildRenderer = renderer
+      if renderer.isInFlow() {
+        renderingParent().hasPrecedingInFlowChild = true
+      }
+    }
   }
 
   private class Parent {
@@ -613,7 +618,7 @@ class RenderTreeUpdater {
 
     var didCreateOrDestroyChildRenderer = false
     var previousChildRenderer: RenderObjectWrapper? = nil
-    let hasPrecedingInFlowChild = false
+    var hasPrecedingInFlowChild = false
 
     init(root: ContainerNodeWrapper) {
       // TODO(asuhan): implement this
