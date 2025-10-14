@@ -544,7 +544,9 @@ class RenderTreeUpdater {
   private static func tearDownRenderers(
     root: ElementWrapper, teardownType: TeardownType, builder: RenderTreeBuilder
   ) {
-    pushForTearDown(element: root)
+    var teardownStack: [ElementWrapper] = []
+
+    pushForTearDown(element: root, teardownStack: &teardownStack)
 
     let descendants = composedTreeDescendants(parent: root)
     let didRepaintRoot = repaintAndMarkContainingBlockDirtyBeforeTearDown(
@@ -562,7 +564,7 @@ class RenderTreeUpdater {
         continue
       }
 
-      pushForTearDown(element: *it as! ElementWrapper)
+      pushForTearDown(element: *it as! ElementWrapper, teardownStack: &teardownStack)
     }
 
     popForTearDown(depth: 0)
@@ -570,9 +572,13 @@ class RenderTreeUpdater {
     tearDownLeftoverPaginationRenderersIfNeeded(root: root, builder: builder)
   }
 
-  private static func pushForTearDown(element: ElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private static func pushForTearDown(
+    element: ElementWrapper, teardownStack: inout [ElementWrapper]
+  ) {
+    if element.hasCustomStyleResolveCallbacks() {
+      element.willDetachRenderers()
+    }
+    teardownStack.append(element)
   }
 
   private static func popForTearDown(depth: UInt32) {

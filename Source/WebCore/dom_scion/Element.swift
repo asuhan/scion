@@ -65,6 +65,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func willDetachRenderers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasDisplayContents() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
