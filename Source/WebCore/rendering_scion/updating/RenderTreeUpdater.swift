@@ -447,8 +447,20 @@ class RenderTreeUpdater {
   }
 
   private func updateSVGRenderer(element: ElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(element.needsSVGRendererUpdate())
+    element.setNeedsSVGRendererUpdate(flag: false)
+
+    let renderer = element.renderer()
+    if renderer == nil {
+      return
+    }
+
+    if element.document().settings().layerBasedSVGEngineEnabled() {
+      renderer!.setNeedsLayout()
+      return
+    }
+
+    LegacyRenderSVGResource.markForLayoutAndParentResourceInvalidation(object: renderer!)
   }
 
   private func updateRendererStyle(

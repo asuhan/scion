@@ -28,4 +28,11 @@ class LegacyRenderSVGResource {
     static let ResourceApplied = ApplyResult(rawValue: 1 << 0)
     static let ClipContainsRendererContent = ApplyResult(rawValue: 1 << 1)
   }
+
+  static func markForLayoutAndParentResourceInvalidation(
+    object: RenderObjectWrapper, needsLayout: Bool = true
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
