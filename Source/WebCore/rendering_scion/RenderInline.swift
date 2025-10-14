@@ -21,6 +21,11 @@
  */
 
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
+  convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func linesVisualOverflowBoundingBox() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

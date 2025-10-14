@@ -1,7 +1,5 @@
 /*
- * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
- *           (C) 1999 Antti Koivisto (koivisto@kde.org)
- * Copyright (C) 2003-2018 Apple Inc. All rights reserved.
+ * Copyright (C) 2025 Scion authors. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,21 +15,15 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
+ *
  */
 
-class TextWrapper: CharacterDataWrapper, Equatable {
-  func createTextRenderer(style: RenderStyleWrapper) -> RenderTextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func renderer() -> RenderTextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func == (lhs: TextWrapper, rhs: TextWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+class CreateRenderer {
+  static func RenderInline(
+    type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper
+  )
+    -> RenderInlineWrapper
+  {
+    return RenderInlineWrapper(type: type, document: document, style: style)
   }
 }

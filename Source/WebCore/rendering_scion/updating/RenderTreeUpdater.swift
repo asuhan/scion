@@ -290,8 +290,44 @@ class RenderTreeUpdater {
   }
 
   private func createTextRenderer(textNode: TextWrapper, textUpdate: Style.TextUpdate?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(textNode.renderer() == nil)
+
+    let renderTreePosition = self.renderTreePosition()
+    let textRenderer = textNode.createTextRenderer(style: renderTreePosition.parent.style())
+
+    renderTreePosition.computeNextSibling(node: textNode)
+
+    if !renderTreePosition.parent.isChildAllowed(
+      child: textRenderer!, style: renderTreePosition.parent.style())
+    {
+      return
+    }
+
+    textNode.setRenderer(renderer: textRenderer)
+
+    if textUpdate != nil && textUpdate!.inheritedDisplayContentsStyle != nil
+      && textUpdate!.inheritedDisplayContentsStyle! != nil
+    {
+      // Wrap text renderer into anonymous inline so we can give it a style.
+      // This is to support "<div style='display:contents;color:green'>text</div>" type cases
+      let displayContentsAnonymousWrapper = CreateRenderer.RenderInline(
+        type: .Inline, document: textNode.document(),
+        style: RenderStyleWrapper.clone(style: textUpdate!.inheritedDisplayContentsStyle!!))
+      displayContentsAnonymousWrapper.initializeStyle()
+      builder!.attach(parent: renderTreePosition.parent, child: displayContentsAnonymousWrapper)
+
+      textRenderer!.setInlineWrapperForDisplayContents(wrapper: displayContentsAnonymousWrapper)
+      builder!.attach(parent: displayContentsAnonymousWrapper, child: textRenderer)
+      return
+    }
+
+    builder!.attach(
+      parent: renderTreePosition.parent, child: textRenderer,
+      beforeChild: renderTreePosition.nextSibling())
+
+    if let textManipulationController = document.textManipulationControllerIfExists() {
+      textManipulationController.didAddOrCreateRendererForNode(node: textNode)
+    }
   }
 
   private func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
