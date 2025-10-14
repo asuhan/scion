@@ -23,23 +23,4 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-extension Style {
-
-  struct PseudoElementRequest {
-    init(pseudoId: PseudoId, scrollbarState: StyleScrollbarState? = nil) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    init(pseudoId: PseudoId, nameArgument: AtomStringWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    init(pseudoElementIdentifier: PseudoElementIdentifier) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-  }
-
-}
+struct StyleScrollbarState {}

@@ -25,6 +25,14 @@
 
 class Style {
   struct PseudoElementIdentifier {
+    init(pseudoId: PseudoId, nameArgument: AtomStringWrapper = nullAtom()) {
+      self.pseudoId = pseudoId
+      self.nameArgument = nameArgument
+    }
+
     let pseudoId: PseudoId
+
+    // highlight name for ::highlight or view transition name for view transition pseudo elements.
+    var nameArgument: AtomStringWrapper
   }
 }

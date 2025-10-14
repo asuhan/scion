@@ -39,7 +39,11 @@ enum CSSPropertyID {
   case CSSPropertyBorderTopColor
 }
 
-class RenderStyleWrapper {
+struct PseudoStyleCache {
+  let styles: [RenderStyleWrapper]
+}
+
+class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
 
   init(
@@ -73,6 +77,11 @@ class RenderStyleWrapper {
     fatalError("Not implemented")
   }
 
+  static func == (this: RenderStyleWrapper, other: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func inheritFrom(inheritParent: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -84,6 +93,22 @@ class RenderStyleWrapper {
       fatalError("Not implemented")
     }
     return PseudoId(rawValue: wk_interop.RenderStyle_pseudoElementType(p))!
+  }
+
+  func pseudoElementNameArgument() -> AtomStringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func addCachedPseudoStyle(pseudo: RenderStyleWrapper?) -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func cachedPseudoStyles() -> PseudoStyleCache? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func position() -> PositionType {

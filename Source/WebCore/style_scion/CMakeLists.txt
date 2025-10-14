@@ -4,5 +4,6 @@ target_sources(layout_scion PRIVATE
     PseudoElementRequest.swift
     Styleable.swift
     StyleChange.swift
+    StyleScrollbarState.swift
     StyleUpdate.swift
 )

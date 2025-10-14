@@ -44,8 +44,30 @@ private func pseudoStyleCacheIsInvalid(
 )
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let currentStyle = renderer.style()
+
+  let pseudoStyleCache = currentStyle.cachedPseudoStyles()
+  if pseudoStyleCache == nil {
+    return false
+  }
+
+  for cache in pseudoStyleCache!.styles {
+    let pseudoElementIdentifier = Style.PseudoElementIdentifier(
+      pseudoId: cache.pseudoElementType(), nameArgument: cache.pseudoElementNameArgument())
+    if let newPseudoStyle = renderer.getUncachedPseudoStyle(
+      pseudoElementRequest: Style.PseudoElementRequest(
+        pseudoElementIdentifier: pseudoElementIdentifier),
+      parentStyle: newStyle, ownStyle: newStyle)
+    {
+      if newPseudoStyle != cache {
+        newStyle!.addCachedPseudoStyle(pseudo: newPseudoStyle)
+        return true
+      }
+    } else {
+      return true
+    }
+  }
+  return false
 }
 
 enum DidRepaintAndMarkContainingBlock {
