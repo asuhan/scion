@@ -800,8 +800,18 @@ class RenderTreeUpdater {
   private static func tearDownLeftoverPaginationRenderersIfNeeded(
     root: ElementWrapper, builder: RenderTreeBuilder
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(root.p) != CPtrToInt(root.document().documentElement()?.p) {
+      return
+    }
+    var child = root.document().renderView()!.firstChild()
+    while child != nil {
+      let nextSibling = child!.nextSibling()
+      if (child is RenderMultiColumnFlowWrapper) || (child is RenderMultiColumnSetWrapper) {
+        builder.destroyAndCleanUpAnonymousWrappers(
+          rendererToDestroy: child!, subtreeDestroyRoot: root.containerRenderer())
+      }
+      child = nextSibling
+    }
   }
 
   private func renderView() -> RenderViewWrapper {

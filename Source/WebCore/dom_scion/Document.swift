@@ -49,6 +49,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func renderView() -> RenderViewWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func axObjectCache() -> AXObjectCacheWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
