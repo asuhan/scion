@@ -34,8 +34,8 @@ class RenderTreeBuilder {
     parent: RenderElementWrapper, child: RenderObjectWrapper?,
     beforeChild: RenderObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    reportVisuallyNonEmptyContent(parent: parent, child: child!)
+    attachInternal(parent: parent, child: child, beforeChild: beforeChild)
   }
 
   func updateAfterDescendants(renderer: RenderElementWrapper) {
@@ -51,6 +51,20 @@ class RenderTreeBuilder {
   }
 
   func normalizeTreeAfterStyleChange(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func attachInternal(
+    parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func reportVisuallyNonEmptyContent(
+    parent: RenderElementWrapper, child: RenderObjectWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
