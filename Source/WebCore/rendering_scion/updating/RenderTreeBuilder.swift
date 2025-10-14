@@ -39,8 +39,23 @@ class RenderTreeBuilder {
   }
 
   func updateAfterDescendants(renderer: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let svgRoot = renderer as? RenderSVGRootWrapper {
+      svgBuilder.updateAfterDescendants(svgRoot: svgRoot)
+      return  // A RenderSVGRoot cannot be a RenderBlock, RenderListItem or RenderBlockFlow: early return.
+    }
+
+    // Do not early return here in any case. For example, RenderListItem derives
+    // from RenderBlockFlow and indirectly from RenderBlock thus fulfilling all
+    // update conditions below.
+    if let block = renderer as? RenderBlockWrapper {
+      firstLetterBuilder.updateAfterDescendants(block: block)
+    }
+    if let listItem = renderer as? RenderListItemWrapper {
+      listBuilder.updateItemMarker(listItemRenderer: listItem)
+    }
+    if let blockFlow = renderer as? RenderBlockFlowWrapper {
+      multiColumnBuilder.updateAfterDescendants(flow: blockFlow)
+    }
   }
 
   func destroyAndCleanUpAnonymousWrappers(
@@ -68,4 +83,9 @@ class RenderTreeBuilder {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let firstLetterBuilder: FirstLetter
+  private let listBuilder: List
+  private let multiColumnBuilder: MultiColumn
+  private let svgBuilder: SVG
 }
