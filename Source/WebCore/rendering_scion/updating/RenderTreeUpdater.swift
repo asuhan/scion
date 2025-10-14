@@ -778,8 +778,23 @@ class RenderTreeUpdater {
   private static func tearDownLeftoverChildrenOfComposedTree(
     element: ElementWrapper, builder: RenderTreeBuilder
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = element.firstChild()
+    while child != nil {
+      if child!.renderer() == nil {
+        child = child!.nextSibling()
+        continue
+      }
+      if let text = child! as? TextWrapper {
+        tearDownTextRenderer(
+          text: text, root: element, builder: builder, needsRepaintAndLayout: .No)
+        child = child!.nextSibling()
+        continue
+      }
+      if let element = child as? ElementWrapper {
+        tearDownRenderers(root: element, teardownType: .Full, builder: builder)
+      }
+      child = child!.nextSibling()
+    }
   }
 
   private static func tearDownLeftoverPaginationRenderersIfNeeded(
