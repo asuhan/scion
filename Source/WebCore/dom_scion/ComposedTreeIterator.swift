@@ -35,6 +35,12 @@ class ComposedTreeIterator: Equatable {
   }
 
   @discardableResult
+  static prefix func ++ (this: ComposedTreeIterator) -> ComposedTreeIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
   func traverseNext() -> ComposedTreeIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

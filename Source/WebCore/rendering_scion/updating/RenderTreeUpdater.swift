@@ -48,6 +48,18 @@ private func pseudoStyleCacheIsInvalid(
   fatalError("Not implemented")
 }
 
+enum DidRepaintAndMarkContainingBlock {
+  case Yes
+  case No
+}
+
+private func repaintAndMarkContainingBlockDirtyBeforeTearDown(
+  root: ElementWrapper, composedTreeDescendantsIterator: ComposedTreeDescendantAdapter
+) -> DidRepaintAndMarkContainingBlock? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderTreeUpdater {
   init(document: Document) {
     self.document = document
@@ -532,6 +544,38 @@ class RenderTreeUpdater {
   private static func tearDownRenderers(
     root: ElementWrapper, teardownType: TeardownType, builder: RenderTreeBuilder
   ) {
+    pushForTearDown(element: root)
+
+    let descendants = composedTreeDescendants(parent: root)
+    let didRepaintRoot = repaintAndMarkContainingBlockDirtyBeforeTearDown(
+      root: root, composedTreeDescendantsIterator: descendants)
+    let needsDescendantRepaintAndLayout: NeedsRepaintAndLayout =
+      (didRepaintRoot != nil || didRepaintRoot! == .Yes) ? .No : .Yes
+    let it = descendants.begin()
+    while it != descendants.end() {
+      popForTearDown(depth: it.depth())
+
+      if let text = *it as? TextWrapper {
+        tearDownTextRenderer(
+          text: text, root: root, builder: builder,
+          needsRepaintAndLayout: needsDescendantRepaintAndLayout)
+        continue
+      }
+
+      pushForTearDown(element: *it as! ElementWrapper)
+    }
+
+    popForTearDown(depth: 0)
+
+    tearDownLeftoverPaginationRenderersIfNeeded(root: root, builder: builder)
+  }
+
+  private static func pushForTearDown(element: ElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func popForTearDown(depth: UInt32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -544,6 +588,13 @@ class RenderTreeUpdater {
   private static func tearDownTextRenderer(
     text: TextWrapper, root: ContainerNodeWrapper?, builder: RenderTreeBuilder,
     needsRepaintAndLayout: NeedsRepaintAndLayout = .Yes
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func tearDownLeftoverPaginationRenderersIfNeeded(
+    root: ElementWrapper, builder: RenderTreeBuilder
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
