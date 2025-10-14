@@ -50,6 +50,16 @@ extension RenderTreeUpdater {
       fatalError("Not implemented")
     }
 
+    static func removeBeforePseudoElement(element: ElementWrapper, builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static func removeAfterPseudoElement(element: ElementWrapper, builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private let updater: RenderTreeUpdater
   }
 }

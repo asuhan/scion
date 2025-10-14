@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     PseudoElement.swift
     RenderedDocumentMarker.swift
     Settings.swift
+    ShadowRoot.swift
     SimpleRange.swift
     StaticRange.swift
     StyledElement.swift

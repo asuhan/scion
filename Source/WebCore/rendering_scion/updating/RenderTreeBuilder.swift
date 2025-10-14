@@ -43,6 +43,13 @@ class RenderTreeBuilder {
     fatalError("Not implemented")
   }
 
+  func destroyAndCleanUpAnonymousWrappers(
+    rendererToDestroy: RenderObjectWrapper, subtreeDestroyRoot: RenderElementWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func normalizeTreeAfterStyleChange(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -20,4 +20,9 @@
  *
  */
 
-final class RenderListItemWrapper: RenderBlockFlowWrapper {}
+final class RenderListItemWrapper: RenderBlockFlowWrapper {
+  func markerRenderer() -> RenderListMarkerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

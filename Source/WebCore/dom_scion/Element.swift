@@ -40,6 +40,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func shadowRootFromElement() -> ShadowRootWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func beforePseudoElement() -> PseudoElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -66,6 +71,16 @@ class ElementWrapper: ContainerNodeWrapper {
   }
 
   func willDetachRenderers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func didDetachRenderers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearHoverAndActiveStatusBeforeDetachingRenderer() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

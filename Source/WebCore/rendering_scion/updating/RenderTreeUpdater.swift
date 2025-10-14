@@ -555,7 +555,9 @@ class RenderTreeUpdater {
       (didRepaintRoot != nil || didRepaintRoot! == .Yes) ? .No : .Yes
     let it = descendants.begin()
     while it != descendants.end() {
-      popForTearDown(depth: it.depth())
+      popForTearDown(
+        depth: it.depth(), root: root, teardownType: teardownType, builder: builder,
+        teardownStack: &teardownStack)
 
       if let text = *it as? TextWrapper {
         tearDownTextRenderer(
@@ -567,7 +569,9 @@ class RenderTreeUpdater {
       pushForTearDown(element: *it as! ElementWrapper, teardownStack: &teardownStack)
     }
 
-    popForTearDown(depth: 0)
+    popForTearDown(
+      depth: 0, root: root, teardownType: teardownType, builder: builder,
+      teardownStack: &teardownStack)
 
     tearDownLeftoverPaginationRenderersIfNeeded(root: root, builder: builder)
   }
@@ -581,9 +585,68 @@ class RenderTreeUpdater {
     teardownStack.append(element)
   }
 
-  private static func popForTearDown(depth: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private static func popForTearDown(
+    depth: UInt32, root: ElementWrapper, teardownType: TeardownType, builder: RenderTreeBuilder,
+    teardownStack: inout [ElementWrapper]
+  ) {
+    while teardownStack.count > depth {
+      let element = teardownStack.removeLast()
+      let styleable = StyleableWrapper.fromElement(element: element)
+
+      // Make sure we don't leave any renderers behind in nodes outside the composed tree.
+      // See ComposedTreeIterator::ComposedTreeIterator().
+      if element is HTMLSlotElementWrapper || element.shadowRootFromElement() != nil {
+        tearDownLeftoverChildrenOfComposedTree(element: element, builder: builder)
+      }
+
+      switch teardownType {
+      case .FullAfterSlotOrShadowRootChange:
+        if CPtrToInt(element.p) == CPtrToInt(root.p) {
+          // Keep animations going on the host.
+          styleable.willChangeRenderer()
+          break
+        }
+        element.clearHoverAndActiveStatusBeforeDetachingRenderer()
+      case .Full:
+        styleable.cancelStyleOriginatedAnimations()
+        element.clearHoverAndActiveStatusBeforeDetachingRenderer()
+      case .RendererUpdateCancelingAnimations:
+        styleable.cancelStyleOriginatedAnimations()
+      case .RendererUpdate:
+        styleable.willChangeRenderer()
+      }
+
+      GeneratedContent.removeBeforePseudoElement(element: element, builder: builder)
+      GeneratedContent.removeAfterPseudoElement(element: element, builder: builder)
+
+      if !(element is PseudoElementWrapper) {
+        // ::before and ::after cannot have a ::marker pseudo-element addressable via
+        // CSS selectors, and as such cannot possibly have animations on them. Additionally,
+        // we cannot create a Styleable with a PseudoElement.
+        if let renderListItem = element.containerRenderer() as? RenderListItemWrapper {
+          if renderListItem.markerRenderer() != nil {
+            let styleable = StyleableWrapper(
+              element: element,
+              pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .Marker))
+            styleable.cancelStyleOriginatedAnimations()
+          }
+        }
+      }
+
+      if let renderer = element.containerRenderer() {
+        if let backdropRenderer = renderer.backdropRenderer() {
+          builder.destroyAndCleanUpAnonymousWrappers(
+            rendererToDestroy: backdropRenderer, subtreeDestroyRoot: nil)
+        }
+        builder.destroyAndCleanUpAnonymousWrappers(
+          rendererToDestroy: renderer, subtreeDestroyRoot: root.containerRenderer())
+        element.setRenderer(renderer: nil)
+      }
+
+      if element.hasCustomStyleResolveCallbacks() {
+        element.didDetachRenderers()
+      }
+    }
   }
 
   private enum NeedsRepaintAndLayout {
@@ -594,6 +657,13 @@ class RenderTreeUpdater {
   private static func tearDownTextRenderer(
     text: TextWrapper, root: ContainerNodeWrapper?, builder: RenderTreeBuilder,
     needsRepaintAndLayout: NeedsRepaintAndLayout = .Yes
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func tearDownLeftoverChildrenOfComposedTree(
+    element: ElementWrapper, builder: RenderTreeBuilder
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

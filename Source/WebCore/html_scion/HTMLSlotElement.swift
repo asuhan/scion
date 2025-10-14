@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2021 Apple Inc. All rights reserved.
+ * Copyright (C) 2015 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,34 +23,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct StyleableWrapper {
-  init(element: ElementWrapper, pseudoElementIdentifier: Style.PseudoElementIdentifier?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func fromElement(element: ElementWrapper) -> StyleableWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func fromRenderer(renderer: RenderElementWrapper) -> StyleableWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func mayHaveNonZeroOpacity() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func willChangeRenderer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func cancelStyleOriginatedAnimations() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+final class HTMLSlotElementWrapper: HTMLElementWrapper {}
