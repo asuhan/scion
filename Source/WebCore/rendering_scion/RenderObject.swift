@@ -451,6 +451,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setPreferredLogicalWidthsDirty(
+    shouldBeDirty: Bool, markParents: MarkingBehavior = .MarkContainingBlockChain
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isComposited() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

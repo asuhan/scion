@@ -658,8 +658,21 @@ class RenderTreeUpdater {
     text: TextWrapper, root: ContainerNodeWrapper?, builder: RenderTreeBuilder,
     needsRepaintAndLayout: NeedsRepaintAndLayout = .Yes
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = text.renderer()
+    if renderer == nil {
+      return
+    }
+    if needsRepaintAndLayout == .Yes {
+      renderer!.repaint()
+      if let parent = renderer!.parent() {
+        parent.setChildNeedsLayout()
+        parent.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+      }
+    }
+    builder.destroyAndCleanUpAnonymousWrappers(
+      rendererToDestroy: renderer!,
+      subtreeDestroyRoot: root != nil ? root!.containerRenderer() : nil)
+    text.setRenderer(renderer: nil)
   }
 
   private static func tearDownLeftoverChildrenOfComposedTree(
