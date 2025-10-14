@@ -21,9 +21,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func supportsFirstLetter(block: RenderBlockWrapper) -> Bool {
+  if block is RenderButtonWrapper {
+    return true
+  }
+  if !(block is RenderBlockFlowWrapper) {
+    return false
+  }
+  if block is RenderSVGTextWrapper {
+    return false
+  }
+  return block.canHaveGeneratedChildren()
+}
+
 extension RenderTreeBuilder {
   class FirstLetter {
     func updateAfterDescendants(block: RenderBlockWrapper) {
+      if !block.style().hasPseudoStyle(pseudo: .FirstLetter) {
+        return
+      }
+      if !supportsFirstLetter(block: block) {
+        return
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
