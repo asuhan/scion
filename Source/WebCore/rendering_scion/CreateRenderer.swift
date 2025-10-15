@@ -26,4 +26,11 @@ class CreateRenderer {
   {
     return RenderInlineWrapper(type: type, document: document, style: style)
   }
+
+  static func RenderBlockFlow(
+    type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper,
+    flags: RenderObjectWrapper.BlockFlowFlag = []
+  ) -> RenderBlockFlowWrapper {
+    return RenderBlockFlowWrapper(type: type, document: document, style: style, flags: flags)
+  }
 }

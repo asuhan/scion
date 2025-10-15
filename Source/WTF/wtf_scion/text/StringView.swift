@@ -93,7 +93,7 @@ class StringWrapperView {
     fatalError("Not implemented")
   }
 
-  func substring(start: UInt32, length: UInt32) -> StringWrapperView {
+  func substring(start: UInt32, length: UInt32 = UInt32.max) -> StringWrapperView {
     if self.p != nil {
       return string_view_substring(s: self, start: start, length: length)
     }

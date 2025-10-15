@@ -118,6 +118,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case LegacySVGViewportContainer
   }
 
+  // Type Specific Flags
+
+  struct BlockFlowFlag: OptionSet {
+    let rawValue: UInt8
+
+    static let IsFragmentContainer = BlockFlowFlag(rawValue: 1 << 0)
+    static let IsFragmentedFlow = BlockFlowFlag(rawValue: 1 << 1)
+    static let IsTextControl = BlockFlowFlag(rawValue: 1 << 2)
+    static let IsSVGBlock = BlockFlowFlag(rawValue: 1 << 3)
+    static let IsViewTransitionContainer = BlockFlowFlag(rawValue: 1 << 4)
+  }
+
   init(p: UnsafeMutableRawPointer) {
     self.p = p
   }

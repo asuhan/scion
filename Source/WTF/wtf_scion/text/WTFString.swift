@@ -42,6 +42,11 @@ class StringWrapper {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func length() -> UInt32 {
     if self.p != nil {
       return string_length(p: self.p!)
@@ -70,6 +75,11 @@ class StringWrapper {
     if self.p != nil {
       return wk_interop.String_is8Bit(self.p)
     }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func characterStartingAt(i: UInt32) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

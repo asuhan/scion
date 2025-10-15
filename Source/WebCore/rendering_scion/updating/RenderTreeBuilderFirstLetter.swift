@@ -27,6 +27,19 @@ private func styleForFirstLetter(firstLetterContainer: RenderElementWrapper) -> 
   fatalError("Not implemented")
 }
 
+// CSS 2.1 http://www.w3.org/TR/CSS21/selector.html#first-letter
+// "Punctuation (i.e, characters defined in Unicode [UNICODE] in the "open" (Ps), "close" (Pe),
+// "initial" (Pi). "final" (Pf) and "other" (Po) punctuation classes), that precedes or follows the first letter should be included"
+private func isPunctuationForFirstLetter(c: UInt32) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func shouldSkipForFirstLetter(c: UInt32) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func supportsFirstLetter(block: RenderBlockWrapper) -> Bool {
   if block is RenderButtonWrapper {
     return true
@@ -105,14 +118,58 @@ extension RenderTreeBuilder {
         newFirstLetter = CreateRenderer.RenderInline(
           type: .Inline, document: currentTextChild.document(), style: pseudoStyle!)
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        newFirstLetter = CreateRenderer.RenderBlockFlow(
+          type: .BlockFlow, document: currentTextChild.document(), style: pseudoStyle!)
       }
       newFirstLetter!.initializeStyle()
       newFirstLetter!.setIsFirstLetter()
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // The original string is going to be either a generated content string or a DOM node's
+      // string. We want the original string before it got transformed in case first-letter has
+      // no text-transform or a different text-transform applied to it.
+      let oldText = currentTextChild.originalText()
+      assert(!oldText.isNull())
+
+      if !oldText.isEmpty() {
+        var length: UInt32 = 0
+
+        // Account for leading spaces and punctuation.
+        while length < oldText.length()
+          && shouldSkipForFirstLetter(c: oldText.characterStartingAt(i: length))
+        {
+          length += numCodeUnitsInGraphemeClusters(
+            string: StringWrapperView(s: oldText).substring(start: length), numGraphemeClusters: 1)
+        }
+
+        // Account for first grapheme cluster.
+        length += numCodeUnitsInGraphemeClusters(
+          string: StringWrapperView(s: oldText).substring(start: length), numGraphemeClusters: 1)
+
+        // Keep looking for whitespace and allowed punctuation, but avoid
+        // accumulating just whitespace into the :first-letter.
+        var numCodeUnits: UInt32 = 0
+        var scanLength = length
+        while scanLength < oldText.length() {
+          let c = oldText.characterStartingAt(i: scanLength)
+
+          if !shouldSkipForFirstLetter(c: c) {
+            break
+          }
+
+          numCodeUnits = numCodeUnitsInGraphemeClusters(
+            string: StringWrapperView(s: oldText).substring(start: scanLength),
+            numGraphemeClusters: 1)
+
+          if isPunctuationForFirstLetter(c: c) {
+            length = scanLength + numCodeUnits
+          }
+
+          scanLength += numCodeUnits
+        }
+
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
     }
   }
 }

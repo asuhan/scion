@@ -109,3 +109,13 @@ struct CachedLineBreakIteratorFactoryWrapper {
 
   private var p: UnsafeMutableRawPointer
 }
+
+// Returns the number of code units that create the specified number of
+// grapheme clusters. If there are fewer clusters in the string than specified,
+// the length of the string is returned.
+func numCodeUnitsInGraphemeClusters(string: StringWrapperView, numGraphemeClusters: UInt32)
+  -> UInt32
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

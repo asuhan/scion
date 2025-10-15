@@ -23,6 +23,13 @@
 import wk_interop
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
+  convenience init(
+    type: `Type`, document: Document, style: RenderStyleWrapper, flags: BlockFlowFlag = []
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func collapsedMarginAfter() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
