@@ -104,6 +104,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 
+  func removeAndDestroyLegacyTextBoxes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentRangesBetweenOffsetsForType(
     type: DocumentMarker.`Type`, startOffset: UInt32, endOffset: UInt32
   ) -> [(UInt32, UInt32)] {

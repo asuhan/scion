@@ -38,9 +38,22 @@ class RenderTreeBuilder {
     attachInternal(parent: parent, child: child, beforeChild: beforeChild)
   }
 
+  enum WillBeDestroyed {
+    case No
+    case Yes
+  }
+
   enum CanCollapseAnonymousBlock {
     case No
     case Yes
+  }
+
+  func detach(
+    parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed,
+    canCollapseAnonymousBlock: CanCollapseAnonymousBlock = .Yes
+  ) -> RenderObjectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func destroy(

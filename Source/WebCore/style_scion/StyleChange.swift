@@ -23,11 +23,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Change: UInt8 {
-  case None
-  case NonInherited
-  case FastPathInherited
-  case Inherited
-  case Descendants
-  case Renderer
+extension Style {
+  enum Change: UInt8 {
+    case None
+    case NonInherited
+    case FastPathInherited
+    case Inherited
+    case Descendants
+    case Renderer
+  }
+
+  static func determineChange(s1: RenderStyleWrapper, s2: RenderStyleWrapper) -> Change {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

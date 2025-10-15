@@ -96,8 +96,60 @@ extension RenderTreeBuilder {
     private func updateStyle(
       firstLetterBlock: RenderBlockWrapper, currentChild: RenderObjectWrapper
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let firstLetter = currentChild.parent()
+      if firstLetter == nil || firstLetter!.parent() == nil {
+        return
+      }
+
+      let firstLetterContainer = firstLetter!.parent()!
+
+      let pseudoStyle = styleForFirstLetter(firstLetterContainer: firstLetterContainer)
+      if pseudoStyle == nil {
+        fatalError("Not reached")
+      }
+
+      assert(firstLetter!.isFloating() || firstLetter!.isInline())
+
+      if Style.determineChange(s1: firstLetter!.style(), s2: pseudoStyle!) == .Renderer {
+        // The first-letter renderer needs to be replaced. Create a new renderer of the right type.
+        var newFirstLetter: RenderBoxModelObjectWrapper? = nil
+        if pseudoStyle!.display() == .Inline {
+          newFirstLetter = CreateRenderer.RenderInline(
+            type: .Inline, document: firstLetterBlock.document(), style: pseudoStyle!)
+        } else {
+          newFirstLetter = CreateRenderer.RenderBlockFlow(
+            type: .BlockFlow, document: firstLetterBlock.document(), style: pseudoStyle!)
+        }
+        newFirstLetter!.initializeStyle()
+        newFirstLetter!.setIsFirstLetter()
+
+        // Move the first letter into the new renderer.
+        while let child = firstLetter!.firstChild() {
+          if let textChild = child as? RenderTextWrapper {
+            textChild.removeAndDestroyLegacyTextBoxes()
+          }
+          let toMove = builder.detach(parent: firstLetter!, child: child, willBeDestroyed: .No)
+          builder.attach(parent: newFirstLetter!, child: toMove)
+        }
+
+        if let remainingText = (firstLetter as! RenderBoxModelObjectWrapper)
+          .firstLetterRemainingText()
+        {
+          assert(
+            remainingText.isAnonymous()
+              || CPtrToInt(remainingText.textNode()!.renderer()?.p) == CPtrToInt(remainingText.p))
+          // Replace the old renderer with the new one.
+          remainingText.setFirstLetter(firstLetter: newFirstLetter!)
+          newFirstLetter!.setFirstLetterRemainingText(remainingText: remainingText)
+        }
+        let nextSibling = firstLetter!.nextSibling()
+        builder.destroy(renderer: firstLetter!)
+        builder.attach(
+          parent: firstLetterContainer, child: newFirstLetter, beforeChild: nextSibling)
+        return
+      }
+
+      firstLetter!.setStyle(style: pseudoStyle!)
     }
 
     private func createRenderers(currentTextChild: RenderTextWrapper) {

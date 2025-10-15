@@ -186,6 +186,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // For RenderBlocks and RenderInlines with m_style->pseudoElementType() == PseudoId::FirstLetter, this tracks their remaining text fragments
+  func firstLetterRemainingText() -> RenderTextFragmentWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setFirstLetterRemainingText(remainingText: RenderTextFragmentWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
