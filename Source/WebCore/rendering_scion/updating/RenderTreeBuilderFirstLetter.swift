@@ -44,6 +44,40 @@ extension RenderTreeBuilder {
         return
       }
 
+      // FIXME: This should be refactored, firstLetterContainer is not needed.
+      let renderObjects = block.getFirstLetter()
+      let firstLetterRenderer = renderObjects.firstLetter
+      let firstLetterContainer = renderObjects.firstLetterContainer
+
+      if firstLetterRenderer == nil {
+        return
+      }
+
+      // Other containers are handled when updating their renderers.
+      if CPtrToInt(block.p) == CPtrToInt(firstLetterContainer?.p) {
+        return
+      }
+
+      // If the child already has style, then it has already been created, so we just want
+      // to update it.
+      if firstLetterRenderer!.parent()!.style().pseudoElementType() == .FirstLetter {
+        updateStyle(firstLetterBlock: block, currentChild: firstLetterRenderer!)
+        return
+      }
+
+      if let renderText = firstLetterRenderer as? RenderTextWrapper {
+        createRenderers(currentTextChild: renderText)
+      }
+    }
+
+    private func updateStyle(
+      firstLetterBlock: RenderBlockWrapper, currentChild: RenderObjectWrapper
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func createRenderers(currentTextChild: RenderTextWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

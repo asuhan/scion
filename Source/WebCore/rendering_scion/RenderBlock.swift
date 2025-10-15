@@ -59,6 +59,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
+  struct FirstLetterRenderObjects {
+    let firstLetter: RenderObjectWrapper?
+    let firstLetterContainer: RenderElementWrapper?
+  }
+
+  func getFirstLetter(skipObject: RenderObjectWrapper? = nil) -> FirstLetterRenderObjects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     let adjustedPaintOffset = paintOffset + location()
     let phase = paintInfo.phase
