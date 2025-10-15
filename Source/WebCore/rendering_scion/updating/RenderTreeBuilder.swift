@@ -38,6 +38,18 @@ class RenderTreeBuilder {
     attachInternal(parent: parent, child: child, beforeChild: beforeChild)
   }
 
+  enum CanCollapseAnonymousBlock {
+    case No
+    case Yes
+  }
+
+  func destroy(
+    renderer: RenderObjectWrapper, canCollapseAnonymousBlock: CanCollapseAnonymousBlock = .Yes
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateAfterDescendants(renderer: RenderElementWrapper) {
     if let svgRoot = renderer as? RenderSVGRootWrapper {
       svgBuilder.updateAfterDescendants(svgRoot: svgRoot)
@@ -83,6 +95,8 @@ class RenderTreeBuilder {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let view: RenderViewWrapper
 
   private let firstLetterBuilder: FirstLetter
   private let listBuilder: List

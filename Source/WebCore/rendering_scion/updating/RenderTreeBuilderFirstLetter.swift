@@ -55,6 +55,10 @@ private func supportsFirstLetter(block: RenderBlockWrapper) -> Bool {
 
 extension RenderTreeBuilder {
   class FirstLetter {
+    init(builder: RenderTreeBuilder) {
+      self.builder = builder
+    }
+
     func updateAfterDescendants(block: RenderBlockWrapper) {
       if !block.style().hasPseudoStyle(pseudo: .FirstLetter) {
         return
@@ -167,9 +171,44 @@ extension RenderTreeBuilder {
           scanLength += numCodeUnits
         }
 
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let textNode = currentTextChild.textNode()
+        let beforeChild = currentTextChild.nextSibling()
+        let inlineWrapperForDisplayContents = currentTextChild.inlineWrapperForDisplayContents()
+        builder.destroy(renderer: currentTextChild)
+
+        // Construct a text fragment for the text after the first letter.
+        // This text fragment might be empty.
+        var newRemainingText: RenderTextFragmentWrapper? = nil
+        if textNode != nil {
+          newRemainingText = CreateRenderer.RenderTextFragment(
+            textNode: textNode!, text: oldText, startOffset: Int32(length),
+            length: Int32(oldText.length() - length))
+          textNode!.setRenderer(renderer: newRemainingText)
+        } else {
+          newRemainingText = CreateRenderer.RenderTextFragment(
+            document: builder.view.document(), text: oldText, startOffset: Int32(length),
+            length: Int32(oldText.length() - length))
+        }
+
+        let remainingText = newRemainingText!
+        remainingText.setInlineWrapperForDisplayContents(wrapper: inlineWrapperForDisplayContents)
+        builder.attach(
+          parent: textContentParent!, child: newRemainingText, beforeChild: beforeChild)
+
+        // FIXME: Make attach the final step so that we don't need to keep firstLetter around.
+        let firstLetter = newFirstLetter!
+        remainingText.setFirstLetter(firstLetter: firstLetter)
+        firstLetter.setFirstLetterRemainingText(remainingText: remainingText)
+        builder.attach(
+          parent: firstLetterContainer!, child: newFirstLetter, beforeChild: remainingText)
+
+        // Construct text fragment for the first letter.
+        let letter = CreateRenderer.RenderTextFragment(
+          document: builder.view.document(), text: oldText, startOffset: 0, length: Int32(length))
+        builder.attach(parent: firstLetter, child: letter)
       }
     }
+
+    private let builder: RenderTreeBuilder
   }
 }

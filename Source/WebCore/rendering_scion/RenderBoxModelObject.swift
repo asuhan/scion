@@ -186,6 +186,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setFirstLetterRemainingText(remainingText: RenderTextFragmentWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum ScaleByUsedZoom {
     case No
     case Yes

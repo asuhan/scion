@@ -33,4 +33,18 @@ class CreateRenderer {
   ) -> RenderBlockFlowWrapper {
     return RenderBlockFlowWrapper(type: type, document: document, style: style, flags: flags)
   }
+
+  static func RenderTextFragment(
+    textNode: TextWrapper, text: StringWrapper, startOffset: Int32, length: Int32
+  ) -> RenderTextFragmentWrapper {
+    return RenderTextFragmentWrapper(
+      textNode: textNode, text: text, startOffset: startOffset, length: length)
+  }
+
+  static func RenderTextFragment(
+    document: Document, text: StringWrapper, startOffset: Int32, length: Int32
+  ) -> RenderTextFragmentWrapper {
+    return RenderTextFragmentWrapper(
+      document: document, text: text, startOffset: startOffset, length: length)
+  }
 }
