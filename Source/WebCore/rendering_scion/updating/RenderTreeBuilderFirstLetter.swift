@@ -21,6 +21,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func styleForFirstLetter(firstLetterContainer: RenderElementWrapper) -> RenderStyleWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func supportsFirstLetter(block: RenderBlockWrapper) -> Bool {
   if block is RenderButtonWrapper {
     return true
@@ -78,6 +84,33 @@ extension RenderTreeBuilder {
     }
 
     private func createRenderers(currentTextChild: RenderTextWrapper) {
+      let textContentParent = currentTextChild.parent()
+      var firstLetterContainer: RenderElementWrapper? = nil
+      if let wrapperInlineForDisplayContents = currentTextChild.inlineWrapperForDisplayContents() {
+        firstLetterContainer = wrapperInlineForDisplayContents.parent()
+      } else {
+        firstLetterContainer = textContentParent
+      }
+      if firstLetterContainer == nil {
+        return
+      }
+
+      let pseudoStyle = styleForFirstLetter(firstLetterContainer: firstLetterContainer!)
+      if pseudoStyle == nil {
+        return
+      }
+
+      var newFirstLetter: RenderBoxModelObjectWrapper? = nil
+      if pseudoStyle!.display() == .Inline {
+        newFirstLetter = CreateRenderer.RenderInline(
+          type: .Inline, document: currentTextChild.document(), style: pseudoStyle!)
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      newFirstLetter!.initializeStyle()
+      newFirstLetter!.setIsFirstLetter()
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

@@ -221,6 +221,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_isContinuation(p)
   }
 
+  func setIsFirstLetter() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // https://www.w3.org/TR/css-transforms-1/#transform-box
   func transformReferenceBoxRect(style: RenderStyleWrapper) -> FloatRectWrapper {
     // TODO(asuhan): implement this
