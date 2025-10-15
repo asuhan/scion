@@ -195,6 +195,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func firstNonAnonymousAncestor() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -230,6 +235,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderBlock() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isRenderBlockFlow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

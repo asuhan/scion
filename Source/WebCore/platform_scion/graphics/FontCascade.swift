@@ -47,6 +47,11 @@ class FontCascadeWrapper {
     return font_cascade_size(p: p!)
   }
 
+  func update(fontSelector: FontSelectorWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum CustomFontNotReadyAction {
     case DoNotPaintIfFontNotReady
     case UseFallbackIfFontNotReady
@@ -226,6 +231,11 @@ class FontCascadeWrapper {
       stringView.p, direction.rawValue, expansionBehavior.left.rawValue,
       expansionBehavior.right.rawValue)
     return (UInt64(raw.count), raw.isAfterExpansion)
+  }
+
+  func fontSelector() -> FontSelectorWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }
 

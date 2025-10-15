@@ -23,8 +23,75 @@
 
 private func styleForFirstLetter(firstLetterContainer: RenderElementWrapper) -> RenderStyleWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let styleContainer =
+    firstLetterContainer.isAnonymous()
+    ? firstLetterContainer.firstNonAnonymousAncestor()! : firstLetterContainer
+  let style = styleContainer.style().getCachedPseudoStyle(
+    pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLetter))
+  if style == nil {
+    return nil
+  }
+
+  let firstLetterStyle = RenderStyleWrapper.clone(style: style!)
+
+  // If we have an initial letter drop that is >= 1, then we need to force floating to be on.
+  if firstLetterStyle.initialLetterDrop() >= 1 && !firstLetterStyle.isFloating() {
+    firstLetterStyle.setFloating(v: firstLetterStyle.isLeftToRightDirection() ? .Left : .Right)
+  }
+
+  // We have to compute the correct font-size for the first-letter if it has an initial letter height set.
+  let paragraph: RenderElementWrapper? =
+    firstLetterContainer.isRenderBlockFlow()
+    ? firstLetterContainer : firstLetterContainer.containingBlock()
+  if firstLetterStyle.initialLetterHeight() >= 1
+    && firstLetterStyle.metricsOfPrimaryFont().capHeight() != nil
+    && paragraph!.style().metricsOfPrimaryFont().capHeight() != nil
+  {
+    // FIXME: For ideographic baselines, we want to go from line edge to line edge. This is equivalent to (N-1)*line-height + the font height.
+    // We don't yet support ideographic baselines.
+    // For an N-line first-letter and for alphabetic baselines, the cap-height of the first letter needs to equal (N-1)*line-height of paragraph lines + cap-height of the paragraph
+    // Mathematically we can't rely on font-size, since font().height() doesn't necessarily match. For reliability, the best approach is simply to
+    // compare the final measured cap-heights of the two fonts in order to get to the closest possible value.
+    firstLetterStyle.setLineBoxContain(c: [.InitialLetter])
+    let lineHeight = Int32(paragraph!.style().computedLineHeight())
+
+    // Set the font to be one line too big and then ratchet back to get to a precise fit. We can't just set the desired font size based off font height metrics
+    // because many fonts bake ascent into the font metrics. Therefore we have to look at actual measured cap height values in order to know when we have a good fit.
+    let newFontDescription = firstLetterStyle.fontDescription()
+    let capRatio =
+      firstLetterStyle.metricsOfPrimaryFont().capHeight()! / firstLetterStyle.computedFontSize()
+    let startingFontSize =
+      Float32(
+        (firstLetterStyle.initialLetterHeight() - 1) * lineHeight
+          + Int32(paragraph!.style().metricsOfPrimaryFont().intCapHeight())) / capRatio
+    newFontDescription.setSpecifiedSize(s: startingFontSize)
+    newFontDescription.setComputedSize(s: startingFontSize)
+    firstLetterStyle.setFontDescription(description: newFontDescription)
+    firstLetterStyle.fontCascade().update(
+      fontSelector: firstLetterStyle.fontCascade().fontSelector())
+
+    let desiredCapHeight =
+      (firstLetterStyle.initialLetterHeight() - 1) * lineHeight
+      + Int32(paragraph!.style().metricsOfPrimaryFont().intCapHeight())
+    var actualCapHeight = Int32(firstLetterStyle.metricsOfPrimaryFont().intCapHeight())
+    while actualCapHeight > desiredCapHeight {
+      let newFontDescription = firstLetterStyle.fontDescription()
+      newFontDescription.setSpecifiedSize(s: newFontDescription.specifiedSize() - 1)
+      newFontDescription.setComputedSize(s: newFontDescription.computedSize() - 1)
+      firstLetterStyle.setFontDescription(description: newFontDescription)
+      firstLetterStyle.fontCascade().update(
+        fontSelector: firstLetterStyle.fontCascade().fontSelector())
+      actualCapHeight = Int32(firstLetterStyle.metricsOfPrimaryFont().intCapHeight())
+    }
+  }
+
+  firstLetterStyle.setPseudoElementType(pseudoElementType: .FirstLetter)
+  // Force inline display (except for floating first-letters).
+  firstLetterStyle.setDisplay(value: firstLetterStyle.isFloating() ? .Block : .Inline)
+  // CSS2 says first-letter can't be positioned.
+  firstLetterStyle.setPosition(v: .Static)
+
+  return firstLetterStyle
 }
 
 // CSS 2.1 http://www.w3.org/TR/CSS21/selector.html#first-letter

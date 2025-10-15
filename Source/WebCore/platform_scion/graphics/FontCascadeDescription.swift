@@ -22,4 +22,14 @@
  *
  */
 
-class FontCascadeDescriptionWrapper: FontDescriptionWrapper {}
+class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
+  func specifiedSize() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setSpecifiedSize(s: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

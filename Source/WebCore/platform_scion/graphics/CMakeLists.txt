@@ -19,6 +19,7 @@ target_sources(layout_scion PRIVATE
     FontCascadeDescription.swift
     FontDescription.swift
     FontMetrics.swift
+    FontSelector.swift
     GeometryUtilities.swift
     Glyph.swift
     GlyphPage.swift

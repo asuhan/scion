@@ -95,7 +95,19 @@ class RenderStyleWrapper: Equatable {
     return PseudoId(rawValue: wk_interop.RenderStyle_pseudoElementType(p))!
   }
 
+  func setPseudoElementType(pseudoElementType: PseudoId) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pseudoElementNameArgument() -> AtomStringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func getCachedPseudoStyle(pseudoElementIdentifier: Style.PseudoElementIdentifier)
+    -> RenderStyleWrapper?
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -107,6 +119,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func cachedPseudoStyles() -> PseudoStyleCache? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFloating() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -520,6 +537,11 @@ class RenderStyleWrapper: Equatable {
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_hasTextCombine(p)
+  }
+
+  func setFloating(v: Float) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func getRoundedInnerBorderFor(
@@ -1366,6 +1388,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setDisplay(value: DisplayType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setPosition(v: PositionType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMaskBorder(image: NinePieceImage) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1392,6 +1424,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setTransform(operations: TransformOperations) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLineBoxContain(c: LineBoxContain) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1542,6 +1579,12 @@ class RenderStyleWrapper: Equatable {
   }
 
   func preserves3D() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func setFontDescription(description: FontCascadeDescriptionWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
