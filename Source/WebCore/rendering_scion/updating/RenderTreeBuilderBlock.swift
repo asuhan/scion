@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2018 Apple Inc. All rights reserved.
- * Copyright (C) 2024 Igalia S.L.
+ * Copyright (C) 2017 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,39 +24,20 @@
  */
 
 extension RenderTreeBuilder {
-  class SVG {
-    func updateAfterDescendants(svgRoot: RenderSVGRootWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
+  class Block {
     func detach(
-      parent: LegacyRenderSVGRootWrapper, child: RenderObjectWrapper,
-      willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
+      parent: RenderBlockWrapper, oldChild: RenderObjectWrapper,
+      willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
+      canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock = .Yes
     ) -> RenderObjectWrapper? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
     func detach(
-      parent: LegacyRenderSVGContainer, child: RenderObjectWrapper,
-      willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
-    ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func detach(
-      parent: RenderSVGInlineWrapper, child: RenderObjectWrapper,
-      willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
-    ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    func detach(
-      parent: RenderSVGTextWrapper, child: RenderObjectWrapper,
-      willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
+      parent: RenderBlockFlowWrapper, child: RenderObjectWrapper,
+      willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
+      canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock = .Yes
     ) -> RenderObjectWrapper? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

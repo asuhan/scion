@@ -24,4 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class RenderGridWrapper: RenderBlockWrapper {}
+final class RenderGridWrapper: RenderBlockWrapper {
+  func dirtyGrid(subgridChanged: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -63,6 +63,7 @@ target_sources(layout_scion PRIVATE
     RenderListBox.swift
     RenderListItem.swift
     RenderListMarker.swift
+    RenderMenuList.swift
     RenderMultiColumnFlow.swift
     RenderMultiColumnSet.swift
     RenderObject.swift

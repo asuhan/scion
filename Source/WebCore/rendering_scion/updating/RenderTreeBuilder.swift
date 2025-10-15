@@ -51,9 +51,50 @@ class RenderTreeBuilder {
   func detach(
     parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed,
     canCollapseAnonymousBlock: CanCollapseAnonymousBlock = .Yes
-  ) -> RenderObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  ) -> RenderObjectWrapper? {
+    if let text = parent as? RenderSVGTextWrapper {
+      return svgBuilder.detach(parent: text, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let blockFlow = parent as? RenderBlockFlowWrapper {
+      return blockBuilder.detach(
+        parent: blockFlow, child: child, willBeDestroyed: willBeDestroyed,
+        canCollapseAnonymousBlock: canCollapseAnonymousBlock)
+    }
+
+    if let menuList = parent as? RenderMenuListWrapper {
+      return formControlsBuilder.detach(
+        parent: menuList, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let button = parent as? RenderButtonWrapper {
+      return formControlsBuilder.detach(
+        parent: button, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let grid = parent as? RenderGridWrapper {
+      return detachFromRenderGrid(parent: grid, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let svgInline = parent as? RenderSVGInlineWrapper {
+      return svgBuilder.detach(parent: svgInline, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let container = parent as? LegacyRenderSVGContainer {
+      return svgBuilder.detach(parent: container, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let svgRoot = parent as? LegacyRenderSVGRootWrapper {
+      return svgBuilder.detach(parent: svgRoot, child: child, willBeDestroyed: willBeDestroyed)
+    }
+
+    if let block = parent as? RenderBlockWrapper {
+      return blockBuilder.detach(
+        parent: block, oldChild: child, willBeDestroyed: willBeDestroyed,
+        canCollapseAnonymousBlock: canCollapseAnonymousBlock)
+    }
+
+    return detachFromRenderElement(parent: parent, child: child, willBeDestroyed: willBeDestroyed)
   }
 
   func destroy(
@@ -100,6 +141,29 @@ class RenderTreeBuilder {
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func detachFromRenderElement(
+    parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func detachFromRenderGrid(
+    parent: RenderGridWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
+  ) -> RenderObjectWrapper? {
+    let takenChild = blockBuilder.detach(
+      parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed)
+    // Positioned grid items do not take up space or otherwise participate in the layout of the grid,
+    // for that reason we don't need to mark the grid as dirty when they are removed.
+    if child.isOutOfFlowPositioned() {
+      return takenChild
+    }
+
+    // The grid needs to be recomputed as it might contain auto-placed items that will change their position.
+    parent.dirtyGrid()
+    return takenChild
   }
 
   private func reportVisuallyNonEmptyContent(
@@ -153,5 +217,7 @@ class RenderTreeBuilder {
   private let firstLetterBuilder: FirstLetter
   private let listBuilder: List
   private let multiColumnBuilder: MultiColumn
+  private let formControlsBuilder: FormControls
+  private let blockBuilder: Block
   private let svgBuilder: SVG
 }

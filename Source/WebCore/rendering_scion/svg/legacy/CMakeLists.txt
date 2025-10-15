@@ -6,4 +6,5 @@ target_sources(layout_scion PRIVATE
     LegacyRenderSVGResourceClipper.swift
     LegacyRenderSVGResourceContainer.swift
     LegacyRenderSVGResourceFilter.swift
+    LegacyRenderSVGRoot.swift
 )

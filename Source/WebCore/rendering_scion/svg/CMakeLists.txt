@@ -2,6 +2,7 @@ target_sources(layout_scion PRIVATE
     RenderSVGBlock.swift
     RenderSVGContainer.swift
     RenderSVGHiddenContainer.swift
+    RenderSVGInline.swift
     RenderSVGModelObject.swift
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
