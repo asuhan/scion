@@ -102,6 +102,21 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func incrementVisuallyNonEmptyCharacterCount(inlineText: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func incrementVisuallyNonEmptyPixelCount(size: IntSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasEnoughContentForVisualMilestones() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFlippedBlockRenderers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

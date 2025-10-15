@@ -149,6 +149,11 @@ internal func ceiledIntSize(s: LayoutSizeWrapper) -> IntSize {
   return IntSize(width: s.width().ceil(), height: s.height().ceil())
 }
 
+func roundedIntSize(s: LayoutSizeWrapper) -> IntSize {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func roundSizeToDevicePixels(size: LayoutSizeWrapper, pixelSnappingFactor: Float32) -> FloatSize {
   return FloatSize(
     width: roundToDevicePixel(value: size.width(), pixelSnappingFactor: pixelSnappingFactor),

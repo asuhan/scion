@@ -105,8 +105,47 @@ class RenderTreeBuilder {
   private func reportVisuallyNonEmptyContent(
     parent: RenderElementWrapper, child: RenderObjectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if view.frameView().hasEnoughContentForVisualMilestones() {
+      return
+    }
+
+    if let textRenderer = child as? RenderTextWrapper {
+      let style = parent.style()
+      // FIXME: Find out how to increment the visually non empty character count when the font becomes available.
+      if style.usedVisibility() == .Visible && !style.fontCascade().isLoadingCustomFonts() {
+        view.frameView().incrementVisuallyNonEmptyCharacterCount(inlineText: textRenderer.text())
+      }
+      return
+    }
+    if child is RenderHTMLCanvasWrapper || child is RenderEmbeddedObjectWrapper {
+      // Actual size is not known yet, report the default intrinsic size for replaced elements.
+      let replacedRenderer = child as! RenderReplacedWrapper
+      view.frameView().incrementVisuallyNonEmptyPixelCount(
+        size: roundedIntSize(s: replacedRenderer.intrinsicSize()))
+      return
+    }
+    if child.isRenderOrLegacyRenderSVGRoot() {
+      // SVG content tends to have a fixed size construct. However this is known to be inaccurate in certain cases (box-sizing: border-box) or especially when the parent box is oversized.
+      var candidateSize = IntSize()
+      if let size = RenderTreeBuilder.fixedSizeForSVG(renderer: child) {
+        candidateSize = size
+      } else if let size = RenderTreeBuilder.fixedSizeForSVG(renderer: parent) {
+        candidateSize = size
+      }
+
+      if !candidateSize.isEmpty() {
+        view.frameView().incrementVisuallyNonEmptyPixelCount(size: candidateSize)
+      }
+      return
+    }
+  }
+
+  private static func fixedSizeForSVG(renderer: RenderObjectWrapper) -> IntSize? {
+    let style = renderer.style()
+    if !style.width().isFixed() || !style.height().isFixed() {
+      return nil
+    }
+    return IntSize(width: style.width().intValue(), height: style.height().intValue())
   }
 
   let view: RenderViewWrapper

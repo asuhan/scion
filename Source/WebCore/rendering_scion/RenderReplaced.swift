@@ -24,4 +24,9 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func intrinsicSize() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

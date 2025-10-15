@@ -237,6 +237,11 @@ class FontCascadeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isLoadingCustomFonts() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 struct GlyphOverflow {
