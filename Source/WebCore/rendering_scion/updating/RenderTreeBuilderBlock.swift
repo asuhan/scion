@@ -23,6 +23,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func moveAllChildrenToInternal(
+  from: RenderBoxModelObjectWrapper, newParent: RenderElementWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func canDropAnonymousBlock(anonymousBlock: RenderBlockWrapper) -> Bool {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -204,8 +211,16 @@ extension RenderTreeBuilder {
     }
 
     func dropAnonymousBoxChild(parent: RenderBlockWrapper, child: RenderBlockWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      parent.setNeedsLayoutAndPrefWidthsRecalc()
+      parent.setChildrenInline(b: child.childrenInline())
+
+      // FIXME: This should really just be a moveAllChilrenTo (see webkit.org/b/182495)
+      moveAllChildrenToInternal(from: child, newParent: parent)
+      let _ /*toBeDeleted*/ = builder.detachFromRenderElement(
+        parent: parent, child: child, willBeDestroyed: .Yes)
+
+      // Delete the now-empty block's lines and nuke it.
+      child.deleteLines()
     }
 
     private let builder: RenderTreeBuilder
