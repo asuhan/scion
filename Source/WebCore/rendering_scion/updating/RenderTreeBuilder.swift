@@ -304,7 +304,7 @@ class RenderTreeBuilder {
 
   private let firstLetterBuilder: FirstLetter
   private let listBuilder: List
-  private let multiColumnBuilder: MultiColumn
+  let multiColumnBuilder: MultiColumn
   private let formControlsBuilder: FormControls
   private let blockBuilder: Block
   private let svgBuilder: SVG

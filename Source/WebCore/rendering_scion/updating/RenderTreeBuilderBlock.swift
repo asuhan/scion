@@ -189,8 +189,18 @@ extension RenderTreeBuilder {
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock = .Yes
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !parent.renderTreeBeingDestroyed() {
+        if let fragmentedFlow = parent.multiColumnFlowForBlockFlow(),
+          CPtrToInt(fragmentedFlow.p) != CPtrToInt(child.p)
+        {
+          builder.multiColumnBuilder.multiColumnRelativeWillBeRemoved(
+            flow: fragmentedFlow, relative: child,
+            canCollapseAnonymousBlock: canCollapseAnonymousBlock)
+        }
+      }
+      return detach(
+        parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed,
+        canCollapseAnonymousBlock: canCollapseAnonymousBlock)
     }
 
     func dropAnonymousBoxChild(parent: RenderBlockWrapper, child: RenderBlockWrapper) {

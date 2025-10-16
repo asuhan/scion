@@ -52,6 +52,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func multiColumnFlowForBlockFlow() -> RenderMultiColumnFlowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearDidBreakAtLineToAvoidWidow() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
