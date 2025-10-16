@@ -226,6 +226,14 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func attachRendererInternal(child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?)
+    -> RenderObjectWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func detachRendererInternal(renderer: RenderObjectWrapper) -> RenderObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

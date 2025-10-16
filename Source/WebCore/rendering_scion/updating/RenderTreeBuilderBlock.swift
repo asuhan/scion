@@ -26,8 +26,10 @@
 private func moveAllChildrenToInternal(
   from: RenderBoxModelObjectWrapper, newParent: RenderElementWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  while from.firstChild() != nil {
+    newParent.attachRendererInternal(
+      child: from.detachRendererInternal(renderer: from.firstChild()!), beforeChild: from)
+  }
 }
 
 private func canDropAnonymousBlock(anonymousBlock: RenderBlockWrapper) -> Bool {
