@@ -37,6 +37,7 @@ target_sources(layout_scion PRIVATE
     RenderBox.swift
     RenderBoxModelObject.swift
     RenderButton.swift
+    RenderChildIterator.swift
     RenderCombineText.swift
     RegionContext.swift
     RenderDeprecatedFlexibleBox.swift

@@ -23,6 +23,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func canDropAnonymousBlock(anonymousBlock: RenderBlockWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func canMergeContiguousAnonymousBlocks(
   rendererToBeRemoved: RenderObjectWrapper, previous: RenderObjectWrapper?,
   next: RenderObjectWrapper?, anonymousDestroyRoot: RenderObjectWrapper?
@@ -111,8 +116,36 @@ extension RenderTreeBuilder {
       }
 
       if canCollapseAnonymousBlock == .Yes && parent.canDropAnonymousBlockChild() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let child = prev != nil ? prev : next
+        if canMergeAnonymousBlocks && child != nil && child!.previousSibling() == nil
+          && child!.nextSibling() == nil
+        {
+          // The removal has knocked us down to containing only a single anonymous box. We can pull the content right back up into our box.
+          dropAnonymousBoxChild(parent: parent, child: child as! RenderBlockWrapper)
+        } else if (prev != nil && prev!.isAnonymousBlock())
+          || (next != nil && next!.isAnonymousBlock())
+        {
+          // It's possible that the removal has knocked us down to a single anonymous block with floating siblings.
+          let anonBlock =
+            ((prev != nil && prev!.isAnonymousBlock()) ? prev! : next!) as! RenderBlockWrapper
+          if canDropAnonymousBlock(anonymousBlock: anonBlock) {
+            var dropAnonymousBlock = true
+            let children: RenderChildIteratorAdapter<RenderObjectWrapper> = childrenOfType(
+              parent: parent)
+            for sibling in children {
+              if CPtrToInt(sibling.p) == CPtrToInt(anonBlock.p) {
+                continue
+              }
+              if !sibling.isFloating() {
+                dropAnonymousBlock = false
+                break
+              }
+            }
+            if dropAnonymousBlock {
+              dropAnonymousBoxChild(parent: parent, child: anonBlock)
+            }
+          }
+        }
       }
 
       if parent.firstChild() == nil {
@@ -129,6 +162,11 @@ extension RenderTreeBuilder {
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock = .Yes
     ) -> RenderObjectWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func dropAnonymousBoxChild(parent: RenderBlockWrapper, child: RenderBlockWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
