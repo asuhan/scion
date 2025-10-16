@@ -64,6 +64,7 @@ target_sources(layout_scion PRIVATE
     RenderListBox.swift
     RenderListItem.swift
     RenderListMarker.swift
+    RenderMedia.swift
     RenderMenuList.swift
     RenderMultiColumnFlow.swift
     RenderMultiColumnSet.swift
@@ -79,6 +80,7 @@ target_sources(layout_scion PRIVATE
     RenderTableRow.swift
     RenderText.swift
     RenderTheme.swift
+    RenderVideo.swift
     RenderView.swift
     RenderViewTransitionCapture.swift
     RenderWidget.swift

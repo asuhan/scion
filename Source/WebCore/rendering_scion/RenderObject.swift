@@ -282,6 +282,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderTableCell() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderTableCol() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -487,6 +492,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func hasOutlineAutoAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isExcludedFromNormalLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -508,6 +518,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func backgroundIsKnownToBeObscured(paintOffset: LayoutPointWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func normalChildNeedsLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -583,6 +598,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func setPreferredLogicalWidthsDirty(
     shouldBeDirty: Bool, markParents: MarkingBehavior = .MarkContainingBlockChain
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasOutlineAutoAncestor(hasOutlineAutoAncestor: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -675,6 +695,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Anonymous blocks that are part of of a continuation chain will return their inline continuation's outline style instead.
+  // This is typically only relevant when repainting.
+  func outlineStyleForRepaint() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Return the RenderLayerModelObject in the container chain which is responsible for painting this object, or nullptr
   // if painting is root-relative. This is the container that should be passed to the 'forRepaint' functions.
   struct RepaintContainerStatus {
@@ -724,12 +751,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: Renderers should not need to be notified about internal reparenting (webkit.org/b/224143).
+  func insertedIntoTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func willBeRemovedFromTree() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func resetFragmentedFlowStateOnRemoval() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func initializeFragmentedFlowStateOnInsertion() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

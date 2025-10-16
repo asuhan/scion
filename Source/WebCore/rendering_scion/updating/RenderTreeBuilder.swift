@@ -184,8 +184,106 @@ class RenderTreeBuilder {
     parent: RenderElementWrapper, child: RenderObjectWrapper?,
     beforeChild: RenderObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if parent.view().frameView().layoutContext().layoutState() != nil {
+      fatalError("Layout must not mutate render tree")
+    }
+    assert(parent.canHaveChildren() || parent.canHaveGeneratedChildren())
+    assert(child!.parent() == nil)
+    assert(
+      !parent.isRenderBlockFlow()
+        || (!child!.isRenderTableSection() && !child!.isRenderTableRow()
+          && !child!.isRenderTableCell())
+    )
+
+    var beforeChild = beforeChild
+    while beforeChild != nil && beforeChild!.parent() != nil
+      && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p)
+    {
+      beforeChild = beforeChild!.parent()
+    }
+
+    if beforeChild != nil && beforeChild!.parent() == nil {
+      fatalError("Not reached")
+    }
+
+    assert(beforeChild == nil || CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p))
+    assert(
+      !(beforeChild is RenderTextWrapper)
+        || (beforeChild as! RenderTextWrapper).inlineWrapperForDisplayContents() == nil)
+
+    // Take the ownership.
+    let newChild = parent.attachRendererInternal(child: child, beforeChild: beforeChild)
+    if parent.renderTreeBeingDestroyed() {
+      fatalError("Not reached")
+    }
+
+    newChild!.insertedIntoTree()
+    invalidateLineLayout(renderer: newChild!, isRemoval: .No)
+
+    if internalMovesType == .No {
+      newChild!.initializeFragmentedFlowStateOnInsertion()
+      if let fragmentedFlow = newChild!.enclosingFragmentedFlow() as? RenderMultiColumnFlowWrapper {
+        multiColumnBuilder.multiColumnDescendantInserted(
+          flow: fragmentedFlow, newDescendant: newChild!)
+      }
+      if let listItemRenderer = newChild as? RenderListItemWrapper {
+        listItemRenderer.updateListMarkerNumbers()
+      }
+    }
+
+    newChild!.setNeedsLayoutAndPrefWidthsRecalc()
+    let isOutOfFlowBox = newChild!.style().hasOutOfFlowPosition()
+    if !isOutOfFlowBox {
+      parent.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+    }
+
+    if !parent.normalChildNeedsLayout() {
+      if isOutOfFlowBox {
+        if RenderTreeBuilder.newChildIsEligibleForStaticPositionLayoutOnly(
+          newChild: newChild!, parent: parent)
+        {
+          // FIXME: Introduce a dirty bit to bridge the gap between parent and containing block which would
+          // not trigger layout but a simple traversal all the way to the direct parent and also expand it non-direct parent cases.
+          parent.setOutOfFlowChildNeedsStaticPositionLayout()
+        } else {
+          parent.setChildNeedsLayout()
+        }
+      } else {
+        parent.setChildNeedsLayout()
+      }
+    }
+
+    if let cache = parent.document().axObjectCache() {
+      cache.childrenChanged(renderer: parent, changedChild: newChild)
+    }
+
+    if parent.hasOutlineAutoAncestor()
+      || parent.outlineStyleForRepaint().outlineStyleIsAuto() == .On
+    {
+      if !(newChild!.previousSibling() is RenderMultiColumnSetWrapper) {
+        newChild!.setHasOutlineAutoAncestor()
+      }
+    }
+  }
+
+  private static func newChildIsEligibleForStaticPositionLayoutOnly(
+    newChild: RenderObjectWrapper, parent: RenderElementWrapper
+  ) -> Bool {
+    // setNeedsLayoutAndPrefWidthsRecalc above already takes care of propagating dirty bits on the ancestor chain, but
+    // in order to compute static position for out of flow boxes, the parent has to run normal flow layout as well (as opposed to simplified)
+    if CPtrToInt(newChild.containingBlock()?.p) != CPtrToInt(parent.p) {
+      return false
+    }
+    // FIXME: RenderVideo's setNeedsLayout pattern does not play well with this optimization: see webkit.org/b/276253
+    if newChild is RenderVideoWrapper {
+      return false
+    }
+    // Since we can't actually run static position only layout for a block container (RenderBlockFlow::layoutBlock() does not have such fine grained layout flow)
+    // floats get rebuilt which assumes (see intruding floats) parent block containers do the same.
+    if let renderBlock = parent as? RenderBlockWrapper {
+      return !renderBlock.containsFloats()
+    }
+    return true
   }
 
   func detachFromRenderElement(

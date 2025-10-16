@@ -28,6 +28,13 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    func multiColumnDescendantInserted(
+      flow: RenderMultiColumnFlowWrapper, newDescendant: RenderObjectWrapper
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func multiColumnRelativeWillBeRemoved(
       flow: RenderMultiColumnFlowWrapper, relative: RenderObjectWrapper,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock

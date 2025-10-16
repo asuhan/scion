@@ -21,6 +21,11 @@
  */
 
 final class RenderListItemWrapper: RenderBlockFlowWrapper {
+  func updateListMarkerNumbers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markerRenderer() -> RenderListMarkerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -115,6 +115,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
 
+  func setOutOfFlowChildNeedsStaticPositionLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsSimplifiedNormalFlowLayout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
