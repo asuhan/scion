@@ -174,6 +174,14 @@ class RenderTreeBuilder {
     fatalError("Not implemented")
   }
 
+  func attachToRenderElementInternal(
+    parent: RenderElementWrapper, child: RenderObjectWrapper?,
+    beforeChild: RenderObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func detachFromRenderElement(
     parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
   ) -> RenderObjectWrapper? {

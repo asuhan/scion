@@ -603,6 +603,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
   }
 
+  func setNeedsLayoutAndPrefWidthsRecalc() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hitTest(
     request: HitTestRequestWrapper, result: HitTestResultWrapper,
     locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,

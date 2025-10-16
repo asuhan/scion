@@ -77,6 +77,13 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  static func createAnonymousStyleWithDisplay(parentStyle: RenderStyleWrapper, display: DisplayType)
+    -> RenderStyleWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (this: RenderStyleWrapper, other: RenderStyleWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

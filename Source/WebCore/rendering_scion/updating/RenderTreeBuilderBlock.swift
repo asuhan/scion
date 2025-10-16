@@ -51,8 +51,8 @@ extension RenderTreeBuilder {
 
       // If this child is a block, and if our previous and next siblings are both anonymous blocks
       // with inline content, then we can fold the inline content back together.
-      let prev = oldChild.previousSibling()
-      let next = oldChild.nextSibling()
+      var prev = oldChild.previousSibling()
+      var next = oldChild.nextSibling()
       let canMergeAnonymousBlocks =
         canCollapseAnonymousBlock == .Yes
         && canMergeContiguousAnonymousBlocks(
@@ -63,8 +63,45 @@ extension RenderTreeBuilder {
         parent: parent, child: oldChild, willBeDestroyed: willBeDestroyed)
 
       if canMergeAnonymousBlocks && prev != nil && next != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        prev!.setNeedsLayoutAndPrefWidthsRecalc()
+        let nextBlock = next as! RenderBlockWrapper
+        let prevBlock = prev as! RenderBlockWrapper
+
+        if prev!.childrenInline() != next!.childrenInline() {
+          let inlineChildrenBlock = prev!.childrenInline() ? prevBlock : nextBlock
+          let blockChildrenBlock = prev!.childrenInline() ? nextBlock : prevBlock
+
+          // Place the inline children block inside of the block children block instead of deleting it.
+          // In order to reuse it, we have to reset it to just be a generic anonymous block. Make sure
+          // to clear out inherited column properties by just making a new style, and to also clear the
+          // column span flag if it is set.
+          assert(inlineChildrenBlock.continuation() == nil)
+          // Cache this value as it might get changed in setStyle() call.
+          inlineChildrenBlock.setStyle(
+            style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+              parentStyle: parent.style(), display: .Block))
+          let blockToMove = builder.detachFromRenderElement(
+            parent: parent, child: inlineChildrenBlock, willBeDestroyed: .No)
+
+          // Now just put the inlineChildrenBlock inside the blockChildrenBlock.
+          let beforeChild =
+            CPtrToInt(prev?.p) == CPtrToInt(inlineChildrenBlock.p)
+            ? blockChildrenBlock.firstChild() : nil
+          builder.attachToRenderElementInternal(
+            parent: blockChildrenBlock, child: blockToMove, beforeChild: beforeChild)
+          next!.setNeedsLayoutAndPrefWidthsRecalc()
+
+          // inlineChildrenBlock got reparented to blockChildrenBlock, so it is no longer a child
+          // of "this". we null out prev or next so that is not used later in the function.
+          if CPtrToInt(inlineChildrenBlock.p) == CPtrToInt(prevBlock.p) {
+            prev = nil
+          } else {
+            next = nil
+          }
+        } else {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
       }
 
       if canCollapseAnonymousBlock == .Yes && parent.canDropAnonymousBlockChild() {
