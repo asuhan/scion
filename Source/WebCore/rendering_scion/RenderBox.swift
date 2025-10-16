@@ -581,6 +581,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
+  func removeFloatingAndInvalidateForLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markForPaginationRelayoutIfNeeded() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

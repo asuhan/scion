@@ -141,6 +141,14 @@ class RenderTreeBuilder {
     case Yes
   }
 
+  func move(
+    from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper, child: RenderObjectWrapper,
+    normalizeAfterInsertion: NormalizeAfterInsertion
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateAfterDescendants(renderer: RenderElementWrapper) {
     if let svgRoot = renderer as? RenderSVGRootWrapper {
       svgBuilder.updateAfterDescendants(svgRoot: svgRoot)
@@ -207,8 +215,27 @@ class RenderTreeBuilder {
     }
 
     if noLongerAffectsParent {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      childFlowStateChangesAndNoLongerAffectsParentBlock(child: renderer)
+
+      if isFloating {
+        if let blockFlow = renderer as? RenderBlockFlowWrapper {
+          // These descendent floats can not intrude other, sibling block containers anymore.
+          for descendant: RenderBoxWrapper in descendantsOfType(root: blockFlow) {
+            if descendant.isFloating() {
+              descendant.removeFloatingAndInvalidateForLayout()
+            }
+          }
+          removeFloatingObjects(renderer: blockFlow)
+          // Fresh floats need to be reparented if they actually belong to the previous anonymous block.
+          // It copies the logic of RenderBlock::addChildIgnoringContinuation
+          if blockFlow.previousSibling() != nil && blockFlow.previousSibling()!.isAnonymousBlock() {
+            move(
+              from: parent as! RenderBoxModelObjectWrapper,
+              to: blockFlow.previousSibling() as! RenderBoxModelObjectWrapper, child: renderer,
+              normalizeAfterInsertion: .No)
+          }
+        }
+      }
     }
 
     handleFragmentedFlowStateChange(
@@ -245,6 +272,7 @@ class RenderTreeBuilder {
 
       // Style change may have moved some subtree out of the fragmented flow. Their flow states have already been updated (see adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded)
       // and here is where we take care of the remaining, spanner tree mutation.
+      let spannerContainingBlockSet = ObjectIdentifierHashSet<RenderElementWrapper>()
       for descendant: RenderMultiColumnSpannerPlaceholderWrapper in descendantsOfType(
         root: renderer)
       {
@@ -252,13 +280,17 @@ class RenderTreeBuilder {
           CPtrToInt(containingBlock.enclosingFragmentedFlow()?.p)
             != CPtrToInt(enclosingFragmentedFlow.p)
         {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          spannerContainingBlockSet.add(value: containingBlock)
         }
       }
-
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let oldEnclosingFragmentedFlow = WeakNullableRef(enclosingFragmentedFlow)
+      for containingBlock in spannerContainingBlockSet {
+        if !oldEnclosingFragmentedFlow.bool() {
+          break
+        }
+        multiColumnBuilder.restoreColumnSpannersForContainer(
+          container: containingBlock, multiColumnFlow: *oldEnclosingFragmentedFlow)
+      }
     }
   }
 
@@ -280,6 +312,11 @@ class RenderTreeBuilder {
   private func attachInternal(
     parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func childFlowStateChangesAndNoLongerAffectsParentBlock(child: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -457,6 +494,11 @@ class RenderTreeBuilder {
     from: RenderBlockWrapper, to: RenderBlockWrapper,
     normalizeAfterInsertion: NormalizeAfterInsertion
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func removeFloatingObjects(renderer: RenderBlockWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

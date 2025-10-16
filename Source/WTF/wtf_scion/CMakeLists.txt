@@ -5,9 +5,11 @@ target_sources(layout_scion PRIVATE
     ListSet.swift
     MathExtras.swift
     MonotonicTime.swift
+    ObjectIdentifierHashSet.swift
     OptionalComparison.swift
     PriorityQueue.swift
     SaturatedArithmetic.swift
+    WeakNullableRef.swift
 )
 add_subdirectory(text)
 add_subdirectory(unicode)
