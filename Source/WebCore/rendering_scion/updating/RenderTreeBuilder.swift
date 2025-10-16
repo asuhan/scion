@@ -191,7 +191,7 @@ class RenderTreeBuilder {
   func detachFromRenderElement(
     parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
   ) -> RenderObjectWrapper? {
-    if parent.view().frameView().layoutContext().layoutState() == nil {
+    if parent.view().frameView().layoutContext().layoutState() != nil {
       fatalError("Layout must not mutate render tree")
     }
     assert(parent.canHaveChildren() || parent.canHaveGeneratedChildren())
