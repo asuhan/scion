@@ -31,8 +31,10 @@ private func moveAllChildrenToInternal(
 }
 
 private func canDropAnonymousBlock(anonymousBlock: RenderBlockWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if anonymousBlock.beingDestroyed() || anonymousBlock.continuation() != nil {
+    return false
+  }
+  return true
 }
 
 private func canMergeContiguousAnonymousBlocks(
