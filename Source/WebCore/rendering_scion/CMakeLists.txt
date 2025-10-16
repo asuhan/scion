@@ -41,6 +41,7 @@ target_sources(layout_scion PRIVATE
     RenderCombineText.swift
     RegionContext.swift
     RenderDeprecatedFlexibleBox.swift
+    RenderDescendantIterator.swift
     RenderLayerFilters.swift
     RenderElement.swift
     RenderEmbeddedObject.swift
@@ -68,6 +69,7 @@ target_sources(layout_scion PRIVATE
     RenderMenuList.swift
     RenderMultiColumnFlow.swift
     RenderMultiColumnSet.swift
+    RenderMultiColumnSpannerPlaceholder.swift
     RenderObject.swift
     RenderObjectEnums.swift
     RenderOverflow.swift

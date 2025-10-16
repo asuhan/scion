@@ -28,6 +28,13 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    func restoreColumnSpannersForContainer(
+      container: RenderElementWrapper, multiColumnFlow: RenderMultiColumnFlowWrapper
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func multiColumnDescendantInserted(
       flow: RenderMultiColumnFlowWrapper, newDescendant: RenderObjectWrapper
     ) {

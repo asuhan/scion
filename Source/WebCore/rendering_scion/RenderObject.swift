@@ -357,6 +357,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  enum FragmentedFlowState {
+    case NotInsideFlow
+    case InsideFlow
+  }
+
+  func fragmentedFlowState() -> FragmentedFlowState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderSVGBlock() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

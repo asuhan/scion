@@ -169,13 +169,122 @@ class RenderTreeBuilder {
   }
 
   func normalizeTreeAfterStyleChange(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.parent() == nil {
+      return
+    }
+
+    let wasFloating = oldStyle.isFloating()
+    let wasOutOfFlowPositioned = oldStyle.hasOutOfFlowPosition()
+    let isFloating = renderer.style().isFloating()
+    let isOutOfFlowPositioned = renderer.style().hasOutOfFlowPosition()
+    var startsAffectingParent = false
+    var noLongerAffectsParent = false
+
+    let parent = renderer.parent()!
+    if parent is RenderBlockWrapper {
+      noLongerAffectsParent =
+        (!wasFloating && isFloating) || (!wasOutOfFlowPositioned && isOutOfFlowPositioned)
+    }
+
+    if parent is RenderBlockFlowWrapper || parent is RenderInlineWrapper {
+      startsAffectingParent =
+        (wasFloating || wasOutOfFlowPositioned) && !isFloating && !isOutOfFlowPositioned
+      assert(!startsAffectingParent || !noLongerAffectsParent)
+    }
+
+    if startsAffectingParent {
+      // We have gone from not affecting the inline status of the parent flow to suddenly
+      // having an impact. See if there is a mismatch between the parent flow's
+      // childrenInline() state and our state.
+      if renderer.isInline() != renderer.parent()!.childrenInline() {
+        childFlowStateChangesAndAffectsParentBlock(child: renderer)
+      }
+      // WARNING: original parent might be deleted at this point.
+      handleFragmentedFlowStateChange(
+        renderer: renderer, wasOutOfFlowPositioned: wasOutOfFlowPositioned,
+        isOutOfFlowPositioned: isOutOfFlowPositioned)
+      return
+    }
+
+    if noLongerAffectsParent {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    handleFragmentedFlowStateChange(
+      renderer: renderer, wasOutOfFlowPositioned: wasOutOfFlowPositioned,
+      isOutOfFlowPositioned: isOutOfFlowPositioned)
+  }
+
+  private func handleFragmentedFlowStateChange(
+    renderer: RenderElementWrapper, wasOutOfFlowPositioned: Bool, isOutOfFlowPositioned: Bool
+  ) {
+    if renderer.parent() == nil {
+      return
+    }
+    // Out of flow children of RenderMultiColumnFlow are not really part of the multicolumn flow. We need to ensure that changes in positioning like this
+    // trigger insertions into the multicolumn flow.
+    if let enclosingFragmentedFlow = renderer.parent()!.enclosingFragmentedFlow()
+      as? RenderMultiColumnFlowWrapper
+    {
+      let movingIntoMulticolumn = RenderTreeBuilder.movingIntoMulticolumn(
+        renderer: renderer, wasOutOfFlowPositioned: wasOutOfFlowPositioned,
+        isOutOfFlowPositioned: isOutOfFlowPositioned)
+      if movingIntoMulticolumn {
+        renderer.initializeFragmentedFlowStateOnInsertion()
+        multiColumnBuilder.multiColumnDescendantInserted(
+          flow: enclosingFragmentedFlow, newDescendant: renderer)
+        return
+      }
+      let movingOutOfMulticolumn = !wasOutOfFlowPositioned && isOutOfFlowPositioned
+      if movingOutOfMulticolumn {
+        multiColumnBuilder.restoreColumnSpannersForContainer(
+          container: renderer, multiColumnFlow: enclosingFragmentedFlow)
+        return
+      }
+
+      // Style change may have moved some subtree out of the fragmented flow. Their flow states have already been updated (see adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded)
+      // and here is where we take care of the remaining, spanner tree mutation.
+      for descendant: RenderMultiColumnSpannerPlaceholderWrapper in descendantsOfType(
+        root: renderer)
+      {
+        if let containingBlock = descendant.containingBlock(),
+          CPtrToInt(containingBlock.enclosingFragmentedFlow()?.p)
+            != CPtrToInt(enclosingFragmentedFlow.p)
+        {
+          // TODO(asuhan): implement this
+          fatalError("Not implemented")
+        }
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private static func movingIntoMulticolumn(
+    renderer: RenderElementWrapper, wasOutOfFlowPositioned: Bool, isOutOfFlowPositioned: Bool
+  ) -> Bool {
+    if wasOutOfFlowPositioned && !isOutOfFlowPositioned {
+      return true
+    }
+    if let containingBlock = renderer.containingBlock(), isOutOfFlowPositioned {
+      // Sometimes the flow state could change even when the renderer stays out-of-flow (e.g when going from fixed to absolute and
+      // the containing block is inside a multi-column flow).
+      return containingBlock.fragmentedFlowState() == .InsideFlow
+        && renderer.fragmentedFlowState() == .NotInsideFlow
+    }
+    return false
   }
 
   private func attachInternal(
     parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func childFlowStateChangesAndAffectsParentBlock(child: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
