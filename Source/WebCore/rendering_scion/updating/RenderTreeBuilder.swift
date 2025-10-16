@@ -174,7 +174,7 @@ class RenderTreeBuilder {
     fatalError("Not implemented")
   }
 
-  private func detachFromRenderElement(
+  func detachFromRenderElement(
     parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
   ) -> RenderObjectWrapper? {
     if parent.view().frameView().layoutContext().layoutState() == nil {
@@ -289,4 +289,5 @@ class RenderTreeBuilder {
   private let internalMovesType: IsInternalMove = .No
   private let tearDownType: TearDownType = .Root
   private let subtreeDestroyRoot: RenderElementWrapper? = nil
+  let anonymousDestroyRoot: RenderObjectWrapper? = nil
 }

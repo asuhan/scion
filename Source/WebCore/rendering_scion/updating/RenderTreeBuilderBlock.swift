@@ -23,15 +23,60 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func canMergeContiguousAnonymousBlocks(
+  rendererToBeRemoved: RenderObjectWrapper, previous: RenderObjectWrapper?,
+  next: RenderObjectWrapper?, anonymousDestroyRoot: RenderObjectWrapper?
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class Block {
+    init(builder: RenderTreeBuilder) {
+      self.builder = builder
+    }
+
     func detach(
       parent: RenderBlockWrapper, oldChild: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock = .Yes
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // No need to waste time in merging or removing empty anonymous blocks.
+      // We can just bail out if our document is getting destroyed.
+      if parent.renderTreeBeingDestroyed() {
+        return builder.detachFromRenderElement(
+          parent: parent, child: oldChild, willBeDestroyed: willBeDestroyed)
+      }
+
+      // If this child is a block, and if our previous and next siblings are both anonymous blocks
+      // with inline content, then we can fold the inline content back together.
+      let prev = oldChild.previousSibling()
+      let next = oldChild.nextSibling()
+      let canMergeAnonymousBlocks =
+        canCollapseAnonymousBlock == .Yes
+        && canMergeContiguousAnonymousBlocks(
+          rendererToBeRemoved: oldChild, previous: prev, next: next,
+          anonymousDestroyRoot: builder.anonymousDestroyRoot)
+
+      let takenChild = builder.detachFromRenderElement(
+        parent: parent, child: oldChild, willBeDestroyed: willBeDestroyed)
+
+      if canMergeAnonymousBlocks && prev != nil && next != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if canCollapseAnonymousBlock == .Yes && parent.canDropAnonymousBlockChild() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if parent.firstChild() == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return takenChild
     }
 
     func detach(
@@ -42,5 +87,7 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let builder: RenderTreeBuilder
   }
 }
