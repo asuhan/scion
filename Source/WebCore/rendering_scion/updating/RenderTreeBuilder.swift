@@ -24,6 +24,25 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum IsRemoval {
+  case No
+  case Yes
+}
+
+private func invalidateLineLayout(renderer: RenderObjectWrapper, isRemoval: IsRemoval) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func resetRendererStateOnDetach(
+  parent: RenderElementWrapper, child: RenderObjectWrapper,
+  willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
+  isInternalMove: RenderTreeBuilder.IsInternalMove
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderTreeBuilder {
   init(view: RenderViewWrapper) {
     // TODO(asuhan): implement this
@@ -38,6 +57,11 @@ class RenderTreeBuilder {
     attachInternal(parent: parent, child: child, beforeChild: beforeChild)
   }
 
+  enum IsInternalMove {
+    case No
+    case Yes
+  }
+
   enum WillBeDestroyed {
     case No
     case Yes
@@ -49,7 +73,8 @@ class RenderTreeBuilder {
   }
 
   func detach(
-    parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed,
+    parent: RenderElementWrapper, child: RenderObjectWrapper,
+    willBeDestroyed: WillBeDestroyed,
     canCollapseAnonymousBlock: CanCollapseAnonymousBlock = .Yes
   ) -> RenderObjectWrapper? {
     if let text = parent as? RenderSVGTextWrapper {
@@ -95,6 +120,12 @@ class RenderTreeBuilder {
     }
 
     return detachFromRenderElement(parent: parent, child: child, willBeDestroyed: willBeDestroyed)
+  }
+
+  enum TearDownType {
+    case Root  // destroy root renderer
+    case SubtreeWithRootStillAttached  // subtree teardown when renderers are still attached to the tree (common case)
+    case SubtreeWithRootAlreadyDetached  // subtree teardown when destroy root gets detached first followed by destroying renderers (e.g. pseudo subtree)
   }
 
   func destroy(
@@ -146,8 +177,43 @@ class RenderTreeBuilder {
   private func detachFromRenderElement(
     parent: RenderElementWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if parent.view().frameView().layoutContext().layoutState() == nil {
+      fatalError("Layout must not mutate render tree")
+    }
+    assert(parent.canHaveChildren() || parent.canHaveGeneratedChildren())
+    assert(CPtrToInt(child.parent()?.p) == CPtrToInt(parent.p))
+
+    if parent.renderTreeBeingDestroyed() || tearDownType == .SubtreeWithRootAlreadyDetached {
+      return parent.detachRendererInternal(renderer: child)
+    }
+
+    if child.everHadLayout() {
+      resetRendererStateOnDetach(
+        parent: parent, child: child, willBeDestroyed: willBeDestroyed,
+        isInternalMove: internalMovesType)
+    }
+
+    if tearDownType == .Root || subtreeDestroyRoot is RenderInlineWrapper {
+      // In case of partial damage on the inline content (the block root is not going away), we need to initiate inline layout invalidation on leaf renderers too.
+      invalidateLineLayout(renderer: child, isRemoval: .Yes)
+    }
+
+    // FIXME: Fragment state should not be such a special case.
+    if internalMovesType == .No {
+      child.resetFragmentedFlowStateOnRemoval()
+    }
+
+    child.willBeRemovedFromTree()
+    // WARNING: There should be no code running between willBeRemovedFromTree() and the actual removal below.
+    // This is needed to avoid race conditions where willBeRemovedFromTree() would dirty the tree's structure
+    // and the code running here would force an untimely rebuilding, leaving |child| dangling.
+    let childToTake = parent.detachRendererInternal(renderer: child)
+
+    if let cache = parent.document().existingAXObjectCache() {
+      cache.childrenChanged(renderer: parent)
+    }
+
+    return childToTake
   }
 
   private func detachFromRenderGrid(
@@ -220,4 +286,7 @@ class RenderTreeBuilder {
   private let formControlsBuilder: FormControls
   private let blockBuilder: Block
   private let svgBuilder: SVG
+  private let internalMovesType: IsInternalMove = .No
+  private let tearDownType: TearDownType = .Root
+  private let subtreeDestroyRoot: RenderElementWrapper? = nil
 }

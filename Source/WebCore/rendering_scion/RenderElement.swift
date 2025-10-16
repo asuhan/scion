@@ -226,6 +226,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func detachRendererInternal(renderer: RenderObjectWrapper) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // https://www.w3.org/TR/css-transforms-1/#transform-box
   func transformReferenceBoxRect(style: RenderStyleWrapper) -> FloatRectWrapper {
     // TODO(asuhan): implement this

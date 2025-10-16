@@ -709,6 +709,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func willBeRemovedFromTree() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func resetFragmentedFlowStateOnRemoval() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSkippedContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

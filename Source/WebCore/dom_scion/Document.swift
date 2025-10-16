@@ -54,6 +54,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func existingAXObjectCache() -> AXObjectCacheWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func axObjectCache() -> AXObjectCacheWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
