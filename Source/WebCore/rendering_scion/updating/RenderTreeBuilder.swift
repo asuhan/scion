@@ -135,6 +135,12 @@ class RenderTreeBuilder {
     fatalError("Not implemented")
   }
 
+  // NormalizeAfterInsertion::Yes ensures that the destination subtree is consistent after the insertion (anonymous wrappers etc).
+  enum NormalizeAfterInsertion {
+    case No
+    case Yes
+  }
+
   func updateAfterDescendants(renderer: RenderElementWrapper) {
     if let svgRoot = renderer as? RenderSVGRootWrapper {
       svgBuilder.updateAfterDescendants(svgRoot: svgRoot)
@@ -238,6 +244,14 @@ class RenderTreeBuilder {
     // The grid needs to be recomputed as it might contain auto-placed items that will change their position.
     parent.dirtyGrid()
     return takenChild
+  }
+
+  func moveAllChildrenIncludingFloats(
+    from: RenderBlockWrapper, to: RenderBlockWrapper,
+    normalizeAfterInsertion: NormalizeAfterInsertion
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func reportVisuallyNonEmptyContent(

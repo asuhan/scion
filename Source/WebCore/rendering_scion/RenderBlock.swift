@@ -28,6 +28,12 @@ enum CaretType {
 }
 
 class RenderBlockWrapper: RenderBoxWrapper {
+  // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
+  func deleteLines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containsFloats() -> Bool {
     return wk_interop.RenderBlock_containsFloats(p)
   }

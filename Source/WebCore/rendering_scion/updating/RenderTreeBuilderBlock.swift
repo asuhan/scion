@@ -99,8 +99,14 @@ extension RenderTreeBuilder {
             next = nil
           }
         } else {
-          // TODO(asuhan): implement this
-          fatalError("Not implemented")
+          // Take all the children out of the |next| block and put them in
+          // the |prev| block.
+          builder.moveAllChildrenIncludingFloats(
+            from: nextBlock, to: prevBlock, normalizeAfterInsertion: .No)
+
+          // Delete the now-empty block's lines and nuke it.
+          nextBlock.deleteLines()
+          builder.destroy(renderer: nextBlock)
         }
       }
 
@@ -110,8 +116,10 @@ extension RenderTreeBuilder {
       }
 
       if parent.firstChild() == nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // If this was our last child be sure to clear out our line boxes.
+        if parent.childrenInline() {
+          parent.deleteLines()
+        }
       }
       return takenChild
     }
