@@ -32,8 +32,35 @@ private func canMergeContiguousAnonymousBlocks(
   rendererToBeRemoved: RenderObjectWrapper, previous: RenderObjectWrapper?,
   next: RenderObjectWrapper?, anonymousDestroyRoot: RenderObjectWrapper?
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(!rendererToBeRemoved.renderTreeBeingDestroyed())
+
+  if rendererToBeRemoved.isInline() {
+    return false
+  }
+
+  if previous != nil
+    && (!previous!.isAnonymousBlock()
+      || !canDropAnonymousBlock(anonymousBlock: previous as! RenderBlockWrapper))
+  {
+    return false
+  }
+
+  if next != nil
+    && (!next!.isAnonymousBlock()
+      || !canDropAnonymousBlock(anonymousBlock: next as! RenderBlockWrapper))
+  {
+    return false
+  }
+
+  let boxToBeRemoved = rendererToBeRemoved as? RenderBoxModelObjectWrapper
+  if boxToBeRemoved == nil || boxToBeRemoved!.continuation() == nil {
+    return true
+  }
+
+  // Let's merge pre and post anonymous block containers when the continuation triggering box (rendererToBeRemoved) is going away.
+  return previous != nil && next != nil
+    && CPtrToInt(previous?.p) != CPtrToInt(anonymousDestroyRoot?.p)
+    && CPtrToInt(next?.p) != CPtrToInt(anonymousDestroyRoot?.p)
 }
 
 extension RenderTreeBuilder {
