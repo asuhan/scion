@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    CaretAnimator.swift
     FloatConversion.swift
     LayoutUnit.swift
     Length.swift

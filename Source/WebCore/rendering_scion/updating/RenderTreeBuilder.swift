@@ -62,8 +62,33 @@ private func resetRendererStateOnDetach(
   willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
   isInternalMove: RenderTreeBuilder.IsInternalMove
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if child.isFloatingOrOutOfFlowPositioned() {
+    (child as! RenderBoxWrapper).removeFloatingOrPositionedChildFromBlockLists()
+  } else if let parentFlexibleBox = parent as? RenderFlexibleBoxWrapper {
+    if let childBox = child as? RenderBoxWrapper {
+      parentFlexibleBox.clearCachedFlexItemIntrinsicContentLogicalHeight(flexItem: childBox)
+      parentFlexibleBox.clearCachedMainSizeForFlexItem(flexItem: childBox)
+    }
+  }
+
+  if willBeDestroyed == .No {
+    child.setNeedsLayoutAndPrefWidthsRecalc()
+  }
+
+  // If we have a line box wrapper, delete it.
+  if let textRenderer = child as? RenderTextWrapper {
+    textRenderer.removeAndDestroyLegacyTextBoxes()
+  }
+
+  if let listItemRenderer = child as? RenderListItemWrapper, isInternalMove == .No {
+    listItemRenderer.updateListMarkerNumbers()
+  }
+
+  // If child is the start or end of the selection, then clear the selection to
+  // avoid problems of invalid pointers.
+  if willBeDestroyed == .Yes && child.isSelectionBorder() {
+    parent.frame().selection().setNeedsSelectionUpdate()
+  }
 }
 
 class RenderTreeBuilder {

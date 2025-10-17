@@ -28,4 +28,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderFlexibleBoxWrapper: RenderBlockWrapper {}
+class RenderFlexibleBoxWrapper: RenderBlockWrapper {
+  func clearCachedMainSizeForFlexItem(flexItem: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearCachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

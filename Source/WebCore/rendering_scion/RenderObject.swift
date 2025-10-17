@@ -537,6 +537,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isSelectionBorder() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasNonVisibleOverflow() -> Bool {
     return wk_interop.RenderObject_hasNonVisibleOverflow(p)
   }
@@ -732,6 +737,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func repaint(forceRepaint: ForceRepaint = .No) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFloatingOrOutOfFlowPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
