@@ -58,6 +58,31 @@ class RenderTreePosition {
   }
 
   func nextSiblingRenderer(node: NodeWrapper) -> RenderObjectWrapper? {
+    assert(node.renderer() == nil)
+
+    let parentElement = parent.element()
+    if parentElement == nil {
+      return nil
+    }
+    // FIXME: PlugingReplacement shadow trees are very wrong.
+    if CPtrToInt(parentElement?.p) == CPtrToInt(node.p) {
+      return nil
+    }
+
+    var elementStack: [ElementWrapper] = []
+
+    // In the common case ancestor == parentElement immediately and this just pushes parentElement into stack.
+    var ancestor = node.parentElementInComposedTree()
+    while true {
+      elementStack.append(ancestor!)
+      if ancestor?.p == parentElement?.p {
+        break
+      }
+      ancestor = ancestor!.parentElementInComposedTree()
+      assert(ancestor != nil)
+    }
+    elementStack.reverse()
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
