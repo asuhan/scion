@@ -611,6 +611,19 @@ class RenderTreeBuilder {
     from: RenderBlockWrapper, to: RenderBlockWrapper,
     normalizeAfterInsertion: NormalizeAfterInsertion
   ) {
+    if from is RenderBlockFlowWrapper {
+      blockFlowBuilder.moveAllChildrenIncludingFloats(
+        from: from as! RenderBlockFlowWrapper, to: to,
+        normalizeAfterInsertion: normalizeAfterInsertion)
+      return
+    }
+    moveAllChildren(from: from, to: to, normalizeAfterInsertion: normalizeAfterInsertion)
+  }
+
+  func moveAllChildren(
+    from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper,
+    normalizeAfterInsertion: NormalizeAfterInsertion
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -732,6 +745,7 @@ class RenderTreeBuilder {
   let multiColumnBuilder: MultiColumn
   private let formControlsBuilder: FormControls
   private let blockBuilder: Block
+  private let blockFlowBuilder: BlockFlow
   private let inlineBuilder: Inline
   private let svgBuilder: SVG
   private let continuationBuilder: Continuation

@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     RenderTreeBuilder.swift
     RenderTreeBuilderBlock.swift
+    RenderTreeBuilderBlockFlow.swift
     RenderTreeBuilderContinuation.swift
     RenderTreeBuilderFirstLetter.swift
     RenderTreeBuilderFormControls.swift

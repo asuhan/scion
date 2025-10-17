@@ -104,6 +104,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func addFloatsToNewParent(toBlockFlow: RenderBlockFlowWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func endPaddingWidthForCaret() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(p))
   }
