@@ -365,8 +365,8 @@ class RenderTreeBuilder {
   }
 
   private func childFlowStateChangesAndNoLongerAffectsParentBlock(child: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(child.parent() != nil)
+    removeAnonymousWrappersForInlineChildrenIfNeeded(parent: child.parent()!)
   }
 
   private func childFlowStateChangesAndAffectsParentBlock(child: RenderElementWrapper) {
@@ -569,6 +569,58 @@ class RenderTreeBuilder {
   private func removeFloatingObjects(renderer: RenderBlockWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func removeAnonymousWrappersForInlineChildrenIfNeeded(parent: RenderElementWrapper) {
+    let blockParent = parent as? RenderBlockWrapper
+    if blockParent == nil || !blockParent!.canDropAnonymousBlockChild() {
+      return
+    }
+
+    // We have changed to floated or out-of-flow positioning so maybe all our parent's
+    // children can be inline now. Bail if there are any block children left on the line,
+    // otherwise we can proceed to stripping solitary anonymous wrappers from the inlines.
+    // FIXME: We should also handle split inlines here - we exclude them at the moment by returning
+    // if we find a continuation.
+    var shouldAllChildrenBeInline: Bool? = nil
+    var current = blockParent!.firstChild()
+    while current != nil {
+      if current!.style().isFloating() || current!.style().hasOutOfFlowPosition() {
+        current = current!.nextSibling()
+        continue
+      }
+      if !current!.isAnonymousBlock() || (current as! RenderBlockWrapper).isContinuation() {
+        return
+      }
+      // Anonymous block not in continuation. Check if it holds a set of inline or block children and try not to mix them.
+      let firstChild = current!.firstChildSlow()
+      if firstChild == nil {
+        current = current!.nextSibling()
+        continue
+      }
+      let isInlineLevelBox = firstChild!.isInline()
+      if shouldAllChildrenBeInline == nil {
+        shouldAllChildrenBeInline = isInlineLevelBox
+        current = current!.nextSibling()
+        continue
+      }
+      // Mixing inline and block level boxes?
+      if shouldAllChildrenBeInline! != isInlineLevelBox {
+        return
+      }
+      current = current!.nextSibling()
+    }
+
+    var next: RenderObjectWrapper? = nil
+    current = blockParent!.firstChild()
+    while current != nil {
+      next = current!.nextSibling()
+      if current!.isAnonymousBlock() {
+        blockBuilder.dropAnonymousBoxChild(
+          parent: blockParent!, child: current as! RenderBlockWrapper)
+      }
+      current = next
+    }
   }
 
   private func reportVisuallyNonEmptyContent(
