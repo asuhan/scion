@@ -29,8 +29,8 @@ class RenderTreePosition {
   }
 
   func nextSibling() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasValidNextSibling)
+    return m_nextSibling
   }
 
   func computeNextSibling(node: NodeWrapper) {
@@ -47,14 +47,15 @@ class RenderTreePosition {
     hasValidNextSibling = true
   }
 
-  func invalidateNextSibling() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func invalidateNextSibling() { hasValidNextSibling = false }
 
   func invalidateNextSibling(siblingRenderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasValidNextSibling {
+      return
+    }
+    if CPtrToInt(m_nextSibling?.p) == CPtrToInt(siblingRenderer.p) {
+      hasValidNextSibling = false
+    }
   }
 
   func nextSiblingRenderer(node: NodeWrapper) -> RenderObjectWrapper? {
