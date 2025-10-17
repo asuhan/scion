@@ -34,8 +34,17 @@ class RenderTreePosition {
   }
 
   func computeNextSibling(node: NodeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(node.renderer() == nil)
+    if hasValidNextSibling {
+      assertionLimitCounter += 1
+      let skipAssert =
+        parent.isRenderView() || assertionLimitCounter > RenderTreePosition.oNSquaredAvoidanceLimit
+      assert(
+        skipAssert || CPtrToInt(nextSiblingRenderer(node: node)?.p) == CPtrToInt(m_nextSibling?.p))
+      return
+    }
+    m_nextSibling = nextSiblingRenderer(node: node)
+    hasValidNextSibling = true
   }
 
   func invalidateNextSibling() {
@@ -48,5 +57,14 @@ class RenderTreePosition {
     fatalError("Not implemented")
   }
 
+  func nextSiblingRenderer(node: NodeWrapper) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let parent: RenderElementWrapper
+  private var m_nextSibling: RenderObjectWrapper? = nil
+  private var hasValidNextSibling = false
+  private var assertionLimitCounter = 0
+  private static let oNSquaredAvoidanceLimit = 20
 }
