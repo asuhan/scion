@@ -30,8 +30,31 @@ enum IsRemoval {
 }
 
 private func invalidateLineLayout(renderer: RenderObjectWrapper, isRemoval: IsRemoval) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let container = LayoutIntegration.LineLayout.blockContainer(renderer: renderer)
+  if container == nil {
+    return
+  }
+  if let inlineLayout = container!.inlineLayout(),
+    shouldInvalidateLineLayoutPath(
+      inlineLayout: inlineLayout, renderer: renderer, isRemoval: isRemoval, container: container!)
+  {
+    container!.invalidateLineLayoutPath(invalidationReason: .InsertionOrRemoval)
+  }
+}
+
+private func shouldInvalidateLineLayoutPath(
+  inlineLayout: LayoutIntegration.LineLayout, renderer: RenderObjectWrapper, isRemoval: IsRemoval,
+  container: RenderBlockFlowWrapper
+) -> Bool {
+  if LayoutIntegration.LineLayout.shouldInvalidateLineLayoutPathAfterTreeMutation(
+    parent: container, renderer: renderer, lineLayout: inlineLayout, isRemoval: isRemoval == .Yes)
+  {
+    return true
+  }
+  if isRemoval == .Yes {
+    return !inlineLayout.removedFromTree(parent: renderer.parent()!, child: renderer)
+  }
+  return !inlineLayout.insertedIntoTree(parent: renderer.parent()!, child: renderer)
 }
 
 private func resetRendererStateOnDetach(

@@ -67,6 +67,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
 
+  enum InvalidationReason {
+    case StyleChange
+    case InsertionOrRemoval  // renderer gets constructed/goes away
+    case ContentChange  // existing renderer gets changed (text content only atm)
+  }
+
+  func invalidateLineLayoutPath(invalidationReason: InvalidationReason) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func svgTextLayout() -> LegacyLineLayout? {
     switch lineLayout {
     case .Legacy(let layout):
