@@ -43,6 +43,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func createAnonymousBlock(display: DisplayType = .Block) -> RenderBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Fieldset legends that are taller than the fieldset border add in intrinsic border
   // in order to ensure that content gets properly pushed down across all layout systems
   // (flexbox, block, etc.)

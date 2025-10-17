@@ -227,6 +227,11 @@ extension RenderTreeBuilder {
       child.deleteLines()
     }
 
+    func childBecameNonInline(parent: RenderBlockWrapper, child: RenderElementWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private let builder: RenderTreeBuilder
   }
 }

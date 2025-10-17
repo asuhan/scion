@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     RenderTreeBuilderBlock.swift
     RenderTreeBuilderFirstLetter.swift
     RenderTreeBuilderFormControls.swift
+    RenderTreeBuilderInline.swift
     RenderTreeBuilderList.swift
     RenderTreeBuilderMultiColumn.swift
     RenderTreeBuilderSVG.swift

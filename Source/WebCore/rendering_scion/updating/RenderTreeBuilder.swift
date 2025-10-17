@@ -370,8 +370,28 @@ class RenderTreeBuilder {
   }
 
   private func childFlowStateChangesAndAffectsParentBlock(child: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !child.isInline() {
+      let parent = child.parent()!
+      if let parentBlockRenderer = parent as? RenderBlockWrapper {
+        blockBuilder.childBecameNonInline(parent: parentBlockRenderer, child: child)
+      } else if let parentInlineRenderer = parent as? RenderInlineWrapper {
+        inlineBuilder.childBecameNonInline(parent: parentInlineRenderer, child: child)
+      }
+      // WARNING: original parent might be deleted at this point.
+      if let newParent = child.parent(), CPtrToInt(newParent.p) != CPtrToInt(parent.p) {
+        if let gridRenderer = newParent as? RenderGridWrapper {
+          // We need to re-run the grid items placement if it had gained a new item.
+          gridRenderer.dirtyGrid()
+        }
+      }
+      return
+    }
+    // An anonymous block must be made to wrap this inline.
+    let parent = child.parent()!
+    let block = (parent as! RenderBlockWrapper).createAnonymousBlock()
+    attachToRenderElementInternal(parent: parent, child: block, beforeChild: child)
+    let thisToMove = detachFromRenderElement(parent: parent, child: child, willBeDestroyed: .No)
+    attachToRenderElementInternal(parent: block!, child: thisToMove)
   }
 
   func attachToRenderElementInternal(
@@ -604,6 +624,7 @@ class RenderTreeBuilder {
   let multiColumnBuilder: MultiColumn
   private let formControlsBuilder: FormControls
   private let blockBuilder: Block
+  private let inlineBuilder: Inline
   private let svgBuilder: SVG
   private let internalMovesType: IsInternalMove = .No
   private let tearDownType: TearDownType = .Root
