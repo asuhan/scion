@@ -696,8 +696,9 @@ class RenderTreeBuilder {
     from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper,
     beforeChild: RenderObjectWrapper?, normalizeAfterInsertion: NormalizeAfterInsertion
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    moveChildren(
+      from: from, to: to, startChild: from.firstChild(), endChild: nil, beforeChild: beforeChild,
+      normalizeAfterInsertion: normalizeAfterInsertion)
   }
 
   func removeFloatingObjects(renderer: RenderBlockWrapper) {
