@@ -82,6 +82,7 @@ target_sources(layout_scion PRIVATE
     RenderTableRow.swift
     RenderText.swift
     RenderTheme.swift
+    RenderTreeMutationDisallowedScope.swift
     RenderVideo.swift
     RenderView.swift
     RenderViewTransitionCapture.swift

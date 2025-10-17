@@ -179,8 +179,57 @@ class RenderTreeBuilder {
   func destroy(
     renderer: RenderObjectWrapper, canCollapseAnonymousBlock: CanCollapseAnonymousBlock = .Yes
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(RenderTreeMutationDisallowedScope.isMutationAllowed())
+    assert(renderer.parent() != nil)
+
+    RenderTreeBuilder.notifyDescendantRenderersBeforeSubtreeTearDownIfApplicable(renderer: renderer)
+
+    let toDestroy = detach(
+      parent: renderer.parent()!, child: renderer, willBeDestroyed: .Yes,
+      canCollapseAnonymousBlock: canCollapseAnonymousBlock)
+
+    if let textFragment = renderer as? RenderTextFragmentWrapper {
+      firstLetterBuilder.cleanupOnDestroy(textFragment: textFragment)
+    }
+
+    if let renderBox = renderer as? RenderBoxModelObjectWrapper {
+      continuationBuilder.cleanupOnDestroy(renderer: renderBox)
+    }
+
+    // FIXME: webkit.org/b/182909.
+    tearDownSubTreeIfApplicable(toDestroy: toDestroy)
+  }
+
+  private static func notifyDescendantRenderersBeforeSubtreeTearDownIfApplicable(
+    renderer: RenderObjectWrapper
+  ) {
+    if renderer.renderTreeBeingDestroyed() {
+      return
+    }
+    if let rendererToDelete = renderer as? RenderElementWrapper,
+      rendererToDelete.firstChild() != nil
+    {
+      for descendant: RenderObjectWrapper in descendantsOfType(root: rendererToDelete) {
+        descendant.willBeRemovedFromTree()
+      }
+    }
+  }
+
+  private func tearDownSubTreeIfApplicable(toDestroy: RenderObjectWrapper?) {
+    let rendererToDelete = toDestroy as? RenderElementWrapper
+    if rendererToDelete == nil {
+      return
+    }
+
+    let _ = SetForScope(
+      scopedVariable: &tearDownType, newValue: TearDownType.SubtreeWithRootAlreadyDetached)
+    while rendererToDelete!.firstChild() != nil {
+      let firstChild = rendererToDelete!.firstChild()!
+      if let node = firstChild.node() {
+        node.setRenderer(renderer: nil)
+      }
+      destroy(renderer: firstChild)
+    }
   }
 
   // NormalizeAfterInsertion::Yes ensures that the destination subtree is consistent after the insertion (anonymous wrappers etc).
@@ -678,8 +727,9 @@ class RenderTreeBuilder {
   private let blockBuilder: Block
   private let inlineBuilder: Inline
   private let svgBuilder: SVG
+  private let continuationBuilder: Continuation
   private let internalMovesType: IsInternalMove = .No
-  private let tearDownType: TearDownType = .Root
+  private var tearDownType: TearDownType = .Root
   private let subtreeDestroyRoot: RenderElementWrapper? = nil
   let anonymousDestroyRoot: RenderObjectWrapper? = nil
 }

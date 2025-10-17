@@ -9,6 +9,7 @@ target_sources(layout_scion PRIVATE
     OptionalComparison.swift
     PriorityQueue.swift
     SaturatedArithmetic.swift
+    SetForScope.swift
     WeakNullableRef.swift
 )
 add_subdirectory(text)

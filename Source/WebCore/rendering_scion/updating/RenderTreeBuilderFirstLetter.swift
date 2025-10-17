@@ -160,6 +160,11 @@ extension RenderTreeBuilder {
       }
     }
 
+    func cleanupOnDestroy(textFragment: RenderTextFragmentWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private func updateStyle(
       firstLetterBlock: RenderBlockWrapper, currentChild: RenderObjectWrapper
     ) {
