@@ -25,4 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class PseudoElementWrapper: ElementWrapper {}
+final class PseudoElementWrapper: ElementWrapper {
+  func hostElement() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

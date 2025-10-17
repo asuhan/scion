@@ -78,6 +78,11 @@ class ComposedTreeDescendantAdapter {
     fatalError("Not implemented")
   }
 
+  func at(child: NodeWrapper) -> ComposedTreeIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let parent: ContainerNodeWrapper
 }
 

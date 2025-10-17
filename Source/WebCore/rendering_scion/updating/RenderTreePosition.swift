@@ -83,8 +83,89 @@ class RenderTreePosition {
     }
     elementStack.reverse()
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let composedDescendants = composedTreeDescendants(parent: parentElement!)
+
+    let it = RenderTreePosition.initializeIteratorConsideringPseudoElements(
+      node: node, parentElement: parentElement!, composedDescendants: composedDescendants,
+      elementStack: &elementStack)
+
+    while it != composedDescendants.end() {
+      if let renderer = RenderTreePosition.popCheckingForAfterPseudoElementRenderers(
+        iteratorDepthToMatch: it.depth(), elementStack: &elementStack)
+      {
+        return renderer
+      }
+
+      if let renderer = (*it).renderer() {
+        return renderer
+      }
+
+      if let element = *it as? ElementWrapper {
+        if element.hasDisplayContents() {
+          if let renderer = RenderTreePosition.pushCheckingForAfterPseudoElementRenderer(
+            element: element, elementStack: &elementStack)
+          {
+            return renderer
+          }
+          it.traverseNext()
+          continue
+        }
+      }
+
+      it.traverseNextSkippingChildren()
+    }
+
+    return RenderTreePosition.popCheckingForAfterPseudoElementRenderers(
+      iteratorDepthToMatch: 0, elementStack: &elementStack)
+  }
+
+  private static func initializeIteratorConsideringPseudoElements(
+    node: NodeWrapper, parentElement: ElementWrapper,
+    composedDescendants: ComposedTreeDescendantAdapter, elementStack: inout [ElementWrapper]
+  ) -> ComposedTreeIterator {
+    if let pseudoElement = node as? PseudoElementWrapper {
+      let host = pseudoElement.hostElement()
+      if node.isBeforePseudoElement() {
+        if CPtrToInt(host?.p) != CPtrToInt(parentElement.p) {
+          return composedDescendants.at(child: host!).traverseNext()
+        }
+        return composedDescendants.begin()
+      }
+      assert(node.isAfterPseudoElement())
+      elementStack.removeLast()
+      if CPtrToInt(host?.p) != CPtrToInt(parentElement.p) {
+        return composedDescendants.at(child: host!).traverseNextSkippingChildren()
+      }
+      return composedDescendants.end()
+    }
+    return composedDescendants.at(child: node).traverseNextSkippingChildren()
+  }
+
+  private static func pushCheckingForAfterPseudoElementRenderer(
+    element: ElementWrapper, elementStack: inout [ElementWrapper]
+  ) -> RenderElementWrapper? {
+    assert(!element.isPseudoElement())
+    if let before = element.beforePseudoElement() {
+      if let renderer = before.containerRenderer() {
+        return renderer
+      }
+    }
+    elementStack.append(element)
+    return nil
+  }
+
+  private static func popCheckingForAfterPseudoElementRenderers(
+    iteratorDepthToMatch: UInt32, elementStack: inout [ElementWrapper]
+  ) -> RenderElementWrapper? {
+    while elementStack.count > iteratorDepthToMatch {
+      let element = elementStack.popLast()!
+      if let after = element.afterPseudoElement() {
+        if let renderer = after.containerRenderer() {
+          return renderer
+        }
+      }
+    }
+    return nil
   }
 
   let parent: RenderElementWrapper

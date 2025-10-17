@@ -39,6 +39,16 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func isBeforePseudoElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isAfterPseudoElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasCustomStyleResolveCallbacks() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
