@@ -419,6 +419,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func isInlineBlockOrInlineTable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false

@@ -57,6 +57,13 @@ private func shouldInvalidateLineLayoutPath(
   return !inlineLayout.insertedIntoTree(parent: renderer.parent()!, child: renderer)
 }
 
+private func getInlineRun(start: RenderObjectWrapper?, boundary: RenderObjectWrapper?) -> (
+  RenderObjectWrapper?, RenderObjectWrapper?
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func resetRendererStateOnDetach(
   parent: RenderElementWrapper, child: RenderObjectWrapper,
   willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,
@@ -709,8 +716,46 @@ class RenderTreeBuilder {
   func createAnonymousWrappersForInlineContent(
     parent: RenderBlockWrapper, insertionPoint: RenderObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // makeChildrenNonInline takes a block whose children are *all* inline and it
+    // makes sure that inline children are coalesced under anonymous
+    // blocks. If |insertionPoint| is defined, then it represents the insertion point for
+    // the new block child that is causing us to have to wrap all the inlines. This
+    // means that we cannot coalesce inlines before |insertionPoint| with inlines following
+    // |insertionPoint|, because the new child is going to be inserted in between the inlines,
+    // splitting them.
+    assert(parent.isInlineBlockOrInlineTable() || !parent.isInline())
+    assert(insertionPoint == nil || CPtrToInt(insertionPoint!.parent()?.p) == CPtrToInt(parent.p))
+
+    parent.setChildrenInline(b: false)
+
+    var child = parent.firstChild()
+    if child == nil {
+      return
+    }
+
+    parent.deleteLines()
+
+    while child != nil {
+      let (inlineRunStart, inlineRunEnd) = getInlineRun(start: child, boundary: insertionPoint)
+
+      if inlineRunStart == nil {
+        break
+      }
+
+      child = inlineRunEnd!.nextSibling()
+
+      let block = parent.createAnonymousBlock()!
+      attachToRenderElementInternal(parent: parent, child: block, beforeChild: inlineRunStart)
+      moveChildren(
+        from: parent, to: block, startChild: inlineRunStart, endChild: child,
+        normalizeAfterInsertion: .No)
+    }
+    var c = parent.firstChild()
+    while c != nil {
+      assert(!c!.isInline())
+      c = c!.nextSibling()
+    }
+    parent.repaint()
   }
 
   private func removeAnonymousWrappersForInlineChildrenIfNeeded(parent: RenderElementWrapper) {

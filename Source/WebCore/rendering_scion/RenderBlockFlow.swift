@@ -62,9 +62,19 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func deleteLines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func insertFloatingObjectForIFC(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper {
     return FloatingObjectWrapper(
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
+  }
+
+  override func setChildrenInline(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   enum InvalidationReason {

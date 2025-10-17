@@ -28,6 +28,11 @@
  */
 
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
+  override func deleteLines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collectLayerFragments(
     layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
