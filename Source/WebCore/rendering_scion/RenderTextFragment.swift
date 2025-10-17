@@ -39,4 +39,9 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func blockForAccompanyingFirstLetter() -> RenderBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

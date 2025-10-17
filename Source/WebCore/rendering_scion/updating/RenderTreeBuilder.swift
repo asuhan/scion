@@ -607,6 +607,70 @@ class RenderTreeBuilder {
     return takenChild
   }
 
+  private func move(
+    from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper, child: RenderObjectWrapper,
+    beforeChild: RenderObjectWrapper?, normalizeAfterInsertion: NormalizeAfterInsertion
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Move all of the kids from |startChild| up to but excluding |endChild|. 0 can be passed as the |endChild| to denote
+  // that all the kids from |startChild| onwards should be moved.
+  private func moveChildren(
+    from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper,
+    startChild: RenderObjectWrapper?, endChild: RenderObjectWrapper?,
+    normalizeAfterInsertion: NormalizeAfterInsertion
+  ) {
+    moveChildren(
+      from: from, to: to, startChild: startChild, endChild: endChild, beforeChild: nil,
+      normalizeAfterInsertion: normalizeAfterInsertion)
+  }
+
+  private func moveChildren(
+    from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper,
+    startChild: RenderObjectWrapper?, endChild: RenderObjectWrapper?,
+    beforeChild: RenderObjectWrapper?, normalizeAfterInsertion: NormalizeAfterInsertion
+  ) {
+    // This condition is rarely hit since this function is usually called on
+    // anonymous blocks which can no longer carry positioned objects (see r120761)
+    // or when fullRemoveInsert is false.
+    if normalizeAfterInsertion == .Yes, let blockFlow = from as? RenderBlockFlowWrapper {
+      blockFlow.removePositionedObjects(newContainingBlockCandidate: nil)
+      RenderBlockWrapper.removePercentHeightDescendantIfNeeded(descendant: blockFlow)
+      removeFloatingObjects(renderer: blockFlow)
+    }
+
+    assert(beforeChild == nil || CPtrToInt(to.p) == CPtrToInt(beforeChild?.parent()?.p))
+    var child = startChild
+    while child != nil && CPtrToInt(child!.p) != CPtrToInt(endChild?.p) {
+      // Save our next sibling as moveChildTo will clear it.
+      var nextSibling = child!.nextSibling()
+
+      // FIXME: This logic here fails to detect the first letter in certain cases
+      // and skips a valid sibling renderer (see webkit.org/b/163737).
+      // Check to make sure we're not saving the firstLetter as the nextSibling.
+      // When the |child| object will be moved, its firstLetter will be recreated,
+      // so saving it now in nextSibling would leave us with a stale object.
+      if child is RenderTextFragmentWrapper && nextSibling is RenderTextWrapper {
+        var firstLetterObj: RenderObjectWrapper? = nil
+        if let block = (child as! RenderTextFragmentWrapper).blockForAccompanyingFirstLetter() {
+          firstLetterObj = block.getFirstLetter().firstLetter
+        }
+
+        // This is the first letter, skip it.
+        if CPtrToInt(firstLetterObj?.p) == CPtrToInt(nextSibling?.p) {
+          nextSibling = nextSibling!.nextSibling()
+        }
+      }
+
+      move(
+        from: from, to: to, child: child!, beforeChild: beforeChild,
+        normalizeAfterInsertion: normalizeAfterInsertion)
+      child = nextSibling
+    }
+  }
+
   func moveAllChildrenIncludingFloats(
     from: RenderBlockWrapper, to: RenderBlockWrapper,
     normalizeAfterInsertion: NormalizeAfterInsertion

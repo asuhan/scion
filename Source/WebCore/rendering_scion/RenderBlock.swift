@@ -27,9 +27,27 @@ enum CaretType {
   case DragCaret
 }
 
+enum ContainingBlockState {
+  case NewContainingBlock
+  case SameContainingBlock
+}
+
 class RenderBlockWrapper: RenderBoxWrapper {
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func deleteLines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removePositionedObjects(
+    newContainingBlockCandidate: RenderBlockWrapper?,
+    containingBlockState: ContainingBlockState = .SameContainingBlock
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
