@@ -47,6 +47,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func hasPositionedObjects() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

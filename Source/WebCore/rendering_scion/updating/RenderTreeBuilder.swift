@@ -618,8 +618,44 @@ class RenderTreeBuilder {
     from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper, child: RenderObjectWrapper,
     beforeChild: RenderObjectWrapper?, normalizeAfterInsertion: NormalizeAfterInsertion
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We assume that callers have cleared their positioned objects list for child moves so the
+    // positioned renderer maps don't become stale. It would be too slow to do the map lookup on each call.
+    assert(
+      normalizeAfterInsertion == .No || !(from is RenderBlockWrapper)
+        || !(from as! RenderBlockWrapper).hasPositionedObjects())
+
+    if normalizeAfterInsertion == .Yes && from is RenderBlockWrapper && child.isRenderBox() {
+      RenderBlockWrapper.removePercentHeightDescendantIfNeeded(
+        descendant: child as! RenderBoxWrapper)
+    }
+    if normalizeAfterInsertion == .Yes && (to.isRenderBlock() || to.isRenderInline()) {
+      // Takes care of adding the new child correctly if toBlock and fromBlock
+      // have different kind of children (block vs inline).
+      let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)
+      attach(parent: to, child: childToMove, beforeChild: beforeChild)
+    } else {
+      let _ = SetForScope(scopedVariable: &internalMovesType, newValue: IsInternalMove.Yes)
+      let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)
+      attachToRenderElementInternal(parent: to, child: childToMove, beforeChild: beforeChild)
+    }
+
+    // When moving a subtree out of a BFC we need to make sure that the line boxes generated for the inline tree are not accessible anymore from the renderers.
+    // Let's find the BFC root and nuke the inline tree (At some point we are going to destroy the subtree instead of moving these renderers around.)
+    if child is RenderInlineWrapper {
+      RenderTreeBuilder.findBFCRootAndDestroyInlineTree(from: from)
+    }
+  }
+
+  private static func findBFCRootAndDestroyInlineTree(from: RenderBoxModelObjectWrapper) {
+    var containingBlock: RenderBoxModelObjectWrapper? = from
+    while containingBlock != nil {
+      containingBlock!.setNeedsLayout()
+      if let blockFlow = containingBlock as? RenderBlockFlowWrapper {
+        blockFlow.deleteLines()
+        break
+      }
+      containingBlock = containingBlock!.containingBlock()
+    }
   }
 
   // Move all of the kids from |startChild| up to but excluding |endChild|. 0 can be passed as the |endChild| to denote
@@ -867,7 +903,7 @@ class RenderTreeBuilder {
   private let inlineBuilder: Inline
   private let svgBuilder: SVG
   private let continuationBuilder: Continuation
-  private let internalMovesType: IsInternalMove = .No
+  private var internalMovesType: IsInternalMove = .No
   private var tearDownType: TearDownType = .Root
   private let subtreeDestroyRoot: RenderElementWrapper? = nil
   let anonymousDestroyRoot: RenderObjectWrapper? = nil
