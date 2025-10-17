@@ -615,7 +615,14 @@ class RenderTreeBuilder {
     fatalError("Not implemented")
   }
 
-  private func removeFloatingObjects(renderer: RenderBlockWrapper) {
+  func removeFloatingObjects(renderer: RenderBlockWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func createAnonymousWrappersForInlineContent(
+    parent: RenderBlockWrapper, insertionPoint: RenderObjectWrapper? = nil
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

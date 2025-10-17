@@ -228,8 +228,33 @@ extension RenderTreeBuilder {
     }
 
     func childBecameNonInline(parent: RenderBlockWrapper, child: RenderElementWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.createAnonymousWrappersForInlineContent(parent: parent)
+      if parent.isAnonymousBlock() && parent.parent() is RenderBlockWrapper {
+        removeLeftoverAnonymousBlock(anonymousBlock: parent)
+      }
+      // parent may be dead here
+    }
+
+    private func removeLeftoverAnonymousBlock(anonymousBlock: RenderBlockWrapper) {
+      assert(anonymousBlock.isAnonymousBlock())
+      assert(!anonymousBlock.childrenInline())
+      assert(anonymousBlock.parent() != nil)
+
+      if anonymousBlock.continuation() != nil {
+        return
+      }
+
+      let parent = anonymousBlock.parent()!
+      if parent is RenderButtonWrapper || parent is RenderTextControlWrapper {
+        return
+      }
+
+      builder.removeFloatingObjects(renderer: anonymousBlock)
+      // FIXME: This should really just be a moveAllChilrenTo (see webkit.org/b/182495)
+      moveAllChildrenToInternal(from: anonymousBlock, newParent: parent)
+      let _ = builder.detachFromRenderElement(
+        parent: parent, child: anonymousBlock, willBeDestroyed: .Yes)
+      // anonymousBlock is dead here.
     }
 
     private let builder: RenderTreeBuilder
