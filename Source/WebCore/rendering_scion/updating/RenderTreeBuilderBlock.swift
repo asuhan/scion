@@ -81,6 +81,18 @@ private func continuationBefore(parent: RenderBlockWrapper, beforeChild: RenderO
   fatalError("Not implemented")
 }
 
+struct ParentAndBeforeChild {
+  let parent: RenderElementWrapper?
+  let beforeChild: RenderObjectWrapper?
+}
+
+private func findParentAndBeforeChildForNonSibling(
+  parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper
+) -> ParentAndBeforeChild? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class Block {
     init(builder: RenderTreeBuilder) {
@@ -100,6 +112,38 @@ extension RenderTreeBuilder {
     func attachIgnoringContinuation(
       parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
     ) {
+      let parentAndBeforeChildMayNeedAdjustment =
+        beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p)
+      var beforeChild = beforeChild
+      if parentAndBeforeChildMayNeedAdjustment {
+        if let parentAndBeforeChild = findParentAndBeforeChildForNonSibling(
+          parent: parent, child: child, beforeChild: beforeChild!)
+        {
+          if parentAndBeforeChild.parent != nil {
+            builder.attach(
+              parent: parentAndBeforeChild.parent!, child: child,
+              beforeChild: parentAndBeforeChild.beforeChild)
+            return
+          }
+          beforeChild = builder.splitAnonymousBoxesAroundChild(
+            parent: parent, originalBeforeChild: beforeChild!)
+          assert(CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p))
+        }
+      }
+
+      if child.isFloatingOrOutOfFlowPositioned() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      // Parent and inflow child match.
+      if (parent.childrenInline() && child.isInline())
+        || (!parent.childrenInline() && !child.isInline())
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

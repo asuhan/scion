@@ -1114,6 +1114,13 @@ class RenderTreeBuilder {
     }
   }
 
+  func splitAnonymousBoxesAroundChild(
+    parent: RenderBoxWrapper, originalBeforeChild: RenderObjectWrapper
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func createAnonymousWrappersForInlineContent(
     parent: RenderBlockWrapper, insertionPoint: RenderObjectWrapper? = nil
   ) {
