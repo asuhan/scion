@@ -161,10 +161,10 @@ class RenderTreeBuilder {
   }
 
   func attach(
-    parent: RenderElementWrapper, child: RenderObjectWrapper?,
+    parent: RenderElementWrapper, child: RenderObjectWrapper,
     beforeChild: RenderObjectWrapper? = nil
   ) {
-    reportVisuallyNonEmptyContent(parent: parent, child: child!)
+    reportVisuallyNonEmptyContent(parent: parent, child: child)
     attachInternal(parent: parent, child: child, beforeChild: beforeChild)
   }
 
@@ -568,7 +568,7 @@ class RenderTreeBuilder {
   }
 
   private func attachInternal(
-    parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    parent: RenderElementWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
   ) {
     assert(CPtrToInt(parent.view().p) == CPtrToInt(view.p))
 
@@ -594,7 +594,7 @@ class RenderTreeBuilder {
 
     if parent.style().display() == .Ruby || parent.style().display() == .RubyBlock {
       let parentCandidate = rubyBuilder!.findOrCreateParentForStyleBasedRubyChild(
-        parent: parent, child: child!, beforeChild: &beforeChild)
+        parent: parent, child: child, beforeChild: &beforeChild)
       if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
         rubyBuilder!.attachForStyleBasedRuby(
           parent: parentCandidate, child: child, beforeChild: beforeChild)
@@ -612,7 +612,7 @@ class RenderTreeBuilder {
 
     if let row = parent as? RenderTableRowWrapper {
       let parentCandidate = tableBuilder!.findOrCreateParentForChild(
-        parent: row, child: child!, beforeChild: &beforeChild)
+        parent: row, child: child, beforeChild: &beforeChild)
       if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
         tableBuilder!.attach(parent: row, child: child, beforeChild: beforeChild)
         return
@@ -624,7 +624,7 @@ class RenderTreeBuilder {
 
     if let tableSection = parent as? RenderTableSectionWrapper {
       let parentCandidate = tableBuilder!.findOrCreateParentForChild(
-        parent: tableSection, child: child!, beforeChild: &beforeChild)
+        parent: tableSection, child: child, beforeChild: &beforeChild)
       if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
         tableBuilder!.attach(parent: tableSection, child: child, beforeChild: beforeChild)
         return
@@ -636,7 +636,7 @@ class RenderTreeBuilder {
 
     if let table = parent as? RenderTableWrapper {
       let parentCandidate = tableBuilder!.findOrCreateParentForChild(
-        parent: table, child: child!, beforeChild: &beforeChild)
+        parent: table, child: child, beforeChild: &beforeChild)
       if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
         tableBuilder!.attach(parent: table, child: child, beforeChild: beforeChild)
         return
@@ -696,7 +696,7 @@ class RenderTreeBuilder {
 
   private func insertRecursiveIfNeeded(
     parent: RenderElementWrapper, parentCandidate: RenderElementWrapper,
-    child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
   ) {
     if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
       // Parents inside multicols can't call internal attach directly.
@@ -754,13 +754,13 @@ class RenderTreeBuilder {
   }
 
   func attachToRenderGrid(
-    parent: RenderGridWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper? = nil
+    parent: RenderGridWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper? = nil
   ) {
     blockBuilder!.attach(parent: parent, child: child, beforeChild: beforeChild)
 
     // Positioned grid items do not take up space or otherwise participate in the layout of the grid,
     // for that reason we don't need to mark the grid as dirty when they are added.
-    if child!.isOutOfFlowPositioned() {
+    if child.isOutOfFlowPositioned() {
       return
     }
 
@@ -770,10 +770,10 @@ class RenderTreeBuilder {
   }
 
   func attachToRenderElement(
-    parent: RenderElementWrapper, child: RenderObjectWrapper?,
+    parent: RenderElementWrapper, child: RenderObjectWrapper,
     beforeChild: RenderObjectWrapper? = nil
   ) {
-    if tableBuilder!.childRequiresTable(parent: parent, child: child!) {
+    if tableBuilder!.childRequiresTable(parent: parent, child: child) {
       var table: RenderTableWrapper? = nil
       let afterChild =
         (beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild())
@@ -782,14 +782,14 @@ class RenderTreeBuilder {
         table = afterChild
       } else {
         table = RenderTableWrapper.createAnonymousWithParentRenderer(parent: parent)
-        attach(parent: parent, child: table, beforeChild: beforeChild)
+        attach(parent: parent, child: table!, beforeChild: beforeChild)
       }
 
       attach(parent: table!, child: child)
       return
     }
     attachToRenderElementInternal(parent: parent, child: child, beforeChild: beforeChild)
-    parent.didAttachChild(child: child!)
+    parent.didAttachChild(child: child)
   }
 
   func attachToRenderElementInternal(
@@ -973,11 +973,11 @@ class RenderTreeBuilder {
     if normalizeAfterInsertion == .Yes && (to.isRenderBlock() || to.isRenderInline()) {
       // Takes care of adding the new child correctly if toBlock and fromBlock
       // have different kind of children (block vs inline).
-      let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)
+      let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)!
       attach(parent: to, child: childToMove, beforeChild: beforeChild)
     } else {
       let _ = SetForScope(scopedVariable: &internalMovesType, newValue: IsInternalMove.Yes)
-      let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)
+      let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)!
       attachToRenderElementInternal(parent: to, child: childToMove, beforeChild: beforeChild)
     }
 

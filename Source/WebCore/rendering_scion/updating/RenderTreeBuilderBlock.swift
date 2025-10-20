@@ -81,7 +81,17 @@ extension RenderTreeBuilder {
     }
 
     func attach(
-      parent: RenderBlockWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+      parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
+    ) {
+      if parent.continuation() != nil && !parent.isAnonymousBlock() {
+        insertChildToContinuation(parent: parent, child: child, beforeChild: beforeChild)
+      } else {
+        attachIgnoringContinuation(parent: parent, child: child, beforeChild: beforeChild)
+      }
+    }
+
+    func attachIgnoringContinuation(
+      parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
     ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -240,6 +250,13 @@ extension RenderTreeBuilder {
         removeLeftoverAnonymousBlock(anonymousBlock: parent)
       }
       // parent may be dead here
+    }
+
+    private func insertChildToContinuation(
+      parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     private func removeLeftoverAnonymousBlock(anonymousBlock: RenderBlockWrapper) {

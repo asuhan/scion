@@ -200,7 +200,7 @@ extension RenderTreeBuilder {
           if let textChild = child as? RenderTextWrapper {
             textChild.removeAndDestroyLegacyTextBoxes()
           }
-          let toMove = builder.detach(parent: firstLetter!, child: child, willBeDestroyed: .No)
+          let toMove = builder.detach(parent: firstLetter!, child: child, willBeDestroyed: .No)!
           builder.attach(parent: newFirstLetter!, child: toMove)
         }
 
@@ -217,7 +217,7 @@ extension RenderTreeBuilder {
         let nextSibling = firstLetter!.nextSibling()
         builder.destroy(renderer: firstLetter!)
         builder.attach(
-          parent: firstLetterContainer, child: newFirstLetter, beforeChild: nextSibling)
+          parent: firstLetterContainer, child: newFirstLetter!, beforeChild: nextSibling)
         return
       }
 
@@ -317,14 +317,14 @@ extension RenderTreeBuilder {
         let remainingText = newRemainingText!
         remainingText.setInlineWrapperForDisplayContents(wrapper: inlineWrapperForDisplayContents)
         builder.attach(
-          parent: textContentParent!, child: newRemainingText, beforeChild: beforeChild)
+          parent: textContentParent!, child: remainingText, beforeChild: beforeChild)
 
         // FIXME: Make attach the final step so that we don't need to keep firstLetter around.
         let firstLetter = newFirstLetter!
         remainingText.setFirstLetter(firstLetter: firstLetter)
         firstLetter.setFirstLetterRemainingText(remainingText: remainingText)
         builder.attach(
-          parent: firstLetterContainer!, child: newFirstLetter, beforeChild: remainingText)
+          parent: firstLetterContainer!, child: firstLetter, beforeChild: remainingText)
 
         // Construct text fragment for the first letter.
         let letter = CreateRenderer.RenderTextFragment(

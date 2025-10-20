@@ -317,12 +317,12 @@ class RenderTreeUpdater {
       builder!.attach(parent: renderTreePosition.parent, child: displayContentsAnonymousWrapper)
 
       textRenderer!.setInlineWrapperForDisplayContents(wrapper: displayContentsAnonymousWrapper)
-      builder!.attach(parent: displayContentsAnonymousWrapper, child: textRenderer)
+      builder!.attach(parent: displayContentsAnonymousWrapper, child: textRenderer!)
       return
     }
 
     builder!.attach(
-      parent: renderTreePosition.parent, child: textRenderer,
+      parent: renderTreePosition.parent, child: textRenderer!,
       beforeChild: renderTreePosition.nextSibling())
 
     if let textManipulationController = document.textManipulationControllerIfExists() {
@@ -498,7 +498,7 @@ class RenderTreeUpdater {
     newRenderer!.initializeStyle()
 
     builder!.attach(
-      parent: insertionPosition.parent, child: newRenderer,
+      parent: insertionPosition.parent, child: newRenderer!,
       beforeChild: insertionPosition.nextSibling())
 
     if let textManipulationController = document.textManipulationControllerIfExists() {
