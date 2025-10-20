@@ -508,6 +508,17 @@ class RenderTreeBuilder {
       return
     }
 
+    if let tableSection = parent as? RenderTableSectionWrapper {
+      let parentCandidate = tableBuilder.findOrCreateParentForChild(
+        parent: tableSection, child: child!, beforeChild: &beforeChild)
+      if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
+        tableBuilder.attach(parent: tableSection, child: child, beforeChild: beforeChild)
+        return
+      }
+      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

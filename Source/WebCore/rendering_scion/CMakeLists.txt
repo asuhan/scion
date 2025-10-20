@@ -80,6 +80,7 @@ target_sources(layout_scion PRIVATE
     RenderTable.swift
     RenderTableCell.swift
     RenderTableRow.swift
+    RenderTableSection.swift
     RenderText.swift
     RenderTheme.swift
     RenderTreeMutationDisallowedScope.swift
