@@ -32,7 +32,38 @@ extension RenderTreeBuilder {
     }
 
     func attach(
+      parent: LegacyRenderSVGRootWrapper, child: RenderObjectWrapper?,
+      beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func attach(
+      parent: LegacyRenderSVGContainer, child: RenderObjectWrapper?,
+      beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func attach(
+      parent: RenderSVGInlineWrapper, child: RenderObjectWrapper?,
+      beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func attach(
       parent: RenderSVGTextWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func attach(
+      parent: RenderSVGRootWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

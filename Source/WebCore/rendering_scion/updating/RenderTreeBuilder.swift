@@ -540,6 +540,26 @@ class RenderTreeBuilder {
       return
     }
 
+    if let container = parent as? LegacyRenderSVGContainer {
+      svgBuilder.attach(parent: container, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let svgInline = parent as? RenderSVGInlineWrapper {
+      svgBuilder.attach(parent: svgInline, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let svgRoot = parent as? RenderSVGRootWrapper {
+      svgBuilder.attach(parent: svgRoot, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let svgRoot = parent as? LegacyRenderSVGRootWrapper {
+      svgBuilder.attach(parent: svgRoot, child: child, beforeChild: beforeChild)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
