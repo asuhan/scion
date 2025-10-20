@@ -71,6 +71,11 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    func childRequiresTable(parent: RenderElementWrapper, child: RenderObjectWrapper) -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: RenderTableCellWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

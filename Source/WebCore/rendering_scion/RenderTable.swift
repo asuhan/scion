@@ -23,6 +23,12 @@
  */
 
 class RenderTableWrapper: RenderBlockWrapper {
+  static func createAnonymousWithParentRenderer(parent: RenderElementWrapper) -> RenderTableWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

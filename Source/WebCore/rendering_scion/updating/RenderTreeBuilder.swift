@@ -758,8 +758,23 @@ class RenderTreeBuilder {
     parent: RenderElementWrapper, child: RenderObjectWrapper?,
     beforeChild: RenderObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if tableBuilder.childRequiresTable(parent: parent, child: child!) {
+      var table: RenderTableWrapper? = nil
+      let afterChild =
+        (beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild())
+        as? RenderTableWrapper
+      if afterChild != nil && afterChild!.isAnonymous() && !afterChild!.isBeforeContent() {
+        table = afterChild
+      } else {
+        table = RenderTableWrapper.createAnonymousWithParentRenderer(parent: parent)
+        attach(parent: parent, child: table, beforeChild: beforeChild)
+      }
+
+      attach(parent: table!, child: child)
+      return
+    }
+    attachToRenderElementInternal(parent: parent, child: child, beforeChild: beforeChild)
+    parent.didAttachChild(child: child!)
   }
 
   func attachToRenderElementInternal(
