@@ -80,6 +80,13 @@ extension RenderTreeBuilder {
       self.builder = builder
     }
 
+    func attach(
+      parent: RenderBlockWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func detach(
       parent: RenderBlockWrapper, oldChild: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed,

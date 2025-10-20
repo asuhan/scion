@@ -560,8 +560,22 @@ class RenderTreeBuilder {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let gridParent = parent as? RenderGridWrapper {
+      attachToRenderGrid(parent: gridParent, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let parentBlock = parent as? RenderBlockWrapper {
+      blockBuilder.attach(parent: parentBlock, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let inlineParent = parent as? RenderInlineWrapper {
+      inlineBuilder.attach(parent: inlineParent, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
   }
 
   private func insertRecursiveIfNeeded(parentCandidate: RenderElementWrapper) {
@@ -608,6 +622,21 @@ class RenderTreeBuilder {
     attachToRenderElementInternal(parent: parent, child: block, beforeChild: child)
     let thisToMove = detachFromRenderElement(parent: parent, child: child, willBeDestroyed: .No)
     attachToRenderElementInternal(parent: block!, child: thisToMove)
+  }
+
+  func attachToRenderGrid(
+    parent: RenderGridWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func attachToRenderElement(
+    parent: RenderElementWrapper, child: RenderObjectWrapper?,
+    beforeChild: RenderObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func attachToRenderElementInternal(
