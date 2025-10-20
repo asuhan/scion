@@ -25,6 +25,11 @@
 
 extension RenderTreeBuilder {
   class Inline {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func attach(
       parent: RenderInlineWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {

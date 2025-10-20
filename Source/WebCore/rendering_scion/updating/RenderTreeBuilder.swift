@@ -141,8 +141,23 @@ private func resetRendererStateOnDetach(
 
 class RenderTreeBuilder {
   init(view: RenderViewWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.view = view
+    firstLetterBuilder = FirstLetter(builder: self)
+    listBuilder = List(builder: self)
+    multiColumnBuilder = MultiColumn(builder: self)
+    tableBuilder = Table(builder: self)
+    rubyBuilder = Ruby(builder: self)
+    formControlsBuilder = FormControls(builder: self)
+    blockBuilder = Block(builder: self)
+    blockFlowBuilder = BlockFlow(builder: self)
+    inlineBuilder = Inline(builder: self)
+    svgBuilder = SVG(builder: self)
+    continuationBuilder = Continuation(builder: self)
+    assert(
+      RenderTreeBuilder.s_current == nil
+        || CPtrToInt(view.p) != CPtrToInt(RenderTreeBuilder.s_current!.view.p))
+    previous = RenderTreeBuilder.s_current
+    RenderTreeBuilder.s_current = self
   }
 
   func attach(
@@ -174,22 +189,22 @@ class RenderTreeBuilder {
     canCollapseAnonymousBlock: CanCollapseAnonymousBlock = .Yes
   ) -> RenderObjectWrapper? {
     if let text = parent as? RenderSVGTextWrapper {
-      return svgBuilder.detach(parent: text, child: child, willBeDestroyed: willBeDestroyed)
+      return svgBuilder!.detach(parent: text, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     if let blockFlow = parent as? RenderBlockFlowWrapper {
-      return blockBuilder.detach(
+      return blockBuilder!.detach(
         parent: blockFlow, child: child, willBeDestroyed: willBeDestroyed,
         canCollapseAnonymousBlock: canCollapseAnonymousBlock)
     }
 
     if let menuList = parent as? RenderMenuListWrapper {
-      return formControlsBuilder.detach(
+      return formControlsBuilder!.detach(
         parent: menuList, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     if let button = parent as? RenderButtonWrapper {
-      return formControlsBuilder.detach(
+      return formControlsBuilder!.detach(
         parent: button, child: child, willBeDestroyed: willBeDestroyed)
     }
 
@@ -198,19 +213,19 @@ class RenderTreeBuilder {
     }
 
     if let svgInline = parent as? RenderSVGInlineWrapper {
-      return svgBuilder.detach(parent: svgInline, child: child, willBeDestroyed: willBeDestroyed)
+      return svgBuilder!.detach(parent: svgInline, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     if let container = parent as? LegacyRenderSVGContainer {
-      return svgBuilder.detach(parent: container, child: child, willBeDestroyed: willBeDestroyed)
+      return svgBuilder!.detach(parent: container, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     if let svgRoot = parent as? LegacyRenderSVGRootWrapper {
-      return svgBuilder.detach(parent: svgRoot, child: child, willBeDestroyed: willBeDestroyed)
+      return svgBuilder!.detach(parent: svgRoot, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     if let block = parent as? RenderBlockWrapper {
-      return blockBuilder.detach(
+      return blockBuilder!.detach(
         parent: block, oldChild: child, willBeDestroyed: willBeDestroyed,
         canCollapseAnonymousBlock: canCollapseAnonymousBlock)
     }
@@ -237,11 +252,11 @@ class RenderTreeBuilder {
       canCollapseAnonymousBlock: canCollapseAnonymousBlock)
 
     if let textFragment = renderer as? RenderTextFragmentWrapper {
-      firstLetterBuilder.cleanupOnDestroy(textFragment: textFragment)
+      firstLetterBuilder!.cleanupOnDestroy(textFragment: textFragment)
     }
 
     if let renderBox = renderer as? RenderBoxModelObjectWrapper {
-      continuationBuilder.cleanupOnDestroy(renderer: renderBox)
+      continuationBuilder!.cleanupOnDestroy(renderer: renderBox)
     }
 
     // FIXME: webkit.org/b/182909.
@@ -297,7 +312,7 @@ class RenderTreeBuilder {
 
   func updateAfterDescendants(renderer: RenderElementWrapper) {
     if let svgRoot = renderer as? RenderSVGRootWrapper {
-      svgBuilder.updateAfterDescendants(svgRoot: svgRoot)
+      svgBuilder!.updateAfterDescendants(svgRoot: svgRoot)
       return  // A RenderSVGRoot cannot be a RenderBlock, RenderListItem or RenderBlockFlow: early return.
     }
 
@@ -305,13 +320,13 @@ class RenderTreeBuilder {
     // from RenderBlockFlow and indirectly from RenderBlock thus fulfilling all
     // update conditions below.
     if let block = renderer as? RenderBlockWrapper {
-      firstLetterBuilder.updateAfterDescendants(block: block)
+      firstLetterBuilder!.updateAfterDescendants(block: block)
     }
     if let listItem = renderer as? RenderListItemWrapper {
-      listBuilder.updateItemMarker(listItemRenderer: listItem)
+      listBuilder!.updateItemMarker(listItemRenderer: listItem)
     }
     if let blockFlow = renderer as? RenderBlockFlowWrapper {
-      multiColumnBuilder.updateAfterDescendants(flow: blockFlow)
+      multiColumnBuilder!.updateAfterDescendants(flow: blockFlow)
     }
   }
 
@@ -355,10 +370,10 @@ class RenderTreeBuilder {
     // Collapse and destroy anonymous table rows and cells siblings.
     // FIXME: Probably need to handle other table parts here as well.
     if let cell = destroyRoot as? RenderTableCellWrapper {
-      tableBuilder.collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: cell)
+      tableBuilder!.collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: cell)
       return
     } else if let row = destroyRoot as? RenderTableRowWrapper {
-      tableBuilder.collapseAndDestroyAnonymousSiblingRows(willBeDestroyed: row)
+      tableBuilder!.collapseAndDestroyAnonymousSiblingRows(willBeDestroyed: row)
       return
     }
 
@@ -502,13 +517,13 @@ class RenderTreeBuilder {
         isOutOfFlowPositioned: isOutOfFlowPositioned)
       if movingIntoMulticolumn {
         renderer.initializeFragmentedFlowStateOnInsertion()
-        multiColumnBuilder.multiColumnDescendantInserted(
+        multiColumnBuilder!.multiColumnDescendantInserted(
           flow: enclosingFragmentedFlow, newDescendant: renderer)
         return
       }
       let movingOutOfMulticolumn = !wasOutOfFlowPositioned && isOutOfFlowPositioned
       if movingOutOfMulticolumn {
-        multiColumnBuilder.restoreColumnSpannersForContainer(
+        multiColumnBuilder!.restoreColumnSpannersForContainer(
           container: renderer, multiColumnFlow: enclosingFragmentedFlow)
         return
       }
@@ -531,7 +546,7 @@ class RenderTreeBuilder {
         if !oldEnclosingFragmentedFlow.bool() {
           break
         }
-        multiColumnBuilder.restoreColumnSpannersForContainer(
+        multiColumnBuilder!.restoreColumnSpannersForContainer(
           container: containingBlock, multiColumnFlow: *oldEnclosingFragmentedFlow)
       }
     }
@@ -573,15 +588,15 @@ class RenderTreeBuilder {
     }
 
     if let text = parent as? RenderSVGTextWrapper {
-      svgBuilder.attach(parent: text, child: child, beforeChild: beforeChild)
+      svgBuilder!.attach(parent: text, child: child, beforeChild: beforeChild)
       return
     }
 
     if parent.style().display() == .Ruby || parent.style().display() == .RubyBlock {
-      let parentCandidate = rubyBuilder.findOrCreateParentForStyleBasedRubyChild(
+      let parentCandidate = rubyBuilder!.findOrCreateParentForStyleBasedRubyChild(
         parent: parent, child: child!, beforeChild: &beforeChild)
       if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
-        rubyBuilder.attachForStyleBasedRuby(
+        rubyBuilder!.attachForStyleBasedRuby(
           parent: parentCandidate, child: child, beforeChild: beforeChild)
         return
       }
@@ -591,15 +606,15 @@ class RenderTreeBuilder {
     }
 
     if let parentBlockFlow = parent as? RenderBlockFlowWrapper {
-      blockFlowBuilder.attach(parent: parentBlockFlow, child: child, beforeChild: beforeChild)
+      blockFlowBuilder!.attach(parent: parentBlockFlow, child: child, beforeChild: beforeChild)
       return
     }
 
     if let row = parent as? RenderTableRowWrapper {
-      let parentCandidate = tableBuilder.findOrCreateParentForChild(
+      let parentCandidate = tableBuilder!.findOrCreateParentForChild(
         parent: row, child: child!, beforeChild: &beforeChild)
       if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
-        tableBuilder.attach(parent: row, child: child, beforeChild: beforeChild)
+        tableBuilder!.attach(parent: row, child: child, beforeChild: beforeChild)
         return
       }
       insertRecursiveIfNeeded(
@@ -608,10 +623,10 @@ class RenderTreeBuilder {
     }
 
     if let tableSection = parent as? RenderTableSectionWrapper {
-      let parentCandidate = tableBuilder.findOrCreateParentForChild(
+      let parentCandidate = tableBuilder!.findOrCreateParentForChild(
         parent: tableSection, child: child!, beforeChild: &beforeChild)
       if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
-        tableBuilder.attach(parent: tableSection, child: child, beforeChild: beforeChild)
+        tableBuilder!.attach(parent: tableSection, child: child, beforeChild: beforeChild)
         return
       }
       insertRecursiveIfNeeded(
@@ -620,10 +635,10 @@ class RenderTreeBuilder {
     }
 
     if let table = parent as? RenderTableWrapper {
-      let parentCandidate = tableBuilder.findOrCreateParentForChild(
+      let parentCandidate = tableBuilder!.findOrCreateParentForChild(
         parent: table, child: child!, beforeChild: &beforeChild)
       if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
-        tableBuilder.attach(parent: table, child: child, beforeChild: beforeChild)
+        tableBuilder!.attach(parent: table, child: child, beforeChild: beforeChild)
         return
       }
       insertRecursiveIfNeeded(
@@ -632,32 +647,32 @@ class RenderTreeBuilder {
     }
 
     if let button = parent as? RenderButtonWrapper {
-      formControlsBuilder.attach(parent: button, child: child, beforeChild: beforeChild)
+      formControlsBuilder!.attach(parent: button, child: child, beforeChild: beforeChild)
       return
     }
 
     if let menuList = parent as? RenderMenuListWrapper {
-      formControlsBuilder.attach(parent: menuList, child: child, beforeChild: beforeChild)
+      formControlsBuilder!.attach(parent: menuList, child: child, beforeChild: beforeChild)
       return
     }
 
     if let container = parent as? LegacyRenderSVGContainer {
-      svgBuilder.attach(parent: container, child: child, beforeChild: beforeChild)
+      svgBuilder!.attach(parent: container, child: child, beforeChild: beforeChild)
       return
     }
 
     if let svgInline = parent as? RenderSVGInlineWrapper {
-      svgBuilder.attach(parent: svgInline, child: child, beforeChild: beforeChild)
+      svgBuilder!.attach(parent: svgInline, child: child, beforeChild: beforeChild)
       return
     }
 
     if let svgRoot = parent as? RenderSVGRootWrapper {
-      svgBuilder.attach(parent: svgRoot, child: child, beforeChild: beforeChild)
+      svgBuilder!.attach(parent: svgRoot, child: child, beforeChild: beforeChild)
       return
     }
 
     if let svgRoot = parent as? LegacyRenderSVGRootWrapper {
-      svgBuilder.attach(parent: svgRoot, child: child, beforeChild: beforeChild)
+      svgBuilder!.attach(parent: svgRoot, child: child, beforeChild: beforeChild)
       return
     }
 
@@ -667,12 +682,12 @@ class RenderTreeBuilder {
     }
 
     if let parentBlock = parent as? RenderBlockWrapper {
-      blockBuilder.attach(parent: parentBlock, child: child, beforeChild: beforeChild)
+      blockBuilder!.attach(parent: parentBlock, child: child, beforeChild: beforeChild)
       return
     }
 
     if let inlineParent = parent as? RenderInlineWrapper {
-      inlineBuilder.attach(parent: inlineParent, child: child, beforeChild: beforeChild)
+      inlineBuilder!.attach(parent: inlineParent, child: child, beforeChild: beforeChild)
       return
     }
 
@@ -688,7 +703,7 @@ class RenderTreeBuilder {
       if let blockFlow = parent as? RenderBlockFlowWrapper,
         blockFlow.multiColumnFlowForBlockFlow() != nil
       {
-        blockFlowBuilder.attach(parent: blockFlow, child: child, beforeChild: beforeChild)
+        blockFlowBuilder!.attach(parent: blockFlow, child: child, beforeChild: beforeChild)
         return
       }
       attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
@@ -717,9 +732,9 @@ class RenderTreeBuilder {
     if !child.isInline() {
       let parent = child.parent()!
       if let parentBlockRenderer = parent as? RenderBlockWrapper {
-        blockBuilder.childBecameNonInline(parent: parentBlockRenderer, child: child)
+        blockBuilder!.childBecameNonInline(parent: parentBlockRenderer, child: child)
       } else if let parentInlineRenderer = parent as? RenderInlineWrapper {
-        inlineBuilder.childBecameNonInline(parent: parentInlineRenderer, child: child)
+        inlineBuilder!.childBecameNonInline(parent: parentInlineRenderer, child: child)
       }
       // WARNING: original parent might be deleted at this point.
       if let newParent = child.parent(), CPtrToInt(newParent.p) != CPtrToInt(parent.p) {
@@ -741,7 +756,7 @@ class RenderTreeBuilder {
   func attachToRenderGrid(
     parent: RenderGridWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper? = nil
   ) {
-    blockBuilder.attach(parent: parent, child: child, beforeChild: beforeChild)
+    blockBuilder!.attach(parent: parent, child: child, beforeChild: beforeChild)
 
     // Positioned grid items do not take up space or otherwise participate in the layout of the grid,
     // for that reason we don't need to mark the grid as dirty when they are added.
@@ -758,7 +773,7 @@ class RenderTreeBuilder {
     parent: RenderElementWrapper, child: RenderObjectWrapper?,
     beforeChild: RenderObjectWrapper? = nil
   ) {
-    if tableBuilder.childRequiresTable(parent: parent, child: child!) {
+    if tableBuilder!.childRequiresTable(parent: parent, child: child!) {
       var table: RenderTableWrapper? = nil
       let afterChild =
         (beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild())
@@ -820,7 +835,7 @@ class RenderTreeBuilder {
     if internalMovesType == .No {
       newChild!.initializeFragmentedFlowStateOnInsertion()
       if let fragmentedFlow = newChild!.enclosingFragmentedFlow() as? RenderMultiColumnFlowWrapper {
-        multiColumnBuilder.multiColumnDescendantInserted(
+        multiColumnBuilder!.multiColumnDescendantInserted(
           flow: fragmentedFlow, newDescendant: newChild!)
       }
       if let listItemRenderer = newChild as? RenderListItemWrapper {
@@ -928,7 +943,7 @@ class RenderTreeBuilder {
   private func detachFromRenderGrid(
     parent: RenderGridWrapper, child: RenderObjectWrapper, willBeDestroyed: WillBeDestroyed
   ) -> RenderObjectWrapper? {
-    let takenChild = blockBuilder.detach(
+    let takenChild = blockBuilder!.detach(
       parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed)
     // Positioned grid items do not take up space or otherwise participate in the layout of the grid,
     // for that reason we don't need to mark the grid as dirty when they are removed.
@@ -1046,7 +1061,7 @@ class RenderTreeBuilder {
     normalizeAfterInsertion: NormalizeAfterInsertion
   ) {
     if from is RenderBlockFlowWrapper {
-      blockFlowBuilder.moveAllChildrenIncludingFloats(
+      blockFlowBuilder!.moveAllChildrenIncludingFloats(
         from: from as! RenderBlockFlowWrapper, to: to,
         normalizeAfterInsertion: normalizeAfterInsertion)
       return
@@ -1181,7 +1196,7 @@ class RenderTreeBuilder {
     while current != nil {
       next = current!.nextSibling()
       if current!.isAnonymousBlock() {
-        blockBuilder.dropAnonymousBoxChild(
+        blockBuilder!.dropAnonymousBoxChild(
           parent: blockParent!, child: current as! RenderBlockWrapper)
       }
       current = next
@@ -1235,18 +1250,20 @@ class RenderTreeBuilder {
   }
 
   let view: RenderViewWrapper
+  private var previous: RenderTreeBuilder? = nil
+  private static var s_current: RenderTreeBuilder? = nil
 
-  private let firstLetterBuilder: FirstLetter
-  private let listBuilder: List
-  let multiColumnBuilder: MultiColumn
-  let tableBuilder: Table
-  let rubyBuilder: Ruby
-  private let formControlsBuilder: FormControls
-  private let blockBuilder: Block
-  private let blockFlowBuilder: BlockFlow
-  private let inlineBuilder: Inline
-  private let svgBuilder: SVG
-  private let continuationBuilder: Continuation
+  private var firstLetterBuilder: FirstLetter? = nil
+  private var listBuilder: List? = nil
+  var multiColumnBuilder: MultiColumn? = nil
+  var tableBuilder: Table? = nil
+  var rubyBuilder: Ruby? = nil
+  private var formControlsBuilder: FormControls? = nil
+  private var blockBuilder: Block? = nil
+  private var blockFlowBuilder: BlockFlow? = nil
+  private var inlineBuilder: Inline? = nil
+  private var svgBuilder: SVG? = nil
+  private var continuationBuilder: Continuation? = nil
   private var internalMovesType: IsInternalMove = .No
   private var tearDownType: TearDownType = .Root
   private var subtreeDestroyRoot: RenderElementWrapper? = nil

@@ -211,7 +211,7 @@ extension RenderTreeBuilder {
         if let fragmentedFlow = parent.multiColumnFlowForBlockFlow(),
           CPtrToInt(fragmentedFlow.p) != CPtrToInt(child.p)
         {
-          builder.multiColumnBuilder.multiColumnRelativeWillBeRemoved(
+          builder.multiColumnBuilder!.multiColumnRelativeWillBeRemoved(
             flow: fragmentedFlow, relative: child,
             canCollapseAnonymousBlock: canCollapseAnonymousBlock)
         }

@@ -26,6 +26,11 @@
 
 extension RenderTreeBuilder {
   class SVG {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func updateAfterDescendants(svgRoot: RenderSVGRootWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

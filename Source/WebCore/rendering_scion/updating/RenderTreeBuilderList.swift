@@ -23,6 +23,11 @@
 
 extension RenderTreeBuilder {
   class List {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func updateItemMarker(listItemRenderer: RenderListItemWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

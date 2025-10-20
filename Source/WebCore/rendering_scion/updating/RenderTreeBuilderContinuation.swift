@@ -25,6 +25,11 @@
 
 extension RenderTreeBuilder {
   class Continuation {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func cleanupOnDestroy(renderer: RenderBoxModelObjectWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

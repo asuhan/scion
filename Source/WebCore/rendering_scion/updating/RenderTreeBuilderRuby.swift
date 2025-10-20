@@ -25,6 +25,11 @@
 
 extension RenderTreeBuilder {
   class Ruby {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func findOrCreateParentForStyleBasedRubyChild(
       parent: RenderElementWrapper, child: RenderObjectWrapper,
       beforeChild: inout RenderObjectWrapper?

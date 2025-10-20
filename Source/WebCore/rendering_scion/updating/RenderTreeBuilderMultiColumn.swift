@@ -23,6 +23,11 @@
 
 extension RenderTreeBuilder {
   class MultiColumn {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func updateAfterDescendants(flow: RenderBlockFlowWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

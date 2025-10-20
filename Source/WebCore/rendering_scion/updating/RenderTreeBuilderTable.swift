@@ -25,6 +25,11 @@
 
 extension RenderTreeBuilder {
   class Table {
+    init(builder: RenderTreeBuilder) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func findOrCreateParentForChild(
       parent: RenderTableRowWrapper, child: RenderObjectWrapper,
       beforeChild: inout RenderObjectWrapper?
