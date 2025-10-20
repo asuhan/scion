@@ -741,8 +741,17 @@ class RenderTreeBuilder {
   func attachToRenderGrid(
     parent: RenderGridWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    blockBuilder.attach(parent: parent, child: child, beforeChild: beforeChild)
+
+    // Positioned grid items do not take up space or otherwise participate in the layout of the grid,
+    // for that reason we don't need to mark the grid as dirty when they are added.
+    if child!.isOutOfFlowPositioned() {
+      return
+    }
+
+    // The grid needs to be recomputed as it might contain auto-placed items that
+    // will change their position.
+    parent.dirtyGrid()
   }
 
   func attachToRenderElement(
