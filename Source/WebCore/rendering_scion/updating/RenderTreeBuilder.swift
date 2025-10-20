@@ -60,8 +60,49 @@ private func shouldInvalidateLineLayoutPath(
 private func getInlineRun(start: RenderObjectWrapper?, boundary: RenderObjectWrapper?) -> (
   RenderObjectWrapper?, RenderObjectWrapper?
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Beginning at |start| we find the largest contiguous run of inlines that
+  // we can. We denote the run with start and end points, |inlineRunStart|
+  // and |inlineRunEnd|. Note that these two values may be the same if
+  // we encounter only one inline.
+  //
+  // We skip any non-inlines we encounter as long as we haven't found any
+  // inlines yet.
+  //
+  // |boundary| indicates a non-inclusive boundary point. Regardless of whether |boundary|
+  // is inline or not, we will not include it in a run with inlines before it. It's as though we encountered
+  // a non-inline.
+
+  // Start by skipping as many non-inlines as we can.
+  var curr = start
+  var sawInline = false
+  var inlineRunStart: RenderObjectWrapper? = nil
+  var inlineRunEnd: RenderObjectWrapper? = nil
+  repeat {
+    while curr != nil && !(curr!.isInline() || curr!.isFloatingOrOutOfFlowPositioned()) {
+      curr = curr!.nextSibling()
+    }
+
+    inlineRunStart = curr
+    inlineRunEnd = curr
+
+    if curr == nil {
+      break  // No more inline children to be found.
+    }
+
+    sawInline = curr!.isInline()
+
+    curr = curr!.nextSibling()
+    while curr != nil && (curr!.isInline() || curr!.isFloatingOrOutOfFlowPositioned())
+      && (CPtrToInt(curr!.p) != CPtrToInt(boundary?.p))
+    {
+      inlineRunEnd = curr
+      if curr!.isInline() {
+        sawInline = true
+      }
+      curr = curr!.nextSibling()
+    }
+  } while !sawInline
+  return (inlineRunStart, inlineRunEnd)
 }
 
 private func resetRendererStateOnDetach(
