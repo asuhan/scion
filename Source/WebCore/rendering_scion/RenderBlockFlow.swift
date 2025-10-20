@@ -67,6 +67,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func floatingObjectSet() -> FloatingObjectSet? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func insertFloatingObjectForIFC(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper {
     return FloatingObjectWrapper(
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))

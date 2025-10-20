@@ -787,8 +787,23 @@ class RenderTreeBuilder {
   }
 
   func removeFloatingObjects(renderer: RenderBlockWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.renderTreeBeingDestroyed() {
+      return
+    }
+
+    let blockFlow = renderer as? RenderBlockFlowWrapper
+    if blockFlow == nil {
+      return
+    }
+
+    let floatingObjects = blockFlow!.floatingObjectSet()
+    if floatingObjects == nil {
+      return
+    }
+    // Here we remove the floating objects from the descendants as well.
+    for floatingObject in floatingObjects! {
+      floatingObject.renderer!.removeFloatingOrPositionedChildFromBlockLists()
+    }
   }
 
   func createAnonymousWrappersForInlineContent(

@@ -23,7 +23,7 @@
 
 import wk_interop
 
-typealias FloatingObjectSet = Set<FloatingObjectWrapper>
+typealias FloatingObjectSet = ListSet<FloatingObjectWrapper, ObjectIdentifier>
 
 class FloatingObjectWrapper: Hashable {
   init(p: UnsafeMutableRawPointer) {
