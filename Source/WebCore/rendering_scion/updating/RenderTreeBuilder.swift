@@ -488,7 +488,8 @@ class RenderTreeBuilder {
           parent: parentCandidate, child: child, beforeChild: beforeChild)
         return
       }
-      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      insertRecursiveIfNeeded(
+        parent: parent, parentCandidate: parentCandidate, child: child, beforeChild: beforeChild)
       return
     }
 
@@ -504,7 +505,8 @@ class RenderTreeBuilder {
         tableBuilder.attach(parent: row, child: child, beforeChild: beforeChild)
         return
       }
-      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      insertRecursiveIfNeeded(
+        parent: parent, parentCandidate: parentCandidate, child: child, beforeChild: beforeChild)
       return
     }
 
@@ -515,7 +517,8 @@ class RenderTreeBuilder {
         tableBuilder.attach(parent: tableSection, child: child, beforeChild: beforeChild)
         return
       }
-      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      insertRecursiveIfNeeded(
+        parent: parent, parentCandidate: parentCandidate, child: child, beforeChild: beforeChild)
       return
     }
 
@@ -526,7 +529,8 @@ class RenderTreeBuilder {
         tableBuilder.attach(parent: table, child: child, beforeChild: beforeChild)
         return
       }
-      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      insertRecursiveIfNeeded(
+        parent: parent, parentCandidate: parentCandidate, child: child, beforeChild: beforeChild)
       return
     }
 
@@ -578,7 +582,21 @@ class RenderTreeBuilder {
     attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
   }
 
-  private func insertRecursiveIfNeeded(parentCandidate: RenderElementWrapper) {
+  private func insertRecursiveIfNeeded(
+    parent: RenderElementWrapper, parentCandidate: RenderElementWrapper,
+    child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+  ) {
+    if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
+      // Parents inside multicols can't call internal attach directly.
+      if let blockFlow = parent as? RenderBlockFlowWrapper,
+        blockFlow.multiColumnFlowForBlockFlow() != nil
+      {
+        blockFlowBuilder.attach(parent: blockFlow, child: child, beforeChild: beforeChild)
+        return
+      }
+      attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
+      return
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
