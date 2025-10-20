@@ -519,6 +519,27 @@ class RenderTreeBuilder {
       return
     }
 
+    if let table = parent as? RenderTableWrapper {
+      let parentCandidate = tableBuilder.findOrCreateParentForChild(
+        parent: table, child: child!, beforeChild: &beforeChild)
+      if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
+        tableBuilder.attach(parent: table, child: child, beforeChild: beforeChild)
+        return
+      }
+      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      return
+    }
+
+    if let button = parent as? RenderButtonWrapper {
+      formControlsBuilder.attach(parent: button, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let menuList = parent as? RenderMenuListWrapper {
+      formControlsBuilder.attach(parent: menuList, child: child, beforeChild: beforeChild)
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

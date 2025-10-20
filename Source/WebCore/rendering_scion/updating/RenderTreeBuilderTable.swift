@@ -41,6 +41,21 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    func findOrCreateParentForChild(
+      parent: RenderTableWrapper, child: RenderObjectWrapper,
+      beforeChild: inout RenderObjectWrapper?
+    ) -> RenderElementWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func attach(
+      parent: RenderTableWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func attach(
       parent: RenderTableSectionWrapper, child: RenderObjectWrapper?,
       beforeChild: RenderObjectWrapper?

@@ -25,6 +25,20 @@
 
 extension RenderTreeBuilder {
   class FormControls {
+    func attach(
+      parent: RenderButtonWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func attach(
+      parent: RenderMenuListWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func detach(
       parent: RenderButtonWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
