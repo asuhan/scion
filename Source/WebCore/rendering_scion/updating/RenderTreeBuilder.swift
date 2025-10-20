@@ -249,8 +249,9 @@ class RenderTreeBuilder {
     from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper, child: RenderObjectWrapper,
     normalizeAfterInsertion: NormalizeAfterInsertion
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    move(
+      from: from, to: to, child: child, beforeChild: nil,
+      normalizeAfterInsertion: normalizeAfterInsertion)
   }
 
   func updateAfterDescendants(renderer: RenderElementWrapper) {
