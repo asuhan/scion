@@ -597,8 +597,7 @@ class RenderTreeBuilder {
       attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
       return
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    attachInternal(parent: parentCandidate, child: child, beforeChild: beforeChild)
   }
 
   private static func columnSpannerPlaceholderForBeforeChild(
