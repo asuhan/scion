@@ -527,6 +527,11 @@ class RenderStyleWrapper: Equatable {
     return direction() == .LTR
   }
 
+  func columnSpan() -> ColumnSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textEmphasisMark() -> TextEmphasisMark {
     if p == nil {
       // TODO(asuhan): implement this

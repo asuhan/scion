@@ -92,6 +92,11 @@ func parentPseudoElement(pseudoId: PseudoId) -> PseudoId? {
   fatalError("Not implemented")
 }
 
+enum ColumnSpan: UInt8 {
+  case None
+  case All
+}
+
 // These have been defined in the order of their precedence for border-collapsing. Do
 // not change this order! This order also must match the order in CSSValueKeywords.in.
 enum BorderStyle: UInt8 {

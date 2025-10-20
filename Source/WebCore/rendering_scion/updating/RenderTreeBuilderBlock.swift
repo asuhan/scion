@@ -74,6 +74,13 @@ private func canMergeContiguousAnonymousBlocks(
     && CPtrToInt(next?.p) != CPtrToInt(anonymousDestroyRoot?.p)
 }
 
+private func continuationBefore(parent: RenderBlockWrapper, beforeChild: RenderObjectWrapper?)
+  -> RenderBlockWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class Block {
     init(builder: RenderTreeBuilder) {
@@ -255,8 +262,48 @@ extension RenderTreeBuilder {
     private func insertChildToContinuation(
       parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let flow = continuationBefore(parent: parent, beforeChild: beforeChild)
+      assert(beforeChild == nil || beforeChild!.parent() is RenderBlockWrapper)
+      var beforeChildParent: RenderBoxModelObjectWrapper? = nil
+      if beforeChild != nil {
+        beforeChildParent = (beforeChild!.parent() as! RenderBoxModelObjectWrapper)
+      } else {
+        if let continuation = flow!.continuation() {
+          beforeChildParent = continuation
+        } else {
+          beforeChildParent = flow
+        }
+      }
+
+      if child.isFloatingOrOutOfFlowPositioned() {
+        builder.attachIgnoringContinuation(
+          parent: beforeChildParent!, child: child, beforeChild: beforeChild)
+        return
+      }
+
+      let childIsNormal = child.isInline() || child.style().columnSpan() == .None
+      let bcpIsNormal =
+        beforeChildParent!.isInline() || beforeChildParent!.style().columnSpan() == .None
+      let flowIsNormal = flow!.isInline() || flow!.style().columnSpan() == .None
+
+      if CPtrToInt(flow?.p) == CPtrToInt(beforeChildParent?.p) {
+        builder.attachIgnoringContinuation(parent: flow!, child: child, beforeChild: beforeChild)
+        return
+      }
+
+      // The goal here is to match up if we can, so that we can coalesce and create the
+      // minimal # of continuations needed for the inline.
+      if childIsNormal == bcpIsNormal {
+        builder.attachIgnoringContinuation(
+          parent: beforeChildParent!, child: child, beforeChild: beforeChild)
+        return
+      }
+      if flowIsNormal == childIsNormal {
+        builder.attachIgnoringContinuation(parent: flow!, child: child)  // Just treat like an append.
+        return
+      }
+      builder.attachIgnoringContinuation(
+        parent: beforeChildParent!, child: child, beforeChild: beforeChild)
     }
 
     private func removeLeftoverAnonymousBlock(anonymousBlock: RenderBlockWrapper) {

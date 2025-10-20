@@ -753,6 +753,14 @@ class RenderTreeBuilder {
     attachToRenderElementInternal(parent: block!, child: thisToMove)
   }
 
+  func attachIgnoringContinuation(
+    parent: RenderElementWrapper, child: RenderObjectWrapper,
+    beforeChild: RenderObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func attachToRenderGrid(
     parent: RenderGridWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper? = nil
   ) {
