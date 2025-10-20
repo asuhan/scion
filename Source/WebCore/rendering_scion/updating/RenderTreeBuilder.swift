@@ -458,8 +458,36 @@ class RenderTreeBuilder {
   private func attachInternal(
     parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
   ) {
+    assert(CPtrToInt(parent.view().p) == CPtrToInt(view.p))
+
+    var beforeChild = beforeChild
+    if let beforeChildText = beforeChild as? RenderTextWrapper {
+      if let wrapperInline = beforeChildText.inlineWrapperForDisplayContents() {
+        beforeChild = wrapperInline
+      }
+    } else if let beforeChildBox = beforeChild as? RenderBoxWrapper {
+      // Adjust the beforeChild if it happens to be a spanner and the its actual location is inside the fragmented flow.
+      if let enclosingFragmentedFlow = parent.enclosingFragmentedFlow(),
+        let spannerPlaceholder = RenderTreeBuilder.columnSpannerPlaceholderForBeforeChild(
+          beforeChildBox: beforeChildBox, enclosingFragmentedFlow: enclosingFragmentedFlow)
+      {
+        beforeChild = spannerPlaceholder
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private static func columnSpannerPlaceholderForBeforeChild(
+    beforeChildBox: RenderBoxWrapper, enclosingFragmentedFlow: RenderFragmentedFlowWrapper?
+  )
+    -> RenderMultiColumnSpannerPlaceholderWrapper?
+  {
+    if let multiColumnFlow = enclosingFragmentedFlow as? RenderMultiColumnFlowWrapper {
+      return multiColumnFlow.findColumnSpannerPlaceholder(spanner: beforeChildBox)
+    }
+    return nil
   }
 
   private func childFlowStateChangesAndNoLongerAffectsParentBlock(child: RenderElementWrapper) {

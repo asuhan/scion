@@ -25,6 +25,13 @@
  */
 
 class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
+  func findColumnSpannerPlaceholder(spanner: RenderBoxWrapper?)
+    -> RenderMultiColumnSpannerPlaceholderWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The point is physical, and the result is a physical location within the fragment.
   func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?
