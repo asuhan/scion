@@ -318,8 +318,105 @@ class RenderTreeBuilder {
   func destroyAndCleanUpAnonymousWrappers(
     rendererToDestroy: RenderObjectWrapper, subtreeDestroyRoot: RenderElementWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let _ = SetForScope(
+      scopedVariable: &tearDownType,
+      newValue: subtreeDestroyRoot == nil
+        || CPtrToInt(rendererToDestroy.p) == CPtrToInt(subtreeDestroyRoot!.p)
+        ? TearDownType.Root : TearDownType.SubtreeWithRootStillAttached)
+    let _ = SetForScope(
+      scopedVariable: &self.subtreeDestroyRoot,
+      newValue: tearDownType == TearDownType.SubtreeWithRootStillAttached ? subtreeDestroyRoot : nil
+    )
+
+    // If the tree is destroyed, there is no need for a clean-up phase.
+    if rendererToDestroy.renderTreeBeingDestroyed() {
+      destroy(renderer: rendererToDestroy)
+      return
+    }
+
+    let destroyRoot: RenderObjectWrapper? = RenderTreeBuilder.destroyRootIncludingAnonymous(
+      rendererToDestroy: rendererToDestroy)
+
+    // Remove floats and out-of-flow positioned objects from their containing block before detaching
+    // the renderer from the tree. It includes all the anonymous block descendants that we are about
+    // to destroy as well as part of the cleanup process below.
+    let destroyRootElement = destroyRoot as? RenderElementWrapper
+    if destroyRootElement != nil {
+      for descendant: RenderBoxWrapper in descendantsOfType(root: destroyRootElement!) {
+        if descendant.isFloatingOrOutOfFlowPositioned() {
+          descendant.removeFloatingOrPositionedChildFromBlockLists()
+        }
+      }
+      if let box = destroyRoot as? RenderBoxWrapper, box.isFloatingOrOutOfFlowPositioned() {
+        box.removeFloatingOrPositionedChildFromBlockLists()
+      }
+    }
+
+    // Collapse and destroy anonymous table rows and cells siblings.
+    // FIXME: Probably need to handle other table parts here as well.
+    if let cell = destroyRoot as? RenderTableCellWrapper {
+      tableBuilder.collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: cell)
+      return
+    } else if let row = destroyRoot as? RenderTableRowWrapper {
+      tableBuilder.collapseAndDestroyAnonymousSiblingRows(willBeDestroyed: row)
+      return
+    }
+
+    // FIXME: Do not try to collapse/cleanup the anonymous wrappers inside destroy (see webkit.org/b/186746).
+    let destroyRootParent: RenderElementWrapper? = destroyRoot!.parent()
+    if CPtrToInt(rendererToDestroy.p) != CPtrToInt(destroyRoot?.p) {
+      // Destroy the child renderer first, before we start tearing down the anonymous wrapper ancestor chain.
+      let _ = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRoot)
+      destroy(renderer: rendererToDestroy)
+    }
+
+    if destroyRoot != nil {
+      let _ = SetForScope(
+        scopedVariable: &anonymousDestroyRoot,
+        newValue: CPtrToInt(destroyRoot?.p) != CPtrToInt(rendererToDestroy.p) ? destroyRoot : nil)
+      destroy(renderer: destroyRoot!)
+    }
+
+    if destroyRootParent == nil {
+      return
+    }
+
+    let _ = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRootParent)
+    removeAnonymousWrappersForInlineChildrenIfNeeded(parent: destroyRootParent!)
+
+    // Anonymous parent might have become empty, try to delete it too.
+    if RenderTreeBuilder.isAnonymousAndSafeToDelete(renderer: destroyRootParent!)
+      && destroyRootParent!.firstChild() == nil
+    {
+      destroyAndCleanUpAnonymousWrappers(
+        rendererToDestroy: destroyRootParent!, subtreeDestroyRoot: destroyRootParent)
+    }
+    // WARNING: rendererToDestroy is deleted here.
+  }
+
+  private static func isAnonymousAndSafeToDelete(renderer: RenderElementWrapper) -> Bool {
+    return renderer.isAnonymous() && !renderer.isRenderView() && !renderer.isRenderFragmentedFlow()
+      && !renderer.isRenderSVGViewportContainer()
+  }
+
+  private static func destroyRootIncludingAnonymous(rendererToDestroy: RenderObjectWrapper)
+    -> RenderObjectWrapper
+  {
+    var destroyRoot: RenderObjectWrapper? = rendererToDestroy
+    while !(destroyRoot is RenderViewWrapper) {
+      let destroyRootParent = destroyRoot!.parent()!
+      if !isAnonymousAndSafeToDelete(renderer: destroyRootParent) {
+        break
+      }
+      let destroyingOnlyChild =
+        CPtrToInt(destroyRootParent.firstChild()?.p) == CPtrToInt(destroyRoot!.p)
+        && CPtrToInt(destroyRootParent.lastChild()?.p) == CPtrToInt(destroyRoot!.p)
+      if !destroyingOnlyChild {
+        break
+      }
+      destroyRoot = destroyRootParent
+    }
+    return destroyRoot!
   }
 
   func normalizeTreeAfterStyleChange(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper) {
@@ -1128,6 +1225,6 @@ class RenderTreeBuilder {
   private let continuationBuilder: Continuation
   private var internalMovesType: IsInternalMove = .No
   private var tearDownType: TearDownType = .Root
-  private let subtreeDestroyRoot: RenderElementWrapper? = nil
-  let anonymousDestroyRoot: RenderObjectWrapper? = nil
+  private var subtreeDestroyRoot: RenderElementWrapper? = nil
+  var anonymousDestroyRoot: RenderObjectWrapper? = nil
 }

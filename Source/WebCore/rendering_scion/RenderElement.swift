@@ -70,6 +70,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return nil
   }
 
+  func lastChild() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layoutBox() -> ElementBoxWrapper? {
     return super.layoutBox() as? ElementBoxWrapper
   }

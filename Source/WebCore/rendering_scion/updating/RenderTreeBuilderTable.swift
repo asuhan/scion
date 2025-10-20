@@ -70,5 +70,15 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: RenderTableCellWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func collapseAndDestroyAnonymousSiblingRows(willBeDestroyed: RenderTableRowWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 }
