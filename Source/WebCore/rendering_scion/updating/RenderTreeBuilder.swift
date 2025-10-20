@@ -475,6 +475,44 @@ class RenderTreeBuilder {
       }
     }
 
+    if let text = parent as? RenderSVGTextWrapper {
+      svgBuilder.attach(parent: text, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if parent.style().display() == .Ruby || parent.style().display() == .RubyBlock {
+      let parentCandidate = rubyBuilder.findOrCreateParentForStyleBasedRubyChild(
+        parent: parent, child: child!, beforeChild: &beforeChild)
+      if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
+        rubyBuilder.attachForStyleBasedRuby(
+          parent: parentCandidate, child: child, beforeChild: beforeChild)
+        return
+      }
+      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      return
+    }
+
+    if let parentBlockFlow = parent as? RenderBlockFlowWrapper {
+      blockFlowBuilder.attach(parent: parentBlockFlow, child: child, beforeChild: beforeChild)
+      return
+    }
+
+    if let row = parent as? RenderTableRowWrapper {
+      let parentCandidate = tableBuilder.findOrCreateParentForChild(
+        parent: row, child: child!, beforeChild: &beforeChild)
+      if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
+        tableBuilder.attach(parent: row, child: child, beforeChild: beforeChild)
+        return
+      }
+      insertRecursiveIfNeeded(parentCandidate: parentCandidate)
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func insertRecursiveIfNeeded(parentCandidate: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -982,6 +1020,8 @@ class RenderTreeBuilder {
   private let firstLetterBuilder: FirstLetter
   private let listBuilder: List
   let multiColumnBuilder: MultiColumn
+  let tableBuilder: Table
+  let rubyBuilder: Ruby
   private let formControlsBuilder: FormControls
   private let blockBuilder: Block
   private let blockFlowBuilder: BlockFlow

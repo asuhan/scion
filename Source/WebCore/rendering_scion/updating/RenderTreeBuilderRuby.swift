@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Apple Inc. All rights reserved.
+ * Copyright (C) 2017 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,26 +24,20 @@
  */
 
 extension RenderTreeBuilder {
-  class BlockFlow {
-    init(builder: RenderTreeBuilder) {
-      self.builder = builder
-    }
-
-    func attach(
-      parent: RenderBlockFlowWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
-    ) {
+  class Ruby {
+    func findOrCreateParentForStyleBasedRubyChild(
+      parent: RenderElementWrapper, child: RenderObjectWrapper,
+      beforeChild: inout RenderObjectWrapper?
+    ) -> RenderElementWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    func moveAllChildrenIncludingFloats(
-      from: RenderBlockFlowWrapper, to: RenderBlockWrapper,
-      normalizeAfterInsertion: RenderTreeBuilder.NormalizeAfterInsertion
+    func attachForStyleBasedRuby(
+      parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      builder.moveAllChildren(from: from, to: to, normalizeAfterInsertion: normalizeAfterInsertion)
-      from.addFloatsToNewParent(toBlockFlow: to as! RenderBlockFlowWrapper)
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
-
-    private let builder: RenderTreeBuilder
   }
 }

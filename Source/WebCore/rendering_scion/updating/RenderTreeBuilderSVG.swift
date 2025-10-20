@@ -31,6 +31,13 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    func attach(
+      parent: RenderSVGTextWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func detach(
       parent: LegacyRenderSVGRootWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
