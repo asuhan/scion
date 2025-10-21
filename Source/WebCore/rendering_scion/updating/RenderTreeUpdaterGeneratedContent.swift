@@ -59,8 +59,11 @@ extension RenderTreeUpdater {
     }
 
     static func removeAfterPseudoElement(element: ElementWrapper, builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let pseudoElement = element.afterPseudoElement() {
+        RenderTreeUpdater.tearDownRenderers(
+          root: pseudoElement, teardownType: .Full, builder: builder)
+        element.clearAfterPseudoElement()
+      }
     }
 
     private let updater: RenderTreeUpdater
