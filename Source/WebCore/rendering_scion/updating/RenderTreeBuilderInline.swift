@@ -25,8 +25,14 @@
 
 private func inFlowPositionedInlineAncestor(renderer: RenderElementWrapper) -> RenderElementWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var ancestor: RenderElementWrapper? = renderer
+  while ancestor != nil && ancestor!.isRenderInline() {
+    if ancestor!.isInFlowPositioned() {
+      return ancestor
+    }
+    ancestor = ancestor!.parent()
+  }
+  return nil
 }
 
 extension RenderTreeBuilder {
