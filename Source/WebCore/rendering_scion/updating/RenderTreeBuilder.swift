@@ -1344,7 +1344,7 @@ class RenderTreeBuilder {
   private var inlineBuilder: Inline? = nil
   private var svgBuilder: SVG? = nil
   private var continuationBuilder: Continuation? = nil
-  private var internalMovesType: IsInternalMove = .No
+  var internalMovesType: IsInternalMove = .No
   private var tearDownType: TearDownType = .Root
   private var subtreeDestroyRoot: RenderElementWrapper? = nil
   var anonymousDestroyRoot: RenderObjectWrapper? = nil

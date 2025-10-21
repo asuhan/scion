@@ -193,6 +193,15 @@ extension RenderTreeBuilder {
         parent: beforeChildAncestor!, child: child!, beforeChild: beforeChild)
     }
 
+    private func splitInlines(
+      parent: RenderInlineWrapper, fromBlock: RenderBlockWrapper?, toBlock: RenderBlockWrapper?,
+      middleBlock: RenderBlockWrapper?, beforeChild: RenderObjectWrapper?,
+      oldCont: RenderBoxModelObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private func newChildIsInline(parent: RenderInlineWrapper, child: RenderObjectWrapper) -> Bool {
       // inline parent generates inline-table.
       return child.isInline()
@@ -205,8 +214,81 @@ extension RenderTreeBuilder {
       newBlockBox: RenderBlockWrapper, child: RenderObjectWrapper?,
       oldCont: RenderBoxModelObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var pre: RenderBlockWrapper? = nil
+      var block = parent.containingBlock()
+
+      // Delete our line boxes before we do the inline split into continuations.
+      block!.deleteLines()
+
+      var createdPre: RenderBlockWrapper? = nil
+      var madeNewBeforeBlock = false
+      if block!.isAnonymousBlock()
+        && (block!.parent() == nil || !block!.parent()!.createsAnonymousWrapper())
+      {
+        // We can reuse this block and make it the preBlock of the next continuation.
+        pre = block
+        pre!.removePositionedObjects(newContainingBlockCandidate: nil)
+        // FIXME-BLOCKFLOW: The enclosing method should likely be switched over
+        // to only work on RenderBlockFlow, in which case this conversion can be
+        // removed.
+        if let blockFlow = pre as? RenderBlockFlowWrapper {
+          blockFlow.removeFloatingObjects()
+        }
+        block = block!.containingBlock()
+      } else {
+        // No anonymous block available for use. Make one.
+        createdPre = block!.createAnonymousBlock()
+        pre = createdPre
+        madeNewBeforeBlock = true
+      }
+
+      let createdPost = pre!.createAnonymousBoxWithSameTypeAs(renderer: block!)
+      let post = createdPost as! RenderBlockWrapper
+
+      let boxFirst = madeNewBeforeBlock ? block!.firstChild() : pre!.nextSibling()
+      if createdPre != nil {
+        builder.attachToRenderElementInternal(
+          parent: block!, child: createdPre, beforeChild: boxFirst)
+      }
+      builder.attachToRenderElementInternal(
+        parent: block!, child: newBlockBox, beforeChild: boxFirst)
+      builder.attachToRenderElementInternal(
+        parent: block!, child: createdPost, beforeChild: boxFirst)
+      block!.setChildrenInline(b: false)
+
+      if madeNewBeforeBlock {
+        var o = boxFirst
+        while o != nil {
+          let no = o
+          let _ = SetForScope(
+            scopedVariable: &builder.internalMovesType, newValue: IsInternalMove.Yes)
+          o = no!.nextSibling()
+          let childToMove = builder.detachFromRenderElement(
+            parent: block!, child: no!, willBeDestroyed: .No)
+          builder.attachToRenderElementInternal(parent: pre!, child: childToMove)
+          no!.setNeedsLayoutAndPrefWidthsRecalc()
+        }
+      }
+
+      splitInlines(
+        parent: parent, fromBlock: pre, toBlock: post, middleBlock: newBlockBox,
+        beforeChild: beforeChild, oldCont: oldCont)
+
+      // We already know the newBlockBox isn't going to contain inline kids, so avoid wasting
+      // time in makeChildrenNonInline by just setting this explicitly up front.
+      newBlockBox.setChildrenInline(b: false)
+
+      // We delayed adding the newChild until now so that the |newBlockBox| would be fully
+      // connected, thus allowing newChild access to a renderArena should it need
+      // to wrap itself in additional boxes (e.g., table construction).
+      builder.attach(parent: newBlockBox, child: child!)
+
+      // Always just do a full layout in order to ensure that line boxes (especially wrappers for images)
+      // get deleted properly. Because objects moves from the pre block into the post block, we want to
+      // make new line boxes instead of leaving the old line boxes around.
+      pre!.setNeedsLayoutAndPrefWidthsRecalc()
+      block!.setNeedsLayoutAndPrefWidthsRecalc()
+      post.setNeedsLayoutAndPrefWidthsRecalc()
     }
 
     private let builder: RenderTreeBuilder

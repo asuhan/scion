@@ -227,6 +227,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func createsAnonymousWrapper() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
   //////////////////////////////////////////
 
   func isRenderReplaced() -> Bool {

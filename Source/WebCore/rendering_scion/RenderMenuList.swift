@@ -23,4 +23,9 @@
  */
 
 // TODO(asuhan): inherit from PopupMenuClient as well
-final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {}
+final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
+  override func createsAnonymousWrapper() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

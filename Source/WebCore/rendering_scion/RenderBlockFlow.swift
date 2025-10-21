@@ -67,6 +67,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func removeFloatingObjects() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func floatingObjectSet() -> FloatingObjectSet? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
