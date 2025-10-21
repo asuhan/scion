@@ -20,6 +20,14 @@
 
 class CreateRenderer {
   static func RenderInline(
+    type: RenderObjectWrapper.`Type`, element: ElementWrapper, style: RenderStyleWrapper
+  )
+    -> RenderInlineWrapper
+  {
+    return RenderInlineWrapper(type: type, element: element, style: style)
+  }
+
+  static func RenderInline(
     type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper
   )
     -> RenderInlineWrapper

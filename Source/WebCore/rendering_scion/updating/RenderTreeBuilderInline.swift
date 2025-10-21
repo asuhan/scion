@@ -73,8 +73,15 @@ private func continuationBefore(parent: RenderInlineWrapper, beforeChild: Render
 }
 
 private func cloneAsContinuation(renderer: RenderInlineWrapper) -> RenderInlineWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let continuationStyle = RenderStyleWrapper.clone(style: renderer.style())
+  continuationStyle.setDisplay(value: .Inline)
+  let cloneInline = CreateRenderer.RenderInline(
+    type: .Inline, element: renderer.element()!, style: continuationStyle)
+  cloneInline.initializeStyle()
+  cloneInline.setFragmentedFlowState(state: renderer.fragmentedFlowState())
+  cloneInline.setHasOutlineAutoAncestor(hasOutlineAutoAncestor: renderer.hasOutlineAutoAncestor())
+  cloneInline.setIsContinuation()
+  return cloneInline
 }
 
 private func inFlowPositionedInlineAncestor(renderer: RenderElementWrapper) -> RenderElementWrapper?

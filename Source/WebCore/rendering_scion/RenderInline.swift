@@ -21,6 +21,11 @@
  */
 
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
+  convenience init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
