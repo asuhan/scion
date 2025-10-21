@@ -40,6 +40,11 @@ private func continuationBefore(parent: RenderInlineWrapper, beforeChild: Render
   fatalError("Not implemented")
 }
 
+private func cloneAsContinuation(renderer: RenderInlineWrapper) -> RenderInlineWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func inFlowPositionedInlineAncestor(renderer: RenderElementWrapper) -> RenderElementWrapper?
 {
   var ancestor: RenderElementWrapper? = renderer
@@ -198,8 +203,121 @@ extension RenderTreeBuilder {
       middleBlock: RenderBlockWrapper?, beforeChild: RenderObjectWrapper?,
       oldCont: RenderBoxModelObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let _ = SetForScope(scopedVariable: &builder.internalMovesType, newValue: IsInternalMove.Yes)
+      // Create a clone of this inline.
+      var cloneInline = cloneAsContinuation(renderer: parent)
+
+      // Now take all of the children from beforeChild to the end and remove
+      // them from |this| and place them in the clone.
+      var rendererToMove = beforeChild
+      while rendererToMove != nil {
+        var nextSibling = rendererToMove!.nextSibling()
+        // When anonymous wrapper is present, we might need to move the whole subtree instead.
+        if CPtrToInt(rendererToMove!.parent()?.p) != CPtrToInt(parent.p) {
+          var anonymousParent = rendererToMove!.parent()
+          while anonymousParent != nil
+            && CPtrToInt(anonymousParent!.parent()?.p) != CPtrToInt(parent.p)
+          {
+            assert(anonymousParent!.isAnonymous())
+            anonymousParent = anonymousParent!.parent()
+          }
+          if anonymousParent == nil {
+            fatalError("Not reached")
+          }
+          // If beforeChild is the first child in the subtree, we could just move the whole subtree.
+          if rendererToMove!.previousSibling() == nil {
+            // Reparent the whole anonymous wrapper tree.
+            rendererToMove = anonymousParent
+            // Skip to the next sibling that is not in this subtree.
+            nextSibling = anonymousParent!.nextSibling()
+          } else if rendererToMove!.nextSibling() == nil {
+            // This is the last renderer in the subtree. We need to jump out of the wrapper subtree, so that
+            // the siblings are getting reparented too.
+            nextSibling = anonymousParent!.nextSibling()
+          }
+          // Otherwise just move the renderer to the inline clone. Should the renderer need an anon
+          // wrapper, the addChild() will generate one for it.
+          // FIXME: When the anonymous wrapper has multiple children, we end up traversing up to the topmost wrapper
+          // every time, which is a bit wasteful.
+        }
+        let childToMove = builder.detachFromRenderElement(
+          parent: rendererToMove!.parent()!, child: rendererToMove!, willBeDestroyed: .No)
+        builder.attachIgnoringContinuation(parent: cloneInline, child: childToMove!)
+        let newParent = rendererToMove!.parent()
+        if let newParentBox = newParent as? RenderBoxWrapper {
+          RenderTreeBuilder.markBoxForRelayoutAfterSplit(box: newParentBox)
+        }
+        rendererToMove!.setNeedsLayoutAndPrefWidthsRecalc()
+        rendererToMove = nextSibling
+      }
+      // Hook |clone| up as the continuation of the middle block.
+      cloneInline.insertIntoContinuationChainAfter(afterRenderer: middleBlock!)
+      if oldCont != nil {
+        oldCont!.insertIntoContinuationChainAfter(afterRenderer: cloneInline)
+      }
+
+      // We have been reparented and are now under the fromBlock. We need
+      // to walk up our inline parent chain until we hit the containing block.
+      // Once we hit the containing block we're done.
+      var current = parent.parent() as! RenderBoxModelObjectWrapper?
+      var currentChild: RenderBoxModelObjectWrapper? = parent
+
+      // FIXME: Because splitting is O(n^2) as tags nest pathologically, we cap the depth at which we're willing to clone.
+      // There will eventually be a better approach to this problem that will let us nest to a much
+      // greater depth (see bugzilla bug 13430) but for now we have a limit. This *will* result in
+      // incorrect rendering, but the alternative is to hang forever.
+      var splitDepth: UInt32 = 1
+      while current != nil && CPtrToInt(current!.p) != CPtrToInt(fromBlock?.p) {
+        if splitDepth < Inline.cMaxSplitDepth && !current!.isAnonymous() {
+          // Create a new clone.
+          let cloneChild = cloneInline
+          cloneInline = cloneAsContinuation(renderer: current as! RenderInlineWrapper)
+
+          // Insert our child clone as the first child.
+          builder.attachIgnoringContinuation(parent: cloneInline, child: cloneChild)
+
+          // Hook the clone up as a continuation of |curr|.
+          cloneInline.insertIntoContinuationChainAfter(afterRenderer: current!)
+
+          // Now we need to take all of the children starting from the first child
+          // *after* currentChild and append them all to the clone.
+          var sibling = currentChild!.nextSibling()
+          while sibling != nil {
+            let next = sibling!.nextSibling()
+            let childToMove = builder.detachFromRenderElement(
+              parent: current!, child: sibling!, willBeDestroyed: .No)
+            builder.attachIgnoringContinuation(parent: cloneInline, child: childToMove!)
+            sibling!.setNeedsLayoutAndPrefWidthsRecalc()
+            sibling = next
+          }
+        } else {
+          builder.setHasBrokenContinuation()
+        }
+
+        // Keep walking up the chain.
+        currentChild = current
+        current = (current!.parent() as! RenderBoxModelObjectWrapper)
+        splitDepth += 1
+      }
+
+      // Clear the flow thread containing blocks cached during the detached state insertions.
+      for cloneBlockChild: RenderBlockWrapper in childrenOfType(parent: cloneInline) {
+        cloneBlockChild.resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants()
+      }
+
+      // Now we are at the block level. We need to put the clone into the toBlock.
+      builder.attachToRenderElementInternal(parent: toBlock!, child: cloneInline)
+
+      // Now take all the children after currentChild and remove them from the fromBlock
+      // and put them in the toBlock.
+      var currentSibling = currentChild!.nextSibling()
+      while currentSibling != nil {
+        let next = currentSibling!.nextSibling()
+        let childToMove = builder.detachFromRenderElement(
+          parent: fromBlock!, child: currentSibling!, willBeDestroyed: .No)
+        builder.attachToRenderElementInternal(parent: toBlock!, child: childToMove)
+        currentSibling = next
+      }
     }
 
     private func newChildIsInline(parent: RenderInlineWrapper, child: RenderObjectWrapper) -> Bool {
@@ -292,5 +410,7 @@ extension RenderTreeBuilder {
     }
 
     private let builder: RenderTreeBuilder
+
+    private static let cMaxSplitDepth: UInt32 = 200
   }
 }

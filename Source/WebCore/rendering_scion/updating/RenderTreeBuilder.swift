@@ -567,7 +567,7 @@ class RenderTreeBuilder {
     return false
   }
 
-  private func markBoxForRelayoutAfterSplit(box: RenderBoxWrapper) {
+  static func markBoxForRelayoutAfterSplit(box: RenderBoxWrapper) {
     // FIXME: The table code should handle that automatically. If not,
     // we should fix it and remove the table part checks.
     if let table = box as? RenderTableWrapper {
@@ -1162,15 +1162,15 @@ class RenderTreeBuilder {
         // We need to invalidate the |parentBox| before inserting the new node
         // so that the table repainting logic knows the structure is dirty.
         // See for example RenderTableCell:clippedOverflowRectForRepaint.
-        markBoxForRelayoutAfterSplit(box: parentBox)
+        RenderTreeBuilder.markBoxForRelayoutAfterSplit(box: parentBox)
         attachToRenderElementInternal(
           parent: parentBox, child: postBox, beforeChild: boxToSplit.nextSibling())
         moveChildren(
           from: boxToSplit, to: postBox, startChild: beforeChild, endChild: nil,
           normalizeAfterInsertion: .Yes)
 
-        markBoxForRelayoutAfterSplit(box: boxToSplit)
-        markBoxForRelayoutAfterSplit(box: postBox)
+        RenderTreeBuilder.markBoxForRelayoutAfterSplit(box: boxToSplit)
+        RenderTreeBuilder.markBoxForRelayoutAfterSplit(box: postBox)
 
         beforeChild = postBox
       } else {
@@ -1179,7 +1179,7 @@ class RenderTreeBuilder {
     }
 
     if didSplitParentAnonymousBoxes {
-      markBoxForRelayoutAfterSplit(box: parent)
+      RenderTreeBuilder.markBoxForRelayoutAfterSplit(box: parent)
     }
 
     assert(CPtrToInt(beforeChild.parent()?.p) == CPtrToInt(parent.p))
@@ -1329,6 +1329,8 @@ class RenderTreeBuilder {
     return IntSize(width: style.width().intValue(), height: style.height().intValue())
   }
 
+  func setHasBrokenContinuation() { hasBrokenContinuation = true }
+
   let view: RenderViewWrapper
   private var previous: RenderTreeBuilder? = nil
   private static var s_current: RenderTreeBuilder? = nil
@@ -1344,6 +1346,7 @@ class RenderTreeBuilder {
   private var inlineBuilder: Inline? = nil
   private var svgBuilder: SVG? = nil
   private var continuationBuilder: Continuation? = nil
+  var hasBrokenContinuation = false
   var internalMovesType: IsInternalMove = .No
   private var tearDownType: TearDownType = .Root
   private var subtreeDestroyRoot: RenderElementWrapper? = nil
