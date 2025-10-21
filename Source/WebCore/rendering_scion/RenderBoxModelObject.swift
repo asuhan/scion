@@ -160,6 +160,16 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return nil
   }
 
+  func insertIntoContinuationChainAfter(afterRenderer: RenderBoxModelObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeFromContinuationChain() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

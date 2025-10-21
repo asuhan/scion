@@ -23,11 +23,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func inFlowPositionedInlineAncestor(renderer: RenderElementWrapper) -> RenderElementWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class Inline {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func attach(
@@ -40,8 +45,47 @@ extension RenderTreeBuilder {
     func attachIgnoringContinuation(
       parent: RenderInlineWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var beforeChild = beforeChild
+      // Make sure we don't append things after :after-generated content if we have it.
+      if beforeChild == nil && parent.isAfterContent(obj: parent.lastChild()) {
+        beforeChild = parent.lastChild()
+      }
+
+      let childInline = newChildIsInline(parent: parent, child: child)
+      // This code is for the old block-inside-inline model that uses continuations.
+      if !childInline && !child.isFloatingOrOutOfFlowPositioned() {
+        // We are placing a block inside an inline. We have to perform a split of this
+        // inline into continuations. This involves creating an anonymous block box to hold
+        // |newChild|. We then make that block box a continuation of this inline. We take all of
+        // the children after |beforeChild| and put them in a clone of this object.
+        let newStyle = RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: parent.containingBlock() != nil
+            ? parent.containingBlock()!.style() : parent.style(), display: .Block)
+
+        // If inside an inline affected by in-flow positioning the block needs to be affected by it too.
+        // Giving the block a layer like this allows it to collect the x/y offsets from inline parents later.
+        if let positionedAncestor = inFlowPositionedInlineAncestor(renderer: parent) {
+          newStyle.setPosition(v: positionedAncestor.style().position())
+        }
+
+        let newBox = CreateRenderer.RenderBlockFlow(
+          type: .BlockFlow, document: parent.document(), style: newStyle)
+        newBox.initializeStyle()
+        newBox.setIsContinuation()
+        let oldContinuation = parent.continuation()
+        if oldContinuation != nil {
+          oldContinuation!.removeFromContinuationChain()
+        }
+        newBox.insertIntoContinuationChainAfter(afterRenderer: parent)
+
+        splitFlow(
+          parent: parent, beforeChild: beforeChild, newBlockBox: newBox, child: child,
+          oldCont: oldContinuation)
+        return
+      }
+
+      builder.attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
+      child.setNeedsLayoutAndPrefWidthsRecalc()
     }
 
     // Make this private once all the mutation code is in RenderTreeBuilder.
@@ -49,5 +93,21 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private func newChildIsInline(parent: RenderInlineWrapper, child: RenderObjectWrapper) -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func splitFlow(
+      parent: RenderInlineWrapper, beforeChild: RenderObjectWrapper?,
+      newBlockBox: RenderBlockWrapper, child: RenderObjectWrapper?,
+      oldCont: RenderBoxModelObjectWrapper?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private let builder: RenderTreeBuilder
   }
 }

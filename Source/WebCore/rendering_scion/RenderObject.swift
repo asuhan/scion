@@ -347,6 +347,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isAfterContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isAfterContent(obj: RenderObjectWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func beingDestroyed() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

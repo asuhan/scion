@@ -236,6 +236,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_isContinuation(p)
   }
 
+  func setIsContinuation() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setIsFirstLetter() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
