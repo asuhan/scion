@@ -687,14 +687,14 @@ class RenderTreeUpdater {
   }
 
   // FIXME: Use OptionSet.
-  private enum TeardownType {
+  enum TeardownType {
     case Full
     case FullAfterSlotOrShadowRootChange
     case RendererUpdate
     case RendererUpdateCancelingAnimations
   }
 
-  private static func tearDownRenderers(
+  static func tearDownRenderers(
     root: ElementWrapper, teardownType: TeardownType, builder: RenderTreeBuilder
   ) {
     var teardownStack: [ElementWrapper] = []
