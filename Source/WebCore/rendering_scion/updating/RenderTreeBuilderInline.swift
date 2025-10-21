@@ -118,8 +118,10 @@ extension RenderTreeBuilder {
     }
 
     private func newChildIsInline(parent: RenderInlineWrapper, child: RenderObjectWrapper) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // inline parent generates inline-table.
+      return child.isInline()
+        || (builder.tableBuilder!.childRequiresTable(parent: parent, child: child)
+          && parent.style().display() == .Inline)
     }
 
     private func splitFlow(
