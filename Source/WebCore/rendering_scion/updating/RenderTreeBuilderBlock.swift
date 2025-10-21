@@ -132,20 +132,63 @@ extension RenderTreeBuilder {
       }
 
       if child.isFloatingOrOutOfFlowPositioned() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        if parent.childrenInline() || parent is RenderFlexibleBoxWrapper || parent.isRenderGrid() {
+          builder.attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
+          return
+        }
+        // In case of sibling block box(es), let's check if we can add this out of flow/floating box under a previous sibling anonymous block.
+        let previousSibling =
+          beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild()
+        if previousSibling == nil || !previousSibling!.isAnonymousBlock() {
+          builder.attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
+          return
+        }
+        builder.attach(parent: previousSibling as! RenderBlockWrapper, child: child)
+        return
       }
 
       // Parent and inflow child match.
       if (parent.childrenInline() && child.isInline())
         || (!parent.childrenInline() && !child.isInline())
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        return builder.attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Inline parent with block child.
+      if parent.childrenInline() {
+        assert(!child.isInline() && !child.isFloatingOrOutOfFlowPositioned())
+        // A block has to either have all of its children inline, or all of its children as blocks.
+        // So, if our children are currently inline and a block child has to be inserted, we move all our
+        // inline children into anonymous block boxes.
+        // This is a block with inline content. Wrap the inline content in anonymous blocks.
+        builder.createAnonymousWrappersForInlineContent(parent: parent, insertionPoint: beforeChild)
+        if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p) {
+          beforeChild = beforeChild!.parent()
+          assert(beforeChild!.isAnonymousBlock())
+          assert(CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p))
+        }
+        builder.attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
+
+        if parent.parent() is RenderBlockWrapper && parent.isAnonymousBlock() {
+          removeLeftoverAnonymousBlock(anonymousBlock: parent)
+        }
+        return
+      }
+
+      // Block parent with inline child.
+      // If we're inserting an inline child but all of our children are blocks, then we have to make sure
+      // it is put into an anomyous block box. We try to use an existing anonymous box if possible, otherwise
+      // a new one is created and inserted into our list of children in the appropriate position.
+      let previousSibling = beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild()
+      if previousSibling != nil && previousSibling!.isAnonymousBlock() {
+        builder.attach(parent: previousSibling as! RenderBlockWrapper, child: child)
+        return
+      }
+
+      // No suitable existing anonymous box - create a new one.
+      let box = parent.createAnonymousBlock()
+      builder.attachToRenderElement(parent: parent, child: box, beforeChild: beforeChild)
+      builder.attach(parent: box, child: child)
     }
 
     func detach(

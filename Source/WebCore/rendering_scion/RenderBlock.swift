@@ -66,7 +66,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  func createAnonymousBlock(display: DisplayType = .Block) -> RenderBlockWrapper? {
+  func createAnonymousBlock(display: DisplayType = .Block) -> RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

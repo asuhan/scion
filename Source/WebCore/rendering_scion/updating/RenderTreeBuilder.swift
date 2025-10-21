@@ -750,7 +750,7 @@ class RenderTreeBuilder {
     let block = (parent as! RenderBlockWrapper).createAnonymousBlock()
     attachToRenderElementInternal(parent: parent, child: block, beforeChild: child)
     let thisToMove = detachFromRenderElement(parent: parent, child: child, willBeDestroyed: .No)
-    attachToRenderElementInternal(parent: block!, child: thisToMove)
+    attachToRenderElementInternal(parent: block, child: thisToMove)
   }
 
   func attachIgnoringContinuation(
@@ -1152,7 +1152,7 @@ class RenderTreeBuilder {
 
       child = inlineRunEnd!.nextSibling()
 
-      let block = parent.createAnonymousBlock()!
+      let block = parent.createAnonymousBlock()
       attachToRenderElementInternal(parent: parent, child: block, beforeChild: inlineRunStart)
       moveChildren(
         from: parent, to: block, startChild: inlineRunStart, endChild: child,
