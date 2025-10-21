@@ -37,8 +37,10 @@ private func canUseAsParentForContinuation(renderer: RenderObjectWrapper?) -> Bo
 }
 
 private func nextContinuation(renderer: RenderObjectWrapper) -> RenderBoxModelObjectWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let renderInline = renderer as? RenderInlineWrapper, !renderInline.isReplacedOrInlineBlock() {
+    return renderInline.continuation()
+  }
+  return (renderer as! RenderBlockWrapper).inlineContinuation()
 }
 
 private func continuationBefore(parent: RenderInlineWrapper, beforeChild: RenderObjectWrapper?)
