@@ -1341,7 +1341,7 @@ class RenderTreeBuilder {
   var tableBuilder: Table? = nil
   var rubyBuilder: Ruby? = nil
   private var formControlsBuilder: FormControls? = nil
-  private var blockBuilder: Block? = nil
+  var blockBuilder: Block? = nil
   private var blockFlowBuilder: BlockFlow? = nil
   private var inlineBuilder: Inline? = nil
   private var svgBuilder: SVG? = nil

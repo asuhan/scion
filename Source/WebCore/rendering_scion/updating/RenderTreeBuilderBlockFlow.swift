@@ -32,8 +32,34 @@ extension RenderTreeBuilder {
     func attach(
       parent: RenderBlockFlowWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let multicolumnFlow = parent.multiColumnFlowForBlockFlow() {
+        let legendAvoidsMulticolumn = parent.isFieldset() && child!.isLegend()
+        if legendAvoidsMulticolumn {
+          return builder.blockBuilder!.attach(parent: parent, child: child!, beforeChild: nil)
+        }
+
+        let legendBeforeChildIsIncorrect =
+          parent.isFieldset() && beforeChild != nil && beforeChild!.isLegend()
+        if legendBeforeChildIsIncorrect {
+          return builder.blockBuilder!.attach(
+            parent: multicolumnFlow, child: child!, beforeChild: nil)
+        }
+
+        // When the before child is set to be the first child of the RenderBlockFlow, we need to readjust it to be the first
+        // child of the multicol conainter.
+        return builder.attach(
+          parent: multicolumnFlow, child: child!,
+          beforeChild: CPtrToInt(beforeChild!.p) == CPtrToInt(multicolumnFlow.p)
+            ? multicolumnFlow.firstChild() : beforeChild)
+      }
+
+      var beforeChildOrPlaceholder = beforeChild
+      if let containingFragmentedFlow = parent.enclosingFragmentedFlow() {
+        beforeChildOrPlaceholder = builder.multiColumnBuilder!.resolveMovedChild(
+          enclosingFragmentedFlow: containingFragmentedFlow, beforeChild: beforeChild)
+      }
+      builder.blockBuilder!.attach(
+        parent: parent, child: child!, beforeChild: beforeChildOrPlaceholder)
     }
 
     func moveAllChildrenIncludingFloats(
