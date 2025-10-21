@@ -33,6 +33,16 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    // Some renderers (column spanners) are moved out of the flow thread to live among column
+    // sets. If |child| is such a renderer, resolve it to the placeholder that lives at the original
+    // location in the tree.
+    func resolveMovedChild(
+      enclosingFragmentedFlow: RenderFragmentedFlowWrapper, beforeChild: RenderObjectWrapper?
+    ) -> RenderObjectWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func restoreColumnSpannersForContainer(
       container: RenderElementWrapper, multiColumnFlow: RenderMultiColumnFlowWrapper
     ) {

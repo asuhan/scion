@@ -44,8 +44,18 @@ extension RenderTreeBuilder {
     func attach(
       parent: RenderInlineWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var beforeChildOrPlaceholder = beforeChild
+      if let fragmentedFlow = parent.enclosingFragmentedFlow() {
+        beforeChildOrPlaceholder = builder.multiColumnBuilder!.resolveMovedChild(
+          enclosingFragmentedFlow: fragmentedFlow, beforeChild: beforeChild)
+      }
+      if parent.continuation() != nil {
+        insertChildToContinuation(
+          parent: parent, child: child, beforeChild: beforeChildOrPlaceholder)
+        return
+      }
+      attachIgnoringContinuation(
+        parent: parent, child: child!, beforeChild: beforeChildOrPlaceholder)
     }
 
     func attachIgnoringContinuation(
@@ -96,6 +106,13 @@ extension RenderTreeBuilder {
 
     // Make this private once all the mutation code is in RenderTreeBuilder.
     func childBecameNonInline(parent: RenderInlineWrapper, child: RenderElementWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func insertChildToContinuation(
+      parent: RenderInlineWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
+    ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
