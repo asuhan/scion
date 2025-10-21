@@ -23,6 +23,23 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func canUseAsParentForContinuation(renderer: RenderObjectWrapper?) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func nextContinuation(renderer: RenderObjectWrapper) -> RenderBoxModelObjectWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func continuationBefore(parent: RenderInlineWrapper, beforeChild: RenderObjectWrapper?)
+  -> RenderBoxModelObjectWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func inFlowPositionedInlineAncestor(renderer: RenderElementWrapper) -> RenderElementWrapper?
 {
   var ancestor: RenderElementWrapper? = renderer
@@ -125,8 +142,55 @@ extension RenderTreeBuilder {
     private func insertChildToContinuation(
       parent: RenderInlineWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let flow = continuationBefore(parent: parent, beforeChild: beforeChild)
+      // It may or may not be the direct parent of the beforeChild.
+      var beforeChildAncestor: RenderBoxModelObjectWrapper? = nil
+      if beforeChild == nil {
+        let continuation = nextContinuation(renderer: flow!)
+        beforeChildAncestor = continuation != nil ? continuation : flow
+      } else if canUseAsParentForContinuation(renderer: beforeChild!.parent()) {
+        beforeChildAncestor = beforeChild!.parent() as? RenderBoxModelObjectWrapper
+      } else if beforeChild!.parent() != nil {
+        // In case of anonymous wrappers, the parent of the beforeChild is mostly irrelevant. What we need is the topmost wrapper.
+        var parent = beforeChild!.parent()
+        while parent != nil && parent!.parent() != nil && parent!.parent()!.isAnonymous() {
+          // The ancestor candidate needs to be inside the continuation.
+          if parent!.isContinuation() {
+            break
+          }
+          parent = parent!.parent()
+        }
+        assert(parent != nil && parent!.parent() != nil)
+        beforeChildAncestor = (parent!.parent() as! RenderBoxModelObjectWrapper)
+      } else {
+        fatalError("Not reached")
+      }
+
+      if child!.isFloatingOrOutOfFlowPositioned() {
+        return builder.attachIgnoringContinuation(
+          parent: beforeChildAncestor!, child: child!, beforeChild: beforeChild)
+      }
+
+      if CPtrToInt(flow?.p) == CPtrToInt(beforeChildAncestor?.p) {
+        return builder.attachIgnoringContinuation(
+          parent: flow!, child: child!, beforeChild: beforeChild)
+      }
+      // A continuation always consists of two potential candidates: an inline or an anonymous
+      // block box holding block children.
+      let childInline = newChildIsInline(parent: parent, child: child!)
+      // The goal here is to match up if we can, so that we can coalesce and create the
+      // minimal # of continuations needed for the inline.
+      if childInline == beforeChildAncestor!.isInline()
+        || (beforeChild != nil && beforeChild!.isInline())
+      {
+        return builder.attachIgnoringContinuation(
+          parent: beforeChildAncestor!, child: child!, beforeChild: beforeChild)
+      }
+      if flow!.isInline() == childInline {
+        return builder.attachIgnoringContinuation(parent: flow!, child: child!)  // Just treat like an append.
+      }
+      return builder.attachIgnoringContinuation(
+        parent: beforeChildAncestor!, child: child!, beforeChild: beforeChild)
     }
 
     private func newChildIsInline(parent: RenderInlineWrapper, child: RenderObjectWrapper) -> Bool {
