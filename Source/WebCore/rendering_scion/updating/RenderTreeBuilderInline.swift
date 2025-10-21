@@ -24,8 +24,16 @@
  */
 
 private func canUseAsParentForContinuation(renderer: RenderObjectWrapper?) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if renderer == nil {
+    return false
+  }
+  if !(renderer is RenderBlockWrapper) && renderer!.isAnonymous() {
+    return false
+  }
+  if renderer is RenderTableWrapper {
+    return false
+  }
+  return true
 }
 
 private func nextContinuation(renderer: RenderObjectWrapper) -> RenderBoxModelObjectWrapper? {
