@@ -106,8 +106,20 @@ extension RenderTreeBuilder {
 
     // Make this private once all the mutation code is in RenderTreeBuilder.
     func childBecameNonInline(parent: RenderInlineWrapper, child: RenderElementWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // We have to split the parent flow.
+      let newBox = parent.containingBlock()!.createAnonymousBlock()
+      newBox.setIsContinuation()
+      let oldContinuation = parent.continuation()
+      if oldContinuation != nil {
+        oldContinuation!.removeFromContinuationChain()
+      }
+      newBox.insertIntoContinuationChainAfter(afterRenderer: parent)
+      let beforeChild = child.nextSibling()
+      let removedChild = builder.detachFromRenderElement(
+        parent: parent, child: child, willBeDestroyed: .No)
+      splitFlow(
+        parent: parent, beforeChild: beforeChild, newBlockBox: newBox, child: removedChild,
+        oldCont: oldContinuation)
     }
 
     private func insertChildToContinuation(
