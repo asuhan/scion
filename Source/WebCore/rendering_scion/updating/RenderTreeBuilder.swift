@@ -568,8 +568,17 @@ class RenderTreeBuilder {
   }
 
   private func markBoxForRelayoutAfterSplit(box: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: The table code should handle that automatically. If not,
+    // we should fix it and remove the table part checks.
+    if let table = box as? RenderTableWrapper {
+      // Because we may have added some sections with already computed column structures, we need to
+      // sync the table structure with them now. This avoids crashes when adding new cells to the table.
+      table.forceSectionsRecalc()
+    } else if let tableSection = box as? RenderTableSectionWrapper {
+      tableSection.setNeedsCellRecalc()
+    }
+
+    box.setNeedsLayoutAndPrefWidthsRecalc()
   }
 
   private func attachInternal(

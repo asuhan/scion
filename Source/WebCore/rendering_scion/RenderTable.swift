@@ -23,6 +23,11 @@
  */
 
 class RenderTableWrapper: RenderBlockWrapper {
+  func forceSectionsRecalc() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func createAnonymousWithParentRenderer(parent: RenderElementWrapper) -> RenderTableWrapper
   {
     // TODO(asuhan): implement this
