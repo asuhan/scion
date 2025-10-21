@@ -46,8 +46,30 @@ private func nextContinuation(renderer: RenderObjectWrapper) -> RenderBoxModelOb
 private func continuationBefore(parent: RenderInlineWrapper, beforeChild: RenderObjectWrapper?)
   -> RenderBoxModelObjectWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p) {
+    return parent
+  }
+
+  var curr = nextContinuation(renderer: parent)
+  var nextToLast: RenderBoxModelObjectWrapper? = parent
+  var last: RenderBoxModelObjectWrapper? = parent
+  while curr != nil {
+    if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(curr!.p) {
+      if CPtrToInt(curr!.firstChild()?.p) == CPtrToInt(beforeChild?.p) {
+        return last
+      }
+      return curr
+    }
+
+    nextToLast = last
+    last = curr
+    curr = nextContinuation(renderer: curr!)
+  }
+
+  if beforeChild == nil && last!.firstChild() == nil {
+    return nextToLast
+  }
+  return last
 }
 
 private func cloneAsContinuation(renderer: RenderInlineWrapper) -> RenderInlineWrapper {
