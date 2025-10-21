@@ -26,13 +26,26 @@
 extension RenderTreeBuilder {
   class Continuation {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func cleanupOnDestroy(renderer: RenderBoxModelObjectWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if renderer.continuation() == nil || renderer.isContinuation() {
+        if renderer.hasContinuationChainNode() {
+          renderer.removeFromContinuationChain()
+        }
+        return
+      }
+
+      assert(renderer.hasContinuationChainNode())
+      assert(renderer.continuationChainNode() != nil)
+      let continuationChainNode = renderer.continuationChainNode()!
+      while continuationChainNode.next != nil {
+        builder.destroy(renderer: continuationChainNode.next!.renderer!)
+      }
+      renderer.removeFromContinuationChain()
     }
+
+    private let builder: RenderTreeBuilder
   }
 }

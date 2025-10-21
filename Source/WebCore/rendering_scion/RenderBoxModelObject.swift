@@ -220,4 +220,36 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  class ContinuationChainNode {
+    // The HashMap for storing continuation pointers.
+    // An inline can be split with blocks occuring in between the inline content.
+    // When this occurs we need a pointer to the next object. We can basically be
+    // split into a sequence of inlines and blocks. The continuation will either be
+    // an anonymous block (that houses other blocks) or it will be an inline flow.
+    // <b><i><p>Hello</p></i></b>. In this example the <i> will have a block as
+    // its continuation but the <b> will just have an inline as its continuation.
+    init(renderer: RenderBoxModelObjectWrapper) { self.renderer = renderer }
+
+    deinit {
+      if next != nil {
+        assert(previous != nil)
+        assert(ObjectIdentifier(next!.previous!) == ObjectIdentifier(self))
+        next!.previous = previous
+      }
+      if previous != nil {
+        assert(ObjectIdentifier(previous!.next!) == ObjectIdentifier(self))
+        previous!.next = next
+      }
+    }
+
+    let renderer: RenderBoxModelObjectWrapper?
+    var previous: ContinuationChainNode? = nil
+    var next: ContinuationChainNode? = nil
+  }
+
+  func continuationChainNode() -> ContinuationChainNode? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

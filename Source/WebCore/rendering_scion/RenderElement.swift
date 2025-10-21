@@ -232,6 +232,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasContinuationChainNode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isContinuation() -> Bool {
     return wk_interop.RenderElement_isContinuation(p)
   }
