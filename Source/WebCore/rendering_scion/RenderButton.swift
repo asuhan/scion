@@ -29,4 +29,14 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func innerRenderer() -> RenderBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setInnerRenderer(innerRenderer: RenderBlockWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

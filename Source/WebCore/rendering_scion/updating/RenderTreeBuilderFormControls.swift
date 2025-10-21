@@ -26,38 +26,75 @@
 extension RenderTreeBuilder {
   class FormControls {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func attach(
       parent: RenderButtonWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.blockBuilder!.attach(
+        parent: findOrCreateParentForChild(parent: parent), child: child!, beforeChild: beforeChild)
     }
 
     func attach(
       parent: RenderMenuListWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.blockBuilder!.attach(
+        parent: findOrCreateParentForChild(parent: parent), child: child!, beforeChild: beforeChild)
+      parent.didAttachChild(child: child!)
     }
 
     func detach(
       parent: RenderButtonWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let innerRenderer = parent.innerRenderer()
+      if innerRenderer == nil || CPtrToInt(child.p) == CPtrToInt(innerRenderer!.p)
+        || CPtrToInt(child.parent()?.p) == CPtrToInt(parent.p)
+      {
+        assert(CPtrToInt(child.p) == CPtrToInt(innerRenderer!.p) || innerRenderer == nil)
+        return builder.blockBuilder!.detach(
+          parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed)
+      }
+      return builder.detach(parent: innerRenderer!, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     func detach(
       parent: RenderMenuListWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let innerRenderer = parent.innerRenderer()
+      if innerRenderer == nil || CPtrToInt(child.p) == CPtrToInt(innerRenderer!.p) {
+        return builder.blockBuilder!.detach(
+          parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed)
+      }
+      return builder.detach(parent: innerRenderer!, child: child, willBeDestroyed: willBeDestroyed)
     }
+
+    private func findOrCreateParentForChild(parent: RenderButtonWrapper) -> RenderBlockWrapper {
+      var innerRenderer = parent.innerRenderer()
+      if innerRenderer != nil {
+        return innerRenderer!
+      }
+
+      innerRenderer = parent.createAnonymousBlock(display: parent.style().display())
+      builder.blockBuilder!.attach(parent: parent, child: innerRenderer!, beforeChild: nil)
+      parent.setInnerRenderer(innerRenderer: innerRenderer!)
+      return innerRenderer!
+    }
+
+    private func findOrCreateParentForChild(parent: RenderMenuListWrapper) -> RenderBlockWrapper {
+      var innerRenderer = parent.innerRenderer()
+      if innerRenderer != nil {
+        return innerRenderer!
+      }
+
+      innerRenderer = parent.createAnonymousBlock()
+      builder.blockBuilder!.attach(parent: parent, child: innerRenderer!, beforeChild: nil)
+      parent.setInnerRenderer(innerRenderer: innerRenderer!)
+      return innerRenderer!
+    }
+
+    private let builder: RenderTreeBuilder
   }
 }
