@@ -567,6 +567,11 @@ class RenderTreeBuilder {
     return false
   }
 
+  private func markBoxForRelayoutAfterSplit(box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func attachInternal(
     parent: RenderElementWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
   ) {
@@ -1128,8 +1133,48 @@ class RenderTreeBuilder {
   func splitAnonymousBoxesAroundChild(
     parent: RenderBoxWrapper, originalBeforeChild: RenderObjectWrapper
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Adjust beforeChild if it is a column spanner and has been moved out of its original position.
+    var beforeChild = RenderTreeBuilder.MultiColumn.adjustBeforeChildForMultiColumnSpannerIfNeeded(
+      beforeChild: originalBeforeChild)
+    var didSplitParentAnonymousBoxes = false
+
+    while CPtrToInt(beforeChild.parent()?.p) != CPtrToInt(parent.p) {
+      let boxToSplit = beforeChild.parent() as! RenderBoxWrapper
+      if CPtrToInt(boxToSplit.firstChild()?.p) != CPtrToInt(beforeChild.p)
+        && boxToSplit.isAnonymous()
+      {
+        didSplitParentAnonymousBoxes = true
+
+        // We have to split the parent box into two boxes and move children
+        // from |beforeChild| to end into the new post box.
+        let postBox = boxToSplit.createAnonymousBoxWithSameTypeAs(renderer: parent)!
+        postBox.setChildrenInline(b: boxToSplit.childrenInline())
+        let parentBox = boxToSplit.parent() as! RenderBoxWrapper
+        // We need to invalidate the |parentBox| before inserting the new node
+        // so that the table repainting logic knows the structure is dirty.
+        // See for example RenderTableCell:clippedOverflowRectForRepaint.
+        markBoxForRelayoutAfterSplit(box: parentBox)
+        attachToRenderElementInternal(
+          parent: parentBox, child: postBox, beforeChild: boxToSplit.nextSibling())
+        moveChildren(
+          from: boxToSplit, to: postBox, startChild: beforeChild, endChild: nil,
+          normalizeAfterInsertion: .Yes)
+
+        markBoxForRelayoutAfterSplit(box: boxToSplit)
+        markBoxForRelayoutAfterSplit(box: postBox)
+
+        beforeChild = postBox
+      } else {
+        beforeChild = boxToSplit
+      }
+    }
+
+    if didSplitParentAnonymousBoxes {
+      markBoxForRelayoutAfterSplit(box: parent)
+    }
+
+    assert(CPtrToInt(beforeChild.parent()?.p) == CPtrToInt(parent.p))
+    return beforeChild
   }
 
   func createAnonymousWrappersForInlineContent(

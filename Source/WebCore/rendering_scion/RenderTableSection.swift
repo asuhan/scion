@@ -23,4 +23,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderTableSectionWrapper: RenderBoxWrapper {}
+final class RenderTableSectionWrapper: RenderBoxWrapper {
+  override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

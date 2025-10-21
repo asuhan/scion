@@ -54,5 +54,12 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    static func adjustBeforeChildForMultiColumnSpannerIfNeeded(beforeChild: RenderObjectWrapper)
+      -> RenderObjectWrapper
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 }

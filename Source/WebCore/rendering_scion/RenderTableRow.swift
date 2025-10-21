@@ -28,4 +28,9 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
