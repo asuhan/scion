@@ -29,8 +29,18 @@ extension RenderTreeBuilder {
     }
 
     func updateAfterDescendants(flow: RenderBlockFlowWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let needsFragmentedFlow = flow.requiresColumns(
+        desiredColumnCount: Int32(flow.style().columnCount()))
+      let hasFragmentedFlow = flow.multiColumnFlowForBlockFlow() != nil
+
+      if !hasFragmentedFlow && needsFragmentedFlow {
+        createFragmentedFlow(flow: flow)
+        return
+      }
+      if hasFragmentedFlow && !needsFragmentedFlow {
+        destroyFragmentedFlow(flow: flow)
+        return
+      }
     }
 
     // Some renderers (column spanners) are moved out of the flow thread to live among column
@@ -68,6 +78,16 @@ extension RenderTreeBuilder {
     static func adjustBeforeChildForMultiColumnSpannerIfNeeded(beforeChild: RenderObjectWrapper)
       -> RenderObjectWrapper
     {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func createFragmentedFlow(flow: RenderBlockWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func destroyFragmentedFlow(flow: RenderBlockWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

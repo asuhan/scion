@@ -81,4 +81,9 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func requiresColumns(desiredColumnCount: Int32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

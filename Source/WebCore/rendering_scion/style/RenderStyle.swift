@@ -527,6 +527,11 @@ class RenderStyleWrapper: Equatable {
     return direction() == .LTR
   }
 
+  func columnCount() -> UInt16 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func columnSpan() -> ColumnSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
