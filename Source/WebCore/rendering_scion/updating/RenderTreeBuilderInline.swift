@@ -205,7 +205,7 @@ extension RenderTreeBuilder {
           parent = parent!.parent()
         }
         assert(parent != nil && parent!.parent() != nil)
-        beforeChildAncestor = (parent!.parent() as! RenderBoxModelObjectWrapper)
+        beforeChildAncestor = parent!.parent() as! RenderBoxModelObjectWrapper?
       } else {
         fatalError("Not reached")
       }
@@ -335,7 +335,7 @@ extension RenderTreeBuilder {
 
         // Keep walking up the chain.
         currentChild = current
-        current = (current!.parent() as! RenderBoxModelObjectWrapper)
+        current = current!.parent() as! RenderBoxModelObjectWrapper?
         splitDepth += 1
       }
 

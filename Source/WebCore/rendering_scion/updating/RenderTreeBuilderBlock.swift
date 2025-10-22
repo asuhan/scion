@@ -437,7 +437,7 @@ extension RenderTreeBuilder {
       assert(beforeChild == nil || beforeChild!.parent() is RenderBlockWrapper)
       var beforeChildParent: RenderBoxModelObjectWrapper? = nil
       if beforeChild != nil {
-        beforeChildParent = (beforeChild!.parent() as! RenderBoxModelObjectWrapper)
+        beforeChildParent = beforeChild!.parent() as! RenderBoxModelObjectWrapper?
       } else {
         if let continuation = flow!.continuation() {
           beforeChildParent = continuation
