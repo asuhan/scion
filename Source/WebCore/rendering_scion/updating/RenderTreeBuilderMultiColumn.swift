@@ -38,8 +38,31 @@ private func findSetRendering(
 private func spannerPlaceholderCandidate(
   renderer: RenderObjectWrapper, stayWithin: RenderMultiColumnFlowWrapper
 ) -> RenderObjectWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Spanner candidate is a next sibling/ancestor's next child within the flow thread and
+  // it is in the same inflow/out-of-flow layout context.
+  if renderer.isOutOfFlowPositioned() {
+    return nil
+  }
+
+  assert(renderer.isDescendantOf(ancestor: stayWithin))
+  var current: RenderObjectWrapper? = renderer
+  while true {
+    // Skip to the first in-flow sibling.
+    var nextSibling = current!.nextSibling()
+    while nextSibling != nil && nextSibling!.isOutOfFlowPositioned() {
+      nextSibling = nextSibling!.nextSibling()
+    }
+    if nextSibling != nil {
+      return nextSibling
+    }
+    // No sibling candidate, jump to the parent and check its siblings.
+    current = current!.parent()
+    if current == nil || CPtrToInt(current?.p) == CPtrToInt(stayWithin.p)
+      || current!.isOutOfFlowPositioned()
+    {
+      return nil
+    }
+  }
 }
 
 private func isValidColumnSpanner(
