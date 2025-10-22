@@ -21,6 +21,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func findSetRendering(
+  fragmentedFlow: RenderMultiColumnFlowWrapper, renderer: RenderObjectWrapper
+) -> RenderMultiColumnSetWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func spannerPlaceholderCandidate(
+  renderer: RenderObjectWrapper, stayWithin: RenderMultiColumnFlowWrapper
+) -> RenderObjectWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func isValidColumnSpanner(
+  fragmentedFlow: RenderMultiColumnFlowWrapper, descendant: RenderObjectWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class MultiColumn {
     init(builder: RenderTreeBuilder) {
@@ -293,8 +314,112 @@ extension RenderTreeBuilder {
       flow: RenderMultiColumnFlowWrapper, subtreeRoot: inout RenderObjectWrapper?,
       descendant: RenderObjectWrapper
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let multicolContainer = flow.multiColumnBlockFlow()
+      let nextRendererInFragmentedFlow = spannerPlaceholderCandidate(
+        renderer: descendant, stayWithin: flow)
+      var insertBeforeMulticolChild: RenderObjectWrapper? = nil
+      var nextDescendant: RenderObjectWrapper? = descendant
+
+      if multicolContainer == nil {
+        return nil
+      }
+
+      if isValidColumnSpanner(fragmentedFlow: flow, descendant: descendant) {
+        // This is a spanner (column-span:all). Such renderers are moved from where they would
+        // otherwise occur in the render tree to becoming a direct child of the multicol container,
+        // so that they live among the column sets. This simplifies the layout implementation, and
+        // basically just relies on regular block layout done by the RenderBlockFlow that
+        // establishes the multicol container.
+        let container = descendant.parent() as! RenderBlockFlowWrapper
+        var setToSplit: RenderMultiColumnSetWrapper? = nil
+        if nextRendererInFragmentedFlow != nil {
+          setToSplit = findSetRendering(fragmentedFlow: flow, renderer: descendant)
+          if setToSplit != nil {
+            setToSplit!.setNeedsLayout()
+            insertBeforeMulticolChild = setToSplit!.nextSibling()
+          }
+        }
+        // Moving a spanner's renderer so that it becomes a sibling of the column sets requires us
+        // to insert an anonymous placeholder in the tree where the spanner's renderer otherwise
+        // would have been. This is needed for a two reasons: We need a way of separating inline
+        // content before and after the spanner, so that it becomes separate line boxes. Secondly,
+        // this placeholder serves as a break point for column sets, so that, when encountered, we
+        // end flowing one column set and move to the next one.
+        let placeholder = RenderMultiColumnSpannerPlaceholderWrapper.createAnonymous(
+          fragmentedFlow: flow, spanner: descendant as! RenderBoxWrapper,
+          parentStyle: container.style())
+        builder.attach(parent: container, child: placeholder, beforeChild: descendant.nextSibling())
+        let takenDescendant = builder.detach(
+          parent: container, child: descendant, willBeDestroyed: .No)
+
+        // This is a guard to stop an ancestor flow thread from processing the spanner.
+        let _ = SetForScope(scopedVariable: &MultiColumn.gShiftingSpanner, newValue: true)
+        builder.blockBuilder!.attach(
+          parent: multicolContainer!, child: takenDescendant!,
+          beforeChild: insertBeforeMulticolChild
+        )
+
+        // The spanner has now been moved out from the flow thread, but we don't want to
+        // examine its children anyway. They are all part of the spanner and shouldn't trigger
+        // creation of column sets or anything like that. Continue at its original position in
+        // the tree, i.e. where the placeholder was just put.
+        if CPtrToInt(subtreeRoot?.p) == CPtrToInt(descendant.p) {
+          subtreeRoot = placeholder
+        }
+        nextDescendant = placeholder
+      } else {
+        // This is regular multicol content, i.e. not part of a spanner.
+        if let placeholder = nextRendererInFragmentedFlow
+          as? RenderMultiColumnSpannerPlaceholderWrapper
+        {
+          // Inserted right before a spanner. Is there a set for us there?
+          if let previous = placeholder.spanner()!.previousSibling() {
+            if previous is RenderMultiColumnSetWrapper {
+              return nextDescendant  // There's already a set there. Nothing to do.
+            }
+          }
+          insertBeforeMulticolChild = placeholder.spanner()
+        } else if let lastSet = flow.lastMultiColumnSet() {
+          // This child is not an immediate predecessor of a spanner, which means that if this
+          // child precedes a spanner at all, there has to be a column set created for us there
+          // already. If it doesn't precede any spanner at all, on the other hand, we need a
+          // column set at the end of the multicol container. We don't really check here if the
+          // child inserted precedes any spanner or not (as that's an expensive operation). Just
+          // make sure we have a column set at the end. It's no big deal if it remains unused.
+
+          // Legends are siblings of RenderMultiColumnSets not because they are spanners, but because they don't participate in multi-column context.
+          let hasMultiColumnSet = lastSet.nextSibling() == nil || lastSet.nextSibling()!.isLegend()
+          if hasMultiColumnSet {
+            return nextDescendant
+          }
+        }
+      }
+      // Need to create a new column set when there's no set already created. We also always insert
+      // another column set after a spanner. Even if it turns out that there are no renderers
+      // following the spanner, there may be bottom margins there, which take up space.
+      let newSet = CreateRenderer.RenderMultiColumnSet(
+        fragmentedFlow: flow,
+        style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: multicolContainer!.style(), display: .Block))
+      newSet.initializeStyle()
+      builder.blockBuilder!.attach(
+        parent: multicolContainer!, child: newSet, beforeChild: insertBeforeMulticolChild)
+      flow.invalidateFragments()
+
+      // We cannot handle immediate column set siblings at the moment (and there's no need for
+      // it, either). There has to be at least one spanner separating them.
+      assert(
+        RenderMultiColumnFlowWrapper.previousColumnSetOrSpannerSiblingOf(child: newSet) == nil
+          || !RenderMultiColumnFlowWrapper.previousColumnSetOrSpannerSiblingOf(child: newSet)!
+            .isRenderMultiColumnSet()
+      )
+      assert(
+        RenderMultiColumnFlowWrapper.nextColumnSetOrSpannerSiblingOf(child: newSet) == nil
+          || !RenderMultiColumnFlowWrapper.nextColumnSetOrSpannerSiblingOf(child: newSet)!
+            .isRenderMultiColumnSet()
+      )
+
+      return nextDescendant
     }
 
     private func handleSpannerRemoval(

@@ -61,4 +61,10 @@ class CreateRenderer {
   {
     return RenderMultiColumnFlowWrapper(document: document, style: style)
   }
+
+  static func RenderMultiColumnSet(
+    fragmentedFlow: RenderFragmentedFlowWrapper, style: RenderStyleWrapper
+  ) -> RenderMultiColumnSetWrapper {
+    return RenderMultiColumnSetWrapper(fragmentedFlow: fragmentedFlow, style: style)
+  }
 }

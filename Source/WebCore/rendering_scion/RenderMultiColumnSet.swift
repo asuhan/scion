@@ -35,6 +35,11 @@
 // Column spans result in the creation of new column sets as well, since a spanning fragment has to be placed in between the column sets that
 // come before and after the span.
 final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
+  init(fragmentedFlow: RenderFragmentedFlowWrapper, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func multiColumnFlowForMultiColumnSet() -> RenderMultiColumnFlowWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

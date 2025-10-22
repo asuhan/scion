@@ -28,6 +28,14 @@
  */
 
 final class RenderMultiColumnSpannerPlaceholderWrapper: RenderBoxWrapper {
+  static func createAnonymous(
+    fragmentedFlow: RenderMultiColumnFlowWrapper, spanner: RenderBoxWrapper,
+    parentStyle: RenderStyleWrapper
+  ) -> RenderMultiColumnSpannerPlaceholderWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func spanner() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
