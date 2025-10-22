@@ -68,6 +68,34 @@ private func spannerPlaceholderCandidate(
 private func isValidColumnSpanner(
   fragmentedFlow: RenderMultiColumnFlowWrapper, descendant: RenderObjectWrapper
 ) -> Bool {
+  // We assume that we're inside the flow thread. This function is not to be called otherwise.
+  assert(descendant.isDescendantOf(ancestor: fragmentedFlow))
+  // First make sure that the renderer itself has the right properties for becoming a spanner.
+  let descendantBox: RenderBoxWrapper? = descendant as? RenderBoxWrapper
+  if descendantBox == nil {
+    return false
+  }
+
+  if descendantBox!.isFloatingOrOutOfFlowPositioned() {
+    return false
+  }
+
+  if descendantBox!.style().columnSpan() != .All {
+    return false
+  }
+
+  let parent = descendantBox!.parent()
+  if !(parent is RenderBlockFlowWrapper) || parent!.childrenInline() {
+    // Needs to be block-level.
+    return false
+  }
+
+  // We need to have the flow thread as the containing block. A spanner cannot break out of the flow thread.
+  let enclosingFragmentedFlow = descendantBox!.enclosingFragmentedFlow()
+  if CPtrToInt(enclosingFragmentedFlow?.p) != CPtrToInt(fragmentedFlow.p) {
+    return false
+  }
+
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
