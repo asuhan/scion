@@ -77,8 +77,28 @@ extension RenderTreeBuilder {
     }
 
     func childRequiresTable(parent: RenderElementWrapper, child: RenderObjectWrapper) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let newTableColumn = child as? RenderTableColWrapper {
+        let isColumnInColumnGroup =
+          newTableColumn.isTableColumn() && parent is RenderTableColWrapper
+        return !(parent is RenderTableWrapper) && !isColumnInColumnGroup
+      }
+      if child is RenderTableCaptionWrapper {
+        return !(parent is RenderTableWrapper)
+      }
+
+      if child is RenderTableSectionWrapper {
+        return !(parent is RenderTableWrapper)
+      }
+
+      if child is RenderTableRowWrapper {
+        return !(parent is RenderTableSectionWrapper)
+      }
+
+      if child is RenderTableCellWrapper {
+        return !(parent is RenderTableRowWrapper)
+      }
+
+      return false
     }
 
     func collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: RenderTableCellWrapper) {

@@ -78,7 +78,9 @@ target_sources(layout_scion PRIVATE
     RenderSelection.swift
     RenderSlider.swift
     RenderTable.swift
+    RenderTableCaption.swift
     RenderTableCell.swift
+    RenderTableCol.swift
     RenderTableRow.swift
     RenderTableSection.swift
     RenderText.swift
