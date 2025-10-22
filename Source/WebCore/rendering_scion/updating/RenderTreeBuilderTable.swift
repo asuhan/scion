@@ -26,16 +26,39 @@
 extension RenderTreeBuilder {
   class Table {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func findOrCreateParentForChild(
       parent: RenderTableRowWrapper, child: RenderObjectWrapper,
       beforeChild: inout RenderObjectWrapper?
     ) -> RenderElementWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if child is RenderTableCellWrapper {
+        return parent
+      }
+
+      if beforeChild != nil && !beforeChild!.isAnonymous()
+        && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      let lastChild = beforeChild ?? parent.lastCell()
+      if lastChild != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return createAnonymousTableCell(parent: parent, beforeChild: &beforeChild)
+    }
+
+    private func createAnonymousTableCell(
+      parent: RenderTableRowWrapper, beforeChild: inout RenderObjectWrapper?
+    ) -> RenderTableCellWrapper {
+      let cell = RenderTableCellWrapper.createAnonymousWithParentRenderer(parent: parent)
+      builder.attach(parent: parent, child: cell, beforeChild: beforeChild)
+      beforeChild = nil
+      return cell
     }
 
     func findOrCreateParentForChild(
@@ -110,5 +133,7 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let builder: RenderTreeBuilder
   }
 }
