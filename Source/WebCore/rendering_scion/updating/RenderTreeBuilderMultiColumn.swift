@@ -233,9 +233,60 @@ extension RenderTreeBuilder {
       flow.setMultiColumnFlow(fragmentedFlow: fragmentedFlow)
     }
 
-    private func destroyFragmentedFlow(flow: RenderBlockWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    private func destroyFragmentedFlow(flow: RenderBlockFlowWrapper) {
+      let multiColumnFlow = flow.multiColumnFlowForBlockFlow()!
+      multiColumnFlow.deleteLines()
+
+      // Move spanners back to their original DOM position in the tree, and destroy the placeholders.
+      let spanners = multiColumnFlow.spannerMap
+      var placeholdersToDelete: [RenderMultiColumnSpannerPlaceholderWrapper] = []
+      for spannerAndPlaceholder in spanners {
+        placeholdersToDelete.append(spannerAndPlaceholder.value)
+      }
+      var parentAndSpannerList: [(RenderElementWrapper, RenderObjectWrapper)] = []
+      for placeholder in placeholdersToDelete {
+        var spannerOriginalParent = placeholder.parent()
+        if CPtrToInt(spannerOriginalParent?.p) == CPtrToInt(multiColumnFlow.p) {
+          spannerOriginalParent = flow
+        }
+        // Detaching the spanner takes care of removing the placeholder (and merges the RenderMultiColumnSets).
+        let spanner = placeholder.spanner()
+        parentAndSpannerList.append(
+          (
+            spannerOriginalParent!,
+            builder.detach(
+              parent: spanner!.parent()!, child: spanner!, willBeDestroyed: .No,
+              canCollapseAnonymousBlock: .No)!
+          ))
+      }
+      var columnSet = multiColumnFlow.firstMultiColumnSet()
+      while columnSet != nil {
+        builder.destroy(renderer: columnSet!)
+        columnSet = multiColumnFlow.firstMultiColumnSet()
+      }
+
+      flow.clearMultiColumnFlow()
+      let hasInitialBlockChild = MultiColumn.hasInitialBlockChild(flow: flow)
+      flow.setChildrenInline(b: !hasInitialBlockChild)
+      builder.moveAllChildren(from: multiColumnFlow, to: flow, normalizeAfterInsertion: .Yes)
+      builder.destroy(renderer: multiColumnFlow)
+      for (parent, spanner) in parentAndSpannerList {
+        builder.attach(parent: parent, child: spanner)
+      }
+    }
+
+    private static func hasInitialBlockChild(flow: RenderBlockFlowWrapper) -> Bool {
+      if !flow.isFieldset() {
+        return false
+      }
+      // We don't move the legend under the multicolumn flow (see MultiColumn::createFragmentedFlow), so when the multicolumn context is destroyed
+      // the fieldset already has a legend block level box.
+      for box: RenderBoxWrapper in childrenOfType(parent: flow) {
+        if box.isLegend() {
+          return true
+        }
+      }
+      return false
     }
 
     func processPossibleSpannerDescendant(
