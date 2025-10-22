@@ -118,8 +118,35 @@ extension RenderTreeBuilder {
     func multiColumnDescendantInserted(
       flow: RenderMultiColumnFlowWrapper, newDescendant: RenderObjectWrapper
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if MultiColumn.gShiftingSpanner || MultiColumn.gRestoringColumnSpannersForContainer
+        || newDescendant.isRenderFragmentedFlow()
+      {
+        return
+      }
+
+      var subtreeRoot: RenderObjectWrapper? = newDescendant
+      var descendant: RenderObjectWrapper? = subtreeRoot
+      while descendant != nil {
+        // Skip nested multicolumn flows.
+        if descendant is RenderMultiColumnFlowWrapper {
+          descendant = descendant!.nextSibling()
+          continue
+        }
+        if let placeholder = descendant as? RenderMultiColumnSpannerPlaceholderWrapper {
+          // A spanner's placeholder has been inserted. The actual spanner renderer is moved from
+          // where it would otherwise occur (if it weren't a spanner) to becoming a sibling of the
+          // column sets.
+          assert(flow.spannerMap[CPtrToInt(placeholder.spanner()?.p)] == nil)
+          flow.spannerMap.updateValue(placeholder, forKey: CPtrToInt(placeholder.spanner()?.p))
+          assert(placeholder.firstChild() == nil)  // There should be no children here, but if there are, we ought to skip them.
+        } else {
+          descendant = processPossibleSpannerDescendant(
+            flow: flow, subtreeRoot: &subtreeRoot, descendant: descendant!)
+        }
+        if descendant != nil {
+          descendant = descendant!.nextInPreOrder(stayWithin: subtreeRoot)
+        }
+      }
     }
 
     func multiColumnRelativeWillBeRemoved(
@@ -184,6 +211,14 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    func processPossibleSpannerDescendant(
+      flow: RenderMultiColumnFlowWrapper, subtreeRoot: inout RenderObjectWrapper?,
+      descendant: RenderObjectWrapper
+    ) -> RenderObjectWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private func handleSpannerRemoval(
       flow: RenderMultiColumnFlowWrapper, spanner: RenderObjectWrapper,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock
@@ -195,5 +230,6 @@ extension RenderTreeBuilder {
     private let builder: RenderTreeBuilder
 
     private static var gRestoringColumnSpannersForContainer = false
+    private static var gShiftingSpanner = false
   }
 }
