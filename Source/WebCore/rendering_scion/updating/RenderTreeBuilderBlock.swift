@@ -111,8 +111,70 @@ struct ParentAndBeforeChild {
 private func findParentAndBeforeChildForNonSibling(
   parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper
 ) -> ParentAndBeforeChild? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var beforeChildContainer = beforeChild.parent()
+  while CPtrToInt(beforeChildContainer!.parent()?.p) != CPtrToInt(parent.p) {
+    beforeChildContainer = beforeChildContainer!.parent()
+  }
+
+  assert(beforeChildContainer != nil)
+  if beforeChildContainer == nil || !beforeChildContainer!.isAnonymous() {
+    return nil
+  }
+
+  if beforeChildContainer!.isInline() && child.isInline() {
+    // The before child happens to be a block level box wrapped in an anonymous inline-block in an inline context (e.g. ruby).
+    // Let's attach this new child before the anonymous inline-block wrapper.
+    assert(beforeChildContainer!.isInlineBlockOrInlineTable())
+    return ParentAndBeforeChild(parent: parent, beforeChild: beforeChildContainer)
+  }
+  assert(!beforeChildContainer!.isInline() || beforeChildContainer!.isRenderTable())
+
+  // If the requested beforeChild is not one of our children, then this is because
+  // there is an anonymous container within this object that contains the beforeChild.
+  let beforeChildAnonymousContainer = beforeChildContainer!
+  if beforeChildAnonymousContainer.isAnonymousBlock() {
+    if mayUseBeforeChildContainerAsParent(
+      beforeChildAnonymousContainer: beforeChildAnonymousContainer, child: child,
+      beforeChild: beforeChild)
+    {
+      return ParentAndBeforeChild(parent: beforeChildAnonymousContainer, beforeChild: beforeChild)
+    }
+    return ParentAndBeforeChild(parent: parent, beforeChild: beforeChild.parent())
+  }
+
+  assert(beforeChildAnonymousContainer.isRenderTable())
+  if child.isTablePart() {
+    return ParentAndBeforeChild(parent: beforeChildAnonymousContainer, beforeChild: beforeChild)
+  }
+
+  // parent needs splitting.
+  return ParentAndBeforeChild(parent: nil, beforeChild: nil)
+}
+
+private func mayUseBeforeChildContainerAsParent(
+  beforeChildAnonymousContainer: RenderElementWrapper, child: RenderObjectWrapper,
+  beforeChild: RenderObjectWrapper
+) -> Bool {
+  if child.isOutOfFlowPositioned()
+    && isFlexOrGridItemContainer(beforeChildAnonymousContainer: beforeChildAnonymousContainer)
+  {
+    // Do not try to move an out-of-flow block box under an anonymous flex/grid item. It should stay a direct child of the flex/grid container.
+    // https://www.w3.org/TR/css-flexbox-1/#abspos-items
+    // As it is out-of-flow, an absolutely-positioned child of a flex container does not participate in flex layout.
+    // The static position of an absolutely-positioned child of a flex container is determined such that the
+    // child is positioned as if it were the sole flex item in the flex container,
+    return false
+  }
+  return child.isInline()
+    || CPtrToInt(beforeChildAnonymousContainer.firstChild()?.p) != CPtrToInt(beforeChild.p)
+}
+
+private func isFlexOrGridItemContainer(beforeChildAnonymousContainer: RenderElementWrapper) -> Bool
+{
+  if let renderBox = beforeChildAnonymousContainer as? RenderBoxWrapper {
+    return renderBox.isFlexItemIncludingDeprecated() || renderBox.isGridItem()
+  }
+  return false
 }
 
 extension RenderTreeBuilder {

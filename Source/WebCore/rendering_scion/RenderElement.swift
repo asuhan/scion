@@ -285,6 +285,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }
 
+  func isFlexItemIncludingDeprecated() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintRectToClipOutFromBorder(paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

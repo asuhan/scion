@@ -692,6 +692,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isGridItem() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFlexItem() -> Bool { return wk_interop.RenderBox_isFlexItem(p) }
 
   func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
