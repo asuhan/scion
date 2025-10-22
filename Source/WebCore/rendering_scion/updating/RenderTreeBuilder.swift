@@ -1035,7 +1035,7 @@ class RenderTreeBuilder {
 
   // Move all of the kids from |startChild| up to but excluding |endChild|. 0 can be passed as the |endChild| to denote
   // that all the kids from |startChild| onwards should be moved.
-  private func moveChildren(
+  func moveChildren(
     from: RenderBoxModelObjectWrapper, to: RenderBoxModelObjectWrapper,
     startChild: RenderObjectWrapper?, endChild: RenderObjectWrapper?,
     normalizeAfterInsertion: NormalizeAfterInsertion

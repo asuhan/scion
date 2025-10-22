@@ -201,9 +201,36 @@ extension RenderTreeBuilder {
       return multiColumnFlow!.findColumnSpannerPlaceholder(spanner: beforeChildBox)!
     }
 
-    private func createFragmentedFlow(flow: RenderBlockWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    private func createFragmentedFlow(flow: RenderBlockFlowWrapper) {
+      flow.setChildrenInline(b: false)  // Do this to avoid wrapping inline children that are just going to move into the flow thread.
+      flow.deleteLines()
+      // If this soon-to-be multicolumn flow is already part of a multicolumn context, we need to move back the descendant spanners
+      // to their original position before moving subtrees around.
+      if let enclosingflow = flow.enclosingFragmentedFlow() as? RenderMultiColumnFlowWrapper {
+        restoreColumnSpannersForContainer(container: flow, multiColumnFlow: enclosingflow)
+      }
+
+      let fragmentedFlow = CreateRenderer.RenderMultiColumnFlow(
+        document: flow.document(),
+        style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: flow.style(), display: .Block))
+      fragmentedFlow.initializeStyle()
+      builder.blockBuilder!.attach(parent: flow, child: fragmentedFlow, beforeChild: nil)
+
+      // Reparent children preceding the fragmented flow into the fragmented flow.
+      builder.moveChildren(
+        from: flow, to: fragmentedFlow, startChild: flow.firstChild(), endChild: fragmentedFlow,
+        normalizeAfterInsertion: .Yes)
+      if flow.isFieldset() {
+        // Keep legends out of the flow thread.
+        for box: RenderBoxWrapper in childrenOfType(parent: fragmentedFlow) {
+          if box.isLegend() {
+            builder.move(from: fragmentedFlow, to: flow, child: box, normalizeAfterInsertion: .Yes)
+          }
+        }
+      }
+
+      flow.setMultiColumnFlow(fragmentedFlow: fragmentedFlow)
     }
 
     private func destroyFragmentedFlow(flow: RenderBlockWrapper) {

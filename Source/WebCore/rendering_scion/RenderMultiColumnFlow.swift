@@ -25,6 +25,11 @@
  */
 
 class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
+  init(document: Document, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func findColumnSpannerPlaceholder(spanner: RenderBoxWrapper?)
     -> RenderMultiColumnSpannerPlaceholderWrapper?
   {

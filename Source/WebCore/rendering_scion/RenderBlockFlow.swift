@@ -62,6 +62,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func setMultiColumnFlow(fragmentedFlow: RenderMultiColumnFlowWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresColumns(desiredColumnCount: Int32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
