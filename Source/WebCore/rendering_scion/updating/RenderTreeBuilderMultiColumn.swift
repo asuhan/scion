@@ -24,8 +24,15 @@
 private func findSetRendering(
   fragmentedFlow: RenderMultiColumnFlowWrapper, renderer: RenderObjectWrapper
 ) -> RenderMultiColumnSetWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Find the set inside which the specified renderer would be rendered.
+  var multicolSet = fragmentedFlow.firstMultiColumnSet()
+  while multicolSet != nil {
+    if multicolSet!.containsRendererInFragmentedFlow(renderer: renderer) {
+      return multicolSet
+    }
+    multicolSet = multicolSet!.nextSiblingMultiColumnSet()
+  }
+  return nil
 }
 
 private func spannerPlaceholderCandidate(

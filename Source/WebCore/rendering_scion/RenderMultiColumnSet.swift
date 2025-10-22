@@ -45,6 +45,17 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  func nextSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Return true if the specified renderer (descendant of the flow thread) is inside this column set.
+  func containsRendererInFragmentedFlow(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
