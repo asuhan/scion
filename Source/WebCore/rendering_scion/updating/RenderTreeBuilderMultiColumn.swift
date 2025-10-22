@@ -90,7 +90,7 @@ extension RenderTreeBuilder {
     func restoreColumnSpannersForContainer(
       container: RenderElementWrapper, multiColumnFlow: RenderMultiColumnFlowWrapper
     ) {
-      let spanners = multiColumnFlow.spannerMap()
+      let spanners = multiColumnFlow.spannerMap
       var placeholdersToRestore: [RenderMultiColumnSpannerPlaceholderWrapper] = []
       for spannerAndPlaceholder in spanners {
         let placeholder = spannerAndPlaceholder.value
@@ -126,8 +126,26 @@ extension RenderTreeBuilder {
       flow: RenderMultiColumnFlowWrapper, relative: RenderObjectWrapper,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      flow.invalidateFragments()
+      if let placeholder = relative as? RenderMultiColumnSpannerPlaceholderWrapper {
+        // Remove the map entry for this spanner, but leave the actual spanner renderer alone. Also
+        // keep the reference to the spanner, since the placeholder may be about to be re-inserted
+        // in the tree.
+        assert(relative.isDescendantOf(ancestor: flow))
+        flow.spannerMap.removeValue(forKey: CPtrToInt(placeholder.spanner()?.p))
+        return
+      }
+      if relative.style().columnSpan() == .All {
+        if CPtrToInt(relative.parent()?.p) != CPtrToInt(flow.parent()?.p) {
+          return  // not a valid spanner.
+        }
+
+        handleSpannerRemoval(
+          flow: flow, spanner: relative, canCollapseAnonymousBlock: canCollapseAnonymousBlock)
+      }
+      // Note that we might end up with empty column sets if all column content is removed. That's no
+      // big deal though (and locating them would be expensive), and they will be found and re-used if
+      // content is added again later.
     }
 
     static func adjustBeforeChildForMultiColumnSpannerIfNeeded(beforeChild: RenderObjectWrapper)
@@ -143,6 +161,14 @@ extension RenderTreeBuilder {
     }
 
     private func destroyFragmentedFlow(flow: RenderBlockWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func handleSpannerRemoval(
+      flow: RenderMultiColumnFlowWrapper, spanner: RenderObjectWrapper,
+      canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock
+    ) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

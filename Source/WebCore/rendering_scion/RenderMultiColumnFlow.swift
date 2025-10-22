@@ -42,8 +42,14 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
 
   typealias SpannerMap = [UInt: RenderMultiColumnSpannerPlaceholderWrapper]
 
-  func spannerMap() -> SpannerMap {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  var spannerMap: SpannerMap {
+    get {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    set {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 }

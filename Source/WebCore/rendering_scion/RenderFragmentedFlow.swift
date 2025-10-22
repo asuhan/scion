@@ -33,6 +33,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collectLayerFragments(
     layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
