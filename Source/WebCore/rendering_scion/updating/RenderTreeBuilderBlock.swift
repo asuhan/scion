@@ -77,8 +77,30 @@ private func canMergeContiguousAnonymousBlocks(
 private func continuationBefore(parent: RenderBlockWrapper, beforeChild: RenderObjectWrapper?)
   -> RenderBlockWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p) {
+    return parent
+  }
+
+  var nextToLast: RenderBlockWrapper? = parent
+  var last: RenderBlockWrapper? = parent
+  var current = parent.continuation() as! RenderBlockWrapper?
+  while current != nil {
+    if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(current!.p) {
+      if CPtrToInt(current!.firstChild()?.p) == CPtrToInt(beforeChild?.p) {
+        return last
+      }
+      return current
+    }
+
+    nextToLast = last
+    last = current
+    current = current!.continuation() as! RenderBlockWrapper?
+  }
+
+  if beforeChild == nil && last!.firstChild() == nil {
+    return nextToLast
+  }
+  return last
 }
 
 struct ParentAndBeforeChild {
