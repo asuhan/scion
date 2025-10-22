@@ -24,8 +24,7 @@
 extension RenderTreeBuilder {
   class MultiColumn {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func updateAfterDescendants(flow: RenderBlockFlowWrapper) {
@@ -91,8 +90,29 @@ extension RenderTreeBuilder {
     func restoreColumnSpannersForContainer(
       container: RenderElementWrapper, multiColumnFlow: RenderMultiColumnFlowWrapper
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let spanners = multiColumnFlow.spannerMap()
+      var placeholdersToRestore: [RenderMultiColumnSpannerPlaceholderWrapper] = []
+      for spannerAndPlaceholder in spanners {
+        let placeholder = spannerAndPlaceholder.value
+        if !placeholder.isDescendantOf(ancestor: container) {
+          continue
+        }
+        placeholdersToRestore.append(placeholder)
+      }
+      for placeholder in placeholdersToRestore {
+        let spanner = placeholder.spanner()
+        if spanner == nil {
+          fatalError("Not reached")
+        }
+        // Move the spanner back to its original position.
+        let spannerOriginalParent = placeholder.parent()!
+        // Detaching the spanner takes care of removing the placeholder (and merges the RenderMultiColumnSets).
+        let spannerToReInsert = builder.detach(
+          parent: spanner!.parent()!, child: spanner!, willBeDestroyed: .No)
+        let _ = SetForScope(
+          scopedVariable: &MultiColumn.gRestoringColumnSpannersForContainer, newValue: true)
+        builder.attach(parent: spannerOriginalParent, child: spannerToReInsert!)
+      }
     }
 
     func multiColumnDescendantInserted(
@@ -126,5 +146,9 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let builder: RenderTreeBuilder
+
+    private static var gRestoringColumnSpannersForContainer = false
   }
 }

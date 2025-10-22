@@ -27,4 +27,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class RenderMultiColumnSpannerPlaceholderWrapper: RenderBoxWrapper {}
+final class RenderMultiColumnSpannerPlaceholderWrapper: RenderBoxWrapper {
+  func spanner() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
