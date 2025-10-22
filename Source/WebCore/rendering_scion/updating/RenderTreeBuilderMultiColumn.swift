@@ -151,8 +151,27 @@ extension RenderTreeBuilder {
     static func adjustBeforeChildForMultiColumnSpannerIfNeeded(beforeChild: RenderObjectWrapper)
       -> RenderObjectWrapper
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let beforeChildBox = beforeChild as? RenderBoxWrapper
+      if beforeChildBox == nil {
+        return beforeChild
+      }
+
+      let nextSibling = beforeChildBox!.nextSibling()
+      if nextSibling == nil {
+        return beforeChild
+      }
+
+      let renderMultiColumnSet = nextSibling as? RenderMultiColumnSetWrapper
+      if renderMultiColumnSet == nil {
+        return beforeChild
+      }
+
+      let multiColumnFlow = renderMultiColumnSet!.multiColumnFlowForMultiColumnSet()
+      if multiColumnFlow == nil {
+        return beforeChild
+      }
+
+      return multiColumnFlow!.findColumnSpannerPlaceholder(spanner: beforeChildBox)!
     }
 
     private func createFragmentedFlow(flow: RenderBlockWrapper) {
