@@ -49,8 +49,43 @@ extension RenderTreeBuilder {
     func resolveMovedChild(
       enclosingFragmentedFlow: RenderFragmentedFlowWrapper, beforeChild: RenderObjectWrapper?
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if beforeChild == nil {
+        return nil
+      }
+
+      let beforeChildRenderBox = beforeChild as? RenderBoxWrapper
+      if beforeChildRenderBox == nil {
+        return beforeChild
+      }
+
+      let renderMultiColumnFlow = enclosingFragmentedFlow as? RenderMultiColumnFlowWrapper
+
+      if renderMultiColumnFlow == nil {
+        return beforeChild
+      }
+
+      // We only need to resolve for column spanners.
+      if beforeChild!.style().columnSpan() != .All {
+        return beforeChild
+      }
+
+      // The renderer for the actual DOM node that establishes a spanner is moved from its original
+      // location in the render tree to becoming a sibling of the column sets. In other words, it's
+      // moved out from the flow thread (and becomes a sibling of it). When we for instance want to
+      // create and insert a renderer for the sibling node immediately preceding the spanner, we need
+      // to map that spanner renderer to the spanner's placeholder, which is where the new inserted
+      // renderer belongs.
+      if let placeholder = renderMultiColumnFlow!.findColumnSpannerPlaceholder(
+        spanner: beforeChildRenderBox)
+      {
+        return placeholder
+      }
+
+      // This is an invalid spanner, or its placeholder hasn't been created yet. This happens when
+      // moving an entire subtree into the flow thread, when we are processing the insertion of this
+      // spanner's preceding sibling, and we obviously haven't got as far as processing this spanner
+      // yet.
+      return beforeChild
     }
 
     func restoreColumnSpannersForContainer(
