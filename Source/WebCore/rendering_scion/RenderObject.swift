@@ -337,6 +337,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderMultiColumnSet() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isDocumentElementRenderer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

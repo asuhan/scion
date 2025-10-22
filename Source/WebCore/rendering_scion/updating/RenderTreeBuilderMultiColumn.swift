@@ -301,8 +301,20 @@ extension RenderTreeBuilder {
       flow: RenderMultiColumnFlowWrapper, spanner: RenderObjectWrapper,
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // The placeholder may already have been removed, but if it hasn't, do so now.
+      if let placeholderIndex = flow.spannerMap.index(forKey: CPtrToInt(spanner.p)) {
+        let placeholder = flow.spannerMap[placeholderIndex].value
+        flow.spannerMap.remove(at: placeholderIndex)
+        builder.destroy(renderer: placeholder, canCollapseAnonymousBlock: canCollapseAnonymousBlock)
+      }
+
+      if let next = spanner.nextSibling(), let previous = spanner.previousSibling(),
+        previous.isRenderMultiColumnSet() && next.isRenderMultiColumnSet()
+      {
+        // Merge two sets that no longer will be separated by a spanner.
+        builder.destroy(renderer: next)
+        previous.setNeedsLayout()
+      }
     }
 
     private let builder: RenderTreeBuilder
