@@ -72,6 +72,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func willCreateColumns(desiredColumnCount: UInt32? = nil) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresColumns(desiredColumnCount: Int32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
