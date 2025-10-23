@@ -225,8 +225,20 @@ extension RenderTreeBuilder {
     func attach(
       parent: RenderTableWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var beforeChild = beforeChild
+      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p) {
+        beforeChild = builder.splitAnonymousBoxesAroundChild(
+          parent: parent, originalBeforeChild: beforeChild!)
+      }
+
+      let newChild = child!
+      if let renderTableSection = newChild as? RenderTableSectionWrapper {
+        parent.willInsertTableSection(child: renderTableSection, beforeChild: beforeChild)
+      } else if let renderTableCol = newChild as? RenderTableColWrapper {
+        parent.willInsertTableColumn(child: renderTableCol, beforeChild: beforeChild)
+      }
+
+      builder.attachToRenderElement(parent: parent, child: newChild, beforeChild: beforeChild)
     }
 
     func attach(
