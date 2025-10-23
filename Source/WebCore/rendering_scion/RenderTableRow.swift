@@ -45,4 +45,9 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func didInsertTableCell(child: RenderTableCellWrapper, beforeChild: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
