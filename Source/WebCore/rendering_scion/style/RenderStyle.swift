@@ -1605,6 +1605,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setUnicodeBidi(v: UnicodeBidi) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTextWrapMode(v: TextWrapMode) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func setFontDescription(description: FontCascadeDescriptionWrapper) -> Bool {
     // TODO(asuhan): implement this

@@ -23,11 +23,27 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func createAnonymousStyleForRuby(parentStyle: RenderStyleWrapper, display: DisplayType)
+  -> RenderStyleWrapper
+{
+  assert(display == .Ruby || display == .RubyBase)
+
+  let style = RenderStyleWrapper.createAnonymousStyleWithDisplay(
+    parentStyle: parentStyle, display: display)
+  style.setUnicodeBidi(v: .Isolate)
+  if display == .RubyBase {
+    style.setTextWrapMode(v: .NoWrap)
+  }
+  return style
+}
+
 private func createAnonymousRendererForRuby(parent: RenderElementWrapper, display: DisplayType)
   -> RenderElementWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let style = createAnonymousStyleForRuby(parentStyle: parent.style(), display: display)
+  let ruby = CreateRenderer.RenderInline(type: .Inline, document: parent.document(), style: style)
+  ruby.initializeStyle()
+  return ruby
 }
 
 extension RenderTreeBuilder {
