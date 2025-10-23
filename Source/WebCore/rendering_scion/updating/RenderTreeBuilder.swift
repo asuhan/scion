@@ -1343,7 +1343,7 @@ class RenderTreeBuilder {
   private var formControlsBuilder: FormControls? = nil
   var blockBuilder: Block? = nil
   private var blockFlowBuilder: BlockFlow? = nil
-  private var inlineBuilder: Inline? = nil
+  var inlineBuilder: Inline? = nil
   private var svgBuilder: SVG? = nil
   private var continuationBuilder: Continuation? = nil
   var hasBrokenContinuation = false

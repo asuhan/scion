@@ -23,19 +23,75 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func createAnonymousRendererForRuby(parent: RenderElementWrapper, display: DisplayType)
+  -> RenderElementWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class Ruby {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func findOrCreateParentForStyleBasedRubyChild(
       parent: RenderElementWrapper, child: RenderObjectWrapper,
       beforeChild: inout RenderObjectWrapper?
     ) -> RenderElementWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !child.isRenderText() && child.style().display() == .Ruby
+        && parent.style().display() == .RubyBlock
+      {
+        return parent
+      }
+
+      if parent.style().display() == .RubyBlock {
+        // See if we have an anonymous ruby box already.
+        // FIXME: It should be the immediate child but continuations can break this assumption.
+        var first = parent.firstChild()
+        while first != nil {
+          if !first!.isAnonymous() {
+            // <ruby blockified><ruby> is valid and still requires construction of an anonymous inline ruby box.
+            assert(first!.style().display() == .Ruby)
+            break
+          }
+          if first!.style().display() == .Ruby {
+            return first as! RenderElementWrapper
+          }
+          first = first!.firstChildSlow()
+        }
+      }
+
+      if parent.style().display() != .Ruby {
+        let rubyContainer = createAnonymousRendererForRuby(parent: parent, display: .Ruby)
+        builder.attach(parent: parent, child: rubyContainer, beforeChild: beforeChild)
+        beforeChild = nil
+        return rubyContainer
+      }
+
+      if !child.isRenderText()
+        && (child.style().display() == .RubyBase || child.style().display() == .RubyAnnotation)
+      {
+        return parent
+      }
+
+      if beforeChild != nil && beforeChild!.parent()!.style().display() == .RubyBase {
+        return beforeChild!.parent()!
+      }
+
+      let previous = beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild()
+      if previous != nil && previous!.style().display() == .RubyBase {
+        beforeChild = nil
+        return previous as! RenderElementWrapper
+      }
+
+      let rubyBase = createAnonymousRendererForRuby(parent: parent, display: .RubyBase)
+      rubyBase.initializeStyle()
+      builder.inlineBuilder!.attach(
+        parent: parent as! RenderInlineWrapper, child: rubyBase, beforeChild: beforeChild)
+      beforeChild = nil
+      return rubyBase
     }
 
     func attachForStyleBasedRuby(
@@ -44,5 +100,7 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let builder: RenderTreeBuilder
   }
 }
