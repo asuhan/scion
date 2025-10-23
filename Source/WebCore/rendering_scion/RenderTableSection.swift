@@ -24,12 +24,24 @@
  */
 
 final class RenderTableSectionWrapper: RenderBoxWrapper {
+  func firstRow() -> RenderTableRowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lastRow() -> RenderTableRowWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func setNeedsCellRecalc() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func createAnonymousWithParentRenderer(parent: RenderTableWrapper)
+    -> RenderTableSectionWrapper
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

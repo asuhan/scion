@@ -67,4 +67,9 @@ class CreateRenderer {
   ) -> RenderMultiColumnSetWrapper {
     return RenderMultiColumnSetWrapper(fragmentedFlow: fragmentedFlow, style: style)
   }
+
+  static func RenderTableCol(document: Document, style: RenderStyleWrapper) -> RenderTableColWrapper
+  {
+    return RenderTableColWrapper(document: document, style: style)
+  }
 }

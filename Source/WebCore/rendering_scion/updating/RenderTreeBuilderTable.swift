@@ -141,8 +141,85 @@ extension RenderTreeBuilder {
       parent: RenderTableWrapper, child: RenderObjectWrapper,
       beforeChild: inout RenderObjectWrapper?
     ) -> RenderElementWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if child is RenderTableCaptionWrapper || child is RenderTableSectionWrapper {
+        return parent
+      }
+
+      if child is RenderTableColWrapper {
+        if child.node() == nil || child.style().display() == .TableColumnGroup {
+          // COLGROUPs and anonymous RenderTableCols (generated wrappers for COLs) are direct children of the table renderer.
+          return parent
+        }
+        let colGroup = CreateRenderer.RenderTableCol(
+          document: parent.document(),
+          style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+            parentStyle: parent.style(), display: .TableColumnGroup))
+        colGroup.initializeStyle()
+        builder.attach(parent: parent, child: colGroup, beforeChild: beforeChild)
+        beforeChild = nil
+        return colGroup
+      }
+
+      let lastChild = parent.lastChild()
+      if let tableSection = lastChild as? RenderTableSectionWrapper,
+        beforeChild == nil && tableSection.isAnonymous() && !tableSection.isBeforeContent()
+      {
+        return tableSection
+      }
+
+      if beforeChild != nil && !beforeChild!.isAnonymous()
+        && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
+      {
+        if let tableSection = beforeChild!.previousSibling() as? RenderTableSectionWrapper,
+          tableSection.isAnonymous()
+        {
+          beforeChild = nil
+          return tableSection
+        }
+      }
+
+      var parentCandidate = beforeChild
+      while parentCandidate != nil && parentCandidate!.parent()!.isAnonymous()
+        && !(parentCandidate is RenderTableSectionWrapper)
+        && parentCandidate!.style().display() != .TableCaption
+        && parentCandidate!.style().display() != .TableColumnGroup
+      {
+        parentCandidate = parentCandidate!.parent()
+      }
+
+      if parentCandidate != nil {
+        if beforeChild != nil && !beforeChild!.isAnonymous()
+          && CPtrToInt(parentCandidate!.parent()?.p) == CPtrToInt(parent.p)
+        {
+          if let tableSection = parentCandidate!.previousSibling() as? RenderTableSectionWrapper,
+            tableSection.isAnonymous()
+          {
+            beforeChild = nil
+            return tableSection
+          }
+        }
+
+        if let parentTableSection = parentCandidate as? RenderTableSectionWrapper,
+          parentTableSection.isAnonymous() && !parent.isAfterContent(obj: parentTableSection)
+        {
+          if CPtrToInt(beforeChild?.p) == CPtrToInt(parentCandidate?.p) {
+            beforeChild = parentTableSection.firstRow()
+          }
+          return parentTableSection
+        }
+      }
+
+      if beforeChild != nil && !(beforeChild is RenderTableSectionWrapper)
+        && beforeChild!.style().display() != .TableCaption
+        && beforeChild!.style().display() != .TableColumnGroup
+      {
+        beforeChild = nil
+      }
+
+      let section = RenderTableSectionWrapper.createAnonymousWithParentRenderer(parent: parent)
+      builder.attach(parent: parent, child: section, beforeChild: beforeChild)
+      beforeChild = nil
+      return section
     }
 
     func attach(

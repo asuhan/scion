@@ -24,6 +24,11 @@
  */
 
 final class RenderTableColWrapper: RenderBoxWrapper {
+  init(document: Document, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTableColumn() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
