@@ -23,6 +23,11 @@
 import wk_interop
 
 final class RenderListMarkerWrapper: RenderBoxWrapper {
+  init(listItem: RenderListItemWrapper, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInside() -> Bool { return wk_interop.RenderListMarker_isInside(p) }
 
   func listItem() -> RenderListItemWrapper? {

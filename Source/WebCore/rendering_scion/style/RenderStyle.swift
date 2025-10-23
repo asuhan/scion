@@ -852,6 +852,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func listStyleType() -> ListStyleType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func listStyleImage() -> StyleImage? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginTop() -> LengthWrapper {
     if p == nil {
       // TODO(asuhan): implement this

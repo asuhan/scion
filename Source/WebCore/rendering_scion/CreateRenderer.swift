@@ -72,4 +72,10 @@ class CreateRenderer {
   {
     return RenderTableColWrapper(document: document, style: style)
   }
+
+  static func RenderListMarker(listItem: RenderListItemWrapper, style: RenderStyleWrapper)
+    -> RenderListMarkerWrapper
+  {
+    return RenderListMarkerWrapper(listItem: listItem, style: style)
+  }
 }

@@ -26,7 +26,17 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func computeMarkerStyle() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markerRenderer() -> RenderListMarkerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarkerRenderer(marker: RenderListMarkerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

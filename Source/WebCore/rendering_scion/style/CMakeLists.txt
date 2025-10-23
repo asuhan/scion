@@ -2,6 +2,7 @@ target_sources(layout_scion PRIVATE
     BlockEllipsis.swift
     BorderData.swift
     FillLayer.swift
+    ListStyleType.swift
     NinePieceImage.swift
     OffsetRotation.swift
     RenderStyle.swift
