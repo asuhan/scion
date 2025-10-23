@@ -28,6 +28,16 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func previousCell() -> RenderTableCellWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func row() -> RenderTableRowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func createAnonymousWithParentRenderer(parent: RenderTableRowWrapper)
     -> RenderTableCellWrapper
   {

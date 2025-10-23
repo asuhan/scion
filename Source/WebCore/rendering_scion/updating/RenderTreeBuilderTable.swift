@@ -23,6 +23,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func canCollapseNextSibling(
+  previousSibling: RenderBoxWrapper, nextSibling: RenderBoxWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeBuilder {
   class Table {
     init(builder: RenderTreeBuilder) {
@@ -302,13 +309,37 @@ extension RenderTreeBuilder {
     }
 
     func collapseAndDestroyAnonymousSiblingCells(willBeDestroyed: RenderTableCellWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let nextCellToDestroy = collapseAndDetachAnonymousNextSibling(
+        parent: willBeDestroyed.row(), previousSibling: willBeDestroyed.previousCell(),
+        nextSibling: willBeDestroyed.nextCell())
+      {
+        (nextCellToDestroy as! RenderTableCellWrapper).deleteLines()
+      }
     }
 
     func collapseAndDestroyAnonymousSiblingRows(willBeDestroyed: RenderTableRowWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let _ = collapseAndDetachAnonymousNextSibling(
+        parent: willBeDestroyed.section(), previousSibling: willBeDestroyed.previousRow(),
+        nextSibling: willBeDestroyed.nextRow())
+    }
+
+    private func collapseAndDetachAnonymousNextSibling<
+      Parent: RenderElementWrapper, Child: RenderBoxWrapper
+    >(
+      parent: Parent?, previousSibling: Child?, nextSibling: Child?
+    ) -> RenderObjectWrapper? {
+      if parent == nil || previousSibling == nil || nextSibling == nil {
+        return nil
+      }
+      if !canCollapseNextSibling(previousSibling: previousSibling!, nextSibling: nextSibling!) {
+        return nil
+      }
+      builder.moveAllChildren(
+        from: nextSibling!, to: previousSibling!, normalizeAfterInsertion: .No)
+      previousSibling!.setChildrenInline(
+        b: previousSibling!.firstInFlowChild() == nil
+          || previousSibling!.firstInFlowChild()!.isInline())
+      return builder.detach(parent: parent!, child: nextSibling!, willBeDestroyed: .Yes)
     }
 
     private let builder: RenderTreeBuilder

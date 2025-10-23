@@ -75,6 +75,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func firstInFlowChild() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layoutBox() -> ElementBoxWrapper? {
     return super.layoutBox() as? ElementBoxWrapper
   }

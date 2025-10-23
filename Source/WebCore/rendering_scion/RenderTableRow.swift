@@ -24,6 +24,16 @@
  */
 
 final class RenderTableRowWrapper: RenderBoxWrapper {
+  func nextRow() -> RenderTableRowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func previousRow() -> RenderTableRowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func firstCell() -> RenderTableCellWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -42,6 +52,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func section() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
