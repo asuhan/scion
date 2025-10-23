@@ -40,14 +40,41 @@ extension RenderTreeBuilder {
       if beforeChild != nil && !beforeChild!.isAnonymous()
         && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let previousSibling = beforeChild!.previousSibling()
+        if let tableCell = previousSibling as? RenderTableCellWrapper, tableCell.isAnonymous() {
+          beforeChild = nil
+          return tableCell
+        }
       }
 
       let lastChild = beforeChild ?? parent.lastCell()
       if lastChild != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        if let tableCell = lastChild as? RenderTableCellWrapper,
+          tableCell.isAnonymous() && !tableCell.isBeforeOrAfterContent()
+        {
+          if CPtrToInt(beforeChild?.p) == CPtrToInt(lastChild!.p) {
+            beforeChild = tableCell.firstChild()
+          }
+          return tableCell
+        }
+
+        // Try to find an anonymous container for the child.
+        if let lastChildParent = lastChild!.parent() {
+          if lastChildParent.isAnonymous() && !lastChildParent.isBeforeOrAfterContent() {
+            // If beforeChild is inside an anonymous COLGROUP, create a cell for the new renderer.
+            if lastChildParent is RenderTableColWrapper {
+              return createAnonymousTableCell(parent: parent, beforeChild: &beforeChild)
+            }
+            // If beforeChild is inside an anonymous cell, insert into the cell.
+            if lastChild is RenderTableCellWrapper {
+              return lastChildParent
+            }
+            // If beforeChild is inside an anonymous row, insert into the row.
+            if let tableRow = lastChildParent as? RenderTableRowWrapper {
+              return createAnonymousTableCell(parent: tableRow, beforeChild: &beforeChild)
+            }
+          }
+        }
       }
       return createAnonymousTableCell(parent: parent, beforeChild: &beforeChild)
     }
