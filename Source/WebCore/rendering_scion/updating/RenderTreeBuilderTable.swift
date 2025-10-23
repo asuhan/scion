@@ -26,8 +26,14 @@
 private func canCollapseNextSibling(
   previousSibling: RenderBoxWrapper, nextSibling: RenderBoxWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !previousSibling.isAnonymous() || !nextSibling.isAnonymous() {
+    return false
+  }
+  let previousSiblingFirstInFlowChild = previousSibling.firstInFlowChild()
+  let nextSiblingFirstInFlowChild = nextSibling.firstInFlowChild()
+  // Do not try to collapse and move inline level boxes over to a container with block level boxes (and vice versa).
+  return previousSiblingFirstInFlowChild == nil || nextSiblingFirstInFlowChild == nil
+    || previousSiblingFirstInFlowChild!.isInline() == nextSiblingFirstInFlowChild!.isInline()
 }
 
 extension RenderTreeBuilder {
