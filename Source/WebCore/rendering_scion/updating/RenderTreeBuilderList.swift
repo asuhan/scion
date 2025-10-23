@@ -21,11 +21,58 @@
  *
  */
 
+// FIXME: This shouldn't need LegacyInlineIterator
+private func generatesLineBoxesForInlineChild(
+  current: RenderBlockWrapper, inlineObj: RenderObjectWrapper?
+) -> Bool {
+  let it = LegacyInlineIterator(root: current, o: inlineObj, p: 0)
+  while !it.atEnd() && !requiresLineBox(it: it) {
+    it.increment()
+  }
+  return !it.atEnd()
+}
+
 private func getParentOfFirstLineBox(current: RenderBlockWrapper, marker: RenderObjectWrapper)
   -> RenderBlockWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let inQuirksMode = current.document().inQuirksMode()
+  for child: RenderObjectWrapper in childrenOfType(parent: current) {
+    if CPtrToInt(child.p) == CPtrToInt(marker.p) {
+      continue
+    }
+
+    if child.isInline()
+      && (!(child is RenderInlineWrapper)
+        || generatesLineBoxesForInlineChild(current: current, inlineObj: child))
+    {
+      return current
+    }
+
+    if child.isFloating() || child.isOutOfFlowPositioned() || child is RenderMenuListWrapper {
+      continue
+    }
+
+    if !(child is RenderBlockWrapper) || child is RenderTableWrapper {
+      break
+    }
+
+    if let renderBox = child as? RenderBoxWrapper, renderBox.isWritingModeRoot() {
+      break
+    }
+
+    if current is RenderListItemWrapper && inQuirksMode && child.node() != nil
+      && isHTMLListElement(node: child.node()!)
+    {
+      break
+    }
+
+    if let lineBox = getParentOfFirstLineBox(current: child as! RenderBlockWrapper, marker: marker)
+    {
+      return lineBox
+    }
+  }
+
+  return nil
 }
 
 private func firstNonMarkerChild(parent: RenderBlockWrapper) -> RenderObjectWrapper? {

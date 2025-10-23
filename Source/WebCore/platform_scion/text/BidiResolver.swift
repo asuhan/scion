@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
- *           (C) 1999 Antti Koivisto (koivisto@kde.org)
- * Copyright (C) 2003-2021 Apple Inc. All rights reserved.
+ * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
+ * Copyright (C) 2003-2017 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,20 +19,13 @@
  *
  */
 
-import wk_interop
+class BidiCharacterRunWrapper {}
 
-final class RenderListMarkerWrapper: RenderBoxWrapper {
-  convenience init(listItem: RenderListItemWrapper, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+// BidiResolver is WebKit's implementation of the Unicode Bidi Algorithm
+// http://unicode.org/reports/tr9
+class BidiResolverBaseWrapper<Iterator, Run, DerivedClass> {}
 
-  func isInside() -> Bool { return wk_interop.RenderListMarker_isInside(p) }
-
-  func listItem() -> RenderListItemWrapper? {
-    if let unwrapped = wk_interop.RenderListMarker_listItem(p) {
-      return RenderListItemWrapper(p: unwrapped)
-    }
-    return nil
-  }
-}
+class BidiResolverWithIsolateWrapper<Iterator, Run, IsolateRun>: BidiResolverBaseWrapper<
+  Iterator, Run, BidiResolverWithIsolateWrapper<Iterator, Run, IsolateRun>
+>
+{}

@@ -12,6 +12,7 @@ target_sources(layout_scion PRIVATE
     LayerFragment.swift
     LegacyInlineBox.swift
     LegacyInlineFlowBox.swift
+    LegacyInlineIterator.swift
     LegacyInlineTextBox.swift
     LegacyLineLayout.swift
     LegacyRootInlineBox.swift
@@ -24,6 +25,7 @@ target_sources(layout_scion PRIVATE
     ReferencedSVGResources.swift
     AccessibilityRegionContext.swift
     BackgroundPainter.swift
+    BidiRun.swift
     BorderEdge.swift
     BorderPainter.swift
     BorderShape.swift
@@ -101,6 +103,7 @@ target_sources(layout_scion PRIVATE
     TextPaintStyle.swift
 )
 add_subdirectory(algorithms)
+add_subdirectory(line)
 add_subdirectory(mathml)
 add_subdirectory(shapes)
 add_subdirectory(style)

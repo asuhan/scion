@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
- *           (C) 1999 Antti Koivisto (koivisto@kde.org)
- * Copyright (C) 2003-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
+ * Copyright (C) 2003, 2004, 2006, 2007, 2008, 2009, 2010 Apple Inc. All right reserved.
+ * Copyright (C) 2010 Google Inc. All rights reserved.
+ * Copyright (C) 2014 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,29 +21,29 @@
  *
  */
 
-final class RenderListItemWrapper: RenderBlockFlowWrapper {
-  func updateListMarkerNumbers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func computeMarkerStyle() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func markerRenderer() -> RenderListMarkerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setMarkerRenderer(marker: RenderListMarkerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+struct BidiIsolatedRun {
+  let object: RenderObjectWrapper
+  let root: RenderElementWrapper
+  let runToReplace: BidiRun
+  let position: UInt32
 }
 
-func isHTMLListElement(node: NodeWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+// This class is used to RenderInline subtrees, stepping by character within the
+// text children. LegacyInlineIterator will use next to find the next RenderText
+// optionally notifying a BidiResolver every time it steps into/out of a RenderInline.
+class LegacyInlineIterator {
+  init(root: RenderElementWrapper?, o: RenderObjectWrapper?, p: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func increment(resolver: InlineBidiResolver? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func atEnd() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
