@@ -28,8 +28,8 @@
  */
 
 class LineInfo {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  let isFirstLine = true
+  let isLastLine = false
+  let isEmpty = true
+  let runsFromLeadingWhitespace: UInt32 = 0
 }
