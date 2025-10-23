@@ -245,8 +245,18 @@ extension RenderTreeBuilder {
       parent: RenderTableSectionWrapper, child: RenderObjectWrapper?,
       beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var beforeChild = beforeChild
+      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p) {
+        beforeChild = builder.splitAnonymousBoxesAroundChild(
+          parent: parent, originalBeforeChild: beforeChild!)
+      }
+
+      // FIXME: child should always be a RenderTableRow at this point.
+      if let renderTableRow = child as? RenderTableRowWrapper {
+        parent.willInsertTableRow(child: renderTableRow, beforeChild: beforeChild)
+      }
+      assert(beforeChild == nil || beforeChild is RenderTableRowWrapper)
+      builder.attachToRenderElement(parent: parent, child: child!, beforeChild: beforeChild)
     }
 
     func attach(
