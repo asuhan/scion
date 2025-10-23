@@ -27,4 +27,9 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func viewportContainer() -> RenderSVGViewportContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

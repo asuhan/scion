@@ -32,8 +32,15 @@ extension RenderTreeBuilder {
     }
 
     func updateAfterDescendants(svgRoot: RenderSVGRootWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Usually the anonymous RenderSVGViewportContainer, wrapping all children of RenderSVGRoot,
+      // is created when the first <svg> child element is inserted into the render tree. We'll
+      // only reach this point with viewportContainer=nullptr, if the <svg> had no children -- we
+      // still need to ensure the creation of the RenderSVGViewportContainer, otherwise computing
+      // e.g. getCTM() would ignore the presence of a 'viewBox' induced transform (and ignore zoom/pan).
+      if svgRoot.viewportContainer() != nil {
+        return
+      }
+      createViewportContainer(parent: svgRoot)
     }
 
     func attach(
@@ -102,6 +109,14 @@ extension RenderTreeBuilder {
       parent: RenderSVGTextWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    @discardableResult
+    private func createViewportContainer(parent: RenderSVGRootWrapper)
+      -> RenderSVGViewportContainerWrapper
+    {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
