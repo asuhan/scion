@@ -113,8 +113,32 @@ extension RenderTreeBuilder {
     func attachForStyleBasedRuby(
       parent: RenderElementWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if parent.style().display() == .RubyBlock {
+        assert(child!.style().display() == .Ruby)
+        builder.attachToRenderElementInternal(
+          parent: parent, child: child, beforeChild: beforeChild)
+        return
+      }
+      assert(parent.style().display() == .Ruby)
+      assert(child!.style().display() == .RubyBase || child!.style().display() == .RubyAnnotation)
+
+      var beforeChild = beforeChild
+      while beforeChild != nil && beforeChild!.parent() != nil
+        && CPtrToInt(beforeChild!.parent()!.p) != CPtrToInt(parent.p)
+      {
+        beforeChild = beforeChild!.parent()
+      }
+
+      if child!.style().display() == .RubyAnnotation {
+        // Create an empty anonymous base if it is missing.
+        let previous = beforeChild != nil ? beforeChild!.previousSibling() : parent.lastChild()
+        if previous == nil || previous!.style().display() != .RubyBase {
+          let rubyBase = createAnonymousRendererForRuby(parent: parent, display: .RubyBase)
+          builder.attachToRenderElementInternal(
+            parent: parent, child: rubyBase, beforeChild: beforeChild)
+        }
+      }
+      builder.attachToRenderElementInternal(parent: parent, child: child, beforeChild: beforeChild)
     }
 
     private let builder: RenderTreeBuilder
