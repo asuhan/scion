@@ -24,6 +24,11 @@
  */
 
 final class RenderTableSectionWrapper: RenderBoxWrapper {
+  func lastRow() -> RenderTableRowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCellRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

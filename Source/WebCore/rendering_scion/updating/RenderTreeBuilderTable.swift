@@ -92,8 +92,49 @@ extension RenderTreeBuilder {
       parent: RenderTableSectionWrapper, child: RenderObjectWrapper,
       beforeChild: inout RenderObjectWrapper?
     ) -> RenderElementWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if child is RenderTableRowWrapper {
+        return parent
+      }
+
+      let lastChild = beforeChild ?? parent.lastRow()
+      if let tableRow = lastChild as? RenderTableRowWrapper,
+        tableRow.isAnonymous() && !tableRow.isBeforeOrAfterContent()
+      {
+        if CPtrToInt(beforeChild?.p) == CPtrToInt(lastChild?.p) {
+          beforeChild = tableRow.firstCell()
+        }
+        return tableRow
+      }
+
+      if beforeChild != nil && !beforeChild!.isAnonymous()
+        && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
+      {
+        if let tableRow = beforeChild!.previousSibling() as? RenderTableRowWrapper,
+          tableRow.isAnonymous()
+        {
+          beforeChild = nil
+          return tableRow
+        }
+      }
+
+      // If beforeChild is inside an anonymous cell/row, insert into the cell or into
+      // the anonymous row containing it, if there is one.
+      var parentCandidate = lastChild
+      while parentCandidate != nil && parentCandidate!.parent() != nil
+        && parentCandidate!.parent()!.isAnonymous() && !(parentCandidate is RenderTableRowWrapper)
+      {
+        parentCandidate = parentCandidate!.parent()
+      }
+      if let tableRow = parentCandidate as? RenderTableRowWrapper,
+        tableRow.isAnonymous() && !tableRow.isBeforeOrAfterContent()
+      {
+        return tableRow
+      }
+
+      let row = RenderTableRowWrapper.createAnonymousWithParentRenderer(parent: parent)
+      builder.attach(parent: parent, child: row, beforeChild: beforeChild)
+      beforeChild = nil
+      return row
     }
 
     func findOrCreateParentForChild(
