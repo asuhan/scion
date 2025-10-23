@@ -76,8 +76,11 @@ private func getParentOfFirstLineBox(current: RenderBlockWrapper, marker: Render
 }
 
 private func firstNonMarkerChild(parent: RenderBlockWrapper) -> RenderObjectWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var child = parent.firstChild()
+  while child is RenderListMarkerWrapper {
+    child = child!.nextSibling()
+  }
+  return child
 }
 
 extension RenderTreeBuilder {
