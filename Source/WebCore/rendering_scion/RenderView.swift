@@ -77,6 +77,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func hasQuotesNeedingUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasRenderersWithOutline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

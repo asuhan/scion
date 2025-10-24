@@ -37,6 +37,21 @@ private func elementHasDisplayAnimationForPseudoId(element: ElementWrapper, pseu
   fatalError("Not implemented")
 }
 
+private func createContentRenderers(
+  builder: RenderTreeBuilder, pseudoRenderer: RenderElementWrapper, style: RenderStyleWrapper,
+  pseudoId: PseudoId
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func updateStyleForContentRenderers(
+  pseudoRenderer: RenderElementWrapper, style: RenderStyleWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeUpdater {
   class GeneratedContent {
     init(updater: RenderTreeUpdater) {
@@ -153,8 +168,25 @@ extension RenderTreeUpdater {
         }
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let pseudoElementRenderer = pseudoElement!.containerRenderer()
+      if pseudoElementRenderer == nil {
+        return
+      }
+
+      if styleChange == .Renderer {
+        createContentRenderers(
+          builder: updater.builder!, pseudoRenderer: pseudoElementRenderer!, style: updateStyle!,
+          pseudoId: pseudoId)
+      } else {
+        updateStyleForContentRenderers(pseudoRenderer: pseudoElementRenderer!, style: updateStyle!)
+      }
+
+      if updater.renderView().hasQuotesNeedingUpdate() {
+        for child: RenderQuoteWrapper in descendantsOfType(root: pseudoElementRenderer!) {
+          updateQuotesUpTo(lastQuote: child)
+        }
+      }
+      updater.builder!.updateAfterDescendants(renderer: pseudoElementRenderer!)
     }
 
     func updateWritingSuggestionsRenderer(
@@ -178,6 +210,11 @@ extension RenderTreeUpdater {
           root: pseudoElement, teardownType: .Full, builder: builder)
         element.clearAfterPseudoElement()
       }
+    }
+
+    private func updateQuotesUpTo(lastQuote: RenderQuoteWrapper?) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     private func needsPseudoElement(style: RenderStyleWrapper?) -> Bool {

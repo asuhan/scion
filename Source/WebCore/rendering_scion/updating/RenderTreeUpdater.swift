@@ -867,7 +867,7 @@ class RenderTreeUpdater {
     }
   }
 
-  private func renderView() -> RenderViewWrapper {
+  func renderView() -> RenderViewWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -75,6 +75,7 @@ target_sources(layout_scion PRIVATE
     RenderObject.swift
     RenderObjectEnums.swift
     RenderOverflow.swift
+    RenderQuote.swift
     RenderReplaced.swift
     RenderReplica.swift
     RenderSelection.swift
