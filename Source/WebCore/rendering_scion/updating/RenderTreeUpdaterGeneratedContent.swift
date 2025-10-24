@@ -23,6 +23,20 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func elementIsTargetedByKeyframeEffectRequiringPseudoElement(
+  element: ElementWrapper?, pseudoId: PseudoId
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func elementHasDisplayAnimationForPseudoId(element: ElementWrapper, pseudoId: PseudoId)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeUpdater {
   class GeneratedContent {
     init(updater: RenderTreeUpdater) {
@@ -67,6 +81,35 @@ extension RenderTreeUpdater {
     func updatePseudoElement(
       current: ElementWrapper, elementUpdate: Style.ElementUpdate, pseudoId: PseudoId
     ) {
+      let pseudoElement =
+        pseudoId == .Before ? current.beforePseudoElement() : current.afterPseudoElement()
+
+      if let renderer = pseudoElement?.renderer() {
+        updater.renderTreePosition().invalidateNextSibling(siblingRenderer: renderer)
+      }
+
+      let updateStyle = elementUpdate.style?.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: pseudoId))
+
+      if !needsPseudoElement(style: updateStyle)
+        && !elementIsTargetedByKeyframeEffectRequiringPseudoElement(
+          element: current, pseudoId: pseudoId)
+        && !elementHasDisplayAnimationForPseudoId(element: current, pseudoId: pseudoId)
+      {
+        if pseudoElement != nil {
+          if pseudoId == .Before {
+            GeneratedContent.removeBeforePseudoElement(element: current, builder: updater.builder!)
+          } else {
+            GeneratedContent.removeAfterPseudoElement(element: current, builder: updater.builder!)
+          }
+        }
+        return
+      }
+
+      if updateStyle == nil {
+        return
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -92,6 +135,11 @@ extension RenderTreeUpdater {
           root: pseudoElement, teardownType: .Full, builder: builder)
         element.clearAfterPseudoElement()
       }
+    }
+
+    private func needsPseudoElement(style: RenderStyleWrapper?) -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     private let updater: RenderTreeUpdater

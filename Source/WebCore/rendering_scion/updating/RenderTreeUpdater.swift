@@ -654,7 +654,7 @@ class RenderTreeUpdater {
     fatalError("Not reached")
   }
 
-  private func renderTreePosition() -> RenderTreePosition {
+  func renderTreePosition() -> RenderTreePosition {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
