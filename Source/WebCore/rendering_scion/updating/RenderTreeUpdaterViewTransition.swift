@@ -167,7 +167,6 @@ extension RenderTreeUpdater {
       groupStyle: RenderStyleWrapper, group: RenderElementWrapper,
       documentElementRenderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
     ) {
-      let documentElementStyle = documentElementRenderer.style()
       let name = groupStyle.pseudoElementNameArgument()
 
       let newGroupStyle = RenderStyleWrapper.clone(style: groupStyle)
@@ -178,7 +177,8 @@ extension RenderTreeUpdater {
       if imagePair != nil {
         assert(imagePair!.style().pseudoElementType() == .ViewTransitionImagePair)
         let shouldDeleteRenderer = ViewTransition.updateRenderer(
-          renderer: imagePair!, documentElementStyle: documentElementStyle)
+          renderer: imagePair!, documentElementRenderer: documentElementRenderer, name: name,
+          minimalStyleDifference: minimalStyleDifference)
         if shouldDeleteRenderer == .Yes {
           updater.builder!.destroy(renderer: imagePair!)
           return
@@ -220,7 +220,9 @@ extension RenderTreeUpdater {
       if imagePairFirstChild!.style().pseudoElementType() == .ViewTransitionOld {
         viewTransitionOld = imagePairFirstChild
         shouldDeleteViewTransitionOld = ViewTransition.updateRenderer(
-          renderer: viewTransitionOld!, documentElementStyle: documentElementStyle)
+          renderer: viewTransitionOld!, documentElementRenderer: documentElementRenderer,
+          name: name, minimalStyleDifference: minimalStyleDifference
+        )
         viewTransitionNew = viewTransitionOld!.nextSibling()
         assert(
           viewTransitionNew == nil
@@ -240,7 +242,9 @@ extension RenderTreeUpdater {
         )
       } else {
         shouldDeleteViewTransitionNew = ViewTransition.updateRenderer(
-          renderer: viewTransitionNew!, documentElementStyle: documentElementStyle)
+          renderer: viewTransitionNew!, documentElementRenderer: documentElementRenderer,
+          name: name, minimalStyleDifference: minimalStyleDifference
+        )
       }
 
       if shouldDeleteViewTransitionNew == .Yes {
@@ -263,10 +267,22 @@ extension RenderTreeUpdater {
     }
 
     private static func updateRenderer(
-      renderer: RenderObjectWrapper, documentElementStyle: RenderStyleWrapper
+      renderer: RenderObjectWrapper, documentElementRenderer: RenderElementWrapper,
+      name: AtomStringWrapper, minimalStyleDifference: StyleDifference
     ) -> ShouldDeleteRenderer {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let documentElementStyle = documentElementRenderer.style()
+      let style = documentElementRenderer.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(
+          pseudoId: renderer.style().pseudoElementType(), nameArgument: name),
+        parentStyle: documentElementStyle)
+      if style == nil || style!.display() == .None {
+        return .Yes
+      }
+
+      let newStyle = RenderStyleWrapper.clone(style: style!)
+      (renderer as! RenderElementWrapper).setStyle(
+        style: newStyle, minimalStyleDifference: minimalStyleDifference)
+      return .No
     }
 
     private let updater: RenderTreeUpdater
