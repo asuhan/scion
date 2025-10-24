@@ -34,4 +34,16 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func subtreeChildWillBeRemoved(
+    child: RenderObjectWrapper, affectedAttributes: inout [SVGTextLayoutAttributes]
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func subtreeChildWasRemoved(affectedAttributes: [SVGTextLayoutAttributes]) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -96,32 +96,56 @@ extension RenderTreeBuilder {
       parent: LegacyRenderSVGRootWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      SVGResourcesCache.clientWillBeRemovedFromTree(renderer: child)
+      return builder.detachFromRenderElement(
+        parent: parent, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     func detach(
       parent: LegacyRenderSVGContainer, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      SVGResourcesCache.clientWillBeRemovedFromTree(renderer: child)
+      return builder.detachFromRenderElement(
+        parent: parent, child: child, willBeDestroyed: willBeDestroyed)
     }
 
     func detach(
       parent: RenderSVGInlineWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !child.document().settings().layerBasedSVGEngineEnabled() {
+        SVGResourcesCache.clientWillBeRemovedFromTree(renderer: child)
+      }
+
+      let textAncestor = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: parent)
+      if textAncestor == nil {
+        return builder.detachFromRenderElement(
+          parent: parent, child: child, willBeDestroyed: willBeDestroyed)
+      }
+
+      var affectedAttributes: [SVGTextLayoutAttributes] = []
+      textAncestor!.subtreeChildWillBeRemoved(child: child, affectedAttributes: &affectedAttributes)
+      let takenChild = builder.detachFromRenderElement(
+        parent: parent, child: child, willBeDestroyed: willBeDestroyed)
+      textAncestor!.subtreeChildWasRemoved(affectedAttributes: affectedAttributes)
+      return takenChild
     }
 
     func detach(
       parent: RenderSVGTextWrapper, child: RenderObjectWrapper,
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !child.document().settings().layerBasedSVGEngineEnabled() {
+        SVGResourcesCache.clientWillBeRemovedFromTree(renderer: child)
+      }
+
+      var affectedAttributes: [SVGTextLayoutAttributes] = []
+      parent.subtreeChildWillBeRemoved(child: child, affectedAttributes: &affectedAttributes)
+      let takenChild = builder.blockBuilder!.detach(
+        parent: parent, child: child, willBeDestroyed: willBeDestroyed)
+      parent.subtreeChildWasRemoved(affectedAttributes: affectedAttributes)
+      return takenChild
     }
 
     private func findOrCreateParentForChild(parent: RenderSVGRootWrapper)

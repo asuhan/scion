@@ -1,5 +1,7 @@
 /*
- * Copyright (C) Research In Motion Limited 2010. All rights reserved.
+ * Copyright (C) Research In Motion Limited 2010-2011. All rights reserved.
+ * Copyright (C) 2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2015 Google Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,16 +19,4 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGResourcesCache {
-  // Called from all SVG renderers addChild() methods.
-  static func clientWasAddedToTree(renderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  // Called from all SVG renderers addChild() methods.
-  static func clientWillBeRemovedFromTree(renderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+class SVGTextLayoutAttributes {}

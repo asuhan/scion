@@ -10,5 +10,6 @@ target_sources(layout_scion PRIVATE
     RenderSVGShape.swift
     RenderSVGText.swift
     RenderSVGViewportContainer.swift
+    SVGTextLayoutAttributes.swift
 )
 add_subdirectory(legacy)
