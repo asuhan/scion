@@ -109,8 +109,9 @@ extension RenderTreeUpdater {
     }
 
     private func destroyPseudoElementTreeIfNeeded(documentElementRenderer: RenderElementWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let viewTransitionRoot = documentElementRenderer.view().viewTransitionRoot() {
+        updater.builder!.destroy(renderer: viewTransitionRoot)
+      }
     }
 
     private func buildPseudoElementGroup(
