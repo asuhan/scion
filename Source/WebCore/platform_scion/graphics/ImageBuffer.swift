@@ -1,5 +1,9 @@
 /*
- * Copyright (C) 2020-2021 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2007-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2009 Dirk Schulze <krit@webkit.org>
+ * Copyright (C) 2010 Torch Mobile (Beijing) Co. Ltd. All rights reserved.
+ * Copyright (C) Research In Motion Limited 2011. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,45 +27,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct StyleableWrapper {
-  init(element: ElementWrapper, pseudoElementIdentifier: Style.PseudoElementIdentifier?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func fromElement(element: ElementWrapper) -> StyleableWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func fromRenderer(renderer: RenderElementWrapper) -> StyleableWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func mayHaveNonZeroOpacity() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func willChangeRenderer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func cancelStyleOriginatedAnimations() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
-
-class WeakStyleableWrapper {
+class ImageBufferWrapper {
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func bool() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -33,6 +33,7 @@ target_sources(layout_scion PRIVATE
     GraphicsStyle.swift
     GraphicsTypes.swift
     Image.swift
+    ImageBuffer.swift
     ImageOrientation.swift
     ImagePaintingOptions.swift
     ImageTypes.swift

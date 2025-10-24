@@ -24,6 +24,26 @@
  */
 
 final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
+  convenience init(type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setImage(oldImage: ImageBufferWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func setCapturedSize(
+    size: LayoutSizeWrapper, overflowRect: LayoutRectWrapper,
+    layerToLayoutOffset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Inset of the scaled capture from the visualOverflowRect()
   func captureContentInset() -> LayoutPointWrapper {
     // TODO(asuhan): implement this

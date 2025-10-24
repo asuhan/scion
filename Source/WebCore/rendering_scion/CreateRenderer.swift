@@ -84,4 +84,10 @@ class CreateRenderer {
   {
     return RenderSVGViewportContainerWrapper(parent: parent, style: style)
   }
+
+  static func RenderViewTransitionCapture(
+    type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper
+  ) -> RenderViewTransitionCaptureWrapper {
+    return RenderViewTransitionCaptureWrapper(type: type, document: document, style: style)
+  }
 }

@@ -26,8 +26,44 @@
 private func createRendererIfNeeded(
   documentElementRenderer: RenderElementWrapper, name: AtomStringWrapper, pseudoId: PseudoId
 ) -> RenderBoxWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let documentElementStyle = documentElementRenderer.style()
+  let style = documentElementRenderer.getCachedPseudoStyle(
+    pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: pseudoId, nameArgument: name),
+    parentStyle: documentElementStyle)
+  if style == nil || style!.display() == .None {
+    return nil
+  }
+
+  let document = documentElementRenderer.document()
+  var renderer: RenderBoxWrapper? = nil
+  if pseudoId == .ViewTransitionOld || pseudoId == .ViewTransitionNew {
+    let capturedElement = document.activeViewTransition()!.namedElements().find(key: name)
+    assert(capturedElement != nil)
+    if pseudoId == .ViewTransitionOld && capturedElement!.oldImage == nil {
+      return nil
+    }
+    if pseudoId == .ViewTransitionNew && !capturedElement!.newElement.bool() {
+      return nil
+    }
+
+    let rendererViewTransition = CreateRenderer.RenderViewTransitionCapture(
+      type: .ViewTransitionCapture, document: document,
+      style: RenderStyleWrapper.clone(style: style!))
+    if pseudoId == .ViewTransitionOld {
+      rendererViewTransition.setImage(oldImage: capturedElement!.oldImage ?? nil)
+    }
+    rendererViewTransition.setCapturedSize(
+      size: capturedElement!.oldSize, overflowRect: capturedElement!.oldOverflowRect,
+      layerToLayoutOffset: capturedElement!.oldLayerToLayoutOffset)
+    renderer = rendererViewTransition
+  } else {
+    renderer = CreateRenderer.RenderBlockFlow(
+      type: .BlockFlow, document: document, style: RenderStyleWrapper.clone(style: style!),
+      flags: .IsViewTransitionContainer)
+  }
+
+  renderer!.initializeStyle()
+  return renderer
 }
 
 extension RenderTreeUpdater {

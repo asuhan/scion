@@ -23,6 +23,21 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct CapturedElement {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // outer nil represents a non-capturable element.
+  // inner nil represents an absent snapshot on an capturable element.
+  let oldImage: ImageBufferWrapper??
+  let oldOverflowRect: LayoutRectWrapper
+  let oldLayerToLayoutOffset: LayoutPointWrapper
+  let oldSize: LayoutSizeWrapper
+  let newElement: WeakStyleableWrapper
+}
+
 class OrderedNamedElementsMapWrapper {
   func keys() -> ListSet<AtomStringWrapper, UInt> {
     // TODO(asuhan): implement this
@@ -30,6 +45,11 @@ class OrderedNamedElementsMapWrapper {
   }
 
   func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func find(key: AtomStringWrapper) -> CapturedElement? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
