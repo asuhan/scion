@@ -82,6 +82,16 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func viewTransitionRoot() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setViewTransitionRoot(renderer: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func requiresColumns(desiredColumnCount: Int32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

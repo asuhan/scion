@@ -880,5 +880,5 @@ class RenderTreeUpdater {
   private var generatedContent: GeneratedContent? = nil
   private var viewTransition: ViewTransition? = nil
 
-  private var builder: RenderTreeBuilder? = nil
+  var builder: RenderTreeBuilder? = nil
 }

@@ -23,8 +23,25 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+class OrderedNamedElementsMapWrapper {
+  func keys() -> ListSet<AtomStringWrapper, UInt> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 // TODO(asuhan): inherit from VisibilityChangeClient, ActiveDOMObject
 class ViewTransitionWrapper {
+  func namedElements() -> OrderedNamedElementsMapWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewTransitionNewPseudoForCapturedElement(renderer: RenderLayerModelObjectWrapper)
     -> RenderViewTransitionCaptureWrapper?
   {

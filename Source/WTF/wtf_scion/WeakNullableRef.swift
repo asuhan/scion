@@ -24,7 +24,7 @@
  */
 
 class WeakNullableRef<T: AnyObject> {
-  init(_ object: T) {
+  init(_ object: T?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
