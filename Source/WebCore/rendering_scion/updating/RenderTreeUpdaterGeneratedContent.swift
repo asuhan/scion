@@ -32,8 +32,36 @@ extension RenderTreeUpdater {
     func updateBackdropRenderer(
       renderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Intentionally bail out early here to avoid computing the style.
+      if renderer.element() == nil || !renderer.element()!.isInTopLayer() {
+        destroyBackdropIfNeeded(renderer: renderer)
+        return
+      }
+
+      let style = renderer.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .Backdrop),
+        parentStyle: renderer.style())
+      if style == nil || style!.display() == .None {
+        destroyBackdropIfNeeded(renderer: renderer)
+        return
+      }
+
+      let newStyle = RenderStyleWrapper.clone(style: style!)
+      if let backdropRenderer = renderer.backdropRenderer() {
+        backdropRenderer.setStyle(style: newStyle, minimalStyleDifference: minimalStyleDifference)
+      } else {
+        let newBackdropRenderer = CreateRenderer.RenderBlockFlow(
+          type: .BlockFlow, document: renderer.document(), style: newStyle)
+        newBackdropRenderer.initializeStyle()
+        renderer.setBackdropRenderer(renderer: newBackdropRenderer)
+        updater.builder!.attach(parent: renderer.view(), child: newBackdropRenderer)
+      }
+    }
+
+    private func destroyBackdropIfNeeded(renderer: RenderElementWrapper) {
+      if let backdropRenderer = renderer.backdropRenderer() {
+        updater.builder!.destroy(renderer: backdropRenderer)
+      }
     }
 
     func updatePseudoElement(
