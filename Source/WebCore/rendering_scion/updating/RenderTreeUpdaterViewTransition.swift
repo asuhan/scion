@@ -209,8 +209,52 @@ extension RenderTreeUpdater {
         return
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Update pre-existing ::view-transition-image-pair children.
+      var shouldDeleteViewTransitionOld: ShouldDeleteRenderer = .No
+
+      var viewTransitionOld: RenderObjectWrapper? = nil
+      var viewTransitionNew: RenderObjectWrapper? = nil
+
+      var newViewTransitionOld: RenderBoxWrapper? = nil
+      var newViewTransitionNew: RenderBoxWrapper? = nil
+      if imagePairFirstChild!.style().pseudoElementType() == .ViewTransitionOld {
+        viewTransitionOld = imagePairFirstChild
+        shouldDeleteViewTransitionOld = ViewTransition.updateRenderer(
+          renderer: viewTransitionOld!, documentElementStyle: documentElementStyle)
+        viewTransitionNew = viewTransitionOld!.nextSibling()
+        assert(
+          viewTransitionNew == nil
+            || viewTransitionNew!.style().pseudoElementType() == .ViewTransitionNew)
+      } else {
+        assert(imagePairFirstChild!.style().pseudoElementType() == .ViewTransitionNew)
+        viewTransitionNew = imagePairFirstChild
+        newViewTransitionOld = createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionOld
+        )
+      }
+
+      var shouldDeleteViewTransitionNew: ShouldDeleteRenderer = .No
+      if viewTransitionNew == nil {
+        newViewTransitionNew = createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionNew
+        )
+      } else {
+        shouldDeleteViewTransitionNew = ViewTransition.updateRenderer(
+          renderer: viewTransitionNew!, documentElementStyle: documentElementStyle)
+      }
+
+      if shouldDeleteViewTransitionNew == .Yes {
+        updater.builder!.destroy(renderer: viewTransitionNew!)
+      } else if newViewTransitionNew != nil {
+        updater.builder!.attach(parent: imagePair!, child: newViewTransitionNew!)
+      }
+
+      if shouldDeleteViewTransitionOld == .Yes {
+        updater.builder!.destroy(renderer: viewTransitionOld!)
+      } else if newViewTransitionOld != nil {
+        updater.builder!.attach(
+          parent: imagePair!, child: newViewTransitionOld!, beforeChild: viewTransitionNew)
+      }
     }
 
     private enum ShouldDeleteRenderer {
