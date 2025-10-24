@@ -151,8 +151,10 @@ extension RenderTreeBuilder {
     private func findOrCreateParentForChild(parent: RenderSVGRootWrapper)
       -> RenderSVGViewportContainerWrapper
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let viewportContainer = parent.viewportContainer() {
+        return viewportContainer
+      }
+      return createViewportContainer(parent: parent)
     }
 
     @discardableResult
