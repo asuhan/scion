@@ -22,4 +22,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderSVGViewportContainerWrapper: RenderSVGContainerWrapper {}
+final class RenderSVGViewportContainerWrapper: RenderSVGContainerWrapper {
+  init(parent: RenderSVGRootWrapper, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

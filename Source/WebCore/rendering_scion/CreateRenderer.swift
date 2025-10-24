@@ -78,4 +78,10 @@ class CreateRenderer {
   {
     return RenderListMarkerWrapper(listItem: listItem, style: style)
   }
+
+  static func RenderSVGViewportContainer(parent: RenderSVGRootWrapper, style: RenderStyleWrapper)
+    -> RenderSVGViewportContainerWrapper
+  {
+    return RenderSVGViewportContainerWrapper(parent: parent, style: style)
+  }
 }

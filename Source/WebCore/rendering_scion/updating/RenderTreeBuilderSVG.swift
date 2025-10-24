@@ -159,8 +159,20 @@ extension RenderTreeBuilder {
     private func createViewportContainer(parent: RenderSVGRootWrapper)
       -> RenderSVGViewportContainerWrapper
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let viewportContainerStyle = RenderStyleWrapper.createAnonymousStyleWithDisplay(
+        parentStyle: parent.style(), display: RenderStyleWrapper.initialDisplay())
+      viewportContainerStyle.setUsedZIndex(index: 0)  // Enforce a stacking context.
+      viewportContainerStyle.setTransformOriginX(
+        length: LengthWrapper(value: Int32(0), type: .Fixed))
+      viewportContainerStyle.setTransformOriginY(
+        length: LengthWrapper(value: Int32(0), type: .Fixed))
+
+      let viewportContainer = CreateRenderer.RenderSVGViewportContainer(
+        parent: parent, style: viewportContainerStyle)
+      viewportContainer.initializeStyle()
+
+      builder.attachToRenderElement(parent: parent, child: viewportContainer, beforeChild: nil)
+      return viewportContainer
     }
 
     private let builder: RenderTreeBuilder

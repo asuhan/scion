@@ -1460,6 +1460,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setTransformOriginX(length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTransformOriginY(length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLineBoxContain(c: LineBoxContain) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1527,6 +1537,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func colorWithColorFilter(color: StyleColorWrapper) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func initialDisplay() -> DisplayType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
