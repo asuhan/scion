@@ -23,6 +23,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func createRendererIfNeeded(
+  documentElementRenderer: RenderElementWrapper, name: AtomStringWrapper, pseudoId: PseudoId
+) -> RenderBoxWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 extension RenderTreeUpdater {
   class ViewTransition {
     init(updater: RenderTreeUpdater) {
@@ -118,8 +125,42 @@ extension RenderTreeUpdater {
       name: AtomStringWrapper, documentElementRenderer: RenderElementWrapper,
       beforeChild: RenderObjectWrapper? = nil
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let viewTransitionGroup = createRendererIfNeeded(
+        documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionGroup
+      )
+      let viewTransitionImagePair =
+        viewTransitionGroup != nil
+        ? createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name,
+          pseudoId: .ViewTransitionImagePair) : nil
+      let viewTransitionOld =
+        viewTransitionImagePair != nil
+        ? createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionOld
+        ) : nil
+      let viewTransitionNew =
+        viewTransitionImagePair != nil
+        ? createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionNew
+        ) : nil
+
+      if viewTransitionOld != nil {
+        updater.builder!.attach(parent: viewTransitionImagePair!, child: viewTransitionOld!)
+      }
+
+      if viewTransitionNew != nil {
+        updater.builder!.attach(parent: viewTransitionImagePair!, child: viewTransitionNew!)
+      }
+
+      if viewTransitionImagePair != nil {
+        updater.builder!.attach(parent: viewTransitionGroup!, child: viewTransitionImagePair!)
+      }
+
+      if viewTransitionGroup != nil {
+        updater.builder!.attach(
+          parent: documentElementRenderer.view().viewTransitionRoot()!, child: viewTransitionGroup!,
+          beforeChild: beforeChild)
+      }
     }
 
     private func updatePseudoElementGroup(
