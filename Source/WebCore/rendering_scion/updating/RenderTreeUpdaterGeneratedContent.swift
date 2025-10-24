@@ -81,7 +81,7 @@ extension RenderTreeUpdater {
     func updatePseudoElement(
       current: ElementWrapper, elementUpdate: Style.ElementUpdate, pseudoId: PseudoId
     ) {
-      let pseudoElement =
+      var pseudoElement =
         pseudoId == .Before ? current.beforePseudoElement() : current.afterPseudoElement()
 
       if let renderer = pseudoElement?.renderer() {
@@ -108,6 +108,49 @@ extension RenderTreeUpdater {
 
       if updateStyle == nil {
         return
+      }
+
+      let existingStyle = pseudoElement?.renderOrDisplayContentsStyle()
+
+      let styleChange =
+        existingStyle != nil
+        ? Style.determineChange(s1: updateStyle!, s2: existingStyle!) : .Renderer
+      if styleChange == .None {
+        return
+      }
+
+      pseudoElement = current.ensurePseudoElement(pseudoId: pseudoId)
+
+      if updateStyle!.display() == .Contents {
+        // For display:contents we create an inline wrapper that inherits its
+        // style from the display:contents style.
+        let contentsStyle = RenderStyleWrapper.create()
+        contentsStyle.setPseudoElementType(pseudoElementType: pseudoId)
+        contentsStyle.inheritFrom(inheritParent: updateStyle!)
+        contentsStyle.copyContentFrom(other: updateStyle!)
+        contentsStyle.copyPseudoElementsFrom(other: updateStyle!)
+
+        let contentsUpdate = Style.ElementUpdate(
+          style: contentsStyle, change: styleChange,
+          recompositeLayer: elementUpdate.recompositeLayer)
+        updater.updateElementRenderer(element: pseudoElement!, elementUpdate: contentsUpdate)
+        let pseudoElementUpdateStyle = RenderStyleWrapper.cloneIncludingPseudoElements(
+          style: updateStyle!)
+        pseudoElement!.storeDisplayContentsOrNoneStyle(style: pseudoElementUpdateStyle)
+      } else {
+        let pseudoElementUpdateStyle = RenderStyleWrapper.cloneIncludingPseudoElements(
+          style: updateStyle!)
+        let pseudoElementUpdate = Style.ElementUpdate(
+          style: pseudoElementUpdateStyle, change: styleChange,
+          recompositeLayer: elementUpdate.recompositeLayer)
+        updater.updateElementRenderer(element: pseudoElement!, elementUpdate: pseudoElementUpdate)
+        if updateStyle!.display() == .None {
+          let pseudoElementUpdateStyle = RenderStyleWrapper.cloneIncludingPseudoElements(
+            style: updateStyle!)
+          pseudoElement!.storeDisplayContentsOrNoneStyle(style: pseudoElementUpdateStyle)
+        } else {
+          pseudoElement!.clearDisplayContentsOrNoneStyle()
+        }
       }
 
       // TODO(asuhan): implement this

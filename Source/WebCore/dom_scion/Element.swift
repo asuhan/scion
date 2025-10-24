@@ -45,6 +45,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func ensurePseudoElement(pseudoId: PseudoId) -> PseudoElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func beforePseudoElement() -> PseudoElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -81,6 +86,11 @@ class ElementWrapper: ContainerNodeWrapper {
   }
 
   func didDetachRenderers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func renderOrDisplayContentsStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

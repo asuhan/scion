@@ -26,9 +26,9 @@
 extension Style {
 
   struct ElementUpdate {
-    let style: RenderStyleWrapper? = nil
-    let change: Change = .None
-    let recompositeLayer = false
+    let style: RenderStyleWrapper?
+    let change: Change
+    let recompositeLayer: Bool
   }
 
   struct TextUpdate {

@@ -94,6 +94,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func copyContentFrom(other: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func copyPseudoElementsFrom(other: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pseudoElementType() -> PseudoId {
     if p == nil {
       // TODO(asuhan): implement this

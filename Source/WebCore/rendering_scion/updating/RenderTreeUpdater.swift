@@ -330,7 +330,7 @@ class RenderTreeUpdater {
     }
   }
 
-  private func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
+  func updateElementRenderer(element: ElementWrapper, elementUpdate: Style.ElementUpdate) {
     if elementUpdate.style == nil {
       return
     }
