@@ -27,8 +27,7 @@
 extension RenderTreeBuilder {
   class SVG {
     init(builder: RenderTreeBuilder) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.builder = builder
     }
 
     func updateAfterDescendants(svgRoot: RenderSVGRootWrapper) {
@@ -47,38 +46,50 @@ extension RenderTreeBuilder {
       parent: LegacyRenderSVGRootWrapper, child: RenderObjectWrapper?,
       beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.attachToRenderElement(parent: parent, child: child!, beforeChild: beforeChild)
+      SVGResourcesCache.clientWasAddedToTree(renderer: child!)
     }
 
     func attach(
       parent: LegacyRenderSVGContainer, child: RenderObjectWrapper?,
       beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.attachToRenderElement(parent: parent, child: child!, beforeChild: beforeChild)
+      SVGResourcesCache.clientWasAddedToTree(renderer: child!)
     }
 
     func attach(
       parent: RenderSVGInlineWrapper, child: RenderObjectWrapper?,
       beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.inlineBuilder!.attach(parent: parent, child: child, beforeChild: beforeChild)
+
+      if !child!.document().settings().layerBasedSVGEngineEnabled() {
+        SVGResourcesCache.clientWasAddedToTree(renderer: child!)
+      }
+
+      if let textAncestor = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: parent) {
+        textAncestor.subtreeChildWasAdded(child: child)
+      }
     }
 
     func attach(
       parent: RenderSVGTextWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.blockFlowBuilder!.attach(parent: parent, child: child, beforeChild: beforeChild)
+
+      if !child!.document().settings().layerBasedSVGEngineEnabled() {
+        SVGResourcesCache.clientWasAddedToTree(renderer: child!)
+      }
+
+      parent.subtreeChildWasAdded(child: child)
     }
 
     func attach(
       parent: RenderSVGRootWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      builder.attachToRenderElement(
+        parent: findOrCreateParentForChild(parent: parent), child: child!, beforeChild: beforeChild)
     }
 
     func detach(
@@ -113,6 +124,13 @@ extension RenderTreeBuilder {
       fatalError("Not implemented")
     }
 
+    private func findOrCreateParentForChild(parent: RenderSVGRootWrapper)
+      -> RenderSVGViewportContainerWrapper
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     @discardableResult
     private func createViewportContainer(parent: RenderSVGRootWrapper)
       -> RenderSVGViewportContainerWrapper
@@ -120,5 +138,7 @@ extension RenderTreeBuilder {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    private let builder: RenderTreeBuilder
   }
 }

@@ -1,12 +1,5 @@
 /*
- * Copyright (C) 2006-2024 Apple Inc. All rights reserved.
- * Copyright (C) 2006 Alexander Kellett <lypanov@kde.org>
- * Copyright (C) 2006 Oliver Hunt <ojh16@student.canterbury.ac.nz>
- * Copyright (C) 2007 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2008 Rob Buis <buis@kde.org>
- * Copyright (C) 2009 Dirk Schulze <krit@webkit.org>
- * Copyright (C) Research In Motion Limited 2010-2012. All rights reserved.
- * Copyright (C) 2012-2023 Google Inc.
+ * Copyright (C) Research In Motion Limited 2010. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,13 +17,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
-  static func locateRenderSVGTextAncestor(start: RenderObjectWrapper) -> RenderSVGTextWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func subtreeChildWasAdded(child: RenderObjectWrapper?) {
+class SVGResourcesCache {
+  // Called from all SVG renderers addChild() methods.
+  static func clientWasAddedToTree(renderer: RenderObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

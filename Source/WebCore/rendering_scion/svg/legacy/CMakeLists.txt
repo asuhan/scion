@@ -7,4 +7,5 @@ target_sources(layout_scion PRIVATE
     LegacyRenderSVGResourceContainer.swift
     LegacyRenderSVGResourceFilter.swift
     LegacyRenderSVGRoot.swift
+    SVGResourcesCache.swift
 )
