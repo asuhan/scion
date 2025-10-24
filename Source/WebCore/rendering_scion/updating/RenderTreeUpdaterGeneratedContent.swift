@@ -218,8 +218,16 @@ extension RenderTreeUpdater {
     }
 
     private func needsPseudoElement(style: RenderStyleWrapper?) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if style == nil {
+        return false
+      }
+      if !updater.renderTreePosition().parent.canHaveGeneratedChildren() {
+        return false
+      }
+      if !pseudoElementRendererIsNeeded(style: style) {
+        return false
+      }
+      return true
     }
 
     private let updater: RenderTreeUpdater

@@ -1503,6 +1503,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func contentData() -> ContentData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hyphenString() -> AtomStringWrapper {
     if p == nil {
       // TODO(asuhan): implement this
@@ -1747,4 +1752,8 @@ class RenderStyleWrapper: Equatable {
   var rareInheritedData = StyleRareInheritedData()
   var inheritedData = StyleInheritedData()
   var inheritedFlags = InheritedFlags()
+}
+
+func pseudoElementRendererIsNeeded(style: RenderStyleWrapper?) -> Bool {
+  return style != nil && style!.display() != .None && style!.contentData() != nil
 }
