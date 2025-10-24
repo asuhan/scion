@@ -167,6 +167,60 @@ extension RenderTreeUpdater {
       groupStyle: RenderStyleWrapper, group: RenderElementWrapper,
       documentElementRenderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
     ) {
+      let documentElementStyle = documentElementRenderer.style()
+      let name = groupStyle.pseudoElementNameArgument()
+
+      let newGroupStyle = RenderStyleWrapper.clone(style: groupStyle)
+      group.setStyle(style: newGroupStyle, minimalStyleDifference: minimalStyleDifference)
+
+      // Create / remove ::view-transtion-image-pair itself.
+      var imagePair = group.firstChild() as! RenderElementWrapper?
+      if imagePair != nil {
+        assert(imagePair!.style().pseudoElementType() == .ViewTransitionImagePair)
+        let shouldDeleteRenderer = ViewTransition.updateRenderer(
+          renderer: imagePair!, documentElementStyle: documentElementStyle)
+        if shouldDeleteRenderer == .Yes {
+          updater.builder!.destroy(renderer: imagePair!)
+          return
+        }
+      } else if let newImagePair = createRendererIfNeeded(
+        documentElementRenderer: documentElementRenderer, name: name,
+        pseudoId: .ViewTransitionImagePair)
+      {
+        imagePair = newImagePair
+        updater.builder!.attach(parent: group, child: newImagePair)
+      } else {
+        return
+      }
+
+      let imagePairFirstChild = imagePair!.firstChild()
+      // Build the ::view-transition-image-pair children if needed.
+      if imagePairFirstChild == nil {
+        if let viewTransitionOld = createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionOld
+        ) {
+          updater.builder!.attach(parent: imagePair!, child: viewTransitionOld)
+        }
+        if let viewTransitionNew = createRendererIfNeeded(
+          documentElementRenderer: documentElementRenderer, name: name, pseudoId: .ViewTransitionNew
+        ) {
+          updater.builder!.attach(parent: imagePair!, child: viewTransitionNew)
+        }
+        return
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private enum ShouldDeleteRenderer {
+      case No
+      case Yes
+    }
+
+    private static func updateRenderer(
+      renderer: RenderObjectWrapper, documentElementStyle: RenderStyleWrapper
+    ) -> ShouldDeleteRenderer {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
