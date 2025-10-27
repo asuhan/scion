@@ -24,6 +24,16 @@
 import wk_interop
 
 class RenderTextWrapper: RenderObjectWrapper {
+  convenience init(type: `Type`, textNode: TextWrapper, text: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  convenience init(type: `Type`, document: Document, text: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layoutBox() -> InlineTextBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

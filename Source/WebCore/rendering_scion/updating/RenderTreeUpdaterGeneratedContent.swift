@@ -268,8 +268,40 @@ extension RenderTreeUpdater {
           }
         }
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        let newWritingSuggestionsRenderer = CreateRenderer.RenderInline(
+          type: .Inline, document: renderer.document(), style: newStyle)
+        newWritingSuggestionsRenderer.initializeStyle()
+
+        let rendererAfterWritingSuggestions = nodeBeforeWritingSuggestionsTextRenderer!
+          .nextSibling()
+
+        let writingSuggestionsText = CreateRenderer.RenderText(
+          type: .Text, document: renderer.document(), text: writingSuggestionData!.content)
+        updater.builder!.attach(
+          parent: newWritingSuggestionsRenderer, child: writingSuggestionsText)
+
+        editor.setWritingSuggestionRenderer(renderer: newWritingSuggestionsRenderer)
+        updater.builder!.attach(
+          parent: parentForWritingSuggestions!, child: newWritingSuggestionsRenderer,
+          beforeChild: rendererAfterWritingSuggestions)
+
+        if parentForWritingSuggestions == nil {
+          destroyWritingSuggestionsIfNeeded(renderer: renderer)
+          return
+        }
+
+        let prefixNode = nodeBeforeWritingSuggestionsTextRenderer!.textNode()
+        if prefixNode == nil {
+          fatalError("Not reached")
+        }
+
+        if !suffix.isEmpty() {
+          let suffixRenderer = CreateRenderer.RenderText(
+            type: .Text, textNode: prefixNode!, text: suffix)
+          updater.builder!.attach(
+            parent: parentForWritingSuggestions!, child: suffixRenderer,
+            beforeChild: rendererAfterWritingSuggestions)
+        }
       }
     }
 

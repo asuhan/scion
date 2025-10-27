@@ -80,4 +80,9 @@ final class EditorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setWritingSuggestionRenderer(renderer: RenderInlineWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

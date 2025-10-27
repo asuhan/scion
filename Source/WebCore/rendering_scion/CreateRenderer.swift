@@ -85,6 +85,20 @@ class CreateRenderer {
     return RenderSVGViewportContainerWrapper(parent: parent, style: style)
   }
 
+  static func RenderText(
+    type: RenderObjectWrapper.`Type`, textNode: TextWrapper, text: StringWrapper
+  )
+    -> RenderTextWrapper
+  {
+    return RenderTextWrapper(type: type, textNode: textNode, text: text)
+  }
+
+  static func RenderText(type: RenderObjectWrapper.`Type`, document: Document, text: StringWrapper)
+    -> RenderTextWrapper
+  {
+    return RenderTextWrapper(type: type, document: document, text: text)
+  }
+
   static func RenderViewTransitionCapture(
     type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper
   ) -> RenderViewTransitionCaptureWrapper {
