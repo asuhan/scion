@@ -315,8 +315,15 @@ extension RenderTreeUpdater {
     }
 
     private func destroyWritingSuggestionsIfNeeded(renderer: RenderElementWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if renderer.element() == nil {
+        return
+      }
+
+      let editor = renderer.element()!.document().editor()
+
+      if let writingSuggestionsRenderer = editor.writingSuggestionRenderer() {
+        updater.builder!.destroy(renderer: writingSuggestionsRenderer)
+      }
     }
 
     static func removeBeforePseudoElement(element: ElementWrapper, builder: RenderTreeBuilder) {
