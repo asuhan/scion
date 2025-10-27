@@ -328,6 +328,13 @@ enum Resize: UInt8 {
   case Inline
 }
 
+enum QuoteType: UInt8 {
+  case OpenQuote
+  case CloseQuote
+  case NoOpenQuote
+  case NoCloseQuote
+}
+
 enum WhiteSpace {
   case Normal
   case Pre

@@ -21,6 +21,11 @@
  */
 
 final class RenderQuoteWrapper: RenderInlineWrapper {
+  init(document: Document, style: RenderStyleWrapper, quote: QuoteType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateRenderer(builder: RenderTreeBuilder, previousQuote: RenderQuoteWrapper?) {
     assert(document().inRenderTreeUpdate())
     var depth: Int32 = -1
@@ -47,8 +52,12 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
   }
 
   private func isOpen() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch type {
+    case .OpenQuote, .NoOpenQuote:
+      return true
+    case .CloseQuote, .NoCloseQuote:
+      return false
+    }
   }
 
   private func updateTextRenderer(builder: RenderTreeBuilder) {
@@ -56,6 +65,7 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  private let type: QuoteType
   private var m_depth: Int32 = -1
 
   private var needsTextUpdate = false
