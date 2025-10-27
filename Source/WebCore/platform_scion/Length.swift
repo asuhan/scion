@@ -135,8 +135,18 @@ struct LengthWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func isPositive() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isPercentOrCalculated() -> Bool {
     return isPercent() || isCalculated()
+  }
+
+  func isIntrinsicOrAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isSpecified() -> Bool {
