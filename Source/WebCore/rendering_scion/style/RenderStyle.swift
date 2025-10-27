@@ -246,6 +246,11 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_computedFontSize(p)
   }
 
+  func hasBorder() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasVisibleBorderDecoration() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -262,6 +267,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasUsedAppearance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasBackground() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

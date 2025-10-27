@@ -170,6 +170,16 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func borderObscuresBackgroundEdge(contextScale: FloatSize) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderObscuresBackground() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

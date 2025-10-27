@@ -806,6 +806,48 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func determineBackgroundBleedAvoidance(context: GraphicsContextWrapper)
     -> BackgroundBleedAvoidance
   {
+    if context.paintingDisabled() {
+      return .BackgroundBleedNone
+    }
+
+    let style = self.style()
+
+    if !style.hasBackground() || !style.hasBorder() || !style.hasBorderRadius()
+      || borderImageIsLoadedAndCanBeRendered()
+    {
+      return .BackgroundBleedNone
+    }
+
+    let ctm = context.getCTM()
+    var contextScaling = FloatSize(width: Float32(ctm.xScale()), height: Float32(ctm.yScale()))
+
+    // Because RoundedRect uses IntRect internally the inset applied by the
+    // BackgroundBleedShrinkBackground strategy cannot be less than one integer
+    // layout coordinate, even with subpixel layout enabled. To take that into
+    // account, we clamp the contextScaling to 1.0 for the following test so
+    // that borderObscuresBackgroundEdge can only return true if the border
+    // widths are greater than 2 in both layout coordinates and screen
+    // coordinates.
+    // This precaution will become obsolete if RoundedRect is ever promoted to
+    // a sub-pixel representation.
+    if contextScaling.width > 1 {
+      contextScaling.setWidth(width: 1)
+    }
+    if contextScaling.height > 1 {
+      contextScaling.setHeight(height: 1)
+    }
+
+    if borderObscuresBackgroundEdge(contextScale: contextScaling) {
+      return .BackgroundBleedShrinkBackground
+    }
+    if !style.hasUsedAppearance() && borderObscuresBackground() && backgroundHasOpaqueTopLayer() {
+      return .BackgroundBleedBackgroundOverBorder
+    }
+
+    return .BackgroundBleedUseTransparencyLayer
+  }
+
+  func backgroundHasOpaqueTopLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -158,6 +158,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_layoutIfNeeded(p)
   }
 
+  func borderImageIsLoadedAndCanBeRendered() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true if this renderer requires a new stacking context.
   static func createsGroupForStyle(style: RenderStyleWrapper) -> Bool {
     // TODO(asuhan): implement this
