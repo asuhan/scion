@@ -35,6 +35,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func verticalScrollbarWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

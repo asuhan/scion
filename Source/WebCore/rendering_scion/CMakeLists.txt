@@ -96,6 +96,7 @@ target_sources(layout_scion PRIVATE
     RenderWidget.swift
     RenderTextControl.swift
     RenderTextControlMultiLine.swift
+    RenderTextControlSingleLine.swift
     RenderTextFragment.swift
     StyledMarkedText.swift
     TextBoxPainter.swift

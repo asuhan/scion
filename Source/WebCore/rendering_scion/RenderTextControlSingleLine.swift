@@ -1,9 +1,8 @@
-/*
- * This file is part of the select element renderer in WebCore.
- *
+/**
+ * Copyright (C) 2006-2023 Apple Inc. All rights reserved.
+ *           (C) 2008 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
+ * Copyright (C) 2010-2014 Google Inc. All rights reserved.
  * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2015 Apple Inc. All rights reserved.
- *               2009 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,23 +21,7 @@
  *
  */
 
-// TODO(asuhan): inherit from PopupMenuClient as well
-final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
-  func innerRenderer() -> RenderBlockWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setInnerRenderer(innerRenderer: RenderBlockWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func createsAnonymousWrapper() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
+class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

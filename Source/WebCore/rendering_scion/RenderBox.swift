@@ -367,10 +367,50 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func pushContentsClip(paintInfo: PaintInfoWrapper, accumulatedOffset: LayoutPointWrapper) -> Bool
+  func pushContentsClip(paintInfo: inout PaintInfoWrapper, accumulatedOffset: LayoutPointWrapper)
+    -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.phase == .BlockBackground || paintInfo.phase == .SelfOutline
+      || paintInfo.phase == .Mask
+    {
+      return false
+    }
+
+    let isControlClip = paintInfo.phase != .EventRegion && hasControlClip()
+    let isOverflowClip = hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer
+
+    if !isControlClip && !isOverflowClip {
+      return false
+    }
+
+    if paintInfo.phase == .Outline {
+      paintInfo.phase = .ChildOutlines
+    } else if paintInfo.phase == .ChildBlockBackground {
+      paintInfo.phase = .BlockBackground
+      paintObject(paintInfo: paintInfo, paintOffset: accumulatedOffset)
+      paintInfo.phase = .ChildBlockBackgrounds
+    }
+    let deviceScaleFactor = document().deviceScaleFactor()
+    let clipRect = snapRectToDevicePixels(
+      rect: (isControlClip
+        ? controlClipRect(additionalOffset: accumulatedOffset)
+        : overflowClipRect(
+          location: accumulatedOffset, fragment: nil, relevancy: .IgnoreOverlayScrollbarSize,
+          phase: paintInfo.phase)),
+      pixelSnappingFactor: deviceScaleFactor)
+    if style().hasBorderRadius() {
+      clipToPaddingBoxShape(
+        context: paintInfo.context(), accumulatedOffset: accumulatedOffset,
+        deviceScaleFactor: deviceScaleFactor)
+    }
+
+    paintInfo.context().clip(rect: clipRect)
+
+    if paintInfo.phase == .EventRegion || paintInfo.phase == .Accessibility {
+      paintInfo.regionContext!.pushClip(clipRect: enclosingIntRect(rect: clipRect))
+    }
+
+    return true
   }
 
   func clipRect(location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?)
@@ -411,6 +451,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasControlClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -744,6 +789,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clipToPaddingBoxShape(
+    context: GraphicsContextWrapper, accumulatedOffset: LayoutPointWrapper,
+    deviceScaleFactor: Float32
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

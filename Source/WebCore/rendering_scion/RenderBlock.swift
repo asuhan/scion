@@ -128,7 +128,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return
     }
 
-    let pushedClip = pushContentsClip(paintInfo: paintInfo, accumulatedOffset: adjustedPaintOffset)
+    let pushedClip = pushContentsClip(paintInfo: &paintInfo, accumulatedOffset: adjustedPaintOffset)
     paintObject(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
     if pushedClip {
       popContentsClip(

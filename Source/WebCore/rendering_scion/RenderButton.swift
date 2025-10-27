@@ -30,6 +30,11 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func innerRenderer() -> RenderBlockWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
