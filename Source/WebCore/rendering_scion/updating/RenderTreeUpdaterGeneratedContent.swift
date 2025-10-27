@@ -51,8 +51,10 @@ private func elementIsTargetedByKeyframeEffectRequiringPseudoElement(
 private func elementHasDisplayAnimationForPseudoId(element: ElementWrapper, pseudoId: PseudoId)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let stack = keyframeEffectStackForElementAndPseudoId(element: element, pseudoId: pseudoId) {
+    return stack.containsProperty(property: .CSSPropertyDisplay)
+  }
+  return false
 }
 
 private func createContentRenderers(

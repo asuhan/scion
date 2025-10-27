@@ -29,6 +29,7 @@ typealias LayoutBoxExtent = RectEdges<LayoutUnit>
 
 enum CSSPropertyID {
   case CSSPropertyColor
+  case CSSPropertyDisplay
   case CSSPropertyBackgroundColor
   case CSSPropertyTextDecorationColor
   case CSSPropertyTextEmphasisColor

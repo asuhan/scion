@@ -29,6 +29,11 @@ class KeyframeEffectStackWrapper {
     fatalError("Not implemented")
   }
 
+  func containsProperty(property: CSSPropertyID) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresPseudoElement() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
