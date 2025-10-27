@@ -24,7 +24,7 @@ import wk_interop
 typealias UChar = UInt16
 typealias LChar = UInt8
 
-class StringWrapper {
+class StringWrapper: Equatable {
   init(p: UnsafeRawPointer? = nil) {
     self.p = p ?? wk_interop.String_new()
   }
@@ -104,6 +104,11 @@ class StringWrapper {
     if self.p != nil {
       return StringWrapper(p: wk_interop.String_substring(self.p!, position, length))
     }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (this: StringWrapper, other: StringWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

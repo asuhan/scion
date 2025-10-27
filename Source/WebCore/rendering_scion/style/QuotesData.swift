@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
- *           (C) 1999 Antti Koivisto (koivisto@kde.org)
- * Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2011 Nokia Inc. All rights reserved.
+ * Copyright (C) 2012 Google Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,32 +19,13 @@
  *
  */
 
-class RenderInlineWrapper: RenderBoxModelObjectWrapper {
-  override init(p: UnsafeMutableRawPointer?) {
-    if p != nil {
-      super.init(p: p!)
-    } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-  }
-
-  init(type: `Type`, element: ElementWrapper, style: RenderStyleWrapper) {
+class QuotesData {
+  func openQuote(index: UInt32) -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  init(type: `Type`, document: Document, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func linesVisualOverflowBoundingBox() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func paintOutline(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  func closeQuote(index: UInt32) -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

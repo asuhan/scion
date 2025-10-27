@@ -35,12 +35,22 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  convenience init(document: Document, text: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setFirstLetter(firstLetter: RenderBoxModelObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func blockForAccompanyingFirstLetter() -> RenderBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContentString(text: StringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

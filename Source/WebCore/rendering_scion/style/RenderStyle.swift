@@ -1699,6 +1699,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func quotes() -> QuotesData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func willChange() -> WillChangeData? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

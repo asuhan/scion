@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     ListStyleType.swift
     NinePieceImage.swift
     OffsetRotation.swift
+    QuotesData.swift
     RenderStyle.swift
     RenderStyleConstants.swift
     ScrollbarGutter.swift

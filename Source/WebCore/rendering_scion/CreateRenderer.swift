@@ -56,6 +56,12 @@ class CreateRenderer {
       document: document, text: text, startOffset: startOffset, length: length)
   }
 
+  static func RenderTextFragment(document: Document, text: StringWrapper)
+    -> RenderTextFragmentWrapper
+  {
+    return RenderTextFragmentWrapper(document: document, text: text)
+  }
+
   static func RenderMultiColumnFlow(document: Document, style: RenderStyleWrapper)
     -> RenderMultiColumnFlowWrapper
   {
