@@ -881,7 +881,31 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func backgroundHasOpaqueTopLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fillLayer = style().backgroundLayers()
+    if fillLayer.clip != .BorderBox {
+      return false
+    }
+
+    // Clipped with local scrolling
+    if hasNonVisibleOverflow() && fillLayer.attachment == .LocalBackground {
+      return false
+    }
+
+    if fillLayer.hasOpaqueImage(renderer: self) && fillLayer.hasRepeatXY()
+      && fillLayer.image()!.canRender(renderer: self, multiplier: style().usedZoom())
+    {
+      return true
+    }
+
+    // If there is only one layer and no image, check whether the background color is opaque.
+    if fillLayer.next() == nil && !fillLayer.hasImage() {
+      let bgColor = style().visitedDependentColorWithColorFilter(
+        colorProperty: .CSSPropertyBackgroundColor)
+      if bgColor.isOpaque() {
+        return true
+      }
+    }
+
+    return false
   }
 }
