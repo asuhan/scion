@@ -789,8 +789,41 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Figure out if we need to push a transparency layer to render our mask.
+    var pushTransparencyLayer = false
+    let compositedMask = hasLayer() && layer()!.hasCompositedMask()
+    let flattenCompositingLayers = paintInfo.paintBehavior.contains(.FlattenCompositingLayers)
+    var compositeOp: CompositeOperator = .SourceOver
+
+    var allMaskImagesLoaded = true
+
+    if !compositedMask || flattenCompositingLayers {
+      pushTransparencyLayer = true
+
+      // Don't render a masked element until all the mask images have loaded, to prevent a flash of unmasked content.
+      if let maskBorder = style().maskBorder().image() {
+        allMaskImagesLoaded = allMaskImagesLoaded && maskBorder.isLoaded(renderer: self)
+      }
+
+      allMaskImagesLoaded =
+        allMaskImagesLoaded && style().maskLayers().imagesAreLoaded(renderer: self)
+
+      paintInfo.context().setCompositeOperation(operation: .DestinationIn)
+      paintInfo.context().beginTransparencyLayer(opacity: 1)
+      compositeOp = .SourceOver
+    }
+
+    if allMaskImagesLoaded {
+      BackgroundPainter(renderer: self, paintInfo: paintInfo).paintFillLayers(
+        color: ColorWrapper(), fillLayer: style().maskLayers(), rect: paintRect,
+        bleedAvoidance: .BackgroundBleedNone, op: compositeOp)
+      BorderPainter(renderer: self, paintInfo: paintInfo).paintNinePieceImage(
+        rect: paintRect, style: style(), ninePieceImage: style().maskBorder(), op: compositeOp)
+    }
+
+    if pushTransparencyLayer {
+      paintInfo.context().endTransparencyLayer()
+    }
   }
 
   private func clipToPaddingBoxShape(

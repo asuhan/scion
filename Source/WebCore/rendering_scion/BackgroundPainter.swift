@@ -158,6 +158,15 @@ class BackgroundPainter {
     fatalError("Not implemented")
   }
 
+  func paintFillLayers(
+    color: ColorWrapper, fillLayer: FillLayerWrapper, rect: LayoutRectWrapper,
+    bleedAvoidance: BackgroundBleedAvoidance, op: CompositeOperator,
+    backgroundObject: RenderElementWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintFillLayer(
     color: ColorWrapper, bgLayer: FillLayerWrapper, rect: LayoutRectWrapper,
     bleedAvoidance: BackgroundBleedAvoidance, inlineBoxIterator: InlineIterator.InlineBoxIterator,
