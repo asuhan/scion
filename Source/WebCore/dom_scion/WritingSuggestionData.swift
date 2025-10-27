@@ -32,5 +32,12 @@ class WritingSuggestionDataWrapper {
     fatalError("Not implemented")
   }
 
+  func supportsSuffix() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let content: StringWrapper
+
+  let offset: UInt64 = 0
 }

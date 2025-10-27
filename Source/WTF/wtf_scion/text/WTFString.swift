@@ -100,7 +100,7 @@ class StringWrapper {
     fatalError("Not implemented")
   }
 
-  func substring(position: UInt32, length: UInt32) -> StringWrapper {
+  func substring(position: UInt32, length: UInt32 = UInt32(Int32.max)) -> StringWrapper {
     if self.p != nil {
       return StringWrapper(p: wk_interop.String_substring(self.p!, position, length))
     }
@@ -109,4 +109,9 @@ class StringWrapper {
   }
 
   var p: UnsafeRawPointer?
+}
+
+func emptyString() -> StringWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }

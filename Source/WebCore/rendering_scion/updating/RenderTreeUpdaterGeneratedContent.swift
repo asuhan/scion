@@ -351,8 +351,15 @@ extension RenderTreeUpdater {
     )
       -> (StringWrapper, StringWrapper)
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if !writingSuggestionData.supportsSuffix() {
+        return (textWithoutSuggestion, emptyString())
+      }
+
+      let offset = UInt32(writingSuggestionData.offset)
+      return (
+        textWithoutSuggestion.substring(position: 0, length: offset),
+        textWithoutSuggestion.substring(position: offset)
+      )
     }
 
     private func destroyWritingSuggestionsIfNeeded(renderer: RenderElementWrapper) {
