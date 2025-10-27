@@ -91,6 +91,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func inRenderTreeUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func securityOrigin() -> SecurityOriginWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

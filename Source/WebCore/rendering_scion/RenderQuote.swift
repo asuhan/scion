@@ -22,7 +22,41 @@
 
 final class RenderQuoteWrapper: RenderInlineWrapper {
   func updateRenderer(builder: RenderTreeBuilder, previousQuote: RenderQuoteWrapper?) {
+    assert(document().inRenderTreeUpdate())
+    var depth: Int32 = -1
+    if previousQuote != nil {
+      depth = previousQuote!.m_depth
+      if previousQuote!.isOpen() {
+        depth += 1
+      }
+    }
+
+    if !isOpen() {
+      depth -= 1
+    } else if depth < 0 {
+      depth = 0
+    }
+
+    if m_depth == depth && !needsTextUpdate {
+      return
+    }
+
+    m_depth = depth
+    needsTextUpdate = false
+    updateTextRenderer(builder: builder)
+  }
+
+  private func isOpen() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func updateTextRenderer(builder: RenderTreeBuilder) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var m_depth: Int32 = -1
+
+  private var needsTextUpdate = false
 }
