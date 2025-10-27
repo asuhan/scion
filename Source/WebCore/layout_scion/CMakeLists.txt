@@ -20,6 +20,8 @@ add_subdirectory(formattingContexts/inline/text)
 add_subdirectory(integration)
 add_subdirectory(integration/inline)
 add_subdirectory(layouttree)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/animation_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/animation_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/rendering_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/rendering_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/platform_scion

@@ -23,11 +23,29 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func keyframeEffectStackForElementAndPseudoId(element: ElementWrapper, pseudoId: PseudoId)
+  -> KeyframeEffectStackWrapper?
+{
+  return element.keyframeEffectStack(
+    pseudoElementIdentifier: pseudoId == .None
+      ? nil : Style.PseudoElementIdentifier(pseudoId: pseudoId))
+}
+
 private func elementIsTargetedByKeyframeEffectRequiringPseudoElement(
   element: ElementWrapper?, pseudoId: PseudoId
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let pseudoElement = element as? PseudoElementWrapper {
+    return elementIsTargetedByKeyframeEffectRequiringPseudoElement(
+      element: pseudoElement.hostElement(), pseudoId: pseudoId)
+  }
+
+  if element != nil,
+    let stack = keyframeEffectStackForElementAndPseudoId(element: element!, pseudoId: pseudoId)
+  {
+    return stack.requiresPseudoElement()
+  }
+
+  return false
 }
 
 private func elementHasDisplayAnimationForPseudoId(element: ElementWrapper, pseudoId: PseudoId)

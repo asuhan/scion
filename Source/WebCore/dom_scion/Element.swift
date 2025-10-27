@@ -65,6 +65,13 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func keyframeEffectStack(pseudoElementIdentifier: Style.PseudoElementIdentifier?)
+    -> KeyframeEffectStackWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInTopLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
