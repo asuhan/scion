@@ -56,6 +56,7 @@ target_sources(layout_scion PRIVATE
     RenderHTMLCanvas.swift
     RenderImage.swift
     RenderInline.swift
+    RenderIterator.swift
     RenderLayer.swift
     RenderLayerBacking.swift
     RenderLayerCompositor.swift

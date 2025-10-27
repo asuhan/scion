@@ -20,4 +20,9 @@
  *
  */
 
-final class RenderQuoteWrapper: RenderInlineWrapper {}
+final class RenderQuoteWrapper: RenderInlineWrapper {
+  func updateRenderer(builder: RenderTreeBuilder, previousQuote: RenderQuoteWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

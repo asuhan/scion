@@ -384,8 +384,22 @@ extension RenderTreeUpdater {
     }
 
     private func updateQuotesUpTo(lastQuote: RenderQuoteWrapper?) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let quoteRenderers: RenderDescendantIteratorAdapter<RenderQuoteWrapper> = descendantsOfType(
+        root: updater.renderView())
+      let it =
+        previousUpdatedQuote != nil
+        ? ++quoteRenderers.at(current: previousUpdatedQuote!) : quoteRenderers.begin()
+      while it != quoteRenderers.end() {
+        let quote = *it
+        // Quote character depends on quote depth so we chain the updates.
+        quote.updateRenderer(builder: updater.builder!, previousQuote: previousUpdatedQuote)
+        previousUpdatedQuote = quote
+        if CPtrToInt(quote.p) == CPtrToInt(lastQuote?.p) {
+          return
+        }
+        ++it
+      }
+      assert(lastQuote == nil || updater.builder!.hasBrokenContinuation)
     }
 
     private func needsPseudoElement(style: RenderStyleWrapper?) -> Bool {
@@ -402,5 +416,6 @@ extension RenderTreeUpdater {
     }
 
     private let updater: RenderTreeUpdater
+    private var previousUpdatedQuote: RenderQuoteWrapper? = nil
   }
 }

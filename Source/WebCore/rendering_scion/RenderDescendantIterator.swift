@@ -24,8 +24,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderDescendantIterator<T>: IteratorProtocol {
-  func next() -> T? {
+class RenderDescendantIterator<T>: RenderIterator<T> {
+  override func next() -> T? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static prefix func ++ (this: RenderDescendantIterator<T>) -> RenderDescendantIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -33,6 +39,21 @@ class RenderDescendantIterator<T>: IteratorProtocol {
 
 class RenderDescendantIteratorAdapter<T>: Sequence {
   func makeIterator() -> RenderDescendantIterator<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func begin() -> RenderDescendantIterator<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func end() -> RenderDescendantIterator<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func at(current: T) -> RenderDescendantIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
