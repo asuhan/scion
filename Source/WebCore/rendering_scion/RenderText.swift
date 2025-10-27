@@ -86,6 +86,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setText(newContent: StringWrapper, force: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTextWithOffset(newText: StringWrapper, offset: UInt32, force: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

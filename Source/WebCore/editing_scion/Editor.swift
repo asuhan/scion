@@ -65,4 +65,19 @@ final class EditorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func nodeBeforeWritingSuggestions() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func writingSuggestionData() -> WritingSuggestionDataWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func writingSuggestionRenderer() -> RenderInlineWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

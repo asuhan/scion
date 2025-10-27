@@ -18,4 +18,5 @@ target_sources(layout_scion PRIVATE
     Text.swift
     TreeScope.swift
     ViewTransition.swift
+    WritingSuggestionData.swift
 )

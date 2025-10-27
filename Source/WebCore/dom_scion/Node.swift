@@ -29,6 +29,11 @@ class NodeWrapper {
     self.p = p
   }
 
+  func parentElement() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextSibling() -> NodeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

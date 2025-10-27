@@ -145,4 +145,9 @@ class Document: TreeScopeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func editor() -> EditorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

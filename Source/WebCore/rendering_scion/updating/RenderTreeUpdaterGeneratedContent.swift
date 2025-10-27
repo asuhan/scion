@@ -192,6 +192,97 @@ extension RenderTreeUpdater {
     func updateWritingSuggestionsRenderer(
       renderer: RenderElementWrapper, minimalStyleDifference: StyleDifference
     ) {
+      if !renderer.canHaveChildren() {
+        return
+      }
+
+      if renderer.element() == nil {
+        return
+      }
+
+      let editor = renderer.element()!.document().editor()
+      let nodeBeforeWritingSuggestions = editor.nodeBeforeWritingSuggestions()
+      if nodeBeforeWritingSuggestions == nil {
+        return
+      }
+
+      if CPtrToInt(renderer.element()?.p)
+        != CPtrToInt(nodeBeforeWritingSuggestions!.parentElement()?.p)
+      {
+        return
+      }
+
+      let writingSuggestionData = editor.writingSuggestionData()
+      if writingSuggestionData == nil {
+        destroyWritingSuggestionsIfNeeded(renderer: renderer)
+        return
+      }
+
+      let style = renderer.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(
+          pseudoId: .InternalWritingSuggestions), parentStyle: renderer.style())
+      if style == nil || style!.display() == .None {
+        destroyWritingSuggestionsIfNeeded(renderer: renderer)
+        return
+      }
+
+      let nodeBeforeWritingSuggestionsTextRenderer =
+        nodeBeforeWritingSuggestions!.renderer() as? RenderTextWrapper
+      if nodeBeforeWritingSuggestionsTextRenderer == nil {
+        destroyWritingSuggestionsIfNeeded(renderer: renderer)
+        return
+      }
+
+      let parentForWritingSuggestions = nodeBeforeWritingSuggestionsTextRenderer!.parent()
+      if parentForWritingSuggestions == nil {
+        destroyWritingSuggestionsIfNeeded(renderer: renderer)
+        return
+      }
+
+      let textWithoutSuggestion = nodeBeforeWritingSuggestionsTextRenderer!.text()
+
+      let (prefix_, suffix) = GeneratedContent.prefixAndSuffixForWritingSuggestion(
+        textWithoutSuggestion: textWithoutSuggestion, writingSuggestionData: writingSuggestionData!)
+
+      nodeBeforeWritingSuggestionsTextRenderer!.setText(newContent: prefix_)
+
+      let newStyle = RenderStyleWrapper.clone(style: style!)
+      newStyle.setDisplay(value: .Inline)
+
+      if let writingSuggestionsRenderer = editor.writingSuggestionRenderer() {
+        writingSuggestionsRenderer.setStyle(
+          style: newStyle, minimalStyleDifference: minimalStyleDifference)
+
+        let writingSuggestionsText = writingSuggestionsRenderer.firstChild() as? RenderTextWrapper
+        if writingSuggestionsText == nil {
+          fatalError("Not reached")
+        }
+
+        writingSuggestionsText!.setText(newContent: writingSuggestionData!.content)
+
+        if !suffix.isEmpty() {
+          if let suffixText = writingSuggestionsRenderer.nextSibling() as? RenderTextWrapper {
+            suffixText.setText(newContent: suffix)
+          } else {
+            fatalError("Not reached")
+          }
+        }
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    }
+
+    private static func prefixAndSuffixForWritingSuggestion(
+      textWithoutSuggestion: StringWrapper, writingSuggestionData: WritingSuggestionDataWrapper
+    )
+      -> (StringWrapper, StringWrapper)
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private func destroyWritingSuggestionsIfNeeded(renderer: RenderElementWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
