@@ -777,8 +777,53 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func updateFloatPainterAfterSelfPaintingLayerChange() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isFloating())
+    assert(!hasLayer() || !layer()!.isSelfPaintingLayer)
+
+    if let floatingObject = floatingObjectForFloatPainting() {
+      floatingObject.setPaintsFloat(paintsFloat: true)
+    }
+  }
+
+  // Find the ancestor renderer that is supposed to paint this float now that it is not self painting anymore.
+  private func floatingObjectForFloatPainting() -> FloatingObjectWrapper? {
+    let layoutContext = view().frameView().layoutContext()
+    if !layoutContext.isInLayout()
+      || CPtrToInt(layoutContext.subtreeLayoutRoot()?.p) != CPtrToInt(p)
+    {
+      return nil
+    }
+
+    var floatPainter: FloatingObjectWrapper? = nil
+    var ancestor = containingBlock()
+    while ancestor != nil {
+      let blockFlow = ancestor as? RenderBlockFlowWrapper
+      if blockFlow == nil {
+        fatalError("Not reached")
+      }
+      let floatingObjects = blockFlow!.floatingObjectSet()
+      if floatingObjects == nil {
+        break
+      }
+      var blockFlowContainsThisFloat = false
+      for floatingObject in floatingObjects! {
+        blockFlowContainsThisFloat = CPtrToInt(floatingObject.renderer?.p) == CPtrToInt(p)
+        if blockFlowContainsThisFloat {
+          floatPainter = floatingObject
+          if blockFlow!.hasLayer() && blockFlow!.layer()!.isSelfPaintingLayer {
+            return floatPainter
+          }
+          break
+        }
+      }
+      if !blockFlowContainsThisFloat {
+        break
+      }
+      ancestor = ancestor!.containingBlock()
+    }
+    // There has to be an ancestor with a floating object assigned to this renderer.
+    assert(floatPainter != nil)
+    return floatPainter
   }
 
   func shapeOutsideInfo() -> ShapeOutsideInfoWrapper? {

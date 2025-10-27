@@ -30,6 +30,16 @@ class LocalFrameViewLayoutContextWrapper {
     self.p = p
   }
 
+  func isInLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func subtreeLayoutRoot() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutState() -> RenderLayoutStateWrapper? {
     if let raw = wk_interop.LocalFrameViewLayoutContext_layoutState(p) {
       return RenderLayoutStateWrapper(p: raw)

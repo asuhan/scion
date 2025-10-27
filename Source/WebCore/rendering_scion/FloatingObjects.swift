@@ -56,6 +56,11 @@ class FloatingObjectWrapper: Hashable {
       frameRect.height().rawValue())
   }
 
+  func setPaintsFloat(paintsFloat: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
   private var p: UnsafeMutableRawPointer
