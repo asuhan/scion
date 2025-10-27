@@ -85,6 +85,13 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  static func createStyleInheritingFromPseudoStyle(pseudoStyle: RenderStyleWrapper)
+    -> RenderStyleWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (this: RenderStyleWrapper, other: RenderStyleWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

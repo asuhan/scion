@@ -83,8 +83,14 @@ private func createContentRenderers(
 private func updateStyleForContentRenderers(
   pseudoRenderer: RenderElementWrapper, style: RenderStyleWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  for contentRenderer: RenderElementWrapper in descendantsOfType(root: pseudoRenderer) {
+    // We only manage the style for the generated content which must be images or text.
+    if !(contentRenderer is RenderImageWrapper) && !(contentRenderer is RenderQuoteWrapper) {
+      continue
+    }
+    contentRenderer.setStyle(
+      style: RenderStyleWrapper.createStyleInheritingFromPseudoStyle(pseudoStyle: style))
+  }
 }
 
 extension RenderTreeUpdater {
