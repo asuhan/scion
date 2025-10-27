@@ -318,9 +318,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func isUnsplittableForPagination() -> Bool {
+  func hasUnsplittableScrollingOverflow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func isUnsplittableForPagination() -> Bool {
+    return isReplacedOrInlineBlock()
+      || hasUnsplittableScrollingOverflow()
+      || (parent() != nil && isWritingModeRoot())
+      || (isFloating() && style().pseudoElementType() == .FirstLetter
+        && style().initialLetterDrop() > 0)
+      || shouldApplySizeContainment()
   }
 
   func overflowClipRect(
