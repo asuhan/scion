@@ -23,4 +23,16 @@
  *
  */
 
-class ContentData {}
+class ContentData {
+  func createContentRenderer(document: Document, pseudoStyle: RenderStyleWrapper)
+    -> RenderObjectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func next() -> ContentData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

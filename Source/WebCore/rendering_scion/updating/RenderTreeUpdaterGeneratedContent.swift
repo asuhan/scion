@@ -61,8 +61,23 @@ private func createContentRenderers(
   builder: RenderTreeBuilder, pseudoRenderer: RenderElementWrapper, style: RenderStyleWrapper,
   pseudoId: PseudoId
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if let contentData = style.contentData() {
+    var content: ContentData? = contentData
+    while content != nil {
+      let child = content!.createContentRenderer(
+        document: pseudoRenderer.document(), pseudoStyle: style)
+      if pseudoRenderer.isChildAllowed(child: child, style: style) {
+        builder.attach(parent: pseudoRenderer, child: child)
+      }
+      content = content!.next()
+    }
+  } else {
+    // The only valid scenario where this method is called without the "content" property being set
+    // is the case where a pseudo-element has animations set on it via the Web Animations API.
+    assert(
+      elementIsTargetedByKeyframeEffectRequiringPseudoElement(
+        element: pseudoRenderer.element(), pseudoId: pseudoId))
+  }
 }
 
 private func updateStyleForContentRenderers(
