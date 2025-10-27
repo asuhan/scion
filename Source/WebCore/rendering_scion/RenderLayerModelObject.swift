@@ -35,7 +35,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return nil
   }
 
-  func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
+  func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }
 

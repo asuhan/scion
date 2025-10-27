@@ -1406,10 +1406,10 @@ class BorderPainter {
         var outerRect = borderRect
         if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
           outerRect.inflate(d: 1)
-          outerBorderTopWidth += 1
-          outerBorderBottomWidth += 1
-          outerBorderLeftWidth += 1
-          outerBorderRightWidth += 1
+          ++outerBorderTopWidth
+          ++outerBorderBottomWidth
+          ++outerBorderLeftWidth
+          ++outerBorderRightWidth
         }
 
         let outerClip = RenderStyleWrapper.getRoundedInnerBorderFor(

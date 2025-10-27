@@ -130,7 +130,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
       let bothEdgeScrollbarGutters = style().scrollbarGutter().bothEdges
 
-      if shouldPlaceVerticalScrollbarOnLeft() || bothEdgeScrollbarGutters {
+      if shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() || bothEdgeScrollbarGutters {
         leftScrollbarSpace = verticalScrollbarWidth
       }
       // FIXME: It's wrong that scrollbar-gutter: both-edges affects height: webkit.org/b/266938
@@ -328,8 +328,35 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     phase: PaintPhase = .BlockBackground
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var clipRect = borderBoxRectInFragment(fragment: fragment)
+    let topLeft = location + clipRect.location()
+    clipRect.setLocation(
+      location: topLeft + LayoutSizeWrapper(width: borderLeft(), height: borderTop()))
+    clipRect.setSize(
+      size: clipRect.size()
+        - LayoutSizeWrapper(
+          width: borderLeft() + borderRight(), height: borderTop() + borderBottom()))
+    if style().overflowX() == .Clip && style().overflowY() == .Visible {
+      clipRect.expandToInfiniteY()
+    } else if style().overflowY() == .Clip && style().overflowX() == .Visible {
+      clipRect.expandToInfiniteX()
+    }
+
+    // Subtract out scrollbars if we have them.
+    if let scrollableArea = layer() != nil ? layer()!.scrollableArea() : nil {
+      if shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() {
+        clipRect.move(
+          dx: scrollableArea.verticalScrollbarWidth(
+            relevancy: relevancy, isHorizontalWritingMode: isHorizontalWritingMode()), dy: 0)
+      }
+      clipRect.contract(
+        dw: scrollableArea.verticalScrollbarWidth(
+          relevancy: relevancy, isHorizontalWritingMode: isHorizontalWritingMode()),
+        dh: scrollableArea.horizontalScrollbarHeight(
+          relevancy: relevancy, isHorizontalWritingMode: isHorizontalWritingMode()))
+    }
+
+    return clipRect
   }
 
   func overflowClipRectForChildLayers(

@@ -73,6 +73,12 @@ struct LayoutUnit: Comparable {
 
   func double() -> Float64 { return toDouble() }
 
+  @discardableResult
+  prefix static func ++ (this: inout LayoutUnit) -> LayoutUnit {
+    this.value += kFixedPointDenominator
+    return this
+  }
+
   func mightBeSaturated() -> Bool {
     return rawValue() == Int32.max || rawValue() == Int32.min
   }
@@ -321,6 +327,12 @@ struct LayoutUnit: Comparable {
   @discardableResult
   static func += (a: inout LayoutUnit, b: LayoutUnit) -> LayoutUnit {
     a.value = WTF.saturatedSum(a: a.rawValue(), b: b.rawValue())
+    return a
+  }
+
+  @discardableResult
+  static func += (a: inout LayoutUnit, b: Int32) -> LayoutUnit {
+    a = a + b
     return a
   }
 

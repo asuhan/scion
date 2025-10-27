@@ -90,6 +90,22 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func verticalScrollbarWidth(
+    relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
+    isHorizontalWritingMode: Bool = true
+  ) -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func horizontalScrollbarHeight(
+    relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
+    isHorizontalWritingMode: Bool = true
+  ) -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOverflowControls(
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect,
     paintingOverlayControls: Bool = false

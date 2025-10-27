@@ -101,11 +101,23 @@ struct LayoutRectWrapper: Equatable {
 
   mutating func move(dx: Float32, dy: Float32) { m_location.move(dx: dx, dy: dy) }
 
+  mutating func move(dx: Int32, dy: Int32) { m_location.move(dx: dx, dy: dy) }
+
   mutating func expand(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: dw, height: dh) }
 
   mutating func expand(box: LayoutBoxExtent) {
     m_location.move(dx: -box.left, dy: -box.top)
     m_size.expand(width: box.left + box.right, height: box.top + box.bottom)
+  }
+
+  mutating func expandToInfiniteY() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func expandToInfiniteX() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   mutating func shiftXEdgeBy(delta: LayoutUnit) {
@@ -119,6 +131,11 @@ struct LayoutRectWrapper: Equatable {
   }
 
   func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
+
+  func contract(dw: Int32, dh: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   mutating func shiftXEdgeTo(edge: Float32) {
     shiftXEdgeTo(edge: LayoutUnit(value: edge))

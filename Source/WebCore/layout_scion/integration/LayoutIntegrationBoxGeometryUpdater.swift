@@ -286,7 +286,8 @@ extension LayoutIntegration {
       padding.vertical += intrinsicPaddingForTableCell(renderer: rootRenderer)
 
       let scrollbarSize = scrollbarLogicalSize(renderer: rootRenderer)
-      let shouldPlaceVerticalScrollbarOnLeft = rootRenderer.shouldPlaceVerticalScrollbarOnLeft()
+      let shouldPlaceVerticalScrollbarOnLeft =
+        rootRenderer.shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
 
       let contentBoxWidth =
         isHorizontalWritingMode() ? rootRenderer.contentWidth() : rootRenderer.contentHeight()
