@@ -30,12 +30,27 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func logicalTop() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func logicalBottom() -> Float32 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
     func contentLogicalLeft() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func inkOverflowLogicalTop() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func inkOverflowLogicalBottom() -> Float32 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

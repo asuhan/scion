@@ -22,6 +22,19 @@
 
 import wk_interop
 
+private func calculateMinimumPageHeight(
+  renderStyle: RenderStyleWrapper, lastLine: InlineIterator.LineBoxIterator, lineTop: LayoutUnit,
+  lineBottom: LayoutUnit
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: RenderBlockFlowWrapper) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBlockFlowWrapper: RenderBlockWrapper {
   convenience init(
     type: `Type`, document: Document, style: RenderStyleWrapper, flags: BlockFlowFlag = []
@@ -252,6 +265,23 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
+  enum PageBoundaryRule {
+    case ExcludePageBoundary
+    case IncludePageBoundary
+  }
+
+  func pageLogicalHeightForOffset(offset: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasNextPage(
+    logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Update minimum page height required to avoid fragmentation where it shouldn't occur (inside
   // unbreakable content, between orphans and widows, etc.). This will be used as a hint to the
   // column balancer to help set a good minimum column height.
@@ -315,6 +345,56 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func computeLineAdjustmentForPagination(
     lineBox: InlineIterator.LineBoxIterator, delta: LayoutUnit, floatMinimumBottom: LayoutUnit
   ) -> LinePaginationAdjustment {
+    let logicalOverflowTop = LayoutUnit(value: lineBox.get().inkOverflowLogicalTop())
+    let logicalOverflowBottom = LayoutUnit(value: lineBox.get().inkOverflowLogicalBottom())
+    let logicalOverflowHeight = logicalOverflowBottom - logicalOverflowTop
+    let logicalTop = LayoutUnit(value: lineBox.get().logicalTop())
+    let logicalOffset = min(logicalTop, logicalOverflowTop)
+
+    var floatMinimumBottom = floatMinimumBottom
+    if floatMinimumBottom.bool() {
+      // Don't push a float to the next page if it is taller than the page.
+      let floatHeight = floatMinimumBottom - logicalTop
+      if floatHeight > pageLogicalHeightForOffset(offset: floatMinimumBottom) {
+        floatMinimumBottom = LayoutUnit(value: UInt64(0))
+      }
+    }
+
+    let logicalBottom = max(
+      LayoutUnit(value: lineBox.get().logicalBottom()), logicalOverflowBottom, floatMinimumBottom)
+
+    updateMinimumPageHeight(
+      offset: logicalOffset,
+      minHeight: calculateMinimumPageHeight(
+        renderStyle: style(), lastLine: lineBox, lineTop: logicalOffset, lineBottom: logicalBottom))
+
+    let pageLogicalHeight = pageLogicalHeightForOffset(offset: logicalOffset)
+
+    let fragmentedFlow = enclosingFragmentedFlow()
+    let hasUniformPageLogicalHeight =
+      fragmentedFlow == nil || fragmentedFlow!.fragmentsHaveUniformLogicalHeight()
+    // If lineHeight is greater than pageLogicalHeight, but logicalVisualOverflow.height() still fits, we are
+    // still going to add a strut, so that the visible overflow fits on a single page.
+    if !pageLogicalHeight.bool() || !hasNextPage(logicalOffset: logicalOffset) {
+      // FIXME: In case the line aligns with the top of the page (or it's slightly shifted downwards) it will not be marked as the first line in the page.
+      // From here, the fix is not straightforward because it's not easy to always determine when the current line is the first in the page.
+      // With no valid page height, we can't possibly accommodate the widow rules.
+      clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: self)
+      return LinePaginationAdjustment()
+    }
+
+    if hasUniformPageLogicalHeight && logicalOverflowHeight > pageLogicalHeight {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func computeLeafBoxTopAndBottom(lineBox: InlineIterator.LineBoxIterator) -> (
+    LayoutUnit, LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

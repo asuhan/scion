@@ -38,6 +38,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func fragmentsHaveUniformLogicalHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collectLayerFragments(
     layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
