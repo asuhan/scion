@@ -39,6 +39,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  static func removePositionedObject(rendererToRemove: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removePositionedObjects(
     newContainingBlockCandidate: RenderBlockWrapper?,
     containingBlockState: ContainingBlockState = .SameContainingBlock

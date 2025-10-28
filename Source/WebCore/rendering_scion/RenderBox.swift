@@ -867,8 +867,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func removeFloatingOrPositionedChildFromBlockLists() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!renderTreeBeingDestroyed())
+
+    if isFloating() {
+      return removeFloatingAndInvalidateForLayout()
+    }
+
+    if isOutOfFlowPositioned() {
+      return RenderBlockWrapper.removePositionedObject(rendererToRemove: self)
+    }
+
+    fatalError("Not reached")
   }
 
   func markForPaginationRelayoutIfNeeded() {
