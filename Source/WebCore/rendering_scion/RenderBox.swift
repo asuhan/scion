@@ -948,8 +948,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRelativeDimensions() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().height().isPercentOrCalculated() || style().width().isPercentOrCalculated()
+      || style().maxHeight().isPercentOrCalculated() || style().maxWidth().isPercentOrCalculated()
+      || style().minHeight().isPercentOrCalculated() || style().minWidth().isPercentOrCalculated()
   }
 
   func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
