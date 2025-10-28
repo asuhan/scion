@@ -17,4 +17,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderTableCaptionWrapper: RenderBlockFlowWrapper {}
+final class RenderTableCaptionWrapper: RenderBlockFlowWrapper {
+  override func containingBlockLogicalWidthForContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

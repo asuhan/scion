@@ -52,6 +52,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func addPercentHeightDescendant(descendant: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -81,6 +86,31 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // (flexbox, block, etc.)
   func intrinsicBorderForFieldset() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(p))
+  }
+
+  override func borderTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func paintExcludedChildrenInBorder(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -116,6 +146,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   final func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
     fragmentedFlow: RenderFragmentedFlowWrapper? = nil
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func availableLogicalHeightForPercentageComputation() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

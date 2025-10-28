@@ -141,10 +141,21 @@ struct UsedFloat: OptionSet {
   static let Right = UsedFloat(rawValue: 1 << 2)
 }
 
+// Box decoration attributes. Not inherited.
+
 enum BoxDecorationBreak: UInt8 {
   case Slice
   case Clone
 }
+
+// Box attributes. Not inherited.
+
+enum BoxSizing: UInt8 {
+  case ContentBox
+  case BorderBox
+}
+
+// Random visual rendering model attributes. Not inherited.
 
 enum Overflow: UInt8 {
   case Visible

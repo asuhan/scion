@@ -38,6 +38,49 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func borderLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func borderAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll
+  // create an extra anonymous RenderBlock to handle mixing directionality anyway, in which case we can lock
+  // the block flow directionality of the cells to the table's directionality.
+  override func paddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func paddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func createAnonymousWithParentRenderer(parent: RenderTableRowWrapper)
     -> RenderTableCellWrapper
   {

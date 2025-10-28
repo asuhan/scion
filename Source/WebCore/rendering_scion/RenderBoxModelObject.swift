@@ -48,6 +48,16 @@ enum BaseBackgroundColorUsage {
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
+  func computedCSSPaddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computedCSSPaddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These functions are used during layout. Table cells and the MathML
   // code override them to include some extra intrinsic padding.
   func padding() -> RectEdges<LayoutUnit> {
@@ -71,6 +81,16 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func paddingRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paddingAfter() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -108,11 +128,26 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func borderBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderStart() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(p))
   }
 
   func borderAndPaddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderAndPaddingLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -127,6 +162,16 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderBoxModelObject_marginStart(p, otherStyle?.p))
@@ -135,6 +180,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func borderShapeForContentClipping(
     borderBoxRect: LayoutRectWrapper, includeLeftEdge: Bool = true, includeRightEdge: Bool = true
   ) -> BorderShape {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containingBlockLogicalWidthForContent() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -178,6 +228,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func borderObscuresBackground() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  enum UpdatePercentageHeightDescendants {
+    case No
+    case Yes
   }
 
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {

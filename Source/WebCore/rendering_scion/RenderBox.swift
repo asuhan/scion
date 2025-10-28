@@ -27,6 +27,13 @@ enum OverlayScrollbarSizeRelevancy {
   case IncludeOverlayScrollbarSize
 }
 
+private func tableCellShouldHaveZeroInitialSize(
+  block: RenderBlockWrapper, child: RenderBoxWrapper, scrollsOverflowY: Bool
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func requiresLayerWithScrollableArea() -> Bool {
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
@@ -232,6 +239,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     )
   }
 
+  override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collapsedMarginAfter() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -273,6 +290,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
+  func overridingLogicalHeight() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  typealias ContainingBlockOverrideValue = LayoutUnit?
+
+  func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func overridingContainingBlockContentLogicalHeight() -> ContainingBlockOverrideValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }
@@ -304,6 +338,94 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         height: oldRect.height().rawValue()))
   }
 
+  override func containingBlockLogicalWidthForContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computePercentageLogicalHeight(
+    height: LengthWrapper, updateDescendants: UpdatePercentageHeightDescendants = .Yes
+  ) -> LayoutUnit? {
+    var skippedAutoHeightContainingBlock = false
+    var cb = containingBlock()
+    var containingBlockChild = self
+    var rootMarginBorderPaddingHeight = LayoutUnit()
+    let isHorizontal = isHorizontalWritingMode()
+    while cb != nil && !(cb is RenderViewWrapper)
+      && skipContainingBlockForPercentHeightCalculation(
+        containingBlock: cb!,
+        isPerpendicularWritingMode: isHorizontal != cb!.isHorizontalWritingMode())
+    {
+      if cb!.isBody() || cb!.isDocumentElementRenderer() {
+        rootMarginBorderPaddingHeight +=
+          cb!.marginBefore() + cb!.marginAfter() + cb!.borderAndPaddingLogicalHeight()
+      }
+      skippedAutoHeightContainingBlock = true
+      containingBlockChild = cb!
+      cb = cb!.containingBlock()
+    }
+    if updateDescendants == .Yes {
+      cb!.addPercentHeightDescendant(descendant: self)
+    }
+
+    var availableHeight: LayoutUnit? = nil
+    let isOrthogonal = isHorizontal != cb!.isHorizontalWritingMode()
+    if let overridingAvailableHeight = isOrthogonal
+      ? overridingContainingBlockContentLogicalWidth()
+      : overridingContainingBlockContentLogicalHeight()
+    {
+      availableHeight = overridingAvailableHeight
+    } else {
+      if isOrthogonal {
+        availableHeight = containingBlockChild.containingBlockLogicalWidthForContent()
+      } else if cb is RenderTableCellWrapper {
+        if !skippedAutoHeightContainingBlock {
+          // Table cells violate what the CSS spec says to do with heights. Basically we
+          // don't care if the cell specified a height or not. We just always make ourselves
+          // be a percentage of the cell's current content height.
+          if let overridingLogicalHeight = cb!.overridingLogicalHeight() {
+            availableHeight =
+              overridingLogicalHeight - cb!.computedCSSPaddingBefore()
+              - cb!.computedCSSPaddingAfter() - cb!.borderBefore() - cb!.borderAfter()
+              - cb!.scrollbarLogicalHeight()
+          } else {
+            return tableCellShouldHaveZeroInitialSize(
+              block: cb!, child: self, scrollsOverflowY: scrollsOverflowY())
+              ? LayoutUnit(value: 0) : nil
+          }
+        }
+      } else {
+        availableHeight = cb!.availableLogicalHeightForPercentageComputation()
+      }
+    }
+
+    if availableHeight == nil {
+      return nil
+    }
+
+    var result = valueForLength(
+      length: height,
+      maximumValue: availableHeight! - rootMarginBorderPaddingHeight
+        + (isRenderTable() && isOutOfFlowPositioned()
+          ? cb!.paddingBefore() + cb!.paddingAfter() : LayoutUnit(value: UInt64(0))))
+
+    // |overridingLogicalHeight| is the maximum height made available by the
+    // cell to its percent height children when we decide they can determine the
+    // height of the cell. If the percent height child is box-sizing:content-box
+    // then we must subtract the border and padding from the cell's
+    // |availableHeight| (given by |overridingLogicalHeight|) to arrive
+    // at the child's computed height.
+    let subtractBorderAndPadding =
+      isRenderTable()
+      || (cb is RenderTableCellWrapper && !skippedAutoHeightContainingBlock
+        && cb!.overridingLogicalHeight() != nil && style().boxSizing() == .ContentBox)
+    if subtractBorderAndPadding {
+      result -= borderAndPaddingLogicalHeight()
+      return max(LayoutUnit(value: UInt64(0)), result)
+    }
+    return result
+  }
+
   func availableLogicalWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(p))
   }
@@ -314,6 +436,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func horizontalScrollbarHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollbarLogicalHeight() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -329,8 +456,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func percentageLogicalHeightIsResolvable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Do this to avoid duplicating all the logic that already exists when computing
+    // an actual percentage height.
+    let fakeLength = LengthWrapper(value: Int32(100), type: .Percent)
+    return computePercentageLogicalHeight(height: fakeLength) != nil
   }
 
   func hasUnsplittableScrollingOverflow() -> Bool {
@@ -1000,5 +1129,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return false
+  }
+
+  func skipContainingBlockForPercentHeightCalculation(
+    containingBlock: RenderBoxWrapper, isPerpendicularWritingMode: Bool
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }

@@ -19,4 +19,14 @@
  *
  */
 
-class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {}
+class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
+  override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

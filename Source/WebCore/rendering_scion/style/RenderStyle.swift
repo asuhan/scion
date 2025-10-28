@@ -1096,6 +1096,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func boxSizing() -> BoxSizing {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marqueeBehavior() -> MarqueeBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
