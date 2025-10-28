@@ -89,10 +89,20 @@ class InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func lineIndex() -> UInt64 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   class LineBoxIterator: IteratorProtocol {
     func next() -> LineBox? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func bool() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

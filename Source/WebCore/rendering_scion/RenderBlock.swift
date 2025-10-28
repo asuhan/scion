@@ -86,6 +86,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func setPaginationStrut(strut: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Fieldset legends that are taller than the fieldset border add in intrinsic border
   // in order to ensure that content gets properly pushed down across all layout systems
   // (flexbox, block, etc.)
@@ -546,6 +551,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func paintDebugBoxShadowIfApplicable(
     context: GraphicsContextWrapper, paintRect: LayoutRectWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

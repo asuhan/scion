@@ -30,6 +30,11 @@ private func calculateMinimumPageHeight(
   fatalError("Not implemented")
 }
 
+private func needsAppleMailPaginationQuirk(renderer: RenderBlockFlowWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: RenderBlockFlowWrapper) {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -60,7 +65,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
   }
 
+  func shouldBreakAtLineToAvoidWidow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setBreakAtLineToAvoidWidow(lineToBreak: Int) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lineBreakToAvoidWidow() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -275,9 +290,22 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func pageRemainingLogicalHeightForOffsetFromBlockFlow(
+    offset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .IncludePageBoundary
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasNextPage(
     logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // A page break is required at some offset due to space shortage in the current fragmentainer.
+  func setPageBreak(offset: LayoutUnit, spaceShortage: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -305,6 +333,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       return nil
     }
     return LayoutUnit.fromRawValue(value: raw.value)
+  }
+
+  private func pushToNextPageWithMinimumLogicalHeight(
+    adjustment: LayoutUnit, logicalOffset: LayoutUnit, minimumLogicalHeight: LayoutUnit
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   struct LinePaginationAdjustment {
@@ -362,13 +397,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     let logicalBottom = max(
       LayoutUnit(value: lineBox.get().logicalBottom()), logicalOverflowBottom, floatMinimumBottom)
+    var lineHeight = logicalBottom - logicalOffset
 
     updateMinimumPageHeight(
       offset: logicalOffset,
       minHeight: calculateMinimumPageHeight(
         renderStyle: style(), lastLine: lineBox, lineTop: logicalOffset, lineBottom: logicalBottom))
 
-    let pageLogicalHeight = pageLogicalHeightForOffset(offset: logicalOffset)
+    var pageLogicalHeight = pageLogicalHeightForOffset(offset: logicalOffset)
 
     let fragmentedFlow = enclosingFragmentedFlow()
     let hasUniformPageLogicalHeight =
@@ -384,12 +420,91 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     if hasUniformPageLogicalHeight && logicalOverflowHeight > pageLogicalHeight {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // We are so tall that we are bigger than a page. Before we give up and just leave the line where it is, try drilling into the
+      // line and computing a new height that excludes anything we consider "blank space". We will discard margins, descent, and even overflow. If we are
+      // able to fit with the blank space and overflow excluded, we will give the line its own page with the highest non-blank element being aligned with the
+      // top of the page.
+      // FIXME: We are still honoring gigantic margins, which does leave open the possibility of blank pages caused by this heuristic. It remains to be seen whether or not
+      // this will be a real-world issue. For now we don't try to deal with this problem.
+      let (logicalOffset, logicalBottom) = RenderBlockFlowWrapper.computeLeafBoxTopAndBottom(
+        lineBox: lineBox)
+      lineHeight = logicalBottom - logicalOffset
+      if logicalOffset == LayoutUnit.max() || lineHeight > pageLogicalHeight {
+        // Give up. We're genuinely too big even after excluding blank space and overflow.
+        clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: self)
+        return LinePaginationAdjustment()
+      }
+      pageLogicalHeight = pageLogicalHeightForOffset(offset: logicalOffset)
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
+      offset: logicalOffset, pageBoundaryRule: .ExcludePageBoundary)
+
+    let lineNumber = Int32(lineBox.get().lineIndex() + 1)
+    if remainingLogicalHeight < lineHeight
+      || (shouldBreakAtLineToAvoidWidow() && lineBreakToAvoidWidow() == lineNumber)
+    {
+      if lineBreakToAvoidWidow() == lineNumber {
+        clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: self)
+      }
+      // If we have a non-uniform page height, then we have to shift further possibly.
+      if !hasUniformPageLogicalHeight
+        && !pushToNextPageWithMinimumLogicalHeight(
+          adjustment: remainingLogicalHeight, logicalOffset: logicalOffset,
+          minimumLogicalHeight: lineHeight)
+      {
+        return LinePaginationAdjustment()
+      }
+      if lineHeight > pageLogicalHeight {
+        // Split the top margin in order to avoid splitting the visible part of the line.
+        remainingLogicalHeight -= min(
+          lineHeight - pageLogicalHeight,
+          max(LayoutUnit(value: UInt64(0)), logicalOverflowTop - logicalTop))
+      }
+      let totalLogicalHeight = lineHeight + max(LayoutUnit(value: 0), logicalOffset)
+      let pageLogicalHeightAtNewOffset =
+        hasUniformPageLogicalHeight
+        ? pageLogicalHeight
+        : pageLogicalHeightForOffset(offset: logicalOffset + remainingLogicalHeight)
+
+      setPageBreak(offset: logicalOffset, spaceShortage: lineHeight - remainingLogicalHeight)
+
+      let avoidFirstLinePageBreak =
+        lineBox.get().isFirst() && totalLogicalHeight < pageLogicalHeightAtNewOffset
+        && !floatMinimumBottom.bool()
+      let affectedByOrphans = !style().hasAutoOrphans() && style().orphans() >= lineNumber
+
+      if (avoidFirstLinePageBreak || affectedByOrphans) && !isOutOfFlowPositioned()
+        && !isRenderTableCell()
+      {
+        if needsAppleMailPaginationQuirk(renderer: self) {
+          return LinePaginationAdjustment()
+        }
+
+        let firstLineBox = InlineIterator.firstLineBoxFor(flow: self)
+        let firstLineBoxOverflowTop = LayoutUnit(
+          value: firstLineBox.bool() ? firstLineBox.get().inkOverflowLogicalTop() : 0)
+        let firstLineUpperOverhang = max(-firstLineBoxOverflowTop, LayoutUnit(value: UInt64(0)))
+        setPaginationStrut(strut: remainingLogicalHeight + logicalOffset + firstLineUpperOverhang)
+
+        return LinePaginationAdjustment()
+      }
+
+      return LinePaginationAdjustment(strut: remainingLogicalHeight, isFirstAfterPageBreak: true)
+    }
+
+    if remainingLogicalHeight == pageLogicalHeight {
+      // We're at the very top of a page or column.
+      let isFirstLine = lineBox.get().isFirst()
+      if !isFirstLine || offsetFromLogicalTopOfFirstPage().bool() {
+        setPageBreak(offset: logicalOffset, spaceShortage: lineHeight)
+      }
+
+      return LinePaginationAdjustment(
+        strut: LayoutUnit(value: UInt64(0)), isFirstAfterPageBreak: !isFirstLine)
+    }
+
+    return LinePaginationAdjustment()
   }
 
   private static func computeLeafBoxTopAndBottom(lineBox: InlineIterator.LineBoxIterator) -> (

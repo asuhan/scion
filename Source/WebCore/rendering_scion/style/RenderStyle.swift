@@ -986,6 +986,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasAutoOrphans() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func breakInside() -> BreakInside {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

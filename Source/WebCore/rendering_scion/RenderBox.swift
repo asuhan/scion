@@ -343,6 +343,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
       p,
