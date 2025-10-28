@@ -924,8 +924,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(rect: inout FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().isFlippedBlocksWritingMode() {
+      return
+    }
+
+    if isHorizontalWritingMode() {
+      rect.setY(y: height() - rect.maxY())
+    } else {
+      rect.setX(x: width() - rect.maxX())
+    }
   }
 
   // These represent your location relative to your container as a physical offset.
