@@ -974,8 +974,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func scrollPosition() -> ScrollPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasPotentiallyScrollableOverflow() {
+      return ScrollPosition(x: 0, y: 0)
+    }
+
+    assert(hasLayer())
+    if let scrollableArea = layer()!.scrollableArea() {
+      return scrollableArea.scrollPosition()
+    }
+
+    return ScrollPosition(x: 0, y: 0)
   }
 
   func hasRelativeDimensions() -> Bool {
