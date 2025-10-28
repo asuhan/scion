@@ -509,8 +509,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldTreatChildAsReplacedInTableCells() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isReplacedOrInlineBlock() {
+      return true
+    }
+    return element() != nil
+      && (element()!.isFormControlElement() || element() is HTMLImageElementWrapper)
   }
 
   func overflowClipRect(

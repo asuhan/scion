@@ -4,6 +4,7 @@ target_sources(layout_scion PRIVATE
     HTMLElement.swift
     HTMLFormControlElement.swift
     HTMLFrameOwnerElement.swift
+    HTMLImageElement.swift
     HTMLSlotElement.swift
     HTMLTextFormControlElement.swift
 )

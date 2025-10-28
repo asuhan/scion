@@ -60,6 +60,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func isFormControlElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func childShouldCreateRenderer(child: NodeWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
