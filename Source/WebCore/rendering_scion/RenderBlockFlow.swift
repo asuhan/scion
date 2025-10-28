@@ -174,6 +174,62 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func invalidateLineLayoutPath(invalidationReason: InvalidationReason) {
+    switch lineLayoutPath() {
+    case .UndeterminedPath:
+      return
+    case .SvgTextPath:
+      setLineLayoutPath(path: .UndeterminedPath)
+      return
+    case .InlinePath:
+      // FIXME: Implement partial invalidation.
+      if inlineLayout() != nil {
+        previousInlineLayoutContentBoxLogicalHeight = inlineLayout()!.contentBoxLogicalHeight()
+        if invalidationReason != .InsertionOrRemoval {
+          // Repaint and set needs layout, including out of flow boxes.
+          // Since we eagerly remove the display content here, repaints issued between this invalidation (triggered by style change/content mutation) and the subsequent layout would produce empty rects.
+          repaint()
+          let walker = InlineWalker(root: self)
+          while !walker.atEnd() {
+            let renderer = walker.current()!
+            if !renderer.everHadLayout() {
+              walker.advance()
+              continue
+            }
+            if !renderer.isInFlow()
+              && inlineLayout()!.contains(renderer: renderer as! RenderElementWrapper)
+            {
+              renderer.repaint()
+            }
+            renderer.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+            walker.advance()
+          }
+        }
+      }
+      lineLayout = .None
+      if invalidationReason == .InsertionOrRemoval {
+        setLineLayoutPath(path: .UndeterminedPath)
+      }
+      if selfNeedsLayout() || normalChildNeedsLayout() {
+        return
+      }
+      // FIXME: We should just kick off a subtree layout here (if needed at all) see webkit.org/b/172947.
+      setNeedsLayout()
+      return
+    }
+  }
+
+  enum LineLayoutPath {
+    case UndeterminedPath
+    case InlinePath
+    case SvgTextPath
+  }
+
+  func lineLayoutPath() -> LineLayoutPath {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLineLayoutPath(path: LineLayoutPath) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -263,11 +319,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.
+  private var previousInlineLayoutContentBoxLogicalHeight: LayoutUnit?
+
   enum LineLayout {
     case None
     case Integration(LayoutIntegration.LineLayout)
     case Legacy(LegacyLineLayout)
   }
 
-  let lineLayout: LineLayout = .None
+  var lineLayout: LineLayout = .None
 }
