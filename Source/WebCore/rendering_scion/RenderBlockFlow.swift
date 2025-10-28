@@ -73,8 +73,56 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func willCreateColumns(desiredColumnCount: UInt32? = nil) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The following types are not supposed to create multicol context.
+    if isRenderFileUploadControl() || isRenderTextControl() || isRenderListBox() {
+      return false
+    }
+    if isRenderSVGBlock() {
+      return false
+    }
+    if style().display() == .RubyBlock || style().display() == .RubyAnnotation {
+      return false
+    }
+
+    if firstChild() == nil {
+      return false
+    }
+
+    if style().pseudoElementType() != .None {
+      return false
+    }
+
+    // If overflow-y is set to paged-x or paged-y on the body or html element, we'll handle the paginating in the RenderView instead.
+    if (style().overflowY() == .PagedX || style().overflowY() == .PagedY)
+      && !(isDocumentElementRenderer() || isBody())
+    {
+      return true
+    }
+
+    if !style().specifiesColumns() {
+      return false
+    }
+
+    // column-axis with opposite writing direction initiates MultiColumnFlow.
+    if !style().hasInlineColumnAxis() {
+      return true
+    }
+
+    // Non-auto column-width always initiates MultiColumnFlow.
+    if !style().hasAutoColumnWidth() {
+      return true
+    }
+
+    if desiredColumnCount != nil {
+      return desiredColumnCount! > 1
+    }
+
+    // column-count > 1 always initiates MultiColumnFlow.
+    if !style().hasAutoColumnCount() {
+      return style().columnCount() > 1
+    }
+
+    fatalError("Not reached")
   }
 
   func requiresColumns(desiredColumnCount: Int32) -> Bool {
