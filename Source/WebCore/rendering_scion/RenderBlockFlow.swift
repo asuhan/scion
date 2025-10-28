@@ -92,6 +92,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func markAllDescendantsWithFloatsForLayout(
+    floatToRemove: RenderBoxWrapper? = nil, inLayout: Bool = true
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func markSiblingsWithFloatsForLayout(floatToRemove: RenderBoxWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func floatingObjectSet() -> FloatingObjectSet? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -27,6 +27,13 @@ enum OverlayScrollbarSizeRelevancy {
   case IncludeOverlayScrollbarSize
 }
 
+private func outermostBlockContainingFloatingObject(box: RenderBoxWrapper)
+  -> RenderBlockFlowWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func tableCellShouldHaveZeroInitialSize(
   block: RenderBlockWrapper, child: RenderBoxWrapper, scrollsOverflowY: Bool
 ) -> Bool {
@@ -847,8 +854,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func removeFloatingAndInvalidateForLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isFloating())
+
+    if renderTreeBeingDestroyed() {
+      return
+    }
+
+    if let ancestor = outermostBlockContainingFloatingObject(box: self) {
+      ancestor.markSiblingsWithFloatsForLayout(floatToRemove: self)
+      ancestor.markAllDescendantsWithFloatsForLayout(floatToRemove: self, inLayout: false)
+    }
   }
 
   func removeFloatingOrPositionedChildFromBlockLists() {
