@@ -30,8 +30,16 @@ enum OverlayScrollbarSizeRelevancy {
 private func tableCellShouldHaveZeroInitialSize(
   block: RenderBlockWrapper, child: RenderBoxWrapper, scrollsOverflowY: Bool
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Normally we would let the cell size intrinsically, but scrolling overflow has to be
+  // treated differently, since WinIE lets scrolled overflow fragments shrink as needed.
+  // While we can't get all cases right, we can at least detect when the cell has a specified
+  // height or when the table has a specified height. In these cases we want to initially have
+  // no size and allow the flexing of the table or the cell to its specified height to cause us
+  // to grow to fill the space. This could end up being wrong in some cases, but it is
+  // preferable to the alternative (sizing intrinsically and making the row end up too big).
+  let cell = block as! RenderTableCellWrapper
+  return scrollsOverflowY && !child.shouldTreatChildAsReplacedInTableCells()
+    && (!cell.style().logicalHeight().isAuto() || !cell.table()!.style().logicalHeight().isAuto())
 }
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
@@ -498,6 +506,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       || (isFloating() && style().pseudoElementType() == .FirstLetter
         && style().initialLetterDrop() > 0)
       || shouldApplySizeContainment()
+  }
+
+  func shouldTreatChildAsReplacedInTableCells() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func overflowClipRect(
