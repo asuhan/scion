@@ -483,6 +483,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isAnonymousForPercentageResolution() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFloating() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -832,6 +837,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Virtual function helper for the new FlexibleBox Layout (display: -webkit-flex).
   func isRenderFlexibleBox() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFlexibleBoxIncludingDeprecated() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

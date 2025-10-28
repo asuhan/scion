@@ -1134,7 +1134,41 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func skipContainingBlockForPercentHeightCalculation(
     containingBlock: RenderBoxWrapper, isPerpendicularWritingMode: Bool
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Flow threads for multicol or paged overflow should be skipped. They are invisible to the DOM,
+    // and percent heights of children should be resolved against the multicol or paged container.
+    if containingBlock.isRenderFragmentedFlow() && !isPerpendicularWritingMode {
+      return true
+    }
+
+    // Render view is not considered auto height.
+    if containingBlock is RenderViewWrapper {
+      return false
+    }
+
+    // If the writing mode of the containing block is orthogonal to ours, it means
+    // that we shouldn't skip anything, since we're going to resolve the
+    // percentage height against a containing block *width*.
+    if isPerpendicularWritingMode {
+      return false
+    }
+
+    // Anonymous blocks should not impede percentage resolution on a child.
+    // Examples of such anonymous blocks are blocks wrapped around inlines that
+    // have block siblings (from the CSS spec) and multicol flow threads (an
+    // implementation detail). Another implementation detail, ruby runs, create
+    // anonymous inline-blocks, so skip those too. All other types of anonymous
+    // objects, such as table-cells and flexboxes, will be treated as if they were
+    // non-anonymous.
+    if containingBlock.isAnonymousForPercentageResolution() {
+      return containingBlock.style().display() == .Block
+        || containingBlock.style().display() == .InlineBlock
+    }
+
+    // For quirks mode, we skip most auto-height containing blocks when computing
+    // percentages.
+    return document().inQuirksMode() && !containingBlock.isRenderTableCell()
+      && !containingBlock.isOutOfFlowPositioned() && !containingBlock.isRenderGrid()
+      && !containingBlock.isFlexibleBoxIncludingDeprecated()
+      && containingBlock.style().logicalHeight().isAuto()
   }
 }
