@@ -265,6 +265,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
 
+  func flipFloatForWritingModeForChild(child: FloatingObjectWrapper, point: LayoutPointWrapper)
+    -> LayoutPointWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setChildrenInline(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -439,8 +446,31 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if floatingObjects == nil {
+      return
+    }
+
+    let floatingObjectSet = floatingObjects!.set()
+    for floatingObject in floatingObjectSet {
+      let renderer = floatingObject.renderer!
+      if floatingObject.shouldPaint() {
+        var currentPaintInfo = paintInfo
+        currentPaintInfo.phase = preservePhase ? paintInfo.phase : .BlockBackground
+        let childPoint = flipFloatForWritingModeForChild(
+          child: floatingObject, point: paintOffset + floatingObject.translationOffsetToAncestor())
+        renderer.paint(paintInfo: &currentPaintInfo, paintOffset: childPoint)
+        if !preservePhase {
+          currentPaintInfo.phase = .ChildBlockBackgrounds
+          renderer.paint(paintInfo: &currentPaintInfo, paintOffset: childPoint)
+          currentPaintInfo.phase = .Float
+          renderer.paint(paintInfo: &currentPaintInfo, paintOffset: childPoint)
+          currentPaintInfo.phase = .Foreground
+          renderer.paint(paintInfo: &currentPaintInfo, paintOffset: childPoint)
+          currentPaintInfo.phase = .Outline
+          renderer.paint(paintInfo: &currentPaintInfo, paintOffset: childPoint)
+        }
+      }
+    }
   }
 
   private func removeFloatingObject(floatBox: RenderBoxWrapper) {
@@ -607,6 +637,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.
   private var previousInlineLayoutContentBoxLogicalHeight: LayoutUnit?
+
+  private let floatingObjects: FloatingObjects? = nil
 
   enum LineLayout {
     case None

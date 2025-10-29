@@ -56,7 +56,17 @@ class FloatingObjectWrapper: Hashable {
       frameRect.height().rawValue())
   }
 
+  func shouldPaint() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPaintsFloat(paintsFloat: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func translationOffsetToAncestor() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -64,4 +74,12 @@ class FloatingObjectWrapper: Hashable {
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
   private var p: UnsafeMutableRawPointer
+}
+
+// FIXME: This is really the same thing as FloatingObjectSet.
+// Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
+class FloatingObjects {
+  func set() -> FloatingObjectSet { return m_set }
+
+  private let m_set = FloatingObjectSet()
 }
