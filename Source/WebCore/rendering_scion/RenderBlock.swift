@@ -62,9 +62,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
+  static func removePercentHeightDescendant(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func hasPercentHeightContainerMap() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func hasPercentHeightDescendant(descendant: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
+    // We query the map directly, rather than looking at style's
+    // logicalHeight()/logicalMinHeight()/logicalMaxHeight() since those
+    // can change with writing mode/directional changes.
+    if !hasPercentHeightContainerMap() {
+      return
+    }
+
+    if !hasPercentHeightDescendant(descendant: descendant) {
+      return
+    }
+
+    removePercentHeightDescendant(descendant: descendant)
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
