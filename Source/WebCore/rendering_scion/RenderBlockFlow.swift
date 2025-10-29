@@ -424,8 +424,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       // line and computing a new height that excludes anything we consider "blank space". We will discard margins, descent, and even overflow. If we are
       // able to fit with the blank space and overflow excluded, we will give the line its own page with the highest non-blank element being aligned with the
       // top of the page.
-      // FIXME: We are still honoring gigantic margins, which does leave open the possibility of blank pages caused by this heuristic. It remains to be seen whether or not
-      // this will be a real-world issue. For now we don't try to deal with this problem.
       let (logicalOffset, logicalBottom) = RenderBlockFlowWrapper.computeLeafBoxTopAndBottom(
         lineBox: lineBox)
       lineHeight = logicalBottom - logicalOffset
@@ -507,11 +505,24 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return LinePaginationAdjustment()
   }
 
+  // FIXME: We are still honoring gigantic margins, which does leave open the possibility of blank pages caused by this heuristic. It remains to be seen whether or not
+  // this will be a real-world issue. For now we don't try to deal with this problem.
   private static func computeLeafBoxTopAndBottom(lineBox: InlineIterator.LineBoxIterator) -> (
     LayoutUnit, LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var lineTop = LayoutUnit.max()
+    var lineBottom = LayoutUnit.min()
+    let box = lineBox.get().firstLeafBox()
+    while box.bool() {
+      if box.get().logicalTop() < lineTop {
+        lineTop = LayoutUnit(value: box.get().logicalTop())
+      }
+      if box.get().logicalBottom() > lineBottom {
+        lineBottom = LayoutUnit(value: box.get().logicalBottom())
+      }
+      box.traverseNextOnLine()
+    }
+    return (lineTop, lineBottom)
   }
 
   // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.

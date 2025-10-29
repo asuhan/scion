@@ -46,6 +46,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func logicalBottom() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func logicalWidth() -> Float32 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -84,6 +89,12 @@ extension InlineIterator {
     }
   }
 
-  class LeafBoxIterator: BoxIterator {}
+  class LeafBoxIterator: BoxIterator {
+    @discardableResult
+    func traverseNextOnLine() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
 }

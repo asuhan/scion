@@ -90,6 +90,11 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func firstLeafBox() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func lineIndex() -> UInt64 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
