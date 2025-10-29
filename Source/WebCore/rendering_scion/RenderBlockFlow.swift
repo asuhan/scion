@@ -26,8 +26,26 @@ private func calculateMinimumPageHeight(
   renderStyle: RenderStyleWrapper, lastLine: InlineIterator.LineBoxIterator, lineTop: LayoutUnit,
   lineBottom: LayoutUnit
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // We may require a certain minimum number of lines per page in order to satisfy
+  // orphans and widows, and that may affect the minimum page height.
+  let lineCount = max(
+    renderStyle.hasAutoOrphans() ? 1 : renderStyle.orphans(),
+    renderStyle.hasAutoWidows() ? 1 : renderStyle.widows())
+  var lineTop = lineTop
+  if lineCount > 1 {
+    var line = lastLine
+    for _ in 1..<lineCount {
+      if !line.get().previous().bool() {
+        break
+      }
+      line = line.get().previous()
+    }
+
+    // FIXME: Paginating using line overflow isn't all fine. See FIXME in
+    // adjustLinePositionForPagination() for more details.
+    lineTop = LayoutUnit(value: min(line.get().logicalTop(), line.get().inkOverflowLogicalTop()))
+  }
+  return lineBottom - lineTop
 }
 
 private func needsAppleMailPaginationQuirk(renderer: RenderBlockFlowWrapper) -> Bool {
