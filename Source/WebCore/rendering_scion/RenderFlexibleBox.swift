@@ -39,6 +39,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: RenderBoxWrapper)
+    -> LayoutUnit?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearCachedMainSizeForFlexItem(flexItem: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

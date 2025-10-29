@@ -95,7 +95,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(p))
   }
 
+  func logicalWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func constrainContentBoxLogicalHeightByMinMax(
+    logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -310,6 +322,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func overridingContentLogicalHeight(overridingLogicalHeight: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   typealias ContainingBlockOverrideValue = LayoutUnit?
 
   func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue {
@@ -328,6 +345,24 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func clearOverridingLogicalWidthLength() {
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
+  }
+
+  func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  struct ComputedMarginValues {
+    let before: LayoutUnit
+    let after: LayoutUnit
+    let start: LayoutUnit
+    let end: LayoutUnit
+  }
+
+  struct LogicalExtentComputedValues {
+    let extent: LayoutUnit
+    let position: LayoutUnit
+    let margins: ComputedMarginValues
   }
 
   enum RenderBoxFragmentInfoFlags {
@@ -359,6 +394,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1024,6 +1066,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldComputeLogicalHeightFromAspectRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateFloatPainterAfterSelfPaintingLayerChange() {
     assert(isFloating())
     assert(!hasLayer() || !layer()!.isSelfPaintingLayer)
@@ -1241,5 +1288,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       && !containingBlock.isOutOfFlowPositioned() && !containingBlock.isRenderGrid()
       && !containingBlock.isFlexibleBoxIncludingDeprecated()
       && containingBlock.style().logicalHeight().isAuto()
+  }
+
+  static func blockSizeFromAspectRatio(
+    borderPaddingInlineSum: LayoutUnit, borderPaddingBlockSum: LayoutUnit, aspectRatio: Float64,
+    boxSizing: BoxSizing, inlineSize: LayoutUnit, aspectRatioType: AspectRatioType,
+    isRenderReplaced: Bool
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }

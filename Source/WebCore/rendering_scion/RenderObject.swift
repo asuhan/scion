@@ -622,6 +622,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func preferredLogicalWidthsDirty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSelectionBorder() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

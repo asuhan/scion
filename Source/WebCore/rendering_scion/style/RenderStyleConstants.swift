@@ -302,6 +302,13 @@ enum ContentDistribution: UInt8 {
   case Stretch
 }
 
+enum AspectRatioType: UInt8 {
+  case Auto
+  case Ratio
+  case AutoAndRatio
+  case AutoZero
+}
+
 enum WordBreak: UInt8 {
   case Normal
   case BreakAll

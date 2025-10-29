@@ -70,6 +70,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func fragmentAtBlockOffset(
     clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
   ) -> RenderFragmentContainerWrapper? {

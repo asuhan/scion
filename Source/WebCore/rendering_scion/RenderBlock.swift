@@ -181,6 +181,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintExcludedChildrenInBorder(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if !isFieldset() || isSkippedContentRoot() {
       return
@@ -278,8 +283,87 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func availableLogicalHeightForPercentageComputation() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For anonymous blocks that are skipped during percentage height calculation,
+    // we consider them to have an indefinite height.
+    if skipContainingBlockForPercentHeightCalculation(
+      containingBlock: self, isPerpendicularWritingMode: false)
+    {
+      return nil
+    }
+
+    if let overridingLogicalHeightForFlex =
+      (isFlexItem()
+        ? (parent() as! RenderFlexibleBoxWrapper)
+          .usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: self) : nil)
+    {
+      return overridingContentLogicalHeight(overridingLogicalHeight: overridingLogicalHeightForFlex)
+    }
+
+    if let overridingLogicalHeightForGrid = isGridItem() ? overridingLogicalHeight() : nil {
+      return overridingContentLogicalHeight(overridingLogicalHeight: overridingLogicalHeightForGrid)
+    }
+
+    let style = self.style()
+    if style.logicalHeight().isFixed() {
+      let contentBoxHeight = adjustContentBoxLogicalHeightForBoxSizing(
+        height: LayoutUnit(value: style.logicalHeight().value()))
+      return max(
+        LayoutUnit(value: UInt64(0)),
+        constrainContentBoxLogicalHeightByMinMax(
+          logicalHeight: contentBoxHeight - scrollbarLogicalHeight(), intrinsicContentHeight: nil))
+    }
+
+    if shouldComputeLogicalHeightFromAspectRatio() {
+      // Only grid is expected to be in a state where it is calculating pref width and having unknown logical width.
+      if isRenderGrid() && preferredLogicalWidthsDirty() && !style.logicalWidth().isSpecified() {
+        return nil
+      }
+      return RenderBoxWrapper.blockSizeFromAspectRatio(
+        borderPaddingInlineSum: horizontalBorderAndPaddingExtent(),
+        borderPaddingBlockSum: verticalBorderAndPaddingExtent(),
+        aspectRatio: style.logicalAspectRatio(), boxSizing: style.boxSizingForAspectRatio(),
+        inlineSize: logicalWidth(), aspectRatioType: style.aspectRatioType(),
+        isRenderReplaced: isRenderReplaced())
+    }
+
+    // A positioned element that specified both top/bottom or that specifies
+    // height should be treated as though it has a height explicitly specified
+    // that can be used for any percentage computations.
+    let isOutOfFlowPositionedWithSpecifiedHeight =
+      isOutOfFlowPositioned()
+      && (!style.logicalHeight().isAuto()
+        || (!style.logicalTop().isAuto() && !style.logicalBottom().isAuto()))
+    if isOutOfFlowPositionedWithSpecifiedHeight {
+      // Don't allow this to affect the block' size() member variable, since this
+      // can get called while the block is still laying out its kids.
+      let zero = LayoutUnit(value: UInt64(0))
+      return max(
+        zero,
+        computeLogicalHeight(logicalHeight: logicalHeight(), logicalTop: zero).extent
+          - borderAndPaddingLogicalHeight()
+          - LayoutUnit(value: scrollbarLogicalHeight()))
+    }
+
+    if style.logicalHeight().isPercentOrCalculated() {
+      if let heightWithScrollbar = computePercentageLogicalHeight(height: style.logicalHeight()) {
+        let contentBoxHeightWithScrollbar = adjustContentBoxLogicalHeightForBoxSizing(
+          height: heightWithScrollbar)
+        // We need to adjust for min/max height because this method does not handle the min/max of the current block, its caller does.
+        // So the return value from the recursive call will not have been adjusted yet.
+        return max(
+          LayoutUnit(value: UInt64(0)),
+          constrainContentBoxLogicalHeightByMinMax(
+            logicalHeight: contentBoxHeightWithScrollbar - scrollbarLogicalHeight(),
+            intrinsicContentHeight: nil))
+      }
+      return nil
+    }
+
+    if isRenderView() {
+      return view().pageOrViewLogicalHeight()
+    }
+
+    return nil
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

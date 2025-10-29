@@ -33,6 +33,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

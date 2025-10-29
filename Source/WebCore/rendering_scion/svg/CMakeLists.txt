@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     RenderSVGModelObject.swift
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
+    RenderSVGForeignObject.swift
     RenderSVGRoot.swift
     RenderSVGShape.swift
     RenderSVGText.swift

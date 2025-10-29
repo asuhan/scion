@@ -555,6 +555,21 @@ class RenderStyleWrapper: Equatable {
     return direction() == .LTR
   }
 
+  func aspectRatioType() -> AspectRatioType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalAspectRatio() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func boxSizingForAspectRatio() -> BoxSizing {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func columnCount() -> UInt16 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

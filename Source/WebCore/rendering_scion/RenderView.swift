@@ -22,6 +22,13 @@
 import wk_interop
 
 class RenderViewWrapper: RenderBlockFlowWrapper {
+  override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func frameView() -> LocalFrameViewWrapper {
     return LocalFrameViewWrapper(p: wk_interop.RenderView_frameView(p))
   }
@@ -46,6 +53,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func printing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pageOrViewLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

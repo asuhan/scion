@@ -60,4 +60,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

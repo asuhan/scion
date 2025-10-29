@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 Apple Inc. All rights reserved.
- *           (C) 2008 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
+ * Copyright (C) 2009-2010 Nokia Corporation and/or its subsidiary(-ies).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,20 +18,10 @@
  *
  */
 
-class RenderTextControlWrapper: RenderBlockFlowWrapper {
-  func textFormControlElement() -> HTMLTextFormControlElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
+final class RenderMeterWrapper: RenderBlockFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func avoidsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

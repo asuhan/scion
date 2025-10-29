@@ -40,6 +40,13 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func verticalScrollbarWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

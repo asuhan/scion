@@ -70,12 +70,14 @@ target_sources(layout_scion PRIVATE
     RenderListMarker.swift
     RenderMedia.swift
     RenderMenuList.swift
+    RenderMeter.swift
     RenderMultiColumnFlow.swift
     RenderMultiColumnSet.swift
     RenderMultiColumnSpannerPlaceholder.swift
     RenderObject.swift
     RenderObjectEnums.swift
     RenderOverflow.swift
+    RenderProgress.swift
     RenderQuote.swift
     RenderReplaced.swift
     RenderReplica.swift
