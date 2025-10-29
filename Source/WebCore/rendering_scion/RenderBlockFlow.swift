@@ -544,10 +544,36 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func pushToNextPageWithMinimumLogicalHeight(
-    adjustment: LayoutUnit, logicalOffset: LayoutUnit, minimumLogicalHeight: LayoutUnit
+    adjustment: inout LayoutUnit, logicalOffset: LayoutUnit, minimumLogicalHeight: LayoutUnit
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var checkFragment = false
+    let fragmentedFlow = enclosingFragmentedFlow()
+    var currentFragmentContainer: RenderFragmentContainerWrapper? = nil
+    var pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(
+      offset: logicalOffset + adjustment)
+    while pageLogicalHeight.bool() {
+      if minimumLogicalHeight <= pageLogicalHeight {
+        return true
+      }
+      let adjustedOffset = logicalOffset + adjustment
+      if !hasNextPage(logicalOffset: adjustedOffset) {
+        return false
+      }
+      if fragmentedFlow != nil {
+        // While in layout and the columnsets are not balanced yet, we keep finding the same (infinite tall) column over and over again.
+        let nextFragmentContainer = fragmentedFlow!.fragmentAtBlockOffset(
+          clampBox: self, offset: adjustedOffset, extendLastFragment: true)!
+        if CPtrToInt(nextFragmentContainer.p) == CPtrToInt(currentFragmentContainer?.p) {
+          return false
+        }
+        currentFragmentContainer = nextFragmentContainer
+      }
+      adjustment += pageLogicalHeight
+      checkFragment = true
+      pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(
+        offset: logicalOffset + adjustment)
+    }
+    return !checkFragment
   }
 
   private func createFloatingObjects() {
@@ -689,7 +715,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       // If we have a non-uniform page height, then we have to shift further possibly.
       if !hasUniformPageLogicalHeight
         && !pushToNextPageWithMinimumLogicalHeight(
-          adjustment: remainingLogicalHeight, logicalOffset: logicalOffset,
+          adjustment: &remainingLogicalHeight, logicalOffset: logicalOffset,
           minimumLogicalHeight: lineHeight)
       {
         return LinePaginationAdjustment()
