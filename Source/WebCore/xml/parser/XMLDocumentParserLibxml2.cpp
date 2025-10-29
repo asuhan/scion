@@ -587,7 +587,8 @@ Ref<XMLParserContext> XMLParserContext::createStringParser(xmlSAXHandlerPtr hand
     return adoptRef(*new XMLParserContext(parser));
 }
 
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 // Chunk should be encoded in UTF-8
 RefPtr<XMLParserContext> XMLParserContext::createMemoryParser(xmlSAXHandlerPtr handlers, void* userData, const CString& chunk)
 {
@@ -616,6 +617,7 @@ RefPtr<XMLParserContext> XMLParserContext::createMemoryParser(xmlSAXHandlerPtr h
 
     return adoptRef(*new XMLParserContext(parser));
 }
+#pragma GCC diagnostic pop
 
 // --------------------------------
 
@@ -1436,6 +1438,8 @@ void XMLDocumentParser::resumeParsing()
         end();
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 bool XMLDocumentParser::appendFragmentSource(const String& chunk)
 {
     ASSERT(!m_context);
@@ -1466,6 +1470,7 @@ bool XMLDocumentParser::appendFragmentSource(const String& chunk)
     // No error if the chunk is well formed or it is not but we have no error.
     return context()->wellFormed || !xmlCtxtGetLastError(context());
 }
+#pragma GCC diagnostic pop
 
 // --------------------------------
 

@@ -556,13 +556,13 @@ inline bool startsWithLettersIgnoringASCIICase(const String& string, ASCIILitera
 
 inline namespace StringLiterals {
 
-inline String operator"" _str(const char* characters, size_t)
+inline String operator""_str(const char* characters, size_t)
 {
     return ASCIILiteral::fromLiteralUnsafe(characters);
 }
 
 #ifndef __swift__ // FIXME: rdar://136156228
-inline String operator"" _str(const UChar* characters, size_t length)
+inline String operator""_str(const UChar* characters, size_t length)
 {
     return String({ characters, length });
 }
