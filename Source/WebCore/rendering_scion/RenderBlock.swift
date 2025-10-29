@@ -32,9 +32,36 @@ enum ContainingBlockState {
   case SameContainingBlock
 }
 
+private func isRenderBlockFlowOrRenderButton(renderElement: RenderElementWrapper) -> Bool {
+  // We include isRenderButton in this check because buttons are implemented
+  // using flex box but should still support first-line|first-letter.
+  // The flex box and specs require that flex box and grid do not support
+  // first-line|first-letter, though.
+  // FIXME: Remove when buttons are implemented with align-items instead of
+  // flex box.
+  return renderElement.isRenderBlockFlow() || renderElement.isRenderButton()
+}
+
 private func findFirstLetterBlock(start: RenderBlockWrapper) -> RenderBlockWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var firstLetterBlock: RenderBlockWrapper? = start
+  while true {
+    let canHaveFirstLetterRenderer =
+      firstLetterBlock!.style().hasPseudoStyle(pseudo: .FirstLetter)
+      && firstLetterBlock!.canHaveGeneratedChildren()
+      && isRenderBlockFlowOrRenderButton(renderElement: firstLetterBlock!)
+    if canHaveFirstLetterRenderer {
+      return firstLetterBlock
+    }
+
+    let parentBlock = firstLetterBlock!.parent()
+    if firstLetterBlock!.isReplacedOrInlineBlock() || parentBlock == nil
+      || CPtrToInt(parentBlock!.firstChild()?.p) != CPtrToInt(firstLetterBlock!.p)
+      || !isRenderBlockFlowOrRenderButton(renderElement: parentBlock!)
+    {
+      return nil
+    }
+    firstLetterBlock = parentBlock as! RenderBlockWrapper?
+  }
 }
 
 class RenderBlockWrapper: RenderBoxWrapper {
