@@ -502,9 +502,29 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  override func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
+    if !isFieldset() || isSkippedContentRoot() || !intrinsicBorderForFieldset().bool() {
+      return
+    }
+
+    let legend = findFieldsetLegend()
+    if legend == nil {
+      return
+    }
+
+    if style().isHorizontalWritingMode() {
+      let yOff = max(LayoutUnit(value: UInt64(0)), (legend!.height() - super.borderBefore()) / 2)
+      paintRect.setHeight(height: paintRect.height() - yOff)
+      if style().blockFlowDirection() == .TopToBottom {
+        paintRect.setY(y: paintRect.y() + yOff)
+      }
+    } else {
+      let xOff = max(LayoutUnit(value: UInt64(0)), (legend!.width() - super.borderBefore()) / 2)
+      paintRect.setWidth(width: paintRect.width() - xOff)
+      if style().blockFlowDirection() == .LeftToRight {
+        paintRect.setX(x: paintRect.x() + xOff)
+      }
+    }
   }
 
   override func isInlineBlockOrInlineTable() -> Bool {

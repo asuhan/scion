@@ -711,7 +711,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
     var paintRect = borderBoxRectInFragment(fragment: nil)
     paintRect.moveBy(offset: paintOffset)
-    adjustBorderBoxRectForPainting(paintRect: paintRect)
+    adjustBorderBoxRectForPainting(paintRect: &paintRect)
 
     paintRect = theme().adjustedPaintRect(box: self, paintRect: paintRect)
     let bleedAvoidance = determineBackgroundBleedAvoidance(context: paintInfo.context())
@@ -806,8 +806,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return
     }
 
-    let paintRect = LayoutRectWrapper(location: paintOffset, size: size())
-    adjustBorderBoxRectForPainting(paintRect: paintRect)
+    var paintRect = LayoutRectWrapper(location: paintOffset, size: size())
+    adjustBorderBoxRectForPainting(paintRect: &paintRect)
     paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
   }
 
@@ -1019,7 +1019,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func isFlexItem() -> Bool { return wk_interop.RenderBox_isFlexItem(p) }
 
-  func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
+  func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
