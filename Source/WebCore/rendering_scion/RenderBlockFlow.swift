@@ -454,8 +454,33 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func hasNextPage(
     logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      view().frameView().layoutContext().layoutState() != nil
+        && view().frameView().layoutContext().layoutState()!.isPaginated())
+
+    let fragmentedFlow = enclosingFragmentedFlow()
+    if fragmentedFlow == nil {
+      return true  // Printing and multi-column both make new pages to accommodate content.
+    }
+
+    // See if we're in the last fragment.
+    let pageOffset = offsetFromLogicalTopOfFirstPage() + logicalOffset
+    let fragment = fragmentedFlow!.fragmentAtBlockOffset(
+      clampBox: self, offset: pageOffset, extendLastFragment: true)
+    if fragment == nil {
+      return false
+    }
+
+    if fragment!.isLastFragment() {
+      return fragment!.isRenderFragmentContainerSet()
+        || (pageBoundaryRule == .IncludePageBoundary
+          && pageOffset == fragment!.logicalTopForFragmentedFlowContent())
+    }
+
+    if let (_, endFragment) = fragmentedFlow!.getFragmentRangeForBox(box: self) {
+      return CPtrToInt(fragment!.p) != CPtrToInt(endFragment.p)
+    }
+    return false
   }
 
   // A page break is required at some offset due to space shortage in the current fragmentainer.

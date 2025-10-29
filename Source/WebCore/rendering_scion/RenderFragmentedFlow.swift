@@ -50,7 +50,21 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func fragmentAtBlockOffset(
+    clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
+  ) -> RenderFragmentContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fragmentsHaveUniformLogicalHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func getFragmentRangeForBox(box: RenderBoxWrapper) -> (
+    RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
+  )? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -34,4 +34,9 @@
 //
 // FIXME: For now we derive from RenderFragmentContainer, but this may change at some point.
 
-class RenderFragmentContainerSetWrapper: RenderFragmentContainerWrapper {}
+class RenderFragmentContainerSetWrapper: RenderFragmentContainerWrapper {
+  override func isRenderFragmentContainerSet() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

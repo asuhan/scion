@@ -28,4 +28,20 @@
  * SUCH DAMAGE.
  */
 
-class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {}
+class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
+  func isLastFragment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalTopForFragmentedFlowContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Whether or not this fragment is a set.
+  func isRenderFragmentContainerSet() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

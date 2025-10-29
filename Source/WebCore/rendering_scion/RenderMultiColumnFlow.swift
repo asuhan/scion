@@ -70,6 +70,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func fragmentAtBlockOffset(
+    clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
+  ) -> RenderFragmentContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   typealias SpannerMap = [UInt: RenderMultiColumnSpannerPlaceholderWrapper]
 
   var spannerMap: SpannerMap {
