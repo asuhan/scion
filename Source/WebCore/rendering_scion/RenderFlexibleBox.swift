@@ -29,6 +29,11 @@
  */
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
+  convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func avoidsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

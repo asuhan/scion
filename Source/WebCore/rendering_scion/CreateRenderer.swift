@@ -110,4 +110,10 @@ class CreateRenderer {
   ) -> RenderViewTransitionCaptureWrapper {
     return RenderViewTransitionCaptureWrapper(type: type, document: document, style: style)
   }
+
+  static func RenderFlexibleBox(
+    type: RenderObjectWrapper.`Type`, document: Document, style: RenderStyleWrapper
+  ) -> RenderFlexibleBoxWrapper {
+    return RenderFlexibleBoxWrapper(type: type, document: document, style: style)
+  }
 }

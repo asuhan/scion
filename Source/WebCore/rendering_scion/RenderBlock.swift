@@ -108,8 +108,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return createAnonymousBlockWithStyleAndDisplay(
+      document: document(), style: renderer.style(), display: style().display())
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
@@ -510,6 +510,27 @@ class RenderBlockWrapper: RenderBoxWrapper {
   override func isInlineBlockOrInlineTable() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func createAnonymousBlockWithStyleAndDisplay(
+    document: Document, style: RenderStyleWrapper, display: DisplayType
+  ) -> RenderBlockWrapper? {
+    // FIXME: Do we need to convert all our inline displays to block-type in the anonymous logic ?
+    var newBox: RenderBlockWrapper? = nil
+    if display == .Flex || display == .InlineFlex {
+      newBox = CreateRenderer.RenderFlexibleBox(
+        type: .FlexibleBox, document: document,
+        style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: style, display: .Flex))
+    } else {
+      newBox = CreateRenderer.RenderBlockFlow(
+        type: .BlockFlow, document: document,
+        style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: style, display: .Block))
+    }
+
+    newBox!.initializeStyle()
+    return newBox
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
