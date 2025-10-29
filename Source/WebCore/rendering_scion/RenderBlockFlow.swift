@@ -54,8 +54,11 @@ private func needsAppleMailPaginationQuirk(renderer: RenderBlockFlowWrapper) -> 
 }
 
 private func clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: RenderBlockFlowWrapper) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !blockFlow.shouldBreakAtLineToAvoidWidow() {
+    return
+  }
+  blockFlow.clearShouldBreakAtLineToAvoidWidow()
+  blockFlow.setDidBreakAtLineToAvoidWidow()
 }
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
@@ -88,7 +91,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  func setBreakAtLineToAvoidWidow(lineToBreak: Int) {
+  func clearShouldBreakAtLineToAvoidWidow() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -98,12 +101,22 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  func multiColumnFlowForBlockFlow() -> RenderMultiColumnFlowWrapper? {
+  func setBreakAtLineToAvoidWidow(lineToBreak: Int) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func clearDidBreakAtLineToAvoidWidow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setDidBreakAtLineToAvoidWidow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func multiColumnFlowForBlockFlow() -> RenderMultiColumnFlowWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
