@@ -200,8 +200,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func subtreeContainsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if containsFloats() {
+      return true
+    }
+
+    for block: RenderBlockWrapper in descendantsOfType(root: self) {
+      if let blockFlow = block as? RenderBlockFlowWrapper, blockFlow.containsFloats() {
+        return true
+      }
+    }
+
+    return false
   }
 
   func subtreeContainsFloat(renderer: RenderBoxWrapper) -> Bool {
