@@ -49,6 +49,11 @@ class RenderLayoutStateWrapper {
     return wk_interop.RenderLayoutState_isPaginated(p)
   }
 
+  func pageLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lineGrid() -> RenderBlockFlowWrapper? {
     if let raw = wk_interop.RenderLayoutState_lineGrid(p) {
       return RenderBlockFlowWrapper(p: raw)

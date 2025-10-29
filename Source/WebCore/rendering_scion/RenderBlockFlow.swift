@@ -367,9 +367,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     case IncludePageBoundary
   }
 
-  func pageLogicalHeightForOffset(offset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func pageLogicalHeightForOffsetFromBlockFlow(offset: LayoutUnit) -> LayoutUnit {
+    // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
+    // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
+    let pageLogicalHeight = view().frameView().layoutContext().layoutState()!.pageLogicalHeight()
+    if !pageLogicalHeight.bool() {
+      return LayoutUnit(value: 0)
+    }
+
+    // Now check for a flow thread.
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      return fragmentedFlow.pageLogicalHeightForOffsetFromFragmentedFlow(
+        offset: offset + offsetFromLogicalTopOfFirstPage())
+    }
+
+    return pageLogicalHeight
   }
 
   private func pageRemainingLogicalHeightForOffsetFromBlockFlow(
@@ -500,7 +512,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     if floatMinimumBottom.bool() {
       // Don't push a float to the next page if it is taller than the page.
       let floatHeight = floatMinimumBottom - logicalTop
-      if floatHeight > pageLogicalHeightForOffset(offset: floatMinimumBottom) {
+      if floatHeight > pageLogicalHeightForOffsetFromBlockFlow(offset: floatMinimumBottom) {
         floatMinimumBottom = LayoutUnit(value: UInt64(0))
       }
     }
@@ -514,7 +526,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       minHeight: calculateMinimumPageHeight(
         renderStyle: style(), lastLine: lineBox, lineTop: logicalOffset, lineBottom: logicalBottom))
 
-    var pageLogicalHeight = pageLogicalHeightForOffset(offset: logicalOffset)
+    var pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset)
 
     let fragmentedFlow = enclosingFragmentedFlow()
     let hasUniformPageLogicalHeight =
@@ -542,7 +554,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: self)
         return LinePaginationAdjustment()
       }
-      pageLogicalHeight = pageLogicalHeightForOffset(offset: logicalOffset)
+      pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset)
     }
 
     var remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
@@ -573,7 +585,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       let pageLogicalHeightAtNewOffset =
         hasUniformPageLogicalHeight
         ? pageLogicalHeight
-        : pageLogicalHeightForOffset(offset: logicalOffset + remainingLogicalHeight)
+        : pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset + remainingLogicalHeight)
 
       setPageBreak(offset: logicalOffset, spaceShortage: lineHeight - remainingLogicalHeight)
 
