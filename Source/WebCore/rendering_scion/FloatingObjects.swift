@@ -40,6 +40,11 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func cloneForNewParent() -> FloatingObjectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setIsPlaced(placed: Bool) {
     wk_interop.FloatingObject_setIsPlaced(p, placed)
   }
@@ -84,6 +89,12 @@ class FloatingObjectWrapper: Hashable {
 // FIXME: This is really the same thing as FloatingObjectSet.
 // Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
 class FloatingObjects {
+  @discardableResult
+  func add(floatingObject: FloatingObjectWrapper) -> FloatingObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func set() -> FloatingObjectSet { return m_set }
 
   private let m_set = FloatingObjectSet()

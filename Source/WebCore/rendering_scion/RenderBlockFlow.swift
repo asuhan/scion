@@ -498,8 +498,37 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func addFloatsToNewParent(toBlockFlow: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When a portion of the render tree is being detached, anonymous blocks
+    // will be combined as their children are deleted. In this process, the
+    // anonymous block later in the tree is merged into the one preceeding it.
+    // It can happen that the later block (this) contains floats that the
+    // previous block (toBlockFlow) did not contain, and thus are not in the
+    // floating objects list for toBlockFlow. This can result in toBlockFlow
+    // containing floats that are not in it's floating objects list, but are in
+    // the floating objects lists of siblings and parents. This can cause
+    // problems when the float itself is deleted, since the deletion code
+    // assumes that if a float is not in it's containing block's floating
+    // objects list, it isn't in any floating objects list. In order to
+    // preserve this condition (removing it has serious performance
+    // implications), we need to copy the floating objects from the old block
+    // (this) to the new block (toBlockFlow). The float's metrics will likely
+    // all be wrong, but since toBlockFlow is already marked for layout, this
+    // will get fixed before anything gets displayed.
+    // See bug https://bugs.webkit.org/show_bug.cgi?id=115566
+    if floatingObjects == nil {
+      return
+    }
+
+    if toBlockFlow.floatingObjects == nil {
+      toBlockFlow.createFloatingObjects()
+    }
+
+    for floatingObject in floatingObjects!.set() {
+      if toBlockFlow.containsFloat(renderer: floatingObject.renderer!) {
+        continue
+      }
+      toBlockFlow.floatingObjects!.add(floatingObject: floatingObject.cloneForNewParent())
+    }
   }
 
   func endPaddingWidthForCaret() -> LayoutUnit {
@@ -517,6 +546,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func pushToNextPageWithMinimumLogicalHeight(
     adjustment: LayoutUnit, logicalOffset: LayoutUnit, minimumLogicalHeight: LayoutUnit
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func createFloatingObjects() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
