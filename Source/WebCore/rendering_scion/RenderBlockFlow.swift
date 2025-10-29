@@ -300,8 +300,22 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func flipFloatForWritingModeForChild(child: FloatingObjectWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().isFlippedBlocksWritingMode() {
+      return point
+    }
+
+    // This is similar to RenderBox::flipForWritingModeForChild. We have to subtract out our left/top offsets twice, since
+    // it's going to get added back in. We hide this complication here so that the calling code looks normal for the unflipped
+    // case.
+    if isHorizontalWritingMode() {
+      return LayoutPointWrapper(
+        x: point.x,
+        y: point.y + height() - child.renderer!.height() - 2
+          * child.locationOffsetOfBorderBox().height())
+    }
+    return LayoutPointWrapper(
+      x: point.x + width() - child.renderer!.width() - 2
+        * child.locationOffsetOfBorderBox().width(), y: point.y)
   }
 
   override func setChildrenInline(b: Bool) {

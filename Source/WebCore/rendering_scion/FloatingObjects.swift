@@ -66,6 +66,11 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func locationOffsetOfBorderBox() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func translationOffsetToAncestor() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
