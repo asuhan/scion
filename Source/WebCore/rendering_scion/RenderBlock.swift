@@ -32,6 +32,11 @@ enum ContainingBlockState {
   case SameContainingBlock
 }
 
+private func findFirstLetterBlock(start: RenderBlockWrapper) -> RenderBlockWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBlockWrapper: RenderBoxWrapper {
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func deleteLines() {
@@ -170,8 +175,67 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func getFirstLetter(skipObject: RenderObjectWrapper? = nil) -> FirstLetterRenderObjects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var firstLetter: RenderObjectWrapper? = nil
+    var firstLetterContainer: RenderElementWrapper? = nil
+
+    // Don't recur
+    if style().pseudoElementType() == .FirstLetter {
+      return FirstLetterRenderObjects(
+        firstLetter: firstLetter, firstLetterContainer: firstLetterContainer)
+    }
+
+    // FIXME: We need to destroy the first-letter object if it is no longer the first child. Need to find
+    // an efficient way to check for that situation though before implementing anything.
+    firstLetterContainer = findFirstLetterBlock(start: self)
+    if firstLetterContainer == nil {
+      return FirstLetterRenderObjects(
+        firstLetter: firstLetter, firstLetterContainer: firstLetterContainer)
+    }
+
+    // Drill into inlines looking for our first text descendant.
+    firstLetter = firstLetterContainer!.firstChild()
+    while firstLetter != nil {
+      if firstLetter is RenderTextWrapper {
+        if CPtrToInt(firstLetter!.p) == CPtrToInt(skipObject?.p) {
+          firstLetter = firstLetter!.nextSibling()
+          continue
+        }
+
+        break
+      }
+
+      let current = firstLetter as! RenderElementWrapper
+      if current is RenderListMarkerWrapper {
+        firstLetter = current.nextSibling()
+      } else if current.isFloatingOrOutOfFlowPositioned() {
+        if current.style().pseudoElementType() == .FirstLetter {
+          firstLetter = current.firstChild()
+          break
+        }
+        firstLetter = current.nextSibling()
+      } else if current.isReplacedOrInlineBlock() || current is RenderButtonWrapper
+        || current is RenderMenuListWrapper
+      {
+        break
+      } else if current.isFlexibleBoxIncludingDeprecated() || current.isRenderGrid() {
+        firstLetter = current.nextSibling()
+      } else if current.style().hasPseudoStyle(pseudo: .FirstLetter)
+        && current.canHaveGeneratedChildren()
+      {
+        // We found a lower-level node with first-letter, which supersedes the higher-level style
+        firstLetterContainer = current
+        firstLetter = current.firstChild()
+      } else {
+        firstLetter = current.firstChild()
+      }
+    }
+
+    if firstLetter == nil {
+      firstLetterContainer = nil
+    }
+
+    return FirstLetterRenderObjects(
+      firstLetter: firstLetter, firstLetterContainer: firstLetterContainer)
   }
 
   func canDropAnonymousBlockChild() -> Bool {
