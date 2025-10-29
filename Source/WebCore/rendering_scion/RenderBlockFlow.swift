@@ -194,6 +194,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func containsFloat(renderer: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func subtreeContainsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -251,8 +256,35 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func markSiblingsWithFloatsForLayout(floatToRemove: RenderBoxWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if floatingObjects == nil {
+      return
+    }
+
+    let floatingObjectSet = floatingObjects!.set()
+
+    var next = nextSibling()
+    while next != nil {
+      let nextBlock = next as? RenderBlockFlowWrapper
+      if nextBlock == nil
+        || (floatToRemove == nil
+          && (next!.isFloatingOrOutOfFlowPositioned() || nextBlock!.avoidsFloats()))
+      {
+        next = next!.nextSibling()
+        continue
+      }
+
+      for floatingObject in floatingObjectSet {
+        let floatingBox = floatingObject.renderer!
+        if floatToRemove == nil && CPtrToInt(floatingBox.p) != CPtrToInt(floatToRemove!.p) {
+          continue
+        }
+        if nextBlock!.containsFloat(renderer: floatingBox) {
+          nextBlock!.markAllDescendantsWithFloatsForLayout(floatToRemove: floatingBox)
+        }
+      }
+
+      next = next!.nextSibling()
+    }
   }
 
   func floatingObjectSet() -> FloatingObjectSet? {

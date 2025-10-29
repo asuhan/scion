@@ -24,4 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderMathMLBlockWrapper: RenderBlockWrapper {}
+class RenderMathMLBlockWrapper: RenderBlockWrapper {
+  override func avoidsFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

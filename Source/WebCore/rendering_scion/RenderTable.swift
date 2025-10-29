@@ -79,6 +79,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func avoidsFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func adjustBorderBoxRectForPainting(paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

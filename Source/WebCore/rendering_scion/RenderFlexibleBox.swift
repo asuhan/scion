@@ -29,6 +29,11 @@
  */
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
+  override func avoidsFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearCachedMainSizeForFlexItem(flexItem: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

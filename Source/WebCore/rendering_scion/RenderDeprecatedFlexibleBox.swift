@@ -20,4 +20,9 @@
  *
  */
 
-final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {}
+final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
+  override func avoidsFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
