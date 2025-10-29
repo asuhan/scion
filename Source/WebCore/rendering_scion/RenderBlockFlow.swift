@@ -205,8 +205,19 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func subtreeContainsFloat(renderer: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if containsFloat(renderer: renderer) {
+      return true
+    }
+
+    for block: RenderBlockWrapper in descendantsOfType(root: self) {
+      if let blockFlow = block as? RenderBlockFlowWrapper,
+        blockFlow.containsFloat(renderer: renderer)
+      {
+        return true
+      }
+    }
+
+    return false
   }
 
   override func deleteLines() {
