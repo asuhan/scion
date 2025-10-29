@@ -189,6 +189,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func containsFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func subtreeContainsFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func subtreeContainsFloat(renderer: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func deleteLines() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -202,8 +217,37 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func markAllDescendantsWithFloatsForLayout(
     floatToRemove: RenderBoxWrapper? = nil, inLayout: Bool = true
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !everHadLayout() && !containsFloats() {
+      return
+    }
+
+    let markParents: MarkingBehavior = inLayout ? .MarkOnlyThis : .MarkContainingBlockChain
+    setChildNeedsLayout(markParents: markParents)
+
+    if floatToRemove != nil {
+      removeFloatingObject(floatBox: floatToRemove!)
+    } else if childrenInline() {
+      return
+    }
+
+    // Iterate over our block children and mark them as needed.
+    for block: RenderBlockWrapper in childrenOfType(parent: self) {
+      if floatToRemove == nil && block.isFloatingOrOutOfFlowPositioned() {
+        continue
+      }
+      if let blockFlow = block as? RenderBlockFlowWrapper {
+        if (floatToRemove != nil
+          ? blockFlow.subtreeContainsFloat(renderer: floatToRemove!)
+          : blockFlow.subtreeContainsFloats())
+          || blockFlow.shrinkToAvoidFloats()
+        {
+          blockFlow.markAllDescendantsWithFloatsForLayout(
+            floatToRemove: floatToRemove, inLayout: inLayout)
+        }
+      } else if block.shrinkToAvoidFloats() && block.everHadLayout() {
+        block.setChildNeedsLayout(markParents: markParents)
+      }
+    }
   }
 
   func markSiblingsWithFloatsForLayout(floatToRemove: RenderBoxWrapper? = nil) {
@@ -395,6 +439,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func removeFloatingObject(floatBox: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

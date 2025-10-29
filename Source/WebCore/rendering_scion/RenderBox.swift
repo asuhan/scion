@@ -885,6 +885,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not reached")
   }
 
+  func shrinkToAvoidFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markForPaginationRelayoutIfNeeded() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
