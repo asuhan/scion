@@ -361,6 +361,14 @@ struct LayoutUnit: Comparable {
     return a
   }
 
+  // For returning the remainder after a division with integer results.
+  static func intMod(a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
+    // This calculates the modulo so that: a = static_cast<int>(a / b) * b + intMod(a, b).
+    var returnVal = LayoutUnit()
+    returnVal.value = a.rawValue() % b.rawValue()
+    return returnVal
+  }
+
   private var value: Int32
 }
 

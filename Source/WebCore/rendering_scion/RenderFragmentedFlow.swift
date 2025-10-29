@@ -43,6 +43,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func pageRemainingLogicalHeightForOffsetFromFragmentedFlow(
+    offset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .IncludePageBoundary
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fragmentsHaveUniformLogicalHeight() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

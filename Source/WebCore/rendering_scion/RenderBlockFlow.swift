@@ -433,8 +433,22 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func pageRemainingLogicalHeightForOffsetFromBlockFlow(
     offset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .IncludePageBoundary
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var offset = offset
+    offset += offsetFromLogicalTopOfFirstPage()
+
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      return fragmentedFlow.pageRemainingLogicalHeightForOffsetFromFragmentedFlow(
+        offset: offset, pageBoundaryRule: pageBoundaryRule)
+    }
+
+    let pageLogicalHeight = view().frameView().layoutContext().layoutState()!.pageLogicalHeight()
+    var remainingHeight = pageLogicalHeight - LayoutUnit.intMod(a: offset, b: pageLogicalHeight)
+    if pageBoundaryRule == .IncludePageBoundary {
+      // If includeBoundaryPoint is true the line exactly on the top edge of a
+      // column will act as being part of the previous column.
+      remainingHeight = LayoutUnit.intMod(a: remainingHeight, b: pageLogicalHeight)
+    }
+    return remainingHeight
   }
 
   func hasNextPage(
