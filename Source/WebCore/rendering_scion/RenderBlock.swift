@@ -237,8 +237,19 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: We're doing this to match other browsers even though it's questionable.
+    // Shouldn't height:100px mean the fieldset content gets 100px of height even if the
+    // resulting fieldset becomes much taller because of the legend?
+    if height == nil {
+      return LayoutUnit(value: 0)
+    }
+    var result = height!
+    if style().boxSizing() == .BorderBox {
+      result -= borderAndPaddingLogicalHeight()
+    } else {
+      result -= intrinsicBorderForFieldset()
+    }
+    return max(LayoutUnit(value: UInt64(0)), result)
   }
 
   func paintExcludedChildrenInBorder(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
