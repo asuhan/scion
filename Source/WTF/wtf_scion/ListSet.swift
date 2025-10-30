@@ -50,12 +50,22 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  func isEmptyIgnoringNullReferences() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeSize() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func first() -> T {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func last() -> T {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

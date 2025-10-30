@@ -28,6 +28,14 @@
  */
 
 typealias RenderFragmentContainerList = ListSet<RenderFragmentContainerWrapper, UInt>
+typealias FragmentIntervalTree = IntervalTree<LayoutUnit, RenderFragmentContainerWrapper>
+
+private func clamp(fragment: RenderFragmentContainerWrapper?, clampBox: RenderBoxWrapper?)
+  -> RenderFragmentContainerWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
 
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   override func deleteLines() {
@@ -101,8 +109,33 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func fragmentAtBlockOffset(
     clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
   ) -> RenderFragmentContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!fragmentsInvalidated)
+
+    if fragmentList.isEmptyIgnoringNullReferences() {
+      return nil
+    }
+
+    if fragmentList.computeSize() == 1 && extendLastFragment {
+      return fragmentList.first()
+    }
+
+    if offset <= Int32(0) {
+      return clamp(fragment: fragmentList.first(), clampBox: clampBox)
+    }
+
+    let adapter = FragmentSearchAdapter(offset: offset)
+    fragmentIntervalTree.allOverlapsWithAdapter(adapter: adapter)
+    if let fragment = adapter.result() {
+      return clamp(fragment: fragment, clampBox: clampBox)
+    }
+
+    // If no fragment was found, the offset is in the flow thread overflow.
+    // The last fragment will contain the offset if extendLastFragment is set or if the last fragment is a set.
+    if extendLastFragment || fragmentList.last().isRenderFragmentContainerSet() {
+      return clamp(fragment: fragmentList.last(), clampBox: clampBox)
+    }
+
+    return nil
   }
 
   func fragmentsHaveUniformLogicalHeight() -> Bool {
@@ -200,7 +233,22 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private class FragmentSearchAdapter: AdapterType {
+    init(offset: LayoutUnit) {
+      self.offset = offset
+    }
+
+    func result() -> RenderFragmentContainerWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private let offset: LayoutUnit
+  }
+
   private let fragmentList = RenderFragmentContainerList()
+
+  private let fragmentIntervalTree = FragmentIntervalTree()
 
   private let fragmentsInvalidated = false
 }
