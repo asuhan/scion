@@ -90,7 +90,36 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func offsetFromLogicalTopOfFirstFragment(currentBlock: RenderBlockWrapper?) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // As a last resort, take the slow path.
+    let zero = LayoutUnit(value: UInt64(0))
+    var blockRect = LayoutRectWrapper(
+      x: zero, y: zero, width: currentBlock!.width(), height: currentBlock!.height())
+    var currentBlock = currentBlock
+    while currentBlock != nil && !(currentBlock is RenderViewWrapper)
+      && !currentBlock!.isRenderFragmentedFlow()
+    {
+      let containerBlock = currentBlock!.containingBlock()!
+      var currentBlockLocation = currentBlock!.location()
+      if let cell = currentBlock as? RenderTableCellWrapper, let section = cell.section() {
+        currentBlockLocation.moveBy(offset: section.location())
+      }
+
+      if containerBlock.style().writingMode() != currentBlock!.style().writingMode() {
+        // We have to put the block rect in container coordinates
+        // and we have to take into account both the container and current block flipping modes
+        if containerBlock.style().isFlippedBlocksWritingMode() {
+          if containerBlock.isHorizontalWritingMode() {
+            blockRect.setY(y: currentBlock!.height() - blockRect.maxY())
+          } else {
+            blockRect.setX(x: currentBlock!.width() - blockRect.maxX())
+          }
+        }
+        currentBlock!.flipForWritingMode(rect: &blockRect)
+      }
+      blockRect.moveBy(offset: currentBlockLocation)
+      currentBlock = containerBlock
+    }
+
+    return currentBlock!.isHorizontalWritingMode() ? blockRect.y() : blockRect.x()
   }
 }

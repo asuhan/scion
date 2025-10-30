@@ -38,6 +38,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func section() -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func table() -> RenderTableWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
