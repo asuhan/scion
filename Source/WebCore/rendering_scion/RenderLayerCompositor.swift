@@ -412,6 +412,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
   }
 
+  func layerGainedCompositedScrollableOverflow(layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // This ensures that the viewport anchor layer will be updated when updating compositing layers upon style change
   private static func styleChangeAffectsAnchorLayer(
     oldStyle: RenderStyleWrapper?, newStyle: RenderStyleWrapper

@@ -90,6 +90,12 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
+  func canUseCompositedScrolling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func verticalScrollbarWidth(
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
@@ -130,7 +136,38 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func computeHasCompositedScrollableOverflow(layoutUpToDate: LayoutUpToDate) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var hasCompositedScrollableOverflow = m_hasCompositedScrollableOverflow
+
+    switch layoutUpToDate {
+    case .No:
+      // If layout is not up to date, the only thing we can reliably know is that style prevents overflow scrolling.
+      if !canUseCompositedScrolling() {
+        hasCompositedScrollableOverflow = false
+      }
+    case .Yes:
+      hasCompositedScrollableOverflow =
+        canUseCompositedScrolling()
+        && (hasScrollableHorizontalOverflow() || hasScrollableVerticalOverflow())
+    }
+
+    if hasCompositedScrollableOverflow == m_hasCompositedScrollableOverflow {
+      return
+    }
+
+    // Whether this layer does composited scrolling affects the configuration of descendant sticky layers. We have to
+    // dirty from the enclosing stacking context because overflow scroll doesn't create stacking context so those
+    // containing block descendants may not be paint-order descendants, and the compositing dirty bits on RenderLayer act in paint order.
+    if let paintParent = m_layer.stackingContext() {
+      paintParent.setDescendantsNeedUpdateBackingAndHierarchyTraversal()
+    }
+
+    m_hasCompositedScrollableOverflow = hasCompositedScrollableOverflow
+    if m_hasCompositedScrollableOverflow {
+      m_layer.compositor().layerGainedCompositedScrollableOverflow(layer: m_layer)
+    }
   }
+
+  private var m_hasCompositedScrollableOverflow = false
+
+  private let m_layer: RenderLayerWrapper
 }
