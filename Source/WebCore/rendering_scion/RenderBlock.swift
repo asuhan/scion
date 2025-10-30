@@ -864,8 +864,23 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let layoutState = view().frameView().layoutContext().layoutState()
+    if layoutState != nil && !layoutState!.isPaginated() {
+      return LayoutUnit(value: 0)
+    }
+
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      return fragmentedFlow.offsetFromLogicalTopOfFirstFragment(currentBlock: self)
+    }
+
+    if layoutState != nil {
+      assert(CPtrToInt(layoutState!.renderer()?.p) == CPtrToInt(p))
+
+      let offsetDelta: LayoutSizeWrapper = layoutState!.layoutOffset() - layoutState!.pageOffset()
+      return isHorizontalWritingMode() ? offsetDelta.height() : offsetDelta.width()
+    }
+
+    fatalError("Not reached")
   }
 
   var floatingObjectSet: FloatingObjectSet? = nil

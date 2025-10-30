@@ -61,6 +61,21 @@ class RenderLayoutStateWrapper {
     return nil
   }
 
+  func layoutOffset() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pageOffset() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func renderer() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lineClamp() -> LineClamp? {
     let raw = wk_interop.RenderLayoutState_lineClamp(p)
     if !raw.isValid {
