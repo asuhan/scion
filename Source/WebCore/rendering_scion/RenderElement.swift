@@ -321,8 +321,27 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func detachRendererInternal(renderer: RenderObjectWrapper) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let parent = renderer.parent()!
+    let nextSibling = renderer.nextSibling()
+
+    if let previousSibling = renderer.previousSibling() {
+      previousSibling.setNextSibling(next: nextSibling)
+    }
+    if nextSibling != nil {
+      nextSibling!.setPreviousSibling(previous: renderer.previousSibling())
+    }
+
+    if CPtrToInt(parent.firstChild()?.p) == CPtrToInt(renderer.p) {
+      parent.m_firstChild = nextSibling
+    }
+    if CPtrToInt(parent.lastChild()?.p) == CPtrToInt(renderer.p) {
+      parent.m_lastChild = renderer
+    }
+
+    renderer.setPreviousSibling(previous: nil)
+    renderer.setNextSibling(next: nil)
+    renderer.setParent(parent: nil)
+    return renderer
   }
 
   // https://www.w3.org/TR/css-transforms-1/#transform-box
