@@ -22,6 +22,14 @@
 
 import wk_interop
 
+private func paintPhase(
+  element: RenderElementWrapper, phase: PaintPhase, paintInfo: inout PaintInfoWrapper,
+  childPoint: LayoutPointWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderElementWrapper: RenderObjectWrapper {
   func initializeStyle() {
     // TODO(asuhan): implement this
@@ -153,9 +161,27 @@ class RenderElementWrapper: RenderObjectWrapper {
   // inline-block elements paint all phases atomically. This function ensures that. Certain other elements
   // (grid items, flex items) require this behavior as well, and this function exists as a helper for them.
   // It is expected that the caller will call this function independent of the value of paintInfo.phase.
-  func paintAsInlineBlock(paintInfo: PaintInfoWrapper, childPoint: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func paintAsInlineBlock(paintInfo: inout PaintInfoWrapper, childPoint: LayoutPointWrapper) {
+    // Paint all phases atomically, as though the element established its own stacking context.
+    // (See Appendix E.2, section 6.4 on inline block/table/replaced elements in the CSS2.1 specification.)
+    // This is also used by other elements (e.g. flex items and grid items).
+    let paintPhaseToUse = isExcludedAndPlacedInBorder() ? paintInfo.phase : .Foreground
+    if paintInfo.phase == .Selection || paintInfo.phase == .EventRegion
+      || paintInfo.phase == .TextClip || paintInfo.phase == .Accessibility
+    {
+      paint(paintInfo: &paintInfo, paintOffset: childPoint)
+    } else if paintInfo.phase == paintPhaseToUse {
+      paintPhase(
+        element: self, phase: .BlockBackground, paintInfo: &paintInfo, childPoint: childPoint)
+      paintPhase(
+        element: self, phase: .ChildBlockBackgrounds, paintInfo: &paintInfo, childPoint: childPoint)
+      paintPhase(element: self, phase: .Float, paintInfo: &paintInfo, childPoint: childPoint)
+      paintPhase(element: self, phase: .Foreground, paintInfo: &paintInfo, childPoint: childPoint)
+      paintPhase(element: self, phase: .Outline, paintInfo: &paintInfo, childPoint: childPoint)
+
+      // Reset |paintInfo| to the original phase.
+      paintInfo.phase = paintPhaseToUse
+    }
   }
 
   /* This function performs a layout only if one is needed. */

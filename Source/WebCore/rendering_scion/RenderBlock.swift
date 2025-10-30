@@ -252,7 +252,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return max(LayoutUnit(value: UInt64(0)), result)
   }
 
-  func paintExcludedChildrenInBorder(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  func paintExcludedChildrenInBorder(
+    paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
     if !isFieldset() || isSkippedContentRoot() {
       return
     }
@@ -263,7 +265,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       }
 
       let childPoint = flipForWritingModeForChild(child: box, point: paintOffset)
-      box.paintAsInlineBlock(paintInfo: paintInfo, childPoint: childPoint)
+      box.paintAsInlineBlock(paintInfo: &paintInfo, childPoint: childPoint)
     }
   }
 
@@ -441,7 +443,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     let pushedClip = pushContentsClip(paintInfo: &paintInfo, accumulatedOffset: adjustedPaintOffset)
-    paintObject(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+    paintObject(paintInfo: &paintInfo, paintOffset: adjustedPaintOffset)
     if pushedClip {
       popContentsClip(
         paintInfo: &paintInfo, originalPhase: phase, accumulatedOffset: adjustedPaintOffset)
@@ -483,7 +485,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return !overflowBox.intersects(other: paintInfo.rect)
   }
 
-  override func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     let paintPhase = paintInfo.phase
 
     // 1. paint background, borders etc
@@ -502,7 +504,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     if paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground
       || paintPhase == .Selection
     {
-      paintExcludedChildrenInBorder(paintInfo: paintInfo, paintOffset: paintOffset)
+      paintExcludedChildrenInBorder(paintInfo: &paintInfo, paintOffset: paintOffset)
     }
 
     if paintPhase == .Mask && style().usedVisibility() == .Visible {
@@ -708,7 +710,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     let childPoint = flipForWritingModeForChild(child: child, point: paintOffset)
     if !child.hasSelfPaintingLayer() && !child.isFloating() {
       if paintType == .PaintAsInlineBlock {
-        child.paintAsInlineBlock(paintInfo: paintInfoForChild, childPoint: childPoint)
+        child.paintAsInlineBlock(paintInfo: &paintInfoForChild, childPoint: childPoint)
       } else {
         child.paint(paintInfo: &paintInfoForChild, paintOffset: childPoint)
       }

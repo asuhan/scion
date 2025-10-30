@@ -634,7 +634,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       paintInfo.phase = .ChildOutlines
     } else if paintInfo.phase == .ChildBlockBackground {
       paintInfo.phase = .BlockBackground
-      paintObject(paintInfo: paintInfo, paintOffset: accumulatedOffset)
+      paintObject(paintInfo: &paintInfo, paintOffset: accumulatedOffset)
       paintInfo.phase = .ChildBlockBackgrounds
     }
     let deviceScaleFactor = document().deviceScaleFactor()
@@ -720,7 +720,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     paintInfo.context().restore()
     if originalPhase == .Outline {
       paintInfo.phase = .SelfOutline
-      paintObject(paintInfo: paintInfo, paintOffset: accumulatedOffset)
+      paintObject(paintInfo: &paintInfo, paintOffset: accumulatedOffset)
       paintInfo.phase = originalPhase
     } else if originalPhase == .ChildBlockBackground {
       paintInfo.phase = originalPhase
@@ -742,7 +742,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     fatalError("Not reached")
   }
 

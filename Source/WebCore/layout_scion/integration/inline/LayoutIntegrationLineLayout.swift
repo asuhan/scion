@@ -689,10 +689,10 @@ class LayoutIntegration {
         return
       }
 
-      InlineContentPainter(
+      var painter = InlineContentPainter(
         paintInfo: paintInfo, paintOffset: paintOffset, inlineBoxWithLayer: layerRenderer,
-        inlineContent: inlineContent!, boxTree: boxTree
-      ).paint()
+        inlineContent: inlineContent!, boxTree: boxTree)
+      painter.paint()
     }
 
     func hitTest(

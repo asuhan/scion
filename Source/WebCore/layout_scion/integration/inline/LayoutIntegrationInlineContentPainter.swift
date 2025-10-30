@@ -39,7 +39,7 @@ extension LayoutIntegration {
       self.outlineObjects = ListSet<RenderInlineWrapper, UInt>()
     }
 
-    func paint() {
+    mutating func paint() {
       var layerPaintScope = LayerPaintScope(
         boxTree: boxTree, inlineBoxWithLayer: inlineBoxWithLayer)
       var lastBoxLineIndex: UInt64? = nil
@@ -91,7 +91,7 @@ extension LayoutIntegration {
       }
     }
 
-    private func paintDisplayBox(box: InlineDisplay.Box) {
+    private mutating func paintDisplayBox(box: InlineDisplay.Box) {
       if box.isFullyTruncated {
         // Fully truncated boxes are visually empty and they don't show their descendants either (unlike visibility property).
         return
@@ -135,7 +135,8 @@ extension LayoutIntegration {
         if paintInfo.shouldPaintWithinRoot(renderer: renderer) {
           // FIXME: Painting should not require a non-const renderer.
           renderer.paintAsInlineBlock(
-            paintInfo: paintInfo, childPoint: flippedContentOffsetIfNeeded(childRenderer: renderer))
+            paintInfo: &paintInfo, childPoint: flippedContentOffsetIfNeeded(childRenderer: renderer)
+          )
         }
       }
     }
@@ -174,7 +175,7 @@ extension LayoutIntegration {
 
     private func root() -> RenderBlockWrapper { return boxTree.rootRenderer }
 
-    private let paintInfo: PaintInfoWrapper
+    private var paintInfo: PaintInfoWrapper
     private let paintOffset: LayoutPointWrapper
     private var damageRect: LayoutRectWrapper
     private let inlineBoxWithLayer: RenderInlineWrapper?
