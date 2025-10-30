@@ -39,6 +39,14 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // This method represents the logical height of the entire flow thread portion used by the fragment or set.
+  // For RenderFragmentContainers it matches logicalPaginationHeight(), but for sets it is the height of all the pages
+  // or columns added together.
+  func logicalHeightOfAllFragmentedFlowContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Whether or not this fragment is a set.
   func isRenderFragmentContainerSet() -> Bool {
     // TODO(asuhan): implement this

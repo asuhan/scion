@@ -353,16 +353,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   struct ComputedMarginValues {
-    let before: LayoutUnit
-    let after: LayoutUnit
-    let start: LayoutUnit
-    let end: LayoutUnit
+    let before = LayoutUnit()
+    let after = LayoutUnit()
+    let start = LayoutUnit()
+    let end = LayoutUnit()
   }
 
   struct LogicalExtentComputedValues {
-    let extent: LayoutUnit
+    var extent: LayoutUnit
     let position: LayoutUnit
-    let margins: ComputedMarginValues
+    let margins = ComputedMarginValues()
   }
 
   enum RenderBoxFragmentInfoFlags {

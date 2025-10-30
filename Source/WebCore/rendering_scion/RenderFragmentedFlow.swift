@@ -38,8 +38,23 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var computedValues = LogicalExtentComputedValues(
+      extent: LayoutUnit(value: 0), position: logicalTop)
+
+    let maxFlowSize = RenderFragmentedFlowWrapper.maxLogicalHeight()
+    for fragment in fragmentList {
+      assert(!fragment.needsLayout() || fragment.isRenderFragmentContainerSet())
+
+      let distanceToMaxSize = maxFlowSize - computedValues.extent
+      computedValues.extent += min(
+        distanceToMaxSize, fragment.logicalHeightOfAllFragmentedFlowContent())
+
+      // If we reached the maximum size there's no point in going further.
+      if computedValues.extent == maxFlowSize {
+        return computedValues
+      }
+    }
+    return computedValues
   }
 
   func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
@@ -155,6 +170,9 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
     return currentBlock!.isHorizontalWritingMode() ? blockRect.y() : blockRect.x()
   }
+
+  // Used to estimate the maximum height of the flow thread.
+  private static func maxLogicalHeight() -> LayoutUnit { return LayoutUnit.max() / 2 }
 
   private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
     RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
