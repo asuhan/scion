@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     Scrollbar.swift
     ScrollTypes.swift
     ScrollView.swift
+    StyleAppearance.swift
     Widget.swift
 )
 add_subdirectory(graphics)

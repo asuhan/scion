@@ -518,6 +518,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func usedAppearance() -> StyleAppearance {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collapseWhiteSpace(mode: WhiteSpace) -> Bool {
     // Pre and prewrap do not collapse whitespace.
     return mode != .Pre && mode != .PreWrap && mode != .BreakSpaces

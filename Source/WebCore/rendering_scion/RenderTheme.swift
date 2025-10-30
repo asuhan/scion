@@ -47,8 +47,48 @@ struct RenderTheme {
   func paintBorderOnly(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.context().paintingDisabled() {
+      return false
+    }
+
+    let devicePixelSnappedRect = snapRectToDevicePixels(
+      rect: rect, pixelSnappingFactor: box.document().deviceScaleFactor())
+    // Call the appropriate paint method based off the appearance value.
+    switch box.style().usedAppearance() {
+    case .TextField:
+      return paintTextField(
+        box: box, paintInfo: paintInfo, devicePixelSnappedRect: devicePixelSnappedRect)
+    case .Listbox, .TextArea:
+      return paintTextArea(
+        box: box, paintInfo: paintInfo, devicePixelSnappedRect: devicePixelSnappedRect)
+    case .MenulistButton, .SearchField:
+      return true
+    case .None,
+      .Auto,
+      .Base,
+      .Checkbox,
+      .Radio,
+      .PushButton,
+      .SquareButton,
+      .DefaultButton,
+      .Button,
+      .Menulist,
+      .Meter,
+      .ProgressBar,
+      .SliderHorizontal,
+      .SliderVertical,
+      .SliderThumbHorizontal,
+      .SliderThumbVertical,
+      .SearchFieldCancelButton,
+      .InnerSpinButton,
+      .SearchFieldDecoration,
+      .SearchFieldResultsDecoration,
+      .SearchFieldResultsButton,
+      .Switch,
+      .SwitchThumb,
+      .SwitchTrack:
+      return false
+    }
   }
 
   func paintDecorations(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
@@ -81,6 +121,20 @@ struct RenderTheme {
   func documentMarkerLineColor(renderer: RenderTextWrapper, mode: DocumentMarkerLineStyleMode)
     -> ColorWrapper
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintTextField(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintTextArea(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
