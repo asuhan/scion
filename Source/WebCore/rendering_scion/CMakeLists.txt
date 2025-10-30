@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     EventRegion.swift
     FloatingObjects.swift
     GlyphDisplayListCache.swift
+    Grid.swift
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift

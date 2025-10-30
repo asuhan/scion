@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2011, 2022 Apple Inc. All rights reserved.
- * Copyright (C) 2013-2017 Igalia S.L.
+ * Copyright (C) 2017 Igalia S.L.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,55 +23,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class RenderGridWrapper: RenderBlockWrapper {
-  override func avoidsFloats() -> Bool {
+final class Grid {
+  func setNeedsItemsPlacement(needsItemsPlacement: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func dirtyGrid(subgridChanged: Bool = false) {
-    if currentGrid().needsItemsPlacement() {
-      return
-    }
-
-    currentGrid().setNeedsItemsPlacement(needsItemsPlacement: true)
-
-    var subgridChanged = subgridChanged
-    var currentChild: RenderGridWrapper? = self
-    while currentChild != nil
-      && (subgridChanged || currentChild!.isSubgridRows() || currentChild!.isSubgridColumns())
-    {
-      currentChild = currentChild!.parent() as? RenderGridWrapper
-      if currentChild != nil {
-        currentChild!.currentGrid().setNeedsItemsPlacement(needsItemsPlacement: true)
-      }
-      subgridChanged = false
-    }
-  }
-
-  func isSubgridRows() -> Bool {
+  func needsItemsPlacement() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  func isSubgridColumns() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func currentGrid() -> Grid {
-    return grid!.currentGrid
-  }
-
-  private class GridWrapper {
-    init(renderGrid: RenderGridWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
-    private let layoutGrid: Grid
-    let currentGrid: Grid
-  }
-
-  private let grid: GridWrapper? = nil
 }
