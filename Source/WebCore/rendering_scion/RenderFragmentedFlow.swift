@@ -47,6 +47,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func hasValidFragmentInfo() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pageLogicalHeightForOffsetFromFragmentedFlow(offset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -74,8 +79,19 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func getFragmentRangeForBox(box: RenderBoxWrapper) -> (
     RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
   )? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasValidFragmentInfo() {  // We clear the ranges when we invalidate the fragments.
+      return nil
+    }
+
+    if fragmentList.computeSize() == 1 {
+      return (fragmentList.first(), fragmentList.first())
+    }
+
+    if let cached = getFragmentRangeForBoxFromCachedInfo(box: box) {
+      return cached
+    }
+
+    return nil
   }
 
   func collectLayerFragments(
@@ -138,6 +154,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     }
 
     return currentBlock!.isHorizontalWritingMode() ? blockRect.y() : blockRect.x()
+  }
+
+  private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
+    RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
+  )? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private let fragmentList = RenderFragmentContainerList()
