@@ -413,8 +413,23 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func layerGainedCompositedScrollableOverflow(layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var queryData = RequiresCompositingData()
+    queryData.layoutUpToDate = .No
+
+    let layerChanged = updateBacking(
+      layer: layer, queryData: &queryData, backingSharingState: nil, backingRequired: .Yes)
+    if layerChanged {
+      layer.setChildrenNeedCompositingGeometryUpdate()
+      layer.setNeedsCompositingLayerConnection()
+      layer.setSubsequentLayersNeedCompositingRequirementsTraversal()
+      // Ancestor layers that composited for indirect reasons (things listed in styleChangeMayAffectIndirectCompositingReasons()) need to get updated.
+      // This could be optimized by only setting this flag on layers with the relevant styles.
+      layer.setNeedsPostLayoutCompositingUpdateOnAncestors()
+    }
+
+    if let backing = layer.backing {
+      backing.updateConfigurationAfterStyleChange()
+    }
   }
 
   // This ensures that the viewport anchor layer will be updated when updating compositing layers upon style change
