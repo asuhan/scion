@@ -296,8 +296,28 @@ class RenderElementWrapper: RenderObjectWrapper {
   func attachRendererInternal(child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?)
     -> RenderObjectWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    child!.setParent(parent: self)
+
+    if CPtrToInt(m_firstChild?.p) == CPtrToInt(beforeChild?.p) {
+      m_firstChild = child
+    }
+
+    if beforeChild != nil {
+      let previousSibling = beforeChild!.previousSibling()
+      if previousSibling != nil {
+        previousSibling!.setNextSibling(next: child)
+      }
+      child!.setPreviousSibling(previous: previousSibling)
+      child!.setNextSibling(next: beforeChild)
+      beforeChild!.setPreviousSibling(previous: child)
+      return child
+    }
+    if m_lastChild != nil {
+      m_lastChild!.setNextSibling(next: child)
+    }
+    child!.setPreviousSibling(previous: m_lastChild)
+    m_lastChild = child
+    return child
   }
 
   func detachRendererInternal(renderer: RenderObjectWrapper) -> RenderObjectWrapper? {
@@ -350,4 +370,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var m_firstChild: RenderObjectWrapper? = nil
+  private var m_lastChild: RenderObjectWrapper? = nil
 }

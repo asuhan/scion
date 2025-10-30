@@ -899,6 +899,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   //////////////////////////////////////////
   // Helper functions. Dangerous to use!
+  func setPreviousSibling(previous: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setNextSibling(next: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setParent(parent: RenderElementWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
