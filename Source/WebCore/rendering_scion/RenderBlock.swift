@@ -22,6 +22,8 @@
 
 import wk_interop
 
+typealias TrackedRendererListHashSet = ListSet<RenderBoxWrapper, UInt>
+
 enum CaretType {
   case CursorCaret
   case DragCaret
@@ -80,6 +82,59 @@ class RenderBlockWrapper: RenderBoxWrapper {
     newContainingBlockCandidate: RenderBlockWrapper?,
     containingBlockState: ContainingBlockState = .SameContainingBlock
   ) {
+    let positionedDescendants = positionedObjects()
+    if positionedDescendants == nil {
+      return
+    }
+
+    var renderersToRemove: [RenderBoxWrapper] = []
+    for renderer in positionedDescendants! {
+      if newContainingBlockCandidate != nil
+        && !renderer.isDescendantOf(ancestor: newContainingBlockCandidate!)
+      {
+        continue
+      }
+      renderersToRemove.append(renderer)
+      if containingBlockState == .NewContainingBlock {
+        renderer.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        if renderer.needsPreferredWidthsRecalculation() {
+          renderer.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+        }
+      }
+      // It is the parent block's job to add positioned children to positioned objects list of its containing block.
+      // Dirty the parent to ensure this happens. We also need to make sure the new containing block is dirty as well so
+      // that it gets to these new positioned objects.
+      var parent = renderer.parent()
+      while parent != nil && !(parent is RenderBlockWrapper) {
+        parent = parent!.parent()
+      }
+      if parent != nil {
+        parent!.setChildNeedsLayout()
+      }
+
+      if renderer.isFixedPositioned() {
+        view().setNeedsLayout()
+      } else {
+        var newContainingBlock = containingBlock()
+        // During style change, at this point the renderer's containing block is still "this" renderer, and "this" renderer is still positioned.
+        // FIXME: During subtree moving, this is mostly invalid but either the subtree is detached (we don't even get here) or renderers
+        // are already marked dirty.
+        while newContainingBlock != nil
+          && !newContainingBlock!.canContainAbsolutelyPositionedObjects()
+        {
+          newContainingBlock = newContainingBlock!.containingBlock()
+        }
+        if newContainingBlock != nil {
+          newContainingBlock!.setNeedsLayout()
+        }
+      }
+    }
+    for renderer in renderersToRemove {
+      RenderBlockWrapper.removePositionedObject(rendererToRemove: renderer)
+    }
+  }
+
+  func positionedObjects() -> TrackedRendererListHashSet? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

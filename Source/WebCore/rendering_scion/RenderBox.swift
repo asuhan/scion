@@ -1030,6 +1030,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func needsPreferredWidthsRecalculation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollPosition() -> ScrollPosition {
     if !hasPotentiallyScrollableOverflow() {
       return ScrollPosition(x: 0, y: 0)
