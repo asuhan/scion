@@ -876,7 +876,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     if layoutState != nil {
       assert(CPtrToInt(layoutState!.renderer()?.p) == CPtrToInt(p))
 
-      let offsetDelta: LayoutSizeWrapper = layoutState!.layoutOffset() - layoutState!.pageOffset()
+      let offsetDelta = layoutState!.layoutOffset() - layoutState!.pageOffset()
       return isHorizontalWritingMode() ? offsetDelta.height() : offsetDelta.width()
     }
 

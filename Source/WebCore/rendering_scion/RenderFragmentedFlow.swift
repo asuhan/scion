@@ -27,6 +27,8 @@
  * SUCH DAMAGE.
  */
 
+typealias RenderFragmentContainerList = ListSet<RenderFragmentContainerWrapper, UInt>
+
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   override func deleteLines() {
     // TODO(asuhan): implement this
@@ -85,8 +87,23 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func fragmentsBoundingBox(layerBoundingBox: LayoutRectWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!fragmentsInvalidated)
+
+    var result = LayoutRectWrapper()
+    for fragment in fragmentList {
+      var fragments = LayerFragments()
+      fragment.collectLayerFragments(
+        layerFragments: &fragments, layerBoundingBox: layerBoundingBox,
+        dirtyRect: LayoutRectWrapper.infiniteRect())
+      for fragment in fragments {
+        var fragmentRect = layerBoundingBox
+        fragmentRect.intersect(other: fragment.paginationClip)
+        fragmentRect.move(size: fragment.paginationOffset)
+        result.unite(other: fragmentRect)
+      }
+    }
+
+    return result
   }
 
   func offsetFromLogicalTopOfFirstFragment(currentBlock: RenderBlockWrapper?) -> LayoutUnit {
@@ -122,4 +139,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
     return currentBlock!.isHorizontalWritingMode() ? blockRect.y() : blockRect.x()
   }
+
+  private let fragmentList = RenderFragmentContainerList()
+
+  private let fragmentsInvalidated = false
 }

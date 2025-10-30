@@ -44,4 +44,12 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func collectLayerFragments(
+    layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
+    dirtyRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

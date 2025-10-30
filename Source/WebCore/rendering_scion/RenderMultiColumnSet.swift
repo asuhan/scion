@@ -67,4 +67,12 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func collectLayerFragments(
+    layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
+    dirtyRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
