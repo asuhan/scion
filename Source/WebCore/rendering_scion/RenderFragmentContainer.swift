@@ -34,6 +34,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func pageLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalTopForFragmentedFlowContent() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -43,6 +48,14 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   // For RenderFragmentContainers it matches logicalPaginationHeight(), but for sets it is the height of all the pages
   // or columns added together.
   func logicalHeightOfAllFragmentedFlowContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // The top of the nearest page inside the fragment. For RenderFragmentContainers, this is just the logical top of the
+  // flow thread portion we contain. For sets, we have to figure out the top of the nearest column or
+  // page.
+  func pageLogicalTopForOffset(offset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
