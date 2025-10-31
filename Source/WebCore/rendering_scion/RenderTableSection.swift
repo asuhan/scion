@@ -63,7 +63,9 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
-  struct RowStruct {}
+  struct RowStruct {
+    let rowRenderer: RenderTableRowWrapper? = nil
+  }
 
   func cellAt(row: UInt32, col: UInt32) -> CellStruct {
     // TODO(asuhan): implement this
@@ -124,6 +126,13 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func willInsertTableRow(child: RenderTableRowWrapper, beforeChild: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintCell(
+    cell: RenderTableCellWrapper, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -199,8 +208,25 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
           }
         }
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // Draw the dirty cells in the order that they appear.
+        for r in dirtiedRows.start..<dirtiedRows.end {
+          if let row = grid[Int(r)].rowRenderer, !row.hasSelfPaintingLayerModelObject() {
+            row.paintOutlineForRowIfNeeded(paintInfo: paintInfo, paintOffset: paintOffset)
+          }
+          for c in dirtiedColumns.start..<dirtiedColumns.end {
+            let current = cellAt(row: r, col: c)
+            let cell = current.primaryCell()
+            if cell == nil
+              || (r > dirtiedRows.start
+                && CPtrToInt(primaryCellAt(row: r - 1, col: c)?.p) == CPtrToInt(cell?.p))
+              || (c > dirtiedColumns.start
+                && CPtrToInt(primaryCellAt(row: r, col: c - 1)?.p) == CPtrToInt(cell?.p))
+            {
+              continue
+            }
+            paintCell(cell: cell!, paintInfo: paintInfo, paintOffset: paintOffset)
+          }
+        }
       }
     } else {
       // TODO(asuhan): implement this
