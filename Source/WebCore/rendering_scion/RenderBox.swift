@@ -1181,7 +1181,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // --------------------- painting stuff -------------------------------
 
-  private func determineBackgroundBleedAvoidance(context: GraphicsContextWrapper)
+  func determineBackgroundBleedAvoidance(context: GraphicsContextWrapper)
     -> BackgroundBleedAvoidance
   {
     if context.paintingDisabled() {

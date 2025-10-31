@@ -178,8 +178,46 @@ class RenderTableWrapper: RenderBlockWrapper {
   final override func paintBoxDecorations(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    var rect = LayoutRectWrapper(location: paintOffset, size: size())
+    adjustBorderBoxRectForPainting(paintRect: &rect)
+
+    let backgroundPainter = BackgroundPainter(renderer: self, paintInfo: paintInfo)
+
+    let bleedAvoidance = determineBackgroundBleedAvoidance(context: paintInfo.context())
+    if !BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+      renderer: self, paintOffset: rect.location(), bleedAvoidance: bleedAvoidance,
+      inlineBox: InlineIterator.InlineBoxIterator())
+    {
+      backgroundPainter.paintBoxShadow(paintRect: rect, style: style(), shadowStyle: .Normal)
+    }
+
+    let stateSaver = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: false)
+    if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
+      // To avoid the background color bleeding out behind the border, we'll render background and border
+      // into a transparency layer, and then clip that in one go (which requires setting up the clip before
+      // beginning the layer).
+      stateSaver.save()
+      let borderShape = BorderShape.shapeForBorderRect(style: style(), borderRect: rect)
+      borderShape.clipToOuterShape(
+        context: paintInfo.context(), deviceScaleFactor: document().deviceScaleFactor())
+      paintInfo.context().beginTransparencyLayer(opacity: 1)
+    }
+
+    backgroundPainter.paintBackground(paintRect: rect, bleedAvoidance: bleedAvoidance)
+    backgroundPainter.paintBoxShadow(paintRect: rect, style: style(), shadowStyle: .Inset)
+
+    if style().hasVisibleBorderDecoration() && !collapseBorders() {
+      let borderPainter = BorderPainter(renderer: self, paintInfo: paintInfo)
+      borderPainter.paintBorder(rect: rect, style: style())
+    }
+
+    if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
+      paintInfo.context().endTransparencyLayer()
+    }
   }
 
   final override func paintMask(
