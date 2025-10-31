@@ -162,8 +162,36 @@ struct RenderTheme {
 
   func paintDecorations(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    // FIXME: Investigate whether all controls can use a device-pixel-snapped rect
+    // rather than an integral-snapped rect.
+
+    let integralSnappedRect = snappedIntRect(rect: rect)
+    let devicePixelSnappedRect = snapRectToDevicePixels(
+      rect: rect, pixelSnappingFactor: box.document().deviceScaleFactor())
+
+    // Call the appropriate paint method based off the appearance value.
+    switch box.style().usedAppearance() {
+    case .MenulistButton:
+      paintMenuListButtonDecorations(box: box, paintInfo: paintInfo, rect: devicePixelSnappedRect)
+    case .TextField:
+      paintTextFieldDecorations(box: box, paintInfo: paintInfo, rect: devicePixelSnappedRect)
+    case .TextArea:
+      paintTextAreaDecorations(box: box, paintInfo: paintInfo, rect: devicePixelSnappedRect)
+    case .SquareButton:
+      paintSquareButtonDecorations(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .ColorWell:
+      paintColorWellDecorations(box: box, paintInfo: paintInfo, rect: devicePixelSnappedRect)
+    case .Menulist:
+      paintMenuListDecorations(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SliderThumbHorizontal, .SearchField:
+      paintSearchFieldDecorations(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    default:
+      break
+    }
   }
 
   func adjustedPaintRect(box: RenderBoxWrapper, paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
@@ -232,9 +260,23 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func paintColorWellDecorations(
+    box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: FloatRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintTextField(
     box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintTextFieldDecorations(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: FloatRectWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -246,9 +288,37 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func paintTextAreaDecorations(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: FloatRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintMenuList(
     box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintMenuListDecorations(
+    box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintMenuListButtonDecorations(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: FloatRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSquareButtonDecorations(
+    box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -282,6 +352,13 @@ struct RenderTheme {
   func paintSearchField(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect)
     -> Bool
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSearchFieldDecorations(
+    box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
