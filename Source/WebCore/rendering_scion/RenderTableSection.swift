@@ -36,6 +36,24 @@ enum CollapsedBorderSide {
   case CBSEnd
 }
 
+private let gMaxAllowedOverflowingCellRatioForFastPaintPath: Float32 = 0.1
+
+private func compareCellPositions(
+  elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+// This comparison is used only when we have overflowing cells as we have an unsorted array to sort. We thus need
+// to sort both on rows and columns to properly repaint.
+private func compareCellPositionsWithOverflowingCells(
+  elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func physicalBorderForDirection(
   styleForCellFlow: RenderStyleWrapper, side: CollapsedBorderSide
 ) -> BoxSide {
@@ -57,7 +75,14 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   func table() -> RenderTableWrapper? { return parent() as! RenderTableWrapper? }
 
   class CellStruct {
+    let cells: [RenderTableCellWrapper] = []
+
     func primaryCell() -> RenderTableCellWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func hasCells() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -229,8 +254,65 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
         }
       }
     } else {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // The overflowing cells should be scarce to avoid adding a lot of cells to the HashSet.
+      #if ASSERT_ENABLED
+        let totalRows = grid.count
+        let totalCols = table()!.columns.count
+        assert(
+          overflowingCells.computeSize()
+            < UInt32(
+              Float32(totalRows * totalCols) * gMaxAllowedOverflowingCellRatioForFastPaintPath)
+        )
+      #endif
+
+      // To make sure we properly repaint the section, we repaint all the overflowing cells that we collected.
+      var cells = copyToVector(collection: overflowingCells)
+
+      var spanningCells: Set<UInt> = []
+
+      for r in dirtiedRows.start..<dirtiedRows.end {
+        if let row = grid[Int(r)].rowRenderer, !row.hasSelfPaintingLayerModelObject() {
+          row.paintOutlineForRowIfNeeded(paintInfo: paintInfo, paintOffset: paintOffset)
+        }
+        for c in dirtiedColumns.start..<dirtiedColumns.end {
+          let current = cellAt(row: r, col: c)
+          if !current.hasCells() {
+            continue
+          }
+          for currentCell in current.cells {
+            if overflowingCells.contains(value: currentCell) {
+              continue
+            }
+
+            if currentCell.rowSpan() > 1 || currentCell.colSpan() > 1 {
+              if !spanningCells.insert(CPtrToInt(currentCell.p)).inserted {
+                continue
+              }
+            }
+
+            cells.append(WeakNullableRef(currentCell))
+          }
+        }
+      }
+
+      // Sort the dirty cells by paint order.
+      if overflowingCells.isEmptyIgnoringNullReferences() {
+        // TODO(asuhan): use a guaranteed stable sort
+        cells.sort(by: compareCellPositions)
+      } else {
+        cells.sort(by: compareCellPositionsWithOverflowingCells)
+      }
+
+      if paintInfo.phase == .CollapsedTableBorders {
+        for cell in cells.reversed() {
+          let cellPoint = flipForWritingModeForChild(child: *cell, point: paintOffset)
+          (*cell).paintCollapsedBorders(paintInfo: paintInfo, paintOffset: cellPoint)
+        }
+      } else {
+        for cell in cells {
+          paintCell(cell: *cell, paintInfo: paintInfo, paintOffset: paintOffset)
+        }
+      }
     }
   }
 

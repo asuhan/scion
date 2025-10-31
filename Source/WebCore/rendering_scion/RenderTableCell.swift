@@ -23,6 +23,16 @@
  */
 
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {
+  func colSpan() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func rowSpan() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextCell() -> RenderTableCellWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

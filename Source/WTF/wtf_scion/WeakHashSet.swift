@@ -24,8 +24,23 @@
  */
 
 final class WeakHashSet<T> {
+  func contains<U>(value: U) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isEmptyIgnoringNullReferences() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func computeSize() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+func copyToVector<T>(collection: WeakHashSet<T>) -> [WeakNullableRef<T>] {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
