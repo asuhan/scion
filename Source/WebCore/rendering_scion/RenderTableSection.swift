@@ -34,6 +34,10 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func table() -> RenderTableWrapper? { return parent() as! RenderTableWrapper? }
+
+  struct RowStruct {}
+
   func setNeedsCellRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -52,11 +56,45 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    fatalError("Not reached")
+    assert(!needsLayout())
+    // avoid crashing on bugs that cause us to paint with dirty layout
+    if needsLayout() {
+      return
+    }
+
+    let totalRows = grid.count
+    let totalCols = table()!.columns.count
+
+    if totalRows == 0 || totalCols == 0 {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    let phase = paintInfo.phase
+    let pushedClip = pushContentsClip(paintInfo: &paintInfo, accumulatedOffset: adjustedPaintOffset)
+    paintObject(paintInfo: &paintInfo, paintOffset: adjustedPaintOffset)
+    if pushedClip {
+      popContentsClip(
+        paintInfo: &paintInfo, originalPhase: phase, accumulatedOffset: adjustedPaintOffset)
+    }
+
+    if (phase == .Outline || phase == .SelfOutline) && style().usedVisibility() == .Visible {
+      paintOutline(
+        paintInfo: paintInfo,
+        paintRect: LayoutRectWrapper(location: adjustedPaintOffset, size: size()))
+    }
   }
 
   func willInsertTableRow(child: RenderTableRowWrapper, beforeChild: RenderObjectWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let grid: [RowStruct] = []
 }

@@ -68,6 +68,10 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  struct ColumnStruct {
+    let span: Int32 = 1
+  }
+
   func bottomSection() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -242,6 +246,8 @@ class RenderTableWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let columns: [ColumnStruct] = []
 
   private let collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil
