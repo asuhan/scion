@@ -40,8 +40,76 @@ struct RenderTheme {
 
   @discardableResult
   func paint(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If painting is disabled, but we aren't updating control tints, then just bail.
+    // If we are updating control tints, just schedule a repaint if the theme supports tinting
+    // for that control.
+    if paintInfo.context().invalidatingControlTints() {
+      if controlSupportsTints(o: box) {
+        box.repaint()
+      }
+      return false
+    }
+    if paintInfo.context().paintingDisabled() {
+      return false
+    }
+
+    let appearance = box.style().usedAppearance()
+
+    if !canPaint(paintInfo: paintInfo, settings: box.settings(), appearance: appearance) {
+      return false
+    }
+
+    let integralSnappedRect = snappedIntRect(rect: rect)
+    let deviceScaleFactor = box.document().deviceScaleFactor()
+    let devicePixelSnappedRect = snapRectToDevicePixels(
+      rect: rect, pixelSnappingFactor: deviceScaleFactor)
+
+    switch appearance {
+    case .Checkbox:
+      return paintCheckbox(box: box, paintInfo: paintInfo, rect: devicePixelSnappedRect)
+    case .Radio:
+      return paintRadio(box: box, paintInfo: paintInfo, rect: devicePixelSnappedRect)
+    case .ColorWell:
+      return paintColorWell(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .PushButton, .SquareButton, .DefaultButton, .Button:
+      return paintButton(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .Menulist:
+      return paintMenuList(
+        box: box, paintInfo: paintInfo, devicePixelSnappedRect: devicePixelSnappedRect)
+    case .Meter:
+      return paintMeter(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .ProgressBar:
+      return paintProgressBar(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SliderHorizontal, .SliderVertical:
+      return paintSliderTrack(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SliderThumbHorizontal, .SliderThumbVertical:
+      return paintSliderThumb(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .MenulistButton, .TextField, .TextArea, .Listbox:
+      return true
+    case .SearchField:
+      return paintSearchField(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SearchFieldCancelButton:
+      return paintSearchFieldCancelButton(box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SearchFieldDecoration:
+      return paintSearchFieldDecorationPart(
+        box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SearchFieldResultsDecoration:
+      return paintSearchFieldResultsDecorationPart(
+        box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .SearchFieldResultsButton:
+      return paintSearchFieldResultsButton(
+        box: box, paintInfo: paintInfo, rect: integralSnappedRect)
+    case .Switch:
+      return true
+    case .SwitchThumb:
+      return paintSwitchThumb(
+        renderer: box, paintInfo: paintInfo, devicePixelSnappedRect: devicePixelSnappedRect)
+    case .SwitchTrack:
+      return paintSwitchTrack(
+        renderer: box, paintInfo: paintInfo, devicePixelSnappedRect: devicePixelSnappedRect)
+    case .None, .Auto, .Base, .InnerSpinButton:
+      return true  // We don't support the appearance, so let the normal background/border paint.
+    }
   }
 
   func paintBorderOnly(box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: LayoutRectWrapper)
@@ -70,6 +138,7 @@ struct RenderTheme {
       .Radio,
       .PushButton,
       .SquareButton,
+      .ColorWell,
       .DefaultButton,
       .Button,
       .Menulist,
@@ -101,6 +170,12 @@ struct RenderTheme {
     return paintRect
   }
 
+  // A method asking if the control changes its tint when the window has focus or not.
+  func controlSupportsTints(o: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Highlighting color for search matches.
   func textSearchHighlightColor(options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this
@@ -125,6 +200,38 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func canPaint(paintInfo: PaintInfoWrapper, settings: SettingsWrapper, appearance: StyleAppearance)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintCheckbox(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: FloatRectWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintRadio(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: FloatRectWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintButton(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintColorWell(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect) -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintTextField(
     box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
   ) -> Bool {
@@ -134,6 +241,90 @@ struct RenderTheme {
 
   func paintTextArea(
     box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintMenuList(
+    box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, devicePixelSnappedRect: FloatRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintMeter(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintProgressBar(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSliderTrack(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSliderThumb(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSearchField(box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSearchFieldCancelButton(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSearchFieldDecorationPart(
+    box: RenderObjectWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSearchFieldResultsDecorationPart(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSearchFieldResultsButton(
+    box: RenderBoxWrapper, paintInfo: PaintInfoWrapper, rect: IntRect
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSwitchThumb(
+    renderer: RenderObjectWrapper, paintInfo: PaintInfoWrapper,
+    devicePixelSnappedRect: FloatRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSwitchTrack(
+    renderer: RenderObjectWrapper, paintInfo: PaintInfoWrapper,
+    devicePixelSnappedRect: FloatRectWrapper
   ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

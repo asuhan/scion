@@ -44,6 +44,7 @@ enum StyleAppearance {
   case SearchField
   case TextArea
   case TextField
+  case ColorWell
   // Internal-only Values
   case InnerSpinButton
   case SearchFieldDecoration
