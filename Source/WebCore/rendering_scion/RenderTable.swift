@@ -223,8 +223,14 @@ class RenderTableWrapper: RenderBlockWrapper {
   final override func paintMask(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().usedVisibility() != .Visible || paintInfo.phase != .Mask {
+      return
+    }
+
+    var rect = LayoutRectWrapper(location: paintOffset, size: size())
+    adjustBorderBoxRectForPainting(paintRect: &rect)
+
+    paintMaskImages(paintInfo: paintInfo, paintRect: rect)
   }
 
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {

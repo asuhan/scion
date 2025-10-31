@@ -1133,7 +1133,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return nil
   }
 
-  private func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
+  func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
     // Figure out if we need to push a transparency layer to render our mask.
     var pushTransparencyLayer = false
     let compositedMask = hasLayer() && layer()!.hasCompositedMask()
