@@ -215,6 +215,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func styleColorOptions() -> StyleColorOptions {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Return our enclosing flow thread if we are contained inside one. Follows the containing block chain.
   func enclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
     // TODO(asuhan): implement this

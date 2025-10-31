@@ -224,8 +224,18 @@ struct RenderTheme {
   func documentMarkerLineColor(renderer: RenderTextWrapper, mode: DocumentMarkerLineStyleMode)
     -> ColorWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let options = renderer.styleColorOptions()
+
+    switch mode {
+    case .Spelling:
+      return spellingMarkerColor(options: options)
+    case .DictationAlternatives, .TextCheckingDictationPhraseWithAlternatives:
+      return dictationAlternativesMarkerColor(options: options)
+    case .AutocorrectionReplacement:
+      return autocorrectionReplacementMarkerColor(renderer: renderer)
+    case .Grammar:
+      return grammarMarkerColor(options: options)
+    }
   }
 
   func canPaint(paintInfo: PaintInfoWrapper, settings: SettingsWrapper, appearance: StyleAppearance)
@@ -403,6 +413,26 @@ struct RenderTheme {
     renderer: RenderObjectWrapper, paintInfo: PaintInfoWrapper,
     devicePixelSnappedRect: FloatRectWrapper
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autocorrectionReplacementMarkerColor(renderer: RenderTextWrapper) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func spellingMarkerColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func dictationAlternativesMarkerColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func grammarMarkerColor(options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
