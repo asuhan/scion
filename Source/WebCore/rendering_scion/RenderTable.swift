@@ -22,7 +22,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
+enum SkipEmptySectionsValue {
+  case DoNotSkipEmptySections
+  case SkipEmptySections
+}
+
 class RenderTableWrapper: RenderBlockWrapper {
+  func collapseBorders() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func borderBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -58,6 +68,21 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func bottomSection() -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func sectionAbove(
+    section: RenderTableSectionWrapper?,
+    skipEmptySections: SkipEmptySectionsValue = .DoNotSkipEmptySections
+  ) -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  typealias CollapsedBorderValues = [CollapsedBorderValue]
+
   static func createAnonymousWithParentRenderer(parent: RenderElementWrapper) -> RenderTableWrapper
   {
     // TODO(asuhan): implement this
@@ -84,8 +109,96 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private final func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    var paintPhase = paintInfo.phase
+    if (paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground)
+      && hasVisibleBoxDecorations() && style().usedVisibility() == .Visible
+    {
+      paintBoxDecorations(paintInfo: paintInfo, paintOffset: paintOffset)
+    }
+
+    if paintPhase == .Mask {
+      paintMask(paintInfo: paintInfo, paintOffset: paintOffset)
+      return
+    }
+
+    if paintPhase == .Accessibility {
+      paintInfo.accessibilityRegionContext()!.takeBounds(renderBox: self, paintOffset: paintOffset)
+    }
+
+    // We're done.  We don't bother painting any children.
+    if paintPhase == .BlockBackground {
+      return
+    }
+
+    // We don't paint our own background, but we do let the kids paint their backgrounds.
+    if paintPhase == .ChildBlockBackgrounds {
+      paintPhase = .ChildBlockBackground
+    }
+
+    var info = paintInfo
+    info.phase = paintPhase
+    info.updateSubtreePaintRootForChildren(renderer: self)
+
+    for box: RenderBoxWrapper in childrenOfType(parent: self) {
+      if !box.hasSelfPaintingLayer() && (box.isRenderTableSection() || box.isRenderTableCaption()) {
+        let childPoint = flipForWritingModeForChild(child: box, point: paintOffset)
+        box.paint(paintInfo: &info, paintOffset: childPoint)
+      }
+    }
+
+    if collapseBorders() && paintPhase == .ChildBlockBackground
+      && style().usedVisibility() == .Visible
+    {
+      recalcCollapsedBorders()
+      // Using our cached sorted styles, we then do individual passes,
+      // painting each style of border from lowest precedence to highest precedence.
+      info.phase = .CollapsedTableBorders
+      for collapsedBorder in collapsedBorders {
+        currentBorder = collapsedBorder
+        var section = bottomSection()
+        while section != nil {
+          let childPoint = flipForWritingModeForChild(child: section!, point: paintOffset)
+          section!.paint(paintInfo: &info, paintOffset: childPoint)
+          section = sectionAbove(section: section)
+        }
+      }
+      currentBorder = nil
+    }
+
+    // Paint outline.
+    if (paintPhase == .Outline || paintPhase == .SelfOutline) && hasOutline()
+      && style().usedVisibility() == .Visible
+    {
+      paintOutline(
+        paintInfo: paintInfo, paintRect: LayoutRectWrapper(location: paintOffset, size: size()))
+    }
+  }
+
+  final override func paintBoxDecorations(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  final override func paintMask(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func recalcCollapsedBorders() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let collapsedBorders = CollapsedBorderValues()
+  private var currentBorder: CollapsedBorderValue? = nil
 }

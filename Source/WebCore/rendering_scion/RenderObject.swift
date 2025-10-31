@@ -327,6 +327,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderTableCaption() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderTableSection() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

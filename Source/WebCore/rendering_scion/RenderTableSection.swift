@@ -51,6 +51,10 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    fatalError("Not reached")
+  }
+
   func willInsertTableRow(child: RenderTableRowWrapper, beforeChild: RenderObjectWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
