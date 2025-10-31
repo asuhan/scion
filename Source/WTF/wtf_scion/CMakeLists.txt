@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     PriorityQueue.swift
     SaturatedArithmetic.swift
     SetForScope.swift
+    WeakHashSet.swift
     WeakNullableRef.swift
 )
 add_subdirectory(text)

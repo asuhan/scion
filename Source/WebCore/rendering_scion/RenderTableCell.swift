@@ -78,6 +78,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func paintCollapsedBorders(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll
   // create an extra anonymous RenderBlock to handle mixing directionality anyway, in which case we can lock
   // the block flow directionality of the cells to the table's directionality.

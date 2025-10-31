@@ -77,6 +77,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func numEffCols() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func sectionAbove(
     section: RenderTableSectionWrapper?,
     skipEmptySections: SkipEmptySectionsValue = .DoNotSkipEmptySections
