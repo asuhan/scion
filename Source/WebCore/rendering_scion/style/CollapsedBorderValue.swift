@@ -24,8 +24,7 @@
 
 class CollapsedBorderValue {
   func width() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style.rawValue > BorderStyle.Hidden.rawValue ? m_width : LayoutUnit(value: UInt64(0))
   }
 
   func exists() -> Bool { return precedence != .Off }
@@ -33,17 +32,19 @@ class CollapsedBorderValue {
   func isTransparent() -> Bool { return transparent }
 
   func isSameIgnoringColor(o: CollapsedBorderValue) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return width() == o.width() && style == o.style && precedence == o.precedence
   }
 
   static func adjustedCollapsedBorderWidth(
     borderWidth: Float32, deviceScaleFactor: Float32, roundUp: Bool
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let halfCollapsedBorderWidth = (borderWidth + (roundUp ? (1 / deviceScaleFactor) : 0)) / 2
+    return LayoutUnit(
+      value: floorToDevicePixel(
+        value: halfCollapsedBorderWidth, pixelSnappingFactor: deviceScaleFactor))
   }
 
+  private let m_width = LayoutUnit()
   let color = ColorWrapper()
   let style: BorderStyle = .None  // BorderStyle
   let precedence: BorderPrecedence = .Off  // BorderPrecedence
