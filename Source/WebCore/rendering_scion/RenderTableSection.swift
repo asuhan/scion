@@ -57,8 +57,28 @@ private func compareCellPositionsWithOverflowingCells(
 private func physicalBorderForDirection(
   styleForCellFlow: RenderStyleWrapper, side: CollapsedBorderSide
 ) -> BoxSide {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch side {
+  case .CBSStart:
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection() ? .Left : .Right
+    }
+    return styleForCellFlow.isLeftToRightDirection() ? .Top : .Bottom
+  case .CBSEnd:
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection() ? .Right : .Left
+    }
+    return styleForCellFlow.isLeftToRightDirection() ? .Bottom : .Top
+  case .CBSBefore:
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return .Top
+    }
+    return styleForCellFlow.isLeftToRightDirection() ? .Right : .Left
+  case .CBSAfter:
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return .Bottom
+    }
+    return styleForCellFlow.isLeftToRightDirection() ? .Left : .Right
+  }
 }
 
 final class RenderTableSectionWrapper: RenderBoxWrapper {
