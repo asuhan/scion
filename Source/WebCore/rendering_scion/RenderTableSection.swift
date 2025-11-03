@@ -113,7 +113,10 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  typealias Row = [CellStruct]
+
   struct RowStruct {
+    var row = Row()
     var rowRenderer: RenderTableRowWrapper? = nil
   }
 
@@ -578,8 +581,22 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func ensureRows(numRows: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if numRows <= grid.count {
+      return
+    }
+
+    let oldSize = grid.count
+    for _ in oldSize..<Int(numRows) {
+      grid.append(RowStruct())
+    }
+
+    let effectiveColumnCount = Int(max(1, table()!.numEffCols()))
+    for row in oldSize..<grid.count {
+      let oldCols = grid[row].row.count
+      for _ in oldCols..<effectiveColumnCount {
+        grid[row].row.append(CellStruct())
+      }
+    }
   }
 
   // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
