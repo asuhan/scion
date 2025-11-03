@@ -28,6 +28,12 @@ enum SkipEmptySectionsValue {
 }
 
 class RenderTableWrapper: RenderBlockWrapper {
+  // Per CSS 3 writing-mode: "The first and second values of the 'border-spacing' property represent spacing between columns
+  // and rows respectively, not necessarily the horizontal and vertical spacing respectively".
+  func hBorderSpacing() -> LayoutUnit { return hSpacing }
+
+  func vBorderSpacing() -> LayoutUnit { return vSpacing }
+
   func collapseBorders() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -268,4 +274,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private let collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil
+
+  private let hSpacing = LayoutUnit()
+  private let vSpacing = LayoutUnit()
 }

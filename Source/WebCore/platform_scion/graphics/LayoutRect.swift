@@ -136,6 +136,11 @@ struct LayoutRectWrapper: Equatable {
     setHeight(height: max(LayoutUnit(value: 0), height() - delta))
   }
 
+  func contract(box: LayoutBoxExtent) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contract(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: -dw, height: -dh) }
 
   func contract(dw: Int32, dh: Int32) {

@@ -69,8 +69,20 @@ private struct CollapsedBorders {
 private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTableWrapper)
   -> LayoutRectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let rect = tableRow.frameRect()
+  if !table.collapseBorders() {
+    // Row frameRects include unwanted hSpacing on both inline ends.
+    let hSpacing = table.hBorderSpacing()
+    let vSpacing = LayoutUnit(value: UInt64(0))
+    if table.style().isHorizontalWritingMode() {
+      rect.contract(
+        box: LayoutBoxExtent(top: vSpacing, right: hSpacing, bottom: vSpacing, left: hSpacing))
+    } else {
+      rect.contract(
+        box: LayoutBoxExtent(top: hSpacing, right: vSpacing, bottom: hSpacing, left: vSpacing))
+    }
+  }
+  return rect
 }
 
 private func backgroundRectForSection(
