@@ -63,6 +63,16 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func outerBorderTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outerBorderBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func forceSectionsRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -91,6 +101,8 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   typealias CollapsedBorderValues = [CollapsedBorderValue]
+
+  func currentBorderValue() -> CollapsedBorderValue? { return currentBorder }
 
   static func createAnonymousWithParentRenderer(parent: RenderElementWrapper) -> RenderTableWrapper
   {

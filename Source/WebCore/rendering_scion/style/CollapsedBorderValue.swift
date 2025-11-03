@@ -22,4 +22,27 @@
  *
  */
 
-class CollapsedBorderValue {}
+class CollapsedBorderValue {
+  func width() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isTransparent() -> Bool { return transparent }
+
+  func isSameIgnoringColor(o: CollapsedBorderValue) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func adjustedCollapsedBorderWidth(
+    borderWidth: Float32, deviceScaleFactor: Float32, roundUp: Bool
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let color = ColorWrapper()
+  let style: BorderStyle = .None  // BorderStyle
+  private let transparent = false
+}

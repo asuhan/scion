@@ -1822,6 +1822,16 @@ class RenderStyleWrapper: Equatable {
   var inheritedFlags = InheritedFlags()
 }
 
+func collapsedBorderStyle(style: BorderStyle) -> BorderStyle {
+  if style == .Outset {
+    return .Groove
+  }
+  if style == .Inset {
+    return .Ridge
+  }
+  return style
+}
+
 func pseudoElementRendererIsNeeded(style: RenderStyleWrapper?) -> Bool {
   return style != nil && style!.display() != .None && style!.contentData() != nil
 }

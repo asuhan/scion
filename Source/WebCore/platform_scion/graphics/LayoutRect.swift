@@ -48,6 +48,12 @@ struct LayoutRectWrapper: Equatable {
       size: LayoutSizeWrapper(width: width, height: height))
   }
 
+  init(topLeft: LayoutPointWrapper, bottomRight: LayoutPointWrapper) {
+    self.m_location = topLeft
+    self.m_size = LayoutSizeWrapper(
+      width: bottomRight.x - topLeft.x, height: bottomRight.y - topLeft.y)
+  }
+
   init(rect: IntRect) {
     self.init(
       location: LayoutPointWrapper(point: rect.location),
