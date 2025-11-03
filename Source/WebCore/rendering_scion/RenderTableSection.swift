@@ -137,6 +137,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func outerBorderBottom(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCellRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -532,8 +537,19 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func verticalRowGroupBorderHeight(
     cell: RenderTableCellWrapper?, rowGroupRect: LayoutRectWrapper, row: UInt32
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: UInt64(0))
+    let isLastRow = row + 1 == grid.count
+    if table()!.style().isHorizontalWritingMode() {
+      return rowPos[Int(row + 1)] - rowPos[Int(row)]
+        + (row == 0
+          ? outerBorderTop(styleForCellFlow: style())
+          : isLastRow ? outerBorderBottom(styleForCellFlow: style()) : zero)
+    }
+    if table()!.style().isLeftToRightDirection() {
+      return rowGroupRect.height() - (cell != nil ? cell!.y() + cell!.height() : zero)
+        + outerBorderBottom(styleForCellFlow: style())
+    }
+    return cell != nil ? rowGroupRect.height() - (cell!.y() - cell!.height()) : zero
   }
 
   private func horizontalRowGroupBorderWidth(
