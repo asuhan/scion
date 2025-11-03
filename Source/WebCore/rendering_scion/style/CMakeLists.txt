@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     BlockEllipsis.swift
     BorderData.swift
+    BorderValue.swift
     CollapsedBorderValue.swift
     ContentData.swift
     FillLayer.swift

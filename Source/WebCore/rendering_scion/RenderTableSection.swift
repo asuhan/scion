@@ -122,6 +122,16 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func outerBorderLeft(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outerBorderTop(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCellRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -374,10 +384,111 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  private func paintRowGroupBorder(
+    paintInfo: PaintInfoWrapper, antialias: Bool, rect: LayoutRectWrapper, side: BoxSide,
+    borderColor: CSSPropertyID, borderStyle: BorderStyle, tableBorderStyle: BorderStyle
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintRowGroupBorderIfRequired(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, row: UInt32, column: UInt32,
     borderSide: BoxSide, cell: RenderTableCellWrapper? = nil
   ) {
+    if table()!.currentBorderValue()!.precedence.rawValue > BorderPrecedence.RowGroup.rawValue {
+      return
+    }
+    if paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    let style = style()
+    let antialias = BorderPainter.shouldAntialiasLines(context: paintInfo.context())
+    var rowGroupRect = LayoutRectWrapper(location: paintOffset, size: size())
+    rowGroupRect.moveBy(
+      offset: -LayoutPointWrapper(
+        x: outerBorderLeft(styleForCellFlow: style),
+        y: borderSide == .Right
+          ? LayoutUnit(value: UInt64(0)) : outerBorderTop(styleForCellFlow: style)))
+
+    switch borderSide {
+    case .Top:
+      paintRowGroupBorder(
+        paintInfo: paintInfo, antialias: antialias,
+        rect: LayoutRectWrapper(
+          x: paintOffset.x
+            + offsetLeftForRowGroupBorder(cell: cell, rowGroupRect: rowGroupRect, row: row),
+          y: rowGroupRect.y(),
+          width: horizontalRowGroupBorderWidth(
+            cell: cell, rowGroupRect: rowGroupRect, row: row, column: column),
+          height: LayoutUnit(value: style.borderTop().width)), side: .Top,
+        borderColor: .CSSPropertyBorderTopColor,
+        borderStyle: style.borderTopStyle(), tableBorderStyle: table()!.style().borderTopStyle())
+    case .Bottom:
+      paintRowGroupBorder(
+        paintInfo: paintInfo, antialias: antialias,
+        rect: LayoutRectWrapper(
+          x: paintOffset.x
+            + offsetLeftForRowGroupBorder(cell: cell, rowGroupRect: rowGroupRect, row: row),
+          y: rowGroupRect.y() + rowGroupRect.height(),
+          width: horizontalRowGroupBorderWidth(
+            cell: cell, rowGroupRect: rowGroupRect, row: row, column: column),
+          height: LayoutUnit(value: style.borderBottom().width)), side: .Bottom,
+        borderColor: .CSSPropertyBorderBottomColor,
+        borderStyle: style.borderBottomStyle(),
+        tableBorderStyle: table()!.style().borderBottomStyle())
+    case .Left:
+      paintRowGroupBorder(
+        paintInfo: paintInfo, antialias: antialias,
+        rect: LayoutRectWrapper(
+          x: rowGroupRect.x(),
+          y: rowGroupRect.y()
+            + offsetTopForRowGroupBorder(cell: cell, borderSide: borderSide, row: row),
+          width: LayoutUnit(value: style.borderLeft().width),
+          height: verticalRowGroupBorderHeight(cell: cell, rowGroupRect: rowGroupRect, row: row)),
+        side: .Left,
+        borderColor: .CSSPropertyBorderLeftColor, borderStyle: style.borderLeftStyle(),
+        tableBorderStyle: table()!.style().borderLeftStyle())
+    case .Right:
+      paintRowGroupBorder(
+        paintInfo: paintInfo, antialias: antialias,
+        rect: LayoutRectWrapper(
+          x: rowGroupRect.x() + rowGroupRect.width(),
+          y: rowGroupRect.y()
+            + offsetTopForRowGroupBorder(cell: cell, borderSide: borderSide, row: row),
+          width: LayoutUnit(value: style.borderRight().width),
+          height: verticalRowGroupBorderHeight(cell: cell, rowGroupRect: rowGroupRect, row: row)),
+        side: .Right,
+        borderColor: .CSSPropertyBorderRightColor, borderStyle: style.borderRightStyle(),
+        tableBorderStyle: table()!.style().borderRightStyle())
+    }
+  }
+
+  private func offsetLeftForRowGroupBorder(
+    cell: RenderTableCellWrapper?, rowGroupRect: LayoutRectWrapper, row: UInt32
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func offsetTopForRowGroupBorder(
+    cell: RenderTableCellWrapper?, borderSide: BoxSide, row: UInt32
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func verticalRowGroupBorderHeight(
+    cell: RenderTableCellWrapper?, rowGroupRect: LayoutRectWrapper, row: UInt32
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func horizontalRowGroupBorderWidth(
+    cell: RenderTableCellWrapper?, rowGroupRect: LayoutRectWrapper, row: UInt32, column: UInt32
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
