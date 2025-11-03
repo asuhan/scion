@@ -476,6 +476,11 @@ struct HangingPunctuation: OptionSet {
   static let ForceEnd = HangingPunctuation(rawValue: 1 << 3)
 }
 
+enum EmptyCell: UInt8 {
+  case Show
+  case Hide
+}
+
 enum Visibility: UInt8 {
   case Visible
   case Hidden

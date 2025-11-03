@@ -243,6 +243,14 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  private func paintBackgroundsBehindCell(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
+    backgroundObject: RenderBoxWrapper?, backgroundPaintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll
   // create an extra anonymous RenderBlock to handle mixing directionality anyway, in which case we can lock
   // the block flow directionality of the cells to the table's directionality.
@@ -272,6 +280,37 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   // writing mode. Writing modes are not allowed on internal table boxes.
   // This means we can safely use the same style in all cases to simplify our code.
   func styleForCellFlow() -> RenderStyleWrapper { return table()!.style() }
+
+  override func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    let table = table()
+    if !table!.collapseBorders() && style().emptyCells() == .Hide && firstChild() == nil {
+      return
+    }
+
+    var paintRect = LayoutRectWrapper(location: paintOffset, size: frameRect().size())
+    adjustBorderBoxRectForPainting(paintRect: &paintRect)
+
+    let backgroundPainter = BackgroundPainter(renderer: self, paintInfo: paintInfo)
+    backgroundPainter.paintBoxShadow(paintRect: paintRect, style: style(), shadowStyle: .Normal)
+
+    // Paint our cell background.
+    paintBackgroundsBehindCell(
+      paintInfo: paintInfo, paintOffset: paintOffset, backgroundObject: self,
+      backgroundPaintOffset: paintOffset)
+
+    backgroundPainter.paintBoxShadow(paintRect: paintRect, style: style(), shadowStyle: .Inset)
+
+    if !style().hasBorder() || table!.collapseBorders() {
+      return
+    }
+
+    let borderPainter = BorderPainter(renderer: self, paintInfo: paintInfo)
+    borderPainter.paintBorder(rect: paintRect, style: style())
+  }
 
   private func cachedCollapsedLeftBorder(styleForCellFlow: RenderStyleWrapper)
     -> CollapsedBorderValue

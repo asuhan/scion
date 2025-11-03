@@ -900,6 +900,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func emptyCells() -> EmptyCell {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func listStyleType() -> ListStyleType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
