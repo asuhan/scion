@@ -513,8 +513,20 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func offsetTopForRowGroupBorder(
     cell: RenderTableCellWrapper?, borderSide: BoxSide, row: UInt32
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isLastRow = row + 1 == grid.count
+    let zero = LayoutUnit(value: UInt64(0))
+    if table()!.style().isHorizontalWritingMode() {
+      return rowPos[Int(row)]
+        + (row == 0 && borderSide == .Right
+          ? -outerBorderTop(styleForCellFlow: style())
+          : isLastRow && borderSide == .Left
+            ? outerBorderTop(styleForCellFlow: style()) : zero)
+    }
+    if table()!.style().isLeftToRightDirection() {
+      return (cell != nil ? cell!.y() + cell!.height() : zero)
+        + (borderSide == .Left ? outerBorderTop(styleForCellFlow: style()) : zero)
+    }
+    return borderSide == .Right ? -outerBorderTop(styleForCellFlow: style()) : zero
   }
 
   private func verticalRowGroupBorderHeight(
