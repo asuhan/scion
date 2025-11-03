@@ -434,6 +434,22 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     borderPainter.paintBorder(rect: paintRect, style: style())
   }
 
+  override func paintMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if style().usedVisibility() != .Visible || paintInfo.phase != .Mask {
+      return
+    }
+
+    let tableElt = table()!
+    if !tableElt.collapseBorders() && style().emptyCells() == .Hide && firstChild() == nil {
+      return
+    }
+
+    var paintRect = LayoutRectWrapper(location: paintOffset, size: frameRect().size())
+    adjustBorderBoxRectForPainting(paintRect: &paintRect)
+
+    paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
+  }
+
   private func cachedCollapsedLeftBorder(styleForCellFlow: RenderStyleWrapper)
     -> CollapsedBorderValue
   {
