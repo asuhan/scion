@@ -112,6 +112,16 @@ enum BorderStyle: UInt8 {
   case Double
 }
 
+enum BorderPrecedence: UInt8 {
+  case Off
+  case Table
+  case ColumnGroup
+  case Column
+  case RowGroup
+  case Row
+  case Cell
+}
+
 enum OutlineIsAuto: UInt8 {
   case Off
   case On

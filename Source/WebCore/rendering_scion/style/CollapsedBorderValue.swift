@@ -28,6 +28,8 @@ class CollapsedBorderValue {
     fatalError("Not implemented")
   }
 
+  func exists() -> Bool { return precedence != .Off }
+
   func isTransparent() -> Bool { return transparent }
 
   func isSameIgnoringColor(o: CollapsedBorderValue) -> Bool {
@@ -44,5 +46,6 @@ class CollapsedBorderValue {
 
   let color = ColorWrapper()
   let style: BorderStyle = .None  // BorderStyle
+  let precedence: BorderPrecedence = .Off  // BorderPrecedence
   private let transparent = false
 }

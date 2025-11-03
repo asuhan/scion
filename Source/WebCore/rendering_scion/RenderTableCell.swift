@@ -23,13 +23,14 @@
  */
 
 private struct CollapsedBorder {
-  let borderValue = CollapsedBorderValue()
-  let side: BoxSide = .Top
-  let x1 = LayoutUnit()
-  let y1 = LayoutUnit()
-  let x2 = LayoutUnit()
-  let y2 = LayoutUnit()
-  let style: BorderStyle = .None
+  var borderValue = CollapsedBorderValue()
+  var side: BoxSide = .Top
+  var shouldPaint = false
+  var x1 = LayoutUnit()
+  var y1 = LayoutUnit()
+  var x2 = LayoutUnit()
+  var y2 = LayoutUnit()
+  var style: BorderStyle = .None
 }
 
 private struct CollapsedBorders {
@@ -37,14 +38,26 @@ private struct CollapsedBorders {
     borderValue: CollapsedBorderValue, borderSide: BoxSide, shouldPaint: Bool, x1: LayoutUnit,
     y1: LayoutUnit, x2: LayoutUnit, y2: LayoutUnit, borderStyle: BorderStyle
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if borderValue.exists() && shouldPaint {
+      var border = CollapsedBorder()
+      border.borderValue = borderValue
+      border.side = borderSide
+      border.shouldPaint = shouldPaint
+      border.x1 = x1
+      border.x2 = x2
+      border.y1 = y1
+      border.y2 = y2
+      border.style = borderStyle
+      borders.append(border)
+    }
   }
 
   func nextBorder() -> CollapsedBorder? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var borders: [CollapsedBorder] = []
 }
 
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {
