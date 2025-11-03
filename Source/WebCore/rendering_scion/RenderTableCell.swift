@@ -188,8 +188,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(paintInfo.phase != .CollapsedTableBorders)
+    super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
   }
 
   func paintCollapsedBorders(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
