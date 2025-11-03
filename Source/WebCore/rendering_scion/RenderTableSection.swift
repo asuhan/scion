@@ -132,6 +132,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func outerBorderRight(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func outerBorderTop(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -555,8 +560,21 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func horizontalRowGroupBorderWidth(
     cell: RenderTableCellWrapper?, rowGroupRect: LayoutRectWrapper, row: UInt32, column: UInt32
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: UInt64(0))
+    if table()!.style().isHorizontalWritingMode() {
+      if table()!.style().isLeftToRightDirection() {
+        return rowGroupRect.width() - (cell != nil ? cell!.x() + cell!.width() : zero)
+          + (column == 0
+            ? outerBorderLeft(styleForCellFlow: style())
+            : column == table()!.numEffCols() ? outerBorderRight(styleForCellFlow: style()) : zero)
+      }
+      return cell != nil ? rowGroupRect.width() - (cell!.x() - cell!.width()) : zero
+    }
+    let isLastRow = row + 1 == grid.count
+    return rowPos[Int(row + 1)] - rowPos[Int(row)]
+      + (isLastRow
+        ? outerBorderLeft(styleForCellFlow: style())
+        : row == 0 ? outerBorderRight(styleForCellFlow: style()) : zero)
   }
 
   private func ensureRows(numRows: UInt32) {
