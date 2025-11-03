@@ -52,9 +52,15 @@ private struct CollapsedBorders {
     }
   }
 
-  func nextBorder() -> CollapsedBorder? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func nextBorder() -> CollapsedBorder? {
+    for (i, border) in borders.enumerated() {
+      if border.borderValue.exists() && border.shouldPaint {
+        borders[i].shouldPaint = false
+        return borders[i]
+      }
+    }
+
+    return nil
   }
 
   private var borders: [CollapsedBorder] = []
