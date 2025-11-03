@@ -1600,7 +1600,7 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_isOriginalDisplayListItemType(p)
   }
 
-  func visitedDependentColor(colorProperty: CSSPropertyID, paintBehavior: PaintBehavior)
+  func visitedDependentColor(colorProperty: CSSPropertyID, paintBehavior: PaintBehavior = [])
     -> ColorWrapper
   {
     // TODO(asuhan): implement this

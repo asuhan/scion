@@ -66,6 +66,20 @@ private struct CollapsedBorders {
   private var borders: [CollapsedBorder] = []
 }
 
+private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTableWrapper)
+  -> LayoutRectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func backgroundRectForSection(
+  tableSection: RenderTableSectionWrapper, table: RenderTableWrapper
+) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   func colSpan() -> UInt32 {
     // TODO(asuhan): implement this
@@ -245,10 +259,82 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
 
   private func paintBackgroundsBehindCell(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
-    backgroundObject: RenderBoxWrapper?, backgroundPaintOffset: LayoutPointWrapper
+    backgroundObject: RenderBoxWrapper, backgroundPaintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    if style().usedVisibility() != .Visible {
+      return
+    }
+
+    let tableElt = table()
+    if !tableElt!.collapseBorders() && style().emptyCells() == .Hide && firstChild() == nil {
+      return
+    }
+
+    let style = backgroundObject.style()
+    let bgLayer = style.backgroundLayers()
+
+    var color = style.visitedDependentColor(colorProperty: .CSSPropertyBackgroundColor)
+    if !bgLayer.hasImage() && !color.isVisible() {
+      return
+    }
+
+    color = style.colorByApplyingColorFilter(color: color)
+
+    var adjustedPaintOffset = paintOffset
+    if CPtrToInt(backgroundObject.p) != CPtrToInt(p) {
+      adjustedPaintOffset.moveBy(offset: location())
+    }
+
+    // Background images attached to the row or row group must span the row
+    // or row group. Draw them at the backgroundObject's dimensions, but
+    // clipped to this cell.
+    // FIXME: This should also apply to columns and column groups.
+    let paintBackgroundObject =
+      CPtrToInt(backgroundObject.p) != CPtrToInt(p) && bgLayer.hasImage()
+      && !(backgroundObject is RenderTableColWrapper)
+    // We have to clip here because the background would paint
+    // on top of the borders otherwise. This only matters for cells and rows.
+    let shouldClip =
+      paintBackgroundObject
+      || (backgroundObject.hasLayer()
+        && (CPtrToInt(backgroundObject.p) == CPtrToInt(p)
+          || CPtrToInt(backgroundObject.p) == CPtrToInt(parent()?.p))
+        && tableElt!.collapseBorders())
+    let _ = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: shouldClip)
+    if paintBackgroundObject {
+      paintInfo.context().clip(
+        rect: LayoutRectWrapper(location: adjustedPaintOffset, size: size()).FloatRect())
+    } else if shouldClip {
+      let clipRect = LayoutRectWrapper(
+        x: adjustedPaintOffset.x + borderLeft(), y: adjustedPaintOffset.y + borderTop(),
+        width: width() - borderLeft() - borderRight(),
+        height: height() - borderTop() - borderBottom())
+      paintInfo.context().clip(rect: clipRect.FloatRect())
+    }
+    var fillRect = LayoutRectWrapper()
+    if paintBackgroundObject {
+      if let tableSectionRenderer = backgroundObject as? RenderTableSectionWrapper {
+        fillRect = backgroundRectForSection(tableSection: tableSectionRenderer, table: tableElt!)
+      } else {
+        fillRect = backgroundRectForRow(tableRow: backgroundObject, table: tableElt!)
+      }
+      fillRect.moveBy(offset: backgroundPaintOffset)
+    } else {
+      fillRect = LayoutRectWrapper(location: adjustedPaintOffset, size: size())
+    }
+    let compositeOp = document().compositeOperatorForBackgroundColor(color: color, renderer: self)
+    let painter = BackgroundPainter(renderer: self, paintInfo: paintInfo)
+    if CPtrToInt(backgroundObject.p) != CPtrToInt(p) {
+      painter.setOverrideClip(overrideClip: .BorderBox)
+      painter.setOverrideOrigin(overrideOrigin: .BorderBox)
+    }
+    painter.paintFillLayers(
+      color: color, fillLayer: bgLayer, rect: fillRect, bleedAvoidance: .BackgroundBleedNone,
+      op: compositeOp, backgroundObject: backgroundObject)
   }
 
   // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll

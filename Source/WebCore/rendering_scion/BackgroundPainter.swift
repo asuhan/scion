@@ -153,6 +153,10 @@ class BackgroundPainter {
     self.overrideClip = overrideClip
   }
 
+  func setOverrideOrigin(overrideOrigin: FillBox) {
+    self.overrideOrigin = overrideOrigin
+  }
+
   func paintBackground(paintRect: LayoutRectWrapper, bleedAvoidance: BackgroundBleedAvoidance) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1288,5 +1292,5 @@ class BackgroundPainter {
   private let renderer: RenderBoxModelObjectWrapper
   private let paintInfo: PaintInfoWrapper
   private var overrideClip: FillBox?
-  private let overrideOrigin: FillBox? = nil
+  private var overrideOrigin: FillBox? = nil
 }
