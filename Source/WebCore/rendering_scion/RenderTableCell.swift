@@ -88,8 +88,32 @@ private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTable
 private func backgroundRectForSection(
   tableSection: RenderTableSectionWrapper, table: RenderTableWrapper
 ) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let rect = LayoutRectWrapper(location: LayoutPointWrapper(), size: tableSection.size())
+  if !table.collapseBorders() {
+    let hSpacing = table.hBorderSpacing()
+    let vSpacing = table.vBorderSpacing()
+    // All sections' size()s include unwanted vSpacing at the block-end
+    // position. The first section's size() includes additional unwanted
+    // vSpacing at the block-start position. All sections' size()s include
+    // unwanted hSpacing on both inline ends.
+    let beforeBlockSpacing =
+      CPtrToInt(tableSection.p) == CPtrToInt(table.topSection()?.p)
+      ? vSpacing : LayoutUnit(value: UInt64(0))
+    if table.style().isHorizontalWritingMode() {
+      rect.contract(
+        box: LayoutBoxExtent(
+          top: beforeBlockSpacing, right: hSpacing, bottom: vSpacing, left: hSpacing))
+    } else if table.style().isFlippedBlocksWritingMode() {
+      rect.contract(
+        box: LayoutBoxExtent(
+          top: hSpacing, right: beforeBlockSpacing, bottom: hSpacing, left: vSpacing))
+    } else {
+      rect.contract(
+        box: LayoutBoxExtent(
+          top: hSpacing, right: vSpacing, bottom: hSpacing, left: beforeBlockSpacing))
+    }
+  }
+  return rect
 }
 
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {

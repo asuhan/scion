@@ -88,6 +88,12 @@ class RenderTableWrapper: RenderBlockWrapper {
     let span: Int32 = 1
   }
 
+  // This function returns nil if the table has no section.
+  func topSection() -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func bottomSection() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
