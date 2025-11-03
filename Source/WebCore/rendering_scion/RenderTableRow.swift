@@ -61,6 +61,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func setRowIndex(rowIndex: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func section() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -38,6 +38,11 @@ enum CollapsedBorderSide {
 
 private let gMaxAllowedOverflowingCellRatioForFastPaintPath: Float32 = 0.1
 
+private func setRowLogicalHeightToRowStyleLogicalHeight(row: RenderTableSectionWrapper.RowStruct) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func compareCellPositions(
   elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
 ) -> Bool {
@@ -109,7 +114,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   struct RowStruct {
-    let rowRenderer: RenderTableRowWrapper? = nil
+    var rowRenderer: RenderTableRowWrapper? = nil
   }
 
   func cellAt(row: UInt32, col: UInt32) -> CellStruct {
@@ -181,8 +186,22 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func willInsertTableRow(child: RenderTableRowWrapper, beforeChild: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if beforeChild != nil {
+      setNeedsCellRecalc()
+    }
+
+    let insertionRow = cRow
+    cRow += 1
+    cCol = 0
+
+    ensureRows(numRows: cRow)
+
+    grid[Int(insertionRow)].rowRenderer = child
+    child.setRowIndex(rowIndex: insertionRow)
+
+    if beforeChild == nil {
+      setRowLogicalHeightToRowStyleLogicalHeight(row: grid[Int(insertionRow)])
+    }
   }
 
   private func paintCell(
@@ -493,6 +512,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func ensureRows(numRows: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
   private func logicalRectForWritingModeAndDirection(rect: LayoutRectWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
@@ -509,7 +533,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  private let grid: [RowStruct] = []
+  private var grid: [RowStruct] = []
+
+  // the current insertion position
+  var cCol: UInt32 = 0
+  var cRow: UInt32 = 0
 
   // This HashSet holds the overflowing cells for faster painting.
   // If we have more than gMaxAllowedOverflowingCellRatio * total cells, it will be empty
