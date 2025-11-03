@@ -104,6 +104,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func colElement(col: UInt32) -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func sectionAbove(
     section: RenderTableSectionWrapper?,
     skipEmptySections: SkipEmptySectionsValue = .DoNotSkipEmptySections

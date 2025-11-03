@@ -127,6 +127,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func col() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextCell() -> RenderTableCellWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -178,6 +183,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func borderAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -293,7 +303,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     }
   }
 
-  private func paintBackgroundsBehindCell(
+  func paintBackgroundsBehindCell(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
     backgroundObject: RenderBoxWrapper, backgroundPaintOffset: LayoutPointWrapper
   ) {

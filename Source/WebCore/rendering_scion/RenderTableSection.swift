@@ -156,10 +156,48 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func paintCell(
-    cell: RenderTableCellWrapper, paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+    cell: RenderTableCellWrapper, paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let cellPoint = flipForWritingModeForChild(child: cell, point: paintOffset)
+    let paintPhase = paintInfo.phase
+    let row = cell.parent() as! RenderTableRowWrapper
+
+    if paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground {
+      // We need to handle painting a stack of backgrounds.  This stack (from bottom to top) consists of
+      // the column group, column, row group, row, and then the cell.
+
+      // Column groups and columns first.
+      // FIXME: Columns and column groups do not currently support opacity, and they are being painted "too late" in
+      // the stack, since we have already opened a transparency layer (potentially) for the table row group.
+      // Note that we deliberately ignore whether or not the cell has a layer, since these backgrounds paint "behind" the
+      // cell.
+      if let column = table()!.colElement(col: cell.col()) {
+        if let columnGroup = column.enclosingColumnGroup() {
+          cell.paintBackgroundsBehindCell(
+            paintInfo: paintInfo, paintOffset: cellPoint, backgroundObject: columnGroup,
+            backgroundPaintOffset: cellPoint)
+        }
+        cell.paintBackgroundsBehindCell(
+          paintInfo: paintInfo, paintOffset: cellPoint, backgroundObject: column,
+          backgroundPaintOffset: cellPoint)
+      }
+
+      // Paint the row group next.
+      cell.paintBackgroundsBehindCell(
+        paintInfo: paintInfo, paintOffset: cellPoint, backgroundObject: self,
+        backgroundPaintOffset: paintOffset)
+
+      // Paint the row next, but only if it doesn't have a layer.  If a row has a layer, it will be responsible for
+      // painting the row background for the cell.
+      if !row.hasSelfPaintingLayer() {
+        cell.paintBackgroundsBehindCell(
+          paintInfo: paintInfo, paintOffset: cellPoint, backgroundObject: row,
+          backgroundPaintOffset: cellPoint)
+      }
+    }
+    if !cell.hasSelfPaintingLayer() && !row.hasSelfPaintingLayer() {
+      cell.paint(paintInfo: &paintInfo, paintOffset: cellPoint)
+    }
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -249,7 +287,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
             {
               continue
             }
-            paintCell(cell: cell!, paintInfo: paintInfo, paintOffset: paintOffset)
+            paintCell(cell: cell!, paintInfo: &paintInfo, paintOffset: paintOffset)
           }
         }
       }
@@ -310,7 +348,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
         }
       } else {
         for cell in cells {
-          paintCell(cell: *cell, paintInfo: paintInfo, paintOffset: paintOffset)
+          paintCell(cell: *cell, paintInfo: &paintInfo, paintOffset: paintOffset)
         }
       }
     }

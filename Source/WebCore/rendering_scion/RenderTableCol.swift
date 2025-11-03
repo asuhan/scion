@@ -33,4 +33,9 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func enclosingColumnGroup() -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
