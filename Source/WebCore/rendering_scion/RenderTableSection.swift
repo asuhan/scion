@@ -407,8 +407,20 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     paintInfo: PaintInfoWrapper, antialias: Bool, rect: LayoutRectWrapper, side: BoxSide,
     borderColor: CSSPropertyID, borderStyle: BorderStyle, tableBorderStyle: BorderStyle
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if tableBorderStyle == .Hidden {
+      return
+    }
+    var rect = rect
+    rect.intersect(other: paintInfo.rect)
+    if rect.isEmpty() {
+      return
+    }
+    BorderPainter.drawLineForBoxSide(
+      graphicsContext: paintInfo.context(), document: document(), rect: rect.FloatRect(),
+      side: side,
+      color: style().visitedDependentColorWithColorFilter(colorProperty: borderColor),
+      borderStyle: borderStyle,
+      adjacentWidth1: 0, adjacentWidth2: 0, antialias: antialias)
   }
 
   private func paintRowGroupBorderIfRequired(
@@ -487,8 +499,15 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func offsetLeftForRowGroupBorder(
     cell: RenderTableCellWrapper?, rowGroupRect: LayoutRectWrapper, row: UInt32
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if table()!.style().isHorizontalWritingMode() {
+      if table()!.style().isLeftToRightDirection() {
+        return cell != nil ? cell!.x() + cell!.width() : LayoutUnit(value: UInt64(0))
+      }
+      return -outerBorderLeft(styleForCellFlow: style())
+    }
+    let isLastRow = row + 1 == grid.count
+    return rowGroupRect.width() - rowPos[Int(row + 1)]
+      + (isLastRow ? -outerBorderLeft(styleForCellFlow: style()) : LayoutUnit(value: UInt64(0)))
   }
 
   private func offsetTopForRowGroupBorder(
@@ -534,6 +553,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private var grid: [RowStruct] = []
+  private let rowPos: [LayoutUnit] = []
 
   // the current insertion position
   var cCol: UInt32 = 0
