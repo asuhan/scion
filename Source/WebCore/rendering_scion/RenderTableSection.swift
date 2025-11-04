@@ -688,8 +688,32 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     flippedRect: LayoutRectWrapper,
     shouldIncludeAllIntersectionCells: ShouldIncludeAllIntersectingCells
   ) -> CellSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Find the first row that starts after rect top.
+    var nextRow = rowPos.partitioningIndex(where: { r in r > flippedRect.y() })
+    if shouldIncludeAllIntersectionCells == .IncludeAllIntersectingCells && nextRow != 0
+      && rowPos[nextRow - 1] == flippedRect.y()
+    {
+      nextRow -= 1
+    }
+
+    if nextRow == rowPos.count {
+      return CellSpan(start: UInt32(rowPos.count - 1), end: UInt32(rowPos.count - 1))  // After all rows.
+    }
+
+    let startRow = nextRow > 0 ? nextRow - 1 : 0
+
+    // Find the first row that starts after rect bottom.
+    var endRow = 0
+    if rowPos[nextRow] >= flippedRect.maxY() {
+      endRow = nextRow
+    } else {
+      endRow = rowPos[nextRow...].partitioningIndex(where: { c in c > flippedRect.maxY() })
+      if endRow == rowPos.count {
+        endRow = rowPos.count - 1
+      }
+    }
+
+    return CellSpan(start: UInt32(startRow), end: UInt32(endRow))
   }
 
   private func spannedColumns(
