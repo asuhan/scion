@@ -425,6 +425,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func adjustIntrinsicLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct ComputedMarginValues {
     var before = LayoutUnit()
     var after = LayoutUnit()
@@ -747,8 +752,32 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeContentAndScrollbarLogicalHeightUsing(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if height.isAuto() {
+      if heightType != .MinSize {
+        return nil
+      }
+      if intrinsicContentHeight != nil && isFlexItem()
+        && (parent() as! RenderFlexibleBoxWrapper).shouldApplyMinBlockSizeAutoForFlexItem(
+          flexItem: self)
+      {
+        return adjustIntrinsicLogicalHeightForBoxSizing(height: intrinsicContentHeight!)
+      }
+      return LayoutUnit(value: 0)
+    }
+    // FIXME: The CSS sizing spec is considering changing what min-content/max-content should resolve to.
+    // If that happens, this code will have to change.
+    if height.isIntrinsic() || height.isLegacyIntrinsic() {
+      return computeIntrinsicLogicalContentHeightUsing(
+        logicalHeightLength: height, intrinsicContentHeight: intrinsicContentHeight,
+        borderAndPadding: borderAndPaddingLogicalHeight())
+    }
+    if height.isFixed() {
+      return LayoutUnit(value: height.value())
+    }
+    if height.isPercentOrCalculated() {
+      return computePercentageLogicalHeight(height: height)
+    }
+    return nil
   }
 
   func computeReplacedLogicalHeightUsing(heightType: SizeType, logicalHeight: LengthWrapper)
@@ -1610,6 +1639,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return false
+  }
+
+  private func computeIntrinsicLogicalContentHeightUsing(
+    logicalHeightLength: LengthWrapper, intrinsicContentHeight: LayoutUnit?,
+    borderAndPadding: LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func shouldComputeSizeAsReplaced() -> Bool {

@@ -252,6 +252,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return max(LayoutUnit(value: UInt64(0)), result)
   }
 
+  override func adjustIntrinsicLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintExcludedChildrenInBorder(
     paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {

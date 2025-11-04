@@ -55,4 +55,9 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func shouldApplyMinBlockSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

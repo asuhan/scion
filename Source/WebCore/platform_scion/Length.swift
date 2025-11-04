@@ -144,6 +144,11 @@ struct LengthWrapper: Equatable {
     return isPercent() || isCalculated()
   }
 
+  func isIntrinsic() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isIntrinsicOrAuto() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -155,6 +160,11 @@ struct LengthWrapper: Equatable {
 
   func nonNanCalculatedValue(maxValue: Float32) -> Float32 {
     return wk_interop.Length_nonNanCalculatedValue(p, maxValue)
+  }
+
+  func isLegacyIntrinsic() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func == (a: LengthWrapper, b: LengthWrapper) -> Bool {
