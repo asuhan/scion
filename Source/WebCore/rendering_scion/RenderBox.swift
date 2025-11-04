@@ -1854,7 +1854,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(view().frameView().hasFlippedBlockRenderers())
+
+    let containerBlock = containingBlock()
+    if containerBlock == nil || CPtrToInt(containerBlock!.p) == CPtrToInt(p) {
+      return location()
+    }
+
+    return containerBlock!.flipForWritingModeForChild(child: self, point: location())
   }
 }
