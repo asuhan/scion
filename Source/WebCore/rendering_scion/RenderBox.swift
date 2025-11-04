@@ -34,6 +34,13 @@ private func outermostBlockContainingFloatingObject(box: RenderBoxWrapper)
   fatalError("Not implemented")
 }
 
+private func shouldFlipBeforeAfterMargins(
+  containingBlockStyle: RenderStyleWrapper, childStyle: RenderStyleWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func tableCellShouldHaveZeroInitialSize(
   block: RenderBlockWrapper, child: RenderBoxWrapper, scrollsOverflowY: Bool
 ) -> Bool {
@@ -382,8 +389,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   struct ComputedMarginValues {
-    let before = LayoutUnit()
-    let after = LayoutUnit()
+    var before = LayoutUnit()
+    var after = LayoutUnit()
     let start = LayoutUnit()
     let end = LayoutUnit()
   }
@@ -391,7 +398,27 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   struct LogicalExtentComputedValues {
     var extent: LayoutUnit
     let position: LayoutUnit
-    let margins = ComputedMarginValues()
+    var margins = ComputedMarginValues()
+  }
+
+  // Resolve auto margins in the inline direction of the containing block so that objects can be pushed to the start, middle or end
+  // of the containing block.
+  func computeInlineDirectionMargins(
+    containingBlock: RenderBlockWrapper, containerWidth: LayoutUnit,
+    availableSpaceAdjustedWithFloats: LayoutUnit?, childWidth: LayoutUnit,
+    marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Used to resolve margins in the containing block's block-flow direction.
+  func computeBlockDirectionMargins(
+    containingBlock: RenderBlockWrapper, marginBefore: inout LayoutUnit,
+    marginAfter: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   enum RenderBoxFragmentInfoFlags {
@@ -430,6 +457,67 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
+    var computedValues = LogicalExtentComputedValues(extent: logicalHeight, position: logicalTop)
+
+    // Cell height is managed by the table and inline non-replaced elements do not support a height property.
+    if isRenderTableCell() || (isInline() && !isReplacedOrInlineBlock()) {
+      return computedValues
+    }
+
+    if isOutOfFlowPositioned() {
+      computePositionedLogicalHeight(computedValues: &computedValues)
+    } else {
+      let cb = containingBlock()!
+      let hasPerpendicularContainingBlock =
+        cb.isHorizontalWritingMode() != isHorizontalWritingMode()
+
+      if !hasPerpendicularContainingBlock {
+        let shouldFlipBeforeAfter = cb.style().writingMode() != style().writingMode()
+        if shouldFlipBeforeAfter {
+          computeBlockDirectionMargins(
+            containingBlock: cb,
+            marginBefore: &computedValues.margins.after,
+            marginAfter: &computedValues.margins.before)
+        } else {
+          computeBlockDirectionMargins(
+            containingBlock: cb,
+            marginBefore: &computedValues.margins.before,
+            marginAfter: &computedValues.margins.after)
+        }
+      }
+
+      // For tables, calculate margins only.
+      if isRenderTable() {
+        if shouldComputeLogicalHeightFromAspectRatio() {
+          computedValues.extent = RenderBoxWrapper.blockSizeFromAspectRatio(
+            borderPaddingInlineSum: horizontalBorderAndPaddingExtent(),
+            borderPaddingBlockSum: verticalBorderAndPaddingExtent(),
+            aspectRatio: style().logicalAspectRatio(), boxSizing: style().boxSizingForAspectRatio(),
+            inlineSize: logicalWidth(),
+            aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+        }
+        if hasPerpendicularContainingBlock {
+          let shouldFlipBeforeAfter = shouldFlipBeforeAfterMargins(
+            containingBlockStyle: cb.style(), childStyle: style())
+          if shouldFlipBeforeAfter {
+            computeInlineDirectionMargins(
+              containingBlock: cb, containerWidth: containingBlockLogicalWidthForContent(),
+              availableSpaceAdjustedWithFloats: nil, childWidth: computedValues.extent,
+              marginStart: &computedValues.margins.after, marginEnd: &computedValues.margins.before)
+          } else {
+            computeInlineDirectionMargins(
+              containingBlock: cb, containerWidth: containingBlockLogicalWidthForContent(),
+              availableSpaceAdjustedWithFloats: nil, childWidth: computedValues.extent,
+              marginStart: &computedValues.margins.before, marginEnd: &computedValues.margins.after)
+          }
+        }
+        return computedValues
+      }
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1344,6 +1432,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     boxSizing: BoxSizing, inlineSize: LayoutUnit, aspectRatioType: AspectRatioType,
     isRenderReplaced: Bool
   ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
