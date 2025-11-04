@@ -707,6 +707,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func intrinsicLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Whether or not the element shrinks to its intrinsic width (rather than filling the width
   // of a containing block).  HTML4 buttons, <select>s, <input>s, legends, and floating/compact elements do this.
   enum SizeType {
@@ -783,8 +788,87 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalHeightUsing(heightType: SizeType, logicalHeight: LengthWrapper)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(heightType == .MinSize || heightType == .MainOrPreferredSize || !logicalHeight.isAuto())
+    // This function should get called with SizeType::MinSize/SizeType::MaxSize only if replacedMinMaxLogicalHeightComputesAsNone
+    // returns false, otherwise we should not try to compute those values as they may be incorrect. The caller
+    // should make sure this condition holds before calling this function
+    if heightType == .MinSize || heightType == .MaxSize {
+      assert(!replacedMinMaxLogicalHeightComputesAsNone(sizeType: heightType))
+    }
+    if heightType == .MinSize && logicalHeight.isAuto() {
+      return adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit(value: 0))
+    }
+
+    switch logicalHeight.type() {
+    case .Fixed:
+      return adjustContentBoxLogicalHeightForBoxSizing(
+        height: LayoutUnit(value: logicalHeight.value()))
+    case .Percent, .Calculated:
+      var container = isOutOfFlowPositioned() ? self.container() : containingBlock()
+      while container != nil && container!.isAnonymousForPercentageResolution() {
+        // Stop at rendering context root.
+        if container is RenderViewWrapper {
+          break
+        }
+        container = container!.containingBlock()
+      }
+      let hasPerpendicularContainingBlock =
+        container!.isHorizontalWritingMode() != isHorizontalWritingMode()
+      var stretchedHeight: LayoutUnit? = nil
+      if let block = container as? RenderBlockWrapper {
+        block.addPercentHeightDescendant(descendant: self)
+        if let usedFlexItemOverridingLogicalHeightForPercentageResolutionForFlex =
+          (block.isFlexItem()
+            ? (block.parent() as! RenderFlexibleBoxWrapper)
+              .usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: block) : nil)
+        {
+          stretchedHeight = block.overridingContentLogicalHeight(
+            overridingLogicalHeight:
+              usedFlexItemOverridingLogicalHeightForPercentageResolutionForFlex)
+        } else if let usedChildOverridingLogicalHeightForGrid =
+          (block.isGridItem() && !hasPerpendicularContainingBlock
+            ? block.overridingLogicalHeight() : nil)
+        {
+          stretchedHeight = block.overridingContentLogicalHeight(
+            overridingLogicalHeight: usedChildOverridingLogicalHeightForGrid)
+        }
+      }
+
+      // FIXME: This calculation is not patched for block-flow yet.
+      // https://bugs.webkit.org/show_bug.cgi?id=46500
+      if container!.isOutOfFlowPositioned()
+        && container!.style().height().isAuto()
+        && !(container!.style().top().isAuto() || container!.style().bottom().isAuto())
+      {  // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if isOutOfFlowPositioned() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else if stretchedHeight != nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else if let gridAreaLogicalHeight =
+        isGridItem() ? overridingContainingBlockContentLogicalHeight() : nil,
+        gridAreaLogicalHeight.bool()
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .MinContent, .MaxContent, .FitContent, .FillAvailable:
+      return adjustContentBoxLogicalHeightForBoxSizing(
+        height: computeIntrinsicLogicalContentHeightUsing(
+          logicalHeightLength: logicalHeight, intrinsicContentHeight: intrinsicLogicalHeight(),
+          borderAndPadding: borderAndPaddingLogicalHeight()))
+    default:
+      return intrinsicLogicalHeight()
+    }
   }
 
   func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
