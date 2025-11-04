@@ -108,8 +108,37 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func constrainContentBoxLogicalHeightByMinMax(
     logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the min/max height and logical height are both percentages we take advantage of already knowing the current resolved percentage height
+    // to avoid recursing up through our containing blocks again to determine it.
+    let styleToUse = style()
+    var logicalHeight = logicalHeight
+    if !styleToUse.logicalMaxHeight().isUndefined() {
+      if styleToUse.logicalMaxHeight().isPercent() && styleToUse.logicalHeight().isPercent() {
+        let availableLogicalHeight = logicalHeight / styleToUse.logicalHeight().value() * 100
+        logicalHeight = min(
+          logicalHeight,
+          valueForLength(
+            length: styleToUse.logicalMaxHeight(), maximumValue: availableLogicalHeight))
+      } else if let maxH = computeContentLogicalHeight(
+        heightType: .MaxSize, height: styleToUse.logicalMaxHeight(),
+        intrinsicContentHeight: intrinsicContentHeight)
+      {
+        logicalHeight = min(logicalHeight, maxH)
+      }
+    }
+
+    if styleToUse.logicalMinHeight().isPercent() && styleToUse.logicalHeight().isPercent() {
+      let availableLogicalHeight = logicalHeight / styleToUse.logicalHeight().value() * 100
+      logicalHeight = max(
+        logicalHeight,
+        valueForLength(length: styleToUse.logicalMinHeight(), maximumValue: availableLogicalHeight))
+    } else if let computedContentLogicalHeight = computeContentLogicalHeight(
+      heightType: .MinSize, height: styleToUse.logicalMinHeight(),
+      intrinsicContentHeight: intrinsicContentHeight)
+    {
+      logicalHeight = max(logicalHeight, computedContentLogicalHeight)
+    }
+    return logicalHeight
   }
 
   func location() -> LayoutPointWrapper {
@@ -401,6 +430,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Whether or not the element shrinks to its intrinsic width (rather than filling the width
+  // of a containing block).  HTML4 buttons, <select>s, <input>s, legends, and floating/compact elements do this.
+  enum SizeType {
+    case MainOrPreferredSize
+    case MinSize
+    case MaxSize
+  }
+
+  func computeContentLogicalHeight(
+    heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
+  ) -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
