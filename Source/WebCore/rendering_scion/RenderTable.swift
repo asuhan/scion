@@ -88,6 +88,8 @@ class RenderTableWrapper: RenderBlockWrapper {
     let span: Int32 = 1
   }
 
+  func columnPositions() -> [LayoutUnit] { return columnPos }
+
   // This function returns nil if the table has no section.
   func topSection() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
@@ -281,6 +283,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  let columnPos: [LayoutUnit] = []
   let columns: [ColumnStruct] = []
 
   private let collapsedBorders = CollapsedBorderValues()

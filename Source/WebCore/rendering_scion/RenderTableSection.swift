@@ -601,8 +601,21 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
   // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
   private func logicalRectForWritingModeAndDirection(rect: LayoutRectWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var tableAlignedRect = rect
+
+    flipForWritingMode(rect: &tableAlignedRect)
+
+    if !style().isHorizontalWritingMode() {
+      tableAlignedRect = tableAlignedRect.transposedRect()
+    }
+
+    let columnPos = table()!.columnPositions()
+    // The table's writing mode determines in which direction the rows flow.
+    if !table()!.style().isLeftToRightDirection() {
+      tableAlignedRect.setX(x: columnPos[columnPos.count - 1] - tableAlignedRect.maxX())
+    }
+
+    return tableAlignedRect
   }
 
   private func dirtiedRows(damageRect: LayoutRectWrapper) -> CellSpan {
