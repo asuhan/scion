@@ -733,8 +733,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeContentLogicalHeight(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let heightIncludingScrollbar = computeContentAndScrollbarLogicalHeightUsing(
+      heightType: heightType, height: height, intrinsicContentHeight: intrinsicContentHeight)
+    {
+      return max(
+        LayoutUnit(value: 0),
+        adjustContentBoxLogicalHeightForBoxSizing(height: heightIncludingScrollbar)
+          - scrollbarLogicalHeight())
+    }
+    return nil
   }
 
   func computeContentAndScrollbarLogicalHeightUsing(
