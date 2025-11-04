@@ -330,6 +330,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func collapsedMarginBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collapsedMarginAfter() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -490,6 +495,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return computedValues
     }
 
+    var h = LengthWrapper()
     if isOutOfFlowPositioned() {
       computePositionedLogicalHeight(computedValues: &computedValues)
     } else {
@@ -548,7 +554,6 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       let treatAsReplaced = shouldComputeSizeAsReplaced() && (!inHorizontalBox || !stretching)
       var checkMinMaxHeight = false
 
-      var h = LengthWrapper()
       // The parent box is flexing us, so it has increased or decreased our height.  We have to
       // grab our cached flexible height.
       // FIXME: Account for block-flow in flexible boxes.
@@ -613,12 +618,57 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         heightResult = LayoutUnit(value: h.value())
       }
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      computedValues.extent = heightResult
+
+      if hasPerpendicularContainingBlock {
+        let shouldFlipBeforeAfter = shouldFlipBeforeAfterMargins(
+          containingBlockStyle: cb.style(), childStyle: style())
+        if shouldFlipBeforeAfter {
+          computeInlineDirectionMargins(
+            containingBlock: cb, containerWidth: containingBlockLogicalWidthForContent(),
+            availableSpaceAdjustedWithFloats: nil, childWidth: heightResult,
+            marginStart: &computedValues.margins.after,
+            marginEnd: &computedValues.margins.before)
+        } else {
+          computeInlineDirectionMargins(
+            containingBlock: cb, containerWidth: containingBlockLogicalWidthForContent(),
+            availableSpaceAdjustedWithFloats: nil, childWidth: heightResult,
+            marginStart: &computedValues.margins.before,
+            marginEnd: &computedValues.margins.after)
+        }
+      }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // WinIE quirk: The <html> block always fills the entire canvas in quirks mode. The <body> always fills the
+    // <html> block in quirks mode. Only apply this quirk if the block is normal flow and no height
+    // is specified. When we're printing, we also need this quirk if the body or root has a percentage
+    // height since we don't set a height in RenderView when we're printing. So without this quirk, the
+    // height has nothing to be a percentage of, and it ends up being 0. That is bad.
+    if stretchesToViewport() || paginatedContentNeedsBaseHeight(h: h) {
+      let margins = collapsedMarginBefore() + collapsedMarginAfter()
+      let visibleHeight = view().pageOrViewLogicalHeight()
+      if isDocumentElementRenderer() {
+        computedValues.extent = max(computedValues.extent, visibleHeight - margins)
+      } else {
+        let marginsBordersPadding =
+          margins + parentBox()!.marginBefore() + parentBox()!.marginAfter()
+          + parentBox()!.borderAndPaddingLogicalHeight()
+        computedValues.extent = max(computedValues.extent, visibleHeight - marginsBordersPadding)
+      }
+    }
+    return computedValues
+  }
+
+  private func paginatedContentNeedsBaseHeight(h: LengthWrapper) -> Bool {
+    if !document().printing() || !h.isPercentOrCalculated() || isInline() {
+      return false
+    }
+    if isDocumentElementRenderer() {
+      return true
+    }
+    let documentElementRenderer = document().documentElement()!.renderer()
+    return isBody() && CPtrToInt(parent()?.p) == CPtrToInt(documentElementRenderer?.p)
+      && documentElementRenderer!.style().logicalHeight().isPercentOrCalculated()
   }
 
   private func boxBorderBefore() -> LayoutUnit {
@@ -637,6 +687,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func boxPaddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func stretchesToViewport() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
