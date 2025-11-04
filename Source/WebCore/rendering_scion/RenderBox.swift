@@ -1446,8 +1446,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shrinkToAvoidFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Floating objects don't shrink.  Objects that don't avoid floats don't shrink.  Marquees don't shrink.
+    if (isInline() && !isHTMLMarquee()) || !avoidsFloats() || isFloating() {
+      return false
+    }
+
+    // Only auto width objects can possibly shrink to avoid floats.
+    return style().width().isAuto()
   }
 
   func avoidsFloats() -> Bool {
