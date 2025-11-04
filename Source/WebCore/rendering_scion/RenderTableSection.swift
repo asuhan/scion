@@ -609,6 +609,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func fullTableColumnSpan() -> CellSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
   private func logicalRectForWritingModeAndDirection(rect: LayoutRectWrapper) -> LayoutRectWrapper {
     var tableAlignedRect = rect
@@ -651,8 +656,26 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func dirtiedColumns(damageRect: LayoutRectWrapper) -> CellSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if forceSlowPaintPathWithOverflowingCell {
+      return fullTableColumnSpan()
+    }
+
+    var coveredColumns = spannedColumns(
+      flippedRect: damageRect, shouldIncludeAllIntersectionCells: .IncludeAllIntersectingCells)
+
+    let columnPos = table()!.columnPositions()
+    // To repaint the border we might need to repaint first or last column even if they are not spanned themselves.
+    if coveredColumns.start >= columnPos.count - 1
+      && columnPos[columnPos.count - 1] + table()!.outerBorderEnd() >= damageRect.x()
+    {
+      coveredColumns.start -= 1
+    }
+
+    if coveredColumns.end == 0 && columnPos[0] - table()!.outerBorderStart() <= damageRect.maxX() {
+      coveredColumns.end += 1
+    }
+
+    return coveredColumns
   }
 
   // These two functions take a rectangle as input that has been flipped by logicalRectForWritingModeAndDirection.

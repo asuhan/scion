@@ -79,6 +79,16 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func outerBorderStart() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outerBorderEnd() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func outerBorderTop() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
