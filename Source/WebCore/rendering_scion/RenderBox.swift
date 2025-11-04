@@ -414,6 +414,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
   }
 
+  // Overridden by fieldsets to subtract out the intrinsic border.
+  func adjustBorderBoxLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -707,13 +713,40 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeightUsing(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if self is RenderReplacedWrapper {
+      if (heightType == .MinSize || heightType == .MaxSize)
+        && !replacedMinMaxLogicalHeightComputesAsNone(sizeType: heightType)
+      {
+        return computeReplacedLogicalHeightUsing(heightType: heightType, logicalHeight: height)
+          + borderAndPaddingLogicalHeight()
+      }
+      return nil
+    }
+    if let logicalHeight = computeContentAndScrollbarLogicalHeightUsing(
+      heightType: heightType, height: height, intrinsicContentHeight: intrinsicContentHeight)
+    {
+      return adjustBorderBoxLogicalHeightForBoxSizing(height: logicalHeight)
+    }
+    return nil
   }
 
   func computeContentLogicalHeight(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeContentAndScrollbarLogicalHeightUsing(
+    heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
+  ) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeReplacedLogicalHeightUsing(heightType: SizeType, logicalHeight: LengthWrapper)
+    -> LayoutUnit
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1623,6 +1656,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     boxSizing: BoxSizing, inlineSize: LayoutUnit, aspectRatioType: AspectRatioType,
     isRenderReplaced: Bool
   ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func replacedMinMaxLogicalHeightComputesAsNone(sizeType: SizeType) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
