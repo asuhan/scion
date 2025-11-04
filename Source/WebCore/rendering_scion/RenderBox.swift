@@ -22,6 +22,11 @@
 
 import wk_interop
 
+enum AvailableLogicalHeightType {
+  case ExcludeMarginBorderPadding
+  case IncludeMarginBorderPadding
+}
+
 enum OverlayScrollbarSizeRelevancy {
   case IgnoreOverlayScrollbarSize
   case IncludeOverlayScrollbarSize
@@ -496,6 +501,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func containingBlockLogicalHeightForPositioned(
+    containingBlock: RenderBoxModelObjectWrapper, checkForPerpendicularWritingMode: Bool = true
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
@@ -839,28 +858,56 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       if container!.isOutOfFlowPositioned()
         && container!.style().height().isAuto()
         && !(container!.style().top().isAuto() || container!.style().bottom().isAuto())
-      {  // TODO(asuhan): implement this
-        fatalError("Not implemented")
+      {
+        let block = container as! RenderBlockWrapper
+        let computedValues = block.computeLogicalHeight(
+          logicalHeight: block.logicalHeight(), logicalTop: LayoutUnit(value: 0))
+        let newContentWithScrollbarHeight =
+          computedValues.extent - block.borderAndPaddingLogicalHeight()
+        let newContentHeight = newContentWithScrollbarHeight - block.scrollbarLogicalHeight()
+        return adjustContentBoxLogicalHeightForBoxSizing(
+          height: valueForLength(length: logicalHeight, maximumValue: newContentHeight))
       }
 
+      var availableHeight = LayoutUnit()
       if isOutOfFlowPositioned() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        availableHeight = containingBlockLogicalHeightForPositioned(
+          containingBlock: container as! RenderBoxModelObjectWrapper)
       } else if stretchedHeight != nil {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        availableHeight = stretchedHeight!
       } else if let gridAreaLogicalHeight =
         isGridItem() ? overridingContainingBlockContentLogicalHeight() : nil,
         gridAreaLogicalHeight.bool()
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        availableHeight = gridAreaLogicalHeight
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        availableHeight =
+          hasPerpendicularContainingBlock
+          ? containingBlockLogicalWidthForContent()
+          : containingBlockLogicalHeightForContent(heightType: .IncludeMarginBorderPadding)
+        // It is necessary to use the border-box to match WinIE's broken
+        // box model. This is essential for sizing inside
+        // table cells using percentage heights.
+        // FIXME: This needs to be made block-flow-aware. If the cell and image are perpendicular block-flows, this isn't right.
+        // https://bugs.webkit.org/show_bug.cgi?id=46997
+        while container != nil && !(container is RenderViewWrapper)
+          && (container!.style().logicalHeight().isAuto()
+            || container!.style().logicalHeight().isPercentOrCalculated())
+        {
+          if container!.isRenderTableCell() {
+            // Don't let table cells squeeze percent-height replaced elements
+            // <http://bugs.webkit.org/show_bug.cgi?id=15359>
+            availableHeight = max(availableHeight, intrinsicLogicalHeight())
+            return valueForLength(
+              length: logicalHeight, maximumValue: availableHeight - borderAndPaddingLogicalHeight()
+            )
+          }
+          (container as! RenderBlockWrapper).addPercentHeightDescendant(descendant: self)
+          container = container!.containingBlock()
+        }
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return adjustContentBoxLogicalHeightForBoxSizing(
+        height: valueForLength(length: logicalHeight, maximumValue: availableHeight))
     case .MinContent, .MaxContent, .FitContent, .FillAvailable:
       return adjustContentBoxLogicalHeightForBoxSizing(
         height: computeIntrinsicLogicalContentHeightUsing(
