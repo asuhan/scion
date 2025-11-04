@@ -112,6 +112,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func constrainLogicalHeightByMinMax(
+    logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func constrainContentBoxLogicalHeightByMinMax(
     logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit {
@@ -229,6 +236,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutRectWrapper(location: location, size: size)
   }
 
+  // Note these functions are not equivalent of childrenOfType<RenderBox>
+  func parentBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func firstChildBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -281,6 +294,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     let width = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_width(p))
     let height = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_height(p))
     return LayoutSizeWrapper(width: width, height: height)
+  }
+
+  func contentLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func paddingBoxWidth() -> LayoutUnit {
@@ -555,16 +573,44 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         && parent()!.style().boxOrient() == .Horizontal
         && (parent() as! RenderDeprecatedFlexibleBoxWrapper).isStretchingChildren()
       {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        h = LengthWrapper(
+          value: parentBox()!.contentLogicalHeight() - marginBefore() - marginAfter(), type: .Fixed)
+        checkMinMaxHeight = false
       }
 
+      var heightResult = LayoutUnit()
       if checkMinMaxHeight {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        // Callers passing LayoutUnit::max() for logicalHeight means an indefinite height, so
+        // translate this to a nullopt intrinsic height for further logical height computations.
+        var intrinsicHeight: LayoutUnit? = nil
+        if computedValues.extent != LayoutUnit.max() {
+          intrinsicHeight = computedValues.extent
+        }
+        if shouldComputeLogicalHeightFromAspectRatio() {
+          if intrinsicHeight != nil && style().boxSizing() == .ContentBox {
+            intrinsicHeight! -=
+              boxBorderBefore() + boxPaddingBefore() + boxBorderAfter() + boxPaddingAfter()
+          }
+          heightResult = RenderBoxWrapper.blockSizeFromAspectRatio(
+            borderPaddingInlineSum: horizontalBorderAndPaddingExtent(),
+            borderPaddingBlockSum: verticalBorderAndPaddingExtent(),
+            aspectRatio: style().logicalAspectRatio(), boxSizing: style().boxSizingForAspectRatio(),
+            inlineSize: logicalWidth(),
+            aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+        } else {
+          if intrinsicHeight != nil {
+            intrinsicHeight! -= borderAndPaddingLogicalHeight()
+          }
+          heightResult =
+            computeLogicalHeightUsing(
+              heightType: .MainOrPreferredSize, height: h, intrinsicContentHeight: intrinsicHeight)
+            ?? computedValues.extent
+        }
+        heightResult = constrainLogicalHeightByMinMax(
+          logicalHeight: heightResult, intrinsicContentHeight: intrinsicHeight)
       } else {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        assert(h.isFixed())
+        heightResult = LayoutUnit(value: h.value())
       }
 
       // TODO(asuhan): implement this
@@ -575,12 +621,39 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func boxBorderBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func boxBorderAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func boxPaddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func boxPaddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Whether or not the element shrinks to its intrinsic width (rather than filling the width
   // of a containing block).  HTML4 buttons, <select>s, <input>s, legends, and floating/compact elements do this.
   enum SizeType {
     case MainOrPreferredSize
     case MinSize
     case MaxSize
+  }
+
+  func computeLogicalHeightUsing(
+    heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
+  ) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computeContentLogicalHeight(
