@@ -283,7 +283,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  let columnPos: [LayoutUnit] = []
+  private let columnPos: [LayoutUnit] = []
   let columns: [ColumnStruct] = []
 
   private let collapsedBorders = CollapsedBorderValues()
