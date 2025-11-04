@@ -720,8 +720,38 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     flippedRect: LayoutRectWrapper,
     shouldIncludeAllIntersectionCells: ShouldIncludeAllIntersectingCells
   ) -> CellSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let columnPos = table()!.columnPositions()
+
+    // Find the first column that starts after rect left.
+    // lower_bound doesn't handle the edge between two cells properly as it would wrongly return the
+    // cell on the logical top/left.
+    // upper_bound on the other hand properly returns the cell on the logical bottom/right, which also
+    // matches the behavior of other browsers.
+    var nextColumn = columnPos.partitioningIndex(where: { c in c > flippedRect.x() })
+    if shouldIncludeAllIntersectionCells == .IncludeAllIntersectingCells && nextColumn != 0
+      && columnPos[nextColumn - 1] == flippedRect.x()
+    {
+      nextColumn -= 1
+    }
+
+    if nextColumn == columnPos.count {
+      return CellSpan(start: UInt32(columnPos.count - 1), end: UInt32(columnPos.count - 1))  // After all columns.
+    }
+
+    let startColumn = nextColumn > 0 ? nextColumn - 1 : 0
+
+    // Find the first column that starts after rect right.
+    var endColumn = 0
+    if columnPos[nextColumn] >= flippedRect.maxX() {
+      endColumn = nextColumn
+    } else {
+      endColumn = columnPos[nextColumn...].partitioningIndex(where: { c in c > flippedRect.maxX() })
+      if endColumn == columnPos.count {
+        endColumn = columnPos.count - 1
+      }
+    }
+
+    return CellSpan(start: UInt32(startColumn), end: UInt32(endColumn))
   }
 
   private var grid: [RowStruct] = []
