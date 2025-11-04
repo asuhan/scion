@@ -25,8 +25,8 @@
 
 // Helper class for paintObject.
 private struct CellSpan {
-  let start: UInt32
-  let end: UInt32
+  var start: UInt32
+  var end: UInt32
 }
 
 enum CollapsedBorderSide {
@@ -215,6 +215,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     if beforeChild == nil {
       setRowLogicalHeightToRowStyleLogicalHeight(row: grid[Int(insertionRow)])
     }
+  }
+
+  private enum ShouldIncludeAllIntersectingCells {
+    case IncludeAllIntersectingCells
+    case DoNotIncludeAllIntersectingCells
   }
 
   private func paintCell(
@@ -599,6 +604,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  private func fullTableRowSpan() -> CellSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Flip the rect so it aligns with the coordinates used by the rowPos and columnPos vectors.
   private func logicalRectForWritingModeAndDirection(rect: LayoutRectWrapper) -> LayoutRectWrapper {
     var tableAlignedRect = rect
@@ -619,11 +629,50 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func dirtiedRows(damageRect: LayoutRectWrapper) -> CellSpan {
+    if forceSlowPaintPathWithOverflowingCell {
+      return fullTableRowSpan()
+    }
+
+    var coveredRows = spannedRows(
+      flippedRect: damageRect, shouldIncludeAllIntersectionCells: .IncludeAllIntersectingCells)
+
+    // To repaint the border we might need to repaint first or last row even if they are not spanned themselves.
+    if coveredRows.start >= rowPos.count - 1
+      && rowPos[rowPos.count - 1] + table()!.outerBorderAfter() >= damageRect.y()
+    {
+      coveredRows.start -= 1
+    }
+
+    if coveredRows.end == 0 && rowPos[0] - table()!.outerBorderBefore() <= damageRect.maxY() {
+      coveredRows.end += 1
+    }
+
+    return coveredRows
+  }
+
+  private func dirtiedColumns(damageRect: LayoutRectWrapper) -> CellSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func dirtiedColumns(damageRect: LayoutRectWrapper) -> CellSpan {
+  // These two functions take a rectangle as input that has been flipped by logicalRectForWritingModeAndDirection.
+  // The returned span of rows or columns is end-exclusive, and empty if start==end.
+  // The IncludeAllIntersectingCells argument is used to determine which cells to include when
+  // an edge of the flippedRect lies exactly on a cell boundary. Using IncludeAllIntersectingCells
+  // will return both cells, and using DoNotIncludeAllIntersectingCells will return only the cell
+  // that hittesting should return.
+  private func spannedRows(
+    flippedRect: LayoutRectWrapper,
+    shouldIncludeAllIntersectionCells: ShouldIncludeAllIntersectingCells
+  ) -> CellSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func spannedColumns(
+    flippedRect: LayoutRectWrapper,
+    shouldIncludeAllIntersectionCells: ShouldIncludeAllIntersectingCells
+  ) -> CellSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -640,5 +689,6 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   // and m_forceSlowPaintPathWithOverflowingCell will be set to save memory.
   private let overflowingCells = WeakHashSet<RenderTableCellWrapper>()
 
+  private let forceSlowPaintPathWithOverflowingCell = false
   private let hasMultipleCellLevels = false
 }
