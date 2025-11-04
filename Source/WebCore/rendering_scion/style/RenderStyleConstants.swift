@@ -254,6 +254,23 @@ enum MarqueeBehavior: UInt8 {
   case Alternate
 }
 
+// Deprecated Flexible Box Properties
+
+enum BoxAlignment: UInt8 {
+  case Stretch
+  case Start
+  case Center
+  case End
+  case Baseline
+}
+
+enum BoxOrient: UInt8 {
+  case Horizontal
+  case Vertical
+}
+
+// CSS3 Flexbox Properties
+
 enum FlexDirection: UInt8 {
   case Row
   case RowReverse

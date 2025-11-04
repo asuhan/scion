@@ -870,6 +870,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Virtual function helpers for the deprecated Flexible Box Layout (display: -webkit-box).
+  func isRenderDeprecatedFlexibleBox() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Virtual function helper for the new FlexibleBox Layout (display: -webkit-flex).
   func isRenderFlexibleBox() -> Bool {
     // TODO(asuhan): implement this

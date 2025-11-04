@@ -595,6 +595,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func boxAlign() -> BoxAlignment {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func boxOrient() -> BoxOrient {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func columnCount() -> UInt16 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

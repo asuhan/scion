@@ -375,6 +375,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // These are currently only used by Flexbox code. In some cases we must layout flex items with a different main size
+  // (the size in the main direction) than the one specified by the item in order to compute the value of flex basis, i.e.,
+  // the initial main size of the flex item before the free space is distributed.
+  func overridingLogicalHeightLength() -> LengthWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }
@@ -514,6 +522,51 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         return computedValues
       }
 
+      // FIXME: Account for block-flow in flexible boxes.
+      // https://bugs.webkit.org/show_bug.cgi?id=46418
+      let inHorizontalBox =
+        parent()!.isRenderDeprecatedFlexibleBox() && parent()!.style().boxOrient() == .Horizontal
+      let stretching = parent()!.style().boxAlign() == .Stretch
+      let treatAsReplaced = shouldComputeSizeAsReplaced() && (!inHorizontalBox || !stretching)
+      var checkMinMaxHeight = false
+
+      var h = LengthWrapper()
+      // The parent box is flexing us, so it has increased or decreased our height.  We have to
+      // grab our cached flexible height.
+      // FIXME: Account for block-flow in flexible boxes.
+      // https://bugs.webkit.org/show_bug.cgi?id=46418
+      if let overridingLogicalHeightForFlexOrGrid =
+        (parent()!.isFlexibleBoxIncludingDeprecated() || parent()!.isRenderGrid()
+          ? overridingLogicalHeight() : nil)
+      {
+        h = LengthWrapper(value: overridingLogicalHeightForFlexOrGrid, type: .Fixed)
+      } else if treatAsReplaced {
+        h = LengthWrapper(
+          value: computeReplacedLogicalHeight() + borderAndPaddingLogicalHeight(), type: .Fixed)
+      } else {
+        h = overridingLogicalHeightLength() ?? style().logicalHeight()
+        checkMinMaxHeight = true
+      }
+
+      // Block children of horizontal flexible boxes fill the height of the box.
+      // FIXME: Account for block-flow in flexible boxes.
+      // https://bugs.webkit.org/show_bug.cgi?id=46418
+      if h.isAuto() && (parent() is RenderDeprecatedFlexibleBoxWrapper)
+        && parent()!.style().boxOrient() == .Horizontal
+        && (parent() as! RenderDeprecatedFlexibleBoxWrapper).isStretchingChildren()
+      {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if checkMinMaxHeight {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      } else {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -533,6 +586,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeContentLogicalHeight(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1384,6 +1442,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return false
+  }
+
+  func shouldComputeSizeAsReplaced() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func skipContainingBlockForPercentHeightCalculation(

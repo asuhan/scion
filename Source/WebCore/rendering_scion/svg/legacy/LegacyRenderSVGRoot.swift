@@ -22,4 +22,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {}
+final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
+  override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
