@@ -42,8 +42,25 @@ private func outermostBlockContainingFloatingObject(box: RenderBoxWrapper)
 private func shouldFlipBeforeAfterMargins(
   containingBlockStyle: RenderStyleWrapper, childStyle: RenderStyleWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(containingBlockStyle.isHorizontalWritingMode() != childStyle.isHorizontalWritingMode())
+  let childBlockFlowDirection = childStyle.blockFlowDirection()
+  var shouldFlip = false
+  switch containingBlockStyle.blockFlowDirection() {
+  case .TopToBottom:
+    shouldFlip = (childBlockFlowDirection == .RightToLeft)
+  case .BottomToTop:
+    shouldFlip = (childBlockFlowDirection == .RightToLeft)
+  case .RightToLeft:
+    shouldFlip = (childBlockFlowDirection == .BottomToTop)
+  case .LeftToRight:
+    shouldFlip = (childBlockFlowDirection == .BottomToTop)
+  }
+
+  if !containingBlockStyle.isLeftToRightDirection() {
+    shouldFlip = !shouldFlip
+  }
+
+  return shouldFlip
 }
 
 private func isOrthogonal(renderer: RenderBoxWrapper, ancestor: RenderElementWrapper) -> Bool {
