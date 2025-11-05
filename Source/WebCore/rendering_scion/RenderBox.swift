@@ -61,6 +61,10 @@ private func tableCellShouldHaveZeroInitialSize(
     && (!cell.style().logicalHeight().isAuto() || !cell.table()!.style().logicalHeight().isAuto())
 }
 
+private func allowMinMaxPercentagesInAutoHeightBlocksQuirk() -> Bool {
+  return false
+}
+
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func requiresLayerWithScrollableArea() -> Bool {
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
@@ -1844,8 +1848,35 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func replacedMinMaxLogicalHeightComputesAsNone(sizeType: SizeType) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(sizeType == .MinSize || sizeType == .MaxSize)
+
+    let logicalHeight =
+      sizeType == .MinSize ? style().logicalMinHeight() : style().logicalMaxHeight()
+    let initialLogicalHeight =
+      sizeType == .MinSize
+      ? RenderStyleWrapper.initialMinSize() : RenderStyleWrapper.initialMaxSize()
+
+    if logicalHeight == initialLogicalHeight {
+      return true
+    }
+
+    if logicalHeight.isPercentOrCalculated(),
+      let overridingContainingBlockContentLogicalHeight =
+        overridingContainingBlockContentLogicalHeight()
+    {
+      return !overridingContainingBlockContentLogicalHeight.bool()
+    }
+
+    // Make sure % min-height and % max-height resolve to none if the containing block has auto height.
+    // Note that the "height" case for replaced elements was handled by hasReplacedLogicalHeight, which is why
+    // min and max-height are the only ones handled here.
+    // FIXME: For now we put in a quirk for iBooks until we can move them to viewport units.
+    if let cb = containingBlockForAutoHeightDetection(logicalHeight: logicalHeight) {
+      return allowMinMaxPercentagesInAutoHeightBlocksQuirk()
+        ? false : cb.hasAutoHeightOrContainingBlockWithAutoHeight()
+    }
+
+    return false
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {

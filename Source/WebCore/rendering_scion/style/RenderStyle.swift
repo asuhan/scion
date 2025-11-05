@@ -1807,6 +1807,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  static func initialMinSize() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func initialMaxSize() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func offsetPath() -> PathOperation? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -245,6 +245,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     case Yes
   }
 
+  func hasAutoHeightOrContainingBlockWithAutoHeight(
+    updatePercentageDescendants: UpdatePercentageHeightDescendants = .Yes
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -292,6 +299,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   )
     -> LayoutSizeWrapper
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containingBlockForAutoHeightDetection(logicalHeight: LengthWrapper) -> RenderBlockWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
