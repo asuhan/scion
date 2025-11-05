@@ -38,6 +38,7 @@ target_sources(layout_scion PRIVATE
     RenderBlock.swift
     RenderBlockFlow.swift
     RenderBox.swift
+    RenderBoxFragmentInfo.swift
     RenderBoxModelObject.swift
     RenderButton.swift
     RenderChildIterator.swift

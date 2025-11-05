@@ -890,5 +890,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not reached")
   }
 
+  func fragmentAtBlockOffset(blockOffset: LayoutUnit) -> RenderFragmentContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var floatingObjectSet: FloatingObjectSet? = nil
 }

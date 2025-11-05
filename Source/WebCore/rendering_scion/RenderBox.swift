@@ -65,6 +65,14 @@ private func allowMinMaxPercentagesInAutoHeightBlocksQuirk() -> Bool {
   return false
 }
 
+private func computeBlockStaticDistance(
+  logicalTop: LengthWrapper, logicalBottom: LengthWrapper, child: RenderBoxWrapper?,
+  containerBlock: RenderBoxModelObjectWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func requiresLayerWithScrollableArea() -> Bool {
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
@@ -447,8 +455,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   struct LogicalExtentComputedValues {
+    init(extent: LayoutUnit = LayoutUnit(), position: LayoutUnit = LayoutUnit()) {
+      self.extent = extent
+      self.position = position
+    }
+
     var extent: LayoutUnit
-    let position: LayoutUnit
+    var position: LayoutUnit
     var margins = ComputedMarginValues()
   }
 
@@ -721,6 +734,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func boxPaddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func renderBoxFragmentInfo(
+    fragment: RenderFragmentContainerWrapper?,
+    cacheFlag: RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
+  ) -> RenderBoxFragmentInfo? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1880,6 +1901,140 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
+    if isReplacedOrInlineBlock() {
+      computePositionedLogicalHeightReplaced(computedValues: computedValues)
+      return
+    }
+
+    // The following is based off of the W3C Working Draft from April 11, 2006 of
+    // CSS 2.1: Section 10.6.4 "Absolutely positioned, non-replaced elements"
+    // <http://www.w3.org/TR/2005/WD-CSS21-20050613/visudet.html#abs-non-replaced-height>
+    // (block-style-comments in this function and in computePositionedLogicalHeightUsing()
+    // correspond to text from the spec)
+
+    // We don't use containingBlock(), since we may be positioned by an enclosing relpositioned inline.
+    let containerBlock = container() as! RenderBoxModelObjectWrapper
+
+    let containerLogicalHeight = containingBlockLogicalHeightForPositioned(
+      containingBlock: containerBlock)
+
+    let styleToUse = style()
+    let bordersPlusPadding = borderAndPaddingLogicalHeight()
+    let marginBefore = styleToUse.marginBefore()
+    let marginAfter = styleToUse.marginAfter()
+    let logicalTopLength = styleToUse.logicalTop()
+    let logicalBottomLength = styleToUse.logicalBottom()
+
+    /*---------------------------------------------------------------------------*\
+     * For the purposes of this section and the next, the term "static position"
+     * (of an element) refers, roughly, to the position an element would have had
+     * in the normal flow. More precisely, the static position for 'top' is the
+     * distance from the top edge of the containing block to the top margin edge
+     * of a hypothetical box that would have been the first box of the element if
+     * its 'position' property had been 'static' and 'float' had been 'none'. The
+     * value is negative if the hypothetical box is above the containing block.
+     *
+     * But rather than actually calculating the dimensions of that hypothetical
+     * box, user agents are free to make a guess at its probable position.
+     *
+     * For the purposes of calculating the static position, the containing block
+     * of fixed positioned elements is the initial containing block instead of
+     * the viewport.
+    \*---------------------------------------------------------------------------*/
+
+    // see FIXME 1
+    // Calculate the static distance if needed.
+    computeBlockStaticDistance(
+      logicalTop: logicalTopLength, logicalBottom: logicalBottomLength, child: self,
+      containerBlock: containerBlock)
+
+    // Calculate constraint equation values for 'height' case.
+    let logicalHeight = computedValues.extent
+    computePositionedLogicalHeightUsing(
+      heightType: .MainOrPreferredSize, logicalHeightLength: styleToUse.logicalHeight(),
+      containerBlock: containerBlock, containerLogicalHeight: containerLogicalHeight,
+      bordersPlusPadding: bordersPlusPadding, logicalHeight: logicalHeight,
+      logicalTop: logicalTopLength, logicalBottom: logicalBottomLength, marginBefore: marginBefore,
+      marginAfter: marginAfter,
+      computedValues: &computedValues)
+
+    // Avoid doing any work in the common case (where the values of min-height and max-height are their defaults).
+    // see FIXME 2
+
+    // Calculate constraint equation values for 'max-height' case.
+    if !styleToUse.logicalMaxHeight().isUndefined() {
+      var maxValues = LogicalExtentComputedValues()
+
+      computePositionedLogicalHeightUsing(
+        heightType: .MaxSize, logicalHeightLength: styleToUse.logicalMaxHeight(),
+        containerBlock: containerBlock, containerLogicalHeight: containerLogicalHeight,
+        bordersPlusPadding: bordersPlusPadding, logicalHeight: logicalHeight,
+        logicalTop: logicalTopLength, logicalBottom: logicalBottomLength,
+        marginBefore: marginBefore,
+        marginAfter: marginAfter,
+        computedValues: &maxValues)
+
+      if computedValues.extent > maxValues.extent {
+        computedValues.extent = maxValues.extent
+        computedValues.position = maxValues.position
+        computedValues.margins.before = maxValues.margins.before
+        computedValues.margins.after = maxValues.margins.after
+      }
+    }
+
+    // Calculate constraint equation values for 'min-height' case.
+    let logicalMinHeight = styleToUse.logicalMinHeight()
+    if logicalMinHeight.isAuto() || !logicalMinHeight.isZero() || logicalMinHeight.isIntrinsic() {
+      var minValues = LogicalExtentComputedValues()
+
+      computePositionedLogicalHeightUsing(
+        heightType: .MinSize, logicalHeightLength: styleToUse.logicalMinHeight(),
+        containerBlock: containerBlock, containerLogicalHeight: containerLogicalHeight,
+        bordersPlusPadding: bordersPlusPadding, logicalHeight: logicalHeight,
+        logicalTop: logicalTopLength, logicalBottom: logicalBottomLength,
+        marginBefore: marginBefore,
+        marginAfter: marginAfter,
+        computedValues: &minValues)
+
+      if computedValues.extent < minValues.extent {
+        computedValues.extent = minValues.extent
+        computedValues.position = minValues.position
+        computedValues.margins.before = minValues.margins.before
+        computedValues.margins.after = minValues.margins.after
+      }
+    }
+
+    // Set final height value.
+    computedValues.extent += bordersPlusPadding
+
+    // Adjust logicalTop if we need to for perpendicular writing modes in fragments.
+    // FIXME: Add support for other types of objects as containerBlock, not only RenderBlock.
+    if enclosingFragmentedFlow() != nil
+      && isHorizontalWritingMode() != containerBlock.isHorizontalWritingMode(),
+      let renderBox = containerBlock as? RenderBlockWrapper
+    {
+      assert(containerBlock.canHaveBoxInfoInFragment())
+      let cbPageOffset = renderBox.offsetFromLogicalTopOfFirstPage() - logicalLeft()
+      if let cbFragment = renderBox.fragmentAtBlockOffset(blockOffset: cbPageOffset),
+        let boxInfo = renderBox.renderBoxFragmentInfo(fragment: cbFragment)
+      {
+        computedValues.position = computedValues.position + boxInfo.logicalLeft
+      }
+    }
+  }
+
+  private func computePositionedLogicalHeightUsing(
+    heightType: SizeType, logicalHeightLength: LengthWrapper,
+    containerBlock: RenderBoxModelObjectWrapper, containerLogicalHeight: LayoutUnit,
+    bordersPlusPadding: LayoutUnit, logicalHeight: LayoutUnit, logicalTop: LengthWrapper,
+    logicalBottom: LengthWrapper, marginBefore: LengthWrapper, marginAfter: LengthWrapper,
+    computedValues: inout LogicalExtentComputedValues
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computePositionedLogicalHeightReplaced(computedValues: LogicalExtentComputedValues) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

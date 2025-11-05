@@ -208,6 +208,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
         p, baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
+  func canHaveBoxInfoInFragment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func continuation() -> RenderBoxModelObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
