@@ -163,12 +163,50 @@ private func computeBlockStaticDistance(
 // The logicalTop concept is confusing here. It's the logical top from the child's POV. This means that is the physical
 // y if the child is vertical or the physical x if the child is horizontal.
 private func computeLogicalTopPositionedOffset(
-  logicalTopPos: LayoutUnit, child: RenderBoxWrapper, logicalHeightValue: LayoutUnit,
+  logicalTopPos: inout LayoutUnit, child: RenderBoxWrapper, logicalHeightValue: LayoutUnit,
   containerBlock: RenderBoxModelObjectWrapper, containerLogicalHeightForPositioned: LayoutUnit,
   logicalTopIsAuto: Bool, logicalBottomIsAuto: Bool
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let logicalTopAndBottomAreAuto = logicalTopIsAuto && logicalBottomIsAuto
+  let haveOrthogonalWritingModes = isOrthogonal(renderer: child, ancestor: containerBlock)
+  let haveFlippedBlockAxis =
+    child.style().isFlippedBlocksWritingMode()
+    != containerBlock.style().isFlippedBlocksWritingMode()
+  let isOverconstrained =
+    !logicalTopIsAuto && !logicalBottomIsAuto && !child.style().logicalHeight().isAuto()
+
+  // Deal with differing writing modes here.  Our offset needs to be in the containing block's coordinate space. If the containing block is flipped
+  // along this axis, then we need to flip the coordinate.  This can only happen if the containing block is both a flipped mode and perpendicular to us.
+  if !isOverconstrained {
+    if logicalTopIsAuto && logicalBottomIsAuto
+      && shouldFlipStaticPositionInParent(outOfFlowBox: child, containerBlock: containerBlock)
+    {
+      // Let's finish computing static top postion inside parents with flipped writing mode now that we've got final height value.
+      // see details in computeBlockStaticDistance.
+      logicalTopPos -= logicalHeightValue
+    }
+    if (haveOrthogonalWritingModes && !logicalTopAndBottomAreAuto
+      && child.style().isFlippedBlocksWritingMode())
+      || (haveFlippedBlockAxis && !haveOrthogonalWritingModes)
+    {
+      logicalTopPos = containerLogicalHeightForPositioned - logicalHeightValue - logicalTopPos
+    }
+  }
+
+  // Our offset is from the logical bottom edge in a flipped environment, e.g., right for vertical-rl and bottom for horizontal-bt.
+  if containerBlock.style().isFlippedBlocksWritingMode() && !haveOrthogonalWritingModes {
+    if child.isHorizontalWritingMode() {
+      logicalTopPos += containerBlock.borderBottom()
+    } else {
+      logicalTopPos += containerBlock.borderRight()
+    }
+  } else {
+    if child.isHorizontalWritingMode() {
+      logicalTopPos += containerBlock.borderTop()
+    } else {
+      logicalTopPos += containerBlock.borderLeft()
+    }
+  }
 }
 
 private func shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: RenderBoxWrapper) -> Bool {
@@ -2379,7 +2417,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // Use computed values to calculate the vertical position.
     computedValues.position = logicalTopValue + computedValues.margins.before
     computeLogicalTopPositionedOffset(
-      logicalTopPos: computedValues.position, child: self,
+      logicalTopPos: &computedValues.position, child: self,
       logicalHeightValue: logicalHeightValue + bordersPlusPadding, containerBlock: containerBlock,
       containerLogicalHeightForPositioned: containerLogicalHeight,
       logicalTopIsAuto: style().logicalTop().isAuto(),
@@ -2533,10 +2571,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // or not.
 
     // Use computed values to calculate the vertical position.
-    let logicalTopPos = logicalTopValue + computedValues.margins.before
+    var logicalTopPos = logicalTopValue + computedValues.margins.before
     // Border and padding have already been included in computedValues.m_extent.
     computeLogicalTopPositionedOffset(
-      logicalTopPos: logicalTopPos, child: self, logicalHeightValue: computedValues.extent,
+      logicalTopPos: &logicalTopPos, child: self, logicalHeightValue: computedValues.extent,
       containerBlock: containerBlock, containerLogicalHeightForPositioned: containerLogicalHeight,
       logicalTopIsAuto: originalLogicalTop.isAuto(),
       logicalBottomIsAuto: originalLogicalBottom.isAuto())
