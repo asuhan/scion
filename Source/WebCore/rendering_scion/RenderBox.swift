@@ -89,6 +89,11 @@ private func computeLogicalTopPositionedOffset(
   fatalError("Not implemented")
 }
 
+private func shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: RenderBoxWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func requiresLayerWithScrollableArea() -> Bool {
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
@@ -1647,8 +1652,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldComputeLogicalHeightFromAspectRatio() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldIgnoreAspectRatio() {
+      return false
+    }
+
+    if shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: self) {
+      return false
+    }
+
+    let h = style().logicalHeight()
+    return h.isAuto() || h.isIntrinsic()
+      || (!isOutOfFlowPositioned() && h.isPercentOrCalculated()
+        && !percentageLogicalHeightIsResolvable())
   }
 
   func updateFloatPainterAfterSelfPaintingLayerChange() {
@@ -1881,6 +1896,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       && !containingBlock.isOutOfFlowPositioned() && !containingBlock.isRenderGrid()
       && !containingBlock.isFlexibleBoxIncludingDeprecated()
       && containingBlock.style().logicalHeight().isAuto()
+  }
+
+  private func shouldIgnoreAspectRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func blockSizeFromAspectRatio(
