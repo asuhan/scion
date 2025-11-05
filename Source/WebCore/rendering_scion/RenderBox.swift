@@ -90,8 +90,30 @@ private func computeLogicalTopPositionedOffset(
 }
 
 private func shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: RenderBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !renderer.isOutOfFlowPositioned() {
+    return false
+  }
+
+  let style = renderer.style()
+  if !style.logicalWidth().isAuto() {
+    // Not applicable for aspect ratio computation.
+    return false
+  }
+  // When both left and right are set, the out-of-flow positioned box is horizontally constrained and aspect ratio for the logical width is not applicable.
+  let hasConstrainedWidth =
+    (!style.logicalLeft().isAuto() && !style.logicalRight().isAuto())
+    || renderer.intrinsicLogicalWidth().bool()
+  if hasConstrainedWidth {
+    return false
+  }
+
+  // When both top and bottom are set, the out-of-flow positioned box is vertically constrained and it can be used as if it had a non-auto height value.
+  let hasConstrainedHeight = !style.logicalTop().isAuto() && !style.logicalBottom().isAuto()
+  if !hasConstrainedHeight {
+    return false
+  }
+  // FIXME: This could probably be omitted and let the callers handle the height check (as they seem to be doing anyway).
+  return style.logicalHeight().isAuto()
 }
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
@@ -776,6 +798,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func stretchesToViewport() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intrinsicLogicalWidth() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
