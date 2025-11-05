@@ -89,8 +89,22 @@ private func allowMinMaxPercentagesInAutoHeightBlocksQuirk() -> Bool {
 private func shouldFlipStaticPositionInParent(
   outOfFlowBox: RenderBoxWrapper, containerBlock: RenderBoxModelObjectWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(outOfFlowBox.isOutOfFlowPositioned())
+
+  let parent = outOfFlowBox.parent()
+  if parent == nil || CPtrToInt(parent!.p) == CPtrToInt(containerBlock.p)
+    || parent is RenderBlockWrapper
+  {
+    return false
+  }
+  if parent is RenderGridWrapper {
+    // FIXME: Out-of-flow grid item's static position computation is non-existent and enabling proper flipping
+    // without implementing the logic in grid layout makes us fail a couple of WPT tests -we pass them now accidentally.
+    return false
+  }
+  // FIXME: While this ensures flipping when parent is a writing root, computeBlockStaticDistance still does not
+  // properly flip when the parent itself is not a writing root but an ancestor between this parent and out-of-flow's containing block.
+  return parent!.style().isFlippedBlocksWritingMode() && parent!.isWritingModeRoot()
 }
 
 private func computeBlockStaticDistance(
