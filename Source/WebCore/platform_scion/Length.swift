@@ -62,6 +62,11 @@ struct LengthWrapper: Equatable {
     self.p = p
   }
 
+  func setValue(type: LengthType, value: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func value() -> Float32 {
     return wk_interop.Length_value(p)
   }

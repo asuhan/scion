@@ -1926,7 +1926,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
     if isReplacedOrInlineBlock() {
-      computePositionedLogicalHeightReplaced(computedValues: computedValues)
+      computePositionedLogicalHeightReplaced(computedValues: &computedValues)
       return
     }
 
@@ -2252,9 +2252,161 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       logicalBottomIsAuto: style().logicalBottom().isAuto())
   }
 
-  private func computePositionedLogicalHeightReplaced(computedValues: LogicalExtentComputedValues) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func computePositionedLogicalHeightReplaced(
+    computedValues: inout LogicalExtentComputedValues
+  ) {
+    // The following is based off of the W3C Working Draft from April 11, 2006 of
+    // CSS 2.1: Section 10.6.5 "Absolutely positioned, replaced elements"
+    // <http://www.w3.org/TR/2005/WD-CSS21-20050613/visudet.html#abs-replaced-height>
+    // (block-style-comments in this function correspond to text from the spec and
+    // the numbers correspond to numbers in spec)
+
+    // We don't use containingBlock(), since we may be positioned by an enclosing relpositioned inline.
+    let containerBlock = container() as! RenderBoxModelObjectWrapper
+
+    let containerLogicalHeight = containingBlockLogicalHeightForPositioned(
+      containingBlock: containerBlock)
+    let containerRelativeLogicalWidth = containingBlockLogicalWidthForPositioned(
+      containingBlock: containerBlock, fragment: nil, checkForPerpendicularWritingMode: false)
+
+    // Variables to solve.
+    let marginBefore = style().marginBefore()
+    let marginAfter = style().marginAfter()
+
+    let originalLogicalTop = style().logicalTop()
+    let originalLogicalBottom = style().logicalBottom()
+    let logicalTop = originalLogicalTop
+    let logicalBottom = originalLogicalBottom
+
+    /*-----------------------------------------------------------------------*\
+     * 1. The used value of 'height' is determined as for inline replaced
+     *    elements.
+    \*-----------------------------------------------------------------------*/
+    // NOTE: This value of height is final in that the min/max height calculations
+    // are dealt with in computeReplacedHeight().  This means that the steps to produce
+    // correct max/min in the non-replaced version, are not necessary.
+    computedValues.extent = computeReplacedLogicalHeight() + borderAndPaddingLogicalHeight()
+    let availableSpace = containerLogicalHeight - computedValues.extent
+
+    /*-----------------------------------------------------------------------*\
+     * 2. If both 'top' and 'bottom' have the value 'auto', replace 'top'
+     *    with the element's static position.
+    \*-----------------------------------------------------------------------*/
+    // see FIXME 1
+    computeBlockStaticDistance(
+      logicalTop: logicalTop, logicalBottom: logicalBottom, child: self,
+      containerBlock: containerBlock)
+
+    /*-----------------------------------------------------------------------*\
+     * 3. If 'bottom' is 'auto', replace any 'auto' on 'margin-top' or
+     *    'margin-bottom' with '0'.
+    \*-----------------------------------------------------------------------*/
+    // FIXME: The spec. says that this step should only be taken when bottom is
+    // auto, but if only top is auto, this makes step 4 impossible.
+    if logicalTop.isAuto() || logicalBottom.isAuto() {
+      if marginBefore.isAuto() {
+        marginBefore.setValue(type: .Fixed, value: Int32(0))
+      }
+      if marginAfter.isAuto() {
+        marginAfter.setValue(type: .Fixed, value: Int32(0))
+      }
+    }
+
+    /*-----------------------------------------------------------------------*\
+     * 4. If at this point both 'margin-top' and 'margin-bottom' are still
+     *    'auto', solve the equation under the extra constraint that the two
+     *    margins must get equal values.
+    \*-----------------------------------------------------------------------*/
+    var logicalTopValue = LayoutUnit()
+    var logicalBottomValue = LayoutUnit()
+
+    if marginBefore.isAuto() && marginAfter.isAuto() {
+      // 'top' and 'bottom' cannot be 'auto' due to step 2 and 3 combined.
+      assert(!(logicalTop.isAuto() || logicalBottom.isAuto()))
+
+      logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+      logicalBottomValue = valueForLength(
+        length: logicalBottom, maximumValue: containerLogicalHeight)
+
+      let difference = availableSpace - (logicalTopValue + logicalBottomValue)
+      // NOTE: This may result in negative values.
+      computedValues.margins.before = difference / 2  // split the difference
+      computedValues.margins.after = difference - computedValues.margins.before  // account for odd valued differences
+
+      /*-----------------------------------------------------------------------*\
+     * 5. If at this point there is only one 'auto' left, solve the equation
+     *    for that value.
+    \*-----------------------------------------------------------------------*/
+    } else if logicalTop.isAuto() {
+      computedValues.margins.before = valueForLength(
+        length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+      computedValues.margins.after = valueForLength(
+        length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+      logicalBottomValue = valueForLength(
+        length: logicalBottom, maximumValue: containerLogicalHeight)
+
+      // Solve for 'top'
+      logicalTopValue =
+        availableSpace
+        - (logicalBottomValue + computedValues.margins.before + computedValues.margins.after)
+    } else if logicalBottom.isAuto() {
+      computedValues.margins.before = valueForLength(
+        length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+      computedValues.margins.after = valueForLength(
+        length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+      logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+
+      // Solve for 'bottom'
+      // NOTE: It is not necessary to solve for 'bottom' because we don't ever
+      // use the value.
+    } else if marginBefore.isAuto() {
+      computedValues.margins.after = valueForLength(
+        length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+      logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+      logicalBottomValue = valueForLength(
+        length: logicalBottom, maximumValue: containerLogicalHeight)
+
+      // Solve for 'margin-top'
+      computedValues.margins.before =
+        availableSpace - (logicalTopValue + logicalBottomValue + computedValues.margins.after)
+    } else if marginAfter.isAuto() {
+      computedValues.margins.before = valueForLength(
+        length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+      logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+      logicalBottomValue = valueForLength(
+        length: logicalBottom, maximumValue: containerLogicalHeight)
+
+      // Solve for 'margin-bottom'
+      computedValues.margins.after =
+        availableSpace - (logicalTopValue + logicalBottomValue + computedValues.margins.before)
+    } else {
+      // Nothing is 'auto', just calculate the values.
+      computedValues.margins.before = valueForLength(
+        length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+      computedValues.margins.after = valueForLength(
+        length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+      logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+      // NOTE: It is not necessary to solve for 'bottom' because we don't ever
+      // use the value.
+    }
+
+    /*-----------------------------------------------------------------------*\
+     * 6. If at this point the values are over-constrained, ignore the value
+     *    for 'bottom' and solve for that value.
+    \*-----------------------------------------------------------------------*/
+    // NOTE: It is not necessary to do this step because we don't end up using
+    // the value of 'bottom' regardless of whether the values are over-constrained
+    // or not.
+
+    // Use computed values to calculate the vertical position.
+    let logicalTopPos = logicalTopValue + computedValues.margins.before
+    // Border and padding have already been included in computedValues.m_extent.
+    computeLogicalTopPositionedOffset(
+      logicalTopPos: logicalTopPos, child: self, logicalHeightValue: computedValues.extent,
+      containerBlock: containerBlock, containerLogicalHeightForPositioned: containerLogicalHeight,
+      logicalTopIsAuto: originalLogicalTop.isAuto(),
+      logicalBottomIsAuto: originalLogicalBottom.isAuto())
+    computedValues.position = logicalTopPos
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {
