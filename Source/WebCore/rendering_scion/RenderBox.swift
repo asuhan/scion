@@ -86,12 +86,63 @@ private func allowMinMaxPercentagesInAutoHeightBlocksQuirk() -> Bool {
   return false
 }
 
+private func shouldFlipStaticPositionInParent(
+  outOfFlowBox: RenderBoxWrapper, containerBlock: RenderBoxModelObjectWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func computeBlockStaticDistance(
   logicalTop: LengthWrapper, logicalBottom: LengthWrapper, child: RenderBoxWrapper?,
   containerBlock: RenderBoxModelObjectWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !logicalTop.isAuto() || !logicalBottom.isAuto() {
+    return
+  }
+
+  let parent = child!.parent()!
+  let haveOrthogonalWritingModes = isOrthogonal(renderer: child!, ancestor: parent)
+  // The static positions from the child's layer are relative to the container block's coordinate space (which is determined
+  // by the writing mode and text direction), meaning that for orthogonal flows the logical top of the child (which depends on
+  // the child's writing mode) is retrieved from the static inline position instead of the static block position.
+  var staticLogicalTop =
+    haveOrthogonalWritingModes
+    ? child!.layer()!.staticInlinePosition() : child!.layer()!.staticBlockPosition()
+  if shouldFlipStaticPositionInParent(outOfFlowBox: child!, containerBlock: containerBlock) {
+    // Note that at this point we can't resolve static top position completely in flipped case as at this point the height of the child box has not been computed yet.
+    // What we can compute here is essentially the "bottom position".
+    staticLogicalTop = (parent as! RenderBoxWrapper).flipForWritingMode(position: staticLogicalTop)
+  }
+  staticLogicalTop -=
+    haveOrthogonalWritingModes ? containerBlock.borderLogicalLeft() : containerBlock.borderBefore()
+  var container = child!.parent()
+  while container != nil && CPtrToInt(container?.p) != CPtrToInt(containerBlock.p) {
+    let renderBox = container as? RenderBoxWrapper
+    if renderBox == nil {
+      container = container!.container()
+      continue
+    }
+    if !(renderBox is RenderTableRowWrapper) {
+      staticLogicalTop +=
+        haveOrthogonalWritingModes ? renderBox!.logicalLeft() : renderBox!.logicalTop()
+    }
+    if renderBox!.isInFlowPositioned() {
+      staticLogicalTop +=
+        renderBox!.isHorizontalWritingMode()
+        ? renderBox!.offsetForInFlowPosition().height()
+        : renderBox!.offsetForInFlowPosition().width()
+    }
+    container = container!.container()
+  }
+
+  // If the parent is RTL then we need to flip the coordinate by setting the logical bottom instead of the logical top. That only needs
+  // to be done in case of orthogonal writing modes, for horizontal ones the text direction of the parent does not affect the block position.
+  if haveOrthogonalWritingModes && parent.style().direction() != .LTR {
+    logicalBottom.setValue(type: .Fixed, value: staticLogicalTop)
+  } else {
+    logicalTop.setValue(type: .Fixed, value: staticLogicalTop)
+  }
 }
 
 // The |containerLogicalHeightForPositioned| is already aware of orthogonal flows.
@@ -177,6 +228,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func logicalLeft() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(p))
+  }
+
+  func logicalTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func logicalWidth() -> LayoutUnit {

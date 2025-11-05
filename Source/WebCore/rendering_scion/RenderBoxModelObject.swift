@@ -48,6 +48,11 @@ enum BaseBackgroundColorUsage {
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
+  func offsetForInFlowPosition() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computedCSSPaddingBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -158,6 +163,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderAndPaddingLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderLogicalLeft() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
