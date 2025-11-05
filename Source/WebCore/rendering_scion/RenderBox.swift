@@ -46,6 +46,10 @@ private func shouldFlipBeforeAfterMargins(
   fatalError("Not implemented")
 }
 
+private func isOrthogonal(renderer: RenderBoxWrapper, ancestor: RenderElementWrapper) -> Bool {
+  return renderer.isHorizontalWritingMode() != ancestor.isHorizontalWritingMode()
+}
+
 private func tableCellShouldHaveZeroInitialSize(
   block: RenderBlockWrapper, child: RenderBoxWrapper, scrollsOverflowY: Bool
 ) -> Bool {
@@ -68,6 +72,18 @@ private func allowMinMaxPercentagesInAutoHeightBlocksQuirk() -> Bool {
 private func computeBlockStaticDistance(
   logicalTop: LengthWrapper, logicalBottom: LengthWrapper, child: RenderBoxWrapper?,
   containerBlock: RenderBoxModelObjectWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+// The |containerLogicalHeightForPositioned| is already aware of orthogonal flows.
+// The logicalTop concept is confusing here. It's the logical top from the child's POV. This means that is the physical
+// y if the child is vertical or the physical x if the child is horizontal.
+private func computeLogicalTopPositionedOffset(
+  logicalTopPos: LayoutUnit, child: RenderBoxWrapper, logicalHeightValue: LayoutUnit,
+  containerBlock: RenderBoxModelObjectWrapper, containerLogicalHeightForPositioned: LayoutUnit,
+  logicalTopIsAuto: Bool, logicalBottomIsAuto: Bool
 ) {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -521,6 +537,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType)
     -> LayoutUnit
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func containingBlockLogicalWidthForPositioned(
+    containingBlock: RenderBoxModelObjectWrapper, fragment: RenderFragmentContainerWrapper? = nil,
+    checkForPerpendicularWritingMode: Bool = true
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1808,7 +1832,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func computeIntrinsicLogicalContentHeightUsing(
     logicalHeightLength: LengthWrapper, intrinsicContentHeight: LayoutUnit?,
     borderAndPadding: LayoutUnit
-  ) -> LayoutUnit {
+  ) -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2030,8 +2054,202 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalBottom: LengthWrapper, marginBefore: LengthWrapper, marginAfter: LengthWrapper,
     computedValues: inout LogicalExtentComputedValues
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      heightType == .MinSize || heightType == .MainOrPreferredSize || !logicalHeightLength.isAuto())
+    var logicalHeightLength = logicalHeightLength
+    if heightType == .MinSize && logicalHeightLength.isAuto() {
+      if shouldComputeLogicalHeightFromAspectRatio() {
+        logicalHeightLength = LengthWrapper(value: logicalHeight, type: .Fixed)
+      } else {
+        logicalHeightLength = LengthWrapper(value: Int32(0), type: .Fixed)
+      }
+    }
+
+    // 'top' and 'bottom' cannot both be 'auto' because 'top would of been
+    // converted to the static position in computePositionedLogicalHeight()
+    assert(!(logicalTop.isAuto() && logicalBottom.isAuto()))
+
+    let contentLogicalHeight = logicalHeight - bordersPlusPadding
+
+    let containerRelativeLogicalWidth = containingBlockLogicalWidthForPositioned(
+      containingBlock: containerBlock, fragment: nil, checkForPerpendicularWritingMode: false)
+
+    let fromAspectRatio =
+      heightType == .MainOrPreferredSize && shouldComputeLogicalHeightFromAspectRatio()
+    var logicalHeightIsAuto = logicalHeightLength.isAuto() && !fromAspectRatio
+    let logicalTopIsAuto = logicalTop.isAuto()
+    let logicalBottomIsAuto = logicalBottom.isAuto()
+
+    // Height is never unsolved for tables.
+    var resolvedLogicalHeight = LayoutUnit()
+    if isRenderTable() {
+      resolvedLogicalHeight = contentLogicalHeight
+      logicalHeightIsAuto = false
+    } else {
+      if logicalHeightLength.isIntrinsic() {
+        resolvedLogicalHeight = adjustContentBoxLogicalHeightForBoxSizing(
+          height: computeIntrinsicLogicalContentHeightUsing(
+            logicalHeightLength: logicalHeightLength, intrinsicContentHeight: contentLogicalHeight,
+            borderAndPadding: bordersPlusPadding)
+            ?? LayoutUnit(value: UInt64(0)))
+      } else if fromAspectRatio {
+        resolvedLogicalHeight = RenderBoxWrapper.blockSizeFromAspectRatio(
+          borderPaddingInlineSum: horizontalBorderAndPaddingExtent(),
+          borderPaddingBlockSum: verticalBorderAndPaddingExtent(),
+          aspectRatio: style().logicalAspectRatio(), boxSizing: style().boxSizingForAspectRatio(),
+          inlineSize: logicalWidth(),
+          aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+        resolvedLogicalHeight = max(LayoutUnit(), resolvedLogicalHeight - bordersPlusPadding)
+      } else {
+        resolvedLogicalHeight = adjustContentBoxLogicalHeightForBoxSizing(
+          height: valueForLength(length: logicalHeightLength, maximumValue: containerLogicalHeight))
+      }
+    }
+
+    var logicalHeightValue = LayoutUnit()
+    var logicalTopValue = LayoutUnit()
+
+    if !logicalTopIsAuto && !logicalHeightIsAuto && !logicalBottomIsAuto {
+      /*-----------------------------------------------------------------------*\
+         * If none of the three are 'auto': If both 'margin-top' and 'margin-
+         * bottom' are 'auto', solve the equation under the extra constraint that
+         * the two margins get equal values. If one of 'margin-top' or 'margin-
+         * bottom' is 'auto', solve the equation for that value. If the values
+         * are over-constrained, ignore the value for 'bottom' and solve for that
+         * value.
+        \*-----------------------------------------------------------------------*/
+      // NOTE:  It is not necessary to solve for 'bottom' in the over constrained
+      // case because the value is not used for any further calculations.
+
+      logicalHeightValue = resolvedLogicalHeight
+      logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+
+      let availableSpace =
+        containerLogicalHeight
+        - (logicalTopValue + logicalHeightValue
+          + valueForLength(length: logicalBottom, maximumValue: containerLogicalHeight)
+          + bordersPlusPadding)
+
+      // Margins are now the only unknown
+      if marginBefore.isAuto() && marginAfter.isAuto() {
+        // Both margins auto, solve for equality
+        // NOTE: This may result in negative values.
+        computedValues.margins.before = availableSpace / 2  // split the difference
+        computedValues.margins.after = availableSpace - computedValues.margins.before  // account for odd valued differences
+      } else if marginBefore.isAuto() {
+        // Solve for top margin
+        computedValues.margins.after = valueForLength(
+          length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+        computedValues.margins.before = availableSpace - computedValues.margins.after
+      } else if marginAfter.isAuto() {
+        // Solve for bottom margin
+        computedValues.margins.before = valueForLength(
+          length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+        computedValues.margins.after = availableSpace - computedValues.margins.before
+      } else {
+        // Over-constrained, (no need solve for bottom)
+        computedValues.margins.before = valueForLength(
+          length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+        computedValues.margins.after = valueForLength(
+          length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+
+        if isOrthogonal(renderer: self, ancestor: containerBlock) {
+          // When orthogonal we want to explicitly deal with left/right instead of top/bottom, so compute physical left next.
+          logicalTopValue = valueForLength(
+            length: style().left(), maximumValue: containerLogicalHeight)
+          if containerBlock.style().direction() == .RTL {
+            // Recompute availableSpace with physical left.
+            let availableSpace =
+              containerLogicalHeight
+              - (logicalTopValue + logicalHeightValue
+                + valueForLength(length: style().right(), maximumValue: containerLogicalHeight)
+                + bordersPlusPadding)
+            logicalTopValue =
+              (availableSpace + logicalTopValue) - computedValues.margins.before
+              - computedValues.margins.after
+          }
+        }
+      }
+    } else {
+      /*--------------------------------------------------------------------*\
+         * Otherwise, set 'auto' values for 'margin-top' and 'margin-bottom'
+         * to 0, and pick the one of the following six rules that applies.
+         *
+         * 1. 'top' and 'height' are 'auto' and 'bottom' is not 'auto', then
+         *    the height is based on the content, and solve for 'top'.
+         *
+         *              OMIT RULE 2 AS IT SHOULD NEVER BE HIT
+         * ------------------------------------------------------------------
+         * 2. 'top' and 'bottom' are 'auto' and 'height' is not 'auto', then
+         *    set 'top' to the static position, and solve for 'bottom'.
+         * ------------------------------------------------------------------
+         *
+         * 3. 'height' and 'bottom' are 'auto' and 'top' is not 'auto', then
+         *    the height is based on the content, and solve for 'bottom'.
+         * 4. 'top' is 'auto', 'height' and 'bottom' are not 'auto', and
+         *    solve for 'top'.
+         * 5. 'height' is 'auto', 'top' and 'bottom' are not 'auto', and
+         *    solve for 'height'.
+         * 6. 'bottom' is 'auto', 'top' and 'height' are not 'auto', and
+         *    solve for 'bottom'.
+        \*--------------------------------------------------------------------*/
+      // NOTE: For rules 3 and 6 it is not necessary to solve for 'bottom'
+      // because the value is not used for any further calculations.
+
+      // Calculate margins, 'auto' margins are ignored.
+      computedValues.margins.before = minimumValueForLength(
+        length: marginBefore, maximumValue: containerRelativeLogicalWidth)
+      computedValues.margins.after = minimumValueForLength(
+        length: marginAfter, maximumValue: containerRelativeLogicalWidth)
+
+      let availableSpace =
+        containerLogicalHeight
+        - (computedValues.margins.before + computedValues.margins.after + bordersPlusPadding)
+
+      // Use rule/case that applies.
+      if logicalTopIsAuto && logicalHeightIsAuto && !logicalBottomIsAuto {
+        // RULE 1: (height is content based, solve of top)
+        logicalHeightValue = contentLogicalHeight
+        logicalTopValue =
+          availableSpace
+          - (logicalHeightValue
+            + valueForLength(length: logicalBottom, maximumValue: containerLogicalHeight))
+      } else if !logicalTopIsAuto && logicalHeightIsAuto && logicalBottomIsAuto {
+        // RULE 3: (height is content based, no need solve of bottom)
+        logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+        logicalHeightValue = contentLogicalHeight
+      } else if logicalTopIsAuto && !logicalHeightIsAuto && !logicalBottomIsAuto {
+        // RULE 4: (solve of top)
+        logicalHeightValue = resolvedLogicalHeight
+        logicalTopValue =
+          availableSpace
+          - (logicalHeightValue
+            + valueForLength(length: logicalBottom, maximumValue: containerLogicalHeight))
+      } else if !logicalTopIsAuto && logicalHeightIsAuto && !logicalBottomIsAuto {
+        // RULE 5: (solve of height)
+        logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+        logicalHeightValue = max(
+          LayoutUnit(value: 0),
+          availableSpace
+            - (logicalTopValue
+              + valueForLength(length: logicalBottom, maximumValue: containerLogicalHeight))
+        )
+      } else if !logicalTopIsAuto && !logicalHeightIsAuto && logicalBottomIsAuto {
+        // RULE 6: (no need solve of bottom)
+        logicalHeightValue = resolvedLogicalHeight
+        logicalTopValue = valueForLength(length: logicalTop, maximumValue: containerLogicalHeight)
+      }
+    }
+    computedValues.extent = logicalHeightValue
+
+    // Use computed values to calculate the vertical position.
+    computedValues.position = logicalTopValue + computedValues.margins.before
+    computeLogicalTopPositionedOffset(
+      logicalTopPos: computedValues.position, child: self,
+      logicalHeightValue: logicalHeightValue + bordersPlusPadding, containerBlock: containerBlock,
+      containerLogicalHeightForPositioned: containerLogicalHeight,
+      logicalTopIsAuto: style().logicalTop().isAuto(),
+      logicalBottomIsAuto: style().logicalBottom().isAuto())
   }
 
   private func computePositionedLogicalHeightReplaced(computedValues: LogicalExtentComputedValues) {
