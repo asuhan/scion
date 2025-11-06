@@ -688,8 +688,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
   ) {
     let containingBlockStyle = containingBlock.style()
-    let marginStartLength = style().marginStartUsing(otherStyle: containingBlockStyle)
-    let marginEndLength = style().marginEndUsing(otherStyle: containingBlockStyle)
+    var marginStartLength = style().marginStartUsing(otherStyle: containingBlockStyle)
+    var marginEndLength = style().marginEndUsing(otherStyle: containingBlockStyle)
 
     if isFloating() {
       marginStart = minimumValueForLength(length: marginStartLength, maximumValue: containerWidth)
@@ -710,6 +710,70 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
           return minimumValueForLength(length: marginEndLength, maximumValue: containerWidth)
         })
       return
+    }
+
+    if containingBlock is RenderFlexibleBoxWrapper {
+      // We need to let flexbox handle the margin adjustment - otherwise, flexbox
+      // will think we're wider than we actually are and calculate line sizes
+      // wrong. See also http://dev.w3.org/csswg/css-flexbox/#auto-margins
+      if marginStartLength.isAuto() {
+        marginStartLength = LengthWrapper(value: Int32(0), type: .Fixed)
+      }
+      if marginEndLength.isAuto() {
+        marginEndLength = LengthWrapper(value: Int32(0), type: .Fixed)
+      }
+    }
+
+    if handleMarginAuto(
+      containingBlock: containingBlock, containerWidth: containerWidth,
+      availableSpaceAdjustedWithFloats: availableSpaceAdjustedWithFloats, childWidth: childWidth,
+      marginStart: &marginStart, marginEnd: &marginEnd, containingBlockStyle: containingBlockStyle,
+      marginStartLength: marginStartLength, marginEndLength: marginEndLength)
+    {
+      return
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func handleMarginAuto(
+    containingBlock: RenderBlockWrapper, containerWidth: LayoutUnit,
+    availableSpaceAdjustedWithFloats: LayoutUnit?,
+    childWidth: LayoutUnit, marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit,
+    containingBlockStyle: RenderStyleWrapper, marginStartLength: LengthWrapper,
+    marginEndLength: LengthWrapper
+  ) -> Bool {
+    let containerWidthForMarginAuto = availableSpaceAdjustedWithFloats ?? containerWidth
+    // Case One: The object is being centered in the containing block's available logical width.
+    let marginAutoCenter =
+      marginStartLength.isAuto() && marginEndLength.isAuto()
+      && childWidth < containerWidthForMarginAuto
+    let alignModeCenter =
+      containingBlock.style().textAlign() == .WebKitCenter && !marginStartLength.isAuto()
+      && !marginEndLength.isAuto()
+    if marginAutoCenter || alignModeCenter {
+      // Other browsers center the margin box for align=center elements so we match them here.
+      marginStart = computeOrTrimInlineMargin(
+        containingBlock: containingBlock, marginSide: .InlineStart,
+        computeInlineMargin: {
+          let marginStartWidth = minimumValueForLength(
+            length: marginStartLength, maximumValue: containerWidthForMarginAuto)
+          let marginEndWidth = minimumValueForLength(
+            length: marginEndLength, maximumValue: containerWidthForMarginAuto)
+          let centeredMarginBoxStart = max(
+            LayoutUnit(value: 0),
+            (containerWidthForMarginAuto - childWidth - marginStartWidth - marginEndWidth) / 2)
+          return centeredMarginBoxStart + marginStartWidth
+        })
+      marginEnd = computeOrTrimInlineMargin(
+        containingBlock: containingBlock, marginSide: .InlineEnd,
+        computeInlineMargin: {
+          let marginEndWidth = minimumValueForLength(
+            length: marginEndLength, maximumValue: containerWidthForMarginAuto)
+          return containerWidthForMarginAuto - childWidth - marginStart + marginEndWidth
+        })
+      return true
     }
 
     // TODO(asuhan): implement this
