@@ -203,6 +203,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func logicalMinWidth() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalMaxWidth() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalMinHeight() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

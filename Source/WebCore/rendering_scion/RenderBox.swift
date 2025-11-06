@@ -2414,6 +2414,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func isRenderReplacedWithIntrinsicRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeMinMaxLogicalHeightFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private enum ConstrainDimension {
     case Width
     case Height
@@ -2428,8 +2443,57 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedMinSize: inout LayoutUnit, computedMaxSize: inout LayoutUnit, computedSize: LayoutUnit,
     minimumSizeType: MinimumSizeIsAutomaticContentBased, dimension: ConstrainDimension
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO: Here we use isSpecified() to present the definite value. This is not quite correct, for the definite value should also include
+    // a size of the initial containing block and the “stretch-fit” sizing of non-replaced blocks if they have definite values.
+    // See https://www.w3.org/TR/css-sizing-3/#definite
+    let styleToUse = style()
+    assert(styleToUse.hasAspectRatio() || isRenderReplacedWithIntrinsicRatio())
+    let logicalSize = dimension == .Width ? styleToUse.logicalWidth() : styleToUse.logicalHeight()
+    // https://www.w3.org/TR/css-sizing-4/#aspect-ratio-minimum
+    if minimumSizeType == .Yes {
+      // Only use Automatic Content-based Minimum Sizes in the ratio-dependent axis.
+      if logicalSize.isSpecified() {
+        computedMinSize = min(computedMinSize, computedSize)
+      }
+      computedMinSize = min(computedMinSize, computedMaxSize)
+    }
+
+    if logicalSize.isSpecified() {
+      return
+    }
+
+    // Sizing constraints in either axis (the origin axis) should be transferred through the preferred aspect ratio. See https://www.w3.org/TR/css-sizing-4/#aspect-ratio-size-transfers
+    let shouldCheckTransferredMinSize =
+      dimension == .Width
+      ? !styleToUse.logicalMinWidth().isSpecified() : !styleToUse.logicalMinHeight().isSpecified()
+    let shouldCheckTransferredMaxSize =
+      dimension == .Width
+      ? !styleToUse.logicalMaxWidth().isSpecified() : !styleToUse.logicalMaxHeight().isSpecified()
+    if !shouldCheckTransferredMaxSize && !shouldCheckTransferredMinSize {
+      return
+    }
+
+    var (transferredLogicalMinSize, transferredLogicalMaxSize) =
+      dimension == .Width
+      ? computeMinMaxLogicalWidthFromAspectRatio() : computeMinMaxLogicalHeightFromAspectRatio()
+    if shouldCheckTransferredMaxSize && transferredLogicalMaxSize != LayoutUnit.max() {
+      // The transferred max size should be floored by the definite minimum size.
+      if !shouldCheckTransferredMinSize && minimumSizeType == .No {
+        transferredLogicalMaxSize = max(transferredLogicalMaxSize, computedMinSize)
+      }
+      computedMaxSize = min(computedMaxSize, transferredLogicalMaxSize)
+      if minimumSizeType == .Yes {
+        computedMinSize = min(computedMinSize, computedMaxSize)
+      }
+    }
+
+    if shouldCheckTransferredMinSize && transferredLogicalMinSize > LayoutUnit() {
+      // The transferred min size should be capped by the definite maximum size.
+      if !shouldCheckTransferredMaxSize {
+        transferredLogicalMinSize = min(transferredLogicalMinSize, computedMaxSize)
+      }
+      computedMinSize = max(computedMinSize, transferredLogicalMinSize)
+    }
   }
 
   static func blockSizeFromAspectRatio(
