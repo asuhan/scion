@@ -131,6 +131,10 @@ struct LengthWrapper: Equatable {
     return type() == .FitContent
   }
 
+  func isMinIntrinsic() -> Bool {
+    return type() == .MinIntrinsic
+  }
+
   func isContent() -> Bool {
     return type() == .Content
   }

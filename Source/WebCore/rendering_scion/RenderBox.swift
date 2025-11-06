@@ -677,6 +677,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func adjustBorderBoxLogicalWidthForBoxSizing(
+    computedLogicalWidth: LayoutUnit, originalType: LengthType
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustBorderBoxLogicalWidthForBoxSizing(
+    computedLogicalWidth: Int32, originalType: LengthType
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Overridden by fieldsets to subtract out the intrinsic border.
   func adjustBorderBoxLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -1272,13 +1286,60 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     case MinSize
     case MaxSize
   }
+  private func sizesLogicalWidthToFitContent(widthType: SizeType) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shrinkLogicalWidthToAvoidFloats(
+    childMarginStart: LayoutUnit, childMarginEnd: LayoutUnit, cb: RenderBlockWrapper,
+    fragment: RenderFragmentContainerWrapper?
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func computeLogicalWidthInFragmentUsing(
     widthType: SizeType, logicalWidth: LengthWrapper, availableLogicalWidth: LayoutUnit,
     cb: RenderBlockWrapper, fragment: RenderFragmentContainerWrapper?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(widthType == .MinSize || widthType == .MainOrPreferredSize || !logicalWidth.isAuto())
+    if widthType == .MinSize && logicalWidth.isAuto() {
+      return adjustBorderBoxLogicalWidthForBoxSizing(
+        computedLogicalWidth: Int32(0), originalType: logicalWidth.type())
+    }
+
+    if !logicalWidth.isIntrinsicOrAuto() {
+      // FIXME: If the containing block flow is perpendicular to our direction we need to use the available logical height instead.
+      return adjustBorderBoxLogicalWidthForBoxSizing(
+        computedLogicalWidth: valueForLength(
+          length: logicalWidth, maximumValue: availableLogicalWidth),
+        originalType: logicalWidth.type())
+    }
+
+    if logicalWidth.isIntrinsic() || logicalWidth.isMinIntrinsic() {
+      return computeIntrinsicLogicalWidthUsing(
+        logicalWidthLength: logicalWidth, availableLogicalWidth: availableLogicalWidth,
+        borderAndPadding: borderAndPaddingLogicalWidth())
+    }
+
+    var marginStart = LayoutUnit()
+    var marginEnd = LayoutUnit()
+    var logicalWidthResult = fillAvailableMeasure(
+      availableLogicalWidth: availableLogicalWidth, marginStart: &marginStart, marginEnd: &marginEnd
+    )
+
+    if shrinkToAvoidFloats() && cb.containsFloats() {
+      logicalWidthResult = min(
+        logicalWidthResult,
+        shrinkLogicalWidthToAvoidFloats(
+          childMarginStart: marginStart, childMarginEnd: marginEnd, cb: cb, fragment: fragment))
+    }
+
+    if widthType == .MainOrPreferredSize && sizesLogicalWidthToFitContent(widthType: widthType) {
+      return max(minPreferredLogicalWidth(), min(maxPreferredLogicalWidth(), logicalWidthResult))
+    }
+    return logicalWidthResult
   }
 
   func computeLogicalHeightUsing(
@@ -2359,6 +2420,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  private func computeIntrinsicLogicalWidthUsing(
+    logicalWidthLength: LengthWrapper, availableLogicalWidth: LayoutUnit,
+    borderAndPadding: LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeIntrinsicLogicalContentHeightUsing(
     logicalHeightLength: LengthWrapper, intrinsicContentHeight: LayoutUnit?,
     borderAndPadding: LayoutUnit
@@ -3132,6 +3201,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       logicalTopIsAuto: originalLogicalTop.isAuto(),
       logicalBottomIsAuto: originalLogicalBottom.isAuto())
     computedValues.position = logicalTopPos
+  }
+
+  private func fillAvailableMeasure(
+    availableLogicalWidth: LayoutUnit, marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {
