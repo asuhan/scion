@@ -306,8 +306,49 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func constrainLogicalHeightByMinMax(
     logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleToUse = style()
+    var computedLogicalMaxHeight: LayoutUnit? = nil
+    if !styleToUse.logicalMaxHeight().isUndefined() {
+      computedLogicalMaxHeight = computeLogicalHeightUsing(
+        heightType: .MaxSize, height: styleToUse.logicalMaxHeight(),
+        intrinsicContentHeight: intrinsicContentHeight)
+    }
+
+    var minimumSizeType: MinimumSizeIsAutomaticContentBased = .No
+    var logicalMinHeight = styleToUse.logicalMinHeight()
+    if logicalMinHeight.isAuto() && shouldComputeLogicalHeightFromAspectRatio()
+      && intrinsicContentHeight != nil && !(self is RenderReplacedWrapper)
+      && effectiveOverflowBlockDirection() == .Visible
+    {
+      var heightFromAspectRatio =
+        RenderBoxWrapper.blockSizeFromAspectRatio(
+          borderPaddingInlineSum: borderAndPaddingLogicalWidth(),
+          borderPaddingBlockSum: borderAndPaddingLogicalHeight(),
+          aspectRatio: style().logicalAspectRatio(), boxSizing: style().boxSizingForAspectRatio(),
+          inlineSize: logicalWidth(),
+          aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+        - borderAndPaddingLogicalHeight()
+      if firstChild() == nil {
+        heightFromAspectRatio = max(heightFromAspectRatio, intrinsicContentHeight!)
+      }
+      logicalMinHeight = LengthWrapper(value: heightFromAspectRatio, type: .Fixed)
+      minimumSizeType = .Yes
+    }
+    if logicalMinHeight.isMinContent() || logicalMinHeight.isMaxContent() {
+      logicalMinHeight = LengthWrapper()
+    }
+    let computedLogicalMinHeight = computeLogicalHeightUsing(
+      heightType: .MinSize, height: logicalMinHeight, intrinsicContentHeight: intrinsicContentHeight
+    )
+    var maxHeight = computedLogicalMaxHeight ?? LayoutUnit.max()
+    var minHeight = computedLogicalMinHeight ?? LayoutUnit()
+    if styleToUse.hasAspectRatio() {
+      constrainLogicalMinMaxSizesByAspectRatio(
+        computedMinSize: &minHeight, computedMaxSize: &maxHeight, computedSize: logicalHeight,
+        minimumSizeType: minimumSizeType, dimension: .Height)
+    }
+    let logicalHeight = min(logicalHeight, maxHeight)
+    return max(logicalHeight, minHeight)
   }
 
   func constrainContentBoxLogicalHeightByMinMax(
@@ -2092,6 +2133,24 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func shouldIgnoreAspectRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private enum ConstrainDimension {
+    case Width
+    case Height
+  }
+
+  private enum MinimumSizeIsAutomaticContentBased {
+    case No
+    case Yes
+  }
+
+  private func constrainLogicalMinMaxSizesByAspectRatio(
+    computedMinSize: inout LayoutUnit, computedMaxSize: inout LayoutUnit, computedSize: LayoutUnit,
+    minimumSizeType: MinimumSizeIsAutomaticContentBased, dimension: ConstrainDimension
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

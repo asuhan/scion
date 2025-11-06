@@ -366,6 +366,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func effectiveOverflowBlockDirection() -> Overflow {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isWritingModeRoot() -> Bool {
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }

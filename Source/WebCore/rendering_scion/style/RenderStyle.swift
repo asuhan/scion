@@ -605,6 +605,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasAspectRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxAlign() -> BoxAlignment {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
