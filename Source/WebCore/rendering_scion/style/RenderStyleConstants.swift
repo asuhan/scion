@@ -448,6 +448,13 @@ enum TextDecorationSkipInk: UInt8 {
   case All
 }
 
+enum MarginTrimType: UInt8 {
+  case BlockStart = 1
+  case BlockEnd = 2
+  case InlineStart = 4
+  case InlineEnd = 8
+}
+
 enum TextEdgeType: UInt8 {
   // Note that TextEdgeType is shared between text-box-edge and line-fit-edge,
   // where text-box-edge's default value is auto, and line-fit-edge has leading.

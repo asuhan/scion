@@ -687,6 +687,31 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     availableSpaceAdjustedWithFloats: LayoutUnit?, childWidth: LayoutUnit,
     marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
   ) {
+    let containingBlockStyle = containingBlock.style()
+    let marginStartLength = style().marginStartUsing(otherStyle: containingBlockStyle)
+    let marginEndLength = style().marginEndUsing(otherStyle: containingBlockStyle)
+
+    if isFloating() {
+      marginStart = minimumValueForLength(length: marginStartLength, maximumValue: containerWidth)
+      marginEnd = minimumValueForLength(length: marginEndLength, maximumValue: containerWidth)
+      return
+    }
+
+    if isInline() {
+      // Inline blocks/tables don't have their margins increased.
+      marginStart = computeOrTrimInlineMargin(
+        containingBlock: containingBlock, marginSide: .InlineStart,
+        computeInlineMargin: {
+          return minimumValueForLength(length: marginStartLength, maximumValue: containerWidth)
+        })
+      marginEnd = computeOrTrimInlineMargin(
+        containingBlock: containingBlock, marginSide: .InlineStart,
+        computeInlineMargin: {
+          return minimumValueForLength(length: marginEndLength, maximumValue: containerWidth)
+        })
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2194,6 +2219,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return false
+  }
+
+  private func computeOrTrimInlineMargin(
+    containingBlock: RenderBlockWrapper, marginSide: MarginTrimType,
+    computeInlineMargin: () -> LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
