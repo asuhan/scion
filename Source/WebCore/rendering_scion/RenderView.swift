@@ -39,6 +39,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func clientLogicalHeightForFixedPosition() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func frameView() -> LocalFrameViewWrapper {
     return LocalFrameViewWrapper(p: wk_interop.RenderView_frameView(p))
   }

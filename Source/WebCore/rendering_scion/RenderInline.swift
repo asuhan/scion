@@ -55,6 +55,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func innerPaddingBoxHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func linesVisualOverflowBoundingBox() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

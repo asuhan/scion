@@ -557,6 +557,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clientLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -977,8 +982,49 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func containingBlockLogicalHeightForPositioned(
     containingBlock: RenderBoxModelObjectWrapper, checkForPerpendicularWritingMode: Bool = true
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      containingBlock.canContainAbsolutelyPositionedObjects()
+        || containingBlock.canContainFixedPositionObjects())
+
+    if checkForPerpendicularWritingMode
+      && containingBlock.isHorizontalWritingMode() != isHorizontalWritingMode()
+    {
+      return containingBlockLogicalWidthForPositioned(
+        containingBlock: containingBlock, fragment: nil, checkForPerpendicularWritingMode: false)
+    }
+
+    if let overridingContainingBlockContentLogicalHeight =
+      overridingContainingBlockContentLogicalHeight(),
+      let value = overridingContainingBlockContentLogicalHeight
+    {
+      return value
+    }
+
+    if let box = containingBlock as? RenderBoxWrapper {
+      let isFixedPosition = isFixedPositioned()
+
+      if isFixedPosition, let renderView = box as? RenderViewWrapper {
+        return renderView.clientLogicalHeightForFixedPosition()
+      }
+
+      let containingBlockAsRenderBlock = box as? RenderBlockWrapper
+      let cb =
+        containingBlockAsRenderBlock != nil ? containingBlockAsRenderBlock! : box.containingBlock()!
+      let result = cb.clientLogicalHeight()
+      if let fragmentedFlow = enclosingFragmentedFlow(),
+        fragmentedFlow.isHorizontalWritingMode() == containingBlock.isHorizontalWritingMode(),
+        let containingBlockFragmentedFlow = containingBlock as? RenderFragmentedFlowWrapper
+      {
+        return containingBlockFragmentedFlow.contentLogicalHeightOfFirstFragment()
+      }
+      return result
+    }
+
+    if let inlineBox = containingBlock as? RenderInlineWrapper {
+      return inlineBox.innerPaddingBoxHeight()
+    }
+
+    fatalError("Not reached")
   }
 
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
