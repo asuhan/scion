@@ -733,8 +733,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Case Four: Either no auto margins, or our width is >= the container width (css2.1, 10.3.3). In that case
+    // auto margins will just turn into 0.
+    marginStart = computeOrTrimInlineMargin(
+      containingBlock: containingBlock, marginSide: .InlineStart,
+      computeInlineMargin: {
+        return minimumValueForLength(length: marginStartLength, maximumValue: containerWidth)
+      })
+    marginEnd = computeOrTrimInlineMargin(
+      containingBlock: containingBlock, marginSide: .InlineEnd,
+      computeInlineMargin: {
+        return minimumValueForLength(length: marginEndLength, maximumValue: containerWidth)
+      })
   }
 
   private func handleMarginAuto(
@@ -776,8 +786,37 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return true
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Case Two: The object is being pushed to the start of the containing block's available logical width.
+    if marginEndLength.isAuto() && childWidth < containerWidthForMarginAuto {
+      marginStart = valueForLength(
+        length: marginStartLength, maximumValue: containerWidthForMarginAuto)
+      marginEnd = containerWidthForMarginAuto - childWidth - marginStart
+      return true
+    }
+
+    // Case Three: The object is being pushed to the end of the containing block's available logical width.
+    let pushToEndFromTextAlign =
+      !marginEndLength.isAuto()
+      && ((!containingBlockStyle.isLeftToRightDirection()
+        && containingBlockStyle.textAlign() == .WebKitLeft)
+        || (containingBlockStyle.isLeftToRightDirection()
+          && containingBlockStyle.textAlign() == .WebKitRight))
+    if (marginStartLength.isAuto() || pushToEndFromTextAlign)
+      && childWidth < containerWidthForMarginAuto
+    {
+      marginEnd = computeOrTrimInlineMargin(
+        containingBlock: containingBlock, marginSide: .InlineEnd,
+        computeInlineMargin: {
+          return valueForLength(length: marginEndLength, maximumValue: containerWidthForMarginAuto)
+        })
+      marginStart = computeOrTrimInlineMargin(
+        containingBlock: containingBlock, marginSide: .InlineStart,
+        computeInlineMargin: {
+          return containerWidthForMarginAuto - childWidth - marginEnd
+        })
+      return true
+    }
+    return false
   }
 
   // Used to resolve margins in the containing block's block-flow direction.
