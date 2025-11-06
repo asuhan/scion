@@ -1273,6 +1273,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     case MaxSize
   }
 
+  func computeLogicalWidthInFragmentUsing(
+    widthType: SizeType, logicalWidth: LengthWrapper, availableLogicalWidth: LayoutUnit,
+    cb: RenderBlockWrapper, fragment: RenderFragmentContainerWrapper?
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeLogicalHeightUsing(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
@@ -2471,8 +2479,45 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeMinMaxLogicalHeightFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var transferredMinSize = LayoutUnit()
+    var transferredMaxSize = LayoutUnit.max()
+    let aspectRatio = resolveAspectRatio()
+    if aspectRatio == nil {
+      return (transferredMinSize, transferredMaxSize)
+    }
+
+    if style().logicalMinWidth().isSpecified() {
+      let inlineMinSize = computeLogicalWidthInFragmentUsing(
+        widthType: .MinSize, logicalWidth: style().logicalMinWidth(),
+        availableLogicalWidth: containingBlockLogicalWidthForContent(),
+        cb: containingBlock()!, fragment: nil)
+      if inlineMinSize > LayoutUnit() {
+        transferredMinSize = RenderBoxWrapper.blockSizeFromAspectRatio(
+          borderPaddingInlineSum: borderAndPaddingLogicalWidth(),
+          borderPaddingBlockSum: borderAndPaddingLogicalHeight(),
+          aspectRatio: aspectRatio!, boxSizing: style().boxSizingForAspectRatio(),
+          inlineSize: inlineMinSize,
+          aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+      }
+    }
+
+    if style().logicalMaxWidth().isSpecified() {
+      let inlineMaxSize = computeLogicalWidthInFragmentUsing(
+        widthType: .MaxSize, logicalWidth: style().logicalMaxWidth(),
+        availableLogicalWidth: containingBlockLogicalWidthForContent(),
+        cb: containingBlock()!, fragment: nil)
+      if inlineMaxSize != LayoutUnit.max() {
+        transferredMaxSize = RenderBoxWrapper.blockSizeFromAspectRatio(
+          borderPaddingInlineSum: borderAndPaddingLogicalWidth(),
+          borderPaddingBlockSum: borderAndPaddingLogicalHeight(),
+          aspectRatio: aspectRatio!, boxSizing: style().boxSizingForAspectRatio(),
+          inlineSize: inlineMaxSize,
+          aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+      }
+    }
+    // Spec says the transferred max size should be floored by the transferred min size
+    transferredMaxSize = max(transferredMinSize, transferredMaxSize)
+    return (transferredMinSize, transferredMaxSize)
   }
 
   private enum ConstrainDimension {
