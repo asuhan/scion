@@ -2592,8 +2592,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     boxSizing: BoxSizing, inlineSize: LayoutUnit, aspectRatioType: AspectRatioType,
     isRenderReplaced: Bool
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if boxSizing == .BorderBox && aspectRatioType == .Ratio && !isRenderReplaced {
+      return max(borderPaddingBlockSum, LayoutUnit(value: inlineSize / aspectRatio))
+    }
+    return LayoutUnit(value: (inlineSize - borderPaddingInlineSum) / aspectRatio)
+      + borderPaddingBlockSum
   }
 
   private func replacedMinMaxLogicalHeightComputesAsNone(sizeType: SizeType) -> Bool {
