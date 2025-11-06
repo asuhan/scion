@@ -572,6 +572,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func constrainBlockMarginInAvailableSpaceOrTrim(
+    containingBlock: RenderBoxWrapper, availableSpace: LayoutUnit, marginSide: MarginTrimType
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func reflectionOffset() -> Int32 {
     if style().boxReflect() == nil {
       return 0
@@ -829,8 +836,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlock: RenderBlockWrapper, marginBefore: inout LayoutUnit,
     marginAfter: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // First assert that we're not calling this method on box types that don't support margins.
+    assert(!isRenderTableCell())
+    assert(!isRenderTableRow())
+    assert(!isRenderTableSection())
+    assert(!isRenderTableCol())
+
+    // Margins are calculated with respect to the logical width of
+    // the containing block (8.3)
+    let cw = containingBlockLogicalWidthForContent()
+    marginBefore = constrainBlockMarginInAvailableSpaceOrTrim(
+      containingBlock: containingBlock, availableSpace: cw, marginSide: .BlockStart)
+    marginAfter = constrainBlockMarginInAvailableSpaceOrTrim(
+      containingBlock: containingBlock, availableSpace: cw, marginSide: .BlockEnd)
   }
 
   enum RenderBoxFragmentInfoFlags {
