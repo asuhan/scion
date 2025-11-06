@@ -123,6 +123,10 @@ struct LengthWrapper: Equatable {
     return type() == .Undefined
   }
 
+  func isFillAvailable() -> Bool {
+    return type() == .FillAvailable
+  }
+
   func isFitContent() -> Bool {
     return type() == .FitContent
   }

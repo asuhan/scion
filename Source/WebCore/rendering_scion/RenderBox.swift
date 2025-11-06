@@ -1239,6 +1239,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(p))
   }
 
+  func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func verticalScrollbarWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2023,8 +2028,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalHeightLength: LengthWrapper, intrinsicContentHeight: LayoutUnit?,
     borderAndPadding: LayoutUnit
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: The CSS sizing spec is considering changing what min-content/max-content should resolve to.
+    // If that happens, this code will have to change.
+    if logicalHeightLength.isMinContent() || logicalHeightLength.isMaxContent()
+      || logicalHeightLength.isFitContent() || logicalHeightLength.isLegacyIntrinsic()
+    {
+      if intrinsicContentHeight != nil {
+        return adjustIntrinsicLogicalHeightForBoxSizing(height: intrinsicContentHeight!)
+      }
+      return nil
+    }
+    if logicalHeightLength.isFillAvailable() {
+      return containingBlock()!.availableLogicalHeight(heightType: .ExcludeMarginBorderPadding)
+        - borderAndPadding
+    }
+    fatalError("Not reached")
   }
 
   func shouldComputeSizeAsReplaced() -> Bool {
