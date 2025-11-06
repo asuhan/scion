@@ -251,6 +251,11 @@ private func shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: RenderB
   return style.logicalHeight().isAuto()
 }
 
+enum StretchingMode {
+  case `Any`
+  case Explicit
+}
+
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func requiresLayerWithScrollableArea() -> Bool {
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
@@ -1287,6 +1292,69 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     case MaxSize
   }
   private func sizesLogicalWidthToFitContent(widthType: SizeType) -> Bool {
+    // Marquees in WinIE are like a mixture of blocks and inline-blocks.  They size as though they're blocks,
+    // but they allow text to sit on the same line as the marquee.
+    if isFloating() || (isInlineBlockOrInlineTable() && !isHTMLMarquee()) {
+      return true
+    }
+
+    if isGridItem() {
+      return (parent() as! RenderGridWrapper).areMasonryColumns() || !hasStretchedLogicalWidth()
+    }
+
+    // This code may look a bit strange.  Basically width:intrinsic should clamp the size when testing both
+    // min-width and width.  max-width is only clamped if it is also intrinsic.
+    let logicalWidth = (widthType == .MaxSize) ? style().logicalMaxWidth() : style().logicalWidth()
+    if logicalWidth.type() == .Intrinsic {
+      return true
+    }
+
+    // Children of a horizontal marquee do not fill the container by default.
+    // FIXME: Need to deal with MarqueeDirection::Auto value properly. It could be vertical.
+    // FIXME: Think about block-flow here.  Need to find out how marquee direction relates to
+    // block-flow (as well as how marquee overflow should relate to block flow).
+    // https://bugs.webkit.org/show_bug.cgi?id=46472
+    if parent()!.isHTMLMarquee() {
+      let dir = parent()!.style().marqueeDirection()
+      if dir == .Auto || dir == .Forward || dir == .Backward || dir == .Left || dir == .Right {
+        return true
+      }
+    }
+
+    // Flexible box items should shrink wrap, so we lay them out at their intrinsic widths.
+    // In the case of columns that have a stretch alignment, we layout at the stretched size
+    // to avoid an extra layout when applying alignment.
+    if parent() is RenderFlexibleBoxWrapper {
+      // For multiline columns, we need to apply align-content first, so we can't stretch now.
+      if !parent()!.style().isColumnFlexDirection() || parent()!.style().flexWrap() != .NoWrap {
+        return true
+      }
+      if !columnFlexItemHasStretchAlignment() {
+        return true
+      }
+    }
+
+    // Flexible horizontal boxes lay out children at their intrinsic widths.  Also vertical boxes
+    // that don't stretch their kids lay out their children at their intrinsic widths.
+    // FIXME: Think about block-flow here.
+    // https://bugs.webkit.org/show_bug.cgi?id=46473
+    if parent()!.isRenderDeprecatedFlexibleBox()
+      && (parent()!.style().boxOrient() == .Horizontal || parent()!.style().boxAlign() != .Stretch)
+    {
+      return true
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
+  private func hasStretchedLogicalWidth(stretchingMode: StretchingMode = .`Any`) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func columnFlexItemHasStretchAlignment() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

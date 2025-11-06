@@ -1163,6 +1163,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func isColumnFlexDirection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func flexWrap() -> FlexWrap {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1197,6 +1202,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func marqueeBehavior() -> MarqueeBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func marqueeDirection() -> MarqueeDirection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -60,6 +60,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func areMasonryColumns() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func currentGrid() -> Grid {
     return grid!.currentGrid
   }

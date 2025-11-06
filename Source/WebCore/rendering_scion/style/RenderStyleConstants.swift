@@ -254,6 +254,16 @@ enum MarqueeBehavior: UInt8 {
   case Alternate
 }
 
+enum MarqueeDirection: UInt8 {
+  case Auto
+  case Left
+  case Right
+  case Up
+  case Down
+  case Forward
+  case Backward
+}
+
 // Deprecated Flexible Box Properties
 
 enum BoxAlignment: UInt8 {
