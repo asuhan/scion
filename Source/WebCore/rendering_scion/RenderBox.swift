@@ -646,6 +646,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
   }
 
+  private func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Overridden by fieldsets to subtract out the intrinsic border.
   func adjustBorderBoxLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -2072,6 +2077,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return nil
   }
 
+  private func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
     // Figure out if we need to push a transparency layer to render our mask.
     var pushTransparencyLayer = false
@@ -2328,8 +2338,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlock: RenderBlockWrapper, marginSide: MarginTrimType,
     computeInlineMargin: () -> LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if containingBlock.shouldTrimChildMarginForBox(type: marginSide, child: self) {
+      // FIXME(255434): This should be set when the margin is being trimmed
+      // within the context of its layout system (block, flex, grid) and should not
+      // be done at this level within RenderBox. We should be able to leave the
+      // trimming responsibility to each of those contexts and not need to
+      // do any of it here (trimming the margin and setting the rare data bit)
+      if isGridItem() && (marginSide == .InlineStart || marginSide == .InlineEnd) {
+        markMarginAsTrimmed(newTrimmedMargin: marginSide)
+      }
+      return LayoutUnit(value: UInt64(0))
+    }
+    return computeInlineMargin()
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
