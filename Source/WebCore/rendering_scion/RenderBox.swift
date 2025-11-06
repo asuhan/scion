@@ -35,8 +35,14 @@ enum OverlayScrollbarSizeRelevancy {
 private func outermostBlockContainingFloatingObject(box: RenderBoxWrapper)
   -> RenderBlockFlowWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(box.isFloating())
+  var parentBlock: RenderBlockFlowWrapper? = nil
+  for ancestor: RenderBlockFlowWrapper in ancestorsOfType(descendant: box) {
+    if parentBlock == nil || ancestor.containsFloat(renderer: box) {
+      parentBlock = ancestor
+    }
+  }
+  return parentBlock
 }
 
 private func shouldFlipBeforeAfterMargins(

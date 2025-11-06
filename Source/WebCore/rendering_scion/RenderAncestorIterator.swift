@@ -23,7 +23,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderAncestorIteratorAdapter<T> {
+class RenderAncestorIterator<T>: IteratorProtocol {
+  func next() -> T? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+class RenderAncestorIteratorAdapter<T>: Sequence {
+  func makeIterator() -> RenderAncestorIterator<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func first() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -33,4 +45,9 @@ class RenderAncestorIteratorAdapter<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+}
+
+func ancestorsOfType<T>(descendant: RenderObjectWrapper) -> RenderAncestorIteratorAdapter<T> {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
