@@ -552,6 +552,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     )
   }
 
+  func clientLogicalWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -627,12 +632,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   typealias ContainingBlockOverrideValue = LayoutUnit?
 
-  func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue {
+  func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func overridingContainingBlockContentLogicalHeight() -> ContainingBlockOverrideValue {
+  func overridingContainingBlockContentLogicalHeight() -> ContainingBlockOverrideValue? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -864,6 +869,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clampToStartAndEndFragments(fragment: RenderFragmentContainerWrapper?)
+    -> RenderFragmentContainerWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -895,8 +907,71 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlock: RenderBoxModelObjectWrapper, fragment: RenderFragmentContainerWrapper? = nil,
     checkForPerpendicularWritingMode: Bool = true
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      containingBlock.canContainAbsolutelyPositionedObjects()
+        || containingBlock.canContainFixedPositionObjects())
+
+    if checkForPerpendicularWritingMode
+      && containingBlock.isHorizontalWritingMode() != isHorizontalWritingMode()
+    {
+      return containingBlockLogicalHeightForPositioned(
+        containingBlock: containingBlock, checkForPerpendicularWritingMode: false)
+    }
+
+    if let overridingContainingBlockContentLogicalWidth =
+      overridingContainingBlockContentLogicalWidth(),
+      let value = overridingContainingBlockContentLogicalWidth
+    {
+      return value
+    }
+
+    if let box = containingBlock as? RenderBoxWrapper {
+      let isFixedPosition = isFixedPositioned()
+
+      let fragmentedFlow = enclosingFragmentedFlow()
+      if fragmentedFlow == nil {
+        if isFixedPosition, let renderView = containingBlock as? RenderViewWrapper {
+          return renderView.clientLogicalWidthForFixedPosition()
+        }
+        return (containingBlock as! RenderBoxWrapper).clientLogicalWidth()
+      }
+
+      let cb = containingBlock as? RenderBlockWrapper
+      if cb == nil {
+        return box.clientLogicalWidth()
+      }
+
+      var boxInfo: RenderBoxFragmentInfo? = nil
+      if fragment == nil {
+        if let fragmentedFlow = containingBlock as? RenderFragmentedFlowWrapper,
+          !checkForPerpendicularWritingMode
+        {
+          return fragmentedFlow.contentLogicalWidthOfFirstFragment()
+        }
+        if isWritingModeRoot() {
+          let cbPageOffset = cb!.offsetFromLogicalTopOfFirstPage()
+          if let cbFragment = cb!.fragmentAtBlockOffset(blockOffset: cbPageOffset) {
+            boxInfo = cb!.renderBoxFragmentInfo(fragment: cbFragment)
+          }
+        }
+      } else if fragmentedFlow!.isHorizontalWritingMode()
+        == containingBlock.isHorizontalWritingMode()
+      {
+        let containingBlockFragment = cb!.clampToStartAndEndFragments(fragment: fragment)
+        boxInfo = cb!.renderBoxFragmentInfo(fragment: containingBlockFragment)
+      }
+      return boxInfo != nil
+        ? max(
+          LayoutUnit(value: 0),
+          cb!.clientLogicalWidth() - (cb!.logicalWidth() - boxInfo!.logicalWidth))
+        : cb!.clientLogicalWidth()
+    }
+
+    if let inlineBox = containingBlock as? RenderInlineWrapper {
+      return inlineBox.innerPaddingBoxWidth()
+    }
+
+    fatalError("Not reached")
   }
 
   private func containingBlockLogicalHeightForPositioned(
@@ -1281,9 +1356,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         availableHeight = stretchedHeight!
       } else if let gridAreaLogicalHeight =
         isGridItem() ? overridingContainingBlockContentLogicalHeight() : nil,
-        gridAreaLogicalHeight.bool()
+        let value = gridAreaLogicalHeight
       {
-        availableHeight = gridAreaLogicalHeight
+        availableHeight = value
       } else {
         availableHeight =
           hasPerpendicularContainingBlock
@@ -2337,7 +2412,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       let overridingContainingBlockContentLogicalHeight =
         overridingContainingBlockContentLogicalHeight()
     {
-      return !overridingContainingBlockContentLogicalHeight.bool()
+      return !overridingContainingBlockContentLogicalHeight!.bool()
     }
 
     // Make sure % min-height and % max-height resolve to none if the containing block has auto height.

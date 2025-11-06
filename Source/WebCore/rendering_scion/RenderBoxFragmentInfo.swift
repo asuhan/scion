@@ -25,4 +25,5 @@
 
 struct RenderBoxFragmentInfo {
   let logicalLeft: LayoutUnit
+  let logicalWidth: LayoutUnit
 }
