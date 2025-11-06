@@ -1130,9 +1130,26 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  private func computeReplacedLogicalHeightRespectingMinMaxHeight(logicalHeight: LayoutUnit)
+    -> LayoutUnit
+  {
+    var minLogicalHeight = LayoutUnit()
+    if !replacedMinMaxLogicalHeightComputesAsNone(sizeType: .MinSize) {
+      minLogicalHeight = computeReplacedLogicalHeightUsing(
+        heightType: .MinSize, logicalHeight: style().logicalMinHeight())
+    }
+    var maxLogicalHeight = logicalHeight
+    if !replacedMinMaxLogicalHeightComputesAsNone(sizeType: .MaxSize) {
+      maxLogicalHeight = computeReplacedLogicalHeightUsing(
+        heightType: .MaxSize, logicalHeight: style().logicalMaxHeight())
+    }
+    return max(minLogicalHeight, min(logicalHeight, maxLogicalHeight))
+  }
+
   func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeReplacedLogicalHeightRespectingMinMaxHeight(
+      logicalHeight: computeReplacedLogicalHeightUsing(
+        heightType: .MainOrPreferredSize, logicalHeight: style().logicalHeight()))
   }
 
   func computePercentageLogicalHeight(
