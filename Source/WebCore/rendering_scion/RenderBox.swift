@@ -45,6 +45,15 @@ private func outermostBlockContainingFloatingObject(box: RenderBoxWrapper)
   return parentBlock
 }
 
+private func inlineSizeFromAspectRatio(
+  borderPaddingInlineSum: LayoutUnit, borderPaddingBlockSum: LayoutUnit, aspectRatio: Float64,
+  boxSizing: BoxSizing, blockSize: LayoutUnit, aspectRatioType: AspectRatioType,
+  isRenderReplaced: Bool
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func shouldFlipBeforeAfterMargins(
   containingBlockStyle: RenderStyleWrapper, childStyle: RenderStyleWrapper
 ) -> Bool {
@@ -2409,6 +2418,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       && containingBlock.style().logicalHeight().isAuto()
   }
 
+  private func resolveAspectRatio() -> Float64? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func shouldIgnoreAspectRatio() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2420,8 +2434,40 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var transferredMinSize = LayoutUnit()
+    var transferredMaxSize = LayoutUnit.max()
+    let aspectRatio = resolveAspectRatio()
+    if aspectRatio == nil {
+      return (transferredMinSize, transferredMaxSize)
+    }
+
+    if style().logicalMinHeight().isSpecified() {
+      let blockMinSize = constrainLogicalHeightByMinMax(
+        logicalHeight: LayoutUnit(), intrinsicContentHeight: nil)
+      if blockMinSize > LayoutUnit() {
+        transferredMinSize = inlineSizeFromAspectRatio(
+          borderPaddingInlineSum: borderAndPaddingLogicalWidth(),
+          borderPaddingBlockSum: borderAndPaddingLogicalHeight(), aspectRatio: aspectRatio!,
+          boxSizing: style().boxSizingForAspectRatio(), blockSize: blockMinSize,
+          aspectRatioType: style().aspectRatioType(),
+          isRenderReplaced: isRenderReplaced())
+      }
+    }
+    if style().logicalMaxHeight().isSpecified() {
+      let blockMaxSize = constrainLogicalHeightByMinMax(
+        logicalHeight: LayoutUnit.max(), intrinsicContentHeight: nil)
+      if blockMaxSize != LayoutUnit.max() {
+        transferredMaxSize = inlineSizeFromAspectRatio(
+          borderPaddingInlineSum: borderAndPaddingLogicalWidth(),
+          borderPaddingBlockSum: borderAndPaddingLogicalHeight(), aspectRatio: aspectRatio!,
+          boxSizing: style().boxSizingForAspectRatio(), blockSize: blockMaxSize,
+          aspectRatioType: style().aspectRatioType(),
+          isRenderReplaced: isRenderReplaced())
+      }
+    }
+    // Spec says the transferred max size should be floored by the transferred min size
+    transferredMaxSize = max(transferredMinSize, transferredMaxSize)
+    return (transferredMinSize, transferredMaxSize)
   }
 
   private func computeMinMaxLogicalHeightFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
