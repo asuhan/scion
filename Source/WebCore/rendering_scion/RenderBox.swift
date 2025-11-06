@@ -1344,12 +1344,32 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return true
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Button, input, select, textarea, and legend treat width value of 'auto' as 'intrinsic' unless it's in a
+    // stretching column flexbox.
+    // FIXME: Think about block-flow here.
+    // https://bugs.webkit.org/show_bug.cgi?id=46473
+    if logicalWidth.isAuto() && !isStretchingColumnFlexItem() && element() != nil
+      && (element() is HTMLInputElementWrapper || element() is HTMLSelectElementWrapper
+        || element() is HTMLButtonElementWrapper || element() is HTMLTextAreaElementWrapper
+        || element() is HTMLLegendElementWrapper)
+    {
+      return true
+    }
+
+    if isHorizontalWritingMode() != containingBlock()!.isHorizontalWritingMode() {
+      return true
+    }
+
+    return false
   }
 
   // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
   private func hasStretchedLogicalWidth(stretchingMode: StretchingMode = .`Any`) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isStretchingColumnFlexItem() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
