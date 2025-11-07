@@ -709,18 +709,31 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func adjustBorderBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
+    let width = LayoutUnit(value: logicalWidth.value())
+    let bordersPlusPadding = borderAndPaddingLogicalWidth()
+    if style().boxSizing() == .ContentBox || logicalWidth.isIntrinsicOrAuto() {
+      return width + bordersPlusPadding
+    }
+    return max(width, bordersPlusPadding)
+  }
+
   private func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if originalType == .Calculated {
+      return adjustBorderBoxLogicalWidthForBoxSizing(
+        logicalWidth: LengthWrapper(value: computedLogicalWidth, type: .Fixed, hasQuirk: false))
+    }
+    return adjustBorderBoxLogicalWidthForBoxSizing(
+      logicalWidth: LengthWrapper(value: computedLogicalWidth, type: originalType, hasQuirk: false))
   }
 
   private func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: Int32, originalType: LengthType
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return adjustBorderBoxLogicalWidthForBoxSizing(
+      computedLogicalWidth: LayoutUnit(value: computedLogicalWidth), originalType: originalType)
   }
 
   // Overridden by fieldsets to subtract out the intrinsic border.
