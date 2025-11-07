@@ -1414,8 +1414,51 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     childMarginStart: LayoutUnit, childMarginEnd: LayoutUnit, cb: RenderBlockWrapper,
     fragment: RenderFragmentContainerWrapper?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var containingBlockFragment: RenderFragmentContainerWrapper? = nil
+    var logicalTopPosition = logicalTop()
+    if fragment != nil {
+      let offsetFromLogicalTopOfFragment =
+        fragment != nil
+        ? fragment!.logicalTopForFragmentedFlowContent() - offsetFromLogicalTopOfFirstPage()
+        : LayoutUnit(value: UInt64(0))
+      logicalTopPosition = max(
+        logicalTopPosition, logicalTopPosition + offsetFromLogicalTopOfFragment)
+      containingBlockFragment = cb.clampToStartAndEndFragments(fragment: fragment)
+    }
+
+    let logicalHeight = cb.logicalHeightForChild(child: self)
+    var availableLogicalWidthAtLogicalTopPosition = cb.availableLogicalWidthForLineInFragment(
+      position: logicalTopPosition, fragment: containingBlockFragment, logicalHeight: logicalHeight)
+    // We need to see if margins on either the start side or the end side can contain the floats in question. If they can,
+    // then just using the line width is inaccurate. In the case where a float completely fits, we don't need to use the line
+    // offset at all, but can instead push all the way to the content edge of the containing block. In the case where the float
+    // doesn't fit, we can use the line offset, but we need to grow it by the margin to reflect the fact that the margin was
+    // "consumed" by the float. Negative margins aren't consumed by the float, and so we ignore them.
+    if childMarginStart > 0 {
+      let startContentSide = cb.startOffsetForContent(fragment: containingBlockFragment)
+      let startContentSideWithMargin = startContentSide + childMarginStart
+      let startOffset = cb.startOffsetForLineInFragment(
+        position: logicalTopPosition, fragment: containingBlockFragment,
+        logicalHeight: logicalHeight)
+      if startOffset <= startContentSideWithMargin {
+        availableLogicalWidthAtLogicalTopPosition -= childMarginStart
+        availableLogicalWidthAtLogicalTopPosition += startOffset - startContentSide
+      }
+    }
+
+    if childMarginEnd > 0 {
+      let endContentSide = cb.endOffsetForContent(fragment: containingBlockFragment)
+      let endContentSideWithMargin = endContentSide + childMarginEnd
+      let endOffset = cb.endOffsetForLineInFragment(
+        position: logicalTopPosition, fragment: containingBlockFragment,
+        logicalHeight: logicalHeight)
+      if endOffset <= endContentSideWithMargin {
+        availableLogicalWidthAtLogicalTopPosition -= childMarginEnd
+        availableLogicalWidthAtLogicalTopPosition += endOffset - endContentSide
+      }
+    }
+
+    return availableLogicalWidthAtLogicalTopPosition
   }
 
   func computeLogicalWidthInFragmentUsing(

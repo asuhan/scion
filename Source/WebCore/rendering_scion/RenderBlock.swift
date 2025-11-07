@@ -184,6 +184,32 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return wk_interop.RenderBlock_containsFloats(p)
   }
 
+  // Versions that can compute line offsets with the fragment and page offset passed in. Used for speed to avoid having to
+  // compute the fragment all over again when you already know it.
+  func availableLogicalWidthForLineInFragment(
+    position: LayoutUnit, fragment: RenderFragmentContainerWrapper?,
+    logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func startOffsetForLineInFragment(
+    position: LayoutUnit, fragment: RenderFragmentContainerWrapper?,
+    logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func endOffsetForLineInFragment(
+    position: LayoutUnit, fragment: RenderFragmentContainerWrapper?,
+    logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addContinuationWithOutline(flow: RenderInlineWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -274,6 +300,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
+  func logicalWidthForChild(child: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalHeightForChild(child: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct FirstLetterRenderObjects {
     let firstLetter: RenderObjectWrapper?
     let firstLetterContainer: RenderElementWrapper?
@@ -341,6 +377,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
     return FirstLetterRenderObjects(
       firstLetter: firstLetter, firstLetterContainer: firstLetterContainer)
+  }
+
+  func startOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func endOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func canDropAnonymousBlockChild() -> Bool {
