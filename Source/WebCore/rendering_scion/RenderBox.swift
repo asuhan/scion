@@ -50,8 +50,12 @@ private func inlineSizeFromAspectRatio(
   boxSizing: BoxSizing, blockSize: LayoutUnit, aspectRatioType: AspectRatioType,
   isRenderReplaced: Bool
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if boxSizing == .BorderBox && aspectRatioType == .Ratio && !isRenderReplaced {
+    return max(borderPaddingInlineSum, LayoutUnit(value: blockSize * aspectRatio))
+  }
+
+  return LayoutUnit(value: (blockSize - borderPaddingBlockSum) * aspectRatio)
+    + borderPaddingInlineSum
 }
 
 private func shouldFlipBeforeAfterMargins(

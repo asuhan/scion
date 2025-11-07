@@ -290,6 +290,10 @@ struct LayoutUnit: Comparable {
     return boundedMultiply(a: a, b: b)
   }
 
+  static func * (a: LayoutUnit, b: Float64) -> Float64 {
+    return a.toDouble() * b
+  }
+
   static func * (a: LayoutUnit, b: Float32) -> Float32 {
     return a.toFloat() * b
   }
