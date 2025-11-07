@@ -1372,9 +1372,40 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
   func hasStretchedLogicalHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = style()
+    if !style.logicalHeight().isAuto() || style.marginBefore().isAuto()
+      || style.marginAfter().isAuto()
+    {
+      return false
+    }
+    let containingBlock = containingBlock()
+    if containingBlock == nil {
+      // We are evaluating align-self/justify-self, which default to 'normal' for the root element.
+      // The 'normal' value behaves like 'start' except for Flexbox Items, which obviously should have a container.
+      return false
+    }
+    if containingBlock!.isHorizontalWritingMode() != isHorizontalWritingMode() {
+      if let grid = self as? RenderGridWrapper,
+        grid.isSubgridInParentDirection(parentDirection: .ForColumns)
+      {
+        return true
+      }
+      return style.resolvedJustifySelf(
+        parentStyle: containingBlock!.style(),
+        normalValueBehaviour: containingBlock!.selfAlignmentNormalBehavior(gridItem: self)
+      ).position == .Stretch
+    }
+    if let grid = self as? RenderGridWrapper,
+      grid.isSubgridInParentDirection(parentDirection: .ForRows)
+    {
+      return true
+    }
+    return style.resolvedAlignSelf(
+      parentStyle: containingBlock!.style(),
+      normalValueBehaviour: containingBlock!.selfAlignmentNormalBehavior(gridItem: self)
+    ).position == .Stretch
   }
 
   // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
