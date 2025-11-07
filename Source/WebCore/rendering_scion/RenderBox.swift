@@ -960,8 +960,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let layoutState = view().frameView().layoutContext().layoutState()
+    if (layoutState != nil && !layoutState!.isPaginated())
+      || (layoutState == nil && enclosingFragmentedFlow() == nil)
+    {
+      return LayoutUnit(value: 0)
+    }
+
+    let containerBlock = containingBlock()!
+    return containerBlock.offsetFromLogicalTopOfFirstPage() + logicalTop()
   }
 
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
