@@ -932,8 +932,31 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func clampToStartAndEndFragments(fragment: RenderFragmentContainerWrapper?)
     -> RenderFragmentContainerWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fragmentedFlow = enclosingFragmentedFlow()
+
+    assert(isRenderView() || (fragment != nil && fragmentedFlow != nil))
+    if isRenderView() {
+      return fragment
+    }
+
+    // We need to clamp to the block, since we want any lines or blocks that overflow out of the
+    // logical top or logical bottom of the block to size as though the border box in the first and
+    // last fragments extended infinitely. Otherwise the lines are going to size according to the fragments
+    // they overflow into, which makes no sense when this block doesn't exist in |fragment| at all.
+    if let (startFragment, endFragment) = fragmentedFlow!.getFragmentRangeForBox(box: self) {
+      if fragment!.logicalTopForFragmentedFlowContent()
+        < startFragment.logicalTopForFragmentedFlowContent()
+      {
+        return startFragment
+      }
+      if fragment!.logicalTopForFragmentedFlowContent()
+        > endFragment.logicalTopForFragmentedFlowContent()
+      {
+        return endFragment
+      }
+    }
+
+    return fragment
   }
 
   func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
