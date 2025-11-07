@@ -982,8 +982,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let overridingContainingBlockContentLogicalWidth =
+      overridingContainingBlockContentLogicalWidth()
+    {
+      return overridingContainingBlockContentLogicalWidth ?? LayoutUnit(value: UInt64(0))
+    }
+
+    if let containingBlock = containingBlock() {
+      return isOutOfFlowPositioned()
+        ? containingBlock.clientLogicalWidth() : containingBlock.availableLogicalWidth()
+    }
+
+    fatalError("Not reached")
   }
 
   private func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType)
