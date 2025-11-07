@@ -1368,6 +1368,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  func hasStretchedLogicalHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
   private func hasStretchedLogicalWidth(stretchingMode: StretchingMode = .`Any`) -> Bool {
     let style = style()
@@ -2718,8 +2723,31 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func shouldComputeLogicalWidthFromAspectRatio() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldIgnoreAspectRatio() {
+      return false
+    }
+
+    if isGridItem() {
+      if shouldComputeSizeAsReplaced() {
+        if hasStretchedLogicalWidth() && hasStretchedLogicalHeight() {
+          return false
+        }
+      } else if hasStretchedLogicalWidth(stretchingMode: .Explicit) {
+        return false
+      }
+      if style().logicalWidth().isPercentOrCalculated()
+        && parent()!.style().logicalWidth().isFixed()
+      {
+        return false
+      }
+    }
+
+    let isResolvablePercentageHeight =
+      style().logicalHeight().isPercentOrCalculated()
+      && (isOutOfFlowPositioned() || percentageLogicalHeightIsResolvable())
+    return overridingLogicalHeight() != nil
+      || shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: self)
+      || style().logicalHeight().isFixed() || isResolvablePercentageHeight
   }
 
   private func computeLogicalWidthFromAspectRatioInternal() -> LayoutUnit {
