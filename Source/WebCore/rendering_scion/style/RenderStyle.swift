@@ -616,6 +616,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func marginBeforeUsing(otherStyle: RenderStyleWrapper) -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func marginAfterUsing(otherStyle: RenderStyleWrapper) -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func direction() -> TextDirection {
     return inheritedFlags.direction
   }

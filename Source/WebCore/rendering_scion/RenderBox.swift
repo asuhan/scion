@@ -603,8 +603,26 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func constrainBlockMarginInAvailableSpaceOrTrim(
     containingBlock: RenderBoxWrapper, availableSpace: LayoutUnit, marginSide: MarginTrimType
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(marginSide == .BlockStart || marginSide == .BlockEnd)
+    if containingBlock.shouldTrimChildMarginForBox(type: marginSide, child: self) {
+      // FIXME(255434): This should be set when the margin is being trimmed
+      // within the context of its layout system (block, flex, grid) and should not
+      // be done at this level within RenderBox. We should be able to leave the
+      // trimming responsibility to each of those contexts and not need to
+      // do any of it here (trimming the margin and setting the rare data bit)
+      if isGridItem() {
+        markMarginAsTrimmed(newTrimmedMargin: marginSide)
+      }
+      return LayoutUnit(value: UInt64(0))
+    }
+
+    return marginSide == .BlockStart
+      ? minimumValueForLength(
+        length: style().marginBeforeUsing(otherStyle: containingBlock.style()),
+        maximumValue: availableSpace)
+      : minimumValueForLength(
+        length: style().marginAfterUsing(otherStyle: containingBlock.style()),
+        maximumValue: availableSpace)
   }
 
   func reflectionOffset() -> Int32 {
