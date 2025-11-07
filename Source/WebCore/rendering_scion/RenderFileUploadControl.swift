@@ -1,7 +1,5 @@
 /*
- * This file is part of the render object implementation for KHTML.
- *
- * Copyright (C) 2003 Apple Inc.
+ * Copyright (C) 2006, 2007, 2009, 2012 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,17 +18,11 @@
  *
  */
 
-final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
-  func isStretchingChildren() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+// Each RenderFileUploadControl contains a RenderButton (for opening the file chooser), and
+// sufficient space to draw a file icon and filename. The RenderButton has a shadow node
+// associated with it to receive click/hover events.
 
-  override func avoidsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
+final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
   override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

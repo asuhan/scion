@@ -639,6 +639,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
+  func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overridingLogicalHeight() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2591,8 +2596,43 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalWidthLength: LengthWrapper, availableLogicalWidth: LayoutUnit,
     borderAndPadding: LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if logicalWidthLength.isFillAvailable() {
+      return max(
+        borderAndPadding, fillAvailableMeasure(availableLogicalWidth: availableLogicalWidth))
+    }
+
+    var minLogicalWidth = LayoutUnit()
+    var maxLogicalWidth = LayoutUnit()
+    if !logicalWidthLength.isMinIntrinsic() && shouldComputeLogicalWidthFromAspectRatio() {
+      maxLogicalWidth = computeLogicalWidthFromAspectRatioInternal() - borderAndPadding
+      minLogicalWidth = maxLogicalWidth
+      if firstChild() != nil {
+        let (minChildrenLogicalWidth, maxChildrenLogicalWidth) =
+          computeIntrinsicKeywordLogicalWidths()
+        minLogicalWidth = max(minLogicalWidth, minChildrenLogicalWidth)
+        maxLogicalWidth = max(maxLogicalWidth, maxChildrenLogicalWidth)
+      }
+    } else {
+      (minLogicalWidth, maxLogicalWidth) = computeIntrinsicKeywordLogicalWidths()
+    }
+
+    if logicalWidthLength.isMinContent() || logicalWidthLength.isMinIntrinsic() {
+      return minLogicalWidth + borderAndPadding
+    }
+
+    if logicalWidthLength.isMaxContent() {
+      return maxLogicalWidth + borderAndPadding
+    }
+
+    if logicalWidthLength.isFitContent() {
+      minLogicalWidth += borderAndPadding
+      maxLogicalWidth += borderAndPadding
+      return max(
+        minLogicalWidth,
+        min(maxLogicalWidth, fillAvailableMeasure(availableLogicalWidth: availableLogicalWidth)))
+    }
+
+    fatalError("Not reached")
   }
 
   private func computeIntrinsicLogicalContentHeightUsing(
@@ -2673,6 +2713,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func isRenderReplacedWithIntrinsicRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldComputeLogicalWidthFromAspectRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeLogicalWidthFromAspectRatioInternal() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -3370,11 +3420,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedValues.position = logicalTopPos
   }
 
+  private func fillAvailableMeasure(availableLogicalWidth: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func fillAvailableMeasure(
     availableLogicalWidth: LayoutUnit, marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
   ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func computeIntrinsicKeywordLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    return computeIntrinsicLogicalWidths()
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {

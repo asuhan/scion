@@ -18,4 +18,9 @@
  *
  */
 
-final class RenderSliderWrapper: RenderFlexibleBoxWrapper {}
+final class RenderSliderWrapper: RenderFlexibleBoxWrapper {
+  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

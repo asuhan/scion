@@ -784,6 +784,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return true
   }
 
+  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum FieldsetFindLegendOption {
     case FieldsetIgnoreFloatingOrOutOfFlow
     case FieldsetIncludeFloatingOrOutOfFlow

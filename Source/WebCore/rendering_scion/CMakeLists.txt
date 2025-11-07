@@ -49,6 +49,7 @@ target_sources(layout_scion PRIVATE
     RenderLayerFilters.swift
     RenderElement.swift
     RenderEmbeddedObject.swift
+    RenderFileUploadControl.swift
     RenderFlexibleBox.swift
     RenderFragmentContainer.swift
     RenderFragmentContainerSet.swift

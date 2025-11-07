@@ -563,6 +563,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return LayoutUnit.fromRawValue(value: raw.value)
   }
 
+  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func pushToNextPageWithMinimumLogicalHeight(
     adjustment: inout LayoutUnit, logicalOffset: LayoutUnit, minimumLogicalHeight: LayoutUnit
   ) -> Bool {

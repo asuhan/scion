@@ -32,6 +32,11 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func avoidsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

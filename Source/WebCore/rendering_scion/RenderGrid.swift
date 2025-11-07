@@ -79,6 +79,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private class GridWrapper {
     init(renderGrid: RenderGridWrapper) {
       // TODO(asuhan): implement this
