@@ -817,6 +817,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func computePreferredWidthsForExcludedChildren() -> (LayoutUnit, LayoutUnit)? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
     if !isFieldset() || isSkippedContentRoot() || !intrinsicBorderForFieldset().bool() {
       return
@@ -843,6 +848,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isInlineBlockOrInlineTable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeChildPreferredLogicalWidths(child: RenderObjectWrapper) -> (
+    LayoutUnit, LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -928,8 +940,124 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func computeBlockPreferredLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!shouldApplyInlineSizeContainment())
+
+    let styleToUse = style()
+    let nowrap =
+      styleToUse.textWrapMode() == .NoWrap && styleToUse.whiteSpaceCollapse() == .Collapse
+
+    var child = firstChild()
+    let containingBlock = containingBlock()
+    var floatLeftWidth = LayoutUnit()
+    var floatRightWidth = LayoutUnit()
+
+    if let (childMinWidth, childMaxWidth) = computePreferredWidthsForExcludedChildren() {
+      minLogicalWidth = max(childMinWidth, minLogicalWidth)
+      maxLogicalWidth = max(childMaxWidth, maxLogicalWidth)
+    }
+
+    while child != nil {
+      // Positioned children don't affect the min/max width. Legends in fieldsets are skipped here
+      // since they compute outside of any one layout system. Other children excluded from
+      // normal layout are only used with block flows, so it's ok to calculate them here.
+      if child!.isOutOfFlowPositioned() || child!.isExcludedAndPlacedInBorder() {
+        child = child!.nextSibling()
+        continue
+      }
+
+      let childStyle = child!.style()
+      // Either the box itself of its content avoids floats.
+      let childBox = child as? RenderBoxWrapper
+      let childAvoidsFloats =
+        childBox != nil
+        ? childBox!.avoidsFloats() || (childBox!.isAnonymousBlock() && childBox!.childrenInline())
+        : false
+      if child!.isFloating() || childAvoidsFloats {
+        let floatTotalWidth = floatLeftWidth + floatRightWidth
+        let childUsedClear = RenderStyleWrapper.usedClear(renderer: child!)
+        if childUsedClear == .Left || childUsedClear == .Both {
+          maxLogicalWidth = max(floatTotalWidth, maxLogicalWidth)
+          floatLeftWidth = LayoutUnit(value: 0)
+        }
+        if childUsedClear == .Right || childUsedClear == .Both {
+          maxLogicalWidth = max(floatTotalWidth, maxLogicalWidth)
+          floatRightWidth = LayoutUnit(value: 0)
+        }
+      }
+
+      // A margin basically has three types: fixed, percentage, and auto (variable).
+      // Auto and percentage margins simply become 0 when computing min/max width.
+      // Fixed margins can be added in as is.
+      let startMarginLength = childStyle.marginStartUsing(otherStyle: styleToUse)
+      let endMarginLength = childStyle.marginEndUsing(otherStyle: styleToUse)
+      var margin = LayoutUnit()
+      var marginStart = LayoutUnit()
+      var marginEnd = LayoutUnit()
+      if startMarginLength.isFixed() {
+        marginStart += startMarginLength.value()
+      }
+      if endMarginLength.isFixed() {
+        marginEnd += endMarginLength.value()
+      }
+      margin = marginStart + marginEnd
+
+      let (childMinPreferredLogicalWidth, childMaxPreferredLogicalWidth) =
+        computeChildPreferredLogicalWidths(child: child!)
+
+      var w = childMinPreferredLogicalWidth + margin
+      minLogicalWidth = max(w, minLogicalWidth)
+
+      // IE ignores tables for calculation of nowrap. Makes some sense.
+      if nowrap && !child!.isRenderTable() {
+        maxLogicalWidth = max(w, maxLogicalWidth)
+      }
+
+      w = childMaxPreferredLogicalWidth + margin
+
+      if !child!.isFloating() {
+        if childAvoidsFloats {
+          // Determine a left and right max value based off whether or not the floats can fit in the
+          // margins of the object.  For negative margins, we will attempt to overlap the float if the negative margin
+          // is smaller than the float width.
+          let ltr =
+            containingBlock != nil
+            ? containingBlock!.style().isLeftToRightDirection()
+            : styleToUse.isLeftToRightDirection()
+          let marginLogicalLeft = ltr ? marginStart : marginEnd
+          let marginLogicalRight = ltr ? marginEnd : marginStart
+          let maxLeft =
+            marginLogicalLeft > 0
+            ? max(floatLeftWidth, marginLogicalLeft) : floatLeftWidth + marginLogicalLeft
+          let maxRight =
+            marginLogicalRight > 0
+            ? max(floatRightWidth, marginLogicalRight) : floatRightWidth + marginLogicalRight
+          w = childMaxPreferredLogicalWidth + maxLeft + maxRight
+          w = max(w, floatLeftWidth + floatRightWidth)
+        } else {
+          maxLogicalWidth = max(floatLeftWidth + floatRightWidth, maxLogicalWidth)
+        }
+        floatLeftWidth = LayoutUnit(value: 0)
+        floatRightWidth = LayoutUnit(value: 0)
+      }
+
+      if child!.isFloating() {
+        if RenderStyleWrapper.usedFloat(renderer: child!) == .Left {
+          floatLeftWidth += w
+        } else {
+          floatRightWidth += w
+        }
+      } else {
+        maxLogicalWidth = max(w, maxLogicalWidth)
+      }
+
+      child = child!.nextSibling()
+    }
+
+    // Always make sure these values are non-negative.
+    minLogicalWidth = max(LayoutUnit(value: 0), minLogicalWidth)
+    maxLogicalWidth = max(LayoutUnit(value: 0), maxLogicalWidth)
+
+    maxLogicalWidth = max(floatLeftWidth + floatRightWidth, maxLogicalWidth)
   }
 
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

@@ -199,6 +199,13 @@ enum Clear: UInt8 {
   case Both
 }
 
+enum UsedClear: UInt8 {
+  case None
+  case Left
+  case Right
+  case Both
+}
+
 enum FillAttachment: UInt8 {
   case ScrollBackground
   case LocalBackground

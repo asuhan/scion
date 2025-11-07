@@ -427,6 +427,11 @@ class RenderStyleWrapper: Equatable {
     return Float(rawValue: wk_interop.RenderStyle_floating(p))!
   }
 
+  static func usedFloat(renderer: RenderObjectWrapper) -> UsedFloat {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderImage() -> NinePieceImage {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -881,6 +886,11 @@ class RenderStyleWrapper: Equatable {
       fatalError("Not implemented")
     }
     return Clear(rawValue: wk_interop.RenderStyle_clear(p))!
+  }
+
+  static func usedClear(renderer: RenderObjectWrapper) -> UsedClear {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func textIndent() -> LengthWrapper {
