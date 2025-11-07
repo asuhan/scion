@@ -661,7 +661,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
-  func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+  func computeIntrinsicLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1957,6 +1959,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func intrinsicScrollbarLogicalWidthIncludingGutter() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollbarLogicalHeight() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2549,6 +2556,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         && !percentageLogicalHeightIsResolvable())
   }
 
+  func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateFloatPainterAfterSelfPaintingLayerChange() {
     assert(isFloating())
     assert(!hasLayer() || !layer()!.isSelfPaintingLayer)
@@ -2752,13 +2764,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       maxLogicalWidth = computeLogicalWidthFromAspectRatioInternal() - borderAndPadding
       minLogicalWidth = maxLogicalWidth
       if firstChild() != nil {
-        let (minChildrenLogicalWidth, maxChildrenLogicalWidth) =
-          computeIntrinsicKeywordLogicalWidths()
+        var minChildrenLogicalWidth = LayoutUnit()
+        var maxChildrenLogicalWidth = LayoutUnit()
+        computeIntrinsicKeywordLogicalWidths(
+          minLogicalWidth: &minChildrenLogicalWidth, maxLogicalWidth: &maxChildrenLogicalWidth)
         minLogicalWidth = max(minLogicalWidth, minChildrenLogicalWidth)
         maxLogicalWidth = max(maxLogicalWidth, maxChildrenLogicalWidth)
       }
     } else {
-      (minLogicalWidth, maxLogicalWidth) = computeIntrinsicKeywordLogicalWidths()
+      computeIntrinsicKeywordLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
     }
 
     if logicalWidthLength.isMinContent() || logicalWidthLength.isMinIntrinsic() {
@@ -3634,8 +3649,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return availableLogicalWidth - marginStart - marginEnd
   }
 
-  func computeIntrinsicKeywordLogicalWidths() -> (LayoutUnit, LayoutUnit) {
-    return computeIntrinsicLogicalWidths()
+  func computeIntrinsicKeywordLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
+    computeIntrinsicLogicalWidths(
+      minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {

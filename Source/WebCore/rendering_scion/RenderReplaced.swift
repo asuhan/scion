@@ -45,7 +45,9 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+  override func computeIntrinsicLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

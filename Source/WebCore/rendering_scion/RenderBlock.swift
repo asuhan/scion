@@ -784,9 +784,25 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return true
   }
 
-  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override func computeIntrinsicLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
+    assert(!childrenInline())
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let width = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = width
+        maxLogicalWidth = width
+      }
+    } else if !shouldApplyInlineSizeContainment() {
+      computeBlockPreferredLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+    }
+
+    maxLogicalWidth = max(minLogicalWidth, maxLogicalWidth)
+
+    let scrollbarWidth = intrinsicScrollbarLogicalWidthIncludingGutter()
+    maxLogicalWidth += scrollbarWidth
+    minLogicalWidth += scrollbarWidth
   }
 
   enum FieldsetFindLegendOption {
@@ -907,6 +923,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
       paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .CursorCaret)
       paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .DragCaret)
     }
+  }
+
+  private func computeBlockPreferredLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

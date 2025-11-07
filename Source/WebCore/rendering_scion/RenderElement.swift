@@ -108,6 +108,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldApplyInlineSizeContainment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shouldApplySizeOrInlineSizeContainment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldApplyPaintContainment() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

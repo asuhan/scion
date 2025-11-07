@@ -293,12 +293,16 @@ class RenderTableWrapper: RenderBlockWrapper {
     paintMaskImages(paintInfo: paintInfo, paintRect: rect)
   }
 
-  override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+  override func computeIntrinsicLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  override func computeIntrinsicKeywordLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+  override func computeIntrinsicKeywordLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
