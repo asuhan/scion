@@ -746,8 +746,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if var result = height {
+      if style().boxSizing() == .BorderBox {
+        result -= borderAndPaddingLogicalHeight()
+      }
+      return max(LayoutUnit(value: UInt64(0)), result)
+    }
+    return LayoutUnit(value: 0)
   }
 
   func adjustIntrinsicLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
