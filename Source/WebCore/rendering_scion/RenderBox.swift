@@ -1274,8 +1274,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fragment: RenderFragmentContainerWrapper?,
     cacheFlag: RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> RenderBoxFragmentInfo? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Make sure nobody is trying to call this with a null fragment.
+    if fragment == nil {
+      return nil
+    }
+
+    // If we have computed our width in this fragment already, it will be cached, and we can
+    // just return it.
+    if let boxInfo = fragment!.renderBoxFragmentInfo(box: self),
+      cacheFlag == .CacheRenderBoxFragmentInfo
+    {
+      return boxInfo
+    }
+
+    return nil
   }
 
   private func stretchesToViewport() -> Bool {

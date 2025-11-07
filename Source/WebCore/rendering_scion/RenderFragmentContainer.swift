@@ -29,6 +29,11 @@
  */
 
 class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
+  func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLastFragment() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
