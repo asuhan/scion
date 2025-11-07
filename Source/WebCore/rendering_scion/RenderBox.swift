@@ -999,8 +999,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let overridingContainingBlockContentLogicalHeight =
+      overridingContainingBlockContentLogicalHeight(),
+      let value = overridingContainingBlockContentLogicalHeight
+    {
+      // FIXME: Containing block for a grid item is the grid area it's located in. We need to return whatever
+      // height value we get from overridingContainingBlockContentLogicalHeight() here, including nil.
+      return value
+    }
+
+    if let containingBlock = containingBlock() {
+      return containingBlock.availableLogicalHeight(heightType: heightType)
+    }
+
+    fatalError("Not reached")
   }
 
   private func containingBlockLogicalWidthForPositioned(
