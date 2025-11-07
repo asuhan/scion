@@ -40,6 +40,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func computeIntrinsicAspectRatio() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeIntrinsicLogicalWidths() -> (LayoutUnit, LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

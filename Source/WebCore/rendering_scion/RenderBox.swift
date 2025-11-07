@@ -2825,8 +2825,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func resolveAspectRatio() -> Float64? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let replacedElement = self as? RenderReplacedWrapper {
+      return replacedElement.computeIntrinsicAspectRatio()
+    }
+    if style().hasAspectRatio() {
+      return style().logicalAspectRatio()
+    }
+    fatalError("Not reached")
   }
 
   private func shouldIgnoreAspectRatio() -> Bool {
