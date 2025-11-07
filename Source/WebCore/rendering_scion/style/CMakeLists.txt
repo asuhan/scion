@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     CollapsedBorderValue.swift
     ContentData.swift
     FillLayer.swift
+    GridPositionsResolver.swift
     ListStyleType.swift
     NinePieceImage.swift
     OffsetRotation.swift

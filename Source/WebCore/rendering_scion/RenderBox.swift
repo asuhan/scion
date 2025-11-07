@@ -1365,8 +1365,39 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
   private func hasStretchedLogicalWidth(stretchingMode: StretchingMode = .`Any`) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = style()
+    if !style.logicalWidth().isAuto() || style.marginStart().isAuto() || style.marginEnd().isAuto()
+    {
+      return false
+    }
+    let containingBlock = containingBlock()
+    if containingBlock == nil {
+      // We are evaluating align-self/justify-self, which default to 'normal' for the root element.
+      // The 'normal' value behaves like 'start' except for Flexbox Items, which obviously should have a container.
+      return false
+    }
+    let normalItemPosition =
+      stretchingMode == .Any
+      ? containingBlock!.selfAlignmentNormalBehavior(gridItem: self) : .Normal
+    if containingBlock!.isHorizontalWritingMode() != isHorizontalWritingMode() {
+      if let grid = self as? RenderGridWrapper,
+        grid.isSubgridInParentDirection(parentDirection: .ForRows)
+      {
+        return true
+      }
+      return style.resolvedAlignSelf(
+        parentStyle: containingBlock!.style(), normalValueBehaviour: normalItemPosition
+      ).position
+        == .Stretch
+    }
+    if let grid = self as? RenderGridWrapper,
+      grid.isSubgridInParentDirection(parentDirection: .ForColumns)
+    {
+      return true
+    }
+    return style.resolvedJustifySelf(
+      parentStyle: containingBlock!.style(), normalValueBehaviour: normalItemPosition
+    ).position == .Stretch
   }
 
   private func isStretchingColumnFlexItem() -> Bool {
@@ -2383,6 +2414,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

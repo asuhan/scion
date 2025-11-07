@@ -60,6 +60,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func isSubgridInParentDirection(parentDirection: GridTrackSizingDirection) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func areMasonryColumns() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -67,6 +72,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   func currentGrid() -> Grid {
     return grid!.currentGrid
+  }
+
+  override func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private class GridWrapper {
