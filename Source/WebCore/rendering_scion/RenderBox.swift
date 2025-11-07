@@ -738,8 +738,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Overridden by fieldsets to subtract out the intrinsic border.
   func adjustBorderBoxLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let bordersPlusPadding = borderAndPaddingLogicalHeight()
+    if style().boxSizing() == .ContentBox {
+      return height + bordersPlusPadding
+    }
+    return max(height, bordersPlusPadding)
   }
 
   func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
