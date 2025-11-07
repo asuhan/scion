@@ -3458,15 +3458,35 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func fillAvailableMeasure(availableLogicalWidth: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var marginStart = LayoutUnit()
+    var marginEnd = LayoutUnit()
+    return fillAvailableMeasure(
+      availableLogicalWidth: availableLogicalWidth, marginStart: &marginStart, marginEnd: &marginEnd
+    )
   }
 
   private func fillAvailableMeasure(
     availableLogicalWidth: LayoutUnit, marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let container = containingBlock()
+    let isOrthogonalElement = isHorizontalWritingMode() != container!.isHorizontalWritingMode()
+    let marginStartLength = style().marginStart()
+    let marginEndLength = style().marginEnd()
+    let availableSizeForResolvingMargin =
+      isOrthogonalElement ? containingBlockLogicalWidthForContent() : availableLogicalWidth
+    marginStart = computeOrTrimInlineMargin(
+      containingBlock: container!, marginSide: .InlineStart,
+      computeInlineMargin: {
+        return minimumValueForLength(
+          length: marginStartLength, maximumValue: availableSizeForResolvingMargin)
+      })
+    marginEnd = computeOrTrimInlineMargin(
+      containingBlock: container!, marginSide: .InlineEnd,
+      computeInlineMargin: {
+        return minimumValueForLength(
+          length: marginEndLength, maximumValue: availableSizeForResolvingMargin)
+      })
+    return availableLogicalWidth - marginStart - marginEnd
   }
 
   func computeIntrinsicKeywordLogicalWidths() -> (LayoutUnit, LayoutUnit) {
