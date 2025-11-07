@@ -756,8 +756,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustIntrinsicLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().boxSizing() == .BorderBox {
+      return height + borderAndPaddingLogicalHeight()
+    }
+    return height
   }
 
   struct ComputedMarginValues {
