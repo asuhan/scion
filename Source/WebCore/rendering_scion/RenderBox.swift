@@ -2751,8 +2751,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeLogicalWidthFromAspectRatioInternal() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(shouldComputeLogicalWidthFromAspectRatio())
+    let computedValues = computeLogicalHeight(
+      logicalHeight: logicalHeight(), logicalTop: logicalTop())
+    let logicalHeightforAspectRatio = computedValues.extent
+
+    return inlineSizeFromAspectRatio(
+      borderPaddingInlineSum: horizontalBorderAndPaddingExtent(),
+      borderPaddingBlockSum: verticalBorderAndPaddingExtent(),
+      aspectRatio: style().logicalAspectRatio(), boxSizing: style().boxSizingForAspectRatio(),
+      blockSize: logicalHeightforAspectRatio,
+      aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
   }
 
   private func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
