@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     InlineWalker.swift
     LayerAncestorClippingStack.swift
     LayerFragment.swift
+    LayoutRepainter.swift
     LegacyInlineBox.swift
     LegacyInlineFlowBox.swift
     LegacyInlineIterator.swift

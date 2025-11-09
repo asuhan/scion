@@ -47,5 +47,15 @@ class LocalFrameViewLayoutContextWrapper {
     return nil
   }
 
+  // These functions may only be accessed by LayoutStateMaintainer.
+  // Subtree push/pop
+  func pushLayoutState(
+    renderer: RenderBoxWrapper, offset: LayoutSizeWrapper,
+    pageHeight: LayoutUnit = LayoutUnit(value: UInt64(0)), pageHeightChanged: Bool = false
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var p: UnsafeRawPointer
 }

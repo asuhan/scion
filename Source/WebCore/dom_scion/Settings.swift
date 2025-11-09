@@ -29,6 +29,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func alignContentOnBlocksEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func asyncOverflowScrollingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

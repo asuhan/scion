@@ -72,6 +72,166 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) {
+    assert(needsLayout())
+
+    if !relayoutChildren && simplifiedLayout() {
+      return
+    }
+
+    let _ /*repainter*/ = LayoutRepainter(renderer: self)
+
+    var relayoutChildren = relayoutChildren
+    if recomputeLogicalWidthAndColumnWidth() {
+      relayoutChildren = true
+    }
+
+    if let layoutState = view().frameView().layoutContext().layoutState(),
+      layoutState.legacyLineClamp() != nil
+    {
+      relayoutChildren = relayoutChildren || !isFieldset()
+    }
+
+    rebuildFloatingObjectSetFromIntrudingFloats()
+
+    let _ /*previousHeight*/ = logicalHeight()
+    // FIXME: should this start out as borderAndPaddingLogicalHeight() + scrollbarLogicalHeight(),
+    // for consistency with other render classes?
+    resetLogicalHeightBeforeLayoutIfNeeded()
+
+    var pageLogicalHeightChanged = false
+    var pageLogicalHeight = pageLogicalHeight
+    checkForPaginationLogicalHeightChange(
+      relayoutChildren: &relayoutChildren, pageLogicalHeight: &pageLogicalHeight,
+      pageLogicalHeightChanged: &pageLogicalHeightChanged)
+
+    var repaintLogicalTop = LayoutUnit()
+    var repaintLogicalBottom = LayoutUnit()
+    var maxFloatLogicalBottom = LayoutUnit()
+    var pageRemaining = LayoutUnit()
+    let isPaginated = isPaginated()
+    let styleToUse = style()
+    repeat {
+      let _ = LayoutStateMaintainer(
+        root: self, offset: locationOffset(),
+        disablePaintOffsetCache: isTransformed() || hasReflection()
+          || styleToUse.isFlippedBlocksWritingMode(),
+        pageHeight: pageLogicalHeight, pageHeightChanged: pageLogicalHeightChanged)
+
+      preparePaginationBeforeBlockLayout(relayoutChildren: &relayoutChildren)
+      if isPaginated {
+        pageRemaining = pageLogicalHeightForOffsetFromBlockFlow(
+          offset: LayoutUnit(value: UInt64(0)))
+      }
+
+      // We use four values, maxTopPos, maxTopNeg, maxBottomPos, and maxBottomNeg, to track
+      // our current maximal positive and negative margins. These values are used when we
+      // are collapsed with adjacent blocks, so for example, if you have block A and B
+      // collapsing together, then you'd take the maximal positive margin from both A and B
+      // and subtract it from the maximal negative margin from both A and B to get the
+      // true collapsed margin. This algorithm is recursive, so when we finish layout()
+      // our block knows its current maximal positive/negative values.
+      //
+      // Start out by setting our margin values to our current margins. Table cells have
+      // no margins, so we don't fill in the values for table cells.
+      let isCell = isRenderTableCell()
+      if !isCell {
+        initMaxMarginValues()
+
+        setHasMarginBeforeQuirk(b: styleToUse.marginBefore().hasQuirk())
+        setHasMarginAfterQuirk(b: styleToUse.marginAfter().hasQuirk())
+        setPaginationStrut(strut: LayoutUnit(value: 0))
+      }
+      if firstChild() == nil && !isAnonymousBlock() {
+        setChildrenInline(b: true)
+      }
+      dirtyForLayoutFromPercentageHeightDescendants()
+      layoutInFlowChildren(
+        relayoutChildren: relayoutChildren, repaintLogicalTop: &repaintLogicalTop,
+        repaintLogicalBottom: &repaintLogicalBottom, maxFloatLogicalBottom: &maxFloatLogicalBottom)
+      // Expand our intrinsic height to encompass floats.
+      let toAdd = borderAndPaddingAfter() + scrollbarLogicalHeight()
+      if lowestFloatLogicalBottom() > (logicalHeight() - toAdd) && createsNewFormattingContext() {
+        setLogicalHeight(size: lowestFloatLogicalBottom() + toAdd)
+      }
+      if shouldBreakAtLineToAvoidWidow() {
+        setEverHadLayout()
+        continue
+      }
+      break
+    } while true
+
+    if relayoutForPagination() {
+      assert(!shouldBreakAtLineToAvoidWidow())
+      return
+    }
+
+    // Calculate our new height.
+    let oldHeight = logicalHeight()
+    var oldClientAfterEdge = clientLogicalBottom()
+
+    // Before updating the final size of the flow thread make sure a forced break is applied after the content.
+    // This ensures the size information is correctly computed for the last auto-height fragment receiving content.
+    if let fragmentedFlow = self as? RenderFragmentedFlowWrapper {
+      fragmentedFlow.applyBreakAfterContent(offsetBreak: oldClientAfterEdge)
+    }
+
+    updateLogicalHeight()
+    let newHeight = logicalHeight()
+
+    var alignContentShift = LayoutUnit(value: UInt64(0))
+    // Alignment isn't supported when fragmenting.
+    // Table cell alignment is handled in RenderTableCell::computeIntrinsicPadding.
+    if (!isPaginated || pageRemaining > newHeight) && (settings().alignContentOnBlocksEnabled())
+      && !isRenderTableCell()
+    {
+      alignContentShift = shiftForAlignContent(
+        intrinsicLogicalHeight: oldHeight, repaintLogicalTop: &repaintLogicalTop,
+        repaintLogicalBottom: &repaintLogicalBottom)
+      oldClientAfterEdge += alignContentShift
+      if alignContentShift < Int32(0) {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+    } else {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isPaginated() -> Bool {
+    // FIXME: Grid calls into layout outside of regular layout phase (during preferred width computation).
+    if let layoutState = view().frameView().layoutContext().layoutState() {
+      return layoutState.isPaginated()
+    }
+    return false
+  }
+
+  // This method is called at the start of layout to wipe away all of the floats in our floating objects list. It also
+  // repopulates the list with any floats that intrude from previous siblings or parents. Floats that were added by
+  // descendants are gone when this call completes and will get added back later on after the children have gotten
+  // a relayout.
+  private func rebuildFloatingObjectSetFromIntrudingFloats() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // RenderBlockFlow always contains either lines or paragraphs. When the children are all blocks (e.g. paragraphs), we call layoutBlockChildren.
+  // When the children are all inline (e.g., lines), we call layoutInlineChildren.
+  func layoutInFlowChildren(
+    relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
+    repaintLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shiftForAlignContent(
+    intrinsicLogicalHeight: LayoutUnit, repaintLogicalTop: inout LayoutUnit,
+    repaintLogicalBottom: inout LayoutUnit
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -82,6 +242,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setHasMarginBeforeQuirk(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setHasMarginAfterQuirk(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -237,6 +407,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func deleteLines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
+    -> LayoutUnit
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -610,7 +787,25 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return !checkFragment
   }
 
+  private func initMaxMarginValues() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func createFloatingObjects() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func recomputeLogicalWidthAndColumnWidth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func checkForPaginationLogicalHeightChange(
+    relayoutChildren: inout Bool, pageLogicalHeight: inout LayoutUnit,
+    pageLogicalHeightChanged: inout Bool
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -618,6 +813,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   struct LinePaginationAdjustment {
     var strut = LayoutUnit(value: 0)
     var isFirstAfterPageBreak = false
+  }
+
+  func relayoutForPagination() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

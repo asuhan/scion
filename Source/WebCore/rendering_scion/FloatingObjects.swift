@@ -40,6 +40,13 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  // Note that Type uses bits so you can use FloatLeftRight as a mask to query for both left and right.
+  enum `Type` {
+    case FloatLeft
+    case FloatRight
+    case FloatLeftRight
+  }
+
   func cloneForNewParent() -> FloatingObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

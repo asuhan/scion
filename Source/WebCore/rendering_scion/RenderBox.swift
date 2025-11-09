@@ -405,6 +405,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return logicalHeight
   }
 
+  func setLogicalHeight(size: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func location() -> LayoutPointWrapper {
     let rawLocation = wk_interop.RenderBox_location(p)
     return LayoutPointWrapper(
@@ -576,6 +581,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clientLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clientLogicalBottom() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1162,6 +1172,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     fatalError("Not reached")
+  }
+
+  func updateLogicalHeight() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
@@ -2629,6 +2644,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func resetLogicalHeightBeforeLayoutIfNeeded() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

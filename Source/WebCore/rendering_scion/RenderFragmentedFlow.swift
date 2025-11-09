@@ -171,6 +171,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return nil
   }
 
+  func applyBreakAfterContent(offsetBreak: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func collectLayerFragments(
     layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper

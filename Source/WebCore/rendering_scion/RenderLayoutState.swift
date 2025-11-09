@@ -118,3 +118,32 @@ class RenderLayoutStateWrapper {
 
   private var p: UnsafeRawPointer
 }
+
+// Stack-based class to assist with LayoutState push/pop
+struct LayoutStateMaintainer: ~Copyable {
+  init(
+    root: RenderBoxWrapper, offset: LayoutSizeWrapper, disablePaintOffsetCache: Bool,
+    pageHeight: LayoutUnit = LayoutUnit(value: UInt64(0)), pageHeightChanged: Bool = false
+  ) {
+    context = root.view().frameView().layoutContext()
+    paintOffsetCacheIsDisabled = disablePaintOffsetCache
+    didPushLayoutState = context.pushLayoutState(
+      renderer: root, offset: offset, pageHeight: pageHeight, pageHeightChanged: pageHeightChanged)
+    if didPushLayoutState && paintOffsetCacheIsDisabled {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  deinit {
+    if !didPushLayoutState {
+      return
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let context: LocalFrameViewLayoutContextWrapper
+  private var paintOffsetCacheIsDisabled = false
+  private var didPushLayoutState = false
+}

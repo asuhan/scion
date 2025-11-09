@@ -401,6 +401,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func createsNewFormattingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSkippedContentRoot() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

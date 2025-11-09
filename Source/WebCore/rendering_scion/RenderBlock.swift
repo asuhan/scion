@@ -817,6 +817,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     minLogicalWidth += scrollbarWidth
   }
 
+  func simplifiedLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum FieldsetFindLegendOption {
     case FieldsetIgnoreFloatingOrOutOfFlow
     case FieldsetIncludeFloatingOrOutOfFlow
@@ -860,6 +865,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isInlineBlockOrInlineTable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func preparePaginationBeforeBlockLayout(relayoutChildren: inout Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1080,6 +1090,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func paintDebugBoxShadowIfApplicable(
     context: GraphicsContextWrapper, paintRect: LayoutRectWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func dirtyForLayoutFromPercentageHeightDescendants() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

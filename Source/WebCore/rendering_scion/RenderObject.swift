@@ -25,6 +25,11 @@
 
 import wk_interop
 
+enum RepaintOutlineBounds {
+  case No
+  case Yes
+}
+
 class RenderObjectWrapper: CachedImageClientWrapper {
   enum `Type` {
     case BlockFlow
@@ -930,6 +935,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
   //////////////////////////////////////////
+
+  func setEverHadLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
     if wk_interop.RenderObject_isRenderListBox(p) {
