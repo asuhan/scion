@@ -23,4 +23,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderMediaWrapper: RenderImageWrapper {}
+class RenderMediaWrapper: RenderImageWrapper {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

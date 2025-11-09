@@ -1,6 +1,15 @@
 /*
- * Copyright (C) 2007 Eric Seidel <eric@webkit.org>
- * Copyright (c) 2022 Igalia S.L.
+ * Copyright (C) 2004, 2005, 2007 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2004, 2005, 2008 Rob Buis <buis@kde.org>
+ * Copyright (C) 2005, 2007 Eric Seidel <eric@webkit.org>
+ * Copyright (C) 2006 Apple Inc.
+ * Copyright (C) 2009 Google, Inc.
+ * Copyright (C) 2009 Dirk Schulze <krit@webkit.org>
+ * Copyright (C) Research In Motion Limited 2010. All rights reserved.
+ * Copyright (C) 2009 Jeff Schiller <codedread@gmail.com>
+ * Copyright (C) 2011 Renata Hodovan <reni@webkit.org>
+ * Copyright (C) 2011 University of Szeged
+ * Copyright (C) 2018 Adobe Systems Incorporated. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,7 +27,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
+final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

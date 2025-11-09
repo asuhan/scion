@@ -44,6 +44,11 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Inset of the scaled capture from the visualOverflowRect()
   func captureContentInset() -> LayoutPointWrapper {
     // TODO(asuhan): implement this

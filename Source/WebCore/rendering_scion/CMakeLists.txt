@@ -54,9 +54,12 @@ target_sources(layout_scion PRIVATE
     RenderFragmentContainer.swift
     RenderFragmentContainerSet.swift
     RenderFragmentedFlow.swift
+    RenderFrameBase.swift
+    RenderFrameSet.swift
     RenderGrid.swift
     RenderHighlight.swift
     RenderHTMLCanvas.swift
+    RenderIFrame.swift
     RenderImage.swift
     RenderInline.swift
     RenderIterator.swift
@@ -84,6 +87,7 @@ target_sources(layout_scion PRIVATE
     RenderQuote.swift
     RenderReplaced.swift
     RenderReplica.swift
+    RenderScrollbarPart.swift
     RenderSelection.swift
     RenderSlider.swift
     RenderTable.swift

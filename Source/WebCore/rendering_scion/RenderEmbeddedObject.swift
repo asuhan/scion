@@ -23,4 +23,9 @@
 
 // Renderer for embeds and objects, often, but not always, rendered via plug-ins.
 // For example, <embed src="foo.html"> does not invoke a plug-in.
-final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {}
+final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -28,4 +28,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {}
+class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

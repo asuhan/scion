@@ -21,4 +21,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {}
+class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

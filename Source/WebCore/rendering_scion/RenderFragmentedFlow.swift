@@ -236,6 +236,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   // Used to estimate the maximum height of the flow thread.
   private static func maxLogicalHeight() -> LayoutUnit { return LayoutUnit.max() / 2 }
 
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
     RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
   )? {

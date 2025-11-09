@@ -40,6 +40,11 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 func isHTMLListElement(node: NodeWrapper) -> Bool {

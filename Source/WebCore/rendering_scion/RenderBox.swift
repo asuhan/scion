@@ -661,6 +661,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {

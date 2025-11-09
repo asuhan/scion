@@ -62,6 +62,11 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The point is physical, and the result is a physical location within the fragment.
   func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?

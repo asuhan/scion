@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2007 Eric Seidel <eric@webkit.org>
- * Copyright (c) 2022 Igalia S.L.
+ * Copyright (C) 2009 Google, Inc.
+ * Copyright (C) 2014 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,7 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
+// This class exists mostly so we can hear about gradient stop style changes
+final class RenderSVGGradientStopWrapper: RenderElementWrapper {
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -27,4 +27,9 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

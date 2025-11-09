@@ -222,6 +222,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     case DoNotIncludeAllIntersectingCells
   }
 
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintCell(
     cell: RenderTableCellWrapper, paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {

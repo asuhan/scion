@@ -1,6 +1,8 @@
-/*
- * Copyright (C) 2007 Eric Seidel <eric@webkit.org>
- * Copyright (c) 2022 Igalia S.L.
+/**
+ * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
+ *           (C) 2000 Simon Hausmann <hausmann@kde.org>
+ *           (C) 2000 Stefan Schimanski (1Stein@gmx.de)
+ * Copyright (C) 2004, 2005, 2006, 2008, 2013 Apple Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -16,9 +18,10 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
+ *
  */
 
-class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
+final class RenderFrameSetWrapper: RenderBoxWrapper {
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

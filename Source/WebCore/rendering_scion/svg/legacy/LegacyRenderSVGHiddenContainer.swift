@@ -19,4 +19,9 @@
 
 // This class is for containers which are never drawn, but do need to support style
 // <defs>, <linearGradient>, <radialGradient> are all good examples
-class LegacyRenderSVGHiddenContainer: LegacyRenderSVGContainer {}
+class LegacyRenderSVGHiddenContainer: LegacyRenderSVGContainer {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

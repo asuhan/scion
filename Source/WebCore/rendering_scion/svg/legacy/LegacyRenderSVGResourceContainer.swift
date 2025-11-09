@@ -19,6 +19,11 @@
 
 // TODO(asuhan): inherit from LegacyRenderSVGResource
 class LegacyRenderSVGResourceContainer: LegacyRenderSVGHiddenContainer {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addClientRenderLayer(client: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -194,6 +194,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
   }
 
+  // Recursive function that computes the size and position of this object and all its descendants.
+  func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   /* This function performs a layout only if one is needed. */
   func layoutIfNeeded() {
     wk_interop.RenderElement_layoutIfNeeded(p)

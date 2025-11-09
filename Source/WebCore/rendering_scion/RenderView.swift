@@ -22,6 +22,11 @@
 import wk_interop
 
 class RenderViewWrapper: RenderBlockFlowWrapper {
+  override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
