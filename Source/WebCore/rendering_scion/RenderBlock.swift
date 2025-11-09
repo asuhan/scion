@@ -73,6 +73,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func layoutBlock(
+    relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func removePositionedObject(rendererToRemove: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

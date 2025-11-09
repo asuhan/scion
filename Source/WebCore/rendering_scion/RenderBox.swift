@@ -1338,6 +1338,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return computedValues
   }
 
+  func cacheIntrinsicContentLogicalHeightForFlexItem(height: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paginatedContentNeedsBaseHeight(h: LengthWrapper) -> Bool {
     if !document().printing() || !h.isPercentOrCalculated() || isInline() {
       return false

@@ -21,6 +21,13 @@
  */
 
 final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
+  override func layoutBlock(
+    relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isStretchingChildren() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

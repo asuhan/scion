@@ -157,6 +157,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func rowIndex() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func borderLeft() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -188,8 +193,32 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+
+    let oldCellBaseline = cellBaselinePosition()
+    layoutBlock(relayoutChildren: cellWidthChanged())
+
+    // If we have replaced content, the intrinsic height of our content may have changed since the last time we laid out. If that's the case the intrinsic padding we used
+    // for layout (the padding required to push the contents of the cell down to the row's baseline) is included in our new height and baseline and makes both
+    // of them wrong. So if our content's intrinsic height has changed push the new content up into the intrinsic padding and relayout so that the rest of
+    // table and row layout can use the correct baseline and height for this cell.
+    if isBaselineAligned() && section()!.rowBaseline(row: rowIndex()).bool()
+      && cellBaselinePosition() > section()!.rowBaseline(row: rowIndex())
+    {
+      let zero = LayoutUnit(value: 0)
+      let newIntrinsicPaddingBefore = max(
+        zero, intrinsicPaddingBefore() - max(zero, cellBaselinePosition() - oldCellBaseline))
+      setIntrinsicPaddingBefore(p: newIntrinsicPaddingBefore)
+      setNeedsLayout(markParents: .MarkOnlyThis)
+      layoutBlock(relayoutChildren: cellWidthChanged())
+    }
+    invalidateHasEmptyCollapsedBorders()
+
+    // FIXME: This value isn't the intrinsic content logical height, but we need
+    // to update the value as its used by flexbox layout. crbug.com/367324
+    cacheIntrinsicContentLogicalHeightForFlexItem(height: contentLogicalHeight())
+
+    setCellWidthChanged(b: false)
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -388,6 +417,21 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
       op: compositeOp, backgroundObject: backgroundObject)
   }
 
+  private func cellBaselinePosition() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isBaselineAligned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func intrinsicPaddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll
   // create an extra anonymous RenderBlock to handle mixing directionality anyway, in which case we can lock
   // the block flow directionality of the cells to the table's directionality.
@@ -397,6 +441,16 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func paddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cellWidthChanged() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setCellWidthChanged(b: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -417,6 +471,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   // writing mode. Writing modes are not allowed on internal table boxes.
   // This means we can safely use the same style in all cases to simplify our code.
   func styleForCellFlow() -> RenderStyleWrapper { return table()!.style() }
+
+  private func invalidateHasEmptyCollapsedBorders() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   override func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if !paintInfo.shouldPaintWithinRoot(renderer: self) {
@@ -463,6 +522,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     adjustBorderBoxRectForPainting(paintRect: &paintRect)
 
     paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
+  }
+
+  private func setIntrinsicPaddingBefore(p: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func cachedCollapsedLeftBorder(styleForCellFlow: RenderStyleWrapper)

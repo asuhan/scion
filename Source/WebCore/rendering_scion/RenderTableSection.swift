@@ -155,6 +155,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func rowBaseline(row: UInt32) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func createAnonymousWithParentRenderer(parent: RenderTableWrapper)
     -> RenderTableSectionWrapper
   {
