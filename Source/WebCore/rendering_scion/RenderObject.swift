@@ -758,6 +758,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
   }
 
+  enum HadSkippedLayout {
+    case No
+    case Yes
+  }
+
+  func clearNeedsLayout(hadSkippedLayout: HadSkippedLayout = .No) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsLayoutAndPrefWidthsRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     RenderSVGRoot.swift
     RenderSVGShape.swift
     RenderSVGText.swift
+    RenderSVGTransformableContainer.swift
     RenderSVGViewportContainer.swift
     SVGTextLayoutAttributes.swift
 )

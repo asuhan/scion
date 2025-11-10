@@ -61,6 +61,11 @@ private func clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: RenderBlockFl
   blockFlow.setDidBreakAtLineToAvoidWidow()
 }
 
+// Allocated only when some of these fields have non-default values
+class RenderBlockFlowRareData {
+  var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
+}
+
 class RenderBlockFlowWrapper: RenderBlockWrapper {
   convenience init(
     type: `Type`, document: Document, style: RenderStyleWrapper, flags: BlockFlowFlag = []
@@ -78,7 +83,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       return
     }
 
-    let _ /*repainter*/ = LayoutRepainter(renderer: self)
+    let repainter = LayoutRepainter(renderer: self)
 
     var relayoutChildren = relayoutChildren
     if recomputeLogicalWidthAndColumnWidth() {
@@ -93,7 +98,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     rebuildFloatingObjectSetFromIntrudingFloats()
 
-    let _ /*previousHeight*/ = logicalHeight()
+    let previousHeight = logicalHeight()
     // FIXME: should this start out as borderAndPaddingLogicalHeight() + scrollbarLogicalHeight(),
     // for consistency with other render classes?
     resetLogicalHeightBeforeLayoutIfNeeded()
@@ -189,16 +194,71 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         repaintLogicalBottom: &repaintLogicalBottom)
       oldClientAfterEdge += alignContentShift
       if alignContentShift < Int32(0) {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        ensureRareBlockFlowData().alignContentShift = alignContentShift
       }
-    } else {
+    } else if hasRareBlockFlowData() {
+      rareBlockFlowData().alignContentShift = LayoutUnit(value: UInt64(0))
+    }
+
+    do {
+      // FIXME: This could be removed once relayoutForPagination() either stop recursing or we manage to
+      // re-order them.
+      let _ = LayoutStateMaintainer(
+        root: self, offset: locationOffset(),
+        disablePaintOffsetCache: isTransformed() || hasReflection()
+          || styleToUse.isFlippedBlocksWritingMode(),
+        pageHeight: pageLogicalHeight, pageHeightChanged: pageLogicalHeightChanged)
+
+      if oldHeight != newHeight && oldHeight > newHeight && maxFloatLogicalBottom > newHeight
+        && !childrenInline()
+      {
+        // One of our children's floats may have become an overhanging float for us. We need to look for it.
+        for blockFlow: RenderBlockFlowWrapper in childrenOfType(parent: self) {
+          if blockFlow.isFloatingOrOutOfFlowPositioned() {
+            continue
+          }
+          if blockFlow.lowestFloatLogicalBottom() + blockFlow.logicalTop() > newHeight {
+            addOverhangingFloats(child: blockFlow, makeChildPaintOtherFloats: false)
+          }
+        }
+      }
+
+      let heightChanged = (previousHeight != newHeight)
+      if heightChanged || alignContentShift != LayoutUnit(value: UInt64(0)) {
+        relayoutChildren = true
+      }
+      layoutPositionedObjects(relayoutChildren: relayoutChildren || isDocumentElementRenderer())
+    }
+
+    updateDescendantTransformsAfterLayout()
+
+    // Add overflow from children (unless we're multi-column, since in that case all our child overflow is clipped anyway).
+    computeOverflow(oldClientAfterEdge: oldClientAfterEdge)
+
+    if let state = view().frameView().layoutContext().layoutState(),
+      state.pageLogicalHeight().bool()
+    {
+      setPageLogicalOffset(
+        logicalOffset: state.pageLogicalOffset(child: self, childLogicalOffset: logicalTop()))
+    }
+
+    updateLayerTransform()
+
+    // Update our scroll information if we're overflow:auto/scroll/hidden now that we know if
+    // we overflow or not.
+    updateScrollInfoAfterLayout()
+
+    // FIXME: This repaint logic should be moved into a separate helper function!
+    // Repaint with our new bounds if they are different from our old bounds.
+    let didFullRepaint = repainter.repaintAfterLayout()
+    if !didFullRepaint && repaintLogicalTop != repaintLogicalBottom
+      && (styleToUse.usedVisibility() == .Visible || enclosingLayer()!.hasVisibleContent)
+    {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    clearNeedsLayout()
   }
 
   private func isPaginated() -> Bool {
@@ -407,6 +467,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func deleteLines() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -869,6 +934,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  private func addOverhangingFloats(child: RenderBlockFlowWrapper, makeChildPaintOtherFloats: Bool)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func hasInlineLayout() -> Bool {
     switch lineLayout {
     case .Integration:
@@ -1024,6 +1097,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       box.traverseNextOnLine()
     }
     return (lineTop, lineBottom)
+  }
+
+  func hasRareBlockFlowData() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func rareBlockFlowData() -> RenderBlockFlowRareData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ensureRareBlockFlowData() -> RenderBlockFlowRareData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.

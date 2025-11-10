@@ -93,6 +93,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private class GridWrapper {
     init(renderGrid: RenderGridWrapper) {
       // TODO(asuhan): implement this

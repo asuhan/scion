@@ -54,6 +54,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  func updateLayerTransform() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func applyTransform(
     transform: inout TransformationMatrix, style: RenderStyleWrapper, boundingBox: FloatRectWrapper,
     options: RenderStyleWrapper.TransformOperationOption

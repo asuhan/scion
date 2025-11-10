@@ -237,6 +237,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  // The page logical offset is the object's offset from the top of the page in the page progression
+  // direction (so an x-offset in vertical text and a y-offset for horizontal text).
+  func setPageLogicalOffset(logicalOffset: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Fieldset legends that are taller than the fieldset border add in intrinsic border
   // in order to ensure that content gets properly pushed down across all layout systems
   // (flexbox, block, etc.)
@@ -492,7 +499,17 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
+  func updateDescendantTransformsAfterLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func layoutPositionedObjects(relayoutChildren: Bool, fixedPositionObjectsOnly: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -817,7 +834,17 @@ class RenderBlockWrapper: RenderBoxWrapper {
     minLogicalWidth += scrollbarWidth
   }
 
+  func updateScrollInfoAfterLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func simplifiedLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

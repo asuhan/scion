@@ -19,4 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGBlockWrapper: RenderBlockFlowWrapper {}
+class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
+  override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
