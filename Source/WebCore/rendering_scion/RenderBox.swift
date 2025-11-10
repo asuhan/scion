@@ -2454,6 +2454,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func lineHeight(
+    firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  )
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {

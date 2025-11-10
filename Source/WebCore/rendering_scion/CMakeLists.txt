@@ -18,6 +18,7 @@ target_sources(layout_scion PRIVATE
     LegacyInlineTextBox.swift
     LegacyLineLayout.swift
     LegacyRootInlineBox.swift
+    LineClampUpdater.swift
     MarkedText.swift
     OverlapTestRequestClient.swift
     PaintFrequencyTracker.swift
@@ -111,6 +112,7 @@ target_sources(layout_scion PRIVATE
     StyledMarkedText.swift
     TextBoxPainter.swift
     TextBoxSelectableRange.swift
+    TextBoxTrimmer.swift
     TextDecorationPainter.swift
     TextPainter.swift
     TextPaintStyle.swift

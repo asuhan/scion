@@ -67,6 +67,17 @@ private func findFirstLetterBlock(start: RenderBlockWrapper) -> RenderBlockWrapp
 }
 
 class RenderBlockWrapper: RenderBoxWrapper {
+  // These two functions are overridden for inline-block.
+  override func lineHeight(
+    firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  )
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
   func deleteLines() {
     // TODO(asuhan): implement this
@@ -497,6 +508,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     return nil
+  }
+
+  func hasLineIfEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func updateDescendantTransformsAfterLayout() {

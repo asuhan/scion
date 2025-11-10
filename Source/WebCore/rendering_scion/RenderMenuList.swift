@@ -50,4 +50,9 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func hasLineIfEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

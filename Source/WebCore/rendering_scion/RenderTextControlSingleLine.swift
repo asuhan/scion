@@ -32,3 +32,10 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
     fatalError("Not implemented")
   }
 }
+
+final class RenderTextControlInnerBlockWrapper: RenderBlockFlowWrapper {
+  override func hasLineIfEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

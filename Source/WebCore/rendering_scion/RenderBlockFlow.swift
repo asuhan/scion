@@ -323,6 +323,70 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
   ) {
+    if firstChild() == nil {
+      // Empty block containers produce empty formatting lines which may affect trim-start/end.
+      let _ = TextBoxTrimmer(blockContainer: self)
+
+      var logicalHeight = borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
+      if hasLineIfEmpty() {
+        logicalHeight += lineHeight(
+          firstLine: true, direction: isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+          linePositionMode: .PositionOfInteriorLineBoxes)
+      }
+      setLogicalHeight(size: logicalHeight)
+
+      repaintLogicalTop = LayoutUnit()
+      repaintLogicalBottom = LayoutUnit()
+      maxFloatLogicalBottom = LayoutUnit()
+      return
+    }
+
+    if childrenInline() {
+      let _ = TextBoxTrimmer(blockContainer: self)
+      let _ = LineClampUpdater(blockContainer: self)
+      return layoutInlineChildren(
+        relayoutChildren: relayoutChildren, repaintLogicalTop: &repaintLogicalTop,
+        repaintLogicalBottom: &repaintLogicalBottom)
+    }
+
+    do {
+      do {
+        // With block children, there's no way to tell what the last formatted line is until after we finished laying out the subtree.
+        let _ = TextBoxTrimmer(blockContainer: self)
+        let _ = LineClampUpdater(blockContainer: self)
+        layoutBlockChildren(
+          relayoutChildren: relayoutChildren, maxFloatLogicalBottom: &maxFloatLogicalBottom)
+      }
+
+      // Dirty the last formatted line (in the last IFC) and issue relayout with forcing trimming the last line if applicable.
+      if let rootForLastFormattedLine = TextBoxTrimmer.lastInlineFormattingContextRootForTrimEnd(
+        blockContainer: self)
+      {
+        assert(CPtrToInt(rootForLastFormattedLine.p) != CPtrToInt(p))
+        // FIXME: We should be able to damage the last line only.
+        var ancestor: RenderBlockWrapper? = rootForLastFormattedLine
+        while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(p) {
+          ancestor!.setNeedsLayout(markParents: .MarkOnlyThis)
+          ancestor = ancestor!.containingBlock()
+        }
+
+        let _ = TextBoxTrimmer(
+          blockContainer: self, lastFormattedLineRoot: rootForLastFormattedLine)
+        layoutBlockChildren(relayoutChildren: false, maxFloatLogicalBottom: &maxFloatLogicalBottom)
+      }
+    }
+  }
+
+  private func layoutBlockChildren(relayoutChildren: Bool, maxFloatLogicalBottom: inout LayoutUnit)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutInlineChildren(
+    relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
+    repaintLogicalBottom: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

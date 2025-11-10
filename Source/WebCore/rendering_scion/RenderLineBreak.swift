@@ -20,6 +20,16 @@
  */
 
 class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
+  override func lineHeight(
+    firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  )
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

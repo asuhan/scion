@@ -556,4 +556,9 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func hasLineIfEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

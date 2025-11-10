@@ -219,6 +219,17 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // Overridden by subclasses to determine line height and baseline position.
+  func lineHeight(
+    firstLine: Bool, direction: LineDirectionMode,
+    linePositionMode: LinePositionMode = .PositionOnContainingLine
+  )
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func baselinePosition(
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
