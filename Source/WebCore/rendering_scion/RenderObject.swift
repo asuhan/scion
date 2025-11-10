@@ -934,6 +934,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isSkippedContentForLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   //////////////////////////////////////////
   // Helper functions. Dangerous to use!
   func setPreviousSibling(previous: RenderObjectWrapper?) {

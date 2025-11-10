@@ -379,6 +379,84 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   private func layoutBlockChildren(relayoutChildren: Bool, maxFloatLogicalBottom: inout LayoutUnit)
   {
+    assert(firstChild() != nil)
+
+    let beforeEdge = borderAndPaddingBefore()
+    let afterEdge = borderAndPaddingAfter() + scrollbarLogicalHeight()
+
+    setLogicalHeight(size: beforeEdge)
+    let layoutState = view().frameView().layoutContext().layoutState()
+
+    // The margin struct caches all our current margin collapsing state.
+    var marginInfo = MarginInfo(
+      block: self, beforeBorderPadding: beforeEdge, afterBorderPadding: afterEdge)
+
+    let hasMarginTrimState = updateMarginTrimStateIfNeeded(
+      layoutState: layoutState!, marginInfo: marginInfo)
+
+    // Fieldsets need to find their legend and position it inside the border of the object.
+    // The legend then gets skipped during normal layout. The same is true for ruby text.
+    // It doesn't get included in the normal layout process but is instead skipped.
+    layoutExcludedChildren(relayoutChildren: relayoutChildren)
+
+    var previousFloatLogicalBottom = LayoutUnit()
+    maxFloatLogicalBottom = LayoutUnit(value: 0)
+
+    var next = firstChildBox()
+
+    while next != nil {
+      let child = next!
+      next = child.nextSiblingBox()
+
+      if child.isExcludedFromNormalLayout() {
+        continue  // Skip this child, since it will be positioned by the specialized subclass (fieldsets and ruby runs).
+      }
+
+      if child.isSkippedContentForLayout() {
+        child.clearNeedsLayoutForSkippedContent()
+        continue
+      }
+
+      updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: relayoutChildren, child: child)
+
+      if child.isOutOfFlowPositioned() {
+        child.containingBlock()!.insertPositionedObject(positioned: child)
+        adjustPositionedBlock(child: child, marginInfo: marginInfo)
+        continue
+      }
+      if child.isFloating() {
+        RenderBlockFlowWrapper.markSiblingsIfIntrudingForLayout(child: child)
+        insertFloatingObject(floatBox: child)
+        adjustFloatingBlock(marginInfo: marginInfo)
+        continue
+      }
+
+      // Lay out the child.
+      layoutBlockChild(
+        child: child, marginInfo: &marginInfo,
+        previousFloatLogicalBottom: &previousFloatLogicalBottom,
+        maxFloatLogicalBottom: &maxFloatLogicalBottom)
+    }
+
+    if style().marginTrim().contains(.BlockEnd) {
+      trimBlockEndChildrenMargins()
+    }
+    // Now do the handling of the bottom of the block, adding in our bottom border/padding and
+    // determining the correct collapsed bottom margin information.
+    handleAfterSideOfBlock(beforeSide: beforeEdge, afterSide: afterEdge, marginInfo: marginInfo)
+    if hasMarginTrimState {
+      layoutState!.popBlockStartTrimming()
+    }
+  }
+
+  private static func markSiblingsIfIntrudingForLayout(child: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateMarginTrimStateIfNeeded(
+    layoutState: RenderLayoutStateWrapper, marginInfo: MarginInfo
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -409,6 +487,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  struct MarginInfo {
+    // Our MarginInfo state used when laying out block children.
+    init(
+      block: RenderBlockFlowWrapper, beforeBorderPadding: LayoutUnit, afterBorderPadding: LayoutUnit
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   private func setHasMarginBeforeQuirk(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -419,11 +507,41 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func layoutBlockChild(
+    child: RenderBoxWrapper, marginInfo: inout MarginInfo,
+    previousFloatLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustPositionedBlock(child: RenderBoxWrapper, marginInfo: MarginInfo) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustFloatingBlock(marginInfo: MarginInfo) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func trimBlockEndChildrenMargins() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setStaticInlinePositionForChild(
     child: RenderBoxWrapper, blockOffset: LayoutUnit, inlinePosition: LayoutUnit
   ) {
     wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
       p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
+  }
+
+  private func handleAfterSideOfBlock(
+    beforeSide: LayoutUnit, afterSide: LayoutUnit, marginInfo: MarginInfo
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func shouldBreakAtLineToAvoidWidow() -> Bool {
@@ -965,6 +1083,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // Called to lay out the legend for a fieldset or the ruby text of a ruby run. Also used by multi-column layout to handle
+  // the flow thread child.
+  override func layoutExcludedChildren(relayoutChildren: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func recomputeLogicalWidthAndColumnWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1030,6 +1155,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         }
       }
     }
+  }
+
+  @discardableResult
+  private func insertFloatingObject(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func removeFloatingObject(floatBox: RenderBoxWrapper) {

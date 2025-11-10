@@ -465,11 +465,12 @@ enum TextDecorationSkipInk: UInt8 {
   case All
 }
 
-enum MarginTrimType: UInt8 {
-  case BlockStart = 1
-  case BlockEnd = 2
-  case InlineStart = 4
-  case InlineEnd = 8
+struct MarginTrimType: OptionSet {
+  let rawValue: UInt8
+  static let BlockStart = MarginTrimType(rawValue: 1 << 0)
+  static let BlockEnd = MarginTrimType(rawValue: 1 << 1)
+  static let InlineStart = MarginTrimType(rawValue: 1 << 2)
+  static let InlineEnd = MarginTrimType(rawValue: 1 << 3)
 }
 
 enum TextEdgeType: UInt8 {

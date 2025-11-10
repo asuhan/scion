@@ -411,6 +411,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clearNeedsLayoutForSkippedContent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

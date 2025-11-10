@@ -19,4 +19,9 @@
  *
  */
 
-final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {}
+final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
+  override func layoutExcludedChildren(relayoutChildren: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

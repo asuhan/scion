@@ -924,6 +924,11 @@ class RenderStyleWrapper: Equatable {
     return TextEdge(over: over, under: under)
   }
 
+  func marginTrim() -> MarginTrimType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textIndentType() -> TextIndentType {
     if p == nil {
       // TODO(asuhan): implement this

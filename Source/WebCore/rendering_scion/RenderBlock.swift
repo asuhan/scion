@@ -91,6 +91,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func insertPositionedObject(positioned: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func removePositionedObject(rendererToRemove: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -877,6 +882,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func layoutExcludedChildren(relayoutChildren: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computePreferredWidthsForExcludedChildren() -> (LayoutUnit, LayoutUnit)? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -908,6 +918,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isInlineBlockOrInlineTable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: Bool, child: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -32,6 +32,11 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func layoutExcludedChildren(relayoutChildren: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {

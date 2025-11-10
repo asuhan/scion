@@ -123,6 +123,11 @@ class RenderLayoutStateWrapper {
     return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, candidate.p)
   }
 
+  func popBlockStartTrimming() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var p: UnsafeRawPointer
 }
 
