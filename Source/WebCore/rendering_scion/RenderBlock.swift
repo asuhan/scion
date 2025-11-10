@@ -202,6 +202,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     removePercentHeightDescendant(descendant: descendant)
   }
 
+  func setHasMarginBeforeQuirk(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasMarginAfterQuirk(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
   func containsFloats() -> Bool {
     return wk_interop.RenderBlock_containsFloats(p)

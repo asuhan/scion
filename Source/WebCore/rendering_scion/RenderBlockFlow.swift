@@ -497,16 +497,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
-  private func setHasMarginBeforeQuirk(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func setHasMarginAfterQuirk(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   private func layoutBlockChild(
     child: RenderBoxWrapper, marginInfo: inout MarginInfo,
     previousFloatLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
