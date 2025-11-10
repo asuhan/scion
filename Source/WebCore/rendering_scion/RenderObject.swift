@@ -861,6 +861,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Repaint a specific subrectangle within a given object. The rect |r| is in the object's coordinate space.
+  func repaintRectangle(repaintRect: LayoutRectWrapper, shouldClipToLayer: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFloatingOrOutOfFlowPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

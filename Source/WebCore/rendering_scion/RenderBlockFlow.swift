@@ -254,8 +254,47 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     if !didFullRepaint && repaintLogicalTop != repaintLogicalBottom
       && (styleToUse.usedVisibility() == .Visible || enclosingLayer()!.hasVisibleContent)
     {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // FIXME: We could tighten up the left and right invalidation points if we let layoutInlineChildren fill them in based off the particular lines
+      // it had to lay out. We wouldn't need the hasNonVisibleOverflow() hack in that case either.
+      var repaintLogicalLeft = logicalLeftVisualOverflow()
+      var repaintLogicalRight = logicalRightVisualOverflow()
+      if hasNonVisibleOverflow() {
+        // If we have clipped overflow, we should use layout overflow as well, since visual overflow from lines didn't propagate to our block's overflow.
+        // Note the old code did this as well but even for overflow:visible. The addition of hasNonVisibleOverflow() at least tightens up the hack a bit.
+        // layoutInlineChildren should be patched to compute the entire repaint rect.
+        repaintLogicalLeft = min(repaintLogicalLeft, logicalLeftLayoutOverflow())
+        repaintLogicalRight = max(repaintLogicalRight, logicalRightLayoutOverflow())
+      }
+
+      var repaintRect = LayoutRectWrapper()
+      if isHorizontalWritingMode() {
+        repaintRect = LayoutRectWrapper(
+          x: repaintLogicalLeft, y: repaintLogicalTop,
+          width: repaintLogicalRight - repaintLogicalLeft,
+          height: repaintLogicalBottom - repaintLogicalTop)
+      } else {
+        repaintRect = LayoutRectWrapper(
+          x: repaintLogicalTop, y: repaintLogicalLeft,
+          width: repaintLogicalBottom - repaintLogicalTop,
+          height: repaintLogicalRight - repaintLogicalLeft)
+      }
+
+      if hasNonVisibleOverflow() {
+        // Adjust repaint rect for scroll offset
+        repaintRect.moveBy(offset: LayoutPointWrapper(point: -scrollPosition()))
+
+        // Don't allow this rect to spill out of our overflow box.
+        repaintRect.intersect(
+          other: LayoutRectWrapper(location: LayoutPointWrapper(), size: size()))
+      }
+
+      // Make sure the rect is still non-empty after intersecting for overflow above
+      if !repaintRect.isEmpty() {
+        repaintRectangle(repaintRect: repaintRect)  // We need to do a partial repaint of our content.
+        if hasReflection() {
+          repaintRectangle(repaintRect: reflectedRect(r: repaintRect))
+        }
+      }
     }
 
     clearNeedsLayout()

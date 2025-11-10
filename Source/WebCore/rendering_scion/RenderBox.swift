@@ -512,7 +512,27 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalLeftLayoutOverflow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalRightLayoutOverflow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func visualOverflowRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalLeftVisualOverflow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalRightVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
