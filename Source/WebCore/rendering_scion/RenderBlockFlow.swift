@@ -531,8 +531,28 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private static func markSiblingsIfIntrudingForLayout(child: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Let's find out if this float box is (was) intruding to sibling boxes and mark them for layout accordingly.
+    if !child.selfNeedsLayout() || !child.everHadLayout() {
+      // At this point floatingObjectSet() is purged, we can't check whether
+      // this is a new or an existing float in this block container.
+      return
+    }
+    var nextSibling = child.nextSibling()
+    while nextSibling != nil {
+      let block = nextSibling as? RenderBlockFlowWrapper
+      if block == nil {
+        nextSibling = nextSibling!.nextSibling()
+        continue
+      }
+      if block!.avoidsFloats() && !block!.shrinkToAvoidFloats() {
+        nextSibling = nextSibling!.nextSibling()
+        continue
+      }
+      if block!.containsFloat(renderer: child) {
+        block!.markAllDescendantsWithFloatsForLayout()
+      }
+      nextSibling = nextSibling!.nextSibling()
+    }
   }
 
   private func updateMarginTrimStateIfNeeded(
