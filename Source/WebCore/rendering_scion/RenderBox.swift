@@ -2029,6 +2029,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isScrollContainerY() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func percentageLogicalHeightIsResolvable() -> Bool {
     // Do this to avoid duplicating all the logic that already exists when computing
     // an actual percentage height.

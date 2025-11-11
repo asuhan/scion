@@ -24,6 +24,26 @@
  */
 
 class StyleContentAlignmentData {
+  func isNormal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isStartward(leftRightAxisDirection: TextDirection? = nil, isFlexReverse: Bool = false)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // leftRightAxisDirection is only needed for justify-content (invalid for align-content).
+  // Pass std::nullopt if neither the inline axis nor the physical left-right axis matches the justify-content axis (e.g. in flexbox).
+  func isCentered() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var position: ContentPosition = .Normal
   var distribution: ContentDistribution = .Default
+  let overflow: OverflowAlignment = .Default
 }

@@ -119,5 +119,10 @@ class FloatingObjects {
 
   func set() -> FloatingObjectSet { return m_set }
 
+  func shiftFloatsBy(blockShift: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let m_set = FloatingObjectSet()
 }

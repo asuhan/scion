@@ -340,12 +340,31 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
+  // Accessors for logical width/height and margins in the containing block's block-flow direction.
+  enum ApplyLayoutDeltaMode {
+    case ApplyLayoutDelta
+    case DoNotApplyLayoutDelta
+  }
+
   func logicalWidthForChild(child: RenderBoxWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func logicalHeightForChild(child: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalTopForChild(child: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLogicalTopForChild(
+    child: RenderBoxWrapper, logicalTop: LayoutUnit,
+    applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

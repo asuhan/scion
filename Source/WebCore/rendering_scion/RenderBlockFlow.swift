@@ -599,8 +599,65 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     intrinsicLogicalHeight: LayoutUnit, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let alignment = style().alignContent()
+
+    // Exit if no alignment necessary.
+    if alignment.isNormal() || alignment.isStartward() {
+      return LayoutUnit(value: UInt64(0))
+    }
+
+    // Calculate alignment shift.
+    let computedLogicalHeight = logicalHeight()
+    var space = computedLogicalHeight - intrinsicLogicalHeight
+    if space <= Int32(0) {
+      let overflowIsSafe =
+        (alignment.overflow == .Default && !isScrollContainerY())
+        || alignment.overflow == .Safe
+        || alignment.position == .Normal
+      if overflowIsSafe {
+        return LayoutUnit(value: UInt64(0))  // Floored at zero; we're done
+      }
+    }
+    if alignment.isCentered() {
+      space = space / 2
+    }
+
+    // Alright, now shift all our content.
+    if !childrenInline() {
+      var child = firstChildBox()
+      while child != nil {
+        setLogicalTopForChild(child: child!, logicalTop: logicalTopForChild(child: child!) + space)
+        if child!.isOutOfFlowPositioned() {
+          if child!.style().hasStaticBlockPosition(horizontal: isHorizontalWritingMode()) {
+            assert(child!.layer() != nil)
+            child!.layer()!.setStaticBlockPosition(
+              position: child!.layer()!.staticBlockPosition() + space)
+            child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+          }
+        }
+        child = child!.nextSiblingBox()
+      }
+    } else if svgTextLayout() != nil {
+      if isHorizontalWritingMode() {
+        svgTextLayout()!.lineBoxes.shiftLinesBy(shiftX: LayoutUnit(value: 0), shiftY: space)
+      } else {
+        svgTextLayout()!.lineBoxes.shiftLinesBy(shiftX: -space, shiftY: LayoutUnit(value: 0))
+      }
+    } else if inlineLayout() != nil {
+      inlineLayout()!.shiftLinesBy(blockShift: space)
+    }
+    if floatingObjects != nil {
+      floatingObjects!.shiftFloatsBy(blockShift: space)
+    }
+
+    // Update repaint region.
+    if space < LayoutUnit(value: UInt64(0)) {
+      repaintLogicalTop += space
+    } else {
+      repaintLogicalBottom += space
+    }
+
+    return space
   }
 
   override func collapsedMarginAfter() -> LayoutUnit {
