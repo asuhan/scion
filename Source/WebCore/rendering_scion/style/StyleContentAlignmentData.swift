@@ -63,8 +63,7 @@ class StyleContentAlignmentData {
   // leftRightAxisDirection is only needed for justify-content (invalid for align-content).
   // Pass std::nullopt if neither the inline axis nor the physical left-right axis matches the justify-content axis (e.g. in flexbox).
   func isCentered() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return position == .Center || distribution == .SpaceAround || distribution == .SpaceEvenly
   }
 
   var position: ContentPosition = .Normal
