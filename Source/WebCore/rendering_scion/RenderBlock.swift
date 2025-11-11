@@ -369,6 +369,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func setTrimmedMarginForChild(child: RenderBoxWrapper, marginTrimType: MarginTrimType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct FirstLetterRenderObjects {
     let firstLetter: RenderObjectWrapper?
     let firstLetterContainer: RenderElementWrapper?

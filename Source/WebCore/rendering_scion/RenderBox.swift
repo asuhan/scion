@@ -502,6 +502,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func lastChildBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func previousSiblingBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextSiblingBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -701,6 +701,9 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     func margin() -> LayoutUnit { return positiveMargin - negativeMargin }
 
+    // Collapsing flags for whether we can collapse our margins with our children's margins.
+    var canCollapseMarginAfterWithChildren = false
+
     // These flags track the previous maximal positive and negative margins.
     let positiveMargin: LayoutUnit
     let negativeMargin: LayoutUnit
@@ -930,6 +933,54 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func trimBlockEndChildrenMargins() {
+    assert(style().marginTrim().contains(.BlockEnd))
+    // If we are trimming the block end margin, we need to make sure we trim the margin of the children
+    // at the end of the block by walking back up the container. Any self collapsing children will also need to
+    // have their position adjusted to below the last non self-collapsing child in its containing block
+    var child = lastChildBox()
+    while child != nil {
+      if child!.isExcludedFromNormalLayout() || !child!.isInFlow() {
+        child = child!.previousSiblingBox()
+        continue
+      }
+
+      let childContainingBlock = child!.containingBlock()
+      setTrimmedMarginForChild(child: child!, marginTrimType: .BlockEnd)
+      if child!.isSelfCollapsingBlock() {
+        setTrimmedMarginForChild(child: child!, marginTrimType: .BlockStart)
+        childContainingBlock!.setLogicalTopForChild(
+          child: child!, logicalTop: childContainingBlock!.logicalHeight())
+
+        // If this self-collapsing child has any other children, which must also be
+        // self-collapsing, we should trim the margins of all its descendants
+        if child!.firstChildBox() != nil && !child!.childrenInline() {
+          trimSelfCollapsingChildDescendants(child: child!)
+        }
+
+        child = child!.previousSiblingBox()
+      } else if let nestedBlock = child as? RenderBlockFlowWrapper,
+        nestedBlock.isBlockContainer() && !nestedBlock.childrenInline()
+          && !nestedBlock.style().marginTrim().contains(.BlockEnd)
+      {
+        let nestedBlockMarginInfo = MarginInfo(
+          block: nestedBlock, beforeBorderPadding: nestedBlock.borderAndPaddingBefore(),
+          afterBorderPadding: nestedBlock.borderAndPaddingAfter())
+        // The margins *inside* this nested block are protected so we should not introspect and try to
+        // trim any of them.
+        if !nestedBlockMarginInfo.canCollapseMarginAfterWithChildren {
+          break
+        }
+
+        child = child!.lastChildBox()
+      } else {
+        // We hit another type of block child that doesn't apply to our search. We can just
+        // end the search since nothing before this block can affect the bottom margin of the outer one we are trimming for.
+        break
+      }
+    }
+  }
+
+  private func trimSelfCollapsingChildDescendants(child: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
