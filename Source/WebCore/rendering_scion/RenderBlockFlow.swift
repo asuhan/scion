@@ -689,10 +689,19 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    func canCollapseWithMarginBefore() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func canCollapseMarginBeforeWithChildren() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    // These flags track the previous maximal positive and negative margins.
+    let positiveMargin: LayoutUnit
+    let negativeMargin: LayoutUnit
   }
 
   private func layoutBlockChild(
@@ -874,8 +883,27 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func adjustPositionedBlock(child: RenderBoxWrapper, marginInfo: MarginInfo) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isHorizontal = isHorizontalWritingMode()
+    let hasStaticBlockPosition = child.style().hasStaticBlockPosition(horizontal: isHorizontal)
+
+    var logicalTop = logicalHeight()
+    updateStaticInlinePositionForChild(child: child, logicalTop: logicalTop)
+
+    if !marginInfo.canCollapseWithMarginBefore() {
+      // Positioned blocks don't collapse margins, so add the margin provided by
+      // the container now. The child's own margin is added later when calculating its logical top.
+      let collapsedBeforePos = marginInfo.positiveMargin
+      let collapsedBeforeNeg = marginInfo.negativeMargin
+      logicalTop += collapsedBeforePos - collapsedBeforeNeg
+    }
+
+    let childLayer = child.layer()!
+    if childLayer.staticBlockPosition() != logicalTop {
+      childLayer.setStaticBlockPosition(position: logicalTop)
+      if hasStaticBlockPosition {
+        child.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    }
   }
 
   private func adjustFloatingBlock(marginInfo: MarginInfo) {
@@ -893,6 +921,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   ) {
     wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
       p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
+  }
+
+  private func updateStaticInlinePositionForChild(child: RenderBoxWrapper, logicalTop: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func collapseMargins(child: RenderBoxWrapper, marginInfo: inout MarginInfo) -> LayoutUnit {
