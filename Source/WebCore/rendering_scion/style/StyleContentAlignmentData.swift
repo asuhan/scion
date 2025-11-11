@@ -32,8 +32,33 @@ class StyleContentAlignmentData {
   func isStartward(leftRightAxisDirection: TextDirection? = nil, isFlexReverse: Bool = false)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch position {
+    case .Normal:
+      switch distribution {
+      case .Default, .Stretch, .SpaceBetween:
+        return !isFlexReverse
+      default:
+        return false
+      }
+    case .Start, .Baseline:
+      return true
+    case .End, .LastBaseline, .Center:
+      return false
+    case .FlexStart:
+      return !isFlexReverse
+    case .FlexEnd:
+      return isFlexReverse
+    case .Left:
+      if let leftRightAxisDirection = leftRightAxisDirection {
+        return leftRightAxisDirection == .LTR
+      }
+      return true
+    case .Right:
+      if let leftRightAxisDirection = leftRightAxisDirection {
+        return leftRightAxisDirection == .RTL
+      }
+      return true
+    }
   }
 
   // leftRightAxisDirection is only needed for justify-content (invalid for align-content).
