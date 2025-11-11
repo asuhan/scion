@@ -25,6 +25,11 @@
  */
 
 class RenderIterator<T>: IteratorProtocol, Equatable {
+  init(root: RenderElementWrapper?, current: T?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -35,7 +40,17 @@ class RenderIterator<T>: IteratorProtocol, Equatable {
     fatalError("Not implemented")
   }
 
+  func bool() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (this: RenderIterator, other: RenderIterator) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func traverseNext() -> RenderIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

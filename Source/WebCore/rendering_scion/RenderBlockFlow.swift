@@ -981,8 +981,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func trimSelfCollapsingChildDescendants(child: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(child.isSelfCollapsingBlock())
+    var itr = RenderIterator<RenderBoxWrapper>(root: child, current: child.firstChildBox())
+    while itr.bool() {
+      setTrimmedMarginForChild(child: *itr, marginTrimType: .BlockStart)
+      setTrimmedMarginForChild(child: *itr, marginTrimType: .BlockEnd)
+      itr = itr.traverseNext()
+    }
   }
 
   func setStaticInlinePositionForChild(
