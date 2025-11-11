@@ -313,8 +313,89 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // descendants are gone when this call completes and will get added back later on after the children have gotten
   // a relayout.
   private func rebuildFloatingObjectSetFromIntrudingFloats() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if floatingObjects != nil {
+      floatingObjects!.setHorizontalWritingMode(b: isHorizontalWritingMode())
+    }
+
+    var oldIntrudingFloatSet: Set<UInt> = []
+    if !childrenInline() && floatingObjects != nil {
+      let floatingObjectSet = floatingObjects!.set()
+      for floatingObject in floatingObjectSet {
+        if !floatingObject.isDescendant() {
+          oldIntrudingFloatSet.update(with: CPtrToInt(floatingObject.renderer?.p))
+        }
+      }
+    }
+
+    // Inline blocks are covered by the isReplacedOrInlineBlock() check in the avoidFloats method.
+    if avoidsFloats() || isDocumentElementRenderer() || isRenderView()
+      || isFloatingOrOutOfFlowPositioned() || isRenderTableCell()
+    {
+      if floatingObjects != nil {
+        floatingObjects!.clear()
+      }
+      if !oldIntrudingFloatSet.isEmpty {
+        markAllDescendantsWithFloatsForLayout()
+      }
+      return
+    }
+
+    if floatingObjects != nil {
+      floatingObjects!.clear()
+    }
+
+    // We should not process floats if the parent node is not a RenderBlock. Otherwise, we will add
+    // floats in an invalid context. This will cause a crash arising from a bad cast on the parent.
+    // See <rdar://problem/8049753>, where float property is applied on a text node in a SVG.
+    let parentBlock = parent() as? RenderBlockFlowWrapper
+    if parentBlock == nil {
+      return
+    }
+
+    // First add in floats from the parent. Self-collapsing blocks let their parent track any floats that intrude into
+    // them (as opposed to floats they contain themselves) so check for those here too.
+    let (previousBlock, parentHasFloats) = previousSiblingWithOverhangingFloats()
+    var logicalTopOffset = logicalTop()
+    let parentHasIntrudingFloats =
+      !parentHasFloats
+      && (previousBlock == nil
+        || (previousBlock!.isSelfCollapsingBlock()
+          && parentBlock!.lowestFloatLogicalBottom() > logicalTopOffset))
+    if parentHasFloats || parentHasIntrudingFloats {
+      addIntrudingFloats(
+        prev: parentBlock, container: parentBlock,
+        logicalLeftOffset: parentBlock!.logicalLeftOffsetForContent(),
+        logicalTopOffset: logicalTopOffset)
+    }
+
+    // Add overhanging floats from the previous RenderBlock, but only if it has a float that intrudes into our space.
+    if previousBlock != nil {
+      logicalTopOffset -= previousBlock!.logicalTop()
+      if previousBlock!.lowestFloatLogicalBottom() > logicalTopOffset {
+        addIntrudingFloats(
+          prev: previousBlock, container: parentBlock, logicalLeftOffset: LayoutUnit(value: 0),
+          logicalTopOffset: logicalTopOffset)
+      }
+    }
+
+    if !childrenInline() && !oldIntrudingFloatSet.isEmpty {
+      // If there are previously intruding floats that no longer intrude, then children with floats
+      // should also get layout because they might need their floating object lists cleared.
+      if floatingObjects!.set().size() < oldIntrudingFloatSet.count {
+        markAllDescendantsWithFloatsForLayout()
+      } else {
+        let floatingObjectSet = floatingObjects!.set()
+        for floatingObject in floatingObjectSet {
+          if oldIntrudingFloatSet.isEmpty {
+            break
+          }
+          oldIntrudingFloatSet.remove(CPtrToInt(floatingObject.renderer?.p))
+          if !oldIntrudingFloatSet.isEmpty {
+            markAllDescendantsWithFloatsForLayout()
+          }
+        }
+      }
+    }
   }
 
   // RenderBlockFlow always contains either lines or paragraphs. When the children are all blocks (e.g. paragraphs), we call layoutBlockChildren.
@@ -1085,6 +1166,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func previousSiblingWithOverhangingFloats() -> (RenderBlockFlowWrapper?, Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func checkForPaginationLogicalHeightChange(
     relayoutChildren: inout Bool, pageLogicalHeight: inout LayoutUnit,
     pageLogicalHeightChanged: inout Bool
@@ -1162,6 +1248,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func addOverhangingFloats(child: RenderBlockFlowWrapper, makeChildPaintOtherFloats: Bool)
     -> LayoutUnit
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func addIntrudingFloats(
+    prev: RenderBlockFlowWrapper?, container: RenderBlockFlowWrapper?,
+    logicalLeftOffset: LayoutUnit, logicalTopOffset: LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

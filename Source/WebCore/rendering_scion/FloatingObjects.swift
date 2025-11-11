@@ -78,6 +78,11 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func isDescendant() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func locationOffsetOfBorderBox() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -96,8 +101,18 @@ class FloatingObjectWrapper: Hashable {
 // FIXME: This is really the same thing as FloatingObjectSet.
 // Change clients to use that set directly, and replace the moveAllToFloatInfoMap function with a takeSet function.
 class FloatingObjects {
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func add(floatingObject: FloatingObjectWrapper) -> FloatingObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHorizontalWritingMode(b: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

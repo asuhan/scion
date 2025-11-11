@@ -28,6 +28,11 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     let isNewEntry: Bool
   }
 
+  func size() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contains(value: T) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

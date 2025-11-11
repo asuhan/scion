@@ -429,6 +429,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalLeftOffsetForContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canDropAnonymousBlockChild() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -968,6 +973,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
     newBox!.initializeStyle()
     return newBox
+  }
+
+  override func isSelfCollapsingBlock() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
