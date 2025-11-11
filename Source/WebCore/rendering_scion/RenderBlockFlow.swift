@@ -558,8 +558,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func updateMarginTrimStateIfNeeded(
     layoutState: RenderLayoutStateWrapper, marginInfo: MarginInfo
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let containingBlockTrimmingState = layoutState.blockStartTrimming()
+    if style().marginTrim().contains(.BlockStart) {
+      layoutState.pushBlockStartTrimming(blockStartTrimming: true)
+    } else if !marginInfo.canCollapseMarginBeforeWithChildren()
+      && containingBlockTrimmingState != nil
+    {
+      layoutState.pushBlockStartTrimming(blockStartTrimming: false)
+    } else if marginInfo.canCollapseMarginBeforeWithChildren(),
+      let containingBlockTrimmingState = containingBlockTrimmingState
+    {
+      layoutState.pushBlockStartTrimming(blockStartTrimming: containingBlockTrimmingState)
+    } else {
+      return false
+    }
+    return true
   }
 
   private func layoutInlineChildren(
@@ -593,6 +606,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     init(
       block: RenderBlockFlowWrapper, beforeBorderPadding: LayoutUnit, afterBorderPadding: LayoutUnit
     ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func canCollapseMarginBeforeWithChildren() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

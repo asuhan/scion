@@ -123,6 +123,16 @@ class RenderLayoutStateWrapper {
     return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, candidate.p)
   }
 
+  func pushBlockStartTrimming(blockStartTrimming: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func blockStartTrimming() -> Bool? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func popBlockStartTrimming() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
