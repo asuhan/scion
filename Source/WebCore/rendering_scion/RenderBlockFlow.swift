@@ -699,6 +699,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    func margin() -> LayoutUnit { return positiveMargin - negativeMargin }
+
     // These flags track the previous maximal positive and negative margins.
     let positiveMargin: LayoutUnit
     let negativeMargin: LayoutUnit
@@ -907,8 +909,24 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func adjustFloatingBlock(marginInfo: MarginInfo) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The float should be positioned taking into account the bottom margin
+    // of the previous flow. We add that margin into the height, get the
+    // float positioned properly, and then subtract the margin out of the
+    // height again. In the case of self-collapsing blocks, we always just
+    // use the top margins, since the self-collapsing block collapsed its
+    // own bottom margin into its top margin.
+    //
+    // Note also that the previous flow may collapse its margin into the top of
+    // our block. If this is the case, then we do not add the margin in to our
+    // height when computing the position of the float. This condition can be tested
+    // for by simply calling canCollapseWithMarginBefore. See
+    // http://www.hixie.ch/tests/adhoc/css/box/block/margin-collapse/046.html for
+    // an example of this scenario.
+    let marginOffset =
+      marginInfo.canCollapseWithMarginBefore() ? LayoutUnit(value: UInt64(0)) : marginInfo.margin()
+    setLogicalHeight(size: logicalHeight() + marginOffset)
+    positionNewFloats()
+    setLogicalHeight(size: logicalHeight() - marginOffset)
   }
 
   private func trimBlockEndChildrenMargins() {
@@ -1633,6 +1651,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func removeFloatingObject(floatBox: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Called from lineWidth, to position the floats added in the last line.
+  // Returns true if and only if it has positioned any floats.
+  @discardableResult
+  private func positionNewFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
