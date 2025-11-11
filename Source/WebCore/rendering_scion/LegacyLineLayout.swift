@@ -28,5 +28,10 @@ class LegacyLineLayout {
     fatalError("Not implemented")
   }
 
+  func layoutLineBoxes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let lineBoxes: RenderLineBoxList
 }

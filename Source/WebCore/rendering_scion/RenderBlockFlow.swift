@@ -579,8 +579,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    computeAndSetLineLayoutPath()
+
+    if lineLayoutPath() == .InlinePath {
+      (repaintLogicalTop, repaintLogicalBottom) = layoutInlineContent(
+        relayoutChildren: relayoutChildren)
+      return
+    }
+
+    if svgTextLayout() == nil {
+      lineLayout = LineLayout.Legacy(LegacyLineLayout(flow: self))
+    }
+
+    svgTextLayout()!.layoutLineBoxes()
+    previousInlineLayoutContentBoxLogicalHeight = nil
   }
 
   private func shiftForAlignContent(
@@ -973,6 +985,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
+  func computeAndSetLineLayoutPath() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum LineLayoutPath {
     case UndeterminedPath
     case InlinePath
@@ -1305,6 +1322,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     default:
       return false
     }
+  }
+
+  private func layoutInlineContent(relayoutChildren: Bool) -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computeLineAdjustmentForPagination(
