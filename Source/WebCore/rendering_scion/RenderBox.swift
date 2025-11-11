@@ -981,6 +981,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       containingBlock: containingBlock, availableSpace: cw, marginSide: .BlockEnd)
   }
 
+  func computeAndSetBlockDirectionMargins(containingBlock: RenderBlockWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum RenderBoxFragmentInfoFlags {
     case CacheRenderBoxFragmentInfo
     case DoNotCacheRenderBoxFragmentInfo
@@ -1044,6 +1049,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         y: oldRect.y().rawValue(),
         width: oldRect.width().rawValue(),
         height: oldRect.height().rawValue()))
+  }
+
+  func repaintOverhangingFloats(paintAllDescendants: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {

@@ -75,6 +75,12 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // Called when a descendant box's layout is finished and it has been positioned within its container.
+  func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pageLogicalHeightForOffsetFromFragmentedFlow(offset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

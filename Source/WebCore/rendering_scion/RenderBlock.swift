@@ -956,6 +956,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func estimateFragmentRangeForBoxChild(box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateFragmentRangeForBoxChild(box: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: Bool, child: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -679,6 +679,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    func setAtBeforeSideOfBlock(b: Bool) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func atBeforeSideOfBlock() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func canCollapseMarginBeforeWithChildren() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -689,8 +699,178 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, marginInfo: inout MarginInfo,
     previousFloatLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldPosMarginBefore = maxPositiveMarginBefore()
+    let oldNegMarginBefore = maxNegativeMarginBefore()
+
+    // The child is a normal flow object. Compute the margins we will use for collapsing now.
+    child.computeAndSetBlockDirectionMargins(containingBlock: self)
+
+    // Try to guess our correct logical top position. In most cases this guess will
+    // be correct. Only if we're wrong (when we compute the real logical top position)
+    // will we have to potentially relayout.
+    let estimatedLogicalTopPosition = estimateLogicalTopPosition(
+      child: child, marginInfo: marginInfo)
+    let logicalTopEstimate = estimatedLogicalTopPosition.logicalTopEstimate
+    let estimateWithoutPagination = estimatedLogicalTopPosition.estimateWithoutPagination
+
+    // Cache our old rect so that we can dirty the proper repaint rects if the child moves.
+    let oldRect = child.frameRect()
+    let oldLogicalTop = logicalTopForChild(child: child)
+    #if ASSERT_ENABLED
+      let oldLayoutDelta = view().frameView().layoutContext().layoutDelta()
+    #endif
+    // Position the child as though it didn't collapse with the top.
+    setLogicalTopForChild(
+      child: child, logicalTop: logicalTopEstimate, applyDelta: .ApplyLayoutDelta)
+    estimateFragmentRangeForBoxChild(box: child)
+
+    let childBlockFlow = child as? RenderBlockFlowWrapper
+    var markDescendantsWithFloats = false
+    if logicalTopEstimate != oldLogicalTop && !child.avoidsFloats() && childBlockFlow != nil
+      && childBlockFlow!.containsFloats()
+    {
+      markDescendantsWithFloats = true
+    } else if logicalTopEstimate.mightBeSaturated() {
+      // logicalTopEstimate, returned by estimateLogicalTopPosition, might be saturated for
+      // very large elements. If it does the comparison with oldLogicalTop might yield a
+      // false negative as adding and removing margins, borders etc from a saturated number
+      // might yield incorrect results. If this is the case always mark for layout.
+      markDescendantsWithFloats = true
+    } else if !child.avoidsFloats() || child.shrinkToAvoidFloats() {
+      // If an element might be affected by the presence of floats, then always mark it for
+      // layout.
+      let fb = max(previousFloatLogicalBottom, lowestFloatLogicalBottom())
+      if fb > logicalTopEstimate {
+        markDescendantsWithFloats = true
+      }
+    }
+
+    if let childBlockFlow = childBlockFlow {
+      if markDescendantsWithFloats {
+        childBlockFlow.markAllDescendantsWithFloatsForLayout()
+      }
+      if !child.isWritingModeRoot() {
+        previousFloatLogicalBottom = max(
+          previousFloatLogicalBottom, oldLogicalTop + childBlockFlow.lowestFloatLogicalBottom())
+      }
+    }
+
+    child.markForPaginationRelayoutIfNeeded()
+
+    let childHadLayout = child.everHadLayout()
+    let childNeededLayout = child.needsLayout()
+    if childNeededLayout {
+      child.layout()
+    }
+
+    // Cache if we are at the top of the block right now.
+    let atBeforeSideOfBlock = marginInfo.atBeforeSideOfBlock()
+
+    // Now determine the correct ypos based off examination of collapsing margin
+    // values.
+    let logicalTopBeforeClear = collapseMargins(child: child, marginInfo: &marginInfo)
+
+    // Now check for clear.
+    var logicalTopAfterClear = clearFloatsIfNeeded(
+      child: child, marginInfo: &marginInfo, oldTopPosMargin: oldPosMarginBefore,
+      oldTopNegMargin: oldNegMarginBefore, yPos: logicalTopBeforeClear)
+
+    let paginated = view().frameView().layoutContext().layoutState()!.isPaginated()
+    if paginated {
+      logicalTopAfterClear = adjustBlockChildForPagination(
+        logicalTopAfterClear: logicalTopAfterClear,
+        estimateWithoutPagination: estimateWithoutPagination, child: child,
+        atBeforeSideOfBlock: atBeforeSideOfBlock && logicalTopBeforeClear == logicalTopAfterClear)
+    }
+
+    setLogicalTopForChild(
+      child: child, logicalTop: logicalTopAfterClear, applyDelta: .ApplyLayoutDelta)
+
+    // Now we have a final top position. See if it really does end up being different from our estimate.
+    // clearFloatsIfNeeded can also mark the child as needing a layout even though we didn't move. This happens
+    // when collapseMargins dynamically adds overhanging floats because of a child with negative margins.
+    if logicalTopAfterClear != logicalTopEstimate || child.needsLayout()
+      || (paginated && childBlockFlow != nil && childBlockFlow!.shouldBreakAtLineToAvoidWidow())
+    {
+      if child.shrinkToAvoidFloats() {
+        // The child's width depends on the line width. When the child shifts to clear an item, its width can
+        // change (because it has more available line width). So mark the item as dirty.
+        child.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+
+      if let childBlockFlow = childBlockFlow {
+        if !child.avoidsFloats() && childBlockFlow.containsFloats() {
+          childBlockFlow.markAllDescendantsWithFloatsForLayout()
+        }
+        child.markForPaginationRelayoutIfNeeded()
+      }
+    }
+
+    if updateFragmentRangeForBoxChild(box: child) {
+      child.setNeedsLayout(markParents: .MarkOnlyThis)
+    }
+
+    // In case our guess was wrong, relayout the child.
+    child.layoutIfNeeded()
+
+    // We are no longer at the top of the block if we encounter a non-empty child.
+    // This has to be done after checking for clear, so that margins can be reset if a clear occurred.
+    if marginInfo.atBeforeSideOfBlock() && !child.isSelfCollapsingBlock() {
+      marginInfo.setAtBeforeSideOfBlock(b: false)
+
+      if let layoutState = frame().view()!.layoutContext().layoutState(),
+        layoutState.blockStartTrimming() != nil
+      {
+        layoutState.popBlockStartTrimming()
+        layoutState.pushBlockStartTrimming(blockStartTrimming: false)
+      }
+    }
+    // Now place the child in the correct left position
+    determineLogicalLeftPositionForChild(child: child, applyDelta: .ApplyLayoutDelta)
+
+    // Update our height now that the child has been placed in the correct position.
+    setLogicalHeight(size: logicalHeight() + logicalHeightForChildForFragmentation(child: child))
+
+    // If the child has overhanging floats that intrude into following siblings (or possibly out
+    // of this block), then the parent gets notified of the floats now.
+    if let childBlockFlow = childBlockFlow, childBlockFlow.containsFloats() {
+      maxFloatLogicalBottom = max(
+        maxFloatLogicalBottom,
+        addOverhangingFloats(child: childBlockFlow, makeChildPaintOtherFloats: !childNeededLayout))
+    }
+
+    let childOffset = child.location() - oldRect.location()
+    if childOffset.width().bool() || childOffset.height().bool() {
+      view().frameView().layoutContext().addLayoutDelta(delta: childOffset)
+
+      // If the child moved, we have to repaint it as well as any floating/positioned
+      // descendants. An exception is if we need a layout. In this case, we know we're going to
+      // repaint ourselves (and the child) anyway.
+      if childHadLayout && !selfNeedsLayout() && child.checkForRepaintDuringLayout() {
+        child.repaintDuringLayoutIfMoved(oldRect: oldRect)
+      }
+    }
+
+    if !childHadLayout && child.checkForRepaintDuringLayout() {
+      child.repaint()
+      child.repaintOverhangingFloats(paintAllDescendants: true)
+    }
+
+    if paginated {
+      if let fragmentedFlow = enclosingFragmentedFlow() {
+        fragmentedFlow.fragmentedFlowDescendantBoxLaidOut(descendant: child)
+      }
+      // Check for an after page/column break.
+      let newHeight = applyAfterBreak(
+        child: child, logicalOffset: logicalHeight(), marginInfo: marginInfo)
+      if newHeight != height() {
+        setLogicalHeight(size: newHeight)
+      }
+    }
+
+    #if ASSERT_ENABLED
+      assert(view().frameView().layoutContext().layoutDeltaMatches(delta: oldLayoutDelta))
+    #endif
   }
 
   private func adjustPositionedBlock(child: RenderBoxWrapper, marginInfo: MarginInfo) {
@@ -713,6 +893,31 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   ) {
     wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
       p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
+  }
+
+  func collapseMargins(child: RenderBoxWrapper, marginInfo: inout MarginInfo) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearFloatsIfNeeded(
+    child: RenderBoxWrapper, marginInfo: inout MarginInfo, oldTopPosMargin: LayoutUnit,
+    oldTopNegMargin: LayoutUnit, yPos: LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct EstimatedLogicalTopPosition {
+    let logicalTopEstimate: LayoutUnit
+    let estimateWithoutPagination: LayoutUnit
+  }
+
+  private func estimateLogicalTopPosition(child: RenderBoxWrapper, marginInfo: MarginInfo)
+    -> EstimatedLogicalTopPosition
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func handleAfterSideOfBlock(
@@ -1124,6 +1329,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return remainingHeight
   }
 
+  private func logicalHeightForChildForFragmentation(child: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasNextPage(
     logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
   ) -> Bool {
@@ -1256,6 +1466,32 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return !checkFragment
   }
 
+  private func adjustBlockChildForPagination(
+    logicalTopAfterClear: LayoutUnit, estimateWithoutPagination: LayoutUnit,
+    child: RenderBoxWrapper, atBeforeSideOfBlock: Bool
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // If the child has an after break, then return a new offset that shifts to the top of the next page/column.
+  private func applyAfterBreak(
+    child: RenderBoxWrapper, logicalOffset: LayoutUnit, marginInfo: MarginInfo
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func maxPositiveMarginBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func maxNegativeMarginBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func initMaxMarginValues() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1286,6 +1522,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func checkForPaginationLogicalHeightChange(
     relayoutChildren: inout Bool, pageLogicalHeight: inout LayoutUnit,
     pageLogicalHeightChanged: inout Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func determineLogicalLeftPositionForChild(
+    child: RenderBoxWrapper, applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1343,6 +1586,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         }
       }
     }
+  }
+
+  override func repaintOverhangingFloats(paintAllDescendants: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   @discardableResult
