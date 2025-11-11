@@ -25,8 +25,7 @@
 
 class StyleContentAlignmentData {
   func isNormal() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return position == .Normal && distribution == .Default
   }
 
   func isStartward(leftRightAxisDirection: TextDirection? = nil, isFlexReverse: Bool = false)
