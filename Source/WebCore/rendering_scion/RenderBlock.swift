@@ -453,6 +453,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func startOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalLeftOffsetForContent() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

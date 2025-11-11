@@ -998,6 +998,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func updateStaticInlinePositionForChild(child: RenderBoxWrapper, logicalTop: LayoutUnit) {
+    if child.style().isOriginalDisplayInlineType() {
+      setStaticInlinePositionForChild(
+        child: child, blockOffset: logicalTop,
+        inlinePosition: staticInlinePositionForOriginalDisplayInline(logicalTop: logicalTop))
+    } else {
+      setStaticInlinePositionForChild(
+        child: child, blockOffset: logicalTop,
+        inlinePosition: startOffsetForContent(blockOffset: logicalTop))
+    }
+  }
+
+  private func staticInlinePositionForOriginalDisplayInline(logicalTop: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
