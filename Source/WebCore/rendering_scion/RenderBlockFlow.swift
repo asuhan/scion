@@ -1250,8 +1250,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func trimChildBlockMargins(child: RenderBoxWrapper, childIsSelfCollapsing: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let childBlockFlow = child as? RenderBlockFlowWrapper
+    let zero = LayoutUnit(value: UInt64(0))
+    if childBlockFlow != nil {
+      childBlockFlow!.setMaxMarginBeforeValues(pos: zero, neg: zero)
+    }
+    setTrimmedMarginForChild(child: child, marginTrimType: .BlockStart)
+
+    // The margin after for a self collapsing child should also be trimmed so it does not
+    // influence the margins of the first non collapsing child
+    if childIsSelfCollapsing {
+      if childBlockFlow != nil {
+        childBlockFlow!.setMaxMarginAfterValues(pos: zero, neg: zero)
+      }
+      setTrimmedMarginForChild(child: child, marginTrimType: .BlockEnd)
+    }
   }
 
   func clearFloatsIfNeeded(
@@ -1859,6 +1872,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setMaxMarginBeforeValues(pos: LayoutUnit, neg: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setMaxMarginAfterValues(pos: LayoutUnit, neg: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
