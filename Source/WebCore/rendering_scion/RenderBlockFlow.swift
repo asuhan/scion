@@ -1496,8 +1496,29 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setCollapsedBottomMargin(marginInfo: MarginInfo) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !marginInfo.canCollapseWithMarginAfter() || marginInfo.canCollapseWithMarginBefore() {
+      return
+    }
+    // Update our max pos/neg bottom margins, since we collapsed our bottom margins
+    // with our children.
+    let shouldTrimBlockEndMargin = style().marginTrim().contains(.BlockEnd)
+    let zero = LayoutUnit(value: UInt64(0))
+    let propagatedPositiveMargin = shouldTrimBlockEndMargin ? zero : marginInfo.positiveMargin
+    let propagatedNegativeMargin = shouldTrimBlockEndMargin ? zero : marginInfo.negativeMargin
+    setMaxMarginAfterValues(
+      pos: max(maxPositiveMarginAfter(), propagatedPositiveMargin),
+      neg: max(maxNegativeMarginAfter(), propagatedNegativeMargin))
+
+    if !marginInfo.hasMarginAfterQuirk {
+      setHasMarginAfterQuirk(b: false)
+    }
+
+    if marginInfo.hasMarginAfterQuirk && !marginAfter().bool() {
+      // We have no bottom margin and our last child has a quirky margin.
+      // We will pick up this quirky margin and pass it through.
+      // This deals with the <td><div><p> case.
+      setHasMarginAfterQuirk(b: true)
+    }
   }
 
   func shouldBreakAtLineToAvoidWidow() -> Bool {
@@ -2083,6 +2104,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func maxNegativeMarginBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func maxPositiveMarginAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func maxNegativeMarginAfter() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
