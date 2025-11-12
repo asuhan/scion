@@ -22,6 +22,11 @@
 
 import wk_interop
 
+private func inNormalFlow(child: RenderBoxWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func calculateMinimumPageHeight(
   renderStyle: RenderStyleWrapper, lastLine: InlineIterator.LineBoxIterator, lineTop: LayoutUnit,
   lineBottom: LayoutUnit
@@ -2184,8 +2189,39 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func applyBeforeBreak(child: RenderBoxWrapper, logicalOffset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Add page break checking here when we support printing.
+    let fragmentedFlow = enclosingFragmentedFlow()
+    let isInsideMulticolFlow = fragmentedFlow != nil
+    let checkColumnBreaks =
+      fragmentedFlow != nil && fragmentedFlow!.shouldCheckColumnBreaks()
+      && (!shouldApplyLayoutContainment() || child.previousSibling() != nil)
+    let checkPageBreaks =
+      !checkColumnBreaks
+      && view().frameView().layoutContext().layoutState()!.pageLogicalHeight().bool()  // FIXME: Once columns can print we have to check this.
+    var checkFragmentBreaks = false
+    let checkBeforeAlways =
+      (checkColumnBreaks && child.style().breakBefore() == .Column)
+      || (checkPageBreaks && alwaysPageBreak(between: child.style().breakBefore()))
+    if checkBeforeAlways && inNormalFlow(child: child)
+      && hasNextPage(logicalOffset: logicalOffset, pageBoundaryRule: .IncludePageBoundary)
+    {
+      if checkColumnBreaks && isInsideMulticolFlow {
+        checkFragmentBreaks = true
+      }
+      if checkFragmentBreaks {
+        var offsetBreakAdjustment: LayoutUnit? = LayoutUnit()
+        if fragmentedFlow!.addForcedFragmentBreak(
+          block: self, offset: offsetFromLogicalTopOfFirstPage() + logicalOffset, breakChild: child,
+          isBefore: true,
+          offsetBreakAdjustment: &offsetBreakAdjustment)
+        {
+          return logicalOffset + offsetBreakAdjustment!
+        }
+      }
+      return nextPageLogicalTop(
+        logicalOffset: logicalOffset, pageBoundaryRule: .IncludePageBoundary)
+    }
+    return logicalOffset
   }
 
   // If the child has an after break, then return a new offset that shifts to the top of the next page/column.

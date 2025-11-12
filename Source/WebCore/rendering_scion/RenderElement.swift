@@ -103,6 +103,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldApplyLayoutContainment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldApplySizeContainment() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

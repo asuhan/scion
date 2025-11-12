@@ -75,6 +75,12 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: Eventually as column and fragment flow threads start nesting, this will end up changing.
+  override func shouldCheckColumnBreaks() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func fragmentedFlowDescendantBoxLaidOut(descendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -90,6 +96,14 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   override func fragmentAtBlockOffset(
     clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
   ) -> RenderFragmentContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func addForcedFragmentBreak(
+    block: RenderBlockWrapper?, offset: LayoutUnit, breakChild: RenderBoxWrapper?, isBefore: Bool,
+    offsetBreakAdjustment: inout LayoutUnit?
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

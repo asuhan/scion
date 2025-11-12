@@ -177,6 +177,14 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return nil
   }
 
+  func addForcedFragmentBreak(
+    block: RenderBlockWrapper?, offset: LayoutUnit, breakChild: RenderBoxWrapper?, isBefore: Bool,
+    offsetBreakAdjustment: inout LayoutUnit?
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func applyBreakAfterContent(offsetBreak: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -248,6 +256,12 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private static func maxLogicalHeight() -> LayoutUnit { return LayoutUnit.max() / 2 }
 
   override func layout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: Eventually as column and fragment flow threads start nesting, this may end up changing.
+  func shouldCheckColumnBreaks() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
