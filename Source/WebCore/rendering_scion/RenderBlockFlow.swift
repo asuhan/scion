@@ -1010,8 +1010,34 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func staticInlinePositionForOriginalDisplayInline(logicalTop: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let textAlign = style().textAlign()
+    let isLeftToRightDirection = style().isLeftToRightDirection()
+
+    var logicalLeft = logicalLeftOffsetForLine(position: logicalTop).float()
+    let logicalRight = logicalRightOffsetForLine(position: logicalTop).float()
+
+    switch textAlign {
+    case .Left, .WebKitLeft:
+      break
+    case .Right, .WebKitRight:
+      logicalLeft = logicalRight
+    case .Center, .WebKitCenter:
+      logicalLeft += (logicalRight - logicalLeft) / 2
+    case .Justify, .Start:
+      if isLeftToRightDirection {
+        logicalLeft = logicalRight
+      }
+    case .End:
+      if isLeftToRightDirection {
+        logicalLeft = logicalRight
+      }
+    }
+
+    if !isLeftToRightDirection {
+      return LayoutUnit(value: logicalWidth() - logicalLeft)
+    }
+
+    return LayoutUnit(value: logicalLeft)
   }
 
   func collapseMargins(child: RenderBoxWrapper, marginInfo: inout MarginInfo) -> LayoutUnit {

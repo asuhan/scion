@@ -243,6 +243,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalRightOffsetForLine(
+    position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalLeftOffsetForLine(
+    position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addContinuationWithOutline(flow: RenderInlineWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
