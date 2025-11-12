@@ -282,6 +282,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
       document: document(), style: renderer.style(), display: style().display())
   }
 
+  func paginationStrut() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPaginationStrut(strut: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

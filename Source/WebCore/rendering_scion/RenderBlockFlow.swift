@@ -1331,6 +1331,67 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func estimateLogicalTopPosition(child: RenderBoxWrapper, marginInfo: MarginInfo)
     -> EstimatedLogicalTopPosition
   {
+    // FIXME: We need to eliminate the estimation of vertical position, because when it's wrong we sometimes trigger a pathological
+    // relayout if there are intruding floats.
+    var logicalTopEstimate = logicalHeight()
+    if !marginInfo.canCollapseWithMarginBefore() {
+      var positiveMarginBefore = LayoutUnit()
+      var negativeMarginBefore = LayoutUnit()
+      if child.selfNeedsLayout() {
+        // Try to do a basic estimation of how the collapse is going to go.
+        marginBeforeEstimateForChild(
+          child: child, positiveMarginBefore: &positiveMarginBefore,
+          negativeMarginBefore: &negativeMarginBefore)
+      } else {
+        // Use the cached collapsed margin values from a previous layout. Most of the time they
+        // will be right.
+        let marginValues = marginValuesForChild(child: child)
+        positiveMarginBefore = max(positiveMarginBefore, marginValues.positiveMarginBefore)
+        negativeMarginBefore = max(negativeMarginBefore, marginValues.negativeMarginBefore)
+      }
+
+      // Collapse the result with our current margins.
+      logicalTopEstimate +=
+        max(marginInfo.positiveMargin, positiveMarginBefore)
+        - max(marginInfo.negativeMargin, negativeMarginBefore)
+    }
+
+    // Adjust logicalTopEstimate down to the next page if the margins are so large that we don't fit on the current
+    // page.
+    let layoutState = view().frameView().layoutContext().layoutState()!
+    if layoutState.isPaginated() && layoutState.pageLogicalHeight().bool()
+      && logicalTopEstimate > logicalHeight()
+      && hasNextPage(logicalOffset: logicalHeight())
+    {
+      logicalTopEstimate = min(
+        logicalTopEstimate, nextPageLogicalTop(logicalOffset: logicalHeight()))
+    }
+
+    logicalTopEstimate += getClearDelta(child: child, logicalTop: logicalTopEstimate)
+
+    let estimateWithoutPagination = logicalTopEstimate
+
+    if layoutState.isPaginated() {
+      // If the object has a page or column break value of "before", then we should shift to the top of the next page.
+      logicalTopEstimate = applyBeforeBreak(child: child, logicalOffset: logicalTopEstimate)
+
+      // For replaced elements and scrolled elements, we want to shift them to the next page if they don't fit on the current one.
+      logicalTopEstimate = adjustForUnsplittableChild(
+        child: child, logicalOffset: logicalTopEstimate)
+
+      if !child.selfNeedsLayout(), let block = child as? RenderBlockWrapper {
+        logicalTopEstimate += block.paginationStrut()
+      }
+    }
+
+    return EstimatedLogicalTopPosition(
+      logicalTopEstimate: logicalTopEstimate, estimateWithoutPagination: estimateWithoutPagination)
+  }
+
+  private func marginBeforeEstimateForChild(
+    child: RenderBoxWrapper, positiveMarginBefore: inout LayoutUnit,
+    negativeMarginBefore: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1888,10 +1949,25 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return !checkFragment
   }
 
+  // If the child is unsplittable and can't fit on the current page, return the top of the next page/column.
+  private func adjustForUnsplittableChild(
+    child: RenderBoxWrapper, logicalOffset: LayoutUnit,
+    childBeforeMargin: LayoutUnit = LayoutUnit(value: UInt64(0)),
+    childAfterMargin: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func adjustBlockChildForPagination(
     logicalTopAfterClear: LayoutUnit, estimateWithoutPagination: LayoutUnit,
     child: RenderBoxWrapper, atBeforeSideOfBlock: Bool
   ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func applyBeforeBreak(child: RenderBoxWrapper, logicalOffset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
