@@ -1888,8 +1888,19 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func nextPageLogicalTop(
     logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset)
+    if !pageLogicalHeight.bool() {
+      return logicalOffset
+    }
+
+    // The logicalOffset is in our coordinate space.  We can add in our pushed offset.
+    let remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
+      offset: logicalOffset)
+    if pageBoundaryRule == .ExcludePageBoundary {
+      return logicalOffset
+        + (remainingLogicalHeight.bool() ? remainingLogicalHeight : pageLogicalHeight)
+    }
+    return logicalOffset + remainingLogicalHeight
   }
 
   func pageLogicalHeightForOffsetFromBlockFlow(offset: LayoutUnit) -> LayoutUnit {
