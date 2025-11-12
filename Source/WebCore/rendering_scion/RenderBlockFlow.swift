@@ -698,11 +698,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
-    func setAtBeforeSideOfBlock(b: Bool) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-
     mutating func setPositiveMarginIfLarger(p: LayoutUnit) {
       if p > positiveMargin {
         positiveMargin = p
@@ -744,7 +739,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     // They may or may not collapse with the top margin of the block (|m_canCollapseTopWithChildren| tells us that), but they will
     // always be collapsing with one another. This variable can remain set to true through multiple iterations
     // as long as we keep encountering self-collapsing blocks.
-    let atBeforeSideOfBlock = false
+    var atBeforeSideOfBlock = false
 
     // These variables are used to detect quirky margins that we need to collapse away (in table cells
     // and in the body element).
@@ -881,7 +876,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     // We are no longer at the top of the block if we encounter a non-empty child.
     // This has to be done after checking for clear, so that margins can be reset if a clear occurred.
     if marginInfo.atBeforeSideOfBlock && !child.isSelfCollapsingBlock() {
-      marginInfo.setAtBeforeSideOfBlock(b: false)
+      marginInfo.atBeforeSideOfBlock = false
 
       if let layoutState = frame().view()!.layoutContext().layoutState(),
         layoutState.blockStartTrimming() != nil
@@ -1271,8 +1266,61 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, marginInfo: inout MarginInfo, oldTopPosMargin: LayoutUnit,
     oldTopNegMargin: LayoutUnit, yPos: LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let heightIncrease = getClearDelta(child: child, logicalTop: yPos)
+    if !heightIncrease.bool() {
+      return yPos
+    }
+
+    if child.isSelfCollapsingBlock() {
+      // For self-collapsing blocks that clear, they can still collapse their
+      // margins with following siblings. Reset the current margins to represent
+      // the self-collapsing block's margins only.
+      let childMargins = marginValuesForChild(child: child)
+      marginInfo.positiveMargin = max(
+        childMargins.positiveMarginBefore, childMargins.positiveMarginAfter)
+      marginInfo.negativeMargin = max(
+        childMargins.negativeMarginBefore, childMargins.negativeMarginAfter)
+
+      // CSS2.1 states:
+      // "If the top and bottom margins of an element with clearance are adjoining, its margins collapse with
+      // the adjoining margins of following siblings but that resulting margin does not collapse with the bottom margin of the parent block."
+      // So the parent's bottom margin cannot collapse through this block or any subsequent self-collapsing blocks. Check subsequent siblings
+      // for a block with height - if none is found then don't allow the margins to collapse with the parent.
+      var wouldCollapseMarginsWithParent = marginInfo.canCollapseMarginAfterWithChildren
+      var curr = child.nextSiblingBox()
+      while curr != nil && wouldCollapseMarginsWithParent {
+        if !curr!.isFloatingOrOutOfFlowPositioned() && !curr!.isSelfCollapsingBlock() {
+          wouldCollapseMarginsWithParent = false
+        }
+        curr = curr!.nextSiblingBox()
+      }
+      if wouldCollapseMarginsWithParent {
+        marginInfo.canCollapseMarginAfterWithChildren = false
+      }
+
+      // For now set the border-top of |child| flush with the bottom border-edge of the float so it can layout any floating or positioned children of
+      // its own at the correct vertical position. If subsequent siblings attempt to collapse with |child|'s margins in |collapseMargins| we will
+      // adjust the height of the parent to |child|'s margin top (which if it is positive sits up 'inside' the float it's clearing) so that all three
+      // margins can collapse at the correct vertical position.
+      // Per CSS2.1 we need to ensure that any negative margin-top clears |child| beyond the bottom border-edge of the float so that the top border edge of the child
+      // (i.e. its clearance)  is at a position that satisfies the equation: "the amount of clearance is set so that clearance + margin-top = [height of float],
+      // i.e., clearance = [height of float] - margin-top".
+      setLogicalHeight(size: child.logicalTop() + childMargins.negativeMarginBefore)
+    } else {
+      // Increase our height by the amount we had to clear.
+      setLogicalHeight(size: logicalHeight() + heightIncrease)
+    }
+
+    if marginInfo.canCollapseWithMarginBefore() {
+      // We can no longer collapse with the top of the block since a clear
+      // occurred. The empty blocks collapse into the cleared block.
+      // https://www.w3.org/TR/CSS2/visuren.html#clearance
+      // "CSS2.1 - Computing the clearance of an element on which 'clear' is set is done..."
+      setMaxMarginBeforeValues(pos: oldTopPosMargin, neg: oldTopNegMargin)
+      marginInfo.atBeforeSideOfBlock = false
+    }
+
+    return yPos + heightIncrease
   }
 
   private struct EstimatedLogicalTopPosition {
@@ -2008,6 +2056,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     prev: RenderBlockFlowWrapper?, container: RenderBlockFlowWrapper?,
     logicalLeftOffset: LayoutUnit, logicalTopOffset: LayoutUnit
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func getClearDelta(child: RenderBoxWrapper, logicalTop: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
