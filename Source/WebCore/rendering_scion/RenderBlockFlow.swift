@@ -61,6 +61,20 @@ private func clearShouldBreakAtLineToAvoidWidowIfNeeded(blockFlow: RenderBlockFl
   blockFlow.setDidBreakAtLineToAvoidWidow()
 }
 
+struct MarginValues {
+  init(beforePos: LayoutUnit, beforeNeg: LayoutUnit, afterPos: LayoutUnit, afterNeg: LayoutUnit) {
+    positiveMarginBefore = beforePos
+    negativeMarginBefore = beforeNeg
+    positiveMarginAfter = afterPos
+    negativeMarginAfter = afterNeg
+  }
+
+  let positiveMarginBefore: LayoutUnit
+  let negativeMarginBefore: LayoutUnit
+  let positiveMarginAfter: LayoutUnit
+  let negativeMarginAfter: LayoutUnit
+}
+
 // Allocated only when some of these fields have non-default values
 class RenderBlockFlowRareData {
   var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
@@ -670,6 +684,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func marginValuesForChild(child: RenderBoxWrapper) -> MarginValues {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct MarginInfo {
     // Our MarginInfo state used when laying out block children.
     init(
@@ -684,9 +703,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
-    func atBeforeSideOfBlock() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    mutating func setPositiveMarginIfLarger(p: LayoutUnit) {
+      if p > positiveMargin {
+        positiveMargin = p
+      }
+    }
+
+    mutating func setNegativeMarginIfLarger(n: LayoutUnit) {
+      if n > negativeMargin {
+        negativeMargin = n
+      }
+    }
+
+    mutating func setMargin(p: LayoutUnit, n: LayoutUnit) {
+      positiveMargin = p
+      negativeMargin = n
     }
 
     func canCollapseWithMarginBefore() -> Bool {
@@ -704,9 +735,29 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     // Collapsing flags for whether we can collapse our margins with our children's margins.
     var canCollapseMarginAfterWithChildren = false
 
+    // Whether or not we are a quirky container, i.e., do we collapse away top and bottom
+    // margins in our container. Table cells and the body are the common examples. We
+    // also have a custom style property for Safari RSS to deal with TypePad blog articles.
+    let quirkContainer = false
+
+    // This flag tracks whether we are still looking at child margins that can all collapse together at the beginning of a block.
+    // They may or may not collapse with the top margin of the block (|m_canCollapseTopWithChildren| tells us that), but they will
+    // always be collapsing with one another. This variable can remain set to true through multiple iterations
+    // as long as we keep encountering self-collapsing blocks.
+    let atBeforeSideOfBlock = false
+
+    // These variables are used to detect quirky margins that we need to collapse away (in table cells
+    // and in the body element).
+    var determinedMarginBeforeQuirk = false
+
+    // These variables are used to detect quirky margins that we need to collapse away (in table cells
+    // and in the body element).
+    var hasMarginBeforeQuirk = false
+    var hasMarginAfterQuirk = false
+
     // These flags track the previous maximal positive and negative margins.
-    let positiveMargin: LayoutUnit
-    let negativeMargin: LayoutUnit
+    var positiveMargin: LayoutUnit
+    var negativeMargin: LayoutUnit
   }
 
   private func layoutBlockChild(
@@ -778,7 +829,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     // Cache if we are at the top of the block right now.
-    let atBeforeSideOfBlock = marginInfo.atBeforeSideOfBlock()
+    let atBeforeSideOfBlock = marginInfo.atBeforeSideOfBlock
 
     // Now determine the correct ypos based off examination of collapsing margin
     // values.
@@ -829,7 +880,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     // We are no longer at the top of the block if we encounter a non-empty child.
     // This has to be done after checking for clear, so that margins can be reset if a clear occurred.
-    if marginInfo.atBeforeSideOfBlock() && !child.isSelfCollapsingBlock() {
+    if marginInfo.atBeforeSideOfBlock && !child.isSelfCollapsingBlock() {
       marginInfo.setAtBeforeSideOfBlock(b: false)
 
       if let layoutState = frame().view()!.layoutContext().layoutState(),
@@ -1041,6 +1092,164 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func collapseMargins(child: RenderBoxWrapper, marginInfo: inout MarginInfo) -> LayoutUnit {
+    return collapseMarginsWithChildInfo(
+      child: child, prevSibling: child.previousSibling(), marginInfo: &marginInfo)
+  }
+
+  func collapseMarginsWithChildInfo(
+    child: RenderBoxWrapper?, prevSibling: RenderObjectWrapper?, marginInfo: inout MarginInfo
+  ) -> LayoutUnit {
+    let childIsSelfCollapsing = child?.isSelfCollapsingBlock() ?? false
+    let beforeQuirk = child != nil ? hasMarginBeforeQuirk(child: child!) : false
+    let afterQuirk = child != nil ? hasMarginAfterQuirk(child: child!) : false
+    if frame().view()!.layoutContext().layoutState()!.blockStartTrimming() ?? false {
+      assert(marginInfo.atBeforeSideOfBlock)
+      trimChildBlockMargins(child: child!, childIsSelfCollapsing: childIsSelfCollapsing)
+    }
+
+    // Get the four margin values for the child and cache them.
+    let zero = LayoutUnit(value: 0)
+    let childMargins =
+      child != nil
+      ? marginValuesForChild(child: child!)
+      : MarginValues(beforePos: zero, beforeNeg: zero, afterPos: zero, afterNeg: zero)
+    // Get our max pos and neg top margins.
+    var posTop = childMargins.positiveMarginBefore
+    var negTop = childMargins.negativeMarginBefore
+
+    // For self-collapsing blocks, collapse our bottom margins into our
+    // top to get new posTop and negTop values.
+    if childIsSelfCollapsing {
+      posTop = max(posTop, childMargins.positiveMarginAfter)
+      negTop = max(negTop, childMargins.negativeMarginAfter)
+    }
+
+    if marginInfo.canCollapseWithMarginBefore() {
+      // This child is collapsing with the top of the
+      // block. If it has larger margin values, then we need to update
+      // our own maximal values.
+      if !document().inQuirksMode() || !marginInfo.quirkContainer || !beforeQuirk {
+        setMaxMarginBeforeValues(
+          pos: max(posTop, maxPositiveMarginBefore()), neg: max(negTop, maxNegativeMarginBefore()))
+      }
+
+      // The minute any of the margins involved isn't a quirk, don't
+      // collapse it away, even if the margin is smaller (www.webreference.com
+      // has an example of this, a <dt> with 0.8em author-specified inside
+      // a <dl> inside a <td>.
+      if !marginInfo.determinedMarginBeforeQuirk && !beforeQuirk && (posTop - negTop).bool() {
+        setHasMarginBeforeQuirk(b: false)
+        marginInfo.determinedMarginBeforeQuirk = true
+      }
+
+      if !marginInfo.determinedMarginBeforeQuirk && beforeQuirk && !marginBefore().bool() {
+        // We have no top margin and our top child has a quirky margin.
+        // We will pick up this quirky margin and pass it through.
+        // This deals with the <td><div><p> case.
+        // Don't do this for a block that split two inlines though. You do
+        // still apply margins in this case.
+        setHasMarginBeforeQuirk(b: true)
+      }
+    }
+
+    if marginInfo.quirkContainer && marginInfo.atBeforeSideOfBlock && (posTop - negTop).bool() {
+      marginInfo.hasMarginBeforeQuirk = beforeQuirk
+    }
+
+    let beforeCollapseLogicalTop = logicalHeight()
+    var logicalTop = beforeCollapseLogicalTop
+    // If the child's previous sibling is a self-collapsing block that cleared a float then its top border edge has been set at the bottom border edge
+    // of the float. Since we want to collapse the child's top margin with the self-collapsing block's top and bottom margins we need to adjust our parent's height to match the
+    // margin top of the self-collapsing block. If the resulting collapsed margin leaves the child still intruding into the float then we will want to clear it.
+    if !marginInfo.canCollapseWithMarginBefore() {
+      if let value = selfCollapsingMarginBeforeWithClear(candidate: child!.previousSibling()) {
+        setLogicalHeight(size: logicalHeight() - value)
+      }
+    }
+
+    if childIsSelfCollapsing {
+      // This child has no height. We need to compute our
+      // position before we collapse the child's margins together,
+      // so that we can get an accurate position for the zero-height block.
+      let collapsedBeforePos = max(marginInfo.positiveMargin, childMargins.positiveMarginBefore)
+      let collapsedBeforeNeg = max(marginInfo.negativeMargin, childMargins.negativeMarginBefore)
+      marginInfo.setMargin(p: collapsedBeforePos, n: collapsedBeforeNeg)
+
+      // Now collapse the child's margins together, which means examining our
+      // bottom margin values as well.
+      marginInfo.setPositiveMarginIfLarger(p: childMargins.positiveMarginAfter)
+      marginInfo.setNegativeMarginIfLarger(n: childMargins.negativeMarginAfter)
+
+      if !marginInfo.canCollapseWithMarginBefore() {
+        // We need to make sure that the position of the self-collapsing block
+        // is correct, since it could have overflowing content
+        // that needs to be positioned correctly (e.g., a block that
+        // had a specified height of 0 but that actually had subcontent).
+        logicalTop = logicalHeight() + collapsedBeforePos - collapsedBeforeNeg
+      }
+    } else {
+      if !marginInfo.atBeforeSideOfBlock
+        || (!marginInfo.canCollapseMarginBeforeWithChildren()
+          && (!document().inQuirksMode() || !marginInfo.quirkContainer
+            || !marginInfo.hasMarginBeforeQuirk))
+      {
+        // We're collapsing with a previous sibling's margins and not
+        // with the top of the block.
+        setLogicalHeight(
+          size: logicalHeight() + max(marginInfo.positiveMargin, posTop)
+            - max(marginInfo.negativeMargin, negTop))
+        logicalTop = logicalHeight()
+      }
+
+      marginInfo.positiveMargin = childMargins.positiveMarginAfter
+      marginInfo.negativeMargin = childMargins.negativeMarginAfter
+
+      if marginInfo.margin().bool() {
+        marginInfo.hasMarginAfterQuirk = afterQuirk
+      }
+    }
+
+    // If margins would pull us past the top of the next page, then we need to pull back and pretend like the margins
+    // collapsed into the page edge.
+    let layoutState = view().frameView().layoutContext().layoutState()!
+    if layoutState.isPaginated() && layoutState.pageLogicalHeight().bool()
+      && logicalTop > beforeCollapseLogicalTop
+      && hasNextPage(logicalOffset: beforeCollapseLogicalTop)
+    {
+      let oldLogicalTop = logicalTop
+      logicalTop = min(logicalTop, nextPageLogicalTop(logicalOffset: beforeCollapseLogicalTop))
+      setLogicalHeight(size: logicalHeight() + (logicalTop - oldLogicalTop))
+    }
+
+    if let block = prevSibling as? RenderBlockFlowWrapper,
+      !prevSibling!.isFloatingOrOutOfFlowPositioned()
+    {
+      // If |child| is a self-collapsing block it may have collapsed into a previous sibling and although it hasn't reduced the height of the parent yet
+      // any floats from the parent will now overhang.
+      let oldLogicalHeight = logicalHeight()
+      setLogicalHeight(size: logicalTop)
+      if block.containsFloats() && !block.avoidsFloats()
+        && (block.logicalTop() + block.lowestFloatLogicalBottom()) > logicalTop
+      {
+        addOverhangingFloats(child: block, makeChildPaintOtherFloats: false)
+      }
+      setLogicalHeight(size: oldLogicalHeight)
+
+      // If |child|'s previous sibling is or contains a self-collapsing block that cleared a float and margin collapsing resulted in |child| moving up
+      // into the margin area of the self-collapsing block then the float it clears is now intruding into |child|. Layout again so that we can look for
+      // floats in the parent that overhang |child|'s new logical top.
+      let logicalTopIntrudesIntoFloat = logicalTop < beforeCollapseLogicalTop
+      if child != nil && logicalTopIntrudesIntoFloat && containsFloats() && !child!.avoidsFloats()
+        && lowestFloatLogicalBottom() > logicalTop
+      {
+        child!.setNeedsLayout()
+      }
+    }
+
+    return logicalTop
+  }
+
+  private func trimChildBlockMargins(child: RenderBoxWrapper, childIsSelfCollapsing: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1436,6 +1645,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     case IncludePageBoundary
   }
 
+  private func nextPageLogicalTop(
+    logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pageLogicalHeightForOffsetFromBlockFlow(offset: LayoutUnit) -> LayoutUnit {
     // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
     // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
@@ -1642,6 +1858,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func setMaxMarginBeforeValues(pos: LayoutUnit, neg: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func createFloatingObjects() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1783,6 +2004,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func layoutInlineContent(relayoutChildren: Bool) -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func selfCollapsingMarginBeforeWithClear(candidate: RenderObjectWrapper?) -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
