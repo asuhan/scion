@@ -49,3 +49,14 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 }
+
+// Renderer for our inner container, for <search> and others.
+// We can't use RenderFlexibleBox directly, because flexboxes have a different
+// baseline definition, and then inputs of different types wouldn't line up
+// anymore.
+final class RenderTextControlInnerContainerWrapper: RenderFlexibleBoxWrapper {
+  override func isFlexibleBoxImpl() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

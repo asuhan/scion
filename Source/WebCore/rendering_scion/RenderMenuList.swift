@@ -55,4 +55,9 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func isFlexibleBoxImpl() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

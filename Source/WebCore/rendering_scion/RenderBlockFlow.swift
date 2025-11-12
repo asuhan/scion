@@ -2124,8 +2124,55 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     childBeforeMargin: LayoutUnit = LayoutUnit(value: UInt64(0)),
     childAfterMargin: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When flexboxes are embedded inside a block flow, they don't perform any adjustments for unsplittable
+    // children. We'll treat flexboxes themselves as unsplittable just to get them to paginate properly inside
+    // a block flow.
+    let isUnsplittable = childBoxIsUnsplittableForFragmentation(child: child)
+    if !isUnsplittable {
+      if let flexibleBox = child as? RenderFlexibleBoxWrapper, flexibleBox.isFlexibleBoxImpl() {
+        return logicalOffset
+      } else if !(child is RenderFlexibleBoxWrapper) {
+        return logicalOffset
+      }
+    }
+
+    let fragmentedFlow = enclosingFragmentedFlow()
+    let childLogicalHeight =
+      logicalHeightForChild(child: child) + childBeforeMargin + childAfterMargin
+    let pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset)
+    let hasUniformPageLogicalHeight =
+      fragmentedFlow == nil || fragmentedFlow!.fragmentsHaveUniformLogicalHeight()
+    if isUnsplittable {
+      updateMinimumPageHeight(offset: logicalOffset, minHeight: childLogicalHeight)
+    }
+    if !pageLogicalHeight.bool()
+      || (hasUniformPageLogicalHeight && childLogicalHeight > pageLogicalHeight)
+      || !hasNextPage(logicalOffset: logicalOffset)
+    {
+      return logicalOffset
+    }
+    var remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
+      offset: logicalOffset, pageBoundaryRule: .ExcludePageBoundary)
+    if remainingLogicalHeight < childLogicalHeight {
+      if !hasUniformPageLogicalHeight
+        && !pushToNextPageWithMinimumLogicalHeight(
+          adjustment: &remainingLogicalHeight, logicalOffset: logicalOffset,
+          minimumLogicalHeight: childLogicalHeight)
+      {
+        return logicalOffset
+      }
+      let result = logicalOffset + remainingLogicalHeight
+      let isInitialLetter =
+        child.isFloating() && child.style().pseudoElementType() == .FirstLetter
+        && child.style().initialLetterDrop() > 0
+      if isInitialLetter {
+        // Increase our logical height to ensure that lines all get pushed along with the letter.
+        setLogicalHeight(size: logicalOffset + remainingLogicalHeight)
+      }
+      return result
+    }
+
+    return logicalOffset
   }
 
   private func adjustBlockChildForPagination(
