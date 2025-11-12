@@ -1110,7 +1110,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
-  private func computeBlockPreferredLogicalWidths(
+  func computeBlockPreferredLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
     assert(!shouldApplyInlineSizeContainment())

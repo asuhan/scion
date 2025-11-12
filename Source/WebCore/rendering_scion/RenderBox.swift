@@ -770,6 +770,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return max(width, bordersPlusPadding)
   }
 
+  func adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {

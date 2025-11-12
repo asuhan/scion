@@ -76,6 +76,7 @@ target_sources(layout_scion PRIVATE
     RenderListBox.swift
     RenderListItem.swift
     RenderListMarker.swift
+    RenderMarquee.swift
     RenderMedia.swift
     RenderMenuList.swift
     RenderMeter.swift

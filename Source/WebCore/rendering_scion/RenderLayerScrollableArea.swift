@@ -55,6 +55,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func marquee() -> RenderMarqueeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func createOrDestroyMarquee() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

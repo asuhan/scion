@@ -2030,8 +2030,48 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var needAdjustIntrinsicLogicalWidthsForColumns = true
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let width = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = width
+        maxLogicalWidth = width
+        needAdjustIntrinsicLogicalWidthsForColumns = false
+      }
+    } else if childrenInline() {
+      computeInlinePreferredLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+    } else {
+      computeBlockPreferredLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+    }
+
+    maxLogicalWidth = max(minLogicalWidth, maxLogicalWidth)
+
+    if needAdjustIntrinsicLogicalWidthsForColumns {
+      adjustIntrinsicLogicalWidthsForColumns(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+    }
+
+    if !style().autoWrap() && childrenInline() {
+      // A horizontal marquee with inline children has no minimum width.
+      if let scrollableArea = layer()?.scrollableArea(),
+        scrollableArea.marquee() != nil && scrollableArea.marquee()!.isHorizontal()
+      {
+        minLogicalWidth = LayoutUnit(value: 0)
+      }
+    }
+
+    if let cell = self as? RenderTableCellWrapper {
+      let tableCellWidth = cell.styleOrColLogicalWidth()
+      if tableCellWidth.isFixed() && tableCellWidth.value() > 0 {
+        maxLogicalWidth = max(
+          minLogicalWidth, adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: tableCellWidth))
+      }
+    }
+
+    let scrollbarWidth = intrinsicScrollbarLogicalWidthIncludingGutter()
+    maxLogicalWidth += scrollbarWidth
+    minLogicalWidth += scrollbarWidth
   }
 
   private func pushToNextPageWithMinimumLogicalHeight(
@@ -2279,6 +2319,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func layoutInlineContent(relayoutChildren: Bool) -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustIntrinsicLogicalWidthsForColumns(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeInlinePreferredLogicalWidths(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
