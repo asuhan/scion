@@ -538,7 +538,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
     // Now do the handling of the bottom of the block, adding in our bottom border/padding and
     // determining the correct collapsed bottom margin information.
-    handleAfterSideOfBlock(beforeSide: beforeEdge, afterSide: afterEdge, marginInfo: marginInfo)
+    handleAfterSideOfBlock(beforeSide: beforeEdge, afterSide: afterEdge, marginInfo: &marginInfo)
     if hasMarginTrimState {
       layoutState!.popBlockStartTrimming()
     }
@@ -720,6 +720,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    func canCollapseWithMarginAfter() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func canCollapseMarginBeforeWithChildren() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -740,6 +745,9 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     // always be collapsing with one another. This variable can remain set to true through multiple iterations
     // as long as we keep encountering self-collapsing blocks.
     var atBeforeSideOfBlock = false
+
+    // This flag is set when we know we're examining bottom margins and we know we're at the bottom of the block.
+    var atAfterSideOfBlock = false
 
     // These variables are used to detect quirky margins that we need to collapse away (in table cells
     // and in the body element).
@@ -1457,8 +1465,37 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func handleAfterSideOfBlock(
-    beforeSide: LayoutUnit, afterSide: LayoutUnit, marginInfo: MarginInfo
+    beforeSide: LayoutUnit, afterSide: LayoutUnit, marginInfo: inout MarginInfo
   ) {
+    marginInfo.atAfterSideOfBlock = true
+
+    // If our last child was a self-collapsing block with clearance then our logical height is flush with the
+    // bottom edge of the float that the child clears. The correct vertical position for the margin-collapsing we want
+    // to perform now is at the child's margin-top - so adjust our height to that position.
+    if let value = selfCollapsingMarginBeforeWithClear(candidate: lastChild()) {
+      setLogicalHeight(size: logicalHeight() - value)
+    }
+
+    // If we can't collapse with children then add in the bottom margin.
+    if !marginInfo.canCollapseWithMarginAfter() && !marginInfo.canCollapseWithMarginBefore()
+      && (!document().inQuirksMode() || !marginInfo.quirkContainer
+        || !marginInfo.hasMarginAfterQuirk)
+    {
+      setLogicalHeight(size: logicalHeight() + marginInfo.margin())
+    }
+
+    // Now add in our bottom border/padding.
+    setLogicalHeight(size: logicalHeight() + afterSide)
+
+    // Negative margins can cause our height to shrink below our minimal height (border/padding).
+    // If this happens, ensure that the computed height is increased to the minimal height.
+    setLogicalHeight(size: max(logicalHeight(), beforeSide + afterSide))
+
+    // Update our bottom collapsed margin info.
+    setCollapsedBottomMargin(marginInfo: marginInfo)
+  }
+
+  private func setCollapsedBottomMargin(marginInfo: MarginInfo) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
