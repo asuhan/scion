@@ -1392,8 +1392,68 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, positiveMarginBefore: inout LayoutUnit,
     negativeMarginBefore: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Give up if in quirks mode and we're a body/table cell and the top margin of the child box is quirky.
+    // Give up if the child specified -webkit-margin-collapse: separate that prevents collapsing.
+    if document().inQuirksMode() && hasMarginBeforeQuirk(child: child)
+      && (isRenderTableCell() || isBody())
+    {
+      return
+    }
+
+    let beforeChildMargin = marginBeforeForChild(child: child)
+    positiveMarginBefore = max(positiveMarginBefore, beforeChildMargin)
+    negativeMarginBefore = max(negativeMarginBefore, -beforeChildMargin)
+
+    let childBlock = child as? RenderBlockFlowWrapper
+    if childBlock == nil {
+      return
+    }
+
+    if childBlock!.childrenInline() || childBlock!.isWritingModeRoot() {
+      return
+    }
+
+    let childMarginInfo = MarginInfo(
+      block: childBlock!, beforeBorderPadding: childBlock!.borderAndPaddingBefore(),
+      afterBorderPadding: childBlock!.borderAndPaddingAfter())
+    if !childMarginInfo.canCollapseMarginBeforeWithChildren() {
+      return
+    }
+
+    var grandchildBox = childBlock!.firstChildBox()
+    while grandchildBox != nil {
+      if !grandchildBox!.isFloatingOrOutOfFlowPositioned() {
+        break
+      }
+      grandchildBox = grandchildBox!.nextSiblingBox()
+    }
+
+    if grandchildBox == nil {
+      return
+    }
+
+    // Make sure to update the block margins now for the grandchild box so that we're looking at current values.
+    if grandchildBox!.needsLayout() {
+      grandchildBox!.computeAndSetBlockDirectionMargins(containingBlock: self)
+      if let grandchildBlock = grandchildBox as? RenderBlockWrapper {
+        grandchildBlock.setHasMarginBeforeQuirk(b: grandchildBox!.style().marginBefore().hasQuirk())
+        grandchildBlock.setHasMarginAfterQuirk(b: grandchildBox!.style().marginAfter().hasQuirk())
+      }
+    }
+
+    // If we have a 'clear' value but also have a margin we may not actually require clearance to move past any floats.
+    // If that's the case we want to be sure we estimate the correct position including margins after any floats rather
+    // than use 'clearance' later which could give us the wrong position.
+    if RenderStyleWrapper.usedClear(renderer: grandchildBox!) != .None
+      && !childBlock!.marginBeforeForChild(child: grandchildBox!).bool()
+    {
+      return
+    }
+
+    // Collapse the margin of the grandchild box with our own to produce an estimate.
+    childBlock!.marginBeforeEstimateForChild(
+      child: grandchildBox!, positiveMarginBefore: &positiveMarginBefore,
+      negativeMarginBefore: &negativeMarginBefore)
   }
 
   private func handleAfterSideOfBlock(

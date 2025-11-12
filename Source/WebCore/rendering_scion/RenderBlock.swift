@@ -398,6 +398,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func marginBeforeForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTrimmedMarginForChild(child: RenderBoxWrapper, marginTrimType: MarginTrimType) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
