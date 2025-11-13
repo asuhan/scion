@@ -593,6 +593,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
+  func hasDefiniteLogicalHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasLineIfEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

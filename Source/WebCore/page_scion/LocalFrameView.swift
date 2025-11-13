@@ -117,6 +117,17 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  // Page and LocalFrameView both store a Pagination value. Page::pagination() is set only by API,
+  // and LocalFrameView::pagination() is set only by CSS. Page::pagination() will affect all
+  // FrameViews in the back/forward cache, but LocalFrameView::pagination() only affects the current
+  // LocalFrameView. LocalFrameView::pagination() will return m_pagination if it has been set. Otherwise,
+  // it will return Page::pagination() since currently there are no callers that need to
+  // distinguish between the two.
+  func pagination() -> Pagination {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFlippedBlockRenderers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

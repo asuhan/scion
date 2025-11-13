@@ -21,6 +21,7 @@ target_sources(layout_scion PRIVATE
     LineClampUpdater.swift
     MarkedText.swift
     OverlapTestRequestClient.swift
+    Pagination.swift
     PaintFrequencyTracker.swift
     PaintInfo.swift
     PaintPhase.swift

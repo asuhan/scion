@@ -67,6 +67,8 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setColumnHeightAvailable(available: LayoutUnit) { columnHeightAvailable = available }
+
   // The point is physical, and the result is a physical location within the fragment.
   func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?
@@ -108,6 +110,11 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func isPageLogicalHeightKnown() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   typealias SpannerMap = [UInt: RenderMultiColumnSpannerPlaceholderWrapper]
 
   var spannerMap: SpannerMap {
@@ -120,4 +127,6 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
       fatalError("Not implemented")
     }
   }
+
+  var columnHeightAvailable: LayoutUnit  // Total height available to columns, or 0 if auto.
 }

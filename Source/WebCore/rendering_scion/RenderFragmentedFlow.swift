@@ -190,6 +190,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func isPageLogicalHeightKnown() -> Bool { return true }
+
   func collectLayerFragments(
     layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
@@ -291,4 +293,5 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private let fragmentIntervalTree = FragmentIntervalTree()
 
   private let fragmentsInvalidated = false
+  let pageLogicalSizeChanged = false
 }

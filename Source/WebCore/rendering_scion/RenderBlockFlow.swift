@@ -2385,8 +2385,41 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     relayoutChildren: inout Bool, pageLogicalHeight: inout LayoutUnit,
     pageLogicalHeightChanged: inout Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we don't use columns or flow threads, then bail.
+    if !isRenderFragmentedFlow() && multiColumnFlowForBlockFlow() == nil {
+      return
+    }
+
+    // We don't actually update any of the variables. We just subclassed to adjust our column height.
+    if let fragmentedFlow = multiColumnFlowForBlockFlow() {
+      var newColumnHeight = LayoutUnit()
+      if hasDefiniteLogicalHeight() || view().frameView().pagination().mode != .Unpaginated {
+        let computedValues = computeLogicalHeight(
+          logicalHeight: LayoutUnit(value: 0), logicalTop: logicalTop())
+        newColumnHeight = max(
+          computedValues.extent - borderAndPaddingLogicalHeight() - scrollbarLogicalHeight(),
+          LayoutUnit(value: 0))
+        if fragmentedFlow.columnHeightAvailable != newColumnHeight {
+          relayoutChildren = true
+        }
+      }
+      fragmentedFlow.setColumnHeightAvailable(available: newColumnHeight)
+    } else if let fragmentedFlow = self as? RenderFragmentedFlowWrapper {
+      // FIXME: This is a hack to always make sure we have a page logical height, if said height
+      // is known. The page logical height thing in RenderLayoutState is meaningless for flow
+      // thread-based pagination (page height isn't necessarily uniform throughout the flow
+      // thread), but as long as it is used universally as a means to determine whether page
+      // height is known or not, we need this. Page height is unknown when column balancing is
+      // enabled and flow thread height is still unknown (i.e. during the first layout pass). When
+      // it's unknown, we need to prevent the pagination code from assuming page breaks everywhere
+      // and thereby eating every top margin. It should be trivial to clean up and get rid of this
+      // hack once the old multicol implementation is gone (see also RenderView::pushLayoutStateForPagination).
+      pageLogicalHeight =
+        fragmentedFlow.isPageLogicalHeightKnown()
+        ? LayoutUnit(value: UInt64(1)) : LayoutUnit(value: UInt64(0))
+
+      pageLogicalHeightChanged = fragmentedFlow.pageLogicalSizeChanged
+    }
   }
 
   private func determineLogicalLeftPositionForChild(
