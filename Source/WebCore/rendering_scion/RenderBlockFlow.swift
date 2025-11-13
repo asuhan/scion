@@ -85,6 +85,48 @@ class RenderBlockFlowRareData {
   var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
 }
 
+private struct InlineMinMaxIterator {
+  /* InlineMinMaxIterator is a class that will iterate over all render objects that contribute to
+   inline min/max width calculations.  Note the following about the way it walks:
+   (1) Positioned content is skipped (since it does not contribute to min/max width of a block)
+   (2) We do not drill into the children of floats or replaced elements, since you can't break
+       in the middle of such an element.
+   (3) Inline flows (e.g., <a>, <span>, <i>) are walked twice, since each side can have
+       distinct borders/margin/padding that contribute to the min/max width.
+*/
+
+  init(p: RenderBlockFlowWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func next() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let endOfInline: Bool
+}
+
+private func getBorderPaddingMargin(child: RenderBoxModelObjectWrapper, endOfInline: Bool)
+  -> LayoutUnit
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func stripTrailingSpace(
+  inlineMax: inout Float32, inlineMin: inout Float32, trailingSpaceChild: RenderObjectWrapper?
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func preferredWidth(preferredWidth: LayoutUnit, result: Float32) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBlockFlowWrapper: RenderBlockWrapper {
   convenience init(
     type: `Type`, document: Document, style: RenderStyleWrapper, flags: BlockFlowFlag = []
@@ -2059,8 +2101,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         needAdjustIntrinsicLogicalWidthsForColumns = false
       }
     } else if childrenInline() {
-      computeInlinePreferredLogicalWidths(
-        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+      (minLogicalWidth, maxLogicalWidth) = computeInlinePreferredLogicalWidths()
     } else {
       computeBlockPreferredLogicalWidths(
         minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
@@ -2455,6 +2496,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func tryComputePreferredWidthsUsingInlinePath() -> (LayoutUnit, LayoutUnit)? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func adjustIntrinsicLogicalWidthsForColumns(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
@@ -2462,11 +2508,442 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func computeInlinePreferredLogicalWidths(
-    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func computeInlinePreferredLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    assert(!shouldApplyInlineSizeContainment())
+
+    if let (minLogicalWidth, maxLogicalWidth) = tryComputePreferredWidthsUsingInlinePath() {
+      return (minLogicalWidth, maxLogicalWidth)
+    }
+
+    var inlineMax: Float32 = 0
+    var inlineMin: Float32 = 0
+
+    let styleToUse = style()
+    // If we are at the start of a line, we want to ignore all white-space.
+    // Also strip spaces if we previously had text that ended in a trailing space.
+    var stripFrontSpaces = true
+    var trailingSpaceChild: RenderObjectWrapper? = nil
+
+    // Firefox and Opera will allow a table cell to grow to fit an image inside it under
+    // very specific cirucumstances (in order to match common WinIE renderings).
+    // Not supporting the quirk has caused us to mis-render some real sites. (See Bugzilla 10517.)
+    let allowImagesToBreak =
+      !document().inQuirksMode() || !isRenderTableCell()
+      || !styleToUse.logicalWidth().isIntrinsicOrAuto()
+
+    var oldAutoWrap = styleToUse.autoWrap()
+
+    let childIterator = InlineMinMaxIterator(p: self)
+
+    // Only gets added to the max preffered width once.
+    var addedTextIndent = false
+    // Signals the text indent was more negative than the min preferred width
+    var hasRemainingNegativeTextIndent = false
+
+    var textIndent = LayoutUnit()
+    if styleToUse.textIndent().isFixed() {
+      textIndent = LayoutUnit(value: styleToUse.textIndent().value())
+    } else if let containingBlock = containingBlock(),
+      containingBlock.style().logicalWidth().isFixed()
+    {
+      // At this point of the shrink-to-fit computatation, we don't have a used value for the containing block width
+      // (that's exactly to what we try to contribute here) unless the computed value is fixed.
+      textIndent = minimumValueForLength(
+        length: styleToUse.textIndent(),
+        maximumValue: containingBlock.style().logicalWidth().value())
+    }
+    var previousFloat: RenderObjectWrapper? = nil
+    var isPrevChildInlineFlow = false
+    var shouldBreakLineAfterText = false
+    let canHangPunctuationAtStart = styleToUse.hangingPunctuation().contains(.First)
+    let canHangPunctuationAtEnd = styleToUse.hangingPunctuation().contains(.Last)
+    var lastText: RenderTextWrapper? = nil
+    var rubyBaseMinimumMaximumWidthStack: [(LayoutUnit, LayoutUnit)] = []
+
+    var addedStartPunctuationHang = false
+
+    var minLogicalWidth = LayoutUnit()
+    var maxLogicalWidth = LayoutUnit()
+
+    while true {
+      let child = childIterator.next()
+      if child == nil {
+        break
+      }
+      let autoWrap =
+        child!.isReplacedOrInlineBlock()
+        ? child!.parent()!.style().autoWrap() : child!.style().autoWrap()
+
+      // Interlinear annotations don't participate in inline layout, but they put a minimum width requirement on the associated ruby base.
+      let isInterlinearTypeAnnotation =
+        child is RenderBlockWrapper && child!.style().display() == .RubyAnnotation
+        && (!child!.style().isInterCharacterRubyPosition() || !styleToUse.isHorizontalWritingMode())
+      if isInterlinearTypeAnnotation {
+        let (annotationMinimumIntrinsicWidth, annotationMaximumIntrinsicWidth) =
+          computeChildPreferredLogicalWidths(child: child!)
+
+        if !rubyBaseMinimumMaximumWidthStack.isEmpty {
+          // Annotation box is always preceded by the associated ruby base.
+          let (baseMinimumWidth, baseMaximumWidth) = rubyBaseMinimumMaximumWidthStack.removeLast()
+          inlineMin += max(
+            0, annotationMinimumIntrinsicWidth.ceilToFloat() - baseMinimumWidth)
+          inlineMax += max(
+            0, annotationMaximumIntrinsicWidth.ceilToFloat() - baseMaximumWidth)
+        } else {
+          fatalError("Not reached")
+        }
+        continue
+      }
+      if !child!.isBR() {
+        // Step One: determine whether or not we need to terminate our current line.
+        // Each discrete chunk can become the new min-width, if it is the widest chunk
+        // seen so far, and it can also become the max-width.
+
+        // Children fall into three categories:
+        // (1) An inline flow object. These objects always have a min/max of 0,
+        // and are included in the iteration solely so that their margins can
+        // be added in.
+        //
+        // (2) An inline non-text non-flow object, e.g., an inline replaced element.
+        // These objects can always be on a line by themselves, so in this situation
+        // we need to break the current line, and then add in our own margins and min/max
+        // width on its own line, and then terminate the line.
+        //
+        // (3) A text object. Text runs can have breakable characters at the start,
+        // the middle or the end. They may also lose whitespace off the front if
+        // we're already ignoring whitespace. In order to compute accurate min-width
+        // information, we need three pieces of information.
+        // (a) the min-width of the first non-breakable run. Should be 0 if the text string
+        // starts with whitespace.
+        // (b) the min-width of the last non-breakable run. Should be 0 if the text string
+        // ends with whitespace.
+        // (c) the min/max width of the string (trimmed for whitespace).
+        //
+        // If the text string starts with whitespace, then we need to terminate our current line
+        // (unless we're already in a whitespace stripping mode.
+        //
+        // If the text string has a breakable character in the middle, but didn't start
+        // with whitespace, then we add the width of the first non-breakable run and
+        // then end the current line. We then need to use the intermediate min/max width
+        // values (if any of them are larger than our current min/max). We then look at
+        // the width of the last non-breakable run and use that to start a new line
+        // (unless we end in whitespace).
+        let childStyle = child!.style()
+        var childMin: Float32 = 0
+        var childMax: Float32 = 0
+
+        if !child!.isRenderText() {
+          if child!.isLineBreakOpportunity() {
+            minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+            inlineMin = 0
+            continue
+          }
+          // Case (1) and (2). Inline replaced and inline flow elements.
+          if let renderInline = child as? RenderInlineWrapper {
+            // Add in padding/border/margin from the appropriate side of
+            // the element.
+            let bpm = getBorderPaddingMargin(
+              child: renderInline, endOfInline: childIterator.endOfInline)
+            childMin += bpm
+            childMax += bpm
+
+            if childStyle.display() == .RubyBase && !childIterator.endOfInline {
+              rubyBaseMinimumMaximumWidthStack.append(
+                (LayoutUnit(value: inlineMin), LayoutUnit(value: inlineMax)))
+            }
+
+            inlineMin += childMin
+            inlineMax += childMax
+
+            if childStyle.display() == .RubyBase && childIterator.endOfInline {
+              if !rubyBaseMinimumMaximumWidthStack.isEmpty {
+                let (rubyBaseStartMin, rubyBaseStartMax) = rubyBaseMinimumMaximumWidthStack.last!
+                rubyBaseMinimumMaximumWidthStack[rubyBaseMinimumMaximumWidthStack.count - 1] = (
+                  LayoutUnit(value: inlineMin - rubyBaseStartMin),
+                  LayoutUnit(value: inlineMax - rubyBaseStartMax)
+                )
+              } else {
+                fatalError("Not reached")
+              }
+            }
+
+            child!.setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+          } else {
+            // Inline replaced elts add in their margins to their min/max values.
+            if !child!.isFloating() {
+              lastText = nil
+            }
+            var margins = LayoutUnit()
+            let startMargin = childStyle.marginStartUsing(otherStyle: style())
+            let endMargin = childStyle.marginEndUsing(otherStyle: style())
+            if startMargin.isFixed() {
+              margins += LayoutUnit.fromFloatCeil(value: startMargin.value())
+            }
+            if endMargin.isFixed() {
+              margins += LayoutUnit.fromFloatCeil(value: endMargin.value())
+            }
+            childMin += margins.ceilToFloat()
+            childMax += margins.ceilToFloat()
+          }
+        }
+
+        if !(child is RenderInlineWrapper) && !(child is RenderTextWrapper) {
+          // Case (2). Inline replaced elements and floats.
+          // Terminate the current line as far as minwidth is concerned.
+          var childMinPreferredLogicalWidth = LayoutUnit()
+          var childMaxPreferredLogicalWidth = LayoutUnit()
+          if let box = child as? RenderBoxWrapper,
+            child!.isHorizontalWritingMode() != isHorizontalWritingMode()
+          {
+            let extent = box.computeLogicalHeight(
+              logicalHeight: box.borderAndPaddingLogicalHeight(), logicalTop: LayoutUnit(value: 0)
+            ).extent
+            childMinPreferredLogicalWidth = extent
+            childMaxPreferredLogicalWidth = extent
+          } else {
+            (childMinPreferredLogicalWidth, childMaxPreferredLogicalWidth) =
+              computeChildPreferredLogicalWidths(child: child!)
+          }
+
+          childMin += childMinPreferredLogicalWidth.ceilToFloat()
+          childMax += childMaxPreferredLogicalWidth.ceilToFloat()
+
+          var clearPreviousFloat = false
+          if child!.isFloating() {
+            let childClearValue = RenderStyleWrapper.usedClear(renderer: child!)
+            if previousFloat != nil {
+              let previousFloatValue = RenderStyleWrapper.usedFloat(renderer: previousFloat!)
+              clearPreviousFloat =
+                (previousFloatValue == .Left
+                  && (childClearValue == .Left || childClearValue == .Both))
+                || (previousFloatValue == .Right
+                  && (childClearValue == .Right || childClearValue == .Both))
+            }
+            previousFloat = child
+          }
+
+          let canBreakReplacedElement = !child!.isImage() || allowImagesToBreak
+          if (canBreakReplacedElement && (autoWrap || oldAutoWrap)
+            && (!isPrevChildInlineFlow || shouldBreakLineAfterText)) || clearPreviousFloat
+          {
+            minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+            inlineMin = 0
+          }
+
+          // If we're supposed to clear the previous float, then terminate maxwidth as well.
+          if clearPreviousFloat {
+            maxLogicalWidth = preferredWidth(preferredWidth: maxLogicalWidth, result: inlineMax)
+            inlineMax = 0
+          }
+
+          // Add in text-indent. This is added in only once.
+          if !addedTextIndent && !child!.isFloating() {
+            let ceiledIndent = LayoutUnit(value: textIndent.ceilToFloat())
+            childMin += ceiledIndent
+            childMax += ceiledIndent
+
+            if childMin < 0 {
+              textIndent = LayoutUnit.fromFloatCeil(value: childMin)
+            } else {
+              addedTextIndent = true
+            }
+          }
+
+          if canHangPunctuationAtStart && !addedStartPunctuationHang && !child!.isFloating() {
+            addedStartPunctuationHang = true
+          }
+
+          // Add our width to the max.
+          inlineMax += max(0, childMax)
+
+          if !autoWrap || !canBreakReplacedElement
+            || (isPrevChildInlineFlow && !shouldBreakLineAfterText)
+          {
+            if child!.isFloating() {
+              minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: childMin)
+            } else {
+              inlineMin += childMin
+            }
+          } else {
+            // Now check our line.
+            minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: childMin)
+
+            // Now start a new line.
+            inlineMin = 0
+          }
+
+          if autoWrap && canBreakReplacedElement && isPrevChildInlineFlow {
+            minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+            inlineMin = 0
+          }
+
+          // We are no longer stripping whitespace at the start of a line.
+          if !child!.isFloating() {
+            stripFrontSpaces = false
+            trailingSpaceChild = nil
+            lastText = nil
+          }
+        } else if let renderText = child as? RenderTextWrapper {
+          if renderText.style().hasTextCombine(),
+            let renderCombineText = renderText as? RenderCombineTextWrapper
+          {
+            renderCombineText.combineTextIfNeeded()
+          }
+
+          // Determine if we have a breakable character. Pass in
+          // whether or not we should ignore any spaces at the front
+          // of the string. If those are going to be stripped out,
+          // then they shouldn't be considered in the breakable char
+          // check.
+          let strippingBeginWS = stripFrontSpaces
+          var widths = renderText.trimmedPreferredWidths(
+            leadWidth: inlineMax, stripFrontSpaces: &stripFrontSpaces)
+
+          childMin = widths.min
+          childMax = widths.max
+
+          // This text object will not be rendered, but it may still provide a breaking opportunity.
+          if !widths.hasBreak && childMax == 0 {
+            if autoWrap && (widths.beginWS || widths.endWS || widths.endZeroSpace) {
+              minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+              inlineMin = 0
+            }
+            continue
+          }
+
+          lastText = renderText
+
+          if stripFrontSpaces {
+            trailingSpaceChild = child
+          } else {
+            trailingSpaceChild = nil
+          }
+
+          // Add in text-indent. This is added in only once.
+          var ti: Float32 = 0
+          if !addedTextIndent || hasRemainingNegativeTextIndent {
+            ti = textIndent.ceilToFloat()
+            childMin += ti
+            widths.beginMin += ti
+
+            // It the text indent negative and larger than the child minimum, we re-use the remainder
+            // in future minimum calculations, but using the negative value again on the maximum
+            // will lead to under-counting the max pref width.
+            if !addedTextIndent {
+              childMax += ti
+              widths.beginMax += ti
+              addedTextIndent = true
+            }
+
+            if childMin < 0 {
+              textIndent = LayoutUnit(value: childMin)
+              hasRemainingNegativeTextIndent = true
+            }
+          }
+
+          // See if we have a hanging punctuation situation at the start.
+          if canHangPunctuationAtStart && !addedStartPunctuationHang {
+            let startIndex = strippingBeginWS ? renderText.firstCharacterIndexStrippingSpaces() : 0
+            let hangStartWidth = renderText.hangablePunctuationStartWidth(index: startIndex)
+            childMin -= hangStartWidth
+            widths.beginMin -= hangStartWidth
+            childMax -= hangStartWidth
+            widths.beginMax -= hangStartWidth
+            addedStartPunctuationHang = true
+          }
+
+          // If we have no breakable characters at all,
+          // then this is the easy case. We add ourselves to the current
+          // min and max and continue.
+          if !widths.hasBreakableChar {
+            inlineMin += childMin
+          } else {
+            // We have a breakable character. Now we need to know if
+            // we start and end with whitespace.
+            if widths.beginWS {
+              // End the current line.
+              minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+            } else {
+              inlineMin += widths.beginMin
+              minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+              childMin -= ti
+            }
+
+            inlineMin = childMin
+
+            if widths.endWS || widths.endZeroSpace {
+              // We end in breakable space, which means we can end our current line.
+              minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+              inlineMin = 0
+              shouldBreakLineAfterText = false
+            } else {
+              minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+              inlineMin = widths.endMin
+              shouldBreakLineAfterText = true
+            }
+          }
+
+          if widths.hasBreak {
+            inlineMax += widths.beginMax
+            maxLogicalWidth = preferredWidth(preferredWidth: maxLogicalWidth, result: inlineMax)
+            maxLogicalWidth = preferredWidth(preferredWidth: maxLogicalWidth, result: childMax)
+            inlineMax = widths.endMax
+            addedTextIndent = true
+            addedStartPunctuationHang = true
+            if widths.endsWithBreak {
+              stripFrontSpaces = true
+            }
+          } else {
+            inlineMax += max(0, childMax)
+          }
+        }
+
+        // Ignore spaces after a list marker.
+        if child!.isRenderListMarker() {
+          stripFrontSpaces = true
+        }
+      } else {
+        if styleToUse.collapseWhiteSpace() {
+          stripTrailingSpace(
+            inlineMax: &inlineMax, inlineMin: &inlineMin, trailingSpaceChild: trailingSpaceChild)
+        }
+        minLogicalWidth = preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin)
+        maxLogicalWidth = preferredWidth(preferredWidth: maxLogicalWidth, result: inlineMax)
+        inlineMin = 0
+        inlineMax = 0
+        stripFrontSpaces = true
+        trailingSpaceChild = nil
+        addedTextIndent = true
+        addedStartPunctuationHang = true
+      }
+
+      if !child!.isRenderText() && child!.isRenderInline() {
+        isPrevChildInlineFlow = true
+      } else {
+        isPrevChildInlineFlow = false
+      }
+
+      oldAutoWrap = autoWrap
+    }
+
+    if styleToUse.collapseWhiteSpace() {
+      stripTrailingSpace(
+        inlineMax: &inlineMax, inlineMin: &inlineMin, trailingSpaceChild: trailingSpaceChild)
+    }
+
+    if canHangPunctuationAtEnd && lastText != nil && lastText!.text().length() > 0 {
+      let endIndex =
+        CPtrToInt(trailingSpaceChild?.p) == CPtrToInt(lastText?.p)
+        ? lastText!.lastCharacterIndexStrippingSpaces() : lastText!.text().length() - 1
+      let endHangWidth = lastText!.hangablePunctuationEndWidth(index: endIndex)
+      inlineMin -= endHangWidth
+      inlineMax -= endHangWidth
+    }
+
+    return (
+      preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin),
+      preferredWidth(preferredWidth: maxLogicalWidth, result: inlineMax)
+    )
   }
 
   private func selfCollapsingMarginBeforeWithClear(candidate: RenderObjectWrapper?) -> LayoutUnit? {

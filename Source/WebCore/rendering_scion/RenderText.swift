@@ -101,6 +101,46 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  struct Widths {
+    let min: Float32 = 0
+    let max: Float32 = 0
+    var beginMin: Float32 = 0
+    let endMin: Float32 = 0
+    var beginMax: Float32 = 0
+    let endMax: Float32 = 0
+    let beginWS = false
+    let endWS = false
+    let endZeroSpace = false
+    let hasBreakableChar = false
+    let hasBreak = false
+    let endsWithBreak = false
+  }
+
+  func trimmedPreferredWidths(leadWidth: Float32, stripFrontSpaces: inout Bool) -> Widths {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hangablePunctuationStartWidth(index: UInt32) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hangablePunctuationEndWidth(index: UInt32) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func firstCharacterIndexStrippingSpaces() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastCharacterIndexStrippingSpaces() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setText(newContent: StringWrapper, force: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

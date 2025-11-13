@@ -307,6 +307,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderListMarker() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderButton() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -559,6 +564,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBR() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isLineBreakOpportunity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

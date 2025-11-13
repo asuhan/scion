@@ -1025,9 +1025,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  private func computeChildPreferredLogicalWidths(child: RenderObjectWrapper) -> (
-    LayoutUnit, LayoutUnit
-  ) {
+  func computeChildPreferredLogicalWidths(child: RenderObjectWrapper) -> (LayoutUnit, LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

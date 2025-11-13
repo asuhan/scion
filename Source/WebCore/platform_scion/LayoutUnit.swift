@@ -236,6 +236,11 @@ struct LayoutUnit: Comparable {
     return value >> kLayoutUnitFractionalBits
   }
 
+  func ceilToFloat() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fraction() -> LayoutUnit {
     // Add the fraction to the size (as opposed to the full location) to avoid overflows.
     // Compute fraction using the mod operator to preserve the sign of the value as it may affect rounding.
