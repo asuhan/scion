@@ -2584,8 +2584,35 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func tryComputePreferredWidthsUsingInlinePath() -> (LayoutUnit, LayoutUnit)? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if firstInFlowChild() == nil {
+      return nil
+    }
+
+    computeAndSetLineLayoutPath()
+
+    if lineLayoutPath() != .InlinePath {
+      return nil
+    }
+
+    if !LayoutIntegration.LineLayout.canUseForPreferredWidthComputation(flow: self) {
+      return nil
+    }
+
+    if inlineLayout() == nil {
+      lineLayout = LineLayout.Integration(LayoutIntegration.LineLayout(flow: self))
+    }
+
+    let intrinsicWidthConstraints = inlineLayout()!.computeIntrinsicWidthConstraints()
+    let walker = InlineWalker(root: self)
+    while !walker.atEnd() {
+      let renderer = walker.current()
+      renderer!.setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+      if let renderText = renderer as? RenderTextWrapper {
+        renderText.resetMinMaxWidth()
+      }
+      walker.advance()
+    }
+    return intrinsicWidthConstraints
   }
 
   private func adjustIntrinsicLogicalWidthsForColumns(

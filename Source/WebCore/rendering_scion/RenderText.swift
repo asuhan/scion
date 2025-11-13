@@ -193,6 +193,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func resetMinMaxWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canUseSimplifiedTextMeasuring() -> Bool? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -427,6 +427,11 @@ class LayoutIntegration {
       return containingBlock as? RenderBlockFlowWrapper
     }
 
+    static func canUseForPreferredWidthComputation(flow: RenderBlockFlowWrapper) -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     static func shouldInvalidateLineLayoutPathAfterContentChange(
       parent: RenderBlockFlowWrapper, rendererWithNewContent: RenderObjectWrapper,
       lineLayout: LineLayout
