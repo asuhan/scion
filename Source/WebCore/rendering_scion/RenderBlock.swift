@@ -267,6 +267,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func startOffsetForLine(
+    position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addContinuationWithOutline(flow: RenderInlineWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -390,6 +397,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func setLogicalLeftForChild(
+    child: RenderBoxWrapper, logicalLeft: LayoutUnit,
+    applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalTopForChild(
     child: RenderBoxWrapper, logicalTop: LayoutUnit,
     applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
@@ -399,6 +414,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginBeforeForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func marginStartForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

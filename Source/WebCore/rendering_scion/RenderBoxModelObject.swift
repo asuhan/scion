@@ -147,6 +147,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(p))
   }
 
+  func borderAndPaddingStart() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderAndPaddingBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

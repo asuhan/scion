@@ -2425,8 +2425,49 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func determineLogicalLeftPositionForChild(
     child: RenderBoxWrapper, applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var startPosition = borderAndPaddingStart()
+    let initialStartPosition = startPosition
+    if (shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
+      || style().scrollbarGutter().bothEdges)
+      && isHorizontalWritingMode()
+    {
+      startPosition += (style().isLeftToRightDirection() ? 1 : -1) * verticalScrollbarWidth()
+    }
+    if style().scrollbarGutter().bothEdges && !isHorizontalWritingMode() {
+      startPosition += (style().isLeftToRightDirection() ? 1 : -1) * horizontalScrollbarHeight()
+    }
+    let totalAvailableLogicalWidth = borderAndPaddingLogicalWidth() + availableLogicalWidth()
+
+    let childMarginStart = marginStartForChild(child: child)
+    var newPosition = startPosition + childMarginStart
+
+    var positionToAvoidFloats = LayoutUnit()
+
+    if child.avoidsFloats() && containsFloats() {
+      positionToAvoidFloats = startOffsetForLine(
+        position: logicalTopForChild(child: child),
+        logicalHeight: logicalHeightForChild(child: child))
+    }
+
+    // If the child has an offset from the content edge to avoid floats then use that, otherwise let any negative
+    // margin pull it back over the content edge or any positive margin push it out.
+    // If the child is being centred then the margin calculated to do that has factored in any offset required to
+    // avoid floats, so use it if necessary.
+
+    if style().textAlign() == .WebKitCenter
+      || child.style().marginStartUsing(otherStyle: style()).isAuto()
+    {
+      newPosition = max(newPosition, positionToAvoidFloats + childMarginStart)
+    } else if positionToAvoidFloats > initialStartPosition {
+      newPosition = max(newPosition, positionToAvoidFloats)
+    }
+
+    setLogicalLeftForChild(
+      child: child,
+      logicalLeft: style().isLeftToRightDirection()
+        ? newPosition
+        : totalAvailableLogicalWidth - newPosition - logicalWidthForChild(child: child),
+      applyDelta: applyDelta)
   }
 
   struct LinePaginationAdjustment {
