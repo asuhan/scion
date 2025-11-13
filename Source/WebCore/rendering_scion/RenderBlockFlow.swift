@@ -2364,8 +2364,21 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func previousSiblingWithOverhangingFloats() -> (RenderBlockFlowWrapper?, Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Attempt to locate a previous sibling with overhanging floats. We skip any elements that are
+    // out of flow (like floating/positioned elements), and we also skip over any objects that may have shifted
+    // to avoid floats.
+    var parentHasFloats = false
+    var sibling = previousSibling()
+    while sibling != nil {
+      if let siblingBlock = sibling as? RenderBlockFlowWrapper, !siblingBlock.avoidsFloats() {
+        return (siblingBlock, parentHasFloats)
+      }
+      if sibling!.isFloating() {
+        parentHasFloats = true
+      }
+      sibling = sibling!.previousSibling()
+    }
+    return (nil, parentHasFloats)
   }
 
   private func checkForPaginationLogicalHeightChange(
