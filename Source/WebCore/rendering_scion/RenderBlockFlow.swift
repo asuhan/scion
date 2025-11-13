@@ -703,6 +703,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    mutating func clearMargin() {
+      positiveMargin = LayoutUnit(value: 0)
+      negativeMargin = LayoutUnit(value: 0)
+    }
+
     mutating func setPositiveMarginIfLarger(p: LayoutUnit) {
       if p > positiveMargin {
         positiveMargin = p
@@ -935,7 +940,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       }
       // Check for an after page/column break.
       let newHeight = applyAfterBreak(
-        child: child, logicalOffset: logicalHeight(), marginInfo: marginInfo)
+        child: child, logicalOffset: logicalHeight(), marginInfo: &marginInfo)
       if newHeight != height() {
         setLogicalHeight(size: newHeight)
       }
@@ -2226,10 +2231,43 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   // If the child has an after break, then return a new offset that shifts to the top of the next page/column.
   private func applyAfterBreak(
-    child: RenderBoxWrapper, logicalOffset: LayoutUnit, marginInfo: MarginInfo
+    child: RenderBoxWrapper, logicalOffset: LayoutUnit, marginInfo: inout MarginInfo
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Add page break checking here when we support printing.
+    let fragmentedFlow = enclosingFragmentedFlow()
+    let isInsideMulticolFlow = fragmentedFlow != nil
+    let checkColumnBreaks = fragmentedFlow != nil && fragmentedFlow!.shouldCheckColumnBreaks()
+    let checkPageBreaks =
+      !checkColumnBreaks
+      && view().frameView().layoutContext().layoutState()!.pageLogicalHeight().bool()  // FIXME: Once columns can print we have to check this.
+    var checkFragmentBreaks = false
+    let checkAfterAlways =
+      (checkColumnBreaks && child.style().breakAfter() == .Column)
+      || (checkPageBreaks && alwaysPageBreak(between: child.style().breakAfter()))
+    if checkAfterAlways && inNormalFlow(child: child)
+      && hasNextPage(logicalOffset: logicalOffset, pageBoundaryRule: .IncludePageBoundary)
+    {
+
+      // So our margin doesn't participate in the next collapsing steps.
+      marginInfo.clearMargin()
+
+      if checkColumnBreaks && isInsideMulticolFlow {
+        checkFragmentBreaks = true
+      }
+      if checkFragmentBreaks {
+        var offsetBreakAdjustment: LayoutUnit? = LayoutUnit()
+        if fragmentedFlow!.addForcedFragmentBreak(
+          block: self, offset: offsetFromLogicalTopOfFirstPage() + logicalOffset, breakChild: child,
+          isBefore: false,
+          offsetBreakAdjustment: &offsetBreakAdjustment)
+        {
+          return logicalOffset + offsetBreakAdjustment!
+        }
+      }
+      return nextPageLogicalTop(
+        logicalOffset: logicalOffset, pageBoundaryRule: .IncludePageBoundary)
+    }
+    return logicalOffset
   }
 
   private func maxPositiveMarginBefore() -> LayoutUnit {
