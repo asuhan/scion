@@ -3117,8 +3117,46 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setStaticPositionsForSimpleOutOfFlowContent() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(childrenInline())
+    #if !NDEBUG
+      assert(!hasLineIfEmpty())
+      let walker_ = InlineWalker(root: self)
+      while !walker_.atEnd() {
+        if walker_.current()!.style().isDisplayInlineType() {
+          assert(hasSimpleStaticPositionForInlineLevelOutOfFlowChildrenByStyle(rootStyle: style()))
+          break
+        }
+        walker_.advance()
+      }
+    #endif
+    // We have nothing but out-of-flow boxes so we don't need to run the actual line layout.
+    // Instead, we can just set the static positions to the point where all these boxes would end up.
+    // This is a common case when using transforms to animate positioned boxes.
+    let staticPosition = LayoutPointWrapper(x: borderAndPaddingStart(), y: borderAndPaddingBefore())
+
+    let walker = InlineWalker(root: self)
+    while !walker.atEnd() {
+      let renderer = walker.current() as! RenderBoxWrapper
+      let layer = renderer.layer()!
+
+      assert(renderer.isOutOfFlowPositioned())
+
+      let previousStaticPosition = LayoutPointWrapper(
+        x: layer.staticInlinePosition(), y: layer.staticBlockPosition())
+      let delta = staticPosition - previousStaticPosition
+      let hasStaticInlinePositioning = renderer.style().hasStaticInlinePosition(
+        horizontal: isHorizontalWritingMode())
+
+      layer.setStaticInlinePosition(position: staticPosition.x)
+      layer.setStaticBlockPosition(position: staticPosition.y)
+
+      if !delta.isZero() && hasStaticInlinePositioning {
+        renderer.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        renderer.layoutIfNeeded()
+      }
+
+      walker.advance()
+    }
   }
 
   private func adjustIntrinsicLogicalWidthsForColumns(

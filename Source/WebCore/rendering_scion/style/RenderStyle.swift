@@ -1703,6 +1703,11 @@ class RenderStyleWrapper: Equatable {
     return AtomStringWrapper(p: wk_interop.RenderStyle_hyphenString(p))
   }
 
+  func isDisplayInlineType() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isOriginalDisplayInlineType() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this
