@@ -3086,8 +3086,27 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func selfCollapsingMarginBeforeWithClear(candidate: RenderObjectWrapper?) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let candidateBlockFlow = candidate as? RenderBlockFlowWrapper
+    if candidateBlockFlow == nil {
+      return nil
+    }
+
+    if !candidateBlockFlow!.isSelfCollapsingBlock() {
+      return nil
+    }
+
+    if RenderStyleWrapper.usedClear(renderer: candidateBlockFlow!) == .None || !containsFloats() {
+      return nil
+    }
+
+    let clear = getClearDelta(
+      child: candidateBlockFlow!, logicalTop: candidateBlockFlow!.logicalHeight())
+    // Just because a block box has the clear property set, it does not mean we always get clearance (e.g. when the box is below the cleared floats)
+    if clear < candidateBlockFlow!.logicalBottom() {
+      return nil
+    }
+
+    return marginValuesForChild(child: candidateBlockFlow!).positiveMarginBefore
   }
 
   func computeLineAdjustmentForPagination(

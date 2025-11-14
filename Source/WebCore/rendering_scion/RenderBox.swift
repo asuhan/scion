@@ -311,6 +311,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalWidth() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
