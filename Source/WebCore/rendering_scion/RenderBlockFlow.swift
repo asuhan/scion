@@ -2751,7 +2751,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       layoutState.setLegacyLineClamp(legacyLineClamp: legacyLineClamp)
       return
     }
-    if let logicalHeight = RenderBlockFlowWrapper.clampedContentHeight(
+    if let logicalHeight = clampedContentHeight(
       layoutFormattingContextLineLayout: layoutFormattingContextLineLayout,
       legacyLineClamp: legacyLineClamp)
     {
@@ -2764,12 +2764,19 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     layoutState.setLegacyLineClamp(legacyLineClamp: legacyLineClamp)
   }
 
-  private static func clampedContentHeight(
+  private func clampedContentHeight(
     layoutFormattingContextLineLayout: LayoutIntegration.LineLayout,
     legacyLineClamp: RenderLayoutStateWrapper.LegacyLineClamp?
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let clampedHeight = layoutFormattingContextLineLayout.clampedContentLogicalHeight() {
+      return clampedHeight
+    }
+    if legacyLineClamp!.currentLineCount == legacyLineClamp!.maximumLineCount {
+      // Even if we did not truncate the content, this might be our clamping position.
+      return computeContentHeight(
+        layoutFormattingContextLineLayout: layoutFormattingContextLineLayout)
+    }
+    return nil
   }
 
   private func updateRepaintTopAndBottomIfNeeded(
