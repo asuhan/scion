@@ -23,8 +23,17 @@
 import wk_interop
 
 private func inNormalFlow(child: RenderBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var curr = child.containingBlock()
+  while curr != nil && CPtrToInt(curr?.p) != CPtrToInt(child.view().p) {
+    if curr!.isRenderFragmentedFlow() {
+      return true
+    }
+    if curr!.isFloatingOrOutOfFlowPositioned() {
+      return false
+    }
+    curr = curr!.containingBlock()
+  }
+  return true
 }
 
 private func calculateMinimumPageHeight(
