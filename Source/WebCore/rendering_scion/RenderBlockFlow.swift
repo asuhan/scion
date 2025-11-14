@@ -2363,6 +2363,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func columnGap() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func previousSiblingWithOverhangingFloats() -> (RenderBlockFlowWrapper?, Bool) {
     // Attempt to locate a previous sibling with overhanging floats. We skip any elements that are
     // out of flow (like floating/positioned elements), and we also skip over any objects that may have shifted
@@ -2618,8 +2623,28 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func adjustIntrinsicLogicalWidthsForColumns(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().hasAutoColumnCount() && style().hasAutoColumnWidth() {
+      return
+    }
+    // The min/max intrinsic widths calculated really tell how much space elements need when
+    // laid out inside the columns. In order to eventually end up with the desired column width,
+    // we need to convert them to values pertaining to the multicol container.
+    let columnCount = style().hasAutoColumnCount() ? 1 : Int32(style().columnCount())
+    var columnWidth = LayoutUnit()
+    let colGap = columnGap()
+    let gapExtra = (columnCount - Int32(1)) * colGap
+    if style().hasAutoColumnWidth() {
+      minLogicalWidth = minLogicalWidth * columnCount + gapExtra
+    } else {
+      columnWidth = LayoutUnit(value: style().columnWidth())
+      minLogicalWidth = min(minLogicalWidth, columnWidth)
+    }
+    // FIXME: If column-count is auto here, we should resolve it to calculate the maximum
+    // intrinsic width, instead of pretending that it's 1. The only way to do that is by
+    // performing a layout pass, but this is not an appropriate time or place for layout. The
+    // good news is that if height is unconstrained and there are no explicit breaks, the
+    // resolved column-count really should be 1.
+    maxLogicalWidth = max(maxLogicalWidth, columnWidth) * columnCount + gapExtra
   }
 
   private func computeInlinePreferredLogicalWidths() -> (LayoutUnit, LayoutUnit) {
