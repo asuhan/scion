@@ -40,6 +40,16 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func contentLogicalTop() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func contentLogicalBottom() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func contentLogicalLeft() -> Float32 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -107,6 +117,12 @@ class InlineIterator {
   }
 
   class LineBoxIterator: IteratorProtocol {
+    @discardableResult
+    func traverseNext() -> LineBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func next() -> LineBox? {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -124,6 +140,11 @@ class InlineIterator {
   }
 
   static func firstLineBoxFor(flow: RenderBlockFlowWrapper) -> LineBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func lastLineBoxFor(flow: RenderBlockFlowWrapper) -> LineBoxIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -2726,6 +2726,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       layoutFormattingContextLineLayout: layoutFormattingContextLineLayout)
 
     let repaintLogicalTopBottom = updateRepaintTopAndBottomIfNeeded(
+      layoutFormattingContextLineLayout: layoutFormattingContextLineLayout,
+      contentBoxTop: contentBoxTop, newBorderBoxBottom: newBorderBoxBottom,
       oldBorderBoxBottom: oldBorderBoxBottom, partialRepaintRect: partialRepaintRect,
       relayoutChildren: relayoutChildren)
 
@@ -2780,10 +2782,51 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func updateRepaintTopAndBottomIfNeeded(
-    oldBorderBoxBottom: LayoutUnit, partialRepaintRect: LayoutRectWrapper?, relayoutChildren: Bool
+    layoutFormattingContextLineLayout: LayoutIntegration.LineLayout, contentBoxTop: LayoutUnit,
+    newBorderBoxBottom: LayoutUnit, oldBorderBoxBottom: LayoutUnit,
+    partialRepaintRect: LayoutRectWrapper?, relayoutChildren: Bool
   ) -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isFullLayout = selfNeedsLayout() || relayoutChildren
+    if isFullLayout {
+      if !selfNeedsLayout() {
+        // In order to really trigger full repaint, the block container has to have the self layout flag set (see LegacyLineLayout::layoutRunsAndFloats).
+        // Without having it set, repaint after layout logic (see RenderElement::repaintAfterLayoutIfNeeded) only issues repaint on the diff of
+        // before/after repaint bounds. It results in incorrect repaint when the inline content changes (new text) and expands the same time.
+        // (it only affects shrink-to-fit type of containers).
+        // FIXME: We have the exact damaged rect here, should be able to issue repaint on both inline and block directions.
+        setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+      // Let's trigger full repaint instead for now (matching legacy line layout).
+      // FIXME: We should revisit this behavior and run repaints strictly on visual overflow.
+      return (LayoutUnit(), LayoutUnit())
+    }
+
+    if partialRepaintRect != nil {
+      return (partialRepaintRect!.y(), partialRepaintRect!.maxY())
+    }
+
+    let firstLineBox = InlineIterator.firstLineBoxFor(flow: self)
+    let lastLineBox = InlineIterator.lastLineBoxFor(flow: self)
+    if !firstLineBox.bool() {
+      return (LayoutUnit(), LayoutUnit())
+    }
+
+    var repaintLogicalTop = min(
+      contentBoxTop, LayoutUnit(value: firstLineBox.get().contentLogicalTop()))
+    var repaintLogicalBottom = max(
+      oldBorderBoxBottom, newBorderBoxBottom,
+      LayoutUnit(value: lastLineBox.get().contentLogicalBottom()))
+    if layoutFormattingContextLineLayout.hasVisualOverflow() {
+      let lineBox = firstLineBox
+      while lineBox.bool() {
+        repaintLogicalTop = min(
+          repaintLogicalTop, LayoutUnit(value: lineBox.get().inkOverflowLogicalTop()))
+        repaintLogicalBottom = max(
+          repaintLogicalBottom, LayoutUnit(value: lineBox.get().inkOverflowLogicalBottom()))
+        lineBox.traverseNext()
+      }
+    }
+    return (repaintLogicalTop, repaintLogicalBottom)
   }
 
   private func computeBorderBoxBottom(

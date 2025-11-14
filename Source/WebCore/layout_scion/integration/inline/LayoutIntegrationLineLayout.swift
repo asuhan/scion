@@ -944,6 +944,11 @@ class LayoutIntegration {
       return UInt64(inlineContent!.displayContent.lines.count)
     }
 
+    func hasVisualOverflow() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func firstLinePhysicalBaseline() -> LayoutUnit {
       if inlineContent == nil || inlineContent!.displayContent.boxes.isEmpty {
         fatalError("Not reached")
