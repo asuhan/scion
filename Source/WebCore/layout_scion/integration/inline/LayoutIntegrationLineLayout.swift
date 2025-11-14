@@ -565,6 +565,7 @@ class LayoutIntegration {
       ).styleWillChange(layoutBox: renderer.layoutBox()!, newStyle: newStyle, diff: diff)
     }
 
+    @discardableResult
     func boxContentWillChange(renderer: RenderBoxWrapper) -> Bool {
       if inlineContent == nil || renderer.layoutBox() == nil {
         return false

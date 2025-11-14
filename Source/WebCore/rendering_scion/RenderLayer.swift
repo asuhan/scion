@@ -5057,7 +5057,7 @@ class RenderLayerWrapper {
   // blend).
   private var usedTransparency = false
   private var paintingInsideReflection = false  // A state bit tracking if we are painting inside a replica.
-  private let repaintStatus: RepaintStatus = .NeedsNormalRepaint
+  var repaintStatus: RepaintStatus = .NeedsNormalRepaint
 
   private var visibleContentStatusDirty = false
   var hasVisibleContent = false

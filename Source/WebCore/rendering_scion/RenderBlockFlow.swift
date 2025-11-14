@@ -85,6 +85,38 @@ class RenderBlockFlowRareData {
   var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
 }
 
+private func hasSimpleStaticPositionForInlineLevelOutOfFlowChildrenByStyle(
+  rootStyle: RenderStyleWrapper
+) -> Bool {
+  if rootStyle.textAlign() != .Start {
+    return false
+  }
+  if rootStyle.textIndent() != RenderStyleWrapper.zeroLength() {
+    return false
+  }
+  return true
+}
+
+private func setFullRepaintOnParentInlineBoxLayerIfNeeded(renderer: RenderTextWrapper) {
+  // Repaints (on self) are normally issued either during layout using LayoutRepainter inside ::layout() functions (#1)
+  // or after layout, while recursing the layer tree (#2).
+  // Additionally, repaint at the block level (#3) takes care of regular in-flow content.
+  // However in case of text content, we don't have (#1), (#2) is primarily a geometry diff type of repaint meaning
+  // no repaint happens unless content size changes (or full repaint bit is set on the layer)
+  // and (#3) only works when the block container and the text content share the same layer.
+  // Here we mark the parent inline box's layer dirty to trigger repaint at (#2).
+  if !renderer.needsLayout() {
+    return
+  }
+  if let parent = renderer.parent() {
+    if !parent.isInline() || !parent.hasLayer() {
+      return
+    }
+    (parent as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus = .NeedsFullRepaint
+  }
+  fatalError("Not reached")
+}
+
 private struct InlineMinMaxIterator {
   /* InlineMinMaxIterator is a class that will iterate over all render objects that contribute to
    inline min/max width calculations.  Note the following about the way it walks:
@@ -2584,8 +2616,85 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func layoutInlineContent(relayoutChildren: Bool) -> (LayoutUnit, LayoutUnit) {
+    var hasSimpleOutOfFlowContentOnly = !hasLineIfEmpty()
+    let hasSimpleStaticPositionForInlineLevelOutOfFlowContentByStyle =
+      hasSimpleStaticPositionForInlineLevelOutOfFlowChildrenByStyle(rootStyle: style())
+
+    let walker = InlineWalker(root: self)
+    while !walker.atEnd() {
+      let renderer = walker.current()!
+      let box = renderer as? RenderBoxWrapper
+      let childNeedsLayout = relayoutChildren || (box != nil && box!.hasRelativeDimensions())
+      let childNeedsPreferredWidthComputation =
+        relayoutChildren && box != nil && box!.needsPreferredWidthsRecalculation()
+      if childNeedsLayout {
+        renderer.setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+      if childNeedsPreferredWidthComputation {
+        renderer.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+      }
+
+      if renderer.isOutOfFlowPositioned() {
+        renderer.containingBlock()!.insertPositionedObject(positioned: box!)
+        // FIXME: This is only needed because of the synchronous layout call in setStaticPositionsForSimpleOutOfFlowContent
+        // which itself appears to be a workaround for a bad subtree layout shown by
+        // fast/block/positioning/static_out_of_flow_inside_layout_boundary.html
+        let hasParentRelativeHeightOrTop = RenderBlockFlowWrapper.hasParentRelativeHeightOrTop(
+          renderer: renderer)
+        if hasParentRelativeHeightOrTop {
+          hasSimpleOutOfFlowContentOnly = false
+        }
+
+        if hasSimpleOutOfFlowContentOnly && renderer.style().isOriginalDisplayInlineType() {
+          hasSimpleOutOfFlowContentOnly =
+            hasSimpleStaticPositionForInlineLevelOutOfFlowContentByStyle
+        }
+      } else {
+        hasSimpleOutOfFlowContentOnly = false
+      }
+
+      if !renderer.needsLayout() && !renderer.preferredLogicalWidthsDirty() {
+        walker.advance()
+        continue
+      }
+
+      if let renderText = renderer as? RenderTextWrapper {
+        setFullRepaintOnParentInlineBoxLayerIfNeeded(renderer: renderText)
+      }
+
+      if let inlineLevelBox = renderer as? RenderBoxWrapper {
+        // FIXME: Move this to where the actual content change happens and call it on the parent IFC.
+        let shouldTriggerFullLayout =
+          inlineLevelBox.isInline()
+          && (inlineLevelBox.normalChildNeedsLayout() || inlineLevelBox.posChildNeedsLayout())
+          && inlineLayout() != nil
+        if shouldTriggerFullLayout {
+          inlineLayout()!.boxContentWillChange(renderer: inlineLevelBox)
+        }
+      }
+
+      if renderer is RenderLineBreakWrapper || renderer is RenderInlineWrapper
+        || renderer is RenderTextWrapper
+      {
+        renderer.clearNeedsLayout()
+      }
+
+      if let renderCombineText = renderer as? RenderCombineTextWrapper {
+        renderCombineText.combineTextIfNeeded()
+      }
+      walker.advance()
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private static func hasParentRelativeHeightOrTop(renderer: RenderObjectWrapper) -> Bool {
+    let style = renderer.style()
+    if style.logicalHeight().isPercentOrCalculated() || style.logicalTop().isPercentOrCalculated() {
+      return true
+    }
+    return !renderer.style().logicalBottom().isAuto()
   }
 
   private func tryComputePreferredWidthsUsingInlinePath() -> (LayoutUnit, LayoutUnit)? {

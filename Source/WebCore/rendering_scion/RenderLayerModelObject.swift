@@ -35,6 +35,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return nil
   }
 
+  func checkedLayer() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }
