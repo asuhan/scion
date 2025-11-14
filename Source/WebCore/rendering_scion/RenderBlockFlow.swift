@@ -1874,6 +1874,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func hasLines() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum InvalidationReason {
     case StyleChange
     case InsertionOrRemoval  // renderer gets constructed/goes away
@@ -2616,6 +2621,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func layoutInlineContent(relayoutChildren: Bool) -> (LayoutUnit, LayoutUnit) {
+    let layoutState = view().frameView().layoutContext().layoutState()!
+
     var hasSimpleOutOfFlowContentOnly = !hasLineIfEmpty()
     let hasSimpleStaticPositionForInlineLevelOutOfFlowContentByStyle =
       hasSimpleStaticPositionForInlineLevelOutOfFlowChildrenByStyle(rootStyle: style())
@@ -2685,8 +2692,89 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       walker.advance()
     }
 
+    if hasSimpleOutOfFlowContentOnly {
+      // Shortcut the layout.
+      lineLayout = .None
+
+      setStaticPositionsForSimpleOutOfFlowContent()
+      setLogicalHeight(size: borderAndPaddingLogicalHeight() + scrollbarLogicalHeight())
+      return (LayoutUnit(), LayoutUnit())
+    }
+
+    if inlineLayout() == nil {
+      lineLayout = LineLayout.Integration(LayoutIntegration.LineLayout(flow: self))
+    }
+
+    let layoutFormattingContextLineLayout = inlineLayout()!
+
+    assert(containingBlock() != nil || self is RenderViewWrapper)
+    layoutFormattingContextLineLayout.updateFormattingContexGeometries(
+      availableLogicalWidth: containingBlock() != nil
+        ? containingBlock()!.availableLogicalWidth() : LayoutUnit())
+
+    let contentBoxTop = borderAndPaddingBefore()
+
+    let oldBorderBoxBottom = computeBorderBoxBottom(
+      contentBoxTop: contentBoxTop,
+      layoutFormattingContextLineLayout: layoutFormattingContextLineLayout)
+    previousInlineLayoutContentBoxLogicalHeight = nil
+
+    let partialRepaintRect = layoutFormattingContextLineLayout.layout()
+
+    let newBorderBoxBottom = computeBorderBoxBottom(
+      contentBoxTop: contentBoxTop,
+      layoutFormattingContextLineLayout: layoutFormattingContextLineLayout)
+
+    let repaintLogicalTopBottom = updateRepaintTopAndBottomIfNeeded(
+      oldBorderBoxBottom: oldBorderBoxBottom, partialRepaintRect: partialRepaintRect,
+      relayoutChildren: relayoutChildren)
+
+    setLogicalHeight(size: newBorderBoxBottom)
+    updateLineClampStateAndLogicalHeightIfApplicable(
+      layoutState: layoutState, layoutFormattingContextLineLayout: layoutFormattingContextLineLayout
+    )
+
+    return repaintLogicalTopBottom
+  }
+
+  private func updateLineClampStateAndLogicalHeightIfApplicable(
+    layoutState: RenderLayoutStateWrapper,
+    layoutFormattingContextLineLayout: LayoutIntegration.LineLayout
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func updateRepaintTopAndBottomIfNeeded(
+    oldBorderBoxBottom: LayoutUnit, partialRepaintRect: LayoutRectWrapper?, relayoutChildren: Bool
+  ) -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeBorderBoxBottom(
+    contentBoxTop: LayoutUnit, layoutFormattingContextLineLayout: LayoutIntegration.LineLayout
+  ) -> LayoutUnit {
+    let contentBoxBottom =
+      contentBoxTop
+      + computeContentHeight(layoutFormattingContextLineLayout: layoutFormattingContextLineLayout)
+    let withBorderAndPadding = contentBoxBottom + borderAndPaddingAfter()
+    return withBorderAndPadding + scrollbarLogicalHeight()
+  }
+
+  private func computeContentHeight(layoutFormattingContextLineLayout: LayoutIntegration.LineLayout)
+    -> LayoutUnit
+  {
+    if !hasLines() && hasLineIfEmpty() {
+      if previousInlineLayoutContentBoxLogicalHeight != nil {
+        return previousInlineLayoutContentBoxLogicalHeight!
+      }
+      return lineHeight(
+        firstLine: true, direction: isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+        linePositionMode: .PositionOfInteriorLineBoxes)
+    }
+
+    return layoutFormattingContextLineLayout.contentBoxLogicalHeight()
   }
 
   private static func hasParentRelativeHeightOrTop(renderer: RenderObjectWrapper) -> Bool {
@@ -2727,6 +2815,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       walker.advance()
     }
     return intrinsicWidthConstraints
+  }
+
+  private func setStaticPositionsForSimpleOutOfFlowContent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func adjustIntrinsicLogicalWidthsForColumns(
