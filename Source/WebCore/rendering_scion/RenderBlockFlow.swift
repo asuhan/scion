@@ -2022,6 +2022,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return logicalOffset + remainingLogicalHeight
   }
 
+  private func pageLogicalHeightForOffset(offset: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pageLogicalHeightForOffsetFromBlockFlow(offset: LayoutUnit) -> LayoutUnit {
     // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
     // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
@@ -2107,6 +2112,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // unbreakable content, between orphans and widows, etc.). This will be used as a hint to the
   // column balancer to help set a good minimum column height.
   func updateMinimumPageHeight(offset: LayoutUnit, minHeight: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustSizeContainmentChildForPagination(child: RenderBoxWrapper, offset: LayoutUnit)
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2297,8 +2308,107 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     logicalTopAfterClear: LayoutUnit, estimateWithoutPagination: LayoutUnit,
     child: RenderBoxWrapper, atBeforeSideOfBlock: Bool
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let childRenderBlock = child as? RenderBlockWrapper
+
+    if estimateWithoutPagination != logicalTopAfterClear {
+      // Our guess prior to pagination movement was wrong. Before we attempt to paginate, let's try again at the new
+      // position.
+      setLogicalHeight(size: logicalTopAfterClear)
+      setLogicalTopForChild(
+        child: child, logicalTop: logicalTopAfterClear, applyDelta: .ApplyLayoutDelta)
+
+      if child.shrinkToAvoidFloats() {
+        // The child's width depends on the line width. When the child shifts to clear an item, its width can
+        // change (because it has more available line width). So mark the item as dirty.
+        child.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+
+      if childRenderBlock != nil {
+        if !child.avoidsFloats() && childRenderBlock!.containsFloats() {
+          (childRenderBlock as! RenderBlockFlowWrapper).markAllDescendantsWithFloatsForLayout()
+        }
+        child.markForPaginationRelayoutIfNeeded()
+      }
+
+      // Our guess was wrong. Make the child lay itself out again.
+      child.layoutIfNeeded()
+    }
+
+    let oldTop = logicalTopAfterClear
+
+    // If the object has a page or column break value of "before", then we should shift to the top of the next page.
+    var result = applyBeforeBreak(child: child, logicalOffset: logicalTopAfterClear)
+
+    if child.shouldApplySizeContainment() {
+      adjustSizeContainmentChildForPagination(child: child, offset: result)
+    }
+
+    // For replaced elements and scrolled elements, we want to shift them to the next page if they don't fit on the current one.
+    let logicalTopBeforeUnsplittableAdjustment = result
+    let logicalTopAfterUnsplittableAdjustment = adjustForUnsplittableChild(
+      child: child, logicalOffset: result)
+
+    var paginationStrut = LayoutUnit()
+    let unsplittableAdjustmentDelta =
+      logicalTopAfterUnsplittableAdjustment - logicalTopBeforeUnsplittableAdjustment
+    let childLogicalHeight = child.logicalHeight()
+    if unsplittableAdjustmentDelta.bool() {
+      setPageBreak(offset: result, spaceShortage: childLogicalHeight - unsplittableAdjustmentDelta)
+      paginationStrut = unsplittableAdjustmentDelta
+    } else if childRenderBlock != nil && childRenderBlock!.paginationStrut().bool() {
+      paginationStrut = childRenderBlock!.paginationStrut()
+    }
+
+    if paginationStrut.bool() {
+      // We are willing to propagate out to our parent block as long as we were at the top of the block prior
+      // to collapsing our margins, and as long as we didn't clear or move as a result of other pagination.
+      if atBeforeSideOfBlock && oldTop == result && !isOutOfFlowPositioned() && !isRenderTableCell()
+      {
+        // FIXME: Should really check if we're exceeding the page height before propagating the strut, but we don't
+        // have all the information to do so (the strut only has the remaining amount to push). Gecko gets this wrong too
+        // and pushes to the next page anyway, so not too concerned about it.
+        setPaginationStrut(strut: result + paginationStrut)
+        if childRenderBlock != nil {
+          childRenderBlock!.setPaginationStrut(strut: LayoutUnit(value: 0))
+        }
+      } else {
+        result += paginationStrut
+      }
+    }
+
+    if !unsplittableAdjustmentDelta.bool() {
+      let pageLogicalHeight = pageLogicalHeightForOffset(offset: result)
+      if pageLogicalHeight.bool() {
+        let remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
+          offset: result, pageBoundaryRule: .ExcludePageBoundary)
+        let spaceShortage = child.logicalHeight() - remainingLogicalHeight
+        if spaceShortage > 0 {
+          // If the child crosses a column boundary, report a break, in case nothing inside it
+          // has already done so. The column balancer needs to know how much it has to stretch
+          // the columns to make more content fit. If no breaks are reported (but do occur),
+          // the balancer will have no clue. Only measure the space after the last column
+          // boundary, in case it crosses more than one.
+          let spaceShortageInLastColumn = LayoutUnit.intMod(a: spaceShortage, b: pageLogicalHeight)
+          setPageBreak(
+            offset: result,
+            spaceShortage: spaceShortageInLastColumn.bool()
+              ? spaceShortageInLastColumn : spaceShortage)
+        } else if remainingLogicalHeight == pageLogicalHeight
+          && (offsetFromLogicalTopOfFirstPage() + child.logicalTop()).bool()
+        {
+          // We're at the very top of a page or column, and it's not the first one. This child
+          // may turn out to be the smallest piece of content that causes a page break, so we
+          // need to report it.
+          setPageBreak(offset: result, spaceShortage: childLogicalHeight)
+        }
+      }
+    }
+
+    // Similar to how we apply clearance. Boost height() to be the place where we're going to position the child.
+    setLogicalHeight(size: logicalHeight() + (result - oldTop))
+
+    // Return the final adjusted logical top.
+    return result
   }
 
   private func applyBeforeBreak(child: RenderBoxWrapper, logicalOffset: LayoutUnit) -> LayoutUnit {
