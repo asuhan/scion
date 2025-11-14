@@ -410,6 +410,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return logicalHeight
   }
 
+  func setLogicalTop(top: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLogicalWidth(size: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalHeight(size: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -621,6 +631,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clientLogicalBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func marginLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginLeft(margin: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginRight(margin: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1227,6 +1252,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     fatalError("Not reached")
+  }
+
+  func updateLogicalWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func updateLogicalHeight() {

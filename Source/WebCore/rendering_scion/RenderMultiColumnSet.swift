@@ -56,6 +56,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  override func updateLogicalWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

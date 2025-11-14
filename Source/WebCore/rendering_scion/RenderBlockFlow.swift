@@ -2590,6 +2590,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func nextFloatLogicalBottomBelowForBlock(logicalHeight: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   private func addOverhangingFloats(child: RenderBlockFlowWrapper, makeChildPaintOtherFloats: Bool)
     -> LayoutUnit
@@ -2607,8 +2612,85 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func getClearDelta(child: RenderBoxWrapper, logicalTop: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // There is no need to compute clearance if we have no floats.
+    if !containsFloats() {
+      return LayoutUnit(value: 0)
+    }
+
+    // At least one float is present. We need to perform the clearance computation.
+    let usedClear = RenderStyleWrapper.usedClear(renderer: child)
+    let clearSet = usedClear != .None
+    var logicalBottom = LayoutUnit()
+    switch usedClear {
+    case .None:
+      break
+    case .Left:
+      logicalBottom = lowestFloatLogicalBottom(floatType: .FloatLeft)
+    case .Right:
+      logicalBottom = lowestFloatLogicalBottom(floatType: .FloatRight)
+    case .Both:
+      logicalBottom = lowestFloatLogicalBottom()
+    }
+
+    // We also clear floats if we are too big to sit on the same line as a float (and wish to avoid floats by default).
+    let result =
+      clearSet
+      ? max(LayoutUnit(value: 0), logicalBottom - logicalTop) : LayoutUnit(value: UInt64(0))
+    if !result.bool() && child.avoidsFloats() {
+      var newLogicalTop = logicalTop
+      while true {
+        let availableLogicalWidthAtNewLogicalTopOffset = availableLogicalWidthForLine(
+          position: newLogicalTop, logicalHeight: logicalHeightForChild(child: child))
+        if availableLogicalWidthAtNewLogicalTopOffset
+          == availableLogicalWidthForContent(blockOffset: newLogicalTop)
+        {
+          return newLogicalTop - logicalTop
+        }
+
+        var fragment = fragmentAtBlockOffset(blockOffset: logicalTopForChild(child: child))
+        var borderBox = child.borderBoxRectInFragment(
+          fragment: fragment, flags: .DoNotCacheRenderBoxFragmentInfo)
+        let childLogicalWidthAtOldLogicalTopOffset =
+          isHorizontalWritingMode() ? borderBox.width() : borderBox.height()
+
+        // FIXME: None of this is right for perpendicular writing-mode children.
+        let childOldLogicalWidth = child.logicalWidth()
+        let childOldMarginLeft = child.marginLeft()
+        let childOldMarginRight = child.marginRight()
+        let childOldLogicalTop = child.logicalTop()
+
+        child.setLogicalTop(top: newLogicalTop)
+        child.updateLogicalWidth()
+        fragment = fragmentAtBlockOffset(blockOffset: logicalTopForChild(child: child))
+        borderBox = child.borderBoxRectInFragment(
+          fragment: fragment, flags: .DoNotCacheRenderBoxFragmentInfo)
+        let childLogicalWidthAtNewLogicalTopOffset =
+          isHorizontalWritingMode() ? borderBox.width() : borderBox.height()
+
+        child.setLogicalTop(top: childOldLogicalTop)
+        child.setLogicalWidth(size: childOldLogicalWidth)
+        child.setMarginLeft(margin: childOldMarginLeft)
+        child.setMarginRight(margin: childOldMarginRight)
+
+        if childLogicalWidthAtNewLogicalTopOffset <= availableLogicalWidthAtNewLogicalTopOffset {
+          // Even though we may not be moving, if the logical width did shrink because of the presence of new floats, then
+          // we need to force a relayout as though we shifted. This happens because of the dynamic addition of overhanging floats
+          // from previous siblings when negative margins exist on a child (see the addOverhangingFloats call at the end of collapseMargins).
+          if childLogicalWidthAtOldLogicalTopOffset != childLogicalWidthAtNewLogicalTopOffset {
+            child.setChildNeedsLayout(markParents: .MarkOnlyThis)
+          }
+          return newLogicalTop - logicalTop
+        }
+
+        newLogicalTop = nextFloatLogicalBottomBelowForBlock(logicalHeight: newLogicalTop)
+        assert(newLogicalTop >= logicalTop)
+        if newLogicalTop < logicalTop {
+          break
+        }
+      }
+      fatalError("Not reached")
+    }
+    return result
   }
 
   private func hasInlineLayout() -> Bool {

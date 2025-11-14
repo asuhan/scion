@@ -482,6 +482,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func updateLogicalWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if !paintInfo.shouldPaintWithinRoot(renderer: self) {
       return

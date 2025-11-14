@@ -197,6 +197,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func marginRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

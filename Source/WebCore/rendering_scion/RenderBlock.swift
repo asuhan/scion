@@ -253,6 +253,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func availableLogicalWidthForLine(
+    position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalRightOffsetForLine(
     position: LayoutUnit, logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
@@ -513,6 +520,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalLeftOffsetForContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func availableLogicalWidthForContent(blockOffset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

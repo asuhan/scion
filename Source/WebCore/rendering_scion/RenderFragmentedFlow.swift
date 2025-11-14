@@ -43,6 +43,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func updateLogicalWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
