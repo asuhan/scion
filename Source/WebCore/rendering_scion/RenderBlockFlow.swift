@@ -149,11 +149,32 @@ private struct InlineMinMaxIterator {
   let endOfInline: Bool
 }
 
+private func borderPaddingAndMarginWidth(childValue: LayoutUnit, cssUnit: LengthWrapper)
+  -> LayoutUnit
+{
+  if cssUnit.isFixed() {
+    return LayoutUnit(value: cssUnit.value())
+  }
+  if cssUnit.isAuto() {
+    return LayoutUnit()
+  }
+  return childValue
+}
+
 private func getBorderPaddingMargin(child: RenderBoxModelObjectWrapper, endOfInline: Bool)
   -> LayoutUnit
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let childStyle = child.style()
+  if endOfInline {
+    return borderPaddingAndMarginWidth(
+      childValue: child.marginEnd(), cssUnit: childStyle.marginEnd())
+      + borderPaddingAndMarginWidth(
+        childValue: child.paddingEnd(), cssUnit: childStyle.paddingEnd()) + child.borderEnd()
+  }
+  return borderPaddingAndMarginWidth(
+    childValue: child.marginStart(), cssUnit: childStyle.marginStart())
+    + borderPaddingAndMarginWidth(
+      childValue: child.paddingStart(), cssUnit: childStyle.paddingStart()) + child.borderStart()
 }
 
 private func stripTrailingSpace(

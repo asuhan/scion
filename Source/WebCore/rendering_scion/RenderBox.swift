@@ -660,6 +660,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSelfCollapsingBlock() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
