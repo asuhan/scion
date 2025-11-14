@@ -47,6 +47,14 @@ class FloatingObjectWrapper: Hashable {
     case FloatLeftRight
   }
 
+  func copyToNewContainer(
+    offset: LayoutSizeWrapper, shouldPaint: Bool = false, isDescendant: Bool = false,
+    overflowClipped: Bool = false
+  ) -> FloatingObjectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func cloneForNewParent() -> FloatingObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

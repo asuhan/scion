@@ -1878,6 +1878,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
 
+  private func logicalBottomForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func flipFloatForWritingModeForChild(child: FloatingObjectWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
@@ -2747,8 +2752,51 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     prev: RenderBlockFlowWrapper?, container: RenderBlockFlowWrapper?,
     logicalLeftOffset: LayoutUnit, logicalTopOffset: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!avoidsFloats())
+
+    // If we create our own block formatting context then our contents don't interact with floats outside it, even those from our parent.
+    if createsNewFormattingContext() {
+      return
+    }
+
+    // If the parent or previous sibling doesn't have any floats to add, don't bother.
+    if prev!.floatingObjects == nil {
+      return
+    }
+
+    var logicalLeftOffset = logicalLeftOffset
+    logicalLeftOffset += marginLogicalLeft()
+
+    let prevSet = prev!.floatingObjects!.set()
+    for floatingObject in prevSet {
+      if logicalBottomForFloat(floatingObject: floatingObject) > logicalTopOffset
+        && (floatingObjects == nil || !floatingObjects!.set().contains(floatingObject))
+      {
+        // We create the floating object list lazily.
+        if floatingObjects == nil {
+          createFloatingObjects()
+        }
+
+        let zero = LayoutUnit(value: UInt64(0))
+        // Applying the child's margin makes no sense in the case where the child was passed in.
+        // since this margin was added already through the modification of the |logicalLeftOffset| variable
+        // above. |logicalLeftOffset| will equal the margin in this case, so it's already been taken
+        // into account. Only apply this code if prev is the parent, since otherwise the left margin
+        // will get applied twice.
+        let offset =
+          isHorizontalWritingMode()
+          ? LayoutSizeWrapper(
+            width: logicalLeftOffset
+              - (CPtrToInt(prev?.p) != CPtrToInt(container?.p) ? prev!.marginLeft() : zero),
+            height: logicalTopOffset)
+          : LayoutSizeWrapper(
+            width: logicalTopOffset,
+            height: logicalLeftOffset
+              - (CPtrToInt(prev?.p) != CPtrToInt(container?.p) ? prev!.marginTop() : zero))
+
+        floatingObjects!.add(floatingObject: floatingObject.copyToNewContainer(offset: offset))
+      }
+    }
   }
 
   private func getClearDelta(child: RenderBoxWrapper, logicalTop: LayoutUnit) -> LayoutUnit {
