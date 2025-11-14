@@ -2741,6 +2741,33 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     layoutState: RenderLayoutStateWrapper,
     layoutFormattingContextLineLayout: LayoutIntegration.LineLayout
   ) {
+    var legacyLineClamp = layoutState.legacyLineClamp()
+    if legacyLineClamp == nil || isFloatingOrOutOfFlowPositioned() {
+      return
+    }
+    legacyLineClamp!.currentLineCount += layoutFormattingContextLineLayout.lineCount()
+    if legacyLineClamp!.clampedRenderer != nil {
+      // We've already clamped this flex container at a previous flex item.
+      layoutState.setLegacyLineClamp(legacyLineClamp: legacyLineClamp)
+      return
+    }
+    if let logicalHeight = RenderBlockFlowWrapper.clampedContentHeight(
+      layoutFormattingContextLineLayout: layoutFormattingContextLineLayout,
+      legacyLineClamp: legacyLineClamp)
+    {
+      legacyLineClamp!.clampedContentLogicalHeight = logicalHeight
+      legacyLineClamp!.clampedRenderer = self
+      setLogicalHeight(
+        size: borderAndPaddingBefore() + logicalHeight + borderAndPaddingAfter()
+          + scrollbarLogicalHeight())
+    }
+    layoutState.setLegacyLineClamp(legacyLineClamp: legacyLineClamp)
+  }
+
+  private static func clampedContentHeight(
+    layoutFormattingContextLineLayout: LayoutIntegration.LineLayout,
+    legacyLineClamp: RenderLayoutStateWrapper.LegacyLineClamp?
+  ) -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

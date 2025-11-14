@@ -38,7 +38,9 @@ class RenderLayoutStateWrapper {
 
   struct LegacyLineClamp {
     let maximumLineCount: UInt64
-    let currentLineCount: UInt64
+    var currentLineCount: UInt64
+    var clampedContentLogicalHeight: LayoutUnit?
+    var clampedRenderer: RenderBlockFlowWrapper?
   }
 
   init(p: UnsafeRawPointer) {
@@ -92,13 +94,19 @@ class RenderLayoutStateWrapper {
       maximumLines: raw.maximumLines, shouldDiscardOverflow: raw.shouldDiscardOverflow)
   }
 
+  func setLegacyLineClamp(legacyLineClamp: LegacyLineClamp?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func legacyLineClamp() -> LegacyLineClamp? {
     let raw = wk_interop.RenderLayoutState_legacyLineClamp(p)
     if !raw.isValid {
       return nil
     }
     return LegacyLineClamp(
-      maximumLineCount: raw.maximumLineCount, currentLineCount: raw.currentLineCount)
+      maximumLineCount: raw.maximumLineCount, currentLineCount: raw.currentLineCount,
+      clampedContentLogicalHeight: nil, clampedRenderer: nil)
   }
 
   func textBoxTrim() -> TextBoxTrim? {
