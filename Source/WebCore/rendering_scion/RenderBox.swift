@@ -592,6 +592,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         height: rect.height().rawValue()))
   }
 
+  func clearOverflow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addVisualEffectOverflow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addOverflowFromChild(child: RenderBoxWrapper, delta: LayoutSizeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

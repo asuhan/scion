@@ -327,6 +327,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func addOverflowFromChildren() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

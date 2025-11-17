@@ -1125,7 +1125,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  // Overflow is always relative to the border-box of the element in question.
+  // Therefore, if the element has a vertical scrollbar placed on the left, an overflow rect at x=2px would conceptually intersect the scrollbar.
   func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
+    clearOverflow()
+    addOverflowFromChildren()
+
+    addOverflowFromPositionedObjects()
+
+    if hasNonVisibleOverflow() {
+      includePaddingEnd()
+
+      includePaddingAfter(oldClientAfterEdge: oldClientAfterEdge)
+      overflow?.layoutClientAfterEdge = oldClientAfterEdge
+    }
+
+    // Add visual overflow from box-shadow, border-image-outset and outline.
+    addVisualEffectOverflow()
+
+    // Add visual overflow from theme.
+    addVisualOverflowFromTheme()
+  }
+
+  private func includePaddingEnd() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func includePaddingAfter(oldClientAfterEdge: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1286,6 +1313,21 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isInlineBlockOrInlineTable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addOverflowFromChildren() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func addOverflowFromPositionedObjects() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func addVisualOverflowFromTheme() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
