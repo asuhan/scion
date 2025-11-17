@@ -417,6 +417,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func logicalLeftForChild(child: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalLeftForChild(
     child: RenderBoxWrapper, logicalLeft: LayoutUnit,
     applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
@@ -468,6 +473,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginStartForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func marginEndForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1148,8 +1158,51 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func includePaddingEnd() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // As per https://github.com/w3c/csswg-drafts/issues/3653 padding should contribute to the scrollable overflow area.
+    if !paddingEnd().bool() {
+      return
+    }
+    // FIXME: Expand it to non-grid/flex cases when applicable.
+    if !(self is RenderGridWrapper) && !(self is RenderFlexibleBoxWrapper) {
+      return
+    }
+
+    let layoutOverflowRect = layoutOverflowRect()
+
+    if isHorizontalWritingMode() {
+      layoutOverflowRect.setWidth(
+        width: layoutOverflowLogicalWidthIncludingPaddingEnd(layoutOverflowRect: layoutOverflowRect)
+      )
+    } else {
+      layoutOverflowRect.setHeight(
+        height: layoutOverflowLogicalWidthIncludingPaddingEnd(
+          layoutOverflowRect: layoutOverflowRect))
+    }
+    addLayoutOverflow(rect: layoutOverflowRect)
+  }
+
+  private func layoutOverflowLogicalWidthIncludingPaddingEnd(layoutOverflowRect: LayoutRectWrapper)
+    -> LayoutUnit
+  {
+    if hasHorizontalLayoutOverflow() {
+      return (isHorizontalWritingMode() ? layoutOverflowRect.width() : layoutOverflowRect.height())
+        + paddingEnd()
+    }
+
+    // FIXME: This is not sufficient for BFC layout (missing non-formatting-context root descendants).
+    var contentLogicalRight = LayoutUnit()
+    for child: RenderBoxWrapper in childrenOfType(parent: self) {
+      if child.isOutOfFlowPositioned() {
+        continue
+      }
+      let childLogicalRight =
+        logicalLeftForChild(child: child) + logicalWidthForChild(child: child)
+        + max(LayoutUnit(value: UInt64(0)), marginEndForChild(child: child))
+      contentLogicalRight = max(contentLogicalRight, childLogicalRight)
+    }
+    let logicalRightWithPaddingEnd = contentLogicalRight + paddingEnd()
+    // Use padding box as the reference box.
+    return logicalRightWithPaddingEnd - (isHorizontalWritingMode() ? borderLeft() : borderTop())
   }
 
   private func includePaddingAfter(oldClientAfterEdge: LayoutUnit) {
