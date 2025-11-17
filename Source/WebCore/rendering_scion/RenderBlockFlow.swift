@@ -2115,6 +2115,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return false
   }
 
+  override func needsLayoutAfterFragmentRangeChange() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // A page break is required at some offset due to space shortage in the current fragmentainer.
   func setPageBreak(offset: LayoutUnit, spaceShortage: LayoutUnit) {
     // TODO(asuhan): implement this

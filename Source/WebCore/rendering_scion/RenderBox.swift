@@ -2674,6 +2674,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func needsLayoutAfterFragmentRangeChange() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isGridItem() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

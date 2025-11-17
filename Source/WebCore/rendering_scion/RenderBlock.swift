@@ -1117,8 +1117,33 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateFragmentRangeForBoxChild(box: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fragmentedFlow = enclosingFragmentedFlow()
+    if !canComputeFragmentRangeForBox(
+      parentBlock: self, childBox: box, enclosingFragmentedFlow: fragmentedFlow)
+    {
+      return false
+    }
+
+    let (startFragment, endFragment) =
+      fragmentedFlow!.getFragmentRangeForBox(box: box) ?? (nil, nil)
+
+    let (newStartFragment, newEndFragment) =
+      fragmentedFlow!.getFragmentRangeForBox(box: box) ?? (nil, nil)
+
+    // Changing the start fragment means we shift everything and a relayout is needed.
+    if CPtrToInt(newStartFragment?.p) != CPtrToInt(startFragment?.p) {
+      return true
+    }
+
+    // The fragment range of the box has changed. Some boxes (e.g floats) may have been positioned assuming
+    // a different range.
+    if box.needsLayoutAfterFragmentRangeChange()
+      && CPtrToInt(newEndFragment?.p) != CPtrToInt(endFragment?.p)
+    {
+      return true
+    }
+
+    return false
   }
 
   func updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: Bool, child: RenderBoxWrapper) {
