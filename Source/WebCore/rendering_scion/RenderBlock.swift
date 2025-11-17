@@ -1008,8 +1008,42 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func computePreferredWidthsForExcludedChildren() -> (LayoutUnit, LayoutUnit)? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isFieldset() {
+      return nil
+    }
+
+    let legend = findFieldsetLegend()
+    if legend == nil {
+      return nil
+    }
+
+    legend!.setIsExcludedFromNormalLayout(excluded: true)
+
+    var (minWidth, maxWidth) = computeChildPreferredLogicalWidths(child: legend!)
+
+    // These are going to be added in later, so we subtract them out to reflect the
+    // fact that the legend is outside the scrollable area.
+    let scrollbarWidth = intrinsicScrollbarLogicalWidthIncludingGutter()
+    minWidth -= scrollbarWidth
+    maxWidth -= scrollbarWidth
+
+    let childStyle = legend!.style()
+    let startMarginLength = childStyle.marginStartUsing(otherStyle: style())
+    let endMarginLength = childStyle.marginEndUsing(otherStyle: style())
+    var marginStart = LayoutUnit()
+    var marginEnd = LayoutUnit()
+    if startMarginLength.isFixed() {
+      marginStart += startMarginLength.value()
+    }
+    if endMarginLength.isFixed() {
+      marginEnd += endMarginLength.value()
+    }
+    let margin = marginStart + marginEnd
+
+    minWidth += margin
+    maxWidth += margin
+
+    return (minWidth, maxWidth)
   }
 
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {

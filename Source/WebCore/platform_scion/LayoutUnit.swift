@@ -376,6 +376,12 @@ struct LayoutUnit: Comparable {
   }
 
   @discardableResult
+  static func -= (a: inout LayoutUnit, b: Int32) -> LayoutUnit {
+    a = a - b
+    return a
+  }
+
+  @discardableResult
   static func -= (a: inout LayoutUnit, b: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this correctly
     a.value = a.rawValue() - b.rawValue()
