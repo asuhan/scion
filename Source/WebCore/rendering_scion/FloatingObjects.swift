@@ -91,6 +91,11 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func hasAncestorWithOverflowClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isDescendant() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

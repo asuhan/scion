@@ -582,6 +582,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         height: rect.height().rawValue()))
   }
 
+  func addOverflowFromChild(child: RenderBoxWrapper, delta: LayoutSizeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentWidth(p))
   }
@@ -2512,6 +2517,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     fatalError("Not reached")
+  }
+
+  func enclosingFloatPaintingLayer() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func shrinkToAvoidFloats() -> Bool {

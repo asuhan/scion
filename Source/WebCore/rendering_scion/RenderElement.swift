@@ -387,6 +387,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func effectiveOverflowX() -> Overflow {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func effectiveOverflowY() -> Overflow {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func effectiveOverflowBlockDirection() -> Overflow {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

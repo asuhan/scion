@@ -2810,8 +2810,79 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func addOverhangingFloats(child: RenderBlockFlowWrapper, makeChildPaintOtherFloats: Bool)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Prevent floats from being added to the canvas by the root element, e.g., <html>.
+    if !child.containsFloats() || child.createsNewFormattingContext() {
+      return LayoutUnit(value: 0)
+    }
+
+    let childLogicalTop = child.logicalTop()
+    let childLogicalLeft = child.logicalLeft()
+    var lowestFloatLogicalBottom = LayoutUnit()
+
+    // Floats that will remain the child's responsibility to paint should factor into its
+    // overflow.
+    let blockHasOverflowClip = effectiveOverflowX() == .Clip || effectiveOverflowY() == .Clip
+    for floatingObject in child.floatingObjects!.set() {
+      let floatLogicalBottom = min(
+        logicalBottomForFloat(floatingObject: floatingObject), LayoutUnit.max() - childLogicalTop)
+      let logicalBottom = childLogicalTop + floatLogicalBottom
+      lowestFloatLogicalBottom = max(lowestFloatLogicalBottom, logicalBottom)
+
+      if logicalBottom > logicalHeight() {
+        // If the object is not in the list, we add it now.
+        if !containsFloat(renderer: floatingObject.renderer!) {
+          let offset =
+            isHorizontalWritingMode()
+            ? LayoutSizeWrapper(width: -childLogicalLeft, height: -childLogicalTop)
+            : LayoutSizeWrapper(width: -childLogicalTop, height: -childLogicalLeft)
+          var shouldPaint = false
+
+          // The nearest enclosing layer always paints the float (so that zindex and stacking
+          // behaves properly). We always want to propagate the desire to paint the float as
+          // far out as we can, to the outermost block that overlaps the float, stopping only
+          // if we hit a self-painting layer boundary.
+          if !floatingObject.hasAncestorWithOverflowClip()
+            && CPtrToInt(floatingObject.renderer!.enclosingFloatPaintingLayer()?.p)
+              == CPtrToInt(enclosingFloatPaintingLayer()?.p)
+          {
+            floatingObject.setPaintsFloat(paintsFloat: false)
+            shouldPaint = true
+          }
+          // We create the floating object list lazily.
+          if floatingObjects == nil {
+            createFloatingObjects()
+          }
+
+          floatingObjects!.add(
+            floatingObject: floatingObject.copyToNewContainer(
+              offset: offset, shouldPaint: shouldPaint, isDescendant: true,
+              overflowClipped: floatingObject.hasAncestorWithOverflowClip() || blockHasOverflowClip)
+          )
+        }
+      } else {
+        let renderer = floatingObject.renderer!
+        if makeChildPaintOtherFloats && !floatingObject.paintsFloat()
+          && !renderer.hasSelfPaintingLayer()
+          && renderer.isDescendantOf(ancestor: child)
+          && CPtrToInt(renderer.enclosingFloatPaintingLayer()?.p)
+            == CPtrToInt(child.enclosingFloatPaintingLayer()?.p)
+        {
+          // The float is not overhanging from this block, so if it is a descendant of the child, the child should
+          // paint it (the other case is that it is intruding into the child), unless it has its own layer or enclosing
+          // layer.
+          // If makeChildPaintOtherFloats is false, it means that the child must already know about all the floats
+          // it should paint.
+          floatingObject.setPaintsFloat(paintsFloat: true)
+        }
+
+        // Since the float doesn't overhang, it didn't get put into our list. We need to add its overflow in to the child now.
+        if floatingObject.isDescendant() {
+          child.addOverflowFromChild(
+            child: renderer, delta: floatingObject.locationOffsetOfBorderBox())
+        }
+      }
+    }
+    return lowestFloatLogicalBottom
   }
 
   private func addIntrudingFloats(
