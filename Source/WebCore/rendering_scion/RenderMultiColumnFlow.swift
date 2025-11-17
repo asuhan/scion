@@ -69,6 +69,21 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
 
   func setColumnHeightAvailable(available: LayoutUnit) { columnHeightAvailable = available }
 
+  func setInBalancingPass(balancing: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setNeedsHeightsRecalculation(recalculate: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shouldRelayoutForPagination() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The point is physical, and the result is a physical location within the fragment.
   func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?

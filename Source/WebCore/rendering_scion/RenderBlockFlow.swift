@@ -2663,8 +2663,52 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func relayoutForPagination() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if multiColumnFlowForBlockFlow() == nil
+      || !multiColumnFlowForBlockFlow()!.shouldRelayoutForPagination()
+    {
+      return false
+    }
+
+    multiColumnFlowForBlockFlow()!.setNeedsHeightsRecalculation(recalculate: false)
+    multiColumnFlowForBlockFlow()!.setInBalancingPass(balancing: true)  // Prevent re-entering this method (and recursion into layout).
+
+    var needsRelayout = false
+    var neededRelayout = false
+    var firstPass = true
+    repeat {
+      // Column heights may change here because of balancing. We may have to do multiple layout
+      // passes, depending on how the contents is fitted to the changed column heights. In most
+      // cases, laying out again twice or even just once will suffice. Sometimes we need more
+      // passes than that, though, but the number of retries should not exceed the number of
+      // columns, unless we have a bug.
+      needsRelayout = false
+      var multicolSet = multiColumnFlowForBlockFlow()!.firstMultiColumnSet()
+      while multicolSet != nil {
+        if multicolSet!.recalculateColumnHeight(initial: firstPass) {
+          needsRelayout = true
+        }
+        if needsRelayout {
+          // Once a column set gets a new column height, that column set and all successive column
+          // sets need to be laid out over again, since their logical top will be affected by
+          // this, and therefore their column heights may change as well, at least if the multicol
+          // height is constrained.
+          multicolSet!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+        multicolSet = multicolSet!.nextSiblingMultiColumnSet()
+      }
+      if needsRelayout {
+        // Layout again. Column balancing resulted in a new height.
+        neededRelayout = true
+        multiColumnFlowForBlockFlow()!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        setChildNeedsLayout(markParents: .MarkOnlyThis)
+        layoutBlock(relayoutChildren: false)
+      }
+      firstPass = false
+    } while needsRelayout
+
+    multiColumnFlowForBlockFlow()!.setInBalancingPass(balancing: false)
+
+    return neededRelayout
   }
 
   override func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
