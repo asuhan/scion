@@ -1635,6 +1635,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
   }
 
+  override func childrenPreventSelfCollapsing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldBreakAtLineToAvoidWidow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1089,6 +1089,45 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isSelfCollapsingBlock() -> Bool {
+    // We are not self-collapsing if we
+    // (a) have a non-zero height according to layout (an optimization to avoid wasting time)
+    // (b) are a table,
+    // (c) have border/padding,
+    // (d) have a min-height
+    // (e) have specified that one of our margins can't collapse using a CSS extension
+    if logicalHeight() > 0
+      || isRenderTable() || borderAndPaddingLogicalHeight().bool()
+      || style().logicalMinHeight().isPositive()
+    {
+      return false
+    }
+
+    let logicalHeightLength = style().logicalHeight()
+    var hasAutoHeight = logicalHeightLength.isAuto()
+    if logicalHeightLength.isPercentOrCalculated() && !document().inQuirksMode() {
+      hasAutoHeight = true
+      var cb = containingBlock()
+      while cb != nil && !(cb is RenderViewWrapper) {
+        if cb!.style().logicalHeight().isFixed() || cb!.isRenderTableCell() {
+          hasAutoHeight = false
+        }
+        cb = cb!.containingBlock()
+      }
+    }
+
+    // If the height is 0 or auto, then whether or not we are a self-collapsing block depends
+    // on whether we have content that is all self-collapsing or not.
+    if hasAutoHeight
+      || ((logicalHeightLength.isFixed() || logicalHeightLength.isPercentOrCalculated())
+        && logicalHeightLength.isZero())
+    {
+      return !createsNewFormattingContext() && !childrenPreventSelfCollapsing()
+    }
+
+    return false
+  }
+
+  func childrenPreventSelfCollapsing() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
