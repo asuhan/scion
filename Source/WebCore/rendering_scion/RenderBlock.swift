@@ -1147,8 +1147,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: Bool, child: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if child.isOutOfFlowPositioned() {
+      return
+    }
+
+    // FIXME: Technically percentage height objects only need a relayout if their percentage isn't going to be turned into
+    // an auto value. Add a method to determine this, so that we can avoid the relayout.
+    if relayoutChildren || (child.hasRelativeLogicalHeight() && !isRenderView()) {
+      child.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
+
+    // If relayoutChildren is set and the child has percentage padding or an embedded content box, we also need to invalidate the childs pref widths.
+    if relayoutChildren && child.needsPreferredWidthsRecalculation() {
+      child.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+    }
   }
 
   func preparePaginationBeforeBlockLayout(relayoutChildren: inout Bool) {

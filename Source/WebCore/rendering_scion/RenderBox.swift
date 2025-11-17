@@ -2669,6 +2669,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       || style().minHeight().isPercentOrCalculated() || style().minWidth().isPercentOrCalculated()
   }
 
+  func hasRelativeLogicalHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
