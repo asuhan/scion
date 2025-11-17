@@ -1128,8 +1128,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func childrenPreventSelfCollapsing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Whether or not we collapse is dependent on whether all our normal flow children
+    // are also self-collapsing.
+    var child = firstChildBox()
+    while child != nil {
+      if child!.isFloatingOrOutOfFlowPositioned() {
+        child = child!.nextSiblingBox()
+        continue
+      }
+      if !child!.isSelfCollapsingBlock() {
+        return true
+      }
+      child = child!.nextSiblingBox()
+    }
+    return false
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
