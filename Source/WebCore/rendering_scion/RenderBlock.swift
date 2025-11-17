@@ -416,8 +416,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
     child: RenderBoxWrapper, logicalLeft: LayoutUnit,
     applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: UInt64(0))
+    if isHorizontalWritingMode() {
+      if applyDelta == .ApplyLayoutDelta {
+        view().frameView().layoutContext().addLayoutDelta(
+          delta: LayoutSizeWrapper(width: child.x() - logicalLeft, height: zero))
+      }
+      child.setX(x: logicalLeft)
+    } else {
+      if applyDelta == .ApplyLayoutDelta {
+        view().frameView().layoutContext().addLayoutDelta(
+          delta: LayoutSizeWrapper(width: zero, height: child.y() - logicalLeft))
+      }
+      child.setY(y: logicalLeft)
+    }
   }
 
   func setLogicalTopForChild(
