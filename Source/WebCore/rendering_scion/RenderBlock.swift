@@ -66,6 +66,14 @@ private func findFirstLetterBlock(start: RenderBlockWrapper) -> RenderBlockWrapp
   }
 }
 
+private func canComputeFragmentRangeForBox(
+  parentBlock: RenderBlockWrapper, childBox: RenderBoxWrapper,
+  enclosingFragmentedFlow: RenderFragmentedFlowWrapper?
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBlockWrapper: RenderBoxWrapper {
   // These two functions are overridden for inline-block.
   override func lineHeight(
@@ -1076,9 +1084,36 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  func estimateFragmentRangeForBoxChild(box: RenderBoxWrapper) {
+  private func computeFragmentRangeForBoxChild(box: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func estimateFragmentRangeForBoxChild(box: RenderBoxWrapper) {
+    let fragmentedFlow = enclosingFragmentedFlow()
+    if !canComputeFragmentRangeForBox(
+      parentBlock: self, childBox: box, enclosingFragmentedFlow: fragmentedFlow)
+    {
+      return
+    }
+
+    if childBoxIsUnsplittableForFragmentation(child: box) {
+      computeFragmentRangeForBoxChild(box: box)
+      return
+    }
+
+    let estimatedValues = box.computeLogicalHeight(
+      logicalHeight: RenderFragmentedFlowWrapper.maxLogicalHeight(),
+      logicalTop: logicalTopForChild(child: box))
+    let offsetFromLogicalTopOfFirstFragment = box.offsetFromLogicalTopOfFirstPage()
+    let startFragment = fragmentedFlow!.fragmentAtBlockOffset(
+      clampBox: self, offset: offsetFromLogicalTopOfFirstFragment, extendLastFragment: true)
+    let endFragment = fragmentedFlow!.fragmentAtBlockOffset(
+      clampBox: self, offset: offsetFromLogicalTopOfFirstFragment + estimatedValues.extent,
+      extendLastFragment: true)
+
+    fragmentedFlow!.setFragmentRangeForBox(
+      box: box, startFragment: startFragment, endFragment: endFragment)
   }
 
   func updateFragmentRangeForBoxChild(box: RenderBoxWrapper) -> Bool {
