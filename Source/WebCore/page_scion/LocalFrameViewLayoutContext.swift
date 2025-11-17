@@ -75,5 +75,20 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
+  // Suspends the LayoutState optimization. Used under transforms that cannot be represented by
+  // LayoutState (common in SVG) and when manipulating the render tree during layout in ways
+  // that can trigger repaint of a non-child (e.g. when a list item moves its list marker around).
+  // Note that even when disabled, LayoutState is still used to store layoutDelta.
+  // These functions may only be accessed by LayoutStateMaintainer or LayoutStateDisabler.
+  func disablePaintOffsetCache() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func enablePaintOffsetCache() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var p: UnsafeRawPointer
 }

@@ -177,3 +177,16 @@ struct LayoutStateMaintainer: ~Copyable {
   private var paintOffsetCacheIsDisabled = false
   private var didPushLayoutState = false
 }
+
+struct LayoutStateDisabler: ~Copyable {
+  init(context: LocalFrameViewLayoutContextWrapper) {
+    self.context = context
+    context.disablePaintOffsetCache()
+  }
+
+  deinit {
+    context.enablePaintOffsetCache()
+  }
+
+  private let context: LocalFrameViewLayoutContextWrapper
+}

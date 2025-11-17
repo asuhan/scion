@@ -2756,8 +2756,30 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func repaintOverhangingFloats(paintAllDescendants: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Repaint any overhanging floats (if we know we're the one to paint them).
+    // Otherwise, bail out.
+    if !hasOverhangingFloats() {
+      return
+    }
+
+    // FIXME: Avoid disabling LayoutState. At the very least, don't disable it for floats originating
+    // in this block. Better yet would be to push extra state for the containers of other floats.
+    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+    let floatingObjectSet = floatingObjects!.set()
+    for floatingObject in floatingObjectSet {
+      // Only repaint the object if it is overhanging, is not in its own layer, and
+      // is our responsibility to paint (m_shouldPaint is set). When paintAllDescendants is true, the latter
+      // condition is replaced with being a descendant of us.
+      let renderer = floatingObject.renderer!
+      if logicalBottomForFloat(floatingObject: floatingObject) > logicalHeight()
+        && !renderer.hasSelfPaintingLayer()
+        && (floatingObject.paintsFloat()
+          || (paintAllDescendants && renderer.isDescendantOf(ancestor: self)))
+      {
+        renderer.repaint()
+        renderer.repaintOverhangingFloats(paintAllDescendants: false)
+      }
+    }
   }
 
   @discardableResult
@@ -2841,6 +2863,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         floatingObjects!.add(floatingObject: floatingObject.copyToNewContainer(offset: offset))
       }
     }
+  }
+
+  private func hasOverhangingFloats() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func getClearDelta(child: RenderBoxWrapper, logicalTop: LayoutUnit) -> LayoutUnit {

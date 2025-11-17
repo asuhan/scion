@@ -81,6 +81,11 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func paintsFloat() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPaintsFloat(paintsFloat: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
