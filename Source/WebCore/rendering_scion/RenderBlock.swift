@@ -438,9 +438,44 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  func setTrimmedMarginForChild(child: RenderBoxWrapper, marginTrimType: MarginTrimType) {
+  private func setMarginStartForChild(child: RenderBoxWrapper, value: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func setMarginEndForChild(child: RenderBoxWrapper, value: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setMarginBeforeForChild(child: RenderBoxWrapper, value: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setMarginAfterForChild(child: RenderBoxWrapper, value: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTrimmedMarginForChild(child: RenderBoxWrapper, marginTrimType: MarginTrimType) {
+    let zero = LayoutUnit(value: UInt64(0))
+    switch marginTrimType {
+    case .BlockStart:
+      setMarginBeforeForChild(child: child, value: zero)
+      child.markMarginAsTrimmed(newTrimmedMargin: .BlockStart)
+    case .BlockEnd:
+      setMarginAfterForChild(child: child, value: zero)
+      child.markMarginAsTrimmed(newTrimmedMargin: .BlockEnd)
+    case .InlineStart:
+      setMarginStartForChild(child: child, value: zero)
+      child.markMarginAsTrimmed(newTrimmedMargin: .InlineStart)
+    case .InlineEnd:
+      setMarginEndForChild(child: child, value: zero)
+      child.markMarginAsTrimmed(newTrimmedMargin: .InlineEnd)
+    default:
+      fatalError("Not implemented yet")
+    }
   }
 
   struct FirstLetterRenderObjects {

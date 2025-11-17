@@ -801,7 +801,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
   }
 
-  private func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {
+  func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
