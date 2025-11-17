@@ -328,6 +328,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(p))
   }
 
+  private func setIntrinsicBorderForFieldset(padding: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func borderTop() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -453,6 +458,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginBeforeForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func marginAfterForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1070,8 +1080,82 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func layoutExcludedChildren(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isFieldset() {
+      return
+    }
+
+    setIntrinsicBorderForFieldset(padding: LayoutUnit(value: 0))
+
+    let box = findFieldsetLegend()
+    if box == nil {
+      return
+    }
+
+    box!.setIsExcludedFromNormalLayout(excluded: true)
+    for child: RenderBoxWrapper in childrenOfType(parent: self) {
+      if CPtrToInt(child.p) == CPtrToInt(box!.p) || !child.isLegend() {
+        continue
+      }
+      child.setIsExcludedFromNormalLayout(excluded: false)
+    }
+
+    let legend = box!
+    if relayoutChildren {
+      legend.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
+    legend.layoutIfNeeded()
+
+    var logicalLeft = LayoutUnit()
+    if style().isLeftToRightDirection() {
+      switch legend.style().textAlign() {
+      case .Center:
+        logicalLeft = (logicalWidth() - logicalWidthForChild(child: legend)) / 2
+      case .Right:
+        logicalLeft = logicalWidth() - borderAndPaddingEnd() - logicalWidthForChild(child: legend)
+      default:
+        logicalLeft = borderAndPaddingStart() + marginStartForChild(child: legend)
+      }
+    } else {
+      switch legend.style().textAlign() {
+      case .Left:
+        logicalLeft = borderAndPaddingStart()
+      case .Center:
+        // Make sure that the extra pixel goes to the end side in RTL (since it went to the end side
+        // in LTR).
+        let centeredWidth = logicalWidth() - logicalWidthForChild(child: legend)
+        logicalLeft = centeredWidth - centeredWidth / 2
+      default:
+        logicalLeft =
+          logicalWidth() - borderAndPaddingStart() - marginStartForChild(child: legend)
+          - logicalWidthForChild(child: legend)
+      }
+    }
+
+    setLogicalLeftForChild(child: legend, logicalLeft: logicalLeft)
+
+    let fieldsetBorderBefore = borderBefore()
+    let legendLogicalHeight = logicalHeightForChild(child: legend)
+    let legendAfterMargin = marginAfterForChild(child: legend)
+    let topPositionForLegend = max(
+      LayoutUnit(value: UInt64(0)), (fieldsetBorderBefore - legendLogicalHeight) / 2)
+    let bottomPositionForLegend = topPositionForLegend + legendLogicalHeight + legendAfterMargin
+
+    // Place the legend now.
+    setLogicalTopForChild(child: legend, logicalTop: topPositionForLegend)
+
+    // If the bottom of the legend (including its after margin) is below the fieldset border,
+    // then we need to add in sufficient intrinsic border to account for this gap.
+    // FIXME: Should we support the before margin of the legend? Not entirely clear.
+    // FIXME: Consider dropping support for the after margin of the legend. Not sure other
+    // browsers support that anyway.
+    if bottomPositionForLegend > fieldsetBorderBefore {
+      setIntrinsicBorderForFieldset(padding: bottomPositionForLegend - fieldsetBorderBefore)
+    }
+
+    // Now that the legend is included in the border extent, we can set our logical height
+    // to the borderBefore (which includes the legend and its after margin if they were bigger
+    // than the actual fieldset border) and then add in our padding before.
+    setLogicalHeight(size: borderAndPaddingBefore())
   }
 
   private func computePreferredWidthsForExcludedChildren() -> (LayoutUnit, LayoutUnit)? {

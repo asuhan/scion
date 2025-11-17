@@ -157,6 +157,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func borderAndPaddingEnd() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderAndPaddingBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
