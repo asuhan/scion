@@ -718,6 +718,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     previousInlineLayoutContentBoxLogicalHeight = nil
   }
 
+  override func simplifiedNormalFlowLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func shiftForAlignContent(
     intrinsicLogicalHeight: LayoutUnit, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit

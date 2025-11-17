@@ -41,4 +41,6 @@ class RenderOverflow {
 
   private let layoutOverflow: LayoutRectWrapper
   private let visualOverflow: LayoutRectWrapper
+
+  let layoutClientAfterEdge = LayoutUnit()
 }

@@ -93,6 +93,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func canPerformSimplifiedLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -2475,6 +2475,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       rect: FloatRectWrapper(r: snappedIntRect(rect: paintRect)), color: ColorWrapper.black)
   }
 
+  // Called when a positioned object moves but doesn't necessarily change size.  A simplified layout is attempted
+  // that just updates the object's position. If the size does change, the object remains dirty.
+  func tryLayoutDoingPositionedMovementOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func maskClipRect(paintOffset: LayoutPointWrapper) -> LayoutRectWrapper {
     let maskBorder = style().maskBorder()
     if maskBorder.image() != nil {
@@ -3836,4 +3843,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
     return containerBlock!.flipForWritingModeForChild(child: self, point: location())
   }
+
+  // Our overflow information.
+  var overflow: RenderOverflow? = nil
 }

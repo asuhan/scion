@@ -1052,7 +1052,70 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func canPerformSimplifiedLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func simplifiedLayout() -> Bool {
+    if !canPerformSimplifiedLayout() {
+      return false
+    }
+
+    let _ = LayoutStateMaintainer(
+      root: self, offset: locationOffset(),
+      disablePaintOffsetCache: isTransformed() || hasReflection()
+        || style().isFlippedBlocksWritingMode())
+    if needsPositionedMovementLayout() && !tryLayoutDoingPositionedMovementOnly() {
+      return false
+    }
+
+    let canContainFixedPosObjects = canContainFixedPositionObjects()
+    if isSkippedContentRoot() && (posChildNeedsLayout() || canContainFixedPosObjects) {
+      return false
+    }
+
+    // Lay out positioned descendants or objects that just need to recompute overflow.
+    if needsSimplifiedNormalFlowLayout() {
+      simplifiedNormalFlowLayout()
+    }
+
+    // Make sure a forced break is applied after the content if we are a flow thread in a simplified layout.
+    // This ensures the size information is correctly computed for the last auto-height fragment receiving content.
+    if let fragmentedFlow = self as? RenderFragmentedFlowWrapper {
+      fragmentedFlow.applyBreakAfterContent(offsetBreak: clientLogicalBottom())
+    }
+
+    // Lay out our positioned objects if our positioned child bit is set.
+    // Also, if an absolute position element inside a relative positioned container moves, and the absolute element has a fixed position
+    // child, neither the fixed element nor its container learn of the movement since posChildNeedsLayout() is only marked as far as the
+    // relative positioned container. So if we can have fixed pos objects in our positioned objects list check if any of them
+    // are statically positioned and thus need to move with their absolute ancestors.
+    if posChildNeedsLayout() || canContainFixedPosObjects {
+      layoutPositionedObjects(
+        relayoutChildren: false,
+        fixedPositionObjectsOnly: !posChildNeedsLayout() && canContainFixedPosObjects)
+    }
+
+    // Recompute our overflow information.
+    // FIXME: We could do better here by computing a temporary overflow object from layoutPositionedObjects and only
+    // updating our overflow if we either used to have overflow or if the new temporary object has overflow.
+    // For now just always recompute overflow.  This is no worse performance-wise than the old code that called rightmostPosition and
+    // lowestPosition on every relayout so it's not a regression.
+    // computeOverflow expects the bottom edge before we clamp our height. Since this information isn't available during
+    // simplifiedLayout, we cache the value in overflow.
+    let oldClientAfterEdge = overflow?.layoutClientAfterEdge ?? clientLogicalBottom()
+    computeOverflow(oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: true)
+
+    updateLayerTransform()
+
+    updateScrollInfoAfterLayout()
+
+    clearNeedsLayout()
+    return true
+  }
+
+  func simplifiedNormalFlowLayout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
