@@ -3041,6 +3041,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return result
   }
 
+  override func addOverflowFromInlineChildren() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func hasInlineLayout() -> Bool {
     switch lineLayout {
     case .Integration:

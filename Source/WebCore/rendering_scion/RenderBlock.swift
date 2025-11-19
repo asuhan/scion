@@ -1426,6 +1426,22 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func addOverflowFromChildren() {
+    if childrenInline() {
+      addOverflowFromInlineChildren()
+
+      // If this block is flowed inside a flow thread, make sure its overflow is propagated to the containing fragments.
+      if overflow != nil, let flow = enclosingFragmentedFlow() {
+        flow.addFragmentsVisualOverflow(box: self, visualOverflow: overflow!.visualOverflowRect())
+      }
+    } else {
+      addOverflowFromBlockChildren()
+    }
+  }
+
+  // FIXME-BLOCKFLOW: Remove virtualization when all callers have moved to RenderBlockFlow
+  func addOverflowFromInlineChildren() {}
+
+  private func addOverflowFromBlockChildren() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
