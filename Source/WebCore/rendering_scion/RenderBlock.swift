@@ -1421,9 +1421,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
-  override func isInlineBlockOrInlineTable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func isInlineBlockOrInlineTable() -> Bool {
+    return isInline() && isReplacedOrInlineBlock()
   }
 
   func addOverflowFromChildren() {
