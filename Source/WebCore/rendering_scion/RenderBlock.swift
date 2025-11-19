@@ -1229,8 +1229,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func findFieldsetLegend(option: FieldsetFindLegendOption = .FieldsetIgnoreFloatingOrOutOfFlow)
     -> RenderBoxWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for legend: RenderBoxWrapper in childrenOfType(parent: self) {
+      if option == .FieldsetIgnoreFloatingOrOutOfFlow && legend.isFloatingOrOutOfFlowPositioned() {
+        continue
+      }
+      if legend.isLegend() {
+        return legend
+      }
+    }
+    return nil
   }
 
   func layoutExcludedChildren(relayoutChildren: Bool) {
