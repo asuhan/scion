@@ -1063,8 +1063,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func canPerformSimplifiedLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if selfNeedsLayout() || normalChildNeedsLayout() || outOfFlowChildNeedsStaticPositionLayout() {
+      return false
+    }
+    if let wasSkippedDuringLastLayout = wasSkippedDuringLastLayoutDueToContentVisibility(),
+      wasSkippedDuringLastLayout
+    {
+      return false
+    }
+    return posChildNeedsLayout() || needsSimplifiedNormalFlowLayout()
   }
 
   func simplifiedLayout() -> Bool {

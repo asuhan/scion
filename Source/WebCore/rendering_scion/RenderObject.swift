@@ -432,6 +432,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func wasSkippedDuringLastLayoutDueToContentVisibility() -> Bool? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func childrenInline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -673,6 +678,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func normalChildNeedsLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outOfFlowChildNeedsStaticPositionLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
