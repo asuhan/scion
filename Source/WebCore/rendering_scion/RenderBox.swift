@@ -630,6 +630,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func addOverflowFromChild(child: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addOverflowFromChild(child: RenderBoxWrapper, delta: LayoutSizeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

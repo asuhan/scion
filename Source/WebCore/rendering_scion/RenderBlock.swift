@@ -1442,8 +1442,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func addOverflowFromInlineChildren() {}
 
   private func addOverflowFromBlockChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = firstChildBox()
+    while child != nil {
+      if !child!.isFloatingOrOutOfFlowPositioned() {
+        addOverflowFromChild(child: child!)
+      }
+      child = child!.nextSiblingBox()
+    }
   }
 
   private func addOverflowFromPositionedObjects() {
