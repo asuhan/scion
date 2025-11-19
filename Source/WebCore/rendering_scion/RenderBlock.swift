@@ -1067,8 +1067,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
     // for items with opposite writing directions, as the contents needs
     // to overflow in that direction
     if !style().isFlippedBlocksWritingMode() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if let transaction = view().frameView().layoutContext()
+        .updateScrollInfoAfterLayoutTransactionIfExists(), transaction.nestedCount != 0
+      {
+        transaction.blocks.add(value: self)
+        return
+      }
     }
 
     if layer() != nil {

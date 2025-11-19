@@ -25,6 +25,11 @@
 
 import wk_interop
 
+struct UpdateScrollInfoAfterLayoutTransaction {
+  let nestedCount: Int32 = 0
+  let blocks = WeakHashSet<RenderBlockWrapper>()
+}
+
 class LocalFrameViewLayoutContextWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
@@ -61,6 +66,11 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func layoutDeltaMatches(delta: LayoutSizeWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateScrollInfoAfterLayoutTransactionIfExists() -> UpdateScrollInfoAfterLayoutTransaction? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

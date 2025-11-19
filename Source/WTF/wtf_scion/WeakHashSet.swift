@@ -23,7 +23,17 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class WeakHashSet<T> {
+final class WeakHashSet<KeyType> {
+  struct AddResult {
+    let isNewEntry: Bool
+  }
+
+  @discardableResult
+  func add<U>(value: U) -> AddResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contains<U>(value: U) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
