@@ -1138,8 +1138,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func childBoxIsUnsplittableForFragmentation(child: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fragmentedFlow = enclosingFragmentedFlow()
+    let checkColumnBreaks = fragmentedFlow != nil && fragmentedFlow!.shouldCheckColumnBreaks()
+    let checkPageBreaks =
+      !checkColumnBreaks
+      && view().frameView().layoutContext().layoutState()!.pageLogicalHeight().bool()
+    return child.isUnsplittableForPagination() || child.style().breakInside() == .Avoid
+      || (checkColumnBreaks && child.style().breakInside() == .AvoidColumn)
+      || (checkPageBreaks && child.style().breakInside() == .AvoidPage)
   }
 
   // Overflow is always relative to the border-box of the element in question.
