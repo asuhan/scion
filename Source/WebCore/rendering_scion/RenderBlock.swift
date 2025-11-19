@@ -1126,8 +1126,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func simplifiedNormalFlowLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!childrenInline())
+
+    var box = firstChildBox()
+    while box != nil {
+      if !box!.isOutOfFlowPositioned() {
+        box!.layoutIfNeeded()
+      }
+      box = box!.nextSiblingBox()
+    }
   }
 
   func childBoxIsUnsplittableForFragmentation(child: RenderBoxWrapper) -> Bool {
