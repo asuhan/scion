@@ -1462,8 +1462,26 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func computeFragmentRangeForBoxChild(box: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fragmentedFlow = enclosingFragmentedFlow()
+    assert(
+      canComputeFragmentRangeForBox(
+        parentBlock: self, childBox: box, enclosingFragmentedFlow: fragmentedFlow))
+
+    let offsetFromLogicalTopOfFirstFragment = box.offsetFromLogicalTopOfFirstPage()
+    let startFragment = fragmentedFlow!.fragmentAtBlockOffset(
+      clampBox: self, offset: offsetFromLogicalTopOfFirstFragment, extendLastFragment: true)
+    var endFragment: RenderFragmentContainerWrapper? = nil
+    if childBoxIsUnsplittableForFragmentation(child: box) {
+      endFragment = startFragment
+    } else {
+      endFragment = fragmentedFlow!.fragmentAtBlockOffset(
+        clampBox: self,
+        offset: offsetFromLogicalTopOfFirstFragment + logicalHeightForChild(child: box),
+        extendLastFragment: true)
+    }
+
+    fragmentedFlow!.setFragmentRangeForBox(
+      box: box, startFragment: startFragment, endFragment: endFragment)
   }
 
   func estimateFragmentRangeForBoxChild(box: RenderBoxWrapper) {
