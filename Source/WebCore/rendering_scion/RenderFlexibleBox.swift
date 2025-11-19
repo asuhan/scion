@@ -79,4 +79,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (
+    LayoutUnit, LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

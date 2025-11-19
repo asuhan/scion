@@ -1543,6 +1543,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // This function will compute the logical border-box height, without laying
+  // out the box. This means that the result is only "correct" when the height
+  // is explicitly specified. This function exists so that intrinsic width
+  // calculations have a way to deal with children that have orthogonal writing modes.
+  // When there is no explicit height, this function assumes a content height of
+  // zero (and returns just border + padding).
+  func computeLogicalHeightWithoutLayout() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func renderBoxFragmentInfo(
     fragment: RenderFragmentContainerWrapper?,
     cacheFlag: RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo

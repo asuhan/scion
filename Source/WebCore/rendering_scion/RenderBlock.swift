@@ -1564,8 +1564,51 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func computeChildPreferredLogicalWidths(child: RenderObjectWrapper) -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = child as? RenderBoxWrapper,
+      box.isHorizontalWritingMode() != isHorizontalWritingMode()
+    {
+      // If the child is an orthogonal flow, child's height determines the width,
+      // but the height is not available until layout.
+      // http://dev.w3.org/csswg/css-writing-modes-3/#orthogonal-shrink-to-fit
+      if !box.needsLayout() {
+        let maxPreferredLogicalWidth = box.logicalHeight()
+        return (maxPreferredLogicalWidth, maxPreferredLogicalWidth)
+      }
+      if box.shouldComputeLogicalHeightFromAspectRatio() && box.style().logicalWidth().isFixed() {
+        let logicalWidth = LayoutUnit(value: box.style().logicalWidth().value())
+        let maxPreferredLogicalWidth = RenderBoxWrapper.blockSizeFromAspectRatio(
+          borderPaddingInlineSum: box.horizontalBorderAndPaddingExtent(),
+          borderPaddingBlockSum: box.verticalBorderAndPaddingExtent(),
+          aspectRatio: LayoutUnit(value: box.style().logicalAspectRatio()).double(),
+          boxSizing: box.style().boxSizingForAspectRatio(),
+          inlineSize: logicalWidth, aspectRatioType: style().aspectRatioType(),
+          isRenderReplaced: isRenderReplaced())
+        return (maxPreferredLogicalWidth, maxPreferredLogicalWidth)
+      }
+      let maxPreferredLogicalWidth = box.computeLogicalHeightWithoutLayout()
+      return (maxPreferredLogicalWidth, maxPreferredLogicalWidth)
+    }
+
+    var (minPreferredLogicalWidth, maxPreferredLogicalWidth) = computeChildIntrinsicLogicalWidths(
+      child: child)
+
+    // For non-replaced blocks if the inline size is min|max-content or a definite
+    // size the min|max-content contribution is that size plus border, padding and
+    // margin https://drafts.csswg.org/css-sizing/#block-intrinsic
+    if child.isRenderBlock() {
+      let computedInlineSize = child.style().logicalWidth()
+      if computedInlineSize.isMaxContent() {
+        minPreferredLogicalWidth = maxPreferredLogicalWidth
+      } else if computedInlineSize.isMinContent() {
+        maxPreferredLogicalWidth = minPreferredLogicalWidth
+      }
+    }
+
+    return (minPreferredLogicalWidth, maxPreferredLogicalWidth)
+  }
+
+  func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (LayoutUnit, LayoutUnit) {
+    return (child.minPreferredLogicalWidth(), child.maxPreferredLogicalWidth())
   }
 
   private func createAnonymousBlockWithStyleAndDisplay(
