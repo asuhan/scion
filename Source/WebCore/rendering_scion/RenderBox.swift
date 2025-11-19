@@ -547,8 +547,27 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // respectively are flipped when compared to their physical counterparts.  For example minX is on the left in vertical-lr,
   // but it is on the right in vertical-rl.
   func flippedClientBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Because of the special coordinate system used for overflow rectangles (not quite logical, not
+    // quite physical), we need to flip the block progression coordinate in vertical-rl and
+    // horizontal-bt writing modes. Apart from that, this method does the same as clientBoxRect().
+
+    let borderWidths = borderWidths()
+    // Calculate physical padding box.
+    var rect = LayoutRectWrapper(
+      x: borderWidths.left, y: borderWidths.top,
+      width: width() - borderWidths.left - borderWidths.right,
+      height: height() - borderWidths.top - borderWidths.bottom)
+    // Flip block progression axis if writing mode is vertical-rl or horizontal-bt.
+    flipForWritingMode(rect: &rect)
+    if hasNonVisibleOverflow() {
+      // Subtract space occupied by scrollbars. They are at their physical edge in this coordinate
+      // system, so order is important here: first flip, then subtract scrollbars.
+      if shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() && isHorizontalWritingMode() {
+        rect.move(dx: verticalScrollbarWidth(), dy: Int32(0))
+      }
+      rect.contract(dw: verticalScrollbarWidth(), dh: horizontalScrollbarHeight())
+    }
+    return rect
   }
 
   func layoutOverflowRect() -> LayoutRectWrapper {
