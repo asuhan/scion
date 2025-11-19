@@ -1559,8 +1559,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func preparePaginationBeforeBlockLayout(relayoutChildren: inout Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Fragments changing widths can force us to relayout our children.
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      fragmentedFlow.logicalWidthChangedInFragmentsForBlock(
+        block: self, relayoutChildren: &relayoutChildren)
+    }
   }
 
   func computeChildPreferredLogicalWidths(child: RenderObjectWrapper) -> (LayoutUnit, LayoutUnit) {

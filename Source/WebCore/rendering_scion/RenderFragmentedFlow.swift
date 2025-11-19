@@ -154,6 +154,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalWidthChangedInFragmentsForBlock(
+    block: RenderBlockWrapper, relayoutChildren: inout Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentLogicalWidthOfFirstFragment() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
