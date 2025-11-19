@@ -837,6 +837,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func updateScrollInfoAfterLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositor() -> RenderLayerCompositorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

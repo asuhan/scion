@@ -1058,8 +1058,22 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateScrollInfoAfterLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasNonVisibleOverflow() {
+      return
+    }
+
+    // FIXME: https://bugs.webkit.org/show_bug.cgi?id=97937
+    // Workaround for now. We cannot delay the scroll info for overflow
+    // for items with opposite writing directions, as the contents needs
+    // to overflow in that direction
+    if !style().isFlippedBlocksWritingMode() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if layer() != nil {
+      layer()!.updateScrollInfoAfterLayout()
+    }
   }
 
   func canPerformSimplifiedLayout() -> Bool {
