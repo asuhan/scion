@@ -132,8 +132,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   func usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: RenderBoxWrapper)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      return usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: flexItem)
+    }
+    return usedFlexItemOverridingMainSizeForPercentageResolution(flexItem: flexItem)
   }
 
   func clearCachedMainSizeForFlexItem(flexItem: RenderBoxWrapper) {
@@ -167,9 +169,34 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   // TODO(asuhan): Use an inline capacity of 8, since flexbox containers usually have less than 8 children.
   private typealias FlexItemFrameRects = [LayoutRectWrapper]
 
+  private func mainAxisIsFlexItemInlineAxis(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (
     LayoutUnit, LayoutUnit
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)
+    -> LayoutUnit?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // This method is only called whenever a descendant of a flex item wants to resolve a percentage in its
+  // block axis (logical height). The key here is that percentages should be generally resolved before the
+  // flex item is flexed, meaning that they shouldn't be recomputed once the flex item has been flexed. There
+  // are some exceptions though that are implemented here, like the case of fully inflexible items with
+  // definite flex-basis, or whenever the flex container has a definite main size. See
+  // https://drafts.csswg.org/css-flexbox/#definite-sizes for additional details.
+  private func usedFlexItemOverridingMainSizeForPercentageResolution(flexItem: RenderBoxWrapper)
+    -> LayoutUnit?
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
