@@ -174,6 +174,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func isColumnFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func flexBasisForFlexItem(flexItem: RenderBoxWrapper) -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -190,8 +195,21 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     flexItem: RenderBoxWrapper, flexBasis: LengthWrapper,
     updateDescendants: UpdatePercentageHeightDescendants
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isColumnFlow() || hasDefiniteHeight == .Definite {
+      return true
+    }
+    if hasDefiniteHeight == .Indefinite {
+      return false
+    }
+    let definite =
+      flexItem.computePercentageLogicalHeight(
+        height: flexBasis, updateDescendants: updateDescendants) != nil
+    if inLayout && (isHorizontalWritingMode() == flexItem.isHorizontalWritingMode()) {
+      // We can reach this code even while we're not laying ourselves out, such
+      // as from mainSizeForPercentageResolution.
+      hasDefiniteHeight = definite ? .Definite : .Indefinite
+    }
+    return definite
   }
 
   private func flexItemMainSizeIsDefinite(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper)
