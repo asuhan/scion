@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     EllipsisBoxPainter.swift
     EventRegion.swift
+    FlexibleBoxAlgorithm.swift
     FloatingObjects.swift
     GlyphDisplayListCache.swift
     Grid.swift
@@ -20,6 +21,7 @@ target_sources(layout_scion PRIVATE
     LegacyRootInlineBox.swift
     LineClampUpdater.swift
     MarkedText.swift
+    OrderIterator.swift
     OverlapTestRequestClient.swift
     Pagination.swift
     PaintFrequencyTracker.swift
@@ -29,6 +31,7 @@ target_sources(layout_scion PRIVATE
     ReferencedSVGResources.swift
     AccessibilityRegionContext.swift
     BackgroundPainter.swift
+    BaselineAlignment.swift
     BidiRun.swift
     BorderEdge.swift
     BorderPainter.swift

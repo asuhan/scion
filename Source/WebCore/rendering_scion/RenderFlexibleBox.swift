@@ -148,6 +148,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private enum GapType {
+    case BetweenLines
+    case BetweenItems
+  }
+
+  private func computeGap(gapType: GapType) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldApplyMinBlockSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -160,6 +170,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private enum FlexSign {
+    case PositiveFlexibility
+    case NegativeFlexibility
+  }
+
   private enum SizeDefiniteness {
     case Definite
     case Indefinite
@@ -168,6 +183,21 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   // TODO(asuhan): Use an inline capacity of 8, since flexbox containers usually have less than 8 children.
   private typealias FlexItemFrameRects = [LayoutRectWrapper]
+
+  private struct LineState {
+    init(
+      crossAxisOffset: LayoutUnit, crossAxisExtent: LayoutUnit,
+      baselineAlignmentState: BaselineAlignmentState?, flexLayoutItems: FlexLayoutItems
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    let flexLayoutItems: FlexLayoutItems
+  }
+
+  private typealias FlexLineStates = [LineState]
+  private typealias FlexLayoutItems = [FlexLayoutItem]
 
   private func mainAxisIsFlexItemInlineAxis(flexItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
@@ -180,6 +210,21 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexBasisForFlexItem(flexItem: RenderBoxWrapper) -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func mainAxisContentExtent(contentLogicalHeight: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flowAwareBorderBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flowAwarePaddingBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -279,8 +324,143 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func performFlexLayout(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layoutUsingFlexFormattingContext() {
+      return
+    }
+
+    var lineStates = FlexLineStates()
+    let sumFlexBaseSize = LayoutUnit()
+    var totalFlexGrow: Float64 = 0
+    var totalFlexShrink: Float64 = 0
+    var totalWeightedFlexShrink: Float64 = 0
+    let sumHypotheticalMainSize = LayoutUnit()
+
+    // Set up our master list of flex items. All of the rest of the algorithm
+    // should work off this list of a subset.
+    // TODO(cbiesinger): That second part is not yet true.
+    var allItems = FlexLayoutItems()
+    orderIterator!.first()
+    var flexItem = orderIterator!.currentChild()
+    while flexItem != nil {
+      if orderIterator!.shouldSkipChild(child: flexItem!) {
+        // Out-of-flow children are not flex items, so we skip them here.
+        if flexItem!.isOutOfFlowPositioned() {
+          prepareFlexItemForPositionedLayout(flexItem: flexItem!)
+        }
+        flexItem = orderIterator!.next()
+        continue
+      }
+      allItems.append(
+        constructFlexLayoutItem(flexItem: flexItem!, relayoutChildren: relayoutChildren))
+      // constructFlexItem() might set the override containing block height so any value cached for definiteness might be incorrect.
+      resetHasDefiniteHeight()
+      flexItem = orderIterator!.next()
+    }
+
+    let lineBreakLength = mainAxisContentExtent(contentLogicalHeight: LayoutUnit.max())
+    let gapBetweenItems = computeGap(gapType: .BetweenItems)
+    let gapBetweenLines = computeGap(gapType: .BetweenLines)
+    let flexAlgorithm = FlexLayoutAlgorithm(
+      flexbox: self, lineBreakLength: lineBreakLength, allItems: allItems,
+      gapBetweenItems: gapBetweenItems, gapBetweenLines: gapBetweenLines)
+    var crossAxisOffset = flowAwareBorderBefore() + flowAwarePaddingBefore()
+    var lineItems = FlexLayoutItems()
+    var nextIndex: UInt64 = 0
+    var numLines: UInt64 = 0
+    // TODO(asuhan): call into InspectorInstrumentation
+    repeat {
+      let nextFlexLine = flexAlgorithm.computeNextFlexLine(nextIndex: &nextIndex)
+      if nextFlexLine.lineItems.count == 0 {
+        break
+      }
+      numLines += 1
+      // TODO(asuhan): call into InspectorInstrumentation
+      // Cross axis margins should only be trimmed if they are on the first/last flex line
+      let shouldTrimCrossAxisStart = shouldTrimCrossAxisMarginStart() && lineStates.isEmpty
+      let shouldTrimCrossAxisEnd =
+        shouldTrimCrossAxisMarginEnd()
+        && CPtrToInt(allItems.last!.renderer.p) == CPtrToInt(lineItems.last!.renderer.p)
+      if shouldTrimCrossAxisStart || shouldTrimCrossAxisEnd {
+        for flexLayoutItem in lineItems {
+          if shouldTrimCrossAxisStart {
+            trimCrossAxisMarginStart(flexLayoutItem: flexLayoutItem)
+          }
+          if shouldTrimCrossAxisEnd {
+            trimCrossAxisMarginEnd(flexLayoutItem: flexLayoutItem)
+          }
+        }
+      }
+      let containerMainInnerSize = mainAxisContentExtent(
+        contentLogicalHeight: sumHypotheticalMainSize)
+      // availableFreeSpace is the initial amount of free space in this flexbox.
+      // remainingFreeSpace starts out at the same value but as we place and lay
+      // out flex items we subtract from it. Note that both values can be
+      // negative.
+      var remainingFreeSpace = containerMainInnerSize - sumFlexBaseSize
+      let flexSign: FlexSign =
+        (sumHypotheticalMainSize < containerMainInnerSize)
+        ? .PositiveFlexibility : .NegativeFlexibility
+      freezeInflexibleItems(
+        flexSign: flexSign, flexLayoutItems: &lineItems, remainingFreeSpace: &remainingFreeSpace,
+        totalFlexGrow: &totalFlexGrow, totalFlexShrink: &totalFlexShrink,
+        totalWeightedFlexShrink: &totalWeightedFlexShrink)
+      // The initial free space gets calculated after freezing inflexible items.
+      // https://drafts.csswg.org/css-flexbox/#resolve-flexible-lengths step 3
+      let initialFreeSpace = remainingFreeSpace
+      while !resolveFlexibleLengths(
+        flexSign: flexSign, flexLayoutItems: &lineItems, initialFreeSpace: initialFreeSpace,
+        remainingFreeSpace: &remainingFreeSpace, totalFlexGrow: &totalFlexGrow,
+        totalFlexShrink: &totalFlexShrink,
+        totalWeightedFlexShrink: &totalWeightedFlexShrink)
+      {
+        assert(totalFlexGrow >= 0)
+        assert(totalWeightedFlexShrink >= 0)
+      }
+
+      // Recalculate the remaining free space. The adjustment for flex factors
+      // between 0..1 means we can't just use remainingFreeSpace here.
+      remainingFreeSpace = containerMainInnerSize
+      for flexLayoutItem in lineItems {
+        assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+        remainingFreeSpace -= flexLayoutItem.flexedMarginBoxSize()
+      }
+      remainingFreeSpace -= (lineItems.count - 1) * gapBetweenItems
+
+      // This will move lineItems into a newly-created LineState.
+      layoutAndPlaceFlexItems(
+        crossAxisOffset: &crossAxisOffset, flexLayoutItems: &lineItems,
+        availableFreeSpace: remainingFreeSpace, relayoutChildren: relayoutChildren,
+        lineStates: &lineStates,
+        gapBetweenItems: gapBetweenItems)
+    } while true
+
+    if !lineStates.isEmpty {
+      numberOfFlexItemsOnFirstLine = UInt64(lineStates.first!.flexLayoutItems.count)
+      numberOfFlexItemsOnLastLine = numberOfFlexItemsOnFirstLine
+    }
+
+    if hasLineIfEmpty() {
+      // Even if computeNextFlexLine returns true, the flexbox might not have
+      // a line because all our children might be out of flow positioned.
+      // Instead of just checking if we have a line, make sure the flexbox
+      // has at least a line's worth of height to cover this case.
+      let minHeight =
+        borderAndPaddingLogicalHeight()
+        + lineHeight(
+          firstLine: true, direction: isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+          linePositionMode: .PositionOfInteriorLineBoxes) + scrollbarLogicalHeight()
+      if size().height() < minHeight {
+        setLogicalHeight(size: minHeight)
+      }
+    }
+
+    if !isColumnFlow() && numLines > 1 {
+      setLogicalHeight(size: logicalHeight() + computeGap(gapType: .BetweenLines) * (numLines - 1))
+    }
+
+    updateLogicalHeight()
+    repositionLogicalHeightDependentFlexItems(
+      lineStates: &lineStates, gapBetweenLines: gapBetweenLines)
   }
 
   private func initializeMarginTrimState() {
@@ -288,7 +468,75 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // Margins parallel with the main axis
+  private func shouldTrimCrossAxisMarginStart() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldTrimCrossAxisMarginEnd() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func trimCrossAxisMarginStart(flexLayoutItem: FlexLayoutItem) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func trimCrossAxisMarginEnd(flexLayoutItem: FlexLayoutItem) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func repositionLogicalHeightDependentFlexItems(
+    lineStates: inout FlexLineStates, gapBetweenLines: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func prepareOrderIteratorAndMargins() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func constructFlexLayoutItem(flexItem: RenderBoxWrapper, relayoutChildren: Bool)
+    -> FlexLayoutItem
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func freezeInflexibleItems(
+    flexSign: FlexSign, flexLayoutItems: inout FlexLayoutItems,
+    remainingFreeSpace: inout LayoutUnit, totalFlexGrow: inout Float64,
+    totalFlexShrink: inout Float64, totalWeightedFlexShrink: inout Float64
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Returns true if we successfully ran the algorithm and sized the flex items.
+  private func resolveFlexibleLengths(
+    flexSign: FlexSign, flexLayoutItems: inout FlexLayoutItems, initialFreeSpace: LayoutUnit,
+    remainingFreeSpace: inout LayoutUnit, totalFlexGrow: inout Float64,
+    totalFlexShrink: inout Float64, totalWeightedFlexShrink: inout Float64
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func prepareFlexItemForPositionedLayout(flexItem: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutAndPlaceFlexItems(
+    crossAxisOffset: inout LayoutUnit, flexLayoutItems: inout FlexLayoutItems,
+    availableFreeSpace: LayoutUnit, relayoutChildren: Bool, lineStates: inout FlexLineStates,
+    gapBetweenItems: LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -305,6 +553,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   private func resetHasDefiniteHeight() { hasDefiniteHeight = .Unknown }
 
+  private func layoutUsingFlexFormattingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // This set is used to keep track of which children we laid out in this
   // current layout iteration. We need it because the ones in this set may
   // need an additional layout pass for correct stretch alignment handling, as
@@ -312,6 +565,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   // sizing of children.
   let relaidOutFlexItems = WeakHashSet<RenderBoxWrapper>()
 
+  let orderIterator: OrderIterator? = nil
   var numberOfFlexItemsOnFirstLine: UInt64 = 0
   var numberOfFlexItemsOnLastLine: UInt64 = 0
 
