@@ -191,6 +191,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func canComputePercentageFlexBasis(
     flexItem: RenderBoxWrapper, flexBasis: LengthWrapper,
     updateDescendants: UpdatePercentageHeightDescendants
@@ -233,8 +238,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+    if alignmentForFlexItem(flexItem: flexItem) != .Stretch {
+      return nil
+    }
+    return flexItem.overridingLogicalHeight()
   }
 
   // This method is only called whenever a descendant of a flex item wants to resolve a percentage in its
