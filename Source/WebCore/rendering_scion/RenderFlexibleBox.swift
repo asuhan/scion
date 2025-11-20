@@ -231,7 +231,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // If the flex container has a definite main size the flex item post-flexing main size is also treated
     // as definite. We make up a percentage to check whether we have a definite size.
     if !canComputePercentageFlexBasis(
-      flexItem: flexItem, flexBasis: LengthWrapper(value: Int32(0), type: .Percent), updateDescendants: .Yes)
+      flexItem: flexItem, flexBasis: LengthWrapper(value: Int32(0), type: .Percent),
+      updateDescendants: .Yes)
     {
       return nil
     }
