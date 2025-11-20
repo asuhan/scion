@@ -1057,6 +1057,19 @@ class RenderBlockWrapper: RenderBoxWrapper {
     minLogicalWidth += scrollbarWidth
   }
 
+  // Delay updating scrollbars until endAndCommitUpdateScrollInfoAfterLayoutTransaction() is called. These functions are used
+  // when a flexbox is laying out its descendants. If multiple calls are made to beginUpdateScrollInfoAfterLayoutTransaction()
+  // then endAndCommitUpdateScrollInfoAfterLayoutTransaction() will do nothing until it is called the same number of times.
+  func beginUpdateScrollInfoAfterLayoutTransaction() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func endAndCommitUpdateScrollInfoAfterLayoutTransaction() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateScrollInfoAfterLayout() {
     if !hasNonVisibleOverflow() {
       return
@@ -1171,6 +1184,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return child.isUnsplittableForPagination() || child.style().breakInside() == .Avoid
       || (checkColumnBreaks && child.style().breakInside() == .AvoidColumn)
       || (checkPageBreaks && child.style().breakInside() == .AvoidPage)
+  }
+
+  static func layoutOverflowLogicalBottom(renderer: RenderBlockWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Overflow is always relative to the border-box of the element in question.
@@ -1884,6 +1902,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func dirtyForLayoutFromPercentageHeightDescendants() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func recomputeLogicalWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

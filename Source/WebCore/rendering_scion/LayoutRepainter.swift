@@ -44,6 +44,7 @@ class LayoutRepainter {
   }
 
   // Return true if it repainted.
+  @discardableResult
   func repaintAfterLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

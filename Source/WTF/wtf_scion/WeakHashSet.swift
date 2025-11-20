@@ -34,6 +34,11 @@ final class WeakHashSet<KeyType> {
     fatalError("Not implemented")
   }
 
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contains<U>(value: U) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
