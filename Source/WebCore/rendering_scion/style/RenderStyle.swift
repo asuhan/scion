@@ -1177,6 +1177,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func flexGrow() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func flexShrink() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func flexBasis() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

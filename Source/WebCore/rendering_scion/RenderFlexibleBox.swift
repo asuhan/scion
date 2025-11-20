@@ -174,9 +174,29 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func flexBasisForFlexItem(flexItem: RenderBoxWrapper) -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (
     LayoutUnit, LayoutUnit
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func canComputePercentageFlexBasis(
+    flexItem: RenderBoxWrapper, flexBasis: LengthWrapper,
+    updateDescendants: UpdatePercentageHeightDescendants
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flexItemMainSizeIsDefinite(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -197,8 +217,27 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func usedFlexItemOverridingMainSizeForPercentageResolution(flexItem: RenderBoxWrapper)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+
+    // The main size of a fully inflexible item with a definite flex basis is, by definition, definite.
+    if flexItem.style().flexGrow() == 0.0 && flexItem.style().flexShrink() == 0.0
+      && flexItemMainSizeIsDefinite(
+        flexItem: flexItem, flexBasis: flexBasisForFlexItem(flexItem: flexItem))
+    {
+      return flexItem.overridingLogicalHeight()
+    }
+
+    // This function implements section 9.8. Definite and Indefinite Sizes, case 2) of the flexbox spec.
+    // If the flex container has a definite main size the flex item post-flexing main size is also treated
+    // as definite. We make up a percentage to check whether we have a definite size.
+    if !canComputePercentageFlexBasis(
+      flexItem: flexItem, flexBasis: LengthWrapper(value: Int32(0), type: .Percent), updateDescendants: .Yes)
+    {
+      return nil
+    }
+
+    return flexItem.overridingLogicalHeight()
+
   }
 
   private func performFlexLayout(relayoutChildren: Bool) {
