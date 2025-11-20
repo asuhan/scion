@@ -215,8 +215,19 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func flexItemMainSizeIsDefinite(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if flexBasis.isAuto() || flexBasis.isContent() {
+      return false
+    }
+    if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
+      && (flexBasis.isIntrinsic() || flexBasis.type() == .Intrinsic)
+    {
+      return false
+    }
+    if flexBasis.isPercentOrCalculated() {
+      return canComputePercentageFlexBasis(
+        flexItem: flexItem, flexBasis: flexBasis, updateDescendants: .No)
+    }
+    return true
   }
 
   private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)
