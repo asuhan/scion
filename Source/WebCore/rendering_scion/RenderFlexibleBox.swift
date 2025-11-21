@@ -385,8 +385,14 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func crossSizeLengthForFlexItem(
     sizeType: RenderBoxWrapper.SizeType, flexItem: RenderBoxWrapper
   ) -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch sizeType {
+    case .MinSize:
+      return isHorizontalFlow() ? flexItem.style().minHeight() : flexItem.style().minWidth()
+    case .MainOrPreferredSize:
+      return isHorizontalFlow() ? flexItem.style().height() : flexItem.style().width()
+    case .MaxSize:
+      return isHorizontalFlow() ? flexItem.style().maxHeight() : flexItem.style().maxWidth()
+    }
   }
 
   // https://drafts.csswg.org/css-flexbox/#min-size-auto
