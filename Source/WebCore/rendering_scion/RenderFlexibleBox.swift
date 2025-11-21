@@ -910,8 +910,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func hasAutoMarginsInCrossAxis(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      return flexItem.style().marginTop().isAuto() || flexItem.style().marginBottom().isAuto()
+    }
+    return flexItem.style().marginLeft().isAuto() || flexItem.style().marginRight().isAuto()
   }
 
   private func repositionLogicalHeightDependentFlexItems(
