@@ -353,8 +353,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func isColumnFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().isColumnFlexDirection()
   }
 
   private func isMultiline() -> Bool {
