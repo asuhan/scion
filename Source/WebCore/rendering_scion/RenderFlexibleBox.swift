@@ -341,8 +341,14 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   // https://drafts.csswg.org/css-flexbox/#min-size-auto
   private func shouldApplyMinSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let minSize = mainSizeLengthForFlexItem(sizeType: .MinSize, flexItem: flexItem)
+    // min, max and fit-content are equivalent to the automatic size for block sizes https://drafts.csswg.org/css-sizing-3/#valdef-width-min-content.
+    let flexItemBlockSizeIsEquivalentToAutomaticSize =
+      !mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
+      && (minSize.isMinContent() || minSize.isMaxContent() || minSize.isFitContent())
+
+    return (minSize.isAuto() || flexItemBlockSizeIsEquivalentToAutomaticSize)
+      && (mainAxisOverflowForFlexItem(flexItem: flexItem) == .Visible)
   }
 
   private func mainAxisContentExtent(contentLogicalHeight: LayoutUnit) -> LayoutUnit {
@@ -439,6 +445,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         flexItem: flexItem, flexBasis: flexBasis, updateDescendants: .No)
     }
     return true
+  }
+
+  private func mainAxisOverflowForFlexItem(flexItem: RenderBoxWrapper) -> Overflow {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)
