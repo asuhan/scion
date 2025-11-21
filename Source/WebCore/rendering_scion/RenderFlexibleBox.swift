@@ -456,6 +456,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func crossAxisMarginExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func crossAxisIsPhysicalWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -481,11 +486,44 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return false
   }
 
+  // This refers to https://drafts.csswg.org/css-flexbox-1/#definite-sizes, section 1).
   private func computeCrossSizeForFlexItemUsingContainerCrossSize(flexItem: RenderBoxWrapper)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if crossAxisIsPhysicalWidth() {
+      return contentWidth()
+    }
+
+    return max(
+      LayoutUnit(value: UInt64(0)),
+      definiteSizeValue() - crossAxisMarginExtentForFlexItem(flexItem: flexItem))
+  }
+
+  // Keep this sync'ed with flexItemCrossSizeShouldUseContainerCrossSize().
+  private func definiteSizeValue() -> LayoutUnit {
+    // Let's compute the definite size value for the flex item (value that we can resolve without running layout).
+    let isHorizontal = isHorizontalFlow()
+    let size = isHorizontal ? style().height() : style().width()
+    assert(
+      size.isFixed()
+        || (size.isPercent() && availableLogicalHeightForPercentageComputation() != nil))
+    var definiteValue = LayoutUnit(value: size.value())
+    if size.isPercent() {
+      definiteValue =
+        availableLogicalHeightForPercentageComputation() ?? LayoutUnit(value: UInt64(0))
+    }
+
+    let maximumSize = isHorizontal ? style().maxHeight() : style().maxWidth()
+    if maximumSize.isFixed() {
+      definiteValue = min(definiteValue, LayoutUnit(value: maximumSize.value()))
+    }
+
+    let minimumSize = isHorizontal ? style().minHeight() : style().minWidth()
+    if minimumSize.isFixed() {
+      definiteValue = max(definiteValue, LayoutUnit(value: minimumSize.value()))
+    }
+
+    return definiteValue
   }
 
   override func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (
