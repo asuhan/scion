@@ -59,7 +59,7 @@ struct BorderEdge {
   func getDoubleBorderStripeWidths() -> (LayoutUnit, LayoutUnit) {
     let fullWidth = LayoutUnit(value: widthForPainting())
     let innerWidth = ceilToDevicePixel(
-      value: fullWidth * 2 / 3, pixelSnappingFactor: devicePixelRatio)
+      value: fullWidth * Int32(2) / 3, pixelSnappingFactor: devicePixelRatio)
     let outerWidth = floorToDevicePixel(value: fullWidth / 3, pixelSnappingFactor: devicePixelRatio)
     return (LayoutUnit(value: outerWidth), LayoutUnit(value: innerWidth))
   }

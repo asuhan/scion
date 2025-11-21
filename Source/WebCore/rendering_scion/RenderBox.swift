@@ -2158,6 +2158,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollbarLogicalWidth() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollbarLogicalHeight() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

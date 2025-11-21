@@ -176,8 +176,97 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let width = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = width
+        maxLogicalWidth = width
+      }
+      addScrollbarWidth(minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+      return
+    }
+
+    var flexItemMinWidth = LayoutUnit()
+    var flexItemMaxWidth = LayoutUnit()
+    var hadExcludedChildren = false
+    if let (preferredMinWidth, preferredMaxWidth) = computePreferredWidthsForExcludedChildren() {
+      flexItemMinWidth = preferredMinWidth
+      flexItemMaxWidth = preferredMaxWidth
+      hadExcludedChildren = true
+    }
+
+    // FIXME: We're ignoring flex-basis here and we shouldn't. We can't start
+    // honoring it though until the flex shorthand stops setting it to 0. See
+    // https://bugs.webkit.org/show_bug.cgi?id=116117 and
+    // https://crbug.com/240765.
+    var numItemsWithNormalLayout: UInt64 = 0
+    var flexItem = firstChildBox()
+    while flexItem != nil {
+      if flexItem!.isOutOfFlowPositioned() || flexItem!.isExcludedFromNormalLayout() {
+        flexItem = flexItem!.nextSiblingBox()
+        continue
+      }
+      numItemsWithNormalLayout += 1
+
+      // Pre-layout orthogonal children in order to get a valid value for the preferred width.
+      if style().isHorizontalWritingMode() != flexItem!.style().isHorizontalWritingMode() {
+        flexItem!.layoutIfNeeded()
+      }
+
+      let margin = marginIntrinsicLogicalWidthForChild(child: flexItem!)
+
+      var (minPreferredLogicalWidth, maxPreferredLogicalWidth) = computeChildPreferredLogicalWidths(
+        child: flexItem!)
+
+      minPreferredLogicalWidth += margin
+      maxPreferredLogicalWidth += margin
+
+      if !isColumnFlow() {
+        maxLogicalWidth += maxPreferredLogicalWidth
+        if isMultiline() {
+          // For multiline, the min preferred width is if you put a break between
+          // each item.
+          minLogicalWidth = max(minLogicalWidth, minPreferredLogicalWidth)
+        } else {
+          minLogicalWidth += minPreferredLogicalWidth
+        }
+      } else {
+        minLogicalWidth = max(minPreferredLogicalWidth, minLogicalWidth)
+        maxLogicalWidth = max(maxPreferredLogicalWidth, maxLogicalWidth)
+      }
+
+      flexItem = flexItem!.nextSiblingBox()
+    }
+
+    if !isColumnFlow() && numItemsWithNormalLayout > 1 {
+      let inlineGapSize = (numItemsWithNormalLayout - 1) * computeGap(gapType: .BetweenItems)
+      maxLogicalWidth += inlineGapSize
+      if !isMultiline() {
+        minLogicalWidth += inlineGapSize
+      }
+    }
+
+    maxLogicalWidth = max(minLogicalWidth, maxLogicalWidth)
+
+    let zero = LayoutUnit(value: UInt64(0))
+    // Due to negative margins, it is possible that we calculated a negative
+    // intrinsic width. Make sure that we never return a negative width.
+    minLogicalWidth = max(zero, minLogicalWidth)
+    maxLogicalWidth = max(zero, maxLogicalWidth)
+
+    if hadExcludedChildren {
+      minLogicalWidth = max(minLogicalWidth, flexItemMinWidth)
+      maxLogicalWidth = max(maxLogicalWidth, flexItemMaxWidth)
+    }
+
+    addScrollbarWidth(minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+  }
+
+  private func addScrollbarWidth(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
+    let scrollbarWidth = LayoutUnit(value: scrollbarLogicalWidth())
+    maxLogicalWidth += scrollbarWidth
+    minLogicalWidth += scrollbarWidth
   }
 
   private enum FlexSign {
@@ -215,6 +304,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func isColumnFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isMultiline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
