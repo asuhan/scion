@@ -124,6 +124,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     inLayout = oldInLayout
   }
 
+  private func isHorizontalFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFlexibleBoxImpl() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -314,8 +319,24 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexBasisForFlexItem(flexItem: RenderBoxWrapper) -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var flexLength = flexItem.style().flexBasis()
+    if flexLength.isAuto() {
+      flexLength = mainSizeLengthForFlexItem(sizeType: .MainOrPreferredSize, flexItem: flexItem)
+    }
+    return flexLength
+  }
+
+  private func mainSizeLengthForFlexItem(
+    sizeType: RenderBoxWrapper.SizeType, flexItem: RenderBoxWrapper
+  ) -> LengthWrapper {
+    switch sizeType {
+    case .MinSize:
+      return isHorizontalFlow() ? flexItem.style().minWidth() : flexItem.style().minHeight()
+    case .MainOrPreferredSize:
+      return isHorizontalFlow() ? flexItem.style().width() : flexItem.style().height()
+    case .MaxSize:
+      return isHorizontalFlow() ? flexItem.style().maxWidth() : flexItem.style().maxHeight()
+    }
   }
 
   // https://drafts.csswg.org/css-flexbox/#min-size-auto
