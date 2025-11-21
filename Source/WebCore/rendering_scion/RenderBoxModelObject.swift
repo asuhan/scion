@@ -232,6 +232,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func verticalMarginExtent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func horizontalMarginExtent() -> LayoutUnit { return marginLeft() + marginRight() }
+
   func borderShapeForContentClipping(
     borderBoxRect: LayoutRectWrapper, includeLeftEdge: Bool = true, includeRightEdge: Bool = true
   ) -> BorderShape {

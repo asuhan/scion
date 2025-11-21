@@ -457,8 +457,24 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func crossAxisMarginExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !flexItem.needsLayout() {
+      return isHorizontalFlow()
+        ? flexItem.verticalMarginExtent() : flexItem.horizontalMarginExtent()
+    }
+
+    var marginStart = LayoutUnit()
+    var marginEnd = LayoutUnit()
+    if isHorizontalFlow() {
+      flexItem.computeBlockDirectionMargins(
+        containingBlock: self, marginBefore: &marginStart, marginAfter: &marginEnd)
+    } else {
+      flexItem.computeInlineDirectionMargins(
+        containingBlock: self,
+        containerWidth: flexItem.containingBlockLogicalWidthForContentInFragment(fragment: nil),
+        availableSpaceAdjustedWithFloats: flexItem.logicalWidth(), childWidth: LayoutUnit(),
+        marginStart: &marginStart, marginEnd: &marginEnd)
+    }
+    return marginStart + marginEnd
   }
 
   private func crossAxisIsPhysicalWidth() -> Bool {

@@ -1327,6 +1327,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not reached")
   }
 
+  func containingBlockLogicalWidthForContentInFragment(fragment: RenderFragmentContainerWrapper?)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateLogicalWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
