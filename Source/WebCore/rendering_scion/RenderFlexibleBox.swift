@@ -892,8 +892,12 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func trimCrossAxisMarginStart(flexLayoutItem: FlexLayoutItem) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      setTrimmedMarginForChild(child: flexLayoutItem.renderer, marginTrimType: .BlockStart)
+    } else {
+      setTrimmedMarginForChild(child: flexLayoutItem.renderer, marginTrimType: .InlineStart)
+    }
+    marginTrimItems.itemsOnFirstFlexLine.add(value: flexLayoutItem.renderer)
   }
 
   private func trimCrossAxisMarginEnd(flexLayoutItem: FlexLayoutItem) {
