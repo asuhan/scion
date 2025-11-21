@@ -225,8 +225,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flowAwareBorderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch transformedBlockFlowDirection() {
+    case .TopToBottom:
+      return borderTop()
+    case .BottomToTop:
+      return borderBottom()
+    case .LeftToRight:
+      return borderLeft()
+    case .RightToLeft:
+      return borderRight()
+    }
   }
 
   private func flowAwarePaddingBefore() -> LayoutUnit {
