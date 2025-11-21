@@ -574,6 +574,14 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return super.computeChildIntrinsicLogicalWidths(child: flexItem)
   }
 
+  // https://drafts.csswg.org/css-flexbox/#algo-main-item
+  func computeFlexBaseSizeForFlexItem(
+    flexItem: RenderBoxWrapper, mainAxisBorderAndPadding: LayoutUnit, relayoutChildren: Bool
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
     var align = flexItem.style().resolvedAlignSelf(
       parentStyle: style(), normalValueBehaviour: selfAlignmentNormalBehavior()
@@ -981,11 +989,41 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func computeFlexItemMinMaxSizes(flexItem: RenderBoxWrapper) -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func constructFlexLayoutItem(flexItem: RenderBoxWrapper, relayoutChildren: Bool)
     -> FlexLayoutItem
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let everHadLayout = flexItem.everHadLayout()
+    flexItem.clearOverridingContentSize()
+    if let flexibleBox = flexItem as? RenderFlexibleBoxWrapper {
+      flexibleBox.resetHasDefiniteHeight()
+    }
+
+    if everHadLayout && flexItem.hasTrimmedMargin(marginTrimType: nil) {
+      flexItem.clearTrimmedMarginsMarkings()
+    }
+
+    if flexItem.needsPreferredWidthsRecalculation() {
+      flexItem.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+    }
+
+    let borderAndPadding =
+      isHorizontalFlow()
+      ? flexItem.horizontalBorderAndPaddingExtent() : flexItem.verticalBorderAndPaddingExtent()
+    let innerFlexBaseSize = computeFlexBaseSizeForFlexItem(
+      flexItem: flexItem, mainAxisBorderAndPadding: borderAndPadding,
+      relayoutChildren: relayoutChildren)
+    let margin =
+      isHorizontalFlow() ? flexItem.horizontalMarginExtent() : flexItem.verticalMarginExtent()
+    return FlexLayoutItem(
+      flexItem: flexItem, flexBaseContentSize: innerFlexBaseSize,
+      mainAxisBorderAndPadding: borderAndPadding, mainAxisMargin: margin,
+      minMaxSizes: computeFlexItemMinMaxSizes(flexItem: flexItem),
+      everHadLayout: everHadLayout)
   }
 
   private func freezeInflexibleItems(

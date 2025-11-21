@@ -846,6 +846,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clearOverridingContentSize() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overridingContentLogicalHeight(overridingLogicalHeight: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -880,6 +885,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearTrimmedMarginsMarkings() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasTrimmedMargin(marginTrimType: MarginTrimType?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
