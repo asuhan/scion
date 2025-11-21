@@ -948,8 +948,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func computeFlexItemMarginValue(margin: LengthWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When resolving the margins, we use the content size for resolving percent and calc (for percents in calc expressions) margins.
+    // Fortunately, percent margins are always computed with respect to the block's width, even for margin-top and margin-bottom.
+    let availableSize = contentLogicalWidth()
+    return minimumValueForLength(length: margin, maximumValue: availableSize)
   }
 
   private func prepareOrderIteratorAndMargins() {
