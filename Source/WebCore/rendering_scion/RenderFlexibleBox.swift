@@ -28,6 +28,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// RAII class which defines a scope in which overriding sizes of a box are either:
+//   1) replaced by other size in one axis if size is specified
+//   2) cleared in both axis if size == nil
+//
+// In any case the previous overriding sizes are restored on destruction (in case of
+// not having a previous value it's simply cleared).
+struct OverridingSizesScope: ~Copyable {
+  enum Axis {
+    case Inline
+    case Block
+    case Both
+  }
+
+  init(box: RenderBoxWrapper, axis: Axis, size: LayoutUnit? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  deinit {
+    if axis == .Inline || axis == .Both {
+      setOrClearOverridingWidth(size: overridingWidth)
+    }
+
+    if axis == .Block || axis == .Both {
+      setOrClearOverridingHeight(size: overridingHeight)
+    }
+  }
+
+  private func setOrClearOverridingWidth(size: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setOrClearOverridingHeight(size: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let axis: Axis
+  private let overridingWidth: LayoutUnit?
+  private let overridingHeight: LayoutUnit?
+}
+
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
@@ -406,11 +449,37 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func flexItemCrossSizeShouldUseContainerCrossSize(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeCrossSizeForFlexItemUsingContainerCrossSize(flexItem: RenderBoxWrapper)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (
     LayoutUnit, LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let flexItem = child as! RenderBoxWrapper
+
+    // If the item cross size should use the definite container cross size then set the overriding size now so
+    // the intrinsic sizes are properly computed in the presence of aspect ratios. The only exception is when
+    // we are both a flex item&container, because our parent might have already set our overriding size.
+    if flexItemCrossSizeShouldUseContainerCrossSize(flexItem: flexItem) && !isFlexItem() {
+      let axis: OverridingSizesScope.Axis =
+        mainAxisIsFlexItemInlineAxis(flexItem: flexItem) ? .Block : .Inline
+      let _ = OverridingSizesScope(
+        box: flexItem, axis: axis,
+        size: computeCrossSizeForFlexItemUsingContainerCrossSize(flexItem: flexItem))
+      return super.computeChildIntrinsicLogicalWidths(child: flexItem)
+    }
+
+    let _ = OverridingSizesScope(box: flexItem, axis: .Both)
+    return super.computeChildIntrinsicLogicalWidths(child: flexItem)
   }
 
   private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
