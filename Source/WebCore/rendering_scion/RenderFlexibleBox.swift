@@ -382,6 +382,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func crossSizeLengthForFlexItem(
+    sizeType: RenderBoxWrapper.SizeType, flexItem: RenderBoxWrapper
+  ) -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // https://drafts.csswg.org/css-flexbox/#min-size-auto
   private func shouldApplyMinSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
     let minSize = mainSizeLengthForFlexItem(sizeType: .MinSize, flexItem: flexItem)
@@ -449,9 +456,29 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
-  private func flexItemCrossSizeShouldUseContainerCrossSize(flexItem: RenderBoxWrapper) -> Bool {
+  private func crossAxisIsPhysicalWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func flexItemCrossSizeShouldUseContainerCrossSize(flexItem: RenderBoxWrapper) -> Bool {
+    // 9.8 https://drafts.csswg.org/css-flexbox/#definite-sizes
+    // 1. If a single-line flex container has a definite cross size, the automatic preferred outer cross size of any
+    // stretched flex items is the flex container's inner cross size (clamped to the flex item's min and max cross size)
+    // and is considered definite.
+    if !isMultiline() && alignmentForFlexItem(flexItem: flexItem) == .Stretch
+      && !hasAutoMarginsInCrossAxis(flexItem: flexItem)
+      && crossSizeLengthForFlexItem(sizeType: .MainOrPreferredSize, flexItem: flexItem).isAuto()
+    {
+      if crossAxisIsPhysicalWidth() {
+        return true
+      }
+      // This must be kept in sync with computeMainSizeFromAspectRatioUsing().
+      let crossSize = isHorizontalFlow() ? style().height() : style().width()
+      return crossSize.isFixed()
+        || (crossSize.isPercent() && availableLogicalHeightForPercentageComputation() != nil)
+    }
+    return false
   }
 
   private func computeCrossSizeForFlexItemUsingContainerCrossSize(flexItem: RenderBoxWrapper)
@@ -736,6 +763,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func trimCrossAxisMarginEnd(flexLayoutItem: FlexLayoutItem) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasAutoMarginsInCrossAxis(flexItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
