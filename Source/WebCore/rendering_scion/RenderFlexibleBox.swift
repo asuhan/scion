@@ -219,14 +219,27 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func transformedBlockFlowDirection() -> FlowDirection {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func flowAwareBorderBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private func flowAwarePaddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch transformedBlockFlowDirection() {
+    case .TopToBottom:
+      return paddingTop()
+    case .BottomToTop:
+      return paddingBottom()
+    case .LeftToRight:
+      return paddingLeft()
+    case .RightToLeft:
+      return paddingRight()
+    }
   }
 
   override func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (
