@@ -664,8 +664,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func mainAxisOverflowForFlexItem(flexItem: RenderBoxWrapper) -> Overflow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      return flexItem.style().overflowX()
+    }
+    return flexItem.style().overflowY()
   }
 
   private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)
