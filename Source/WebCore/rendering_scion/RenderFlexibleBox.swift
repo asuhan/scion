@@ -352,8 +352,18 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func mainAxisContentExtent(contentLogicalHeight: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isColumnFlow() {
+      return contentLogicalWidth()
+    }
+
+    let borderPaddingAndScrollbar = borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
+    let borderBoxLogicalHeight = contentLogicalHeight + borderPaddingAndScrollbar
+    let computedValues = computeLogicalHeight(
+      logicalHeight: borderBoxLogicalHeight, logicalTop: logicalTop())
+    if computedValues.extent == LayoutUnit.max() {
+      return computedValues.extent
+    }
+    return max(LayoutUnit(value: UInt64(0)), computedValues.extent - borderPaddingAndScrollbar)
   }
 
   private func transformedBlockFlowDirection() -> FlowDirection {
