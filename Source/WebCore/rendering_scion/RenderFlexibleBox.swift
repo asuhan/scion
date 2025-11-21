@@ -854,8 +854,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func initializeMarginTrimState() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When computeIntrinsicLogicalWidth goes through each of the children, it
+    // will include the margins when computing the flexbox's min and max widths.
+    // We need to trim the margins of the first and last child early so that
+    // these margins do not incorrectly constribute to the box's min/max width
+    let marginTrim = style().marginTrim()
+    let isRowsFlexbox = isHorizontalFlow()
+    if let flexItem = firstInFlowChildBox(), marginTrim.contains(.InlineStart) {
+      if isRowsFlexbox {
+        marginTrimItems.itemsAtFlexLineStart.add(value: flexItem)
+      } else {
+        marginTrimItems.itemsOnFirstFlexLine.add(value: flexItem)
+      }
+    }
+    if let flexItem = lastInFlowChildBox(), marginTrim.contains(.InlineEnd) {
+      if isRowsFlexbox {
+        marginTrimItems.itemsAtFlexLineEnd.add(value: flexItem)
+      } else {
+        marginTrimItems.itemsOnLastFlexLine.add(value: flexItem)
+      }
+    }
   }
 
   // Margins parallel with the main axis
@@ -963,6 +981,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   let orderIterator: OrderIterator? = nil
   var numberOfFlexItemsOnFirstLine: UInt64 = 0
   var numberOfFlexItemsOnLastLine: UInt64 = 0
+
+  private struct MarginTrimItems {
+    let itemsAtFlexLineStart = WeakHashSet<RenderBoxWrapper>()
+    let itemsAtFlexLineEnd = WeakHashSet<RenderBoxWrapper>()
+    let itemsOnFirstFlexLine = WeakHashSet<RenderBoxWrapper>()
+    let itemsOnLastFlexLine = WeakHashSet<RenderBoxWrapper>()
+  }
+
+  private let marginTrimItems = MarginTrimItems()
 
   var justifyContentStartOverflow = LayoutUnit(value: 0)
 
