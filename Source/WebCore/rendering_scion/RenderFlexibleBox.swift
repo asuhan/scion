@@ -570,8 +570,59 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var align = flexItem.style().resolvedAlignSelf(
+      parentStyle: style(), normalValueBehaviour: selfAlignmentNormalBehavior()
+    ).position
+    assert(align != .Auto && align != .Normal)
+    // Left and Right are only for justify-*.
+    assert(align != .Left && align != .Right)
+
+    // We can safely return here because start/end are not affected by a reversed flex-wrap because the
+    // alignment container is the flex line, and in a wrap reversed flex container the start and end within
+    // a flex line are still the same. Contrary to this flex-start/flex-end depend on the flex container
+    // start/end edges which are flipped in the case of wrap-reverse.
+    if align == .Start {
+      return .FlexStart
+    }
+    if align == .End {
+      return .FlexEnd
+    }
+
+    if align == .SelfStart || align == .SelfEnd {
+      // self-start corresponds to flex-start (and self-end to flex-end) in the majority of the cases
+      // for orthogonal layouts except when the container is flipped blocks writing mode (vrl/hbt) and
+      // the child is ltr or the other way around. For example:
+      // 1) htb ltr child inside a vrl container: self-start corresponds to flex-end
+      // 2) htb rtl child inside a vlr container: self-end corresponds to flex-start
+      let isOrthogonal =
+        style().isHorizontalWritingMode() != flexItem.style().isHorizontalWritingMode()
+      if isOrthogonal
+        && (style().isFlippedBlocksWritingMode() == flexItem.style().isLeftToRightDirection())
+      {
+        return align == .SelfStart ? .FlexEnd : .FlexStart
+      }
+
+      if !isOrthogonal {
+        if style().isFlippedLinesWritingMode() != flexItem.style().isFlippedLinesWritingMode() {
+          return align == .SelfStart ? .FlexEnd : .FlexStart
+        }
+        if style().isLeftToRightDirection() != flexItem.style().isLeftToRightDirection() {
+          return align == .SelfStart ? .FlexEnd : .FlexStart
+        }
+      }
+
+      return align == .SelfStart ? .FlexStart : .FlexEnd
+    }
+
+    if style().flexWrap() == .Reverse {
+      if align == .FlexStart {
+        align = .FlexEnd
+      } else if align == .FlexEnd {
+        align = .FlexStart
+      }
+    }
+
+    return align
   }
 
   private func canComputePercentageFlexBasis(
