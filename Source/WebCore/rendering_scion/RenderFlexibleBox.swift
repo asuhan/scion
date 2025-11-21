@@ -154,8 +154,18 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func computeGap(gapType: GapType) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // row-gap is used for gaps between flex items in column flows or for gaps between lines in row flows.
+    let usesRowGap = (gapType == .BetweenItems) == isColumnFlow()
+    let gapLength = usesRowGap ? style().rowGap() : style().columnGap()
+    if gapLength.isNormal {
+      return LayoutUnit()
+    }
+
+    let availableSize =
+      usesRowGap
+      ? (availableLogicalHeightForPercentageComputation() ?? LayoutUnit(value: UInt64(0)))
+      : contentLogicalWidth()
+    return minimumValueForLength(length: gapLength.length, maximumValue: availableSize)
   }
 
   func shouldApplyMinBlockSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {

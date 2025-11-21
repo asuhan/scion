@@ -654,6 +654,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutSizeWrapper(width: width, height: height)
   }
 
+  func contentLogicalWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

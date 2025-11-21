@@ -1372,6 +1372,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func columnGap() -> GapLength {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func rowGap() -> GapLength {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func transform() -> TransformOperations {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
