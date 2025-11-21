@@ -483,8 +483,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func crossAxisIsPhysicalWidth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return (isHorizontalWritingMode() && isColumnFlow())
+      || (!isHorizontalWritingMode() && !isColumnFlow())
   }
 
   private func flexItemCrossSizeShouldUseContainerCrossSize(flexItem: RenderBoxWrapper) -> Bool {
