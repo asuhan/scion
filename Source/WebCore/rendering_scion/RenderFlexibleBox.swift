@@ -168,8 +168,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func isHorizontalFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      return !isColumnFlow()
+    }
+    return isColumnFlow()
   }
 
   func isFlexibleBoxImpl() -> Bool {
