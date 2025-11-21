@@ -357,8 +357,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func isMultiline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().flexWrap() != .NoWrap
   }
 
   private func flexBasisForFlexItem(flexItem: RenderBoxWrapper) -> LengthWrapper {
