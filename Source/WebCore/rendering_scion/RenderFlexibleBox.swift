@@ -349,8 +349,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private typealias FlexLayoutItems = [FlexLayoutItem]
 
   private func mainAxisIsFlexItemInlineAxis(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isHorizontalFlow() == flexItem.isHorizontalWritingMode()
   }
 
   private func isColumnFlow() -> Bool {
