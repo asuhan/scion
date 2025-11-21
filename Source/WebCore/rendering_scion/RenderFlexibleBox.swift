@@ -169,8 +169,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   func shouldApplyMinBlockSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
+      && shouldApplyMinSizeAutoForFlexItem(flexItem: flexItem)
   }
 
   override func computeIntrinsicLogicalWidths(
@@ -220,6 +220,12 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexBasisForFlexItem(flexItem: RenderBoxWrapper) -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // https://drafts.csswg.org/css-flexbox/#min-size-auto
+  private func shouldApplyMinSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
