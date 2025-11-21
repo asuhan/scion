@@ -713,6 +713,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setMarginTop(margin: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginBottom(margin: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMarginLeft(margin: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

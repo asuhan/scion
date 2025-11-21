@@ -55,4 +55,30 @@ struct OrderIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func reset() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  typealias OrderValues = Set<Int32>
+  var orderValues: OrderValues
+}
+
+struct OrderIteratorPopulator: ~Copyable {
+  init(iterator: OrderIterator) {
+    self.iterator = iterator
+    self.iterator.orderValues.removeAll()
+  }
+
+  deinit {
+    iterator.reset()
+  }
+
+  func collectChild(child: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var iterator: OrderIterator
 }

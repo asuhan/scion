@@ -947,9 +947,37 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     flipForRightToLeftColumn(lineStates: lineStates)
   }
 
-  private func prepareOrderIteratorAndMargins() {
+  private func computeFlexItemMarginValue(margin: LengthWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func prepareOrderIteratorAndMargins() {
+    let populator = OrderIteratorPopulator(iterator: orderIterator!)
+
+    var flexItem = firstChildBox()
+    while flexItem != nil {
+      if !populator.collectChild(child: flexItem!) {
+        flexItem = flexItem!.nextSiblingBox()
+        continue
+      }
+
+      // Before running the flex algorithm, 'auto' has a margin of 0.
+      // Also, if we're not auto sizing, we don't do a layout that computes the start/end margins.
+      if isHorizontalFlow() {
+        flexItem!.setMarginLeft(
+          margin: computeFlexItemMarginValue(margin: flexItem!.style().marginLeft()))
+        flexItem!.setMarginRight(
+          margin: computeFlexItemMarginValue(margin: flexItem!.style().marginRight()))
+      } else {
+        flexItem!.setMarginTop(
+          margin: computeFlexItemMarginValue(margin: flexItem!.style().marginTop()))
+        flexItem!.setMarginBottom(
+          margin: computeFlexItemMarginValue(margin: flexItem!.style().marginBottom()))
+      }
+
+      flexItem = flexItem!.nextSiblingBox()
+    }
   }
 
   private func constructFlexLayoutItem(flexItem: RenderBoxWrapper, relayoutChildren: Bool)
