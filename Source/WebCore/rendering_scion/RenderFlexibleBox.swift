@@ -220,8 +220,17 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func transformedBlockFlowDirection() -> FlowDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let blockFlowDirection = style().blockFlowDirection()
+    if !isColumnFlow() {
+      return blockFlowDirection
+    }
+
+    switch blockFlowDirection {
+    case .TopToBottom, .BottomToTop:
+      return style().isLeftToRightDirection() ? .LeftToRight : .RightToLeft
+    case .LeftToRight, .RightToLeft:
+      return style().isLeftToRightDirection() ? .TopToBottom : .BottomToTop
+    }
   }
 
   private func flowAwareBorderBefore() -> LayoutUnit {
