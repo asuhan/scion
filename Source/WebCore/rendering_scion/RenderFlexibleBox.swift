@@ -342,6 +342,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    let crossAxisOffset: LayoutUnit
+    var crossAxisExtent: LayoutUnit
     let flexLayoutItems: FlexLayoutItems
   }
 
@@ -404,6 +406,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
     return (minSize.isAuto() || flexItemBlockSizeIsEquivalentToAutomaticSize)
       && (mainAxisOverflowForFlexItem(flexItem: flexItem) == .Visible)
+  }
+
+  private func crossAxisContentExtent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func mainAxisContentExtent(contentLogicalHeight: LayoutUnit) -> LayoutUnit {
@@ -919,8 +926,25 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func repositionLogicalHeightDependentFlexItems(
     lineStates: inout FlexLineStates, gapBetweenLines: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let crossAxisStartEdge =
+      lineStates.isEmpty ? LayoutUnit(value: UInt64(0)) : lineStates[0].crossAxisOffset
+    // If we have a single line flexbox, the line height is all the available space. For flex-direction: row,
+    // this means we need to use the height, so we do this after calling updateLogicalHeight.
+    if !isMultiline() && !lineStates.isEmpty {
+      lineStates[0].crossAxisExtent = crossAxisContentExtent()
+    }
+
+    alignFlexLines(lineStates: &lineStates, gapBetweenLines: gapBetweenLines)
+
+    alignFlexItems(lineStates: &lineStates)
+
+    if style().flexWrap() == .Reverse {
+      flipForWrapReverse(lineStates: lineStates, crossAxisStartEdge: crossAxisStartEdge)
+    }
+
+    // direction:rtl + flex-direction:column means the cross-axis direction is
+    // flipped.
+    flipForRightToLeftColumn(lineStates: lineStates)
   }
 
   private func prepareOrderIteratorAndMargins() {
@@ -964,6 +988,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     availableFreeSpace: LayoutUnit, relayoutChildren: Bool, lineStates: inout FlexLineStates,
     gapBetweenItems: LayoutUnit
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func alignFlexLines(lineStates: inout FlexLineStates, gapBetweenLines: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func alignFlexItems(lineStates: inout FlexLineStates) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flipForRightToLeftColumn(lineStates: FlexLineStates) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flipForWrapReverse(lineStates: FlexLineStates, crossAxisStartEdge: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
