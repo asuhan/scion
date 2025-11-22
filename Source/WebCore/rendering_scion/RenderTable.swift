@@ -169,6 +169,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func sumCaptionsLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func simplifiedNormalFlowLayout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

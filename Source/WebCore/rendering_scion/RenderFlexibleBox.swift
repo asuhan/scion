@@ -71,6 +71,11 @@ struct OverridingSizesScope: ~Copyable {
   private let overridingHeight: LayoutUnit?
 }
 
+private func flexItemHasAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // This is a RAII class that is used to temporarily set the flex basis as the child size in the main axis.
 struct ScopedFlexBasisAsFlexItemMainSize: ~Copyable {
   init(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper, mainAxisIsInlineAxis: Bool) {
@@ -208,6 +213,12 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   func clearCachedMainSizeForFlexItem(flexItem: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) -> LayoutUnit
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -449,8 +460,63 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func computeMainAxisExtentForFlexItem(
     flexItem: RenderBoxWrapper, sizeType: RenderBoxWrapper.SizeType, size: LengthWrapper
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we have a horizontal flow, that means the main size is the width.
+    // That's the logical width for horizontal writing modes, and the logical
+    // height in vertical writing modes. For a vertical flow, main size is the
+    // height, so it's the inverse. So we need the logical width if we have a
+    // horizontal flow and horizontal writing mode, or vertical flow and vertical
+    // writing mode. Otherwise we need the logical height.
+    if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      // We don't have to check for "auto" here - computeContentLogicalHeight
+      // will just return a null Optional for that case anyway. It's safe to access
+      // scrollbarLogicalHeight here because ComputeNextFlexLine will have
+      // already forced layout on the child. We previously did a layout out the child
+      // if necessary (see ComputeNextFlexLine and the call to
+      // flexItemHasIntrinsicMainAxisSize) so we can be sure that the two height
+      // calls here will return up-to-date data.
+      let height = flexItem.computeContentLogicalHeight(
+        heightType: sizeType, height: size,
+        intrinsicContentHeight: cachedFlexItemIntrinsicContentLogicalHeight(flexItem: flexItem))
+      if height == nil {
+        return nil
+      }
+      // Tables interpret overriding sizes as the size of captions + rows. However the specified height of a table
+      // only includes the size of the rows. That's why we need to add the size of the captions here so that the table
+      // layout algorithm behaves appropiately.
+      var captionsHeight = LayoutUnit()
+      if let table = flexItem as? RenderTableWrapper,
+        flexItemMainSizeIsDefinite(flexItem: flexItem, flexBasis: size)
+      {
+        captionsHeight = table.sumCaptionsLogicalHeight()
+      }
+      return height! + flexItem.scrollbarLogicalHeight() + captionsHeight
+    }
+
+    // computeLogicalWidth always re-computes the intrinsic widths. However, when
+    // our logical width is auto, we can just use our cached value. So let's do
+    // that here. (Compare code in RenderBlock::computePreferredLogicalWidths)
+    if flexItem.style().logicalWidth().isAuto() && !flexItemHasAspectRatio(flexItem: flexItem) {
+      if size.isMinContent() {
+        if flexItem.needsPreferredWidthsRecalculation() {
+          flexItem.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+        }
+        return flexItem.minPreferredLogicalWidth() - flexItem.borderAndPaddingLogicalWidth()
+      }
+      if size.isMaxContent() {
+        if flexItem.needsPreferredWidthsRecalculation() {
+          flexItem.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+        }
+        return flexItem.maxPreferredLogicalWidth() - flexItem.borderAndPaddingLogicalWidth()
+      }
+    }
+
+    let mainAxisWidth =
+      isColumnFlow()
+      ? availableLogicalHeight(heightType: .ExcludeMarginBorderPadding) : contentLogicalWidth()
+    return flexItem.computeLogicalWidthInFragmentUsing(
+      widthType: sizeType, logicalWidth: size, availableLogicalWidth: mainAxisWidth, cb: self,
+      fragment: nil)
+      - flexItem.borderAndPaddingLogicalWidth()
   }
 
   private func transformedBlockFlowDirection() -> FlowDirection {
