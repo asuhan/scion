@@ -580,11 +580,19 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return marginStart + marginEnd
   }
 
+  private func flexItemHasComputableAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func flexItemHasComputableAspectRatioAndCrossSizeIsConsideredDefinite(
     flexItem: RenderBoxWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return flexItemHasComputableAspectRatio(flexItem: flexItem)
+      && (flexItemCrossSizeIsDefinite(
+        flexItem: flexItem,
+        length: crossSizeLengthForFlexItem(sizeType: .MainOrPreferredSize, flexItem: flexItem))
+        || flexItemCrossSizeShouldUseContainerCrossSize(flexItem: flexItem))
   }
 
   private func crossAxisIsPhysicalWidth() -> Bool {
@@ -925,6 +933,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         flexItem: flexItem, flexBasis: flexBasis, updateDescendants: .No)
     }
     return true
+  }
+
+  private func flexItemCrossSizeIsDefinite(flexItem: RenderBoxWrapper, length: LengthWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func flexItemHasIntrinsicMainAxisSize(flexItem: RenderBoxWrapper) -> Bool {
