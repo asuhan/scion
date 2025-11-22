@@ -1495,7 +1495,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       }
     }
     freezeViolations(
-      violations: newInflexibleItems, availableFreeSpace: &remainingFreeSpace,
+      violations: &newInflexibleItems, availableFreeSpace: &remainingFreeSpace,
       totalFlexGrow: &totalFlexGrow, totalFlexShrink: &totalFlexShrink,
       totalWeightedFlexShrink: &totalWeightedFlexShrink)
   }
@@ -1560,10 +1560,17 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
 
     if totalViolation.bool() {
-      freezeViolations(
-        violations: totalViolation < Int32(0) ? maxViolations : minViolations,
-        availableFreeSpace: &remainingFreeSpace, totalFlexGrow: &totalFlexGrow,
-        totalFlexShrink: &totalFlexShrink, totalWeightedFlexShrink: &totalWeightedFlexShrink)
+      if totalViolation < Int32(0) {
+        freezeViolations(
+          violations: &maxViolations,
+          availableFreeSpace: &remainingFreeSpace, totalFlexGrow: &totalFlexGrow,
+          totalFlexShrink: &totalFlexShrink, totalWeightedFlexShrink: &totalWeightedFlexShrink)
+      } else {
+        freezeViolations(
+          violations: &minViolations,
+          availableFreeSpace: &remainingFreeSpace, totalFlexGrow: &totalFlexGrow,
+          totalFlexShrink: &totalFlexShrink, totalWeightedFlexShrink: &totalWeightedFlexShrink)
+      }
     } else {
       remainingFreeSpace -= usedFreeSpace
     }
@@ -1572,12 +1579,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func freezeViolations(
-    violations: [FlexLayoutItem], availableFreeSpace: inout LayoutUnit,
+    violations: inout [FlexLayoutItem], availableFreeSpace: inout LayoutUnit,
     totalFlexGrow: inout Float64, totalFlexShrink: inout Float64,
     totalWeightedFlexShrink: inout Float64
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for (i, violation) in violations.enumerated() {
+      assert(!violation.frozen)
+      let flexItemStyle = violation.style()
+      let flexItemSize = violation.flexedContentSize
+      availableFreeSpace -= flexItemSize - violation.flexBaseContentSize
+      totalFlexGrow -= Float64(flexItemStyle.flexGrow())
+      totalFlexShrink -= Float64(flexItemStyle.flexShrink())
+      totalWeightedFlexShrink -= Float64(flexItemStyle.flexShrink() * violation.flexBaseContentSize)
+      // totalWeightedFlexShrink can be negative when we exceed the precision of
+      // a double when we initially calcuate totalWeightedFlexShrink. We then
+      // subtract each child's weighted flex shrink with full precision, now
+      // leading to a negative result. See
+      // css3/flexbox/large-flex-shrink-assert.html
+      totalWeightedFlexShrink = max(totalWeightedFlexShrink, 0)
+      violations[i].frozen = true
+    }
   }
 
   private func prepareFlexItemForPositionedLayout(flexItem: RenderBoxWrapper) {

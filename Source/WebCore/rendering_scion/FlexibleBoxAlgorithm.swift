@@ -60,7 +60,7 @@ struct FlexLayoutItem {
   let minMaxSizes: (LayoutUnit, LayoutUnit)
   let hypotheticalMainContentSize: LayoutUnit
   var flexedContentSize: LayoutUnit
-  let frozen = false
+  var frozen = false
 }
 
 struct FlexLayoutAlgorithm {
