@@ -71,6 +71,18 @@ struct OverridingSizesScope: ~Copyable {
   private let overridingHeight: LayoutUnit?
 }
 
+// FIXME: consider adding this check to RenderBox::hasIntrinsicAspectRatio(). We could even make it
+// virtual returning false by default. RenderReplaced will overwrite it with the current implementation
+// plus this extra check. See wkb.ug/231955.
+private func isSVGRootWithIntrinsicAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
+  if !flexItem.isRenderOrLegacyRenderSVGRoot() {
+    return false
+  }
+  // It's common for some replaced elements, such as SVGs, to have intrinsic aspect ratios but no intrinsic sizes.
+  // That's why it isn't enough just to check for intrinsic sizes in those cases.
+  return (flexItem as! RenderReplacedWrapper).computeIntrinsicAspectRatio() > 0
+}
+
 private func flexItemHasAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -581,8 +593,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexItemHasComputableAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !flexItemHasAspectRatio(flexItem: flexItem) {
+      return false
+    }
+    return flexItem.intrinsicSize().height().bool() || flexItem.style().hasAspectRatio()
+      || isSVGRootWithIntrinsicAspectRatio(flexItem: flexItem)
   }
 
   private func flexItemHasComputableAspectRatioAndCrossSizeIsConsideredDefinite(
