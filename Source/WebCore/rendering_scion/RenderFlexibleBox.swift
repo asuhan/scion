@@ -938,8 +938,24 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func flexItemCrossSizeIsDefinite(flexItem: RenderBoxWrapper, length: LengthWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if length.isAuto() {
+      return false
+    }
+
+    if length.isPercentOrCalculated() {
+      if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem) || hasDefiniteHeight == .Definite {
+        return true
+      }
+      if hasDefiniteHeight == .Indefinite {
+        return false
+      }
+      let definite = flexItem.computePercentageLogicalHeight(height: length) != nil
+      hasDefiniteHeight = definite ? .Definite : .Indefinite
+      return definite
+    }
+    // FIXME: Eventually we should support other types of sizes here.
+    // Requires updating computeMainSizeFromAspectRatioUsing.
+    return length.isFixed()
   }
 
   private func flexItemHasIntrinsicMainAxisSize(flexItem: RenderBoxWrapper) -> Bool {
