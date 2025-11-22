@@ -1007,8 +1007,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func cacheFlexItemMainSize(flexItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!flexItem.needsLayout())
+    var mainSize = LayoutUnit()
+    if mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      mainSize = flexItem.maxPreferredLogicalWidth()
+    } else {
+      let flexBasis = flexBasisForFlexItem(flexItem: flexItem)
+      if flexBasis.isPercentOrCalculated()
+        && !flexItemMainSizeIsDefinite(flexItem: flexItem, flexBasis: flexBasis)
+      {
+        let mainContentWithBordersAndPadding =
+          cachedFlexItemIntrinsicContentLogicalHeight(flexItem: flexItem)
+          + flexItem.borderAndPaddingLogicalHeight()
+        mainSize = mainContentWithBordersAndPadding + flexItem.scrollbarLogicalHeight()
+      } else {
+        mainSize = flexItem.logicalHeight()
+      }
+    }
+
+    intrinsicSizeAlongMainAxis.updateValue(mainSize, forKey: CPtrToInt(flexItem.p))
+    relaidOutFlexItems.add(value: flexItem)
   }
 
   private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)
@@ -1432,7 +1450,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   // This is used to cache the preferred size for orthogonal flow children so we
   // don't have to relayout to get it
-  private let intrinsicSizeAlongMainAxis: [UInt: LayoutUnit] = [:]
+  private var intrinsicSizeAlongMainAxis: [UInt: LayoutUnit] = [:]
 
   // This set is used to keep track of which children we laid out in this
   // current layout iteration. We need it because the ones in this set may
