@@ -1335,8 +1335,84 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func computeFlexItemMinMaxSizes(flexItem: RenderBoxWrapper) -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let maxLength = mainSizeLengthForFlexItem(sizeType: .MaxSize, flexItem: flexItem)
+    var maxExtent: LayoutUnit? = nil
+    if maxLength.isSpecifiedOrIntrinsic() {
+      maxExtent = computeMainAxisExtentForFlexItem(
+        flexItem: flexItem, sizeType: .MaxSize, size: maxLength)
+    }
+
+    let minLength = mainSizeLengthForFlexItem(sizeType: .MinSize, flexItem: flexItem)
+    // Intrinsic sizes in child's block axis are handled by the min-size:auto code path.
+    if minLength.isSpecified()
+      || (minLength.isIntrinsic() && mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+    {
+      var minExtent =
+        computeMainAxisExtentForFlexItem(flexItem: flexItem, sizeType: .MinSize, size: minLength)
+        ?? LayoutUnit(value: UInt64(0))
+      // We must never return a min size smaller than the min preferred size for tables.
+      if flexItem.isRenderTable() && mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+        minExtent = max(minExtent, flexItem.minPreferredLogicalWidth())
+      }
+      return (minExtent, maxExtent ?? LayoutUnit.max())
+    }
+
+    if shouldApplyMinSizeAutoForFlexItem(flexItem: flexItem) {
+      // FIXME: If the min value is expected to be valid here, we need to come up with a non optional version of computeMainAxisExtentForFlexItem and
+      // ensure it's valid through the virtual calls of computeIntrinsicLogicalContentHeightUsing.
+      var contentSize = LayoutUnit()
+      let flexItemCrossSizeLength = crossSizeLengthForFlexItem(
+        sizeType: .MainOrPreferredSize, flexItem: flexItem)
+
+      let canComputeSizeThroughAspectRatio =
+        flexItem.isRenderReplaced() && flexItemHasComputableAspectRatio(flexItem: flexItem)
+        && flexItemCrossSizeIsDefinite(flexItem: flexItem, length: flexItemCrossSizeLength)
+
+      if canComputeSizeThroughAspectRatio {
+        contentSize = computeMainSizeFromAspectRatioUsing(
+          flexItem: flexItem, crossSizeLength: flexItemCrossSizeLength)
+      } else {
+        contentSize =
+          computeMainAxisExtentForFlexItem(
+            flexItem: flexItem, sizeType: .MinSize, size: LengthWrapper(type: .MinContent))
+          ?? LayoutUnit(value: UInt64(0))
+      }
+
+      if flexItemHasAspectRatio(flexItem: flexItem)
+        && (!crossSizeLengthForFlexItem(sizeType: .MinSize, flexItem: flexItem).isAuto()
+          || !crossSizeLengthForFlexItem(sizeType: .MaxSize, flexItem: flexItem).isAuto())
+      {
+        contentSize = adjustFlexItemSizeForAspectRatioCrossAxisMinAndMax(
+          flexItem: flexItem, flexItemSize: contentSize)
+      }
+      assert(contentSize >= Int32(0))
+      contentSize = min(contentSize, maxExtent ?? contentSize)
+
+      let mainSize = mainSizeLengthForFlexItem(sizeType: .MainOrPreferredSize, flexItem: flexItem)
+      if flexItemMainSizeIsDefinite(flexItem: flexItem, flexBasis: mainSize) {
+        let resolvedMainSize =
+          computeMainAxisExtentForFlexItem(
+            flexItem: flexItem, sizeType: .MainOrPreferredSize, size: mainSize)
+          ?? LayoutUnit(value: 0)
+        assert(resolvedMainSize >= Int32(0))
+        let specifiedSize = min(resolvedMainSize, maxExtent ?? resolvedMainSize)
+        return (min(specifiedSize, contentSize), maxExtent ?? LayoutUnit.max())
+      }
+
+      if flexItem.isRenderReplaced()
+        && flexItemHasComputableAspectRatioAndCrossSizeIsConsideredDefinite(flexItem: flexItem)
+      {
+        var transferredSize = computeMainSizeFromAspectRatioUsing(
+          flexItem: flexItem, crossSizeLength: flexItemCrossSizeLength)
+        transferredSize = adjustFlexItemSizeForAspectRatioCrossAxisMinAndMax(
+          flexItem: flexItem, flexItemSize: transferredSize)
+        return (min(transferredSize, contentSize), maxExtent ?? LayoutUnit.max())
+      }
+
+      return (contentSize, maxExtent ?? LayoutUnit.max())
+    }
+
+    return (LayoutUnit(value: UInt64(0)), maxExtent ?? LayoutUnit.max())
   }
 
   private func adjustFlexItemSizeForAspectRatioCrossAxisMinAndMax(

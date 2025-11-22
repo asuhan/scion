@@ -176,6 +176,10 @@ struct LengthWrapper: Equatable {
     return isFixed() || isPercentOrCalculated()
   }
 
+  func isSpecifiedOrIntrinsic() -> Bool {
+    return isSpecified() || isIntrinsic()
+  }
+
   func nonNanCalculatedValue(maxValue: Float32) -> Float32 {
     return wk_interop.Length_nonNanCalculatedValue(p, maxValue)
   }
