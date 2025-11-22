@@ -1418,8 +1418,23 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func adjustFlexItemSizeForAspectRatioCrossAxisMinAndMax(
     flexItem: RenderBoxWrapper, flexItemSize: LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let crossMin = crossSizeLengthForFlexItem(sizeType: .MinSize, flexItem: flexItem)
+    let crossMax = crossSizeLengthForFlexItem(sizeType: .MaxSize, flexItem: flexItem)
+    var flexItemSize = flexItemSize
+
+    if flexItemCrossSizeIsDefinite(flexItem: flexItem, length: crossMax) {
+      let maxValue = computeMainSizeFromAspectRatioUsing(
+        flexItem: flexItem, crossSizeLength: crossMax)
+      flexItemSize = min(maxValue, flexItemSize)
+    }
+
+    if flexItemCrossSizeIsDefinite(flexItem: flexItem, length: crossMin) {
+      let minValue = computeMainSizeFromAspectRatioUsing(
+        flexItem: flexItem, crossSizeLength: crossMin)
+      flexItemSize = max(minValue, flexItemSize)
+    }
+
+    return flexItemSize
   }
 
   private func constructFlexLayoutItem(flexItem: RenderBoxWrapper, relayoutChildren: Bool)
