@@ -162,6 +162,13 @@ struct LayoutUnit: Comparable {
     return v
   }
 
+  static func fromFloatRound(value: Float32) -> LayoutUnit {
+    if value >= 0 {
+      return clamp(value: Float64(value + epsilon() / 2.0))
+    }
+    return clamp(value: Float64(value - epsilon() / 2.0))
+  }
+
   static func < (lhs: LayoutUnit, rhs: LayoutUnit) -> Bool {
     return lhs.rawValue() < rhs.rawValue()
   }
@@ -263,6 +270,11 @@ struct LayoutUnit: Comparable {
     var m = LayoutUnit()
     m.value = Int32.min
     return m
+  }
+
+  static func clamp(value: Float64) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   init() {

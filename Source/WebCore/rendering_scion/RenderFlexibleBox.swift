@@ -1506,8 +1506,69 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     remainingFreeSpace: inout LayoutUnit, totalFlexGrow: inout Float64,
     totalFlexShrink: inout Float64, totalWeightedFlexShrink: inout Float64
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var totalViolation = LayoutUnit()
+    var usedFreeSpace = LayoutUnit()
+    var minViolations: [FlexLayoutItem] = []
+    var maxViolations: [FlexLayoutItem] = []
+
+    let sumFlexFactors = (flexSign == .PositiveFlexibility) ? totalFlexGrow : totalFlexShrink
+    if sumFlexFactors > 0 && sumFlexFactors < 1 {
+      let fractional = LayoutUnit(value: initialFreeSpace * sumFlexFactors)
+      if fractional.abs() < remainingFreeSpace.abs() {
+        remainingFreeSpace = fractional
+      }
+    }
+
+    for (i, flexLayoutItem) in flexLayoutItems.enumerated() {
+      // This check also covers out-of-flow children.
+      if flexLayoutItem.frozen {
+        continue
+      }
+
+      let flexItemStyle = flexLayoutItem.style()
+      var flexItemSize = flexLayoutItem.flexBaseContentSize
+      var extraSpace: Float64 = 0
+      if remainingFreeSpace > 0 && totalFlexGrow > 0 && flexSign == .PositiveFlexibility
+        && totalFlexGrow.isFinite
+      {
+        extraSpace = Float64(remainingFreeSpace * flexItemStyle.flexGrow()) / totalFlexGrow
+      } else if remainingFreeSpace < Int32(0) && totalWeightedFlexShrink > 0
+        && flexSign == .NegativeFlexibility && totalWeightedFlexShrink.isFinite
+        && flexItemStyle.flexShrink() != 0
+      {
+        extraSpace =
+          Float64(
+            remainingFreeSpace * flexItemStyle.flexShrink() * flexLayoutItem.flexBaseContentSize)
+          / totalWeightedFlexShrink
+      }
+      if extraSpace.isFinite {
+        flexItemSize += LayoutUnit.fromFloatRound(value: Float32(extraSpace))
+      }
+
+      let adjustedFlexItemSize = flexLayoutItem.constrainSizeByMinMax(size: flexItemSize)
+      assert(adjustedFlexItemSize >= Int32(0))
+      flexLayoutItems[i].flexedContentSize = adjustedFlexItemSize
+      usedFreeSpace += adjustedFlexItemSize - flexLayoutItems[i].flexBaseContentSize
+
+      let violation = adjustedFlexItemSize - flexItemSize
+      if violation > 0 {
+        minViolations.append(flexLayoutItems[i])
+      } else if violation < Int32(0) {
+        maxViolations.append(flexLayoutItems[i])
+      }
+      totalViolation += violation
+    }
+
+    if totalViolation.bool() {
+      freezeViolations(
+        violations: totalViolation < Int32(0) ? maxViolations : minViolations,
+        availableFreeSpace: &remainingFreeSpace, totalFlexGrow: &totalFlexGrow,
+        totalFlexShrink: &totalFlexShrink, totalWeightedFlexShrink: &totalWeightedFlexShrink)
+    } else {
+      remainingFreeSpace -= usedFreeSpace
+    }
+
+    return !totalViolation.bool()
   }
 
   private func freezeViolations(

@@ -50,8 +50,14 @@ struct FlexLayoutItem {
 
   func style() -> RenderStyleWrapper { return renderer.style() }
 
+  func constrainSizeByMinMax(size: LayoutUnit) -> LayoutUnit {
+    let (minSize, maxSize) = minMaxSizes
+    return max(minSize, min(size, maxSize))
+  }
+
   let renderer: RenderBoxWrapper
   let flexBaseContentSize: LayoutUnit
+  let minMaxSizes: (LayoutUnit, LayoutUnit)
   let hypotheticalMainContentSize: LayoutUnit
   var flexedContentSize: LayoutUnit
   let frozen = false
