@@ -1474,8 +1474,30 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     remainingFreeSpace: inout LayoutUnit, totalFlexGrow: inout Float64,
     totalFlexShrink: inout Float64, totalWeightedFlexShrink: inout Float64
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Per https://drafts.csswg.org/css-flexbox/#resolve-flexible-lengths step 2,
+    // we freeze all items with a flex factor of 0 as well as those with a min/max
+    // size violation.
+    var newInflexibleItems: [FlexLayoutItem] = []
+    for (i, flexLayoutItem) in flexLayoutItems.enumerated() {
+      assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+      assert(!flexLayoutItem.frozen)
+      let flexFactor =
+        (flexSign == .PositiveFlexibility)
+        ? flexLayoutItem.style().flexGrow() : flexLayoutItem.style().flexShrink()
+      if flexFactor == 0
+        || (flexSign == .PositiveFlexibility
+          && flexLayoutItem.flexBaseContentSize > flexLayoutItem.hypotheticalMainContentSize)
+        || (flexSign == .NegativeFlexibility
+          && flexLayoutItem.flexBaseContentSize < flexLayoutItem.hypotheticalMainContentSize)
+      {
+        flexLayoutItems[i].flexedContentSize = flexLayoutItem.hypotheticalMainContentSize
+        newInflexibleItems.append(flexLayoutItems[i])
+      }
+    }
+    freezeViolations(
+      violations: newInflexibleItems, availableFreeSpace: &remainingFreeSpace,
+      totalFlexGrow: &totalFlexGrow, totalFlexShrink: &totalFlexShrink,
+      totalWeightedFlexShrink: &totalWeightedFlexShrink)
   }
 
   // Returns true if we successfully ran the algorithm and sized the flex items.
@@ -1484,6 +1506,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     remainingFreeSpace: inout LayoutUnit, totalFlexGrow: inout Float64,
     totalFlexShrink: inout Float64, totalWeightedFlexShrink: inout Float64
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func freezeViolations(
+    violations: [FlexLayoutItem], availableFreeSpace: inout LayoutUnit,
+    totalFlexGrow: inout Float64, totalFlexShrink: inout Float64,
+    totalWeightedFlexShrink: inout Float64
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

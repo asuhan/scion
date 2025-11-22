@@ -48,7 +48,13 @@ struct FlexLayoutItem {
     fatalError("Not implemented")
   }
 
+  func style() -> RenderStyleWrapper { return renderer.style() }
+
   let renderer: RenderBoxWrapper
+  let flexBaseContentSize: LayoutUnit
+  let hypotheticalMainContentSize: LayoutUnit
+  var flexedContentSize: LayoutUnit
+  let frozen = false
 }
 
 struct FlexLayoutAlgorithm {
