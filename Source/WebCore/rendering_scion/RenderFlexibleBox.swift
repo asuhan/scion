@@ -974,8 +974,29 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexItemHasIntrinsicMainAxisSize(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      return false
+    }
+
+    let flexBasis = flexBasisForFlexItem(flexItem: flexItem)
+    let minSize = mainSizeLengthForFlexItem(sizeType: .MinSize, flexItem: flexItem)
+    let maxSize = mainSizeLengthForFlexItem(sizeType: .MaxSize, flexItem: flexItem)
+    // FIXME: we must run flexItemMainSizeIsDefinite() because it might end up calling computePercentageLogicalHeight()
+    // which has some side effects like calling addPercentHeightDescendant() for example so it is not possible to skip
+    // the call for example by moving it to the end of the conditional expression. This is error-prone and we should
+    // refactor computePercentageLogicalHeight() at some point so that it only computes stuff without those side effects.
+    if !flexItemMainSizeIsDefinite(flexItem: flexItem, flexBasis: flexBasis)
+      || minSize.isIntrinsic()
+      || maxSize.isIntrinsic()
+    {
+      return true
+    }
+
+    if shouldApplyMinSizeAutoForFlexItem(flexItem: flexItem) {
+      return true
+    }
+
+    return false
   }
 
   private func mainAxisOverflowForFlexItem(flexItem: RenderBoxWrapper) -> Overflow {
