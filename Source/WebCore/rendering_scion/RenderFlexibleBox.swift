@@ -545,6 +545,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func flowAwareBorderStart() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func flowAwareBorderBefore() -> LayoutUnit {
     switch transformedBlockFlowDirection() {
     case .TopToBottom:
@@ -556,6 +561,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     case .RightToLeft:
       return borderRight()
     }
+  }
+
+  private func flowAwarePaddingStart() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func flowAwarePaddingBefore() -> LayoutUnit {
@@ -1602,8 +1612,24 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func prepareFlexItemForPositionedLayout(flexItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(flexItem.isOutOfFlowPositioned())
+    flexItem.containingBlock()!.insertPositionedObject(positioned: flexItem)
+    let layer = flexItem.layer()!
+    let staticInlinePosition = flowAwareBorderStart() + flowAwarePaddingStart()
+    if layer.staticInlinePosition() != staticInlinePosition {
+      layer.setStaticInlinePosition(position: staticInlinePosition)
+      if flexItem.style().hasStaticInlinePosition(horizontal: style().isHorizontalWritingMode()) {
+        flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    }
+
+    let staticBlockPosition = flowAwareBorderBefore() + flowAwarePaddingBefore()
+    if layer.staticBlockPosition() != staticBlockPosition {
+      layer.setStaticBlockPosition(position: staticBlockPosition)
+      if flexItem.style().hasStaticBlockPosition(horizontal: style().isHorizontalWritingMode()) {
+        flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    }
   }
 
   private func layoutAndPlaceFlexItems(
