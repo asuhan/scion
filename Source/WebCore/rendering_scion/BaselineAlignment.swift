@@ -37,4 +37,17 @@
 // By adding new items to a BaselineAlignmentState, the baseline-sharing groups it handles are automatically updated,
 // if there is one that is compatible with such item. Otherwise, a new baseline-sharing group is created,
 // compatible with the new item.
-struct BaselineAlignmentState {}
+struct BaselineAlignmentState {
+  init(child: RenderBoxWrapper, preference: ItemPosition, ascent: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Updates the baseline-sharing group compatible with the item.
+  // We pass the item's baseline-preference to avoid dependencies with the LayoutGrid class, which is the one
+  // managing the alignment behavior of the Grid Items.
+  func updateSharedGroup(child: RenderBoxWrapper, preference: ItemPosition, ascent: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

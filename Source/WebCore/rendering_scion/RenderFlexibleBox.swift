@@ -71,6 +71,17 @@ struct OverridingSizesScope: ~Copyable {
   private let overridingHeight: LayoutUnit?
 }
 
+private func updateFlexItemDirtyBitsBeforeLayout(relayoutFlexItem: Bool, flexItem: RenderBoxWrapper)
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func contentAlignmentNormalBehavior() -> StyleContentAlignmentData {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // FIXME: consider adding this check to RenderBox::hasIntrinsicAspectRatio(). We could even make it
 // virtual returning false by default. RenderReplaced will overwrite it with the current implementation
 // plus this extra check. See wkb.ug/231955.
@@ -105,6 +116,37 @@ struct ScopedFlexBasisAsFlexItemMainSize: ~Copyable {
 
   private let flexItem: RenderBoxWrapper
   private let mainAxisIsInlineAxis: Bool
+}
+
+private func resolveLeftRightAlignment(
+  position: ContentPosition, style: RenderStyleWrapper, isReversed: Bool
+) -> ContentPosition {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func initialJustifyContentOffset(
+  style: RenderStyleWrapper, availableFreeSpace: LayoutUnit, numberOfFlexItems: UInt32,
+  isReversed: Bool
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func justifyContentSpaceBetweenFlexItems(
+  availableFreeSpace: LayoutUnit, justifyContentDistribution: ContentDistribution,
+  numberOfFlexItems: UInt32
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func contentAlignmentStartOverflow(
+  availableFreeSpace: LayoutUnit, position: ContentPosition, distribution: ContentDistribution,
+  safety: OverflowAlignment, isReverse: Bool
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
@@ -400,6 +442,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return style().isColumnFlexDirection()
   }
 
+  private func isColumnOrRowReverse() -> Bool {
+    return style().flexDirection() == .ColumnReverse || style().flexDirection() == .RowReverse
+  }
+
+  private func isLeftToRightFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func isMultiline() -> Bool {
     return style().flexWrap() != .NoWrap
   }
@@ -448,6 +499,33 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
     return (minSize.isAuto() || flexItemBlockSizeIsEquivalentToAutomaticSize)
       && (mainAxisOverflowForFlexItem(flexItem: flexItem) == .Visible)
+  }
+
+  private func crossAxisExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func crossAxisIntrinsicExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func mainAxisExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func mainAxisContentExtentForFlexItemIncludingScrollbar(flexItem: RenderBoxWrapper)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func mainAxisExtent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func crossAxisContentExtent() -> LayoutUnit {
@@ -550,6 +628,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func flowAwareBorderEnd() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func flowAwareBorderBefore() -> LayoutUnit {
     switch transformedBlockFlowDirection() {
     case .TopToBottom:
@@ -563,7 +646,17 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func flowAwareBorderAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func flowAwarePaddingStart() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flowAwarePaddingEnd() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -579,6 +672,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     case .RightToLeft:
       return paddingRight()
     }
+  }
+
+  private func flowAwarePaddingAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flowAwareMarginStartForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flowAwareMarginEndForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flowAwareMarginBeforeForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func crossAxisMarginExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
@@ -600,6 +713,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         marginStart: &marginStart, marginEnd: &marginEnd)
     }
     return marginStart + marginEnd
+  }
+
+  private func crossAxisScrollbarExtent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func flexItemHasComputableAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
@@ -772,6 +890,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       return max(zero, LayoutUnit(value: crossSize * ratio) - borderAndPadding)
     }
     return max(zero, LayoutUnit(value: crossSize / ratio) - borderAndPadding)
+  }
+
+  private func setFlowAwareLocationForFlexItem(
+    flexItem: RenderBoxWrapper, location: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func adjustForBoxSizing(box: RenderBoxWrapper, value: LayoutUnit) -> LayoutUnit {
@@ -1222,6 +1347,19 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       lineStates: &lineStates, gapBetweenLines: gapBetweenLines)
   }
 
+  private func autoMarginOffsetInMainAxis(
+    flexLayoutItems: FlexLayoutItems, availableFreeSpace: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateAutoMarginsInMainAxis(flexItem: RenderBoxWrapper, autoMarginOffset: LayoutUnit)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func initializeMarginTrimState() {
     // When computeIntrinsicLogicalWidth goes through each of the children, it
     // will include the margins when computing the flexbox's min and max widths.
@@ -1307,6 +1445,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // direction:rtl + flex-direction:column means the cross-axis direction is
     // flipped.
     flipForRightToLeftColumn(lineStates: lineStates)
+  }
+
+  private func marginBoxAscentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computeFlexItemMarginValue(margin: LengthWrapper) -> LayoutUnit {
@@ -1611,6 +1754,18 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  private func resetAutoMarginsAndLogicalTopInCrossAxis(flexItem: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setOverridingMainSizeForFlexItem(
+    flexItem: RenderBoxWrapper, preferredSize: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func prepareFlexItemForPositionedLayout(flexItem: RenderBoxWrapper) {
     assert(flexItem.isOutOfFlowPositioned())
     flexItem.containingBlock()!.insertPositionedObject(positioned: flexItem)
@@ -1635,6 +1790,183 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func layoutAndPlaceFlexItems(
     crossAxisOffset: inout LayoutUnit, flexLayoutItems: inout FlexLayoutItems,
     availableFreeSpace: LayoutUnit, relayoutChildren: Bool, lineStates: inout FlexLineStates,
+    gapBetweenItems: LayoutUnit
+  ) {
+    var availableFreeSpace = availableFreeSpace
+    let autoMarginOffset = autoMarginOffsetInMainAxis(
+      flexLayoutItems: flexLayoutItems, availableFreeSpace: &availableFreeSpace)
+    var mainAxisOffset = flowAwareBorderStart() + flowAwarePaddingStart()
+    mainAxisOffset += initialJustifyContentOffset(
+      style: style(), availableFreeSpace: availableFreeSpace,
+      numberOfFlexItems: UInt32(flexLayoutItems.count), isReversed: isColumnOrRowReverse())
+    if style().flexDirection() == .RowReverse {
+      mainAxisOffset += isHorizontalFlow() ? verticalScrollbarWidth() : horizontalScrollbarHeight()
+    }
+
+    if availableFreeSpace < Int32(0) {
+      var position = style().resolvedJustifyContentPosition(
+        normalValueBehavior: contentAlignmentNormalBehavior())
+      let distribution = style().resolvedJustifyContentDistribution(
+        normalValueBehavior: contentAlignmentNormalBehavior())
+      let safety = style().justifyContent().overflow
+      position = resolveLeftRightAlignment(
+        position: position, style: style(), isReversed: isColumnOrRowReverse())
+      let overflow = contentAlignmentStartOverflow(
+        availableFreeSpace: availableFreeSpace, position: position, distribution: distribution,
+        safety: safety, isReverse: isColumnOrRowReverse())
+      justifyContentStartOverflow = max(justifyContentStartOverflow, overflow)
+    }
+
+    let totalMainExtent = mainAxisExtent()
+    var maxFlexItemCrossAxisExtent = LayoutUnit()
+
+    var maxAscent = LayoutUnit()
+    var maxDescent = LayoutUnit()
+    var lastBaselineMaxAscent = LayoutUnit()
+    var baselineAlignmentState: BaselineAlignmentState? = nil
+
+    let distribution = style().resolvedJustifyContentDistribution(
+      normalValueBehavior: contentAlignmentNormalBehavior())
+    let shouldFlipMainAxis = !isColumnFlow() && !isLeftToRightFlow()
+    for (i, flexLayoutItem) in flexLayoutItems.enumerated() {
+      let flexItem = flexLayoutItem.renderer
+
+      assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+
+      setOverridingMainSizeForFlexItem(
+        flexItem: flexItem, preferredSize: flexLayoutItem.flexedContentSize)
+      // The flexed content size and the override size include the scrollbar
+      // width, so we need to compare to the size including the scrollbar.
+      // TODO(cbiesinger): Should it include the scrollbar?
+      if flexLayoutItem.flexedContentSize
+        != mainAxisContentExtentForFlexItemIncludingScrollbar(flexItem: flexItem)
+      {
+        flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      } else {
+        // To avoid double applying margin changes in
+        // updateAutoMarginsInCrossAxis, we reset the margins here.
+        resetAutoMarginsAndLogicalTopInCrossAxis(flexItem: flexItem)
+      }
+      // We may have already forced relayout for orthogonal flowing children in
+      // computeInnerFlexBaseSizeForFlexItem.
+      var forceFlexItemRelayout =
+        relayoutChildren && !relaidOutFlexItems.contains(value: CPtrToInt(flexItem.p))
+      if !forceFlexItemRelayout && flexItemHasPercentHeightDescendants(renderer: flexItem) {
+        // Have to force another relayout even though the child is sized
+        // correctly, because its descendants are not sized correctly yet. Our
+        // previous layout of the child was done without an override height set.
+        // So, redo it here.
+        forceFlexItemRelayout = true
+      }
+      updateFlexItemDirtyBitsBeforeLayout(
+        relayoutFlexItem: forceFlexItemRelayout, flexItem: flexItem)
+      if !flexItem.needsLayout() {
+        flexItem.markForPaginationRelayoutIfNeeded()
+      }
+      if flexItem.needsLayout() {
+        relaidOutFlexItems.add(value: flexItem)
+      }
+      flexItem.layoutIfNeeded()
+      if !flexLayoutItem.everHadLayout && flexItem.checkForRepaintDuringLayout() {
+        flexItem.repaint()
+        flexItem.repaintOverhangingFloats(paintAllDescendants: true)
+      }
+
+      updateAutoMarginsInMainAxis(flexItem: flexItem, autoMarginOffset: autoMarginOffset)
+
+      var flexItemCrossAxisMarginBoxExtent = LayoutUnit()
+
+      let alignment = alignmentForFlexItem(flexItem: flexItem)
+      if (alignment == .Baseline || alignment == .LastBaseline)
+        && !hasAutoMarginsInCrossAxis(flexItem: flexItem)
+      {
+        let ascent = marginBoxAscentForFlexItem(flexItem: flexItem)
+        let descent =
+          (crossAxisMarginExtentForFlexItem(flexItem: flexItem)
+            + crossAxisExtentForFlexItem(flexItem: flexItem))
+          - ascent
+        maxDescent = max(maxDescent, descent)
+
+        if baselineAlignmentState != nil {
+          baselineAlignmentState!.updateSharedGroup(
+            child: flexItem, preference: alignment, ascent: ascent)
+        } else {
+          baselineAlignmentState = BaselineAlignmentState(
+            child: flexItem, preference: alignment, ascent: ascent)
+        }
+
+        if alignment == .Baseline {
+          maxAscent = max(maxAscent, ascent)
+          flexItemCrossAxisMarginBoxExtent = maxAscent + maxDescent
+        } else {
+          lastBaselineMaxAscent = max(lastBaselineMaxAscent, ascent)
+          flexItemCrossAxisMarginBoxExtent = lastBaselineMaxAscent + maxDescent
+        }
+
+      } else {
+        flexItemCrossAxisMarginBoxExtent =
+          crossAxisIntrinsicExtentForFlexItem(flexItem: flexItem)
+          + crossAxisMarginExtentForFlexItem(flexItem: flexItem)
+      }
+
+      if !isColumnFlow() {
+        setLogicalHeight(
+          size: max(
+            logicalHeight(),
+            crossAxisOffset + flowAwareBorderAfter() + flowAwarePaddingAfter()
+              + flexItemCrossAxisMarginBoxExtent + crossAxisScrollbarExtent()))
+      }
+      maxFlexItemCrossAxisExtent = max(maxFlexItemCrossAxisExtent, flexItemCrossAxisMarginBoxExtent)
+
+      mainAxisOffset += flowAwareMarginStartForFlexItem(flexItem: flexItem)
+
+      let flexItemMainExtent = mainAxisExtentForFlexItem(flexItem: flexItem)
+      // In an RTL column situation, this will apply the margin-right/margin-end
+      // on the left. This will be fixed later in flipForRightToLeftColumn.
+      let location = LayoutPointWrapper(
+        x: shouldFlipMainAxis
+          ? totalMainExtent - mainAxisOffset - flexItemMainExtent : mainAxisOffset,
+        y: crossAxisOffset + flowAwareMarginBeforeForFlexItem(flexItem: flexItem))
+      setFlowAwareLocationForFlexItem(flexItem: flexItem, location: location)
+      mainAxisOffset += flexItemMainExtent + flowAwareMarginEndForFlexItem(flexItem: flexItem)
+
+      if i != flexLayoutItems.count - 1 {
+        // The last item does not get extra space added.
+        mainAxisOffset +=
+          justifyContentSpaceBetweenFlexItems(
+            availableFreeSpace: availableFreeSpace, justifyContentDistribution: distribution,
+            numberOfFlexItems: UInt32(flexLayoutItems.count)) + gapBetweenItems
+      }
+
+      // FIXME: Deal with pagination.
+    }
+
+    if isColumnFlow() {
+      setLogicalHeight(
+        size: max(
+          logicalHeight(),
+          mainAxisOffset + flowAwareBorderEnd() + flowAwarePaddingEnd() + scrollbarLogicalHeight()))
+    }
+
+    if style().flexDirection() == .ColumnReverse {
+      // We have to do an extra pass for column-reverse to reposition the flex
+      // items since the start depends on the height of the flexbox, which we
+      // only know after we've positioned all the flex items.
+      updateLogicalHeight()
+      layoutColumnReverse(
+        flexLayoutItems: flexLayoutItems, crossAxisOffset: crossAxisOffset,
+        availableFreeSpace: availableFreeSpace, gapBetweenItems: gapBetweenItems)
+    }
+
+    lineStates.append(
+      LineState(
+        crossAxisOffset: crossAxisOffset, crossAxisExtent: maxFlexItemCrossAxisExtent,
+        baselineAlignmentState: baselineAlignmentState, flexLayoutItems: flexLayoutItems))
+    crossAxisOffset += maxFlexItemCrossAxisExtent
+  }
+
+  private func layoutColumnReverse(
+    flexLayoutItems: FlexLayoutItems, crossAxisOffset: LayoutUnit, availableFreeSpace: LayoutUnit,
     gapBetweenItems: LayoutUnit
   ) {
     // TODO(asuhan): implement this
@@ -1667,6 +1999,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func repaintFlexItemsDuringLayoutIfMoved(oldFlexItemRects: FlexItemFrameRects) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flexItemHasPercentHeightDescendants(renderer: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

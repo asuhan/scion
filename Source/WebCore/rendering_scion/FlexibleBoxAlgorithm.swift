@@ -61,6 +61,7 @@ struct FlexLayoutItem {
   let hypotheticalMainContentSize: LayoutUnit
   var flexedContentSize: LayoutUnit
   var frozen = false
+  let everHadLayout = false
 }
 
 struct FlexLayoutAlgorithm {

@@ -112,6 +112,20 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func resolvedJustifyContentPosition(normalValueBehavior: StyleContentAlignmentData)
+    -> ContentPosition
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func resolvedJustifyContentDistribution(normalValueBehavior: StyleContentAlignmentData)
+    -> ContentDistribution
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func resolvedAlignSelf(parentStyle: RenderStyleWrapper?, normalValueBehaviour: ItemPosition)
     -> StyleSelfAlignmentData
   {
