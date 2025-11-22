@@ -678,8 +678,80 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func computeMainSizeFromAspectRatioUsing(
     flexItem: RenderBoxWrapper, crossSizeLength: LengthWrapper
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(flexItemHasAspectRatio(flexItem: flexItem))
+
+    var crossSize = LayoutUnit()
+    // crossSize is border-box size if box-sizing is border-box, and content-box otherwise.
+    if crossSizeLength.isFixed() {
+      crossSize = LayoutUnit(value: crossSizeLength.value())
+    } else if crossSizeLength.isAuto() {
+      assert(flexItemCrossSizeShouldUseContainerCrossSize(flexItem: flexItem))
+      crossSize = computeCrossSizeForFlexItemUsingContainerCrossSize(flexItem: flexItem)
+    } else {
+      assert(crossSizeLength.isPercentOrCalculated())
+      if let flexItemSize = mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
+        ? flexItem.computePercentageLogicalHeight(height: crossSizeLength)
+        : adjustBorderBoxLogicalWidthForBoxSizing(
+          computedLogicalWidth: valueForLength(
+            length: crossSizeLength, maximumValue: contentWidth()),
+          originalType: crossSizeLength.type())
+      {
+        crossSize = flexItemSize
+      } else {
+        return LayoutUnit(value: UInt64(0))
+      }
+    }
+
+    var ratio: Float64 = 0
+    var borderAndPadding = LayoutUnit()
+    if flexItem.isRenderOrLegacyRenderSVGRoot() {
+      ratio = (flexItem as! RenderReplacedWrapper).computeIntrinsicAspectRatio()
+    } else {
+      let flexItemIntrinsicSize = flexItem.intrinsicSize()
+      if flexItem.style().aspectRatioType() == .Ratio
+        || (flexItem.style().aspectRatioType() == .AutoAndRatio && flexItemIntrinsicSize.isEmpty())
+      {
+        ratio = flexItem.style().aspectRatioWidth() / flexItem.style().aspectRatioHeight()
+        if flexItem.style().boxSizingForAspectRatio() == .ContentBox {
+          crossSize -=
+            isHorizontalFlow()
+            ? flexItem.verticalBorderAndPaddingExtent()
+            : flexItem.horizontalBorderAndPaddingExtent()
+        } else {
+          borderAndPadding =
+            isHorizontalFlow()
+            ? flexItem.horizontalBorderAndPaddingExtent()
+            : flexItem.verticalBorderAndPaddingExtent()
+        }
+      } else {
+        if let replacedElement = flexItem as? RenderReplacedWrapper {
+          ratio = replacedElement.computeIntrinsicAspectRatio()
+        } else {
+          assert(flexItemIntrinsicSize.height().bool())
+          ratio = Float64(
+            flexItemIntrinsicSize.width().toFloat() / flexItemIntrinsicSize.height().toFloat())
+        }
+        crossSize = adjustForBoxSizing(box: flexItem, value: crossSize)
+      }
+    }
+    let zero = LayoutUnit(value: UInt64(0))
+    if isHorizontalFlow() {
+      return max(zero, LayoutUnit(value: crossSize * ratio) - borderAndPadding)
+    }
+    return max(zero, LayoutUnit(value: crossSize / ratio) - borderAndPadding)
+  }
+
+  private func adjustForBoxSizing(box: RenderBoxWrapper, value: LayoutUnit) -> LayoutUnit {
+    // We need to substract the border and padding extent from the cross axis.
+    // Furthermore, the sizing calculations that floor the content box size at zero when applying box-sizing are also ignored.
+    // https://drafts.csswg.org/css-flexbox/#algo-main-item.
+    var value = value
+    if box.style().boxSizing() == .BorderBox {
+      value -=
+        isHorizontalFlow()
+        ? box.verticalBorderAndPaddingExtent() : box.horizontalBorderAndPaddingExtent()
+    }
+    return value
   }
 
   // https://drafts.csswg.org/css-flexbox/#algo-main-item

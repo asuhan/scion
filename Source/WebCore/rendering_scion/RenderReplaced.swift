@@ -30,7 +30,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  func intrinsicSize() -> LayoutSizeWrapper {
+  override func intrinsicSize() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

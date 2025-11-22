@@ -918,7 +918,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func adjustBorderBoxLogicalWidthForBoxSizing(
+  func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
     if originalType == .Calculated {
@@ -1630,6 +1630,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func intrinsicSize() -> LayoutSizeWrapper { return LayoutSizeWrapper() }
 
   func intrinsicLogicalWidth() -> LayoutUnit {
     // TODO(asuhan): implement this
