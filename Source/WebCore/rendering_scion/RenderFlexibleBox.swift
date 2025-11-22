@@ -71,6 +71,25 @@ struct OverridingSizesScope: ~Copyable {
   private let overridingHeight: LayoutUnit?
 }
 
+// This is a RAII class that is used to temporarily set the flex basis as the child size in the main axis.
+struct ScopedFlexBasisAsFlexItemMainSize: ~Copyable {
+  init(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper, mainAxisIsInlineAxis: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  deinit {
+    if mainAxisIsInlineAxis {
+      flexItem.clearOverridingLogicalWidthLength()
+    } else {
+      flexItem.clearOverridingLogicalHeightLength()
+    }
+  }
+
+  private let flexItem: RenderBoxWrapper
+  private let mainAxisIsInlineAxis: Bool
+}
+
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
@@ -427,6 +446,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return max(LayoutUnit(value: UInt64(0)), computedValues.extent - borderPaddingAndScrollbar)
   }
 
+  private func computeMainAxisExtentForFlexItem(
+    flexItem: RenderBoxWrapper, sizeType: RenderBoxWrapper.SizeType, size: LengthWrapper
+  ) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func transformedBlockFlowDirection() -> FlowDirection {
     let blockFlowDirection = style().blockFlowDirection()
     if !isColumnFlow() {
@@ -486,6 +512,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         marginStart: &marginStart, marginEnd: &marginEnd)
     }
     return marginStart + marginEnd
+  }
+
+  private func flexItemHasComputableAspectRatioAndCrossSizeIsConsideredDefinite(
+    flexItem: RenderBoxWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func crossAxisIsPhysicalWidth() -> Bool {
@@ -574,10 +607,68 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return super.computeChildIntrinsicLogicalWidths(child: flexItem)
   }
 
+  // FIXME: computeMainSizeFromAspectRatioUsing may need to return an std::optional<LayoutUnit> in the future
+  // rather than returning indefinite sizes as 0/-1.
+  private func computeMainSizeFromAspectRatioUsing(
+    flexItem: RenderBoxWrapper, crossSizeLength: LengthWrapper
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // https://drafts.csswg.org/css-flexbox/#algo-main-item
   func computeFlexBaseSizeForFlexItem(
     flexItem: RenderBoxWrapper, mainAxisBorderAndPadding: LayoutUnit, relayoutChildren: Bool
   ) -> LayoutUnit {
+    let flexBasis = flexBasisForFlexItem(flexItem: flexItem)
+    let _ = ScopedFlexBasisAsFlexItemMainSize(
+      flexItem: flexItem,
+      flexBasis: flexBasis.isContent() ? LengthWrapper(type: .MaxContent) : flexBasis,
+      mainAxisIsInlineAxis: mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+    // FIXME: While we are supposed to ignore min/max here, clients of maybeCacheFlexItemMainIntrinsicSize may expect min/max constrained size.
+    let _ = SetForScope(scopedVariable: &isComputingFlexBaseSizes, newValue: true)
+
+    maybeCacheFlexItemMainIntrinsicSize(flexItem: flexItem, relayoutChildren: relayoutChildren)
+
+    // 9.2.3 A.
+    if flexItemMainSizeIsDefinite(flexItem: flexItem, flexBasis: flexBasis) {
+      return max(
+        LayoutUnit(value: UInt64(0)),
+        computeMainAxisExtentForFlexItem(
+          flexItem: flexItem, sizeType: .MainOrPreferredSize, size: flexBasis)!)
+    }
+
+    // 9.2.3 B.
+    if flexItemHasComputableAspectRatioAndCrossSizeIsConsideredDefinite(flexItem: flexItem) {
+      let crossSizeLength = crossSizeLengthForFlexItem(
+        sizeType: .MainOrPreferredSize, flexItem: flexItem)
+      return adjustFlexItemSizeForAspectRatioCrossAxisMinAndMax(
+        flexItem: flexItem,
+        flexItemSize: computeMainSizeFromAspectRatioUsing(
+          flexItem: flexItem, crossSizeLength: crossSizeLength))
+    }
+
+    // FIXME: 9.2.3 C.
+    // FIXME: 9.2.3 D.
+
+    // 9.2.3 E.
+    var mainAxisExtent = LayoutUnit()
+    if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      assert(!flexItem.needsLayout())
+      let maybeMainAxisExtent = intrinsicSizeAlongMainAxis[CPtrToInt(flexItem.p)]
+      assert(maybeMainAxisExtent != nil)
+      mainAxisExtent = maybeMainAxisExtent!
+    } else {
+      // We don't need to add scrollbarLogicalWidth here because the preferred
+      // width includes the scrollbar, even for overflow: auto.
+      mainAxisExtent = flexItem.maxPreferredLogicalWidth()
+    }
+    return mainAxisExtent - mainAxisBorderAndPadding
+  }
+
+  private func maybeCacheFlexItemMainIntrinsicSize(
+    flexItem: RenderBoxWrapper, relayoutChildren: Bool
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -994,6 +1085,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func adjustFlexItemSizeForAspectRatioCrossAxisMinAndMax(
+    flexItem: RenderBoxWrapper, flexItemSize: LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func constructFlexLayoutItem(flexItem: RenderBoxWrapper, relayoutChildren: Bool)
     -> FlexLayoutItem
   {
@@ -1096,6 +1194,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // This is used to cache the preferred size for orthogonal flow children so we
+  // don't have to relayout to get it
+  private let intrinsicSizeAlongMainAxis: [UInt: LayoutUnit] = [:]
+
   // This set is used to keep track of which children we laid out in this
   // current layout iteration. We need it because the ones in this set may
   // need an additional layout pass for correct stretch alignment handling, as
@@ -1121,4 +1223,5 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   // This is SizeIsUnknown outside of layoutBlock()
   private var hasDefiniteHeight: SizeDefiniteness = .Unknown
   var inLayout = false
+  var isComputingFlexBaseSizes = false
 }

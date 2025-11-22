@@ -880,6 +880,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }
 
+  func clearOverridingLogicalHeightLength() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearOverridingLogicalWidthLength() {
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
   }
