@@ -807,8 +807,29 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func maybeCacheFlexItemMainIntrinsicSize(
     flexItem: RenderBoxWrapper, relayoutChildren: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !flexItemHasIntrinsicMainAxisSize(flexItem: flexItem) {
+      return
+    }
+
+    // If this condition is true, then computeMainAxisExtentForFlexItem will call
+    // flexItem.intrinsicContentLogicalHeight() and flexItem.scrollbarLogicalHeight(),
+    // so if the child has intrinsic min/max/preferred size, run layout on it now to make sure
+    // its logical height and scroll bars are up to date.
+    updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: relayoutChildren, child: flexItem)
+    // Don't resolve percentages in children. This is especially important for the min-height calculation,
+    // where we want percentages to be treated as auto. For flex-basis itself, this is not a problem because
+    // by definition we have an indefinite flex basis here and thus percentages should not resolve.
+    if flexItem.needsLayout() || !intrinsicSizeAlongMainAxis.keys.contains(CPtrToInt(flexItem.p)) {
+      if isHorizontalWritingMode() == flexItem.isHorizontalWritingMode() {
+        flexItem.setOverridingContainingBlockContentLogicalHeight(logicalHeight: nil)
+      } else {
+        flexItem.setOverridingContainingBlockContentLogicalWidth(logicalWidth: nil)
+      }
+      flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      flexItem.layoutIfNeeded()
+      cacheFlexItemMainSize(flexItem: flexItem)
+      flexItem.clearOverridingContainingBlockContentSize()
+    }
   }
 
   private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
@@ -906,11 +927,21 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return true
   }
 
+  private func flexItemHasIntrinsicMainAxisSize(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func mainAxisOverflowForFlexItem(flexItem: RenderBoxWrapper) -> Overflow {
     if isHorizontalFlow() {
       return flexItem.style().overflowX()
     }
     return flexItem.style().overflowY()
+  }
+
+  private func cacheFlexItemMainSize(flexItem: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func usedFlexItemOverridingCrossSizeForPercentageResolution(flexItem: RenderBoxWrapper)

@@ -868,6 +868,22 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setOverridingContainingBlockContentLogicalWidth(logicalWidth: ContainingBlockOverrideValue) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setOverridingContainingBlockContentLogicalHeight(logicalHeight: ContainingBlockOverrideValue)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearOverridingContainingBlockContentSize() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These are currently only used by Flexbox code. In some cases we must layout flex items with a different main size
   // (the size in the main direction) than the one specified by the item in order to compute the value of flex basis, i.e.,
   // the initial main size of the flex item before the free space is distributed.
