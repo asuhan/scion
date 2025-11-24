@@ -776,8 +776,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flowAwareBorderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      return isLeftToRightFlow() ? borderRight() : borderLeft()
+    }
+    return isLeftToRightFlow() ? borderBottom() : borderTop()
   }
 
   private func flowAwareBorderBefore() -> LayoutUnit {
