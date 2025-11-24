@@ -144,8 +144,53 @@ private func initialJustifyContentOffset(
   style: RenderStyleWrapper, availableFreeSpace: LayoutUnit, numberOfFlexItems: UInt32,
   isReversed: Bool
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var justifyContent = style.resolvedJustifyContentPosition(
+    normalValueBehavior: contentAlignmentNormalBehavior())
+  let justifyContentDistribution = style.resolvedJustifyContentDistribution(
+    normalValueBehavior: contentAlignmentNormalBehavior())
+
+  if availableFreeSpace < Int32(0) && style.justifyContent().overflow == .Safe {
+    assert(justifyContent != .Normal)
+    justifyContent = .Start
+  }
+
+  // First of all resolve Left and Right so we could convert it to their equivalent properties handled bellow.
+  // If the property's axis is not parallel with either left<->right axis, this value behaves as start. Currently,
+  // the only case where the property's axis is not parallel with either left<->right axis is in a column flexbox.
+  // https: //www.w3.org/TR/css-align-3/#valdef-justify-content-left
+  justifyContent = resolveLeftRightAlignment(
+    position: justifyContent, style: style, isReversed: isReversed)
+  assert(justifyContent != .Left)
+  assert(justifyContent != .Right)
+
+  if justifyContent == .FlexEnd
+    || (justifyContent == .End && !isReversed)
+    || (justifyContent == .Start && isReversed)
+  {
+    return availableFreeSpace
+  }
+  if justifyContent == .Center {
+    return availableFreeSpace / 2
+  }
+  if justifyContentDistribution == .SpaceAround {
+    if numberOfFlexItems == 0 {
+      return availableFreeSpace / 2
+    }
+    if availableFreeSpace > 0 {
+      return availableFreeSpace / (UInt32(2) * numberOfFlexItems)
+    }
+    return LayoutUnit()
+  }
+  if justifyContentDistribution == .SpaceEvenly {
+    if numberOfFlexItems == 0 {
+      return availableFreeSpace / 2
+    }
+    if availableFreeSpace > 0 {
+      return availableFreeSpace / (numberOfFlexItems + UInt32(1))
+    }
+    return LayoutUnit()
+  }
+  return LayoutUnit()
 }
 
 private func justifyContentSpaceBetweenFlexItems(

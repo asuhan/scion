@@ -138,6 +138,10 @@ struct LayoutUnit: Comparable {
     return a.toDouble() / b
   }
 
+  static func / (a: LayoutUnit, b: UInt32) -> LayoutUnit {
+    return a / LayoutUnit(value: b)
+  }
+
   static func / (a: LayoutUnit, b: UInt64) -> LayoutUnit {
     return a / LayoutUnit(value: b)
   }
@@ -293,6 +297,11 @@ struct LayoutUnit: Comparable {
   init(value: Int32) {
     // TODO(asuhan): implement this correctly
     self.value = value
+  }
+
+  init(value: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   init(value: UInt64) {
