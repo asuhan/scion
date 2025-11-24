@@ -2083,8 +2083,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func setOverridingMainSizeForFlexItem(
     flexItem: RenderBoxWrapper, preferredSize: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      flexItem.setOverridingLogicalWidth(
+        width: preferredSize + flexItem.borderAndPaddingLogicalWidth())
+    } else {
+      flexItem.setOverridingLogicalHeight(
+        height: preferredSize + flexItem.borderAndPaddingLogicalHeight())
+    }
   }
 
   private func prepareFlexItemForPositionedLayout(flexItem: RenderBoxWrapper) {

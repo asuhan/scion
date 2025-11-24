@@ -851,6 +851,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setOverridingLogicalHeight(height: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setOverridingLogicalWidth(width: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearOverridingContentSize() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
