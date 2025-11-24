@@ -619,10 +619,21 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func crossAxisExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    return isHorizontalFlow() ? flexItem.height() : flexItem.width();
+    return isHorizontalFlow() ? flexItem.height() : flexItem.width()
   }
 
   private func crossAxisIntrinsicExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    return mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
+      ? flexItemIntrinsicLogicalHeight(flexItem: flexItem)
+      : flexItemIntrinsicLogicalWidth(flexItem: flexItem)
+  }
+
+  private func flexItemIntrinsicLogicalHeight(flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flexItemIntrinsicLogicalWidth(flexItem: RenderBoxWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
