@@ -561,8 +561,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func isLeftToRightFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isColumnFlow() {
+      return style().blockFlowDirection() == .TopToBottom
+        || style().blockFlowDirection() == .LeftToRight
+    }
+    return style().isLeftToRightDirection() != (style().flexDirection() == .RowReverse)
   }
 
   private func isMultiline() -> Bool {
