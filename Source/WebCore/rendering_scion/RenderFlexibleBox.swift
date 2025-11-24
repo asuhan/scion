@@ -215,8 +215,32 @@ private func contentAlignmentStartOverflow(
   availableFreeSpace: LayoutUnit, position: ContentPosition, distribution: ContentDistribution,
   safety: OverflowAlignment, isReverse: Bool
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if availableFreeSpace >= Int32(0) || safety == .Safe {
+    return LayoutUnit(value: UInt64(0))
+  }
+
+  if distribution == .SpaceAround || distribution == .SpaceEvenly {
+    return -availableFreeSpace / 2
+  }
+
+  switch position {
+  case .Start, .Baseline, .LastBaseline:
+    return LayoutUnit(value: UInt64(0))
+  case .FlexStart:
+    return isReverse ? -availableFreeSpace : LayoutUnit(value: UInt64(0))
+  case .Center:
+    return -availableFreeSpace / 2
+  case .End:
+    return -availableFreeSpace
+  case .FlexEnd:
+    return isReverse ? LayoutUnit(value: UInt64(0)) : -availableFreeSpace
+  default:
+    assert(
+      (distribution == .Default && position == .Normal)  // Normal alignment.
+        || distribution == .Stretch
+        || distribution == .SpaceBetween)
+    return isReverse ? -availableFreeSpace : LayoutUnit(value: UInt64(0))
+  }
 }
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
