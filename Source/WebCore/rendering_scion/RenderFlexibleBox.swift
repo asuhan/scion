@@ -378,8 +378,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   func clearCachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if flexItem.isRenderReplaced() {
+      return  // Replaced elements know their intrinsic height already, so nothing to do.
+    }
+    intrinsicContentLogicalHeights.removeValue(forKey: CPtrToInt(flexItem.p))
   }
 
   private enum GapType {
