@@ -243,6 +243,23 @@ private func contentAlignmentStartOverflow(
   }
 }
 
+private func initialAlignContentOffset(
+  availableFreeSpace: LayoutUnit, alignContent: ContentPosition,
+  alignContentDistribution: ContentDistribution, safety: OverflowAlignment, numberOfLines: UInt32,
+  isReversed: Bool
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func alignContentSpaceBetweenFlexItems(
+  availableFreeSpace: LayoutUnit, alignContentDistribution: ContentDistribution,
+  numberOfLines: UInt32
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
@@ -552,7 +569,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
-    let crossAxisOffset: LayoutUnit
+    var crossAxisOffset: LayoutUnit
     var crossAxisExtent: LayoutUnit
     let flexLayoutItems: FlexLayoutItems
   }
@@ -1184,6 +1201,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       cacheFlexItemMainSize(flexItem: flexItem)
       flexItem.clearOverridingContainingBlockContentSize()
     }
+  }
+
+  private func adjustAlignmentForFlexItem(flexItem: RenderBoxWrapper, delta: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func alignmentForFlexItem(flexItem: RenderBoxWrapper) -> ItemPosition {
@@ -2331,8 +2353,51 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func alignFlexLines(lineStates: inout FlexLineStates, gapBetweenLines: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if lineStates.isEmpty || !isMultiline() {
+      return
+    }
+
+    let position = style().resolvedAlignContentPosition(
+      normalValueBehavior: contentAlignmentNormalBehavior())
+    let distribution = style().resolvedAlignContentDistribution(
+      normalValueBehavior: contentAlignmentNormalBehavior())
+    let safety = style().alignContent().overflow
+    let isWrapReverse = style().flexWrap() == .Reverse
+
+    if position == .FlexStart && !gapBetweenLines.bool() && safety != .Safe && !isWrapReverse {
+      return
+    }
+
+    let numLines = UInt64(lineStates.count)
+    var availableCrossAxisSpace =
+      crossAxisContentExtent() - (numLines - UInt64(1)) * gapBetweenLines
+    for lineState in lineStates {
+      availableCrossAxisSpace -= lineState.crossAxisExtent
+    }
+
+    alignContentStartOverflow = contentAlignmentStartOverflow(
+      availableFreeSpace: availableCrossAxisSpace, position: position, distribution: distribution,
+      safety: safety, isReverse: isWrapReverse)
+    var lineOffset = initialAlignContentOffset(
+      availableFreeSpace: availableCrossAxisSpace, alignContent: position,
+      alignContentDistribution: distribution, safety: safety, numberOfLines: UInt32(numLines),
+      isReversed: isWrapReverse)
+    for lineNumber in 0..<numLines {
+      lineStates[Int(lineNumber)].crossAxisOffset += lineOffset
+      for flexLayoutItem in lineStates[Int(lineNumber)].flexLayoutItems {
+        adjustAlignmentForFlexItem(flexItem: flexLayoutItem.renderer, delta: lineOffset)
+      }
+
+      if distribution == .Stretch && availableCrossAxisSpace > 0 {
+        lineStates[Int(lineNumber)].crossAxisExtent += availableCrossAxisSpace / UInt32(numLines)
+      }
+
+      lineOffset +=
+        alignContentSpaceBetweenFlexItems(
+          availableFreeSpace: availableCrossAxisSpace, alignContentDistribution: distribution,
+          numberOfLines: UInt32(numLines))
+        + gapBetweenLines
+    }
   }
 
   private func alignFlexItems(lineStates: inout FlexLineStates) {
@@ -2399,6 +2464,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private let marginTrimItems = MarginTrimItems()
+
+  private var alignContentStartOverflow = LayoutUnit(value: 0)
 
   var justifyContentStartOverflow = LayoutUnit(value: 0)
 
