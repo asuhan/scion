@@ -2010,8 +2010,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func resetAutoMarginsAndLogicalTopInCrossAxis(flexItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasAutoMarginsInCrossAxis(flexItem: flexItem) {
+      return
+    }
+    flexItem.updateLogicalHeight()
+    let zero = LayoutUnit(value: UInt64(0))
+    if isHorizontalFlow() {
+      if flexItem.style().marginTop().isAuto() {
+        flexItem.setMarginTop(margin: zero)
+      }
+      if flexItem.style().marginBottom().isAuto() {
+        flexItem.setMarginBottom(margin: zero)
+      }
+    } else {
+      if flexItem.style().marginLeft().isAuto() {
+        flexItem.setMarginLeft(margin: zero)
+      }
+      if flexItem.style().marginRight().isAuto() {
+        flexItem.setMarginRight(margin: zero)
+      }
+    }
   }
 
   private func setOverridingMainSizeForFlexItem(
