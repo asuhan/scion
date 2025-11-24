@@ -629,8 +629,17 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexItemIntrinsicLogicalHeight(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This should only be called if the logical height is the cross size
+    assert(mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+    if needToStretchFlexItemLogicalHeight(flexItem: flexItem) {
+      let flexItemContentHeight = cachedFlexItemIntrinsicContentLogicalHeight(flexItem: flexItem)
+      let flexItemWithScrollbarHeight = flexItemContentHeight + flexItem.scrollbarLogicalHeight()
+      let flexItemLogicalHeight =
+        flexItemWithScrollbarHeight + flexItem.borderAndPaddingLogicalHeight()
+      return flexItem.constrainLogicalHeightByMinMax(
+        logicalHeight: flexItemLogicalHeight, intrinsicContentHeight: flexItemContentHeight)
+    }
+    return flexItem.logicalHeight()
   }
 
   private func flexItemIntrinsicLogicalWidth(flexItem: RenderBoxWrapper) -> LayoutUnit {
@@ -1233,6 +1242,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // FIXME: Eventually we should support other types of sizes here.
     // Requires updating computeMainSizeFromAspectRatioUsing.
     return length.isFixed()
+  }
+
+  private func needToStretchFlexItemLogicalHeight(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func flexItemHasIntrinsicMainAxisSize(flexItem: RenderBoxWrapper) -> Bool {
