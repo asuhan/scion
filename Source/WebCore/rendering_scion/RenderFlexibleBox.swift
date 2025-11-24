@@ -243,6 +243,8 @@ private func contentAlignmentStartOverflow(
   }
 }
 
+private func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
+
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
@@ -337,6 +339,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     clearNeedsLayout()
 
     inLayout = oldInLayout
+  }
+
+  override func firstLineBaseline() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func lastLineBaseline() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func isHorizontalFlow() -> Bool {
@@ -1703,8 +1715,44 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func marginBoxAscentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isHorizontalFlow = isHorizontalFlow()
+    let direction: LineDirectionMode = isHorizontalFlow ? .HorizontalLine : .VerticalLine
+
+    if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
+      return synthesizedBaseline(
+        box: flexItem, parentStyle: style(), direction: direction, edge: .BorderBox)
+        + flowAwareMarginBeforeForFlexItem(flexItem: flexItem)
+    }
+    var ascent =
+      alignmentForFlexItem(flexItem: flexItem) == .LastBaseline
+      ? flexItem.lastLineBaseline() : flexItem.firstLineBaseline()
+    if ascent == nil {
+      return synthesizedBaseline(
+        box: flexItem, parentStyle: style(), direction: direction, edge: .BorderBox)
+        + flowAwareMarginBeforeForFlexItem(flexItem: flexItem)
+    }
+
+    if flexItem.isWritingModeRoot()
+      && style().isFlippedBlocksWritingMode() != flexItem.style().isFlippedBlocksWritingMode()
+      && !flexItem.isHorizontalWritingMode()
+    {
+      // Baseline from flex item with opposite block direction needs to be resolved as if flex item had the same block direction.
+      //  _____________________________ <- flex box top/left (e.g. writing-mode: vertical-rl)
+      // |        __________________   |
+      // |       |  20px |    80px  |<-- flex item with vertical-lr (top is at visual left)
+      // |       |<----->|<-------->|  |
+      // |       top     baseline   |  |
+      // where computed baseline is 20px and resolved (as if flex item shares the block direction with flex box) is 80px.
+      ascent = flexItem.logicalHeight() - ascent!
+    }
+
+    if isHorizontalFlow ? flexItem.isScrollContainerY() : flexItem.isScrollContainerX() {
+      return clamp(
+        val: ascent!, lo: LayoutUnit(value: UInt64(0)),
+        hi: crossAxisExtentForFlexItem(flexItem: flexItem))
+        + flowAwareMarginBeforeForFlexItem(flexItem: flexItem)
+    }
+    return ascent! + flowAwareMarginBeforeForFlexItem(flexItem: flexItem)
   }
 
   private func computeFlexItemMarginValue(margin: LengthWrapper) -> LayoutUnit {

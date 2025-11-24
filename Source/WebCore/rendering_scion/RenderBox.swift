@@ -2256,6 +2256,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isScrollContainerX() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isScrollContainerY() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2679,6 +2684,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func enclosingFloatPaintingLayer() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func firstLineBaseline() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastLineBaseline() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -3993,4 +4008,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Our overflow information.
   var overflow: RenderOverflow? = nil
+}
+
+func synthesizedBaseline(
+  box: RenderBoxWrapper, parentStyle: RenderStyleWrapper, direction: LineDirectionMode,
+  edge: BaselineSynthesisEdge
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }

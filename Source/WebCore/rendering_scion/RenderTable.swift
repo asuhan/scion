@@ -327,6 +327,16 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func firstLineBaseline() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func lastLineBaseline() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateLogicalWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

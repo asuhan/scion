@@ -28,3 +28,9 @@ enum FontBaseline: UInt8 {
   case IdeographicBaseline
   case CentralBaseline
 }
+
+enum BaselineSynthesisEdge {
+  case ContentBox
+  case BorderBox
+  case MarginBox
+}
