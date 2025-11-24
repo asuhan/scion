@@ -1642,6 +1642,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return nil
   }
 
+  func computeLogicalWidthInFragment(
+    computedValues: inout LogicalExtentComputedValues,
+    fragment: RenderFragmentContainerWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func stretchesToViewport() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -643,8 +643,18 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexItemIntrinsicLogicalWidth(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This should only be called if the logical width is the cross size
+    assert(!mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+    if flexItemCrossSizeIsDefinite(flexItem: flexItem, length: flexItem.style().logicalWidth()) {
+      return flexItem.logicalWidth()
+    }
+
+    var values = LogicalExtentComputedValues()
+    do {
+      let _ = OverridingSizesScope(box: flexItem, axis: .Inline)
+      flexItem.computeLogicalWidthInFragment(computedValues: &values)
+    }
+    return values.extent
   }
 
   private func mainAxisExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
