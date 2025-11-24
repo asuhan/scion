@@ -897,8 +897,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func crossAxisScrollbarExtent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutUnit(
+      value: isHorizontalFlow() ? horizontalScrollbarHeight() : verticalScrollbarWidth())
   }
 
   private func flexItemHasComputableAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
