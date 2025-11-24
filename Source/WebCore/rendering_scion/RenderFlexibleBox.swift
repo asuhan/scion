@@ -809,8 +809,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flowAwarePaddingStart() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      return isLeftToRightFlow() ? paddingLeft() : paddingRight()
+    }
+    return isLeftToRightFlow() ? paddingTop() : paddingBottom()
   }
 
   private func flowAwarePaddingEnd() -> LayoutUnit {
