@@ -658,8 +658,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func mainAxisExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isHorizontalFlow() ? flexItem.size().width() : flexItem.size().height()
   }
 
   private func mainAxisContentExtentForFlexItemIncludingScrollbar(flexItem: RenderBoxWrapper)
