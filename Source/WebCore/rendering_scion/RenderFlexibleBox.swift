@@ -197,8 +197,18 @@ private func justifyContentSpaceBetweenFlexItems(
   availableFreeSpace: LayoutUnit, justifyContentDistribution: ContentDistribution,
   numberOfFlexItems: UInt32
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if availableFreeSpace > 0 && numberOfFlexItems > 1 {
+    if justifyContentDistribution == .SpaceBetween {
+      return availableFreeSpace / (numberOfFlexItems - 1)
+    }
+    if justifyContentDistribution == .SpaceAround {
+      return availableFreeSpace / numberOfFlexItems
+    }
+    if justifyContentDistribution == .SpaceEvenly {
+      return availableFreeSpace / (numberOfFlexItems + 1)
+    }
+  }
+  return LayoutUnit(value: 0)
 }
 
 private func contentAlignmentStartOverflow(
