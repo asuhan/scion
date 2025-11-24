@@ -73,8 +73,15 @@ struct OverridingSizesScope: ~Copyable {
 
 private func updateFlexItemDirtyBitsBeforeLayout(relayoutFlexItem: Bool, flexItem: RenderBoxWrapper)
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if flexItem.isOutOfFlowPositioned() {
+    return
+  }
+
+  // FIXME: Technically percentage height objects only need a relayout if their percentage isn't going to be turned into
+  // an auto value. Add a method to determine this, so that we can avoid the relayout.
+  if relayoutFlexItem || flexItem.hasRelativeLogicalHeight() {
+    flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+  }
 }
 
 private func contentAlignmentNormalBehavior() -> StyleContentAlignmentData {
