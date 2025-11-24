@@ -708,6 +708,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func marginBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func marginLeft() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
