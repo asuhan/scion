@@ -1596,8 +1596,23 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   private func updateAutoMarginsInMainAxis(flexItem: RenderBoxWrapper, autoMarginOffset: LayoutUnit)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(autoMarginOffset >= LayoutUnit(value: UInt64(0)))
+
+    if isHorizontalFlow() {
+      if flexItem.style().marginLeft().isAuto() {
+        flexItem.setMarginLeft(margin: autoMarginOffset)
+      }
+      if flexItem.style().marginRight().isAuto() {
+        flexItem.setMarginRight(margin: autoMarginOffset)
+      }
+    } else {
+      if flexItem.style().marginTop().isAuto() {
+        flexItem.setMarginTop(margin: autoMarginOffset)
+      }
+      if flexItem.style().marginBottom().isAuto() {
+        flexItem.setMarginBottom(margin: autoMarginOffset)
+      }
+    }
   }
 
   private func initializeMarginTrimState() {
