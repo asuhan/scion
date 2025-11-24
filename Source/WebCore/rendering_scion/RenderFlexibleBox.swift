@@ -102,8 +102,8 @@ private func isSVGRootWithIntrinsicAspectRatio(flexItem: RenderBoxWrapper) -> Bo
 }
 
 private func flexItemHasAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return flexItem.hasIntrinsicAspectRatio() || flexItem.style().hasAspectRatio()
+    || isSVGRootWithIntrinsicAspectRatio(flexItem: flexItem)
 }
 
 // This is a RAII class that is used to temporarily set the flex basis as the child size in the main axis.
