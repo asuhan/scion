@@ -1076,8 +1076,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func setFlowAwareLocationForFlexItem(
     flexItem: RenderBoxWrapper, location: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      flexItem.setLocation(p: location)
+    } else {
+      flexItem.setLocation(p: location.transposedPoint())
+    }
   }
 
   private func adjustForBoxSizing(box: RenderBoxWrapper, value: LayoutUnit) -> LayoutUnit {
