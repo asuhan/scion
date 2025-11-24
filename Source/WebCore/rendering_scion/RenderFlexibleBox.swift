@@ -1558,8 +1558,40 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func autoMarginOffsetInMainAxis(
     flexLayoutItems: FlexLayoutItems, availableFreeSpace: inout LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: UInt64(0))
+
+    if availableFreeSpace <= zero {
+      return zero
+    }
+
+    var numberOfAutoMargins = 0
+    let isHorizontal = isHorizontalFlow()
+    for flexLayoutItem in flexLayoutItems {
+      let flexItemStyle = flexLayoutItem.style()
+      assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+      if isHorizontal {
+        if flexItemStyle.marginLeft().isAuto() {
+          numberOfAutoMargins += 1
+        }
+        if flexItemStyle.marginRight().isAuto() {
+          numberOfAutoMargins += 1
+        }
+      } else {
+        if flexItemStyle.marginTop().isAuto() {
+          numberOfAutoMargins += 1
+        }
+        if flexItemStyle.marginBottom().isAuto() {
+          numberOfAutoMargins += 1
+        }
+      }
+    }
+    if numberOfAutoMargins == 0 {
+      return zero
+    }
+
+    let sizeOfAutoMargin = availableFreeSpace / numberOfAutoMargins
+    availableFreeSpace = zero
+    return sizeOfAutoMargin
   }
 
   private func updateAutoMarginsInMainAxis(flexItem: RenderBoxWrapper, autoMarginOffset: LayoutUnit)
