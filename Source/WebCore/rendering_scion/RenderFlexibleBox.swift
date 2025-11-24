@@ -1293,8 +1293,27 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func needToStretchFlexItemLogicalHeight(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This function is a little bit magical. It relies on the fact that blocks
+    // intrinsically "stretch" themselves in their inline axis, i.e. a <div> has
+    // an implicit width: 100%. So the child will automatically stretch if our
+    // cross axis is the child's inline axis. That's the case if:
+    // - We are horizontal and the child is in vertical writing mode
+    // - We are vertical and the child is in horizontal writing mode
+    // Otherwise, we need to stretch if the cross axis size is auto.
+    if alignmentForFlexItem(flexItem: flexItem) != .Stretch {
+      return false
+    }
+
+    if isHorizontalFlow() != flexItem.style().isHorizontalWritingMode() {
+      return false
+    }
+
+    // Aspect ratio is properly handled by RenderReplaced during layout.
+    if flexItem.isRenderReplaced() && flexItemHasAspectRatio(flexItem: flexItem) {
+      return false
+    }
+
+    return flexItem.style().logicalHeight().isAuto()
   }
 
   private func flexItemHasIntrinsicMainAxisSize(flexItem: RenderBoxWrapper) -> Bool {
