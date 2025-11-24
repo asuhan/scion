@@ -2295,8 +2295,39 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     flexLayoutItems: FlexLayoutItems, crossAxisOffset: LayoutUnit, availableFreeSpace: LayoutUnit,
     gapBetweenItems: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This is similar to the logic in layoutAndPlaceFlexItems, except we place
+    // the children starting from the end of the flexbox. We also don't need to
+    // layout anything since we're just moving the children to a new position.
+    var mainAxisOffset = logicalHeight() - flowAwareBorderEnd() - flowAwarePaddingEnd()
+    mainAxisOffset -= initialJustifyContentOffset(
+      style: style(), availableFreeSpace: availableFreeSpace,
+      numberOfFlexItems: UInt32(flexLayoutItems.count), isReversed: isColumnOrRowReverse())
+    mainAxisOffset -= isHorizontalFlow() ? verticalScrollbarWidth() : horizontalScrollbarHeight()
+
+    let distribution = style().resolvedJustifyContentDistribution(
+      normalValueBehavior: contentAlignmentNormalBehavior())
+
+    for (i, flexLayoutItem) in flexLayoutItems.enumerated() {
+      let flexItem = flexLayoutItem.renderer
+      assert(!flexItem.isOutOfFlowPositioned())
+      mainAxisOffset -=
+        mainAxisExtentForFlexItem(flexItem: flexItem)
+        + flowAwareMarginEndForFlexItem(flexItem: flexItem)
+      setFlowAwareLocationForFlexItem(
+        flexItem: flexItem,
+        location: LayoutPointWrapper(
+          x: mainAxisOffset,
+          y: crossAxisOffset + flowAwareMarginBeforeForFlexItem(flexItem: flexItem)))
+      mainAxisOffset -= flowAwareMarginStartForFlexItem(flexItem: flexItem)
+
+      if i != flexLayoutItems.count - 1 {
+        // The last item does not get extra space added.
+        mainAxisOffset -=
+          justifyContentSpaceBetweenFlexItems(
+            availableFreeSpace: availableFreeSpace, justifyContentDistribution: distribution,
+            numberOfFlexItems: UInt32(flexLayoutItems.count)) + gapBetweenItems
+      }
+    }
   }
 
   private func alignFlexLines(lineStates: inout FlexLineStates, gapBetweenLines: LayoutUnit) {
