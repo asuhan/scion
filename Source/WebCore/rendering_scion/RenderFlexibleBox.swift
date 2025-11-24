@@ -367,8 +367,14 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   private func cachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderReplaced = flexItem as? RenderReplacedWrapper {
+      return renderReplaced.intrinsicLogicalHeight()
+    }
+    if let cachedContentLogicalHeight = intrinsicContentLogicalHeights[CPtrToInt(flexItem.p)] {
+      return cachedContentLogicalHeight
+    }
+
+    return flexItem.contentLogicalHeight()
   }
 
   func clearCachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) {
@@ -2117,6 +2123,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   // This is used to cache the preferred size for orthogonal flow children so we
   // don't have to relayout to get it
   private var intrinsicSizeAlongMainAxis: [UInt: LayoutUnit] = [:]
+
+  // This is used to cache the intrinsic size on the cross axis to avoid
+  // relayouts when stretching.
+  private var intrinsicContentLogicalHeights: [UInt: LayoutUnit] = [:]
 
   // This set is used to keep track of which children we laid out in this
   // current layout iteration. We need it because the ones in this set may

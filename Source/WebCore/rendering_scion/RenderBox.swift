@@ -1654,7 +1654,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func intrinsicLogicalHeight() -> LayoutUnit {
+  func intrinsicLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
