@@ -863,8 +863,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flowAwareMarginBeforeForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch transformedBlockFlowDirection() {
+    case .TopToBottom:
+      return flexItem.marginTop()
+    case .BottomToTop:
+      return flexItem.marginBottom()
+    case .LeftToRight:
+      return flexItem.marginLeft()
+    case .RightToLeft:
+      return flexItem.marginRight()
+    }
   }
 
   private func crossAxisMarginExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
