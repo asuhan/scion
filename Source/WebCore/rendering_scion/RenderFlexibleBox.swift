@@ -670,8 +670,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func mainAxisExtent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isHorizontalFlow() ? size().width() : size().height()
   }
 
   private func crossAxisContentExtent() -> LayoutUnit {
