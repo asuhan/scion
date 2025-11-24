@@ -410,8 +410,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   static func leftRightAxisDirectionFromStyle(style: RenderStyleWrapper) -> TextDirection? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style.isColumnFlexDirection() {
+      return style.direction()
+    }
+
+    if !style.isHorizontalWritingMode() {
+      return (style.blockFlowDirection() == .LeftToRight) ? .LTR : .RTL
+    }
+
+    return nil
   }
 
   override func computeIntrinsicLogicalWidths(
