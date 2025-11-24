@@ -128,8 +128,16 @@ struct ScopedFlexBasisAsFlexItemMainSize: ~Copyable {
 private func resolveLeftRightAlignment(
   position: ContentPosition, style: RenderStyleWrapper, isReversed: Bool
 ) -> ContentPosition {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var position = position
+  if position == .Left || position == .Right {
+    let leftRightAxisDirection = RenderFlexibleBoxWrapper.leftRightAxisDirectionFromStyle(
+      style: style)
+    position =
+      (style.justifyContent().isEndward(
+        leftRightAxisDirection: leftRightAxisDirection, isFlexReverse: isReversed))
+      ? .End : .Start
+  }
+  return position
 }
 
 private func initialJustifyContentOffset(
@@ -312,6 +320,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   func shouldApplyMinBlockSizeAutoForFlexItem(flexItem: RenderBoxWrapper) -> Bool {
     return !mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
       && shouldApplyMinSizeAutoForFlexItem(flexItem: flexItem)
+  }
+
+  static func leftRightAxisDirectionFromStyle(style: RenderStyleWrapper) -> TextDirection? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func computeIntrinsicLogicalWidths(

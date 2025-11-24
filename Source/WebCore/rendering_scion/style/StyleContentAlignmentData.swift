@@ -60,6 +60,38 @@ class StyleContentAlignmentData {
     }
   }
 
+  func isEndward(leftRightAxisDirection: TextDirection? = nil, isFlexReverse: Bool = false)
+    -> Bool
+  {
+    switch position {
+    case .Normal:
+      switch distribution {
+      case .Default, .Stretch, .SpaceBetween:
+        return isFlexReverse
+      default:
+        return false
+      }
+    case .Start, .Baseline, .Center:
+      return false
+    case .End, .LastBaseline:
+      return true
+    case .FlexStart:
+      return isFlexReverse
+    case .FlexEnd:
+      return !isFlexReverse
+    case .Left:
+      if let leftRightAxisDirection = leftRightAxisDirection {
+        return leftRightAxisDirection == .RTL
+      }
+      return false
+    case .Right:
+      if let leftRightAxisDirection = leftRightAxisDirection {
+        return leftRightAxisDirection == .LTR
+      }
+      return false
+    }
+  }
+
   // leftRightAxisDirection is only needed for justify-content (invalid for align-content).
   // Pass std::nullopt if neither the inline axis nor the physical left-right axis matches the justify-content axis (e.g. in flexbox).
   func isCentered() -> Bool {

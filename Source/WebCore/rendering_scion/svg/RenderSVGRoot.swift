@@ -23,6 +23,11 @@
  */
 
 final class RenderSVGRootWrapper: RenderReplacedWrapper {
+  override final func hasIntrinsicAspectRatio() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldApplyViewportClip() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
