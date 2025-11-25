@@ -219,7 +219,9 @@ private func alignmentOffset(
   case .Legacy, .Auto, .Normal:
     fatalError("Not reached")
   case .Start, .End, .SelfStart, .SelfEnd, .Left, .Right:
-    fatalError("Not reached")
+    fatalError(
+      "Not reached: \(position) alignmentForFlexItem should have transformed this position value to something we handle below."
+    )
   case .Stretch:
     // Actual stretching must be handled by the caller. Since wrap-reverse
     // flips cross start and cross end, stretch children should be aligned
