@@ -211,6 +211,14 @@ private func justifyContentSpaceBetweenFlexItems(
   return LayoutUnit(value: 0)
 }
 
+private func alignmentOffset(
+  availableFreeSpace: LayoutUnit, position: ItemPosition, ascent: LayoutUnit?,
+  maxAscent: LayoutUnit?, isWrapReverse: Bool
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func contentAlignmentStartOverflow(
   availableFreeSpace: LayoutUnit, position: ContentPosition, distribution: ContentDistribution,
   safety: OverflowAlignment, isReverse: Bool
@@ -571,6 +579,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
     var crossAxisOffset: LayoutUnit
     var crossAxisExtent: LayoutUnit
+    let baselineAlignmentState: BaselineAlignmentState? = nil
     let flexLayoutItems: FlexLayoutItems
   }
 
@@ -1264,6 +1273,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return align
   }
 
+  private func overflowAlignmentForFlexItem(flexItem: RenderBoxWrapper) -> OverflowAlignment {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func canComputePercentageFlexBasis(
     flexItem: RenderBoxWrapper, flexBasis: LengthWrapper,
     updateDescendants: UpdatePercentageHeightDescendants
@@ -1712,6 +1726,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return flexItem.style().marginLeft().isAuto() || flexItem.style().marginRight().isAuto()
   }
 
+  private func updateAutoMarginsInCrossAxis(
+    flexItem: RenderBoxWrapper, availableAlignmentSpace: LayoutUnit
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func repositionLogicalHeightDependentFlexItems(
     lineStates: inout FlexLineStates, gapBetweenLines: LayoutUnit
   ) {
@@ -1734,6 +1755,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // direction:rtl + flex-direction:column means the cross-axis direction is
     // flipped.
     flipForRightToLeftColumn(lineStates: lineStates)
+  }
+
+  private func availableAlignmentSpaceForFlexItem(
+    lineCrossAxisExtent: LayoutUnit, flexItem: RenderBoxWrapper
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func marginBoxAscentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
@@ -2401,6 +2429,54 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func alignFlexItems(lineStates: inout FlexLineStates) {
+    for lineState in lineStates {
+      let lineCrossAxisExtent = lineState.crossAxisExtent
+
+      if lineState.baselineAlignmentState != nil {
+        performBaselineAlignment(lineState: lineState)
+      }
+
+      for flexLayoutItem in lineState.flexLayoutItems {
+        assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+
+        let safety = overflowAlignmentForFlexItem(flexItem: flexLayoutItem.renderer)
+        var position = alignmentForFlexItem(flexItem: flexLayoutItem.renderer)
+        if updateAutoMarginsInCrossAxis(
+          flexItem: flexLayoutItem.renderer,
+          availableAlignmentSpace: max(
+            LayoutUnit(value: UInt64(0)),
+            availableAlignmentSpaceForFlexItem(
+              lineCrossAxisExtent: lineCrossAxisExtent, flexItem: flexLayoutItem.renderer)))
+          || position == .Baseline || position == .LastBaseline
+        {
+          continue
+        }
+
+        if position == .Stretch {
+          applyStretchAlignmentToFlexItem(
+            flexItem: flexLayoutItem.renderer, lineCrossAxisExtent: lineCrossAxisExtent)
+        }
+        let availableSpace = availableAlignmentSpaceForFlexItem(
+          lineCrossAxisExtent: lineCrossAxisExtent, flexItem: flexLayoutItem.renderer)
+        if availableSpace < Int32(0) && safety == .Safe {
+          position = .FlexStart  // See Start == FlexStart assumption in alignmentForFlexItem().
+        }
+        let offset = alignmentOffset(
+          availableFreeSpace: availableSpace, position: position, ascent: nil, maxAscent: nil,
+          isWrapReverse: style().flexWrap() == .Reverse)
+        adjustAlignmentForFlexItem(flexItem: flexLayoutItem.renderer, delta: offset)
+      }
+    }
+  }
+
+  private func applyStretchAlignmentToFlexItem(
+    flexItem: RenderBoxWrapper, lineCrossAxisExtent: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func performBaselineAlignment(lineState: LineState) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
