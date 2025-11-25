@@ -1250,6 +1250,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func isRowFlexDirection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isColumnFlexDirection() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
