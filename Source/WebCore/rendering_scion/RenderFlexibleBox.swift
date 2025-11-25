@@ -215,8 +215,29 @@ private func alignmentOffset(
   availableFreeSpace: LayoutUnit, position: ItemPosition, ascent: LayoutUnit?,
   maxAscent: LayoutUnit?, isWrapReverse: Bool
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch position {
+  case .Legacy, .Auto, .Normal:
+    fatalError("Not reached")
+  case .Start, .End, .SelfStart, .SelfEnd, .Left, .Right:
+    fatalError("Not reached")
+  case .Stretch:
+    // Actual stretching must be handled by the caller. Since wrap-reverse
+    // flips cross start and cross end, stretch children should be aligned
+    // with the cross end. This matters because applyStretchAlignment
+    // doesn't always stretch or stretch fully (explicit cross size given, or
+    // stretching constrained by max-height/max-width). For flex-start and
+    // flex-end this is handled by alignmentForFlexItem().
+    return isWrapReverse ? availableFreeSpace : LayoutUnit(value: 0)
+  case .FlexStart:
+    return LayoutUnit(value: 0)
+  case .FlexEnd:
+    return availableFreeSpace
+  case .Center:
+    return availableFreeSpace / 2
+  case .Baseline, .LastBaseline:
+    let zero = LayoutUnit(value: UInt64(0))
+    return (maxAscent ?? zero) - (ascent ?? zero)
+  }
 }
 
 private func contentAlignmentStartOverflow(
