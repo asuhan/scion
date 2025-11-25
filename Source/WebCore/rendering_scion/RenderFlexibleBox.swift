@@ -3013,8 +3013,34 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexItemForLastBaseline() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Looking for baseline flex candidate on visually last line.
+    let useLastLine = style().flexWrap() == .Reverse
+    let useLastItem =
+      style().flexDirection() == .RowReverse || style().flexDirection() == .ColumnReverse
+
+    if !useLastLine {
+      if !useLastItem {
+        // Logically (and visually) last item on logically (and visually) last line.
+        return firstBaselineCandidateOnLine(
+          flexItemIterator: orderIterator!.reverse(), baselinePosition: .LastBaseline,
+          numberOfItemsOnLine: numberOfFlexItemsOnLastLine)
+      }
+      // Logically first (but visually last) item  on logically (and visually) last line.
+      return lastBaselineCandidateOnLine(
+        flexItemIterator: orderIterator!.reverse(), baselinePosition: .LastBaseline,
+        numberOfItemsOnLine: numberOfFlexItemsOnLastLine)
+    }
+
+    if !useLastItem {
+      // Logically (and visually) last item on logically first (but visually last) line.
+      return lastBaselineCandidateOnLine(
+        flexItemIterator: orderIterator!, baselinePosition: .LastBaseline,
+        numberOfItemsOnLine: numberOfFlexItemsOnFirstLine)
+    }
+    // Logically first (but visually last) item on logically last (but visually first) line.
+    return firstBaselineCandidateOnLine(
+      flexItemIterator: orderIterator!, baselinePosition: .LastBaseline,
+      numberOfItemsOnLine: numberOfFlexItemsOnFirstLine)
   }
 
   private func firstBaselineCandidateOnLine(
