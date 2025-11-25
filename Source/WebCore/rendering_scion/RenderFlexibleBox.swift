@@ -1849,8 +1849,64 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func updateAutoMarginsInCrossAxis(
     flexItem: RenderBoxWrapper, availableAlignmentSpace: LayoutUnit
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!flexItem.isOutOfFlowPositioned())
+    assert(availableAlignmentSpace >= LayoutUnit(value: UInt64(0)))
+
+    let isHorizontal = isHorizontalFlow()
+    let topOrLeft = isHorizontal ? flexItem.style().marginTop() : flexItem.style().marginLeft()
+    let bottomOrRight =
+      isHorizontal ? flexItem.style().marginBottom() : flexItem.style().marginRight()
+    if topOrLeft.isAuto() && bottomOrRight.isAuto() {
+      adjustAlignmentForFlexItem(flexItem: flexItem, delta: availableAlignmentSpace / 2)
+      if isHorizontal {
+        flexItem.setMarginTop(margin: availableAlignmentSpace / 2)
+        flexItem.setMarginBottom(margin: availableAlignmentSpace / 2)
+      } else {
+        flexItem.setMarginLeft(margin: availableAlignmentSpace / 2)
+        flexItem.setMarginRight(margin: availableAlignmentSpace / 2)
+      }
+      return true
+    }
+    var shouldAdjustTopOrLeft = true
+    if isColumnFlow() && !flexItem.style().isLeftToRightDirection() {
+      // For column flows, only make this adjustment if topOrLeft corresponds to
+      // the "before" margin, so that flipForRightToLeftColumn will do the right
+      // thing.
+      shouldAdjustTopOrLeft = false
+    }
+    if !isColumnFlow() && flexItem.style().isFlippedBlocksWritingMode() {
+      // If we are a flipped writing mode, we need to adjust the opposite side.
+      // This is only needed for row flows because this only affects the
+      // block-direction axis.
+      shouldAdjustTopOrLeft = false
+    }
+
+    if topOrLeft.isAuto() {
+      if shouldAdjustTopOrLeft {
+        adjustAlignmentForFlexItem(flexItem: flexItem, delta: availableAlignmentSpace)
+      }
+
+      if isHorizontal {
+        flexItem.setMarginTop(margin: availableAlignmentSpace)
+      } else {
+        flexItem.setMarginLeft(margin: availableAlignmentSpace)
+      }
+      return true
+    }
+
+    if bottomOrRight.isAuto() {
+      if !shouldAdjustTopOrLeft {
+        adjustAlignmentForFlexItem(flexItem: flexItem, delta: availableAlignmentSpace)
+      }
+
+      if isHorizontal {
+        flexItem.setMarginBottom(margin: availableAlignmentSpace)
+      } else {
+        flexItem.setMarginRight(margin: availableAlignmentSpace)
+      }
+      return true
+    }
+    return false
   }
 
   private func repositionLogicalHeightDependentFlexItems(
