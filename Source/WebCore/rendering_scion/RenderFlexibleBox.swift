@@ -335,6 +335,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  typealias Direction = FlowDirection
+
   override func avoidsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -501,6 +503,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       return !isColumnFlow()
     }
     return isColumnFlow()
+  }
+
+  private func crossAxisDirection() -> Direction {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isFlexibleBoxImpl() -> Bool {
@@ -2795,8 +2802,29 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func shouldAdjustItemTowardsCrossAxisEnd(
     flexItemBlockFlowDirection: FlowDirection, alignment: ItemPosition
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(alignment == .Baseline || alignment == .LastBaseline)
+
+    // The direction in which we are aligning (i.e. direction of the cross axis) must be parallel with the direction of the flex item's used writing mode
+    if crossAxisDirection() == .TopToBottom || crossAxisDirection() == .BottomToTop {
+      assert(
+        flexItemBlockFlowDirection == .TopToBottom || flexItemBlockFlowDirection == .BottomToTop)
+    }
+    if crossAxisDirection() == .LeftToRight || crossAxisDirection() == .RightToLeft {
+      assert(
+        flexItemBlockFlowDirection == .LeftToRight || flexItemBlockFlowDirection == .RightToLeft)
+    }
+
+    // For first baseline aligned items, if its block direction is the opposite of
+    // the cross axis direction, then that means its fallback alignment (safe self-start)
+    // is in the direction of the end of the cross axis
+    //
+    // For last baseline aligned items, if its block direction is in the same direction as
+    // the cross axis direction, then that means its fallback alignment (safe self-end) is
+    // in the direction of the end of the cross axis
+    if alignment == .Baseline {
+      return crossAxisDirection() != flexItemBlockFlowDirection
+    }
+    return crossAxisDirection() == flexItemBlockFlowDirection
   }
 
   private func flipForRightToLeftColumn(lineStates: FlexLineStates) {
