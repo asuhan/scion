@@ -2909,8 +2909,24 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func repaintFlexItemsDuringLayoutIfMoved(oldFlexItemRects: FlexItemFrameRects) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var index = 0
+    var flexItem = orderIterator!.first()
+    while flexItem != nil {
+      if flexItem!.isOutOfFlowPositioned() {
+        flexItem = orderIterator!.next()
+        continue
+      }
+
+      // If the child moved, we have to repaint it as well as any floating/positioned
+      // descendants. An exception is if we need a layout. In this case, we know we're going to
+      // repaint ourselves (and the child) anyway.
+      if !selfNeedsLayout() && flexItem!.checkForRepaintDuringLayout() {
+        flexItem!.repaintDuringLayoutIfMoved(oldRect: oldFlexItemRects[index])
+      }
+      index += 1
+      flexItem = orderIterator!.next()
+    }
+    assert(index == oldFlexItemRects.count)
   }
 
   private func flexItemHasPercentHeightDescendants(renderer: RenderBoxWrapper) -> Bool {
