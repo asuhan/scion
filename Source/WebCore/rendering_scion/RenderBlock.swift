@@ -185,6 +185,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func percentHeightDescendants() -> TrackedRendererListHashSet? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasPercentHeightDescendants() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -213,6 +218,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     removePercentHeightDescendant(descendant: descendant)
+  }
+
+  func isContainingBlockAncestorFor(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func setHasMarginBeforeQuirk(b: Bool) {

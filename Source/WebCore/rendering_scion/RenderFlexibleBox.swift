@@ -2930,8 +2930,53 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flexItemHasPercentHeightDescendants(renderer: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: This function can be removed soon after webkit.org/b/204318 is fixed. Evaluate whether the
+    // skipContainingBlockForPercentHeightCalculation() check below should be moved to the caller in that case.
+    let renderBlock = renderer as? RenderBlockWrapper
+    if renderBlock == nil {
+      return false
+    }
+
+    // FlexibleBoxImpl's like RenderButton might wrap their children in anonymous blocks. Those anonymous blocks are
+    // skipped for percentage height calculations in RenderBox::computePercentageLogicalHeight() and thus
+    // addPercentHeightDescendant() is never called for them. This means that this method would always wrongly
+    // return false for a child of a <button> with a percentage height.
+    if hasPercentHeightDescendants()
+      && skipContainingBlockForPercentHeightCalculation(
+        containingBlock: renderer,
+        isPerpendicularWritingMode: isHorizontalWritingMode() != renderer.isHorizontalWritingMode())
+    {
+      for descendant in percentHeightDescendants()! {
+        if renderBlock!.isContainingBlockAncestorFor(renderer: descendant) {
+          return true
+        }
+      }
+    }
+
+    if !renderBlock!.hasPercentHeightDescendants() {
+      return false
+    }
+
+    let percentHeightDescendants = renderBlock!.percentHeightDescendants()
+    if percentHeightDescendants == nil {
+      return false
+    }
+
+    for descendant in percentHeightDescendants! {
+      var hasOutOfFlowAncestor = false
+      var ancestor = descendant.containingBlock()
+      while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(renderBlock!.p) {
+        if ancestor!.isOutOfFlowPositioned() {
+          hasOutOfFlowAncestor = true
+          break
+        }
+        ancestor = ancestor!.containingBlock()
+      }
+      if !hasOutOfFlowAncestor {
+        return true
+      }
+    }
+    return false
   }
 
   private func resetHasDefiniteHeight() { hasDefiniteHeight = .Unknown }
