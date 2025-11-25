@@ -463,8 +463,37 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isWritingModeRoot() || numberOfFlexItemsOnLastLine == 0 || shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    let baselineFlexItem = flexItemForLastBaseline()
+    if baselineFlexItem == nil {
+      return nil
+    }
+
+    if !isColumnFlow() && !mainAxisIsFlexItemInlineAxis(flexItem: baselineFlexItem!) {
+      return LayoutUnit(
+        value: (crossAxisExtentForFlexItem(flexItem: baselineFlexItem!)
+          + baselineFlexItem!.logicalTop())
+          .toInt())
+    }
+    if isColumnFlow() && mainAxisIsFlexItemInlineAxis(flexItem: baselineFlexItem!) {
+      return LayoutUnit(
+        value: (mainAxisExtentForFlexItem(flexItem: baselineFlexItem!)
+          + baselineFlexItem!.logicalTop()).toInt())
+    }
+
+    if let baseline = baselineFlexItem!.lastLineBaseline() {
+      return LayoutUnit(value: (baseline + baselineFlexItem!.logicalTop()).toInt())
+    }
+
+    // FIXME: We should pass |direction| into firstLineBoxBaseline and stop bailing out if we're a writing mode root.
+    // This would also fix some cases where the flexbox is orthogonal to its container.
+    let direction: LineDirectionMode = isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine
+    return synthesizedBaseline(
+      box: baselineFlexItem!, parentStyle: style(), direction: direction, edge: .BorderBox)
+      + baselineFlexItem!.logicalTop()
   }
 
   private func isHorizontalFlow() -> Bool {
@@ -2600,6 +2629,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func resetHasDefiniteHeight() { hasDefiniteHeight = .Unknown }
 
   private func flexItemForFirstBaseline() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func flexItemForLastBaseline() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
