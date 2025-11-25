@@ -508,8 +508,28 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func crossAxisDirection() -> Direction {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch writingModeToBlockFlowDirection(writingMode: style().writingMode()) {
+    case .TopToBottom:
+      if style().isRowFlexDirection() {
+        return (style().flexWrap() == .Reverse) ? .BottomToTop : .TopToBottom
+      }
+      return (style().flexWrap() == .Reverse) ? .RightToLeft : .LeftToRight
+    case .BottomToTop:
+      if style().isRowFlexDirection() {
+        return (style().flexWrap() == .Reverse) ? .TopToBottom : .BottomToTop
+      }
+      return (style().flexWrap() == .Reverse) ? .RightToLeft : .LeftToRight
+    case .LeftToRight:
+      if style().isRowFlexDirection() {
+        return (style().flexWrap() == .Reverse) ? .RightToLeft : .LeftToRight
+      }
+      return (style().flexWrap() == .Reverse) ? .BottomToTop : .TopToBottom
+    case .RightToLeft:
+      if style().isRowFlexDirection() {
+        return (style().flexWrap() == .Reverse) ? .LeftToRight : .RightToLeft
+      }
+      return (style().flexWrap() == .Reverse) ? .BottomToTop : .TopToBottom
+    }
   }
 
   func isFlexibleBoxImpl() -> Bool {
