@@ -336,6 +336,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  enum AllowIntrinsic {
+    case No
+    case Yes
+  }
+
+  func constrainLogicalWidthInFragmentByMinMax(
+    logicalWidth: LayoutUnit, availableWidth: LayoutUnit, cb: RenderBlockWrapper,
+    fragment: RenderFragmentContainerWrapper?, allowIntrinsic: AllowIntrinsic = .Yes
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func constrainLogicalHeightByMinMax(
     logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit {

@@ -534,6 +534,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return flexItem.contentLogicalHeight()
   }
 
+  private func setCachedFlexItemIntrinsicContentLogicalHeight(
+    flexItem: RenderBoxWrapper, height: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearCachedFlexItemIntrinsicContentLogicalHeight(flexItem: RenderBoxWrapper) {
     if flexItem.isRenderReplaced() {
       return  // Replaced elements know their intrinsic height already, so nothing to do.
@@ -2648,8 +2655,64 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func applyStretchAlignmentToFlexItem(
     flexItem: RenderBoxWrapper, lineCrossAxisExtent: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if mainAxisIsFlexItemInlineAxis(flexItem: flexItem) && flexItem.style().logicalHeight().isAuto()
+    {
+      let stretchedLogicalHeight = max(
+        flexItem.borderAndPaddingLogicalHeight(),
+        lineCrossAxisExtent - crossAxisMarginExtentForFlexItem(flexItem: flexItem))
+      assert(!flexItem.needsLayout())
+      let desiredLogicalHeight = flexItem.constrainLogicalHeightByMinMax(
+        logicalHeight: stretchedLogicalHeight,
+        intrinsicContentHeight: cachedFlexItemIntrinsicContentLogicalHeight(flexItem: flexItem))
+
+      // FIXME: Can avoid laying out here in some cases. See https://webkit.org/b/87905.
+      var flexItemNeedsRelayout = desiredLogicalHeight != flexItem.logicalHeight()
+      if let block = flexItem as? RenderBlockWrapper,
+        block.hasPercentHeightDescendants() && relaidOutFlexItems.contains(value: flexItem)
+      {
+        // Have to force another relayout even though the child is sized
+        // correctly, because its descendants are not sized correctly yet. Our
+        // previous layout of the child was done without an override height set.
+        // So, redo it here.
+        flexItemNeedsRelayout = true
+      }
+      if flexItemNeedsRelayout || flexItem.overridingLogicalHeight() == nil {
+        flexItem.setOverridingLogicalHeight(height: desiredLogicalHeight)
+      }
+      if flexItemNeedsRelayout {
+        let _ = SetForScope(
+          scopedVariable: &shouldResetFlexItemLogicalHeightBeforeLayout, newValue: true)
+        // We cache the child's intrinsic content logical height to avoid it being
+        // reset to the stretched height.
+        // FIXME: This is fragile. RenderBoxes should be smart enough to
+        // determine their intrinsic content logical height correctly even when
+        // there's an overrideHeight.
+        let flexItemIntrinsicContentLogicalHeight = cachedFlexItemIntrinsicContentLogicalHeight(
+          flexItem: flexItem)
+        flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+
+        // Don't use layoutChildIfNeeded to avoid setting cross axis cached size twice.
+        flexItem.layoutIfNeeded()
+
+        setCachedFlexItemIntrinsicContentLogicalHeight(
+          flexItem: flexItem, height: flexItemIntrinsicContentLogicalHeight)
+      }
+    } else if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem)
+      && flexItem.style().logicalWidth().isAuto()
+    {
+      var flexItemWidth = max(
+        LayoutUnit(value: UInt64(0)),
+        lineCrossAxisExtent - crossAxisMarginExtentForFlexItem(flexItem: flexItem))
+      flexItemWidth = flexItem.constrainLogicalWidthInFragmentByMinMax(
+        logicalWidth: flexItemWidth, availableWidth: crossAxisContentExtent(), cb: self,
+        fragment: nil)
+
+      if flexItemWidth != flexItem.logicalWidth() {
+        flexItem.setOverridingLogicalWidth(width: flexItemWidth)
+        flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        flexItem.layoutIfNeeded()
+      }
+    }
   }
 
   private func performBaselineAlignment(lineState: LineState) {
@@ -2734,5 +2797,6 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   // This is SizeIsUnknown outside of layoutBlock()
   private var hasDefiniteHeight: SizeDefiniteness = .Unknown
   var inLayout = false
+  var shouldResetFlexItemLogicalHeightBeforeLayout = false
   var isComputingFlexBaseSizes = false
 }

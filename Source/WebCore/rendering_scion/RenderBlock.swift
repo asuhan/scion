@@ -185,6 +185,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func hasPercentHeightDescendants() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func hasPercentHeightContainerMap() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
