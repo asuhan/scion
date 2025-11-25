@@ -277,8 +277,36 @@ private func initialAlignContentOffset(
   alignContentDistribution: ContentDistribution, safety: OverflowAlignment, numberOfLines: UInt32,
   isReversed: Bool
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var alignContent = alignContent
+  if availableFreeSpace < Int32(0) && safety == .Safe {
+    assert(alignContent != .Normal)
+    alignContent = .Start
+  }
+
+  if alignContent == .FlexEnd || (alignContent == .End && !isReversed)
+    || (alignContent == .Start && isReversed)
+  {
+    return availableFreeSpace
+  }
+  if alignContent == .Center {
+    return availableFreeSpace / 2
+  }
+  if alignContentDistribution == .SpaceAround {
+    if availableFreeSpace > 0 && numberOfLines != 0 {
+      return availableFreeSpace / (2 * numberOfLines)
+    }
+    if availableFreeSpace < Int32(0) {
+      return availableFreeSpace / 2
+    }
+  }
+  if alignContentDistribution == .SpaceEvenly {
+    if availableFreeSpace > 0 {
+      return availableFreeSpace / (numberOfLines + 1)
+    }
+    // Fallback to 'center'
+    return availableFreeSpace / 2
+  }
+  return LayoutUnit(value: UInt64(0))
 }
 
 private func alignContentSpaceBetweenFlexItems(
