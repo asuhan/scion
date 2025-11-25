@@ -109,8 +109,13 @@ private func flexItemHasAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
 // This is a RAII class that is used to temporarily set the flex basis as the child size in the main axis.
 struct ScopedFlexBasisAsFlexItemMainSize: ~Copyable {
   init(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper, mainAxisIsInlineAxis: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.flexItem = flexItem
+    self.mainAxisIsInlineAxis = mainAxisIsInlineAxis
+    if self.mainAxisIsInlineAxis {
+      flexItem.setOverridingLogicalWidthLength(height: flexBasis)
+    } else {
+      flexItem.setOverridingLogicalHeightLength(height: flexBasis)
+    }
   }
 
   deinit {
