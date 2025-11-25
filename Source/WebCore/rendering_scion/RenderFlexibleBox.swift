@@ -2982,11 +2982,51 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func resetHasDefiniteHeight() { hasDefiniteHeight = .Unknown }
 
   private func flexItemForFirstBaseline() -> RenderBoxWrapper? {
+    // Looking for baseline flex candidate on visually first line.
+    let useLastLine = style().flexWrap() == .Reverse
+    let useLastItem =
+      style().flexDirection() == .RowReverse || style().flexDirection() == .ColumnReverse
+
+    if !useLastLine {
+      if !useLastItem {
+        // Logically (and visually) first item on logically (and visually) first line.
+        return firstBaselineCandidateOnLine(
+          flexItemIterator: orderIterator!, baselinePosition: .Baseline,
+          numberOfItemsOnLine: numberOfFlexItemsOnFirstLine)
+      }
+      // Logically last (but visually first) item on logically (and visually) first line.
+      return lastBaselineCandidateOnLine(
+        flexItemIterator: orderIterator!, baselinePosition: .Baseline,
+        numberOfItemsOnLine: numberOfFlexItemsOnFirstLine)
+    }
+
+    if !useLastItem {
+      // Logically (and visually) first item on logically last (but visually first) line.
+      return lastBaselineCandidateOnLine(
+        flexItemIterator: orderIterator!.reverse(), baselinePosition: .Baseline,
+        numberOfItemsOnLine: numberOfFlexItemsOnLastLine)
+    }
+    // Logically last (but visually first) item on logically last (but visually first) line.
+    return firstBaselineCandidateOnLine(
+      flexItemIterator: orderIterator!.reverse(), baselinePosition: .Baseline,
+      numberOfItemsOnLine: numberOfFlexItemsOnLastLine)
+  }
+
+  private func flexItemForLastBaseline() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func flexItemForLastBaseline() -> RenderBoxWrapper? {
+  private func firstBaselineCandidateOnLine(
+    flexItemIterator: OrderIterator, baselinePosition: ItemPosition, numberOfItemsOnLine: UInt64
+  ) -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func lastBaselineCandidateOnLine(
+    flexItemIterator: OrderIterator, baselinePosition: ItemPosition, numberOfItemsOnLine: UInt64
+  ) -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

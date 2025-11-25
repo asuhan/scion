@@ -51,6 +51,11 @@ struct OrderIterator {
     fatalError("Not implemented")
   }
 
+  func reverse() -> OrderIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldSkipChild(child: RenderObjectWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
