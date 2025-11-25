@@ -2897,8 +2897,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func appendFlexItemFrameRects() -> FlexItemFrameRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var flexItemFrameRects = FlexItemFrameRects()
+    var flexItem = orderIterator!.first()
+    while flexItem != nil {
+      if !flexItem!.isOutOfFlowPositioned() {
+        flexItemFrameRects.append(flexItem!.frameRect())
+      }
+      flexItem = orderIterator!.next()
+    }
+    return flexItemFrameRects
   }
 
   private func repaintFlexItemsDuringLayoutIfMoved(oldFlexItemRects: FlexItemFrameRects) {
