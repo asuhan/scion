@@ -3049,7 +3049,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // Note that "first" here means in iterator order and not logical flex order (caller can pass in reversed order).
     assert(baselinePosition == .Baseline || baselinePosition == .LastBaseline)
 
-    var index = 0
+    var index: UInt64 = 0
     var baselineFlexItem: RenderBoxWrapper? = nil
     var flexItem = flexItemIterator.first()
     while flexItem != nil {
@@ -3078,8 +3078,30 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func lastBaselineCandidateOnLine(
     flexItemIterator: OrderIterator, baselinePosition: ItemPosition, numberOfItemsOnLine: UInt64
   ) -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Note that "last" here means in iterator order and not logical flex order (caller can pass in reversed order).
+    assert(baselinePosition == .Baseline || baselinePosition == .LastBaseline)
+
+    var index: UInt64 = 0
+    var baselineFlexItem: RenderBoxWrapper? = nil
+    var flexItem = flexItemIterator.first()
+    while flexItem != nil {
+      if flexItemIterator.shouldSkipChild(child: flexItem!) {
+        flexItem = flexItemIterator.next()
+        continue
+      }
+      if alignmentForFlexItem(flexItem: flexItem!) == baselinePosition
+        && mainAxisIsFlexItemInlineAxis(flexItem: flexItem!)
+        && !hasAutoMarginsInCrossAxis(flexItem: flexItem!)
+      {
+        baselineFlexItem = flexItem
+      }
+      index += 1
+      if index == numberOfItemsOnLine {
+        return baselineFlexItem ?? flexItem
+      }
+      flexItem = flexItemIterator.next()
+    }
+    return nil
   }
 
   private func layoutUsingFlexFormattingContext() -> Bool {
