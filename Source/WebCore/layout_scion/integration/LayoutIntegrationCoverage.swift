@@ -28,4 +28,9 @@ extension LayoutIntegration {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func canUseForFlexLayout(flexBox: RenderFlexibleBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

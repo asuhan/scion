@@ -18,6 +18,7 @@ add_subdirectory(formattingContexts/inline/invalidation)
 add_subdirectory(formattingContexts/inline/ruby)
 add_subdirectory(formattingContexts/inline/text)
 add_subdirectory(integration)
+add_subdirectory(integration/flex)
 add_subdirectory(integration/inline)
 add_subdirectory(layouttree)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/animation_scion

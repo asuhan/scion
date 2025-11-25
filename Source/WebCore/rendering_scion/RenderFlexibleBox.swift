@@ -3105,8 +3105,22 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func layoutUsingFlexFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    hasFlexFormattingContextLayout = LayoutIntegration.canUseForFlexLayout(flexBox: self)
+    if !hasFlexFormattingContextLayout {
+      return false
+    }
+
+    let flexLayout = LayoutIntegration.FlexLayout(flexBoxRenderer: self)
+    flexLayout.updateFormattingContexGeometries(
+      availableLogicalWidth: containingBlock() != nil
+        ? containingBlock()!.availableLogicalWidth() : LayoutUnit())
+
+    flexLayout.layout()
+    setLogicalHeight(
+      size: max(
+        logicalHeight(), borderAndPaddingLogicalHeight() + flexLayout.contentBoxLogicalHeight()))
+    updateLogicalHeight()
+    return true
   }
 
   // This is used to cache the preferred size for orthogonal flow children so we
@@ -3146,4 +3160,5 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   var inLayout = false
   var shouldResetFlexItemLogicalHeightBeforeLayout = false
   var isComputingFlexBaseSizes = false
+  var hasFlexFormattingContextLayout = false
 }
