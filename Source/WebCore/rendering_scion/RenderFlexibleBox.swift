@@ -313,8 +313,18 @@ private func alignContentSpaceBetweenFlexItems(
   availableFreeSpace: LayoutUnit, alignContentDistribution: ContentDistribution,
   numberOfLines: UInt32
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if availableFreeSpace > 0 && numberOfLines > 1 {
+    if alignContentDistribution == .SpaceBetween {
+      return availableFreeSpace / (numberOfLines - 1)
+    }
+    if alignContentDistribution == .SpaceAround || alignContentDistribution == .Stretch {
+      return availableFreeSpace / numberOfLines
+    }
+    if alignContentDistribution == .SpaceEvenly {
+      return availableFreeSpace / (numberOfLines + 1)
+    }
+  }
+  return LayoutUnit(value: UInt64(0))
 }
 
 private func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
