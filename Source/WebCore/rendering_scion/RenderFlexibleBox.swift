@@ -426,8 +426,40 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if (isWritingModeRoot() && !isFlexItem()) || numberOfFlexItemsOnFirstLine == 0
+      || shouldApplyLayoutContainment()
+    {
+      return nil
+    }
+
+    let baselineFlexItem = flexItemForFirstBaseline()
+    if baselineFlexItem == nil {
+      return nil
+    }
+
+    if !isColumnFlow() && !mainAxisIsFlexItemInlineAxis(flexItem: baselineFlexItem!) {
+      return LayoutUnit(
+        value: (crossAxisExtentForFlexItem(flexItem: baselineFlexItem!)
+          + baselineFlexItem!.logicalTop())
+          .toInt())
+    }
+    if isColumnFlow() && mainAxisIsFlexItemInlineAxis(flexItem: baselineFlexItem!) {
+      return LayoutUnit(
+        value: (mainAxisExtentForFlexItem(flexItem: baselineFlexItem!)
+          + baselineFlexItem!.logicalTop())
+          .toInt())
+    }
+
+    if let baseline = baselineFlexItem!.firstLineBaseline() {
+      return LayoutUnit(value: (baseline + baselineFlexItem!.logicalTop()).toInt())
+    }
+
+    // FIXME: We should pass |direction| into firstLineBoxBaseline and stop bailing out if we're a writing mode root.
+    // This would also fix some cases where the flexbox is orthogonal to its container.
+    let direction: LineDirectionMode = isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine
+    return synthesizedBaseline(
+      box: baselineFlexItem!, parentStyle: style(), direction: direction, edge: .BorderBox)
+      + baselineFlexItem!.logicalTop()
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
@@ -2566,6 +2598,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func resetHasDefiniteHeight() { hasDefiniteHeight = .Unknown }
+
+  private func flexItemForFirstBaseline() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   private func layoutUsingFlexFormattingContext() -> Bool {
     // TODO(asuhan): implement this
