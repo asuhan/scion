@@ -23,6 +23,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// These classes are used to implement the Baseline Alignment logic, as described in the CSS Box Alignment
+// specification.
+// https://drafts.csswg.org/css-align/#baseline-terms
+//
+// A baseline-sharing group is composed of boxes that participate in baseline alignment together. This is
+// possible only if they:
+//
+//   * Share an alignment context along an axis perpendicular to their baseline alignment axis.
+//   * Have compatible baseline alignment preferences (i.e., the baselines that want to align are on the same
+//     side of the alignment context).
+//
+// Once the BaselineGroup is instantiated, defined by a 'block flow direction' and a 'baseline-preference'
+// (first/last baseline), it's ready to collect the items that will participate in the Baseline Alignment logic.
+//
+class BaselineGroup: Sequence, IteratorProtocol {
+  init(blockFlow: FlowDirection, childPreference: ItemPosition) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func next() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let maxAscent: LayoutUnit
+}
+
 //
 // BaselineAlignmentState provides an API to interact with baseline sharing groups in various
 // ways such as adding items to appropriate ones and querying the baseline sharing group for
@@ -50,4 +78,6 @@ struct BaselineAlignmentState {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let sharedGroups: [BaselineGroup]
 }

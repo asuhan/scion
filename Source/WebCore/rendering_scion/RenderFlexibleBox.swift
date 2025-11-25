@@ -2716,6 +2716,63 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func performBaselineAlignment(lineState: LineState) {
+    assert(lineState.baselineAlignmentState != nil)
+
+    let lineCrossAxisExtent = lineState.crossAxisExtent
+    let containerHasWrapReverse = style().flexWrap() == .Reverse
+
+    for baselineSharingGroup in lineState.baselineAlignmentState!.sharedGroups {
+      var minMarginAfterBaseline = LayoutUnit.max()
+      for flexItem in baselineSharingGroup {
+        let position = alignmentForFlexItem(flexItem: flexItem)
+        assert(position == .Baseline || position == .LastBaseline)
+        let offset = alignmentOffset(
+          availableFreeSpace: availableAlignmentSpaceForFlexItem(
+            lineCrossAxisExtent: lineCrossAxisExtent, flexItem: flexItem),
+          position: position,
+          ascent: marginBoxAscentForFlexItem(flexItem: flexItem),
+          maxAscent: baselineSharingGroup.maxAscent,
+          isWrapReverse: containerHasWrapReverse)
+        adjustAlignmentForFlexItem(flexItem: flexItem, delta: offset)
+
+        if shouldAdjustItemTowardsCrossAxisEnd(
+          flexItemBlockFlowDirection: writingModeToBlockFlowDirection(
+            writingMode: flexItemWritingModeForBaselineAlignment(flexItem: flexItem)),
+          alignment: position)
+        {
+          minMarginAfterBaseline = min(
+            minMarginAfterBaseline,
+            availableAlignmentSpaceForFlexItem(
+              lineCrossAxisExtent: lineCrossAxisExtent, flexItem: flexItem) - offset)
+        }
+      }
+      // css-align-3 9.3 part 3:
+      // Position the aligned baseline-sharing group within the alignment container according to its
+      // fallback alignment. The fallback alignment of a baseline-sharing group is the fallback alignment
+      // of its items as resolved to physical directions.
+      if minMarginAfterBaseline.bool() {
+        for flexItem in baselineSharingGroup {
+          if shouldAdjustItemTowardsCrossAxisEnd(
+            flexItemBlockFlowDirection: writingModeToBlockFlowDirection(
+              writingMode: flexItemWritingModeForBaselineAlignment(flexItem: flexItem)),
+            alignment: alignmentForFlexItem(flexItem: flexItem))
+            && !hasAutoMarginsInCrossAxis(flexItem: flexItem)
+          {
+            adjustAlignmentForFlexItem(flexItem: flexItem, delta: minMarginAfterBaseline)
+          }
+        }
+      }
+    }
+  }
+
+  private func flexItemWritingModeForBaselineAlignment(flexItem: RenderBoxWrapper) -> WritingMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldAdjustItemTowardsCrossAxisEnd(
+    flexItemBlockFlowDirection: FlowDirection, alignment: ItemPosition
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
