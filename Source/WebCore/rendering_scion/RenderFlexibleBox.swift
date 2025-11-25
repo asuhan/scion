@@ -2884,8 +2884,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flipForWrapReverse(lineStates: FlexLineStates, crossAxisStartEdge: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let contentExtent = crossAxisContentExtent()
+    for lineState in lineStates {
+      for flexLayoutItem in lineState.flexLayoutItems {
+        let lineCrossAxisExtent = lineState.crossAxisExtent
+        let originalOffset = lineState.crossAxisOffset - crossAxisStartEdge
+        let newOffset = contentExtent - originalOffset - lineCrossAxisExtent
+        adjustAlignmentForFlexItem(
+          flexItem: flexLayoutItem.renderer, delta: newOffset - originalOffset)
+      }
+    }
   }
 
   private func appendFlexItemFrameRects() -> FlexItemFrameRects {
