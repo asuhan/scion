@@ -841,6 +841,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       : flexItem.contentHeight() + flexItem.horizontalScrollbarHeight()
   }
 
+  private func crossAxisExtent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func mainAxisExtent() -> LayoutUnit {
     return isHorizontalFlow() ? size().width() : size().height()
   }
@@ -1071,6 +1076,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func crossAxisScrollbarExtent() -> LayoutUnit {
     return LayoutUnit(
       value: isHorizontalFlow() ? horizontalScrollbarHeight() : verticalScrollbarWidth())
+  }
+
+  private func flowAwareLocationForFlexItem(flexItem: RenderBoxWrapper) -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func flexItemHasComputableAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
@@ -2828,8 +2838,27 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func flipForRightToLeftColumn(lineStates: FlexLineStates) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().isLeftToRightDirection() || !isColumnFlow() {
+      return
+    }
+
+    let crossExtent = crossAxisExtent()
+    for lineState in lineStates {
+      for flexLayoutItem in lineState.flexLayoutItems {
+        assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+
+        var location = flowAwareLocationForFlexItem(flexItem: flexLayoutItem.renderer)
+        // For vertical flows, setFlowAwareLocationForFlexItem will transpose x and
+        // y, so using the y axis for a column cross axis extent is correct.
+        location.setY(
+          y: crossExtent - crossAxisExtentForFlexItem(flexItem: flexLayoutItem.renderer)
+            - location.y)
+        if !isHorizontalWritingMode() {
+          location.move(s: LayoutSizeWrapper(width: 0, height: -horizontalScrollbarHeight()))
+        }
+        setFlowAwareLocationForFlexItem(flexItem: flexLayoutItem.renderer, location: location)
+      }
+    }
   }
 
   private func flipForWrapReverse(lineStates: FlexLineStates, crossAxisStartEdge: LayoutUnit) {
