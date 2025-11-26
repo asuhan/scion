@@ -1898,8 +1898,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // When there is no explicit height, this function assumes a content height of
   // zero (and returns just border + padding).
   func computeLogicalHeightWithoutLayout() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var estimatedHeight = borderAndPaddingLogicalHeight()
+    if shouldApplySizeContainment(), let height = explicitIntrinsicInnerLogicalHeight() {
+      estimatedHeight += height + scrollbarLogicalHeight()
+    }
+    let computedValues = computeLogicalHeight(
+      logicalHeight: estimatedHeight, logicalTop: LayoutUnit(value: UInt64(0)))
+    return computedValues.extent
   }
 
   private func renderBoxFragmentInfo(
