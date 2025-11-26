@@ -274,6 +274,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return currentBlock!.isHorizontalWritingMode() ? blockRect.y() : blockRect.x()
   }
 
+  func addFragmentsVisualEffectOverflow(box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addFragmentsVisualOverflow(box: RenderBoxWrapper, visualOverflow: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

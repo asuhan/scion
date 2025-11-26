@@ -684,6 +684,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addVisualEffectOverflow() {
+    let hasBoxShadow = style().boxShadow()
+    let hasBorderImageOutsets = style().hasBorderImageOutsets()
+    let hasOutline = outlineStyleForRepaint().hasOutlineInVisualOverflow()
+    if hasBoxShadow == nil && !hasBorderImageOutsets && !hasOutline {
+      return
+    }
+
+    addVisualOverflow(rect: applyVisualEffectOverflow(borderBox: borderBoxRect()))
+
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      fragmentedFlow.addFragmentsVisualEffectOverflow(box: self)
+    }
+  }
+
+  private func applyVisualEffectOverflow(borderBox: LayoutRectWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

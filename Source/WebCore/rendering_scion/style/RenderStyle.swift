@@ -353,6 +353,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasBorderImageOutsets() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func maskBorderOutsets() -> LayoutBoxExtent {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
