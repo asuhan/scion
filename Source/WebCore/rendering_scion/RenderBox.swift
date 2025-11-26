@@ -1589,8 +1589,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func containingBlockLogicalWidthForContentInFragment(fragment: RenderFragmentContainerWrapper?)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fragment == nil {
+      return containingBlockLogicalWidthForContent()
+    }
+
+    let cb = containingBlock()
+    let containingBlockFragment = cb!.clampToStartAndEndFragments(fragment: fragment)
+    // FIXME: It's unclear if a fragment's content should use the containing block's override logical width.
+    // If it should, the following line should call containingBlockLogicalWidthForContent.
+    let result = cb!.availableLogicalWidth()
+    if let boxInfo = cb!.renderBoxFragmentInfo(fragment: containingBlockFragment) {
+      return max(LayoutUnit(value: 0), result - (cb!.logicalWidth() - boxInfo.logicalWidth))
+    }
+    return result
   }
 
   func updateLogicalWidth() {
