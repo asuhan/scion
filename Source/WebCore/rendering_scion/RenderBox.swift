@@ -921,6 +921,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func setMarginBefore(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setMarginAfter(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1594,8 +1604,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func updateLogicalHeight() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplySizeContainment() && !isRenderGrid() {
+      overrideLogicalHeightForSizeContainment()
+    }
+
+    cacheIntrinsicContentLogicalHeightForFlexItem(height: contentLogicalHeight())
+    let computedValues = computeLogicalHeight(
+      logicalHeight: logicalHeight(), logicalTop: logicalTop())
+    setLogicalHeight(size: computedValues.extent)
+    setLogicalTop(top: computedValues.position)
+    setMarginBefore(value: computedValues.margins.before)
+    setMarginAfter(value: computedValues.margins.after)
   }
 
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
@@ -1770,6 +1789,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       }
     }
     return computedValues
+  }
+
+  private func overrideLogicalHeightForSizeContainment() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func cacheIntrinsicContentLogicalHeightForFlexItem(height: LayoutUnit) {
