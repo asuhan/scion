@@ -105,6 +105,15 @@ private func allowMinMaxPercentagesInAutoHeightBlocksQuirk() -> Bool {
   return false
 }
 
+private func computeInlineStaticDistance(
+  logicalLeft: inout LengthWrapper, logicalRight: inout LengthWrapper, child: RenderBoxWrapper,
+  containerBlock: RenderBoxModelObjectWrapper, containerLogicalWidth: LayoutUnit,
+  fragment: RenderFragmentContainerWrapper?
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func shouldFlipStaticPositionInParent(
   outOfFlowBox: RenderBoxWrapper, containerBlock: RenderBoxModelObjectWrapper
 ) -> Bool {
@@ -3568,6 +3577,88 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedValues: inout LogicalExtentComputedValues,
     fragment: RenderFragmentContainerWrapper? = nil
   ) {
+    if isReplacedOrInlineBlock() {
+      // FIXME: Positioned replaced elements inside a flow thread are not working properly
+      // with variable width fragments (see https://bugs.webkit.org/show_bug.cgi?id=69896 ).
+      computePositionedLogicalWidthReplaced(computedValues: computedValues)
+      return
+    }
+
+    // QUESTIONS
+    // FIXME 1: Should we still deal with these the cases of 'left' or 'right' having
+    // the type 'static' in determining whether to calculate the static distance?
+    // NOTE: 'static' is not a legal value for 'left' or 'right' as of CSS 2.1.
+
+    // FIXME 2: Can perhaps optimize out cases when max-width/min-width are greater
+    // than or less than the computed width().  Be careful of box-sizing and
+    // percentage issues.
+
+    // The following is based off of the W3C Working Draft from April 11, 2006 of
+    // CSS 2.1: Section 10.3.7 "Absolutely positioned, non-replaced elements"
+    // <http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-width>
+    // (block-style-comments in this function and in computePositionedLogicalWidthUsing()
+    // correspond to text from the spec)
+
+    // We don't use containingBlock(), since we may be positioned by an enclosing
+    // relative positioned inline.
+    let containerBlock = container() as! RenderBoxModelObjectWrapper
+
+    let containerLogicalWidth = containingBlockLogicalWidthForPositioned(
+      containingBlock: containerBlock, fragment: fragment)
+
+    // Use the container block's direction except when calculating the static distance
+    // This conforms with the reference results for abspos-replaced-width-margin-000.htm
+    // of the CSS 2.1 test suite
+    let containerDirection = containerBlock.style().direction()
+
+    let isHorizontal = isHorizontalWritingMode()
+    let bordersPlusPadding = borderAndPaddingLogicalWidth()
+    let marginLogicalLeft = isHorizontal ? style().marginLeft() : style().marginTop()
+    let marginLogicalRight = isHorizontal ? style().marginRight() : style().marginBottom()
+
+    var logicalLeftLength = style().logicalLeft()
+    var logicalRightLength = style().logicalRight()
+
+    /*---------------------------------------------------------------------------*\
+     * For the purposes of this section and the next, the term "static position"
+     * (of an element) refers, roughly, to the position an element would have had
+     * in the normal flow. More precisely:
+     *
+     * * The static position for 'left' is the distance from the left edge of the
+     *   containing block to the left margin edge of a hypothetical box that would
+     *   have been the first box of the element if its 'position' property had
+     *   been 'static' and 'float' had been 'none'. The value is negative if the
+     *   hypothetical box is to the left of the containing block.
+     * * The static position for 'right' is the distance from the right edge of the
+     *   containing block to the right margin edge of the same hypothetical box as
+     *   above. The value is positive if the hypothetical box is to the left of the
+     *   containing block's edge.
+     *
+     * But rather than actually calculating the dimensions of that hypothetical box,
+     * user agents are free to make a guess at its probable position.
+     *
+     * For the purposes of calculating the static position, the containing block of
+     * fixed positioned elements is the initial containing block instead of the
+     * viewport, and all scrollable boxes should be assumed to be scrolled to their
+     * origin.
+    \*---------------------------------------------------------------------------*/
+
+    // see FIXME 1
+    // Calculate the static distance if needed.
+    computeInlineStaticDistance(
+      logicalLeft: &logicalLeftLength, logicalRight: &logicalRightLength, child: self,
+      containerBlock: containerBlock, containerLogicalWidth: containerLogicalWidth,
+      fragment: fragment)
+
+    // Calculate constraint equation values for 'width' case.
+    computePositionedLogicalWidthUsing(
+      widthType: .MainOrPreferredSize, logicalWidth: style().logicalWidth(),
+      containerBlock: containerBlock, containerDirection: containerDirection,
+      containerLogicalWidth: containerLogicalWidth, bordersPlusPadding: bordersPlusPadding,
+      logicalLeft: logicalLeftLength, logicalRight: logicalRightLength,
+      marginLogicalLeft: marginLogicalLeft, marginLogicalRight: marginLogicalRight,
+      computedValues: &computedValues)
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -4084,6 +4175,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  private func computePositionedLogicalWidthUsing(
+    widthType: SizeType, logicalWidth: LengthWrapper, containerBlock: RenderBoxModelObjectWrapper,
+    containerDirection: TextDirection, containerLogicalWidth: LayoutUnit,
+    bordersPlusPadding: LayoutUnit, logicalLeft: LengthWrapper, logicalRight: LengthWrapper,
+    marginLogicalLeft: LengthWrapper, marginLogicalRight: LengthWrapper,
+    computedValues: inout LogicalExtentComputedValues
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computePositionedLogicalHeightUsing(
     heightType: SizeType, logicalHeightLength: LengthWrapper,
     containerBlock: RenderBoxModelObjectWrapper, containerLogicalHeight: LayoutUnit,
@@ -4444,6 +4546,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       logicalTopIsAuto: originalLogicalTop.isAuto(),
       logicalBottomIsAuto: originalLogicalBottom.isAuto())
     computedValues.position = logicalTopPos
+  }
+
+  private func computePositionedLogicalWidthReplaced(computedValues: LogicalExtentComputedValues) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func fillAvailableMeasure(availableLogicalWidth: LayoutUnit) -> LayoutUnit {
