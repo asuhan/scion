@@ -358,6 +358,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func borderImageOutsets() -> LayoutBoxExtent {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func maskBorderOutsets() -> LayoutBoxExtent {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1276,6 +1281,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxShadow() -> ShadowData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func boxShadowExtent() -> LayoutBoxExtent {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

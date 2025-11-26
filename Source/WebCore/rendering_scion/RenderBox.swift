@@ -699,8 +699,43 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func applyVisualEffectOverflow(borderBox: LayoutRectWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var overflowMinX = borderBox.x()
+    var overflowMaxX = borderBox.maxX()
+    var overflowMinY = borderBox.y()
+    var overflowMaxY = borderBox.maxY()
+
+    // Compute box-shadow overflow first.
+    if style().boxShadow() != nil {
+      let shadowExtent = style().boxShadowExtent()
+
+      // Note that box-shadow extent's left and top are negative when extends to left and top, respectively.
+      overflowMinX = borderBox.x() + shadowExtent.left
+      overflowMaxX = borderBox.maxX() + shadowExtent.right
+      overflowMinY = borderBox.y() + shadowExtent.top
+      overflowMaxY = borderBox.maxY() + shadowExtent.bottom
+    }
+
+    // Now compute border-image-outset overflow.
+    if style().hasBorderImageOutsets() {
+      let borderOutsets = style().borderImageOutsets()
+
+      overflowMinX = min(overflowMinX, borderBox.x() - borderOutsets.left)
+      overflowMaxX = max(overflowMaxX, borderBox.maxX() + borderOutsets.right)
+      overflowMinY = min(overflowMinY, borderBox.y() - borderOutsets.top)
+      overflowMaxY = max(overflowMaxY, borderBox.maxY() + borderOutsets.bottom)
+    }
+
+    if outlineStyleForRepaint().hasOutlineInVisualOverflow() {
+      let outlineSize = LayoutUnit(value: outlineStyleForRepaint().outlineSize())
+      overflowMinX = min(overflowMinX, borderBox.x() - outlineSize)
+      overflowMaxX = max(overflowMaxX, borderBox.maxX() + outlineSize)
+      overflowMinY = min(overflowMinY, borderBox.y() - outlineSize)
+      overflowMaxY = max(overflowMaxY, borderBox.maxY() + outlineSize)
+    }
+    // Add in the final overflow with shadows and outsets combined.
+    return LayoutRectWrapper(
+      x: overflowMinX, y: overflowMinY, width: overflowMaxX - overflowMinX,
+      height: overflowMaxY - overflowMinY)
   }
 
   func addOverflowFromChild(child: RenderBoxWrapper) {
