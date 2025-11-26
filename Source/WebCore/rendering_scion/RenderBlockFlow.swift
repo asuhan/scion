@@ -2561,6 +2561,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called to lay out the legend for a fieldset or the ruby text of a ruby run. Also used by multi-column layout to handle
   // the flow thread child.
   override func layoutExcludedChildren(relayoutChildren: Bool) {

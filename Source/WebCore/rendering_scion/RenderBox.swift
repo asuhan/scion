@@ -658,6 +658,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // RenderBox's basic implementation accounts for the writing mode (only).
+  func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addLayoutOverflow(rect: LayoutRectWrapper) {
     wk_interop.RenderBox_addLayoutOverflow(
       p,
@@ -4181,8 +4187,42 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func addLayoutOverflow(rect: LayoutRectWrapper, clientBox: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if clientBox.contains(other: rect) || rect.isEmpty() {
+      return
+    }
+
+    // For overflow clip objects, we don't want to propagate overflow into unreachable areas.
+    var overflowRect = rect
+    if hasPotentiallyScrollableOverflow() || isRenderView() {
+      let allowance = allowedLayoutOverflow()
+      // Non-negative values indicate a limit, let's apply them.
+      if allowance.top != nil {
+        overflowRect.shiftYEdgeTo(edge: max(overflowRect.y(), clientBox.y() - allowance.top!))
+      }
+      if allowance.bottom != nil {
+        overflowRect.shiftMaxYEdgeTo(
+          edge: min(overflowRect.maxY(), clientBox.maxY() + allowance.bottom!))
+      }
+      if allowance.left != nil {
+        overflowRect.shiftXEdgeTo(edge: max(overflowRect.x(), clientBox.x() - allowance.left!))
+      }
+      if allowance.right != nil {
+        overflowRect.shiftMaxXEdgeTo(
+          edge: min(overflowRect.maxX(), clientBox.maxX() + allowance.right!))
+      }
+
+      // Now re-test with the adjusted rectangle and see if it has become unreachable or fully
+      // contained.
+      if clientBox.contains(other: overflowRect) || overflowRect.isEmpty() {
+        return
+      }
+    }
+
+    if overflow == nil {
+      overflow = RenderOverflow(layoutRect: clientBox, visualRect: borderBoxRect())
+    }
+
+    overflow!.addLayoutOverflow(rect: overflowRect)
   }
 
   // Our overflow information.

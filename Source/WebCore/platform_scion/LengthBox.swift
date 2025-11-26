@@ -31,6 +31,7 @@ class LengthBox: Equatable {
 typealias IntBoxExtent = RectEdges<Int32>
 
 typealias IntOutsets = IntBoxExtent
+typealias LayoutOptionalOutsets = RectEdges<LayoutUnit?>
 
 func toLayoutBoxExtent(extent: IntBoxExtent) -> LayoutBoxExtent {
   return LayoutBoxExtent(

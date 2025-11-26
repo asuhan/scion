@@ -537,6 +537,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFlexibleBoxImpl() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

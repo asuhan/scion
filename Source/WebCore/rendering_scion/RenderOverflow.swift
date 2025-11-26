@@ -39,6 +39,11 @@ class RenderOverflow {
 
   func visualOverflowRect() -> LayoutRectWrapper { return visualOverflow }
 
+  func addLayoutOverflow(rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let layoutOverflow: LayoutRectWrapper
   private let visualOverflow: LayoutRectWrapper
 

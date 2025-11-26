@@ -173,6 +173,11 @@ struct LayoutRectWrapper: Equatable {
     setHeight(height: max(LayoutUnit(value: 0), height() - delta))
   }
 
+  mutating func shiftMaxYEdgeTo(edge: LayoutUnit) {
+    let delta = edge - maxY()
+    setHeight(height: max(LayoutUnit(value: 0), height() + delta))
+  }
+
   func minXMinYCorner() -> LayoutPointWrapper { return m_location }  // typically topLeft
   func maxXMinYCorner() -> LayoutPointWrapper {
     return LayoutPointWrapper(x: m_location.x + m_size.width(), y: m_location.y)
