@@ -1510,6 +1510,11 @@ class RenderStyleWrapper: Equatable {
     return RubyOverhang(rawValue: wk_interop.RenderStyle_rubyOverhang(p))!
   }
 
+  func textOrientation() -> TextOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct TransformOperationOption: OptionSet {
     let rawValue: UInt8
 

@@ -616,6 +616,12 @@ struct TextEmphasisPosition: OptionSet {
   static let Right = TextEmphasisPosition(rawValue: 1 << 3)
 }
 
+enum TextOrientation: UInt8 {
+  case Mixed
+  case Upright
+  case Sideways
+}
+
 enum TextOverflow: UInt8 {
   case Clip
   case Ellipsis

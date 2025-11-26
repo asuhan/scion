@@ -4042,6 +4042,38 @@ func synthesizedBaseline(
   box: RenderBoxWrapper, parentStyle: RenderStyleWrapper, direction: LineDirectionMode,
   edge: BaselineSynthesisEdge
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var boxSize = direction == .HorizontalLine ? box.height() : box.width()
+  if edge == .ContentBox {
+    boxSize -=
+      direction == .HorizontalLine
+      ? box.verticalBorderAndPaddingExtent() : box.horizontalBorderAndPaddingExtent()
+  } else if edge == .MarginBox {
+    boxSize +=
+      direction == .HorizontalLine ? box.verticalMarginExtent() : box.horizontalMarginExtent()
+  }
+
+  let textOrientation = parentStyle.textOrientation()
+  let baselineType = baselineType(parentStyle: parentStyle)
+  if baselineType == .AlphabeticBaseline {
+    let shouldTreatAsHorizontal =
+      direction == .HorizontalLine
+      || (textOrientation == .Sideways && parentStyle.writingMode() == .VerticalRl)
+    return shouldTreatAsHorizontal ? boxSize : LayoutUnit()
+  }
+  return boxSize / 2
+}
+
+private func baselineType(parentStyle: RenderStyleWrapper) -> FontBaseline {
+  // https://drafts.csswg.org/css-inline-3/#alignment-baseline-property
+  // https://drafts.csswg.org/css-inline-3/#dominant-baseline-property
+  let isInsideHorizontalWritingMode = parentStyle.isHorizontalWritingMode()
+  let textOrientation = parentStyle.textOrientation()
+  if isInsideHorizontalWritingMode || textOrientation == .Sideways {
+    return .AlphabeticBaseline
+  }
+  if textOrientation == .Upright || textOrientation == .Mixed {
+    return .CentralBaseline
+  }
+
+  fatalError("Not implemented yet")
 }
