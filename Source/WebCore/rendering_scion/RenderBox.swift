@@ -2798,8 +2798,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // Called when a positioned object moves but doesn't necessarily change size.  A simplified layout is attempted
   // that just updates the object's position. If the size does change, the object remains dirty.
   func tryLayoutDoingPositionedMovementOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldWidth = width()
+    updateLogicalWidth()
+    // If we shrink to fit our width may have changed, so we still need full layout.
+    if oldWidth != width() {
+      return false
+    }
+    updateLogicalHeight()
+    return true
   }
 
   func maskClipRect(paintOffset: LayoutPointWrapper) -> LayoutRectWrapper {
