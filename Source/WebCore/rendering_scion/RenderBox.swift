@@ -345,8 +345,43 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalWidth: LayoutUnit, availableWidth: LayoutUnit, cb: RenderBlockWrapper,
     fragment: RenderFragmentContainerWrapper?, allowIntrinsic: AllowIntrinsic = .Yes
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleToUse = style()
+    var computedMaxWidth = LayoutUnit.max()
+    if !styleToUse.logicalMaxWidth().isUndefined()
+      && (allowIntrinsic == .Yes || !styleToUse.logicalMaxWidth().isIntrinsic())
+    {
+      computedMaxWidth = computeLogicalWidthInFragmentUsing(
+        widthType: .MaxSize, logicalWidth: styleToUse.logicalMaxWidth(),
+        availableLogicalWidth: availableWidth, cb: cb, fragment: fragment)
+    }
+
+    if allowIntrinsic == .No && styleToUse.logicalMinWidth().isIntrinsic() {
+      return min(logicalWidth, computedMaxWidth)
+    }
+
+    var logicalMinWidth = styleToUse.logicalMinWidth()
+    var computedMinWidth = LayoutUnit()
+    var minimumSizeType: MinimumSizeIsAutomaticContentBased = .No
+    if logicalMinWidth.isAuto() && shouldComputeLogicalWidthFromAspectRatio()
+      && (styleToUse.logicalWidth().isAuto() || styleToUse.logicalWidth().isMinContent()
+        || styleToUse.logicalWidth().isMaxContent())
+      && !(self is RenderReplacedWrapper) && effectiveOverflowInlineDirection() == .Visible
+    {
+      // The automatic minimum size in the ratio-dependent axis is  its min-content size. See https://www.w3.org/TR/css-sizing-4/#aspect-ratio-minimum
+      logicalMinWidth = LengthWrapper(type: .MinContent)
+      minimumSizeType = .Yes
+    }
+    computedMinWidth = computeLogicalWidthInFragmentUsing(
+      widthType: .MinSize, logicalWidth: logicalMinWidth, availableLogicalWidth: availableWidth,
+      cb: cb, fragment: fragment)
+
+    if styleToUse.hasAspectRatio() {
+      constrainLogicalMinMaxSizesByAspectRatio(
+        computedMinSize: &computedMinWidth, computedMaxSize: &computedMaxWidth,
+        computedSize: logicalWidth, minimumSizeType: minimumSizeType, dimension: .Width)
+    }
+
+    return max(min(logicalWidth, computedMaxWidth), computedMinWidth)
   }
 
   func constrainLogicalHeightByMinMax(
