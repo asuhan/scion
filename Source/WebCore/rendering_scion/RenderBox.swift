@@ -1822,8 +1822,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func cacheIntrinsicContentLogicalHeightForFlexItem(height: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: it should be enough with checking hasOverridingLogicalHeight() as this logic could be shared
+    // by any layout system using overrides like grid or flex. However this causes a never ending sequence of calls
+    // between layoutBlock() <-> relayoutToAvoidWidows().
+    if isFloatingOrOutOfFlowPositioned() {
+      return
+    }
+    let flexibleBox = parent() as? RenderFlexibleBoxWrapper
+    if flexibleBox == nil {
+      return
+    }
+    if overridingLogicalHeight() != nil || shouldComputeLogicalHeightFromAspectRatio() {
+      return
+    }
+    flexibleBox!.setCachedFlexItemIntrinsicContentLogicalHeight(flexItem: self, height: height)
   }
 
   private func paginatedContentNeedsBaseHeight(h: LengthWrapper) -> Bool {

@@ -573,7 +573,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return flexItem.contentLogicalHeight()
   }
 
-  private func setCachedFlexItemIntrinsicContentLogicalHeight(
+  func setCachedFlexItemIntrinsicContentLogicalHeight(
     flexItem: RenderBoxWrapper, height: LayoutUnit
   ) {
     // TODO(asuhan): implement this
