@@ -665,8 +665,29 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // RenderBox's basic implementation accounts for the writing mode (only).
   func allowedLayoutOverflow() -> LayoutOptionalOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var allowance = LayoutOptionalOutsets()
+
+    // Overflow is in the block's coordinate space and thus is flipped
+    // for horizontal-bt and vertical-rl writing modes. This means we can
+    // treat horizontal-tb/bt as the same and vertical-lr/rl as the same.
+
+    if isHorizontalWritingMode() {
+      allowance.top = LayoutUnit(value: UInt64(0))
+      if style().isLeftToRightDirection() {
+        allowance.left = LayoutUnit(value: UInt64(0))
+      } else {
+        allowance.right = LayoutUnit(value: UInt64(0))
+      }
+    } else {
+      allowance.left = LayoutUnit(value: UInt64(0))
+      if style().isLeftToRightDirection() {
+        allowance.top = LayoutUnit(value: UInt64(0))
+      } else {
+        allowance.bottom = LayoutUnit(value: UInt64(0))
+      }
+    }
+
+    return allowance
   }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
