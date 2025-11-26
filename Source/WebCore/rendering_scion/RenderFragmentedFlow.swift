@@ -279,6 +279,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func addFragmentsOverflowFromChild(
+    box: RenderBoxWrapper, child: RenderBoxWrapper, delta: LayoutSizeWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addFragmentsVisualOverflow(box: RenderBoxWrapper, visualOverflow: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

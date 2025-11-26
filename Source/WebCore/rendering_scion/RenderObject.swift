@@ -627,6 +627,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func paintContainmentApplies() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isExcludedFromNormalLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

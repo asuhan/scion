@@ -739,13 +739,67 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addOverflowFromChild(child: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    addOverflowFromChild(child: child, delta: child.locationOffset())
   }
 
   func addOverflowFromChild(child: RenderBoxWrapper, delta: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    addOverflowFromChild(child: child, delta: delta, flippedClientRect: flippedClientBoxRect())
+  }
+
+  private func addOverflowFromChild(
+    child: RenderBoxWrapper, delta: LayoutSizeWrapper, flippedClientRect: LayoutRectWrapper
+  ) {
+    // Never allow flow threads to propagate overflow up to a parent.
+    if child.isRenderFragmentedFlow() {
+      return
+    }
+
+    let fragmentedFlow = enclosingFragmentedFlow()
+    if fragmentedFlow != nil {
+      fragmentedFlow!.addFragmentsOverflowFromChild(box: self, child: child, delta: delta)
+    }
+
+    // Only propagate layout overflow from the child if the child isn't clipping its overflow.  If it is, then
+    // its overflow is internal to it, and we don't care about it. layoutOverflowRectForPropagation takes care of this
+    // and just propagates the border box rect instead.
+    var childLayoutOverflowRect = child.layoutOverflowRectForPropagation(style: style())
+    childLayoutOverflowRect.move(size: delta)
+    addLayoutOverflow(rect: childLayoutOverflowRect, clientBox: flippedClientRect)
+
+    if paintContainmentApplies() {
+      return
+    }
+
+    // Add in visual overflow from the child. Even if the child clips its overflow, it may still
+    // have visual overflow of its own set from box shadows or reflections. It is unnecessary to propagate this
+    // overflow if we are clipping our own overflow.
+    if hasPotentiallyScrollableOverflow() {
+      return
+    }
+
+    var childVisualOverflowRect: LayoutRectWrapper? = nil
+    // If this block is flowed inside a flow thread, make sure its overflow is propagated to the containing fragments.
+    if fragmentedFlow != nil {
+      childVisualOverflowRect = computeChildVisualOverflowRect(child: child, delta: delta)
+      fragmentedFlow!.addFragmentsVisualOverflow(
+        box: self, visualOverflow: childVisualOverflowRect!)
+    } else if child.hasSelfPaintingLayer() {
+      // Update our visual overflow in case the child spills out the block, but only if we were going to paint
+      // the child block ourselves.
+      return
+    }
+    if childVisualOverflowRect == nil {
+      childVisualOverflowRect = computeChildVisualOverflowRect(child: child, delta: delta)
+    }
+    addVisualOverflow(rect: childVisualOverflowRect!)
+  }
+
+  private func computeChildVisualOverflowRect(child: RenderBoxWrapper, delta: LayoutSizeWrapper)
+    -> LayoutRectWrapper?
+  {
+    var childVisualOverflowRect = child.visualOverflowRectForPropagation(parentStyle: style())
+    childVisualOverflowRect.move(size: delta)
+    return childVisualOverflowRect
   }
 
   func contentWidth() -> LayoutUnit {
@@ -2914,6 +2968,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: LayoutUnit.fromRawValue(value: raw.height))
   }
 
+  private func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper?)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
     if style.p == nil {
       // TODO(asuhan): implement this
@@ -4117,6 +4178,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return containerBlock!.flipForWritingModeForChild(child: self, point: location())
+  }
+
+  private func addLayoutOverflow(rect: LayoutRectWrapper, clientBox: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Our overflow information.
