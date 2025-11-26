@@ -3659,8 +3659,95 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       marginLogicalLeft: marginLogicalLeft, marginLogicalRight: marginLogicalRight,
       computedValues: &computedValues)
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var transferredMinSize = LayoutUnit.min()
+    var transferredMaxSize = LayoutUnit.max()
+    if shouldComputeLogicalHeightFromAspectRatio() {
+      (transferredMinSize, transferredMaxSize) = computeMinMaxLogicalWidthFromAspectRatio()
+    }
+
+    var maxValues = LogicalExtentComputedValues()
+    maxValues.extent = LayoutUnit.max()
+    // Calculate constraint equation values for 'max-width' case.
+    if !style().logicalMaxWidth().isUndefined() {
+      computePositionedLogicalWidthUsing(
+        widthType: .MaxSize, logicalWidth: style().logicalMaxWidth(),
+        containerBlock: containerBlock, containerDirection: containerDirection,
+        containerLogicalWidth: containerLogicalWidth, bordersPlusPadding: bordersPlusPadding,
+        logicalLeft: logicalLeftLength, logicalRight: logicalRightLength,
+        marginLogicalLeft: marginLogicalLeft, marginLogicalRight: marginLogicalRight,
+        computedValues: &maxValues)
+    }
+    if transferredMaxSize < maxValues.extent {
+      computePositionedLogicalWidthUsing(
+        widthType: .MaxSize, logicalWidth: LengthWrapper(value: transferredMaxSize, type: .Fixed),
+        containerBlock: containerBlock, containerDirection: containerDirection,
+        containerLogicalWidth: containerLogicalWidth, bordersPlusPadding: bordersPlusPadding,
+        logicalLeft: logicalLeftLength, logicalRight: logicalRightLength,
+        marginLogicalLeft: marginLogicalLeft, marginLogicalRight: marginLogicalRight,
+        computedValues: &maxValues)
+    }
+    if computedValues.extent > maxValues.extent {
+      computedValues.extent = maxValues.extent
+      computedValues.position = maxValues.position
+      computedValues.margins.start = maxValues.margins.start
+      computedValues.margins.end = maxValues.margins.end
+    }
+
+    var minValues = LogicalExtentComputedValues()
+    minValues.extent = LayoutUnit.min()
+    // Calculate constraint equation values for 'min-width' case.
+    if !style().logicalMinWidth().isZero() || style().logicalMinWidth().isIntrinsic() {
+      computePositionedLogicalWidthUsing(
+        widthType: .MinSize, logicalWidth: style().logicalMinWidth(),
+        containerBlock: containerBlock, containerDirection: containerDirection,
+        containerLogicalWidth: containerLogicalWidth, bordersPlusPadding: bordersPlusPadding,
+        logicalLeft: logicalLeftLength, logicalRight: logicalRightLength,
+        marginLogicalLeft: marginLogicalLeft, marginLogicalRight: marginLogicalRight,
+        computedValues: &minValues)
+    }
+    if transferredMinSize > minValues.extent {
+      computePositionedLogicalWidthUsing(
+        widthType: .MinSize, logicalWidth: LengthWrapper(value: transferredMinSize, type: .Fixed),
+        containerBlock: containerBlock,
+        containerDirection: containerDirection,
+        containerLogicalWidth: containerLogicalWidth, bordersPlusPadding: bordersPlusPadding,
+        logicalLeft: logicalLeftLength, logicalRight: logicalRightLength,
+        marginLogicalLeft: marginLogicalLeft, marginLogicalRight: marginLogicalRight,
+        computedValues: &minValues)
+    }
+    if computedValues.extent < minValues.extent {
+      computedValues.extent = minValues.extent
+      computedValues.position = minValues.position
+      computedValues.margins.start = minValues.margins.start
+      computedValues.margins.end = minValues.margins.end
+    }
+
+    computedValues.extent += bordersPlusPadding
+    if let containingBox = containerBlock as? RenderBoxWrapper {
+      if containingBox.shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
+        && isHorizontalWritingMode()
+      {
+        computedValues.position += containingBox.verticalScrollbarWidth()
+      }
+    }
+
+    // Adjust logicalLeft if we need to for the flipped version of our writing mode in fragments.
+    // FIXME: Add support for other types of objects as containerBlock, not only RenderBlock.
+    let fragmentedFlow = enclosingFragmentedFlow()
+    if fragmentedFlow != nil && fragment == nil && isWritingModeRoot()
+      && isHorizontalWritingMode() == containerBlock.isHorizontalWritingMode(),
+      let renderBlock = containerBlock as? RenderBlockWrapper
+    {
+      assert(containerBlock.canHaveBoxInfoInFragment())
+      var logicalLeftPos = computedValues.position
+      let cbPageOffset = renderBlock.offsetFromLogicalTopOfFirstPage()
+      if let cbFragment = renderBlock.fragmentAtBlockOffset(blockOffset: cbPageOffset),
+        let boxInfo = renderBlock.renderBoxFragmentInfo(fragment: cbFragment)
+      {
+        logicalLeftPos += boxInfo.logicalLeft
+        computedValues.position = logicalLeftPos
+      }
+    }
   }
 
   private func computeIntrinsicLogicalWidthUsing(
