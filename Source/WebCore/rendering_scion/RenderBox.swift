@@ -1803,8 +1803,22 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func overrideLogicalHeightForSizeContainment() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var intrinsicHeight = LayoutUnit()
+    if let height = explicitIntrinsicInnerLogicalHeight() {
+      intrinsicHeight = height
+    } else if isRenderMenuList() {
+      // RenderMenuList has its own theme, if there isn't explicitIntrinsicInnerLogicalHeight,
+      // as a size containment, it should be treated as if there is no content, and the height
+      // should the original logical height for theme.
+      return
+    }
+
+    // We need the exact width of border and padding here, yet we can't use borderAndPadding* interfaces.
+    // Because these interfaces evetually call borderAfter/Before, and RenderBlock::borderBefore
+    // adds extra border to fieldset by adding intrinsicBorderForFieldset which is not needed here.
+    let borderAndPadding =
+      boxBorderBefore() + boxPaddingBefore() + boxBorderAfter() + boxPaddingAfter()
+    setLogicalHeight(size: intrinsicHeight + borderAndPadding + scrollbarLogicalHeight())
   }
 
   func cacheIntrinsicContentLogicalHeightForFlexItem(height: LayoutUnit) {
@@ -3132,6 +3146,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func explicitIntrinsicInnerLogicalHeight() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
