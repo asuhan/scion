@@ -255,6 +255,11 @@ private func shouldComputeLogicalWidthFromAspectRatioAndInsets(renderer: RenderB
   return style.logicalHeight().isAuto()
 }
 
+enum ShouldComputePreferred {
+  case ComputeActual
+  case ComputePreferred
+}
+
 enum StretchingMode {
   case `Any`
   case Explicit
@@ -1050,6 +1055,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func overridingLogicalWidth() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overridingLogicalHeight() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1107,6 +1117,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // (the size in the main direction) than the one specified by the item in order to compute the value of flex basis, i.e.,
   // the initial main size of the flex item before the free space is distributed.
   func overridingLogicalHeightLength() -> LengthWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func overridingLogicalWidthLength() -> LengthWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1205,8 +1220,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   struct ComputedMarginValues {
     var before = LayoutUnit()
     var after = LayoutUnit()
-    let start = LayoutUnit()
-    let end = LayoutUnit()
+    var start = LayoutUnit()
+    var end = LayoutUnit()
   }
 
   struct LogicalExtentComputedValues {
@@ -1625,6 +1640,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
+  private func containingBlockAvailableLineWidthInFragment(
+    fragment: RenderFragmentContainerWrapper?
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func perpendicularContainingBlockLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateLogicalWidth() {
     var computedValues = LogicalExtentComputedValues()
     computeLogicalWidthInFragment(computedValues: &computedValues)
@@ -1931,8 +1958,152 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedValues: inout LogicalExtentComputedValues,
     fragment: RenderFragmentContainerWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    computedValues.extent = logicalWidth()
+    computedValues.position = logicalLeft()
+    computedValues.margins.start = marginStart()
+    computedValues.margins.end = marginEnd()
+
+    if isOutOfFlowPositioned() {
+      // FIXME: This calculation is not patched for block-flow yet.
+      // https://bugs.webkit.org/show_bug.cgi?id=46500
+      computePositionedLogicalWidth(computedValues: &computedValues, fragment: fragment)
+      return
+    }
+
+    // The parent box is flexing us, so it has increased or decreased our
+    // width.  Use the width from the style context.
+    // FIXME: Account for block-flow in flexible boxes.
+    // https://bugs.webkit.org/show_bug.cgi?id=46418
+    if let overridingLogicalWidth =
+      (parent()!.isFlexibleBoxIncludingDeprecated() ? overridingLogicalWidth() : nil)
+    {
+      computedValues.extent = overridingLogicalWidth
+      return
+    }
+
+    // FIXME: Account for block-flow in flexible boxes.
+    // https://bugs.webkit.org/show_bug.cgi?id=46418
+    let inVerticalBox =
+      parent()!.isRenderDeprecatedFlexibleBox() && (parent()!.style().boxOrient() == .Vertical)
+    let stretching = (parent()!.style().boxAlign() == .Stretch)
+    // FIXME: Stretching is the only reason why we don't want the box to be treated as a replaced element, so we could perhaps
+    // refactor all this logic, not only for flex and grid since alignment is intended to be applied to any block.
+    var treatAsReplaced = shouldComputeSizeAsReplaced() && (!inVerticalBox || !stretching)
+    treatAsReplaced = treatAsReplaced && (!isGridItem() || !hasStretchedLogicalWidth())
+
+    let styleToUse = style()
+    var logicalWidthLength = LengthWrapper()
+    var hasOverridingLogicalWidthLength = false
+    if let overridingLogicalWidthLength = overridingLogicalWidthLength() {
+      logicalWidthLength = overridingLogicalWidthLength
+      hasOverridingLogicalWidthLength = true
+    } else {
+      logicalWidthLength =
+        treatAsReplaced
+        ? LengthWrapper(value: computeReplacedLogicalWidth(), type: .Fixed)
+        : styleToUse.logicalWidth()
+    }
+
+    let cb = containingBlock()!
+    let containerLogicalWidth = max(
+      LayoutUnit(value: 0), containingBlockLogicalWidthForContentInFragment(fragment: fragment))
+    let hasPerpendicularContainingBlock = cb.isHorizontalWritingMode() != isHorizontalWritingMode()
+
+    if isInline() && !isInlineBlockOrInlineTable() {
+      // just calculate margins
+      computedValues.margins.start = minimumValueForLength(
+        length: styleToUse.marginStart(), maximumValue: containerLogicalWidth)
+      computedValues.margins.end = minimumValueForLength(
+        length: styleToUse.marginEnd(), maximumValue: containerLogicalWidth)
+      if treatAsReplaced {
+        computedValues.extent = max(
+          LayoutUnit(
+            value: floatValueForLength(
+              length: logicalWidthLength, maximumValue: LayoutUnit(value: 0))
+              + borderAndPaddingLogicalWidth()),
+          minPreferredLogicalWidth())
+      }
+      return
+    }
+
+    let containerWidthInInlineDirection =
+      hasPerpendicularContainingBlock
+      ? perpendicularContainingBlockLogicalHeight() : containerLogicalWidth
+
+    // Width calculations
+    if let overridingLogicalWidth = (isGridItem() ? overridingLogicalWidth() : nil) {
+      computedValues.extent = overridingLogicalWidth
+    } else if treatAsReplaced {
+      computedValues.extent = LayoutUnit(
+        value: logicalWidthLength.value() + borderAndPaddingLogicalWidth())
+    } else if shouldComputeLogicalWidthFromAspectRatio() && style().logicalWidth().isAuto() {
+      computedValues.extent = computeLogicalWidthFromAspectRatio(fragment: fragment)
+    } else {
+      let preferredWidth = computeLogicalWidthInFragmentUsing(
+        widthType: .MainOrPreferredSize,
+        logicalWidth: hasOverridingLogicalWidthLength
+          ? logicalWidthLength : styleToUse.logicalWidth(),
+        availableLogicalWidth: containerWidthInInlineDirection, cb: cb, fragment: fragment)
+      computedValues.extent = constrainLogicalWidthInFragmentByMinMax(
+        logicalWidth: preferredWidth, availableWidth: containerWidthInInlineDirection, cb: cb,
+        fragment: fragment)
+    }
+
+    // Margin calculations.
+    if hasPerpendicularContainingBlock || isFloating() || isInline() {
+      let marginStartLength = styleToUse.marginStart()
+      let marginEndLength = styleToUse.marginEnd()
+      computedValues.margins.start = computeOrTrimInlineMargin(
+        containingBlock: cb, marginSide: .BlockStart,
+        computeInlineMargin: {
+          return minimumValueForLength(
+            length: marginStartLength, maximumValue: containerLogicalWidth)
+        })
+      computedValues.margins.end = computeOrTrimInlineMargin(
+        containingBlock: cb, marginSide: .BlockEnd,
+        computeInlineMargin: {
+          return minimumValueForLength(length: marginEndLength, maximumValue: containerLogicalWidth)
+        })
+    } else {
+      var containerLogicalWidthForAutoMargins = containerLogicalWidth
+      if avoidsFloats() && cb.containsFloats() {
+        containerLogicalWidthForAutoMargins = containingBlockAvailableLineWidthInFragment(
+          fragment: fragment)
+      }
+      let hasInvertedDirection =
+        cb.style().isLeftToRightDirection() != style().isLeftToRightDirection()
+      if hasInvertedDirection {
+        computeInlineDirectionMargins(
+          containingBlock: cb, containerWidth: containerLogicalWidth,
+          availableSpaceAdjustedWithFloats: containerLogicalWidthForAutoMargins,
+          childWidth: computedValues.extent,
+          marginStart: &computedValues.margins.end,
+          marginEnd: &computedValues.margins.start)
+      } else {
+        computeInlineDirectionMargins(
+          containingBlock: cb, containerWidth: containerLogicalWidth,
+          availableSpaceAdjustedWithFloats: containerLogicalWidthForAutoMargins,
+          childWidth: computedValues.extent,
+          marginStart: &computedValues.margins.start,
+          marginEnd: &computedValues.margins.end)
+      }
+    }
+
+    if !hasPerpendicularContainingBlock && containerLogicalWidth.bool()
+      && containerLogicalWidth
+        != (computedValues.extent + computedValues.margins.start + computedValues.margins.end)
+      && !isFloating() && !isInline() && !cb.isFlexibleBoxIncludingDeprecated()
+      && !cb.isRenderGrid()
+    {
+      let newMarginTotal = containerLogicalWidth - computedValues.extent
+      let hasInvertedDirection =
+        cb.style().isLeftToRightDirection() != style().isLeftToRightDirection()
+      if hasInvertedDirection {
+        computedValues.margins.start = newMarginTotal - computedValues.margins.end
+      } else {
+        computedValues.margins.end = newMarginTotal - computedValues.margins.start
+      }
+    }
   }
 
   private func stretchesToViewport() -> Bool {
@@ -2401,6 +2572,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         heightType: .MaxSize, logicalHeight: style().logicalMaxHeight())
     }
     return max(minLogicalHeight, min(logicalHeight, maxLogicalHeight))
+  }
+
+  func computeReplacedLogicalWidth(shouldComputePreferred: ShouldComputePreferred = .ComputeActual)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
@@ -3386,6 +3564,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  private func computePositionedLogicalWidth(
+    computedValues: inout LogicalExtentComputedValues,
+    fragment: RenderFragmentContainerWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeIntrinsicLogicalWidthUsing(
     logicalWidthLength: LengthWrapper, availableLogicalWidth: LayoutUnit,
     borderAndPadding: LayoutUnit
@@ -3559,6 +3745,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       aspectRatio: style().logicalAspectRatio(), boxSizing: style().boxSizingForAspectRatio(),
       blockSize: logicalHeightforAspectRatio,
       aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
+  }
+
+  private func computeLogicalWidthFromAspectRatio(fragment: RenderFragmentContainerWrapper? = nil)
+    -> LayoutUnit
+  {  // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
