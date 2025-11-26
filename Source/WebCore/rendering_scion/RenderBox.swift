@@ -468,6 +468,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return logicalHeight
   }
 
+  func setLogicalLeft(left: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalTop(top: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -912,6 +917,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setMarginEnd(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1569,8 +1584,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func updateLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var computedValues = LogicalExtentComputedValues()
+    computeLogicalWidthInFragment(computedValues: &computedValues)
+
+    setLogicalWidth(size: computedValues.extent)
+    setLogicalLeft(left: computedValues.position)
+    setMarginStart(value: computedValues.margins.start)
+    setMarginEnd(value: computedValues.margins.end)
   }
 
   func updateLogicalHeight() {
