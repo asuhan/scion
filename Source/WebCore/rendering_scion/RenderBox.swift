@@ -1281,6 +1281,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func adjustContentBoxLogicalWidthForBoxSizing(
+    computedLogicalWidth: LayoutUnit, originalType: LengthType
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
@@ -2556,7 +2563,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     -> LayoutUnit
   {
     assert(heightType == .MinSize || heightType == .MainOrPreferredSize || !logicalHeight.isAuto())
-    // This function should get called with SizeType::MinSize/SizeType::MaxSize only if replacedMinMaxLogicalHeightComputesAsNone
+    // This function should get called with .MinSize/.MaxSize only if replacedMinMaxLogicalHeightComputesAsNone
     // returns false, otherwise we should not try to compute those values as they may be incorrect. The caller
     // should make sure this condition holds before calling this function
     if heightType == .MinSize || heightType == .MaxSize {
@@ -4368,8 +4375,214 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     marginLogicalLeft: LengthWrapper, marginLogicalRight: LengthWrapper,
     computedValues: inout LogicalExtentComputedValues
   ) {
+    assert(widthType == .MinSize || widthType == .MainOrPreferredSize || !logicalWidth.isAuto())
+    let originalLogicalWidthType = logicalWidth.type()
+    var logicalWidth = logicalWidth
+    if widthType == .MinSize && logicalWidth.isAuto() {
+      if shouldComputeLogicalWidthFromAspectRatio() {
+        var minLogicalWidth = LayoutUnit()
+        var maxLogicalWidth = LayoutUnit()
+        computeIntrinsicLogicalWidths(
+          minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+        logicalWidth = LengthWrapper(value: minLogicalWidth, type: .Fixed)
+      } else {
+        logicalWidth = LengthWrapper(value: Int32(0), type: .Fixed)
+      }
+    } else if widthType == .MainOrPreferredSize && logicalWidth.isAuto()
+      && shouldComputeLogicalWidthFromAspectRatio()
+    {
+      logicalWidth = LengthWrapper(value: computeLogicalWidthFromAspectRatio(), type: .Fixed)
+    } else if logicalWidth.isIntrinsic() {
+      logicalWidth = LengthWrapper(
+        value: computeIntrinsicLogicalWidthUsing(
+          logicalWidthLength: logicalWidth, availableLogicalWidth: containerLogicalWidth,
+          borderAndPadding: bordersPlusPadding) - bordersPlusPadding,
+        type: .Fixed)
+    }
+
+    // 'left' and 'right' cannot both be 'auto' because one would of been
+    // converted to the static position already
+    assert(!(logicalLeft.isAuto() && logicalRight.isAuto()))
+
+    let containerRelativeLogicalWidth = containingBlockLogicalWidthForPositioned(
+      containingBlock: containerBlock, fragment: nil, checkForPerpendicularWritingMode: false)
+
+    let logicalWidthIsAuto =
+      logicalWidth.isIntrinsicOrAuto() && !shouldComputeLogicalWidthFromAspectRatio()
+    let logicalLeftIsAuto = logicalLeft.isAuto()
+    let logicalRightIsAuto = logicalRight.isAuto()
+    var marginLogicalLeftValue = MarginLogicalLeftValue(
+      isLeftToRightDirection: style().isLeftToRightDirection())
+    var marginLogicalRightValue = MarginLogicalRightValue(
+      isLeftToRightDirection: style().isLeftToRightDirection())
+
+    var logicalLeftValue = LayoutUnit()
+
+    if !logicalLeftIsAuto && !logicalWidthIsAuto && !logicalRightIsAuto {
+      /*-----------------------------------------------------------------------*\
+         * If none of the three is 'auto': If both 'margin-left' and 'margin-
+         * right' are 'auto', solve the equation under the extra constraint that
+         * the two margins get equal values, unless this would make them negative,
+         * in which case when direction of the containing block is 'ltr' ('rtl'),
+         * set 'margin-left' ('margin-right') to zero and solve for 'margin-right'
+         * ('margin-left'). If one of 'margin-left' or 'margin-right' is 'auto',
+         * solve the equation for that value. If the values are over-constrained,
+         * ignore the value for 'left' (in case the 'direction' property of the
+         * containing block is 'rtl') or 'right' (in case 'direction' is 'ltr')
+         * and solve for that value.
+        \*-----------------------------------------------------------------------*/
+      // NOTE:  It is not necessary to solve for 'right' in the over constrained
+      // case because the value is not used for any further calculations.
+
+      logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+      computedValues.extent = adjustContentBoxLogicalWidthForBoxSizing(
+        computedLogicalWidth: valueForLength(
+          length: logicalWidth, maximumValue: containerLogicalWidth),
+        originalType: originalLogicalWidthType)
+
+      let availableSpace =
+        containerLogicalWidth
+        - (logicalLeftValue + computedValues.extent
+          + valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
+          + bordersPlusPadding)
+
+      // Margins are now the only unknown
+      if marginLogicalLeft.isAuto() && marginLogicalRight.isAuto() {
+        // Both margins auto, solve for equality
+        if availableSpace >= Int32(0) {
+          marginLogicalLeftValue.set(availableSpace / 2, &computedValues)  // split the difference
+          marginLogicalRightValue.set(
+            availableSpace - marginLogicalLeftValue.get(computedValues), &computedValues)  // account for odd valued differences
+        } else {
+          // Use the containing block's direction rather than the parent block's
+          // per CSS 2.1 reference test abspos-non-replaced-width-margin-000.
+          if containerDirection == .LTR {
+            marginLogicalLeftValue.set(LayoutUnit(value: 0), &computedValues)
+            marginLogicalRightValue.set(availableSpace, &computedValues)  // will be negative
+          } else {
+            marginLogicalLeftValue.set(availableSpace, &computedValues)  // will be negative
+            marginLogicalRightValue.set(LayoutUnit(value: 0), &computedValues)
+          }
+        }
+      } else if marginLogicalLeft.isAuto() {
+        // Solve for left margin
+        marginLogicalRightValue.set(
+          valueForLength(length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth),
+          &computedValues)
+        marginLogicalLeftValue.set(
+          availableSpace - marginLogicalRightValue.get(computedValues), &computedValues)
+      } else if marginLogicalRight.isAuto() {
+        // Solve for right margin
+        marginLogicalLeftValue.set(
+          valueForLength(length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth),
+          &computedValues)
+        marginLogicalRightValue.set(
+          availableSpace - marginLogicalLeftValue.get(computedValues), &computedValues)
+      } else {
+        // Over-constrained, solve for left if direction is RTL
+        marginLogicalLeftValue.set(
+          valueForLength(length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth),
+          &computedValues)
+        marginLogicalRightValue.set(
+          valueForLength(length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth),
+          &computedValues)
+
+        // Use the containing block's direction rather than the parent block's
+        // per CSS 2.1 reference test abspos-non-replaced-width-margin-000.
+        if !isOrthogonal(renderer: self, ancestor: containerBlock) && containerDirection == .RTL {
+          logicalLeftValue =
+            (availableSpace + logicalLeftValue) - marginLogicalLeftValue.get(computedValues)
+            - marginLogicalRightValue.get(computedValues)
+        }
+      }
+    } else {
+      /*--------------------------------------------------------------------*\
+         * Otherwise, set 'auto' values for 'margin-left' and 'margin-right'
+         * to 0, and pick the one of the following six rules that applies.
+         *
+         * 1. 'left' and 'width' are 'auto' and 'right' is not 'auto', then the
+         *    width is shrink-to-fit. Then solve for 'left'
+         *
+         *              OMIT RULE 2 AS IT SHOULD NEVER BE HIT
+         * ------------------------------------------------------------------
+         * 2. 'left' and 'right' are 'auto' and 'width' is not 'auto', then if
+         *    the 'direction' property of the containing block is 'ltr' set
+         *    'left' to the static position, otherwise set 'right' to the
+         *    static position. Then solve for 'left' (if 'direction is 'rtl')
+         *    or 'right' (if 'direction' is 'ltr').
+         * ------------------------------------------------------------------
+         *
+         * 3. 'width' and 'right' are 'auto' and 'left' is not 'auto', then the
+         *    width is shrink-to-fit . Then solve for 'right'
+         * 4. 'left' is 'auto', 'width' and 'right' are not 'auto', then solve
+         *    for 'left'
+         * 5. 'width' is 'auto', 'left' and 'right' are not 'auto', then solve
+         *    for 'width'
+         * 6. 'right' is 'auto', 'left' and 'width' are not 'auto', then solve
+         *    for 'right'
+         *
+         * Calculation of the shrink-to-fit width is similar to calculating the
+         * width of a table cell using the automatic table layout algorithm.
+         * Roughly: calculate the preferred width by formatting the content
+         * without breaking lines other than where explicit line breaks occur,
+         * and also calculate the preferred minimum width, e.g., by trying all
+         * possible line breaks. CSS 2.1 does not define the exact algorithm.
+         * Thirdly, calculate the available width: this is found by solving
+         * for 'width' after setting 'left' (in case 1) or 'right' (in case 3)
+         * to 0.
+         *
+         * Then the shrink-to-fit width is:
+         * min(max(preferred minimum width, available width), preferred width).
+        \*--------------------------------------------------------------------*/
+      // NOTE: For rules 3 and 6 it is not necessary to solve for 'right'
+      // because the value is not used for any further calculations.
+
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private struct MarginLogicalLeftValue {
+    init(isLeftToRightDirection: Bool) {
+      self.isLeftToRightDirection = isLeftToRightDirection
+    }
+
+    mutating func set(_ value: LayoutUnit, _ computedValues: inout LogicalExtentComputedValues) {
+      if isLeftToRightDirection {
+        computedValues.margins.start = value
+      } else {
+        computedValues.margins.end = value
+      }
+    }
+
+    func get(_ computedValues: LogicalExtentComputedValues) -> LayoutUnit {
+      return isLeftToRightDirection ? computedValues.margins.start : computedValues.margins.end
+    }
+
+    private let isLeftToRightDirection: Bool
+  }
+
+  private struct MarginLogicalRightValue {
+    init(isLeftToRightDirection: Bool) {
+      self.isLeftToRightDirection = isLeftToRightDirection
+    }
+
+    mutating func set(_ value: LayoutUnit, _ computedValues: inout LogicalExtentComputedValues) {
+      if isLeftToRightDirection {
+        computedValues.margins.end = value
+      } else {
+        computedValues.margins.start = value
+      }
+    }
+
+    func get(_ computedValues: LogicalExtentComputedValues) -> LayoutUnit {
+      return isLeftToRightDirection ? computedValues.margins.end : computedValues.margins.start
+    }
+
+    private let isLeftToRightDirection: Bool
   }
 
   private func computePositionedLogicalHeightUsing(
