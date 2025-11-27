@@ -242,8 +242,31 @@ private func positionWithRTLInlineBoxContainingBlock(
   containingBlock: RenderElementWrapper, logicalLeftValue: LayoutUnit,
   marginLogicalLeftValue: LayoutUnit
 ) -> Float32? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let renderInline = containingBlock as? RenderInlineWrapper
+  if renderInline == nil || containingBlock.style().isLeftToRightDirection() {
+    return nil
+  }
+
+  let firstInlineBox = InlineIterator.firstInlineBoxFor(renderInline: renderInline!)
+  if firstInlineBox.bool() {
+    return nil
+  }
+
+  var lastInlineBox = firstInlineBox
+  while lastInlineBox.get().nextInlineBox().bool() {
+    lastInlineBox = lastInlineBox.traverseNextInlineBox()
+  }
+  if firstInlineBox == lastInlineBox {
+    return nil
+  }
+
+  let lastInlineBoxPaddingBoxVisualRight =
+    lastInlineBox.get().logicalLeftIgnoringInlineDirection() + renderInline!.borderLogicalLeft()
+  // FIXME: This does not work with decoration break clone.
+  let firstInlineBoxPaddingBoxVisualRight = firstInlineBox.get()
+    .logicalLeftIgnoringInlineDirection()
+  let distance = lastInlineBoxPaddingBoxVisualRight - firstInlineBoxPaddingBoxVisualRight
+  return logicalLeftValue + marginLogicalLeftValue + distance
 }
 
 private func shouldFlipStaticPositionInParent(

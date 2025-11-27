@@ -56,6 +56,12 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    // Return visual left/right coords in inline direction (they are still considered logical values as there's no flip for writing mode).
+    func logicalLeftIgnoringInlineDirection() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isHorizontal() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -79,6 +85,11 @@ extension InlineIterator {
 
   class BoxIterator {
     func bool() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    static func == (self: BoxIterator, other: BoxIterator) -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
