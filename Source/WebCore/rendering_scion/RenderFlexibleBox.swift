@@ -334,7 +334,7 @@ private func alignContentSpaceBetweenFlexItems(
   return LayoutUnit(value: UInt64(0))
 }
 
-private func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
+func clamp<T: Comparable>(val: T, lo: T, hi: T) -> T { return min(max(val, lo), hi) }
 
 class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   convenience init(type: `Type`, document: Document, style: RenderStyleWrapper) {

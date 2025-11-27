@@ -213,6 +213,23 @@ private func computeInlineStaticDistance(
   }
 }
 
+private func computeLogicalLeftPositionedOffset(
+  logicalLeftPos: inout LayoutUnit, child: RenderBoxWrapper, logicalWidthValue: LayoutUnit,
+  containerBlock: RenderBoxModelObjectWrapper, containerLogicalWidth: LayoutUnit,
+  logicalLeftIsAuto: Bool, logicalRightIsAuto: Bool
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func positionWithRTLInlineBoxContainingBlock(
+  containingBlock: RenderElementWrapper, logicalLeftValue: LayoutUnit,
+  marginLogicalLeftValue: LayoutUnit
+) -> Float32? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func shouldFlipStaticPositionInParent(
   outOfFlowBox: RenderBoxWrapper, containerBlock: RenderBoxModelObjectWrapper
 ) -> Bool {
@@ -4411,10 +4428,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       logicalWidth.isIntrinsicOrAuto() && !shouldComputeLogicalWidthFromAspectRatio()
     let logicalLeftIsAuto = logicalLeft.isAuto()
     let logicalRightIsAuto = logicalRight.isAuto()
-    var marginLogicalLeftValue = MarginLogicalLeftValue(
-      isLeftToRightDirection: style().isLeftToRightDirection())
-    var marginLogicalRightValue = MarginLogicalRightValue(
-      isLeftToRightDirection: style().isLeftToRightDirection())
+    var marginLogicalLeftValue_ = LayoutUnit()
 
     var logicalLeftValue = LayoutUnit()
 
@@ -4445,6 +4459,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         - (logicalLeftValue + computedValues.extent
           + valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
           + bordersPlusPadding)
+
+      var marginLogicalLeftValue = MarginLogicalLeftValue(
+        isLeftToRightDirection: style().isLeftToRightDirection())
+      var marginLogicalRightValue = MarginLogicalRightValue(
+        isLeftToRightDirection: style().isLeftToRightDirection())
 
       // Margins are now the only unknown
       if marginLogicalLeft.isAuto() && marginLogicalRight.isAuto() {
@@ -4495,6 +4514,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
             - marginLogicalRightValue.get(computedValues)
         }
       }
+      marginLogicalLeftValue_ = marginLogicalLeftValue.get(computedValues)
     } else {
       /*--------------------------------------------------------------------*\
          * Otherwise, set 'auto' values for 'margin-left' and 'margin-right'
@@ -4537,12 +4557,90 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       // NOTE: For rules 3 and 6 it is not necessary to solve for 'right'
       // because the value is not used for any further calculations.
 
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Calculate margins, 'auto' margins are ignored.
+      let marginLogicalLeftValue = minimumValueForLength(
+        length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth)
+      let marginLogicalRightValue = minimumValueForLength(
+        length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth)
+
+      let availableSpace =
+        containerLogicalWidth
+        - (marginLogicalLeftValue + marginLogicalRightValue + bordersPlusPadding)
+
+      // FIXME: Is there a faster way to find the correct case?
+      // Use rule/case that applies.
+      if logicalLeftIsAuto && logicalWidthIsAuto && !logicalRightIsAuto {
+        // RULE 1: (use shrink-to-fit for width, and solve of left)
+        let logicalRightValue = valueForLength(
+          length: logicalRight, maximumValue: containerLogicalWidth)
+        computedValues.extent = shrinkToFitLogicalWidth(
+          availableLogicalWidth: availableSpace - logicalRightValue,
+          bordersPlusPadding: bordersPlusPadding)
+        logicalLeftValue = availableSpace - (computedValues.extent + logicalRightValue)
+      } else if !logicalLeftIsAuto && logicalWidthIsAuto && logicalRightIsAuto {
+        // RULE 3: (use shrink-to-fit for width, and no need solve of right)
+        logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+        computedValues.extent = shrinkToFitLogicalWidth(
+          availableLogicalWidth: availableSpace - logicalLeftValue,
+          bordersPlusPadding: bordersPlusPadding)
+      } else if logicalLeftIsAuto && !logicalWidthIsAuto && !logicalRightIsAuto {
+        // RULE 4: (solve for left)
+        computedValues.extent = adjustContentBoxLogicalWidthForBoxSizing(
+          computedLogicalWidth: valueForLength(
+            length: logicalWidth, maximumValue: containerLogicalWidth),
+          originalType: originalLogicalWidthType)
+        logicalLeftValue =
+          availableSpace
+          - (computedValues.extent
+            + valueForLength(length: logicalRight, maximumValue: containerLogicalWidth))
+      } else if !logicalLeftIsAuto && logicalWidthIsAuto && !logicalRightIsAuto {
+        // RULE 5: (solve for width)
+        logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+        computedValues.extent =
+          availableSpace
+          - (logicalLeftValue
+            + valueForLength(length: logicalRight, maximumValue: containerLogicalWidth))
+      } else if !logicalLeftIsAuto && !logicalWidthIsAuto && logicalRightIsAuto {
+        // RULE 6: (no need solve for right)
+        logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+        computedValues.extent = adjustContentBoxLogicalWidthForBoxSizing(
+          computedLogicalWidth: valueForLength(
+            length: logicalWidth, maximumValue: containerLogicalWidth),
+          originalType: originalLogicalWidthType)
+      }
+      marginLogicalLeftValue_ = marginLogicalLeftValue
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Use computed values to calculate the horizontal position.
+
+    // FIXME: This hack is needed to calculate the logical left position for a 'rtl' relatively
+    // positioned, inline because right now, it is using the logical left position
+    // of the first line box when really it should use the last line box. When
+    // this is fixed elsewhere, this block should be removed.
+    if let position = positionWithRTLInlineBoxContainingBlock(
+      containingBlock: containerBlock, logicalLeftValue: logicalLeftValue,
+      marginLogicalLeftValue: marginLogicalLeftValue_)
+    {
+      computedValues.position = LayoutUnit(value: position)
+      return
+    }
+
+    computedValues.position = logicalLeftValue + marginLogicalLeftValue_
+    computeLogicalLeftPositionedOffset(
+      logicalLeftPos: &computedValues.position, child: self,
+      logicalWidthValue: computedValues.extent + bordersPlusPadding, containerBlock: containerBlock,
+      containerLogicalWidth: containerLogicalWidth,
+      logicalLeftIsAuto: style().logicalLeft().isAuto(),
+      logicalRightIsAuto: style().logicalRight().isAuto())
+  }
+
+  private func shrinkToFitLogicalWidth(
+    availableLogicalWidth: LayoutUnit, bordersPlusPadding: LayoutUnit
+  ) -> LayoutUnit {
+    let preferredMaxLogicalWidth = maxPreferredLogicalWidth() - bordersPlusPadding
+    let preferredMinLogicalWidth = minPreferredLogicalWidth() - bordersPlusPadding
+    return clamp(
+      val: availableLogicalWidth, lo: preferredMinLogicalWidth, hi: preferredMaxLogicalWidth)
   }
 
   private struct MarginLogicalLeftValue {
