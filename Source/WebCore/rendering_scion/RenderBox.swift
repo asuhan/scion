@@ -2940,8 +2940,40 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func intrinsicScrollbarLogicalWidthIncludingGutter() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasNonVisibleOverflow() {
+      return 0
+    }
+
+    if isHorizontalWritingMode()
+      && ((style().overflowY() == .Scroll
+        || RenderBoxWrapper.shouldIncludeScrollbarGutter(
+          gutter: style().scrollbarGutter(), hasVisibleOverflow: hasScrollableOverflowY(),
+          overflow: style().overflowY()))
+        && !canUseOverlayScrollbars())
+    {
+      return style().scrollbarGutter().bothEdges
+        ? verticalScrollbarWidth() * 2 : verticalScrollbarWidth()
+    }
+
+    if !isHorizontalWritingMode()
+      && ((style().overflowX() == .Scroll
+        || RenderBoxWrapper.shouldIncludeScrollbarGutter(
+          gutter: style().scrollbarGutter(), hasVisibleOverflow: hasScrollableOverflowX(),
+          overflow: style().overflowX()))
+        && !canUseOverlayScrollbars())
+    {
+      return style().scrollbarGutter().bothEdges
+        ? horizontalScrollbarHeight() * 2 : horizontalScrollbarHeight()
+    }
+
+    return 0
+  }
+
+  private static func shouldIncludeScrollbarGutter(
+    gutter: ScrollbarGutter, hasVisibleOverflow: Bool, overflow: Overflow
+  ) -> Bool {
+    return (overflow == .Auto && (!gutter.isAuto || hasVisibleOverflow))
+      || (overflow == .Hidden && !gutter.isAuto)
   }
 
   func scrollbarLogicalWidth() -> Int32 {
@@ -2954,12 +2986,27 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func canUseOverlayScrollbars() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollsOverflowX() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func scrollsOverflowY() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasScrollableOverflowX() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasScrollableOverflowY() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
