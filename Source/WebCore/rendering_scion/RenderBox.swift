@@ -2618,8 +2618,52 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func computeReplacedLogicalWidthUsing(widthType: SizeType, logicalWidth: LengthWrapper)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(widthType == .MinSize || widthType == .MainOrPreferredSize || !logicalWidth.isAuto())
+    if widthType == .MinSize && logicalWidth.isAuto() {
+      return adjustContentBoxLogicalWidthForBoxSizing(
+        computedLogicalWidth: LayoutUnit(value: 0), originalType: logicalWidth.type())
+    }
+
+    switch logicalWidth.type() {
+    case .Fixed:
+      return adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: logicalWidth)
+    case .MinContent, .MaxContent:
+      // MinContent/MaxContent don't need the availableLogicalWidth argument.
+      return computeIntrinsicLogicalWidthUsing(
+        logicalWidthLength: logicalWidth, availableLogicalWidth: LayoutUnit(),
+        borderAndPadding: borderAndPaddingLogicalWidth())
+        - borderAndPaddingLogicalWidth()
+    case .FitContent, .FillAvailable, .Percent, .Calculated:
+      var containerWidth = LayoutUnit()
+      if isOutOfFlowPositioned() {
+        containerWidth = containingBlockLogicalWidthForPositioned(
+          containingBlock: container() as! RenderBoxModelObjectWrapper)
+      } else if isHorizontalWritingMode() == containingBlock()!.isHorizontalWritingMode() {
+        containerWidth = containingBlockLogicalWidthForContent()
+      } else {
+        containerWidth = perpendicularContainingBlockLogicalHeight()
+      }
+      let containerLogicalWidth = containingBlock()!.style().logicalWidth()
+      // FIXME: Handle cases when containing block width is calculated or viewport percent.
+      // https://bugs.webkit.org/show_bug.cgi?id=91071
+      if logicalWidth.isIntrinsic() {
+        return computeIntrinsicLogicalWidthUsing(
+          logicalWidthLength: logicalWidth, availableLogicalWidth: containerWidth,
+          borderAndPadding: borderAndPaddingLogicalWidth()) - borderAndPaddingLogicalWidth()
+      }
+      if containerWidth > 0
+        || (!containerWidth.bool()
+          && (containerLogicalWidth.isFixed() || containerLogicalWidth.isPercentOrCalculated()))
+      {
+        return adjustContentBoxLogicalWidthForBoxSizing(
+          computedLogicalWidth: minimumValueForLength(
+            length: logicalWidth, maximumValue: containerWidth),
+          originalType: logicalWidth.type())
+      }
+      return LayoutUnit(value: UInt64(0))
+    case .Intrinsic, .MinIntrinsic, .Auto, .Normal, .Content, .Relative, .Undefined:
+      return intrinsicLogicalWidth()
+    }
   }
 
   private func computeReplacedLogicalWidthRespectingMinMaxWidth(
