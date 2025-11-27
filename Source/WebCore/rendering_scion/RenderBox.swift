@@ -3703,7 +3703,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     if isReplacedOrInlineBlock() {
       // FIXME: Positioned replaced elements inside a flow thread are not working properly
       // with variable width fragments (see https://bugs.webkit.org/show_bug.cgi?id=69896 ).
-      computePositionedLogicalWidthReplaced(computedValues: computedValues)
+      computePositionedLogicalWidthReplaced(computedValues: &computedValues)
       return
     }
 
@@ -5045,9 +5045,220 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedValues.position = logicalTopPos
   }
 
-  private func computePositionedLogicalWidthReplaced(computedValues: LogicalExtentComputedValues) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func computePositionedLogicalWidthReplaced(
+    computedValues: inout LogicalExtentComputedValues
+  ) {
+    // The following is based off of the W3C Working Draft from April 11, 2006 of
+    // CSS 2.1: Section 10.3.8 "Absolutely positioned, replaced elements"
+    // <http://www.w3.org/TR/2005/WD-CSS21-20050613/visudet.html#abs-replaced-width>
+    // (block-style-comments in this function correspond to text from the spec and
+    // the numbers correspond to numbers in spec)
+
+    // We don't use containingBlock(), since we may be positioned by an enclosing
+    // relative positioned inline.
+    let containerBlock = container() as! RenderBoxModelObjectWrapper
+
+    let containerLogicalWidth = containingBlockLogicalWidthForPositioned(
+      containingBlock: containerBlock)
+    let containerRelativeLogicalWidth = containingBlockLogicalWidthForPositioned(
+      containingBlock: containerBlock, fragment: nil, checkForPerpendicularWritingMode: false)
+
+    // To match WinIE, in quirks mode use the parent's 'direction' property
+    // instead of the container block's.
+    let containerDirection = containerBlock.style().direction()
+
+    // Variables to solve.
+    let isHorizontal = isHorizontalWritingMode()
+    let originalLogicalLeft = style().logicalLeft()
+    let originalLogicalRight = style().logicalRight()
+    var logicalLeft = originalLogicalLeft
+    var logicalRight = originalLogicalRight
+
+    let marginLogicalLeft = isHorizontal ? style().marginLeft() : style().marginTop()
+    let marginLogicalRight = isHorizontal ? style().marginRight() : style().marginBottom()
+    var marginLogicalLeftAlias = MarginLogicalLeftValue(
+      isLeftToRightDirection: style().isLeftToRightDirection())
+    var marginLogicalRightAlias = MarginLogicalRightValue(
+      isLeftToRightDirection: style().isLeftToRightDirection())
+
+    /*-----------------------------------------------------------------------*\
+     * 1. The used value of 'width' is determined as for inline replaced
+     *    elements.
+    \*-----------------------------------------------------------------------*/
+    // NOTE: This value of width is final in that the min/max width calculations
+    // are dealt with in computeReplacedWidth().  This means that the steps to produce
+    // correct max/min in the non-replaced version, are not necessary.
+    computedValues.extent = computeReplacedLogicalWidth() + borderAndPaddingLogicalWidth()
+
+    let availableSpace = containerLogicalWidth - computedValues.extent
+
+    /*-----------------------------------------------------------------------*\
+     * 2. If both 'left' and 'right' have the value 'auto', then if 'direction'
+     *    of the containing block is 'ltr', set 'left' to the static position;
+     *    else if 'direction' is 'rtl', set 'right' to the static position.
+    \*-----------------------------------------------------------------------*/
+    // see FIXME 1
+    computeInlineStaticDistance(
+      logicalLeft: &logicalLeft, logicalRight: &logicalRight, child: self,
+      containerBlock: containerBlock, containerLogicalWidth: containerLogicalWidth, fragment: nil)  // FIXME: Pass the fragment.
+
+    /*-----------------------------------------------------------------------*\
+     * 3. If 'left' or 'right' are 'auto', replace any 'auto' on 'margin-left'
+     *    or 'margin-right' with '0'.
+    \*-----------------------------------------------------------------------*/
+    if logicalLeft.isAuto() || logicalRight.isAuto() {
+      if marginLogicalLeft.isAuto() {
+        marginLogicalLeft.setValue(type: .Fixed, value: Int32(0))
+      }
+      if marginLogicalRight.isAuto() {
+        marginLogicalRight.setValue(type: .Fixed, value: Int32(0))
+      }
+    }
+
+    /*-----------------------------------------------------------------------*\
+     * 4. If at this point both 'margin-left' and 'margin-right' are still
+     *    'auto', solve the equation under the extra constraint that the two
+     *    margins must get equal values, unless this would make them negative,
+     *    in which case when the direction of the containing block is 'ltr'
+     *    ('rtl'), set 'margin-left' ('margin-right') to zero and solve for
+     *    'margin-right' ('margin-left').
+    \*-----------------------------------------------------------------------*/
+    var logicalLeftValue = LayoutUnit()
+    var logicalRightValue = LayoutUnit()
+
+    if marginLogicalLeft.isAuto() && marginLogicalRight.isAuto() {
+      // 'left' and 'right' cannot be 'auto' due to step 3
+      assert(!(logicalLeft.isAuto() && logicalRight.isAuto()))
+
+      logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+      logicalRightValue = valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
+
+      let difference = availableSpace - (logicalLeftValue + logicalRightValue)
+      if difference > 0 {
+        marginLogicalLeftAlias.set(difference / 2, &computedValues)  // split the difference
+        marginLogicalRightAlias.set(
+          difference - marginLogicalLeftAlias.get(computedValues), &computedValues)  // account for odd valued differences
+      } else {
+        // Use the containing block's direction rather than the parent block's
+        // per CSS 2.1 reference test abspos-replaced-width-margin-000.
+        if containerDirection == .LTR {
+          marginLogicalLeftAlias.set(LayoutUnit(value: 0), &computedValues)
+          marginLogicalRightAlias.set(difference, &computedValues)  // will be negative
+        } else {
+          marginLogicalLeftAlias.set(difference, &computedValues)  // will be negative
+          marginLogicalRightAlias.set(LayoutUnit(value: 0), &computedValues)
+        }
+      }
+
+      /*-----------------------------------------------------------------------*\
+     * 5. If at this point there is an 'auto' left, solve the equation for
+     *    that value.
+    \*-----------------------------------------------------------------------*/
+    } else if logicalLeft.isAuto() {
+      marginLogicalLeftAlias.set(
+        valueForLength(
+          length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth), &computedValues)
+      marginLogicalRightAlias.set(
+        valueForLength(
+          length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth), &computedValues)
+      logicalRightValue = valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
+
+      // Solve for 'left'
+      logicalLeftValue =
+        availableSpace
+        - (logicalRightValue + marginLogicalLeftAlias.get(computedValues)
+          + marginLogicalRightAlias.get(computedValues))
+    } else if logicalRight.isAuto() {
+      marginLogicalLeftAlias.set(
+        valueForLength(
+          length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth), &computedValues)
+      marginLogicalRightAlias.set(
+        valueForLength(
+          length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth), &computedValues)
+      logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+
+      // Solve for 'right'
+      logicalRightValue =
+        availableSpace
+        - (logicalLeftValue + marginLogicalLeftAlias.get(computedValues)
+          + marginLogicalRightAlias.get(computedValues))
+    } else if marginLogicalLeft.isAuto() {
+      marginLogicalRightAlias.set(
+        valueForLength(
+          length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth), &computedValues)
+      logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+      logicalRightValue = valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
+
+      // Solve for 'margin-left'
+      marginLogicalLeftAlias.set(
+        availableSpace
+          - (logicalLeftValue + logicalRightValue + marginLogicalRightAlias.get(computedValues)),
+        &computedValues)
+    } else if marginLogicalRight.isAuto() {
+      marginLogicalLeftAlias.set(
+        valueForLength(
+          length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth), &computedValues)
+      logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+      logicalRightValue = valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
+
+      // Solve for 'margin-right'
+      marginLogicalRightAlias.set(
+        availableSpace
+          - (logicalLeftValue + logicalRightValue + marginLogicalLeftAlias.get(computedValues)),
+        &computedValues)
+    } else {
+      // Nothing is 'auto', just calculate the values.
+      marginLogicalLeftAlias.set(
+        valueForLength(length: marginLogicalLeft, maximumValue: containerRelativeLogicalWidth),
+        &computedValues)
+      marginLogicalRightAlias.set(
+        valueForLength(length: marginLogicalRight, maximumValue: containerRelativeLogicalWidth),
+        &computedValues)
+      logicalRightValue = valueForLength(length: logicalRight, maximumValue: containerLogicalWidth)
+      logicalLeftValue = valueForLength(length: logicalLeft, maximumValue: containerLogicalWidth)
+      // If the containing block is right-to-left, then push the left position as far to the right as possible
+      if containerDirection == .RTL {
+        let totalLogicalWidth =
+          computedValues.extent + logicalLeftValue + logicalRightValue
+          + marginLogicalLeftAlias.get(computedValues)
+          + marginLogicalRightAlias.get(computedValues)
+        logicalLeftValue = containerLogicalWidth - (totalLogicalWidth - logicalLeftValue)
+      }
+    }
+
+    /*-----------------------------------------------------------------------*\
+     * 6. If at this point the values are over-constrained, ignore the value
+     *    for either 'left' (in case the 'direction' property of the
+     *    containing block is 'rtl') or 'right' (in case 'direction' is
+     *    'ltr') and solve for that value.
+    \*-----------------------------------------------------------------------*/
+    // NOTE: Constraints imposed by the width of the containing block and its content have already been accounted for above.
+
+    // FIXME: Deal with differing writing modes here.  Our offset needs to be in the containing block's coordinate space, so that
+    // can make the result here rather complicated to compute.
+
+    // Use computed values to calculate the horizontal position.
+
+    // FIXME: This hack is needed to calculate the logical left position for a 'rtl' relatively
+    // positioned, inline containing block because right now, it is using the logical left position
+    // of the first line box when really it should use the last line box. When
+    // this is fixed elsewhere, this block should be removed.
+    if let position = positionWithRTLInlineBoxContainingBlock(
+      containingBlock: containerBlock, logicalLeftValue: logicalLeftValue,
+      marginLogicalLeftValue: marginLogicalLeftAlias.get(computedValues))
+    {
+      computedValues.position = LayoutUnit(value: position)
+      return
+    }
+
+    var logicalLeftPos = logicalLeftValue + marginLogicalLeftAlias.get(computedValues)
+    // Border and padding have already been included in computedValues.m_extent.
+    computeLogicalLeftPositionedOffset(
+      logicalLeftPos: &logicalLeftPos, child: self, logicalWidthValue: computedValues.extent,
+      containerBlock: containerBlock, containerLogicalWidth: containerLogicalWidth,
+      logicalLeftIsAuto: originalLogicalLeft.isAuto(),
+      logicalRightIsAuto: originalLogicalRight.isAuto())
+    computedValues.position = logicalLeftPos
   }
 
   private func fillAvailableMeasure(availableLogicalWidth: LayoutUnit) -> LayoutUnit {
