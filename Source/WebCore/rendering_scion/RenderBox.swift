@@ -2615,6 +2615,39 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return nil
   }
 
+  private func computeReplacedLogicalWidthUsing(widthType: SizeType, logicalWidth: LengthWrapper)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeReplacedLogicalWidthRespectingMinMaxWidth(
+    logicalWidth: LayoutUnit, shouldComputePreferred: ShouldComputePreferred = .ComputeActual
+  ) -> LayoutUnit {
+    if shouldIgnoreLogicalMinMaxWidthSizes() {
+      return logicalWidth
+    }
+
+    let logicalMinWidth = style().logicalMinWidth()
+    let logicalMaxWidth = style().logicalMaxWidth()
+    let useLogicalWidthForMinWidth =
+      (shouldComputePreferred == .ComputePreferred && logicalMinWidth.isPercentOrCalculated())
+      || logicalMinWidth.isUndefined()
+    let useLogicalWidthForMaxWidth =
+      (shouldComputePreferred == .ComputePreferred && logicalMaxWidth.isPercentOrCalculated())
+      || logicalMaxWidth.isUndefined()
+    let minLogicalWidth =
+      useLogicalWidthForMinWidth
+      ? logicalWidth
+      : computeReplacedLogicalWidthUsing(widthType: .MinSize, logicalWidth: logicalMinWidth)
+    let maxLogicalWidth =
+      useLogicalWidthForMaxWidth
+      ? logicalWidth
+      : computeReplacedLogicalWidthUsing(widthType: .MaxSize, logicalWidth: logicalMaxWidth)
+    return max(minLogicalWidth, min(logicalWidth, maxLogicalWidth))
+  }
+
   func computeReplacedLogicalHeightUsing(heightType: SizeType, logicalHeight: LengthWrapper)
     -> LayoutUnit
   {
@@ -2748,8 +2781,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalWidth(shouldComputePreferred: ShouldComputePreferred = .ComputeActual)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeReplacedLogicalWidthRespectingMinMaxWidth(
+      logicalWidth: computeReplacedLogicalWidthUsing(
+        widthType: .MainOrPreferredSize, logicalWidth: style().logicalWidth()),
+      shouldComputePreferred: shouldComputePreferred)
   }
 
   func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
@@ -3530,6 +3565,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return h.isAuto() || h.isIntrinsic()
       || (!isOutOfFlowPositioned() && h.isPercentOrCalculated()
         && !percentageLogicalHeightIsResolvable())
+  }
+
+  private func shouldIgnoreLogicalMinMaxWidthSizes() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
