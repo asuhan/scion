@@ -215,6 +215,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func enclosingBox() -> RenderBoxWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingBoxModelObject() -> RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

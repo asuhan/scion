@@ -67,6 +67,11 @@ struct LengthWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setValue(type: LengthType, value: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setValue(type: LengthType, value: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

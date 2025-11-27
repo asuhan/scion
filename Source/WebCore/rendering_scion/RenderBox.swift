@@ -110,8 +110,107 @@ private func computeInlineStaticDistance(
   containerBlock: RenderBoxModelObjectWrapper, containerLogicalWidth: LayoutUnit,
   fragment: RenderFragmentContainerWrapper?
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !logicalLeft.isAuto() || !logicalRight.isAuto() {
+    return
+  }
+
+  let parent = child.parent()!
+  let parentDirection = parent.style().direction()
+
+  // This method is using enclosingBox() which is wrong for absolutely
+  // positioned grid items, as they rely on the grid area. So for grid items if
+  // both "left" and "right" properties are "auto", we can consider that one of
+  // them (depending on the direction) is simply "0".
+  if parent.isRenderGrid() && CPtrToInt(parent.p) == CPtrToInt(child.containingBlock()?.p) {
+    if parentDirection == .LTR {
+      logicalLeft.setValue(type: .Fixed, value: Int32(0))
+    } else {
+      logicalRight.setValue(type: .Fixed, value: Int32(0))
+    }
+    return
+  }
+
+  // For orthogonal flows we don't care whether the parent is LTR or RTL because it does not affect the position in our inline axis.
+  var fragment = fragment
+  if parentDirection == .LTR || isOrthogonal(renderer: child, ancestor: parent) {
+    var staticPosition =
+      isOrthogonal(renderer: child, ancestor: parent)
+      ? child.layer()!.staticBlockPosition() - containerBlock.borderBefore()
+      : child.layer()!.staticInlinePosition() - containerBlock.borderLogicalLeft()
+    var current: RenderElementWrapper? = parent
+    while current != nil && CPtrToInt(current!.p) != CPtrToInt(containerBlock.p) {
+      let renderBox = current as? RenderBoxWrapper
+      if renderBox == nil {
+        current = current!.container()
+        continue
+      }
+      staticPosition +=
+        isOrthogonal(renderer: child, ancestor: parent)
+        ? renderBox!.logicalTop() : renderBox!.logicalLeft()
+      if renderBox!.isInFlowPositioned() {
+        staticPosition +=
+          renderBox!.isHorizontalWritingMode()
+          ? renderBox!.offsetForInFlowPosition().width()
+          : renderBox!.offsetForInFlowPosition().height()
+      }
+      if fragment != nil, let currentBlock = current as? RenderBlockWrapper {
+        fragment = currentBlock.clampToStartAndEndFragments(fragment: fragment)
+        if let boxInfo = currentBlock.renderBoxFragmentInfo(fragment: fragment) {
+          staticPosition += boxInfo.logicalLeft
+        }
+      }
+      current = current!.container()
+    }
+    logicalLeft.setValue(type: .Fixed, value: staticPosition)
+  } else {
+    assert(!isOrthogonal(renderer: child, ancestor: parent))
+    var staticPosition =
+      child.layer()!.staticInlinePosition() + containerLogicalWidth
+      + containerBlock.borderLogicalLeft()
+    let enclosingBox = parent.enclosingBox()
+    if CPtrToInt(enclosingBox.p) != CPtrToInt(containerBlock.p)
+      && containerBlock.isDescendantOf(ancestor: enclosingBox)
+    {
+      logicalRight.setValue(type: .Fixed, value: staticPosition)
+      return
+    }
+    staticPosition -= enclosingBox.logicalWidth()
+    var current: RenderElementWrapper? = enclosingBox
+    while current != nil {
+      let renderBox = current as? RenderBoxWrapper
+      if renderBox == nil {
+        current = current!.container()
+        continue
+      }
+
+      if CPtrToInt(current!.p) != CPtrToInt(containerBlock.p) {
+        staticPosition -= renderBox!.logicalLeft()
+        if renderBox!.isInFlowPositioned() {
+          staticPosition -=
+            renderBox!.isHorizontalWritingMode()
+            ? renderBox!.offsetForInFlowPosition().width()
+            : renderBox!.offsetForInFlowPosition().height()
+        }
+      }
+      if fragment != nil, let currentBlock = current as? RenderBlockWrapper {
+        fragment = currentBlock.clampToStartAndEndFragments(fragment: fragment)
+        if let boxInfo = currentBlock.renderBoxFragmentInfo(fragment: fragment) {
+          if CPtrToInt(current!.p) != CPtrToInt(containerBlock.p) {
+            staticPosition -=
+              currentBlock.logicalWidth() - (boxInfo.logicalLeft + boxInfo.logicalWidth)
+          }
+          if CPtrToInt(current!.p) == CPtrToInt(enclosingBox.p) {
+            staticPosition += enclosingBox.logicalWidth() - boxInfo.logicalWidth
+          }
+        }
+      }
+      if CPtrToInt(current!.p) == CPtrToInt(containerBlock.p) {
+        break
+      }
+      current = current!.container()
+    }
+    logicalRight.setValue(type: .Fixed, value: staticPosition)
+  }
 }
 
 private func shouldFlipStaticPositionInParent(
@@ -1943,7 +2042,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return computedValues.extent
   }
 
-  private func renderBoxFragmentInfo(
+  func renderBoxFragmentInfo(
     fragment: RenderFragmentContainerWrapper?,
     cacheFlag: RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> RenderBoxFragmentInfo? {
