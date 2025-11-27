@@ -218,8 +218,24 @@ private func computeLogicalLeftPositionedOffset(
   containerBlock: RenderBoxModelObjectWrapper, containerLogicalWidth: LayoutUnit,
   logicalLeftIsAuto: Bool, logicalRightIsAuto: Bool
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let logicalLeftAndRightAreAuto = logicalLeftIsAuto && logicalRightIsAuto
+  let isOverconstrained =
+    !logicalLeftIsAuto && !logicalRightIsAuto && !child.style().logicalWidth().isAuto()
+  // Deal with differing writing modes here. Our offset needs to be in the containing block's coordinate space. If the containing block is flipped
+  // along this axis, then we need to flip the coordinate. Auto positioned items do not need this correction as it was properly handled in
+  // computeInlineStaticDistance().
+  if isOrthogonal(renderer: child, ancestor: containerBlock) && !logicalLeftAndRightAreAuto
+    && !isOverconstrained
+    && containerBlock.style().isFlippedBlocksWritingMode()
+  {
+    logicalLeftPos = containerLogicalWidth - logicalWidthValue - logicalLeftPos
+    logicalLeftPos +=
+      (child.isHorizontalWritingMode()
+        ? containerBlock.borderRight() : containerBlock.borderBottom())
+  } else {
+    logicalLeftPos +=
+      (child.isHorizontalWritingMode() ? containerBlock.borderLeft() : containerBlock.borderTop())
+  }
 }
 
 private func positionWithRTLInlineBoxContainingBlock(
