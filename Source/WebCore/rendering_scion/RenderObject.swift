@@ -568,6 +568,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRelativelyPositioned() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isStickilyPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

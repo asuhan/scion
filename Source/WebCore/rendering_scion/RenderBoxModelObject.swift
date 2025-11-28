@@ -114,9 +114,26 @@ private func resolveAgainstIntrinsicRatio(
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
-  func offsetForInFlowPosition() -> LayoutSizeWrapper {
+  func relativePositionOffset() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func stickyPositionOffset() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func offsetForInFlowPosition() -> LayoutSizeWrapper {
+    if isRelativelyPositioned() {
+      return relativePositionOffset()
+    }
+
+    if isStickilyPositioned() {
+      return stickyPositionOffset()
+    }
+
+    return LayoutSizeWrapper()
   }
 
   func computedCSSPaddingBefore() -> LayoutUnit {
