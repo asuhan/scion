@@ -84,6 +84,21 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setColumnCountAndWidth(count: UInt32, width: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setProgressionIsInline(progressionIsInline: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setProgressionIsReversed(reversed: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The point is physical, and the result is a physical location within the fragment.
   func physicalTranslationFromFlowToFragment(physicalPoint: LayoutPointWrapper)
     -> RenderFragmentContainerWrapper?

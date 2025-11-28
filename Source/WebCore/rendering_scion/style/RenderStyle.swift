@@ -1410,6 +1410,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func columnProgression() -> ColumnProgression {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func columnWidth() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

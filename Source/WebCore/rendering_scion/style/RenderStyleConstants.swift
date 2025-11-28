@@ -652,6 +652,11 @@ enum Order: UInt8 {
   case Visual = 1
 }
 
+enum ColumnProgression: UInt8 {
+  case Normal
+  case Reverse
+}
+
 enum LineSnap: UInt8 {
   case None
   case Baseline

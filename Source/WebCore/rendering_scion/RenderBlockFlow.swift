@@ -2719,8 +2719,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert((multiColumnFlowForBlockFlow() != nil) == requiresColumns(desiredColumnCount: count))
+    if let multiColumnFlow = multiColumnFlowForBlockFlow() {
+      multiColumnFlow.setColumnCountAndWidth(count: UInt32(count), width: width)
+      multiColumnFlow.setProgressionIsInline(progressionIsInline: style().hasInlineColumnAxis())
+      multiColumnFlow.setProgressionIsReversed(reversed: style().columnProgression() == .Reverse)
+    }
   }
 
   private func computedColumnWidthForBlockFlow() -> LayoutUnit {
