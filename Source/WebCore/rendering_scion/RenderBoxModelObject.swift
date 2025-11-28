@@ -245,8 +245,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   private static func containingBlockContentHeight(
     containingBlock: RenderBlockWrapper?, overridingContainingBlockContentHeight: LayoutUnit?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return overridingContainingBlockContentHeight ?? containingBlock!.availableHeight()
   }
 
   func stickyPositionOffset() -> LayoutSizeWrapper {
