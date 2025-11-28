@@ -48,8 +48,22 @@ enum BaseBackgroundColorUsage {
 }
 
 private func accumulateInFlowPositionOffsets(child: RenderObjectWrapper) -> LayoutSizeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !child.isAnonymousBlock() || !child.isInFlowPositioned() {
+    return LayoutSizeWrapper()
+  }
+  var offset = LayoutSizeWrapper()
+  var parent: RenderElementWrapper? = (child as! RenderBlockWrapper).inlineContinuation()
+  while parent != nil {
+    if let parentRenderInline = parent as? RenderInlineWrapper {
+      if parent!.isInFlowPositioned() {
+        offset += parentRenderInline.offsetForInFlowPosition()
+      }
+    } else {
+      break
+    }
+    parent = parent!.parent()
+  }
+  return offset
 }
 
 private func isOutOfFlowPositionedWithImplicitHeight(child: RenderBoxModelObjectWrapper) -> Bool {
