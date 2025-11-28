@@ -48,8 +48,8 @@ enum BaseBackgroundColorUsage {
 }
 
 private func isOutOfFlowPositionedWithImplicitHeight(child: RenderBoxModelObjectWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return child.isOutOfFlowPositioned() && !child.style().logicalTop().isAuto()
+    && !child.style().logicalBottom().isAuto()
 }
 
 private func resolveWidthForRatio(height: LayoutUnit, intrinsicRatio: LayoutSizeWrapper)
