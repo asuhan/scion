@@ -719,8 +719,34 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func simplifiedNormalFlowLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !childrenInline() {
+      super.simplifiedNormalFlowLayout()
+      return
+    }
+
+    var shouldUpdateOverflow = false
+    let walker = InlineWalker(root: self)
+    while !walker.atEnd() {
+      let renderer = walker.current()!
+      if !renderer.isOutOfFlowPositioned()
+        && (renderer.isReplacedOrInlineBlock() || renderer.isFloating())
+      {
+        let box = renderer as! RenderBoxWrapper
+        box.layoutIfNeeded()
+        shouldUpdateOverflow = true
+      } else if renderer is RenderTextWrapper || renderer is RenderInlineWrapper {
+        renderer.clearNeedsLayout()
+      }
+      walker.advance()
+    }
+
+    if !shouldUpdateOverflow {
+      return
+    }
+
+    if let lineLayout = inlineLayout() {
+      lineLayout.updateOverflow()
+    }
   }
 
   private func shiftForAlignContent(

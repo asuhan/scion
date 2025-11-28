@@ -460,6 +460,11 @@ class LayoutIntegration {
         intrinsicWidthMode: nil)
     }
 
+    func updateOverflow() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // Partial invalidation.
     func insertedIntoTree(parent: RenderElementWrapper, child: RenderObjectWrapper) -> Bool {
       if inlineContent == nil {
