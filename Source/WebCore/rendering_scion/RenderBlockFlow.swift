@@ -2215,8 +2215,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func needsLayoutAfterFragmentRangeChange() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // A block without floats or that expands to enclose them won't need a relayout
+    // after a fragment range change. There is no overflow content needing relayout
+    // in the fragment chain because the fragment range can only shrink after the estimation.
+    if !containsFloats() || createsNewFormattingContext() {
+      return false
+    }
+
+    return true
   }
 
   // A page break is required at some offset due to space shortage in the current fragmentainer.
