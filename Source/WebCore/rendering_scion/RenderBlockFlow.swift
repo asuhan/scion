@@ -1913,8 +1913,13 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func removeFloatingObjects() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if floatingObjects == nil {
+      return
+    }
+
+    markSiblingsWithFloatsForLayout()
+
+    floatingObjects!.clear()
   }
 
   func markAllDescendantsWithFloatsForLayout(
