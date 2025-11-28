@@ -47,6 +47,11 @@ enum BaseBackgroundColorUsage {
   case BaseBackgroundColorSkip
 }
 
+private func isOutOfFlowPositionedWithImplicitHeight(child: RenderBoxModelObjectWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func resolveAgainstIntrinsicWidthOrHeightAndRatio(
   size: LayoutSizeWrapper, intrinsicRatio: LayoutSizeWrapper, useWidth: LayoutUnit,
   useHeight: LayoutUnit
@@ -443,8 +448,44 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func containingBlockForAutoHeightDetection(logicalHeight: LengthWrapper) -> RenderBlockWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For percentage heights: The percentage is calculated with respect to the
+    // height of the generated box's containing block. If the height of the
+    // containing block is not specified explicitly (i.e., it depends on content
+    // height), and this element is not absolutely positioned, the used height is
+    // calculated as if 'auto' was specified.
+    if !logicalHeight.isPercentOrCalculated() || isOutOfFlowPositioned() {
+      return nil
+    }
+
+    // Anonymous block boxes are ignored when resolving percentage values that
+    // would refer to it: the closest non-anonymous ancestor box is used instead.
+    var cb = containingBlock()
+    while cb != nil && cb!.isAnonymousForPercentageResolution() && !(cb is RenderViewWrapper) {
+      cb = cb!.containingBlock()
+    }
+    if cb == nil {
+      return nil
+    }
+
+    // Matching RenderBox::percentageLogicalHeightIsResolvable() by
+    // ignoring table cell's attribute value, where it says that table cells
+    // violate what the CSS spec says to do with heights. Basically we don't care
+    // if the cell specified a height or not.
+    if cb!.isRenderTableCell() {
+      return nil
+    }
+
+    // Match RenderBox::availableLogicalHeightUsing by special casing the layout
+    // view. The available height is taken from the frame.
+    if cb!.isRenderView() {
+      return nil
+    }
+
+    if isOutOfFlowPositionedWithImplicitHeight(child: cb!) {
+      return nil
+    }
+
+    return cb
   }
 
   class ContinuationChainNode {
