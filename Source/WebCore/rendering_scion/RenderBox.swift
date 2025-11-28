@@ -833,7 +833,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   // RenderBox's basic implementation accounts for the writing mode (only).
-  func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+  func allowedLayoutOverflowForBox() -> LayoutOptionalOutsets {
     var allowance = LayoutOptionalOutsets()
 
     // Overflow is in the block's coordinate space and thus is flipped
@@ -858,6 +858,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
     return allowance
   }
+
+  func allowedLayoutOverflow() -> LayoutOptionalOutsets { return allowedLayoutOverflowForBox() }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
     wk_interop.RenderBox_addLayoutOverflow(

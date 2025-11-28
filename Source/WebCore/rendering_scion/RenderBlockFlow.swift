@@ -2728,8 +2728,27 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var allowance = allowedLayoutOverflowForBox()
+
+    if style().alignContent().position != .Normal {
+      if hasRareBlockFlowData() {
+        if isHorizontalWritingMode() {
+          allowance.top = -rareBlockFlowData().alignContentShift
+        } else {
+          allowance.left = -rareBlockFlowData().alignContentShift
+        }
+      }
+    }
+
+    if multiColumnFlowForBlockFlow() != nil && style().columnProgression() != .Normal {
+      if isHorizontalWritingMode() != !style().hasInlineColumnAxis() {
+        allowance = allowance.xFlippedCopy()
+      } else {
+        allowance = allowance.yFlippedCopy()
+      }
+    }
+
+    return allowance
   }
 
   func computeColumnCountAndWidth() {
