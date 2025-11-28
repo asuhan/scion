@@ -138,4 +138,9 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func computeColumnCountAndWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

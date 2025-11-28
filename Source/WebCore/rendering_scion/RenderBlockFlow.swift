@@ -2702,7 +2702,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not reached")
   }
 
+  private func computedColumnWidthForBlockFlow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeColumnCountAndWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2750,8 +2760,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func recomputeLogicalWidthAndColumnWidth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let changed = recomputeLogicalWidth()
+
+    let oldColumnWidth = computedColumnWidthForBlockFlow()
+    computeColumnCountAndWidth()
+
+    return changed || oldColumnWidth != computedColumnWidthForBlockFlow()
   }
 
   private func columnGap() -> LayoutUnit {
