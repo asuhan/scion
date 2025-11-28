@@ -41,10 +41,12 @@ class FloatingObjectWrapper: Hashable {
   }
 
   // Note that Type uses bits so you can use FloatLeftRight as a mask to query for both left and right.
-  enum `Type` {
-    case FloatLeft
-    case FloatRight
-    case FloatLeftRight
+  struct `Type`: OptionSet {
+    let rawValue: UInt8
+
+    static let FloatLeft = `Type`(rawValue: 1 << 0)
+    static let FloatRight = `Type`(rawValue: 1 << 1)
+    static let FloatLeftRight: `Type` = [.FloatLeft, .FloatRight]
   }
 
   func copyToNewContainer(
@@ -113,6 +115,8 @@ class FloatingObjectWrapper: Hashable {
 
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
+  let type: `Type` = .FloatLeft  // Type (left or right aligned)
+  let isPlaced = false
   private var p: UnsafeMutableRawPointer
 }
 

@@ -1898,8 +1898,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if floatingObjects == nil {
+      return LayoutUnit(value: 0)
+    }
+    var lowestFloatBottom = LayoutUnit()
+    let floatingObjectSet = floatingObjects!.set()
+    for floatingObject in floatingObjectSet {
+      if floatingObject.isPlaced && floatingObject.type.rawValue & floatType.rawValue != 0 {
+        lowestFloatBottom = max(
+          lowestFloatBottom, logicalBottomForFloat(floatingObject: floatingObject))
+      }
+    }
+    return lowestFloatBottom
   }
 
   func removeFloatingObjects() {
