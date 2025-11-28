@@ -52,6 +52,18 @@ private func isOutOfFlowPositionedWithImplicitHeight(child: RenderBoxModelObject
   fatalError("Not implemented")
 }
 
+private func resolveWidthForRatio(height: LayoutUnit, intrinsicRatio: LayoutSizeWrapper)
+  -> LayoutUnit
+{
+  return height * intrinsicRatio.width() / intrinsicRatio.height()
+}
+
+private func resolveHeightForRatio(width: LayoutUnit, intrinsicRatio: LayoutSizeWrapper)
+  -> LayoutUnit
+{
+  return width * intrinsicRatio.height() / intrinsicRatio.width()
+}
+
 private func resolveAgainstIntrinsicWidthOrHeightAndRatio(
   size: LayoutSizeWrapper, intrinsicRatio: LayoutSizeWrapper, useWidth: LayoutUnit,
   useHeight: LayoutUnit
@@ -63,8 +75,29 @@ private func resolveAgainstIntrinsicWidthOrHeightAndRatio(
 private func resolveAgainstIntrinsicRatio(
   size: LayoutSizeWrapper, intrinsicRatio: LayoutSizeWrapper
 ) -> LayoutSizeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Two possible solutions: (size.width(), solutionHeight) or (solutionWidth, size.height())
+  // "... must be assumed to be the largest dimensions..." = easiest answer: the rect with the largest surface area.
+
+  let solutionWidth = resolveWidthForRatio(height: size.height(), intrinsicRatio: intrinsicRatio)
+  let solutionHeight = resolveHeightForRatio(width: size.width(), intrinsicRatio: intrinsicRatio)
+  if solutionWidth <= size.width() {
+    if solutionHeight <= size.height() {
+      // If both solutions fit, choose the one covering the larger area.
+      let areaOne = solutionWidth * size.height()
+      let areaTwo = size.width() * solutionHeight
+      if areaOne < areaTwo {
+        return LayoutSizeWrapper(width: size.width(), height: solutionHeight)
+      }
+      return LayoutSizeWrapper(width: solutionWidth, height: size.height())
+    }
+
+    // Only the first solution fits.
+    return LayoutSizeWrapper(width: solutionWidth, height: size.height())
+  }
+
+  // Only the second solution fits, assert that.
+  assert(solutionHeight <= size.height())
+  return LayoutSizeWrapper(width: size.width(), height: solutionHeight)
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
