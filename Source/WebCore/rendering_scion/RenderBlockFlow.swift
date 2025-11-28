@@ -2629,8 +2629,27 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isWritingModeRoot() && !isGridItem() && !isFlexItem() {
+      return nil
+    }
+
+    if shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    if !childrenInline() {
+      return super.firstLineBaseline()
+    }
+
+    if !hasLines() {
+      return nil
+    }
+
+    if let lineLayout = inlineLayout() {
+      return LayoutUnit(value: floorToInt(value: lineLayout.firstLinePhysicalBaseline()))
+    }
+
+    fatalError("Not reached")
   }
 
   override func lastLineBaseline() -> LayoutUnit? {

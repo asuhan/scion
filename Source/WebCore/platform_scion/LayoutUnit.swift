@@ -479,6 +479,10 @@ internal func roundToInt(value: LayoutUnit) -> Int {
   return Int(value.round())
 }
 
+func floorToInt(value: LayoutUnit) -> Int32 {
+  return value.floor()
+}
+
 func roundToDevicePixel(
   value: Float32, pixelSnappingFactor: Float32, needsDirectionalRounding: Bool = false
 ) -> Float32 {
