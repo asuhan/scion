@@ -2027,8 +2027,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func setChildrenInline(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if childrenInline() && !b {
+      setLineLayoutPath(path: .UndeterminedPath)
+      lineLayout = .None
+    }
+
+    super.setChildrenInline(b: b)
   }
 
   private func hasLines() -> Bool {
