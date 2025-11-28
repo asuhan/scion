@@ -47,6 +47,11 @@ enum BaseBackgroundColorUsage {
   case BaseBackgroundColorSkip
 }
 
+private func accumulateInFlowPositionOffsets(child: RenderObjectWrapper) -> LayoutSizeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func isOutOfFlowPositionedWithImplicitHeight(child: RenderBoxModelObjectWrapper) -> Bool {
   return child.isOutOfFlowPositioned() && !child.style().logicalTop().isAuto()
     && !child.style().logicalBottom().isAuto()
@@ -115,6 +120,131 @@ private func resolveAgainstIntrinsicRatio(
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func relativePositionOffset() -> LayoutSizeWrapper {
+    // This function has been optimized to avoid calls to containingBlock() in the common case
+    // where all values are either auto or fixed.
+    let containingBlock = containingBlock()
+
+    let style = style()
+    let left = style.left()
+    let right = style.right()
+    let top = style.top()
+    let bottom = style.bottom()
+
+    let offset = accumulateInFlowPositionOffsets(child: self)
+    if top.isFixed() && bottom.isAuto() && left.isFixed() && right.isAuto()
+      && containingBlock!.style().isLeftToRightDirection()
+    {
+      offset.expand(width: left.value(), height: top.value())
+      return offset
+    }
+
+    let zero = LayoutUnit(value: UInt64(0))
+    // Objects that shrink to avoid floats normally use available line width when computing containing block width.  However
+    // in the case of relative positioning using percentages, we can't do this.  The offset should always be resolved using the
+    // available width of the containing block.  Therefore we don't use containingBlockLogicalWidthForContent() here, but instead explicitly
+    // call availableWidth on our containing block.
+    // However for grid items the containing block is the grid area, so offsets should be resolved against that:
+    // https://drafts.csswg.org/css-grid/#grid-item-sizing
+    if !left.isAuto() || !right.isAuto() {
+      if !left.isAuto() {
+        if !right.isAuto() && !containingBlock!.style().isLeftToRightDirection() {
+          offset.setWidth(
+            width: -valueForLength(
+              length: right,
+              maximumValue: !right.isFixed()
+                ? availableWidth(containingBlock: containingBlock) : zero))
+        } else {
+          offset.expand(
+            width: valueForLength(
+              length: left,
+              maximumValue: !left.isFixed()
+                ? availableWidth(containingBlock: containingBlock) : zero),
+            height: zero
+          )
+        }
+      } else if !right.isAuto() {
+        offset.expand(
+          width: -valueForLength(
+            length: right,
+            maximumValue: !right.isFixed() ? availableWidth(containingBlock: containingBlock) : zero
+          ),
+          height: zero
+        )
+      }
+    }
+
+    // If the containing block of a relatively positioned element does not
+    // specify a height, a percentage top or bottom offset should be resolved as
+    // auto. An exception to this is if the containing block has the WinIE quirk
+    // where <html> and <body> assume the size of the viewport. In this case,
+    // calculate the percent offset based on this height.
+    // See <https://bugs.webkit.org/show_bug.cgi?id=26396>.
+    // Another exception is a grid item, as the containing block is the grid area:
+    // https://drafts.csswg.org/css-grid/#grid-item-sizing
+    if top.isAuto() && bottom.isAuto() {
+      return offset
+    }
+
+    let overridingContainingBlockContentHeight = overridingContainingBlockContentHeight(
+      containingBlock: containingBlock)
+    let containingBlockHasDefiniteHeight =
+      !containingBlock!.hasAutoHeightOrContainingBlockWithAutoHeight()
+      || containingBlock!.stretchesToViewport() || overridingContainingBlockContentHeight != nil
+    if !top.isAuto() && (!top.isPercentOrCalculated() || containingBlockHasDefiniteHeight) {
+      // FIXME: The computation of the available height is repeated later for "bottom".
+      // We could refactor this and move it to some common code for both ifs, however moving it outside of the ifs
+      // is not possible as it'd cause performance regressions.
+      offset.expand(
+        width: zero,
+        height: valueForLength(
+          length: top,
+          maximumValue: !top.isFixed()
+            ? RenderBoxModelObjectWrapper.containingBlockContentHeight(
+              containingBlock: containingBlock,
+              overridingContainingBlockContentHeight: overridingContainingBlockContentHeight) : zero
+        ))
+    } else if !bottom.isAuto()
+      && (!bottom.isPercentOrCalculated() || containingBlockHasDefiniteHeight)
+    {
+      // FIXME: Check comment above for "top", it applies here too.
+      offset.expand(
+        width: zero,
+        height: -valueForLength(
+          length: bottom,
+          maximumValue: !bottom.isFixed()
+            ? RenderBoxModelObjectWrapper.containingBlockContentHeight(
+              containingBlock: containingBlock,
+              overridingContainingBlockContentHeight: overridingContainingBlockContentHeight) : zero
+        ))
+    }
+    return offset
+  }
+
+  private func availableWidth(containingBlock: RenderBlockWrapper?) -> LayoutUnit {
+    if let renderBox = self as? RenderBoxWrapper,
+      let overridingContainingBlockContentWidth = renderBox.overridingContainingBlockContentWidth(
+        writingMode: containingBlock!.style().writingMode())
+    {
+      return overridingContainingBlockContentWidth ?? LayoutUnit(value: UInt64(0))
+    }
+    return containingBlock!.availableWidth()
+  }
+
+  private func overridingContainingBlockContentHeight(containingBlock: RenderBlockWrapper?)
+    -> LayoutUnit?
+  {
+    if let renderBox = self as? RenderBoxWrapper,
+      let overridingContainingBlockContentHeight = renderBox.overridingContainingBlockContentHeight(
+        writingMode: containingBlock!.style().writingMode())
+    {
+      return overridingContainingBlockContentHeight
+    }
+    return nil
+  }
+
+  private static func containingBlockContentHeight(
+    containingBlock: RenderBlockWrapper?, overridingContainingBlockContentHeight: LayoutUnit?
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

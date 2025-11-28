@@ -1253,6 +1253,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   typealias ContainingBlockOverrideValue = LayoutUnit?
 
+  func overridingContainingBlockContentWidth(writingMode: WritingMode)
+    -> ContainingBlockOverrideValue?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func overridingContainingBlockContentHeight(writingMode: WritingMode)
+    -> ContainingBlockOverrideValue?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overridingContainingBlockContentLogicalWidth() -> ContainingBlockOverrideValue? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2279,7 +2293,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  private func stretchesToViewport() -> Bool {
+  func stretchesToViewport() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2927,6 +2941,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // There are a few cases where we need to refer specifically to the available physical width and available physical height.
+  // Relative positioning is one of those cases, since left/top offsets are physical.
+  func availableWidth() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

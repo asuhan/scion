@@ -77,6 +77,11 @@ class LayoutSizeWrapper {
     height_ += height
   }
 
+  func expand(width: Float32, height: Float32) {
+    width_ += width
+    height_ += height
+  }
+
   func scale(scale: Float32) {
     width_ *= scale
     height_ *= scale
