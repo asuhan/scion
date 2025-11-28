@@ -2653,8 +2653,27 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isWritingModeRoot() && !isGridItem() && !isFlexItem() {
+      return nil
+    }
+
+    if shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    if !childrenInline() {
+      return super.lastLineBaseline()
+    }
+
+    if !hasLines() {
+      return nil
+    }
+
+    if let lineLayout = inlineLayout() {
+      return LayoutUnit(value: floorToInt(value: lineLayout.lastLinePhysicalBaseline()))
+    }
+
+    fatalError("Not reached")
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
