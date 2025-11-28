@@ -2134,11 +2134,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return logicalOffset + remainingLogicalHeight
   }
 
-  private func pageLogicalHeightForOffset(offset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func pageLogicalHeightForOffsetFromBlockFlow(offset: LayoutUnit) -> LayoutUnit {
     // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
     // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
@@ -2519,7 +2514,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     if !unsplittableAdjustmentDelta.bool() {
-      let pageLogicalHeight = pageLogicalHeightForOffset(offset: result)
+      let pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: result)
       if pageLogicalHeight.bool() {
         let remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
           offset: result, pageBoundaryRule: .ExcludePageBoundary)
