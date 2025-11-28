@@ -110,6 +110,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func updateSpaceShortageForSizeContainment(
+    block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func fragmentAtBlockOffset(
     clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
   ) -> RenderFragmentContainerWrapper? {

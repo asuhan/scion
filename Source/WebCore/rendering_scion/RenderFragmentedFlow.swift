@@ -117,6 +117,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return remainingHeight
   }
 
+  func updateSpaceShortageForSizeContainment(
+    block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
+  ) {}
+
   func fragmentAtBlockOffset(
     clampBox: RenderBoxWrapper?, offset: LayoutUnit, extendLastFragment: Bool = false
   ) -> RenderFragmentContainerWrapper? {

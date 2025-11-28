@@ -2199,8 +2199,27 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   private func adjustSizeContainmentChildForPagination(child: RenderBoxWrapper, offset: LayoutUnit)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !child.shouldApplySizeContainment() {
+      return
+    }
+
+    let childOverflowHeight =
+      child.isHorizontalWritingMode()
+      ? child.layoutOverflowRect().maxY() : child.layoutOverflowRect().maxX()
+    let childLogicalHeight = max(child.logicalHeight(), childOverflowHeight)
+
+    let remainingLogicalHeight = pageRemainingLogicalHeightForOffsetFromBlockFlow(
+      offset: offset, pageBoundaryRule: .ExcludePageBoundary)
+
+    let spaceShortage = childLogicalHeight - remainingLogicalHeight
+    if spaceShortage <= Int32(0) {
+      return
+    }
+
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      fragmentedFlow.updateSpaceShortageForSizeContainment(
+        block: self, offset: offsetFromLogicalTopOfFirstPage() + offset, shortage: spaceShortage)
+    }
   }
 
   func addFloatsToNewParent(toBlockFlow: RenderBlockFlowWrapper) {
