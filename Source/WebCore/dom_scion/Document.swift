@@ -74,6 +74,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func paginated() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func inQuirksMode() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

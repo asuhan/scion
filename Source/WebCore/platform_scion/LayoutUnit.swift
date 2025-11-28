@@ -65,6 +65,11 @@ struct LayoutUnit: Comparable {
 
   func toDouble() -> Float64 { return Float64(value) / Float64(kFixedPointDenominator) }
 
+  func toUnsigned() -> UInt32 {
+    assert(value >= 0)
+    return UInt32(toInt())
+  }
+
   func bool() -> Bool { return value != 0 }
 
   func int() -> Int32 { return toInt() }
@@ -330,6 +335,10 @@ struct LayoutUnit: Comparable {
 
   static func * (a: LayoutUnit, b: UInt64) -> LayoutUnit {
     return a * LayoutUnit(value: b)
+  }
+
+  static func * (a: UInt32, b: LayoutUnit) -> LayoutUnit {
+    return LayoutUnit(value: a) * b
   }
 
   static func * (a: UInt64, b: LayoutUnit) -> LayoutUnit {

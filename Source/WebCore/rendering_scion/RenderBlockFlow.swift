@@ -2702,6 +2702,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not reached")
   }
 
+  private func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computedColumnWidthForBlockFlow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2713,8 +2718,38 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func computeColumnCountAndWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Calculate our column width and column count.
+    // FIXME: Can overflow on fast/block/float/float-not-removed-from-next-sibling4.html, see https://bugs.webkit.org/show_bug.cgi?id=68744
+    var desiredColumnCount: UInt32 = 1
+    var desiredColumnWidth = contentLogicalWidth()
+
+    // For now, we don't support multi-column layouts when printing, since we have to do a lot of work for proper pagination.
+    if document().paginated() || (style().hasAutoColumnCount() && style().hasAutoColumnWidth())
+      || !style().hasInlineColumnAxis()
+    {
+      setComputedColumnCountAndWidth(count: Int32(desiredColumnCount), width: desiredColumnWidth)
+      return
+    }
+
+    let availWidth = desiredColumnWidth
+    let colGap = columnGap()
+    let colWidth = max(LayoutUnit(value: UInt64(1)), LayoutUnit(value: style().columnWidth()))
+    let colCount = UInt32(max(1, style().columnCount()))
+
+    if style().hasAutoColumnWidth() && !style().hasAutoColumnCount() {
+      desiredColumnCount = UInt32(colCount)
+      desiredColumnWidth = max(
+        LayoutUnit(value: 0),
+        (availWidth - ((desiredColumnCount - UInt32(1)) * colGap)) / desiredColumnCount)
+    } else if !style().hasAutoColumnWidth() && style().hasAutoColumnCount() {
+      desiredColumnCount = max(1, ((availWidth + colGap) / (colWidth + colGap)).toUnsigned())
+      desiredColumnWidth = ((availWidth + colGap) / desiredColumnCount) - colGap
+    } else {
+      desiredColumnCount = max(
+        min(colCount, ((availWidth + colGap) / (colWidth + colGap)).toUnsigned()), 1)
+      desiredColumnWidth = ((availWidth + colGap) / desiredColumnCount) - colGap
+    }
+    setComputedColumnCountAndWidth(count: Int32(desiredColumnCount), width: desiredColumnWidth)
   }
 
   // Called to lay out the legend for a fieldset or the ruby text of a ruby run. Also used by multi-column layout to handle
