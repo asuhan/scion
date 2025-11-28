@@ -820,8 +820,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.paintColumnRules(paintInfo: paintInfo, point: point)
+
+    if multiColumnFlowForBlockFlow() == nil || paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    // Iterate over our children and paint the column rules as needed.
+    for columnSet: RenderMultiColumnSetWrapper in childrenOfType(parent: self) {
+      let childPoint =
+        columnSet.location() + flipForWritingModeForChild(child: columnSet, point: point)
+      columnSet.paintColumnRules(paintInfo: paintInfo, point: childPoint)
+    }
   }
 
   private func marginValuesForChild(child: RenderBoxWrapper) -> MarginValues {
