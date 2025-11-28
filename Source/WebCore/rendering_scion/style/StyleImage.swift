@@ -33,6 +33,14 @@ class StyleImage {
   }
 
   // Size / scale.
+  func computeIntrinsicDimensions(
+    renderer: RenderElementWrapper?, intrinsicWidth: inout LengthWrapper,
+    intrinsicHeight: inout LengthWrapper, intrinsicRatio: inout FloatSize
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

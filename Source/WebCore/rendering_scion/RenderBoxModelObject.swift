@@ -47,6 +47,21 @@ enum BaseBackgroundColorUsage {
   case BaseBackgroundColorSkip
 }
 
+private func resolveAgainstIntrinsicWidthOrHeightAndRatio(
+  size: LayoutSizeWrapper, intrinsicRatio: LayoutSizeWrapper, useWidth: LayoutUnit,
+  useHeight: LayoutUnit
+) -> LayoutSizeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func resolveAgainstIntrinsicRatio(
+  size: LayoutSizeWrapper, intrinsicRatio: LayoutSizeWrapper
+) -> LayoutSizeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func offsetForInFlowPosition() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
@@ -372,8 +387,59 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   )
     -> LayoutSizeWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // A generated image without a fixed size, will always return the container size as intrinsic size.
+    if !image.imageHasNaturalDimensions() {
+      return LayoutSizeWrapper(
+        width: positioningAreaSize.width(), height: positioningAreaSize.height())
+    }
+
+    var intrinsicWidth = LengthWrapper()
+    var intrinsicHeight = LengthWrapper()
+    var intrinsicRatio = FloatSize()
+    image.computeIntrinsicDimensions(
+      renderer: self, intrinsicWidth: &intrinsicWidth, intrinsicHeight: &intrinsicHeight,
+      intrinsicRatio: &intrinsicRatio)
+
+    assert(!intrinsicWidth.isPercentOrCalculated())
+    assert(!intrinsicHeight.isPercentOrCalculated())
+
+    let resolvedSize = LayoutSizeWrapper(
+      width: intrinsicWidth.value(), height: intrinsicHeight.value())
+    let minimumSize = LayoutSizeWrapper(
+      width: Int32(resolvedSize.width() > 0 ? 1 : 0),
+      height: Int32(resolvedSize.height() > 0 ? 1 : 0))
+
+    if scaleByUsedZoom == .Yes {
+      resolvedSize.scale(scale: style().usedZoom())
+    }
+    resolvedSize.clampToMinimumSize(minimumSize: minimumSize)
+
+    if !resolvedSize.isEmpty() {
+      return resolvedSize
+    }
+
+    // If the image has one of either an intrinsic width or an intrinsic height:
+    // * and an intrinsic aspect ratio, then the missing dimension is calculated from the given dimension and the ratio.
+    // * and no intrinsic aspect ratio, then the missing dimension is assumed to be the size of the rectangle that
+    //   establishes the coordinate system for the 'background-position' property.
+    if resolvedSize.width() > 0 || resolvedSize.height() > 0 {
+      return resolveAgainstIntrinsicWidthOrHeightAndRatio(
+        size: positioningAreaSize, intrinsicRatio: LayoutSizeWrapper(size: intrinsicRatio),
+        useWidth: resolvedSize.width(),
+        useHeight: resolvedSize.height())
+    }
+
+    // If the image has no intrinsic dimensions and has an intrinsic ratio the dimensions must be assumed to be the
+    // largest dimensions at that ratio such that neither dimension exceeds the dimensions of the rectangle that
+    // establishes the coordinate system for the 'background-position' property.
+    if !intrinsicRatio.isEmpty() {
+      return resolveAgainstIntrinsicRatio(
+        size: positioningAreaSize, intrinsicRatio: LayoutSizeWrapper(size: intrinsicRatio))
+    }
+
+    // If the image has no intrinsic ratio either, then the dimensions must be assumed to be the rectangle that
+    // establishes the coordinate system for the 'background-position' property.
+    return positioningAreaSize
   }
 
   func containingBlockForAutoHeightDetection(logicalHeight: LengthWrapper) -> RenderBlockWrapper? {

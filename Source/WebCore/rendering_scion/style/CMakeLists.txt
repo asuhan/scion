@@ -15,9 +15,12 @@ target_sources(layout_scion PRIVATE
     RenderStyleConstants.swift
     ScrollbarGutter.swift
     ShadowData.swift
+    StyleCachedImage.swift
     StyleContentAlignmentData.swift
+    StyleGeneratedImage.swift
     StyleImage.swift
     StyleInheritedData.swift
+    StyleMultiImage.swift
     StyleRareInheritedData.swift
     StyleReflection.swift
     StyleSelfAlignmentData.swift
