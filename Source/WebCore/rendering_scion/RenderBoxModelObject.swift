@@ -68,8 +68,21 @@ private func resolveAgainstIntrinsicWidthOrHeightAndRatio(
   size: LayoutSizeWrapper, intrinsicRatio: LayoutSizeWrapper, useWidth: LayoutUnit,
   useHeight: LayoutUnit
 ) -> LayoutSizeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if intrinsicRatio.isEmpty() {
+    if useWidth.bool() {
+      return LayoutSizeWrapper(width: useWidth, height: size.height())
+    }
+    return LayoutSizeWrapper(width: size.width(), height: useHeight)
+  }
+
+  if useWidth.bool() {
+    return LayoutSizeWrapper(
+      width: useWidth,
+      height: resolveHeightForRatio(width: useWidth, intrinsicRatio: intrinsicRatio))
+  }
+  return LayoutSizeWrapper(
+    width: resolveWidthForRatio(height: useHeight, intrinsicRatio: intrinsicRatio),
+    height: useHeight)
 }
 
 private func resolveAgainstIntrinsicRatio(
