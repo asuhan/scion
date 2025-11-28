@@ -3937,6 +3937,25 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func computeLineAdjustmentForPagination(
     lineBox: InlineIterator.LineBoxIterator, delta: LayoutUnit, floatMinimumBottom: LayoutUnit
   ) -> LinePaginationAdjustment {
+    // FIXME: For now we paginate using line overflow. This ensures that lines don't overlap at all when we
+    // put a strut between them for pagination purposes. However, this really isn't the desired rendering, since
+    // the line on the top of the next page will appear too far down relative to the same kind of line at the top
+    // of the first column.
+    //
+    // The rendering we would like to see is one where the lineTopWithLeading is at the top of the column, and any line overflow
+    // simply spills out above the top of the column. This effect would match what happens at the top of the first column.
+    // We can't achieve this rendering, however, until we stop columns from clipping to the column bounds (thus allowing
+    // for overflow to occur), and then cache visible overflow for each column rect.
+    //
+    // Furthermore, the paint we have to do when a column has overflow has to be special. We need to exclude
+    // content that paints in a previous column (and content that paints in the following column).
+    //
+    // For now we'll at least honor the lineTopWithLeading when paginating if it is above the logical top overflow. This will
+    // at least make positive leading work in typical cases.
+    //
+    // FIXME: Another problem with simply moving lines is that the available line width may change (because of floats).
+    // Technically if the location we move the line to has a different line width than our old position, then we need to dirty the
+    // line and all following lines.
     let logicalOverflowTop = LayoutUnit(value: lineBox.get().inkOverflowLogicalTop())
     let logicalOverflowBottom = LayoutUnit(value: lineBox.get().inkOverflowLogicalBottom())
     let logicalOverflowHeight = logicalOverflowBottom - logicalOverflowTop
@@ -3981,6 +4000,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       // line and computing a new height that excludes anything we consider "blank space". We will discard margins, descent, and even overflow. If we are
       // able to fit with the blank space and overflow excluded, we will give the line its own page with the highest non-blank element being aligned with the
       // top of the page.
+      // FIXME: We are still honoring gigantic margins, which does leave open the possibility of blank pages caused by this heuristic. It remains to be seen whether or not
+      // this will be a real-world issue. For now we don't try to deal with this problem.
       let (logicalOffset, logicalBottom) = RenderBlockFlowWrapper.computeLeafBoxTopAndBottom(
         lineBox: lineBox)
       lineHeight = logicalBottom - logicalOffset
@@ -4062,8 +4083,6 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return LinePaginationAdjustment()
   }
 
-  // FIXME: We are still honoring gigantic margins, which does leave open the possibility of blank pages caused by this heuristic. It remains to be seen whether or not
-  // this will be a real-world issue. For now we don't try to deal with this problem.
   private static func computeLeafBoxTopAndBottom(lineBox: InlineIterator.LineBoxIterator) -> (
     LayoutUnit, LayoutUnit
   ) {
