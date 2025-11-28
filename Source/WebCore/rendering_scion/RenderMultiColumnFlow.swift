@@ -159,4 +159,5 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   var columnHeightAvailable: LayoutUnit  // Total height available to columns, or 0 if auto.
+  let inBalancingPass = false  // Guard to avoid re-entering column balancing.
 }

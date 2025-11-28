@@ -2710,8 +2710,43 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // Called to lay out the legend for a fieldset or the ruby text of a ruby run. Also used by multi-column layout to handle
   // the flow thread child.
   override func layoutExcludedChildren(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.layoutExcludedChildren(relayoutChildren: relayoutChildren)
+
+    let fragmentedFlow = multiColumnFlowForBlockFlow()
+    if fragmentedFlow == nil {
+      return
+    }
+
+    fragmentedFlow!.setIsExcludedFromNormalLayout(excluded: true)
+
+    setLogicalTopForChild(child: fragmentedFlow!, logicalTop: borderAndPaddingBefore())
+
+    if relayoutChildren {
+      fragmentedFlow!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
+
+    if fragmentedFlow!.needsLayout() {
+      var columnSet = fragmentedFlow!.firstMultiColumnSet()
+      while columnSet != nil {
+        columnSet!.prepareForLayout(initial: !fragmentedFlow!.inBalancingPass)
+        columnSet = columnSet!.nextSiblingMultiColumnSet()
+      }
+
+      fragmentedFlow!.invalidateFragments(markingParents: .MarkOnlyThis)
+      fragmentedFlow!.setNeedsHeightsRecalculation(recalculate: true)
+      fragmentedFlow!.layout()
+    } else {
+      // At the end of multicol layout, relayoutForPagination() is called unconditionally, but if
+      // no children are to be laid out (e.g. fixed width with layout already being up-to-date),
+      // we want to prevent it from doing any work, so that the column balancing machinery doesn't
+      // kick in and trigger additional unnecessary layout passes. Actually, it's not just a good
+      // idea in general to not waste time on balancing content that hasn't been re-laid out; we
+      // are actually required to guarantee this. The calculation of implicit breaks needs to be
+      // preceded by a proper layout pass, since it's layout that sets up content runs, and the
+      // runs get deleted right after every pass.
+      fragmentedFlow!.setNeedsHeightsRecalculation(recalculate: false)
+    }
+    determineLogicalLeftPositionForChild(child: fragmentedFlow!)
   }
 
   private func recomputeLogicalWidthAndColumnWidth() -> Bool {
