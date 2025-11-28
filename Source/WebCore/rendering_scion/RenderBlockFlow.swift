@@ -799,8 +799,66 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func marginValuesForChild(child: RenderBoxWrapper) -> MarginValues {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var childBeforePositive = LayoutUnit()
+    var childBeforeNegative = LayoutUnit()
+    var childAfterPositive = LayoutUnit()
+    var childAfterNegative = LayoutUnit()
+
+    var beforeMargin = LayoutUnit()
+    var afterMargin = LayoutUnit()
+
+    let childRenderBlock = child as? RenderBlockFlowWrapper
+
+    // If the child has the same directionality as we do, then we can just return its
+    // margins in the same direction.
+    if !child.isWritingModeRoot() {
+      if childRenderBlock != nil {
+        childBeforePositive = childRenderBlock!.maxPositiveMarginBefore()
+        childBeforeNegative = childRenderBlock!.maxNegativeMarginBefore()
+        childAfterPositive = childRenderBlock!.maxPositiveMarginAfter()
+        childAfterNegative = childRenderBlock!.maxNegativeMarginAfter()
+      } else {
+        beforeMargin = child.marginBefore()
+        afterMargin = child.marginAfter()
+      }
+    } else if child.isHorizontalWritingMode() == isHorizontalWritingMode() {
+      // The child has a different directionality. If the child is parallel, then it's just
+      // flipped relative to us. We can use the margins for the opposite edges.
+      if childRenderBlock != nil {
+        childBeforePositive = childRenderBlock!.maxPositiveMarginAfter()
+        childBeforeNegative = childRenderBlock!.maxNegativeMarginAfter()
+        childAfterPositive = childRenderBlock!.maxPositiveMarginBefore()
+        childAfterNegative = childRenderBlock!.maxNegativeMarginBefore()
+      } else {
+        beforeMargin = child.marginAfter()
+        afterMargin = child.marginBefore()
+      }
+    } else {
+      // The child is perpendicular to us, which means its margins don't collapse but are on the
+      // "logical left/right" sides of the child box. We can just return the raw margin in this case.
+      beforeMargin = marginBeforeForChild(child: child)
+      afterMargin = marginAfterForChild(child: child)
+    }
+
+    // Resolve uncollapsing margins into their positive/negative buckets.
+    if beforeMargin.bool() {
+      if beforeMargin > 0 {
+        childBeforePositive = beforeMargin
+      } else {
+        childBeforeNegative = -beforeMargin
+      }
+    }
+    if afterMargin.bool() {
+      if afterMargin > 0 {
+        childAfterPositive = afterMargin
+      } else {
+        childAfterNegative = -afterMargin
+      }
+    }
+
+    return MarginValues(
+      beforePos: childBeforePositive, beforeNeg: childBeforeNegative, afterPos: childAfterPositive,
+      afterNeg: childAfterNegative)
   }
 
   struct MarginInfo {
