@@ -134,8 +134,25 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func selectionPseudoStyle() -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isAnonymous() {
+      return nil
+    }
+
+    if let selectionStyle = getUncachedPseudoStyle(
+      pseudoElementRequest: Style.PseudoElementRequest(pseudoId: .Selection))
+    {
+      // We intentionally return the pseudo selection style here if it exists before ascending to
+      // the shadow host element. This allows us to apply selection pseudo styles in user agent
+      // shadow roots, instead of always deferring to the shadow host's selection pseudo style.
+      return selectionStyle
+    }
+
+    if let renderer = rendererForPseudoStyleAcrossShadowBoundary() {
+      return renderer.getUncachedPseudoStyle(
+        pseudoElementRequest: Style.PseudoElementRequest(pseudoId: .Selection))
+    }
+
+    return nil
   }
 
   // Obtains the selection colors that should be used when painting a selection.
@@ -616,6 +633,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isVisibleInViewport() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
