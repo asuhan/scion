@@ -133,10 +133,44 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  // Obtains the selection colors that should be used when painting a selection.
-  func selectionBackgroundColor() -> ColorWrapper {
+  func selectionPseudoStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Obtains the selection colors that should be used when painting a selection.
+  func selectionBackgroundColor() -> ColorWrapper {
+    if style().usedUserSelect() == .None {
+      return ColorWrapper()
+    }
+
+    if frame().selection().shouldShowBlockCursor() && frame().selection().isCaret() {
+      return theme().transformSelectionBackgroundColor(
+        color: style().visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor),
+        options: styleColorOptions())
+    }
+
+    var pseudoStyleCandidate: RenderElementWrapper? = self
+    if pseudoStyleCandidate!.isAnonymous() {
+      pseudoStyleCandidate = pseudoStyleCandidate!.firstNonAnonymousAncestor()
+    }
+
+    if pseudoStyleCandidate != nil {
+      if let pseudoStyle = pseudoStyleCandidate!.selectionPseudoStyle(),
+        pseudoStyle.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyBackgroundColor)
+          .isValid()
+      {
+        return theme().transformSelectionBackgroundColor(
+          color: pseudoStyle.visitedDependentColorWithColorFilter(
+            colorProperty: .CSSPropertyBackgroundColor),
+          options: styleColorOptions())
+      }
+    }
+
+    if frame().selection().isFocusedAndActive() {
+      return theme().activeSelectionBackgroundColor(options: styleColorOptions())
+    }
+    return theme().inactiveSelectionBackgroundColor(options: styleColorOptions())
   }
 
   func selectionForegroundColor() -> ColorWrapper {

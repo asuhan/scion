@@ -204,6 +204,24 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  // Text selection colors.
+  func activeSelectionBackgroundColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inactiveSelectionBackgroundColor(options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformSelectionBackgroundColor(color: ColorWrapper, options: StyleColorOptions)
+    -> ColorWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Highlighting color for search matches.
   func textSearchHighlightColor(options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this

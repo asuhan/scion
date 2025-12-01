@@ -1323,6 +1323,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func usedUserSelect() -> UserSelect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textOverflow() -> TextOverflow {
     if p == nil {
       // TODO(asuhan): implement this

@@ -346,6 +346,14 @@ enum ContentDistribution: UInt8 {
   case Stretch
 }
 
+// CSS3 User Select Values
+
+enum UserSelect: UInt8 {
+  case None
+  case Text
+  case All
+}
+
 enum AspectRatioType: UInt8 {
   case Auto
   case Ratio

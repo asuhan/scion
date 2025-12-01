@@ -35,4 +35,19 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isCaret() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFocusedAndActive() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shouldShowBlockCursor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
