@@ -826,8 +826,23 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isDocumentElementRenderer() {
+      return false
+    }
+
+    if view().frameView().paintBehavior().contains(.FlattenCompositingLayers) {
+      return false
+    }
+
+    if let rootLayer = view().layer() {
+      if !rootLayer.isComposited() {
+        return false
+      }
+
+      return rootLayer.backing!.backgroundLayerPaintsFixedRootBackground
+    }
+
+    return false
   }
 
   func chooseInterpolationQuality(
