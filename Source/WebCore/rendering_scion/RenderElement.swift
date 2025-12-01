@@ -587,8 +587,16 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    if !hasOutline() {
+      return
+    }
+
+    let painter = BorderPainter(renderer: self, paintInfo: paintInfo)
+    painter.paintOutline(paintRect: paintRect)
   }
 
   func isVisibleInViewport() -> Bool {

@@ -353,6 +353,11 @@ class BorderPainter {
     return !rectWithOutsets.isEmpty()
   }
 
+  func paintOutline(paintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func paintNinePieceImage(
     rect: LayoutRectWrapper, style: RenderStyleWrapper, ninePieceImage: NinePieceImage,
