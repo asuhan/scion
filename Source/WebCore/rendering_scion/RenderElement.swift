@@ -431,6 +431,54 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // https://www.w3.org/TR/css-transforms-1/#reference-box
   func referenceBoxRect(boxType: CSSBoxType) -> FloatRectWrapper {
+    // CSS box model code is implemented in RenderBox::referenceBoxRect().
+
+    // For the legacy SVG engine, RenderElement is the only class that's
+    // present in the ancestor chain of all SVG renderers. In LBSE the
+    // common class is RenderLayerModelObject. Once the legacy SVG engine
+    // is removed this function should be moved to RenderLayerModelObject.
+    // As this method is used by both SVG engines, we need to place it
+    // here in RenderElement, as temporary solution.
+    if element() != nil && !(element() is SVGElementWrapper) {
+      return FloatRectWrapper()
+    }
+
+    switch boxType {
+    case .ContentBox, .PaddingBox, .FillBox:
+      return alignReferenceBox(referenceBox: objectBoundingBox())
+    case .BoxMissing, .BorderBox, .MarginBox, .StrokeBox:
+      return alignReferenceBox(referenceBox: strokeBoundingBox())
+    case .ViewBox:
+      return alignReferenceBox(referenceBox: determineSVGViewport())
+    }
+  }
+
+  private func alignReferenceBox(referenceBox: FloatRectWrapper) -> FloatRectWrapper {
+    // The CSS borderBoxRect() is defined to start at an origin of (0, 0).
+    // A possible shift of a CSS box (e.g. due to non-static position + top/left properties)
+    // does not effect the borderBoxRect() location. The location information
+    // is propagated upon paint time, e.g. via 'paintOffset' when calling RenderObject::paint(),
+    // or by altering the RenderLayer TransformationMatrix to include the 'offsetFromAncestor'
+    // right in the transformation matrix, when CSS transformations are present (see RenderLayer
+    // paintLayerByApplyingTransform() for details).
+    //
+    // To mimic the expectation for SVG, 'fill-box' must behave the same: if we'd include
+    // the 'referenceBox' location in the returned rect, we'd apply the (x, y) location
+    // information for the SVG renderer twice. We would shift the 'transform-origin' by (x, y)
+    // and at the same time alter the CTM in RenderLayer::paintLayerByApplyingTransform() by
+    // including a translation to the enclosing transformed ancestor ('offsetFromAncestor').
+    // Avoid that, and move by -nominalSVGLayoutLocation().
+    var referenceBox = referenceBox
+    if isSVGLayerAwareRenderer() && !isRenderSVGRoot()
+      && document().settings().layerBasedSVGEngineEnabled()
+    {
+      referenceBox.moveBy(
+        delta: -(self as! RenderLayerModelObjectWrapper).nominalSVGLayoutLocation().FloatPoint())
+    }
+    return referenceBox
+  }
+
+  private func determineSVGViewport() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
