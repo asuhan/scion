@@ -834,6 +834,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_maxPreferredLogicalWidth(p))
   }
 
+  func markContainingBlocksForLayout(layoutRoot: RenderElementWrapper? = nil)
+    -> RenderElementWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
   }
@@ -1036,6 +1043,26 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
   //////////////////////////////////////////
+
+  func scheduleLayout(layoutRoot: RenderElementWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setNeedsSimplifiedNormalFlowLayoutBit(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isSetNeedsLayoutForbidden() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLayerNeedsFullRepaint() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func setEverHadLayout() {
     // TODO(asuhan): implement this

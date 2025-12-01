@@ -215,8 +215,15 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setNeedsSimplifiedNormalFlowLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isSetNeedsLayoutForbidden())
+    if needsSimplifiedNormalFlowLayout() {
+      return
+    }
+    setNeedsSimplifiedNormalFlowLayoutBit(b: true)
+    scheduleLayout(layoutRoot: markContainingBlocksForLayout())
+    if hasLayer() {
+      setLayerNeedsFullRepaint()
+    }
   }
 
   // paintOffset is the offset from the origin of the GraphicsContext at which to paint the current object.
