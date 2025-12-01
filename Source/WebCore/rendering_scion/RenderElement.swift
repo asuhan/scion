@@ -504,13 +504,19 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func effectiveOverflowX() -> Overflow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let overflowX = style().overflowX()
+    if paintContainmentApplies() && overflowX == .Visible {
+      return .Clip
+    }
+    return overflowX
   }
 
   func effectiveOverflowY() -> Overflow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let overflowY = style().overflowY()
+    if paintContainmentApplies() && overflowY == .Visible {
+      return .Clip
+    }
+    return overflowY
   }
 
   func effectiveOverflowInlineDirection() -> Overflow {
