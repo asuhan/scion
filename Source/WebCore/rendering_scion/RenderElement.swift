@@ -561,8 +561,29 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func layerCreationAllowedForSubtree() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // In LBSE layers are always created regardless of there position in the render tree.
+    // Consider the SVG document fragment: "<defs><mask><rect transform="scale(2)".../>"
+    // To paint the <rect> into the mask image, the rect needs to be transformed -
+    // which is handled via RenderLayer in LBSE, unlike as in the legacy engine where no
+    // layers are involved for any SVG painting features. In the legacy engine we could
+    // simply omit the layer creation for any children of a <defs> element (or in general
+    // any "hidden container"). For LBSE layers are needed for painting, even if a
+    // RenderSVGHiddenContainer is in the render tree ancestor chain -- however they are
+    // never painted directly, only indirectly through the "LegacyRenderSVGResourceContainer
+    // elements (such as LegacyRenderSVGResourceClipper, RenderSVGResourceMasker, etc.)
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return true
+    }
+
+    var parentRenderer = parent()
+    while parentRenderer != nil {
+      if parentRenderer!.isLegacyRenderSVGHiddenContainer() {
+        return false
+      }
+      parentRenderer = parentRenderer!.parent()
+    }
+
+    return true
   }
 
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
