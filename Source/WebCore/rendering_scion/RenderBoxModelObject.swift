@@ -936,8 +936,44 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     context: GraphicsContextWrapper, paintRect: FloatRectWrapper,
     inlineBox: InlineIterator.InlineBoxIterator, scrolledPaintRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Now add the text to the clip. We do this by painting using a special paint phase that signals to
+    // the painter it should just modify the clip.
+    var maskInfo = PaintInfoWrapper(
+      newContext: context, newRect: LayoutRectWrapper(r: paintRect), newPhase: .TextClip,
+      newPaintBehavior: .ForceBlackText)
+    if inlineBox.bool() {
+      let paintOffset =
+        scrolledPaintRect.location()
+        - toLayoutSize(
+          point: LayoutPointWrapper(
+            size: inlineBox.get().visualRectIgnoringBlockDirection().location()))
+
+      let box = inlineBox.get().firstLeafBox()
+      let end = inlineBox.get().endLeafBox()
+      while box != end {
+        if !box.get().isText() {
+          box.traverseNextOnLine()
+          continue
+        }
+        if let legacyTextBox = box.get().legacyInlineBox() as? LegacyInlineTextBox {
+          let textBoxPainter = LegacyTextBoxPainter(
+            textBox: legacyTextBox, paintInfo: maskInfo, paintOffset: paintOffset)
+          textBoxPainter.paint()
+          box.traverseNextOnLine()
+          continue
+        }
+        let textBoxPainter = ModernTextBoxPainterWrapper(
+          inlineContent: box.get().modernPath().inlineContent, box: box.get().modernPath().box(),
+          paintInfo: maskInfo, paintOffset: paintOffset)
+        textBoxPainter.paint()
+        box.traverseNextOnLine()
+      }
+      return
+    }
+
+    let renderBox = self as? RenderBoxWrapper
+    let localOffset = renderBox != nil ? renderBox!.locationOffset() : LayoutSizeWrapper()
+    paint(paintInfo: &maskInfo, paintOffset: scrolledPaintRect.location() - localOffset)
   }
 
   // For RenderBlocks and RenderInlines with m_style->pseudoElementType() == PseudoId::FirstLetter, this tracks their remaining text fragments

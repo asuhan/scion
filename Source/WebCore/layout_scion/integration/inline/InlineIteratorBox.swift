@@ -26,6 +26,11 @@
 extension InlineIterator {
 
   class Box {
+    func isText() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isRootInlineBox() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -72,6 +77,12 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    // FIXME: Remove. For intermediate porting steps only.
+    func legacyInlineBox() -> LegacyInlineBox? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func parentInlineBox() -> InlineBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -81,9 +92,14 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func modernPath() -> BoxModernPath {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
-  class BoxIterator {
+  class BoxIterator: Equatable {
     func bool() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

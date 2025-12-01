@@ -50,6 +50,16 @@ extension InlineIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func firstLeafBox() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func endLeafBox() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   static func firstInlineBoxFor(renderInline: RenderInlineWrapper) -> InlineBoxIterator {

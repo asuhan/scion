@@ -104,7 +104,7 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    private let inlineContent: LayoutIntegration.InlineContent
+    let inlineContent: LayoutIntegration.InlineContent
     private let boxIndex: UInt64
   }
 
