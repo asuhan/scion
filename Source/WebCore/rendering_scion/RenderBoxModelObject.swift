@@ -755,8 +755,24 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderObscuresBackground() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().hasBorder() {
+      return false
+    }
+
+    // Bail if we have any border-image for now. We could look at the image alpha to improve this.
+    if style().borderImage().image() != nil {
+      return false
+    }
+
+    let edges = borderEdges(style: style(), deviceScaleFactor: document().deviceScaleFactor())
+
+    for side in allBoxSides {
+      if !edges.at(side: side).obscuresBackground() {
+        return false
+      }
+    }
+
+    return true
   }
 
   enum UpdatePercentageHeightDescendants {

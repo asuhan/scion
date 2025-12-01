@@ -82,6 +82,18 @@ struct BorderEdge {
     return true
   }
 
+  func obscuresBackground() -> Bool {
+    if !isPresent || isTransparent || !color.isOpaque() || style == .Hidden {
+      return false
+    }
+
+    if style == .Dotted || style == .Dashed || style == .Double {
+      return false
+    }
+
+    return true
+  }
+
   private func borderWidthInDevicePixel(logicalPixels: Int32) -> Float32 {
     return LayoutUnit(value: Float32(logicalPixels) / devicePixelRatio).toFloat()
   }
