@@ -479,8 +479,18 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func determineSVGViewport() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var viewportElement = element() as! SVGElementWrapper?
+
+    // RenderSVGViewportContainer is the only possible anonymous renderer in the SVG tree.
+    if viewportElement == nil && document().settings().layerBasedSVGEngineEnabled() {
+      assert(isAnonymous())
+      viewportElement = (self as! RenderSVGViewportContainerWrapper).svgSVGElement()
+    }
+
+    // FIXME: [LBSE] Upstream: Cache the immutable SVGLengthContext per SVGElement, to avoid the repeated RenderSVGRoot size queries in determineViewport().
+    assert(viewportElement != nil)
+    let viewportSize = SVGLengthContext(context: viewportElement).viewportSize() ?? FloatSize()
+    return FloatRectWrapper(location: FloatPoint(), size: viewportSize)
   }
 
   func backdropRenderer() -> RenderBlockFlowWrapper? {

@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2004, 2005, 2007 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2007 Rob Buis <buis@kde.org>
- * Copyright (C) 2007 Eric Seidel <eric@webkit.org>
- * Copyright (C) 2009 Google, Inc.
- * Copyright (C) 2009 Apple Inc. All rights reserved.
- * Copyright (c) 2020, 2021, 2022 Igalia S.L.
+ * Copyright (C) 2004, 2005, 2006, 2019 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2004, 2005, 2006, 2007, 2008, 2010 Rob Buis <buis@kde.org>
+ * Copyright (C) 2007-2022 Apple Inc. All rights reserved.
+ * Copyright (C) 2015 Google Inc. All rights reserved.
+ * Copyright (C) 2014 Adobe Systems Incorporated. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,19 +21,5 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderSVGViewportContainerWrapper: RenderSVGContainerWrapper {
-  func svgSVGElement() -> SVGSVGElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  init(parent: RenderSVGRootWrapper, style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func updateLayerTransform() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+// TODO(asuhan): also inherit from SVGFitToViewBox and SVGZoomAndPan
+final class SVGSVGElementWrapper: SVGGraphicsElementWrapper {}

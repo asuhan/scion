@@ -19,4 +19,5 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGGraphicsElementWrapper {}
+// TODO(asuhan): also inherit from SVGTransformable, SVGTests
+class SVGGraphicsElementWrapper: SVGElementWrapper {}
