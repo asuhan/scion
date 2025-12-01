@@ -543,6 +543,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isBlockBox() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isBlockContainer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

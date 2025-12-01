@@ -1191,6 +1191,11 @@ class RenderStyleWrapper: Equatable {
     return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p))
   }
 
+  func containsLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // usedContentVisibility will return ContentVisibility::Hidden in a content-visibility: hidden subtree (overriding
   // content-visibility: auto at all times), ContentVisibility::Auto in a content-visibility: auto subtree (when the
   // content is not user relevant and thus skipped), and ContentVisibility::Visible otherwise.
@@ -1804,6 +1809,11 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_isOriginalDisplayInlineType(p)
   }
 
+  func isDisplayBlockLevel() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isOriginalDisplayListItemType() -> Bool {
     if p == nil {
       // TODO(asuhan): implement this
@@ -2020,6 +2030,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func offsetRotate() -> OffsetRotation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func blockStepSize() -> LengthWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

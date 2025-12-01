@@ -422,8 +422,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func establishesIndependentFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isFloatingOrOutOfFlowPositioned() || (isBlockBox() && hasPotentiallyScrollableOverflow())
+      || style().containsLayout() || paintContainmentApplies()
+      || (style().isDisplayBlockLevel() && style().blockStepSize() != nil)
   }
 
   func createsNewFormattingContext() -> Bool {
