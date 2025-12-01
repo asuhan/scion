@@ -366,6 +366,16 @@ class RenderLayerWrapper {
     }
   }
 
+  enum LayerChangeTiming {
+    case StyleChange
+    case RenderTreeConstruction
+  }
+
+  func removeOnlyThisLayer(timing: LayerChangeTiming) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
   // Not all stacking contexts are CSS stacking contexts.
   func isStackingContext() -> Bool {

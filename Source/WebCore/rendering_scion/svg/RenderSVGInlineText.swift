@@ -1,5 +1,10 @@
 /*
- * Copyright (C) 2011 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Oliver Hunt <ojh16@student.canterbury.ac.nz>
+ * Copyright (C) 2006-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2015 Google Inc. All rights reserved.
+ * Copyright (C) 2007 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2008 Rob Buis <buis@kde.org>
+ * Copyright (C) Research In Motion Limited 2010. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,35 +20,9 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
  */
 
-final class RenderCombineTextWrapper: RenderTextWrapper {
-  func combineTextIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func computeTextOrigin(boxRect: FloatRectWrapper) -> FloatPoint? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isCombined() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func originalFont() -> FontCascadeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func textCombineFont() -> FontCascadeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
+final class RenderSVGInlineTextWrapper: RenderTextWrapper {
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

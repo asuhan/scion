@@ -169,6 +169,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentRangesBetweenOffsetsForType(
     type: DocumentMarker.`Type`, startOffset: UInt32, endOffset: UInt32
   ) -> [(UInt32, UInt32)] {
