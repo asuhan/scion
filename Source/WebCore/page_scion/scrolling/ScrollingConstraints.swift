@@ -25,10 +25,59 @@
 
 // ViewportConstraints classes encapsulate data and logic required to reposition elements whose layout
 // depends on the viewport rect (positions fixed and sticky), when scrolling and zooming.
-class ViewportConstraintsWrapper {}
+class ViewportConstraints {
+  struct AnchorEdgeFlags: OptionSet {
+    let rawValue: UInt8
 
-final class StickyPositionViewportConstraints: ViewportConstraintsWrapper {
+    static let AnchorEdgeLeft = AnchorEdgeFlags(rawValue: 1 << 0)
+    static let AnchorEdgeRight = AnchorEdgeFlags(rawValue: 1 << 1)
+    static let AnchorEdgeTop = AnchorEdgeFlags(rawValue: 1 << 2)
+    static let AnchorEdgeBottom = AnchorEdgeFlags(rawValue: 1 << 3)
+  }
+
+  func addAnchorEdge(edgeFlag: AnchorEdgeFlags) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+final class StickyPositionViewportConstraints: ViewportConstraints {
   func computeStickyOffset(constrainingRect: FloatRectWrapper) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLeftOffset(offset: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setRightOffset(offset: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTopOffset(offset: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setBottomOffset(offset: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setConstrainingRectAtLastLayout(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContainingBlockRect(rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setStickyBoxRect(rect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -49,4 +49,9 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func frameRectForStickyPositioning() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

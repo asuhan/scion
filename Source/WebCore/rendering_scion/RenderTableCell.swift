@@ -487,6 +487,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func frameRectForStickyPositioning() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateLogicalWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

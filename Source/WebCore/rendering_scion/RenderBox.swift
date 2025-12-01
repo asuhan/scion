@@ -738,6 +738,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutRectWrapper(location: location, size: size)
   }
 
+  // This returns the content area of the box (excluding padding and border). The only difference with contentBoxRect is that computedCSSContentBoxRect
+  // does include the intrinsic padding in the content box as this is what some callers expect (like getComputedStyle).
+  func computedCSSContentBoxRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Note these functions are not equivalent of childrenOfType<RenderBox>
   func parentBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
@@ -5496,6 +5503,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   ) {
     computeIntrinsicLogicalWidths(
       minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+  }
+
+  override func frameRectForStickyPositioning() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {

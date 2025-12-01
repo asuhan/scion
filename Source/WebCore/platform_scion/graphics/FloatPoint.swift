@@ -75,6 +75,12 @@ struct FloatPoint {
     return a
   }
 
+  @discardableResult
+  static func += (a: inout FloatPoint, b: FloatPoint) -> FloatPoint {
+    a.move(dx: b.x, dy: b.y)
+    return a
+  }
+
   static func + (a: FloatPoint, b: FloatPoint) -> FloatPoint {
     return FloatPoint(x: a.x + b.x, y: a.y + b.y)
   }
@@ -85,6 +91,10 @@ struct FloatPoint {
 
   static func - (a: FloatPoint, b: FloatPoint) -> FloatSize {
     return FloatSize(width: a.x - b.x, height: a.y - b.y)
+  }
+
+  static func - (a: FloatPoint, b: FloatSize) -> FloatPoint {
+    return FloatPoint(x: a.x - b.width, y: a.y - b.height)
   }
 
   prefix static func - (a: FloatPoint) -> FloatPoint {

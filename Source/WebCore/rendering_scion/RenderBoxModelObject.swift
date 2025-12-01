@@ -301,11 +301,149 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return view().frameView().rectForFixedPositionLayout().FloatRect()
   }
 
+  func enclosingClippingBoxForStickyPosition() -> (RenderBoxWrapper, RenderLayerWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeStickyPositionConstraints(constrainingRect: FloatRectWrapper)
     -> StickyPositionViewportConstraints
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let constraints = StickyPositionViewportConstraints()
+    constraints.setConstrainingRectAtLastLayout(rect: constrainingRect)
+
+    // Do not use anonymous containing blocks to determine sticky constraints. We want the size
+    // of the first true containing block, because that is what imposes the limitation on the
+    // movement of stickily positioned items.
+    var containingBlock = containingBlock()
+    while containingBlock != nil && containingBlock!.isAnonymousBlock() {
+      containingBlock = containingBlock!.containingBlock()
+    }
+    assert(containingBlock != nil)
+
+    let (enclosingClippingBox, enclosingClippingLayer) = enclosingClippingBoxForStickyPosition()
+
+    var containerContentRect = LayoutRectWrapper()
+    if enclosingClippingLayer == nil
+      || (CPtrToInt(containingBlock?.p) != CPtrToInt(enclosingClippingBox.p))
+    {
+      // In this case either the scrolling element is the view or there is another containing block in
+      // the hierarchy between this stickily positioned item and its scrolling ancestor. In both cases,
+      // we use the content box rectangle of the containing block, which is what should constrain the
+      // movement.
+      containerContentRect = containingBlock!.computedCSSContentBoxRect()
+    } else {
+      containerContentRect = containingBlock!.layoutOverflowRect()
+      containerContentRect.contract(
+        box: LayoutBoxExtent(
+          top: containingBlock!.computedCSSPaddingTop(),
+          right: containingBlock!.computedCSSPaddingRight(),
+          bottom: containingBlock!.computedCSSPaddingBottom(),
+          left: containingBlock!.computedCSSPaddingLeft()
+        ))
+    }
+
+    let maxWidth = containingBlock!.availableLogicalWidth()
+
+    // Sticky positioned element ignore any override logical width on the containing block (as they don't call
+    // containingBlockLogicalWidthForContent). It's unclear whether this is totally fine.
+    let minMargin = LayoutBoxExtent(
+      top: minimumValueForLength(length: style().marginTop(), maximumValue: maxWidth),
+      right: minimumValueForLength(length: style().marginRight(), maximumValue: maxWidth),
+      bottom: minimumValueForLength(length: style().marginBottom(), maximumValue: maxWidth),
+      left: minimumValueForLength(length: style().marginLeft(), maximumValue: maxWidth))
+
+    // Compute the container-relative area within which the sticky element is allowed to move.
+    containerContentRect.contract(box: minMargin)
+
+    // Finally compute container rect relative to the scrolling ancestor. We pass an empty
+    // mode here, because sticky positioning should ignore transforms.
+    var containerRectRelativeToScrollingAncestor = containingBlock!.localToContainerQuad(
+      localQuad: FloatQuad(inRect: containerContentRect.FloatRect()),
+      container: enclosingClippingBox,
+      mode: [] /* ignore transforms */
+    ).boundingBox()
+    if enclosingClippingLayer != nil {
+      var containerLocationRelativeToScrollingAncestor =
+        containerRectRelativeToScrollingAncestor.location()
+        - FloatSize(
+          width: (enclosingClippingBox.borderLeft() + enclosingClippingBox.paddingLeft()).float(),
+          height: (enclosingClippingBox.borderTop() + enclosingClippingBox.paddingTop()).float())
+      if CPtrToInt(enclosingClippingBox.p) != CPtrToInt(containingBlock!.p),
+        let scrollableArea = enclosingClippingLayer!.scrollableArea()
+      {
+        containerLocationRelativeToScrollingAncestor += FloatPoint(p: scrollableArea.scrollOffset())
+      }
+      containerRectRelativeToScrollingAncestor.setLocation(
+        location: containerLocationRelativeToScrollingAncestor)
+    }
+    constraints.setContainingBlockRect(rect: containerRectRelativeToScrollingAncestor)
+
+    // Now compute the sticky box rect, also relative to the scrolling ancestor.
+    var stickyBoxRect = frameRectForStickyPositioning()
+
+    // Ideally, it would be possible to call this->localToContainerQuad to determine the frame
+    // rectangle in the coordinate system of the scrolling ancestor, but localToContainerQuad
+    // itself depends on sticky positioning! Instead, start from the parent but first adjusting
+    // the rectangle for the writing mode of this stickily-positioned element. We also pass an
+    // empty mode here because sticky positioning should ignore transforms.
+    //
+    // FIXME: It would also be nice to not have to call localToContainerQuad again since we
+    // have already done a similar call to move from the containing block to the scrolling
+    // ancestor above, but localToContainerQuad takes care of a lot of complex situations
+    // involving inlines, tables, and transformations.
+    if let parentBox = parent() as? RenderBoxWrapper {
+      parentBox.flipForWritingMode(rect: &stickyBoxRect)
+    }
+    var stickyBoxRelativeToScrollingAncestor = parent()!.localToContainerQuad(
+      localQuad: FloatQuad(inRect: stickyBoxRect.FloatRect()), container: enclosingClippingBox,
+      mode: [] /* ignore transforms */
+    ).boundingBox()
+
+    if enclosingClippingLayer != nil {
+      stickyBoxRelativeToScrollingAncestor.move(
+        delta: -FloatSize(
+          width: (enclosingClippingBox.borderLeft() + enclosingClippingBox.paddingLeft()).float(),
+          height: (enclosingClippingBox.borderTop() + enclosingClippingBox.paddingTop()).float()))
+
+      if CPtrToInt(enclosingClippingBox.p) != CPtrToInt(parent()?.p),
+        let scrollableArea = enclosingClippingLayer!.scrollableArea()
+      {
+        stickyBoxRelativeToScrollingAncestor.moveBy(
+          delta: FloatPoint(p: scrollableArea.scrollOffset()))
+      }
+    }
+    constraints.setStickyBoxRect(rect: stickyBoxRelativeToScrollingAncestor)
+
+    if !style().left().isAuto() {
+      constraints.setLeftOffset(
+        offset: valueForLength(length: style().left(), maximumValue: constrainingRect.width())
+          .float())
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeLeft)
+    }
+
+    if !style().right().isAuto() {
+      constraints.setRightOffset(
+        offset: valueForLength(length: style().right(), maximumValue: constrainingRect.width())
+          .float())
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeRight)
+    }
+
+    if !style().top().isAuto() {
+      constraints.setTopOffset(
+        offset: valueForLength(length: style().top(), maximumValue: constrainingRect.height())
+          .float())
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeTop)
+    }
+
+    if !style().bottom().isAuto() {
+      constraints.setBottomOffset(
+        offset: valueForLength(length: style().bottom(), maximumValue: constrainingRect.height())
+          .float())
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeBottom)
+    }
+
+    return constraints
   }
 
   func stickyPositionOffset() -> LayoutSizeWrapper {
@@ -327,6 +465,27 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     }
 
     return LayoutSizeWrapper()
+  }
+
+  // These return the CSS computed padding values.
+  func computedCSSPaddingTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computedCSSPaddingBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computedCSSPaddingLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computedCSSPaddingRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computedCSSPaddingBefore() -> LayoutUnit {
@@ -772,6 +931,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func continuationChainNode() -> ContinuationChainNode? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func frameRectForStickyPositioning() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
