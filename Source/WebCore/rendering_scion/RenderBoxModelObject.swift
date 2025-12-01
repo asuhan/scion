@@ -739,8 +739,19 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderObscuresBackgroundEdge(contextScale: FloatSize) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let edges = borderEdges(style: style(), deviceScaleFactor: document().deviceScaleFactor())
+
+    for side in allBoxSides {
+      let currEdge = edges.at(side: side)
+      // FIXME: for vertical text
+      let axisScale =
+        (side == .Top || side == .Bottom) ? contextScale.height : contextScale.width
+      if !currEdge.obscuresBackgroundEdge(scale: axisScale) {
+        return false
+      }
+    }
+
+    return true
   }
 
   func borderObscuresBackground() -> Bool {

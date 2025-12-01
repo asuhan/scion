@@ -64,7 +64,25 @@ struct BorderEdge {
     return (LayoutUnit(value: outerWidth), LayoutUnit(value: innerWidth))
   }
 
-  private func borderWidthInDevicePixel(logicalPixels: Int) -> Float32 {
+  func obscuresBackgroundEdge(scale: Float32) -> Bool {
+    if !isPresent || isTransparent || (width * scale) < borderWidthInDevicePixel(logicalPixels: 2)
+      || !color.isOpaque() || style == .Hidden
+    {
+      return false
+    }
+
+    if style == .Dotted || style == .Dashed {
+      return false
+    }
+
+    if style == .Double {
+      return width >= scale * borderWidthInDevicePixel(logicalPixels: 5)  // The outer band needs to be >= 2px wide at unit scale.
+    }
+
+    return true
+  }
+
+  private func borderWidthInDevicePixel(logicalPixels: Int32) -> Float32 {
     return LayoutUnit(value: Float32(logicalPixels) / devicePixelRatio).toFloat()
   }
 
