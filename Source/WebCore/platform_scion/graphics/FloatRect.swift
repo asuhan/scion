@@ -52,6 +52,8 @@ struct FloatRectWrapper {
 
   func size() -> FloatSize { return m_size }
 
+  mutating func setLocation(location: FloatPoint) { m_location = location }
+
   func x() -> Float32 {
     return location().x
   }

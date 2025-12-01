@@ -262,9 +262,59 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return overridingContainingBlockContentHeight ?? containingBlock!.availableHeight()
   }
 
-  func stickyPositionOffset() -> LayoutSizeWrapper {
+  private func constrainingRectForStickyPosition() -> FloatRectWrapper {
+    if let enclosingClippingLayer =
+      hasLayer() ? layer()!.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf) : nil
+    {
+      let enclosingClippingBox = enclosingClippingLayer.renderer() as! RenderBoxWrapper
+      var clipRect = enclosingClippingBox.overflowClipRect(
+        location: LayoutPointWrapper(), fragment: nil)  // FIXME: make this work in regions.
+      clipRect.contract(
+        size: LayoutSizeWrapper(
+          width: enclosingClippingBox.paddingLeft() + enclosingClippingBox.paddingRight(),
+          height: enclosingClippingBox.paddingTop() + enclosingClippingBox.paddingBottom()
+        ))
+
+      var constrainingRect = enclosingClippingBox.localToContainerQuad(
+        localQuad: FloatQuad(inRect: clipRect.FloatRect()), container: view()
+      ).boundingBox()
+
+      let scrollableArea = enclosingClippingLayer.scrollableArea()
+      let scrollOffset =
+        scrollableArea != nil
+        ? FloatPoint() + FloatPoint(p: scrollableArea!.scrollOffset()) : FloatPoint()
+
+      let scrollbarOffset =
+        Float32(
+          (enclosingClippingBox.hasLayer()
+            && enclosingClippingBox.shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
+            && scrollableArea != nil)
+            ? scrollableArea!.verticalScrollbarWidth(
+              relevancy: .IgnoreOverlayScrollbarSize,
+              isHorizontalWritingMode: isHorizontalWritingMode()) : 0)
+
+      constrainingRect.setLocation(
+        location: FloatPoint(x: scrollOffset.x + scrollbarOffset, y: scrollOffset.y))
+      return constrainingRect
+    }
+
+    return view().frameView().rectForFixedPositionLayout().FloatRect()
+  }
+
+  private func computeStickyPositionConstraints(constrainingRect: FloatRectWrapper)
+    -> StickyPositionViewportConstraints
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func stickyPositionOffset() -> LayoutSizeWrapper {
+    let constrainingRect = constrainingRectForStickyPosition()
+    let constraints = computeStickyPositionConstraints(constrainingRect: constrainingRect)
+
+    // The sticky offset is physical, so we can just return the delta computed in absolute coords (though it may be wrong with transforms).
+    return LayoutSizeWrapper(
+      size: constraints.computeStickyOffset(constrainingRect: constrainingRect))
   }
 
   func offsetForInFlowPosition() -> LayoutSizeWrapper {
