@@ -441,6 +441,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isVisibleInViewport() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var m_firstChild: RenderObjectWrapper? = nil
   private var m_lastChild: RenderObjectWrapper? = nil
 }

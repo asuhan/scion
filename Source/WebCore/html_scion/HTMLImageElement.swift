@@ -20,4 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class HTMLImageElementWrapper: HTMLElementWrapper {}
+class HTMLImageElementWrapper: HTMLElementWrapper {
+  func decodingMode() -> DecodingMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

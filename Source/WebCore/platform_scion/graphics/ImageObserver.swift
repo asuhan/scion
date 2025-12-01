@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2006 Samuel Weinig (sam.weinig@gmail.com)
- * Copyright (C) 2004-2023 Apple Inc.  All rights reserved.
+ * Copyright (C) 2004, 2005, 2006 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,19 +23,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ImageWrapper {
-  func isBitmapImage() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func size(orientation: ImageOrientation.Orientation = .FromImage) -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  // Typically the CachedImage that owns us.
-  func imageObserver() -> ImageObserverWrapper? {
+// Interface for notification about changes to an image, including decoding,
+// drawing, and animating.
+class ImageObserverWrapper {
+  func numberOfClients() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

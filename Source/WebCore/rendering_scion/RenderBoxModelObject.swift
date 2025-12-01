@@ -854,8 +854,82 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func decodingModeForImageDraw(image: ImageWrapper, paintInfo: PaintInfoWrapper) -> DecodingMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Some document types force synchronous decoding.
+    if document().isImageDocument() {
+      return .Synchronous
+    }
+
+    // A PaintBehavior may force synchronous decoding.
+    if paintInfo.paintBehavior.contains(.Snapshotting) {
+      return .Synchronous
+    }
+
+    let bitmapImage = image as? BitmapImageWrapper
+    if bitmapImage == nil {
+      return .Synchronous
+    }
+
+    if let imgElement = element() as? HTMLImageElementWrapper {
+      // <img decoding="sync"> forces synchronous decoding.
+      if imgElement.decodingMode() == .Synchronous {
+        return .Synchronous
+      }
+
+      // <img decoding="async"> forces asynchronous decoding but make sure this
+      // will not cause flickering.
+      if imgElement.decodingMode() == .Asynchronous {
+        if bitmapImage!.isAsyncDecodingEnabledForTesting() {
+          return .Asynchronous
+        }
+
+        // Choose a decodingMode such that the image does not flicker.
+        return defaultDecodingMode(paintInfo: paintInfo, bitmapImage: bitmapImage!)
+      }
+    }
+
+    // isAsyncDecodingEnabledForTesting() forces async image decoding regardless of the size.
+    if bitmapImage!.isAsyncDecodingEnabledForTesting() {
+      return .Asynchronous
+    }
+
+    // Animated image case.
+    if bitmapImage!.isAnimated() {
+      if bitmapImage!.isLargeForDecoding() && settings().animatedImageAsyncDecodingEnabled() {
+        return .Asynchronous
+      }
+      return .Synchronous
+    }
+
+    // Large image case.
+    if !(bitmapImage!.isLargeForDecoding() && settings().largeImageAsyncDecodingEnabled()) {
+      return .Synchronous
+    }
+
+    // Choose a decodingMode such that the image does not flicker.
+    return defaultDecodingMode(paintInfo: paintInfo, bitmapImage: bitmapImage!)
+  }
+
+  private func defaultDecodingMode(paintInfo: PaintInfoWrapper, bitmapImage: BitmapImageWrapper)
+    -> DecodingMode
+  {
+    if paintInfo.paintBehavior.contains(.ForceSynchronousImageDecode) {
+      return .Synchronous
+    }
+
+    // First tile paint.
+    if paintInfo.paintBehavior.contains(.DefaultAsynchronousImageDecode) {
+      // No image has been painted in this element yet and it should not flicker with previous painting.
+      let observer = bitmapImage.imageObserver()
+      let mayOverlapOtherClients =
+        observer != nil && observer!.numberOfClients() > 1
+        && bitmapImage.currentFrameDecodingOptions().decodingMode == .Asynchronous
+      if element() != nil && !element()!.hasEverPaintedImages() && !mayOverlapOtherClients {
+        return .Asynchronous
+      }
+    }
+
+    // FIXME: Calling isVisibleInViewport() is not cheap. Find a way to make this faster.
+    return isVisibleInViewport() ? .Synchronous : .Asynchronous
   }
 
   func paintMaskForTextFillBox(

@@ -26,7 +26,28 @@
  */
 
 final class BitmapImageWrapper: ImageWrapper {
+  final func isAnimated() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Decoding
+  func isLargeForDecoding() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func currentFrameOrientation() -> ImageOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func currentFrameDecodingOptions() -> DecodingOptions {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isAsyncDecodingEnabledForTesting() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

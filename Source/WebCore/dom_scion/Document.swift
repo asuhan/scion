@@ -32,6 +32,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func isImageDocument() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func view() -> LocalFrameViewWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

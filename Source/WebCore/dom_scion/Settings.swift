@@ -34,6 +34,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func animatedImageAsyncDecodingEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func asyncOverflowScrollingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -65,6 +70,11 @@ class SettingsWrapper {
   }
 
   func imageSubsamplingEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func largeImageAsyncDecodingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

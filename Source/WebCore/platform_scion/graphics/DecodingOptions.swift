@@ -28,3 +28,12 @@ enum DecodingMode: UInt8 {
   case Synchronous
   case Asynchronous
 }
+
+struct DecodingOptions {
+  init(decodingMode: DecodingMode = .Synchronous, sizeForDrawing: IntSize? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let decodingMode: DecodingMode
+}
