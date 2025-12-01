@@ -421,9 +421,26 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func createsNewFormattingContext() -> Bool {
+  func establishesIndependentFormattingContext() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func createsNewFormattingContext() -> Bool {
+    // Writing-mode changes establish an independent block formatting context
+    // if the box is a block-container.
+    // https://drafts.csswg.org/css-writing-modes/#block-flow
+    if isWritingModeRoot() && isBlockContainer() {
+      return true
+    }
+    if isBlockContainer() && !style().alignContent().isNormal() {
+      return true
+    }
+    return isInlineBlockOrInlineTable() || isFlexItemIncludingDeprecated()
+      || isRenderTableCell() || isRenderTableCaption() || isFieldset()
+      || isDocumentElementRenderer() || isRenderFragmentedFlow() || isRenderSVGForeignObject()
+      || style().specifiesColumns() || style().columnSpan() == .All
+      || style().display() == .FlowRoot || establishesIndependentFormattingContext()
   }
 
   func isSkippedContentRoot() -> Bool {

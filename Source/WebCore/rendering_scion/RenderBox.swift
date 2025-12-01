@@ -3708,6 +3708,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func establishesIndependentFormattingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateFloatPainterAfterSelfPaintingLayerChange() {
     assert(isFloating())
     assert(!hasLayer() || !layer()!.isSelfPaintingLayer)
