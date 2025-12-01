@@ -783,8 +783,46 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func hasAutoHeightOrContainingBlockWithAutoHeight(
     updatePercentageDescendants: UpdatePercentageHeightDescendants = .Yes
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let thisBox = self as? RenderBoxWrapper
+    let logicalHeightLength = style().logicalHeight()
+    let cb = containingBlockForAutoHeightDetection(logicalHeight: logicalHeightLength)
+
+    if updatePercentageDescendants == .Yes && logicalHeightLength.isPercentOrCalculated()
+      && cb != nil && thisBox != nil
+    {
+      cb!.addPercentHeightDescendant(descendant: thisBox!)
+    }
+
+    if thisBox != nil && thisBox!.isFlexItem()
+      && (parent() as! RenderFlexibleBoxWrapper)
+        .usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: thisBox!) != nil
+    {
+      return false
+    }
+
+    if thisBox != nil && thisBox!.isGridItem(),
+      let overridingContainingBlockContentLogicalHeight =
+        thisBox!.overridingContainingBlockContentLogicalHeight()
+    {
+      return !overridingContainingBlockContentLogicalHeight!.bool()
+    }
+
+    if logicalHeightLength.isAuto() && !isOutOfFlowPositionedWithImplicitHeight(child: self) {
+      return true
+    }
+
+    // We need the containing block to have a definite block-size in order to resolve the block-size of the descendant,
+    // except when in quirks mode. Flexboxes follow strict behavior even in quirks mode, though.
+    if cb == nil || (document().inQuirksMode() && !cb!.isFlexibleBoxIncludingDeprecated()) {
+      return false
+    }
+    if thisBox != nil,
+      let overridingContainingBlockContentLogicalHeight =
+        thisBox!.overridingContainingBlockContentLogicalHeight()
+    {
+      return !overridingContainingBlockContentLogicalHeight!.bool()
+    }
+    return !cb!.hasDefiniteLogicalHeight()
   }
 
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
