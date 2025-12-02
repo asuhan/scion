@@ -109,8 +109,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isSubgridInParentDirection(parentDirection: GridTrackSizingDirection) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderGrid = parent() as? RenderGridWrapper {
+      let direction = GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: renderGrid, gridItem: self, direction: parentDirection)
+      return isSubgrid(direction: direction)
+    }
+    return false
   }
 
   func isMasonry() -> Bool {

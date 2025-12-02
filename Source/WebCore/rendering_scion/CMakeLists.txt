@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     FloatingObjects.swift
     GlyphDisplayListCache.swift
     Grid.swift
+    GridLayoutFunctions.swift
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift
