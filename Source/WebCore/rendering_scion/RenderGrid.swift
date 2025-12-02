@@ -105,8 +105,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isSubgridColumns() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isSubgrid(direction: .ForColumns)
   }
 
   func isSubgridInParentDirection(parentDirection: GridTrackSizingDirection) -> Bool {
