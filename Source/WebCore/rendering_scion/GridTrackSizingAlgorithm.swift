@@ -52,6 +52,13 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func cacheBaselineAlignedItem(
+    item: RenderBoxWrapper, axis: GridAxis, cachingRowSubgridsForRootGrid: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func copyBaselineItemsCache(source: GridTrackSizingAlgorithm, axis: GridAxis) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -77,4 +84,6 @@ final class GridTrackSizingAlgorithm {
 
   // Required to be public by RenderGrid. Try to minimize the exposed surface.
   let grid: Grid
+
+  let renderGrid: RenderGridWrapper?
 }

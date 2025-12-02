@@ -81,3 +81,9 @@ struct BaselineAlignmentState {
 
   let sharedGroups: [BaselineGroup]
 }
+
+enum AllowedBaseLine {
+  case FirstLine
+  case LastLine
+  case BothLines
+}

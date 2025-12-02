@@ -25,12 +25,79 @@
  */
 
 private func cacheBaselineAlignedGridItems(
-  grid: RenderGridWrapper, algorithm: GridTrackSizingAlgorithm, axes: UInt8,
+  grid: RenderGridWrapper, algorithm: GridTrackSizingAlgorithm, axes: GridAxis,
   callback: (_: RenderBoxWrapper) -> Void,
   cachingRowSubgridsForRootGrid: Bool
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if cachingRowSubgridsForRootGrid {
+    assert(
+      !algorithm.renderGrid!.isSubgridRows()
+        && (CPtrToInt(algorithm.renderGrid?.p) == CPtrToInt(grid.p)
+          || grid.isSubgridOf(
+            direction: GridLayoutFunctions.flowAwareDirectionForGridItem(
+              grid: algorithm.renderGrid!, gridItem: grid, direction: .ForRows),
+            ancestor: algorithm.renderGrid!))
+    )
+  }
+
+  var gridItem = grid.firstChildBox()
+  while gridItem != nil {
+    if gridItem!.isOutOfFlowPositioned() || gridItem!.isLegend() {
+      gridItem = gridItem!.nextSiblingBox()
+      continue
+    }
+
+    callback(gridItem!)
+
+    // We keep a cache of items with baseline as alignment values so that we only compute the baseline shims for
+    // such items. This cache is needed for performance related reasons due to the cost of evaluating the item's
+    // participation in a baseline context during the track sizing algorithm.
+    var innerAxes: GridAxis = []
+    let inner = gridItem as? RenderGridWrapper
+
+    if axes.contains(.GridColumnAxis) {
+      if inner != nil && inner!.isSubgridInParentDirection(parentDirection: .ForRows) {
+        innerAxes.update(
+          with: GridLayoutFunctions.isOrthogonalGridItem(grid: grid, gridItem: gridItem!)
+            ? .GridRowAxis : .GridColumnAxis)
+      } else if grid.isBaselineAlignmentForGridItem(
+        gridItem: gridItem!, baselineAxis: .GridColumnAxis)
+      {
+        algorithm.cacheBaselineAlignedItem(
+          item: gridItem!, axis: .GridColumnAxis,
+          cachingRowSubgridsForRootGrid: cachingRowSubgridsForRootGrid)
+      }
+    }
+
+    if axes.contains(.GridRowAxis) {
+      if inner != nil && inner!.isSubgridInParentDirection(parentDirection: .ForColumns) {
+        innerAxes.update(
+          with: GridLayoutFunctions.isOrthogonalGridItem(grid: grid, gridItem: gridItem!)
+            ? .GridColumnAxis : .GridRowAxis)
+      } else if grid.isBaselineAlignmentForGridItem(
+        gridItem: gridItem!, baselineAxis: .GridRowAxis)
+      {
+        algorithm.cacheBaselineAlignedItem(
+          item: gridItem!, axis: .GridRowAxis,
+          cachingRowSubgridsForRootGrid: cachingRowSubgridsForRootGrid)
+      }
+    }
+
+    var cachingRowSubgridsForRootGrid = cachingRowSubgridsForRootGrid
+    if inner != nil && cachingRowSubgridsForRootGrid {
+      cachingRowSubgridsForRootGrid =
+        GridLayoutFunctions.isOrthogonalGridItem(grid: algorithm.renderGrid!, gridItem: inner!)
+        ? inner!.isSubgridColumns() : inner!.isSubgridRows()
+    }
+
+    if !innerAxes.isEmpty {
+      cacheBaselineAlignedGridItems(
+        grid: inner!, algorithm: algorithm, axes: innerAxes, callback: callback,
+        cachingRowSubgridsForRootGrid: cachingRowSubgridsForRootGrid)
+    }
+
+    gridItem = gridItem!.nextSiblingBox()
+  }
 }
 
 private struct ContentAlignmentData {
@@ -104,7 +171,14 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func isBaselineAlignmentForGridItem(gridItem: RenderBoxWrapper) -> Bool {
+  func isBaselineAlignmentForGridItem(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isBaselineAlignmentForGridItem(
+    gridItem: RenderBoxWrapper, baselineAxis: GridAxis, allowed: AllowedBaseLine = .BothLines
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -155,6 +229,14 @@ final class RenderGridWrapper: RenderBlockWrapper {
       return isSubgrid(direction: direction)
     }
     return false
+  }
+
+  // Returns true if this grid is inheriting subgridded tracks for
+  // the given direction from the specified ancestor. This handles
+  // nested subgrids, where ancestor may not be our direct parent.
+  func isSubgridOf(direction: GridTrackSizingDirection, ancestor: RenderGridWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isMasonry() -> Bool {
@@ -219,7 +301,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       algorithm.copyBaselineItemsCache(source: trackSizingAlgorithm!, axis: .GridRowAxis)
     } else {
       cacheBaselineAlignedGridItems(
-        grid: self, algorithm: algorithm, axes: GridAxis.GridRowAxis.rawValue,
+        grid: self, algorithm: algorithm, axes: .GridRowAxis,
         callback: { (_: RenderBoxWrapper) in return },
         cachingRowSubgridsForRootGrid: !isSubgridRows())
     }
