@@ -6,6 +6,8 @@ target_sources(layout_scion PRIVATE
     GlyphDisplayListCache.swift
     Grid.swift
     GridLayoutFunctions.swift
+    GridLayoutState.swift
+    GridTrackSizingAlgorithm.swift
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift

@@ -24,6 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func cacheBaselineAlignedGridItems(
+  grid: RenderGridWrapper, algorithm: GridTrackSizingAlgorithm, axes: UInt8,
+  callback: (_: RenderBoxWrapper) -> Void,
+  cachingRowSubgridsForRootGrid: Bool
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderGridWrapper: RenderBlockWrapper {
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
@@ -152,11 +161,76 @@ final class RenderGridWrapper: RenderBlockWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
+    var gridLayoutState = GridLayoutState()
+
+    var gridItemMinWidth = LayoutUnit()
+    var gridItemMaxWidth = LayoutUnit()
+    var hadExcludedChildren = false
+    if let (minWidth, maxWidth) = computePreferredWidthsForExcludedChildren() {
+      gridItemMinWidth = minWidth
+      gridItemMaxWidth = maxWidth
+      hadExcludedChildren = true
+    }
+
+    let grid = Grid(grid: self)
+    self.grid!.currentGrid = grid
+    let algorithm = GridTrackSizingAlgorithm(renderGrid: self, grid: grid)
+    placeItemsOnGrid(availableLogicalWidth: nil)
+
+    performPreLayoutForGridItems(algorithm: algorithm, shouldUpdateGridAreaLogicalSize: .No)
+
+    if baselineItemsCached {
+      algorithm.copyBaselineItemsCache(source: trackSizingAlgorithm!, axis: .GridRowAxis)
+    } else {
+      cacheBaselineAlignedGridItems(
+        grid: self, algorithm: algorithm, axes: GridAxis.GridRowAxis.rawValue,
+        callback: { (_: RenderBoxWrapper) in return },
+        cachingRowSubgridsForRootGrid: !isSubgridRows())
+    }
+
+    (minLogicalWidth, maxLogicalWidth) = computeTrackSizesForIndefiniteSize(
+      algorithm: algorithm, direction: .ForColumns, gridLayoutState: &gridLayoutState,
+      computeIntrinsicSizes: true)!
+
+    self.grid!.resetCurrentGrid()
+
+    if hadExcludedChildren {
+      minLogicalWidth = max(minLogicalWidth, gridItemMinWidth)
+      maxLogicalWidth = max(maxLogicalWidth, gridItemMaxWidth)
+    }
+
+    let scrollbarWidth = intrinsicScrollbarLogicalWidthIncludingGutter()
+    minLogicalWidth += scrollbarWidth
+    maxLogicalWidth += scrollbarWidth
+  }
+
+  private enum ShouldUpdateGridAreaLogicalSize {
+    case No
+    case Yes
+  }
+
+  private func performPreLayoutForGridItems(
+    algorithm: GridTrackSizingAlgorithm,
+    shouldUpdateGridAreaLogicalSize: ShouldUpdateGridAreaLogicalSize
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeItemsOnGrid(availableLogicalWidth: LayoutUnit?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   override func canPerformSimplifiedLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeTrackSizesForIndefiniteSize(
+    algorithm: GridTrackSizingAlgorithm, direction: GridTrackSizingDirection,
+    gridLayoutState: inout GridLayoutState, computeIntrinsicSizes: Bool = false
+  ) -> (LayoutUnit, LayoutUnit)? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -192,9 +266,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
       fatalError("Not implemented")
     }
 
+    func resetCurrentGrid() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     private let layoutGrid: Grid
-    let currentGrid: Grid
+    var currentGrid: Grid
   }
 
-  private let grid: GridWrapper? = nil
+  private var grid: GridWrapper? = nil
+
+  // FIXME: Refactor m_trackSizingAlgorithm to be inside of layoutGrid and layoutMasonry.
+  // https://bugs.webkit.org/show_bug.cgi?id=277496
+  private let trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
+
+  private var baselineItemsCached = false
 }

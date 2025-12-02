@@ -24,6 +24,11 @@
  */
 
 final class Grid {
+  init(grid: RenderGridWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsItemsPlacement(needsItemsPlacement: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

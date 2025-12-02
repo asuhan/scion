@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2017 Igalia S.L.
+ * Copyright (C) 2024 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,17 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct GridAxis: OptionSet {
-  let rawValue: UInt8
+final class GridTrackSizingAlgorithm {
+  init(renderGrid: RenderGridWrapper, grid: Grid) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
-  static let GridRowAxis = GridAxis(rawValue: 1 << 0)
-  static let GridColumnAxis = GridAxis(rawValue: 1 << 1)
-}
-
-class GridLayoutFunctions {
-  static func flowAwareDirectionForGridItem(
-    grid: RenderGridWrapper, gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
-  ) -> GridTrackSizingDirection {
+  func copyBaselineItemsCache(source: GridTrackSizingAlgorithm, axis: GridAxis) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
