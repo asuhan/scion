@@ -350,8 +350,19 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    renderBlockComputeOverflow(
+      oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: recomputeFloats)
+
+    if !hasPotentiallyScrollableOverflow() || isMasonry() || isSubgridRows() || isSubgridColumns() {
+      return
+    }
+
+    // FIXME: We should handle RTL and other writing modes also.
+    if style().direction() == .LTR && isHorizontalWritingMode() {
+      var gridAreaSize = LayoutSizeWrapper(width: columnPositions.last!, height: rowPositions.last!)
+      gridAreaSize += LayoutSizeWrapper(width: paddingEnd(), height: paddingAfter())
+      addLayoutOverflow(rect: LayoutRectWrapper(location: LayoutPointWrapper(), size: gridAreaSize))
+    }
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
@@ -389,6 +400,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
   // FIXME: Refactor m_trackSizingAlgorithm to be inside of layoutGrid and layoutMasonry.
   // https://bugs.webkit.org/show_bug.cgi?id=277496
   private let trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
+
+  private let columnPositions: [LayoutUnit] = []
+  private let rowPositions: [LayoutUnit] = []
 
   private let offsetBetweenColumns = ContentAlignmentData()
   private let offsetBetweenRows = ContentAlignmentData()

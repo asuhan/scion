@@ -1228,6 +1228,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // Overflow is always relative to the border-box of the element in question.
   // Therefore, if the element has a vertical scrollbar placed on the left, an overflow rect at x=2px would conceptually intersect the scrollbar.
   func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
+    return renderBlockComputeOverflow(
+      oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: recomputeFloats)
+  }
+
+  func renderBlockComputeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool) {
     clearOverflow()
     addOverflowFromChildren()
 
