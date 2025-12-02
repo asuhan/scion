@@ -145,8 +145,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridItem != nil)
+    return gridItem!.isRenderReplaced() ? .Start : .Stretch
   }
 
   override func computeIntrinsicLogicalWidths(
