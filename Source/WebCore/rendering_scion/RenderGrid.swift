@@ -28,8 +28,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(needsLayout())
+
+    if !relayoutChildren && simplifiedLayout() {
+      return
+    }
+
+    // The layoutBlock was handling the layout of both the grid and masonry implementations.
+    // This caused a huge amount of branching code to handle masonry specific cases. Splitting up the code
+    // to layout will simplify both implementations.
+    if !isMasonry() {
+      layoutGrid(relayoutChildren: relayoutChildren)
+    } else {
+      layoutMasonry(relayoutChildren: relayoutChildren)
+    }
   }
 
   override func avoidsFloats() -> Bool {
@@ -57,6 +69,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  // These functions handle the actual implementation of layoutBlock based on if
+  // the grid is a standard grid or a masonry one. While masonry is an extension of grid,
+  // keeping the logic in the same function was leading to a messy amount of if statements being added to handle
+  // specific masonry cases.
+  func layoutGrid(relayoutChildren: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func layoutMasonry(relayoutChildren: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isSubgridRows() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -68,6 +94,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isSubgridInParentDirection(parentDirection: GridTrackSizingDirection) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isMasonry() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
