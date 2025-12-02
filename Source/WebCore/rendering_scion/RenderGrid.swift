@@ -396,8 +396,26 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isWritingModeRoot() || !currentGrid().hasGridItems() || shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    let baselineGridItem = getBaselineGridItem(alignment: .LastBaseline)
+    if baselineGridItem == nil {
+      return nil
+    }
+
+    if let baseline =
+      GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: baselineGridItem!)
+      ? nil : baselineGridItem!.lastLineBaseline()
+    {
+      return baseline + baselineGridItem!.logicalTop().toInt()
+    }
+
+    let direction: LineDirectionMode = isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine
+    return synthesizedBaseline(
+      box: baselineGridItem!, parentStyle: style(), direction: direction, edge: .BorderBox)
+      + logicalTopForChild(child: baselineGridItem!)
   }
 
   private func getBaselineGridItem(alignment: ItemPosition) -> RenderBoxWrapper? {
