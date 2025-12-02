@@ -584,8 +584,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isSkippedContentRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return layout_scion.isSkippedContentRoot(style: style(), element: element())
+      && !view().frameView().layoutContext().needsSkippedContentLayout()
   }
 
   func clearNeedsLayoutForSkippedContent() {

@@ -44,6 +44,24 @@ struct PseudoStyleCache {
   let styles: [RenderStyleWrapper]
 }
 
+func isSkippedContentRoot(style: RenderStyleWrapper, element: ElementWrapper?) -> Bool {
+  if style.contentVisibility() == .Visible {
+    return false
+  }
+  // FIXME (https://bugs.webkit.org/show_bug.cgi?id=265020): check more display types.
+  // FIXME: try to avoid duplication with shouldApplySizeOrStyleContainment.
+  let displayType = style.display()
+  if (displayType != .TableCaption && style.isDisplayTableOrTablePart()) || displayType == .Contents
+  {
+    return false
+  }
+  if style.contentVisibility() == .Hidden {
+    return true
+  }
+  assert(style.contentVisibility() == .Auto)
+  return element != nil && !element!.isRelevantToUser()
+}
+
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
 
@@ -1196,6 +1214,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func contentVisibility() -> ContentVisibility {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // usedContentVisibility will return ContentVisibility::Hidden in a content-visibility: hidden subtree (overriding
   // content-visibility: auto at all times), ContentVisibility::Auto in a content-visibility: auto subtree (when the
   // content is not user relevant and thus skipped), and ContentVisibility::Visible otherwise.
@@ -1815,6 +1838,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isDisplayBlockLevel() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isDisplayTableOrTablePart() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -40,6 +40,11 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
+  func needsSkippedContentLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func subtreeLayoutRoot() -> RenderElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
