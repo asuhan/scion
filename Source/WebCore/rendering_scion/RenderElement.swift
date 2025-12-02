@@ -616,6 +616,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func establishesIndependentFormattingContext() -> Bool {
+    return renderElementEstablishesIndependentFormattingContext()
+  }
+
+  func renderElementEstablishesIndependentFormattingContext() -> Bool {
     return isFloatingOrOutOfFlowPositioned() || (isBlockBox() && hasPotentiallyScrollableOverflow())
       || style().containsLayout() || paintContainmentApplies()
       || (style().isDisplayBlockLevel() && style().blockStepSize() != nil)

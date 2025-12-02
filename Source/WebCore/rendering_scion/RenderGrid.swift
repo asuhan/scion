@@ -83,9 +83,25 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func isSubgrid(direction: GridTrackSizingDirection) -> Bool {
+    // If the grid container is forced to establish an independent formatting
+    // context (like contain layout, or position:absolute), then the used value
+    // of grid-template-rows/columns is 'none' and the container is not a subgrid.
+    // https://drafts.csswg.org/css-grid-2/#subgrid-listing
+    if renderElementEstablishesIndependentFormattingContext() {
+      return false
+    }
+    if direction == .ForColumns ? !style().gridSubgridColumns() : !style().gridSubgridRows() {
+      return false
+    }
+    if let renderGrid = parent() as? RenderGridWrapper {
+      return direction == .ForRows ? !renderGrid.areMasonryRows() : !renderGrid.areMasonryColumns()
+    }
+    return false
+  }
+
   func isSubgridRows() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isSubgrid(direction: .ForRows)
   }
 
   func isSubgridColumns() -> Bool {
@@ -99,6 +115,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isMasonry() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func areMasonryRows() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

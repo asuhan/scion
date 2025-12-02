@@ -1313,6 +1313,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func gridSubgridRows() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridSubgridColumns() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxShadow() -> ShadowData? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
