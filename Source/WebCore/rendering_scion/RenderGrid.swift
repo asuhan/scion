@@ -274,8 +274,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func canPerformSimplifiedLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We cannot perform a simplified layout if we need to position the items and we have some
+    // positioned items to be laid out.
+    if currentGrid().needsItemsPlacement() && posChildNeedsLayout() {
+      return false
+    }
+
+    return renderBlockCanPerformSimplifiedLayout()
   }
 
   private func computeTrackSizesForIndefiniteSize(

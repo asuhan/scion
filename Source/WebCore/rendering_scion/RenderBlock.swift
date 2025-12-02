@@ -1124,6 +1124,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func canPerformSimplifiedLayout() -> Bool {
+    return renderBlockCanPerformSimplifiedLayout()
+  }
+
+  func renderBlockCanPerformSimplifiedLayout() -> Bool {
     if selfNeedsLayout() || normalChildNeedsLayout() || outOfFlowChildNeedsStaticPositionLayout() {
       return false
     }
