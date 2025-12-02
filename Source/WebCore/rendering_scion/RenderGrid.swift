@@ -160,8 +160,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   private func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !shouldCheckExplicitIntrinsicInnerLogicalSize(direction: direction) {
+      return nil
+    }
+    if direction == .ForColumns {
+      return explicitIntrinsicInnerLogicalWidth()
+    }
+    return explicitIntrinsicInnerLogicalHeight()
   }
 
   private func updateGridAreaLogicalSize(
@@ -267,6 +272,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldCheckExplicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
