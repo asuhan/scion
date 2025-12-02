@@ -31,6 +31,12 @@ enum DelegatedScrollingMode: UInt8 {
 }
 
 class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
+  // Returns a clip rect in host window coordinates. Used to clip the blit on a scroll.
+  func windowClipRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func positionScrollbarLayers() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -88,6 +94,11 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   // will return a version of the current scroll offset which tracks the top of the Document
   // relative to the very top of the view.
   func documentScrollPositionRelativeToViewOrigin() -> ScrollPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func windowToContents(windowRect: IntRect) -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

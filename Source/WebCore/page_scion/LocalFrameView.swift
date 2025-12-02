@@ -65,6 +65,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  override func windowClipRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rectForFixedPositionLayout() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

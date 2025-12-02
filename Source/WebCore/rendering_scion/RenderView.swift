@@ -109,6 +109,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func backgroundRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rootElementShouldPaintBaseBackground() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

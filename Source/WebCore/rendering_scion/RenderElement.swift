@@ -22,6 +22,10 @@
 
 import wk_interop
 
+private func rendererHasBackground(renderer: RenderElementWrapper?) -> Bool {
+  return renderer != nil && renderer!.hasBackground()
+}
+
 private func paintPhase(
   element: RenderElementWrapper, phase: PaintPhase, paintInfo: inout PaintInfoWrapper,
   childPoint: LayoutPointWrapper
@@ -288,6 +292,33 @@ class RenderElementWrapper: RenderObjectWrapper {
   func borderImageIsLoadedAndCanBeRendered() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func isVisibleIgnoringGeometry() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isVisibleInDocumentRect(documentRect: IntRect) -> Bool {
+    if !isVisibleIgnoringGeometry() {
+      return false
+    }
+
+    // Use background rect if we are the root or if we are the body and the background is propagated to the root.
+    // FIXME: This is overly conservative as the image may not be a background-image, in which case it will not
+    // be propagated to the root. At this point, we unfortunately don't have access to the image anymore so we
+    // can no longer check if it is a background image.
+    let backgroundIsPaintedByRoot =
+      isDocumentElementRenderer()
+      || (isBody()
+        && !rendererHasBackground(renderer: document().documentElement()!.containerRenderer()))
+    let backgroundPaintingRect =
+      backgroundIsPaintedByRoot ? view().backgroundRect() : absoluteClippedOverflowRectForRepaint()
+    if !documentRect.intersects(other: enclosingIntRect(rect: backgroundPaintingRect)) {
+      return false
+    }
+
+    return true
   }
 
   // Returns true if this renderer requires a new stacking context.
@@ -633,8 +664,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isVisibleInViewport() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let frameView = view().frameView()
+    let visibleRect = frameView.windowToContents(windowRect: frameView.windowClipRect())
+    return isVisibleInDocumentRect(documentRect: visibleRect)
   }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {

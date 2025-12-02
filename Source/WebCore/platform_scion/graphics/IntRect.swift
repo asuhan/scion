@@ -47,6 +47,11 @@ struct IntRect {
     location.move(dx: offset.x, dy: offset.y)
   }
 
+  func intersects(other: IntRect) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var location: IntPoint
   let size: IntSize
 }
