@@ -32,3 +32,11 @@ enum GridTrackSizingDirection {
   case ForColumns
   case ForRows
 }
+
+// Class with all the code related to grid items positions resolution.
+class GridPositionsResolver {
+  static func explicitGridColumnCount(gridContainer: RenderGridWrapper) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

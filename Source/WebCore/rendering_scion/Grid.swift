@@ -29,6 +29,11 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Note that each in flow child of a grid container becomes a grid item. This means that
   // this method will return false for a grid container with only out of flow children.
   func hasGridItems() -> Bool {

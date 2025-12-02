@@ -281,8 +281,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Due to limitations in our internal representation, we cannot know the number of columns from
+    // currentGrid *if* there is no row (because currentGrid would be empty). That's why in that case we need
+    // to get it from the style. Note that we know for sure that there aren't any implicit tracks,
+    // because not having rows implies that there are no "normal" grid items (out-of-flow grid items are
+    // not stored in currentGrid).
+    assert(!currentGrid().needsItemsPlacement())
+    if direction == .ForRows {
+      return currentGrid().numTracks(direction: .ForRows)
+    }
+
+    // FIXME: This still requires knowledge about currentGrid internals.
+    return currentGrid().numTracks(direction: .ForRows) != 0
+      ? currentGrid().numTracks(direction: .ForColumns)
+      : GridPositionsResolver.explicitGridColumnCount(gridContainer: self)
   }
 
   private func shouldCheckExplicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection)
