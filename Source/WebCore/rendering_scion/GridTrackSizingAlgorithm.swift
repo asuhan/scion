@@ -30,8 +30,18 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func estimatedGridAreaBreadthForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func copyBaselineItemsCache(source: GridTrackSizingAlgorithm, axis: GridAxis) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Required to be public by RenderGrid. Try to minimize the exposed surface.
+  let grid: Grid
 }

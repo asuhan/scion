@@ -31,6 +31,11 @@ struct GridAxis: OptionSet {
 }
 
 class GridLayoutFunctions {
+  static func isOrthogonalGridItem(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func flowAwareDirectionForGridItem(
     grid: RenderGridWrapper, gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> GridTrackSizingDirection {

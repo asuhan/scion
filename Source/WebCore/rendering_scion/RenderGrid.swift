@@ -78,6 +78,18 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  private func updateGridAreaLogicalSize(
+    gridItem: RenderBoxWrapper, width: LayoutUnit?, height: LayoutUnit?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isBaselineAlignmentForGridItem(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These functions handle the actual implementation of layoutBlock based on if
   // the grid is a standard grid or a masonry one. While masonry is an extension of grid,
   // keeping the logic in the same function was leading to a messy amount of if statements being added to handle
@@ -213,8 +225,47 @@ final class RenderGridWrapper: RenderBlockWrapper {
     algorithm: GridTrackSizingAlgorithm,
     shouldUpdateGridAreaLogicalSize: ShouldUpdateGridAreaLogicalSize
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!algorithm.grid.needsItemsPlacement())
+    // FIXME: We need a way when we are calling this during intrinsic size computation before performing
+    // the layout. Maybe using the PreLayout phase?
+    var gridItem = firstChildBox()
+    while gridItem != nil {
+      if gridItem!.isOutOfFlowPositioned() {
+        gridItem = gridItem!.nextSiblingBox()
+        continue
+      }
+      // Orthogonal items should be laid out in order to properly compute content-sized tracks that may depend on item's intrinsic size.
+      // We also need to properly estimate its grid area size, since it may affect to the baseline shims if such item participates in baseline alignment.
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem!) {
+        updateGridAreaLogicalSize(
+          gridItem: gridItem!,
+          width: algorithm.estimatedGridAreaBreadthForGridItem(
+            gridItem: gridItem!, direction: .ForColumns),
+          height: algorithm.estimatedGridAreaBreadthForGridItem(
+            gridItem: gridItem!, direction: .ForRows))
+        gridItem!.layoutIfNeeded()
+        gridItem = gridItem!.nextSiblingBox()
+        continue
+      }
+      // We need to layout the item to know whether it must synthesize its
+      // baseline or not, which may imply a cyclic sizing dependency.
+      // FIXME: Can we avoid it ?
+      // FIXME: We also want to layout baseline aligned items within subgrids, but
+      // we don't currently have a way to do that here.
+      if isBaselineAlignmentForGridItem(gridItem: gridItem!) {
+        // FIXME: Hack to fix nested grid text size overflow during re-layouts.
+        if shouldUpdateGridAreaLogicalSize == .Yes {
+          updateGridAreaLogicalSize(
+            gridItem: gridItem!,
+            width: algorithm.estimatedGridAreaBreadthForGridItem(
+              gridItem: gridItem!, direction: .ForColumns),
+            height: algorithm.estimatedGridAreaBreadthForGridItem(
+              gridItem: gridItem!, direction: .ForRows))
+        }
+        gridItem!.layoutIfNeeded()
+      }
+      gridItem = gridItem!.nextSiblingBox()
+    }
   }
 
   private func placeItemsOnGrid(availableLogicalWidth: LayoutUnit?) {
