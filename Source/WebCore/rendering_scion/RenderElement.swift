@@ -323,8 +323,8 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Returns true if this renderer requires a new stacking context.
   static func createsGroupForStyle(style: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style.hasOpacity() || style.hasMask() || style.clipPath() != nil || style.hasFilter()
+      || style.hasBackdropFilter() || style.hasBlendMode()
   }
 
   func isTransparent() -> Bool {

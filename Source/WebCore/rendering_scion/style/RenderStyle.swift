@@ -633,6 +633,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasOpacity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usedAppearance() -> StyleAppearance {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1586,6 +1591,11 @@ class RenderStyleWrapper: Equatable {
     .Translate, .Rotate, .Scale, .Offset,
   ]
 
+  func hasMask() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func backfaceVisibility() -> BackfaceVisibility {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1723,7 +1733,17 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasBackdropFilter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func blendMode() -> BlendMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasBlendMode() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
