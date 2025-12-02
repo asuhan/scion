@@ -33,6 +33,11 @@ private func cacheBaselineAlignedGridItems(
   fatalError("Not implemented")
 }
 
+private struct ContentAlignmentData {
+  let positionOffset = LayoutUnit()
+  let distributionOffset = LayoutUnit()
+}
+
 final class RenderGridWrapper: RenderBlockWrapper {
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
@@ -326,8 +331,22 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var allowance = allowedLayoutOverflowForBox()
+    if offsetBetweenColumns.positionOffset < Int32(0) {
+      allowance.setStart(
+        start: -offsetBetweenColumns.positionOffset, writingMode: style().writingMode(),
+        direction: style().direction())
+    }
+
+    if offsetBetweenRows.positionOffset < Int32(0) {
+      if isHorizontalWritingMode() {
+        allowance.top = -offsetBetweenRows.positionOffset
+      } else {
+        allowance.left = -offsetBetweenRows.positionOffset
+      }
+    }
+
+    return allowance
   }
 
   override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
@@ -370,6 +389,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
   // FIXME: Refactor m_trackSizingAlgorithm to be inside of layoutGrid and layoutMasonry.
   // https://bugs.webkit.org/show_bug.cgi?id=277496
   private let trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
+
+  private let offsetBetweenColumns = ContentAlignmentData()
+  private let offsetBetweenRows = ContentAlignmentData()
 
   private var baselineItemsCached = false
 }

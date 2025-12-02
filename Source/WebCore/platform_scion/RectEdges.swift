@@ -70,6 +70,11 @@ struct RectEdges<T> {
     fatalError("Not implemented")
   }
 
+  func setStart(start: T, writingMode: WritingMode, direction: TextDirection = .LTR) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isZero() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
