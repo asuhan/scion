@@ -366,11 +366,41 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
+    if (isWritingModeRoot() && !isFlexItem()) || !currentGrid().hasGridItems()
+      || shouldApplyLayoutContainment()
+    {
+      return nil
+    }
+
+    // Finding the first grid item in grid order.
+    let baselineGridItem = getBaselineGridItem(alignment: .Baseline)
+
+    if baselineGridItem == nil {
+      return nil
+    }
+
+    if let baseline =
+      GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: baselineGridItem!)
+      ? nil : baselineGridItem!.firstLineBaseline()
+    {
+      return baseline + baselineGridItem!.logicalTop().toInt()
+    }
+
+    // We take border-box's bottom if no valid baseline.
+    // FIXME: We should pass |direction| into firstLineBaseline and stop bailing out if we're a writing
+    // mode root. This would also fix some cases where the grid is orthogonal to its container.
+    let direction: LineDirectionMode = isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine
+    return synthesizedBaseline(
+      box: baselineGridItem!, parentStyle: style(), direction: direction, edge: .BorderBox)
+      + logicalTopForChild(child: baselineGridItem!)
+  }
+
+  override func lastLineBaseline() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  override func lastLineBaseline() -> LayoutUnit? {
+  private func getBaselineGridItem(alignment: ItemPosition) -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
