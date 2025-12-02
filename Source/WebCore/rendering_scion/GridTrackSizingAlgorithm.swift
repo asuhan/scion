@@ -24,8 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum SizingOperation {
+  case TrackSizing
+  case IntrinsicSizeComputation
+}
+
+class GridTrack {}
+
 final class GridTrackSizingAlgorithm {
   init(renderGrid: RenderGridWrapper, grid: Grid) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func run(
+    direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
+    availableSpace: LayoutUnit?, gridLayoutState: inout GridLayoutState
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -41,6 +56,24 @@ final class GridTrackSizingAlgorithm {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func tracks(direction: GridTrackSizingDirection) -> ArraySlice<GridTrack> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func tracksAreWiderThanMinTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // The track sizing algorithm is used for both layout and intrinsic size
+  // computation. We're normally just interested in intrinsic inline sizes
+  // (a.k.a widths in most of the cases) for the computeIntrinsicLogicalWidths()
+  // computations. That's why we don't need to keep around different values for
+  // rows/columns.
+  let minContentSize: LayoutUnit
+  let maxContentSize: LayoutUnit
 
   // Required to be public by RenderGrid. Try to minimize the exposed surface.
   let grid: Grid

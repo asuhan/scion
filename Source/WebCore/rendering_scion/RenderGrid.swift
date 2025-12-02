@@ -78,6 +78,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  // Required by GridTrackSizingAlgorithm. Keep them under control.
+  private func guttersSize(
+    direction: GridTrackSizingDirection, startLine: UInt32, span: UInt32, availableSize: LayoutUnit?
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateGridAreaLogicalSize(
     gridItem: RenderBoxWrapper, width: LayoutUnit?, height: LayoutUnit?
   ) {
@@ -163,6 +177,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   func currentGrid() -> Grid {
     return grid!.currentGrid
+  }
+
+  private func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
@@ -287,8 +306,23 @@ final class RenderGridWrapper: RenderBlockWrapper {
     algorithm: GridTrackSizingAlgorithm, direction: GridTrackSizingDirection,
     gridLayoutState: inout GridLayoutState, computeIntrinsicSizes: Bool = false
   ) -> (LayoutUnit, LayoutUnit)? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    algorithm.run(
+      direction: direction, numTracks: numTracks(direction: direction),
+      sizingOperation: .IntrinsicSizeComputation, availableSpace: nil,
+      gridLayoutState: &gridLayoutState)
+
+    let numberOfTracks = UInt32(algorithm.tracks(direction: direction).count)
+    let totalGuttersSize =
+      direction == .ForColumns && explicitIntrinsicInnerLogicalSize(direction: direction) != nil
+      ? LayoutUnit(value: UInt64(0))
+      : guttersSize(direction: direction, startLine: 0, span: numberOfTracks, availableSize: nil)
+
+    assert(algorithm.tracksAreWiderThanMinTrackBreadth())
+
+    return computeIntrinsicSizes
+      ? (
+        algorithm.minContentSize + totalGuttersSize, algorithm.maxContentSize + totalGuttersSize
+      ) : nil
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
