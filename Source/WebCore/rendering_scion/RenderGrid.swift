@@ -118,8 +118,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isMasonry() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return areMasonryRows() || areMasonryColumns()
   }
 
   func areMasonryRows() -> Bool {
