@@ -137,6 +137,31 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func selectionColor(colorProperty: CSSPropertyID) -> ColorWrapper {
+    // If the element is unselectable, or we are only painting the selection,
+    // don't override the foreground color with the selection foreground color.
+    if style().usedUserSelect() == .None
+      || !view().frameView().paintBehavior().isDisjoint(with: [
+        .SelectionOnly, .SelectionAndBackgroundsOnly,
+      ])
+    {
+      return ColorWrapper()
+    }
+
+    if let pseudoStyle = selectionPseudoStyle() {
+      var color = pseudoStyle.visitedDependentColorWithColorFilter(colorProperty: colorProperty)
+      if !color.isValid() {
+        color = pseudoStyle.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor)
+      }
+      return color
+    }
+
+    if frame().selection().isFocusedAndActive() {
+      return theme().activeSelectionForegroundColor(options: styleColorOptions())
+    }
+    return theme().inactiveSelectionForegroundColor(options: styleColorOptions())
+  }
+
   func selectionPseudoStyle() -> RenderStyleWrapper? {
     if isAnonymous() {
       return nil
@@ -195,8 +220,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func selectionForegroundColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return selectionColor(colorProperty: .CSSPropertyWebkitTextFillColor)
   }
 
   func isChildAllowed(child: RenderObjectWrapper, style: RenderStyleWrapper) -> Bool {
