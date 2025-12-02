@@ -424,8 +424,15 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   override func establishesIndependentFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Grid items establish a new independent formatting context, unless
+    // they're a subgrid
+    // https://drafts.csswg.org/css-grid-2/#grid-item-display
+    if isGridItem() {
+      if !isSubgridRows() && !isSubgridColumns() {
+        return true
+      }
+    }
+    return renderElementEstablishesIndependentFormattingContext()
   }
 
   private class GridWrapper {
