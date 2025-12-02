@@ -288,8 +288,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func shouldCheckExplicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment()
   }
 
   override func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
