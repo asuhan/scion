@@ -123,13 +123,22 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func areMasonryRows() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // isSubgridRows will return false if the masonry axis is rows. Need to check style if we are a subgrid
+    if let parentGrid = parent() as? RenderGridWrapper, style().gridSubgridRows() {
+      return parentGrid.areMasonryRows()
+    }
+    return style().gridMasonryRows()
   }
 
+  // Masonry Spec Section 2
+  // "If masonry is specified for both grid-template-columns and grid-template-rows, then the used value for grid-template-columns is none,
+  // and thus the inline axis will be the grid axis."
   func areMasonryColumns() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // isSubgridColumns will return false if the masonry axis is columns. Need to check style if we are a subgrid
+    if let parentGrid = parent() as? RenderGridWrapper, style().gridSubgridColumns() {
+      return parentGrid.areMasonryColumns()
+    }
+    return !areMasonryRows() && style().gridMasonryColumns()
   }
 
   func currentGrid() -> Grid {
