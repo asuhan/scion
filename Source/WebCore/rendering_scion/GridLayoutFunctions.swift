@@ -42,4 +42,11 @@ class GridLayoutFunctions {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func flowAwareDirectionForParent(
+    grid: RenderGridWrapper, parent: RenderElementWrapper, direction: GridTrackSizingDirection
+  ) -> GridTrackSizingDirection {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

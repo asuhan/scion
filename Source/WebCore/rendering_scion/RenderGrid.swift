@@ -240,8 +240,17 @@ final class RenderGridWrapper: RenderBlockWrapper {
   // the given direction from the specified ancestor. This handles
   // nested subgrids, where ancestor may not be our direct parent.
   func isSubgridOf(direction: GridTrackSizingDirection, ancestor: RenderGridWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isSubgrid(direction: direction) {
+      return false
+    }
+    if CPtrToInt(parent()?.p) == CPtrToInt(ancestor.p) {
+      return true
+    }
+
+    let parentGrid = parent() as! RenderGridWrapper
+    let parentDirection = GridLayoutFunctions.flowAwareDirectionForParent(
+      grid: parentGrid, parent: self, direction: direction)
+    return parentGrid.isSubgridOf(direction: parentDirection, ancestor: ancestor)
   }
 
   func isMasonry() -> Bool {
