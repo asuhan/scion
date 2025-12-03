@@ -652,8 +652,16 @@ final class RenderGridWrapper: RenderBlockWrapper {
     gridItem: RenderBoxWrapper, stretchingMode: StretchingMode = .Any,
     gridStyle: RenderStyleWrapper? = nil
   ) -> StyleSelfAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderGrid = gridItem as? RenderGridWrapper,
+      renderGrid.isSubgridInParentDirection(parentDirection: .ForColumns)
+    {
+      return StyleSelfAlignmentData(position: .Stretch, overflow: .Default)
+    }
+    let gridStyle = gridStyle ?? style()
+    let normalBehavior =
+      stretchingMode == .Any ? selfAlignmentNormalBehavior(gridItem: gridItem) : .Normal
+    return gridItem.style().resolvedJustifySelf(
+      parentStyle: gridStyle, normalValueBehaviour: normalBehavior)
   }
 
   private func alignSelfForGridItem(

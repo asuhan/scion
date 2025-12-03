@@ -24,10 +24,22 @@
  */
 
 class StyleSelfAlignmentData {
+  // Style data for Self-Aligment and Default-Alignment properties: align-{self, items}, justify-{self, items}.
+  // [ <self-position> && <overflow-position>? ] | [ legacy && [ left | right | center ] ]
+  init(
+    position: ItemPosition, overflow: OverflowAlignment = .Default,
+    positionType: ItemPositionType = .NonLegacy
+  ) {
+    self.position = position
+    self.positionType = positionType
+    self.overflow = overflow
+  }
+
   func setPosition(position: ItemPosition) {
     self.position = position
   }
 
   var position: ItemPosition = .Legacy
+  private let positionType: ItemPositionType  // ItemPositionType: Whether or not alignment uses the 'legacy' keyword.
   var overflow: OverflowAlignment = .Default
 }

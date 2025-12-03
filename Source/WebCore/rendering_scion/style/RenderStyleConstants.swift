@@ -325,6 +325,11 @@ enum OverflowAlignment: UInt8 {
   case Safe
 }
 
+enum ItemPositionType {
+  case NonLegacy
+  case Legacy
+}
+
 enum ContentPosition: UInt8 {
   case Normal
   case Baseline
