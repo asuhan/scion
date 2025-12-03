@@ -3651,6 +3651,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasRelativeLogicalWidth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasHorizontalLayoutOverflow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

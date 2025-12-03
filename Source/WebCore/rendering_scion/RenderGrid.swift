@@ -121,8 +121,9 @@ private func overrideSizeChanged(
 }
 
 private func hasRelativeBlockAxisSize(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return GridLayoutFunctions.isOrthogonalGridItem(grid: grid, gridItem: gridItem)
+    ? gridItem.hasRelativeLogicalWidth() || gridItem.style().logicalWidth().isAuto()
+    : gridItem.hasRelativeLogicalHeight()
 }
 
 private struct ContentAlignmentData {
