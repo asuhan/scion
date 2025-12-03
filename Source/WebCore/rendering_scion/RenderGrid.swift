@@ -311,8 +311,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func selfAlignmentForGridItem(
     axis: GridAxis, gridItem: RenderBoxWrapper, gridStyle: RenderStyleWrapper? = nil
   ) -> StyleSelfAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return axis == .GridRowAxis
+      ? justifySelfForGridItem(gridItem: gridItem, stretchingMode: .Any, gridStyle: gridStyle)
+      : alignSelfForGridItem(gridItem: gridItem, stretchingMode: .Any, gridStyle: gridStyle)
   }
 
   // These functions handle the actual implementation of layoutBlock based on if
@@ -645,6 +646,22 @@ final class RenderGridWrapper: RenderBlockWrapper {
       gridAreaSize += LayoutSizeWrapper(width: paddingEnd(), height: paddingAfter())
       addLayoutOverflow(rect: LayoutRectWrapper(location: LayoutPointWrapper(), size: gridAreaSize))
     }
+  }
+
+  private func justifySelfForGridItem(
+    gridItem: RenderBoxWrapper, stretchingMode: StretchingMode = .Any,
+    gridStyle: RenderStyleWrapper? = nil
+  ) -> StyleSelfAlignmentData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func alignSelfForGridItem(
+    gridItem: RenderBoxWrapper, stretchingMode: StretchingMode = .Any,
+    gridStyle: RenderStyleWrapper? = nil
+  ) -> StyleSelfAlignmentData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
