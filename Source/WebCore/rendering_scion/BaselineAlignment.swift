@@ -87,3 +87,11 @@ enum AllowedBaseLine {
   case LastLine
   case BothLines
 }
+
+func isBaselinePosition(position: ItemPosition) -> Bool {
+  return position == .Baseline || position == .LastBaseline
+}
+
+func isFirstBaselinePosition(position: ItemPosition) -> Bool {
+  return position == .Baseline
+}

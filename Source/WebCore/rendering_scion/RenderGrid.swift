@@ -291,13 +291,29 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isBaselineAlignmentForGridItem(gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isBaselineAlignmentForGridItem(gridItem: gridItem, baselineAxis: .GridRowAxis)
+      || isBaselineAlignmentForGridItem(gridItem: gridItem, baselineAxis: .GridColumnAxis)
   }
 
   func isBaselineAlignmentForGridItem(
     gridItem: RenderBoxWrapper, baselineAxis: GridAxis, allowed: AllowedBaseLine = .BothLines
   ) -> Bool {
+    if gridItem.isOutOfFlowPositioned() {
+      return false
+    }
+    let align = selfAlignmentForGridItem(axis: baselineAxis, gridItem: gridItem).position
+    let hasAutoMargins =
+      baselineAxis == .GridColumnAxis
+      ? hasAutoMarginsInColumnAxis(gridItem: gridItem) : hasAutoMarginsInRowAxis(gridItem: gridItem)
+    let isBaseline =
+      allowed == .FirstLine
+      ? isFirstBaselinePosition(position: align) : isBaselinePosition(position: align)
+    return isBaseline && !hasAutoMargins
+  }
+
+  private func selfAlignmentForGridItem(
+    axis: GridAxis, gridItem: RenderBoxWrapper, gridStyle: RenderStyleWrapper? = nil
+  ) -> StyleSelfAlignmentData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -599,6 +615,18 @@ final class RenderGridWrapper: RenderBlockWrapper {
       gridAreaSize += LayoutSizeWrapper(width: paddingEnd(), height: paddingAfter())
       addLayoutOverflow(rect: LayoutRectWrapper(location: LayoutPointWrapper(), size: gridAreaSize))
     }
+  }
+
+  // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
+  private func hasAutoMarginsInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
+  private func hasAutoMarginsInRowAxis(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
