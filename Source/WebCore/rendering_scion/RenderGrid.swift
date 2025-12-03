@@ -104,8 +104,20 @@ private func overrideSizeChanged(
   gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection, width: LayoutUnit?,
   height: LayoutUnit?
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if direction == .ForColumns {
+    if let overridingContainingBlockContentLogicalWidth =
+      gridItem.overridingContainingBlockContentLogicalWidth()
+    {
+      return overridingContainingBlockContentLogicalWidth != width
+    }
+    return true
+  }
+  if let overridingContainingBlockContentLogicalHeight =
+    gridItem.overridingContainingBlockContentLogicalHeight()
+  {
+    return overridingContainingBlockContentLogicalHeight != height
+  }
+  return true
 }
 
 private func hasRelativeBlockAxisSize(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
