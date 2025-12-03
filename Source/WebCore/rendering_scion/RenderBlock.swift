@@ -727,7 +727,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
-  func hasDefiniteLogicalHeight() -> Bool {
+  func hasDefiniteLogicalHeight() -> Bool { return renderBlockHasDefiniteLogicalHeight() }
+
+  func renderBlockHasDefiniteLogicalHeight() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

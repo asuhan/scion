@@ -45,6 +45,11 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func reset() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func estimatedGridAreaBreadthForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit? {
@@ -64,7 +69,31 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func clearBaselineItemsCache() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func tracks(direction: GridTrackSizingDirection) -> ArraySlice<GridTrack> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func freeSpace(direction: GridTrackSizingDirection) -> LayoutUnit? {
+    return direction == .ForColumns ? freeSpaceColumns : freeSpaceRows
+  }
+
+  func setFreeSpace(direction: GridTrackSizingDirection, freeSpace: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeTrackBasedSize() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -73,6 +102,9 @@ final class GridTrackSizingAlgorithm {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let freeSpaceColumns: LayoutUnit? = nil
+  private let freeSpaceRows: LayoutUnit? = nil
 
   // The track sizing algorithm is used for both layout and intrinsic size
   // computation. We're normally just interested in intrinsic inline sizes

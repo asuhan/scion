@@ -321,6 +321,167 @@ final class RenderGridWrapper: RenderBlockWrapper {
   // keeping the logic in the same function was leading to a messy amount of if statements being added to handle
   // specific masonry cases.
   func layoutGrid(relayoutChildren: Bool) {
+    let repainter = LayoutRepainter(renderer: self)
+    do {
+      let _ = LayoutStateMaintainer(
+        root: self, offset: locationOffset(),
+        disablePaintOffsetCache: isTransformed() || hasReflection()
+          || style().isFlippedBlocksWritingMode())
+
+      var gridLayoutState = computeLayoutRequirementsForItemsBeforeLayout()
+
+      var relayoutChildren = relayoutChildren
+      preparePaginationBeforeBlockLayout(relayoutChildren: &relayoutChildren)
+      beginUpdateScrollInfoAfterLayoutTransaction()
+
+      let previousSize = size()
+
+      // FIXME: We should use RenderBlock::hasDefiniteLogicalHeight() only but it does not work for positioned stuff.
+      // FIXME: Consider caching the hasDefiniteLogicalHeight value throughout the layout.
+      // FIXME: We might need to cache the hasDefiniteLogicalHeight if the call of RenderBlock::hasDefiniteLogicalHeight() causes a relevant performance regression.
+      let hasDefiniteLogicalHeight =
+        renderBlockHasDefiniteLogicalHeight() || overridingLogicalHeight() != nil
+        || computeContentLogicalHeight(
+          heightType: .MainOrPreferredSize, height: style().logicalHeight(),
+          intrinsicContentHeight: nil) != nil
+
+      let aspectRatioBlockSizeDependentGridItems = computeAspectRatioDependentAndBaselineItems()
+
+      resetLogicalHeightBeforeLayoutIfNeeded()
+
+      updateLogicalWidth()
+
+      // Fieldsets need to find their legend and position it inside the border of the object.
+      // The legend then gets skipped during normal layout. The same is true for ruby text.
+      // It doesn't get included in the normal layout process but is instead skipped.
+      layoutExcludedChildren(relayoutChildren: relayoutChildren)
+
+      let availableSpaceForColumns = availableLogicalWidth()
+      placeItemsOnGrid(availableLogicalWidth: availableSpaceForColumns)
+
+      trackSizingAlgorithm!.setAvailableSpace(
+        direction: .ForColumns, availableSpace: availableSpaceForColumns)
+      performPreLayoutForGridItems(
+        algorithm: trackSizingAlgorithm!, shouldUpdateGridAreaLogicalSize: .Yes)
+
+      // 1. First, the track sizing algorithm is used to resolve the sizes of the grid columns. At this point the
+      // logical width is always definite as the above call to updateLogicalWidth() properly resolves intrinsic
+      // sizes. We cannot do the same for heights though because many code paths inside updateLogicalHeight() require
+      // a previous call to setLogicalHeight() to resolve heights properly (like for positioned items for example).
+      computeTrackSizesForDefiniteSize(
+        direction: .ForColumns, availableSpace: availableSpaceForColumns,
+        gridLayoutState: &gridLayoutState)
+
+      // 1.5. Compute Content Distribution offsets for column tracks
+      offsetBetweenColumns = computeContentPositionAndDistributionOffset(
+        direction: .ForColumns,
+        availableFreeSpace: trackSizingAlgorithm!.freeSpace(direction: .ForColumns)!,
+        numberOfGridTracks: nonCollapsedTracks(direction: .ForColumns))
+
+      // 2. Next, the track sizing algorithm resolves the sizes of the grid rows,
+      // using the grid column sizes calculated in the previous step.
+      var shouldRecomputeHeight = false
+      if !hasDefiniteLogicalHeight {
+        computeTrackSizesForIndefiniteSize(
+          algorithm: trackSizingAlgorithm!, direction: .ForRows, gridLayoutState: &gridLayoutState)
+        if shouldApplySizeContainment() {
+          shouldRecomputeHeight = true
+        }
+      } else {
+        computeTrackSizesForDefiniteSize(
+          direction: .ForRows, availableSpace: availableLogicalHeightForContentBox(),
+          gridLayoutState: &gridLayoutState)
+      }
+
+      var trackBasedLogicalHeight = borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
+      if let size = explicitIntrinsicInnerLogicalSize(direction: .ForRows) {
+        trackBasedLogicalHeight += size
+      } else {
+        trackBasedLogicalHeight += trackSizingAlgorithm!.computeTrackBasedSize()
+      }
+
+      if shouldRecomputeHeight {
+        computeTrackSizesForDefiniteSize(
+          direction: .ForRows, availableSpace: trackBasedLogicalHeight,
+          gridLayoutState: &gridLayoutState)
+      }
+
+      setLogicalHeight(size: trackBasedLogicalHeight)
+
+      updateLogicalHeight()
+
+      // Once grid's indefinite height is resolved, we can compute the
+      // available free space for Content Alignment.
+      if !hasDefiniteLogicalHeight {
+        trackSizingAlgorithm!.setFreeSpace(
+          direction: .ForRows, freeSpace: logicalHeight() - trackBasedLogicalHeight)
+      }
+
+      // 2.5. Compute Content Distribution offsets for rows tracks
+      offsetBetweenRows = computeContentPositionAndDistributionOffset(
+        direction: .ForRows,
+        availableFreeSpace: trackSizingAlgorithm!.freeSpace(direction: .ForRows)!,
+        numberOfGridTracks: nonCollapsedTracks(direction: .ForRows))
+
+      if !aspectRatioBlockSizeDependentGridItems.isEmpty {
+        updateGridAreaForAspectRatioItems(
+          autoGridItems: aspectRatioBlockSizeDependentGridItems, gridLayoutState: &gridLayoutState)
+        updateLogicalWidth()
+      }
+
+      // 3. If the min-content contribution of any grid items have changed based on the row
+      // sizes calculated in step 2, steps 1 and 2 are repeated with the new min-content
+      // contribution (once only).
+      repeatTracksSizingIfNeeded(
+        availableSpaceForColumns: availableSpaceForColumns,
+        availableSpaceForRows: contentLogicalHeight(), gridLayoutState: &gridLayoutState)
+
+      // Grid container should have the minimum height of a line if it's editable. That does not affect track sizing though.
+      if hasLineIfEmpty() {
+        let minHeightForEmptyLine =
+          borderAndPaddingLogicalHeight()
+          + lineHeight(
+            firstLine: true, direction: isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+            linePositionMode: .PositionOfInteriorLineBoxes)
+          + scrollbarLogicalHeight()
+        setLogicalHeight(size: max(logicalHeight(), minHeightForEmptyLine))
+      }
+
+      layoutGridItems(gridLayoutState: &gridLayoutState)
+
+      endAndCommitUpdateScrollInfoAfterLayoutTransaction()
+
+      if size() != previousSize {
+        relayoutChildren = true
+      }
+
+      outOfFlowItemColumn.removeAll()
+      outOfFlowItemRow.removeAll()
+
+      layoutPositionedObjects(relayoutChildren: relayoutChildren || isDocumentElementRenderer())
+      trackSizingAlgorithm!.reset()
+
+      computeOverflow(
+        oldClientAfterEdge: RenderGridWrapper.layoutOverflowLogicalBottom(renderer: self))
+
+      updateDescendantTransformsAfterLayout()
+    }
+
+    updateLayerTransform()
+
+    // Update our scroll information if we're overflow:auto/scroll/hidden now that we know if
+    // we overflow or not.
+    updateScrollInfoAfterLayout()
+
+    repainter.repaintAfterLayout()
+
+    clearNeedsLayout()
+
+    trackSizingAlgorithm!.clearBaselineItemsCache()
+    baselineItemsCached = false
+  }
+
+  private func availableLogicalHeightForContentBox() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -472,6 +633,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
       ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment()
   }
 
+  private func computeLayoutRequirementsForItemsBeforeLayout() -> GridLayoutState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
     assert(gridItem != nil)
     return gridItem!.isRenderReplaced() ? .Start : .Stretch
@@ -590,6 +756,15 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return renderBlockCanPerformSimplifiedLayout()
   }
 
+  private func computeTrackSizesForDefiniteSize(
+    direction: GridTrackSizingDirection, availableSpace: LayoutUnit,
+    gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
   private func computeTrackSizesForIndefiniteSize(
     algorithm: GridTrackSizingAlgorithm, direction: GridTrackSizingDirection,
     gridLayoutState: inout GridLayoutState, computeIntrinsicSizes: Bool = false
@@ -611,6 +786,33 @@ final class RenderGridWrapper: RenderBlockWrapper {
       ? (
         algorithm.minContentSize + totalGuttersSize, algorithm.maxContentSize + totalGuttersSize
       ) : nil
+  }
+
+  private func repeatTracksSizingIfNeeded(
+    availableSpaceForColumns: LayoutUnit, availableSpaceForRows: LayoutUnit,
+    gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateGridAreaForAspectRatioItems(
+    autoGridItems: [RenderBoxWrapper], gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutGridItems(gridLayoutState: inout GridLayoutState) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeContentPositionAndDistributionOffset(
+    direction: GridTrackSizingDirection, availableFreeSpace: LayoutUnit, numberOfGridTracks: UInt32
+  ) -> ContentAlignmentData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
@@ -754,6 +956,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func nonCollapsedTracks(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func establishesIndependentFormattingContext() -> Bool {
     // Grid items establish a new independent formatting context, unless
     // they're a subgrid
@@ -764,6 +971,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
       }
     }
     return renderElementEstablishesIndependentFormattingContext()
+  }
+
+  private func computeAspectRatioDependentAndBaselineItems() -> [RenderBoxWrapper] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private class GridWrapper {
@@ -790,8 +1002,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private let columnPositions: [LayoutUnit] = []
   private let rowPositions: [LayoutUnit] = []
 
-  private let offsetBetweenColumns = ContentAlignmentData()
-  private let offsetBetweenRows = ContentAlignmentData()
+  private var offsetBetweenColumns = ContentAlignmentData()
+  private var offsetBetweenRows = ContentAlignmentData()
+
+  private typealias OutOfFlowPositionsMap = [UInt: UInt64]
+  private var outOfFlowItemColumn = OutOfFlowPositionsMap()
+  private var outOfFlowItemRow = OutOfFlowPositionsMap()
 
   private var baselineItemsCached = false
 }
