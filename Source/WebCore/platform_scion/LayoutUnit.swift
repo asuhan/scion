@@ -333,6 +333,10 @@ struct LayoutUnit: Comparable {
     return a * LayoutUnit(value: b)
   }
 
+  static func * (a: LayoutUnit, b: UInt32) -> LayoutUnit {
+    return a * LayoutUnit(value: b)
+  }
+
   static func * (a: LayoutUnit, b: UInt64) -> LayoutUnit {
     return a * LayoutUnit(value: b)
   }

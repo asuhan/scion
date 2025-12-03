@@ -154,8 +154,84 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func guttersSize(
     direction: GridTrackSizingDirection, startLine: UInt32, span: UInt32, availableSize: LayoutUnit?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if span <= 1 {
+      return LayoutUnit()
+    }
+
+    let gap = gridGap(direction: direction, availableSize: availableSize)
+
+    // Fast path, no collapsing tracks.
+    if !currentGrid().hasAutoRepeatEmptyTracks(direction: direction) {
+      return gap * (span - 1)
+    }
+
+    // If there are collapsing tracks we need to be sure that gutters are properly collapsed. Apart
+    // from that, if we have a collapsed track in the edges of the span we're considering, we need
+    // to move forward (or backwards) in order to know whether the collapsed tracks reach the end of
+    // the grid (so the gap becomes 0) or there is a non empty track before that.
+
+    var gapAccumulator = LayoutUnit()
+    let endLine = startLine + span
+
+    for line in startLine..<endLine - 1 {
+      if !currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: line) {
+        gapAccumulator += gap
+      }
+    }
+
+    // The above loop adds one extra gap for trailing collapsed tracks.
+    if gapAccumulator.bool()
+      && currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: endLine - 1)
+    {
+      assert(gapAccumulator >= gap)
+      gapAccumulator -= gap
+    }
+
+    // If the startLine is the start line of a collapsed track we need to go backwards till we reach
+    // a non collapsed track. If we find a non collapsed track we need to add that gap.
+    var nonEmptyTracksBeforeStartLine: UInt32 = 0
+    if startLine != 0 && currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: startLine)
+    {
+      nonEmptyTracksBeforeStartLine = startLine
+      let emptyTracksIndices = currentGrid().autoRepeatEmptyTracks(direction: direction)
+      for trackIndex in emptyTracksIndices {
+        if trackIndex == startLine {
+          break
+        }
+        assert(nonEmptyTracksBeforeStartLine != 0)
+        nonEmptyTracksBeforeStartLine -= 1
+      }
+      if nonEmptyTracksBeforeStartLine != 0 {
+        gapAccumulator += gap
+      }
+    }
+
+    // If the endLine is the end line of a collapsed track we need to go forward till we reach a non
+    // collapsed track. If we find a non collapsed track we need to add that gap.
+    if currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: endLine - 1) {
+      var nonEmptyTracksAfterEndLine = currentGrid().numTracks(direction: direction) - endLine
+      let currentEmptyTrack = currentGrid().autoRepeatEmptyTracks(direction: direction).find(
+        value: UInt64(endLine - 1))
+      let endEmptyTrack = currentGrid().autoRepeatEmptyTracks(direction: direction).end()
+      // Hash set iterators do not implement operator- so we have to manually iterate to know the number of remaining empty tracks.
+      let it = ++currentEmptyTrack
+      while it != endEmptyTrack {
+        assert(nonEmptyTracksAfterEndLine >= 1)
+        nonEmptyTracksAfterEndLine -= 1
+        ++it
+      }
+      if nonEmptyTracksAfterEndLine != 0 {
+        // We shouldn't count the gap twice if the span starts and ends in a collapsed track between two non-empty tracks.
+        if nonEmptyTracksBeforeStartLine == 0 {
+          gapAccumulator += gap
+        }
+      } else if nonEmptyTracksBeforeStartLine != 0 {
+        // We shouldn't count the gap if the span starts and ends in a collapsed but there isn't non-empty tracks afterwards (it's at the end of the grid).
+        gapAccumulator -= gap
+      }
+    }
+
+    return gapAccumulator
   }
 
   private func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit?
@@ -295,6 +371,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return currentGrid().numTracks(direction: .ForRows) != 0
       ? currentGrid().numTracks(direction: .ForColumns)
       : GridPositionsResolver.explicitGridColumnCount(gridContainer: self)
+  }
+
+  private func gridGap(direction: GridTrackSizingDirection, availableSize: LayoutUnit?)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func shouldCheckExplicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection)

@@ -23,12 +23,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ListSet<T, KeyType>: Sequence, IteratorProtocol {
+final class ListSetIterator<T, KeyType>: IteratorProtocol, Equatable {
+  func next() -> T? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static prefix func ++ (it: ListSetIterator<T, KeyType>) -> ListSetIterator<T, KeyType> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (this: ListSetIterator<T, KeyType>, other: ListSetIterator<T, KeyType>) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+final class ListSet<T, KeyType>: Sequence {
   struct AddResult {
     let isNewEntry: Bool
   }
 
   func size() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func begin() -> ListSetIterator<T, KeyType> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func end() -> ListSetIterator<T, KeyType> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -75,7 +103,12 @@ class ListSet<T, KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
-  func next() -> T? {
+  func find(value: T) -> ListSetIterator<T, KeyType> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func makeIterator() -> ListSetIterator<T, KeyType> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
