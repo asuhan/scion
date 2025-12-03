@@ -98,6 +98,21 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func hasAnyPercentSizedRowsIndefiniteHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAnyFlexibleMaxTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAnyBaselineAlignmentItem() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func tracksAreWiderThanMinTrackBreadth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

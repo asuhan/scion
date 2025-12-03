@@ -23,4 +23,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct GridLayoutState {}
+struct GridLayoutState {
+  let needsSecondTrackSizingPass = false
+}

@@ -963,8 +963,45 @@ final class RenderGridWrapper: RenderBlockWrapper {
     availableSpaceForColumns: LayoutUnit, availableSpaceForRows: LayoutUnit,
     gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // In orthogonal flow cases column track's size is determined by using the computed
+    // row track's size, which it was estimated during the first cycle of the sizing
+    // algorithm. Hence we need to repeat computeUsedBreadthOfGridTracks for both,
+    // columns and rows, to determine the final values.
+    // TODO (lajava): orthogonal flows is just one of the cases which may require
+    // a new cycle of the sizing algorithm; there may be more. In addition, not all the
+    // cases with orthogonal flows require this extra cycle; we need a more specific
+    // condition to detect whether grid item's min-content contribution has changed or not.
+    // The complication with repeating the track sizing algorithm for flex max-sizing is that
+    // it might change a grid item's status of participating in Baseline Alignment for
+    // a cyclic sizing dependency case, which should be definitively excluded. See
+    // https://github.com/w3c/csswg-drafts/issues/3046 for details.
+    // FIXME: we are avoiding repeating the track sizing algorithm for grid item with baseline alignment
+    // here in the case of using flex max-sizing functions. We probably also need to investigate whether
+    // it is applicable for the case of percent-sized rows with indefinite height as well.
+    if gridLayoutState.needsSecondTrackSizingPass
+      || trackSizingAlgorithm!.hasAnyPercentSizedRowsIndefiniteHeight()
+      || (trackSizingAlgorithm!.hasAnyFlexibleMaxTrackBreadth()
+        && !trackSizingAlgorithm!.hasAnyBaselineAlignmentItem())
+      || hasAspectRatioBlockSizeDependentItem
+    {
+
+      populateGridPositionsForDirection(direction: .ForRows)
+      computeTrackSizesForDefiniteSize(
+        direction: .ForColumns, availableSpace: availableSpaceForColumns,
+        gridLayoutState: &gridLayoutState)
+      offsetBetweenColumns = computeContentPositionAndDistributionOffset(
+        direction: .ForColumns,
+        availableFreeSpace: trackSizingAlgorithm!.freeSpace(direction: .ForColumns)!,
+        numberOfGridTracks: nonCollapsedTracks(direction: .ForColumns))
+
+      computeTrackSizesForDefiniteSize(
+        direction: .ForRows, availableSpace: availableSpaceForRows,
+        gridLayoutState: &gridLayoutState)
+      offsetBetweenRows = computeContentPositionAndDistributionOffset(
+        direction: .ForRows,
+        availableFreeSpace: trackSizingAlgorithm!.freeSpace(direction: .ForRows)!,
+        numberOfGridTracks: nonCollapsedTracks(direction: .ForRows))
+    }
   }
 
   private func updateGridAreaForAspectRatioItems(
@@ -980,6 +1017,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func layoutMasonryItems(gridLayoutState: inout GridLayoutState) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func populateGridPositionsForDirection(direction: GridTrackSizingDirection) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1187,5 +1229,6 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private var outOfFlowItemColumn = OutOfFlowPositionsMap()
   private var outOfFlowItemRow = OutOfFlowPositionsMap()
 
+  private var hasAspectRatioBlockSizeDependentItem = false
   private var baselineItemsCached = false
 }
