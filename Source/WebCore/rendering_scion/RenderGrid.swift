@@ -100,6 +100,19 @@ private func cacheBaselineAlignedGridItems(
   }
 }
 
+private func overrideSizeChanged(
+  gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection, width: LayoutUnit?,
+  height: LayoutUnit?
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func hasRelativeBlockAxisSize(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private struct ContentAlignmentData {
   let positionOffset = LayoutUnit()
   let distributionOffset = LayoutUnit()
@@ -248,8 +261,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func updateGridAreaLogicalSize(
     gridItem: RenderBoxWrapper, width: LayoutUnit?, height: LayoutUnit?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Because the grid area cannot be styled, we don't need to adjust
+    // the grid breadth to account for 'box-sizing'.
+    let gridAreaWidthChanged = overrideSizeChanged(
+      gridItem: gridItem, direction: .ForColumns, width: width, height: height)
+    let gridAreaHeightChanged = overrideSizeChanged(
+      gridItem: gridItem, direction: .ForRows, width: width, height: height)
+    if gridAreaWidthChanged
+      || (gridAreaHeightChanged && hasRelativeBlockAxisSize(grid: self, gridItem: gridItem))
+    {
+      gridItem.setNeedsLayout(markParents: .MarkOnlyThis)
+    }
+
+    gridItem.setOverridingContainingBlockContentLogicalWidth(logicalWidth: width)
+    gridItem.setOverridingContainingBlockContentLogicalHeight(logicalHeight: height)
   }
 
   func isBaselineAlignmentForGridItem(gridItem: RenderBoxWrapper) -> Bool {
