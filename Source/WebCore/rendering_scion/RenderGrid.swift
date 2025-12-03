@@ -427,9 +427,21 @@ final class RenderGridWrapper: RenderBlockWrapper {
       : GridPositionsResolver.explicitGridColumnCount(gridContainer: self)
   }
 
+  // This method optimizes the gutters computation by skipping the available size
+  // call if gaps are fixed size (it's only needed for percentages).
+  private func availableSpaceForGutters(direction: GridTrackSizingDirection) -> LayoutUnit? {
+    let isRowAxis = direction == .ForColumns
+    let gapLength = isRowAxis ? style().columnGap() : style().rowGap()
+    if gapLength.isNormal || !gapLength.length.isPercentOrCalculated() {
+      return nil
+    }
+
+    return isRowAxis ? availableLogicalWidth() : contentLogicalHeight()
+  }
+
   private func gridGap(direction: GridTrackSizingDirection) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return gridGap(
+      direction: direction, availableSize: availableSpaceForGutters(direction: direction))
   }
 
   private func gridGap(direction: GridTrackSizingDirection, availableSize: LayoutUnit?)
