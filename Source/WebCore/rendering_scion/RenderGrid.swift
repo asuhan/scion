@@ -491,8 +491,175 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func layoutMasonry(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let repainter = LayoutRepainter(renderer: self)
+    do {
+      let _ = LayoutStateMaintainer(
+        root: self, offset: locationOffset(),
+        disablePaintOffsetCache: isTransformed() || hasReflection()
+          || style().isFlippedBlocksWritingMode())
+      var gridLayoutState = GridLayoutState()
+
+      var relayoutChildren = relayoutChildren
+      preparePaginationBeforeBlockLayout(relayoutChildren: &relayoutChildren)
+      beginUpdateScrollInfoAfterLayoutTransaction()
+
+      let previousSize = size()
+
+      // FIXME: We should use RenderBlock::hasDefiniteLogicalHeight() only but it does not work for positioned stuff.
+      // FIXME: Consider caching the hasDefiniteLogicalHeight value throughout the layout.
+      // FIXME: We might need to cache the hasDefiniteLogicalHeight if the call of RenderBlock::hasDefiniteLogicalHeight() causes a relevant performance regression.
+      let hasDefiniteLogicalHeight =
+        renderBlockHasDefiniteLogicalHeight() || overridingLogicalHeight() != nil
+        || computeContentLogicalHeight(
+          heightType: .MainOrPreferredSize, height: style().logicalHeight(),
+          intrinsicContentHeight: nil) != nil
+
+      let aspectRatioBlockSizeDependentGridItems = computeAspectRatioDependentAndBaselineItems()
+
+      resetLogicalHeightBeforeLayoutIfNeeded()
+
+      // Fieldsets need to find their legend and position it inside the border of the object.
+      // The legend then gets skipped during normal layout. The same is true for ruby text.
+      // It doesn't get included in the normal layout process but is instead skipped.
+      layoutExcludedChildren(relayoutChildren: relayoutChildren)
+
+      updateLogicalWidth()
+
+      let availableSpaceForColumns = availableLogicalWidth()
+      placeItemsOnGrid(availableLogicalWidth: availableSpaceForColumns)
+
+      trackSizingAlgorithm!.setAvailableSpace(
+        direction: .ForColumns, availableSpace: availableSpaceForColumns)
+      performPreLayoutForGridItems(
+        algorithm: trackSizingAlgorithm!, shouldUpdateGridAreaLogicalSize: .Yes)
+
+      // 1. First, the track sizing algorithm is used to resolve the sizes of the grid columns. At this point the
+      // logical width is always definite as the above call to updateLogicalWidth() properly resolves intrinsic
+      // sizes. We cannot do the same for heights though because many code paths inside updateLogicalHeight() require
+      // a previous call to setLogicalHeight() to resolve heights properly (like for positioned items for example).
+      computeTrackSizesForDefiniteSize(
+        direction: .ForColumns, availableSpace: availableSpaceForColumns,
+        gridLayoutState: &gridLayoutState)
+
+      // 1.5. Compute Content Distribution offsets for column tracks
+      offsetBetweenColumns = computeContentPositionAndDistributionOffset(
+        direction: .ForColumns,
+        availableFreeSpace: trackSizingAlgorithm!.freeSpace(direction: .ForColumns)!,
+        numberOfGridTracks: nonCollapsedTracks(direction: .ForColumns))
+
+      // 2. Next, the track sizing algorithm resolves the sizes of the grid rows,
+      // using the grid column sizes calculated in the previous step.
+      var shouldRecomputeHeight = false
+      if !hasDefiniteLogicalHeight {
+        computeTrackSizesForIndefiniteSize(
+          algorithm: trackSizingAlgorithm!, direction: .ForRows, gridLayoutState: &gridLayoutState)
+        if shouldApplySizeContainment() {
+          shouldRecomputeHeight = true
+        }
+      } else {
+        computeTrackSizesForDefiniteSize(
+          direction: .ForRows,
+          availableSpace: availableLogicalHeight(heightType: .ExcludeMarginBorderPadding),
+          gridLayoutState: &gridLayoutState)
+      }
+
+      if areMasonryRows() {
+        performMasonryPlacement(masonryAxisDirection: .ForRows)
+      } else if areMasonryColumns() {
+        performMasonryPlacement(masonryAxisDirection: .ForColumns)
+      }
+
+      var trackBasedLogicalHeight = borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
+      if let size = explicitIntrinsicInnerLogicalSize(direction: .ForRows) {
+        trackBasedLogicalHeight += size
+      } else {
+        if areMasonryRows() {
+          trackBasedLogicalHeight += masonryLayout!.gridContentSize
+        } else {
+          trackBasedLogicalHeight += trackSizingAlgorithm!.computeTrackBasedSize()
+        }
+      }
+      if shouldRecomputeHeight {
+        computeTrackSizesForDefiniteSize(
+          direction: .ForRows, availableSpace: trackBasedLogicalHeight,
+          gridLayoutState: &gridLayoutState)
+      }
+
+      setLogicalHeight(size: trackBasedLogicalHeight)
+
+      updateLogicalHeight()
+
+      // Once grid's indefinite height is resolved, we can compute the
+      // available free space for Content Alignment.
+      if !hasDefiniteLogicalHeight || areMasonryRows() {
+        trackSizingAlgorithm!.setFreeSpace(
+          direction: .ForRows, freeSpace: logicalHeight() - trackBasedLogicalHeight)
+      }
+
+      // 2.5. Compute Content Distribution offsets for rows tracks
+      offsetBetweenRows = computeContentPositionAndDistributionOffset(
+        direction: .ForRows,
+        availableFreeSpace: trackSizingAlgorithm!.freeSpace(direction: .ForRows)!,
+        numberOfGridTracks: nonCollapsedTracks(direction: .ForRows))
+
+      if !aspectRatioBlockSizeDependentGridItems.isEmpty {
+        updateGridAreaForAspectRatioItems(
+          autoGridItems: aspectRatioBlockSizeDependentGridItems, gridLayoutState: &gridLayoutState)
+        updateLogicalWidth()
+      }
+
+      // Grid container should have the minimum height of a line if it's editable. That does not affect track sizing though.
+      if hasLineIfEmpty() {
+        let minHeightForEmptyLine =
+          borderAndPaddingLogicalHeight()
+          + lineHeight(
+            firstLine: true, direction: isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+            linePositionMode: .PositionOfInteriorLineBoxes)
+          + scrollbarLogicalHeight()
+        setLogicalHeight(size: max(logicalHeight(), minHeightForEmptyLine))
+      }
+
+      layoutMasonryItems(gridLayoutState: &gridLayoutState)
+
+      endAndCommitUpdateScrollInfoAfterLayoutTransaction()
+
+      if size() != previousSize {
+        relayoutChildren = true
+      }
+
+      outOfFlowItemColumn.removeAll()
+      outOfFlowItemRow.removeAll()
+
+      layoutPositionedObjects(relayoutChildren: relayoutChildren || isDocumentElementRenderer())
+      trackSizingAlgorithm!.reset()
+
+      computeOverflow(
+        oldClientAfterEdge: RenderGridWrapper.layoutOverflowLogicalBottom(renderer: self))
+
+      updateDescendantTransformsAfterLayout()
+    }
+
+    updateLayerTransform()
+
+    // Update our scroll information if we're overflow:auto/scroll/hidden now that we know if
+    // we overflow or not.
+    updateScrollInfoAfterLayout()
+
+    repainter.repaintAfterLayout()
+
+    clearNeedsLayout()
+
+    trackSizingAlgorithm!.clearBaselineItemsCache()
+    baselineItemsCached = false
+  }
+
+  private func performMasonryPlacement(masonryAxisDirection: GridTrackSizingDirection) {
+    let gridAxisDirection: GridTrackSizingDirection =
+      masonryAxisDirection == .ForRows ? .ForColumns : .ForRows
+    let gridAxisTracksBeforeAutoPlacement = currentGrid().numTracks(direction: gridAxisDirection)
+
+    masonryLayout!.performMasonryPlacement(
+      gridAxisTracks: gridAxisTracksBeforeAutoPlacement, masonryAxisDirection: masonryAxisDirection)
   }
 
   private func isSubgrid(direction: GridTrackSizingDirection) -> Bool {
@@ -812,6 +979,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func layoutMasonryItems(gridLayoutState: inout GridLayoutState) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeContentPositionAndDistributionOffset(
     direction: GridTrackSizingDirection, availableFreeSpace: LayoutUnit, numberOfGridTracks: UInt32
   ) -> ContentAlignmentData {
@@ -1008,6 +1180,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   private var offsetBetweenColumns = ContentAlignmentData()
   private var offsetBetweenRows = ContentAlignmentData()
+
+  private let masonryLayout: GridMasonryLayout? = nil
 
   private typealias OutOfFlowPositionsMap = [UInt: UInt64]
   private var outOfFlowItemColumn = OutOfFlowPositionsMap()
