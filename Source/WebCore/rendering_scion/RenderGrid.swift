@@ -652,14 +652,18 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
   private func hasAutoMarginsInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      return gridItem.style().marginTop().isAuto() || gridItem.style().marginBottom().isAuto()
+    }
+    return gridItem.style().marginLeft().isAuto() || gridItem.style().marginRight().isAuto()
   }
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
   private func hasAutoMarginsInRowAxis(gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      return gridItem.style().marginLeft().isAuto() || gridItem.style().marginRight().isAuto()
+    }
+    return gridItem.style().marginTop().isAuto() || gridItem.style().marginBottom().isAuto()
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
