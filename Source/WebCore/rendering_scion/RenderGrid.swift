@@ -151,10 +151,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
-  override func avoidsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func avoidsFloats() -> Bool { return true }
 
   func dirtyGrid(subgridChanged: Bool = false) {
     if currentGrid().needsItemsPlacement() {
