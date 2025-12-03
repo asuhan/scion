@@ -482,8 +482,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func availableLogicalHeightForContentBox() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let overridingLogicalHeight = overridingLogicalHeight() {
+      return constrainContentBoxLogicalHeightByMinMax(
+        logicalHeight: overridingLogicalHeight - borderAndPaddingLogicalHeight(),
+        intrinsicContentHeight: nil)
+    }
+    return availableLogicalHeight(heightType: .ExcludeMarginBorderPadding)
   }
 
   func layoutMasonry(relayoutChildren: Bool) {
