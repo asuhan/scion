@@ -427,11 +427,32 @@ final class RenderGridWrapper: RenderBlockWrapper {
       : GridPositionsResolver.explicitGridColumnCount(gridContainer: self)
   }
 
+  private func gridGap(direction: GridTrackSizingDirection) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func gridGap(direction: GridTrackSizingDirection, availableSize: LayoutUnit?)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(availableSize != nil || availableSize! >= Int32(0))
+    let gapLength = direction == .ForColumns ? style().columnGap() : style().rowGap()
+    if gapLength.isNormal {
+      if !isSubgrid(direction: direction) {
+        return LayoutUnit(value: UInt64(0))
+      }
+
+      let parentDirection = GridLayoutFunctions.flowAwareDirectionForParent(
+        grid: self, parent: parent()!, direction: direction)
+      if availableSize == nil {
+        return (parent() as! RenderGridWrapper).gridGap(
+          direction: parentDirection, availableSize: nil)
+      }
+      return (parent() as! RenderGridWrapper).gridGap(direction: parentDirection)
+    }
+
+    return valueForLength(
+      length: gapLength.length, maximumValue: availableSize ?? LayoutUnit(value: 0))
   }
 
   private func shouldCheckExplicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection)
