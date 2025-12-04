@@ -740,6 +740,26 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func gridColumnTrackSizes() -> ArraySlice<GridTrackSize> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridRowTrackSizes() -> ArraySlice<GridTrackSize> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridAutoRepeatColumns() -> ArraySlice<GridTrackSize> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridAutoRepeatRows() -> ArraySlice<GridTrackSize> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func columnCount() -> UInt16 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

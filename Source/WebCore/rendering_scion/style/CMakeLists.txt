@@ -7,7 +7,9 @@ target_sources(layout_scion PRIVATE
     FillLayer.swift
     GapLength.swift
     GridArea.swift
+    GridLength.swift
     GridPositionsResolver.swift
+    GridTrackSize.swift
     ListStyleType.swift
     NinePieceImage.swift
     OffsetRotation.swift

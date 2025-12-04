@@ -1360,7 +1360,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func adjustContentBoxLogicalWidthForBoxSizing(
+  func adjustContentBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -1678,8 +1678,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not reached")
   }
 
-  private func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType)
-    -> LayoutUnit
+  func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType) -> LayoutUnit
   {
     if let overridingContainingBlockContentLogicalHeight =
       overridingContainingBlockContentLogicalHeight(),
@@ -4211,7 +4210,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not reached")
   }
 
-  private func shouldIgnoreAspectRatio() -> Bool {
+  func shouldIgnoreAspectRatio() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -4269,7 +4268,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
+  func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
     var transferredMinSize = LayoutUnit()
     var transferredMaxSize = LayoutUnit.max()
     let aspectRatio = resolveAspectRatio()

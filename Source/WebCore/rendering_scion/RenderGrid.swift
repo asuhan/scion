@@ -24,6 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func max(_ a: LayoutUnit?, _ b: LayoutUnit?) -> LayoutUnit? { return a < b ? b : a }
+
+private func < (a: LayoutUnit?, b: LayoutUnit?) -> Bool { return b != nil && (a == nil || a! < b!) }
+
 private func cacheBaselineAlignedGridItems(
   grid: RenderGridWrapper, algorithm: GridTrackSizingAlgorithm, axes: GridAxis,
   callback: (_: RenderBoxWrapper) -> Void,
@@ -914,8 +918,149 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func computeAutoRepeatTracksCount(
     direction: GridTrackSizingDirection, availableSize: LayoutUnit?
   ) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(availableSize == nil || availableSize! != -1)
+    let isRowAxis = direction == .ForColumns
+    if isSubgrid(direction: direction) {
+      return 0
+    }
+
+    let autoRepeatTracks =
+      isRowAxis ? style().gridAutoRepeatColumns() : style().gridAutoRepeatRows()
+    let autoRepeatTrackListLength = UInt32(autoRepeatTracks.count)
+
+    if autoRepeatTrackListLength == 0 {
+      return 0
+    }
+
+    var needsToFulfillMinimumSize = false
+    if availableSize == nil {
+      let maxSize = isRowAxis ? style().logicalMaxWidth() : style().logicalMaxHeight()
+      var containingBlockAvailableSize: LayoutUnit? = nil
+      var availableMaxSize: LayoutUnit? = nil
+      if maxSize.isSpecified() {
+        if maxSize.isPercentOrCalculated() {
+          containingBlockAvailableSize =
+            isRowAxis
+            ? containingBlockLogicalWidthForContent()
+            : containingBlockLogicalHeightForContent(heightType: .ExcludeMarginBorderPadding)
+        }
+        let maxSizeValue = valueForLength(
+          length: maxSize, maximumValue: containingBlockAvailableSize ?? LayoutUnit())
+        availableMaxSize =
+          isRowAxis
+          ? adjustContentBoxLogicalWidthForBoxSizing(
+            computedLogicalWidth: maxSizeValue, originalType: maxSize.type())
+          : adjustContentBoxLogicalHeightForBoxSizing(height: maxSizeValue)
+      }
+
+      let minSize = isRowAxis ? style().logicalMinWidth() : style().logicalMinHeight()
+      let minSizeForOrthogonalAxis =
+        isRowAxis ? style().logicalMinHeight() : style().logicalMinWidth()
+      let shouldComputeMinSizeFromAspectRatio =
+        minSizeForOrthogonalAxis.isSpecified() && !shouldIgnoreAspectRatio()
+      let explicitIntrinsicInnerSize = explicitIntrinsicInnerLogicalSize(direction: direction)
+
+      if availableMaxSize == nil && !minSize.isSpecified() && !shouldComputeMinSizeFromAspectRatio
+        && explicitIntrinsicInnerSize == nil
+      {
+        return autoRepeatTrackListLength
+      }
+
+      var availableMinSize: LayoutUnit? = nil
+      if minSize.isSpecified() {
+        if containingBlockAvailableSize == nil && minSize.isPercentOrCalculated() {
+          containingBlockAvailableSize =
+            isRowAxis
+            ? containingBlockLogicalWidthForContent()
+            : containingBlockLogicalHeightForContent(heightType: .ExcludeMarginBorderPadding)
+        }
+        let minSizeValue = valueForLength(
+          length: minSize, maximumValue: containingBlockAvailableSize ?? LayoutUnit())
+        availableMinSize =
+          isRowAxis
+          ? adjustContentBoxLogicalWidthForBoxSizing(
+            computedLogicalWidth: minSizeValue, originalType: minSize.type())
+          : adjustContentBoxLogicalHeightForBoxSizing(height: minSizeValue)
+      } else if shouldComputeMinSizeFromAspectRatio {
+        let (logicalMinWidth, _) = computeMinMaxLogicalWidthFromAspectRatio()
+        availableMinSize = logicalMinWidth
+      }
+      if !maxSize.isSpecified() || explicitIntrinsicInnerSize != nil {
+        needsToFulfillMinimumSize = true
+      }
+
+      var availableSize: LayoutUnit? = max(
+        availableMinSize ?? LayoutUnit(), availableMaxSize ?? LayoutUnit(),
+        explicitIntrinsicInnerSize ?? LayoutUnit())
+      if maxSize.isSpecified() && availableMaxSize < availableSize {
+        availableSize = max(availableMinSize, availableMaxSize)
+      }
+    }
+
+    var autoRepeatTracksSize = LayoutUnit()
+    for autoTrackSize in autoRepeatTracks {
+      assert(autoTrackSize.minTrackBreadth.isLength())
+      assert(!autoTrackSize.minTrackBreadth.isFlex())
+      let hasDefiniteMaxTrackSizingFunction =
+        autoTrackSize.maxTrackBreadth.isLength()
+        && !autoTrackSize.maxTrackBreadth.isContentSized()
+      var trackLength =
+        hasDefiniteMaxTrackSizingFunction
+        ? autoTrackSize.maxTrackBreadth.length() : autoTrackSize.minTrackBreadth.length()
+      let hasDefiniteMinTrackSizingFunction =
+        autoTrackSize.minTrackBreadth.isLength()
+        && !autoTrackSize.minTrackBreadth.isContentSized()
+      if hasDefiniteMinTrackSizingFunction
+        && (trackLength.value() < autoTrackSize.minTrackBreadth.length().value())
+      {
+        trackLength = autoTrackSize.minTrackBreadth.length()
+      }
+      autoRepeatTracksSize += valueForLength(
+        length: trackLength, maximumValue: availableSize!)
+    }
+    // For the purpose of finding the number of auto-repeated tracks, the UA must floor the track size to a UA-specified
+    // value to avoid division by zero. It is suggested that this floor be 1px.
+    autoRepeatTracksSize = max(LayoutUnit(value: UInt64(1)), autoRepeatTracksSize)
+
+    // There will be always at least 1 auto-repeat track, so take it already into account when computing the total track size.
+    var tracksSize = autoRepeatTracksSize
+    let trackSizes = isRowAxis ? style().gridColumnTrackSizes() : style().gridRowTrackSizes()
+
+    for track in trackSizes {
+      let hasDefiniteMaxTrackBreadth =
+        track.maxTrackBreadth.isLength() && !track.maxTrackBreadth.isContentSized()
+      assert(
+        hasDefiniteMaxTrackBreadth
+          || (track.minTrackBreadth.isLength() && !track.minTrackBreadth.isContentSized()))
+      tracksSize += valueForLength(
+        length: hasDefiniteMaxTrackBreadth
+          ? track.maxTrackBreadth.length() : track.minTrackBreadth.length(),
+        maximumValue: availableSize!)
+    }
+
+    // Add gutters as if auto repeat tracks were only repeated once. Gaps between different repetitions will be added later when
+    // computing the number of repetitions of the auto repeat().
+    let gapSize = gridGap(direction: direction, availableSize: availableSize)
+    tracksSize += gapSize * (UInt64(trackSizes.count) + UInt64(autoRepeatTrackListLength) - 1)
+
+    var freeSpace = availableSize! - tracksSize
+    if freeSpace <= Int32(0) {
+      return autoRepeatTrackListLength
+    }
+
+    let autoRepeatSizeWithGap = autoRepeatTracksSize + gapSize * autoRepeatTrackListLength
+    var repetitions = 1 + (freeSpace / autoRepeatSizeWithGap).toUnsigned()
+    freeSpace -= autoRepeatSizeWithGap * (repetitions - 1)
+    assert(freeSpace >= Int32(0))
+
+    // Provided the grid container does not have a definite size or max-size in the relevant axis,
+    // if the min size is definite then the number of repetitions is the largest possible positive
+    // integer that fulfills that minimum requirement.
+    if needsToFulfillMinimumSize && freeSpace != 0 {
+      repetitions += 1
+    }
+
+    return repetitions * autoRepeatTrackListLength
   }
 
   private func clampAutoRepeatTracks(direction: GridTrackSizingDirection, autoRepeatTracks: UInt32)
