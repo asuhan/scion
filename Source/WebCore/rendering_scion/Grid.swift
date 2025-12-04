@@ -115,3 +115,20 @@ final class Grid {
 
   let orderIterator: OrderIterator
 }
+
+class GridIterator {
+  // |direction| is the direction that is fixed to |fixedTrackIndex| so e.g
+  // GridIterator(m_grid, ForColumns, 1) will walk over the rows of the 2nd column.
+  init(
+    grid: Grid, direction: GridTrackSizingDirection, fixedTrackIndex: UInt32,
+    varyingTrackIndex: UInt32 = 0
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nextGridItem() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

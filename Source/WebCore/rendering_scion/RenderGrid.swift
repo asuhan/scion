@@ -1089,8 +1089,43 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func computeEmptyTracksForAutoRepeat(direction: GridTrackSizingDirection)
     -> OrderedTrackIndexSet?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isRowAxis = direction == .ForColumns
+    if (isRowAxis && autoRepeatColumnsType() != .Fit)
+      || (!isRowAxis && autoRepeatRowsType() != .Fit)
+    {
+      return nil
+    }
+
+    var emptyTrackIndexes: OrderedTrackIndexSet? = nil
+    let insertionPoint =
+      isRowAxis
+      ? style().gridAutoRepeatColumnsInsertionPoint() : style().gridAutoRepeatRowsInsertionPoint()
+    let firstAutoRepeatTrack =
+      insertionPoint + currentGrid().explicitGridStart(direction: direction)
+    let lastAutoRepeatTrack =
+      firstAutoRepeatTrack + currentGrid().autoRepeatTracks(direction: direction)
+
+    if !currentGrid().hasGridItems()
+      || (shouldCheckExplicitIntrinsicInnerLogicalSize(direction: direction)
+        && explicitIntrinsicInnerLogicalSize(direction: direction) == nil)
+    {
+      emptyTrackIndexes = OrderedTrackIndexSet()
+      for trackIndex in firstAutoRepeatTrack..<lastAutoRepeatTrack {
+        emptyTrackIndexes!.add(value: UInt64(trackIndex))
+      }
+    } else {
+      for trackIndex in firstAutoRepeatTrack..<lastAutoRepeatTrack {
+        let iterator = GridIterator(
+          grid: currentGrid(), direction: direction, fixedTrackIndex: trackIndex)
+        if iterator.nextGridItem() == nil {
+          if emptyTrackIndexes == nil {
+            emptyTrackIndexes = OrderedTrackIndexSet()
+          }
+          emptyTrackIndexes!.add(value: UInt64(trackIndex))
+        }
+      }
+    }
+    return emptyTrackIndexes
   }
 
   private enum ShouldUpdateGridAreaLogicalSize {
@@ -1566,6 +1601,16 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func computeAspectRatioDependentAndBaselineItems() -> [RenderBoxWrapper] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatColumnsType() -> AutoRepeatType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatRowsType() -> AutoRepeatType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

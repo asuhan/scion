@@ -700,6 +700,12 @@ enum RubyOverhang: UInt8 {
   case None
 }
 
+enum AutoRepeatType {
+  case None
+  case Fill
+  case Fit
+}
+
 enum TextIndentLine: UInt8 {
   case FirstLine
   case EachLine
