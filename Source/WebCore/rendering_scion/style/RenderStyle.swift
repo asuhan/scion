@@ -770,6 +770,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func isGridAutoFlowDirectionColumn() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isGridAutoFlowAlgorithmDense() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

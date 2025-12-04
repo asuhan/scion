@@ -1316,7 +1316,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let isGridAutoFlowDense = style().isGridAutoFlowAlgorithmDense()
 
     for autoGridItem in autoGridItems {
-      placeAutoMajorAxisItemOnGrid(gridItem: autoGridItem, autoPlacementCursor: &autoPlacementCursor)
+      placeAutoMajorAxisItemOnGrid(
+        gridItem: autoGridItem, autoPlacementCursor: &autoPlacementCursor)
 
       if isGridAutoFlowDense {
         autoPlacementCursor = (UInt32(0), UInt32(0))
@@ -1334,8 +1335,14 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func autoPlacementMajorAxisDirection() -> GridTrackSizingDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if areMasonryColumns() {
+      return .ForColumns
+    }
+    if areMasonryRows() {
+      return .ForRows
+    }
+
+    return style().isGridAutoFlowDirectionColumn() ? .ForColumns : .ForRows
   }
 
   override func canPerformSimplifiedLayout() -> Bool {
