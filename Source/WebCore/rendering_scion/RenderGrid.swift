@@ -102,8 +102,16 @@ private func cacheBaselineAlignedGridItems(
 
 @discardableResult
 private func insertIntoGrid(grid: Grid, gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let clamped = grid.insert(gridItem: gridItem, area: area)
+
+  if let renderGrid = gridItem as? RenderGridWrapper {
+    if renderGrid.isSubgridRows() || renderGrid.isSubgridColumns() {
+      renderGrid.placeItems()
+    }
+    return clamped
+  }
+
+  return clamped
 }
 
 private func overrideSizeChanged(
@@ -761,6 +769,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return currentGrid().numTracks(direction: .ForRows) != 0
       ? currentGrid().numTracks(direction: .ForColumns)
       : GridPositionsResolver.explicitGridColumnCount(gridContainer: self)
+  }
+
+  func placeItems() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // This method optimizes the gutters computation by skipping the available size
