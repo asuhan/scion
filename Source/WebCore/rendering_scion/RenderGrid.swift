@@ -1312,6 +1312,23 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func placeAutoMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
+    var autoPlacementCursor = (UInt32(0), UInt32(0))
+    let isGridAutoFlowDense = style().isGridAutoFlowAlgorithmDense()
+
+    for autoGridItem in autoGridItems {
+      placeAutoMajorAxisItemOnGrid(gridItem: autoGridItem, autoPlacementCursor: &autoPlacementCursor)
+
+      if isGridAutoFlowDense {
+        autoPlacementCursor = (UInt32(0), UInt32(0))
+      }
+    }
+  }
+
+  private typealias AutoPlacementCursor = (UInt32, UInt32)
+
+  private func placeAutoMajorAxisItemOnGrid(
+    gridItem: RenderBoxWrapper, autoPlacementCursor: inout AutoPlacementCursor
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
