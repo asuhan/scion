@@ -1066,8 +1066,24 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func clampAutoRepeatTracks(direction: GridTrackSizingDirection, autoRepeatTracks: UInt32)
     -> UInt32
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if autoRepeatTracks == 0 {
+      return 0
+    }
+
+    let insertionPoint =
+      direction == .ForColumns
+      ? style().gridAutoRepeatColumnsInsertionPoint() : style().gridAutoRepeatRowsInsertionPoint()
+    let maxTracks = UInt32(GridPosition.max())
+
+    if insertionPoint == 0 {
+      return min(autoRepeatTracks, maxTracks)
+    }
+
+    if insertionPoint >= maxTracks {
+      return 0
+    }
+
+    return min(autoRepeatTracks, maxTracks - insertionPoint)
   }
 
   private func computeEmptyTracksForAutoRepeat(direction: GridTrackSizingDirection)

@@ -760,6 +760,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func gridAutoRepeatColumnsInsertionPoint() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridAutoRepeatRowsInsertionPoint() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func columnCount() -> UInt16 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

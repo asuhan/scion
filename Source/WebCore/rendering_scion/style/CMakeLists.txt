@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     GapLength.swift
     GridArea.swift
     GridLength.swift
+    GridPosition.swift
     GridPositionsResolver.swift
     GridTrackSize.swift
     ListStyleType.swift
