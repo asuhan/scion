@@ -43,6 +43,46 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  func gridItemArea(item: RenderBoxWrapper) -> GridArea {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setGridItemArea(item: RenderBoxWrapper, area: GridArea) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func explicitGridStart(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatTracks(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAutoRepeatTracks(autoRepeatRows: UInt32, autoRepeatColumns: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clampAreaToSubgridIfNeeded(area: GridArea) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAutoRepeatEmptyColumns(autoRepeatEmptyColumns: OrderedTrackIndexSet?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAutoRepeatEmptyRows(autoRepeatEmptyRows: OrderedTrackIndexSet?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasAutoRepeatEmptyTracks(direction: GridTrackSizingDirection) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -67,4 +107,6 @@ final class Grid {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let orderIterator: OrderIterator
 }

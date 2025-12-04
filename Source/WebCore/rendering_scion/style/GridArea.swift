@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2014-2017 Igalia S.L.
+ * Copyright (C) 2013 Google Inc. All rights reserved.
+ * Copyright (C) 2013-2017 Igalia S.L.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -28,20 +29,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum GridTrackSizingDirection {
-  case ForColumns
-  case ForRows
+// A span in a single direction (either rows or columns). Note that |startLine|
+// and |endLine| are grid lines' indexes.
+// Despite line numbers in the spec start in "1", the indexes here start in "0".
+struct GridSpan {
+  func isTranslatedDefinite() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isIndefinite() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func translate(offset: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
-// Class with all the code related to grid items positions resolution.
-class GridPositionsResolver {
-  static func explicitGridColumnCount(gridContainer: RenderGridWrapper) -> UInt32 {
+// This represents a grid area that spans in both rows' and columns' direction.
+struct GridArea {
+  init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  static func explicitGridRowCount(gridContainer: RenderGridWrapper) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  init(r: GridSpan, c: GridSpan) {
+    columns = c
+    rows = r
   }
+
+  let columns: GridSpan
+  let rows: GridSpan
 }

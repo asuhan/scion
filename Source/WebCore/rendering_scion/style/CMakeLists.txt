@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     ContentData.swift
     FillLayer.swift
     GapLength.swift
+    GridArea.swift
     GridPositionsResolver.swift
     ListStyleType.swift
     NinePieceImage.swift

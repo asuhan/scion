@@ -100,6 +100,12 @@ private func cacheBaselineAlignedGridItems(
   }
 }
 
+@discardableResult
+private func insertIntoGrid(grid: Grid, gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func overrideSizeChanged(
   gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection, width: LayoutUnit?,
   height: LayoutUnit?
@@ -860,6 +866,27 @@ final class RenderGridWrapper: RenderBlockWrapper {
     maxLogicalWidth += scrollbarWidth
   }
 
+  private func computeAutoRepeatTracksCount(
+    direction: GridTrackSizingDirection, availableSize: LayoutUnit?
+  ) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clampAutoRepeatTracks(direction: GridTrackSizingDirection, autoRepeatTracks: UInt32)
+    -> UInt32
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeEmptyTracksForAutoRepeat(direction: GridTrackSizingDirection)
+    -> OrderedTrackIndexSet?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private enum ShouldUpdateGridAreaLogicalSize {
     case No
     case Yes
@@ -912,7 +939,143 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  // FIXME: We shouldn't have to pass the available logical width as argument. The problem is that
+  // availableLogicalWidth() does always return a value even if we cannot resolve it like when
+  // computing the intrinsic size (preferred widths). That's why we pass the responsibility to the
+  // caller who does know whether the available logical width is indefinite or not.
   private func placeItemsOnGrid(availableLogicalWidth: LayoutUnit?) {
+    var autoRepeatColumns = computeAutoRepeatTracksCount(
+      direction: .ForColumns, availableSize: availableLogicalWidth)
+    var autoRepeatRows = computeAutoRepeatTracksCount(
+      direction: .ForRows, availableSize: availableLogicalHeightForPercentageComputation())
+    autoRepeatRows = clampAutoRepeatTracks(direction: .ForRows, autoRepeatTracks: autoRepeatRows)
+    autoRepeatColumns = clampAutoRepeatTracks(
+      direction: .ForColumns, autoRepeatTracks: autoRepeatColumns)
+
+    if isSubgridInParentDirection(parentDirection: .ForColumns)
+      || isSubgridInParentDirection(parentDirection: .ForRows),
+      let parent = parent() as? RenderGridWrapper, parent.currentGrid().needsItemsPlacement()
+    {
+      currentGrid().setNeedsItemsPlacement(needsItemsPlacement: true)
+    }
+
+    if autoRepeatColumns != currentGrid().autoRepeatTracks(direction: .ForColumns)
+      || autoRepeatRows != currentGrid().autoRepeatTracks(direction: .ForRows)
+      || isMasonry()
+    {
+      currentGrid().setNeedsItemsPlacement(needsItemsPlacement: true)
+      currentGrid().setAutoRepeatTracks(
+        autoRepeatRows: autoRepeatRows, autoRepeatColumns: autoRepeatColumns)
+    }
+
+    if !currentGrid().needsItemsPlacement() {
+      return
+    }
+
+    assert(!currentGrid().hasGridItems())
+    populateExplicitGridAndOrderIterator()
+
+    var autoMajorAxisAutoGridItems: [RenderBoxWrapper] = []
+    var specifiedMajorAxisAutoGridItems: [RenderBoxWrapper] = []
+    var gridItem = currentGrid().orderIterator.first()
+    while gridItem != nil {
+      if currentGrid().orderIterator.shouldSkipChild(child: gridItem!) {
+        gridItem = currentGrid().orderIterator.next()
+        continue
+      }
+
+      // Grid items should use the grid area sizes instead of the containing block (grid container)
+      // sizes, we initialize the overrides here if needed to ensure it.
+      if gridItem!.overridingContainingBlockContentLogicalWidth() == nil && !areMasonryColumns() {
+        gridItem!.setOverridingContainingBlockContentLogicalWidth(
+          logicalWidth: LayoutUnit(value: UInt64(0)))
+      }
+      if gridItem!.overridingContainingBlockContentLogicalHeight() == nil && !areMasonryRows() {
+        gridItem!.setOverridingContainingBlockContentLogicalHeight(logicalHeight: nil)
+      }
+
+      let area = currentGrid().gridItemArea(item: gridItem!)
+      currentGrid().clampAreaToSubgridIfNeeded(area: area)
+      if !area.rows.isIndefinite() {
+        area.rows.translate(offset: currentGrid().explicitGridStart(direction: .ForRows))
+      }
+      if !area.columns.isIndefinite() {
+        area.columns.translate(offset: currentGrid().explicitGridStart(direction: .ForColumns))
+      }
+
+      if area.rows.isIndefinite() || area.columns.isIndefinite() {
+        currentGrid().setGridItemArea(item: gridItem!, area: area)
+        let majorAxisDirectionIsForColumns = autoPlacementMajorAxisDirection() == .ForColumns
+        if (majorAxisDirectionIsForColumns && area.columns.isIndefinite())
+          || (!majorAxisDirectionIsForColumns && area.rows.isIndefinite())
+        {
+          autoMajorAxisAutoGridItems.append(gridItem!)
+        } else {
+          specifiedMajorAxisAutoGridItems.append(gridItem!)
+        }
+        gridItem = currentGrid().orderIterator.next()
+        continue
+      }
+      insertIntoGrid(
+        grid: currentGrid(), gridItem: gridItem!, area: GridArea(r: area.rows, c: area.columns))
+      gridItem = currentGrid().orderIterator.next()
+    }
+
+    #if ASSERT_ENABLED
+      if currentGrid().hasGridItems() {
+        assert(
+          currentGrid().numTracks(direction: .ForRows)
+            >= GridPositionsResolver.explicitGridRowCount(gridContainer: self))
+        assert(
+          currentGrid().numTracks(direction: .ForColumns)
+            >= GridPositionsResolver.explicitGridColumnCount(gridContainer: self))
+      }
+    #endif
+
+    // Perform auto placement.
+    placeSpecifiedMajorAxisItemsOnGrid(autoGridItems: &specifiedMajorAxisAutoGridItems)
+    placeAutoMajorAxisItemsOnGrid(autoGridItems: &autoMajorAxisAutoGridItems)
+    // Compute collapsible tracks for auto-fit.
+    currentGrid().setAutoRepeatEmptyColumns(
+      autoRepeatEmptyColumns: computeEmptyTracksForAutoRepeat(direction: .ForColumns))
+    currentGrid().setAutoRepeatEmptyRows(
+      autoRepeatEmptyRows: computeEmptyTracksForAutoRepeat(direction: .ForRows))
+
+    currentGrid().setNeedsItemsPlacement(needsItemsPlacement: false)
+
+    #if ASSERT_ENABLED
+      do {
+        var gridItem = currentGrid().orderIterator.first()
+        while gridItem != nil {
+          if currentGrid().orderIterator.shouldSkipChild(child: gridItem!) {
+            gridItem = currentGrid().orderIterator.next()
+            continue
+          }
+
+          let area = currentGrid().gridItemArea(item: gridItem!)
+          assert(area.rows.isTranslatedDefinite() && area.columns.isTranslatedDefinite())
+          gridItem = currentGrid().orderIterator.next()
+        }
+      }
+    #endif
+  }
+
+  private func populateExplicitGridAndOrderIterator() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeSpecifiedMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeAutoMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func autoPlacementMajorAxisDirection() -> GridTrackSizingDirection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
