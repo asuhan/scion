@@ -1528,9 +1528,15 @@ final class RenderGridWrapper: RenderBlockWrapper {
       parentStyle: gridStyle, normalValueBehaviour: normalBehavior)
   }
 
-  private func allowedToStretchGridItemAlongColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
+  private func hasAutoSizeInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func allowedToStretchGridItemAlongColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
+    return alignSelfForGridItem(gridItem: gridItem).position == .Stretch
+      && hasAutoSizeInColumnAxis(gridItem: gridItem)
+      && !hasAutoMarginsInColumnAxis(gridItem: gridItem)
   }
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
