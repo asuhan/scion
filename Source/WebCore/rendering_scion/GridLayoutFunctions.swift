@@ -36,6 +36,13 @@ class GridLayoutFunctions {
     fatalError("Not implemented")
   }
 
+  static func isGridItemInlineSizeDependentOnBlockConstraints(
+    gridItem: RenderBoxWrapper, parentGrid: RenderGridWrapper, gridItemAlignSelf: ItemPosition
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func flowAwareDirectionForGridItem(
     grid: RenderGridWrapper, gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> GridTrackSizingDirection {

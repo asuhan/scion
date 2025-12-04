@@ -23,6 +23,22 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct ItemLayoutRequirement: OptionSet {
+  let rawValue: UInt8
+
+  static let NeedsColumnAxisStretchAlignment = ItemLayoutRequirement(rawValue: 1 << 0)
+  static let MinContentContributionForSecondColumnPass = ItemLayoutRequirement(rawValue: 1 << 1)
+}
+
 struct GridLayoutState {
-  let needsSecondTrackSizingPass = false
+  mutating func setLayoutRequirementForGridItem(
+    gridItem: RenderBoxWrapper, layoutRequirement: ItemLayoutRequirement
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func setNeedsSecondTrackSizingPass() { needsSecondTrackSizingPass = true }
+
+  var needsSecondTrackSizingPass = false
 }

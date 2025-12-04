@@ -826,6 +826,34 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func computeLayoutRequirementsForItemsBeforeLayout() -> GridLayoutState {
+    var gridLayoutState = GridLayoutState()
+
+    for gridItem: RenderBoxWrapper in childrenOfType(parent: self) {
+      let gridItemAlignSelf = alignSelfForGridItem(gridItem: gridItem).position
+      if GridLayoutFunctions.isGridItemInlineSizeDependentOnBlockConstraints(
+        gridItem: gridItem, parentGrid: self, gridItemAlignSelf: gridItemAlignSelf)
+      {
+        gridLayoutState.setNeedsSecondTrackSizingPass()
+        gridLayoutState.setLayoutRequirementForGridItem(
+          gridItem: gridItem, layoutRequirement: .MinContentContributionForSecondColumnPass)
+      }
+
+      if !gridItem.needsLayout() || gridItem.isOutOfFlowPositioned()
+        || gridItem.isExcludedFromNormalLayout()
+      {
+        continue
+      }
+
+      if canSetColumnAxisStretchRequirementForItem(gridItem: gridItem) {
+        gridLayoutState.setLayoutRequirementForGridItem(
+          gridItem: gridItem, layoutRequirement: .NeedsColumnAxisStretchAlignment)
+      }
+    }
+
+    return gridLayoutState
+  }
+
+  private func canSetColumnAxisStretchRequirementForItem(gridItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
