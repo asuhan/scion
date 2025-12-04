@@ -772,8 +772,10 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func placeItems() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    updateLogicalWidth()
+
+    let availableSpaceForColumns = availableLogicalWidth()
+    placeItemsOnGrid(availableLogicalWidth: availableSpaceForColumns)
   }
 
   // This method optimizes the gutters computation by skipping the available size
