@@ -854,8 +854,10 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func canSetColumnAxisStretchRequirementForItem(gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridItemBlockFlowDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: self, gridItem: gridItem, direction: .ForRows)
+    return gridItemBlockFlowDirection == .ForRows
+      && allowedToStretchGridItemAlongColumnAxis(gridItem: gridItem)
   }
 
   override func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
@@ -1304,6 +1306,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
       stretchingMode == .Any ? selfAlignmentNormalBehavior(gridItem: gridItem) : .Normal
     return gridItem.style().resolvedAlignSelf(
       parentStyle: gridStyle, normalValueBehaviour: normalBehavior)
+  }
+
+  private func allowedToStretchGridItemAlongColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
