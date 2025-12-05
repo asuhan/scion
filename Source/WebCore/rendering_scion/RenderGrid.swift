@@ -1387,9 +1387,56 @@ final class RenderGridWrapper: RenderBlockWrapper {
       maxColumns: isSubgridColumns() ? maximumColumnIndex : 0)
   }
 
-  private func placeSpecifiedMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
+  private func createEmptyGridAreaAtSpecifiedPositionsOutsideGrid(
+    gridItem: RenderBoxWrapper, specifiedDirection: GridTrackSizingDirection,
+    specifiedPositions: GridSpan
+  ) -> GridArea {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func placeSpecifiedMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
+    let isForColumns = autoPlacementMajorAxisDirection() == .ForColumns
+    let isGridAutoFlowDense = style().isGridAutoFlowAlgorithmDense()
+
+    // Mapping between the major axis tracks (rows or columns) and the last auto-placed item's position inserted on
+    // that track. This is needed to implement "sparse" packing for items locked to a given track.
+    // See https://drafts.csswg.org/css-grid-2/#auto-placement-algo
+    var minorAxisCursors: [UInt32: UInt32] = [:]
+
+    for autoGridItem in autoGridItems {
+      let majorAxisPositions = currentGrid().gridItemSpan(
+        gridItem: autoGridItem, direction: autoPlacementMajorAxisDirection())
+      assert(majorAxisPositions.isTranslatedDefinite())
+      assert(
+        currentGrid().gridItemSpan(
+          gridItem: autoGridItem, direction: autoPlacementMinorAxisDirection()
+        ).isIndefinite())
+      let minorAxisSpanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
+        gridItem: autoGridItem, direction: autoPlacementMinorAxisDirection())
+      let majorAxisInitialPosition = majorAxisPositions.startLine()
+
+      let iterator = GridIterator(
+        grid: currentGrid(), direction: autoPlacementMajorAxisDirection(),
+        fixedTrackIndex: majorAxisPositions.startLine(),
+        varyingTrackIndex: isGridAutoFlowDense ? 0 : minorAxisCursors[majorAxisInitialPosition]!)
+      var emptyGridArea = iterator.nextEmptyGridArea(
+        fixedTrackSpan: majorAxisPositions.integerSpan(), varyingTrackSpan: minorAxisSpanSize)
+      if emptyGridArea == nil {
+        emptyGridArea = createEmptyGridAreaAtSpecifiedPositionsOutsideGrid(
+          gridItem: autoGridItem, specifiedDirection: autoPlacementMajorAxisDirection(),
+          specifiedPositions: majorAxisPositions)
+      }
+
+      emptyGridArea = insertIntoGrid(
+        grid: currentGrid(), gridItem: autoGridItem, area: emptyGridArea!)
+
+      if !isGridAutoFlowDense {
+        minorAxisCursors.updateValue(
+          isForColumns ? emptyGridArea!.rows.startLine() : emptyGridArea!.columns.startLine(),
+          forKey: majorAxisInitialPosition)
+      }
+    }
   }
 
   private func placeAutoMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
@@ -1424,6 +1471,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
 
     return style().isGridAutoFlowDirectionColumn() ? .ForColumns : .ForRows
+  }
+
+  private func autoPlacementMinorAxisDirection() -> GridTrackSizingDirection {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func canPerformSimplifiedLayout() -> Bool {

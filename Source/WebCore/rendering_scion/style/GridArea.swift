@@ -33,12 +33,22 @@
 // and |endLine| are grid lines' indexes.
 // Despite line numbers in the spec start in "1", the indexes here start in "0".
 struct GridSpan {
+  func integerSpan() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func untranslatedStartLine() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func untranslatedEndLine() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func startLine() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

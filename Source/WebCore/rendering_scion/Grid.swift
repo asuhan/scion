@@ -63,6 +63,11 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  func gridItemSpan(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection) -> GridSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func explicitGridStart(direction: GridTrackSizingDirection) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -143,6 +148,11 @@ class GridIterator {
   }
 
   func nextGridItem() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nextEmptyGridArea(fixedTrackSpan: UInt32, varyingTrackSpan: UInt32) -> GridArea? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
