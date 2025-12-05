@@ -31,6 +31,13 @@ struct GridAxis: OptionSet {
 }
 
 class GridLayoutFunctions {
+  static func marginLogicalSizeForGridItem(
+    grid: RenderGridWrapper, direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func isOrthogonalGridItem(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

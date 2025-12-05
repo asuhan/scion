@@ -1826,8 +1826,16 @@ final class RenderGridWrapper: RenderBlockWrapper {
     gridAreaBreadthForGridItem: LayoutUnit, gridItem: RenderBoxWrapper,
     direction: GridTrackSizingDirection
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Because we want to avoid multiple layouts, stretching logic might be performed before
+    // grid items are laid out, so we can't use the grid item cached values. Hence, we need to
+    // compute margins in order to determine the available height before stretching.
+    let gridItemFlowDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: self, gridItem: gridItem, direction: direction)
+    return max(
+      LayoutUnit(value: UInt64(0)),
+      gridAreaBreadthForGridItem
+        - GridLayoutFunctions.marginLogicalSizeForGridItem(
+          grid: self, direction: gridItemFlowDirection, gridItem: gridItem))
   }
 
   private func justifySelfForGridItem(
