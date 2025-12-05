@@ -35,6 +35,21 @@ enum GridTrackSizingDirection {
 
 // Class with all the code related to grid items positions resolution.
 class GridPositionsResolver {
+  static func spanSizeForAutoPlacedItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func resolveGridPositionsFromStyle(
+    gridContainer: RenderGridWrapper, gridItem: RenderBoxWrapper,
+    direction: GridTrackSizingDirection
+  ) -> GridSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func explicitGridColumnCount(gridContainer: RenderGridWrapper) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

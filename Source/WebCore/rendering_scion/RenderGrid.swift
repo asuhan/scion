@@ -1329,8 +1329,62 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func populateExplicitGridAndOrderIterator() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let populator = OrderIteratorPopulator(iterator: currentGrid().orderIterator)
+    var explicitRowStart = 0
+    var explicitColumnStart = 0
+    var maximumRowIndex = GridPositionsResolver.explicitGridRowCount(gridContainer: self)
+    var maximumColumnIndex = GridPositionsResolver.explicitGridColumnCount(gridContainer: self)
+
+    var gridItem = firstChildBox()
+    while gridItem != nil {
+      if !populator.collectChild(child: gridItem!) {
+        gridItem = gridItem!.nextSiblingBox()
+        continue
+      }
+
+      let rowPositions = GridPositionsResolver.resolveGridPositionsFromStyle(
+        gridContainer: self, gridItem: gridItem!, direction: .ForRows)
+      if !isSubgridRows() {
+        if !rowPositions.isIndefinite() {
+          explicitRowStart = max(explicitRowStart, Int(-rowPositions.untranslatedStartLine()))
+          maximumRowIndex = max(maximumRowIndex, UInt32(rowPositions.untranslatedEndLine()))
+        } else {
+          // Grow the grid for items with a definite row span, getting the largest such span.
+          let spanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
+            gridItem: gridItem!, direction: .ForRows)
+          maximumRowIndex = max(maximumRowIndex, spanSize)
+        }
+      }
+
+      let columnPositions = GridPositionsResolver.resolveGridPositionsFromStyle(
+        gridContainer: self, gridItem: gridItem!, direction: .ForColumns)
+      if !isSubgridColumns() {
+        if !columnPositions.isIndefinite() {
+          explicitColumnStart = max(
+            explicitColumnStart, Int(-columnPositions.untranslatedStartLine()))
+          maximumColumnIndex = max(
+            maximumColumnIndex, UInt32(columnPositions.untranslatedEndLine()))
+        } else {
+          // Grow the grid for items with a definite column span, getting the largest such span.
+          let spanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
+            gridItem: gridItem!, direction: .ForColumns)
+          maximumColumnIndex = max(maximumColumnIndex, spanSize)
+        }
+      }
+
+      currentGrid().setGridItemArea(
+        item: gridItem!, area: GridArea(r: rowPositions, c: columnPositions))
+      gridItem = gridItem!.nextSiblingBox()
+    }
+
+    currentGrid().setExplicitGridStart(
+      rowStart: UInt32(explicitRowStart), columnStart: UInt32(explicitColumnStart))
+    currentGrid().ensureGridSize(
+      maximumRowSize: maximumRowIndex + UInt32(explicitRowStart),
+      maximumColumnSize: maximumColumnIndex + UInt32(explicitColumnStart))
+    currentGrid().setClampingForSubgrid(
+      maxRows: isSubgridRows() ? maximumRowIndex : 0,
+      maxColumns: isSubgridColumns() ? maximumColumnIndex : 0)
   }
 
   private func placeSpecifiedMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {

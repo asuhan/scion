@@ -36,6 +36,11 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  func ensureGridSize(maximumRowSize: UInt32, maximumColumnSize: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func insert(gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -69,6 +74,16 @@ final class Grid {
   }
 
   func setAutoRepeatTracks(autoRepeatRows: UInt32, autoRepeatColumns: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setClampingForSubgrid(maxRows: UInt32, maxColumns: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setExplicitGridStart(rowStart: UInt32, columnStart: UInt32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
