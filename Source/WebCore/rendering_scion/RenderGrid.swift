@@ -2065,8 +2065,17 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func aspectRatioPrefersInline(gridItem: RenderBoxWrapper, blockFlowIsColumnAxis: Bool)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !gridItem.style().hasAspectRatio() {
+      return false
+    }
+    var hasExplicitInlineStretch =
+      justifySelfForGridItem(gridItem: gridItem, stretchingMode: .Explicit).position == .Stretch
+    var hasExplicitBlockStretch =
+      alignSelfForGridItem(gridItem: gridItem, stretchingMode: .Explicit).position == .Stretch
+    if !blockFlowIsColumnAxis {
+      swap(&hasExplicitInlineStretch, &hasExplicitBlockStretch)
+    }
+    return !hasExplicitBlockStretch
   }
 
   private func computeAspectRatioDependentAndBaselineItems() -> [RenderBoxWrapper] {
