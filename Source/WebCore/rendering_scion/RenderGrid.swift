@@ -1917,8 +1917,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func nonCollapsedTracks(direction: GridTrackSizingDirection) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let tracks = trackSizingAlgorithm!.tracks(direction: direction)
+    let numberOfTracks = UInt32(tracks.count)
+    let hasCollapsedTracks = currentGrid().hasAutoRepeatEmptyTracks(direction: direction)
+    let numberOfCollapsedTracks =
+      hasCollapsedTracks ? currentGrid().autoRepeatEmptyTracks(direction: direction).size() : 0
+    return numberOfTracks - numberOfCollapsedTracks
   }
 
   override func establishesIndependentFormattingContext() -> Bool {
