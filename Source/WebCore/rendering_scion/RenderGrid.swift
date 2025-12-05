@@ -1504,8 +1504,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     direction: GridTrackSizingDirection, availableSpace: LayoutUnit,
     gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    trackSizingAlgorithm!.run(
+      direction: direction, numTracks: numTracks(direction: direction),
+      sizingOperation: .TrackSizing,
+      availableSpace: availableSpace, gridLayoutState: &gridLayoutState)
+    assert(trackSizingAlgorithm!.tracksAreWiderThanMinTrackBreadth())
   }
 
   @discardableResult
