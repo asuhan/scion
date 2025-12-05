@@ -1395,8 +1395,17 @@ final class RenderGridWrapper: RenderBlockWrapper {
     gridItem: RenderBoxWrapper, specifiedDirection: GridTrackSizingDirection,
     specifiedPositions: GridSpan
   ) -> GridArea {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let crossDirection: GridTrackSizingDirection =
+      specifiedDirection == .ForColumns ? .ForRows : .ForColumns
+    let endOfCrossDirection = currentGrid().numTracks(direction: crossDirection)
+    let crossDirectionSpanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
+      gridItem: gridItem, direction: crossDirection)
+    let crossDirectionPositions = GridSpan.translatedDefiniteGridSpan(
+      startLine: Int32(endOfCrossDirection),
+      endLine: Int32(endOfCrossDirection + crossDirectionSpanSize))
+    return GridArea(
+      r: specifiedDirection == .ForColumns ? crossDirectionPositions : specifiedPositions,
+      c: specifiedDirection == .ForColumns ? specifiedPositions : crossDirectionPositions)
   }
 
   private func placeSpecifiedMajorAxisItemsOnGrid(autoGridItems: inout [RenderBoxWrapper]) {
