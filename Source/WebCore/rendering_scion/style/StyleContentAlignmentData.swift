@@ -24,6 +24,16 @@
  */
 
 class StyleContentAlignmentData {
+  // Style data for Content-Distribution properties: align-content, justify-content.
+  // <content-distribution> || [ <overflow-position>? && <content-position> ]
+  init(
+    position: ContentPosition, distribution: ContentDistribution,
+    overflow: OverflowAlignment = .Default
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isNormal() -> Bool {
     return position == .Normal && distribution == .Default
   }

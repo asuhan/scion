@@ -118,6 +118,9 @@ private func insertIntoGrid(grid: Grid, gridItem: RenderBoxWrapper, area: GridAr
   return clamped
 }
 
+private let contentAlignmentNormalBehaviorGrid = StyleContentAlignmentData(
+  position: .Normal, distribution: .Stretch)
+
 private func overrideSizeChanged(
   gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection, width: LayoutUnit?,
   height: LayoutUnit?
@@ -357,8 +360,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func contentAlignment(direction: GridTrackSizingDirection) -> StyleContentAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? style().resolvedJustifyContent(normalValueBehavior: contentAlignmentNormalBehaviorGrid)
+      : style().resolvedAlignContent(normalValueBehavior: contentAlignmentNormalBehaviorGrid)
   }
 
   // These functions handle the actual implementation of layoutBlock based on if
