@@ -1583,8 +1583,22 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func updateGridAreaForAspectRatioItems(
     autoGridItems: [RenderBoxWrapper], gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    populateGridPositionsForDirection(direction: .ForColumns)
+    populateGridPositionsForDirection(direction: .ForRows)
+
+    for autoGridItem in autoGridItems {
+      updateGridAreaLogicalSize(
+        gridItem: autoGridItem,
+        width: gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+          gridItem: autoGridItem, direction: .ForColumns),
+        height: gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+          gridItem: autoGridItem, direction: .ForRows))
+      // For an item with aspect-ratio, if it has stretch alignment that stretches to the definite row, we also need to transfer the size before laying out the grid item.
+      if autoGridItem.hasStretchedLogicalHeight() {
+        applyStretchAlignmentToGridItemIfNeeded(
+          gridItem: autoGridItem, gridLayoutState: &gridLayoutState)
+      }
+    }
   }
 
   private func layoutGridItems(gridLayoutState: inout GridLayoutState) {
@@ -1745,6 +1759,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  private func gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
     var allowance = allowedLayoutOverflowForBox()
     if offsetBetweenColumns.positionOffset < Int32(0) {
@@ -1810,6 +1831,14 @@ final class RenderGridWrapper: RenderBlockWrapper {
       stretchingMode == .Any ? selfAlignmentNormalBehavior(gridItem: gridItem) : .Normal
     return gridItem.style().resolvedAlignSelf(
       parentStyle: gridStyle, normalValueBehaviour: normalBehavior)
+  }
+
+  // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
+  private func applyStretchAlignmentToGridItemIfNeeded(
+    gridItem: RenderBoxWrapper, gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func hasAutoSizeInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
