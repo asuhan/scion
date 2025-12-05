@@ -2101,8 +2101,37 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
   private func updateAutoMarginsInColumnAxisIfNeeded(gridItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!gridItem.isOutOfFlowPositioned())
+
+    let parentStyle = style()
+    let marginBefore = gridItem.style().marginBeforeUsing(otherStyle: parentStyle)
+    let marginAfter = gridItem.style().marginAfterUsing(otherStyle: parentStyle)
+    var marginLogicalHeight = LayoutUnit()
+    // We should only consider computed margins if their specified value isn't
+    // 'auto', since such computed value may come from a previous layout and may
+    // be incorrect now.
+    if !marginBefore.isAuto() {
+      marginLogicalHeight += gridItem.marginBefore()
+    }
+    if !marginAfter.isAuto() {
+      marginLogicalHeight += gridItem.marginAfter()
+    }
+
+    let availableAlignmentSpace =
+      gridItem.overridingContainingBlockContentLogicalHeight()!! - gridItem.logicalHeight()
+      - marginLogicalHeight
+    if availableAlignmentSpace <= Int32(0) {
+      return
+    }
+
+    if marginBefore.isAuto() && marginAfter.isAuto() {
+      gridItem.setMarginBefore(value: availableAlignmentSpace / 2, overrideStyle: parentStyle)
+      gridItem.setMarginAfter(value: availableAlignmentSpace / 2, overrideStyle: parentStyle)
+    } else if marginBefore.isAuto() {
+      gridItem.setMarginBefore(value: availableAlignmentSpace, overrideStyle: parentStyle)
+    } else if marginAfter.isAuto() {
+      gridItem.setMarginAfter(value: availableAlignmentSpace, overrideStyle: parentStyle)
+    }
   }
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
