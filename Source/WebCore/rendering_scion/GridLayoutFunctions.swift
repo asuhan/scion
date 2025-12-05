@@ -43,6 +43,11 @@ class GridLayoutFunctions {
     fatalError("Not implemented")
   }
 
+  static func isAspectRatioBlockSizeDependentGridItem(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func flowAwareDirectionForGridItem(
     grid: RenderGridWrapper, gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> GridTrackSizingDirection {

@@ -1938,8 +1938,32 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func computeAspectRatioDependentAndBaselineItems() -> [RenderBoxWrapper] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var dependentGridItems: [RenderBoxWrapper] = []
+
+    baselineItemsCached = true
+    hasAspectRatioBlockSizeDependentItem = false
+
+    let computeOrthogonalAndDependentItems = { [self] (gridItem: RenderBoxWrapper) in
+      // Grid's layout logic controls the grid item's override content size, hence we need to
+      // clear any override set previously, so it doesn't interfere in current layout
+      // execution.
+      gridItem.clearOverridingContentSize()
+
+      // For a grid item that has an aspect-ratio and block-constraints such as the relative logical height,
+      // when the grid width is auto, we may need get the real grid width before laying out the item.
+      if GridLayoutFunctions.isAspectRatioBlockSizeDependentGridItem(gridItem: gridItem)
+        && (style().logicalWidth().isAuto() || style().logicalWidth().isMinContent()
+          || style().logicalWidth().isMaxContent())
+      {
+        dependentGridItems.append(gridItem)
+        hasAspectRatioBlockSizeDependentItem = true
+      }
+    }
+
+    cacheBaselineAlignedGridItems(
+      grid: self, algorithm: trackSizingAlgorithm!, axes: [.GridRowAxis, .GridColumnAxis],
+      callback: computeOrthogonalAndDependentItems, cachingRowSubgridsForRootGrid: !isSubgridRows())
+    return dependentGridItems
   }
 
   // Masonry Spec Section 2.3.1 repeat(auto-fit)
