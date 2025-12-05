@@ -1353,6 +1353,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func justifySelf() -> StyleSelfAlignmentData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func gridSubgridRows() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1529,8 +1529,27 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func hasAutoSizeInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if gridItem.style().hasAspectRatio() {
+      // FIXME: should align-items + align-self: auto/justify-items + justify-self: auto be taken into account?
+      if isHorizontalWritingMode() == gridItem.isHorizontalWritingMode()
+        && gridItem.style().alignSelf().position != .Stretch
+      {
+        // A non-auto inline size means the same for block size (column axis size) because of the aspect ratio.
+        if !gridItem.style().logicalWidth().isAuto() {
+          return false
+        }
+      } else if gridItem.style().justifySelf().position != .Stretch {
+        let logicalHeight = gridItem.style().logicalHeight()
+        if logicalHeight.isFixed()
+          || (logicalHeight.isPercentOrCalculated()
+            && gridItem.percentageLogicalHeightIsResolvable())
+        {
+          return false
+        }
+      }
+    }
+    return isHorizontalWritingMode()
+      ? gridItem.style().height().isAuto() : gridItem.style().width().isAuto()
   }
 
   private func allowedToStretchGridItemAlongColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
