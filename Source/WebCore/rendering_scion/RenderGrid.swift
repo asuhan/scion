@@ -1450,8 +1450,69 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func populateGridPositionsForDirection(direction: GridTrackSizingDirection) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Since we add alignment offsets and track gutters, grid lines are not always adjacent. Hence, we will have to
+    // assume from now on that we just store positions of the initial grid lines of each track,
+    // except the last one, which is the only one considered as a final grid line of a track.
+
+    // The grid container's frame elements (border, padding and <content-position> offset) are sensible to the
+    // inline-axis flow direction. However, column lines positions are 'direction' unaware. This simplification
+    // allows us to use the same indexes to identify the columns independently on the inline-axis direction.
+    let isRowAxis = direction == .ForColumns
+    let tracks = trackSizingAlgorithm!.tracks(direction: direction)
+    let numberOfTracks = tracks.count
+    let numberOfLines = numberOfTracks + 1
+    let lastLine = numberOfLines - 1
+    let hasCollapsedTracks = currentGrid().hasAutoRepeatEmptyTracks(direction: direction)
+    let numberOfCollapsedTracks =
+      hasCollapsedTracks ? currentGrid().autoRepeatEmptyTracks(direction: direction).size() : 0
+    let offset = direction == .ForColumns ? offsetBetweenColumns : offsetBetweenRows
+    var positions = isRowAxis ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
+    assert(positions.count <= numberOfLines)
+    for _ in positions.count..<numberOfLines {
+      positions.append(LayoutUnit())
+    }
+
+    let borderAndPadding = isRowAxis ? borderAndPaddingStart() : borderAndPaddingBefore()
+
+    positions[0] = borderAndPadding + offset.positionOffset
+    if numberOfLines > 1 {
+      // If we have collapsed tracks we just ignore gaps here and add them later as we might not
+      // compute the gap between two consecutive tracks without examining the surrounding ones.
+      var gap = !hasCollapsedTracks ? gridGap(direction: direction) : LayoutUnit(value: UInt64(0))
+      let nextToLastLine = numberOfLines - 2
+
+      for i in 0..<nextToLastLine {
+        positions[i + 1] =
+          positions[i] + offset.distributionOffset + tracks[i].unclampedBaseSize() + gap
+      }
+      positions[lastLine] = positions[nextToLastLine] + tracks[nextToLastLine].unclampedBaseSize()
+
+      // Adjust collapsed gaps. Collapsed tracks cause the surrounding gutters to collapse (they
+      // coincide exactly) except on the edges of the grid where they become 0.
+      if hasCollapsedTracks {
+        gap = gridGap(direction: direction)
+        var remainingEmptyTracks = numberOfCollapsedTracks
+        var offsetAccumulator = LayoutUnit()
+        var gapAccumulator = LayoutUnit()
+        for i in 1..<lastLine {
+          if currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: UInt32(i - 1)) {
+            remainingEmptyTracks -= 1
+            offsetAccumulator += offset.distributionOffset
+          } else {
+            // Add gap between consecutive non empty tracks. Add it also just once for an
+            // arbitrary number of empty tracks between two non empty ones.
+            let allRemainingTracksAreEmpty = remainingEmptyTracks == (lastLine - i)
+            if !allRemainingTracksAreEmpty
+              || !currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: UInt32(i))
+            {
+              gapAccumulator += gap
+            }
+          }
+          positions[i] += gapAccumulator - offsetAccumulator
+        }
+        positions[lastLine] += gapAccumulator - offsetAccumulator
+      }
+    }
   }
 
   private func computeContentPositionAndDistributionOffset(

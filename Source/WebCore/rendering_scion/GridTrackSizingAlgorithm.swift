@@ -29,7 +29,12 @@ enum SizingOperation {
   case IntrinsicSizeComputation
 }
 
-class GridTrack {}
+class GridTrack {
+  func unclampedBaseSize() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
 
 final class GridTrackSizingAlgorithm {
   init(renderGrid: RenderGridWrapper, grid: Grid) {
