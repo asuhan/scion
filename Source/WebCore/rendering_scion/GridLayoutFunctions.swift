@@ -61,4 +61,13 @@ class GridLayoutFunctions {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func overridingContainingBlockContentSizeForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> RenderBoxWrapper
+    .ContainingBlockOverrideValue?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

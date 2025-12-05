@@ -31,6 +31,13 @@ struct ItemLayoutRequirement: OptionSet {
 }
 
 struct GridLayoutState {
+  func containsLayoutRequirementForGridItem(
+    gridItem: RenderBoxWrapper, layoutRequirement: ItemLayoutRequirement
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func setLayoutRequirementForGridItem(
     gridItem: RenderBoxWrapper, layoutRequirement: ItemLayoutRequirement
   ) {

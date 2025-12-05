@@ -1801,6 +1801,14 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  private func availableAlignmentSpaceForGridItemBeforeStretching(
+    gridAreaBreadthForGridItem: LayoutUnit, gridItem: RenderBoxWrapper,
+    direction: GridTrackSizingDirection
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func justifySelfForGridItem(
     gridItem: RenderBoxWrapper, stretchingMode: StretchingMode = .Any,
     gridStyle: RenderStyleWrapper? = nil
@@ -1837,8 +1845,86 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func applyStretchAlignmentToGridItemIfNeeded(
     gridItem: RenderBoxWrapper, gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridItem.overridingContainingBlockContentLogicalHeight() != nil)
+    assert(gridItem.overridingContainingBlockContentLogicalWidth() != nil)
+
+    // We clear height and width override values because we will decide now whether it's allowed or
+    // not, evaluating the conditions which might have changed since the old values were set.
+    gridItem.clearOverridingLogicalHeight()
+    gridItem.clearOverridingLogicalWidth()
+
+    let gridItemBlockDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: self, gridItem: gridItem, direction: .ForRows)
+    let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: self, gridItem: gridItem, direction: .ForColumns)
+    let blockFlowIsColumnAxis = gridItemBlockDirection == .ForRows
+    let allowedToStretchgridItemBlockSize =
+      blockFlowIsColumnAxis
+      ? allowedToStretchGridItemAlongColumnAxis(gridItem: gridItem)
+      : allowedToStretchGridItemAlongRowAxis(gridItem: gridItem)
+    if allowedToStretchgridItemBlockSize
+      && !aspectRatioPrefersInline(gridItem: gridItem, blockFlowIsColumnAxis: blockFlowIsColumnAxis)
+    {
+      let overridingContainingBlockContentSizeForGridItem =
+        GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+          gridItem: gridItem, direction: gridItemBlockDirection)
+      assert(
+        overridingContainingBlockContentSizeForGridItem != nil
+          && overridingContainingBlockContentSizeForGridItem! != nil)
+      let stretchedLogicalHeight = availableAlignmentSpaceForGridItemBeforeStretching(
+        gridAreaBreadthForGridItem: overridingContainingBlockContentSizeForGridItem!!,
+        gridItem: gridItem, direction: .ForRows)
+      let desiredLogicalHeight = gridItem.constrainLogicalHeightByMinMax(
+        logicalHeight: stretchedLogicalHeight, intrinsicContentHeight: nil)
+      gridItem.setOverridingLogicalHeight(height: desiredLogicalHeight)
+
+      let itemNeedsRelayoutForStretchAlignment = itemNeedsRelayoutForStretchAlignment(
+        desiredLogicalHeight: desiredLogicalHeight, gridItem: gridItem,
+        gridLayoutState: gridLayoutState)
+      // Checking the logical-height of a grid item isn't enough. Setting an override logical-height
+      // changes the definiteness, resulting in percentages to resolve differently.
+      //
+      // FIXME: Can avoid laying out here in some cases. See https://webkit.org/b/87905.
+      if itemNeedsRelayoutForStretchAlignment {
+        gridItem.setLogicalHeight(size: LayoutUnit(value: UInt64(0)))
+        gridItem.setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    } else if !allowedToStretchgridItemBlockSize
+      && allowedToStretchGridItemAlongRowAxis(gridItem: gridItem)
+    {
+      let overridingContainingBlockContentSizeForGridItem =
+        GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+          gridItem: gridItem, direction: gridItemInlineDirection)
+      assert(
+        overridingContainingBlockContentSizeForGridItem != nil
+          && overridingContainingBlockContentSizeForGridItem != nil)
+      let stretchedLogicalWidth = availableAlignmentSpaceForGridItemBeforeStretching(
+        gridAreaBreadthForGridItem: overridingContainingBlockContentSizeForGridItem!!,
+        gridItem: gridItem, direction: .ForColumns)
+      let desiredLogicalWidth = gridItem.constrainLogicalWidthInFragmentByMinMax(
+        logicalWidth: stretchedLogicalWidth, availableWidth: contentWidth(), cb: self, fragment: nil
+      )
+      gridItem.setOverridingLogicalWidth(width: desiredLogicalWidth)
+      if desiredLogicalWidth != gridItem.logicalWidth() {
+        gridItem.setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    }
+  }
+
+  private func itemNeedsRelayoutForStretchAlignment(
+    desiredLogicalHeight: LayoutUnit, gridItem: RenderBoxWrapper, gridLayoutState: GridLayoutState
+  ) -> Bool {
+    if desiredLogicalHeight != gridItem.logicalHeight() {
+      return true
+    }
+
+    if canSetColumnAxisStretchRequirementForItem(gridItem: gridItem) {
+      return gridLayoutState.containsLayoutRequirementForGridItem(
+        gridItem: gridItem, layoutRequirement: .NeedsColumnAxisStretchAlignment)
+    }
+
+    return gridItem is RenderBlockWrapper
+      && (gridItem as! RenderBlockWrapper).hasPercentHeightDescendants()
   }
 
   private func hasAutoSizeInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
@@ -1865,10 +1951,20 @@ final class RenderGridWrapper: RenderBlockWrapper {
       ? gridItem.style().height().isAuto() : gridItem.style().width().isAuto()
   }
 
+  private func hasAutoSizeInRowAxis(gridItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func allowedToStretchGridItemAlongColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
     return alignSelfForGridItem(gridItem: gridItem).position == .Stretch
       && hasAutoSizeInColumnAxis(gridItem: gridItem)
       && !hasAutoMarginsInColumnAxis(gridItem: gridItem)
+  }
+
+  private func allowedToStretchGridItemAlongRowAxis(gridItem: RenderBoxWrapper) -> Bool {
+    return justifySelfForGridItem(gridItem: gridItem).position == .Stretch
+      && hasAutoSizeInRowAxis(gridItem: gridItem) && !hasAutoMarginsInRowAxis(gridItem: gridItem)
   }
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
@@ -1964,6 +2060,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
       }
     }
     return renderElementEstablishesIndependentFormattingContext()
+  }
+
+  private func aspectRatioPrefersInline(gridItem: RenderBoxWrapper, blockFlowIsColumnAxis: Bool)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computeAspectRatioDependentAndBaselineItems() -> [RenderBoxWrapper] {
