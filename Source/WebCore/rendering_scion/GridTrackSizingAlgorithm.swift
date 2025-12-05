@@ -30,6 +30,11 @@ enum SizingOperation {
 }
 
 class GridTrack {
+  func baseSize() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unclampedBaseSize() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

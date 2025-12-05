@@ -1762,8 +1762,29 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func gridAreaBreadthForGridItemIncludingAlignmentOffsets(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForRows {
+      if areMasonryRows() {
+        return isHorizontalWritingMode()
+          ? gridItem.height() + gridItem.verticalMarginExtent()
+          : gridItem.width() + gridItem.horizontalMarginExtent()
+      }
+    } else if areMasonryColumns() {
+      return isHorizontalWritingMode()
+        ? gridItem.width() + gridItem.horizontalMarginExtent()
+        : gridItem.height() + gridItem.verticalMarginExtent()
+    }
+
+    // We need the cached value when available because Content Distribution alignment properties
+    // may have some influence in the final grid area breadth.
+    let tracks = trackSizingAlgorithm!.tracks(direction: direction)
+    let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
+    let linePositions = (direction == .ForColumns) ? columnPositions : rowPositions
+
+    let initialTrackPosition = linePositions[Int(span.startLine())]
+    let finalTrackPosition = linePositions[Int(span.endLine() - 1)]
+
+    // Track Positions vector stores the 'start' grid line of each track, so we have to add last track's baseSize.
+    return finalTrackPosition - initialTrackPosition + tracks[Int(span.endLine() - 1)].baseSize()
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {

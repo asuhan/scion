@@ -58,6 +58,11 @@ struct GridSpan {
     fatalError("Not implemented")
   }
 
+  func endLine() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTranslatedDefinite() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
