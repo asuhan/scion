@@ -647,6 +647,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setLogicalLocation(location: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalWidth(size: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

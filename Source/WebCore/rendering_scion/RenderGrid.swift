@@ -1818,6 +1818,19 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // FIXME: SetLogicalPositionForGridItem has only one caller, consider its refactoring in the future.
   private func setLogicalPositionForGridItem(gridItem: RenderBoxWrapper) {
+    // "In the positioning phase [...] calculations are performed according to the writing mode of the containing block of the box establishing the
+    // orthogonal flow." However, 'setLogicalLocation' will only take into account the grid item's writing-mode, so the position may need to be transposed.
+    let gridItemLocation = LayoutPointWrapper(
+      x: logicalOffsetForGridItem(gridItem: gridItem, direction: .ForColumns),
+      y: logicalOffsetForGridItem(gridItem: gridItem, direction: .ForRows))
+    gridItem.setLogicalLocation(
+      location: GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem)
+        ? gridItemLocation.transposedPoint() : gridItemLocation)
+  }
+
+  private func logicalOffsetForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
