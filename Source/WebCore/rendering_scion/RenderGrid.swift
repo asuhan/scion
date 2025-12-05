@@ -1487,8 +1487,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func autoPlacementMinorAxisDirection() -> GridTrackSizingDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return (autoPlacementMajorAxisDirection() == .ForColumns) ? .ForRows : .ForColumns
   }
 
   override func canPerformSimplifiedLayout() -> Bool {
