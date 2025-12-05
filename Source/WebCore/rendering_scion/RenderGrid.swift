@@ -145,8 +145,20 @@ private func hasRelativeBlockAxisSize(grid: RenderGridWrapper, gridItem: RenderB
 }
 
 private struct ContentAlignmentData {
-  let positionOffset = LayoutUnit()
-  let distributionOffset = LayoutUnit()
+  init(positionOffset: LayoutUnit = LayoutUnit(), distributionOffset: LayoutUnit = LayoutUnit()) {
+    self.positionOffset = positionOffset
+    self.distributionOffset = distributionOffset
+  }
+
+  let positionOffset: LayoutUnit
+  let distributionOffset: LayoutUnit
+}
+
+private func resolveContentDistributionFallback(distribution: ContentDistribution) -> (
+  OverflowAlignment, ContentPosition
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 final class RenderGridWrapper: RenderBlockWrapper {
@@ -332,6 +344,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return axis == .GridRowAxis
       ? justifySelfForGridItem(gridItem: gridItem, stretchingMode: .Any, gridStyle: gridStyle)
       : alignSelfForGridItem(gridItem: gridItem, stretchingMode: .Any, gridStyle: gridStyle)
+  }
+
+  private func contentAlignment(direction: GridTrackSizingDirection) -> StyleContentAlignmentData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // These functions handle the actual implementation of layoutBlock based on if
@@ -1518,8 +1535,83 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func computeContentPositionAndDistributionOffset(
     direction: GridTrackSizingDirection, availableFreeSpace: LayoutUnit, numberOfGridTracks: UInt32
   ) -> ContentAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isRowAxis = direction == .ForColumns
+    if isRowAxis ? isSubgridColumns() : isSubgridRows() {
+      return ContentAlignmentData()
+    }
+
+    let contentAlignmentData = contentAlignment(direction: direction)
+    let contentAlignmentDistribution = contentAlignmentData.distribution
+    let zero = LayoutUnit(value: UInt64(0))
+
+    // Apply <content-distribution> and return, or continue to fallback positioning if we can't distribute.
+    if contentAlignmentDistribution != .Default && availableFreeSpace > 0 {
+      switch contentAlignmentDistribution {
+      case .SpaceBetween:
+        if numberOfGridTracks < 2 {
+          break
+        }
+        return ContentAlignmentData(
+          positionOffset: zero, distributionOffset: availableFreeSpace / (numberOfGridTracks - 1))
+      case .SpaceAround:
+        if numberOfGridTracks < 1 {
+          break
+        }
+        let spaceBetweenTracks = availableFreeSpace / numberOfGridTracks
+        return ContentAlignmentData(
+          positionOffset: spaceBetweenTracks / 2, distributionOffset: spaceBetweenTracks)
+      case .SpaceEvenly:
+        let spaceEvenlyDistribution = availableFreeSpace / (numberOfGridTracks + 1)
+        return ContentAlignmentData(
+          positionOffset: spaceEvenlyDistribution, distributionOffset: spaceEvenlyDistribution)
+      case .Stretch:
+        break
+      case .Default:
+        fatalError("Not reached")
+      }
+    }
+
+    let (fallbackOverflow, fallbackContentPosition) = resolveContentDistributionFallback(
+      distribution: contentAlignmentDistribution)
+    let contentAlignmentOverflow = contentAlignmentData.overflow
+
+    // Apply alignment safety.
+    if availableFreeSpace <= Int32(0)
+      && (contentAlignmentOverflow == .Safe || fallbackOverflow == .Safe)
+    {
+      return ContentAlignmentData()
+    }
+
+    let usedContentPosition =
+      contentAlignmentDistribution == .Default
+      ? contentAlignmentData.position : fallbackContentPosition
+    // Apply <content-position> / fallback positioning.
+    switch usedContentPosition {
+    case .Left:
+      assert(isRowAxis)
+      if !style().isLeftToRightDirection() {
+        return ContentAlignmentData(positionOffset: availableFreeSpace, distributionOffset: zero)
+      }
+      return ContentAlignmentData()
+    case .Right:
+      assert(isRowAxis)
+      if style().isLeftToRightDirection() {
+        return ContentAlignmentData(positionOffset: availableFreeSpace, distributionOffset: zero)
+      }
+      return ContentAlignmentData()
+    case .Center:
+      return ContentAlignmentData(positionOffset: availableFreeSpace / 2, distributionOffset: zero)
+    case .FlexEnd,  // Only used in flex layout, for other layout, it's equivalent to 'end'.
+      .End:
+      return ContentAlignmentData(positionOffset: availableFreeSpace, distributionOffset: zero)
+    case .FlexStart,  // Only used in flex layout, for other layout, it's equivalent to 'start'.
+      .Start, .Baseline, .LastBaseline:
+      // FIXME: Implement the baseline values. For now, we always 'start' align.
+      // http://webkit.org/b/145566
+      return ContentAlignmentData()
+    case .Normal:
+      fatalError("Not reached")
+    }
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
