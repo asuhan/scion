@@ -157,8 +157,18 @@ private struct ContentAlignmentData {
 private func resolveContentDistributionFallback(distribution: ContentDistribution) -> (
   OverflowAlignment, ContentPosition
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch distribution {
+  case .SpaceBetween:
+    return (.Default, .Start)
+  case .SpaceAround:
+    return (.Safe, .Center)
+  case .SpaceEvenly:
+    return (.Safe, .Center)
+  case .Stretch:
+    return (.Default, .Start)
+  case .Default:
+    return (.Default, .Normal)
+  }
 }
 
 final class RenderGridWrapper: RenderBlockWrapper {
