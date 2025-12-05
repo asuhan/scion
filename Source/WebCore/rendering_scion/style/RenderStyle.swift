@@ -784,6 +784,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func gridAutoRepeatColumnsType() -> AutoRepeatType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridAutoRepeatRowsType() -> AutoRepeatType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isGridAutoFlowDirectionColumn() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

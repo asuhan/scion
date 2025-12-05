@@ -1942,14 +1942,27 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // Masonry Spec Section 2.3.1 repeat(auto-fit)
+  // "repeat(auto-fit) behaves as repeat(auto-fill) when the other axis is a masonry axis."
+  // We need to lie here that we are really an auto-fill instead of an auto-fit.
   func autoRepeatColumnsType() -> AutoRepeatType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let autoRepeatColumns = style().gridAutoRepeatColumnsType()
+
+    if areMasonryRows() && autoRepeatColumns == .Fit {
+      return .Fill
+    }
+
+    return autoRepeatColumns
   }
 
   func autoRepeatRowsType() -> AutoRepeatType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let autoRepeatRow = style().gridAutoRepeatRowsType()
+
+    if areMasonryColumns() && autoRepeatRow == .Fit {
+      return .Fill
+    }
+
+    return autoRepeatRow
   }
 
   private class GridWrapper {
