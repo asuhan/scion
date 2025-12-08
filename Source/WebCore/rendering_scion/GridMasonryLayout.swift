@@ -31,5 +31,10 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  func offsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let gridContentSize = LayoutUnit()
 }

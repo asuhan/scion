@@ -147,6 +147,13 @@ private func hasRelativeBlockAxisSize(grid: RenderGridWrapper, gridItem: RenderB
     : gridItem.hasRelativeLogicalHeight()
 }
 
+private func computeOverflowAlignmentOffset(
+  overflow: OverflowAlignment, trackSize: LayoutUnit, gridItemSize: LayoutUnit
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private struct ContentAlignmentData {
   init(positionOffset: LayoutUnit = LayoutUnit(), distributionOffset: LayoutUnit = LayoutUnit()) {
     self.positionOffset = positionOffset
@@ -155,6 +162,12 @@ private struct ContentAlignmentData {
 
   let positionOffset: LayoutUnit
   let distributionOffset: LayoutUnit
+}
+
+private enum GridAxisPosition {
+  case GridAxisStart
+  case GridAxisEnd
+  case GridAxisCenter
 }
 
 private func resolveContentDistributionFallback(distribution: ContentDistribution) -> (
@@ -1807,9 +1820,45 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
-  private func columnAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
+  private func gridAreaPositionForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> (LayoutUnit, LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func columnAxisPositionForGridItem(gridItem: RenderBoxWrapper) -> GridAxisPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func columnAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
+    let (startOfRow, endOfRow) = gridAreaPositionForGridItem(
+      gridItem: gridItem, direction: .ForRows)
+    let startPosition = startOfRow + marginBeforeForChild(child: gridItem)
+    let columnAxisGridItemSize =
+      GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem)
+      ? gridItem.logicalWidth() + gridItem.marginLogicalWidth()
+      : gridItem.logicalHeight() + gridItem.marginLogicalHeight()
+    let masonryOffset =
+      areMasonryRows()
+      ? masonryLayout!.offsetForGridItem(gridItem: gridItem) : LayoutUnit(value: UInt64(0))
+    let overflow = alignSelfForGridItem(gridItem: gridItem).overflow
+    let offsetFromStartPosition = computeOverflowAlignmentOffset(
+      overflow: overflow, trackSize: endOfRow - startOfRow, gridItemSize: columnAxisGridItemSize)
+    if hasAutoMarginsInColumnAxis(gridItem: gridItem) {
+      return startPosition
+    }
+    let axisPosition = columnAxisPositionForGridItem(gridItem: gridItem)
+    switch axisPosition {
+    case .GridAxisStart:
+      return startPosition + columnAxisBaselineOffsetForGridItem(gridItem: gridItem) + masonryOffset
+    case .GridAxisEnd:
+      return (startPosition + offsetFromStartPosition)
+        - columnAxisBaselineOffsetForGridItem(gridItem: gridItem)
+    case .GridAxisCenter:
+      return startPosition + (offsetFromStartPosition / 2)
+    }
   }
 
   private func rowAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
@@ -2301,6 +2350,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func getBaselineGridItem(alignment: ItemPosition) -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func columnAxisBaselineOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
