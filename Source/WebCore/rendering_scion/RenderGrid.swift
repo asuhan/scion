@@ -1471,8 +1471,81 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func placeAutoMajorAxisItemOnGrid(
     gridItem: RenderBoxWrapper, autoPlacementCursor: inout AutoPlacementCursor
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      currentGrid().gridItemSpan(gridItem: gridItem, direction: autoPlacementMajorAxisDirection())
+        .isIndefinite())
+    let majorAxisSpanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
+      gridItem: gridItem, direction: autoPlacementMajorAxisDirection())
+
+    let endOfMajorAxis = currentGrid().numTracks(direction: autoPlacementMajorAxisDirection())
+    var (majorAxisAutoPlacementCursor, minorAxisAutoPlacementCursor) = autoPlacementCursor
+    if autoPlacementMajorAxisDirection() == .ForColumns {
+      swap(&majorAxisAutoPlacementCursor, &minorAxisAutoPlacementCursor)
+    }
+
+    var emptyGridArea: GridArea? = nil
+    let minorAxisPositions = currentGrid().gridItemSpan(
+      gridItem: gridItem, direction: autoPlacementMinorAxisDirection())
+    if minorAxisPositions.isTranslatedDefinite() {
+      // Move to the next track in major axis if initial position in minor axis is before auto-placement cursor.
+      if minorAxisPositions.startLine() < minorAxisAutoPlacementCursor {
+        majorAxisAutoPlacementCursor += 1
+      }
+
+      if majorAxisAutoPlacementCursor < endOfMajorAxis {
+        let iterator = GridIterator(
+          grid: currentGrid(), direction: autoPlacementMinorAxisDirection(),
+          fixedTrackIndex: minorAxisPositions.startLine(),
+          varyingTrackIndex: majorAxisAutoPlacementCursor)
+        emptyGridArea = iterator.nextEmptyGridArea(
+          fixedTrackSpan: minorAxisPositions.integerSpan(), varyingTrackSpan: majorAxisSpanSize)
+      }
+
+      if emptyGridArea == nil {
+        emptyGridArea = createEmptyGridAreaAtSpecifiedPositionsOutsideGrid(
+          gridItem: gridItem, specifiedDirection: autoPlacementMinorAxisDirection(),
+          specifiedPositions: minorAxisPositions)
+      }
+    } else {
+      let minorAxisSpanSize = GridPositionsResolver.spanSizeForAutoPlacedItem(
+        gridItem: gridItem, direction: autoPlacementMinorAxisDirection())
+
+      for majorAxisIndex in majorAxisAutoPlacementCursor..<endOfMajorAxis {
+        let iterator = GridIterator(
+          grid: currentGrid(), direction: autoPlacementMajorAxisDirection(),
+          fixedTrackIndex: majorAxisIndex, varyingTrackIndex: minorAxisAutoPlacementCursor)
+        emptyGridArea = iterator.nextEmptyGridArea(
+          fixedTrackSpan: majorAxisSpanSize, varyingTrackSpan: minorAxisSpanSize)
+
+        if emptyGridArea != nil {
+          // Check that it fits in the minor axis direction, as we shouldn't grow in that direction here (it was already managed in populateExplicitGridAndOrderIterator()).
+          let minorAxisFinalPositionIndex =
+            autoPlacementMinorAxisDirection() == .ForColumns
+            ? emptyGridArea!.columns.endLine() : emptyGridArea!.rows.endLine()
+          let endOfMinorAxis = currentGrid().numTracks(direction: autoPlacementMinorAxisDirection())
+          if minorAxisFinalPositionIndex <= endOfMinorAxis {
+            break
+          }
+
+          // Discard empty grid area as it does not fit in the minor axis direction.
+          // We don't need to create a new empty grid area yet as we might find a valid one in the next iteration.
+          emptyGridArea = nil
+        }
+
+        // As we're moving to the next track in the major axis we should reset the auto-placement cursor in the minor axis.
+        minorAxisAutoPlacementCursor = 0
+      }
+
+      if emptyGridArea == nil {
+        emptyGridArea = createEmptyGridAreaAtSpecifiedPositionsOutsideGrid(
+          gridItem: gridItem, specifiedDirection: autoPlacementMinorAxisDirection(),
+          specifiedPositions: GridSpan.translatedDefiniteGridSpan(
+            startLine: 0, endLine: Int32(minorAxisSpanSize)))
+      }
+    }
+
+    emptyGridArea = insertIntoGrid(grid: currentGrid(), gridItem: gridItem, area: emptyGridArea!)
+    autoPlacementCursor = (emptyGridArea!.rows.startLine(), emptyGridArea!.columns.startLine())
   }
 
   private func autoPlacementMajorAxisDirection() -> GridTrackSizingDirection {
