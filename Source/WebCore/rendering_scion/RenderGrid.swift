@@ -1614,8 +1614,9 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func hasStaticPositionForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? gridItem.style().hasStaticInlinePosition(horizontal: isHorizontalWritingMode())
+      : gridItem.style().hasStaticBlockPosition(horizontal: isHorizontalWritingMode())
   }
 
   private func computeTrackSizesForDefiniteSize(
