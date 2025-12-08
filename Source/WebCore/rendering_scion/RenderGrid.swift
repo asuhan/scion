@@ -2447,8 +2447,34 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func applySubgridStretchAlignmentToGridItemIfNeeded(gridItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderGrid = gridItem as? RenderGridWrapper
+    if renderGrid == nil {
+      return
+    }
+
+    if renderGrid!.isSubgrid(direction: .ForRows) {
+      let gridItemBlockDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: self, gridItem: gridItem, direction: .ForRows)
+      let overridingContainingBlockContentSizeForGridItem =
+        GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+          gridItem: gridItem, direction: gridItemBlockDirection)
+      let stretchedLogicalHeight = availableAlignmentSpaceForGridItemBeforeStretching(
+        gridAreaBreadthForGridItem: overridingContainingBlockContentSizeForGridItem!!,
+        gridItem: gridItem, direction: .ForRows)
+      gridItem.setOverridingLogicalHeight(height: stretchedLogicalHeight)
+    }
+
+    if renderGrid!.isSubgrid(direction: .ForColumns) {
+      let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: self, gridItem: gridItem, direction: .ForColumns)
+      let overridingContainingBlockContentSizeForGridItem =
+        GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+          gridItem: gridItem, direction: gridItemInlineDirection)
+      let stretchedLogicalWidth = availableAlignmentSpaceForGridItemBeforeStretching(
+        gridAreaBreadthForGridItem: overridingContainingBlockContentSizeForGridItem!!,
+        gridItem: gridItem, direction: .ForColumns)
+      gridItem.setOverridingLogicalWidth(width: stretchedLogicalWidth)
+    }
   }
 
   private func hasAutoSizeInColumnAxis(gridItem: RenderBoxWrapper) -> Bool {
