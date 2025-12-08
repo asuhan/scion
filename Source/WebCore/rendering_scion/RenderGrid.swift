@@ -1842,11 +1842,29 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  private func logicalOffsetForOutOfFlowGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection, trackBreadth: LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func gridAreaPositionForOutOfFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridItem.isOutOfFlowPositioned())
+    let trackBreadth = GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+      gridItem: gridItem, direction: direction)!!
+    let isRowAxis = direction == .ForColumns
+    let outOfFlowItemLine = isRowAxis ? outOfFlowItemColumn : outOfFlowItemRow
+    var start = isRowAxis ? borderStart() : borderBefore()
+    if let line = outOfFlowItemLine[CPtrToInt(gridItem.p)] {
+      let positions = isRowAxis ? columnPositions : rowPositions
+      start = positions[Int(line)]
+    }
+    start += logicalOffsetForOutOfFlowGridItem(
+      gridItem: gridItem, direction: direction, trackBreadth: trackBreadth)
+    return (start, start + trackBreadth)
   }
 
   private func gridAreaPositionForInFlowGridItem(
