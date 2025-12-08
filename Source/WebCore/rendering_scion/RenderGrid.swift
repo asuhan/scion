@@ -2726,8 +2726,19 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func translateRTLCoordinate(coordinate: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var width = borderLogicalLeft() + borderLogicalRight() + clientLogicalWidth()
+
+    #if !WTF_PLATFORM_IOS_FAMILY
+      // FIXME: Ideally scrollbarLogicalWidth() should return zero in iOS so we don't need this
+      // (see bug https://webkit.org/b/191857).
+      // If we are in horizontal writing mode and RTL direction the scrollbar is painted on the left,
+      // so we need to take into account when computing the position of the columns.
+      if style().isHorizontalWritingMode() {
+        width += scrollbarLogicalWidth()
+      }
+    #endif
+
+    return width - coordinate
   }
 
   override func establishesIndependentFormattingContext() -> Bool {

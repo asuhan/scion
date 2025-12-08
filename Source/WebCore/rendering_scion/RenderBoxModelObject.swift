@@ -632,6 +632,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func borderLogicalRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginTop() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
