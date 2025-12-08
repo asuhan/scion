@@ -1606,6 +1606,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
     gridItemLayer!.setStaticBlockPosition(position: borderAndPaddingBefore())
   }
 
+  private func hasStaticPositionForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeTrackSizesForDefiniteSize(
     direction: GridTrackSizingDirection, availableSpace: LayoutUnit,
     gridLayoutState: inout GridLayoutState
@@ -1843,8 +1850,84 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func columnAxisPositionForGridItem(gridItem: RenderBoxWrapper) -> GridAxisPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hasSameWritingMode = gridItem.style().writingMode() == style().writingMode()
+    let gridItemIsLTR = gridItem.style().isLeftToRightDirection()
+    if gridItem.isOutOfFlowPositioned()
+      && !hasStaticPositionForGridItem(gridItem: gridItem, direction: .ForRows)
+    {
+      return .GridAxisStart
+    }
+
+    let gridItemAlignSelf = alignSelfForGridItem(gridItem: gridItem).position
+    switch gridItemAlignSelf {
+    case .SelfStart:
+      // FIXME: Should we implement this logic in a generic utility function ?
+      // Aligns the alignment subject to be flush with the edge of the alignment container
+      // corresponding to the alignment subject's 'start' side in the column axis.
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem) {
+        // If orthogonal writing-modes, self-start will be based on the grid item's inline-axis
+        // direction (inline-start), because it's the one parallel to the column axis.
+        if style().isFlippedBlocksWritingMode() {
+          return gridItemIsLTR ? .GridAxisEnd : .GridAxisStart
+        }
+        return gridItemIsLTR ? .GridAxisStart : .GridAxisEnd
+      }
+      // self-start is based on the grid item's block-flow direction. That's why we need to check against the grid container's block-flow direction.
+      return hasSameWritingMode ? .GridAxisStart : .GridAxisEnd
+    case .SelfEnd:
+      // FIXME: Should we implement this logic in a generic utility function ?
+      // Aligns the alignment subject to be flush with the edge of the alignment container
+      // corresponding to the alignment subject's 'end' side in the column axis.
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem) {
+        // If orthogonal writing-modes, self-end will be based on the grid item's inline-axis
+        // direction, (inline-end) because it's the one parallel to the column axis.
+        if style().isFlippedBlocksWritingMode() {
+          return gridItemIsLTR ? .GridAxisStart : .GridAxisEnd
+        }
+        return gridItemIsLTR ? .GridAxisEnd : .GridAxisStart
+      }
+      // self-end is based on the grid item's block-flow direction. That's why we need to check against the grid container's block-flow direction.
+      return hasSameWritingMode ? .GridAxisEnd : .GridAxisStart
+    case .Left:
+      // Aligns the alignment subject to be flush with the alignment container's 'line-left' edge.
+      // The alignment axis (column axis) is always orthogonal to the inline axis, hence this value behaves as 'start'.
+      return .GridAxisStart
+    case .Right:
+      // Aligns the alignment subject to be flush with the alignment container's 'line-right' edge.
+      // The alignment axis (column axis) is always orthogonal to the inline axis, hence this value behaves as 'start'.
+      return .GridAxisStart
+    case .Center:
+      return .GridAxisCenter
+    case .FlexStart,  // Only used in flex layout, otherwise equivalent to 'start'.
+      // Aligns the alignment subject to be flush with the alignment container's 'start' edge (block-start) in the column axis.
+      .Start:
+      return .GridAxisStart
+    case .FlexEnd,  // Only used in flex layout, otherwise equivalent to 'start'.
+      // Aligns the alignment subject to be flush with the alignment container's 'start' edge (block-start) in the column axis.
+      .End:
+      return .GridAxisEnd
+    case .Stretch:
+      return .GridAxisStart
+    case .Baseline, .LastBaseline:
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem) {
+        return gridItemAlignSelf == .Baseline ? .GridAxisStart : .GridAxisEnd
+      }
+      return RenderGridWrapper.fallbackAlignment(
+        gridItemAlignSelf: gridItemAlignSelf, hasSameWritingMode: hasSameWritingMode)
+    case .Legacy, .Auto, .Normal:
+      break
+    }
+
+    fatalError("Not reached")
+  }
+
+  private static func fallbackAlignment(gridItemAlignSelf: ItemPosition, hasSameWritingMode: Bool)
+    -> GridAxisPosition
+  {
+    if gridItemAlignSelf == .Baseline {
+      return hasSameWritingMode ? .GridAxisStart : .GridAxisEnd
+    }
+    return hasSameWritingMode ? .GridAxisEnd : .GridAxisStart
   }
 
   private func columnAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
