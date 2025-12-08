@@ -77,4 +77,11 @@ class GridLayoutFunctions {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func alignmentContextForBaselineAlignment(span: GridSpan, alignment: ItemPosition)
+    -> UInt32
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     FloatingObjects.swift
     GlyphDisplayListCache.swift
     Grid.swift
+    GridBaselineAlignment.swift
     GridLayoutFunctions.swift
     GridLayoutState.swift
     GridMasonryLayout.swift

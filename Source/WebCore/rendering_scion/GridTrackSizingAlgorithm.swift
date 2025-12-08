@@ -41,6 +41,10 @@ class GridTrack {
   }
 }
 
+private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
+  return axis == .GridRowAxis ? .ForColumns : .ForRows
+}
+
 final class GridTrackSizingAlgorithm {
   init(renderGrid: RenderGridWrapper, grid: Grid) {
     // TODO(asuhan): implement this
@@ -106,8 +110,28 @@ final class GridTrackSizingAlgorithm {
   }
 
   func baselineOffsetForGridItem(gridItem: RenderBoxWrapper, baselineAxis: GridAxis) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we haven't yet initialized this axis (which can be the case if we're doing
+    // prelayout of a subgrid), then we can't know the baseline offset.
+    if tracks(direction: gridDirectionForAxis(axis: baselineAxis)).isEmpty {
+      return LayoutUnit()
+    }
+
+    if !participateInBaselineAlignment(gridItem: gridItem, baselineAxis: baselineAxis) {
+      return LayoutUnit()
+    }
+
+    if baselineAxis == .GridColumnAxis {
+      assert(!renderGrid!.isSubgridRows())
+    }
+    let align = renderGrid!.selfAlignmentForGridItem(axis: baselineAxis, gridItem: gridItem)
+      .position
+    let span = renderGrid!.gridSpanForGridItem(
+      gridItem: gridItem, direction: gridDirectionForAxis(axis: baselineAxis))
+    let alignmentContext = GridLayoutFunctions.alignmentContextForBaselineAlignment(
+      span: span, alignment: align)
+    return baselineAlignment.baselineOffsetForGridItem(
+      preference: align, sharedContext: alignmentContext, gridItem: gridItem,
+      alignmentAxis: baselineAxis)
   }
 
   func estimatedGridAreaBreadthForGridItem(
@@ -182,6 +206,13 @@ final class GridTrackSizingAlgorithm {
     direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
     availableSpace: LayoutUnit?
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func participateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -264,6 +295,8 @@ final class GridTrackSizingAlgorithm {
 
   let renderGrid: RenderGridWrapper?
   private let strategy: GridTrackSizingAlgorithmStrategy?
+
+  private let baselineAlignment: GridBaselineAlignment
 
   // This is a RAII class used to ensure that the track sizing algorithm is
   // executed as it is supposed to be, i.e., first resolve columns and then

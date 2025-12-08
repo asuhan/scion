@@ -379,7 +379,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return isBaseline && !hasAutoMargins
   }
 
-  private func selfAlignmentForGridItem(
+  func selfAlignmentForGridItem(
     axis: GridAxis, gridItem: RenderBoxWrapper, gridStyle: RenderStyleWrapper? = nil
   ) -> StyleSelfAlignmentData {
     return axis == .GridRowAxis
@@ -737,6 +737,15 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
     masonryLayout!.performMasonryPlacement(
       gridAxisTracks: gridAxisTracksBeforeAutoPlacement, masonryAxisDirection: masonryAxisDirection)
+  }
+
+  // Computes the span relative to this RenderGrid, even if the RenderBox is a grid item
+  // of a descendant subgrid.
+  func gridSpanForGridItem(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection)
+    -> GridSpan
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isSubgrid(direction: GridTrackSizingDirection) -> Bool {
