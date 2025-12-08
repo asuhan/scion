@@ -1864,7 +1864,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let outOfFlowItemLine = isRowAxis ? outOfFlowItemColumn : outOfFlowItemRow
     var start = isRowAxis ? borderStart() : borderBefore()
     if let line = outOfFlowItemLine[CPtrToInt(gridItem.p)] {
-      let positions = isRowAxis ? columnPositions : rowPositions
+      let positions = isRowAxis ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
       start = positions[Int(line)]
     }
     start += logicalOffsetForOutOfFlowGridItem(
@@ -2152,7 +2152,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
     // may have some influence in the final grid area breadth.
     let tracks = trackSizingAlgorithm!.tracks(direction: direction)
     let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
-    let linePositions = (direction == .ForColumns) ? columnPositions : rowPositions
+    let linePositions =
+      (direction == .ForColumns) ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
 
     let initialTrackPosition = linePositions[Int(span.startLine())]
     let finalTrackPosition = linePositions[Int(span.endLine() - 1)]
