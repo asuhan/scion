@@ -1842,11 +1842,27 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
-  private func gridAreaPositionForGridItem(
+  private func gridAreaPositionForOutOfFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> (LayoutUnit, LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func gridAreaPositionForInFlowGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> (LayoutUnit, LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func gridAreaPositionForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> (LayoutUnit, LayoutUnit) {
+    if gridItem.isOutOfFlowPositioned() {
+      return gridAreaPositionForOutOfFlowGridItem(gridItem: gridItem, direction: direction)
+    }
+    return gridAreaPositionForInFlowGridItem(gridItem: gridItem, direction: direction)
   }
 
   private func columnAxisPositionForGridItem(gridItem: RenderBoxWrapper) -> GridAxisPosition {
