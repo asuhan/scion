@@ -150,8 +150,18 @@ private func hasRelativeBlockAxisSize(grid: RenderGridWrapper, gridItem: RenderB
 private func computeOverflowAlignmentOffset(
   overflow: OverflowAlignment, trackSize: LayoutUnit, gridItemSize: LayoutUnit
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let offset = trackSize - gridItemSize
+  switch overflow {
+  case .Safe:
+    // If overflow is 'safe', we have to make sure we don't overflow the 'start'
+    // edge (potentially cause some data loss as the overflow is unreachable).
+    return max(LayoutUnit(value: 0), offset)
+  case .Unsafe, .Default:
+    // If we overflow our alignment container and overflow is 'true' (default), we
+    // ignore the overflow and just return the value regardless (which may cause data
+    // loss as we overflow the 'start' edge).
+    return offset
+  }
 }
 
 private struct ContentAlignmentData {
