@@ -324,8 +324,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func gridItemOffset(direction: GridTrackSizingDirection) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForRows
+      ? offsetBetweenRows.distributionOffset : offsetBetweenColumns.distributionOffset
   }
 
   private func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit?
