@@ -323,6 +323,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return gapAccumulator
   }
 
+  private func gridItemOffset(direction: GridTrackSizingDirection) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit?
   {
     if !shouldCheckExplicitIntrinsicInnerLogicalSize(direction: direction) {
@@ -1870,8 +1875,26 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func gridAreaPositionForInFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> (LayoutUnit, LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!gridItem.isOutOfFlowPositioned())
+    let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
+    // FIXME (lajava): This is a common pattern, why not defining a function like
+    // positions(direction) ?
+    let positions =
+      direction == .ForColumns ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
+    let start = positions[Int(span.startLine())]
+    var end = positions[Int(span.endLine())]
+    // The 'positions' vector includes distribution offset (because of content
+    // alignment) and gutters, so we need to subtract them to get the actual
+    // end position for a given track (this does not have to be done for the
+    // last track as there are no more positions' elements after it, nor for
+    // collapsed tracks).
+    if span.endLine() < positions.count - 1
+      && !(currentGrid().hasAutoRepeatEmptyTracks(direction: direction)
+        && currentGrid().isEmptyAutoRepeatTrack(direction: direction, line: span.endLine()))
+    {
+      end -= gridGap(direction: direction) + gridItemOffset(direction: direction)
+    }
+    return (start, end)
   }
 
   private func gridAreaPositionForGridItem(
