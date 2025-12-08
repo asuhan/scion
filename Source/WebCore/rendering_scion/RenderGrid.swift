@@ -1851,8 +1851,31 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func logicalOffsetForOutOfFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection, trackBreadth: LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridItem.isOutOfFlowPositioned())
+    if hasStaticPositionForGridItem(gridItem: gridItem, direction: direction) {
+      return LayoutUnit(value: UInt64(0))
+    }
+
+    let isRowAxis = direction == .ForColumns
+    let isFlowAwareRowAxis =
+      GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: self, gridItem: gridItem, direction: direction) == .ForColumns
+    let gridItemPosition = isFlowAwareRowAxis ? gridItem.logicalLeft() : gridItem.logicalTop()
+    let gridBorder = isRowAxis ? borderLogicalLeft() : borderBefore()
+    let gridItemMargin =
+      isRowAxis
+      ? gridItem.marginLogicalLeft(overrideStyle: style())
+      : gridItem.marginBefore(otherStyle: style())
+    let offset = gridItemPosition - gridBorder - gridItemMargin
+    if !isRowAxis || style().isLeftToRightDirection() {
+      return offset
+    }
+
+    let gridItemBreadth =
+      isFlowAwareRowAxis
+      ? gridItem.logicalWidth() + gridItem.marginLogicalWidth()
+      : gridItem.logicalHeight() + gridItem.marginLogicalHeight()
+    return trackBreadth - offset - gridItemBreadth
   }
 
   private func gridAreaPositionForOutOfFlowGridItem(
