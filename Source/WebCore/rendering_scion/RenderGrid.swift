@@ -739,7 +739,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       gridAxisTracks: gridAxisTracksBeforeAutoPlacement, masonryAxisDirection: masonryAxisDirection)
   }
 
-  private func isSubgrid(direction: GridTrackSizingDirection) -> Bool {
+  func isSubgrid(direction: GridTrackSizingDirection) -> Bool {
     // If the grid container is forced to establish an independent formatting
     // context (like contain layout, or position:absolute), then the used value
     // of grid-template-rows/columns is 'none' and the container is not a subgrid.
@@ -792,6 +792,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   func isMasonry() -> Bool {
     return areMasonryRows() || areMasonryColumns()
+  }
+
+  func isMasonry(direction: GridTrackSizingDirection) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func areMasonryRows() -> Bool {
