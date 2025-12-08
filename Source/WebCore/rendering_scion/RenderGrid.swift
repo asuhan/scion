@@ -1807,6 +1807,16 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  private func columnAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func rowAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeContentPositionAndDistributionOffset(
     direction: GridTrackSizingDirection, availableFreeSpace: LayoutUnit, numberOfGridTracks: UInt32
   ) -> ContentAlignmentData {
@@ -1904,8 +1914,19 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func logicalOffsetForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForRows {
+      return columnAxisOffsetForGridItem(gridItem: gridItem)
+    }
+    var rowAxisOffset = rowAxisOffsetForGridItem(gridItem: gridItem)
+    // We stored m_columnPositions's data ignoring the direction, hence we might need now
+    // to translate positions from RTL to LTR, as it's more convenient for painting.
+    if !style().isLeftToRightDirection() {
+      rowAxisOffset =
+        translateRTLCoordinate(coordinate: rowAxisOffset)
+        - (GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem)
+          ? gridItem.logicalHeight() : gridItem.logicalWidth())
+    }
+    return rowAxisOffset
   }
 
   private func gridAreaBreadthForGridItemIncludingAlignmentOffsets(
@@ -2291,6 +2312,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let numberOfCollapsedTracks =
       hasCollapsedTracks ? currentGrid().autoRepeatEmptyTracks(direction: direction).size() : 0
     return numberOfTracks - numberOfCollapsedTracks
+  }
+
+  private func translateRTLCoordinate(coordinate: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func establishesIndependentFormattingContext() -> Bool {
