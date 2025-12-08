@@ -2012,8 +2012,71 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func rowAxisPositionForGridItem(gridItem: RenderBoxWrapper) -> GridAxisPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hasSameDirection = gridItem.style().direction() == style().direction()
+    let gridIsLTR = style().isLeftToRightDirection()
+    if gridItem.isOutOfFlowPositioned()
+      && !hasStaticPositionForGridItem(gridItem: gridItem, direction: .ForColumns)
+    {
+      return .GridAxisStart
+    }
+
+    switch justifySelfForGridItem(gridItem: gridItem).position {
+    case .SelfStart:
+      // FIXME: Should we implement this logic in a generic utility function ?
+      // Aligns the alignment subject to be flush with the edge of the alignment container
+      // corresponding to the alignment subject's 'start' side in the row axis.
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem) {
+        // If orthogonal writing-modes, self-start will be based on the grid item's block-axis
+        // direction, because it's the one parallel to the row axis.
+        if gridItem.style().isFlippedBlocksWritingMode() {
+          return gridIsLTR ? .GridAxisEnd : .GridAxisStart
+        }
+        return gridIsLTR ? .GridAxisStart : .GridAxisEnd
+      }
+      // self-start is based on the grid item's inline-flow direction. That's why we need to check against the grid container's direction.
+      return hasSameDirection ? .GridAxisStart : .GridAxisEnd
+    case .SelfEnd:
+      // FIXME: Should we implement this logic in a generic utility function ?
+      // Aligns the alignment subject to be flush with the edge of the alignment container
+      // corresponding to the alignment subject's 'end' side in the row axis.
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem) {
+        // If orthogonal writing-modes, self-end will be based on the grid item's block-axis
+        // direction, because it's the one parallel to the row axis.
+        if gridItem.style().isFlippedBlocksWritingMode() {
+          return gridIsLTR ? .GridAxisStart : .GridAxisEnd
+        }
+        return gridIsLTR ? .GridAxisEnd : .GridAxisStart
+      }
+      // self-end is based on the grid item's inline-flow direction. That's why we need to check against the grid container's direction.
+      return hasSameDirection ? .GridAxisEnd : .GridAxisStart
+    case .Left:
+      // Aligns the alignment subject to be flush with the alignment container's 'line-left' edge.
+      // We want the physical 'left' side, so we have to take account, container's inline-flow direction.
+      return gridIsLTR ? .GridAxisStart : .GridAxisEnd
+    case .Right:
+      // Aligns the alignment subject to be flush with the alignment container's 'line-right' edge.
+      // We want the physical 'right' side, so we have to take account, container's inline-flow direction.
+      return gridIsLTR ? .GridAxisEnd : .GridAxisStart
+    case .Center:
+      return .GridAxisCenter
+    case .FlexStart,  // Only used in flex layout, otherwise equivalent to 'start'.
+      // Aligns the alignment subject to be flush with the alignment container's 'start' edge (inline-start) in the row axis.
+      .Start:
+      return .GridAxisStart
+    case .FlexEnd,  // Only used in flex layout, otherwise equivalent to 'end'.
+      // Aligns the alignment subject to be flush with the alignment container's 'end' edge (inline-end) in the row axis.
+      .End:
+      return .GridAxisEnd
+    case .Stretch:
+      return .GridAxisStart
+    case .Baseline, .LastBaseline:
+      // FIXME: Implement the previous values. For now, we always 'start' align the grid item.
+      return .GridAxisStart
+    case .Legacy, .Auto, .Normal:
+      break
+    }
+
+    fatalError("Not reached")
   }
 
   private func columnAxisOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
