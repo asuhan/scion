@@ -1135,12 +1135,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
+  func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func setMarginEnd(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
+  func setMarginEnd(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

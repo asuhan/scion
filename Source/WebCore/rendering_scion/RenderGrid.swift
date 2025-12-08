@@ -2589,8 +2589,37 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // FIXME: This logic is shared by RenderFlexibleBox, so it should be moved to RenderBox.
   private func updateAutoMarginsInRowAxisIfNeeded(gridItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!gridItem.isOutOfFlowPositioned())
+
+    let parentStyle = style()
+    let marginStart = gridItem.style().marginStartUsing(otherStyle: parentStyle)
+    let marginEnd = gridItem.style().marginEndUsing(otherStyle: parentStyle)
+    var marginLogicalWidth = LayoutUnit()
+    // We should only consider computed margins if their specified value isn't
+    // 'auto', since such computed value may come from a previous layout and may
+    // be incorrect now.
+    if !marginStart.isAuto() {
+      marginLogicalWidth += gridItem.marginStart()
+    }
+    if !marginEnd.isAuto() {
+      marginLogicalWidth += gridItem.marginEnd()
+    }
+
+    let availableAlignmentSpace =
+      gridItem.overridingContainingBlockContentLogicalWidth()!! - gridItem.logicalWidth()
+      - marginLogicalWidth
+    if availableAlignmentSpace <= Int32(0) {
+      return
+    }
+
+    if marginStart.isAuto() && marginEnd.isAuto() {
+      gridItem.setMarginStart(value: availableAlignmentSpace / 2, overrideStyle: parentStyle)
+      gridItem.setMarginEnd(value: availableAlignmentSpace / 2, overrideStyle: parentStyle)
+    } else if marginStart.isAuto() {
+      gridItem.setMarginStart(value: availableAlignmentSpace, overrideStyle: parentStyle)
+    } else if marginEnd.isAuto() {
+      gridItem.setMarginEnd(value: availableAlignmentSpace, overrideStyle: parentStyle)
+    }
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
