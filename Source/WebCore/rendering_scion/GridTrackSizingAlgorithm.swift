@@ -60,6 +60,11 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func baselineOffsetForGridItem(gridItem: RenderBoxWrapper, baselineAxis: GridAxis) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func estimatedGridAreaBreadthForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit? {

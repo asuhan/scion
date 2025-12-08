@@ -2681,8 +2681,21 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func columnAxisBaselineOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME : CSS Masonry does not properly handle baseline calculations currently.
+    // We will just skip this running this step if we detect the RenderGrid is Masonry for now.
+    if isMasonry() {
+      return LayoutUnit()
+    }
+
+    if isSubgridRows() {
+      let outer = parent() as! RenderGridWrapper
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: outer, gridItem: self) {
+        return outer.rowAxisBaselineOffsetForGridItem(gridItem: gridItem)
+      }
+      return outer.columnAxisBaselineOffsetForGridItem(gridItem: gridItem)
+    }
+    return trackSizingAlgorithm!.baselineOffsetForGridItem(
+      gridItem: gridItem, baselineAxis: .GridColumnAxis)
   }
 
   private func rowAxisBaselineOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
