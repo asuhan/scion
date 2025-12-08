@@ -1597,8 +1597,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func prepareGridItemForPositionedLayout(gridItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridItem.isOutOfFlowPositioned())
+    gridItem.containingBlock()!.insertPositionedObject(positioned: gridItem)
+
+    let gridItemLayer = gridItem.layer()
+    // Static position of a positioned grid item should use the content-box (https://drafts.csswg.org/css-grid/#static-position).
+    gridItemLayer!.setStaticInlinePosition(position: borderAndPaddingStart())
+    gridItemLayer!.setStaticBlockPosition(position: borderAndPaddingBefore())
   }
 
   private func computeTrackSizesForDefiniteSize(
