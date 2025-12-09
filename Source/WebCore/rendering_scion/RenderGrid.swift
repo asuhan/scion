@@ -328,8 +328,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       ? offsetBetweenRows.distributionOffset : offsetBetweenColumns.distributionOffset
   }
 
-  private func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit?
-  {
+  func explicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection) -> LayoutUnit? {
     if !shouldCheckExplicitIntrinsicInnerLogicalSize(direction: direction) {
       return nil
     }

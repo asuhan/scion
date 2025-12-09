@@ -39,6 +39,26 @@ class GridTrack {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func growthLimit() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func growthLimitIsInfinite() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func infiniteGrowthPotential() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setGrowthLimitCap(growthLimitCap: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
@@ -373,8 +393,26 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func computeGridContainerIntrinsicSizes() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForColumns && strategy!.isComputingSizeOrInlineSizeContainment(),
+      let size = renderGrid!.explicitIntrinsicInnerLogicalSize(direction: direction)
+    {
+      minContentSize = size
+      maxContentSize = size
+      return
+    }
+
+    minContentSize = LayoutUnit(value: UInt64(0))
+    maxContentSize = LayoutUnit(value: UInt64(0))
+
+    let allTracks = tracks(direction: direction)
+    for track in allTracks {
+      assert(strategy!.isComputingSizeOrInlineSizeContainment() || !track.infiniteGrowthPotential())
+      minContentSize += track.baseSize()
+      maxContentSize += track.growthLimitIsInfinite() ? track.baseSize() : track.growthLimit()
+      // The growth limit caps must be cleared now in order to properly sort
+      // tracks by growth potential on an eventual "Maximize Tracks".
+      track.setGrowthLimitCap(growthLimitCap: nil)
+    }
   }
 
   // Track sizing algorithm steps. Note that the "Maximize Tracks" step is done
@@ -452,8 +490,8 @@ final class GridTrackSizingAlgorithm {
   // (a.k.a widths in most of the cases) for the computeIntrinsicLogicalWidths()
   // computations. That's why we don't need to keep around different values for
   // rows/columns.
-  let minContentSize: LayoutUnit
-  let maxContentSize: LayoutUnit
+  var minContentSize: LayoutUnit
+  var maxContentSize: LayoutUnit
 
   private let direction: GridTrackSizingDirection
 
@@ -489,4 +527,6 @@ private class GridTrackSizingAlgorithmStrategy {
   func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: LayoutUnit?) {
     fatalError("Not reached")
   }
+
+  func isComputingSizeOrInlineSizeContainment() -> Bool { fatalError("Not reached") }
 }
