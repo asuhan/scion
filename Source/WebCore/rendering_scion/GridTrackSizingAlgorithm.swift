@@ -96,8 +96,12 @@ private func computeGridSpanSize(
   tracks: ArraySlice<GridTrack>, gridSpan: GridSpan, gridItemOffset: LayoutUnit?,
   totalGuttersSize: LayoutUnit
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var totalTracksSize = LayoutUnit()
+  for trackPosition in gridSpan {
+    totalTracksSize += tracks[Int(trackPosition)].baseSize()
+  }
+  return totalTracksSize + totalGuttersSize
+    + (gridSpan.integerSpan() - 1) * (gridItemOffset ?? LayoutUnit(value: UInt64(0)))
 }
 
 private final class IndefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
