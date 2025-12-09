@@ -29,11 +29,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum GridPositionType {
+  case AutoPosition
+  case ExplicitPosition  // [ <integer> || <string> ]
+  case SpanPosition  // span && [ <integer> || <string> ]
+  case NamedGridAreaPosition  // <ident>
+}
+
 struct GridPosition {
+  func isAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Note that grid line 1 is internally represented by the index 0, that's why the max value for
   // a position is kGridMaxTracks instead of kGridMaxTracks + 1.
   static func max() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let type: GridPositionType = .AutoPosition
 }

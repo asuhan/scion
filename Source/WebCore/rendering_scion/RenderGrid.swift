@@ -2853,8 +2853,50 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func gridSpanForOutOfFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let lastLine = Int32(numTracks(direction: direction))
+    if let gridPositions = computeGridPositionsForOutOfFlowGridItem(
+      gridItem: gridItem, direction: direction)
+    {
+      return GridSpan.translatedDefiniteGridSpan(
+        startLine: gridPositions.startIsAuto ? 0 : gridPositions.startLine,
+        endLine: gridPositions.endIsAuto ? lastLine : gridPositions.endLine)
+    }
+    return GridSpan.translatedDefiniteGridSpan(startLine: 0, endLine: lastLine)
+  }
+
+  private struct GridPositionsForOutOfFlowGridItem {
+    let startLine: Int32
+    let startIsAuto: Bool
+    let endLine: Int32
+    let endIsAuto: Bool
+  }
+
+  private func computeGridPositionsForOutOfFlowGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> GridPositionsForOutOfFlowGridItem? {
+    assert(gridItem.isOutOfFlowPositioned())
+    let lastLine = numTracks(direction: direction)
+    let span = GridPositionsResolver.resolveGridPositionsFromStyle(
+      gridContainer: self, gridItem: gridItem, direction: direction)
+    if span.isIndefinite() {
+      return nil
+    }
+
+    let explicitStart = Int32(currentGrid().explicitGridStart(direction: direction))
+    let startLine = span.untranslatedStartLine() + explicitStart
+    let endLine = span.untranslatedEndLine() + explicitStart
+
+    let startPosition =
+      direction == .ForColumns
+      ? gridItem.style().gridItemColumnStart() : gridItem.style().gridItemRowStart()
+    let endPosition =
+      direction == .ForColumns
+      ? gridItem.style().gridItemColumnEnd() : gridItem.style().gridItemRowEnd()
+
+    let startIsAuto = startPosition.isAuto() || startLine < 0 || startLine > lastLine
+    let endIsAuto = endPosition.isAuto() || endLine < 0 || endLine > lastLine
+    return GridPositionsForOutOfFlowGridItem(
+      startLine: startLine, startIsAuto: startIsAuto, endLine: endLine, endIsAuto: endIsAuto)
   }
 
   // Masonry Spec Section 2.3.1 repeat(auto-fit)

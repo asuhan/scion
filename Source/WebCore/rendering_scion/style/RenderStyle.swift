@@ -1402,6 +1402,26 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func gridItemColumnStart() -> GridPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridItemColumnEnd() -> GridPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridItemRowStart() -> GridPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridItemRowEnd() -> GridPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxShadow() -> ShadowData? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
