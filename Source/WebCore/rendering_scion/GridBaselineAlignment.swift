@@ -40,6 +40,29 @@ struct GridBaselineAlignment {
     preference: ItemPosition, sharedContext: UInt32, gridItem: RenderBoxWrapper,
     alignmentAxis: GridAxis
   ) -> LayoutUnit {
+    assert(isBaselinePosition(position: preference))
+    let group = baselineGroupForGridItem(
+      preference: preference, sharedContext: sharedContext, gridItem: gridItem,
+      alignmentAxis: alignmentAxis)
+    if group.computeSize() > 1 {
+      return group.maxAscent
+        - logicalAscentForGridItem(
+          gridItem: gridItem, alignmentAxis: alignmentAxis, position: preference)
+    }
+    return LayoutUnit()
+  }
+
+  private func baselineGroupForGridItem(
+    preference: ItemPosition, sharedContext: UInt32, gridItem: RenderBoxWrapper,
+    alignmentAxis: GridAxis
+  ) -> BaselineGroup {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func logicalAscentForGridItem(
+    gridItem: RenderBoxWrapper, alignmentAxis: GridAxis, position: ItemPosition
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

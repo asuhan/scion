@@ -43,6 +43,11 @@ class BaselineGroup: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  func computeSize() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
