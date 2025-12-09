@@ -63,7 +63,17 @@ struct GridTrackSize {
     fatalError("Not implemented")
   }
 
+  func isContentSized() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFitContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAutoMaxTrackBreadth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

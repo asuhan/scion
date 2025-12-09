@@ -40,6 +40,11 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  func setBaseSize(baseSize: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func growthLimit() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -50,12 +55,27 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  func setGrowthLimit(growthLimit: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func infiniteGrowthPotential() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  func setInfinitelyGrowable(infinitelyGrowable: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setGrowthLimitCap(growthLimitCap: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setCachedTrackSize(cachedTrackSize: GridTrackSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -319,6 +339,17 @@ final class GridTrackSizingAlgorithm {
     return trackStyles[Int(untranslatedIndex - autoRepeatTracksCount)]
   }
 
+  // Helper methods for step 1. initializeTrackSizes().
+  private func initialBaseSize(trackSize: GridTrackSize) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func initialGrowthLimit(trackSize: GridTrackSize, baseSize: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
     if direction == .ForColumns {
       availableSpaceColumns = availableSpace
@@ -419,8 +450,56 @@ final class GridTrackSizingAlgorithm {
   // entirely inside the strategies, that's why we don't need an additional
   // method at this level.
   private func initializeTrackSizes() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(contentSizedTracksIndex.isEmpty)
+    assert(flexibleSizedTracksIndex.isEmpty)
+    assert(autoSizedTracksForStretchIndex.isEmpty)
+    assert(!hasPercentSizedRowsIndefiniteHeight)
+    assert(!hasFlexibleMaxTrackBreadth)
+
+    let allTracks = tracks(direction: direction)
+    let indefiniteHeight = direction == .ForRows && !renderGrid!.hasDefiniteLogicalHeight()
+    let zero = LayoutUnit(value: UInt64(0))
+    let maxSize = max(zero, availableSpace() ?? zero)
+    // 1. Initialize per Grid track variables.
+    for (i, track) in allTracks.enumerated() {
+      let trackSize = calculateGridTrackSize(direction: direction, translatedIndex: UInt32(i))
+      track.setCachedTrackSize(cachedTrackSize: trackSize)
+      track.setBaseSize(baseSize: initialBaseSize(trackSize: trackSize))
+      track.setGrowthLimit(
+        growthLimit: initialGrowthLimit(trackSize: trackSize, baseSize: track.baseSize()))
+      track.setInfinitelyGrowable(infinitelyGrowable: false)
+
+      if trackSize.isFitContent() {
+        track.setGrowthLimitCap(
+          growthLimitCap: valueForLength(
+            length: trackSize.fitContentTrackBreadth().length(), maximumValue: maxSize))
+      }
+      if trackSize.isContentSized() {
+        contentSizedTracksIndex.append(UInt32(i))
+      }
+      if trackSize.maxTrackBreadth.isFlex() {
+        flexibleSizedTracksIndex.append(UInt32(i))
+      }
+      if trackSize.hasAutoMaxTrackBreadth() && !trackSize.isFitContent() {
+        autoSizedTracksForStretchIndex.append(UInt32(i))
+      }
+
+      if indefiniteHeight {
+        let rawTrackSize = rawGridTrackSize(direction: direction, translatedIndex: UInt32(i))
+        // Set the flag for repeating the track sizing algorithm. For flexible tracks, as per spec https://drafts.csswg.org/css-grid/#algo-flex-tracks,
+        // in clause "if the free space is an indefinite length:", it states that "If using this flex fraction would cause the grid to be smaller than
+        // the grid container’s min-width/height (or larger than the grid container’s max-width/height), then redo this step".
+        if !hasFlexibleMaxTrackBreadth && rawTrackSize.maxTrackBreadth.isFlex() {
+          hasFlexibleMaxTrackBreadth = true
+        }
+        if !hasPercentSizedRowsIndefiniteHeight
+          && (rawTrackSize.minTrackBreadth.isPercentage()
+            || rawTrackSize.maxTrackBreadth.isPercentage())
+        {
+          hasPercentSizedRowsIndefiniteHeight = true
+        }
+      }
+    }
   }
 
   private func resolveIntrinsicTrackSizes(gridLayoutState: inout GridLayoutState) {
@@ -477,21 +556,17 @@ final class GridTrackSizingAlgorithm {
   private func wasSetup() -> Bool { return strategy != nil }
 
   private var needsSetup = true
+  private var hasPercentSizedRowsIndefiniteHeight = false
+  private var hasFlexibleMaxTrackBreadth = false
   private var availableSpaceRows: LayoutUnit? = nil
   private var availableSpaceColumns: LayoutUnit? = nil
 
   private let freeSpaceColumns: LayoutUnit? = nil
   private let freeSpaceRows: LayoutUnit? = nil
 
-  private let contentSizedTracksIndex: [UInt32] = []
-
-  // The track sizing algorithm is used for both layout and intrinsic size
-  // computation. We're normally just interested in intrinsic inline sizes
-  // (a.k.a widths in most of the cases) for the computeIntrinsicLogicalWidths()
-  // computations. That's why we don't need to keep around different values for
-  // rows/columns.
-  var minContentSize: LayoutUnit
-  var maxContentSize: LayoutUnit
+  private var contentSizedTracksIndex: [UInt32] = []
+  private var flexibleSizedTracksIndex: [UInt32] = []
+  private var autoSizedTracksForStretchIndex: [UInt32] = []
 
   private let direction: GridTrackSizingDirection
 
@@ -500,6 +575,14 @@ final class GridTrackSizingAlgorithm {
 
   let renderGrid: RenderGridWrapper?
   private let strategy: GridTrackSizingAlgorithmStrategy?
+
+  // The track sizing algorithm is used for both layout and intrinsic size
+  // computation. We're normally just interested in intrinsic inline sizes
+  // (a.k.a widths in most of the cases) for the computeIntrinsicLogicalWidths()
+  // computations. That's why we don't need to keep around different values for
+  // rows/columns.
+  var minContentSize: LayoutUnit
+  var maxContentSize: LayoutUnit
 
   private let baselineAlignment: GridBaselineAlignment
 
