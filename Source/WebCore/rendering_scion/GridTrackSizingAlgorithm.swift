@@ -250,6 +250,72 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
+    if direction == .ForColumns {
+      availableSpaceColumns = availableSpace
+    } else {
+      availableSpaceRows = availableSpace
+    }
+  }
+
+  func computeTrackBasedSize() -> LayoutUnit {
+    if isDirectionInMasonryDirection() {
+      return renderGrid!.masonryContentSize()
+    }
+
+    var size = LayoutUnit()
+    let allTracks = tracks(direction: direction)
+    for track in allTracks {
+      size += track.baseSize()
+    }
+
+    size += renderGrid!.guttersSize(
+      direction: direction, startLine: 0, span: UInt32(allTracks.count),
+      availableSize: availableSpace())
+
+    return size
+  }
+
+  func hasAnyPercentSizedRowsIndefiniteHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAnyFlexibleMaxTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAnyBaselineAlignmentItem() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func tracksAreWiderThanMinTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setup(
+    direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
+    availableSpace: LayoutUnit?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func availableSpace() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isRelativeGridLengthAsAuto(length: GridLength, direction: GridTrackSizingDirection)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func calculateGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)
     -> GridTrackSize
   {
@@ -346,72 +412,6 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func initialGrowthLimit(trackSize: GridTrackSize, baseSize: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
-    if direction == .ForColumns {
-      availableSpaceColumns = availableSpace
-    } else {
-      availableSpaceRows = availableSpace
-    }
-  }
-
-  func computeTrackBasedSize() -> LayoutUnit {
-    if isDirectionInMasonryDirection() {
-      return renderGrid!.masonryContentSize()
-    }
-
-    var size = LayoutUnit()
-    let allTracks = tracks(direction: direction)
-    for track in allTracks {
-      size += track.baseSize()
-    }
-
-    size += renderGrid!.guttersSize(
-      direction: direction, startLine: 0, span: UInt32(allTracks.count),
-      availableSize: availableSpace())
-
-    return size
-  }
-
-  func hasAnyPercentSizedRowsIndefiniteHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hasAnyFlexibleMaxTrackBreadth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func hasAnyBaselineAlignmentItem() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func tracksAreWiderThanMinTrackBreadth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func setup(
-    direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
-    availableSpace: LayoutUnit?
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func availableSpace() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func isRelativeGridLengthAsAuto(length: GridLength, direction: GridTrackSizingDirection)
-    -> Bool
-  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
