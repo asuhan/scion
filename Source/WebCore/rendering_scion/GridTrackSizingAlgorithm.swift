@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private let infinity: Int32 = -1
+
 enum SizingOperation {
   case TrackSizing
   case IntrinsicSizeComputation
@@ -423,8 +425,19 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func initialGrowthLimit(trackSize: GridTrackSize, baseSize: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridLength = trackSize.maxTrackBreadth
+    if gridLength.isFlex() {
+      return trackSize.minTrackBreadth.isContentSized() ? LayoutUnit(value: infinity) : baseSize
+    }
+
+    let trackLength = gridLength.length()
+    if trackLength.isSpecified() {
+      let zero = LayoutUnit(value: 0)
+      return valueForLength(length: trackLength, maximumValue: max(availableSpace() ?? zero, zero))
+    }
+
+    assert(trackLength.isMinContent() || trackLength.isAuto() || trackLength.isMaxContent())
+    return LayoutUnit(value: infinity)
   }
 
   private func participateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
