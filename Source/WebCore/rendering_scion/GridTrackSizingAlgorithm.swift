@@ -137,8 +137,41 @@ final class GridTrackSizingAlgorithm {
   func estimatedGridAreaBreadthForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let span = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
+    var gridAreaSize = LayoutUnit()
+    var gridAreaIsIndefinite = false
+    let availableSize = availableSpace(direction: direction)
+    for trackPosition in span {
+      // We may need to estimate the grid area size before running the track sizing algorithm in order to perform the pre-layout of orthogonal items.
+      // We cannot use tracks(direction)[trackPosition].cachedTrackSize() because tracks(direction) is empty, since we are either performing pre-layout
+      // or are running the track sizing algorithm in the opposite direction and haven't run it in the desired direction yet.
+      let trackSize =
+        wasSetup()
+        ? calculateGridTrackSize(direction: direction, translatedIndex: trackPosition)
+        : rawGridTrackSize(direction: direction, translatedIndex: trackPosition)
+      let maxTrackSize = trackSize.maxTrackBreadth
+      if maxTrackSize.isContentSized() || maxTrackSize.isFlex()
+        || isRelativeGridLengthAsAuto(length: maxTrackSize, direction: direction)
+      {
+        gridAreaIsIndefinite = true
+      } else {
+        gridAreaSize += valueForLength(
+          length: maxTrackSize.length(), maximumValue: availableSize ?? LayoutUnit(value: UInt64(0))
+        )
+      }
+    }
+
+    gridAreaSize += renderGrid!.guttersSize(
+      direction: direction, startLine: span.startLine(), span: span.integerSpan(),
+      availableSize: availableSize)
+
+    let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid!, gridItem: gridItem, direction: .ForColumns)
+    if gridAreaIsIndefinite {
+      return direction == gridItemInlineDirection
+        ? max(gridItem.maxPreferredLogicalWidth(), gridAreaSize) : nil
+    }
+    return gridAreaSize
   }
 
   func cacheBaselineAlignedItem(
@@ -168,6 +201,25 @@ final class GridTrackSizingAlgorithm {
   }
 
   func setFreeSpace(direction: GridTrackSizingDirection, freeSpace: LayoutUnit?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func availableSpace(direction: GridTrackSizingDirection) -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func calculateGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)
+    -> GridTrackSize
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func rawGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)
+    -> GridTrackSize
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -206,6 +258,13 @@ final class GridTrackSizingAlgorithm {
     direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
     availableSpace: LayoutUnit?
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isRelativeGridLengthAsAuto(length: GridLength, direction: GridTrackSizingDirection)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -274,6 +333,9 @@ final class GridTrackSizingAlgorithm {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Data.
+  private func wasSetup() -> Bool { return strategy != nil }
 
   private var needsSetup = true
 

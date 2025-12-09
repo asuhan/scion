@@ -240,7 +240,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   // Required by GridTrackSizingAlgorithm. Keep them under control.
-  private func guttersSize(
+  func guttersSize(
     direction: GridTrackSizingDirection, startLine: UInt32, span: UInt32, availableSize: LayoutUnit?
   ) -> LayoutUnit {
     if span <= 1 {
