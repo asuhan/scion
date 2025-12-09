@@ -579,8 +579,13 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func isValidTransition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch sizingState {
+    case .ColumnSizingFirstIteration, .ColumnSizingSecondIteration:
+      return direction == .ForColumns
+    case .RowSizingFirstIteration, .RowSizingExtraIterationForSizeContainment,
+      .RowSizingSecondIteration:
+      return direction == .ForRows
+    }
   }
 
   private func isDirectionInMasonryDirection() -> Bool {
