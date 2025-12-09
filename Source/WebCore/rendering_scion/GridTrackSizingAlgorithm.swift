@@ -273,8 +273,7 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func availableSpace(direction: GridTrackSizingDirection) -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns ? availableSpaceColumns : availableSpaceRows
   }
 
   func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
@@ -394,8 +393,8 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func availableSpace() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(wasSetup())
+    return availableSpace(direction: direction)
   }
 
   private func isRelativeGridLengthAsAuto(length: GridLength, direction: GridTrackSizingDirection)
