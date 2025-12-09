@@ -308,8 +308,21 @@ final class GridTrackSizingAlgorithm {
   }
 
   func computeTrackBasedSize() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isDirectionInMasonryDirection() {
+      return renderGrid!.masonryContentSize()
+    }
+
+    var size = LayoutUnit()
+    let allTracks = tracks(direction: direction)
+    for track in allTracks {
+      size += track.baseSize()
+    }
+
+    size += renderGrid!.guttersSize(
+      direction: direction, startLine: 0, span: UInt32(allTracks.count),
+      availableSize: availableSpace())
+
+    return size
   }
 
   func hasAnyPercentSizedRowsIndefiniteHeight() -> Bool {
@@ -336,6 +349,11 @@ final class GridTrackSizingAlgorithm {
     direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
     availableSpace: LayoutUnit?
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func availableSpace() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -412,6 +430,11 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  private func isDirectionInMasonryDirection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Data.
   private func wasSetup() -> Bool { return strategy != nil }
 
@@ -431,6 +454,8 @@ final class GridTrackSizingAlgorithm {
   // rows/columns.
   let minContentSize: LayoutUnit
   let maxContentSize: LayoutUnit
+
+  private let direction: GridTrackSizingDirection
 
   // Required to be public by RenderGrid. Try to minimize the exposed surface.
   let grid: Grid

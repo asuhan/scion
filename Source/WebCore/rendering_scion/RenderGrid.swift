@@ -933,6 +933,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
       length: gapLength.length, maximumValue: availableSize ?? LayoutUnit(value: 0))
   }
 
+  func masonryContentSize() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func shouldCheckExplicitIntrinsicInnerLogicalSize(direction: GridTrackSizingDirection)
     -> Bool
   {
