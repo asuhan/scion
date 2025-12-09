@@ -407,8 +407,19 @@ final class GridTrackSizingAlgorithm {
 
   // Helper methods for step 1. initializeTrackSizes().
   private func initialBaseSize(trackSize: GridTrackSize) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: 0)
+    let gridLength = trackSize.minTrackBreadth
+    if gridLength.isFlex() {
+      return zero
+    }
+
+    let trackLength = gridLength.length()
+    if trackLength.isSpecified() {
+      return valueForLength(length: trackLength, maximumValue: max(availableSpace() ?? zero, zero))
+    }
+
+    assert(trackLength.isMinContent() || trackLength.isAuto() || trackLength.isMaxContent())
+    return zero
   }
 
   private func initialGrowthLimit(trackSize: GridTrackSize, baseSize: LayoutUnit) -> LayoutUnit {
