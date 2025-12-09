@@ -470,6 +470,13 @@ final class GridTrackSizingAlgorithm {
     }
   }
 
+  private func computeFlexSizedTracksGrowth(
+    flexFraction: Float64, increments: inout [LayoutUnit], totalGrowth: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Track sizing algorithm steps. Note that the "Maximize Tracks" step is done
   // entirely inside the strategies, that's why we don't need an additional
   // method at this level.
@@ -546,8 +553,41 @@ final class GridTrackSizingAlgorithm {
 
   private func stretchFlexibleTracks(freeSpace: LayoutUnit?, gridLayoutState: inout GridLayoutState)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if flexibleSizedTracksIndex.isEmpty {
+      return
+    }
+
+    var flexFraction = strategy!.findUsedFlexFraction(
+      flexibleSizedTracksIndex: flexibleSizedTracksIndex[...], direction: direction,
+      freeSpace: freeSpace, gridLayoutState: &gridLayoutState)
+
+    var totalGrowth = LayoutUnit()
+    var increments = [LayoutUnit](repeating: LayoutUnit(), count: flexibleSizedTracksIndex.count)
+    computeFlexSizedTracksGrowth(
+      flexFraction: flexFraction, increments: &increments, totalGrowth: &totalGrowth)
+
+    if strategy!.recomputeUsedFlexFractionIfNeeded(
+      flexFraction: &flexFraction, totalGrowth: &totalGrowth)
+    {
+      totalGrowth = LayoutUnit(value: UInt64(0))
+      computeFlexSizedTracksGrowth(
+        flexFraction: flexFraction, increments: &increments, totalGrowth: &totalGrowth)
+    }
+
+    var i = 0
+    let allTracks = tracks(direction: direction)
+    for trackIndex in flexibleSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      let increment = increments[i]
+      if increment.bool() {
+        track.setBaseSize(baseSize: track.baseSize() + increment)
+      }
+      i += 1
+    }
+    if let freeSpace = self.freeSpace(direction: direction) {
+      setFreeSpace(direction: direction, freeSpace: freeSpace - totalGrowth)
+    }
+    maxContentSize += totalGrowth
   }
 
   private func stretchAutoTracks() {
@@ -658,6 +698,19 @@ final class GridTrackSizingAlgorithm {
 
 private class GridTrackSizingAlgorithmStrategy {
   func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: LayoutUnit?) {
+    fatalError("Not reached")
+  }
+
+  func findUsedFlexFraction(
+    flexibleSizedTracksIndex: ArraySlice<UInt32>, direction: GridTrackSizingDirection,
+    freeSpace: LayoutUnit?, gridLayoutState: inout GridLayoutState
+  ) -> Float64 {
+    fatalError("Not reached")
+  }
+
+  func recomputeUsedFlexFractionIfNeeded(flexFraction: inout Float64, totalGrowth: inout LayoutUnit)
+    -> Bool
+  {
     fatalError("Not reached")
   }
 
