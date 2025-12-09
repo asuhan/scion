@@ -804,8 +804,15 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   func isMasonry(direction: GridTrackSizingDirection) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if areMasonryRows() && direction == .ForRows {
+      return true
+    }
+
+    if areMasonryColumns() && direction == .ForColumns {
+      return true
+    }
+
+    return false
   }
 
   func areMasonryRows() -> Bool {
