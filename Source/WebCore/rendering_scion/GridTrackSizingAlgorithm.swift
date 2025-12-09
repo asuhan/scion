@@ -254,8 +254,49 @@ final class GridTrackSizingAlgorithm {
   private func rawGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)
     -> GridTrackSize
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isRowAxis = direction == .ForColumns
+    let renderStyle = renderGrid!.style()
+    let trackStyles =
+      isRowAxis ? renderStyle.gridColumnTrackSizes() : renderStyle.gridRowTrackSizes()
+    let autoRepeatTrackStyles =
+      isRowAxis ? renderStyle.gridAutoRepeatColumns() : renderStyle.gridAutoRepeatRows()
+    let autoTrackStyles = isRowAxis ? renderStyle.gridAutoColumns() : renderStyle.gridAutoRows()
+    let insertionPoint =
+      isRowAxis
+      ? renderStyle.gridAutoRepeatColumnsInsertionPoint()
+      : renderStyle.gridAutoRepeatRowsInsertionPoint()
+    let autoRepeatTracksCount = grid.autoRepeatTracks(direction: direction)
+
+    // We should not use GridPositionsResolver::explicitGridXXXCount() for this because the
+    // explicit grid might be larger than the number of tracks in grid-template-rows|columns (if
+    // grid-template-areas is specified for example).
+    let explicitTracksCount = UInt32(trackStyles.count) + autoRepeatTracksCount
+
+    let untranslatedIndex = translatedIndex - grid.explicitGridStart(direction: direction)
+    let untranslatedIndexAsInt = Int(untranslatedIndex)
+    let autoTrackStylesSize = UInt32(autoTrackStyles.count)
+    if untranslatedIndexAsInt < 0 {
+      var index = untranslatedIndexAsInt % Int(autoTrackStylesSize)
+      // We need to transpose the index because the first negative implicit line will get the last defined auto track and so on.
+      index += index != 0 ? Int(autoTrackStylesSize) : 0
+      assert(index >= 0)
+      return autoTrackStyles[index]
+    }
+
+    if untranslatedIndex >= explicitTracksCount {
+      return autoTrackStyles[Int((untranslatedIndex - explicitTracksCount) % autoTrackStylesSize)]
+    }
+
+    if autoRepeatTracksCount == 0 || untranslatedIndex < insertionPoint {
+      return trackStyles[Int(untranslatedIndex)]
+    }
+
+    if untranslatedIndex < (insertionPoint + autoRepeatTracksCount) {
+      let autoRepeatLocalIndex = untranslatedIndexAsInt - Int(insertionPoint)
+      return autoRepeatTrackStyles[autoRepeatLocalIndex % autoRepeatTrackStyles.count]
+    }
+
+    return trackStyles[Int(untranslatedIndex - autoRepeatTracksCount)]
   }
 
   func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
