@@ -213,8 +213,42 @@ final class GridTrackSizingAlgorithm {
   private func calculateGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)
     -> GridTrackSize
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(wasSetup())
+    // Collapse empty auto repeat tracks if auto-fit.
+    if grid.hasAutoRepeatEmptyTracks(direction: direction)
+      && grid.isEmptyAutoRepeatTrack(direction: direction, line: translatedIndex)
+    {
+      return GridTrackSize(
+        length: GridLength(length: LengthWrapper(type: .Fixed)), trackSizeType: .LengthTrackSizing)
+    }
+
+    let trackSize = rawGridTrackSize(direction: direction, translatedIndex: translatedIndex)
+    if trackSize.isFitContent() {
+      return isRelativeGridLengthAsAuto(
+        length: trackSize.fitContentTrackBreadth(), direction: direction)
+        ? GridTrackSize(
+          minTrackBreadth: GridLength(length: LengthWrapper(type: .Auto)),
+          maxTrackBreadth: GridLength(length: LengthWrapper(type: .MaxContent))) : trackSize
+    }
+
+    var minTrackBreadth = trackSize.minTrackBreadth
+    var maxTrackBreadth = trackSize.maxTrackBreadth
+    // If the logical width/height of the grid container is indefinite, percentage
+    // values are treated as <auto>.
+    if isRelativeGridLengthAsAuto(length: trackSize.minTrackBreadth, direction: direction) {
+      minTrackBreadth = GridLength(length: LengthWrapper(type: .Auto))
+    }
+    if isRelativeGridLengthAsAuto(length: trackSize.maxTrackBreadth, direction: direction) {
+      maxTrackBreadth = GridLength(length: LengthWrapper(type: .Auto))
+    }
+
+    // Flex sizes are invalid as a min sizing function. However we still can have a flexible |minTrackBreadth|
+    // if the track size is just a flex size (e.g. "1fr"), the spec says that in this case it implies an automatic minimum.
+    if minTrackBreadth.isFlex() {
+      minTrackBreadth = GridLength(length: LengthWrapper(type: .Auto))
+    }
+
+    return GridTrackSize(minTrackBreadth: minTrackBreadth, maxTrackBreadth: maxTrackBreadth)
   }
 
   private func rawGridTrackSize(direction: GridTrackSizingDirection, translatedIndex: UInt32)

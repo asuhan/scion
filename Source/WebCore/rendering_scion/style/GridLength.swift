@@ -33,6 +33,11 @@
 // or <flex>. This class avoids spreading the knowledge of <flex> throughout the rendering directory by adding
 // an new unit to Length.h.
 struct GridLength {
+  init(length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLength() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

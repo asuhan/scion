@@ -30,6 +30,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum GridTrackSizeType {
+  case LengthTrackSizing
+  case MinMaxTrackSizing
+  case FitContentTrackSizing
+}
+
 // This class represents a <track-size> from the spec. Althought there are 3 different types of
 // <track-size> there is always an equivalent minmax() representation that could represent any of
 // them. The only special case is fit-content(argument) which is similar to minmax(auto,
@@ -42,6 +48,26 @@
 // spot, so adding a conditional statement there (to distinguish between fit-content and any other
 // case) was causing a severe performance drop.
 struct GridTrackSize {
+  init(length: GridLength, trackSizeType: GridTrackSizeType = .LengthTrackSizing) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(minTrackBreadth: GridLength, maxTrackBreadth: GridLength) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fitContentTrackBreadth() -> GridLength {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFitContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let minTrackBreadth: GridLength
   let maxTrackBreadth: GridLength
 }
