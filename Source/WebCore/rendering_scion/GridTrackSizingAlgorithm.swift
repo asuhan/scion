@@ -300,8 +300,11 @@ final class GridTrackSizingAlgorithm {
   }
 
   func setAvailableSpace(direction: GridTrackSizingDirection, availableSpace: LayoutUnit?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForColumns {
+      availableSpaceColumns = availableSpace
+    } else {
+      availableSpaceRows = availableSpace
+    }
   }
 
   func computeTrackBasedSize() -> LayoutUnit {
@@ -413,6 +416,8 @@ final class GridTrackSizingAlgorithm {
   private func wasSetup() -> Bool { return strategy != nil }
 
   private var needsSetup = true
+  private var availableSpaceRows: LayoutUnit? = nil
+  private var availableSpaceColumns: LayoutUnit? = nil
 
   private let freeSpaceColumns: LayoutUnit? = nil
   private let freeSpaceRows: LayoutUnit? = nil
