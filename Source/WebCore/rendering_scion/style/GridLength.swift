@@ -53,6 +53,11 @@ struct GridLength {
     fatalError("Not implemented")
   }
 
+  func flex() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isPercentage() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -77,6 +77,11 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  func cachedTrackSize() -> GridTrackSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setCachedTrackSize(cachedTrackSize: GridTrackSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -473,8 +478,26 @@ final class GridTrackSizingAlgorithm {
   private func computeFlexSizedTracksGrowth(
     flexFraction: Float64, increments: inout [LayoutUnit], totalGrowth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let numFlexTracks = flexibleSizedTracksIndex.count
+    assert(increments.count == numFlexTracks)
+    let allTracks = tracks(direction: direction)
+    // The flexFraction multiplied by the flex factor can result in a non-integer size. Since we floor the stretched size to fit in a LayoutUnit,
+    // we may lose the fractional part of the computation which can cause the entire free space not being distributed evenly. The leftover
+    // fractional part from every flexible track are accumulated here to avoid this issue.
+    var leftOverSize: Float64 = 0
+    for i in 0..<numFlexTracks {
+      let trackIndex = Int(flexibleSizedTracksIndex[i])
+      let trackSize = allTracks[trackIndex].cachedTrackSize()
+      assert(trackSize.maxTrackBreadth.isFlex())
+      let oldBaseSize = allTracks[trackIndex].baseSize()
+      let frShare = flexFraction * trackSize.maxTrackBreadth.flex() + leftOverSize
+      let stretchedSize = LayoutUnit(value: frShare)
+      let newBaseSize = max(oldBaseSize, stretchedSize)
+      increments[i] = newBaseSize - oldBaseSize
+      totalGrowth += increments[i]
+      // In the case that stretchedSize is greater than frShare, we floor it to 0 to avoid a negative leftover.
+      leftOverSize = max(frShare - stretchedSize.toDouble(), 0)
+    }
   }
 
   // Track sizing algorithm steps. Note that the "Maximize Tracks" step is done
