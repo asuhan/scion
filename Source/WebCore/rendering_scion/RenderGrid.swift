@@ -2728,8 +2728,40 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func getBaselineGridItem(alignment: ItemPosition) -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(alignment == .Baseline || alignment == .LastBaseline)
+    var baselineGridItem: RenderBoxWrapper? = nil
+    let numColumns = currentGrid().numTracks(direction: .ForColumns)
+    let rowIndexDeterminingBaseline =
+      alignment == .Baseline ? 0 : currentGrid().numTracks(direction: .ForRows) - 1
+    for column in 0..<numColumns {
+      let cell = currentGrid().cell(
+        row: rowIndexDeterminingBaseline,
+        column: alignment == .Baseline ? column : numColumns - column - 1)
+
+      for gridItem in cell {
+        // If an item participates in baseline alignment, we select such item.
+        if isBaselineAlignmentForGridItem(
+          gridItem: gridItem, baselineAxis: .GridColumnAxis, allowed: .BothLines)
+        {
+          let gridItemAlignment = selfAlignmentForGridItem(
+            axis: .GridColumnAxis, gridItem: gridItem
+          ).position
+          if rowIndexDeterminingBaseline
+            == GridLayoutFunctions.alignmentContextForBaselineAlignment(
+              span: gridSpanForGridItem(gridItem: gridItem, direction: .ForRows),
+              alignment: gridItemAlignment)
+          {
+            // FIXME: self-baseline and content-baseline alignment not implemented yet.
+            baselineGridItem = gridItem
+            break
+          }
+          if baselineGridItem == nil {
+            baselineGridItem = gridItem
+          }
+        }
+      }
+    }
+    return baselineGridItem
   }
 
   private func columnAxisBaselineOffsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {

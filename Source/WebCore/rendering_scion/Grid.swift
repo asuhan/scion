@@ -23,6 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+typealias GridCell = [RenderBoxWrapper]
 typealias OrderedTrackIndexSet = ListSet<UInt64, UInt64>
 
 final class Grid {
@@ -64,6 +65,11 @@ final class Grid {
   }
 
   func gridItemSpan(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection) -> GridSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func cell(row: UInt32, column: UInt32) -> GridCell {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
