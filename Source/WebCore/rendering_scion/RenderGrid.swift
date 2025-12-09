@@ -323,7 +323,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return gapAccumulator
   }
 
-  private func gridItemOffset(direction: GridTrackSizingDirection) -> LayoutUnit {
+  func gridItemOffset(direction: GridTrackSizingDirection) -> LayoutUnit {
     return direction == .ForRows
       ? offsetBetweenRows.distributionOffset : offsetBetweenColumns.distributionOffset
   }

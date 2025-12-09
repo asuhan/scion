@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class WeakHashSet<KeyType> {
+final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
   struct AddResult {
     let isNewEntry: Bool
   }
@@ -50,6 +50,11 @@ final class WeakHashSet<KeyType> {
   }
 
   func computeSize() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func next() -> KeyType? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -92,6 +92,22 @@ private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
   return axis == .GridRowAxis ? .ForColumns : .ForRows
 }
 
+private func computeGridSpanSize(
+  tracks: ArraySlice<GridTrack>, gridSpan: GridSpan, gridItemOffset: LayoutUnit?,
+  totalGuttersSize: LayoutUnit
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private final class IndefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
+  override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
+}
+
+private final class DefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
+  override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
+}
+
 final class GridTrackSizingAlgorithm {
   init(renderGrid: RenderGridWrapper, grid: Grid) {
     // TODO(asuhan): implement this
@@ -303,10 +319,72 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  // GridTrackSizingAlgorithm API.
+
   private func setup(
     direction: GridTrackSizingDirection, numTracks: UInt32, sizingOperation: SizingOperation,
     availableSpace: LayoutUnit?
   ) {
+    assert(needsSetup)
+    self.direction = direction
+    setAvailableSpace(
+      direction: direction,
+      availableSpace: availableSpace != nil
+        ? max(LayoutUnit(value: UInt64(0)), availableSpace!) : availableSpace)
+
+    self.sizingOperation = sizingOperation
+    switch self.sizingOperation {
+    case .IntrinsicSizeComputation:
+      strategy = IndefiniteSizeStrategy(algorithm: self)
+    case .TrackSizing:
+      strategy = DefiniteSizeStrategy(algorithm: self)
+    }
+
+    contentSizedTracksIndex.removeAll()
+    flexibleSizedTracksIndex.removeAll()
+    autoSizedTracksForStretchIndex.removeAll()
+
+    if availableSpace != nil {
+      let guttersSize = renderGrid!.guttersSize(
+        direction: direction, startLine: 0, span: grid.numTracks(direction: direction),
+        availableSize: self.availableSpace(direction: direction))
+      setFreeSpace(direction: direction, freeSpace: availableSpace! - guttersSize)
+    } else {
+      setFreeSpace(direction: direction, freeSpace: nil)
+    }
+    resizeTracks(direction: direction, numTracks: numTracks)
+
+    needsSetup = false
+    hasPercentSizedRowsIndefiniteHeight = false
+    hasFlexibleMaxTrackBreadth = false
+
+    if direction == .ForRows
+      && (sizingState == .RowSizingFirstIteration || sizingState == .RowSizingSecondIteration)
+    {
+      for subgrid in rowSubgridsWithBaselineAlignedItems {
+        let subgridSpan = renderGrid!.gridSpanForGridItem(gridItem: subgrid, direction: .ForColumns)
+        let subgridRowStartMargin = subgrid.style().marginBeforeUsing(
+          otherStyle: renderGrid!.style())
+        if !subgridRowStartMargin.isAuto() {
+          renderGrid!.setMarginBeforeForChild(
+            child: subgrid,
+            value: minimumValueForLength(
+              length: subgridRowStartMargin,
+              maximumValue: computeGridSpanSize(
+                tracks: tracks(direction: .ForColumns), gridSpan: subgridSpan,
+                gridItemOffset: renderGrid!.gridItemOffset(direction: direction),
+                totalGuttersSize: renderGrid!.guttersSize(
+                  direction: .ForColumns, startLine: subgridSpan.startLine(),
+                  span: subgridSpan.integerSpan(),
+                  availableSize: self.availableSpace(direction: .ForColumns)))))
+        }
+      }
+    }
+
+    computeBaselineAlignmentContext()
+  }
+
+  private func resizeTracks(direction: GridTrackSizingDirection, numTracks: UInt32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -443,6 +521,11 @@ final class GridTrackSizingAlgorithm {
 
     assert(trackLength.isMinContent() || trackLength.isAuto() || trackLength.isMaxContent())
     return LayoutUnit(value: infinity)
+  }
+
+  private func computeBaselineAlignmentContext() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func participateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
@@ -685,13 +768,14 @@ final class GridTrackSizingAlgorithm {
   private var flexibleSizedTracksIndex: [UInt32] = []
   private var autoSizedTracksForStretchIndex: [UInt32] = []
 
-  private let direction: GridTrackSizingDirection
+  private var direction: GridTrackSizingDirection
+  private var sizingOperation: SizingOperation
 
   // Required to be public by RenderGrid. Try to minimize the exposed surface.
   let grid: Grid
 
   let renderGrid: RenderGridWrapper?
-  private let strategy: GridTrackSizingAlgorithmStrategy?
+  private var strategy: GridTrackSizingAlgorithmStrategy?
 
   // The track sizing algorithm is used for both layout and intrinsic size
   // computation. We're normally just interested in intrinsic inline sizes
@@ -711,6 +795,8 @@ final class GridTrackSizingAlgorithm {
   private var sizingState: SizingState
 
   private let baselineAlignment: GridBaselineAlignment
+
+  private let rowSubgridsWithBaselineAlignedItems: WeakHashSet<RenderGridWrapper>
 
   // This is a RAII class used to ensure that the track sizing algorithm is
   // executed as it is supposed to be, i.e., first resolve columns and then
@@ -755,4 +841,8 @@ private class GridTrackSizingAlgorithmStrategy {
   func isComputingSizeContainment() -> Bool { fatalError("Not reached") }
 
   func isComputingSizeOrInlineSizeContainment() -> Bool { fatalError("Not reached") }
+
+  init(algorithm: GridTrackSizingAlgorithm) { self.algorithm = algorithm }
+
+  private let algorithm: GridTrackSizingAlgorithm
 }
