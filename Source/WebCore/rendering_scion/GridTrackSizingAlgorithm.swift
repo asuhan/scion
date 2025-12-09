@@ -591,8 +591,21 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func stretchAutoTracks() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let currentFreeSpace = strategy!.freeSpaceForStretchAutoTracksStep()
+    if autoSizedTracksForStretchIndex.isEmpty || currentFreeSpace <= Int32(0)
+      || (renderGrid!.contentAlignment(direction: direction).distribution != .Stretch)
+    {
+      return
+    }
+
+    let allTracks = tracks(direction: direction)
+    let numberOfAutoSizedTracks = UInt32(autoSizedTracksForStretchIndex.count)
+    let sizeToIncrease = currentFreeSpace / numberOfAutoSizedTracks
+    for trackIndex in autoSizedTracksForStretchIndex {
+      let track = allTracks[Int(trackIndex)]
+      track.setBaseSize(baseSize: track.baseSize() + sizeToIncrease)
+    }
+    setFreeSpace(direction: direction, freeSpace: LayoutUnit(value: UInt64(0)))
   }
 
   private func copyUsedTrackSizesForSubgrid() -> Bool {
@@ -713,6 +726,8 @@ private class GridTrackSizingAlgorithmStrategy {
   {
     fatalError("Not reached")
   }
+
+  func freeSpaceForStretchAutoTracksStep() -> LayoutUnit { fatalError("Not reached") }
 
   func isComputingSizeContainment() -> Bool { fatalError("Not reached") }
 

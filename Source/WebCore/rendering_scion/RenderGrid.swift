@@ -386,7 +386,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       : alignSelfForGridItem(gridItem: gridItem, stretchingMode: .Any, gridStyle: gridStyle)
   }
 
-  private func contentAlignment(direction: GridTrackSizingDirection) -> StyleContentAlignmentData {
+  func contentAlignment(direction: GridTrackSizingDirection) -> StyleContentAlignmentData {
     return direction == .ForColumns
       ? style().resolvedJustifyContent(normalValueBehavior: contentAlignmentNormalBehaviorGrid)
       : style().resolvedAlignContent(normalValueBehavior: contentAlignmentNormalBehaviorGrid)
