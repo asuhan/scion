@@ -562,8 +562,20 @@ final class GridTrackSizingAlgorithm {
 
   // State machine.
   private func advanceNextState() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch sizingState {
+    case .ColumnSizingFirstIteration:
+      sizingState = .RowSizingFirstIteration
+    case .RowSizingFirstIteration:
+      sizingState =
+        strategy!.isComputingSizeContainment()
+        ? .RowSizingExtraIterationForSizeContainment : .ColumnSizingSecondIteration
+    case .RowSizingExtraIterationForSizeContainment:
+      sizingState = .ColumnSizingSecondIteration
+    case .ColumnSizingSecondIteration:
+      sizingState = .RowSizingSecondIteration
+    case .RowSizingSecondIteration:
+      sizingState = .ColumnSizingFirstIteration
+    }
   }
 
   private func isValidTransition() -> Bool {
@@ -608,6 +620,15 @@ final class GridTrackSizingAlgorithm {
   var minContentSize: LayoutUnit
   var maxContentSize: LayoutUnit
 
+  enum SizingState {
+    case ColumnSizingFirstIteration
+    case RowSizingFirstIteration
+    case RowSizingExtraIterationForSizeContainment
+    case ColumnSizingSecondIteration
+    case RowSizingSecondIteration
+  }
+  private var sizingState: SizingState
+
   private let baselineAlignment: GridBaselineAlignment
 
   // This is a RAII class used to ensure that the track sizing algorithm is
@@ -634,6 +655,8 @@ private class GridTrackSizingAlgorithmStrategy {
   func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: LayoutUnit?) {
     fatalError("Not reached")
   }
+
+  func isComputingSizeContainment() -> Bool { fatalError("Not reached") }
 
   func isComputingSizeOrInlineSizeContainment() -> Bool { fatalError("Not reached") }
 }
