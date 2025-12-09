@@ -77,6 +77,13 @@ struct GridSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Moves this span to be in the same coordinate space as |parent|.
+  // If reverse is specified, then swaps the direction to handle RTL/LTR changes.
+  func translateTo(parent: GridSpan, reverse: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 // This represents a grid area that spans in both rows' and columns' direction.

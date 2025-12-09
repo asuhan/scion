@@ -78,6 +78,13 @@ class GridLayoutFunctions {
     fatalError("Not implemented")
   }
 
+  static func isSubgridReversedDirection(
+    grid: RenderGridWrapper, outerDirection: GridTrackSizingDirection, subgrid: RenderGridWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func alignmentContextForBaselineAlignment(span: GridSpan, alignment: ItemPosition)
     -> UInt32
   {

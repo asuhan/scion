@@ -744,8 +744,39 @@ final class RenderGridWrapper: RenderBlockWrapper {
   func gridSpanForGridItem(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection)
     -> GridSpan
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var renderGrid = gridItem.parent() as! RenderGridWrapper
+    // |direction| is specified relative to this grid, switch it if |gridItem|'s direct parent grid
+    // is using a different writing mode.
+    var direction = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: self, gridItem: renderGrid, direction: direction)
+    var span =
+      gridItem.isOutOfFlowPositioned()
+      ? renderGrid.gridSpanForOutOfFlowGridItem(gridItem: gridItem, direction: direction)
+      : renderGrid.currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
+
+    while CPtrToInt(renderGrid.p) != CPtrToInt(p) {
+      let parent = renderGrid.parent() as! RenderGridWrapper
+
+      let isSubgrid = renderGrid.isSubgrid(direction: direction)
+
+      direction = GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: parent, gridItem: renderGrid, direction: direction)
+
+      let parentSpan =
+        renderGrid.isOutOfFlowPositioned()
+        ? parent.gridSpanForOutOfFlowGridItem(gridItem: renderGrid, direction: direction)
+        : parent.currentGrid().gridItemSpan(gridItem: renderGrid, direction: direction)
+      if isSubgrid {
+        span.translateTo(
+          parent: parentSpan,
+          reverse: GridLayoutFunctions.isSubgridReversedDirection(
+            grid: parent, outerDirection: direction, subgrid: renderGrid))
+      } else {
+        span = parentSpan
+      }
+      renderGrid = parent
+    }
+    return span
   }
 
   func isSubgrid(direction: GridTrackSizingDirection) -> Bool {
@@ -2817,6 +2848,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
       grid: self, algorithm: trackSizingAlgorithm!, axes: [.GridRowAxis, .GridColumnAxis],
       callback: computeOrthogonalAndDependentItems, cachingRowSubgridsForRootGrid: !isSubgridRows())
     return dependentGridItems
+  }
+
+  private func gridSpanForOutOfFlowGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> GridSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Masonry Spec Section 2.3.1 repeat(auto-fit)
