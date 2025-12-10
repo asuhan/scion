@@ -38,11 +38,52 @@ struct ExtraMarginsFromSubgrids {
 }
 
 class GridLayoutFunctions {
+  private static func marginStartIsAuto(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func marginEndIsAuto(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func gridItemHasMargin(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private static func computeMarginLogicalSizeForGridItem(
     grid: RenderGridWrapper, direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let flowAwareDirection = flowAwareDirectionForGridItem(
+      grid: grid, gridItem: gridItem, direction: direction)
+    if !gridItemHasMargin(gridItem: gridItem, direction: flowAwareDirection) {
+      return LayoutUnit(value: 0)
+    }
+
+    var marginStart = LayoutUnit()
+    var marginEnd = LayoutUnit()
+    if direction == .ForColumns {
+      gridItem.computeInlineDirectionMargins(
+        containingBlock: grid,
+        containerWidth: gridItem.containingBlockLogicalWidthForContentInFragment(fragment: nil),
+        availableSpaceAdjustedWithFloats: nil, childWidth: gridItem.logicalWidth(),
+        marginStart: &marginStart, marginEnd: &marginEnd)
+    } else {
+      gridItem.computeBlockDirectionMargins(
+        containingBlock: grid, marginBefore: &marginStart, marginAfter: &marginEnd)
+    }
+    return marginStartIsAuto(gridItem: gridItem, direction: flowAwareDirection)
+      ? marginEnd
+      : marginEndIsAuto(gridItem: gridItem, direction: flowAwareDirection)
+        ? marginStart : marginStart + marginEnd
   }
 
   private static func extraMarginForSubgridAncestors(
