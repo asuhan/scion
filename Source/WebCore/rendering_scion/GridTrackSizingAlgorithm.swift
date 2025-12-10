@@ -567,8 +567,31 @@ final class GridTrackSizingAlgorithm {
   private func sizeTrackToFitSingleSpanMasonryGroup(
     span: GridSpan, masonryIndefiniteItems: MasonryMinMaxTrackSize, track: GridTrack
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let trackPosition = Int(span.startLine())
+    let trackSize = tracks(direction: direction)[trackPosition].cachedTrackSize()
+
+    if trackSize.hasMinContentMinTrackBreadth() {
+      track.setBaseSize(baseSize: max(track.baseSize(), masonryIndefiniteItems.minContentSize))
+    } else if trackSize.hasMaxContentMinTrackBreadth() {
+      track.setBaseSize(baseSize: max(track.baseSize(), masonryIndefiniteItems.maxContentSize))
+    } else if trackSize.hasAutoMinTrackBreadth() {
+      track.setBaseSize(baseSize: max(track.baseSize(), masonryIndefiniteItems.minSize))
+    }
+
+    if trackSize.hasMinContentMaxTrackBreadth() {
+      track.setGrowthLimit(
+        growthLimit: max(track.growthLimit(), masonryIndefiniteItems.minContentSize))
+    } else if trackSize.hasMaxContentOrAutoMaxTrackBreadth() {
+      var growthLimit = masonryIndefiniteItems.maxContentSize
+      if trackSize.isFitContent() {
+        growthLimit = min(
+          growthLimit,
+          valueForLength(
+            length: trackSize.fitContentTrackBreadth().length(),
+            maximumValue: availableSpace() ?? LayoutUnit(value: 0)))
+      }
+      track.setGrowthLimit(growthLimit: max(track.growthLimit(), growthLimit))
+    }
   }
 
   private func spanningItemCrossesFlexibleSizedTracks(itemSpan: GridSpan) -> Bool {
