@@ -46,8 +46,51 @@ class GridLayoutFunctions {
   static func isGridItemInlineSizeDependentOnBlockConstraints(
     gridItem: RenderBoxWrapper, parentGrid: RenderGridWrapper, gridItemAlignSelf: ItemPosition
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(gridItem.parent()?.p) == CPtrToInt(parentGrid.p))
+
+    if isOrthogonalGridItem(grid: parentGrid, gridItem: gridItem) {
+      return true
+    }
+
+    let gridItemStyle = gridItem.style()
+    let gridItemFlexWrap = gridItemStyle.flexWrap()
+    if gridItem.isRenderFlexibleBox() && gridItem.style().isColumnFlexDirection()
+      && (gridItemFlexWrap == .Wrap || gridItemFlexWrap == .Reverse)
+    {
+      return true
+    }
+
+    if gridItem.isRenderMultiColumnFlow() {
+      return true
+    }
+
+    if isAspectRatioBlockSizeDependentGridItem(gridItem: gridItem) {
+      return true
+    }
+
+    // Stretch alignment allows the grid item content to resolve against the stretched size.
+    if gridItemAlignSelf != .Stretch {
+      return false
+    }
+
+    for gridItemChild: RenderObjectWrapper in childrenOfType(parent: gridItem) {
+      if hasAspectRatioAndInlineSizeDependsOnBlockSize(renderer: gridItemChild) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  private static func hasAspectRatioAndInlineSizeDependsOnBlockSize(renderer: RenderObjectWrapper)
+    -> Bool
+  {
+    let rendererStyle = renderer.style()
+    let rendererHasAspectRatio =
+      renderer.hasIntrinsicAspectRatio() || rendererStyle.hasAspectRatio()
+
+    return rendererHasAspectRatio && rendererStyle.logicalWidth().isAuto()
+      && !rendererStyle.logicalHeight().isIntrinsicOrAuto()
   }
 
   static func isAspectRatioBlockSizeDependentGridItem(gridItem: RenderBoxWrapper) -> Bool {
