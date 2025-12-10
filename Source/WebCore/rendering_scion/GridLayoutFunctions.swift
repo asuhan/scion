@@ -192,6 +192,12 @@ class GridLayoutFunctions {
     return gridItem.isHorizontalWritingMode() != grid.isHorizontalWritingMode()
   }
 
+  private static func isOrthogonalParent(grid: RenderGridWrapper, parent: RenderElementWrapper)
+    -> Bool
+  {
+    return parent.isHorizontalWritingMode() != grid.isHorizontalWritingMode()
+  }
+
   static func isGridItemInlineSizeDependentOnBlockConstraints(
     gridItem: RenderBoxWrapper, parentGrid: RenderGridWrapper, gridItemAlignSelf: ItemPosition
   ) -> Bool {
@@ -250,15 +256,15 @@ class GridLayoutFunctions {
   static func flowAwareDirectionForGridItem(
     grid: RenderGridWrapper, gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> GridTrackSizingDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !isOrthogonalGridItem(grid: grid, gridItem: gridItem)
+      ? direction : (direction == .ForColumns ? .ForRows : .ForColumns)
   }
 
   static func flowAwareDirectionForParent(
     grid: RenderGridWrapper, parent: RenderElementWrapper, direction: GridTrackSizingDirection
   ) -> GridTrackSizingDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isOrthogonalParent(grid: grid, parent: parent)
+      ? (direction == .ForColumns ? .ForRows : .ForColumns) : direction
   }
 
   static func overridingContainingBlockContentSizeForGridItem(
