@@ -744,8 +744,13 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func handleInfinityGrowthLimit() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let allTracks = tracks(direction: direction)
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      if track.growthLimit() == infinity {
+        track.setGrowthLimit(growthLimit: track.baseSize())
+      }
+    }
   }
 
   private struct DefiniteAndIndefiniteItemsForMasonry {
