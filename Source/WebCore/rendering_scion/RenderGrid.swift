@@ -904,14 +904,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return isRowAxis ? availableLogicalWidth() : contentLogicalHeight()
   }
 
-  private func gridGap(direction: GridTrackSizingDirection) -> LayoutUnit {
+  func gridGap(direction: GridTrackSizingDirection) -> LayoutUnit {
     return gridGap(
       direction: direction, availableSize: availableSpaceForGutters(direction: direction))
   }
 
-  private func gridGap(direction: GridTrackSizingDirection, availableSize: LayoutUnit?)
-    -> LayoutUnit
-  {
+  func gridGap(direction: GridTrackSizingDirection, availableSize: LayoutUnit?) -> LayoutUnit {
     assert(availableSize != nil || availableSize! >= Int32(0))
     let gapLength = direction == .ForColumns ? style().columnGap() : style().rowGap()
     if gapLength.isNormal {
@@ -2977,7 +2975,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // FIXME: Refactor m_trackSizingAlgorithm to be inside of layoutGrid and layoutMasonry.
   // https://bugs.webkit.org/show_bug.cgi?id=277496
-  private let trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
+  let trackSizingAlgorithm: GridTrackSizingAlgorithm? = nil
 
   private let columnPositions: [LayoutUnit] = []
   private let rowPositions: [LayoutUnit] = []

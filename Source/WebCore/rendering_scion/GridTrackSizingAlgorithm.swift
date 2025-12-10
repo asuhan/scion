@@ -112,6 +112,13 @@ private final class DefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
   override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
 }
 
+private func removeSubgridMarginBorderPaddingFromTracks(
+  tracks: inout ArraySlice<GridTrack>, mbp: LayoutUnit, forwards: Bool
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class GridTrackSizingAlgorithm {
   init(renderGrid: RenderGridWrapper, grid: Grid) {
     // TODO(asuhan): implement this
@@ -718,8 +725,54 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func copyUsedTrackSizesForSubgrid() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let outer = renderGrid!.parent() as! RenderGridWrapper
+    let parentAlgo = outer.trackSizingAlgorithm!
+    let direction = GridLayoutFunctions.flowAwareDirectionForParent(
+      grid: renderGrid!, parent: outer, direction: direction)
+    let parentTracks = parentAlgo.tracks(direction: direction)
+
+    if parentTracks.isEmpty {
+      return false
+    }
+
+    let span = outer.gridSpanForGridItem(gridItem: renderGrid!, direction: direction)
+    var allTracks = tracks(direction: direction)
+    let numTracks = allTracks.count
+    assert((parentTracks.count - 1) >= (numTracks - 1 + Int(span.startLine())))
+    for i in 0..<numTracks {
+      allTracks[i] = parentTracks[i + Int(span.startLine())]
+    }
+
+    if GridLayoutFunctions.isSubgridReversedDirection(
+      grid: outer, outerDirection: direction, subgrid: renderGrid!)
+    {
+      allTracks.reverse()
+    }
+
+    let startMBP =
+      (direction == .ForColumns)
+      ? renderGrid!.marginAndBorderAndPaddingStart() : renderGrid!.marginAndBorderAndPaddingBefore()
+    removeSubgridMarginBorderPaddingFromTracks(tracks: &allTracks, mbp: startMBP, forwards: true)
+    let endMBP =
+      (direction == .ForColumns)
+      ? renderGrid!.marginAndBorderAndPaddingEnd() : renderGrid!.marginAndBorderAndPaddingAfter()
+    removeSubgridMarginBorderPaddingFromTracks(tracks: &allTracks, mbp: endMBP, forwards: false)
+
+    let gapDifference =
+      (renderGrid!.gridGap(
+        direction: direction, availableSize: availableSpace(direction: direction))
+        - outer.gridGap(direction: direction)) / 2
+    for i in 0..<numTracks {
+      var size = allTracks[i].baseSize()
+      if i != 0 {
+        size -= gapDifference
+      }
+      if i != numTracks - 1 {
+        size -= gapDifference
+      }
+      allTracks[i].setBaseSize(baseSize: size)
+    }
+    return true
   }
 
   // State machine.
