@@ -115,8 +115,26 @@ private final class DefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
 private func removeSubgridMarginBorderPaddingFromTracks(
   tracks: inout ArraySlice<GridTrack>, mbp: LayoutUnit, forwards: Bool
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let numTracks = tracks.count
+  var i = forwards ? 0 : numTracks - 1
+  var mbp = mbp
+  while mbp > 0 && (forwards ? i < numTracks : i >= 0) {
+    var size = tracks[i].baseSize()
+    if size > mbp {
+      size -= mbp
+      mbp = LayoutUnit(value: 0)
+    } else {
+      mbp -= size
+      size = LayoutUnit(value: 0)
+    }
+    tracks[i].setBaseSize(baseSize: size)
+
+    if forwards {
+      i += 1
+    } else {
+      i -= 1
+    }
+  }
 }
 
 final class GridTrackSizingAlgorithm {
