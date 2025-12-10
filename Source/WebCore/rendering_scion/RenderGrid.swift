@@ -1853,7 +1853,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let numberOfCollapsedTracks =
       hasCollapsedTracks ? currentGrid().autoRepeatEmptyTracks(direction: direction).size() : 0
     let offset = direction == .ForColumns ? offsetBetweenColumns : offsetBetweenRows
-    var positions = isRowAxis ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
+    var positions = isRowAxis ? columnPositions[...] : rowPositions[...]
     assert(positions.count <= numberOfLines)
     for _ in positions.count..<numberOfLines {
       positions.append(LayoutUnit())
@@ -1942,7 +1942,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let outOfFlowItemLine = isRowAxis ? outOfFlowItemColumn : outOfFlowItemRow
     var start = isRowAxis ? borderStart() : borderBefore()
     if let line = outOfFlowItemLine[CPtrToInt(gridItem.p)] {
-      let positions = isRowAxis ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
+      let positions = isRowAxis ? columnPositions[...] : rowPositions[...]
       start = positions[Int(line)]
     }
     start += logicalOffsetForOutOfFlowGridItem(
@@ -1957,8 +1957,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
     // FIXME (lajava): This is a common pattern, why not defining a function like
     // positions(direction) ?
-    let positions =
-      direction == .ForColumns ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
+    let positions = direction == .ForColumns ? columnPositions[...] : rowPositions[...]
     let start = positions[Int(span.startLine())]
     var end = positions[Int(span.endLine())]
     // The 'positions' vector includes distribution offset (because of content
@@ -2321,8 +2320,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     // may have some influence in the final grid area breadth.
     let tracks = trackSizingAlgorithm!.tracks(direction: direction)
     let span = currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
-    let linePositions =
-      (direction == .ForColumns) ? ArraySlice(columnPositions) : ArraySlice(rowPositions)
+    let linePositions = direction == .ForColumns ? columnPositions[...] : rowPositions[...]
 
     let initialTrackPosition = linePositions[Int(span.startLine())]
     let finalTrackPosition = linePositions[Int(span.endLine() - 1)]
