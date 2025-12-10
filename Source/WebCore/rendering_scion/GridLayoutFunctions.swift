@@ -41,15 +41,15 @@ class GridLayoutFunctions {
   private static func marginStartIsAuto(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? gridItem.style().marginStart().isAuto() : gridItem.style().marginBefore().isAuto()
   }
 
   private static func marginEndIsAuto(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? gridItem.style().marginEnd().isAuto() : gridItem.style().marginAfter().isAuto()
   }
 
   private static func gridItemHasMargin(
