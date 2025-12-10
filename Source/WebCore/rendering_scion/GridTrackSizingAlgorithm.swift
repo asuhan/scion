@@ -783,8 +783,90 @@ final class GridTrackSizingAlgorithm {
   private func increaseSizesToAccommodateSpanningItemsMasonryWithFlex(
     definiteItemSizesSpanFlexTracks: ArraySlice<MasonryMinMaxTrackSizeWithGridSpan>
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    increaseSizesToAccommodateSpanningItemsMasonryWithFlexForPhase(
+      phase: .ResolveIntrinsicMinimums,
+      definiteItemSizesSpanFlexTracks: definiteItemSizesSpanFlexTracks[...])
+    increaseSizesToAccommodateSpanningItemsMasonryWithFlexForPhase(
+      phase: .ResolveContentBasedMinimums,
+      definiteItemSizesSpanFlexTracks: definiteItemSizesSpanFlexTracks[...])
+    increaseSizesToAccommodateSpanningItemsMasonryWithFlexForPhase(
+      phase: .ResolveMaxContentMinimums,
+      definiteItemSizesSpanFlexTracks: definiteItemSizesSpanFlexTracks[...])
+    increaseSizesToAccommodateSpanningItemsMasonryWithFlexForPhase(
+      phase: .ResolveIntrinsicMaximums,
+      definiteItemSizesSpanFlexTracks: definiteItemSizesSpanFlexTracks[...])
+    increaseSizesToAccommodateSpanningItemsMasonryWithFlexForPhase(
+      phase: .ResolveMaxContentMaximums,
+      definiteItemSizesSpanFlexTracks: definiteItemSizesSpanFlexTracks[...])
+  }
+
+  private func increaseSizesToAccommodateSpanningItemsMasonryWithFlexForPhase(
+    phase: TrackSizeComputationPhase,
+    definiteItemSizesSpanFlexTracks: ArraySlice<MasonryMinMaxTrackSizeWithGridSpan>
+  ) {
+    let allTracks = tracks(direction: direction)
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      track.setPlannedSize(
+        plannedSize: trackSizeForTrackSizeComputationPhase(
+          phase: phase, track: track, restriction: .AllowInfinity))
+    }
+
+    var growBeyondGrowthLimitsTracks: [GridTrack] = []
+    var filteredTracks: [GridTrack] = []
+
+    for item in definiteItemSizesSpanFlexTracks {
+      let itemSpan = item.gridSpan
+
+      filteredTracks.removeAll()
+      growBeyondGrowthLimitsTracks.removeAll()
+      var spanningTracksSize = LayoutUnit()
+      for trackPosition in itemSpan {
+        let track = allTracks[Int(trackPosition)]
+        let trackSize = track.cachedTrackSize()
+        spanningTracksSize += trackSizeForTrackSizeComputationPhase(
+          phase: phase, track: track, restriction: .ForbidInfinity)
+        if !trackSize.maxTrackBreadth.isFlex() {
+          continue
+        }
+        if !shouldProcessTrackForTrackSizeComputationPhase(phase: phase, trackSize: trackSize) {
+          continue
+        }
+
+        filteredTracks.append(track)
+
+        if trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
+          phase: phase, trackSize: trackSize)
+        {
+          growBeyondGrowthLimitsTracks.append(track)
+        }
+      }
+
+      if filteredTracks.isEmpty {
+        continue
+      }
+
+      spanningTracksSize += renderGrid!.guttersSize(
+        direction: direction, startLine: itemSpan.startLine(), span: itemSpan.integerSpan(),
+        availableSize: availableSpace())
+
+      var extraSpace =
+        itemSizeForTrackSizeComputationPhaseMasonry(phase: phase, trackSize: item.trackSize)
+        - spanningTracksSize
+      extraSpace = max(extraSpace, LayoutUnit(value: 0))
+      let tracksToGrowBeyondGrowthLimits =
+        growBeyondGrowthLimitsTracks.isEmpty
+        ? filteredTracks[...] : growBeyondGrowthLimitsTracks[...]
+      distributeSpaceToTracks(
+        variant: .CrossingFlexibleTracks, phase: phase, tracks: filteredTracks[...],
+        growBeyondGrowthLimitsTracks: tracksToGrowBeyondGrowthLimits[...], freeSpace: &extraSpace)
+    }
+
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase: phase, track: track)
+      updateTrackSizeForTrackSizeComputationPhase(phase: phase, track: track)
+    }
   }
 
   private func convertIndefiniteItemsToDefiniteMasonry(
