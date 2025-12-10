@@ -189,8 +189,7 @@ class GridLayoutFunctions {
   }
 
   static func isOrthogonalGridItem(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return gridItem.isHorizontalWritingMode() != grid.isHorizontalWritingMode()
   }
 
   static func isGridItemInlineSizeDependentOnBlockConstraints(
