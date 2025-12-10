@@ -347,6 +347,8 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
+  private typealias SpanLength = UInt32
+
   // GridTrackSizingAlgorithm API.
 
   private func setup(
@@ -410,6 +412,17 @@ final class GridTrackSizingAlgorithm {
     }
 
     computeBaselineAlignmentContext()
+  }
+
+  struct MasonryMinMaxTrackSize {
+    let minContentSize: LayoutUnit
+    let maxContentSize: LayoutUnit
+    let minSize: LayoutUnit
+  }
+
+  struct MasonryMinMaxTrackSizeWithGridSpan {
+    let trackSize: MasonryMinMaxTrackSize
+    let gridSpan: GridSpan
   }
 
   private func resizeTracks(direction: GridTrackSizingDirection, numTracks: UInt32) {
@@ -551,6 +564,70 @@ final class GridTrackSizingAlgorithm {
     return LayoutUnit(value: infinity)
   }
 
+  private func sizeTrackToFitSingleSpanMasonryGroup(
+    span: GridSpan, masonryIndefiniteItems: MasonryMinMaxTrackSize, track: GridTrack
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func spanningItemCrossesFlexibleSizedTracks(itemSpan: GridSpan) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // 12.5 Resolve Intrinsic Track Sizing : Step 3
+  // https://drafts.csswg.org/css-grid-2/#algo-spanning-items
+  //
+  // Take all grid items (definite and indefinite) that span 2 or more tracks, and distribute space to intrinsic tracks (non-flex).
+  // The implementation diverges from increaseSizesToAccommodateSpanningItems(), because we are grouping items together that are the same span length.
+  // This function is divided into two main sections:
+  //
+  // 1. Constructing the track items
+  // This step takes the definite and indefinite items, and merges them into one large map to send over to the second step.
+  // Since the indefinite items are grouped together from a prior computation, this step also need to create "fake" grid items that
+  // will be considered in each track.
+  //
+  // 2. Distribute space to intrinsic tracks
+  // This step behaves similar to increaseSizesToAccommodateSpanningItems() where we start at the lowest span length and distribute space to the tracks.
+  // Then look at the next smallest span length, and repeat step 2 until we exhaust all grid items.
+  private func increaseSizesToAccommodateSpanningItemsMasonry(
+    definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]]
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // 12.5 Resolve Intrinsic Track Sizing : Step 4
+  // https://drafts.csswg.org/css-grid-2/#algo-spanning-items
+  //
+  // Take all grid items (definite and indefinite) that span 1 or tracks, and distribute space to only flex tracks.
+  // The implementation diverges from increaseSizesToAccommodateSpanningItems(), because we are grouping items together that are the same span length.
+  // This function is divided into two main sections:
+  //
+  // 1. Constructing the track items
+  // This step takes the definite and indefinite items, and merges them into one large map to send over to the second step.
+  // Since the indefinite items are grouped together from a prior computation, this step also need to create "fake" grid items that
+  // will be considered in each track.
+  //
+  // 2. Distribute space to intrinsic tracks
+  // This step behaves similar to increaseSizesToAccommodateSpanningItems() where we consider all track items at once instead of per span length.
+  private func increaseSizesToAccommodateSpanningItemsMasonryWithFlex(
+    definiteItemSizesSpanFlexTracks: ArraySlice<MasonryMinMaxTrackSizeWithGridSpan>
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func convertIndefiniteItemsToDefiniteMasonry(
+    indefiniteSpanSizes: [SpanLength: MasonryMinMaxTrackSize],
+    definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]],
+    definiteItemSizesSpanFlexTracks: [MasonryMinMaxTrackSizeWithGridSpan]
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeBaselineAlignmentContext() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -609,6 +686,26 @@ final class GridTrackSizingAlgorithm {
       // In the case that stretchedSize is greater than frShare, we floor it to 0 to avoid a negative leftover.
       leftOverSize = max(frShare - stretchedSize.toDouble(), 0)
     }
+  }
+
+  private func handleInfinityGrowthLimit() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct DefiniteAndIndefiniteItemsForMasonry {
+    let indefiniteSpanSizes: [SpanLength: MasonryMinMaxTrackSize]
+    let definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]]
+    let definiteItemSizesSpanFlexTrack: [MasonryMinMaxTrackSizeWithGridSpan]
+  }
+
+  // Build up a map of min/max sizes for each span length for use during resolving intrinsic track sizes.
+  // We also need to keep track of definite items separately, since they do not contribute to every track like indefinite items do.
+  private func computeDefiniteAndIndefiniteItemsForMasonry(gridLayoutState: inout GridLayoutState)
+    -> DefiniteAndIndefiniteItemsForMasonry
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Track sizing algorithm steps. Note that the "Maximize Tracks" step is done
@@ -681,8 +778,45 @@ final class GridTrackSizingAlgorithm {
   //
   // Further details on the optimization can be found at https://fantasai.inkedblade.net/style/specs/masonry/performance.
   private func resolveIntrinsicTrackSizesMasonry(gridLayoutState: inout GridLayoutState) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if strategy!.isComputingSizeContainment() || !grid.hasGridItems() {
+      handleInfinityGrowthLimit()
+      return
+    }
+    let definiteAndIndefiniteItemsForMasonry = computeDefiniteAndIndefiniteItemsForMasonry(
+      gridLayoutState: &gridLayoutState)
+
+    // Update intrinsic tracks with single span items that do not cross flex tracks.
+    let allTracks = tracks(direction: direction)
+
+    if let singleTrackSpanSize = definiteAndIndefiniteItemsForMasonry.indefiniteSpanSizes[1] {
+      for trackIndex in contentSizedTracksIndex {
+        let track = allTracks[Int(trackIndex)]
+
+        let itemSpan = GridSpan.translatedDefiniteGridSpan(
+          startLine: Int32(trackIndex), endLine: Int32(trackIndex + 1))
+        if spanningItemCrossesFlexibleSizedTracks(itemSpan: itemSpan) {
+          continue
+        }
+
+        sizeTrackToFitSingleSpanMasonryGroup(
+          span: itemSpan, masonryIndefiniteItems: singleTrackSpanSize, track: track)
+      }
+    }
+
+    convertIndefiniteItemsToDefiniteMasonry(
+      indefiniteSpanSizes: definiteAndIndefiniteItemsForMasonry.indefiniteSpanSizes,
+      definiteItemSizes: definiteAndIndefiniteItemsForMasonry.definiteItemSizes,
+      definiteItemSizesSpanFlexTracks: definiteAndIndefiniteItemsForMasonry
+        .definiteItemSizesSpanFlexTrack)
+
+    increaseSizesToAccommodateSpanningItemsMasonry(
+      definiteItemSizes: definiteAndIndefiniteItemsForMasonry.definiteItemSizes)
+
+    increaseSizesToAccommodateSpanningItemsMasonryWithFlex(
+      definiteItemSizesSpanFlexTracks:
+        definiteAndIndefiniteItemsForMasonry.definiteItemSizesSpanFlexTrack[...])
+
+    handleInfinityGrowthLimit()
   }
 
   private func stretchFlexibleTracks(freeSpace: LayoutUnit?, gridLayoutState: inout GridLayoutState)
