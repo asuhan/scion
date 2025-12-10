@@ -55,8 +55,11 @@ class GridLayoutFunctions {
   private static func gridItemHasMargin(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Length::IsZero returns true for 'auto' margins, which is aligned with the purpose of this function.
+    if direction == .ForColumns {
+      return !gridItem.style().marginStart().isZero() || !gridItem.style().marginEnd().isZero()
+    }
+    return !gridItem.style().marginBefore().isZero() || !gridItem.style().marginAfter().isZero()
   }
 
   private static func computeMarginLogicalSizeForGridItem(
