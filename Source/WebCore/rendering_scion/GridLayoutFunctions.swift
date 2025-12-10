@@ -243,8 +243,8 @@ class GridLayoutFunctions {
   }
 
   static func isAspectRatioBlockSizeDependentGridItem(gridItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return (gridItem.style().hasAspectRatio() || gridItem.hasIntrinsicAspectRatio())
+      && (gridItem.hasRelativeLogicalHeight() || gridItem.hasStretchedLogicalHeight())
   }
 
   static func flowAwareDirectionForGridItem(
