@@ -868,7 +868,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return grid!.currentGrid
   }
 
-  private func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
+  func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
     // Due to limitations in our internal representation, we cannot know the number of columns from
     // currentGrid *if* there is no row (because currentGrid would be empty). That's why in that case we need
     // to get it from the style. Note that we know for sure that there aren't any implicit tracks,
@@ -894,7 +894,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   // This method optimizes the gutters computation by skipping the available size
   // call if gaps are fixed size (it's only needed for percentages).
-  private func availableSpaceForGutters(direction: GridTrackSizingDirection) -> LayoutUnit? {
+  func availableSpaceForGutters(direction: GridTrackSizingDirection) -> LayoutUnit? {
     let isRowAxis = direction == .ForColumns
     let gapLength = isRowAxis ? style().columnGap() : style().rowGap()
     if gapLength.isNormal || !gapLength.length.isPercentOrCalculated() {

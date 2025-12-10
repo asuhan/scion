@@ -43,6 +43,13 @@ struct ExtraMarginsFromSubgrids {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  mutating func addTrackStartMargin(extraMargin: LayoutUnit) { extraMarginsFirst += extraMargin }
+
+  mutating func addTrackEndMargin(extraMargin: LayoutUnit) { extraMarginsSecond += extraMargin }
+
+  private var extraMarginsFirst = LayoutUnit()
+  private var extraMarginsSecond = LayoutUnit()
 }
 
 class GridLayoutFunctions {
@@ -97,12 +104,52 @@ class GridLayoutFunctions {
         ? marginStart : marginStart + marginEnd
   }
 
+  private static func hasRelativeOrIntrinsicSizeForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private static func extraMarginForSubgrid(
     parent: RenderGridWrapper, startLine: UInt32, endLine: UInt32,
     direction: GridTrackSizingDirection
   ) -> ExtraMarginsFromSubgrids {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let numTracks = parent.numTracks(direction: direction)
+    if numTracks == 0 || !parent.isSubgrid(direction: direction) {
+      return ExtraMarginsFromSubgrids()
+    }
+
+    var availableSpace: LayoutUnit? = nil
+    if !hasRelativeOrIntrinsicSizeForGridItem(gridItem: parent, direction: direction) {
+      availableSpace = parent.availableSpaceForGutters(direction: direction)
+    }
+
+    let grandParent = parent.parent() as! RenderGridWrapper
+    var extraMargins = ExtraMarginsFromSubgrids()
+    if startLine == 0 {
+      extraMargins.addTrackStartMargin(
+        extraMargin: direction == .ForColumns
+          ? parent.marginAndBorderAndPaddingStart() : parent.marginAndBorderAndPaddingBefore())
+    } else {
+      extraMargins.addTrackStartMargin(
+        extraMargin: (parent.gridGap(direction: direction, availableSize: availableSpace)
+          - grandParent.gridGap(direction: direction))
+          / 2)
+    }
+
+    if endLine == numTracks {
+      extraMargins.addTrackEndMargin(
+        extraMargin: direction == .ForColumns
+          ? parent.marginAndBorderAndPaddingEnd() : parent.marginAndBorderAndPaddingAfter())
+    } else {
+      extraMargins.addTrackEndMargin(
+        extraMargin: (parent.gridGap(direction: direction, availableSize: availableSpace)
+          - grandParent.gridGap(direction: direction))
+          / 2)
+    }
+
+    return extraMargins
   }
 
   private static func extraMarginForSubgridAncestors(
