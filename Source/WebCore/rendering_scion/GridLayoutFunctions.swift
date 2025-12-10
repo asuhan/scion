@@ -107,8 +107,12 @@ class GridLayoutFunctions {
   private static func hasRelativeOrIntrinsicSizeForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForColumns {
+      return gridItem.hasRelativeLogicalWidth()
+        || gridItem.style().logicalWidth().isIntrinsicOrAuto()
+    }
+    return gridItem.hasRelativeLogicalHeight()
+      || gridItem.style().logicalHeight().isIntrinsicOrAuto()
   }
 
   private static func extraMarginForSubgrid(
