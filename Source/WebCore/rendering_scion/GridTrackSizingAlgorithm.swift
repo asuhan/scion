@@ -595,8 +595,15 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func spanningItemCrossesFlexibleSizedTracks(itemSpan: GridSpan) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let trackList = tracks(direction: direction)
+    for trackPosition in itemSpan {
+      let trackSize = trackList[Int(trackPosition)].cachedTrackSize()
+      if trackSize.minTrackBreadth.isFlex() || trackSize.maxTrackBreadth.isFlex() {
+        return true
+      }
+    }
+
+    return false
   }
 
   // 12.5 Resolve Intrinsic Track Sizing : Step 3
