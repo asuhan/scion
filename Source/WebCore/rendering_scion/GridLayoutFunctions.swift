@@ -299,7 +299,10 @@ class GridLayoutFunctions {
   static func alignmentContextForBaselineAlignment(span: GridSpan, alignment: ItemPosition)
     -> UInt32
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(alignment == .Baseline || alignment == .LastBaseline)
+    if alignment == .Baseline {
+      return span.startLine()
+    }
+    return span.endLine() - 1
   }
 }
