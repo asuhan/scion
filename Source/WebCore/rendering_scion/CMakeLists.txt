@@ -35,6 +35,7 @@ target_sources(layout_scion PRIVATE
     PathOperation.swift
     ReferencedSVGResources.swift
     AccessibilityRegionContext.swift
+    AncestorSubgridIterator.swift
     BackgroundPainter.swift
     BaselineAlignment.swift
     BidiRun.swift

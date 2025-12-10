@@ -35,6 +35,14 @@ struct ExtraMarginsFromSubgrids {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  @discardableResult
+  static func += (lhs: inout ExtraMarginsFromSubgrids, rhs: ExtraMarginsFromSubgrids)
+    -> ExtraMarginsFromSubgrids
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 class GridLayoutFunctions {
@@ -89,11 +97,28 @@ class GridLayoutFunctions {
         ? marginStart : marginStart + marginEnd
   }
 
-  private static func extraMarginForSubgridAncestors(
-    direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
+  private static func extraMarginForSubgrid(
+    parent: RenderGridWrapper, startLine: UInt32, endLine: UInt32,
+    direction: GridTrackSizingDirection
   ) -> ExtraMarginsFromSubgrids {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private static func extraMarginForSubgridAncestors(
+    direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
+  ) -> ExtraMarginsFromSubgrids {
+    var extraMargins = ExtraMarginsFromSubgrids()
+    for currentAncestorSubgrid in ancestorSubgridsOfGridItem(
+      gridItem: gridItem, direction: direction)
+    {
+      let span = currentAncestorSubgrid.gridSpanForGridItem(
+        gridItem: gridItem, direction: direction)
+      extraMargins += extraMarginForSubgrid(
+        parent: currentAncestorSubgrid, startLine: span.startLine(), endLine: span.endLine(),
+        direction: direction)
+    }
+    return extraMargins
   }
 
   static func marginLogicalSizeForGridItem(
