@@ -651,11 +651,36 @@ final class GridTrackSizingAlgorithm {
 
   private func convertIndefiniteItemsToDefiniteMasonry(
     indefiniteSpanSizes: [SpanLength: MasonryMinMaxTrackSize],
-    definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]],
-    definiteItemSizesSpanFlexTracks: [MasonryMinMaxTrackSizeWithGridSpan]
+    definiteItemSizes: inout [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]],
+    definiteItemSizesSpanFlexTracks: inout [MasonryMinMaxTrackSizeWithGridSpan]
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let allTracks = tracks(direction: direction)
+
+    for (indefiniteItemKey, indefiniteItemVal) in indefiniteSpanSizes {
+      for trackIndex in 0..<allTracks.count {
+        let endLine = trackIndex + Int(indefiniteItemKey)
+        let itemSpan = GridSpan.translatedDefiniteGridSpan(
+          startLine: Int32(trackIndex), endLine: Int32(endLine))
+
+        if endLine > allTracks.count {
+          continue
+        }
+
+        // The spec requires items with a span of 1 to be handled earlier.
+        if itemSpan.integerSpan() != 1
+          && !spanningItemCrossesFlexibleSizedTracks(itemSpan: itemSpan)
+        {
+          definiteItemSizes[itemSpan.integerSpan()]!.append(
+            MasonryMinMaxTrackSizeWithGridSpan(trackSize: indefiniteItemVal, gridSpan: itemSpan)
+          )
+        }
+
+        if spanningItemCrossesFlexibleSizedTracks(itemSpan: itemSpan) {
+          definiteItemSizesSpanFlexTracks.append(
+            MasonryMinMaxTrackSizeWithGridSpan(trackSize: indefiniteItemVal, gridSpan: itemSpan))
+        }
+      }
+    }
   }
 
   private func computeBaselineAlignmentContext() {
@@ -725,8 +750,8 @@ final class GridTrackSizingAlgorithm {
 
   private struct DefiniteAndIndefiniteItemsForMasonry {
     let indefiniteSpanSizes: [SpanLength: MasonryMinMaxTrackSize]
-    let definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]]
-    let definiteItemSizesSpanFlexTrack: [MasonryMinMaxTrackSizeWithGridSpan]
+    var definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]]
+    var definiteItemSizesSpanFlexTrack: [MasonryMinMaxTrackSizeWithGridSpan]
   }
 
   // Build up a map of min/max sizes for each span length for use during resolving intrinsic track sizes.
@@ -812,7 +837,7 @@ final class GridTrackSizingAlgorithm {
       handleInfinityGrowthLimit()
       return
     }
-    let definiteAndIndefiniteItemsForMasonry = computeDefiniteAndIndefiniteItemsForMasonry(
+    var definiteAndIndefiniteItemsForMasonry = computeDefiniteAndIndefiniteItemsForMasonry(
       gridLayoutState: &gridLayoutState)
 
     // Update intrinsic tracks with single span items that do not cross flex tracks.
@@ -835,8 +860,8 @@ final class GridTrackSizingAlgorithm {
 
     convertIndefiniteItemsToDefiniteMasonry(
       indefiniteSpanSizes: definiteAndIndefiniteItemsForMasonry.indefiniteSpanSizes,
-      definiteItemSizes: definiteAndIndefiniteItemsForMasonry.definiteItemSizes,
-      definiteItemSizesSpanFlexTracks: definiteAndIndefiniteItemsForMasonry
+      definiteItemSizes: &definiteAndIndefiniteItemsForMasonry.definiteItemSizes,
+      definiteItemSizesSpanFlexTracks: &definiteAndIndefiniteItemsForMasonry
         .definiteItemSizesSpanFlexTrack)
 
     increaseSizesToAccommodateSpanningItemsMasonry(
