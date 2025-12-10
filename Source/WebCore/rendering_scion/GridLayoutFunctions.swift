@@ -272,8 +272,9 @@ class GridLayoutFunctions {
   ) -> RenderBoxWrapper
     .ContainingBlockOverrideValue?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return direction == .ForColumns
+      ? gridItem.overridingContainingBlockContentLogicalWidth()
+      : gridItem.overridingContainingBlockContentLogicalHeight()
   }
 
   static func isSubgridReversedDirection(
