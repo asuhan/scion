@@ -31,6 +31,20 @@ enum SizingOperation {
   case IntrinsicSizeComputation
 }
 
+private enum TrackSizeComputationVariant {
+  case NotCrossingFlexibleTracks
+  case CrossingFlexibleTracks
+}
+
+private enum TrackSizeComputationPhase {
+  case ResolveIntrinsicMinimums
+  case ResolveContentBasedMinimums
+  case ResolveMaxContentMinimums
+  case ResolveIntrinsicMaximums
+  case ResolveMaxContentMaximums
+  case MaximizeTracks
+}
+
 class GridTrack {
   func baseSize() -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -67,6 +81,11 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  func setPlannedSize(plannedSize: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setInfinitelyGrowable(infinitelyGrowable: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -90,6 +109,46 @@ class GridTrack {
 
 private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
   return axis == .GridRowAxis ? .ForColumns : .ForRows
+}
+
+private enum TrackSizeRestriction {
+  case AllowInfinity
+  case ForbidInfinity
+}
+
+private func shouldProcessTrackForTrackSizeComputationPhase(
+  phase: TrackSizeComputationPhase, trackSize: GridTrackSize
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func trackSizeForTrackSizeComputationPhase(
+  phase: TrackSizeComputationPhase, track: GridTrack, restriction: TrackSizeRestriction
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func updateTrackSizeForTrackSizeComputationPhase(
+  phase: TrackSizeComputationPhase, track: GridTrack
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
+  phase: TrackSizeComputationPhase, trackSize: GridTrackSize
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func markAsInfinitelyGrowableForTrackSizeComputationPhase(
+  phase: TrackSizeComputationPhase, track: GridTrack
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 private func computeGridSpanSize(
@@ -624,8 +683,87 @@ final class GridTrackSizingAlgorithm {
   private func increaseSizesToAccommodateSpanningItemsMasonry(
     definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]]
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for definiteItemSpanGroupValue in definiteItemSizes.values {
+      increaseSizesToAccommodateSpanningItemsMasonryForPhase(
+        phase: .ResolveIntrinsicMinimums, definiteItemSizes: definiteItemSpanGroupValue[...])
+      increaseSizesToAccommodateSpanningItemsMasonryForPhase(
+        phase: .ResolveContentBasedMinimums, definiteItemSizes: definiteItemSpanGroupValue[...])
+      increaseSizesToAccommodateSpanningItemsMasonryForPhase(
+        phase: .ResolveMaxContentMinimums, definiteItemSizes: definiteItemSpanGroupValue[...])
+      increaseSizesToAccommodateSpanningItemsMasonryForPhase(
+        phase: .ResolveIntrinsicMaximums, definiteItemSizes: definiteItemSpanGroupValue[...])
+      increaseSizesToAccommodateSpanningItemsMasonryForPhase(
+        phase: .ResolveMaxContentMaximums, definiteItemSizes: definiteItemSpanGroupValue[...])
+    }
+  }
+
+  private func increaseSizesToAccommodateSpanningItemsMasonryForPhase(
+    phase: TrackSizeComputationPhase,
+    definiteItemSizes: ArraySlice<MasonryMinMaxTrackSizeWithGridSpan>
+  ) {
+    let allTracks = tracks(direction: direction)
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      track.setPlannedSize(
+        plannedSize: trackSizeForTrackSizeComputationPhase(
+          phase: phase, track: track, restriction: .AllowInfinity))
+    }
+
+    var growBeyondGrowthLimitsTracks: [GridTrack] = []
+    var filteredTracks: [GridTrack] = []
+
+    for definiteItem in definiteItemSizes {
+      let itemSpan = definiteItem.gridSpan
+      assert(itemSpan.integerSpan() > 1)
+
+      filteredTracks.removeAll()
+      growBeyondGrowthLimitsTracks.removeAll()
+      var spanningTracksSize = LayoutUnit()
+      for trackPosition in itemSpan {
+        let track = allTracks[Int(trackPosition)]
+        let trackSize = track.cachedTrackSize()
+        spanningTracksSize += trackSizeForTrackSizeComputationPhase(
+          phase: phase, track: track, restriction: .ForbidInfinity)
+
+        if !shouldProcessTrackForTrackSizeComputationPhase(phase: phase, trackSize: trackSize) {
+          continue
+        }
+
+        filteredTracks.append(track)
+
+        if trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
+          phase: phase, trackSize: trackSize)
+        {
+          growBeyondGrowthLimitsTracks.append(track)
+        }
+      }
+
+      if filteredTracks.isEmpty {
+        continue
+      }
+
+      spanningTracksSize += renderGrid!.guttersSize(
+        direction: direction, startLine: itemSpan.startLine(), span: itemSpan.integerSpan(),
+        availableSize: availableSpace())
+
+      var extraSpace =
+        itemSizeForTrackSizeComputationPhaseMasonry(phase: phase, trackSize: definiteItem.trackSize)
+        - spanningTracksSize
+      extraSpace = max(extraSpace, LayoutUnit(value: 0))
+      let tracksToGrowBeyondGrowthLimits =
+        growBeyondGrowthLimitsTracks.isEmpty
+        ? filteredTracks[...] : growBeyondGrowthLimitsTracks[...]
+      distributeSpaceToTracks(
+        variant: .NotCrossingFlexibleTracks, phase: phase, tracks: filteredTracks[...],
+        growBeyondGrowthLimitsTracks: tracksToGrowBeyondGrowthLimits[...],
+        freeSpace: &extraSpace)
+    }
+
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase: phase, track: track)
+      updateTrackSizeForTrackSizeComputationPhase(phase: phase, track: track)
+    }
   }
 
   // 12.5 Resolve Intrinsic Track Sizing : Step 4
@@ -681,6 +819,22 @@ final class GridTrackSizingAlgorithm {
         }
       }
     }
+  }
+
+  private func itemSizeForTrackSizeComputationPhaseMasonry(
+    phase: TrackSizeComputationPhase, trackSize: MasonryMinMaxTrackSize
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func distributeSpaceToTracks(
+    variant: TrackSizeComputationVariant, phase: TrackSizeComputationPhase,
+    tracks: ArraySlice<GridTrack>, growBeyondGrowthLimitsTracks: ArraySlice<GridTrack>,
+    freeSpace: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computeBaselineAlignmentContext() {
