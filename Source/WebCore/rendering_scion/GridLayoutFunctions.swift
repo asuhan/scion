@@ -31,17 +31,17 @@ struct GridAxis: OptionSet {
 }
 
 struct ExtraMarginsFromSubgrids {
-  func extraTotalMargin() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  private func extraTrackStartMargin() -> LayoutUnit { return extraMarginsFirst }
+  private func extraTrackEndMargin() -> LayoutUnit { return extraMarginsSecond }
+  func extraTotalMargin() -> LayoutUnit { return extraMarginsFirst + extraMarginsSecond }
 
   @discardableResult
   static func += (lhs: inout ExtraMarginsFromSubgrids, rhs: ExtraMarginsFromSubgrids)
     -> ExtraMarginsFromSubgrids
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    lhs.extraMarginsFirst += rhs.extraTrackStartMargin()
+    lhs.extraMarginsSecond += rhs.extraTrackEndMargin()
+    return lhs
   }
 
   mutating func addTrackStartMargin(extraMargin: LayoutUnit) { extraMarginsFirst += extraMargin }
