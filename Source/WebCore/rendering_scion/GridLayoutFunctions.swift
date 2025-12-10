@@ -30,12 +30,42 @@ struct GridAxis: OptionSet {
   static let GridColumnAxis = GridAxis(rawValue: 1 << 1)
 }
 
+struct ExtraMarginsFromSubgrids {
+  func extraTotalMargin() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 class GridLayoutFunctions {
-  static func marginLogicalSizeForGridItem(
+  private static func computeMarginLogicalSizeForGridItem(
     grid: RenderGridWrapper, direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
   ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private static func extraMarginForSubgridAncestors(
+    direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
+  ) -> ExtraMarginsFromSubgrids {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func marginLogicalSizeForGridItem(
+    grid: RenderGridWrapper, direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
+  ) -> LayoutUnit {
+    var margin = computeMarginLogicalSizeForGridItem(
+      grid: grid, direction: direction, gridItem: gridItem)
+
+    if CPtrToInt(grid.p) != CPtrToInt(gridItem.parent()?.p) {
+      let subgridDirection = flowAwareDirectionForGridItem(
+        grid: grid, gridItem: gridItem.parent() as! RenderGridWrapper, direction: direction)
+      margin += extraMarginForSubgridAncestors(direction: subgridDirection, gridItem: gridItem)
+        .extraTotalMargin()
+    }
+
+    return margin
   }
 
   static func isOrthogonalGridItem(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
