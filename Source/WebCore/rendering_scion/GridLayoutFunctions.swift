@@ -277,11 +277,23 @@ class GridLayoutFunctions {
       : gridItem.overridingContainingBlockContentLogicalHeight()
   }
 
+  private static func isFlippedDirection(
+    grid: RenderGridWrapper, direction: GridTrackSizingDirection
+  ) -> Bool {
+    if direction == .ForColumns {
+      return !grid.style().isLeftToRightDirection()
+    }
+    return grid.style().isFlippedBlocksWritingMode()
+  }
+
   static func isSubgridReversedDirection(
     grid: RenderGridWrapper, outerDirection: GridTrackSizingDirection, subgrid: RenderGridWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let subgridDirection = flowAwareDirectionForGridItem(
+      grid: grid, gridItem: subgrid, direction: outerDirection)
+    assert(subgrid.isSubgrid(direction: subgridDirection))
+    return isFlippedDirection(grid: grid, direction: outerDirection)
+      != isFlippedDirection(grid: subgrid, direction: subgridDirection)
   }
 
   static func alignmentContextForBaselineAlignment(span: GridSpan, alignment: ItemPosition)
