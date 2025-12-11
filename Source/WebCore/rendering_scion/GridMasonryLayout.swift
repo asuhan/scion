@@ -72,6 +72,16 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  private func gridAreaForIndefiniteGridAxisItem(item: RenderBoxWrapper) -> GridArea {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func gridAreaForDefiniteGridAxisItem(gridItem: RenderBoxWrapper) -> GridArea {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func collectMasonryItems() {
     assert(gridAxisTracksCount != 0)
 
@@ -101,8 +111,15 @@ class GridMasonryLayout {
   }
 
   private func placeItemsUsingOrderModifiedDocumentOrder() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for gridItem in itemsWithDefiniteGridAxisPosition {
+      if hasDefiniteGridAxisPosition(gridItem: gridItem, gridAxisDirection: gridAxisDirection()) {
+        insertIntoGridAndLayoutItem(
+          gridItem: gridItem, area: gridAreaForDefiniteGridAxisItem(gridItem: gridItem))
+      } else {
+        insertIntoGridAndLayoutItem(
+          gridItem: gridItem, area: gridAreaForIndefiniteGridAxisItem(item: gridItem))
+      }
+    }
   }
 
   private func placeItemsWithDefiniteGridAxisPosition() {
@@ -111,6 +128,11 @@ class GridMasonryLayout {
   }
 
   private func placeItemsWithIndefiniteGridAxisPosition() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func insertIntoGridAndLayoutItem(gridItem: RenderBoxWrapper, area: GridArea) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
