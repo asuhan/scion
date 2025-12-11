@@ -74,9 +74,23 @@ class GridMasonryLayout {
     return LayoutUnit(value: UInt64(0))
   }
 
-  private func gridAreaForIndefiniteGridAxisItem(item: RenderBoxWrapper) -> GridArea {
+  private func gridAxisPositionUsingPackAutoFlow(item: RenderBoxWrapper) -> GridSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func gridAxisPositionUsingNextAutoFlow(item: RenderBoxWrapper) -> GridSpan {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func gridAreaForIndefiniteGridAxisItem(item: RenderBoxWrapper) -> GridArea {
+    // Determine the logic to use for positioning based on the value of masonry-auto-flow
+    let gridAxisPosition =
+      renderGrid.style().masonryAutoFlow().placementAlgorithm == .Pack
+      ? gridAxisPositionUsingPackAutoFlow(item: item)
+      : gridAxisPositionUsingNextAutoFlow(item: item)
+    return masonryGridAreaFromGridAxisSpan(gridAxisSpan: gridAxisPosition)
   }
 
   private func gridAreaForDefiniteGridAxisItem(gridItem: RenderBoxWrapper) -> GridArea {
@@ -157,6 +171,11 @@ class GridMasonryLayout {
   private func hasDefiniteGridAxisPosition(
     gridItem: RenderBoxWrapper, gridAxisDirection: GridTrackSizingDirection
   ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func masonryGridAreaFromGridAxisSpan(gridAxisSpan: GridSpan) -> GridArea {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
