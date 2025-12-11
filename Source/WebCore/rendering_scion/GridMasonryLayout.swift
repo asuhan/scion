@@ -179,8 +179,10 @@ class GridMasonryLayout {
   }
 
   private func placeItemsWithIndefiniteGridAxisPosition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for item in itemsWithIndefiniteGridAxisPosition {
+      insertIntoGridAndLayoutItem(
+        gridItem: item, area: gridAreaForIndefiniteGridAxisItem(item: item))
+    }
   }
 
   private func insertIntoGridAndLayoutItem(gridItem: RenderBoxWrapper, area: GridArea) {
