@@ -42,6 +42,7 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  @discardableResult
   func insert(gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

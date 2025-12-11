@@ -185,9 +185,17 @@ class GridMasonryLayout {
     }
   }
 
-  private func insertIntoGridAndLayoutItem(gridItem: RenderBoxWrapper, area: GridArea) {
+  private func setItemGridAxisContainingBlockToGridArea(gridItem: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func insertIntoGridAndLayoutItem(gridItem: RenderBoxWrapper, area: GridArea) {
+    renderGrid.currentGrid().insert(gridItem: gridItem, area: area)
+    setItemGridAxisContainingBlockToGridArea(gridItem: gridItem)
+    gridItem.layoutIfNeeded()
+    updateRunningPositions(gridItem: gridItem, area: area)
+    autoFlowNextCursor = gridAxisSpanFromArea(gridArea: area).endLine() % gridAxisTracksCount
   }
 
   private func resizeAndResetRunningPositions() {
@@ -196,6 +204,11 @@ class GridMasonryLayout {
   }
 
   private func allocateCapacityForMasonryVectors() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateRunningPositions(gridItem: RenderBoxWrapper, area: GridArea) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -213,6 +226,11 @@ class GridMasonryLayout {
   }
 
   private func masonryGridAreaFromGridAxisSpan(gridAxisSpan: GridSpan) -> GridArea {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func gridAxisSpanFromArea(gridArea: GridArea) -> GridSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
