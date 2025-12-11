@@ -96,8 +96,13 @@ class GridMasonryLayout {
   }
 
   private func gridAxisPositionUsingNextAutoFlow(item: RenderBoxWrapper) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let itemSpanLength = GridPositionsResolver.spanSizeForAutoPlacedItem(
+      gridItem: item, direction: gridAxisDirection())
+    if !hasEnoughSpaceAtPosition(startingPosition: autoFlowNextCursor, spanLength: itemSpanLength) {
+      autoFlowNextCursor = 0
+    }
+    return GridSpan.translatedDefiniteGridSpan(
+      startLine: Int32(autoFlowNextCursor), endLine: Int32(autoFlowNextCursor + itemSpanLength))
   }
 
   private func gridAreaForIndefiniteGridAxisItem(item: RenderBoxWrapper) -> GridArea {
@@ -192,6 +197,11 @@ class GridMasonryLayout {
   }
 
   private func masonryGridAreaFromGridAxisSpan(gridAxisSpan: GridSpan) -> GridArea {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasEnoughSpaceAtPosition(startingPosition: UInt32, spanLength: UInt32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
