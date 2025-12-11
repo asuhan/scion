@@ -91,8 +91,31 @@ private func adjustGridPositionsFromStyle(
   return (initialPosition, finalPosition)
 }
 
+private func resolveGridPositionAgainstOppositePosition(
+  gridContainer: RenderGridWrapper, oppositeLine: Int32, position: GridPosition,
+  side: GridPositionSide
+) -> GridSpan {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func resolveGridPositionFromStyle(
+  gridContainer: RenderGridWrapper, position: GridPosition, side: GridPositionSide
+) -> Int32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // Class with all the code related to grid items positions resolution.
 class GridPositionsResolver {
+  private static func initialPositionSide(direction: GridTrackSizingDirection) -> GridPositionSide {
+    return direction == .ForColumns ? .ColumnStartSide : .RowStartSide
+  }
+
+  private static func finalPositionSide(direction: GridTrackSizingDirection) -> GridPositionSide {
+    return direction == .ForColumns ? .ColumnEndSide : .RowEndSide
+  }
+
   static func spanSizeForAutoPlacedItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> UInt32 {
@@ -119,8 +142,50 @@ class GridPositionsResolver {
     gridContainer: RenderGridWrapper, gridItem: RenderBoxWrapper,
     direction: GridTrackSizingDirection
   ) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (initialPosition, finalPosition) = adjustGridPositionsFromStyle(
+      gridItem: gridItem, direction: direction)
+
+    let initialSide = initialPositionSide(direction: direction)
+    let finalSide = finalPositionSide(direction: direction)
+
+    // We can't get our grid positions without running the auto placement algorithm.
+    if initialPosition.shouldBeResolvedAgainstOppositePosition()
+      && finalPosition.shouldBeResolvedAgainstOppositePosition()
+    {
+      return GridSpan.indefiniteGridSpan()
+    }
+
+    if initialPosition.shouldBeResolvedAgainstOppositePosition() {
+      // Infer the position from the final position ('auto / 1' or 'span 2 / 3' case).
+      let endLine = resolveGridPositionFromStyle(
+        gridContainer: gridContainer, position: finalPosition, side: finalSide)
+      return resolveGridPositionAgainstOppositePosition(
+        gridContainer: gridContainer, oppositeLine: endLine, position: initialPosition,
+        side: initialSide)
+    }
+
+    if finalPosition.shouldBeResolvedAgainstOppositePosition() {
+      // Infer our position from the initial position ('1 / auto' or '3 / span 2' case).
+      let startLine = resolveGridPositionFromStyle(
+        gridContainer: gridContainer, position: initialPosition, side: initialSide)
+      return resolveGridPositionAgainstOppositePosition(
+        gridContainer: gridContainer, oppositeLine: startLine, position: finalPosition,
+        side: finalSide)
+    }
+
+    var startLine = resolveGridPositionFromStyle(
+      gridContainer: gridContainer, position: initialPosition, side: initialSide)
+    var endLine = resolveGridPositionFromStyle(
+      gridContainer: gridContainer, position: finalPosition, side: finalSide)
+
+    if startLine > endLine {
+      swap(&startLine, &endLine)
+    } else if startLine == endLine {
+      endLine = startLine + 1
+    }
+
+    return GridSpan.untranslatedDefiniteGridSpan(
+      startLine: startLine, endLine: max(startLine, endLine))
   }
 
   static func explicitGridColumnCount(gridContainer: RenderGridWrapper) -> UInt32 {

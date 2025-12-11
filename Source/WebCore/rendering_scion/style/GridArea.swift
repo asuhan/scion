@@ -33,9 +33,17 @@
 // and |endLine| are grid lines' indexes.
 // Despite line numbers in the spec start in "1", the indexes here start in "0".
 struct GridSpan: Sequence, IteratorProtocol {
+  static func untranslatedDefiniteGridSpan(startLine: Int32, endLine: Int32) -> GridSpan {
+    return GridSpan(startLine: startLine, endLine: endLine, type: .UntranslatedDefinite)
+  }
+
   static func translatedDefiniteGridSpan(startLine: Int32, endLine: Int32) -> GridSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func indefiniteGridSpan() -> GridSpan {
+    return GridSpan(startLine: 0, endLine: 1, type: .Indefinite)
   }
 
   func integerSpan() -> UInt32 {

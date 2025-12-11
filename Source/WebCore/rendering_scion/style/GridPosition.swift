@@ -36,6 +36,13 @@ enum GridPositionType {
   case NamedGridAreaPosition  // <ident>
 }
 
+enum GridPositionSide {
+  case ColumnStartSide
+  case ColumnEndSide
+  case RowStartSide
+  case RowEndSide
+}
+
 struct GridPosition {
   func isAuto() -> Bool { return type == .AutoPosition }
 
