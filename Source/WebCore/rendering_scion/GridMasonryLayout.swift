@@ -164,8 +164,18 @@ class GridMasonryLayout {
   }
 
   private func placeItemsWithDefiniteGridAxisPosition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for item in itemsWithDefiniteGridAxisPosition {
+      let itemSpan = renderGrid.currentGrid().gridItemSpan(
+        gridItem: item, direction: gridAxisDirection())
+
+      assert(!itemSpan.isIndefinite())
+
+      itemSpan.translate(
+        offset: renderGrid.currentGrid().explicitGridStart(direction: gridAxisDirection()))
+      let gridArea = gridAreaForDefiniteGridAxisItem(gridItem: item)
+      renderGrid.currentGrid().clampAreaToSubgridIfNeeded(area: gridArea)
+      insertIntoGridAndLayoutItem(gridItem: item, area: gridArea)
+    }
   }
 
   private func placeItemsWithIndefiniteGridAxisPosition() {
