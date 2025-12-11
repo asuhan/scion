@@ -271,8 +271,9 @@ class GridMasonryLayout {
   }
 
   private func gridAxisDirection() -> GridTrackSizingDirection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The masonry axis and grid axis can never be the same.
+    // They are always perpendicular to each other.
+    return masonryAxisDirection == .ForRows ? .ForColumns : .ForRows
   }
 
   private func hasDefiniteGridAxisPosition(
