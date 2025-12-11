@@ -1836,7 +1836,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func populateGridPositionsForDirection(direction: GridTrackSizingDirection) {
+  func populateGridPositionsForDirection(direction: GridTrackSizingDirection) {
     // Since we add alignment offsets and track gutters, grid lines are not always adjacent. Hence, we will have to
     // assume from now on that we just store positions of the initial grid lines of each track,
     // except the last one, which is the only one considered as a final grid line of a track.

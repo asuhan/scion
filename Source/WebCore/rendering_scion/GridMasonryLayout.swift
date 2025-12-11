@@ -24,11 +24,37 @@
  */
 
 class GridMasonryLayout {
-  func performMasonryPlacement(
+  init(renderGrid: RenderGridWrapper) {
+    self.renderGrid = renderGrid
+  }
+
+  private func initializeMasonry(
     gridAxisTracks: UInt32, masonryAxisDirection: GridTrackSizingDirection
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func performMasonryPlacement(
+    gridAxisTracks: UInt32, masonryAxisDirection: GridTrackSizingDirection
+  ) {
+    initializeMasonry(gridAxisTracks: gridAxisTracks, masonryAxisDirection: masonryAxisDirection)
+
+    renderGrid.populateGridPositionsForDirection(direction: .ForColumns)
+    renderGrid.populateGridPositionsForDirection(direction: .ForRows)
+
+    // 2.3 Masonry Layout Algorithm
+    // https://drafts.csswg.org/css-grid-3/#masonry-layout-algorithm
+
+    // the insertIntoGridAndLayoutItem() will modify the m_autoFlowNextCursor, so m_autoFlowNextCursor needs to be reset.
+    autoFlowNextCursor = 0
+
+    if renderGrid.style().masonryAutoFlow().placementOrder == .Ordered {
+      placeItemsUsingOrderModifiedDocumentOrder()
+    } else {
+      placeItemsWithDefiniteGridAxisPosition()
+      placeItemsWithIndefiniteGridAxisPosition()
+    }
   }
 
   func offsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
@@ -36,5 +62,23 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  private func placeItemsUsingOrderModifiedDocumentOrder() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeItemsWithDefiniteGridAxisPosition() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeItemsWithIndefiniteGridAxisPosition() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let renderGrid: RenderGridWrapper
   let gridContentSize = LayoutUnit()
+
+  private var autoFlowNextCursor: UInt32 = 0
 }

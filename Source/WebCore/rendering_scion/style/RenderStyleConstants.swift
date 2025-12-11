@@ -700,6 +700,16 @@ enum RubyOverhang: UInt8 {
   case None
 }
 
+enum MasonryAutoFlowPlacementAlgorithm {
+  case Pack
+  case Next
+}
+
+enum MasonryAutoFlowPlacementOrder {
+  case DefiniteFirst
+  case Ordered
+}
+
 enum AutoRepeatType {
   case None
   case Fill

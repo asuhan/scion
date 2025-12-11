@@ -22,6 +22,7 @@ target_sources(layout_scion PRIVATE
     StyleCachedImage.swift
     StyleContentAlignmentData.swift
     StyleGeneratedImage.swift
+    StyleGridData.swift
     StyleImage.swift
     StyleInheritedData.swift
     StyleMultiImage.swift
