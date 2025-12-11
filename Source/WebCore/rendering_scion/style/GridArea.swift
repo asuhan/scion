@@ -91,9 +91,17 @@ struct GridSpan: Sequence, IteratorProtocol {
 
   // Moves this span to be in the same coordinate space as |parent|.
   // If reverse is specified, then swaps the direction to handle RTL/LTR changes.
-  func translateTo(parent: GridSpan, reverse: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func translateTo(parent: GridSpan, reverse: Bool) {
+    assert(m_type == .TranslatedDefinite)
+    assert(parent.m_type == .TranslatedDefinite)
+    if reverse {
+      let start = m_startLine
+      m_startLine = Int32(parent.endLine()) - m_endLine
+      m_endLine = Int32(parent.endLine()) - start
+    } else {
+      m_startLine += parent.m_startLine
+      m_endLine += parent.m_startLine
+    }
   }
 
   mutating func clamp(max: Int32) {
