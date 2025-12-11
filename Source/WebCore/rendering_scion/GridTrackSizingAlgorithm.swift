@@ -1109,8 +1109,27 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func isIntrinsicSizedGridArea(gridItem: RenderBoxWrapper, axis: GridAxis) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(wasSetup())
+    let direction = gridDirectionForAxis(axis: axis)
+    let span = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
+    for trackPosition in span {
+      let trackSize = rawGridTrackSize(direction: direction, translatedIndex: trackPosition)
+      // We consider fr units as 'auto' for the min sizing function.
+      // FIXME(jfernandez): https://github.com/w3c/csswg-drafts/issues/2611
+      //
+      // The use of AvailableSize function may imply different results
+      // for the same item when assuming indefinite or definite size
+      // constraints depending on the phase we evaluate the item's
+      // baseline participation.
+      // FIXME(jfernandez): https://github.com/w3c/csswg-drafts/issues/3046
+      if trackSize.isContentSized() || trackSize.isFitContent()
+        || trackSize.minTrackBreadth.isFlex()
+        || (trackSize.maxTrackBreadth.isFlex() && availableSpace(direction: direction) == nil)
+      {
+        return true
+      }
+    }
+    return false
   }
 
   private func computeGridContainerIntrinsicSizes() {
