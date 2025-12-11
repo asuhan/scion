@@ -52,6 +52,16 @@ struct GridBaselineAlignment {
     return LayoutUnit()
   }
 
+  // Sets the Grid Container's writing-mode so that we can avoid the dependecy of the LayoutGrid class for
+  // determining whether a grid item is orthogonal or not.
+  mutating func setWritingMode(writingMode: WritingMode) { self.writingMode = writingMode }
+
+  // Clearing the Baseline Alignment context and their internal classes and data structures.
+  func clear(alignmentAxis: GridAxis) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func baselineGroupForGridItem(
     preference: ItemPosition, sharedContext: UInt32, gridItem: RenderBoxWrapper,
     alignmentAxis: GridAxis
@@ -66,4 +76,7 @@ struct GridBaselineAlignment {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Grid Container's WritingMode, used to determine grid item's orthogonality.
+  private var writingMode: WritingMode = .HorizontalTb
 }

@@ -137,6 +137,12 @@ class GridTrack {
   }
 }
 
+// Private helper methods.
+
+private func gridAxisForDirection(direction: GridTrackSizingDirection) -> GridAxis {
+  return direction == .ForColumns ? .GridRowAxis : .GridColumnAxis
+}
+
 private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
   return axis == .GridRowAxis ? .ForColumns : .ForRows
 }
@@ -1035,6 +1041,32 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func computeBaselineAlignmentContext() {
+    let axis = gridAxisForDirection(direction: direction)
+    baselineAlignment.clear(alignmentAxis: axis)
+    baselineAlignment.setWritingMode(writingMode: renderGrid!.style().writingMode())
+    let baselineItemsCache = axis == .GridColumnAxis ? columnBaselineItemsMap : rowBaselineItemsMap
+    let tmpBaselineItemsCache = baselineItemsCache.deepCopy()
+    for gridItem in tmpBaselineItemsCache.keys() {
+      // FIXME (jfernandez): We may have to get rid of the baseline participation
+      // flag (hence just using a HashSet) depending on the CSS WG resolution on
+      // https://github.com/w3c/csswg-drafts/issues/3046
+      if canParticipateInBaselineAlignment(gridItem: gridItem, baselineAxis: axis) {
+        updateBaselineAlignmentContext(gridItem: gridItem, baselineAxis: axis)
+        baselineItemsCache.set(gridItem, true)
+      } else {
+        baselineItemsCache.set(gridItem, false)
+      }
+    }
+  }
+
+  private func updateBaselineAlignmentContext(gridItem: RenderBoxWrapper, baselineAxis: GridAxis) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func canParticipateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1413,7 +1445,27 @@ final class GridTrackSizingAlgorithm {
   }
   private var sizingState: SizingState
 
-  private let baselineAlignment: GridBaselineAlignment
+  private var baselineAlignment: GridBaselineAlignment
+
+  private class BaselineItemsCache {
+    func set(_ key: RenderBoxWrapper, _ value: Bool) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func keys() -> ArraySlice<RenderBoxWrapper> {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func deepCopy() -> BaselineItemsCache {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private let columnBaselineItemsMap: BaselineItemsCache
+  private let rowBaselineItemsMap: BaselineItemsCache
 
   private let rowSubgridsWithBaselineAlignedItems: WeakHashSet<RenderGridWrapper>
 
