@@ -218,7 +218,35 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  private func masonryAxisMarginBoxForItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateRunningPositions(gridItem: RenderBoxWrapper, area: GridArea) {
+    let gridAxisSpan = gridAxisSpanFromArea(gridArea: area)
+    assert(
+      gridAxisSpan.startLine() < runningPositions.count
+        && gridAxisSpan.endLine() <= runningPositions.count)
+    gridAxisSpan.clamp(max: Int32(runningPositions.count))
+
+    var previousRunningPosition = LayoutUnit()
+    for line in gridAxisSpan {
+      previousRunningPosition = max(previousRunningPosition, runningPositions[Int(line)])
+    }
+
+    let newRunningPosition =
+      masonryAxisMarginBoxForItem(gridItem: gridItem) + previousRunningPosition + masonryAxisGridGap
+    gridContentSize = max(gridContentSize, newRunningPosition - masonryAxisGridGap)
+
+    for span in gridAxisSpan {
+      runningPositions[Int(span)] = max(runningPositions[Int(span)], newRunningPosition)
+    }
+
+    updateItemOffset(gridItem: gridItem, offset: previousRunningPosition)
+  }
+
+  private func updateItemOffset(gridItem: RenderBoxWrapper, offset: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

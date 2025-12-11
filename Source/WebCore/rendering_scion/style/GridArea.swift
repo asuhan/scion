@@ -89,6 +89,11 @@ struct GridSpan: Sequence, IteratorProtocol {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func clamp(max: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 // This represents a grid area that spans in both rows' and columns' direction.
