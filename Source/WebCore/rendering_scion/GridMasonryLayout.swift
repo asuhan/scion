@@ -219,8 +219,27 @@ class GridMasonryLayout {
   }
 
   private func masonryAxisMarginBoxForItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var marginBoxSize = LayoutUnit()
+    if masonryAxisDirection == .ForRows {
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid, gridItem: gridItem) {
+        marginBoxSize =
+          gridItem.isHorizontalWritingMode()
+          ? gridItem.width() + gridItem.horizontalMarginExtent()
+          : gridItem.height() + gridItem.verticalMarginExtent()
+      } else {
+        marginBoxSize = gridItem.logicalHeight() + gridItem.marginLogicalHeight()
+      }
+    } else {
+      if GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid, gridItem: gridItem) {
+        marginBoxSize =
+          gridItem.isHorizontalWritingMode()
+          ? gridItem.height() + gridItem.verticalMarginExtent()
+          : gridItem.width() + gridItem.horizontalMarginExtent()
+      } else {
+        marginBoxSize = gridItem.logicalWidth() + gridItem.marginLogicalWidth()
+      }
+    }
+    return marginBoxSize
   }
 
   private func updateRunningPositions(gridItem: RenderBoxWrapper, area: GridArea) {
