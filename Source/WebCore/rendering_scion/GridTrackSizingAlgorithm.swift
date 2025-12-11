@@ -96,6 +96,11 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  func infinitelyGrowable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setInfinitelyGrowable(infinitelyGrowable: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -188,8 +193,23 @@ private func trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
 private func markAsInfinitelyGrowableForTrackSizeComputationPhase(
   phase: TrackSizeComputationPhase, track: GridTrack
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch phase {
+  case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums, .ResolveMaxContentMinimums:
+    return
+  case .ResolveIntrinsicMaximums:
+    if trackSizeForTrackSizeComputationPhase(
+      phase: phase, track: track, restriction: .AllowInfinity) == infinity
+      && track.plannedSize() != infinity
+    {
+      track.setInfinitelyGrowable(infinitelyGrowable: true)
+    }
+  case .ResolveMaxContentMaximums:
+    if track.infinitelyGrowable() {
+      track.setInfinitelyGrowable(infinitelyGrowable: false)
+    }
+  case .MaximizeTracks:
+    fatalError("Not reached")
+  }
 }
 
 private func computeGridSpanSize(
