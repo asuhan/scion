@@ -1104,8 +1104,8 @@ final class GridTrackSizingAlgorithm {
   private func participateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return baselineAxis == .GridColumnAxis
+      ? columnBaselineItemsMap.contains(gridItem) : rowBaselineItemsMap.contains(gridItem)
   }
 
   private func isIntrinsicSizedGridArea(gridItem: RenderBoxWrapper, axis: GridAxis) -> Bool {
