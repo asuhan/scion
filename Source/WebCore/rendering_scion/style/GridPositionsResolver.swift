@@ -33,11 +33,57 @@ enum GridTrackSizingDirection {
   case ForRows
 }
 
+// https://drafts.csswg.org/css-grid-2/#indefinite-grid-span
+private func isIndefiniteSpan(initialPosition: GridPosition, finalPosition: GridPosition) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func adjustGridPositionsFromStyle(
   gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
 ) -> (GridPosition, GridPosition) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let isForColumns = direction == .ForColumns
+  let initialPosition =
+    isForColumns ? gridItem.style().gridItemColumnStart() : gridItem.style().gridItemRowStart()
+  let finalPosition =
+    isForColumns ? gridItem.style().gridItemColumnEnd() : gridItem.style().gridItemRowEnd()
+
+  // We must handle the placement error handling code here instead of in the StyleAdjuster because we don't want to
+  // overwrite the specified values.
+  if initialPosition.isSpan() && finalPosition.isSpan() {
+    finalPosition.setAutoPosition()
+  }
+
+  // If the grid item has an automatic position and a grid span for a named line in a given dimension, instead treat the grid span as one.
+  if initialPosition.isAuto() && finalPosition.isSpan() && !finalPosition.namedGridLine().isNull() {
+    finalPosition.setSpanPosition(position: 1, namedGridLine: StringWrapper())
+  }
+  if finalPosition.isAuto() && initialPosition.isSpan() && !initialPosition.namedGridLine().isNull()
+  {
+    initialPosition.setSpanPosition(position: 1, namedGridLine: StringWrapper())
+  }
+
+  if isIndefiniteSpan(initialPosition: initialPosition, finalPosition: finalPosition) {
+    if let renderGrid = gridItem as? RenderGridWrapper, renderGrid.isSubgrid(direction: direction) {
+      // Indefinite span for an item that is subgridded in this axis.
+      let lineCount = Int32(
+        (isForColumns
+          ? gridItem.style().orderedNamedGridColumnLines()
+          : gridItem.style().orderedNamedGridRowLines()).count)
+
+      if initialPosition.isAuto() {
+        // Set initial position to span <line names - 1>
+        initialPosition.setSpanPosition(
+          position: max(1, lineCount - 1), namedGridLine: StringWrapper())
+      } else {
+        // Set final position to span <line names - 1>
+        finalPosition.setSpanPosition(
+          position: max(1, lineCount - 1), namedGridLine: StringWrapper())
+      }
+    }
+  }
+
+  return (initialPosition, finalPosition)
 }
 
 // Class with all the code related to grid items positions resolution.

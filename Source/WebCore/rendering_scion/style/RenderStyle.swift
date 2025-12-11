@@ -1392,6 +1392,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func orderedNamedGridColumnLines() -> OrderedNamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func orderedNamedGridRowLines() -> OrderedNamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func masonryAutoFlow() -> MasonryAutoFlow {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -23,6 +23,8 @@
  *
  */
 
+typealias OrderedNamedGridLinesMap = [UInt32: [StringWrapper]]
+
 struct MasonryAutoFlow {
   let placementAlgorithm: MasonryAutoFlowPlacementAlgorithm
   let placementOrder: MasonryAutoFlowPlacementOrder

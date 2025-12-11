@@ -41,6 +41,24 @@ struct GridPosition {
 
   func isSpan() -> Bool { return type == .SpanPosition }
 
+  func setAutoPosition() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // 'span' values cannot be negative, yet we reuse the <integer> position which can
+  // be. This means that we have to convert the span position to an integer, losing
+  // some precision here. It shouldn't be an issue in practice though.
+  func setSpanPosition(position: Int32, namedGridLine: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func namedGridLine() -> StringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func spanPosition() -> Int32 {
     assert(type == .SpanPosition)
     return integerPosition
