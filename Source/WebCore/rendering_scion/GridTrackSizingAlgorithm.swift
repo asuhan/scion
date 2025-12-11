@@ -747,8 +747,8 @@ final class GridTrackSizingAlgorithm {
         availableSize: availableSpace())
 
       var extraSpace =
-        itemSizeForTrackSizeComputationPhaseMasonry(phase: phase, trackSize: definiteItem.trackSize)
-        - spanningTracksSize
+        GridTrackSizingAlgorithm.itemSizeForTrackSizeComputationPhaseMasonry(
+          phase: phase, trackSize: definiteItem.trackSize) - spanningTracksSize
       extraSpace = max(extraSpace, LayoutUnit(value: 0))
       let tracksToGrowBeyondGrowthLimits =
         growBeyondGrowthLimitsTracks.isEmpty
@@ -851,8 +851,8 @@ final class GridTrackSizingAlgorithm {
         availableSize: availableSpace())
 
       var extraSpace =
-        itemSizeForTrackSizeComputationPhaseMasonry(phase: phase, trackSize: item.trackSize)
-        - spanningTracksSize
+        GridTrackSizingAlgorithm.itemSizeForTrackSizeComputationPhaseMasonry(
+          phase: phase, trackSize: item.trackSize) - spanningTracksSize
       extraSpace = max(extraSpace, LayoutUnit(value: 0))
       let tracksToGrowBeyondGrowthLimits =
         growBeyondGrowthLimitsTracks.isEmpty
@@ -903,11 +903,19 @@ final class GridTrackSizingAlgorithm {
     }
   }
 
-  private func itemSizeForTrackSizeComputationPhaseMasonry(
+  private static func itemSizeForTrackSizeComputationPhaseMasonry(
     phase: TrackSizeComputationPhase, trackSize: MasonryMinMaxTrackSize
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch phase {
+    case .ResolveIntrinsicMinimums:
+      return trackSize.minSize
+    case .ResolveContentBasedMinimums, .ResolveIntrinsicMaximums:
+      return trackSize.minContentSize
+    case .ResolveMaxContentMinimums, .ResolveMaxContentMaximums:
+      return trackSize.maxContentSize
+    case .MaximizeTracks:
+      fatalError("Not reached")
+    }
   }
 
   private func distributeSpaceToTracks(
