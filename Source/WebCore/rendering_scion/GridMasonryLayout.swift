@@ -186,8 +186,18 @@ class GridMasonryLayout {
   }
 
   private func setItemGridAxisContainingBlockToGridArea(gridItem: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if gridAxisDirection() == .ForColumns {
+      gridItem.setOverridingContainingBlockContentLogicalWidth(
+        logicalWidth: renderGrid.trackSizingAlgorithm!.gridAreaBreadthForGridItem(
+          gridItem: gridItem, direction: .ForColumns))
+    } else {
+      gridItem.setOverridingContainingBlockContentLogicalHeight(
+        logicalHeight: renderGrid.trackSizingAlgorithm!.gridAreaBreadthForGridItem(
+          gridItem: gridItem, direction: .ForRows))
+    }
+
+    // FIXME(249230): Try to cache masonry layout sizes
+    gridItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
   }
 
   private func insertIntoGridAndLayoutItem(gridItem: RenderBoxWrapper, area: GridArea) {

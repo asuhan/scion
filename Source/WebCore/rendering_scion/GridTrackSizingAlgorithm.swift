@@ -375,6 +375,15 @@ final class GridTrackSizingAlgorithm {
       alignmentAxis: baselineAxis)
   }
 
+  // The estimated grid area should be use pre-layout versus the grid area, which should be used once
+  // layout is complete.
+  func gridAreaBreadthForGridItem(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection)
+    -> LayoutUnit?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func estimatedGridAreaBreadthForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit? {
