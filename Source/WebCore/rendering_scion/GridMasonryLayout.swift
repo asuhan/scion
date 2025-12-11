@@ -73,8 +73,31 @@ class GridMasonryLayout {
   }
 
   private func collectMasonryItems() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridAxisTracksCount != 0)
+
+    itemsWithDefiniteGridAxisPosition.removeAll()
+    itemsWithIndefiniteGridAxisPosition.removeAll()
+
+    let grid = renderGrid.currentGrid()
+    var gridItem = grid.orderIterator.first()
+    while gridItem != nil {
+      if grid.orderIterator.shouldSkipChild(child: gridItem!) {
+        gridItem = grid.orderIterator.next()
+        continue
+      }
+
+      if renderGrid.style().masonryAutoFlow().placementOrder == .Ordered {
+        itemsWithDefiniteGridAxisPosition.append(gridItem!)
+      } else if renderGrid.style().masonryAutoFlow().placementOrder == .DefiniteFirst {
+        if hasDefiniteGridAxisPosition(gridItem: gridItem!, gridAxisDirection: gridAxisDirection())
+        {
+          itemsWithDefiniteGridAxisPosition.append(gridItem!)
+        } else {
+          itemsWithIndefiniteGridAxisPosition.append(gridItem!)
+        }
+      }
+      gridItem = grid.orderIterator.next()
+    }
   }
 
   private func placeItemsUsingOrderModifiedDocumentOrder() {
@@ -102,7 +125,22 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  private func gridAxisDirection() -> GridTrackSizingDirection {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasDefiniteGridAxisPosition(
+    gridItem: RenderBoxWrapper, gridAxisDirection: GridTrackSizingDirection
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var gridAxisTracksCount: UInt32 = 0
+
+  private var itemsWithDefiniteGridAxisPosition: [RenderBoxWrapper] = []
+  private var itemsWithIndefiniteGridAxisPosition: [RenderBoxWrapper] = []
 
   private let renderGrid: RenderGridWrapper
   private var masonryAxisGridGap = LayoutUnit()
