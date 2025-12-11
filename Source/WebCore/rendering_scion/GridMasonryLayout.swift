@@ -243,7 +243,7 @@ class GridMasonryLayout {
   }
 
   private func updateRunningPositions(gridItem: RenderBoxWrapper, area: GridArea) {
-    let gridAxisSpan = gridAxisSpanFromArea(gridArea: area)
+    var gridAxisSpan = gridAxisSpanFromArea(gridArea: area)
     assert(
       gridAxisSpan.startLine() < runningPositions.count
         && gridAxisSpan.endLine() <= runningPositions.count)

@@ -96,9 +96,13 @@ struct GridSpan: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
-  func clamp(max: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func clamp(max: Int32) {
+    assert(m_type != .Indefinite)
+    m_startLine = Swift.max(m_startLine, 0)
+    m_endLine = Swift.max(Swift.min(m_endLine, max), 1)
+    if m_startLine >= m_endLine {
+      m_startLine = m_endLine - 1
+    }
   }
 
   private enum GridSpanType {
