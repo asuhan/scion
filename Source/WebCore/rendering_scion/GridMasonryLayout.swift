@@ -68,8 +68,10 @@ class GridMasonryLayout {
   }
 
   func offsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let offsetIter = itemOffsets[CPtrToInt(gridItem.p)] {
+      return offsetIter
+    }
+    return LayoutUnit(value: UInt64(0))
   }
 
   private func gridAreaForIndefiniteGridAxisItem(item: RenderBoxWrapper) -> GridArea {
@@ -164,6 +166,7 @@ class GridMasonryLayout {
   private var itemsWithDefiniteGridAxisPosition: [RenderBoxWrapper] = []
   private var itemsWithIndefiniteGridAxisPosition: [RenderBoxWrapper] = []
 
+  private let itemOffsets: [UInt: LayoutUnit] = [:]
   private let renderGrid: RenderGridWrapper
   private var masonryAxisGridGap = LayoutUnit()
   var gridContentSize = LayoutUnit()
