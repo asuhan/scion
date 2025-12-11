@@ -45,6 +45,11 @@ private enum TrackSizeComputationPhase {
   case MaximizeTracks
 }
 
+private enum SpaceDistributionLimit {
+  case UpToGrowthLimit
+  case BeyondGrowthLimit
+}
+
 class GridTrack {
   func baseSize() -> LayoutUnit {
     // TODO(asuhan): implement this
@@ -92,6 +97,16 @@ class GridTrack {
   }
 
   func setPlannedSize(plannedSize: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func tempSize() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTempSize(tempSize: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -210,6 +225,14 @@ private func markAsInfinitelyGrowableForTrackSizeComputationPhase(
   case .MaximizeTracks:
     fatalError("Not reached")
   }
+}
+
+private func distributeItemIncurredIncreases(
+  variant: TrackSizeComputationVariant, phase: TrackSizeComputationPhase,
+  limit: SpaceDistributionLimit, tracks: ArraySlice<GridTrack>, freeSpace: inout LayoutUnit
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 private func computeGridSpanSize(
@@ -984,8 +1007,31 @@ final class GridTrackSizingAlgorithm {
     tracks: ArraySlice<GridTrack>, growBeyondGrowthLimitsTracks: ArraySlice<GridTrack>,
     freeSpace: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(freeSpace >= Int32(0))
+
+    for track in tracks {
+      track.setTempSize(
+        tempSize: trackSizeForTrackSizeComputationPhase(
+          phase: phase, track: track, restriction: .ForbidInfinity))
+    }
+
+    if freeSpace > Int32(0) {
+      distributeItemIncurredIncreases(
+        variant: variant, phase: phase, limit: .UpToGrowthLimit, tracks: tracks,
+        freeSpace: &freeSpace)
+    }
+
+    if freeSpace > Int32(0) {
+      distributeItemIncurredIncreases(
+        variant: variant, phase: phase, limit: .BeyondGrowthLimit,
+        tracks: growBeyondGrowthLimitsTracks, freeSpace: &freeSpace)
+    }
+
+    for track in tracks {
+      track.setPlannedSize(
+        plannedSize: track.plannedSize() == infinity
+          ? track.tempSize() : max(track.plannedSize(), track.tempSize()))
+    }
   }
 
   private func computeBaselineAlignmentContext() {

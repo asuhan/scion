@@ -226,6 +226,10 @@ struct LayoutUnit: Comparable {
     return lhs > LayoutUnit(value: rhs)
   }
 
+  static func > (lhs: LayoutUnit, rhs: Int32) -> Bool {
+    return lhs > LayoutUnit(value: rhs)
+  }
+
   static func > (lhs: Float32, rhs: LayoutUnit) -> Bool {
     return lhs > rhs.toFloat()
   }
