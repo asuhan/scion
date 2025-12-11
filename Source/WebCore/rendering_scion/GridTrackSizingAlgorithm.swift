@@ -81,6 +81,11 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
+  func growthLimitIfNotInfinite() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPlannedSize(plannedSize: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -138,8 +143,13 @@ private func shouldProcessTrackForTrackSizeComputationPhase(
 private func trackSizeForTrackSizeComputationPhase(
   phase: TrackSizeComputationPhase, track: GridTrack, restriction: TrackSizeRestriction
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch phase {
+  case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums, .ResolveMaxContentMinimums,
+    .MaximizeTracks:
+    return track.baseSize()
+  case .ResolveIntrinsicMaximums, .ResolveMaxContentMaximums:
+    return restriction == .AllowInfinity ? track.growthLimit() : track.growthLimitIfNotInfinite()
+  }
 }
 
 private func updateTrackSizeForTrackSizeComputationPhase(
