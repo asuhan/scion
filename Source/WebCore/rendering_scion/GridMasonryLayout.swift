@@ -75,8 +75,24 @@ class GridMasonryLayout {
   }
 
   private func gridAxisPositionUsingPackAutoFlow(item: RenderBoxWrapper) -> GridSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let itemSpanLength = GridPositionsResolver.spanSizeForAutoPlacedItem(
+      gridItem: item, direction: gridAxisDirection())
+    var smallestMaxPos = LayoutUnit.max()
+    var smallestMaxPosLine: UInt32 = 0
+    let gridAxisLines = gridAxisTracksCount + 1
+    for startingLine in 0..<gridAxisLines - itemSpanLength {
+      var maxPosForCurrentStartingLine = LayoutUnit()
+      for lineOffset in 0..<itemSpanLength {
+        maxPosForCurrentStartingLine = max(
+          maxPosForCurrentStartingLine, runningPositions[Int(startingLine + lineOffset)])
+      }
+      if maxPosForCurrentStartingLine < smallestMaxPos {
+        smallestMaxPos = maxPosForCurrentStartingLine
+        smallestMaxPosLine = startingLine
+      }
+    }
+    return GridSpan.translatedDefiniteGridSpan(
+      startLine: Int32(smallestMaxPosLine), endLine: Int32(smallestMaxPosLine + itemSpanLength))
   }
 
   private func gridAxisPositionUsingNextAutoFlow(item: RenderBoxWrapper) -> GridSpan {
@@ -185,6 +201,7 @@ class GridMasonryLayout {
   private var itemsWithDefiniteGridAxisPosition: [RenderBoxWrapper] = []
   private var itemsWithIndefiniteGridAxisPosition: [RenderBoxWrapper] = []
 
+  private var runningPositions: [LayoutUnit] = []
   private let itemOffsets: [UInt: LayoutUnit] = [:]
   private let renderGrid: RenderGridWrapper
   private var masonryAxisGridGap = LayoutUnit()
