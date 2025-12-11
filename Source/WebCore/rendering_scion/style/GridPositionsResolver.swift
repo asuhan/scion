@@ -33,13 +33,35 @@ enum GridTrackSizingDirection {
   case ForRows
 }
 
+private func adjustGridPositionsFromStyle(
+  gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+) -> (GridPosition, GridPosition) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // Class with all the code related to grid items positions resolution.
 class GridPositionsResolver {
   static func spanSizeForAutoPlacedItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (initialPosition, finalPosition) = adjustGridPositionsFromStyle(
+      gridItem: gridItem, direction: direction)
+
+    // This method will only be used when both positions need to be resolved against the opposite one.
+    assert(
+      initialPosition.shouldBeResolvedAgainstOppositePosition()
+        && finalPosition.shouldBeResolvedAgainstOppositePosition())
+
+    if initialPosition.isAuto() && finalPosition.isAuto() {
+      return 1
+    }
+
+    let position = initialPosition.isSpan() ? initialPosition : finalPosition
+    assert(position.isSpan())
+
+    assert(position.spanPosition() != 0)
+    return UInt32(position.spanPosition())
   }
 
   static func resolveGridPositionsFromStyle(

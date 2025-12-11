@@ -37,10 +37,16 @@ enum GridPositionType {
 }
 
 struct GridPosition {
-  func isAuto() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func isAuto() -> Bool { return type == .AutoPosition }
+
+  func isSpan() -> Bool { return type == .SpanPosition }
+
+  func spanPosition() -> Int32 {
+    assert(type == .SpanPosition)
+    return integerPosition
   }
+
+  func shouldBeResolvedAgainstOppositePosition() -> Bool { return isAuto() || isSpan() }
 
   // Note that grid line 1 is internally represented by the index 0, that's why the max value for
   // a position is kGridMaxTracks instead of kGridMaxTracks + 1.
@@ -55,4 +61,5 @@ struct GridPosition {
   }
 
   private let type: GridPositionType = .AutoPosition
+  private let integerPosition: Int32 = 0
 }
