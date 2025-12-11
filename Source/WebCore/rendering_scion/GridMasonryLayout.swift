@@ -115,8 +115,12 @@ class GridMasonryLayout {
   }
 
   private func gridAreaForDefiniteGridAxisItem(gridItem: RenderBoxWrapper) -> GridArea {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let itemSpan = renderGrid.currentGrid().gridItemSpan(
+      gridItem: gridItem, direction: gridAxisDirection())
+    assert(!itemSpan.isIndefinite())
+    itemSpan.translate(
+      offset: renderGrid.currentGrid().explicitGridStart(direction: gridAxisDirection()))
+    return masonryGridAreaFromGridAxisSpan(gridAxisSpan: itemSpan)
   }
 
   private func collectMasonryItems() {
