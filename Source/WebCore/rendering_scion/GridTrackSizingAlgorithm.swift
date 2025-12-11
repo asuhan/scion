@@ -119,8 +119,20 @@ private enum TrackSizeRestriction {
 private func shouldProcessTrackForTrackSizeComputationPhase(
   phase: TrackSizeComputationPhase, trackSize: GridTrackSize
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch phase {
+  case .ResolveIntrinsicMinimums:
+    return trackSize.hasIntrinsicMinTrackBreadth()
+  case .ResolveContentBasedMinimums:
+    return trackSize.hasMinOrMaxContentMinTrackBreadth()
+  case .ResolveMaxContentMinimums:
+    return trackSize.hasMaxContentMinTrackBreadth()
+  case .ResolveIntrinsicMaximums:
+    return trackSize.hasIntrinsicMaxTrackBreadth()
+  case .ResolveMaxContentMaximums:
+    return trackSize.hasMaxContentOrAutoMaxTrackBreadth()
+  case .MaximizeTracks:
+    fatalError("Not reached")
+  }
 }
 
 private func trackSizeForTrackSizeComputationPhase(

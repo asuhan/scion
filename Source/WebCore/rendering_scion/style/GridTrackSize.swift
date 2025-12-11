@@ -73,6 +73,21 @@ struct GridTrackSize {
     fatalError("Not implemented")
   }
 
+  func hasIntrinsicMinTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasIntrinsicMaxTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasMinOrMaxContentMinTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasAutoMinTrackBreadth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
