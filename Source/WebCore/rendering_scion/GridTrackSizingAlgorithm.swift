@@ -1067,13 +1067,48 @@ final class GridTrackSizingAlgorithm {
   private func canParticipateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      baselineAxis == .GridColumnAxis
+        ? columnBaselineItemsMap.contains(gridItem) : rowBaselineItemsMap.contains(gridItem))
+
+    // Baseline cyclic dependencies only happen with synthesized
+    // baselines. These cases include orthogonal or empty grid items
+    // and replaced elements.
+    let isParallelToBaselineAxis =
+      baselineAxis == .GridColumnAxis
+      ? !GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid!, gridItem: gridItem)
+      : GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid!, gridItem: gridItem)
+    if isParallelToBaselineAxis && gridItem.firstLineBaseline() != nil {
+      return true
+    }
+
+    // FIXME: We don't currently allow items within subgrids that need to
+    // synthesize a baseline, since we need a layout to have been completed
+    // and performPreLayoutForGridItems on the outer grid doesn't layout subgrid
+    // items.
+    if CPtrToInt(gridItem.parent()?.p) != CPtrToInt(renderGrid!.p) {
+      return false
+    }
+
+    // Baseline cyclic dependencies only happen in grid areas with
+    // intrinsically-sized tracks.
+    if !isIntrinsicSizedGridArea(gridItem: gridItem, axis: baselineAxis) {
+      return true
+    }
+
+    return isParallelToBaselineAxis
+      ? !gridItem.hasRelativeLogicalHeight()
+      : !gridItem.hasRelativeLogicalWidth() && !gridItem.style().logicalWidth().isAuto()
   }
 
   private func participateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)
     -> Bool
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isIntrinsicSizedGridArea(gridItem: RenderBoxWrapper, axis: GridAxis) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1449,6 +1484,11 @@ final class GridTrackSizingAlgorithm {
 
   private class BaselineItemsCache {
     func set(_ key: RenderBoxWrapper, _ value: Bool) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func contains(_ key: RenderBoxWrapper) -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
