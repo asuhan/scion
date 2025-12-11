@@ -49,5 +49,10 @@ struct GridPosition {
     fatalError("Not implemented")
   }
 
+  static func min() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let type: GridPositionType = .AutoPosition
 }

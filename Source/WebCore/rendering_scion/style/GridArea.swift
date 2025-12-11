@@ -94,6 +94,30 @@ struct GridSpan: Sequence, IteratorProtocol {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private enum GridSpanType {
+    case UntranslatedDefinite
+    case TranslatedDefinite
+    case Indefinite
+  }
+
+  private init(startLine: Int32, endLine: Int32, type: GridSpanType) {
+    #if ASSERT_ENABLED
+      assert(startLine < endLine)
+      if type == .TranslatedDefinite {
+        assert(startLine >= 0)
+        assert(endLine > 0)
+      }
+    #endif
+
+    m_type = type
+    m_startLine = Swift.max(GridPosition.min(), Swift.min(startLine, GridPosition.max() - 1))
+    m_endLine = Swift.max(GridPosition.min() + 1, Swift.min(endLine, GridPosition.max()))
+  }
+
+  private let m_startLine: Int32
+  private let m_endLine: Int32
+  private let m_type: GridSpanType
 }
 
 // This represents a grid area that spans in both rows' and columns' direction.
