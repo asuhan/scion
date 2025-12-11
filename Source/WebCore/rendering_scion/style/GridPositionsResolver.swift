@@ -35,8 +35,13 @@ enum GridTrackSizingDirection {
 
 // https://drafts.csswg.org/css-grid-2/#indefinite-grid-span
 private func isIndefiniteSpan(initialPosition: GridPosition, finalPosition: GridPosition) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if initialPosition.isAuto() {
+    return !finalPosition.isSpan()
+  }
+  if finalPosition.isAuto() {
+    return !initialPosition.isSpan()
+  }
+  return false
 }
 
 private func adjustGridPositionsFromStyle(
