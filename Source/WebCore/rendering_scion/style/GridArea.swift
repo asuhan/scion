@@ -78,9 +78,15 @@ struct GridSpan: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
-  func translate(offset: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func translate(offset: UInt32) {
+    assert(m_type == .UntranslatedDefinite)
+
+    m_type = .TranslatedDefinite
+    m_startLine += Int32(offset)
+    m_endLine += Int32(offset)
+
+    assert(m_startLine >= 0)
+    assert(m_endLine > 0)
   }
 
   // Moves this span to be in the same coordinate space as |parent|.
@@ -115,9 +121,9 @@ struct GridSpan: Sequence, IteratorProtocol {
     m_endLine = Swift.max(GridPosition.min() + 1, Swift.min(endLine, GridPosition.max()))
   }
 
-  private let m_startLine: Int32
-  private let m_endLine: Int32
-  private let m_type: GridSpanType
+  private var m_startLine: Int32
+  private var m_endLine: Int32
+  private var m_type: GridSpanType
 }
 
 // This represents a grid area that spans in both rows' and columns' direction.
@@ -132,6 +138,6 @@ struct GridArea {
     rows = r
   }
 
-  let columns: GridSpan
-  let rows: GridSpan
+  var columns: GridSpan
+  var rows: GridSpan
 }

@@ -115,7 +115,7 @@ class GridMasonryLayout {
   }
 
   private func gridAreaForDefiniteGridAxisItem(gridItem: RenderBoxWrapper) -> GridArea {
-    let itemSpan = renderGrid.currentGrid().gridItemSpan(
+    var itemSpan = renderGrid.currentGrid().gridItemSpan(
       gridItem: gridItem, direction: gridAxisDirection())
     assert(!itemSpan.isIndefinite())
     itemSpan.translate(
@@ -165,7 +165,7 @@ class GridMasonryLayout {
 
   private func placeItemsWithDefiniteGridAxisPosition() {
     for item in itemsWithDefiniteGridAxisPosition {
-      let itemSpan = renderGrid.currentGrid().gridItemSpan(
+      var itemSpan = renderGrid.currentGrid().gridItemSpan(
         gridItem: item, direction: gridAxisDirection())
 
       assert(!itemSpan.isIndefinite())

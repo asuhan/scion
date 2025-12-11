@@ -1348,7 +1348,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
         gridItem!.setOverridingContainingBlockContentLogicalHeight(logicalHeight: nil)
       }
 
-      let area = currentGrid().gridItemArea(item: gridItem!)
+      var area = currentGrid().gridItemArea(item: gridItem!)
       currentGrid().clampAreaToSubgridIfNeeded(area: area)
       if !area.rows.isIndefinite() {
         area.rows.translate(offset: currentGrid().explicitGridStart(direction: .ForRows))
