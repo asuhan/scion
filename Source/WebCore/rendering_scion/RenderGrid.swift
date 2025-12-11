@@ -1414,7 +1414,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     #endif
   }
 
-  private func populateExplicitGridAndOrderIterator() {
+  func populateExplicitGridAndOrderIterator() {
     let populator = OrderIteratorPopulator(iterator: currentGrid().orderIterator)
     var explicitRowStart = 0
     var explicitColumnStart = 0

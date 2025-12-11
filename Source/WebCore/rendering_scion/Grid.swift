@@ -139,6 +139,11 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  func setupGridForMasonryLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let orderIterator: OrderIterator
 }
 

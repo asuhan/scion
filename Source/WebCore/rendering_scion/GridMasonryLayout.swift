@@ -31,8 +31,18 @@ class GridMasonryLayout {
   private func initializeMasonry(
     gridAxisTracks: UInt32, masonryAxisDirection: GridTrackSizingDirection
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Reset global variables as they may contain state from previous runs of Masonry.
+    self.masonryAxisDirection = masonryAxisDirection
+    self.masonryAxisGridGap = renderGrid.gridGap(direction: masonryAxisDirection)
+    self.gridAxisTracksCount = gridAxisTracks
+    self.gridContentSize = LayoutUnit(value: 0)
+
+    allocateCapacityForMasonryVectors()
+    collectMasonryItems()
+    renderGrid.currentGrid().setupGridForMasonryLayout()
+    renderGrid.populateExplicitGridAndOrderIterator()
+
+    resizeAndResetRunningPositions()
   }
 
   func performMasonryPlacement(
@@ -62,6 +72,11 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  private func collectMasonryItems() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func placeItemsUsingOrderModifiedDocumentOrder() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -77,8 +92,23 @@ class GridMasonryLayout {
     fatalError("Not implemented")
   }
 
+  private func resizeAndResetRunningPositions() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func allocateCapacityForMasonryVectors() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var gridAxisTracksCount: UInt32 = 0
+
   private let renderGrid: RenderGridWrapper
-  let gridContentSize = LayoutUnit()
+  private var masonryAxisGridGap = LayoutUnit()
+  var gridContentSize = LayoutUnit()
+
+  private var masonryAxisDirection: GridTrackSizingDirection = .ForColumns
 
   private var autoFlowNextCursor: UInt32 = 0
 }
