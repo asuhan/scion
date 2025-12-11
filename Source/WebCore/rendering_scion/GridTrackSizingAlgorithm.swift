@@ -173,8 +173,16 @@ private func updateTrackSizeForTrackSizeComputationPhase(
 private func trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
   phase: TrackSizeComputationPhase, trackSize: GridTrackSize
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch phase {
+  case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums:
+    return trackSize.hasAutoOrMinContentMinTrackBreadthAndIntrinsicMaxTrackBreadth()
+  case .ResolveMaxContentMinimums:
+    return trackSize.hasMaxContentMinTrackBreadthAndMaxContentMaxTrackBreadth()
+  case .ResolveIntrinsicMaximums, .ResolveMaxContentMaximums:
+    return true
+  case .MaximizeTracks:
+    fatalError("Not reached")
+  }
 }
 
 private func markAsInfinitelyGrowableForTrackSizeComputationPhase(
