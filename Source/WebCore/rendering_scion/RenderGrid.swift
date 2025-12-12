@@ -239,6 +239,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
     }
   }
 
+  func autoRepeatCountForDirection(direction: GridTrackSizingDirection) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Required by GridTrackSizingAlgorithm. Keep them under control.
   func guttersSize(
     direction: GridTrackSizingDirection, startLine: UInt32, span: UInt32, availableSize: LayoutUnit?
