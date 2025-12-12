@@ -33,6 +33,10 @@ enum GridTrackSizingDirection {
   case ForRows
 }
 
+private func contains_(_ indices: [UInt32]?, _ line: UInt32) -> Bool {
+  return indices != nil && indices!.contains(line)
+}
+
 class NamedLineCollectionBase {
   init(
     initialGrid: RenderGridWrapper, name: StringWrapper, side: GridPositionSide,
@@ -145,8 +149,58 @@ class NamedLineCollectionBase {
   }
 
   func contains(line: UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasNamedLines())
+
+    if line > self.lastLine {
+      return false
+    }
+
+    if contains_(self.implicitNamedLinesIndices, line) {
+      return true
+    }
+
+    if self.autoRepeatTrackListLength == 0 || line < self.insertionPoint {
+      return contains_(self.namedLinesIndices, line)
+    }
+
+    if self.isSubgrid {
+      if line >= self.insertionPoint + self.autoRepeatLines {
+        return contains_(self.namedLinesIndices, line - self.autoRepeatLines)
+      }
+
+      if self.autoRepeatLines == 0 {
+        return contains_(self.namedLinesIndices, line)
+      }
+
+      let autoRepeatIndexInFirstRepetition =
+        (line - self.insertionPoint) % self.autoRepeatTrackListLength
+      return contains_(self.autoRepeatNamedLinesIndices, autoRepeatIndexInFirstRepetition)
+    }
+
+    assert(self.autoRepeatTotalTracks != 0)
+
+    if line > self.insertionPoint + self.autoRepeatTotalTracks {
+      return contains_(self.namedLinesIndices, line - (self.autoRepeatTotalTracks - 1))
+    }
+
+    if line == self.insertionPoint {
+      return contains_(self.namedLinesIndices, line)
+        || contains_(self.autoRepeatNamedLinesIndices, 0)
+    }
+
+    if line == self.insertionPoint + self.autoRepeatTotalTracks {
+      return contains_(self.autoRepeatNamedLinesIndices, self.autoRepeatTrackListLength)
+        || contains_(self.namedLinesIndices, self.insertionPoint + 1)
+    }
+
+    let autoRepeatIndexInFirstRepetition =
+      (line - self.insertionPoint) % self.autoRepeatTrackListLength
+    if autoRepeatIndexInFirstRepetition == 0
+      && contains_(self.autoRepeatNamedLinesIndices, self.autoRepeatTrackListLength)
+    {
+      return true
+    }
+    return contains_(self.autoRepeatNamedLinesIndices, autoRepeatIndexInFirstRepetition)
   }
 
   private var namedLinesIndices: [UInt32]? = nil
