@@ -116,12 +116,39 @@ private func adjustGridPositionsFromStyle(
   return (initialPosition, finalPosition)
 }
 
+private func lookAheadForNamedGridLine(
+  start: Int32, numberOfLines: UInt32, linesCollection: NamedLineCollection
+) -> Int32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func lookBackForNamedGridLine(
+  end: Int32, numberOfLines: UInt32, linesCollection: NamedLineCollection
+) -> Int32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func definiteGridSpanWithNamedLineSpanAgainstOpposite(
   oppositeLine: Int32, position: GridPosition, side: GridPositionSide,
   linesCollection: NamedLineCollection
 ) -> GridSpan {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var start: Int32 = 0
+  var end: Int32 = 0
+  if side == .RowStartSide || side == .ColumnStartSide {
+    start = lookBackForNamedGridLine(
+      end: oppositeLine - 1, numberOfLines: UInt32(position.spanPosition()),
+      linesCollection: linesCollection)
+    end = oppositeLine
+  } else {
+    start = oppositeLine
+    end = lookAheadForNamedGridLine(
+      start: oppositeLine + 1, numberOfLines: UInt32(position.spanPosition()),
+      linesCollection: linesCollection)
+  }
+
+  return GridSpan.untranslatedDefiniteGridSpan(startLine: start, endLine: end)
 }
 
 private func resolveNamedGridLinePositionAgainstOppositePosition(
