@@ -277,7 +277,7 @@ class GridLayoutFunctions {
       : gridItem.overridingContainingBlockContentLogicalHeight()
   }
 
-  private static func isFlippedDirection(
+  static func isFlippedDirection(
     grid: RenderGridWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
     if direction == .ForColumns {

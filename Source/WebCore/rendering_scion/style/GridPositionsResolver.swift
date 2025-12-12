@@ -210,14 +210,19 @@ class NamedLineCollectionBase {
     return contains_(self.autoRepeatNamedLinesIndices, autoRepeatIndexInFirstRepetition)
   }
 
+  func ensureInheritedNamedIndices() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var namedLinesIndices: [UInt32]? = nil
   private var autoRepeatNamedLinesIndices: [UInt32]? = nil
   private var implicitNamedLinesIndices: [UInt32]? = nil
 
-  private var inheritedNamedLinesIndices: [UInt32] = []
+  var inheritedNamedLinesIndices: [UInt32] = []
 
   private var insertionPoint: UInt32 = 0
-  private var lastLine: UInt32 = 0
+  var lastLine: UInt32 = 0
   private var autoRepeatTotalTracks: UInt32 = 0
   private var autoRepeatLines: UInt32 = 0
   private var autoRepeatTrackListLength: UInt32 = 0
@@ -230,8 +235,104 @@ class NamedLineCollection: NamedLineCollectionBase {
     nameIsAreaName: Bool = false
   ) {
     super.init(initialGrid: initialGrid, name: name, side: side, nameIsAreaName: nameIsAreaName)
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if lastLine == 0 {
+      return
+    }
+    var search = GridSpan.translatedDefiniteGridSpan(startLine: 0, endLine: Int32(lastLine))
+    var currentSide = side
+    var direction = directionFromSide(side: currentSide)
+    let initialFlipped = GridLayoutFunctions.isFlippedDirection(
+      grid: initialGrid, direction: direction)
+    var isRowAxis = direction == .ForColumns
+
+    if !initialGrid.isSubgrid(direction: direction) {
+      return
+    }
+
+    // If we're a subgrid, we want to inherit the line names from any ancestor grids.
+    for currentAncestorSubgrid in AncestorSubgridIterator(
+      firstAncestorSubgrid: initialGrid, direction: direction)
+    {
+      let currentAncestorSubgridParent = currentAncestorSubgrid.parent() as! RenderGridWrapper
+
+      // auto-placed subgrids inside a masonry grid do not inherit any line names
+      if (currentAncestorSubgridParent.areMasonryRows()
+        && (currentAncestorSubgrid.style().gridItemColumnStart().isAuto()
+          || currentAncestorSubgrid.style().gridItemColumnStart().isSpan()))
+        || (currentAncestorSubgridParent.areMasonryColumns()
+          && (currentAncestorSubgrid.style().gridItemRowStart().isAuto()
+            || currentAncestorSubgrid.style().gridItemRowStart().isSpan()))
+      {
+        return
+      }
+      // Translate our explicit grid set of lines into the coordinate space of the
+      // parent grid, adjusting direction/side as needed.
+      if currentAncestorSubgrid.isHorizontalWritingMode()
+        != currentAncestorSubgridParent.isHorizontalWritingMode()
+      {
+        isRowAxis = !isRowAxis
+        currentSide = transposedSide(side: currentSide)
+      }
+      direction = directionFromSide(side: currentSide)
+
+      let span = currentAncestorSubgridParent.gridSpanForGridItem(
+        gridItem: currentAncestorSubgrid, direction: direction)
+      search.translateTo(
+        parent: span,
+        reverse: GridLayoutFunctions.isSubgridReversedDirection(
+          grid: currentAncestorSubgridParent, outerDirection: direction,
+          subgrid: currentAncestorSubgrid))
+
+      let convertToInitialSpace = { [self] (_ i: UInt32) in
+        assert(i >= search.startLine())
+        var i = i
+        i -= search.startLine()
+        if GridLayoutFunctions.isFlippedDirection(
+          grid: currentAncestorSubgridParent, direction: direction)
+          != initialFlipped
+        {
+          assert(lastLine >= i)
+          i = lastLine - i
+        }
+        return i
+      }
+
+      // Create a line collection for the parent grid, and check to see if any of our lines
+      // are present. If we find any, add them to a locally stored line name list (with numbering
+      // relative to our grid).
+      var appended = false
+      let parentCollection = NamedLineCollectionBase(
+        initialGrid: currentAncestorSubgridParent, name: name, side: currentSide,
+        nameIsAreaName: nameIsAreaName)
+      if parentCollection.hasNamedLines() {
+        for i in search.startLine()...search.endLine() {
+          if parentCollection.contains(line: i) {
+            ensureInheritedNamedIndices()
+            appended = true
+            inheritedNamedLinesIndices.append(convertToInitialSpace(i))
+          }
+        }
+      }
+
+      if nameIsAreaName,
+        // We now need to look at the grid areas for the parent (not the implicit
+        // lines for the parent!), and insert the ones that intersect as implicit
+        // lines (but in our single combined list).
+        let implicitLine = clampedImplicitLineForArea(
+          style: currentAncestorSubgridParent.style(), name: name, min: Int32(search.startLine()),
+          max: Int32(search.endLine()),
+          isRowAxis: isRowAxis, isStartSide: isStartSide(side: side))
+      {
+        ensureInheritedNamedIndices()
+        appended = true
+        inheritedNamedLinesIndices.append(convertToInitialSpace(UInt32(implicitLine)))
+      }
+
+      if appended {
+        // Re-sort inheritedNamedLinesIndices
+        inheritedNamedLinesIndices.sort()
+      }
+    }
   }
 
   func firstPosition() -> Int32 {
@@ -270,6 +371,15 @@ private func explicitGridSizeForSide(gridContainer: RenderGridWrapper, side: Gri
   return isColumnSide(side: side)
     ? GridPositionsResolver.explicitGridColumnCount(gridContainer: gridContainer)
     : GridPositionsResolver.explicitGridRowCount(gridContainer: gridContainer)
+}
+
+private func transposedSide(side: GridPositionSide) -> GridPositionSide {
+  switch side {
+  case .ColumnStartSide: return .RowStartSide
+  case .ColumnEndSide: return .RowEndSide
+  case .RowStartSide: return .ColumnStartSide
+  case .RowEndSide: return .ColumnEndSide
+  }
 }
 
 private func clampedImplicitLineForArea(

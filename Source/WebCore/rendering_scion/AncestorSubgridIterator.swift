@@ -24,6 +24,11 @@
  */
 
 final class AncestorSubgridIterator: Sequence, IteratorProtocol {
+  init(firstAncestorSubgrid: RenderGridWrapper, direction: GridTrackSizingDirection) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func next() -> RenderGridWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
