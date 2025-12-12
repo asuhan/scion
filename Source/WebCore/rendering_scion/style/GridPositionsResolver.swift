@@ -200,8 +200,19 @@ private func lookBackForNamedGridLine(
 private func resolveNamedGridLinePositionFromStyle(
   gridContainer: RenderGridWrapper, position: GridPosition, side: GridPositionSide
 ) -> Int32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(!position.namedGridLine().isNull())
+
+  let linesCollection = NamedLineCollection(
+    initialGrid: gridContainer, name: position.namedGridLine(), side: side)
+
+  if position.isPositive() {
+    return lookAheadForNamedGridLine(
+      start: 0, numberOfLines: UInt32(abs(position.integerPosition())),
+      linesCollection: linesCollection)
+  }
+  return lookBackForNamedGridLine(
+    end: Int32(linesCollection.lastLine()), numberOfLines: UInt32(abs(position.integerPosition())),
+    linesCollection: linesCollection)
 }
 
 private func definiteGridSpanWithNamedLineSpanAgainstOpposite(
