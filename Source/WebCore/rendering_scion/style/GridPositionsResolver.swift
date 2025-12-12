@@ -33,6 +33,10 @@ enum GridTrackSizingDirection {
   case ForRows
 }
 
+private func isStartSide(side: GridPositionSide) -> Bool {
+  return side == .ColumnStartSide || side == .RowStartSide
+}
+
 // https://drafts.csswg.org/css-grid-2/#indefinite-grid-span
 private func isIndefiniteSpan(initialPosition: GridPosition, finalPosition: GridPosition) -> Bool {
   if initialPosition.isAuto() {
@@ -91,12 +95,45 @@ private func adjustGridPositionsFromStyle(
   return (initialPosition, finalPosition)
 }
 
-private func resolveGridPositionAgainstOppositePosition(
+private func resolveNamedGridLinePositionAgainstOppositePosition(
   gridContainer: RenderGridWrapper, oppositeLine: Int32, position: GridPosition,
   side: GridPositionSide
 ) -> GridSpan {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+
+private func resolveGridPositionAgainstOppositePosition(
+  gridContainer: RenderGridWrapper, oppositeLine: Int32, position: GridPosition,
+  side: GridPositionSide
+) -> GridSpan {
+  if position.isAuto() {
+    if isStartSide(side: side) {
+      return GridSpan.untranslatedDefiniteGridSpan(
+        startLine: oppositeLine - 1, endLine: oppositeLine)
+    }
+    return GridSpan.untranslatedDefiniteGridSpan(startLine: oppositeLine, endLine: oppositeLine + 1)
+  }
+
+  assert(position.isSpan())
+  assert(position.spanPosition() > 0)
+
+  if !position.namedGridLine().isNull() {
+    // span 2 'c' -> we need to find the appropriate grid line before / after our opposite position.
+    return resolveNamedGridLinePositionAgainstOppositePosition(
+      gridContainer: gridContainer, oppositeLine: oppositeLine, position: position, side: side)
+  }
+
+  // 'span 1' is contained inside a single grid track regardless of the direction.
+  // That's why the CSS span value is one more than the offset we apply.
+  let positionOffset = position.spanPosition()
+  if isStartSide(side: side) {
+    return GridSpan.untranslatedDefiniteGridSpan(
+      startLine: oppositeLine - positionOffset, endLine: oppositeLine)
+  }
+
+  return GridSpan.untranslatedDefiniteGridSpan(
+    startLine: oppositeLine, endLine: oppositeLine + positionOffset)
 }
 
 private func resolveGridPositionFromStyle(
