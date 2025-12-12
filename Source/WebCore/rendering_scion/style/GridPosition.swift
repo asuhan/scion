@@ -44,6 +44,8 @@ enum GridPositionSide {
 }
 
 struct GridPosition {
+  func isPositive() -> Bool { return integerPosition() > 0 }
+
   func isAuto() -> Bool { return type == .AutoPosition }
 
   func isSpan() -> Bool { return type == .SpanPosition }
@@ -61,6 +63,11 @@ struct GridPosition {
     fatalError("Not implemented")
   }
 
+  func integerPosition() -> Int32 {
+    assert(type == .ExplicitPosition)
+    return m_integerPosition
+  }
+
   func namedGridLine() -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -68,7 +75,7 @@ struct GridPosition {
 
   func spanPosition() -> Int32 {
     assert(type == .SpanPosition)
-    return integerPosition
+    return m_integerPosition
   }
 
   func shouldBeResolvedAgainstOppositePosition() -> Bool { return isAuto() || isSpan() }
@@ -85,6 +92,6 @@ struct GridPosition {
     fatalError("Not implemented")
   }
 
-  private let type: GridPositionType = .AutoPosition
-  private let integerPosition: Int32 = 0
+  let type: GridPositionType = .AutoPosition
+  private let m_integerPosition: Int32 = 0
 }

@@ -63,6 +63,11 @@ class NamedLineCollection: NamedLineCollectionBase {
     fatalError("Not implemented")
   }
 
+  func firstPosition() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lastLine() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -71,6 +76,13 @@ class NamedLineCollection: NamedLineCollectionBase {
 
 private func isStartSide(side: GridPositionSide) -> Bool {
   return side == .ColumnStartSide || side == .RowStartSide
+}
+
+private func explicitGridSizeForSide(gridContainer: RenderGridWrapper, side: GridPositionSide)
+  -> UInt32
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 // https://drafts.csswg.org/css-grid-2/#indefinite-grid-span
@@ -180,6 +192,13 @@ private func lookBackForNamedGridLine(
   return start + 1
 }
 
+private func resolveNamedGridLinePositionFromStyle(
+  gridContainer: RenderGridWrapper, position: GridPosition, side: GridPositionSide
+) -> Int32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func definiteGridSpanWithNamedLineSpanAgainstOpposite(
   oppositeLine: Int32, position: GridPosition, side: GridPositionSide,
   linesCollection: NamedLineCollection
@@ -252,8 +271,50 @@ private func resolveGridPositionAgainstOppositePosition(
 private func resolveGridPositionFromStyle(
   gridContainer: RenderGridWrapper, position: GridPosition, side: GridPositionSide
 ) -> Int32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch position.type {
+  case .ExplicitPosition:
+    assert(position.integerPosition() != 0)
+
+    if !position.namedGridLine().isNull() {
+      return resolveNamedGridLinePositionFromStyle(
+        gridContainer: gridContainer, position: position, side: side)
+    }
+
+    // Handle <integer> explicit position.
+    if position.isPositive() {
+      return position.integerPosition() - 1
+    }
+
+    let resolvedPosition = abs(position.integerPosition()) - 1
+    let endOfTrack = explicitGridSizeForSide(gridContainer: gridContainer, side: side)
+
+    return Int32(endOfTrack) - resolvedPosition
+  case .NamedGridAreaPosition:
+    // First attempt to match the grid area's edge to a named grid area: if there is a named line with the name
+    // ''<custom-ident>-start (for grid-*-start) / <custom-ident>-end'' (for grid-*-end), contributes the first such
+    // line to the grid item's placement.
+    let namedGridLine = position.namedGridLine()
+    assert(!position.namedGridLine().isNull())
+
+    let implicitLines = NamedLineCollection(
+      initialGrid: gridContainer, name: namedGridLine, side: side, nameIsAreaName: true)
+    if implicitLines.hasNamedLines() {
+      return implicitLines.firstPosition()
+    }
+
+    // Otherwise, if there is a named line with the specified name, contributes the first such line to the grid
+    // item's placement.
+    let explicitLines = NamedLineCollection(
+      initialGrid: gridContainer, name: namedGridLine, side: side)
+    if explicitLines.hasNamedLines() {
+      return explicitLines.firstPosition()
+    }
+
+    // If none of the above works specs mandate to assume that all the lines in the implicit grid have this name.
+    return Int32(explicitGridSizeForSide(gridContainer: gridContainer, side: side) + 1)
+  case .AutoPosition, .SpanPosition:
+    fatalError("Not reached")
+  }
 }
 
 // Class with all the code related to grid items positions resolution.
