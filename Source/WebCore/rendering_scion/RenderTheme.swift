@@ -18,6 +18,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func effectiveRendererForAppearance(renderObject: RenderObjectWrapper)
+  -> RenderObjectWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 struct RenderTheme {
   // This function is to be implemented in platform-specific theme implementations to hand back the
   // appropriate platform theme.
@@ -237,6 +244,8 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func supportsLargeFormControls() -> Bool { return false }
+
   // Text selection colors.
   func activeSelectionBackgroundColor(options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this
@@ -302,8 +311,10 @@ struct RenderTheme {
   private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
     -> ControlStyle.State
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderer = effectiveRendererForAppearance(renderObject: renderObject) {
+      return extractControlStyleStatesForRendererInternal(renderer: renderer)
+    }
+    return []
   }
 
   private func extractControlStyleForRenderer(renderObject: RenderObjectWrapper) -> ControlStyle {
@@ -490,6 +501,124 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  private func extractControlStyleStatesForRendererInternal(renderer: RenderObjectWrapper)
+    -> ControlStyle.State
+  {
+    var states = ControlStyle.State()
+    if isHovered(renderer: renderer) {
+      states.update(with: .Hovered)
+      if isSpinUpButtonPartHovered(renderer: renderer) {
+        states.update(with: .SpinUp)
+      }
+    }
+    if isPressed(renderer: renderer) {
+      states.update(with: .Pressed)
+      if isSpinUpButtonPartPressed(renderer: renderer) {
+        states.update(with: .SpinUp)
+      }
+    }
+    if isFocused(renderer: renderer) && renderer.style().outlineStyleIsAuto() == .On {
+      states.update(with: .Focused)
+    }
+    if isEnabled(renderer: renderer) {
+      states.update(with: .Enabled)
+    }
+    if isChecked(renderer: renderer) {
+      states.update(with: .Checked)
+    }
+    if isDefault(o: renderer) {
+      states.update(with: .Default)
+    }
+    if isWindowActive(renderer: renderer) {
+      states.update(with: .WindowActive)
+    }
+    if isIndeterminate(renderer: renderer) {
+      states.update(with: .Indeterminate)
+    }
+    if isPresenting(renderer: renderer) {
+      states.update(with: .Presenting)
+    }
+    if useFormSemanticContext {
+      states.update(with: .FormSemanticContext)
+    }
+    if renderer.useDarkAppearance() {
+      states.update(with: .DarkAppearance)
+    }
+    if !renderer.style().isLeftToRightDirection() {
+      states.update(with: .RightToLeft)
+    }
+    if supportsLargeFormControls() {
+      states.update(with: .LargeControls)
+    }
+    if isReadOnlyControl(renderer: renderer) {
+      states.update(with: .ReadOnly)
+    }
+    if !renderer.style().isHorizontalWritingMode() {
+      states.update(with: .VerticalWritingMode)
+    }
+    return states
+  }
+
+  private func isWindowActive(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isChecked(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isIndeterminate(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isEnabled(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isFocused(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isPressed(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isSpinUpButtonPartPressed(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isHovered(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isSpinUpButtonPartHovered(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isPresenting(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isReadOnlyControl(renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isDefault(o: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func autocorrectionReplacementMarkerColor(renderer: RenderTextWrapper) -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -509,4 +638,6 @@ struct RenderTheme {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let useFormSemanticContext = false
 }

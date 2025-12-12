@@ -236,6 +236,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func useDarkAppearance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // RenderObject tree manipulation
   //////////////////////////////////////////
   func canHaveChildren() -> Bool {
