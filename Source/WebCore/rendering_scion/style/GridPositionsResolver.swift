@@ -144,8 +144,15 @@ class NamedLineCollectionBase {
   }
 
   func hasNamedLines() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasExplicitNamedLines()
+      || (implicitNamedLinesIndices != nil && !implicitNamedLinesIndices!.isEmpty)
+  }
+
+  func hasExplicitNamedLines() -> Bool {
+    if namedLinesIndices != nil {
+      return true
+    }
+    return autoRepeatNamedLinesIndices != nil && (!isSubgrid || autoRepeatLines != 0)
   }
 
   func contains(line: UInt32) -> Bool {
