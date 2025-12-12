@@ -262,6 +262,14 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func drawControlPart(
+    part: ControlPartWrapper, borderRect: FloatRoundedRect, deviceScaleFactor: Float32,
+    style: ControlStyle
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clip(rect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

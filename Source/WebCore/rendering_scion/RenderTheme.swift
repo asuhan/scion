@@ -26,6 +26,12 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  private func updateControlPartForRenderer(part: ControlPartWrapper, renderer: RenderObjectWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These methods are called to paint the widget as a background of the RenderObject. A widget's foreground, e.g., the
   // text of a button, is always rendered by the engine itself. The boolean return value indicates
   // whether the CSS border/background should also be painted.
@@ -34,8 +40,35 @@ struct RenderTheme {
     box: RenderBoxWrapper, part: ControlPartWrapper, paintInfo: PaintInfoWrapper,
     rect: LayoutRectWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If painting is disabled, but we aren't updating control tints, then just bail.
+    // If we are updating control tints, just schedule a repaint if the theme supports tinting
+    // for that control.
+    if paintInfo.context().invalidatingControlTints() {
+      if controlSupportsTints(o: box) {
+        box.repaint()
+      }
+      return false
+    }
+
+    if paintInfo.context().paintingDisabled() {
+      return false
+    }
+
+    updateControlPartForRenderer(part: part, renderer: box)
+
+    let deviceScaleFactor = box.document().deviceScaleFactor()
+    let zoomedRect = snapRectToDevicePixels(rect: rect, pixelSnappingFactor: deviceScaleFactor)
+    let borderShape = BorderShape.shapeForBorderRect(
+      style: box.style(), borderRect: LayoutRectWrapper(r: zoomedRect))
+    let controlStyle = extractControlStyleForRenderer(renderObject: box)
+    let context = paintInfo.context()
+
+    context.drawControlPart(
+      part: part,
+      borderRect: borderShape.deprecatedPixelSnappedRoundedRect(
+        deviceScaleFactor: deviceScaleFactor),
+      deviceScaleFactor: deviceScaleFactor, style: controlStyle)
+    return false
   }
 
   @discardableResult
@@ -264,6 +297,18 @@ struct RenderTheme {
     case .Grammar:
       return grammarMarkerColor(options: options)
     }
+  }
+
+  private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
+    -> ControlStyle.State
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func extractControlStyleForRenderer(renderObject: RenderObjectWrapper) -> ControlStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func canPaint(paintInfo: PaintInfoWrapper, settings: SettingsWrapper, appearance: StyleAppearance)
