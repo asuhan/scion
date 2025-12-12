@@ -74,6 +74,10 @@ class NamedLineCollection: NamedLineCollectionBase {
   }
 }
 
+private func isColumnSide(side: GridPositionSide) -> Bool {
+  return side == .ColumnStartSide || side == .ColumnEndSide
+}
+
 private func isStartSide(side: GridPositionSide) -> Bool {
   return side == .ColumnStartSide || side == .RowStartSide
 }
@@ -81,8 +85,9 @@ private func isStartSide(side: GridPositionSide) -> Bool {
 private func explicitGridSizeForSide(gridContainer: RenderGridWrapper, side: GridPositionSide)
   -> UInt32
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return isColumnSide(side: side)
+    ? GridPositionsResolver.explicitGridColumnCount(gridContainer: gridContainer)
+    : GridPositionsResolver.explicitGridRowCount(gridContainer: gridContainer)
 }
 
 // https://drafts.csswg.org/css-grid-2/#indefinite-grid-span
