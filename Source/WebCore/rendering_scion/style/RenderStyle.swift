@@ -794,6 +794,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func namedGridAreaRowCount() -> UInt64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func namedGridAreaColumnCount() -> UInt64 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

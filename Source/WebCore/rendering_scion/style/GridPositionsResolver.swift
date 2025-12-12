@@ -430,7 +430,16 @@ class GridPositionsResolver {
   }
 
   static func explicitGridRowCount(gridContainer: RenderGridWrapper) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if gridContainer.isSubgridRows() {
+      let parent = gridContainer.parent() as! RenderGridWrapper
+      let direction = GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: parent, gridItem: gridContainer, direction: .ForRows)
+      return parent.gridSpanForGridItem(gridItem: gridContainer, direction: direction).integerSpan()
+    }
+    return min(
+      max(
+        UInt32(gridContainer.style().gridRowTrackSizes().count)
+          + gridContainer.autoRepeatCountForDirection(direction: .ForRows),
+        UInt32(gridContainer.style().namedGridAreaRowCount())), UInt32(GridPosition.max()))
   }
 }
