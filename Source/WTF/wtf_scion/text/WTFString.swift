@@ -24,7 +24,7 @@ import wk_interop
 typealias UChar = UInt16
 typealias LChar = UInt8
 
-class StringWrapper: Equatable {
+class StringWrapper: Hashable {
   init(p: UnsafeRawPointer? = nil) {
     self.p = p ?? wk_interop.String_new()
   }
@@ -79,6 +79,16 @@ class StringWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func find(literal: String) -> UInt64? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func left(length: UInt64) -> StringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func characterStartingAt(i: UInt32) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -87,6 +97,14 @@ class StringWrapper: Equatable {
   func convertTo16Bit() {
     if self.p != nil {
       return wk_interop.String_convertTo16Bit(self.p)
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hash(into hasher: inout Hasher) {
+    if self.p != nil {
+      hasher.combine(wk_interop.String_hash(self.p))
     }
     // TODO(asuhan): implement this
     fatalError("Not implemented")

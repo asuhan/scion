@@ -23,6 +23,9 @@
  *
  */
 
+typealias NamedGridLinesMap = [StringWrapper: [UInt32]]
+
+// TODO(asuhan): make it ordered
 typealias OrderedNamedGridLinesMap = [UInt32: [StringWrapper]]
 
 struct MasonryAutoFlow {

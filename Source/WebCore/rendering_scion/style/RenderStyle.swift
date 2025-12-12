@@ -1402,12 +1402,52 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func namedGridColumnLines() -> NamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func namedGridRowLines() -> NamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func orderedNamedGridColumnLines() -> OrderedNamedGridLinesMap {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func orderedNamedGridRowLines() -> OrderedNamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatNamedGridColumnLines() -> NamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatNamedGridRowLines() -> NamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatOrderedNamedGridColumnLines() -> OrderedNamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoRepeatOrderedNamedGridRowLines() -> OrderedNamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func implicitNamedGridColumnLines() -> NamedGridLinesMap {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func implicitNamedGridRowLines() -> NamedGridLinesMap {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

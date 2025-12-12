@@ -276,6 +276,11 @@ extern "C" WEBCORE_EXPORT void String_convertTo16Bit(const void* p)
     static_cast<String*>(const_cast<void*>(p))->convertTo16Bit();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t String_hash(const void* p)
+{
+    return static_cast<String*>(const_cast<void*>(p))->hash();
+}
+
 extern "C" WEBCORE_EXPORT bool StringView_is8Bit(const void* p)
 {
     return static_cast<const StringView*>(p)->is8Bit();

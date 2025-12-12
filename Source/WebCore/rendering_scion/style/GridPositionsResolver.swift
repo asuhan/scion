@@ -38,8 +38,105 @@ class NamedLineCollectionBase {
     initialGrid: RenderGridWrapper, name: StringWrapper, side: GridPositionSide,
     nameIsAreaName: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let lineName = nameIsAreaName ? implicitNamedGridLineForSide(lineName: name, side: side) : name
+    let direction = directionFromSide(side: side)
+    let gridContainerStyle = initialGrid.style()
+    let isRowAxis = direction == .ForColumns
+
+    lastLine = explicitGridSizeForSide(gridContainer: initialGrid, side: side)
+
+    let gridLineNames =
+      isRowAxis ? gridContainerStyle.namedGridColumnLines() : gridContainerStyle.namedGridRowLines()
+    let autoRepeatGridLineNames =
+      isRowAxis
+      ? gridContainerStyle.autoRepeatNamedGridColumnLines()
+      : gridContainerStyle.autoRepeatNamedGridRowLines()
+    let implicitGridLineNames =
+      isRowAxis
+      ? gridContainerStyle.implicitNamedGridColumnLines()
+      : gridContainerStyle.implicitNamedGridRowLines()
+
+    self.namedLinesIndices = gridLineNames[lineName]
+    self.autoRepeatNamedLinesIndices = autoRepeatGridLineNames[lineName]
+    self.implicitNamedLinesIndices = implicitGridLineNames[lineName]
+    self.isSubgrid = initialGrid.isSubgrid(direction: direction)
+
+    self.autoRepeatTotalTracks = initialGrid.autoRepeatCountForDirection(direction: direction)
+    self.autoRepeatTrackListLength = UInt32(
+      isRowAxis
+        ? gridContainerStyle.gridAutoRepeatColumns().count
+        : gridContainerStyle.gridAutoRepeatRows().count)
+    self.autoRepeatLines = 0
+    self.insertionPoint =
+      isRowAxis
+      ? gridContainerStyle.gridAutoRepeatColumnsInsertionPoint()
+      : gridContainerStyle.gridAutoRepeatRowsInsertionPoint()
+
+    if !isSubgrid {
+      if isRowAxis ? gridContainerStyle.gridSubgridColumns() : gridContainerStyle.gridSubgridRows()
+      {
+        // If subgrid was specified, but the grid wasn't able to actually become a subgrid, the used
+        // value of the style should be the initial 'none' value.
+        self.namedLinesIndices = nil
+        self.autoRepeatNamedLinesIndices = nil
+      }
+      return
+    }
+
+    if self.implicitNamedLinesIndices == nil {
+      // The implicit lines list was created based on the areas specified for the grid areas property, but the
+      // subgrid might have inherited fewer tracks than needed to cover the specified area. We want to clamp
+      // the specified area down to explicit grid we actually have, and then generate implicit -start/-end
+      // lines for the new area.
+      assert(self.implicitNamedLinesIndices!.count == 1)
+      self.implicitNamedLinesIndices = inheritedNamedLinesIndices
+
+      // Find the area name that creates the implicit line we're looking for. If the input was an area name,
+      // then we can use that, otherwise we need to choose the substring and infer which side the input specified.
+      // It's possible for authors to manually name a *-start implicit line name for the end line search, and vice-versa,
+      // so we need to remember which side we inferred from the name, separately from the side we're searching for.
+      var areaName = name
+      var startSide = isStartSide(side: side)
+      if !nameIsAreaName {
+        var suffix = name.find(literal: "-start")
+        if suffix != nil {
+          suffix = name.find(literal: "-end")
+          assert(suffix != nil)
+          startSide = false
+        } else {
+          startSide = true
+        }
+        areaName = name.left(length: suffix!)
+      }
+      if let implicitLine = clampedImplicitLineForArea(
+        style: gridContainerStyle, name: areaName, min: 0, max: Int32(self.lastLine),
+        isRowAxis: isRowAxis,
+        isStartSide: startSide)
+      {
+        self.inheritedNamedLinesIndices.append(UInt32(implicitLine))
+      }
+    }
+
+    assert(self.autoRepeatTotalTracks == 0)
+    self.autoRepeatTrackListLength =
+      UInt32(
+        (isRowAxis
+          ? gridContainerStyle.autoRepeatOrderedNamedGridColumnLines()
+          : gridContainerStyle.autoRepeatOrderedNamedGridRowLines()).count)
+    if self.autoRepeatTrackListLength != 0 {
+      let namedLines =
+        UInt32(
+          (isRowAxis
+            ? gridContainerStyle.orderedNamedGridColumnLines()
+            : gridContainerStyle.orderedNamedGridRowLines()).count)
+      let totalLines = self.lastLine + 1
+      if namedLines < totalLines {
+        // auto repeat in a subgrid specifies the line names that should be repeated, not
+        // the tracks.
+        self.autoRepeatLines = (totalLines - namedLines) / self.autoRepeatTrackListLength
+        self.autoRepeatLines *= self.autoRepeatTrackListLength
+      }
+    }
   }
 
   func hasNamedLines() -> Bool {
@@ -51,6 +148,19 @@ class NamedLineCollectionBase {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var namedLinesIndices: [UInt32]? = nil
+  private var autoRepeatNamedLinesIndices: [UInt32]? = nil
+  private var implicitNamedLinesIndices: [UInt32]? = nil
+
+  private var inheritedNamedLinesIndices: [UInt32] = []
+
+  private var insertionPoint: UInt32 = 0
+  private var lastLine: UInt32 = 0
+  private var autoRepeatTotalTracks: UInt32 = 0
+  private var autoRepeatLines: UInt32 = 0
+  private var autoRepeatTrackListLength: UInt32 = 0
+  private var isSubgrid = false
 }
 
 class NamedLineCollection: NamedLineCollectionBase {
@@ -82,12 +192,31 @@ private func isStartSide(side: GridPositionSide) -> Bool {
   return side == .ColumnStartSide || side == .RowStartSide
 }
 
+private func directionFromSide(side: GridPositionSide) -> GridTrackSizingDirection {
+  return side == .ColumnStartSide || side == .ColumnEndSide ? .ForColumns : .ForRows
+}
+
+private func implicitNamedGridLineForSide(lineName: StringWrapper, side: GridPositionSide)
+  -> StringWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func explicitGridSizeForSide(gridContainer: RenderGridWrapper, side: GridPositionSide)
   -> UInt32
 {
   return isColumnSide(side: side)
     ? GridPositionsResolver.explicitGridColumnCount(gridContainer: gridContainer)
     : GridPositionsResolver.explicitGridRowCount(gridContainer: gridContainer)
+}
+
+private func clampedImplicitLineForArea(
+  style: RenderStyleWrapper, name: StringWrapper, min: Int32, max: Int32, isRowAxis: Bool,
+  isStartSide: Bool
+) -> Int32? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 // https://drafts.csswg.org/css-grid-2/#indefinite-grid-span
