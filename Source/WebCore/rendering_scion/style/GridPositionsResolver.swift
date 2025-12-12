@@ -41,6 +41,16 @@ class NamedLineCollectionBase {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasNamedLines() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func contains(line: UInt32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 class NamedLineCollection: NamedLineCollectionBase {
@@ -49,6 +59,11 @@ class NamedLineCollection: NamedLineCollectionBase {
     nameIsAreaName: Bool = false
   ) {
     super.init(initialGrid: initialGrid, name: name, side: side, nameIsAreaName: nameIsAreaName)
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastLine() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -119,8 +134,26 @@ private func adjustGridPositionsFromStyle(
 private func lookAheadForNamedGridLine(
   start: Int32, numberOfLines: UInt32, linesCollection: NamedLineCollection
 ) -> Int32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(numberOfLines != 0)
+
+  // Only implicit lines on the search direction are assumed to have the given name, so we can start to look from first line.
+  // See: https://drafts.csswg.org/css-grid/#grid-placement-span-int
+  var end = max(start, 0)
+
+  if !linesCollection.hasNamedLines() {
+    return Int32(max(UInt32(end), linesCollection.lastLine() + 1) + numberOfLines - 1)
+  }
+
+  var numberOfLines = numberOfLines
+  while numberOfLines != 0 {
+    if end > linesCollection.lastLine() || linesCollection.contains(line: UInt32(end)) {
+      numberOfLines -= 1
+    }
+    end += 1
+  }
+
+  assert(end != 0)
+  return end - 1
 }
 
 private func lookBackForNamedGridLine(
