@@ -159,8 +159,25 @@ private func lookAheadForNamedGridLine(
 private func lookBackForNamedGridLine(
   end: Int32, numberOfLines: UInt32, linesCollection: NamedLineCollection
 ) -> Int32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(numberOfLines != 0)
+
+  // Only implicit lines on the search direction are assumed to have the given name, so we can start to look from last line.
+  // See: https://drafts.csswg.org/css-grid/#grid-placement-span-int
+  var start = min(end, Int32(linesCollection.lastLine()))
+
+  if !linesCollection.hasNamedLines() {
+    return min(start, -1) - Int32(numberOfLines) + 1
+  }
+
+  var numberOfLines = numberOfLines
+  while numberOfLines != 0 {
+    if start < 0 || linesCollection.contains(line: UInt32(start)) {
+      numberOfLines -= 1
+    }
+    start -= 1
+  }
+
+  return start + 1
 }
 
 private func definiteGridSpanWithNamedLineSpanAgainstOpposite(
