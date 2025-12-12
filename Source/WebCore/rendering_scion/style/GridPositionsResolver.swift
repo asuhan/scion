@@ -33,6 +33,27 @@ enum GridTrackSizingDirection {
   case ForRows
 }
 
+class NamedLineCollectionBase {
+  init(
+    initialGrid: RenderGridWrapper, name: StringWrapper, side: GridPositionSide,
+    nameIsAreaName: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+class NamedLineCollection: NamedLineCollectionBase {
+  override init(
+    initialGrid: RenderGridWrapper, name: StringWrapper, side: GridPositionSide,
+    nameIsAreaName: Bool = false
+  ) {
+    super.init(initialGrid: initialGrid, name: name, side: side, nameIsAreaName: nameIsAreaName)
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 private func isStartSide(side: GridPositionSide) -> Bool {
   return side == .ColumnStartSide || side == .RowStartSide
 }
@@ -95,12 +116,27 @@ private func adjustGridPositionsFromStyle(
   return (initialPosition, finalPosition)
 }
 
+private func definiteGridSpanWithNamedLineSpanAgainstOpposite(
+  oppositeLine: Int32, position: GridPosition, side: GridPositionSide,
+  linesCollection: NamedLineCollection
+) -> GridSpan {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func resolveNamedGridLinePositionAgainstOppositePosition(
   gridContainer: RenderGridWrapper, oppositeLine: Int32, position: GridPosition,
   side: GridPositionSide
 ) -> GridSpan {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(position.isSpan())
+  assert(!position.namedGridLine().isNull())
+  // Negative positions are not allowed per the specification and should have been handled during parsing.
+  assert(position.spanPosition() > 0)
+
+  let linesCollection = NamedLineCollection(
+    initialGrid: gridContainer, name: position.namedGridLine(), side: side)
+  return definiteGridSpanWithNamedLineSpanAgainstOpposite(
+    oppositeLine: oppositeLine, position: position, side: side, linesCollection: linesCollection)
 }
 
 private func resolveGridPositionAgainstOppositePosition(
