@@ -56,8 +56,18 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
 
   @discardableResult
   private func scrollToRevealElementAtListIndex(index: Int32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if index < 0 || index >= numItems() || listIndexIsVisible(index: index) {
+      return false
+    }
+
+    var newOffset = index < indexOffset() ? index : index - numVisibleItems() + 1
+
+    if style().isFlippedBlocksWritingMode() {
+      newOffset *= -1
+    }
+
+    scrollToPosition(positionIndex: newOffset)
+    return true
   }
 
   private func listIndexIsVisible(index: Int32) -> Bool {
@@ -185,6 +195,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func scrollToPosition(positionIndex: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func numberOfVisibleItemsInPaddingBefore() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -231,6 +246,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     {
       scrollToRevealElementAtListIndex(index: firstIndex)
     }
+  }
+
+  private func indexOffset() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private var scrollToRevealSelectionAfterLayout = false
