@@ -174,6 +174,16 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func numberOfVisibleItemsInPaddingBefore() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func numberOfVisibleItemsInPaddingAfter() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func itemLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -185,8 +195,16 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func numVisibleItems(considerPadding: ConsiderPadding = .No) -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Only count fully visible rows. But don't return 0 even if only part of a row shows.
+    let visibleItemsExcludingPadding = max(
+      LayoutUnit(value: 1), (contentLogicalHeight() + itemBlockSpacing) / itemLogicalHeight()
+    ).int()
+    if considerPadding == .No {
+      return visibleItemsExcludingPadding
+    }
+
+    return numberOfVisibleItemsInPaddingBefore() + visibleItemsExcludingPadding
+      + numberOfVisibleItemsInPaddingAfter()
   }
 
   private func numItems() -> Int32 {
