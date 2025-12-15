@@ -536,6 +536,11 @@ enum EmptyCell: UInt8 {
   case Hide
 }
 
+enum CaptionSide: UInt8 {
+  case Top
+  case Bottom
+}
+
 enum Visibility: UInt8 {
   case Visible
   case Hidden

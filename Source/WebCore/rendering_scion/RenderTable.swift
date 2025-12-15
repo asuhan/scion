@@ -534,8 +534,25 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for caption in captions {
+      let captionLogicalHeight =
+        caption!.logicalHeight() + caption!.marginBefore() + caption!.marginAfter()
+      let captionIsBefore =
+        (caption!.style().captionSide() != .Bottom) != style().isFlippedBlocksWritingMode()
+      if style().isHorizontalWritingMode() {
+        paintRect.setHeight(height: paintRect.height() - captionLogicalHeight)
+        if captionIsBefore {
+          paintRect.move(dx: LayoutUnit(value: UInt64(0)), dy: captionLogicalHeight)
+        }
+      } else {
+        paintRect.setWidth(width: paintRect.width() - captionLogicalHeight)
+        if captionIsBefore {
+          paintRect.move(dx: captionLogicalHeight, dy: LayoutUnit(value: UInt64(0)))
+        }
+      }
+    }
+
+    super.adjustBorderBoxRectForPainting(paintRect: &paintRect)
   }
 
   private func recalcCollapsedBorders() {
