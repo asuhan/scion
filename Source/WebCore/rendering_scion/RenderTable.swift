@@ -94,6 +94,16 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func outerBorderLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outerBorderRight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func outerBorderTop() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -142,6 +152,14 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func sectionAbove(
+    section: RenderTableSectionWrapper?,
+    skipEmptySections: SkipEmptySectionsValue = .DoNotSkipEmptySections
+  ) -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func sectionBelow(
     section: RenderTableSectionWrapper?,
     skipEmptySections: SkipEmptySectionsValue = .DoNotSkipEmptySections
   ) -> RenderTableSectionWrapper? {
@@ -482,8 +500,37 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func addOverflowFromChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Add overflow from borders.
+    // Technically it's odd that we are incorporating the borders into layout overflow, which is only supposed to be about overflow from our
+    // descendant objects, but since tables don't support overflow:auto, this works out fine.
+    if collapseBorders() {
+      let rightBorderOverflow = width() + outerBorderRight() - borderRight()
+      let leftBorderOverflow = borderLeft() - outerBorderLeft()
+      let bottomBorderOverflow = height() + outerBorderBottom() - borderBottom()
+      let topBorderOverflow = borderTop() - outerBorderTop()
+      let borderOverflowRect = LayoutRectWrapper(
+        x: leftBorderOverflow, y: topBorderOverflow,
+        width: rightBorderOverflow - leftBorderOverflow,
+        height: bottomBorderOverflow - topBorderOverflow)
+      if borderOverflowRect != borderBoxRect() {
+        addLayoutOverflow(rect: borderOverflowRect)
+        addVisualOverflow(rect: borderOverflowRect)
+      }
+    }
+
+    // Add overflow from our caption.
+    for caption in captions {
+      if caption != nil {
+        addOverflowFromChild(child: caption!)
+      }
+    }
+
+    // Add overflow from our sections.
+    var section = topSection()
+    while section != nil {
+      addOverflowFromChild(child: section!)
+      section = sectionBelow(section: section)
+    }
   }
 
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
@@ -498,6 +545,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private let columnPos: [LayoutUnit] = []
   let columns: [ColumnStruct] = []
+  private let captions: [RenderTableCaptionWrapper?] = []
 
   private let tableLayout: TableLayout? = nil
 
