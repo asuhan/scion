@@ -131,6 +131,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func bordersPaddingAndSpacingInRowDirection() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func colElement(col: UInt32) -> RenderTableColWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -147,6 +152,11 @@ class RenderTableWrapper: RenderBlockWrapper {
   typealias CollapsedBorderValues = [CollapsedBorderValue]
 
   func currentBorderValue() -> CollapsedBorderValue? { return currentBorder }
+
+  private func recalcSectionsIfNeeded() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   static func createAnonymousWithParentRenderer(parent: RenderElementWrapper) -> RenderTableWrapper
   {
@@ -338,6 +348,135 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func updateLogicalWidth() {
+    recalcSectionsIfNeeded()
+
+    if isGridItem() {
+      // FIXME: Investigate whether the grid layout algorithm provides all the logic
+      // needed and that we're not skipping anything essential due to the early return here.
+      super.updateLogicalWidth()
+      return
+    }
+
+    if isOutOfFlowPositioned() {
+      var computedValues = LogicalExtentComputedValues()
+      computePositionedLogicalWidth(computedValues: &computedValues)
+      setLogicalWidth(size: computedValues.extent)
+      setLogicalLeft(left: computedValues.position)
+      setMarginStart(value: computedValues.margins.start)
+      setMarginEnd(value: computedValues.margins.end)
+    }
+
+    let cb = containingBlock()!
+
+    let availableLogicalWidth = containingBlockLogicalWidthForContent()
+    let hasPerpendicularContainingBlock =
+      cb.style().isHorizontalWritingMode() != style().isHorizontalWritingMode()
+    let containerWidthInInlineDirection =
+      hasPerpendicularContainingBlock
+      ? perpendicularContainingBlockLogicalHeight() : availableLogicalWidth
+
+    let styleLogicalWidth = style().logicalWidth()
+    if let overridingLogicalWidth = overridingLogicalWidth() {
+      setLogicalWidth(size: overridingLogicalWidth)
+    } else if (styleLogicalWidth.isSpecified() && styleLogicalWidth.isPositive())
+      || styleLogicalWidth.isIntrinsic()
+    {
+      setLogicalWidth(
+        size: convertStyleLogicalWidthToComputedWidth(
+          styleLogicalWidth: styleLogicalWidth, availableWidth: containerWidthInInlineDirection))
+    } else {
+      // Subtract out any fixed margins from our available width for auto width tables.
+      let marginStart = minimumValueForLength(
+        length: style().marginStart(), maximumValue: availableLogicalWidth)
+      let marginEnd = minimumValueForLength(
+        length: style().marginEnd(), maximumValue: availableLogicalWidth)
+      let marginTotal = marginStart + marginEnd
+
+      // Subtract out our margins to get the available content width.
+      var availableContentLogicalWidth = max(
+        LayoutUnit(value: 0), containerWidthInInlineDirection - marginTotal)
+      if shrinkToAvoidFloats() && cb.containsFloats() && !hasPerpendicularContainingBlock {
+        // FIXME: Work with regions someday.
+        availableContentLogicalWidth = shrinkLogicalWidthToAvoidFloats(
+          childMarginStart: marginStart, childMarginEnd: marginEnd, cb: cb, fragment: nil)
+      }
+
+      // Ensure we aren't bigger than our available width.
+      setLogicalWidth(size: min(availableContentLogicalWidth, maxPreferredLogicalWidth()))
+      var maxWidth = maxPreferredLogicalWidth()
+      // scaledWidthFromPercentColumns depends on m_layoutStruct in TableLayoutAlgorithmAuto, which
+      // maxPreferredLogicalWidth fills in. So scaledWidthFromPercentColumns has to be called after
+      // maxPreferredLogicalWidth.
+      let scaledWidth =
+        tableLayout!.scaledWidthFromPercentColumns() + bordersPaddingAndSpacingInRowDirection()
+      maxWidth = max(scaledWidth, maxWidth)
+      setLogicalWidth(size: min(availableContentLogicalWidth, maxWidth))
+    }
+
+    // Ensure we aren't bigger than our max-width style.
+    let styleMaxLogicalWidth = style().logicalMaxWidth()
+    if (styleMaxLogicalWidth.isSpecified() && !styleMaxLogicalWidth.isNegative())
+      || styleMaxLogicalWidth.isIntrinsic()
+    {
+      let computedMaxLogicalWidth = convertStyleLogicalWidthToComputedWidth(
+        styleLogicalWidth: styleMaxLogicalWidth, availableWidth: availableLogicalWidth)
+      setLogicalWidth(size: min(logicalWidth(), computedMaxLogicalWidth))
+    }
+
+    // Ensure we aren't smaller than our min preferred width.
+    setLogicalWidth(size: max(logicalWidth(), minPreferredLogicalWidth()))
+
+    // Ensure we aren't smaller than our min-width style.
+    let styleMinLogicalWidth = style().logicalMinWidth()
+    if (styleMinLogicalWidth.isSpecified() && !styleMinLogicalWidth.isNegative())
+      || styleMinLogicalWidth.isIntrinsic()
+    {
+      let computedMinLogicalWidth = convertStyleLogicalWidthToComputedWidth(
+        styleLogicalWidth: styleMinLogicalWidth, availableWidth: availableLogicalWidth)
+      setLogicalWidth(size: max(logicalWidth(), computedMinLogicalWidth))
+    }
+
+    // Finally, with our true width determined, compute our margins for real.
+    setMarginStart(value: LayoutUnit(value: 0))
+    setMarginEnd(value: LayoutUnit(value: 0))
+    if !hasPerpendicularContainingBlock {
+      var containerLogicalWidthForAutoMargins = availableLogicalWidth
+      if avoidsFloats() && cb.containsFloats() {
+        containerLogicalWidthForAutoMargins = containingBlockAvailableLineWidthInFragment(
+          fragment: nil)  // FIXME: Work with regions someday.
+      }
+      var marginValues = ComputedMarginValues()
+      let hasInvertedDirection =
+        cb.style().isLeftToRightDirection() == style().isLeftToRightDirection()
+      if hasInvertedDirection {
+        computeInlineDirectionMargins(
+          containingBlock: cb, containerWidth: availableLogicalWidth,
+          availableSpaceAdjustedWithFloats: containerLogicalWidthForAutoMargins,
+          childWidth: logicalWidth(),
+          marginStart: &marginValues.start, marginEnd: &marginValues.end)
+      } else {
+        computeInlineDirectionMargins(
+          containingBlock: cb, containerWidth: availableLogicalWidth,
+          availableSpaceAdjustedWithFloats: containerLogicalWidthForAutoMargins,
+          childWidth: logicalWidth(),
+          marginStart: &marginValues.end, marginEnd: &marginValues.start)
+      }
+      setMarginStart(value: marginValues.start)
+      setMarginEnd(value: marginValues.end)
+    } else {
+      setMarginStart(
+        value: minimumValueForLength(
+          length: style().marginStart(), maximumValue: availableLogicalWidth))
+      setMarginEnd(
+        value: minimumValueForLength(
+          length: style().marginEnd(), maximumValue: availableLogicalWidth))
+    }
+  }
+
+  // This method takes a RenderStyle's logical width, min-width, or max-width length and computes its actual value.
+  private func convertStyleLogicalWidthToComputedWidth(
+    styleLogicalWidth: LengthWrapper, availableWidth: LayoutUnit
+  ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -359,6 +498,8 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private let columnPos: [LayoutUnit] = []
   let columns: [ColumnStruct] = []
+
+  private let tableLayout: TableLayout? = nil
 
   private let collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil

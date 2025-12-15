@@ -1875,9 +1875,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
-  private func containingBlockAvailableLineWidthInFragment(
-    fragment: RenderFragmentContainerWrapper?
-  ) -> LayoutUnit {
+  func containingBlockAvailableLineWidthInFragment(fragment: RenderFragmentContainerWrapper?)
+    -> LayoutUnit
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2526,7 +2526,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func shrinkLogicalWidthToAvoidFloats(
+  func shrinkLogicalWidthToAvoidFloats(
     childMarginStart: LayoutUnit, childMarginEnd: LayoutUnit, cb: RenderBlockWrapper,
     fragment: RenderFragmentContainerWrapper?
   ) -> LayoutUnit {
@@ -3958,7 +3958,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
-  private func computePositionedLogicalWidth(
+  func computePositionedLogicalWidth(
     computedValues: inout LogicalExtentComputedValues,
     fragment: RenderFragmentContainerWrapper? = nil
   ) {

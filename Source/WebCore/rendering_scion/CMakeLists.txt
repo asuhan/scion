@@ -121,6 +121,7 @@ target_sources(layout_scion PRIVATE
     RenderTextControlSingleLine.swift
     RenderTextFragment.swift
     StyledMarkedText.swift
+    TableLayout.swift
     TextBoxPainter.swift
     TextBoxSelectableRange.swift
     TextBoxTrimmer.swift
