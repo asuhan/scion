@@ -29,6 +29,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private let optionsSpacingInlineStart: Int32 = 2
+
 final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   override func hasControlClip() -> Bool {
     // TODO(asuhan): implement this
@@ -43,8 +45,28 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let logicalWidth = explicitIntrinsicInnerLogicalWidth() {
+        maxLogicalWidth = logicalWidth
+      } else {
+        maxLogicalWidth = LayoutUnit(value: 2 * optionsSpacingInlineStart)
+      }
+    } else {
+      maxLogicalWidth = LayoutUnit(value: 2 * optionsSpacingInlineStart + optionsLogicalWidth)
+    }
+
+    if scrollbar != nil {
+      maxLogicalWidth +=
+        scrollbar!.orientation() == .Vertical ? scrollbar!.width() : scrollbar!.height()
+    }
+
+    let logicalWidth = style().logicalWidth()
+    if logicalWidth.isCalculated() {
+      let zero = LayoutUnit(value: UInt64(0))
+      minLogicalWidth = max(zero, valueForLength(length: logicalWidth, maximumValue: zero))
+    } else if !logicalWidth.isPercent() {
+      minLogicalWidth = maxLogicalWidth
+    }
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
@@ -73,4 +95,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let optionsLogicalWidth: Int32 = 0
+
+  private let scrollbar: Scrollbar? = nil
 }

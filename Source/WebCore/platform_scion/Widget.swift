@@ -45,5 +45,9 @@ typealias PlatformWidget = UnsafeMutableRawPointer?
 protocol Widget {
   func platformWidget() -> PlatformWidget
 
+  func width() -> Int32
+
+  func height() -> Int32
+
   func size() -> IntSize
 }
