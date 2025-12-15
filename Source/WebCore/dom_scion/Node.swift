@@ -69,6 +69,12 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  // If this node is in a shadow tree, returns its shadow host. Otherwise, returns null.
+  func shadowHost() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasEverPaintedImages() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -21,8 +21,18 @@
 private func effectiveRendererForAppearance(renderObject: RenderObjectWrapper)
   -> RenderObjectWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var renderer: RenderObjectWrapper? = renderObject
+  let type = renderObject.style().usedAppearance()
+
+  if type == .SearchFieldCancelButton
+    || type == .SwitchTrack
+    || type == .SwitchThumb
+  {
+    let input = renderObject.node()!.shadowHost() ?? renderObject.node()
+
+    renderer = input!.renderer() as? RenderBoxWrapper
+  }
+  return renderer
 }
 
 struct RenderTheme {
