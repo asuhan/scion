@@ -1017,6 +1017,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func addFocusRingRects(
+    rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
+    paintContainer: RenderLayerModelObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: Renderers should not need to be notified about internal reparenting (webkit.org/b/224143).
   func insertedIntoTree() {
     // TODO(asuhan): implement this
@@ -1034,6 +1042,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func initializeFragmentedFlowStateOnInsertion() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addPDFURLRect(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

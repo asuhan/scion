@@ -254,6 +254,15 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  // A method asking if the theme is able to draw the focus ring.
+  func supportsFocusRing(style: RenderStyleWrapper) -> Bool {
+    return style.hasUsedAppearance()
+      && style.usedAppearance() != .TextField
+      && style.usedAppearance() != .TextArea
+      && style.usedAppearance() != .MenulistButton
+      && style.usedAppearance() != .Listbox
+  }
+
   func supportsLargeFormControls() -> Bool { return false }
 
   // Text selection colors.

@@ -21,6 +21,11 @@
     Boston, MA 02110-1301, USA.
 */
 
+func intValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> Int32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // FIXME: when subpixel layout is supported this copy of floatValueForLength() can be removed. See bug 71143.
 func floatValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> Float32 {
   switch length.type() {

@@ -48,6 +48,14 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func addFocusRingRects(
+    rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
+    paintContainer: RenderLayerModelObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 // Renderer for our inner container, for <search> and others.

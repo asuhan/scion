@@ -507,6 +507,26 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func borderTopLeftRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderTopRightRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderBottomLeftRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderBottomRightRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderRadii() -> BorderDataRadii {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -518,6 +538,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasOutline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outlineStyle() -> BorderStyle {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1004,6 +1029,11 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_outlineSize(p)
   }
 
+  func outlineWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func outlineStyleIsAuto() -> OutlineIsAuto {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1301,6 +1331,11 @@ class RenderStyleWrapper: Equatable {
       fatalError("Not implemented")
     }
     return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p))
+  }
+
+  func outlineOffset() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func containsLayout() -> Bool {

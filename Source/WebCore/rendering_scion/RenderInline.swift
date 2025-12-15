@@ -75,6 +75,14 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func addFocusRingRects(
+    rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
+    paintContainer: RenderLayerModelObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOutline(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -354,8 +354,111 @@ class BorderPainter {
   }
 
   func paintOutline(paintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleToUse = renderer.style()
+    let outlineWidth = floorToDevicePixel(
+      value: styleToUse.outlineWidth(), pixelSnappingFactor: document().deviceScaleFactor())
+    let outlineOffset = floorToDevicePixel(
+      value: styleToUse.outlineOffset(), pixelSnappingFactor: document().deviceScaleFactor())
+
+    // Only paint the focus ring by hand if the theme isn't able to draw it.
+    if styleToUse.outlineStyleIsAuto() == .On
+      && !renderer.theme().supportsFocusRing(style: styleToUse)
+    {
+      var paintRectToUse = paintRect
+      if let box = renderer as? RenderBoxWrapper {
+        paintRectToUse = renderer.theme().adjustedPaintRect(box: box, paintRect: paintRectToUse)
+      }
+      var focusRingRects: [LayoutRectWrapper] = []
+      renderer.addFocusRingRects(
+        rects: &focusRingRects, additionalOffset: paintRectToUse.location(),
+        paintContainer: paintInfo.paintContainer)
+      renderer.paintFocusRing(
+        paintInfo: paintInfo, style: styleToUse, focusRingRects: focusRingRects)
+    }
+
+    if renderer.hasOutlineAnnotation() && styleToUse.outlineStyleIsAuto() == .Off
+      && !renderer.theme().supportsFocusRing(style: styleToUse)
+    {
+      renderer.addPDFURLRect(paintInfo: paintInfo, paintOffset: paintRect.location())
+    }
+
+    if styleToUse.outlineStyleIsAuto() == .On || styleToUse.outlineStyle() == .None {
+      return
+    }
+
+    // FIXME: This prevents outlines from painting inside the object. See bug 12042
+    var outer = paintRect
+    outer.inflate(d: outlineOffset + outlineWidth)
+    if outer.isEmpty() {
+      return
+    }
+
+    let isHorizontal = styleToUse.isHorizontalWritingMode()
+    let hasBorderRadius = styleToUse.hasBorderRadius()
+    let includeLogicalLeftEdge = true
+    let includeLogicalRightEdge = true
+    let roundedBorderRectFor = {
+      (_ borderRect: LayoutRectWrapper, _ borderOffset: LayoutUnit) -> RoundedRect in
+      let adjustedRadius = { (_ radius: LengthSize, _ offset: LayoutUnit) in
+        let widthValue =
+          radius.width.isAuto()
+          ? 0 : intValueForLength(length: radius.width, maximumValue: paintRect.width())
+        let heightValue =
+          radius.height.isAuto()
+          ? 0 : intValueForLength(length: radius.height, maximumValue: paintRect.height())
+        if widthValue == 0 && heightValue == 0 {
+          return LengthSize(
+            width: LengthWrapper(value: Int32(0), type: .Fixed),
+            height: LengthWrapper(value: Int32(0), type: .Fixed))
+        }
+        if widthValue == 0 {
+          return LengthSize(
+            width: LengthWrapper(value: Int32(0), type: .Fixed),
+            height: LengthWrapper(value: (heightValue + offset).int(), type: .Fixed))
+        }
+        return LengthSize(
+          width: LengthWrapper(value: (widthValue + offset).int(), type: .Fixed),
+          height: LengthWrapper(value: (heightValue + offset).int(), type: .Fixed))
+      }
+
+      let borderRadii: BorderData.Radii? =
+        hasBorderRadius
+        ? BorderData.Radii(
+          topLeft: adjustedRadius(styleToUse.borderTopLeftRadius(), borderOffset),
+          topRight: adjustedRadius(styleToUse.borderTopRightRadius(), borderOffset),
+          bottomLeft: adjustedRadius(styleToUse.borderBottomLeftRadius(), borderOffset),
+          bottomRight: adjustedRadius(styleToUse.borderBottomRightRadius(), borderOffset)
+        ) : nil
+      return RenderStyleWrapper.getRoundedInnerBorderFor(
+        borderRect: borderRect, topWidth: LayoutUnit(), bottomWidth: LayoutUnit(),
+        leftWidth: LayoutUnit(), rightWidth: LayoutUnit(), radii: borderRadii,
+        isHorizontalWritingMode: isHorizontal, includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge)
+    }
+    var innerRectForOutline = paintRect
+    innerRectForOutline.inflate(d: outlineOffset)
+    let innerBorder = roundedBorderRectFor(innerRectForOutline, LayoutUnit(value: outlineOffset))
+    let outerBorder = roundedBorderRectFor(outer, LayoutUnit(value: outlineWidth + outlineOffset))
+    let bleedAvoidance: BackgroundBleedAvoidance = .BackgroundBleedShrinkBackground
+    let appliedClipAlready = false
+    let edges = borderEdgesForOutline(
+      style: styleToUse, deviceScaleFactor: document().deviceScaleFactor())
+    let haveAllSolidEdges = decorationHasAllSolidEdges(edges: edges)
+
+    paintSides(
+      sides: Sides(
+        outerBorder: outerBorder,
+        innerBorder: innerBorder,
+        unadjustedInnerBorder: innerBorder,
+        radii: hasBorderRadius ? styleToUse.borderRadii() : nil,
+        edges: edges,
+        haveAllSolidEdges: haveAllSolidEdges,
+        bleedAvoidance: bleedAvoidance,
+        includeLogicalLeftEdge: includeLogicalLeftEdge,
+        includeLogicalRightEdge: includeLogicalRightEdge,
+        appliedClipAlready: appliedClipAlready,
+        isHorizontal: isHorizontal
+      ))
   }
 
   @discardableResult

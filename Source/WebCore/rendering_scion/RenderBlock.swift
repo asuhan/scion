@@ -1520,6 +1520,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func addFocusRingRects(
+    rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
+    paintContainer: RenderLayerModelObjectWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeFragmentRangeForBoxChild(box: RenderBoxWrapper) {
     let fragmentedFlow = enclosingFragmentedFlow()
     assert(

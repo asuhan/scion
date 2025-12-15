@@ -396,6 +396,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasOutlineAnnotation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasOutline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -611,6 +616,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func paintRectToClipOutFromBorder(paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintFocusRing(
+    paintInfo: PaintInfoWrapper, style: RenderStyleWrapper, focusRingRects: [LayoutRectWrapper]
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

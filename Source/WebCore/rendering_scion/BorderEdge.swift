@@ -165,6 +165,11 @@ func borderEdges(
   )
 }
 
+func borderEdgesForOutline(style: RenderStyleWrapper, deviceScaleFactor: Float32) -> BorderEdges {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func edgesShareColor(firstEdge: BorderEdge, secondEdge: BorderEdge) -> Bool {
   return firstEdge.color == secondEdge.color
 }

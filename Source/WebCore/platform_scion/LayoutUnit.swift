@@ -391,6 +391,10 @@ struct LayoutUnit: Comparable {
     return a.toFloat() + b
   }
 
+  static func + (a: Int32, b: LayoutUnit) -> LayoutUnit {
+    return LayoutUnit(value: a) + b
+  }
+
   static func + (a: Int, b: LayoutUnit) -> LayoutUnit {
     return LayoutUnit(value: a) + b
   }
