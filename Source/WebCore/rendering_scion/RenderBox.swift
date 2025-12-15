@@ -1050,8 +1050,22 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paddingBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: UInt64(0))
+    var offsetForScrollbar = zero
+    var verticalScrollbarWidth = zero
+    var horizontalScrollbarHeight = zero
+    if hasNonVisibleOverflow() {
+      verticalScrollbarWidth = LayoutUnit(value: self.verticalScrollbarWidth())
+      offsetForScrollbar =
+        shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() ? verticalScrollbarWidth : zero
+      horizontalScrollbarHeight = LayoutUnit(value: self.horizontalScrollbarHeight())
+    }
+
+    let borderWidths = borderWidths()
+    return LayoutRectWrapper(
+      x: borderWidths.left + offsetForScrollbar, y: borderWidths.top,
+      width: width() - borderWidths.left - borderWidths.right - verticalScrollbarWidth,
+      height: height() - borderWidths.top - borderWidths.bottom - horizontalScrollbarHeight)
   }
 
   func paddingBoxRectIncludingScrollbar() -> LayoutRectWrapper {
