@@ -54,6 +54,17 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     return nodeForNonAnonymous() as! HTMLSelectElementWrapper
   }
 
+  @discardableResult
+  private func scrollToRevealElementAtListIndex(index: Int32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func listIndexIsVisible(index: Int32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func size() -> UInt32 {
     if style().fieldSizing() == .Content {
       return UInt32(numItems())
@@ -213,11 +224,16 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func scrollToRevealSelection() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    scrollToRevealSelectionAfterLayout = false
+
+    let firstIndex = selectElement().activeSelectionStartListIndex()
+    if firstIndex >= 0 && !listIndexIsVisible(index: selectElement().activeSelectionEndListIndex())
+    {
+      scrollToRevealElementAtListIndex(index: firstIndex)
+    }
   }
 
-  private let scrollToRevealSelectionAfterLayout = false
+  private var scrollToRevealSelectionAfterLayout = false
   private let optionsLogicalWidth: Int32 = 0
 
   private let scrollbar: Scrollbar? = nil
