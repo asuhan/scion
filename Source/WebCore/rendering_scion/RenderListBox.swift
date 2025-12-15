@@ -29,9 +29,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private let itemBlockSpacing: Int32 = 1
+
 private let optionsSpacingInlineStart: Int32 = 2
 
 final class RenderListBoxWrapper: RenderBlockFlowWrapper {
+  private func size() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func hasControlClip() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -75,8 +82,19 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var logicalHeight = itemLogicalHeight() * size() - itemBlockSpacing
+
+    if shouldApplySizeContainment(),
+      let explicitIntrinsicHeight = explicitIntrinsicInnerLogicalHeight()
+    {
+      logicalHeight = explicitIntrinsicHeight
+    }
+
+    cacheIntrinsicContentLogicalHeightForFlexItem(height: logicalHeight)
+    logicalHeight +=
+      style().isHorizontalWritingMode()
+      ? verticalBorderAndPaddingExtent() : horizontalBorderAndPaddingExtent()
+    return boxComputeLogicalHeight(logicalHeight: logicalHeight, logicalTop: logicalTop)
   }
 
   override func layout() {
@@ -95,6 +113,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   final override func useDarkAppearance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func itemLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

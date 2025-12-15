@@ -1906,6 +1906,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
+    return boxComputeLogicalHeight(logicalHeight: logicalHeight, logicalTop: logicalTop)
+  }
+
+  func boxComputeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
+    -> LogicalExtentComputedValues
+  {
     var computedValues = LogicalExtentComputedValues(extent: logicalHeight, position: logicalTop)
 
     // Cell height is managed by the table and inline non-replaced elements do not support a height property.
