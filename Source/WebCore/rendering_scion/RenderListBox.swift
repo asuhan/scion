@@ -249,8 +249,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func indexOffset() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var scrollPosition = self.scrollPosition
+    if !style().isHorizontalWritingMode() {
+      scrollPosition = scrollPosition.transposedPoint()
+    }
+    return abs(scrollPosition.y)
   }
 
   private var scrollToRevealSelectionAfterLayout = false
