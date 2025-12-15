@@ -39,6 +39,10 @@ struct IntPoint {
     y += dy
   }
 
+  func transposedPoint() -> IntPoint {
+    return IntPoint(x: y, y: x)
+  }
+
   static func - (a: IntPoint, b: IntPoint) -> IntSize {
     return IntSize(width: a.x - b.x, height: a.y - b.y)
   }

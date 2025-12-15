@@ -36,7 +36,20 @@ private let optionsSpacingInlineStart: Int32 = 2
 // Default size when the multiple attribute is present but size attribute is absent.
 private let defaultSize: Int32 = 4
 
+// TODO(asuhan): also inherit from ScrollableArea
 final class RenderListBoxWrapper: RenderBlockFlowWrapper {
+  // TODO(asuhan): move to ScrollableArea
+  private func scrollToOffsetWithoutAnimation(orientation: ScrollbarOrientation, offset: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // TODO(asuhan): move to ScrollableArea
+  private func setScrollOrigin(origin: IntPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func selectElement() -> HTMLSelectElementWrapper {
     return nodeForNonAnonymous() as! HTMLSelectElementWrapper
   }
@@ -113,8 +126,37 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add back stack recursion checks
+    super.layout()
+
+    if scrollbar != nil {
+      let enabled = numVisibleItems() < numItems()
+      scrollbar!.setEnabled(e: enabled)
+      scrollbar!.setSteps(
+        lineStep: 1, pageStep: max(1, numVisibleItems() - 1),
+        pixelsPerStep: itemLogicalHeight().int())
+      scrollbar!.setProportion(visibleSize: numVisibleItems(), totalSize: numItems())
+      if !enabled {
+        scrollToOffsetWithoutAnimation(orientation: scrollbar!.orientation(), offset: 0)
+        scrollPosition = ScrollPosition()
+      }
+
+      if style().isFlippedBlocksWritingMode() {
+        var scrollOrigin = IntPoint(x: 0, y: numItems() - numVisibleItems())
+        if scrollbar!.orientation() == .Horizontal {
+          scrollOrigin = scrollOrigin.transposedPoint()
+        }
+        setScrollOrigin(origin: scrollOrigin)
+        scrollbar!.offsetDidChange()
+      } else {
+        setScrollOrigin(origin: IntPoint())
+      }
+    }
+
+    if scrollToRevealSelectionAfterLayout {
+      let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+      scrollToRevealSelection()
+    }
   }
 
   override func verticalScrollbarWidth() -> Int32 {
@@ -137,12 +179,31 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private enum ConsiderPadding {
+    case No
+    case Yes
+  }
+
+  private func numVisibleItems(considerPadding: ConsiderPadding = .No) -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func numItems() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private func scrollToRevealSelection() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let scrollToRevealSelectionAfterLayout = false
   private let optionsLogicalWidth: Int32 = 0
 
   private let scrollbar: Scrollbar? = nil
+
+  // Note: This is based on item index rather than a pixel offset.
+  private var scrollPosition = ScrollPosition()
 }

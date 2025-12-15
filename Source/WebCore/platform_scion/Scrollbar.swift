@@ -49,7 +49,28 @@ class Scrollbar: Widget {
     fatalError("Not implemented")
   }
 
+  // Called by the ScrollableArea when the scroll offset changes.
+  func offsetDidChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func orientation() -> ScrollbarOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setSteps(lineStep: Int32, pageStep: Int32, pixelsPerStep: Int32 = 1) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setProportion(visibleSize: Int32, totalSize: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setEnabled(e: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
