@@ -1048,6 +1048,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func fieldSizing() -> FieldSizing {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textIndent() -> LengthWrapper {
     if p == nil {
       fatalError("Not implemented")

@@ -766,4 +766,9 @@ enum ContentVisibility: UInt8 {
   case Hidden
 }
 
+enum FieldSizing: UInt8 {
+  case Fixed
+  case Content
+}
+
 let defaultMiterLimit: Float32 = 4

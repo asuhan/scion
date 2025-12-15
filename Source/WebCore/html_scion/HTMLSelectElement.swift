@@ -26,4 +26,9 @@
  */
 
 // TODO(asuhan): add TypeAheadDataSource protocol and have this implement it
-class HTMLSelectElementWrapper: HTMLFormControlElementWrapper {}
+class HTMLSelectElementWrapper: HTMLFormControlElementWrapper {
+  func size() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

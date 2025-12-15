@@ -33,10 +33,25 @@ private let itemBlockSpacing: Int32 = 1
 
 private let optionsSpacingInlineStart: Int32 = 2
 
+// Default size when the multiple attribute is present but size attribute is absent.
+private let defaultSize: Int32 = 4
+
 final class RenderListBoxWrapper: RenderBlockFlowWrapper {
+  private func selectElement() -> HTMLSelectElementWrapper {
+    return nodeForNonAnonymous() as! HTMLSelectElementWrapper
+  }
+
   private func size() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().fieldSizing() == .Content {
+      return UInt32(numItems())
+    }
+
+    let specifiedSize = selectElement().size()
+    if specifiedSize >= 1 {
+      return specifiedSize
+    }
+
+    return UInt32(defaultSize)
   }
 
   override func hasControlClip() -> Bool {
@@ -118,6 +133,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func itemLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func numItems() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
