@@ -45,6 +45,12 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   // TODO(asuhan): move to ScrollableArea
+  private func scrollOrigin() -> IntPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // TODO(asuhan): move to ScrollableArea
   private func setScrollOrigin(origin: IntPoint) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -196,8 +202,19 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func scrollToPosition(positionIndex: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let orientation = scrollbarOrientationForWritingMode()
+    let scrollOrigin = self.scrollOrigin()
+
+    var offsetIndex = positionIndex
+
+    switch orientation {
+    case .Vertical:
+      offsetIndex = positionIndex + scrollOrigin.y
+    case .Horizontal:
+      offsetIndex = positionIndex + scrollOrigin.x
+    }
+
+    scrollToOffsetWithoutAnimation(orientation: orientation, offset: Float32(offsetIndex))
   }
 
   private func numberOfVisibleItemsInPaddingBefore() -> Int32 {
@@ -246,6 +263,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     {
       scrollToRevealElementAtListIndex(index: firstIndex)
     }
+  }
+
+  private func scrollbarOrientationForWritingMode() -> ScrollbarOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func indexOffset() -> Int32 {
