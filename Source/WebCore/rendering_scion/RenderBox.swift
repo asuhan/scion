@@ -1049,6 +1049,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxHeight(p))
   }
 
+  func paddingBoxRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paddingBoxRectIncludingScrollbar() -> LayoutRectWrapper {
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_x(p)),

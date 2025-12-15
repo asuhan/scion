@@ -38,8 +38,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Clip against the padding box, to give <option>s and overlay scrollbar some extra space
+    // to get painted.
+    var clipRect = paddingBoxRect()
+    clipRect.moveBy(offset: additionalOffset)
+    return clipRect
   }
 
   override func computeIntrinsicLogicalWidths(
