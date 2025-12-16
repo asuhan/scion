@@ -29,6 +29,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func isTableColumnGroupWithColumnChildren() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTableColumn() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -38,4 +43,12 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Returns the next column or column-group.
+  func nextColumn() -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let span: UInt32 = 1
 }

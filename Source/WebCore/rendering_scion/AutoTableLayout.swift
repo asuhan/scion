@@ -304,6 +304,70 @@ final class AutoTableLayout: TableLayout {
   }
 
   private func fullRecalc() {
+    hasPercent = false
+    effectiveLogicalWidthDirty = true
+
+    let nEffCols = table.numEffCols()
+    layoutStruct = [Layout](repeating: Layout(), count: Int(nEffCols))
+    for i in 0..<spanCells.count {
+      spanCells[i] = nil
+    }
+
+    var groupLogicalWidth = LengthWrapper()
+    var currentColumn: UInt32 = 0
+    var column = table.firstColumn()
+    while column != nil {
+      if column!.isTableColumnGroupWithColumnChildren() {
+        groupLogicalWidth = column!.style().logicalWidth()
+      } else {
+        var colLogicalWidth = column!.style().logicalWidth()
+        // FIXME: calc() on tables should be handled consistently with other lengths.
+        if colLogicalWidth.isCalculated() || colLogicalWidth.isAuto() {
+          colLogicalWidth = groupLogicalWidth
+        }
+        if (colLogicalWidth.isFixed() || colLogicalWidth.isPercentOrCalculated())
+          && colLogicalWidth.isZero()
+        {
+          colLogicalWidth = LengthWrapper()
+        }
+        let effCol = Int(table.colToEffCol(column: currentColumn))
+        let span = column!.span
+        if !colLogicalWidth.isAuto() && span == 1 && effCol < nEffCols
+          && table.spanOfEffCol(effCol: UInt32(effCol)) == 1
+        {
+          layoutStruct[effCol].logicalWidth = colLogicalWidth
+          if colLogicalWidth.isFixed()
+            && layoutStruct[effCol].maxLogicalWidth < colLogicalWidth.value()
+          {
+            layoutStruct[effCol].maxLogicalWidth = colLogicalWidth.value()
+          }
+        }
+        currentColumn += span
+      }
+
+      // For the last column in a column-group, we invalidate our group logical width.
+      if column!.isTableColumn() && column!.nextSibling() == nil {
+        groupLogicalWidth = LengthWrapper()
+      }
+
+      column = column!.nextColumn()
+    }
+
+    for i in 0..<UInt32(nEffCols) {
+      recalcColumn(effCol: i)
+    }
+
+    for section: RenderTableSectionWrapper in childrenOfType(parent: table) {
+      section.setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+      var row = section.firstRow()
+      while row != nil {
+        row!.setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+        row = row!.nextRow()
+      }
+    }
+  }
+
+  func recalcColumn(effCol: UInt32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -314,10 +378,10 @@ final class AutoTableLayout: TableLayout {
   }
 
   private struct Layout {
-    let logicalWidth = LengthWrapper()
+    var logicalWidth = LengthWrapper()
     let effectiveLogicalWidth = LengthWrapper()
     let minLogicalWidth: Float32 = 0
-    let maxLogicalWidth: Float32 = 0
+    var maxLogicalWidth: Float32 = 0
     let effectiveMinLogicalWidth: Float32 = 0
     let effectiveMaxLogicalWidth: Float32 = 0
     var computedLogicalWidth: Float32 = 0
@@ -325,6 +389,7 @@ final class AutoTableLayout: TableLayout {
   }
 
   private var layoutStruct: [Layout] = []
-  private let hasPercent = false
-  private let effectiveLogicalWidthDirty = false
+  private var spanCells: [RenderTableCellWrapper?] = []
+  private var hasPercent = false
+  private var effectiveLogicalWidthDirty = false
 }

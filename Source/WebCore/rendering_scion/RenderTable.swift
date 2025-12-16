@@ -153,7 +153,23 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func spanOfEffCol(effCol: UInt32) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func colToEffCol(column: UInt32) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func bordersPaddingAndSpacingInRowDirection() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Return the first column or column-group.
+  func firstColumn() -> RenderTableColWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
