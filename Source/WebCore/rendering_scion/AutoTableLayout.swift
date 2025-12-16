@@ -145,6 +145,60 @@ final class AutoTableLayout: TableLayout {
       }
     }
 
+    // spread over fixed columns
+    if available > 0 && numFixed != 0 {
+      for i in 0..<nEffCols {
+        let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+        if logicalWidth.isFixed() {
+          let cellLogicalWidth = available * layoutStruct[i].effectiveMaxLogicalWidth / totalFixed
+          available -= cellLogicalWidth
+          totalFixed -= layoutStruct[i].effectiveMaxLogicalWidth
+          layoutStruct[i].computedLogicalWidth += cellLogicalWidth
+        }
+      }
+    }
+
+    // spread over percent colums
+    if available > 0 && hasPercent && totalPercent < 100 {
+      for i in 0..<nEffCols {
+        let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+        if logicalWidth.isPercent() {
+          let cellLogicalWidth = available * logicalWidth.percent() / totalPercent
+          available -= cellLogicalWidth
+          totalPercent -= logicalWidth.percent()
+          layoutStruct[i].computedLogicalWidth += cellLogicalWidth
+          if available == 0 || totalPercent == 0 {
+            break
+          }
+        }
+      }
+    }
+
+    // spread over the rest
+    if available > 0 && nEffCols > numAutoEmptyCellsOnly {
+      var total = nEffCols - numAutoEmptyCellsOnly
+      // still have some width to spread
+      for i in (0..<nEffCols).reversed() {
+        // variable columns with empty cells only don't get any width
+        if layoutStruct[i].effectiveLogicalWidth.isAuto() && layoutStruct[i].emptyCellsOnly {
+          continue
+        }
+        let cellLogicalWidth = available / Float32(total)
+        available -= cellLogicalWidth
+        total -= 1
+        layoutStruct[i].computedLogicalWidth += cellLogicalWidth
+      }
+    }
+
+    if available > 0 && numAutoEmptyCellsOnly != 0 && nEffCols == numAutoEmptyCellsOnly {
+      // All columns in this table are empty with 'width: auto'.
+      let equalWidthForColumns = available / Float32(numAutoEmptyCellsOnly)
+      for i in 0..<nEffCols {
+        layoutStruct[i].computedLogicalWidth = equalWidthForColumns
+        available -= layoutStruct[i].computedLogicalWidth
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -171,5 +225,6 @@ final class AutoTableLayout: TableLayout {
   }
 
   private var layoutStruct: [Layout] = []
+  private let hasPercent = false
   private let effectiveLogicalWidthDirty = false
 }
