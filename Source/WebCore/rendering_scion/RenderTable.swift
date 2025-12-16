@@ -860,6 +860,21 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func layoutCaptions(bottomCaptionLayoutPhase: BottomCaptionLayoutPhase = .No) {
+    if captions.isEmpty {
+      return
+    }
+    // FIXME: Collapse caption margin.
+    for caption in captions {
+      if (bottomCaptionLayoutPhase == .Yes && caption!.style().captionSide() != .Bottom)
+        || (bottomCaptionLayoutPhase == .No && caption!.style().captionSide() == .Bottom)
+      {
+        continue
+      }
+      layoutCaption(caption: caption!)
+    }
+  }
+
+  private func layoutCaption(caption: RenderTableCaptionWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
