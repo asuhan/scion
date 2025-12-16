@@ -105,6 +105,46 @@ final class AutoTableLayout: TableLayout {
       }
     }
 
+    // then allocate width to fixed cols
+    if available > 0 {
+      for i in 0..<nEffCols {
+        let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+        if logicalWidth.isFixed() && logicalWidth.value() > layoutStruct[i].computedLogicalWidth {
+          available += layoutStruct[i].computedLogicalWidth - logicalWidth.value()
+          layoutStruct[i].computedLogicalWidth = logicalWidth.value()
+        }
+      }
+    }
+
+    // now satisfy variable
+    if available > 0 && numberOfNonEmptyAuto != 0 {
+      assert(totalAuto != nil)
+      available += allocAuto  // this gets redistributed.
+      var equalWidthForZeroLengthColumns: Float32? = nil
+      if totalAuto! == 0 {
+        // All columns in this table are (non-empty)zero length with 'width: auto'.
+        equalWidthForZeroLengthColumns = available / Float32(numberOfNonEmptyAuto)
+      }
+      for i in 0..<nEffCols {
+        if !layoutStruct[i].effectiveLogicalWidth.isAuto() || layoutStruct[i].emptyCellsOnly {
+          continue
+        }
+        let columnWidthCandidate =
+          equalWidthForZeroLengthColumns != nil
+          ? equalWidthForZeroLengthColumns!
+          : available * layoutStruct[i].effectiveMaxLogicalWidth / totalAuto!
+        layoutStruct[i].computedLogicalWidth = max(
+          layoutStruct[i].computedLogicalWidth, columnWidthCandidate)
+        available -= layoutStruct[i].computedLogicalWidth
+        if equalWidthForZeroLengthColumns == nil {
+          totalAuto! -= layoutStruct[i].effectiveMaxLogicalWidth
+          if totalAuto! <= 0 {
+            break
+          }
+        }
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
