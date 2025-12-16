@@ -3750,6 +3750,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldIgnoreLogicalMinMaxHeightSizes() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

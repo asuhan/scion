@@ -107,6 +107,16 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func calcRowLogicalHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func layoutRows() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func table() -> RenderTableWrapper? { return parent() as! RenderTableWrapper? }
 
   class CellStruct {
@@ -136,6 +146,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func primaryCellAt(row: UInt32, col: UInt32) -> RenderTableCellWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func recalcOuterBorder() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

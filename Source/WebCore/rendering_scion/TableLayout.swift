@@ -24,4 +24,6 @@ class TableLayout {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func layout() { fatalError("Not reached") }
 }
