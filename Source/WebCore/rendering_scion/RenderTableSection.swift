@@ -185,6 +185,13 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  // distributeExtraLogicalHeightToRows methods return the *consumed* extra logical height.
+  // FIXME: We may want to introduce a structure holding the in-flux layout information.
+  func distributeExtraLogicalHeightToRows(extraLogicalHeight: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func createAnonymousWithParentRenderer(parent: RenderTableWrapper)
     -> RenderTableSectionWrapper
   {

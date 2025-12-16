@@ -137,6 +137,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     columnPos[index] = position
   }
 
+  func firstBody() -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // This function returns nil if the table has no section.
   func topSection() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
@@ -880,8 +885,20 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func distributeExtraLogicalHeight(extraLogicalHeight: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if extraLogicalHeight <= Int32(0) {
+      return
+    }
+
+    // FIXME: Distribute the extra logical height between all table sections instead of giving it all to the first one.
+    var extraLogicalHeight = extraLogicalHeight
+    if let section = firstBody() {
+      extraLogicalHeight -= section.distributeExtraLogicalHeightToRows(
+        extraLogicalHeight: extraLogicalHeight)
+    }
+
+    // FIXME: We really would like to enable this ASSERT to ensure that all the extra space has been distributed.
+    // However our current distribution algorithm does not round properly and thus we can have some remaining height.
+    // ASSERT(!topSection() || !extraLogicalHeight);
   }
 
   private var columnPos: [LayoutUnit] = []
