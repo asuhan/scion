@@ -199,8 +199,108 @@ final class AutoTableLayout: TableLayout {
       }
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we have overallocated, reduce every cell according to the difference between desired width and minwidth
+    // this seems to produce to the pixel exact results with IE. Wonder if some of this also holds for width distributing.
+    if available < 0 {
+      // Need to reduce cells with the following prioritization:
+      // (1) Auto
+      // (2) Fixed
+      // (3) Percent
+      // This is basically the reverse of how we grew the cells.
+      var logicalWidthBeyondMin: Float32 = 0
+      for i in (0..<nEffCols).reversed() {
+        let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+        if logicalWidth.isAuto() {
+          logicalWidthBeyondMin +=
+            layoutStruct[i].computedLogicalWidth - layoutStruct[i].effectiveMinLogicalWidth
+        }
+      }
+
+      for i in (0..<nEffCols).reversed() {
+        if logicalWidthBeyondMin <= 0 {
+          break
+        }
+        let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+        if logicalWidth.isAuto() {
+          let minMaxDiff =
+            layoutStruct[i].computedLogicalWidth - layoutStruct[i].effectiveMinLogicalWidth
+          let reduce = available * minMaxDiff / logicalWidthBeyondMin
+          layoutStruct[i].computedLogicalWidth += reduce
+          available -= reduce
+          logicalWidthBeyondMin -= minMaxDiff
+          if available >= 0 {
+            break
+          }
+        }
+      }
+
+      if available < 0 {
+        var logicalWidthBeyondMin: Float32 = 0
+        for i in (0..<nEffCols).reversed() {
+          let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+          if logicalWidth.isFixed() {
+            logicalWidthBeyondMin +=
+              layoutStruct[i].computedLogicalWidth - layoutStruct[i].effectiveMinLogicalWidth
+          }
+        }
+
+        for i in (0..<nEffCols).reversed() {
+          if logicalWidthBeyondMin <= 0 {
+            break
+          }
+          let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+          if logicalWidth.isFixed() {
+            let minMaxDiff =
+              layoutStruct[i].computedLogicalWidth - layoutStruct[i].effectiveMinLogicalWidth
+            let reduce = available * minMaxDiff / logicalWidthBeyondMin
+            layoutStruct[i].computedLogicalWidth += reduce
+            available -= reduce
+            logicalWidthBeyondMin -= minMaxDiff
+            if available >= 0 {
+              break
+            }
+          }
+        }
+      }
+
+      if available < 0 {
+        var logicalWidthBeyondMin: Float32 = 0
+        for i in (0..<nEffCols).reversed() {
+          let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+          if logicalWidth.isPercentOrCalculated() {
+            logicalWidthBeyondMin +=
+              layoutStruct[i].computedLogicalWidth - layoutStruct[i].effectiveMinLogicalWidth
+          }
+        }
+
+        for i in (0..<nEffCols).reversed() {
+          if logicalWidthBeyondMin <= 0 {
+            break
+          }
+          let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+          if logicalWidth.isPercentOrCalculated() {
+            let minMaxDiff =
+              layoutStruct[i].computedLogicalWidth - layoutStruct[i].effectiveMinLogicalWidth
+            let reduce = available * minMaxDiff / logicalWidthBeyondMin
+            layoutStruct[i].computedLogicalWidth += reduce
+            available -= reduce
+            logicalWidthBeyondMin -= minMaxDiff
+            if available >= 0 {
+              break
+            }
+          }
+        }
+      }
+    }
+
+    var pos = LayoutUnit()
+    for i in 0..<nEffCols {
+      table.setColumnPosition(index: i, position: pos)
+      pos +=
+        LayoutUnit.fromFloatCeil(value: layoutStruct[i].computedLogicalWidth)
+        + table.hBorderSpacing()
+    }
+    table.setColumnPosition(index: table.columnPositions().count - 1, position: pos)
   }
 
   private func fullRecalc() {

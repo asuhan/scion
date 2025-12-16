@@ -130,6 +130,13 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func columnPositions() -> [LayoutUnit] { return columnPos }
 
+  func setColumnPosition(index: Int, position: LayoutUnit) {
+    // Note that if our horizontal border-spacing changed, our position will change but not
+    // our column's width. In practice, horizontal border-spacing won't change often.
+    columnLogicalWidthChanged = columnLogicalWidthChanged || columnPos[index] != position
+    columnPos[index] = position
+  }
+
   // This function returns nil if the table has no section.
   func topSection() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
@@ -846,7 +853,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private let columnPos: [LayoutUnit] = []
+  private var columnPos: [LayoutUnit] = []
   let columns: [ColumnStruct] = []
   private let captions: [RenderTableCaptionWrapper?] = []
 
