@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     EllipsisBoxPainter.swift
     EventRegion.swift
+    FixedTableLayout.swift
     FlexibleBoxAlgorithm.swift
     FloatingObjects.swift
     GlyphDisplayListCache.swift
@@ -36,6 +37,7 @@ target_sources(layout_scion PRIVATE
     ReferencedSVGResources.swift
     AccessibilityRegionContext.swift
     AncestorSubgridIterator.swift
+    AutoTableLayout.swift
     BackgroundPainter.swift
     BaselineAlignment.swift
     BidiRun.swift
