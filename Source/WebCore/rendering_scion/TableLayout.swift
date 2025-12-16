@@ -20,10 +20,16 @@
  */
 
 class TableLayout {
+  init(table: RenderTableWrapper) {
+    self.table = table
+  }
+
   func scaledWidthFromPercentColumns() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func layout() { fatalError("Not reached") }
+
+  let table: RenderTableWrapper
 }

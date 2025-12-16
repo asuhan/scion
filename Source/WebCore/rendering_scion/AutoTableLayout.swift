@@ -20,4 +20,116 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class AutoTableLayout: TableLayout {}
+final class AutoTableLayout: TableLayout {
+  override func layout() {
+    // table layout based on the values collected in the layout structure.
+    let tableLogicalWidth = (table.logicalWidth() - table.bordersPaddingAndSpacingInRowDirection())
+      .float()
+    var available = tableLogicalWidth
+    var nEffCols = Int(table.numEffCols())
+
+    // FIXME: It is possible to be called without having properly updated our internal representation.
+    // This means that our preferred logical widths were not recomputed as expected.
+    if nEffCols != layoutStruct.count {
+      fullRecalc()
+      // FIXME: Table layout shouldn't modify our table structure (but does due to columns and column-groups).
+      nEffCols = Int(table.numEffCols())
+    }
+
+    if effectiveLogicalWidthDirty {
+      calcEffectiveLogicalWidth()
+    }
+
+    var havePercent = false
+    var numFixed = 0
+    var numberOfNonEmptyAuto = 0
+    var totalAuto: Float32? = nil
+    var totalFixed: Float32 = 0
+    var totalPercent: Float32 = 0
+    var allocAuto: Float32 = 0
+    var numAutoEmptyCellsOnly = 0
+
+    // fill up every cell with its minWidth
+    for i in 0..<nEffCols {
+      let cellLogicalWidth = layoutStruct[i].effectiveMinLogicalWidth
+      layoutStruct[i].computedLogicalWidth = cellLogicalWidth
+      available -= cellLogicalWidth
+      let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+      switch logicalWidth.type() {
+      case .Percent:
+        havePercent = true
+        totalPercent += logicalWidth.percent()
+      case .Fixed:
+        numFixed += 1
+        totalFixed += layoutStruct[i].effectiveMaxLogicalWidth
+      case .Auto:
+        if layoutStruct[i].emptyCellsOnly {
+          numAutoEmptyCellsOnly += 1
+        } else {
+          numberOfNonEmptyAuto += 1
+          totalAuto = (totalAuto ?? 0) + layoutStruct[i].effectiveMaxLogicalWidth
+          allocAuto += cellLogicalWidth
+        }
+      default:
+        break
+      }
+    }
+
+    // allocate width to percent cols
+    if available > 0 && havePercent {
+      for i in 0..<nEffCols {
+        let logicalWidth = layoutStruct[i].effectiveLogicalWidth
+        if logicalWidth.isPercentOrCalculated() {
+          let cellLogicalWidth = max(
+            layoutStruct[i].effectiveMinLogicalWidth,
+            minimumValueForLength(length: logicalWidth, maximumValue: tableLogicalWidth).float())
+          available += layoutStruct[i].computedLogicalWidth - cellLogicalWidth
+          layoutStruct[i].computedLogicalWidth = cellLogicalWidth
+        }
+      }
+      if totalPercent > 100 {
+        // remove overallocated space from the last columns
+        var excess = tableLogicalWidth * (totalPercent - 100) / 100
+        for i in (0..<nEffCols).reversed() {
+          if layoutStruct[i].effectiveLogicalWidth.isPercentOrCalculated() {
+            let cellLogicalWidth = layoutStruct[i].computedLogicalWidth
+            let reduction = min(cellLogicalWidth, excess)
+            // the lines below might look inconsistent, but that's the way it's handled in mozilla
+            excess -= reduction
+            let newLogicalWidth = max(
+              layoutStruct[i].effectiveMinLogicalWidth, cellLogicalWidth - reduction)
+            available += cellLogicalWidth - newLogicalWidth
+            layoutStruct[i].computedLogicalWidth = newLogicalWidth
+          }
+        }
+      }
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func fullRecalc() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func calcEffectiveLogicalWidth() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct Layout {
+    let logicalWidth = LengthWrapper()
+    let effectiveLogicalWidth = LengthWrapper()
+    let minLogicalWidth: Float32 = 0
+    let maxLogicalWidth: Float32 = 0
+    let effectiveMinLogicalWidth: Float32 = 0
+    let effectiveMaxLogicalWidth: Float32 = 0
+    var computedLogicalWidth: Float32 = 0
+    let emptyCellsOnly = true
+  }
+
+  private var layoutStruct: [Layout] = []
+  private let effectiveLogicalWidthDirty = false
+}
