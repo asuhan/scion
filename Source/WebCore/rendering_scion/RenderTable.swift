@@ -65,24 +65,32 @@ class RenderTableWrapper: RenderBlockWrapper {
     return super.borderAfter()
   }
 
-  override func borderLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func borderLeft() -> LayoutUnit {
+    if style().isHorizontalWritingMode() {
+      return style().isLeftToRightDirection() ? borderStart() : borderEnd()
+    }
+    return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore()
   }
 
-  override func borderRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func borderRight() -> LayoutUnit {
+    if style().isHorizontalWritingMode() {
+      return style().isLeftToRightDirection() ? borderEnd() : borderStart()
+    }
+    return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter()
   }
 
-  override func borderTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func borderTop() -> LayoutUnit {
+    if style().isHorizontalWritingMode() {
+      return style().isFlippedBlocksWritingMode() ? borderAfter() : borderBefore()
+    }
+    return style().isLeftToRightDirection() ? borderStart() : borderEnd()
   }
 
-  override func borderBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func borderBottom() -> LayoutUnit {
+    if style().isHorizontalWritingMode() {
+      return style().isFlippedBlocksWritingMode() ? borderBefore() : borderAfter()
+    }
+    return style().isLeftToRightDirection() ? borderEnd() : borderStart()
   }
 
   func outerBorderBefore() -> LayoutUnit {
