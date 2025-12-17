@@ -880,8 +880,29 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func layoutCaption(caption: RenderTableCaptionWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let captionRect = caption.frameRect()
+
+    if caption.needsLayout() {
+      // The margins may not be available but ensure the caption is at least located beneath any previous sibling caption
+      // so that it does not mistakenly think any floats in the previous caption intrude into it.
+      caption.setLogicalLocation(
+        location: LayoutPointWrapper(
+          x: caption.marginStart(), y: caption.marginBefore() + logicalHeight()))
+      // If RenderTableCaption ever gets a layout() function, use it here.
+      caption.layoutIfNeeded()
+    }
+    // Apply the margins to the location now that they are definitely available from layout
+    caption.setLogicalLocation(
+      location: LayoutPointWrapper(
+        x: caption.marginStart(), y: caption.marginBefore() + logicalHeight()))
+
+    if !selfNeedsLayout() && caption.checkForRepaintDuringLayout() {
+      caption.repaintDuringLayoutIfMoved(oldRect: captionRect)
+    }
+
+    setLogicalHeight(
+      size: logicalHeight() + caption.logicalHeight() + caption.marginBefore()
+        + caption.marginAfter())
   }
 
   private func distributeExtraLogicalHeight(extraLogicalHeight: LayoutUnit) {
