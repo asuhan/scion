@@ -44,10 +44,9 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  override func borderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override final func borderStart() -> LayoutUnit { return m_borderStart }
+
+  override final func borderEnd() -> LayoutUnit { return m_borderEnd }
 
   override func borderBefore() -> LayoutUnit {
     if collapseBorders() {
