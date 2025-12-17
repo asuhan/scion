@@ -516,7 +516,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
-  private func invalidateHasEmptyCollapsedBorders() {
+  func invalidateHasEmptyCollapsedBorders() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

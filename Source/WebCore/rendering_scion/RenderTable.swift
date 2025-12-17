@@ -512,11 +512,71 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func cellAbove(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cellBelow(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cellBefore(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cellAfter(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   typealias CollapsedBorderValues = [CollapsedBorderValue]
 
   private func invalidateCollapsedBorders(cellWithStyleChange: RenderTableCellWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    collapsedBordersValid = false
+    collapsedBorders.removeAll()
+
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      section.clearCachedCollapsedBorders()
+    }
+
+    if !collapsedEmptyBorderIsPresent {
+      return
+    }
+
+    if cellWithStyleChange != nil {
+      // It is enough to invalidate just the surrounding cells when cell border style changes.
+      cellWithStyleChange!.invalidateHasEmptyCollapsedBorders()
+      if let below = cellBelow(cell: cellWithStyleChange) {
+        below.invalidateHasEmptyCollapsedBorders()
+      }
+      if let above = cellAbove(cell: cellWithStyleChange) {
+        above.invalidateHasEmptyCollapsedBorders()
+      }
+      if let before = cellBefore(cell: cellWithStyleChange) {
+        before.invalidateHasEmptyCollapsedBorders()
+      }
+      if let after = cellAfter(cell: cellWithStyleChange) {
+        after.invalidateHasEmptyCollapsedBorders()
+      }
+      return
+    }
+
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      var row = section.firstRow()
+      while row != nil {
+        var cell = row!.firstCell()
+        while cell != nil {
+          assert(CPtrToInt(cell!.table()?.p) == CPtrToInt(p))
+          cell!.invalidateHasEmptyCollapsedBorders()
+          cell = cell!.nextCell()
+        }
+        row = row!.nextRow()
+      }
+    }
+    collapsedEmptyBorderIsPresent = false
   }
 
   func currentBorderValue() -> CollapsedBorderValue? { return currentBorder }
@@ -1336,6 +1396,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil
   private var collapsedBordersValid = false
+  private var collapsedEmptyBorderIsPresent = false
 
   private var columnLogicalWidthChanged = false
   private let hasCellColspanThatDeterminesTableWidth = false
