@@ -569,9 +569,18 @@ class RenderTableWrapper: RenderBlockWrapper {
     return nil
   }
 
-  private func cellBefore(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func cellBefore(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+    recalcSectionsIfNeeded()
+
+    let section = cell.section()
+    let effCol = colToEffCol(column: cell.col())
+    if effCol == 0 {
+      return nil
+    }
+
+    // If we hit a colspan back up to a real cell.
+    let prevCell = section!.cellAt(row: cell.rowIndex(), col: effCol - 1)
+    return prevCell.primaryCell()
   }
 
   private func cellAfter(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
@@ -602,7 +611,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       if let above = cellAbove(cell: cellWithStyleChange!) {
         above.invalidateHasEmptyCollapsedBorders()
       }
-      if let before = cellBefore(cell: cellWithStyleChange) {
+      if let before = cellBefore(cell: cellWithStyleChange!) {
         before.invalidateHasEmptyCollapsedBorders()
       }
       if let after = cellAfter(cell: cellWithStyleChange) {
