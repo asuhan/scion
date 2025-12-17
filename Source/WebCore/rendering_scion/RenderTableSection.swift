@@ -117,6 +117,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func computeOverflowFromCells() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func table() -> RenderTableWrapper? { return parent() as! RenderTableWrapper? }
 
   class CellStruct {

@@ -677,8 +677,17 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func simplifiedNormalFlowLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for caption in captions {
+      caption!.layoutIfNeeded()
+    }
+    var section = topSection()
+    while section != nil {
+      section!.layoutIfNeeded()
+      section!.layoutRows()
+      section!.computeOverflowFromCells()
+      section!.addVisualEffectOverflow()
+      section = sectionBelow(section: section)
+    }
   }
 
   override func avoidsFloats() -> Bool {
