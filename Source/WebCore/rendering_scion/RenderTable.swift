@@ -541,9 +541,32 @@ class RenderTableWrapper: RenderBlockWrapper {
     return nil
   }
 
-  private func cellBelow(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func cellBelow(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+    recalcSectionsIfNeeded()
+
+    // Find the section and row to look in
+    let r = cell.rowIndex() + cell.rowSpan() - 1
+    var section: RenderTableSectionWrapper? = nil
+    var rBelow: UInt32 = 0
+    if r < cell.section()!.numRows() - 1 {
+      // The cell is not in the last row, so use the next row in the section.
+      section = cell.section()
+      rBelow = r + 1
+    } else {
+      section = sectionBelow(section: cell.section(), skipEmptySections: .SkipEmptySections)
+      if section != nil {
+        rBelow = 0
+      }
+    }
+
+    // Look up the cell in the section's grid, which requires effective col index
+    if section != nil {
+      let effCol = colToEffCol(column: cell.col())
+      let belowCell = section!.cellAt(row: rBelow, col: effCol)
+      return belowCell.primaryCell()
+    }
+
+    return nil
   }
 
   private func cellBefore(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
@@ -573,7 +596,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     if cellWithStyleChange != nil {
       // It is enough to invalidate just the surrounding cells when cell border style changes.
       cellWithStyleChange!.invalidateHasEmptyCollapsedBorders()
-      if let below = cellBelow(cell: cellWithStyleChange) {
+      if let below = cellBelow(cell: cellWithStyleChange!) {
         below.invalidateHasEmptyCollapsedBorders()
       }
       if let above = cellAbove(cell: cellWithStyleChange!) {
