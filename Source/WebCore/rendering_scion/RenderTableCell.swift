@@ -202,6 +202,16 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func collectBorderValues(borderValues: inout RenderTableWrapper.CollapsedBorderValues) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func sortBorderValues(borderValues: inout RenderTableWrapper.CollapsedBorderValues) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
 

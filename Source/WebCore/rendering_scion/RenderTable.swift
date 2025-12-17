@@ -854,9 +854,26 @@ class RenderTableWrapper: RenderBlockWrapper {
     super.adjustBorderBoxRectForPainting(paintRect: &paintRect)
   }
 
+  // Collect all the unique border values that we want to paint in a sorted list.
   private func recalcCollapsedBorders() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if collapsedBordersValid {
+      return
+    }
+    collapsedBorders.removeAll()
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      var row = section.firstRow()
+      while row != nil {
+        var cell = row!.firstCell()
+        while cell != nil {
+          assert(CPtrToInt(cell!.table()?.p) == CPtrToInt(p))
+          cell!.collectBorderValues(borderValues: &collapsedBorders)
+          cell = cell!.nextCell()
+        }
+        row = row!.nextRow()
+      }
+    }
+    RenderTableCellWrapper.sortBorderValues(borderValues: &collapsedBorders)
+    collapsedBordersValid = true
   }
 
   enum BottomCaptionLayoutPhase {
@@ -928,8 +945,9 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private let tableLayout: TableLayout? = nil
 
-  private let collapsedBorders = CollapsedBorderValues()
+  private var collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil
+  private var collapsedBordersValid = false
 
   private var columnLogicalWidthChanged = false
 
