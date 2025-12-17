@@ -787,8 +787,24 @@ class RenderTableWrapper: RenderBlockWrapper {
   private func convertStyleLogicalWidthToComputedWidth(
     styleLogicalWidth: LengthWrapper, availableWidth: LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleLogicalWidth.isIntrinsic() {
+      return computeIntrinsicLogicalWidthUsing(
+        logicalWidthLength: styleLogicalWidth, availableLogicalWidth: availableWidth,
+        borderAndPadding: bordersPaddingAndSpacingInRowDirection())
+    }
+
+    // HTML tables' width styles already include borders and padding, but CSS tables' width styles do not.
+    var borders = LayoutUnit()
+    let isCSSTable = !(element() is HTMLTableElementWrapper)
+    if isCSSTable && styleLogicalWidth.isSpecified() && styleLogicalWidth.isPositive()
+      && style().boxSizing() == .ContentBox
+    {
+      borders =
+        borderStart() + borderEnd()
+        + (collapseBorders() ? LayoutUnit(value: UInt64(0)) : paddingStart() + paddingEnd())
+    }
+
+    return minimumValueForLength(length: styleLogicalWidth, maximumValue: availableWidth) + borders
   }
 
   private func convertStyleLogicalHeightToComputedHeight(styleLogicalHeight: LengthWrapper)

@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     HTMLLegendElement.swift
     HTMLSelectElement.swift
     HTMLSlotElement.swift
+    HTMLTableElement.swift
     HTMLTextAreaElement.swift
     HTMLTextFormControlElement.swift
 )

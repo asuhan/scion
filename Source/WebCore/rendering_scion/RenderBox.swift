@@ -4140,7 +4140,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  private func computeIntrinsicLogicalWidthUsing(
+  func computeIntrinsicLogicalWidthUsing(
     logicalWidthLength: LengthWrapper, availableLogicalWidth: LayoutUnit,
     borderAndPadding: LayoutUnit
   ) -> LayoutUnit {
