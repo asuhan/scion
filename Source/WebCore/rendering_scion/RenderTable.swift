@@ -405,11 +405,6 @@ class RenderTableWrapper: RenderBlockWrapper {
     columnPos[index] = position
   }
 
-  func firstBody() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   // This function returns nil if the table has no section.
   func topSection() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
@@ -1393,8 +1388,79 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func recalcSections() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(needsSectionRecalc)
+
+    head = nil
+    foot = nil
+    firstBody = nil
+    hasColElements = false
+    hasCellColspanThatDeterminesTableWidth = computeHasCellColspanThatDeterminesTableWidth()
+
+    // We need to get valid pointers to caption, head, foot and first body again
+    var nextSibling: RenderObjectWrapper? = nil
+    var child = firstChild()
+    while child != nil {
+      nextSibling = child!.nextSibling()
+      switch child!.style().display() {
+      case .TableColumn, .TableColumnGroup:
+        hasColElements = true
+      case .TableHeaderGroup:
+        if let section = child as? RenderTableSectionWrapper {
+          if head == nil {
+            head = section
+          } else if firstBody == nil {
+            firstBody = section
+          }
+          section.recalcCellsIfNeeded()
+        }
+      case .TableFooterGroup:
+        if let section = child as? RenderTableSectionWrapper {
+          if foot == nil {
+            foot = section
+          } else if firstBody == nil {
+            firstBody = section
+          }
+          section.recalcCellsIfNeeded()
+        }
+      case .TableRowGroup:
+        if let section = child as? RenderTableSectionWrapper {
+          if firstBody == nil {
+            firstBody = section
+          }
+          section.recalcCellsIfNeeded()
+        }
+      default:
+        break
+      }
+      child = nextSibling
+    }
+
+    // repair column count (addChild can grow it too much, because it always adds elements to the last row of a section)
+    var maxCols: UInt32 = 0
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      let sectionCols = section.numColumns()
+      if sectionCols > maxCols {
+        maxCols = sectionCols
+      }
+    }
+
+    assert(maxCols >= columns.count)
+    while columns.count < maxCols {
+      columns.append(ColumnStruct())
+    }
+    assert(maxCols + 1 >= columnPos.count)
+    while columnPos.count < maxCols + 1 {
+      columnPos.append(LayoutUnit())
+    }
+
+    // Now that we know the number of maximum number of columns, let's shrink the sections grids if needed.
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      section.removeRedundantColumns()
+    }
+
+    assert(selfNeedsLayout() || wasSkippedDuringLastLayoutDueToContentVisibility() ?? true)
+
+    needsSectionRecalc = false
   }
 
   enum BottomCaptionLayoutPhase {
@@ -1450,7 +1516,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
     // FIXME: Distribute the extra logical height between all table sections instead of giving it all to the first one.
     var extraLogicalHeight = extraLogicalHeight
-    if let section = firstBody() {
+    if let section = firstBody {
       extraLogicalHeight -= section.distributeExtraLogicalHeightToRows(
         extraLogicalHeight: extraLogicalHeight)
     }
@@ -1460,9 +1526,22 @@ class RenderTableWrapper: RenderBlockWrapper {
     // ASSERT(!topSection() || !extraLogicalHeight);
   }
 
+  private func computeHasCellColspanThatDeterminesTableWidth() -> Bool {
+    for c in 0..<Int(numEffCols()) {
+      if columns[c].span > 1 {
+        return true
+      }
+    }
+    return false
+  }
+
   private var columnPos: [LayoutUnit] = []
-  let columns: [ColumnStruct] = []
+  var columns: [ColumnStruct] = []
   private let captions: [RenderTableCaptionWrapper?] = []
+
+  private var head: RenderTableSectionWrapper? = nil
+  private var foot: RenderTableSectionWrapper? = nil
+  private var firstBody: RenderTableSectionWrapper? = nil
 
   private let tableLayout: TableLayout? = nil
 
@@ -1471,8 +1550,11 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var collapsedBordersValid = false
   private var collapsedEmptyBorderIsPresent = false
 
+  private var hasColElements = false
+  private var needsSectionRecalc = false
+
   private var columnLogicalWidthChanged = false
-  private let hasCellColspanThatDeterminesTableWidth = false
+  private var hasCellColspanThatDeterminesTableWidth = false
 
   private let hSpacing = LayoutUnit()
   private let vSpacing = LayoutUnit()

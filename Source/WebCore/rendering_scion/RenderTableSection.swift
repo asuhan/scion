@@ -195,6 +195,21 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func numColumns() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func recalcCellsIfNeeded() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeRedundantColumns() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCellRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
