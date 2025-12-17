@@ -245,9 +245,20 @@ class RenderTableWrapper: RenderBlockWrapper {
     return style().isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart()
   }
 
-  func recalcBordersInRowDirection() {
+  private func calcBorderStart() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func calcBorderEnd() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func recalcBordersInRowDirection() {
+    // FIXME: We need to compute the collapsed before / after borders in the same fashion.
+    self.m_borderStart = calcBorderStart()
+    self.m_borderEnd = calcBorderEnd()
   }
 
   func forceSectionsRecalc() {
@@ -1166,5 +1177,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private let hSpacing = LayoutUnit()
   private let vSpacing = LayoutUnit()
+  private var m_borderStart = LayoutUnit()
+  private var m_borderEnd = LayoutUnit()
   private var recursiveSectionMovedWithPaginationLevel = 0
 }
