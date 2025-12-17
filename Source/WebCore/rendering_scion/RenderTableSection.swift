@@ -140,6 +140,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     var rowRenderer: RenderTableRowWrapper? = nil
   }
 
+  func borderAdjoiningTableStart() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func cellAt(row: UInt32, col: UInt32) -> CellStruct {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

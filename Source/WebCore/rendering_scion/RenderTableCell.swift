@@ -506,6 +506,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   // This means we can safely use the same style in all cases to simplify our code.
   func styleForCellFlow() -> RenderStyleWrapper { return table()!.style() }
 
+  func borderAdjoiningTableStart() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func invalidateHasEmptyCollapsedBorders() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

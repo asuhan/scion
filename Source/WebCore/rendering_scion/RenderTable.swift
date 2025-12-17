@@ -245,8 +245,70 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func calcBorderStart() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !collapseBorders() {
+      return super.borderStart()
+    }
+
+    // Determined by the first cell of the first row. See the CSS 2.1 spec, section 17.6.2.
+    if numEffCols() == 0 {
+      return LayoutUnit(value: 0)
+    }
+
+    var borderWidth: Float32 = 0
+
+    let tableStartBorder = style().borderStart()
+    if tableStartBorder.style == .Hidden {
+      return LayoutUnit(value: 0)
+    }
+    if tableStartBorder.style != .None {
+      borderWidth = tableStartBorder.width
+    }
+
+    if let column = colElement(col: 0) {
+      // FIXME: We don't account for direction on columns and column groups.
+      let columnAdjoiningBorder = column.style().borderStart()
+      if columnAdjoiningBorder.style == .Hidden {
+        return LayoutUnit(value: 0)
+      }
+      if columnAdjoiningBorder.style != .None {
+        borderWidth = max(borderWidth, columnAdjoiningBorder.width)
+      }
+      // FIXME: This logic doesn't properly account for the first column in the first column-group case.
+    }
+
+    if let topNonEmptySection = topNonEmptySection() {
+      let sectionAdjoiningBorder = topNonEmptySection.borderAdjoiningTableStart()
+      if sectionAdjoiningBorder.style == .Hidden {
+        return LayoutUnit(value: 0)
+      }
+
+      if sectionAdjoiningBorder.style != .None {
+        borderWidth = max(borderWidth, sectionAdjoiningBorder.width)
+      }
+
+      if let adjoiningStartCell = topNonEmptySection.cellAt(row: 0, col: 0).primaryCell() {
+        // FIXME: Make this work with perpendicular and flipped cells.
+        let startCellAdjoiningBorder = adjoiningStartCell.borderAdjoiningTableStart()
+        if startCellAdjoiningBorder.style == .Hidden {
+          return LayoutUnit(value: 0)
+        }
+
+        let firstRowAdjoiningBorder = adjoiningStartCell.row()!.borderAdjoiningTableStart()
+        if firstRowAdjoiningBorder.style == .Hidden {
+          return LayoutUnit(value: 0)
+        }
+
+        if startCellAdjoiningBorder.style != .None {
+          borderWidth = max(borderWidth, startCellAdjoiningBorder.width)
+        }
+        if firstRowAdjoiningBorder.style != .None {
+          borderWidth = max(borderWidth, firstRowAdjoiningBorder.width)
+        }
+      }
+    }
+    return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+      borderWidth: borderWidth, deviceScaleFactor: document().deviceScaleFactor(),
+      roundUp: !style().isLeftToRightDirection())
   }
 
   private func calcBorderEnd() -> LayoutUnit {
