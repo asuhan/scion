@@ -27,6 +27,11 @@ enum SkipEmptySectionsValue {
   case SkipEmptySections
 }
 
+enum TableIntrinsics {
+  case ForLayout
+  case ForKeyword
+}
+
 class RenderTableWrapper: RenderBlockWrapper {
   // Per CSS 3 writing-mode: "The first and second values of the 'border-spacing' property represent spacing between columns
   // and rows respectively, not necessarily the horizontal and vertical spacing respectively".
@@ -639,18 +644,28 @@ class RenderTableWrapper: RenderBlockWrapper {
     clearNeedsLayout()
   }
 
+  private func computeIntrinsicLogicalWidths(intrinsics: TableIntrinsics) -> (
+    LayoutUnit, LayoutUnit
+  ) {
+    recalcSectionsIfNeeded()
+    // FIXME: Do the recalc in borderStart/borderEnd and make those const_cast this call.
+    // Then m_borderStart/m_borderEnd will be transparent a cache and it removes the possibility
+    // of reading out stale values.
+    recalcBordersInRowDirection()
+    // FIXME: We should include captions widths here like we do in computePreferredLogicalWidths.
+    return tableLayout!.computeIntrinsicLogicalWidths(intrinsics: intrinsics)
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    (minLogicalWidth, maxLogicalWidth) = computeIntrinsicLogicalWidths(intrinsics: .ForLayout)
   }
 
   override func computeIntrinsicKeywordLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    (minLogicalWidth, maxLogicalWidth) = computeIntrinsicLogicalWidths(intrinsics: .ForKeyword)
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
