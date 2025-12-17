@@ -66,6 +66,13 @@ private struct CollapsedBorders {
   private var borders: [CollapsedBorder] = []
 }
 
+private func addBorderStyle(
+  borderValues: inout RenderTableWrapper.CollapsedBorderValues, borderValue: CollapsedBorderValue
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTableWrapper)
   -> LayoutRectWrapper
 {
@@ -114,6 +121,11 @@ private func backgroundRectForSection(
     }
   }
   return rect
+}
+
+private enum IncludeBorderColorOrNot {
+  case DoNotIncludeBorderColor
+  case IncludeBorderColor
 }
 
 final class RenderTableCellWrapper: RenderBlockFlowWrapper {
@@ -203,8 +215,10 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func collectBorderValues(borderValues: inout RenderTableWrapper.CollapsedBorderValues) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    addBorderStyle(borderValues: &borderValues, borderValue: collapsedStartBorder())
+    addBorderStyle(borderValues: &borderValues, borderValue: collapsedEndBorder())
+    addBorderStyle(borderValues: &borderValues, borderValue: collapsedBeforeBorder())
+    addBorderStyle(borderValues: &borderValues, borderValue: collapsedAfterBorder())
   }
 
   static func sortBorderValues(borderValues: inout RenderTableWrapper.CollapsedBorderValues) {
@@ -555,6 +569,34 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   private func setIntrinsicPaddingBefore(p: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collapsedStartBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
+    -> CollapsedBorderValue
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collapsedEndBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
+    -> CollapsedBorderValue
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collapsedBeforeBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
+    -> CollapsedBorderValue
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collapsedAfterBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
+    -> CollapsedBorderValue
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
