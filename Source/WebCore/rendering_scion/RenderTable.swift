@@ -182,8 +182,39 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func outerBorderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !collapseBorders() {
+      return LayoutUnit(value: 0)
+    }
+
+    var borderWidth = LayoutUnit()
+
+    let tb = style().borderEnd()
+    if tb.style == .Hidden {
+      return LayoutUnit(value: 0)
+    }
+    if tb.style != .None {
+      return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+        borderWidth: tb.width, deviceScaleFactor: document().deviceScaleFactor(),
+        roundUp: style().isLeftToRightDirection())
+    }
+
+    var allHidden = true
+    var section = topSection()
+    while section != nil {
+      let sw = section!.outerBorderEnd
+      if sw < Int32(0) {
+        section = sectionBelow(section: section)
+        continue
+      }
+      allHidden = false
+      borderWidth = max(borderWidth, sw)
+      section = sectionBelow(section: section)
+    }
+    if allHidden {
+      return LayoutUnit(value: 0)
+    }
+
+    return borderWidth
   }
 
   func outerBorderLeft() -> LayoutUnit {

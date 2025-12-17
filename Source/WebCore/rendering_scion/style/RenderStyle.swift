@@ -337,6 +337,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func borderEnd() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fontCascade() -> FontCascadeWrapper {
     return inheritedData.fontCascade
   }
