@@ -459,9 +459,21 @@ class RenderTableWrapper: RenderBlockWrapper {
     return effColumn
   }
 
+  private func borderSpacingInRowDirection() -> LayoutUnit {
+    let effectiveColumnCount = numEffCols()
+    if effectiveColumnCount != 0 {
+      return (effectiveColumnCount + 1) * hBorderSpacing()
+    }
+
+    return LayoutUnit(value: 0)
+  }
+
   func bordersPaddingAndSpacingInRowDirection() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // 'border-spacing' only applies to separate borders (see 17.6.1 The separated borders model).
+    return borderStart() + borderEnd()
+      + (collapseBorders()
+        ? LayoutUnit(value: UInt64(0))
+        : (paddingStart() + paddingEnd() + borderSpacingInRowDirection()))
   }
 
   // Return the first column or column-group.
