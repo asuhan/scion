@@ -153,6 +153,12 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // This function returns 0 if the table has no non-empty sections.
+  func topNonEmptySection() -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func numEffCols() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -643,8 +649,24 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The baseline of a 'table' is the same as the 'inline-table' baseline per CSS 3 Flexbox (CSS 2.1
+    // doesn't define the baseline of a 'table' only an 'inline-table').
+    // This is also needed to properly determine the baseline of a cell if it has a table child.
+
+    if (isWritingModeRoot() && !isFlexItem()) || shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    recalcSectionsIfNeeded()
+
+    if let topNonEmptySection = topNonEmptySection(),
+      let baseline = topNonEmptySection.firstLineBaseline()
+    {
+      return topNonEmptySection.logicalTop() + baseline
+    }
+
+    // FIXME: A table row always has a baseline per CSS 2.1. Will this return the right value?
+    return nil
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
