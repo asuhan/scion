@@ -218,23 +218,31 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func outerBorderLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().isHorizontalWritingMode() {
+      return style().isLeftToRightDirection() ? outerBorderStart() : outerBorderEnd()
+    }
+    return style().isFlippedBlocksWritingMode() ? outerBorderAfter() : outerBorderBefore()
   }
 
   func outerBorderRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().isHorizontalWritingMode() {
+      return style().isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart()
+    }
+    return style().isFlippedBlocksWritingMode() ? outerBorderBefore() : outerBorderAfter()
   }
 
   func outerBorderTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().isHorizontalWritingMode() {
+      return style().isFlippedBlocksWritingMode() ? outerBorderAfter() : outerBorderBefore()
+    }
+    return style().isLeftToRightDirection() ? outerBorderStart() : outerBorderEnd()
   }
 
   func outerBorderBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().isHorizontalWritingMode() {
+      return style().isFlippedBlocksWritingMode() ? outerBorderBefore() : outerBorderAfter()
+    }
+    return style().isLeftToRightDirection() ? outerBorderEnd() : outerBorderStart()
   }
 
   func recalcBordersInRowDirection() {
