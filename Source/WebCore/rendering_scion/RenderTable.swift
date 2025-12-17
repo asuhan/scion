@@ -50,13 +50,19 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func borderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if collapseBorders() {
+      recalcSectionsIfNeeded()
+      return outerBorderBefore()
+    }
+    return super.borderBefore()
   }
 
   override func borderAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if collapseBorders() {
+      recalcSectionsIfNeeded()
+      return outerBorderAfter()
+    }
+    return super.borderAfter()
   }
 
   override func borderLeft() -> LayoutUnit {
