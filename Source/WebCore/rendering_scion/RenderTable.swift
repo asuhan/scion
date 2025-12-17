@@ -312,8 +312,73 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func calcBorderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !collapseBorders() {
+      return super.borderEnd()
+    }
+
+    // Determined by the last cell of the first row. See the CSS 2.1 spec, section 17.6.2.
+    if numEffCols() == 0 {
+      return LayoutUnit(value: 0)
+    }
+
+    var borderWidth: Float32 = 0
+
+    let tableEndBorder = style().borderEnd()
+    if tableEndBorder.style == .Hidden {
+      return LayoutUnit(value: 0)
+    }
+    if tableEndBorder.style != .None {
+      borderWidth = tableEndBorder.width
+    }
+
+    let endColumn = numEffCols() - 1
+    if let column = colElement(col: endColumn) {
+      // FIXME: We don't account for direction on columns and column groups.
+      let columnAdjoiningBorder = column.style().borderEnd()
+      if columnAdjoiningBorder.style == .Hidden {
+        return LayoutUnit(value: 0)
+      }
+      if columnAdjoiningBorder.style != .None {
+        borderWidth = max(borderWidth, columnAdjoiningBorder.width)
+      }
+      // FIXME: This logic doesn't properly account for the last column in the last column-group case.
+    }
+
+    if let topNonEmptySection = topNonEmptySection() {
+      let sectionAdjoiningBorder = topNonEmptySection.borderAdjoiningTableEnd()
+      if sectionAdjoiningBorder.style == .Hidden {
+        return LayoutUnit(value: 0)
+      }
+
+      if sectionAdjoiningBorder.style != .None {
+        borderWidth = max(borderWidth, sectionAdjoiningBorder.width)
+      }
+
+      if let adjoiningEndCell = topNonEmptySection.cellAt(row: 0, col: lastColumnIndex())
+        .primaryCell()
+      {
+        // FIXME: Make this work with perpendicular and flipped cells.
+        let endCellAdjoiningBorder = adjoiningEndCell.borderAdjoiningTableEnd()
+        if endCellAdjoiningBorder.style == .Hidden {
+          return LayoutUnit(value: 0)
+        }
+
+        let firstRowAdjoiningBorder = adjoiningEndCell.row()!.borderAdjoiningTableEnd()
+        if firstRowAdjoiningBorder.style == .Hidden {
+          return LayoutUnit(value: 0)
+        }
+
+        if endCellAdjoiningBorder.style != .None {
+          borderWidth = max(borderWidth, endCellAdjoiningBorder.width)
+        }
+        if firstRowAdjoiningBorder.style != .None {
+          borderWidth = max(borderWidth, firstRowAdjoiningBorder.width)
+        }
+      }
+    }
+    return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+      borderWidth: borderWidth, deviceScaleFactor: document().deviceScaleFactor(),
+      roundUp: style().isLeftToRightDirection())
   }
 
   func recalcBordersInRowDirection() {
@@ -366,6 +431,8 @@ class RenderTableWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func lastColumnIndex() -> UInt32 { return numEffCols() - 1 }
 
   func numEffCols() -> UInt32 {
     // TODO(asuhan): implement this

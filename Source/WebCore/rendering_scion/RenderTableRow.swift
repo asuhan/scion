@@ -71,6 +71,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func borderAdjoiningTableEnd() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func section() -> RenderTableSectionWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

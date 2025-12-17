@@ -511,6 +511,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func borderAdjoiningTableEnd() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func invalidateHasEmptyCollapsedBorders() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
