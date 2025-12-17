@@ -478,8 +478,12 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   // Return the first column or column-group.
   func firstColumn() -> RenderTableColWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for child: RenderObjectWrapper in childrenOfType(parent: self) {
+      if let column = child as? RenderTableColWrapper {
+        return column
+      }
+    }
+    return nil
   }
 
   func colElement(col: UInt32) -> RenderTableColWrapper? {
