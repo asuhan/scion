@@ -24,4 +24,5 @@
 
 struct BorderValue {
   let width: Float32 = 3
+  let style: BorderStyle = .None
 }

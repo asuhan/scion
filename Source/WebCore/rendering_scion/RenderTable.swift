@@ -94,8 +94,27 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func outerBorderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !collapseBorders() {
+      return LayoutUnit(value: 0)
+    }
+    var borderWidth = LayoutUnit()
+    if let topSection = topSection() {
+      borderWidth = topSection.outerBorderBefore
+      if borderWidth < Int32(0) {
+        return LayoutUnit(value: 0)  // Overridden by hidden
+      }
+    }
+    let tb = style().borderBefore()
+    if tb.style == .Hidden {
+      return LayoutUnit(value: 0)
+    }
+    if tb.style != .None {
+      let collapsedBorderWidth = max(borderWidth, LayoutUnit(value: tb.width / 2))
+      borderWidth = LayoutUnit(
+        value: floorToDevicePixel(
+          value: collapsedBorderWidth, pixelSnappingFactor: document().deviceScaleFactor()))
+    }
+    return borderWidth
   }
 
   func outerBorderAfter() -> LayoutUnit {

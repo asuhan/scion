@@ -803,6 +803,8 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   var cCol: UInt32 = 0
   var cRow: UInt32 = 0
 
+  let outerBorderBefore = LayoutUnit()
+
   // This HashSet holds the overflowing cells for faster painting.
   // If we have more than gMaxAllowedOverflowingCellRatio * total cells, it will be empty
   // and m_forceSlowPaintPathWithOverflowingCell will be set to save memory.
