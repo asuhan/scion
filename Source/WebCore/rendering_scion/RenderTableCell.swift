@@ -169,7 +169,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
-  private func rowIndex() -> UInt32 {
+  func rowIndex() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

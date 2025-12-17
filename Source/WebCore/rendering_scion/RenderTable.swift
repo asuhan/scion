@@ -512,9 +512,33 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func cellAbove(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func cellAbove(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+    recalcSectionsIfNeeded()
+
+    // Find the section and row to look in
+    let r = cell.rowIndex()
+    var section: RenderTableSectionWrapper? = nil
+    var rAbove: UInt32 = 0
+    if r > 0 {
+      // cell is not in the first row, so use the above row in its own section
+      section = cell.section()
+      rAbove = r - 1
+    } else {
+      section = sectionAbove(section: cell.section(), skipEmptySections: .SkipEmptySections)
+      if section != nil {
+        assert(section!.numRows() != 0)
+        rAbove = section!.numRows() - 1
+      }
+    }
+
+    // Look up the cell in the section's grid, which requires effective col index
+    if section != nil {
+      let effCol = colToEffCol(column: cell.col())
+      let aboveCell = section!.cellAt(row: rAbove, col: effCol)
+      return aboveCell.primaryCell()
+    }
+
+    return nil
   }
 
   private func cellBelow(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
@@ -552,7 +576,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       if let below = cellBelow(cell: cellWithStyleChange) {
         below.invalidateHasEmptyCollapsedBorders()
       }
-      if let above = cellAbove(cell: cellWithStyleChange) {
+      if let above = cellAbove(cell: cellWithStyleChange!) {
         above.invalidateHasEmptyCollapsedBorders()
       }
       if let before = cellBefore(cell: cellWithStyleChange) {

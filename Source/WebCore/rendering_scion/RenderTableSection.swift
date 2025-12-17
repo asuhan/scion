@@ -185,6 +185,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func numRows() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCellRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
