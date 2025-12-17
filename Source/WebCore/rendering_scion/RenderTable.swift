@@ -393,7 +393,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   struct ColumnStruct {
-    let span: Int32 = 1
+    let span: UInt32 = 1
   }
 
   func columnPositions() -> [LayoutUnit] { return columnPos }
@@ -445,8 +445,18 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func colToEffCol(column: UInt32) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasCellColspanThatDeterminesTableWidth {
+      return column
+    }
+
+    var effColumn: UInt32 = 0
+    let numColumns = numEffCols()
+    var c: UInt32 = 0
+    while effColumn < numColumns && c + columns[Int(effColumn)].span - 1 < column {
+      c += columns[Int(effColumn)].span
+      effColumn += 1
+    }
+    return effColumn
   }
 
   func bordersPaddingAndSpacingInRowDirection() -> LayoutUnit {
@@ -1312,6 +1322,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var collapsedBordersValid = false
 
   private var columnLogicalWidthChanged = false
+  private let hasCellColspanThatDeterminesTableWidth = false
 
   private let hSpacing = LayoutUnit()
   private let vSpacing = LayoutUnit()
