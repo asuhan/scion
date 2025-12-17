@@ -583,9 +583,14 @@ class RenderTableWrapper: RenderBlockWrapper {
     return prevCell.primaryCell()
   }
 
-  private func cellAfter(cell: RenderTableCellWrapper?) -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func cellAfter(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+    recalcSectionsIfNeeded()
+
+    let effCol = colToEffCol(column: cell.col() + cell.colSpan())
+    if effCol >= numEffCols() {
+      return nil
+    }
+    return cell.section()!.primaryCellAt(row: cell.rowIndex(), col: effCol)
   }
 
   typealias CollapsedBorderValues = [CollapsedBorderValue]
@@ -614,7 +619,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       if let before = cellBefore(cell: cellWithStyleChange!) {
         before.invalidateHasEmptyCollapsedBorders()
       }
-      if let after = cellAfter(cell: cellWithStyleChange) {
+      if let after = cellAfter(cell: cellWithStyleChange!) {
         after.invalidateHasEmptyCollapsedBorders()
       }
       return
