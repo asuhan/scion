@@ -159,6 +159,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func bottomNonEmptySection() -> RenderTableSectionWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func numEffCols() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -670,8 +675,17 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isWritingModeRoot() || shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    recalcSectionsIfNeeded()
+
+    if let tableSection = bottomNonEmptySection(), let baseline = tableSection.lastLineBaseline() {
+      return baseline + tableSection.logicalTop()
+    }
+
+    return nil
   }
 
   private func invalidateCachedColumnOffsets() {
