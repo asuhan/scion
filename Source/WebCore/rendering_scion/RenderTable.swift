@@ -810,8 +810,28 @@ class RenderTableWrapper: RenderBlockWrapper {
   private func convertStyleLogicalHeightToComputedHeight(styleLogicalHeight: LengthWrapper)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let zero = LayoutUnit(value: UInt64(0))
+    let borderAndPaddingBefore = borderBefore() + (collapseBorders() ? zero : paddingBefore())
+    let borderAndPaddingAfter = borderAfter() + (collapseBorders() ? zero : paddingAfter())
+    let borderAndPadding = borderAndPaddingBefore + borderAndPaddingAfter
+    if styleLogicalHeight.isFixed() {
+      // HTML tables size as though CSS height includes border/padding, CSS tables do not.
+      var borders = LayoutUnit()
+      // FIXME: We cannot apply box-sizing: content-box on <table> which other browsers allow.
+      if (element() is HTMLTableElementWrapper) || style().boxSizing() == .BorderBox {
+        borders = borderAndPadding
+      }
+      return LayoutUnit(value: styleLogicalHeight.value() - borders)
+    } else if styleLogicalHeight.isPercentOrCalculated() {
+      return computePercentageLogicalHeight(height: styleLogicalHeight) ?? LayoutUnit(value: 0)
+    } else if styleLogicalHeight.isIntrinsic() {
+      return computeIntrinsicLogicalContentHeightUsing(
+        logicalHeightLength: styleLogicalHeight,
+        intrinsicContentHeight: logicalHeight() - borderAndPadding,
+        borderAndPadding: borderAndPadding) ?? LayoutUnit(value: 0)
+    } else {
+      fatalError("Not reached")
+    }
   }
 
   override func addOverflowFromChildren() {

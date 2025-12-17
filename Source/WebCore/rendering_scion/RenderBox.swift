@@ -4186,7 +4186,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not reached")
   }
 
-  private func computeIntrinsicLogicalContentHeightUsing(
+  func computeIntrinsicLogicalContentHeightUsing(
     logicalHeightLength: LengthWrapper, intrinsicContentHeight: LayoutUnit?,
     borderAndPadding: LayoutUnit
   ) -> LayoutUnit? {
