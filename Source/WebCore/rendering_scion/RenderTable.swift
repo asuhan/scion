@@ -669,8 +669,11 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func sumCaptionsLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var height = LayoutUnit()
+    for caption in captions {
+      height += caption!.logicalHeight() + caption!.marginBefore() + caption!.marginAfter()
+    }
+    return height
   }
 
   override func simplifiedNormalFlowLayout() {
