@@ -261,8 +261,8 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func forceSectionsRecalc() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setNeedsSectionRecalc()
+    recalcSections()
   }
 
   struct ColumnStruct {
@@ -332,6 +332,11 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func colElement(col: UInt32) -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setNeedsSectionRecalc() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1097,6 +1102,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     }
     RenderTableCellWrapper.sortBorderValues(borderValues: &collapsedBorders)
     collapsedBordersValid = true
+  }
+
+  private func recalcSections() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   enum BottomCaptionLayoutPhase {
