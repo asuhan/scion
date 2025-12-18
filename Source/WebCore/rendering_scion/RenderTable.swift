@@ -515,8 +515,11 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func setNeedsSectionRecalc() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderTreeBeingDestroyed() {
+      return
+    }
+    needsSectionRecalc = true
+    setNeedsLayout()
   }
 
   func sectionAbove(
