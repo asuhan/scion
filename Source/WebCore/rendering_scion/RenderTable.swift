@@ -563,8 +563,31 @@ class RenderTableWrapper: RenderBlockWrapper {
     section: RenderTableSectionWrapper?,
     skipEmptySections: SkipEmptySectionsValue = .DoNotSkipEmptySections
   ) -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    recalcSectionsIfNeeded()
+
+    if CPtrToInt(section?.p) == CPtrToInt(foot?.p) {
+      return nil
+    }
+
+    var nextSection =
+      CPtrToInt(section?.p) == CPtrToInt(head?.p) ? firstChild() : section!.nextSibling()
+    while nextSection != nil {
+      let tableSection = nextSection as? RenderTableSectionWrapper
+      if tableSection != nil && CPtrToInt(nextSection!.p) != CPtrToInt(head?.p)
+        && CPtrToInt(nextSection!.p) != CPtrToInt(foot?.p)
+        && (skipEmptySections == .DoNotSkipEmptySections
+          || (nextSection as! RenderTableSectionWrapper).numRows() != 0)
+      {
+        return tableSection
+      }
+      nextSection = nextSection!.nextSibling()
+    }
+    if nextSection == nil && foot != nil
+      && (skipEmptySections == .DoNotSkipEmptySections || foot!.numRows() != 0)
+    {
+      return foot
+    }
+    return nil
   }
 
   private func cellAbove(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
