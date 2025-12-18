@@ -54,10 +54,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func vBorderSpacing() -> LayoutUnit { return vSpacing }
 
-  func collapseBorders() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func collapseBorders() -> Bool { return style().borderCollapse() == .Collapse }
 
   override final func borderStart() -> LayoutUnit { return m_borderStart }
 
