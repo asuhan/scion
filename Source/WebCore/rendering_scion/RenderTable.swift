@@ -405,7 +405,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   struct ColumnStruct {
-    let span: UInt32 = 1
+    var span: UInt32 = 1
   }
 
   func columnPositions() -> [LayoutUnit] { return columnPos }
@@ -464,8 +464,24 @@ class RenderTableWrapper: RenderBlockWrapper {
   private func lastColumnIndex() -> UInt32 { return numEffCols() - 1 }
 
   func splitColumn(position: UInt32, firstSpan: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We split the column at "position", taking "firstSpan" cells from the span.
+    assert(columns[Int(position)].span > firstSpan)
+    columns.insert(ColumnStruct(span: firstSpan), at: Int(position))
+    columns[Int(position + 1)].span -= firstSpan
+
+    // Propagate the change in our columns representation to the sections that don't need
+    // cell recalc. If they do, they will be synced up directly with m_columns later.
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      if section.needsCellRecalc {
+        continue
+      }
+
+      section.splitColumn(pos: position, first: firstSpan)
+    }
+
+    while columnPos.count < numEffCols() + 1 {
+      columnPos.append(LayoutUnit())
+    }
   }
 
   func appendColumn(span: UInt32) {

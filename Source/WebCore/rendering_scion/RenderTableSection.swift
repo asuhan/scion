@@ -165,6 +165,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func splitColumn(pos: UInt32, first: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func recalcOuterBorder() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -855,4 +860,5 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
   private let forceSlowPaintPathWithOverflowingCell = false
   private let hasMultipleCellLevels = false
+  let needsCellRecalc = false
 }
