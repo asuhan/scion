@@ -422,13 +422,29 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   // This function returns nil if the table has no section.
   func topSection() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!needsSectionRecalc)
+    if head != nil {
+      return head
+    }
+    if firstBody != nil {
+      return firstBody
+    }
+    return foot
   }
 
   func bottomSection() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    recalcSectionsIfNeeded()
+    if foot != nil {
+      return foot
+    }
+    var child = lastChild()
+    while child != nil {
+      if let tableSection = child as? RenderTableSectionWrapper {
+        return tableSection
+      }
+      child = child!.previousSibling()
+    }
+    return nil
   }
 
   // This function returns 0 if the table has no non-empty sections.
