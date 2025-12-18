@@ -368,8 +368,119 @@ final class AutoTableLayout: TableLayout {
   }
 
   func recalcColumn(effCol: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var fixedContributor: RenderTableCellWrapper? = nil
+    var maxContributor: RenderTableCellWrapper? = nil
+    let ec = Int(effCol)
+
+    for child: RenderObjectWrapper in childrenOfType(parent: table) {
+      if let column = child as? RenderTableColWrapper {
+        // RenderTableCols don't have the concept of preferred logical width, but we need to clear their dirty bits
+        // so that if we call setPreferredWidthsDirty(true) on a col or one of its descendants, we'll mark its
+        // ancestors as dirty.
+        column.clearPreferredLogicalWidthsDirtyBits()
+      } else if let section = child as? RenderTableSectionWrapper {
+        let numRows = section.numRows()
+        for i in 0..<numRows {
+          let current = section.cellAt(row: i, col: effCol)
+          let cell = current.primaryCell()
+
+          if current.inColSpan || cell == nil {
+            continue
+          }
+
+          let cellHasContent =
+            cell!.firstChild() != nil || cell!.style().hasBorder() || cell!.style().hasPadding()
+            || cell!.style().hasBackground()
+          if cellHasContent {
+            layoutStruct[ec].emptyCellsOnly = false
+          }
+
+          // A cell originates in this column. Ensure we have
+          // a min/max width of at least 1px for this column now.
+          layoutStruct[ec].minLogicalWidth = max(layoutStruct[ec].minLogicalWidth, 0.0)
+          layoutStruct[ec].maxLogicalWidth = max(layoutStruct[ec].maxLogicalWidth, 0.0)
+
+          if cell!.colSpan() == 1 {
+            layoutStruct[ec].minLogicalWidth = max(
+              cell!.minPreferredLogicalWidth().ceilToFloat(), layoutStruct[ec].minLogicalWidth)
+            let maxPreferredWidth = cell!.maxPreferredLogicalWidth().ceilToFloat()
+            if maxPreferredWidth > layoutStruct[ec].maxLogicalWidth {
+              layoutStruct[ec].maxLogicalWidth = maxPreferredWidth
+              maxContributor = cell
+            }
+
+            // All browsers implement a size limit on the cell's max width.
+            // Our limit is based on KHTML's representation that used 16 bits widths.
+            // FIXME: Other browsers have a lower limit for the cell's max width.
+            let cCellMaxWidth: Float32 = 32760
+            let cellLogicalWidth = cell!.styleOrColLogicalWidth()
+            if cellLogicalWidth.isFixed() {
+              if cellLogicalWidth.value() > cCellMaxWidth {
+                cellLogicalWidth.setValue(type: .Fixed, value: cCellMaxWidth)
+              }
+              if cellLogicalWidth.isNegative() {
+                cellLogicalWidth.setValue(type: .Fixed, value: Int32(0))
+              }
+            }
+            switch cellLogicalWidth.type() {
+            case .Fixed:
+              // ignore width=0
+              if cellLogicalWidth.isPositive()
+                && !layoutStruct[ec].logicalWidth.isPercentOrCalculated()
+              {
+                let logicalWidth = cell!.adjustBorderBoxLogicalWidthForBoxSizing(
+                  logicalWidth: cellLogicalWidth
+                ).float()
+                if layoutStruct[ec].logicalWidth.isFixed() {
+                  // Nav/IE weirdness
+                  if (logicalWidth > layoutStruct[ec].logicalWidth.value())
+                    || ((layoutStruct[ec].logicalWidth.value() == logicalWidth)
+                      && (CPtrToInt(maxContributor?.p) == CPtrToInt(cell!.p)))
+                  {
+                    layoutStruct[ec].logicalWidth.setValue(type: .Fixed, value: logicalWidth)
+                    fixedContributor = cell
+                  }
+                } else {
+                  layoutStruct[ec].logicalWidth.setValue(type: .Fixed, value: logicalWidth)
+                  fixedContributor = cell
+                }
+              }
+            case .Percent:
+              hasPercent = true
+              if cellLogicalWidth.isPositive()
+                && (!layoutStruct[ec].logicalWidth.isPercent()
+                  || cellLogicalWidth.percent() > layoutStruct[ec].logicalWidth.percent())
+              {
+                layoutStruct[ec].logicalWidth = cellLogicalWidth
+              }
+            case .Calculated:
+              layoutStruct[ec].logicalWidth = LengthWrapper()
+            default:
+              break
+            }
+          } else if effCol == 0
+            || CPtrToInt(section.primaryCellAt(row: i, col: effCol - 1)?.p) != CPtrToInt(cell!.p)
+          {
+            // This spanning cell originates in this column. Insert the cell into spanning cells list.
+            insertSpanCell(cell: cell)
+          }
+        }
+      }
+    }
+
+    // Nav/IE weirdness
+    if layoutStruct[ec].logicalWidth.isFixed() {
+      if table.document().inQuirksMode()
+        && layoutStruct[ec].maxLogicalWidth > layoutStruct[ec].logicalWidth.value()
+        && CPtrToInt(fixedContributor?.p) != CPtrToInt(maxContributor?.p)
+      {
+        layoutStruct[ec].logicalWidth = LengthWrapper()
+        fixedContributor = nil
+      }
+    }
+
+    layoutStruct[ec].maxLogicalWidth = max(
+      layoutStruct[ec].maxLogicalWidth, layoutStruct[ec].minLogicalWidth)
   }
 
   /*
@@ -626,10 +737,15 @@ final class AutoTableLayout: TableLayout {
     return min(maxLogicalWidth, Float32(TableLayout.tableMaxWidth))
   }
 
+  private func insertSpanCell(cell: RenderTableCellWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private struct Layout {
     var logicalWidth = LengthWrapper()
     var effectiveLogicalWidth = LengthWrapper()
-    let minLogicalWidth: Float32 = 0
+    var minLogicalWidth: Float32 = 0
     var maxLogicalWidth: Float32 = 0
     var effectiveMinLogicalWidth: Float32 = 0
     var effectiveMaxLogicalWidth: Float32 = 0

@@ -385,6 +385,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasPadding() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasBackgroundImage() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

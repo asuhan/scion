@@ -126,6 +126,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
   class CellStruct {
     let cells: [RenderTableCellWrapper] = []
+    let inColSpan = false  // true for columns after the first in a colspan
 
     func primaryCell() -> RenderTableCellWrapper? {
       // TODO(asuhan): implement this
