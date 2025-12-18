@@ -788,10 +788,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     }
   }
 
-  override func avoidsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override final func avoidsFloats() -> Bool { return true }
 
   private final func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     var paintPhase = paintInfo.phase
@@ -1231,8 +1228,8 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private func invalidateCachedColumnOffsets() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    columnOffsetTop = LayoutUnit(value: -1)
+    columnOffsetHeight = LayoutUnit(value: -1)
   }
 
   override func updateLogicalWidth() {
@@ -1663,5 +1660,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   private let vSpacing = LayoutUnit()
   private var m_borderStart = LayoutUnit()
   private var m_borderEnd = LayoutUnit()
+  private var columnOffsetTop = LayoutUnit()
+  private var columnOffsetHeight = LayoutUnit()
   private var recursiveSectionMovedWithPaginationLevel = 0
 }
