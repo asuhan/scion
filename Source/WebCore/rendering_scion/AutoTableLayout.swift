@@ -462,7 +462,7 @@ final class AutoTableLayout: TableLayout {
             || CPtrToInt(section.primaryCellAt(row: i, col: effCol - 1)?.p) != CPtrToInt(cell!.p)
           {
             // This spanning cell originates in this column. Insert the cell into spanning cells list.
-            insertSpanCell(cell: cell)
+            insertSpanCell(cell: cell!)
           }
         }
       }
@@ -737,9 +737,30 @@ final class AutoTableLayout: TableLayout {
     return min(maxLogicalWidth, Float32(TableLayout.tableMaxWidth))
   }
 
-  private func insertSpanCell(cell: RenderTableCellWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  /* gets all cells that originate in a column and have a cellspan > 1
+   Sorts them by increasing cellspan
+  */
+  private func insertSpanCell(cell: RenderTableCellWrapper) {
+    assert(cell.colSpan() != 1)
+
+    var size = spanCells.count
+    if size == 0 || spanCells[size - 1] != nil {
+      for _ in 0..<10 {
+        spanCells.append(nil)
+      }
+      size += 10
+    }
+
+    // add them in sort. This is a slow algorithm, and a binary search or a fast sorting after collection would be better
+    var pos = 0
+    let span = cell.colSpan()
+    while pos < spanCells.count && spanCells[pos] != nil && span > spanCells[pos]!.colSpan() {
+      pos += 1
+    }
+    for i in (pos..<spanCells.count).reversed() {
+      spanCells[i + 1] = spanCells[i]
+    }
+    spanCells[pos] = cell
   }
 
   private struct Layout {
