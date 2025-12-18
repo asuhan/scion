@@ -715,8 +715,9 @@ class RenderTableWrapper: RenderBlockWrapper {
   func currentBorderValue() -> CollapsedBorderValue? { return currentBorder }
 
   private func recalcSectionsIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if needsSectionRecalc {
+      recalcSections()
+    }
   }
 
   static func createAnonymousWithParentRenderer(parent: RenderElementWrapper) -> RenderTableWrapper
@@ -731,8 +732,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func willInsertTableColumn(child: RenderTableColWrapper, beforeChild: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    hasColElements = true
   }
 
   func willInsertTableSection(child: RenderTableSectionWrapper, beforeChild: RenderObjectWrapper?) {
