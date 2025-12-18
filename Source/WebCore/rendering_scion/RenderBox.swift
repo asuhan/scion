@@ -1388,7 +1388,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func adjustBorderBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
+  func adjustBorderBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
     let width = LayoutUnit(value: logicalWidth.value())
     let bordersPlusPadding = borderAndPaddingLogicalWidth()
     if style().boxSizing() == .ContentBox || logicalWidth.isIntrinsicOrAuto() {

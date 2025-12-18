@@ -463,6 +463,16 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private func lastColumnIndex() -> UInt32 { return numEffCols() - 1 }
 
+  func splitColumn(position: UInt32, firstSpan: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func appendColumn(span: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func numEffCols() -> UInt32 { return UInt32(columns.count) }
 
   func spanOfEffCol(effCol: UInt32) -> UInt32 { return columns[Int(effCol)].span }

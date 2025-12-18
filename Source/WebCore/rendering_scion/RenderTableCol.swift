@@ -29,6 +29,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func clearPreferredLogicalWidthsDirtyBits() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTableColumnGroupWithColumnChildren() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

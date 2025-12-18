@@ -148,9 +148,114 @@ final class FixedTableLayout: TableLayout {
 
   @discardableResult
   private func calcWidthArray() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: We might want to wait until we have all of the first row before computing for the first time.
+    var usedWidth: Float32 = 0
+
+    // iterate over all <col> elements
+    var nEffCols = table.numEffCols()
+    width = [LengthWrapper](repeating: LengthWrapper(type: .Auto), count: Int(nEffCols))
+
+    var currentEffectiveColumn: UInt32 = 0
+    var col = table.firstColumn()
+    while col != nil {
+      // RenderTableCols don't have the concept of preferred logical width, but we need to clear their dirty bits
+      // so that if we call setPreferredWidthsDirty(true) on a col or one of its descendants, we'll mark it's
+      // ancestors as dirty.
+      col!.clearPreferredLogicalWidthsDirtyBits()
+
+      // Width specified by column-groups that have column child does not affect column width in fixed layout tables
+      if col!.isTableColumnGroupWithColumnChildren() {
+        col = col!.nextColumn()
+        continue
+      }
+
+      var colStyleLogicalWidth = col!.style().logicalWidth()
+      var effectiveColWidth: Float32 = 0
+      if colStyleLogicalWidth.isFixed() && colStyleLogicalWidth.value() > 0 {
+        effectiveColWidth = colStyleLogicalWidth.value()
+      } else if colStyleLogicalWidth.isCalculated() {
+        colStyleLogicalWidth = LengthWrapper()
+      }
+
+      var span = col!.span
+      while span != 0 {
+        var spanInCurrentEffectiveColumn: UInt32 = 0
+        if currentEffectiveColumn >= nEffCols {
+          table.appendColumn(span: span)
+          nEffCols += 1
+          width.append(LengthWrapper())
+          spanInCurrentEffectiveColumn = span
+        } else {
+          if span < table.spanOfEffCol(effCol: currentEffectiveColumn) {
+            table.splitColumn(position: currentEffectiveColumn, firstSpan: span)
+            nEffCols += 1
+            width.append(LengthWrapper())
+          }
+          spanInCurrentEffectiveColumn = table.spanOfEffCol(effCol: currentEffectiveColumn)
+        }
+        if (colStyleLogicalWidth.isFixed() || colStyleLogicalWidth.isPercent())
+          && colStyleLogicalWidth.isPositive()
+        {
+          width[Int(currentEffectiveColumn)] = colStyleLogicalWidth
+          width[Int(currentEffectiveColumn)] *= Float32(spanInCurrentEffectiveColumn)
+          usedWidth += effectiveColWidth * Float32(spanInCurrentEffectiveColumn)
+        }
+        span -= spanInCurrentEffectiveColumn
+        currentEffectiveColumn += 1
+      }
+
+      col = col!.nextColumn()
+    }
+
+    // Iterate over the first row in case some are unspecified.
+    let section = table.topNonEmptySection()
+    if section == nil {
+      return usedWidth
+    }
+
+    var currentColumn = 0
+
+    let firstRow = section!.firstRow()!
+    var cell = firstRow.firstCell()
+    while cell != nil {
+      var logicalWidth = cell!.styleOrColLogicalWidth()
+      let span = cell!.colSpan()
+      var fixedBorderBoxLogicalWidth: Float32 = 0
+      // FIXME: Support other length types. If the width is non-auto, it should probably just use
+      // RenderBox::computeLogicalWidthInFragmentUsing to compute the width.
+      if logicalWidth.isFixed() && logicalWidth.isPositive() {
+        fixedBorderBoxLogicalWidth = cell!.adjustBorderBoxLogicalWidthForBoxSizing(
+          logicalWidth: logicalWidth
+        ).float()
+        logicalWidth.setValue(type: .Fixed, value: fixedBorderBoxLogicalWidth)
+      } else if logicalWidth.isCalculated() {
+        logicalWidth = LengthWrapper()
+      }
+
+      var usedSpan: UInt32 = 0
+      while usedSpan < span && currentColumn < nEffCols {
+        let eSpan = table.spanOfEffCol(effCol: UInt32(currentColumn))
+        // Only set if no col element has already set it.
+        if width[currentColumn].isAuto() && !logicalWidth.isAuto() {
+          width[currentColumn] = logicalWidth
+          width[currentColumn] *= Float32(eSpan) / Float32(span)
+          usedWidth += fixedBorderBoxLogicalWidth * Float32(eSpan) / Float32(span)
+        }
+        usedSpan += eSpan
+        currentColumn += 1
+      }
+
+      // FixedTableLayout doesn't use min/maxPreferredLogicalWidths, but we need to clear the
+      // dirty bit on the cell so that we'll correctly mark its ancestors dirty
+      // in case we later call setPreferredLogicalWidthsDirty(true) on it later.
+      if cell!.preferredLogicalWidthsDirty() {
+        cell!.setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+      }
+      cell = cell!.nextCell()
+    }
+
+    return usedWidth
   }
 
-  private let width: [LengthWrapper] = []
+  private var width: [LengthWrapper] = []
 }

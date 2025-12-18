@@ -77,6 +77,11 @@ struct LengthWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  static func *= (this: LengthWrapper, value: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func value() -> Float32 {
     return wk_interop.Length_value(p)
   }
