@@ -32,6 +32,21 @@ enum TableIntrinsics {
   case ForKeyword
 }
 
+private func resetSectionPointerIfNotBefore(
+  section: inout RenderTableSectionWrapper?, before: RenderObjectWrapper?
+) {
+  if before == nil || section == nil {
+    return
+  }
+  var previousSibling = before!.previousSibling()
+  while previousSibling != nil && CPtrToInt(previousSibling!.p) != CPtrToInt(section!.p) {
+    previousSibling = previousSibling!.previousSibling()
+  }
+  if previousSibling == nil {
+    section = nil
+  }
+}
+
 class RenderTableWrapper: RenderBlockWrapper {
   // Per CSS 3 writing-mode: "The first and second values of the 'border-spacing' property represent spacing between columns
   // and rows respectively, not necessarily the horizontal and vertical spacing respectively".
@@ -659,8 +674,34 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func willInsertTableSection(child: RenderTableSectionWrapper, beforeChild: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch child.style().display() {
+    case .TableHeaderGroup:
+      resetSectionPointerIfNotBefore(section: &head, before: beforeChild)
+      if head == nil {
+        head = child
+      } else {
+        resetSectionPointerIfNotBefore(section: &firstBody, before: beforeChild)
+        if firstBody == nil {
+          firstBody = child
+        }
+      }
+    case .TableFooterGroup:
+      resetSectionPointerIfNotBefore(section: &foot, before: beforeChild)
+      if foot == nil {
+        foot = child
+        break
+      }
+      fallthrough
+    case .TableRowGroup:
+      resetSectionPointerIfNotBefore(section: &firstBody, before: beforeChild)
+      if firstBody == nil {
+        firstBody = child
+      }
+    default:
+      fatalError("Not reached")
+    }
+
+    setNeedsSectionRecalc()
   }
 
   func sumCaptionsLogicalHeight() -> LayoutUnit {
