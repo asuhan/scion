@@ -36,5 +36,9 @@ class TableLayout {
 
   func layout() { fatalError("Not reached") }
 
+  // FIXME: Once we enable SATURATED_LAYOUT_ARITHMETHIC, this should just be LayoutUnit.nearlyMax().
+  // Until then though, using nearlyMax causes overflow in some tests, so we just pick a large number.
+  static let tableMaxWidth = 1_000_000
+
   let table: RenderTableWrapper
 }

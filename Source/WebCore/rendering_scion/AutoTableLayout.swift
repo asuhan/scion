@@ -372,20 +372,269 @@ final class AutoTableLayout: TableLayout {
     fatalError("Not implemented")
   }
 
-  private func calcEffectiveLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  /*
+  This method takes care of colspans.
+  effWidth is the same as width for cells without colspans. If we have colspans, they get modified.
+ */
+  @discardableResult
+  private func calcEffectiveLogicalWidth() -> Float32 {
+    var maxLogicalWidth: Float32 = 0
+
+    let nEffCols = layoutStruct.count
+    let spacingInRowDirection = table.hBorderSpacing().float()
+
+    for i in 0..<nEffCols {
+      layoutStruct[i].effectiveLogicalWidth = layoutStruct[i].logicalWidth
+      layoutStruct[i].effectiveMinLogicalWidth = layoutStruct[i].minLogicalWidth
+      layoutStruct[i].effectiveMaxLogicalWidth = layoutStruct[i].maxLogicalWidth
+    }
+
+    for cell in spanCells {
+      if cell == nil {
+        break
+      }
+
+      var span = cell!.colSpan()
+
+      var cellLogicalWidth = cell!.styleOrColLogicalWidth()
+      if cellLogicalWidth.isZero() {
+        cellLogicalWidth = LengthWrapper()  // make it Auto
+      }
+
+      let effCol = table.colToEffCol(column: cell!.col())
+      var lastCol = effCol
+      var cellMinLogicalWidth = cell!.minPreferredLogicalWidth() + spacingInRowDirection
+      var cellMaxLogicalWidth = cell!.maxPreferredLogicalWidth() + spacingInRowDirection
+      var totalPercent: Float32 = 0
+      var spanMinLogicalWidth: Float32 = 0
+      var spanMaxLogicalWidth: Float32 = 0
+      var allColsArePercent = true
+      var allColsAreFixed = true
+      var haveAuto = false
+      var spanHasEmptyCellsOnly = true
+      var fixedWidth: Float32 = 0
+      while lastCol < nEffCols && span > 0 {
+        var columnLayout = layoutStruct[Int(lastCol)]
+        switch columnLayout.logicalWidth.type() {
+        case .Percent:
+          totalPercent += columnLayout.logicalWidth.percent()
+          allColsAreFixed = false
+        case .Fixed:
+          if columnLayout.logicalWidth.value() > 0 {
+            fixedWidth += columnLayout.logicalWidth.value()
+            allColsArePercent = false
+            // IE resets effWidth to Auto here, but this breaks the konqueror about page and seems to be some bad
+            // legacy behaviour anyway. mozilla doesn't do this so I decided we don't neither.
+            break
+          }
+          fallthrough
+        case .Auto:
+          haveAuto = true
+          fallthrough
+        default:
+          // If the column is a percentage width, do not let the spanning cell overwrite the
+          // width value.  This caused a mis-rendering on amazon.com.
+          // Sample snippet:
+          // <table border=2 width=100%><
+          //   <tr><td>1</td><td colspan=2>2-3</tr>
+          //   <tr><td>1</td><td colspan=2 width=100%>2-3</td></tr>
+          // </table>
+          if !columnLayout.effectiveLogicalWidth.isPercent() {
+            columnLayout.effectiveLogicalWidth = LengthWrapper()
+            allColsArePercent = false
+          } else {
+            totalPercent += columnLayout.effectiveLogicalWidth.percent()
+          }
+          allColsAreFixed = false
+        }
+        if !columnLayout.emptyCellsOnly {
+          spanHasEmptyCellsOnly = false
+        }
+        span -= table.spanOfEffCol(effCol: lastCol)
+        spanMinLogicalWidth += columnLayout.effectiveMinLogicalWidth
+        spanMaxLogicalWidth += columnLayout.effectiveMaxLogicalWidth
+        lastCol += 1
+        cellMinLogicalWidth -= spacingInRowDirection
+        cellMaxLogicalWidth -= spacingInRowDirection
+      }
+
+      // adjust table max width if needed
+      if cellLogicalWidth.isPercent() {
+        if totalPercent > cellLogicalWidth.percent() || allColsArePercent {
+          // can't satify this condition, treat as variable
+          cellLogicalWidth = LengthWrapper()
+        } else {
+          maxLogicalWidth = max(
+            maxLogicalWidth,
+            max(spanMaxLogicalWidth, cellMaxLogicalWidth) * 100 / cellLogicalWidth.percent())
+
+          // all non percent columns in the span get percent values to sum up correctly.
+          var percentMissing = cellLogicalWidth.percent() - totalPercent
+          var totalWidth: Float32 = 0
+          for pos in Int(effCol)..<Int(lastCol) {
+            if !layoutStruct[pos].effectiveLogicalWidth.isPercentOrCalculated() {
+              totalWidth += layoutStruct[pos].effectiveMaxLogicalWidth
+            }
+          }
+
+          for pos in Int(effCol)..<Int(lastCol) {
+            if !layoutStruct[pos].effectiveLogicalWidth.isPercentOrCalculated() {
+              // Handle the case when there's only one cell with 'width: percent' and it's empty.
+              let percent =
+                percentMissing
+                * (totalWidth != 0 ? layoutStruct[pos].effectiveMaxLogicalWidth / totalWidth : 1)
+              totalWidth -= layoutStruct[pos].effectiveMaxLogicalWidth
+              percentMissing -= percent
+              if percent > 0 {
+                layoutStruct[pos].effectiveLogicalWidth.setValue(type: .Percent, value: percent)
+              } else {
+                layoutStruct[pos].effectiveLogicalWidth = LengthWrapper()
+              }
+            }
+            if totalWidth <= 0 {
+              break
+            }
+          }
+        }
+      }
+
+      // make sure minWidth and maxWidth of the spanning cell are honoured
+      if cellMinLogicalWidth > spanMinLogicalWidth {
+        if allColsAreFixed {
+          for pos in Int(effCol)..<Int(lastCol) {
+            if fixedWidth <= 0 {
+              break
+            }
+            let cellLogicalWidth = max(
+              layoutStruct[pos].effectiveMinLogicalWidth,
+              cellMinLogicalWidth * layoutStruct[pos].logicalWidth.value() / fixedWidth)
+            fixedWidth -= layoutStruct[pos].logicalWidth.value()
+            cellMinLogicalWidth -= cellLogicalWidth
+            layoutStruct[pos].effectiveMinLogicalWidth = cellLogicalWidth
+          }
+        } else if allColsArePercent {
+          // In this case, we just split the colspan's min amd max widths following the percentage.
+          #if ASSERT_ENABLED
+            var allocatedMinLogicalWidth: Float32 = 0
+          #endif
+          var allocatedMaxLogicalWidth: Float32 = 0
+          for pos in Int(effCol)..<Int(lastCol) {
+            assert(
+              layoutStruct[pos].logicalWidth.isPercent()
+                || layoutStruct[pos].effectiveLogicalWidth.isPercent())
+            // |allColsArePercent| means that either the logicalWidth *or* the effectiveLogicalWidth are percents, handle both of them here.
+            let percent =
+              layoutStruct[pos].logicalWidth.isPercent()
+              ? layoutStruct[pos].logicalWidth.percent()
+              : layoutStruct[pos].effectiveLogicalWidth.percent()
+            let columnMinLogicalWidth = percent * cellMinLogicalWidth / totalPercent
+            let columnMaxLogicalWidth = percent * cellMaxLogicalWidth / totalPercent
+            layoutStruct[pos].effectiveMinLogicalWidth = max(
+              layoutStruct[pos].effectiveMinLogicalWidth, columnMinLogicalWidth)
+            layoutStruct[pos].effectiveMaxLogicalWidth = columnMaxLogicalWidth
+            #if ASSERT_ENABLED
+              allocatedMinLogicalWidth += columnMinLogicalWidth
+            #endif
+            allocatedMaxLogicalWidth += columnMaxLogicalWidth
+          }
+          #if ASSERT_ENABLED
+            assert(
+              allocatedMinLogicalWidth < cellMinLogicalWidth
+                || WTF.areEssentiallyEqual(u: allocatedMinLogicalWidth, v: cellMinLogicalWidth))
+          #endif
+          assert(
+            allocatedMaxLogicalWidth < cellMaxLogicalWidth
+              || WTF.areEssentiallyEqual(u: allocatedMaxLogicalWidth, v: cellMaxLogicalWidth))
+          cellMaxLogicalWidth -= allocatedMaxLogicalWidth
+        } else {
+          var remainingMaxLogicalWidth = spanMaxLogicalWidth
+          var remainingMinLogicalWidth = spanMinLogicalWidth
+
+          // Give min to variable first, to fixed second, and to others third.
+          for pos in Int(effCol)..<Int(lastCol) {
+            if remainingMaxLogicalWidth < 0 {
+              break
+            }
+            if layoutStruct[pos].logicalWidth.isFixed() && haveAuto
+              && fixedWidth <= cellMinLogicalWidth
+            {
+              let colMinLogicalWidth = max(
+                layoutStruct[pos].effectiveMinLogicalWidth, layoutStruct[pos].logicalWidth.value())
+              fixedWidth -= layoutStruct[pos].logicalWidth.value()
+              remainingMinLogicalWidth -= layoutStruct[pos].effectiveMinLogicalWidth
+              remainingMaxLogicalWidth -= layoutStruct[pos].effectiveMaxLogicalWidth
+              cellMinLogicalWidth -= colMinLogicalWidth
+              layoutStruct[pos].effectiveMinLogicalWidth = colMinLogicalWidth
+            }
+          }
+
+          for pos in Int(effCol)..<Int(lastCol) {
+            if remainingMaxLogicalWidth < 0 || remainingMinLogicalWidth >= cellMinLogicalWidth {
+              break
+            }
+            if layoutStruct[pos].logicalWidth.isFixed() && haveAuto
+              && fixedWidth <= cellMinLogicalWidth
+            {
+              continue
+            }
+            var colMinLogicalWidth = max(
+              layoutStruct[pos].effectiveMinLogicalWidth,
+              remainingMaxLogicalWidth != 0
+                ? cellMinLogicalWidth * layoutStruct[pos].effectiveMaxLogicalWidth
+                  / remainingMaxLogicalWidth : cellMinLogicalWidth)
+            colMinLogicalWidth = min(
+              layoutStruct[pos].effectiveMinLogicalWidth
+                + (cellMinLogicalWidth - remainingMinLogicalWidth), colMinLogicalWidth)
+            remainingMaxLogicalWidth -= layoutStruct[pos].effectiveMaxLogicalWidth
+            remainingMinLogicalWidth -= layoutStruct[pos].effectiveMinLogicalWidth
+            cellMinLogicalWidth -= colMinLogicalWidth
+            layoutStruct[pos].effectiveMinLogicalWidth = colMinLogicalWidth
+          }
+        }
+      }
+      if !cellLogicalWidth.isPercentOrCalculated() {
+        if cellMaxLogicalWidth > spanMaxLogicalWidth {
+          for pos in Int(effCol)..<Int(lastCol) {
+            if spanMaxLogicalWidth < 0 {
+              break
+            }
+            let colMaxLogicalWidth = max(
+              layoutStruct[pos].effectiveMaxLogicalWidth,
+              spanMaxLogicalWidth != 0
+                ? cellMaxLogicalWidth * layoutStruct[pos].effectiveMaxLogicalWidth
+                  / spanMaxLogicalWidth : cellMaxLogicalWidth)
+            spanMaxLogicalWidth -= layoutStruct[pos].effectiveMaxLogicalWidth
+            cellMaxLogicalWidth -= colMaxLogicalWidth
+            layoutStruct[pos].effectiveMaxLogicalWidth = colMaxLogicalWidth
+          }
+        }
+      } else {
+        for pos in Int(effCol)..<Int(lastCol) {
+          layoutStruct[pos].maxLogicalWidth = max(
+            layoutStruct[pos].maxLogicalWidth, layoutStruct[pos].minLogicalWidth)
+        }
+      }
+      // treat span ranges consisting of empty cells only as if they had content
+      if spanHasEmptyCellsOnly {
+        for pos in Int(effCol)..<Int(lastCol) {
+          layoutStruct[pos].emptyCellsOnly = false
+        }
+      }
+    }
+    effectiveLogicalWidthDirty = false
+
+    return min(maxLogicalWidth, Float32(TableLayout.tableMaxWidth))
   }
 
   private struct Layout {
     var logicalWidth = LengthWrapper()
-    let effectiveLogicalWidth = LengthWrapper()
+    var effectiveLogicalWidth = LengthWrapper()
     let minLogicalWidth: Float32 = 0
     var maxLogicalWidth: Float32 = 0
-    let effectiveMinLogicalWidth: Float32 = 0
-    let effectiveMaxLogicalWidth: Float32 = 0
+    var effectiveMinLogicalWidth: Float32 = 0
+    var effectiveMaxLogicalWidth: Float32 = 0
     var computedLogicalWidth: Float32 = 0
-    let emptyCellsOnly = true
+    var emptyCellsOnly = true
   }
 
   private var layoutStruct: [Layout] = []
