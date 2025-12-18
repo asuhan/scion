@@ -485,8 +485,26 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func appendColumn(span: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let newColumnIndex = UInt32(columns.count)
+    columns.append(ColumnStruct(span: span))
+
+    // Unless the table has cell(s) with colspan that exceed the number of columns afforded
+    // by the other rows in the table we can use the fast path when mapping columns to effective columns.
+    hasCellColspanThatDeterminesTableWidth = hasCellColspanThatDeterminesTableWidth || span > 1
+
+    // Propagate the change in our columns representation to the sections that don't need
+    // cell recalc. If they do, they will be synced up directly with m_columns later.
+    for section: RenderTableSectionWrapper in childrenOfType(parent: self) {
+      if section.needsCellRecalc {
+        continue
+      }
+
+      section.appendColumn(pos: newColumnIndex)
+    }
+
+    while columnPos.count < numEffCols() + 1 {
+      columnPos.append(LayoutUnit())
+    }
   }
 
   func numEffCols() -> UInt32 { return UInt32(columns.count) }

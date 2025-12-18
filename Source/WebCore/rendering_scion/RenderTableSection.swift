@@ -165,6 +165,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func appendColumn(pos: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func splitColumn(pos: UInt32, first: UInt32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
