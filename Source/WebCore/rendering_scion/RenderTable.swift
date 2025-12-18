@@ -449,13 +449,19 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   // This function returns 0 if the table has no non-empty sections.
   func topNonEmptySection() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var section = topSection()
+    if section != nil && section!.numRows() == 0 {
+      section = sectionBelow(section: section, skipEmptySections: .SkipEmptySections)
+    }
+    return section
   }
 
   func bottomNonEmptySection() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var section = bottomSection()
+    if section != nil && section!.numRows() == 0 {
+      section = sectionAbove(section: section, skipEmptySections: .SkipEmptySections)
+    }
+    return section
   }
 
   private func lastColumnIndex() -> UInt32 { return numEffCols() - 1 }
