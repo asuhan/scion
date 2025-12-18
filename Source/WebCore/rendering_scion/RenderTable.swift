@@ -463,15 +463,9 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private func lastColumnIndex() -> UInt32 { return numEffCols() - 1 }
 
-  func numEffCols() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func numEffCols() -> UInt32 { return UInt32(columns.count) }
 
-  func spanOfEffCol(effCol: UInt32) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func spanOfEffCol(effCol: UInt32) -> UInt32 { return columns[Int(effCol)].span }
 
   func colToEffCol(column: UInt32) -> UInt32 {
     if !hasCellColspanThatDeterminesTableWidth {
