@@ -558,6 +558,12 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func colElement(col: UInt32, startEdge: inout Bool, endEdge: inout Bool) -> RenderTableColWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setNeedsSectionRecalc() {
     if renderTreeBeingDestroyed() {
       return
@@ -685,7 +691,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     return nil
   }
 
-  private func cellBefore(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+  func cellBefore(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
     recalcSectionsIfNeeded()
 
     let section = cell.section()
@@ -710,6 +716,8 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   typealias CollapsedBorderValues = [CollapsedBorderValue]
+
+  func collapsedBordersAreValid() -> Bool { return collapsedBordersValid }
 
   private func invalidateCollapsedBorders(cellWithStyleChange: RenderTableCellWrapper? = nil) {
     collapsedBordersValid = false

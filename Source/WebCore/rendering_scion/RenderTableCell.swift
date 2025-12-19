@@ -66,6 +66,18 @@ private struct CollapsedBorders {
   private var borders: [CollapsedBorder] = []
 }
 
+private func chooseBorder(border1: CollapsedBorderValue, border2: CollapsedBorderValue)
+  -> CollapsedBorderValue
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func emptyBorder() -> CollapsedBorderValue {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func addBorderStyle(
   borderValues: inout RenderTableWrapper.CollapsedBorderValues, borderValue: CollapsedBorderValue
 ) {
@@ -546,7 +558,17 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func borderAdjoiningCellAfter(cell: RenderTableCellWrapper) -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateHasEmptyCollapsedBorders() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setHasEmptyCollapsedBorder(side: CollapsedBorderSide, empty: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -693,11 +715,31 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func hasStartBorderAdjoiningTable() -> Bool {
+    return col() == 0
+  }
+
   private func collapsedStartBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if table() == nil || section() == nil {
+      return emptyBorder()
+    }
+
+    if hasEmptyCollapsedStartBorder {
+      return emptyBorder()
+    }
+
+    if table()!.collapsedBordersAreValid() {
+      return section()!.cachedCollapsedBorder(cell: self, side: .CBSStart)
+    }
+
+    let result = computeCollapsedStartBorder(includeColor: includeColor)
+    setHasEmptyCollapsedBorder(side: .CBSStart, empty: !result.width().bool())
+    if includeColor == .IncludeBorderColor && !hasEmptyCollapsedStartBorder {
+      section()!.setCachedCollapsedBorder(cell: self, side: .CBSStart, border: result)
+    }
+    return result
   }
 
   private func collapsedEndBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
@@ -749,8 +791,188 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeCollapsedStartBorder(
+    includeColor: IncludeBorderColorOrNot = .IncludeBorderColor
+  ) -> CollapsedBorderValue {
+    // For the start border, we need to check, in order of precedence:
+    // (1) Our start border.
+    let startColorProperty: CSSPropertyID =
+      includeColor == .IncludeBorderColor
+      ? CSSProperty.resolveDirectionAwareProperty(
+        id: .CSSPropertyBorderInlineStartColor, direction: styleForCellFlow().direction(),
+        writingMode: styleForCellFlow().writingMode()) : .CSSPropertyInvalid
+    let endColorProperty: CSSPropertyID =
+      includeColor == .IncludeBorderColor
+      ? CSSProperty.resolveDirectionAwareProperty(
+        id: .CSSPropertyBorderInlineEndColor, direction: styleForCellFlow().direction(),
+        writingMode: styleForCellFlow().writingMode()) : .CSSPropertyInvalid
+    var result = CollapsedBorderValue(
+      border: style().borderStart(styleForFlow: styleForCellFlow()),
+      color: includeColor == .IncludeBorderColor
+        ? style().visitedDependentColorWithColorFilter(colorProperty: startColorProperty)
+        : ColorWrapper(),
+      precedence: .Cell)
+
+    let table = table()
+    if table == nil {
+      return result
+    }
+    // (2) The end border of the preceding cell.
+    let cellBefore = table!.cellBefore(cell: self)
+    if cellBefore != nil {
+      let cellBeforeAdjoiningBorder = CollapsedBorderValue(
+        border: cellBefore!.borderAdjoiningCellAfter(cell: self),
+        color: includeColor == .IncludeBorderColor
+          ? cellBefore!.style().visitedDependentColorWithColorFilter(
+            colorProperty: endColorProperty) : ColorWrapper(), precedence: .Cell)
+      // |result| should be the 2nd argument as |cellBefore| should win in case of equality per CSS 2.1 (Border conflict resolution, point 4).
+      result = chooseBorder(border1: cellBeforeAdjoiningBorder, border2: result)
+      if !result.exists() {
+        return result
+      }
+    }
+
+    let startBorderAdjoinsTable = hasStartBorderAdjoiningTable()
+    if startBorderAdjoinsTable {
+      // (3) Our row's start border.
+      result = chooseBorder(
+        border1: result,
+        border2: CollapsedBorderValue(
+          border: row()!.borderAdjoiningStartCell(cell: self),
+          color: includeColor == .IncludeBorderColor
+            ? parent()!.style().visitedDependentColorWithColorFilter(
+              colorProperty: startColorProperty)
+            : ColorWrapper(), precedence: .Row))
+      if !result.exists() {
+        return result
+      }
+
+      // (4) Our row group's start border.
+      result = chooseBorder(
+        border1: result,
+        border2: CollapsedBorderValue(
+          border: section()!.borderAdjoiningStartCell(cell: self),
+          color: includeColor == .IncludeBorderColor
+            ? section()!.style().visitedDependentColorWithColorFilter(
+              colorProperty: startColorProperty) : ColorWrapper(), precedence: .RowGroup))
+      if !result.exists() {
+        return result
+      }
+    }
+
+    // (5) Our column and column group's start borders.
+    var startColEdge = false
+    var endColEdge = false
+    if let colElt = table!.colElement(col: col(), startEdge: &startColEdge, endEdge: &endColEdge) {
+      if colElt.isTableColumnGroup() && startColEdge {
+        // The |colElt| is a column group and is also the first colgroup (in case of spanned colgroups).
+        result = chooseBorder(
+          border1: result,
+          border2: CollapsedBorderValue(
+            border: colElt.borderAdjoiningCellStartBorder(),
+            color: includeColor == .IncludeBorderColor
+              ? colElt.style().visitedDependentColorWithColorFilter(
+                colorProperty: startColorProperty) : ColorWrapper(), precedence: .ColumnGroup))
+        if !result.exists() {
+          return result
+        }
+      } else if !colElt.isTableColumnGroup() {
+        // We first consider the |colElt| and irrespective of whether it is a spanned col or not, we apply
+        // its start border. This is as per HTML5 which states that: "For the purposes of the CSS table model,
+        // the col element is expected to be treated as if it was present as many times as its span attribute specifies".
+        result = chooseBorder(
+          border1: result,
+          border2: CollapsedBorderValue(
+            border: colElt.borderAdjoiningCellStartBorder(),
+            color: includeColor == .IncludeBorderColor
+              ? colElt.style().visitedDependentColorWithColorFilter(
+                colorProperty: startColorProperty) : ColorWrapper(), precedence: .Column))
+        if !result.exists() {
+          return result
+        }
+        // Next, apply the start border of the enclosing colgroup but only if it is adjacent to the cell's edge.
+        if let enclosingColumnGroup = colElt.enclosingColumnGroupIfAdjacentBefore() {
+          result = chooseBorder(
+            border1: result,
+            border2: CollapsedBorderValue(
+              border: enclosingColumnGroup.borderAdjoiningCellStartBorder(),
+              color: includeColor == .IncludeBorderColor
+                ? enclosingColumnGroup.style().visitedDependentColorWithColorFilter(
+                  colorProperty: startColorProperty) : ColorWrapper(), precedence: .ColumnGroup))
+          if !result.exists() {
+            return result
+          }
+        }
+      }
+    }
+
+    // (6) The end border of the preceding column.
+    if cellBefore != nil,
+      let colElt = table!.colElement(
+        col: col() - 1, startEdge: &startColEdge, endEdge: &endColEdge)
+    {
+      if colElt.isTableColumnGroup() && endColEdge {
+        // The element is a colgroup and is also the last colgroup (in case of spanned colgroups).
+        result = chooseBorder(
+          border1: CollapsedBorderValue(
+            border: colElt.borderAdjoiningCellAfter(cell: self),
+            color: includeColor == .IncludeBorderColor
+              ? colElt.style().visitedDependentColorWithColorFilter(
+                colorProperty: endColorProperty)
+              : ColorWrapper(), precedence: .ColumnGroup), border2: result)
+        if !result.exists() {
+          return result
+        }
+      } else if colElt.isTableColumn() {
+        // Resolve the collapsing border against the col's border ignoring any 'span' as per HTML5.
+        result = chooseBorder(
+          border1: CollapsedBorderValue(
+            border: colElt.borderAdjoiningCellAfter(cell: self),
+            color: includeColor == .IncludeBorderColor
+              ? colElt.style().visitedDependentColorWithColorFilter(
+                colorProperty: endColorProperty)
+              : ColorWrapper(), precedence: .Column), border2: result)
+        if !result.exists() {
+          return result
+        }
+        // Next, if the previous col has a parent colgroup then its end border should be applied
+        // but only if it is adjacent to the cell's edge.
+        if let enclosingColumnGroup = colElt.enclosingColumnGroupIfAdjacentAfter() {
+          result = chooseBorder(
+            border1: CollapsedBorderValue(
+              border: enclosingColumnGroup.borderAdjoiningCellEndBorder(),
+              color: includeColor == .IncludeBorderColor
+                ? enclosingColumnGroup.style().visitedDependentColorWithColorFilter(
+                  colorProperty: endColorProperty) : ColorWrapper(), precedence: .ColumnGroup),
+            border2: result)
+          if !result.exists() {
+            return result
+          }
+        }
+      }
+    }
+
+    if startBorderAdjoinsTable {
+      // (7) The table's start border.
+      result = chooseBorder(
+        border1: result,
+        border2: CollapsedBorderValue(
+          border: table!.style().borderStart(),
+          color: includeColor == .IncludeBorderColor
+            ? table!.style().visitedDependentColorWithColorFilter(colorProperty: startColorProperty)
+            : ColorWrapper(), precedence: .Table))
+      if !result.exists() {
+        return result
+      }
+    }
+
+    return result
+  }
+
   override func hasLineIfEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let hasEmptyCollapsedStartBorder = false
 }

@@ -156,6 +156,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func borderAdjoiningStartCell(cell: RenderTableCellWrapper) -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func cellAt(row: UInt32, col: UInt32) -> CellStruct {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -232,6 +237,20 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func clearCachedCollapsedBorders() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setCachedCollapsedBorder(
+    cell: RenderTableCellWrapper, side: CollapsedBorderSide, border: CollapsedBorderValue
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func cachedCollapsedBorder(cell: RenderTableCellWrapper, side: CollapsedBorderSide)
+    -> CollapsedBorderValue
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

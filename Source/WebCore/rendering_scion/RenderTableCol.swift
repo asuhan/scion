@@ -44,13 +44,43 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func isTableColumnGroup() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingColumnGroup() -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func enclosingColumnGroupIfAdjacentBefore() -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func enclosingColumnGroupIfAdjacentAfter() -> RenderTableColWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   // Returns the next column or column-group.
   func nextColumn() -> RenderTableColWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderAdjoiningCellStartBorder() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderAdjoiningCellEndBorder() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderAdjoiningCellAfter(cell: RenderTableCellWrapper) -> BorderValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

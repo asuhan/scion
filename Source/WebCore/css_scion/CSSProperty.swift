@@ -1,9 +1,7 @@
 /*
- * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
- *           (C) 2000 Antti Koivisto (koivisto@kde.org)
- *           (C) 2000 Dirk Mueller (mueller@kde.org)
- * Copyright (C) 2003, 2005, 2006, 2007, 2008, 2022 Apple Inc. All rights reserved.
- * Copyright (C) 2006 Graham Dennis (graham.dennis@gmail.com)
+ * (C) 1999-2003 Lars Knoll (knoll@kde.org)
+ * Copyright (C) 2004-2021 Apple Inc.
+ * Copyright (C) 2013 Intel Corporation. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,19 +17,13 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
  */
 
-struct BorderValue {
-  func nonZero() -> Bool {
-    return width != 0 && style != .None
-  }
-
-  func isTransparent() -> Bool {
+class CSSProperty {
+  static func resolveDirectionAwareProperty(
+    id: CSSPropertyID, direction: TextDirection, writingMode: WritingMode
+  ) -> CSSPropertyID {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  let width: Float32 = 3
-  let style: BorderStyle = .None
 }

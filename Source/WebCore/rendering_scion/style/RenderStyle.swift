@@ -28,6 +28,7 @@ import wk_interop
 typealias LayoutBoxExtent = RectEdges<LayoutUnit>
 
 enum CSSPropertyID {
+  case CSSPropertyInvalid
   case CSSPropertyColor
   case CSSPropertyDisplay
   case CSSPropertyBackgroundColor
@@ -35,6 +36,8 @@ enum CSSPropertyID {
   case CSSPropertyTextEmphasisColor
   case CSSPropertyWebkitTextFillColor
   case CSSPropertyBorderBottomColor
+  case CSSPropertyBorderInlineEndColor
+  case CSSPropertyBorderInlineStartColor
   case CSSPropertyBorderLeftColor
   case CSSPropertyBorderRightColor
   case CSSPropertyBorderTopColor
@@ -338,6 +341,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderEnd() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderStart(styleForFlow: RenderStyleWrapper) -> BorderValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

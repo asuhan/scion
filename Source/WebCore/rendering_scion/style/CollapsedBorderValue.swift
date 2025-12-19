@@ -23,6 +23,22 @@
  */
 
 class CollapsedBorderValue {
+  init() {
+    self.m_width = LayoutUnit()
+    self.color = ColorWrapper()
+    self.style = .None
+    self.precedence = .Off
+    self.transparent = false
+  }
+
+  init(border: BorderValue, color: ColorWrapper, precedence: BorderPrecedence) {
+    self.m_width = LayoutUnit(value: border.nonZero() ? border.width : 0)
+    self.color = color
+    self.style = border.style
+    self.precedence = precedence
+    self.transparent = border.isTransparent()
+  }
+
   func width() -> LayoutUnit {
     return style.rawValue > BorderStyle.Hidden.rawValue ? m_width : LayoutUnit(value: UInt64(0))
   }
@@ -44,9 +60,9 @@ class CollapsedBorderValue {
         value: halfCollapsedBorderWidth, pixelSnappingFactor: deviceScaleFactor))
   }
 
-  private let m_width = LayoutUnit()
-  let color = ColorWrapper()
-  let style: BorderStyle = .None  // BorderStyle
-  let precedence: BorderPrecedence = .Off  // BorderPrecedence
-  private let transparent = false
+  private let m_width: LayoutUnit
+  let color: ColorWrapper
+  let style: BorderStyle
+  let precedence: BorderPrecedence
+  private let transparent: Bool
 }
