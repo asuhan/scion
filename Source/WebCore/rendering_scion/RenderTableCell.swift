@@ -187,38 +187,61 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func borderLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfLeft(outer: false) : super.borderLeft()
+    }
+    return super.borderLeft()
   }
 
   override func borderRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfRight(outer: false) : super.borderRight()
+    }
+    return super.borderRight()
   }
 
   override func borderTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfTop(outer: false) : super.borderTop()
+    }
+    return super.borderTop()
   }
 
   override func borderBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfBottom(outer: false) : super.borderBottom()
+    }
+    return super.borderBottom()
+  }
+
+  // FIXME: https://bugs.webkit.org/show_bug.cgi?id=46191, make the collapsed border drawing
+  // work with different block flow values instead of being hard-coded to top-to-bottom.
+  override func borderStart() -> LayoutUnit {
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfStart(outer: false) : super.borderStart()
+    }
+    return super.borderStart()
   }
 
   override func borderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfEnd(outer: false) : super.borderEnd()
+    }
+    return super.borderEnd()
   }
 
   override func borderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfBefore(outer: false) : super.borderBefore()
+    }
+    return super.borderBefore()
   }
 
   override func borderAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let table = table() {
+      return table.collapseBorders() ? borderHalfAfter(outer: false) : super.borderAfter()
+    }
+    return super.borderAfter()
   }
 
   func collectBorderValues(borderValues: inout RenderTableWrapper.CollapsedBorderValues) {
@@ -583,6 +606,46 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     adjustBorderBoxRectForPainting(paintRect: &paintRect)
 
     paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
+  }
+
+  private func borderHalfLeft(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfRight(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfTop(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfBottom(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfStart(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfEnd(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfBefore(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderHalfAfter(outer: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func setIntrinsicPaddingBefore(p: LayoutUnit) {
