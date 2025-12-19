@@ -131,6 +131,14 @@ struct PaintInfoWrapper {
     return forceBlackText() ? ColorWrapper.black : ColorWrapper.white
   }
 
+  func skipRootBackground() -> Bool {
+    if n == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return n!.paintBehavior.contains(.SkipRootBackground)
+  }
+
   func paintRootBackgroundOnly() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

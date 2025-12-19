@@ -1266,8 +1266,26 @@ class BackgroundPainter {
   }
 
   private func paintRootBoxFillLayers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(renderer.isDocumentElementRenderer())
+    if paintInfo.skipRootBackground() {
+      return
+    }
+
+    let rootBackgroundRenderer = view().rendererForRootBackground()
+    if rootBackgroundRenderer == nil {
+      return
+    }
+
+    let style = rootBackgroundRenderer!.style()
+    let backgroundColor = style.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor)
+    let compositeOp = document().compositeOperatorForBackgroundColor(
+      color: backgroundColor, renderer: renderer)
+
+    paintFillLayers(
+      color: backgroundColor, fillLayer: style.backgroundLayers(), rect: view().backgroundRect(),
+      bleedAvoidance: .BackgroundBleedNone, op: compositeOp,
+      backgroundObject: rootBackgroundRenderer)
   }
 
   private static func calculateFillTileSize(

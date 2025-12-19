@@ -72,6 +72,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // Return the renderer whose background style is used to paint the root background.
+  func rendererForRootBackground() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func selection() -> RenderSelection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
