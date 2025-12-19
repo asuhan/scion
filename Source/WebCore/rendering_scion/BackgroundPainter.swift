@@ -158,8 +158,31 @@ class BackgroundPainter {
   }
 
   func paintBackground(paintRect: LayoutRectWrapper, bleedAvoidance: BackgroundBleedAvoidance) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.isDocumentElementRenderer() {
+      paintRootBoxFillLayers()
+      return
+    }
+
+    if !BackgroundPainter.paintsOwnBackground(renderer: renderer) {
+      return
+    }
+
+    if renderer.backgroundIsKnownToBeObscured(paintOffset: paintRect.location())
+      && !BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+        renderer: renderer, paintOffset: paintRect.location(), bleedAvoidance: bleedAvoidance,
+        inlineBox: InlineIterator.InlineBoxIterator())
+    {
+      return
+    }
+
+    let backgroundColor = renderer.style().visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor)
+    let compositeOp = document().compositeOperatorForBackgroundColor(
+      color: backgroundColor, renderer: renderer)
+
+    paintFillLayers(
+      color: backgroundColor, fillLayer: renderer.style().backgroundLayers(), rect: paintRect,
+      bleedAvoidance: bleedAvoidance, op: compositeOp)
   }
 
   func paintFillLayers(
@@ -829,6 +852,11 @@ class BackgroundPainter {
       includeLogicalRightEdge: includeLogicalRightEdge)
   }
 
+  private static func paintsOwnBackground(renderer: RenderBoxModelObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func calculateBackgroundImageGeometry(
     renderer: RenderBoxModelObjectWrapper, paintContainer: RenderLayerModelObjectWrapper?,
     fillLayer: FillLayerWrapper, paintOffset: LayoutPointWrapper, borderBoxRect: LayoutRectWrapper,
@@ -1177,6 +1205,11 @@ class BackgroundPainter {
     let hasFillImage =
       image != nil && image!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
     return !hasFillImage && !renderer.style().hasBorderRadius()
+  }
+
+  private func paintRootBoxFillLayers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private static func calculateFillTileSize(
