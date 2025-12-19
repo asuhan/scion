@@ -911,8 +911,18 @@ class BackgroundPainter {
   }
 
   private static func paintsOwnBackground(renderer: RenderBoxModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer.isBody() {
+      return true
+    }
+    if renderer.shouldApplyAnyContainment() {
+      return true
+    }
+    // The <body> only paints its background if the root element has defined a background independent of the body,
+    // or if the <body>'s parent is not the document element's renderer (e.g. inside SVG foreignObject).
+    let documentElementRenderer = renderer.document().documentElement()!.containerRenderer()
+    return documentElementRenderer == nil || documentElementRenderer!.shouldApplyAnyContainment()
+      || documentElementRenderer!.hasBackground()
+      || CPtrToInt(documentElementRenderer!.p) != CPtrToInt(renderer.parent()?.p)
   }
 
   static func calculateBackgroundImageGeometry(

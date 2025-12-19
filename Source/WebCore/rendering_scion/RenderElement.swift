@@ -137,6 +137,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldApplyAnyContainment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func selectionColor(colorProperty: CSSPropertyID) -> ColorWrapper {
     // If the element is unselectable, or we are only painting the selection,
     // don't override the foreground color with the selection foreground color.
