@@ -649,23 +649,43 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   private func borderHalfStart(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let border = collapsedStartBorder(includeColor: .DoNotIncludeBorderColor)
+    if border.exists() {
+      return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+        borderWidth: border.width().float(), deviceScaleFactor: document().deviceScaleFactor(),
+        roundUp: styleForCellFlow().isLeftToRightDirection() != outer)
+    }
+    return LayoutUnit(value: 0)
   }
 
   private func borderHalfEnd(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let border = collapsedEndBorder(includeColor: .DoNotIncludeBorderColor)
+    if border.exists() {
+      return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+        borderWidth: border.width().float(), deviceScaleFactor: document().deviceScaleFactor(),
+        roundUp: styleForCellFlow().isLeftToRightDirection() == outer)
+    }
+    return LayoutUnit(value: 0)
   }
 
   private func borderHalfBefore(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let border = collapsedBeforeBorder(includeColor: .DoNotIncludeBorderColor)
+    if border.exists() {
+      return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+        borderWidth: border.width().float(), deviceScaleFactor: document().deviceScaleFactor(),
+        roundUp: styleForCellFlow().isFlippedBlocksWritingMode() == outer)
+    }
+    return LayoutUnit(value: 0)
   }
 
   private func borderHalfAfter(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let border = collapsedAfterBorder(includeColor: .DoNotIncludeBorderColor)
+    if border.exists() {
+      return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+        borderWidth: border.width().float(), deviceScaleFactor: document().deviceScaleFactor(),
+        roundUp: styleForCellFlow().isFlippedBlocksWritingMode() != outer)
+    }
+    return LayoutUnit(value: 0)
   }
 
   private func setIntrinsicPaddingBefore(p: LayoutUnit) {
