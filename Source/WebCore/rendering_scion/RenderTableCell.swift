@@ -69,8 +69,15 @@ private struct CollapsedBorders {
 private func addBorderStyle(
   borderValues: inout RenderTableWrapper.CollapsedBorderValues, borderValue: CollapsedBorderValue
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !borderValue.exists() {
+    return
+  }
+  for thisBorderValue in borderValues {
+    if thisBorderValue.isSameIgnoringColor(o: borderValue) {
+      return
+    }
+  }
+  borderValues.append(borderValue)
 }
 
 private func backgroundRectForRow(tableRow: RenderBoxWrapper, table: RenderTableWrapper)
