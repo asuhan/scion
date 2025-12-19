@@ -80,6 +80,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func borderAdjoiningCellBefore(cell: RenderTableCellWrapper) -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderAdjoiningCellAfter(cell: RenderTableCellWrapper) -> BorderValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

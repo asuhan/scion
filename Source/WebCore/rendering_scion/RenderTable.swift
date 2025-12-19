@@ -705,7 +705,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     return prevCell.primaryCell()
   }
 
-  private func cellAfter(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+  func cellAfter(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
     recalcSectionsIfNeeded()
 
     let effCol = colToEffCol(column: cell.col() + cell.colSpan())
