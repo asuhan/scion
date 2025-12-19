@@ -609,23 +609,43 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   private func borderHalfLeft(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleForCellFlow = styleForCellFlow()
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection()
+        ? borderHalfStart(outer: outer) : borderHalfEnd(outer: outer)
+    }
+    return styleForCellFlow.isFlippedBlocksWritingMode()
+      ? borderHalfAfter(outer: outer) : borderHalfBefore(outer: outer)
   }
 
   private func borderHalfRight(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleForCellFlow = styleForCellFlow()
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection()
+        ? borderHalfEnd(outer: outer) : borderHalfStart(outer: outer)
+    }
+    return styleForCellFlow.isFlippedBlocksWritingMode()
+      ? borderHalfBefore(outer: outer) : borderHalfAfter(outer: outer)
   }
 
   private func borderHalfTop(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleForCellFlow = styleForCellFlow()
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isFlippedBlocksWritingMode()
+        ? borderHalfAfter(outer: outer) : borderHalfBefore(outer: outer)
+    }
+    return styleForCellFlow.isLeftToRightDirection()
+      ? borderHalfStart(outer: outer) : borderHalfEnd(outer: outer)
   }
 
   private func borderHalfBottom(outer: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleForCellFlow = styleForCellFlow()
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isFlippedBlocksWritingMode()
+        ? borderHalfBefore(outer: outer) : borderHalfAfter(outer: outer)
+    }
+    return styleForCellFlow.isLeftToRightDirection()
+      ? borderHalfEnd(outer: outer) : borderHalfStart(outer: outer)
   }
 
   private func borderHalfStart(outer: Bool) -> LayoutUnit {
