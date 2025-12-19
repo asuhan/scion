@@ -190,8 +190,66 @@ class BackgroundPainter {
     bleedAvoidance: BackgroundBleedAvoidance, op: CompositeOperator,
     backgroundObject: RenderElementWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layers: [FillLayerWrapper] = []
+    var shouldDrawBackgroundInSeparateBuffer = false
+
+    var layer: FillLayerWrapper? = fillLayer
+    while layer != nil {
+      layers.append(layer!)
+
+      if layer!.blendMode != .Normal {
+        shouldDrawBackgroundInSeparateBuffer = true
+      }
+
+      // Stop traversal when an opaque layer is encountered.
+      // FIXME: It would be possible for the following occlusion culling test to be more aggressive
+      // on layers with no repeat by testing whether the image covers the layout rect.
+      // Testing that here would imply duplicating a lot of calculations that are currently done in
+      // BackgroundPainter::paintFillLayer. A more efficient solution might be to move
+      // the layer recursion into paintFillLayer, or to compute the layer geometry here
+      // and pass it down.
+
+      // The clipOccludesNextLayers condition must be evaluated first to avoid short-circuiting.
+      if layer!.clipOccludesNextLayers(
+        firstLayer: ObjectIdentifier(layer!) == ObjectIdentifier(fillLayer))
+        && layer!.hasOpaqueImage(renderer: renderer)
+        && layer!.image()!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
+        && layer!.hasRepeatXY()
+        && layer!.blendMode == .Normal
+        && !BackgroundPainter.boxShadowShouldBeAppliedToBackground(
+          renderer: renderer, paintOffset: rect.location(), bleedAvoidance: bleedAvoidance,
+          inlineBox: InlineIterator.InlineBoxIterator())
+      {
+        break
+      }
+
+      layer = layer!.next()
+    }
+
+    let context = paintInfo.context()
+    var baseBgColorUsage: BaseBackgroundColorUsage = .BaseBackgroundColorUse
+
+    if shouldDrawBackgroundInSeparateBuffer {
+      paintFillLayer(
+        color: color, bgLayer: layers.last!, rect: rect, bleedAvoidance: bleedAvoidance,
+        inlineBoxIterator: InlineIterator.InlineBoxIterator(),
+        backgroundImageStrip: LayoutRectWrapper(), op: op,
+        backgroundObject: backgroundObject, baseBgColorUsage: .BaseBackgroundColorOnly)
+      baseBgColorUsage = .BaseBackgroundColorSkip
+      context.beginTransparencyLayer(opacity: 1)
+    }
+
+    for layer in layers.reversed() {
+      paintFillLayer(
+        color: color, bgLayer: layer, rect: rect, bleedAvoidance: bleedAvoidance,
+        inlineBoxIterator: InlineIterator.InlineBoxIterator(),
+        backgroundImageStrip: LayoutRectWrapper(), op: op, backgroundObject: backgroundObject,
+        baseBgColorUsage: baseBgColorUsage)
+    }
+
+    if shouldDrawBackgroundInSeparateBuffer {
+      context.endTransparencyLayer()
+    }
   }
 
   func paintFillLayer(

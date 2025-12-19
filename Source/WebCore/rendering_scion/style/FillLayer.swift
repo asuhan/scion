@@ -32,7 +32,7 @@ struct FillRepeatXY {
   let y: FillRepeat = .Repeat
 }
 
-struct FillLayerWrapper {
+class FillLayerWrapper {
   func image() -> StyleImage? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -126,6 +126,11 @@ struct FillLayerWrapper {
   }
 
   func hasRepeatXY() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipOccludesNextLayers(firstLayer: Bool) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
