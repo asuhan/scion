@@ -634,7 +634,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     return nil
   }
 
-  private func cellAbove(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+  func cellAbove(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
     recalcSectionsIfNeeded()
 
     // Find the section and row to look in

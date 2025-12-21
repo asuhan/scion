@@ -35,6 +35,8 @@ enum CSSPropertyID {
   case CSSPropertyTextDecorationColor
   case CSSPropertyTextEmphasisColor
   case CSSPropertyWebkitTextFillColor
+  case CSSPropertyBorderBlockEndColor
+  case CSSPropertyBorderBlockStartColor
   case CSSPropertyBorderBottomColor
   case CSSPropertyBorderInlineEndColor
   case CSSPropertyBorderInlineStartColor
@@ -341,6 +343,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderEnd() -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func borderBefore(styleForFlow: RenderStyleWrapper) -> BorderValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

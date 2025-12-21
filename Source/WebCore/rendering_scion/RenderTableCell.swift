@@ -777,8 +777,24 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private func collapsedBeforeBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if table() == nil || section() == nil {
+      return emptyBorder()
+    }
+
+    if hasEmptyCollapsedBeforeBorder {
+      return emptyBorder()
+    }
+
+    if table()!.collapsedBordersAreValid() {
+      return section()!.cachedCollapsedBorder(cell: self, side: .CBSBefore)
+    }
+
+    let result = computeCollapsedBeforeBorder(includeColor: includeColor)
+    setHasEmptyCollapsedBorder(side: .CBSBefore, empty: !result.width().bool())
+    if includeColor == .IncludeBorderColor && !hasEmptyCollapsedBeforeBorder {
+      section()!.setCachedCollapsedBorder(cell: self, side: .CBSBefore, border: result)
+    }
+    return result
   }
 
   private func collapsedAfterBorder(includeColor: IncludeBorderColorOrNot = .IncludeBorderColor)
@@ -1174,11 +1190,162 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     return result
   }
 
+  private func computeCollapsedBeforeBorder(
+    includeColor: IncludeBorderColorOrNot = .IncludeBorderColor
+  ) -> CollapsedBorderValue {
+    // For before border, we need to check, in order of precedence:
+    // (1) Our before border.
+    let beforeColorProperty: CSSPropertyID =
+      includeColor == .IncludeBorderColor
+      ? CSSProperty.resolveDirectionAwareProperty(
+        id: .CSSPropertyBorderBlockStartColor, direction: styleForCellFlow().direction(),
+        writingMode: styleForCellFlow().writingMode()) : .CSSPropertyInvalid
+    let afterColorProperty =
+      includeColor == .IncludeBorderColor
+      ? CSSProperty.resolveDirectionAwareProperty(
+        id: .CSSPropertyBorderBlockEndColor, direction: styleForCellFlow().direction(),
+        writingMode: styleForCellFlow().writingMode()) : .CSSPropertyInvalid
+    var result = CollapsedBorderValue(
+      border: style().borderBefore(styleForFlow: styleForCellFlow()),
+      color: includeColor == .IncludeBorderColor
+        ? style().visitedDependentColorWithColorFilter(colorProperty: beforeColorProperty)
+        : ColorWrapper(),
+      precedence: .Cell)
+
+    let table = table()
+    if table == nil {
+      return result
+    }
+    let prevCell = table!.cellAbove(cell: self)
+    if prevCell != nil {
+      // (2) A before cell's after border.
+      result = chooseBorder(
+        border1: CollapsedBorderValue(
+          border: prevCell!.style().borderAfter(),
+          color: includeColor == .IncludeBorderColor
+            ? prevCell!.style().visitedDependentColorWithColorFilter(
+              colorProperty: afterColorProperty) : ColorWrapper(), precedence: .Cell),
+        border2: result)
+      if !result.exists() {
+        return result
+      }
+    }
+
+    // (3) Our row's before border.
+    result = chooseBorder(
+      border1: result,
+      border2: CollapsedBorderValue(
+        border: parent()!.style().borderBefore(styleForFlow: styleForCellFlow()),
+        color: includeColor == .IncludeBorderColor
+          ? parent()!.style().visitedDependentColorWithColorFilter(
+            colorProperty: beforeColorProperty)
+          : ColorWrapper(), precedence: .Row))
+    if !result.exists() {
+      return result
+    }
+
+    // (4) The previous row's after border.
+    if prevCell != nil {
+      var prevRow: RenderObjectWrapper? = nil
+      if CPtrToInt(prevCell!.section()?.p) == CPtrToInt(section()?.p) {
+        prevRow = parent()!.previousSibling()
+      } else {
+        prevRow = prevCell!.section()!.lastRow()
+      }
+
+      if prevRow != nil {
+        result = chooseBorder(
+          border1: CollapsedBorderValue(
+            border: prevRow!.style().borderAfter(),
+            color: includeColor == .IncludeBorderColor
+              ? prevRow!.style().visitedDependentColorWithColorFilter(
+                colorProperty: afterColorProperty) : ColorWrapper(), precedence: .Row),
+          border2: result)
+        if !result.exists() {
+          return result
+        }
+      }
+    }
+
+    // Now check row groups.
+    var currSection = section()
+    if rowIndex() == 0 {
+      // (5) Our row group's before border.
+      result = chooseBorder(
+        border1: result,
+        border2: CollapsedBorderValue(
+          border: currSection!.style().borderBefore(styleForFlow: styleForCellFlow()),
+          color: includeColor == .IncludeBorderColor
+            ? currSection!.style().visitedDependentColorWithColorFilter(
+              colorProperty: beforeColorProperty)
+            : ColorWrapper(), precedence: .RowGroup))
+      if !result.exists() {
+        return result
+      }
+
+      // (6) Previous row group's after border.
+      currSection = table!.sectionAbove(section: currSection, skipEmptySections: .SkipEmptySections)
+      if currSection != nil {
+        result = chooseBorder(
+          border1: CollapsedBorderValue(
+            border: currSection!.style().borderAfter(),
+            color: includeColor == .IncludeBorderColor
+              ? currSection!.style().visitedDependentColorWithColorFilter(
+                colorProperty: afterColorProperty)
+              : ColorWrapper(), precedence: .RowGroup), border2: result)
+        if !result.exists() {
+          return result
+        }
+      }
+    }
+
+    if currSection != nil {
+      return result
+    }
+
+    // (8) Our column and column group's before borders.
+    if let colElt = table!.colElement(col: col()) {
+      result = chooseBorder(
+        border1: result,
+        border2: CollapsedBorderValue(
+          border: colElt.style().borderBefore(styleForFlow: styleForCellFlow()),
+          color: includeColor == .IncludeBorderColor
+            ? colElt.style().visitedDependentColorWithColorFilter(
+              colorProperty: beforeColorProperty)
+            : ColorWrapper(), precedence: .Column))
+      if !result.exists() {
+        return result
+      }
+      if let enclosingColumnGroup = colElt.enclosingColumnGroup() {
+        result = chooseBorder(
+          border1: result,
+          border2: CollapsedBorderValue(
+            border: enclosingColumnGroup.style().borderBefore(styleForFlow: styleForCellFlow()),
+            color: includeColor == .IncludeBorderColor
+              ? enclosingColumnGroup.style().visitedDependentColorWithColorFilter(
+                colorProperty: beforeColorProperty) : ColorWrapper(), precedence: .ColumnGroup))
+        if !result.exists() {
+          return result
+        }
+      }
+    }
+
+    // (9) The table's before border.
+    return chooseBorder(
+      border1: result,
+      border2: CollapsedBorderValue(
+        border: table!.style().borderBefore(),
+        color: includeColor == .IncludeBorderColor
+          ? table!.style().visitedDependentColorWithColorFilter(colorProperty: beforeColorProperty)
+          : ColorWrapper(), precedence: .Table))
+  }
+
   override func hasLineIfEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private let hasEmptyCollapsedBeforeBorder = false
   private let hasEmptyCollapsedStartBorder = false
   private let hasEmptyCollapsedEndBorder = false
 }
