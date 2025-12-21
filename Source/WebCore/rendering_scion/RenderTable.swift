@@ -663,7 +663,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     return nil
   }
 
-  private func cellBelow(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
+  func cellBelow(cell: RenderTableCellWrapper) -> RenderTableCellWrapper? {
     recalcSectionsIfNeeded()
 
     // Find the section and row to look in

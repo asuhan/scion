@@ -352,6 +352,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func borderAfter(styleForFlow: RenderStyleWrapper) -> BorderValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderStart(styleForFlow: RenderStyleWrapper) -> BorderValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
