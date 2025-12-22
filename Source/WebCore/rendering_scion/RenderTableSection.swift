@@ -512,9 +512,31 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  func recalcOuterBorder() {
+  func calcOuterBorderBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func calcOuterBorderAfter() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func calcOuterBorderStart() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func calcOuterBorderEnd() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func recalcOuterBorder() {
+    outerBorderBefore = calcOuterBorderBefore()
+    outerBorderAfter = calcOuterBorderAfter()
+    outerBorderStart = calcOuterBorderStart()
+    outerBorderEnd = calcOuterBorderEnd()
   }
 
   func outerBorderLeft(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
@@ -1221,10 +1243,10 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   var cCol: UInt32 = 0
   var cRow: UInt32 = 0
 
-  let outerBorderBefore = LayoutUnit()
-  let outerBorderAfter = LayoutUnit()
-  let outerBorderStart = LayoutUnit()
-  let outerBorderEnd = LayoutUnit()
+  var outerBorderBefore = LayoutUnit()
+  var outerBorderAfter = LayoutUnit()
+  var outerBorderStart = LayoutUnit()
+  var outerBorderEnd = LayoutUnit()
 
   // This HashSet holds the overflowing cells for faster painting.
   // If we have more than gMaxAllowedOverflowingCellRatio * total cells, it will be empty
