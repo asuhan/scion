@@ -46,8 +46,29 @@ private func setRowLogicalHeightToRowStyleLogicalHeight(row: RenderTableSectionW
 private func updateLogicalHeightForCell(
   row: inout RenderTableSectionWrapper.RowStruct, cell: RenderTableCellWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // We ignore height settings on rowspan cells.
+  if cell.rowSpan() != 1 {
+    return
+  }
+
+  let logicalHeight = cell.style().logicalHeight()
+  if logicalHeight.isPositive() {
+    let cRowLogicalHeight = row.logicalHeight
+    switch logicalHeight.type() {
+    case .Percent:
+      if !cRowLogicalHeight.isPercent() || cRowLogicalHeight.percent() < logicalHeight.percent() {
+        row.logicalHeight = logicalHeight
+      }
+    case .Fixed:
+      if cRowLogicalHeight.isAuto() || cRowLogicalHeight.isRelative()
+        || (cRowLogicalHeight.isFixed() && cRowLogicalHeight.value() < logicalHeight.value())
+      {
+        row.logicalHeight = logicalHeight
+      }
+    default:
+      break
+    }
+  }
 }
 
 private func resolveLogicalHeightForRow(rowLogicalHeight: LengthWrapper) -> LayoutUnit {
