@@ -44,6 +44,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func table() -> RenderTableWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOutlineForRowIfNeeded(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -92,8 +97,16 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func didInsertTableCell(child: RenderTableCellWrapper, beforeChild: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Generated content can result in us having a null section so make sure to null check our parent.
+    if let section = section() {
+      section.addCell(cell: child, row: self)
+      if beforeChild != nil || nextRow() != nil {
+        section.setNeedsCellRecalc()
+      }
+    }
+    if let table = table() {
+      table.invalidateCollapsedBorders()
+    }
   }
 
   override func layout() {

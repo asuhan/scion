@@ -107,6 +107,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func addCell(cell: RenderTableCellWrapper, row: RenderTableRowWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func calcRowLogicalHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

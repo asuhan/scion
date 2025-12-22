@@ -719,7 +719,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func collapsedBordersAreValid() -> Bool { return collapsedBordersValid }
 
-  private func invalidateCollapsedBorders(cellWithStyleChange: RenderTableCellWrapper? = nil) {
+  func invalidateCollapsedBorders(cellWithStyleChange: RenderTableCellWrapper? = nil) {
     collapsedBordersValid = false
     collapsedBorders.removeAll()
 
