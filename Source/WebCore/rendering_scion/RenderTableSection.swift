@@ -93,8 +93,11 @@ private func compareCellPositions(
 private func compareCellPositionsWithOverflowingCells(
   elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if (*elem1).rowIndex() != (*elem2).rowIndex() {
+    return (*elem1).rowIndex() < (*elem2).rowIndex()
+  }
+
+  return (*elem1).col() < (*elem2).col()
 }
 
 private func physicalBorderForDirection(
