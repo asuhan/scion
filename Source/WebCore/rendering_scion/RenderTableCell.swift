@@ -513,6 +513,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func computeIntrinsicPadding(rowHeight: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearIntrinsicPadding() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

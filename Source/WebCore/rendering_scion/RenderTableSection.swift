@@ -305,8 +305,111 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func layoutRows() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): SetLayoutNeededForbiddenScope
+    assert(!needsLayout())
+
+    let totalRows = grid.count
+
+    // Set the width of our section now.  The rows will also be this width.
+    setLogicalWidth(size: table()!.contentLogicalWidth())
+    forceSlowPaintPathWithOverflowingCell = false
+
+    let vspacing = table()!.vBorderSpacing()
+    let nEffCols = table()!.numEffCols()
+
+    let _ = LayoutStateMaintainer(
+      root: self, offset: locationOffset(),
+      disablePaintOffsetCache: isTransformed() || style().isFlippedBlocksWritingMode())
+
+    for r in 0..<totalRows {
+      // Set the row's x/y position and width/height.
+      if let rowRenderer = grid[r].rowRenderer {
+        // FIXME: the x() position of the row should be table()->hBorderSpacing() so that it can
+        // report the correct offsetLeft. However, that will require a lot of rebaselining of test results.
+        rowRenderer.setLogicalLeft(left: LayoutUnit(value: UInt64(0)))
+        rowRenderer.setLogicalTop(top: rowPos[r])
+        rowRenderer.setLogicalWidth(size: logicalWidth())
+        rowRenderer.setLogicalHeight(size: rowPos[r + 1] - rowPos[r] - vspacing)
+        rowRenderer.updateLayerTransform()
+        rowRenderer.clearOverflow()
+        rowRenderer.addVisualEffectOverflow()
+      }
+
+      var rowHeightIncreaseForPagination = LayoutUnit()
+
+      for c in 0..<nEffCols {
+        let cs = cellAt(row: UInt32(r), col: c)
+        let cell = cs.primaryCell()
+
+        if cell == nil || cs.inColSpan {
+          continue
+        }
+
+        let rowIndex = cell!.rowIndex()
+        let rHeight = rowPos[Int(rowIndex + cell!.rowSpan())] - rowPos[Int(rowIndex)] - vspacing
+
+        relayoutCellIfFlexed(cell: cell!, rowIndex: Int32(r), rowHeight: rHeight)
+
+        cell!.computeIntrinsicPadding(rowHeight: rHeight)
+
+        let oldCellRect = cell!.frameRect()
+
+        setLogicalPositionForCell(cell: cell!, effectiveColumn: c)
+
+        let layoutState = view().frameView().layoutContext().layoutState()!
+        if !cell!.needsLayout() && layoutState.pageLogicalHeight().bool()
+          && layoutState.pageLogicalOffset(child: cell!, childLogicalOffset: cell!.logicalTop())
+            != cell!.pageLogicalOffset()
+        {
+          cell!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+
+        cell!.layoutIfNeeded()
+
+        // FIXME: Make pagination work with vertical tables.
+        if layoutState.pageLogicalHeight().bool() && cell!.logicalHeight() != rHeight {
+          // FIXME: Pagination might have made us change size. For now just shrink or grow the cell to fit without doing a relayout.
+          // We'll also do a basic increase of the row height to accommodate the cell if it's bigger, but this isn't quite right
+          // either. It's at least stable though and won't result in an infinite # of relayouts that may never stabilize.
+          if cell!.logicalHeight() > rHeight {
+            rowHeightIncreaseForPagination = max(
+              rowHeightIncreaseForPagination, cell!.logicalHeight() - rHeight)
+          }
+          cell!.setLogicalHeight(size: rHeight)
+        }
+
+        let childOffset = cell!.location() - oldCellRect.location()
+        if childOffset.width().bool() || childOffset.height().bool() {
+          view().frameView().layoutContext().addLayoutDelta(delta: childOffset)
+
+          // If the child moved, we have to repaint it as well as any floating/positioned
+          // descendants.  An exception is if we need a layout.  In this case, we know we're going to
+          // repaint ourselves (and the child) anyway.
+          if !table()!.selfNeedsLayout() && cell!.checkForRepaintDuringLayout() {
+            cell!.repaintDuringLayoutIfMoved(oldRect: oldCellRect)
+          }
+        }
+      }
+      if rowHeightIncreaseForPagination.bool() {
+        for rowIndex in r + 1...totalRows {
+          rowPos[rowIndex] += rowHeightIncreaseForPagination
+        }
+        for c in 0..<nEffCols {
+          let cells = cellAt(row: UInt32(r), col: c).cells[...]
+          for cell in cells {
+            cell.setLogicalHeight(size: cell.logicalHeight() + rowHeightIncreaseForPagination)
+          }
+        }
+      }
+    }
+
+    assert(!needsLayout())
+
+    setLogicalHeight(size: rowPos[totalRows])
+
+    updateLayerTransform()
+
+    computeOverflowFromCells(totalRows: UInt32(totalRows), nEffCols: nEffCols)
   }
 
   func computeOverflowFromCells() {
@@ -915,6 +1018,18 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  private func relayoutCellIfFlexed(
+    cell: RenderTableCellWrapper, rowIndex: Int32, rowHeight: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeOverflowFromCells(totalRows: UInt32, nEffCols: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func fullTableRowSpan() -> CellSpan {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1065,6 +1180,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     return CellSpan(start: UInt32(startColumn), end: UInt32(endColumn))
   }
 
+  private func setLogicalPositionForCell(cell: RenderTableCellWrapper, effectiveColumn: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var grid: [RowStruct] = []
   private var rowPos: [LayoutUnit] = []
 
@@ -1082,7 +1202,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   // and m_forceSlowPaintPathWithOverflowingCell will be set to save memory.
   private let overflowingCells = WeakHashSet<RenderTableCellWrapper>()
 
-  private let forceSlowPaintPathWithOverflowingCell = false
+  private var forceSlowPaintPathWithOverflowingCell = false
   private var hasMultipleCellLevels = false
   let needsCellRecalc = false
 }
