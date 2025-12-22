@@ -63,6 +63,11 @@ class RenderLayoutStateWrapper {
     fatalError("Not implemented")
   }
 
+  func pageLogicalHeightChanged() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lineGrid() -> RenderBlockFlowWrapper? {
     if let raw = wk_interop.RenderLayoutState_lineGrid(p) {
       return RenderBlockFlowWrapper(p: raw)

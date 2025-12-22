@@ -97,7 +97,51 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    // Table rows do not add translation.
+    let _ = LayoutStateMaintainer(
+      root: self, offset: LayoutSizeWrapper(),
+      disablePaintOffsetCache: isTransformed() || hasReflection()
+        || style().isFlippedBlocksWritingMode())
+
+    let layoutState = view().frameView().layoutContext().layoutState()!
+    let paginated = layoutState.isPaginated()
+
+    var cell = firstCell()
+    while cell != nil {
+      if !cell!.needsLayout() && paginated
+        && (layoutState.pageLogicalHeightChanged()
+          || (layoutState.pageLogicalHeight().bool()
+            && layoutState.pageLogicalOffset(child: cell!, childLogicalOffset: cell!.logicalTop())
+              != cell!.pageLogicalOffset()))
+      {
+        cell!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+
+      if cell!.needsLayout() {
+        cell!.layout()
+      }
+      cell = cell!.nextCell()
+    }
+
+    clearOverflow()
+    addVisualEffectOverflow()
+    // We only ever need to repaint if our cells didn't, which menas that they didn't need
+    // layout, so we know that our bounds didn't change. This code is just making up for
+    // the fact that we did not repaint in setStyle() because we had a layout hint.
+    // We cannot call repaint() because our clippedOverflowRect() is taken from the
+    // parent table, and being mid-layout, that is invalid. Instead, we repaint our cells.
+    if selfNeedsLayout() && checkForRepaintDuringLayout() {
+      var cell = firstCell()
+      while cell != nil {
+        cell!.repaint()
+        cell = cell!.nextCell()
+      }
+    }
+
+    // RenderTableSection.layoutRows will set our logical height and width later, so it calls updateLayerTransform().
+    clearNeedsLayout()
   }
 }
