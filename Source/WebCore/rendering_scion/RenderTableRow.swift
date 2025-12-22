@@ -91,13 +91,19 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func borderAdjoiningStartCell(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(cell.isFirstOrLastCellInRow())
+    #endif
+    // FIXME: https://webkit.org/b/79272 - Add support for mixed directionality at the cell level.
+    return style().borderStart(styleForFlow: table()!.style())
   }
 
   func borderAdjoiningEndCell(cell: RenderTableCellWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(cell.isFirstOrLastCellInRow())
+    #endif
+    // FIXME: https://webkit.org/b/79272 - Add support for mixed directionality at the cell level.
+    return style().borderEnd(styleForFlow: table()!.style())
   }
 
   func section() -> RenderTableSectionWrapper? {
