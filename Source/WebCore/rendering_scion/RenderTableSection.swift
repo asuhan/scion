@@ -72,8 +72,13 @@ private func updateLogicalHeightForCell(
 }
 
 private func resolveLogicalHeightForRow(rowLogicalHeight: LengthWrapper) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if rowLogicalHeight.isFixed() {
+    return LayoutUnit(value: rowLogicalHeight.value())
+  }
+  if rowLogicalHeight.isCalculated() {
+    return LayoutUnit(value: rowLogicalHeight.nonNanCalculatedValue(maxValue: 0))
+  }
+  return LayoutUnit(value: 0)
 }
 
 private func compareCellPositions(
