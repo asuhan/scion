@@ -513,8 +513,65 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func calcOuterBorderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let totalCols = table()!.numEffCols()
+    if grid.isEmpty || totalCols == 0 {
+      return LayoutUnit(value: 0)
+    }
+
+    let sb = style().borderBefore(styleForFlow: table()!.style())
+    if sb.style == .Hidden {
+      return LayoutUnit(value: -1)
+    }
+
+    var borderWidth: Float32 = 0
+
+    if sb.style != .None {
+      borderWidth = sb.width
+    }
+
+    let rb = firstRow()!.style().borderBefore(styleForFlow: table()!.style())
+    if rb.style == .Hidden {
+      return LayoutUnit(value: -1)
+    }
+    if rb.style != .None && rb.width > borderWidth {
+      borderWidth = rb.width
+    }
+
+    var allHidden = true
+    for c in 0..<totalCols {
+      let current = cellAt(row: 0, col: c)
+      if current.inColSpan || !current.hasCells() {
+        continue
+      }
+      let cb = current.primaryCell()!.style().borderBefore(styleForFlow: table()!.style())  // FIXME: Make this work with perpendicular and flipped cells.
+      // FIXME: Don't repeat for the same col group
+      if let colGroup = table()!.colElement(col: c) {
+        let gb = colGroup.style().borderBefore(styleForFlow: table()!.style())
+        if gb.style == .Hidden || cb.style == .Hidden {
+          continue
+        }
+        allHidden = false
+        if gb.style != .None && gb.width > borderWidth {
+          borderWidth = gb.width
+        }
+        if cb.style != .None && cb.width > borderWidth {
+          borderWidth = cb.width
+        }
+      } else {
+        if cb.style == .Hidden {
+          continue
+        }
+        allHidden = false
+        if cb.style != .None && cb.width > borderWidth {
+          borderWidth = cb.width
+        }
+      }
+    }
+    if allHidden {
+      return LayoutUnit(value: -1)
+    }
+    return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+      borderWidth: borderWidth, deviceScaleFactor: document().deviceScaleFactor(), roundUp: false)
   }
 
   func calcOuterBorderAfter() -> LayoutUnit {
