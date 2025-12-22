@@ -50,8 +50,15 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func paintOutlineForRowIfNeeded(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustedPaintOffset = paintOffset + location()
+    let paintPhase = paintInfo.phase
+    if (paintPhase == .Outline || paintPhase == .SelfOutline)
+      && style().usedVisibility() == .Visible
+    {
+      paintOutline(
+        paintInfo: paintInfo,
+        paintRect: LayoutRectWrapper(location: adjustedPaintOffset, size: size()))
+    }
   }
 
   static func createAnonymousWithParentRenderer(parent: RenderTableSectionWrapper)
