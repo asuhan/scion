@@ -203,6 +203,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalHeightForRowSizing() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func borderLeft() -> LayoutUnit {
     if let table = table() {
       return table.collapseBorders() ? borderHalfLeft(outer: false) : super.borderLeft()
@@ -498,17 +503,22 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
       op: compositeOp, backgroundObject: backgroundObject)
   }
 
-  private func cellBaselinePosition() -> LayoutUnit {
+  func cellBaselinePosition() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func isBaselineAligned() -> Bool {
+  func isBaselineAligned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func intrinsicPaddingBefore() -> LayoutUnit {
+  func clearIntrinsicPadding() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intrinsicPaddingBefore() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

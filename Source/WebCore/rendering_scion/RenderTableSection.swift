@@ -50,6 +50,11 @@ private func updateLogicalHeightForCell(
   fatalError("Not implemented")
 }
 
+private func resolveLogicalHeightForRow(rowLogicalHeight: LengthWrapper) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func compareCellPositions(
   elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
 ) -> Bool {
@@ -180,8 +185,123 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func calcRowLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): SetLayoutNeededForbiddenScope
+    assert(!needsLayout())
+
+    // We ignore the border-spacing on any non-top section as it is already included in the previous section's last row position.
+    var spacing =
+      CPtrToInt(table()!.topSection()?.p) == CPtrToInt(p) ? LayoutUnit() : table()!.vBorderSpacing()
+
+    let _ = LayoutStateMaintainer(
+      root: self, offset: locationOffset(),
+      disablePaintOffsetCache: isTransformed() || hasReflection()
+        || style().isFlippedBlocksWritingMode())
+
+    assert(grid.count + 1 >= rowPos.count)
+    while rowPos.count < grid.count + 1 {
+      rowPos.append(LayoutUnit())
+    }
+    rowPos[0] = spacing
+
+    let totalRows = grid.count
+
+    for r in 0..<totalRows {
+      grid[r].baseline = LayoutUnit(value: 0)
+      var baselineDescent = LayoutUnit()
+
+      if grid[r].logicalHeight.isSpecified() {
+        // Our base size is the biggest logical height from our cells' styles (excluding row spanning cells).
+        rowPos[r + 1] = max(
+          rowPos[r] + resolveLogicalHeightForRow(rowLogicalHeight: grid[r].logicalHeight),
+          LayoutUnit(value: UInt64(0)))
+      } else {
+        // Non-specified lengths are ignored because the row already accounts for the cells intrinsic logical height.
+        rowPos[r + 1] = max(rowPos[r], LayoutUnit(value: UInt64(0)))
+      }
+
+      let totalCols = UInt32(grid[r].row.count)
+
+      for c in 0..<totalCols {
+        let current = cellAt(row: UInt32(r), col: c)
+        for i in 0..<current.cells.count {
+          let cell = current.cells[i]
+          if current.inColSpan && cell.rowSpan() == 1 {
+            continue
+          }
+
+          // FIXME: We are always adding the height of a rowspan to the last rows which doesn't match
+          // other browsers. See webkit.org/b/52185 for example.
+          if (cell.rowIndex() + cell.rowSpan() - 1) != r {
+            // We will apply the height of the rowspan to the current row if next row is not valid.
+            if (r + 1) < totalRows {
+              var col: UInt32 = 0
+              var nextRowCell = cellAt(row: UInt32(r + 1), col: col)
+
+              // We are trying to find that next row is valid or not.
+              while !nextRowCell.cells.isEmpty && nextRowCell.cells[0].rowSpan() > 1
+                && nextRowCell.cells[0].rowIndex() < (r + 1)
+              {
+                col += 1
+                if col < totalCols {
+                  nextRowCell = cellAt(row: UInt32(r + 1), col: col)
+                } else {
+                  break
+                }
+              }
+
+              // We are adding the height of the rowspan to the current row if next row is not valid.
+              if col < totalCols && !nextRowCell.cells.isEmpty {
+                continue
+              }
+            }
+          }
+
+          // For row spanning cells, |r| is the last row in the span.
+          let cellStartRow = Int(cell.rowIndex())
+
+          if cell.overridingLogicalHeight() != nil {
+            cell.clearIntrinsicPadding()
+            cell.clearOverridingContentSize()
+            cell.setChildNeedsLayout(markParents: .MarkOnlyThis)
+            cell.layoutIfNeeded()
+          }
+
+          let cellLogicalHeight = cell.logicalHeightForRowSizing()
+          rowPos[r + 1] = max(rowPos[r + 1], rowPos[cellStartRow] + cellLogicalHeight)
+
+          // Find out the baseline. The baseline is set on the first row in a rowspan.
+          if cell.isBaselineAligned() {
+            let baselinePosition = cell.cellBaselinePosition() - cell.intrinsicPaddingBefore()
+            let borderAndComputedPaddingBefore =
+              cell.borderAndPaddingBefore() - cell.intrinsicPaddingBefore()
+            if baselinePosition > borderAndComputedPaddingBefore {
+              grid[cellStartRow].baseline = max(grid[cellStartRow].baseline, baselinePosition)
+              // The descent of a cell that spans multiple rows does not affect the height of the first row it spans, so don't let it
+              // become the baseline descent applied to the rest of the row. Also we don't account for the baseline descent of
+              // non-spanning cells when computing a spanning cell's extent.
+              var cellStartRowBaselineDescent = LayoutUnit()
+              if cell.rowSpan() == 1 {
+                baselineDescent = max(baselineDescent, cellLogicalHeight - baselinePosition)
+                cellStartRowBaselineDescent = baselineDescent
+              }
+              rowPos[cellStartRow + 1] = max(
+                rowPos[cellStartRow + 1],
+                rowPos[cellStartRow] + grid[cellStartRow].baseline + cellStartRowBaselineDescent)
+            }
+          }
+        }
+      }
+
+      // Add the border-spacing to our final position.
+      // Use table border-spacing even in non-top sections
+      spacing = table()!.vBorderSpacing()
+      rowPos[r + 1] += grid[r].rowRenderer != nil ? spacing : LayoutUnit(value: UInt64(0))
+      rowPos[r + 1] = max(rowPos[r + 1], rowPos[r])
+    }
+
+    assert(!needsLayout())
+
+    return rowPos[grid.count]
   }
 
   func layoutRows() {
@@ -216,6 +336,8 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   struct RowStruct {
     var row = Row()
     var rowRenderer: RenderTableRowWrapper? = nil
+    var baseline = LayoutUnit()
+    var logicalHeight = LengthWrapper()
   }
 
   func borderAdjoiningTableStart() -> BorderValue {
@@ -944,7 +1066,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private var grid: [RowStruct] = []
-  private let rowPos: [LayoutUnit] = []
+  private var rowPos: [LayoutUnit] = []
 
   // the current insertion position
   var cCol: UInt32 = 0
