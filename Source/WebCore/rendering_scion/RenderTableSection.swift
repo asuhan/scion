@@ -692,8 +692,58 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func calcOuterBorderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let totalCols = table()!.numEffCols()
+    if grid.isEmpty || totalCols == 0 {
+      return LayoutUnit(value: 0)
+    }
+
+    let sb = style().borderEnd(styleForFlow: table()!.style())
+    if sb.style == .Hidden {
+      return LayoutUnit(value: -1)
+    }
+
+    var borderWidth: Float32 = 0
+
+    if sb.style != .None {
+      borderWidth = sb.width
+    }
+
+    if let colGroup = table()!.colElement(col: totalCols - 1) {
+      let gb = colGroup.style().borderEnd(styleForFlow: table()!.style())
+      if gb.style == .Hidden {
+        return LayoutUnit(value: -1)
+      }
+      if gb.style != .None && gb.width > borderWidth {
+        borderWidth = gb.width
+      }
+    }
+
+    var allHidden = true
+    for r in 0..<grid.count {
+      let current = cellAt(row: UInt32(r), col: totalCols - 1)
+      if !current.hasCells() {
+        continue
+      }
+      // FIXME: Don't repeat for the same cell
+      let cb = current.primaryCell()!.style().borderEnd(styleForFlow: table()!.style())  // FIXME: Make this work with perpendicular and flipped cells.
+      let rb = current.primaryCell()!.parent()!.style().borderEnd(styleForFlow: table()!.style())
+      if cb.style == .Hidden || rb.style == .Hidden {
+        continue
+      }
+      allHidden = false
+      if cb.style != .None && cb.width > borderWidth {
+        borderWidth = cb.width
+      }
+      if rb.style != .None && rb.width > borderWidth {
+        borderWidth = rb.width
+      }
+    }
+    if allHidden {
+      return LayoutUnit(value: -1)
+    }
+    return CollapsedBorderValue.adjustedCollapsedBorderWidth(
+      borderWidth: borderWidth, deviceScaleFactor: document().deviceScaleFactor(),
+      roundUp: table()!.style().isLeftToRightDirection())
   }
 
   func recalcOuterBorder() {
