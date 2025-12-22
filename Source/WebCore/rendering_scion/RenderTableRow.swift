@@ -45,8 +45,10 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   func table() -> RenderTableWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let section = section() {
+      return section.parent() as! RenderTableWrapper?
+    }
+    return nil
   }
 
   func paintOutlineForRowIfNeeded(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
