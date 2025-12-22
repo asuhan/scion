@@ -158,6 +158,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setCol(column: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func col() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

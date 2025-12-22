@@ -43,6 +43,13 @@ private func setRowLogicalHeightToRowStyleLogicalHeight(row: RenderTableSectionW
   fatalError("Not implemented")
 }
 
+private func updateLogicalHeightForCell(
+  row: inout RenderTableSectionWrapper.RowStruct, cell: RenderTableCellWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func compareCellPositions(
   elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
 ) -> Bool {
@@ -108,8 +115,68 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func addCell(cell: RenderTableCellWrapper, row: RenderTableRowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We don't insert the cell if we need cell recalc as our internal columns' representation
+    // will have drifted from the table's representation. Also recalcCells will call addCell
+    // at a later time after sync'ing our columns' with the table's.
+    if needsCellRecalc {
+      return
+    }
+
+    let rSpan = cell.rowSpan()
+    var cSpan = cell.colSpan()
+    let columns = table()!.columns[...]
+    let nCols = columns.count
+    let insertionRow = row.rowIndex()
+
+    // ### mozilla still seems to do the old HTML way, even for strict DTD
+    // (see the annotation on table cell layouting in the CSS specs and the testcase below:
+    // <TABLE border>
+    // <TR><TD>1 <TD rowspan="2">2 <TD>3 <TD>4
+    // <TR><TD colspan="2">5
+    // </TABLE>
+    while cCol < nCols
+      && (cellAt(row: insertionRow, col: cCol).hasCells()
+        || cellAt(row: insertionRow, col: cCol).inColSpan)
+    {
+      cCol += 1
+    }
+
+    updateLogicalHeightForCell(row: &grid[Int(insertionRow)], cell: cell)
+
+    ensureRows(numRows: insertionRow + rSpan)
+
+    grid[Int(insertionRow)].rowRenderer = row
+
+    let col = self.cCol
+    // tell the cell where it is
+    var inColSpan = false
+    while cSpan != 0 {
+      var currentSpan: UInt32 = 0
+      if cCol >= nCols {
+        table()!.appendColumn(span: cSpan)
+        currentSpan = cSpan
+      } else {
+        if cSpan < columns[Int(cCol)].span {
+          table()!.splitColumn(position: cCol, firstSpan: cSpan)
+        }
+        currentSpan = columns[Int(cCol)].span
+      }
+      for r in 0..<rSpan {
+        let c = cellAt(row: insertionRow + r, col: cCol)
+        c.cells.append(cell)
+        // If cells overlap then we take the slow path for painting.
+        if c.cells.count > 1 {
+          hasMultipleCellLevels = true
+        }
+        if inColSpan {
+          c.inColSpan = true
+        }
+      }
+      cCol += 1
+      cSpan -= currentSpan
+      inColSpan = true
+    }
+    cell.setCol(column: table()!.effColToCol(effCol: col))
   }
 
   func calcRowLogicalHeight() -> LayoutUnit {
@@ -130,8 +197,8 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   func table() -> RenderTableWrapper? { return parent() as! RenderTableWrapper? }
 
   class CellStruct {
-    let cells: [RenderTableCellWrapper] = []
-    let inColSpan = false  // true for columns after the first in a colspan
+    var cells: [RenderTableCellWrapper] = []
+    var inColSpan = false  // true for columns after the first in a colspan
 
     func primaryCell() -> RenderTableCellWrapper? {
       // TODO(asuhan): implement this
@@ -894,6 +961,6 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private let overflowingCells = WeakHashSet<RenderTableCellWrapper>()
 
   private let forceSlowPaintPathWithOverflowingCell = false
-  private let hasMultipleCellLevels = false
+  private var hasMultipleCellLevels = false
   let needsCellRecalc = false
 }

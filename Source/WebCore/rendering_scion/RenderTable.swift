@@ -526,6 +526,18 @@ class RenderTableWrapper: RenderBlockWrapper {
     return effColumn
   }
 
+  func effColToCol(effCol: UInt32) -> UInt32 {
+    if !hasCellColspanThatDeterminesTableWidth {
+      return effCol
+    }
+
+    var c: UInt32 = 0
+    for i in 0..<effCol {
+      c += columns[Int(i)].span
+    }
+    return c
+  }
+
   private func borderSpacingInRowDirection() -> LayoutUnit {
     let effectiveColumnCount = numEffCols()
     if effectiveColumnCount != 0 {
