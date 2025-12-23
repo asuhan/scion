@@ -728,8 +728,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalLeftOffsetForContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
   }
 
   func availableLogicalWidthForContent(blockOffset: LayoutUnit) -> LayoutUnit {
