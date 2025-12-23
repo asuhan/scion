@@ -86,8 +86,13 @@ private func resolveLogicalHeightForRow(rowLogicalHeight: LengthWrapper) -> Layo
 private func shouldFlexCellChild(cell: RenderTableCellWrapper, cellDescendant: RenderBoxWrapper)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !cell.style().logicalHeight().isSpecified() {
+    return false
+  }
+  if cellDescendant.scrollsOverflowY() {
+    return true
+  }
+  return cellDescendant.shouldTreatChildAsReplacedInTableCells()
 }
 
 private func compareCellPositions(
