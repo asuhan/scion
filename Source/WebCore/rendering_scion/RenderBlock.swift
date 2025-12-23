@@ -266,8 +266,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func isContainingBlockAncestorFor(renderer: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var ancestor = renderer.containingBlock()
+    while ancestor != nil {
+      if CPtrToInt(ancestor!.p) == CPtrToInt(p) {
+        return true
+      }
+      ancestor = ancestor!.containingBlock()
+    }
+    return false
   }
 
   func setHasMarginBeforeQuirk(b: Bool) {
