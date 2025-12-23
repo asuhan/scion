@@ -51,6 +51,11 @@ struct LayoutPointWrapper: Equatable {
     self.y = LayoutUnit(value: size.y)
   }
 
+  init(size: LayoutSizeWrapper) {
+    self.x = size.width()
+    self.y = size.height()
+  }
+
   var x = LayoutUnit()
   var y = LayoutUnit()
 

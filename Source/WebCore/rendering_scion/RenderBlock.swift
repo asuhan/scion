@@ -1697,6 +1697,74 @@ class RenderBlockWrapper: RenderBoxWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
+    // For blocks inside inlines, we include margins so that we run right up to the inline boxes
+    // above and below us (thus getting merged with them to form a single irregular shape).
+    let inlineContinuation = inlineContinuation()
+    if inlineContinuation != nil {
+      // FIXME: This check really isn't accurate.
+      let nextInlineHasLineBox = inlineContinuation!.firstLegacyInlineBox() != nil
+      // FIXME: This is wrong. The principal renderer may not be the continuation preceding this block.
+      // FIXME: This is wrong for block-flows that are horizontal.
+      // https://bugs.webkit.org/show_bug.cgi?id=46781
+      let prevInlineHasLineBox =
+        (inlineContinuation!.element()!.renderer() as! RenderInlineWrapper)
+        .firstLegacyInlineBox() != nil
+      let zero = LayoutUnit(value: UInt64(0))
+      let topMargin = prevInlineHasLineBox ? collapsedMarginBefore() : zero
+      let bottomMargin = nextInlineHasLineBox ? collapsedMarginAfter() : zero
+      let rect = LayoutRectWrapper(
+        x: additionalOffset.x, y: additionalOffset.y - topMargin, width: width(),
+        height: height() + topMargin + bottomMargin)
+      if !rect.isEmpty() {
+        rects.append(rect)
+      }
+    } else if width().bool() && height().bool() {
+      rects.append(LayoutRectWrapper(location: additionalOffset, size: size()))
+    }
+
+    if !hasNonVisibleOverflow() && !hasControlClip() {
+      if childrenInline() {
+        addFocusRingRectsForInlineChildren(
+          rects: &rects[...], additionalOffset: additionalOffset, paintContainer: paintContainer)
+      }
+
+      for box: RenderBoxWrapper in childrenOfType(parent: self) {
+        if box is RenderListMarkerWrapper {
+          continue
+        }
+
+        var pos = FloatPoint()
+        // FIXME: This doesn't work correctly with transforms.
+        if box.layer() != nil {
+          var wasFixed: Bool? = nil
+          pos = box.localToContainerPoint(
+            localPoint: FloatPoint(), container: paintContainer, wasFixed: &wasFixed)
+        } else {
+          pos = FloatPoint(
+            x: (additionalOffset.x + box.x()).float(), y: (additionalOffset.y + box.y()).float())
+        }
+        box.addFocusRingRects(
+          rects: &rects, additionalOffset: flooredLayoutPoint(p: pos),
+          paintContainer: paintContainer
+        )
+      }
+    }
+
+    if inlineContinuation != nil {
+      inlineContinuation!.addFocusRingRects(
+        rects: &rects,
+        additionalOffset: flooredLayoutPoint(
+          p: LayoutPointWrapper(
+            size: additionalOffset + inlineContinuation!.containingBlock()!.location() - location()
+          ).FloatPoint()),
+        paintContainer: paintContainer)
+    }
+  }
+
+  func addFocusRingRectsForInlineChildren(
+    rects: inout ArraySlice<LayoutRectWrapper>, additionalOffset: LayoutPointWrapper,
+    paintContainer: RenderLayerModelObjectWrapper?
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

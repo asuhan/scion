@@ -3339,6 +3339,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func addFocusRingRectsForInlineChildren(
+    rects: inout ArraySlice<LayoutRectWrapper>, additionalOffset: LayoutPointWrapper,
+    paintContainer: RenderLayerModelObjectWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func hasInlineLayout() -> Bool {
     switch lineLayout {
     case .Integration:

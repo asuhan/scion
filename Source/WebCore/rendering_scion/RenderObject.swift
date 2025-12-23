@@ -841,6 +841,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func localToContainerPoint(
+    localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?, wasFixed: inout Bool?,
+    mode: MapCoordinatesMode = .UseTransforms
+  ) -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func minPreferredLogicalWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_minPreferredLogicalWidth(p))
   }
