@@ -500,8 +500,8 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func cellAt(row: UInt32, col: UInt32) -> CellStruct {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    recalcCellsIfNeeded()
+    return grid[Int(row)].row[Int(col)]
   }
 
   func primaryCellAt(row: UInt32, col: UInt32) -> RenderTableCellWrapper? {
