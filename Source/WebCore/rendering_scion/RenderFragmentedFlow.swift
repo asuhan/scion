@@ -70,6 +70,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return computedValues
   }
 
+  func hasFragments() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -199,6 +204,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     }
 
     return nil
+  }
+
+  func hasCachedFragmentRangeForBox(box: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func addForcedFragmentBreak(

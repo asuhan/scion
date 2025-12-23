@@ -3713,6 +3713,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // True if this box can have a range in an outside fragmentation context.
+  func canHaveOutsideFragmentRange() -> Bool { return !isRenderFragmentedFlow() }
+
   func needsLayoutAfterFragmentRangeChange() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

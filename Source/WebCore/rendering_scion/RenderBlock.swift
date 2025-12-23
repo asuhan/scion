@@ -70,8 +70,19 @@ private func canComputeFragmentRangeForBox(
   parentBlock: RenderBlockWrapper, childBox: RenderBoxWrapper,
   enclosingFragmentedFlow: RenderFragmentedFlowWrapper?
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if enclosingFragmentedFlow == nil {
+    return false
+  }
+
+  if !enclosingFragmentedFlow!.hasFragments() {
+    return false
+  }
+
+  if !childBox.canHaveOutsideFragmentRange() {
+    return false
+  }
+
+  return enclosingFragmentedFlow!.hasCachedFragmentRangeForBox(box: parentBlock)
 }
 
 class RenderBlockWrapper: RenderBoxWrapper {
