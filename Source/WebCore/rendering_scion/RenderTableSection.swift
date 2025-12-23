@@ -906,8 +906,13 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func removeRedundantColumns() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let maximumNumberOfColumns = table()!.numEffCols()
+    for i in 0..<grid.count {
+      if grid[i].row.count <= maximumNumberOfColumns {
+        continue
+      }
+      grid[i].row.removeLast(grid[i].row.count - Int(maximumNumberOfColumns))
+    }
   }
 
   func setNeedsCellRecalc() {
