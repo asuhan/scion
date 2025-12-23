@@ -280,14 +280,56 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func hasMarginBeforeQuirk() -> Bool { return renderBlockHasMarginBeforeQuirk }
+
+  func hasMarginAfterQuirk() -> Bool { return renderBlockHasMarginAfterQuirk }
+
   func hasMarginBeforeQuirk(child: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the child has the same directionality as we do, then we can just return its
+    // margin quirk.
+    if !child.isWritingModeRoot() {
+      if let childBlock = child as? RenderBlockWrapper {
+        return childBlock.hasMarginBeforeQuirk()
+      }
+      return child.style().marginBefore().hasQuirk()
+    }
+
+    // The child has a different directionality. If the child is parallel, then it's just
+    // flipped relative to us. We can use the opposite edge.
+    if child.isHorizontalWritingMode() == isHorizontalWritingMode() {
+      if let childBlock = child as? RenderBlockWrapper {
+        return childBlock.hasMarginAfterQuirk()
+      }
+      return child.style().marginAfter().hasQuirk()
+    }
+
+    // The child is perpendicular to us and box sides are never quirky in html.css, and we don't really care about
+    // whether or not authors specified quirky ems, since they're an implementation detail.
+    return false
   }
 
   func hasMarginAfterQuirk(child: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the child has the same directionality as we do, then we can just return its
+    // margin quirk.
+    if !child.isWritingModeRoot() {
+      if let childBlock = child as? RenderBlockWrapper {
+        return childBlock.hasMarginAfterQuirk()
+      }
+      return child.style().marginAfter().hasQuirk()
+    }
+
+    // The child has a different directionality. If the child is parallel, then it's just
+    // flipped relative to us. We can use the opposite edge.
+    if child.isHorizontalWritingMode() == isHorizontalWritingMode() {
+      if let childBlock = child as? RenderBlockWrapper {
+        return childBlock.hasMarginBeforeQuirk()
+      }
+      return child.style().marginBefore().hasQuirk()
+    }
+
+    // The child is perpendicular to us and box sides are never quirky in html.css, and we don't really care about
+    // whether or not authors specified quirky ems, since they're an implementation detail.
+    return false
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
