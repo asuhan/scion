@@ -1259,8 +1259,27 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    var child = firstChild()
+    if child == nil {
+      clearNeedsLayout()
+      return
+    }
+
+    let _ = LayoutStateMaintainer(
+      root: self, offset: locationOffset(),
+      disablePaintOffsetCache: style().isFlippedBlocksWritingMode())
+    while child != nil {
+      if child!.needsLayout() {
+        (child as! RenderElementWrapper).layout()
+      }
+      assert((!child!.needsLayout()))
+      child = child!.nextSibling()
+    }
+    invalidateBackgroundObscurationStatus()
+    clearNeedsLayout()
   }
 
   func computeIntrinsicLogicalWidths(

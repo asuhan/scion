@@ -883,6 +883,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func invalidateBackgroundObscurationStatus() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hitTest(
     request: HitTestRequestWrapper, result: HitTestResultWrapper,
     locationInContainer: HitTestLocationWrapper, accumulatedOffset: LayoutPointWrapper,
