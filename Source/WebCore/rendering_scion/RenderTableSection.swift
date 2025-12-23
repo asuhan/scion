@@ -790,9 +790,45 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func recalcCells() {
+    assert(needsCellRecalc)
+    // We reset the flag here to ensure that addCell() works. This is safe to do because we clear the grid
+    // and update its dimensions to be consistent with the table's column representation before we rebuild
+    // the grid using addCell().
+    needsCellRecalc = false
+
+    cCol = 0
+    cRow = 0
+    grid.removeAll()
+
+    var row = firstRow()
+    while row != nil {
+      let insertionRow = cRow
+      cRow += 1
+      cCol = 0
+      ensureRows(numRows: cRow)
+
+      grid[Int(insertionRow)].rowRenderer = row
+      row!.setRowIndex(rowIndex: insertionRow)
+      setRowLogicalHeightToRowStyleLogicalHeight(row: grid[Int(insertionRow)])
+
+      var cell = row!.firstCell()
+      while cell != nil {
+        addCell(cell: cell!, row: row!)
+        cell = cell!.nextCell()
+      }
+
+      row = row!.nextRow()
+    }
+
+    // TODO(asuhan): shrink to size
+    setNeedsLayout()
+  }
+
   func recalcCellsIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if needsCellRecalc {
+      recalcCells()
+    }
   }
 
   func removeRedundantColumns() {
@@ -1638,5 +1674,5 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
   private var forceSlowPaintPathWithOverflowingCell = false
   private var hasMultipleCellLevels = false
-  let needsCellRecalc = false
+  var needsCellRecalc = false
 }
