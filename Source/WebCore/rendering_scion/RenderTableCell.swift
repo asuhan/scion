@@ -208,6 +208,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setCellLogicalWidth(constrainedLogicalWidth: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func borderLeft() -> LayoutUnit {
     if let table = table() {
       return table.collapseBorders() ? borderHalfLeft(outer: false) : super.borderLeft()

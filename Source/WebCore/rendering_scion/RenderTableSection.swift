@@ -1055,8 +1055,58 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+    assert(!needsCellRecalc)
+    assert(!table()!.needsSectionRecalc)
+
+    forceSlowPaintPathWithOverflowingCell = false
+    // addChild may over-grow m_grid but we don't want to throw away the memory too early as addChild
+    // can be called in a loop (e.g during parsing). Doing it now ensures we have a stable-enough structure.
+    // TODO(asuhan): shrink to size
+
+    let _ = LayoutStateMaintainer(
+      root: self, offset: locationOffset(),
+      disablePaintOffsetCache: isTransformed() || hasReflection()
+        || style().isFlippedBlocksWritingMode())
+    let paginated = view().frameView().layoutContext().layoutState()!.isPaginated()
+
+    let columnPos = table()!.columnPositions()
+
+    for (r, rowStruct) in grid.enumerated() {
+      let row = rowStruct.row
+      let cols = row.count
+      // First, propagate our table layout's information to the cells. This will mark the row as needing layout
+      // if there was a column logical width change.
+      for (startColumn, current) in row.enumerated() {
+        let cell = current.primaryCell()
+        if cell == nil || current.inColSpan {
+          continue
+        }
+
+        var endCol = startColumn
+        var cspan = cell!.colSpan()
+        while cspan != 0 && endCol < cols {
+          assert(endCol < table()!.columns.count)
+          cspan -= table()!.columns[endCol].span
+          endCol += 1
+        }
+        let tableLayoutLogicalWidth =
+          columnPos[endCol] - columnPos[startColumn] - table()!.hBorderSpacing()
+        cell!.setCellLogicalWidth(constrainedLogicalWidth: tableLayoutLogicalWidth)
+      }
+
+      if let rowRenderer = grid[r].rowRenderer {
+        if !rowRenderer.needsLayout() && paginated
+          && view().frameView().layoutContext().layoutState()!.pageLogicalHeightChanged()
+        {
+          rowRenderer.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+
+        rowRenderer.layoutIfNeeded()
+      }
+    }
+    clearNeedsLayout()
   }
 
   private func paintCell(

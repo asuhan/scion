@@ -1717,7 +1717,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var collapsedEmptyBorderIsPresent = false
 
   private var hasColElements = false
-  private var needsSectionRecalc = false
+  var needsSectionRecalc = false
 
   private var columnLogicalWidthChanged = false
   private var hasCellColspanThatDeterminesTableWidth = false
