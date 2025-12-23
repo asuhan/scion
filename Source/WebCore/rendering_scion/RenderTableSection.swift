@@ -152,13 +152,45 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if grid.isEmpty {
+      return nil
+    }
+
+    let firstLineBaseline = grid[0].baseline
+    if firstLineBaseline.bool() {
+      return firstLineBaseline + rowPos[0]
+    }
+
+    return baselineFromCellContentEdges(alignment: .Baseline)
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if grid.isEmpty {
+      return nil
+    }
+
+    let lastLineBaseline = grid[grid.count - 1].baseline
+    if lastLineBaseline.bool() {
+      return lastLineBaseline + rowPos[grid.count - 1]
+    }
+
+    return baselineFromCellContentEdges(alignment: .LastBaseline)
+  }
+
+  private func baselineFromCellContentEdges(alignment: ItemPosition) -> LayoutUnit? {
+    assert(alignment == .Baseline || alignment == .LastBaseline)
+    let row = alignment == .Baseline ? grid.first!.row : grid.last!.row
+
+    var result: LayoutUnit? = nil
+    for cs in row {
+      // Only cells with content have a baseline
+      if let cell = cs.primaryCell(), cell.contentLogicalHeight().bool() {
+        let candidate =
+          cell.logicalTop() + cell.borderAndPaddingBefore() + cell.contentLogicalHeight()
+        result = max(result ?? candidate, candidate)
+      }
+    }
+    return result
   }
 
   func addCell(cell: RenderTableCellWrapper, row: RenderTableRowWrapper) {
