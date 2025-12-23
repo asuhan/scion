@@ -98,8 +98,7 @@ private func shouldFlexCellChild(cell: RenderTableCellWrapper, cellDescendant: R
 private func compareCellPositions(
   elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return (*elem1).rowIndex() < (*elem2).rowIndex()
 }
 
 // This comparison is used only when we have overflowing cells as we have an unsorted array to sort. We thus need
