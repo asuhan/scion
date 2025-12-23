@@ -1329,8 +1329,18 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   static func layoutOverflowLogicalBottom(renderer: RenderBlockWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(renderer is RenderGridWrapper || renderer is RenderFlexibleBoxWrapper)
+    var maxChildLogicalBottom = LayoutUnit()
+    for child: RenderBoxWrapper in childrenOfType(parent: renderer) {
+      if child.isOutOfFlowPositioned() {
+        continue
+      }
+      let childLogicalBottom =
+        renderer.logicalTopForChild(child: child) + renderer.logicalHeightForChild(child: child)
+        + renderer.marginAfterForChild(child: child)
+      maxChildLogicalBottom = max(maxChildLogicalBottom, childLogicalBottom)
+    }
+    return max(renderer.clientLogicalBottom(), maxChildLogicalBottom + renderer.paddingAfter())
   }
 
   // Overflow is always relative to the border-box of the element in question.
