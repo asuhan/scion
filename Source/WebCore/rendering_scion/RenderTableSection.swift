@@ -824,23 +824,31 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func outerBorderLeft(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection() ? outerBorderStart : outerBorderEnd
+    }
+    return styleForCellFlow.isFlippedBlocksWritingMode() ? outerBorderAfter : outerBorderBefore
   }
 
   func outerBorderRight(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection() ? outerBorderEnd : outerBorderStart
+    }
+    return styleForCellFlow.isFlippedBlocksWritingMode() ? outerBorderBefore : outerBorderAfter
   }
 
   func outerBorderTop(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isFlippedBlocksWritingMode() ? outerBorderAfter : outerBorderBefore
+    }
+    return styleForCellFlow.isLeftToRightDirection() ? outerBorderStart : outerBorderEnd
   }
 
   func outerBorderBottom(styleForCellFlow: RenderStyleWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isFlippedBlocksWritingMode() ? outerBorderBefore : outerBorderAfter
+    }
+    return styleForCellFlow.isLeftToRightDirection() ? outerBorderEnd : outerBorderStart
   }
 
   func numRows() -> UInt32 {
