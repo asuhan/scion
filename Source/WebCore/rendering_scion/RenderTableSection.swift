@@ -546,8 +546,9 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func primaryCellAt(row: UInt32, col: UInt32) -> RenderTableCellWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    recalcCellsIfNeeded()
+    let c = grid[Int(row)].row[Int(col)]
+    return c.primaryCell()
   }
 
   func appendColumn(pos: UInt32) {
