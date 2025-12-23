@@ -36,6 +36,8 @@ enum CollapsedBorderSide {
   case CBSEnd
 }
 
+// Those 2 variables are used to balance the memory consumption vs the repaint time on big tables.
+private let gMinTableSizeToUseFastPaintPathWithOverflowingCell = 75 * 75
 private let gMaxAllowedOverflowingCellRatioForFastPaintPath: Float32 = 0.1
 
 private func setRowLogicalHeightToRowStyleLogicalHeight(
@@ -487,8 +489,9 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func computeOverflowFromCells() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let totalRows = UInt32(grid.count)
+    let nEffCols = table()!.numEffCols()
+    computeOverflowFromCells(totalRows: totalRows, nEffCols: nEffCols)
   }
 
   func table() -> RenderTableWrapper? { return parent() as! RenderTableWrapper? }
@@ -1533,9 +1536,52 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     extraLogicalHeight -= totalLogicalHeightAdded
   }
 
+  private func hasOverflowingCell() -> Bool {
+    return overflowingCells.computeSize() != 0 || forceSlowPaintPathWithOverflowingCell
+  }
+
   private func computeOverflowFromCells(totalRows: UInt32, nEffCols: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    clearOverflow()
+    overflowingCells.clear()
+    let totalCellsCount = nEffCols * totalRows
+    let maxAllowedOverflowingCellsCount =
+      totalCellsCount < gMinTableSizeToUseFastPaintPathWithOverflowingCell
+      ? 0 : UInt32(gMaxAllowedOverflowingCellRatioForFastPaintPath * Float32(totalCellsCount))
+
+    #if ASSERT_ENABLED
+      var hasOverflowingCell = false
+    #endif
+    // Now that our height has been determined, add in overflow from cells.
+    for r in 0..<totalRows {
+      for c in 0..<nEffCols {
+        let cs = cellAt(row: r, col: c)
+        let cell = cs.primaryCell()
+        if cell == nil || cs.inColSpan {
+          continue
+        }
+        if r < totalRows - 1
+          && CPtrToInt(cell!.p) == CPtrToInt(primaryCellAt(row: r + 1, col: c)?.p)
+        {
+          continue
+        }
+        addOverflowFromChild(child: cell!)
+        #if ASSERT_ENABLED
+          hasOverflowingCell = hasOverflowingCell || cell!.hasVisualOverflow()
+        #endif
+        if cell!.hasVisualOverflow() && !forceSlowPaintPathWithOverflowingCell {
+          overflowingCells.add(value: cell!)
+          if overflowingCells.computeSize() > maxAllowedOverflowingCellsCount {
+            // We need to set m_forcesSlowPaintPath only if there is a least one overflowing cells as the hit testing code rely on this information.
+            forceSlowPaintPathWithOverflowingCell = true
+            // The slow path does not make any use of the overflowing cells info, don't hold on to the memory.
+            overflowingCells.clear()
+          }
+        }
+      }
+    }
+    #if ASSERT_ENABLED
+      assert(hasOverflowingCell == self.hasOverflowingCell())
+    #endif
   }
 
   private func fullTableRowSpan() -> CellSpan {
