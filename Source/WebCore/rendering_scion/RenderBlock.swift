@@ -1186,8 +1186,25 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    if isWritingModeRoot() && !isFlexItem() {
+      return nil
+    }
+
+    var child = firstInFlowChildBox()
+    while child != nil {
+      if child!.isLegend() && child!.isExcludedFromNormalLayout() {
+        continue
+      }
+      if let baseline = child!.firstLineBaseline() {
+        return LayoutUnit(value: floorToInt(value: child!.logicalTop() + baseline))
+      }
+      child = child!.nextInFlowSiblingBox()
+    }
+    return nil
   }
 
   override func lastLineBaseline() -> LayoutUnit? {

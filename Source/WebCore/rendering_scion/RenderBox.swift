@@ -794,6 +794,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func nextInFlowSiblingBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Visual and layout overflow are in the coordinate space of the box.  This means that they aren't purely physical directions.
   // For horizontal-tb and vertical-lr they will match physical directions, but for horizontal-bt and vertical-rl, the top/bottom and left/right
   // respectively are flipped when compared to their physical counterparts.  For example minX is on the left in vertical-lr,
