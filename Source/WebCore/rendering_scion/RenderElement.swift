@@ -723,6 +723,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   let renderBlockHasMarginBeforeQuirk = false
   let renderBlockHasMarginAfterQuirk = false
+  var renderBlockShouldForceRelayoutChildren = false
 
   private var m_lastChild: RenderObjectWrapper? = nil
 }

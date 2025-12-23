@@ -280,9 +280,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func setShouldForceRelayoutChildren(b: Bool) { renderBlockShouldForceRelayoutChildren = b }
+
   func hasMarginBeforeQuirk() -> Bool { return renderBlockHasMarginBeforeQuirk }
 
   func hasMarginAfterQuirk() -> Bool { return renderBlockHasMarginAfterQuirk }
+
+  private func hasBorderOrPaddingLogicalWidthChanged() -> Bool {
+    return renderBlockShouldForceRelayoutChildren
+  }
 
   func hasMarginBeforeQuirk(child: RenderBoxWrapper) -> Bool {
     // If the child has the same directionality as we do, then we can just return its
@@ -2050,8 +2056,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func recomputeLogicalWidth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldWidth = logicalWidth()
+
+    updateLogicalWidth()
+
+    let hasBorderOrPaddingLogicalWidthChanged = hasBorderOrPaddingLogicalWidthChanged()
+    setShouldForceRelayoutChildren(b: false)
+
+    return oldWidth != logicalWidth() || hasBorderOrPaddingLogicalWidthChanged
   }
 
   override func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
