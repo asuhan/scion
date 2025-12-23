@@ -557,8 +557,29 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func splitColumn(pos: UInt32, first: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!needsCellRecalc)
+
+    if cCol > pos {
+      cCol += 1
+    }
+    let pos = Int(pos)
+    for rowStruct in grid {
+      var r = rowStruct.row[...]
+      r.insert(CellStruct(), at: pos + 1)
+      if r[pos].hasCells() {
+        r[pos + 1].cells.append(contentsOf: r[pos].cells)
+        let cell = r[pos].primaryCell()!
+        assert(cell.colSpan() >= (r[pos].inColSpan ? 1 : 0))
+        let colleft = cell.colSpan() - (r[pos].inColSpan ? 1 : 0)
+        if first > colleft {
+          r[pos + 1].inColSpan = false
+        } else {
+          r[pos + 1].inColSpan = first != 0 || r[pos].inColSpan
+        }
+      } else {
+        r[pos + 1].inColSpan = false
+      }
+    }
   }
 
   func calcOuterBorderBefore() -> LayoutUnit {
