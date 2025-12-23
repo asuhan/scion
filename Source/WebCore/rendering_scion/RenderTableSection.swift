@@ -1353,8 +1353,22 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func distributeExtraLogicalHeightToAutoRows(
     extraLogicalHeight: inout LayoutUnit, autoRowsCount: UInt32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if autoRowsCount == 0 {
+      return
+    }
+
+    var totalLogicalHeightAdded = LayoutUnit()
+    var autoRowsCount = autoRowsCount
+    for (r, row) in grid.enumerated() {
+      if autoRowsCount > 0 && row.logicalHeight.isAuto() {
+        // Recomputing |extraLogicalHeightForRow| guarantees that we properly ditribute round |extraLogicalHeight|.
+        let extraLogicalHeightForRow = extraLogicalHeight / autoRowsCount
+        totalLogicalHeightAdded += extraLogicalHeightForRow
+        extraLogicalHeight -= extraLogicalHeightForRow
+        autoRowsCount -= 1
+      }
+      rowPos[r + 1] += totalLogicalHeightAdded
+    }
   }
 
   private func distributeRemainingExtraLogicalHeight(extraLogicalHeight: inout LayoutUnit) {
