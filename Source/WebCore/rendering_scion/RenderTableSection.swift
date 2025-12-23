@@ -849,8 +849,19 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   func numColumns() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!needsCellRecalc)
+    var result: UInt32 = 0
+
+    for r in 0..<UInt32(grid.count) {
+      for c in result..<table()!.numEffCols() {
+        let cell = cellAt(row: r, col: c)
+        if cell.hasCells() || cell.inColSpan {
+          result = c
+        }
+      }
+    }
+
+    return result + 1
   }
 
   private func recalcCells() {
