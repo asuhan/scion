@@ -1679,8 +1679,18 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func addVisualOverflowFromTheme() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().hasUsedAppearance() {
+      return
+    }
+
+    let inflatedRect = borderBoxRect().FloatRect()
+    theme().adjustRepaintRect(renderer: self, rect: inflatedRect)
+    addVisualOverflow(
+      rect: LayoutRectWrapper(rect: snappedIntRect(rect: LayoutRectWrapper(r: inflatedRect))))
+
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      fragmentedFlow.addFragmentsVisualOverflowFromTheme(block: self)
+    }
   }
 
   override func addFocusRingRects(

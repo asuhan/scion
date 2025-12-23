@@ -254,6 +254,11 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func adjustRepaintRect(renderer: RenderBoxWrapper, rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // A method asking if the theme is able to draw the focus ring.
   func supportsFocusRing(style: RenderStyleWrapper) -> Bool {
     return style.hasUsedAppearance()
