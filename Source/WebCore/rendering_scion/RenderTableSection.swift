@@ -1321,8 +1321,33 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func distributeExtraLogicalHeightToPercentRows(
     extraLogicalHeight: inout LayoutUnit, totalPercent: Int
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if totalPercent == 0 {
+      return
+    }
+
+    let totalRows = grid.count
+    let totalHeight = rowPos[totalRows] + extraLogicalHeight
+    var totalLogicalHeightAdded = LayoutUnit()
+    var totalPercent = min(totalPercent, 100)
+    var rowHeight = rowPos[1] - rowPos[0]
+    for (r, row) in grid.enumerated() {
+      if totalPercent > 0 && row.logicalHeight.isPercent() {
+        var toAdd = min(
+          extraLogicalHeight,
+          LayoutUnit(value: (totalHeight * row.logicalHeight.percent() / 100) - rowHeight))
+        // If toAdd is negative, then we don't want to shrink the row (this bug
+        // affected Outlook Web Access).
+        toAdd = max(LayoutUnit(value: UInt64(0)), toAdd)
+        totalLogicalHeightAdded += toAdd
+        extraLogicalHeight -= toAdd
+        totalPercent -= Int(row.logicalHeight.percent())
+      }
+      assert(totalRows >= 1)
+      if r < totalRows - 1 {
+        rowHeight = rowPos[r + 2] - rowPos[r + 1]
+      }
+      rowPos[r + 1] += totalLogicalHeightAdded
+    }
   }
 
   private func distributeExtraLogicalHeightToAutoRows(
