@@ -2830,6 +2830,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return width - coordinate
   }
 
+  override func shouldResetLogicalHeightBeforeLayout() -> Bool { return true }
+
   override func establishesIndependentFormattingContext() -> Bool {
     // Grid items establish a new independent formatting context, unless
     // they're a subgrid

@@ -3864,9 +3864,22 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldResetLogicalHeightBeforeLayout() -> Bool { return false }
+
   func resetLogicalHeightBeforeLayoutIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shouldSetLogicalHeight = { [self] () in
+      if shouldResetLogicalHeightBeforeLayout() {
+        return true
+      }
+      if let parentBlock = parent() as? RenderBlockWrapper {
+        return parentBlock.shouldResetChildLogicalHeightBeforeLayout()
+      }
+      return false
+    }
+
+    if shouldSetLogicalHeight() {
+      setLogicalHeight(size: LayoutUnit(value: UInt64(0)))
+    }
   }
 
   func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {

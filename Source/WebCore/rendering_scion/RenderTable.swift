@@ -1703,6 +1703,8 @@ class RenderTableWrapper: RenderBlockWrapper {
     return false
   }
 
+  override func shouldResetLogicalHeightBeforeLayout() -> Bool { return true }
+
   private var columnPos: [LayoutUnit] = []
   private var m_columns: [ColumnStruct] = []
   private let captions: [RenderTableCaptionWrapper?] = []

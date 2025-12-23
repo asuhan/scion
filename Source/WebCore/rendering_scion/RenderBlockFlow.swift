@@ -2324,6 +2324,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return LayoutUnit.fromRawValue(value: raw.value)
   }
 
+  override func shouldResetLogicalHeightBeforeLayout() -> Bool { return true }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {

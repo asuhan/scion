@@ -720,6 +720,10 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     minLogicalWidth += scrollbarWidth
   }
 
+  override func shouldResetChildLogicalHeightBeforeLayout() -> Bool {
+    return shouldResetFlexItemLogicalHeightBeforeLayout
+  }
+
   private enum FlexSign {
     case PositiveFlexibility
     case NegativeFlexibility
