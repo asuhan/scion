@@ -979,7 +979,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     addOverflowFromChild(child: child, delta: delta, flippedClientRect: flippedClientBoxRect())
   }
 
-  private func addOverflowFromChild(
+  func addOverflowFromChild(
     child: RenderBoxWrapper, delta: LayoutSizeWrapper, flippedClientRect: LayoutRectWrapper
   ) {
     // Never allow flow threads to propagate overflow up to a parent.

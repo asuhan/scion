@@ -1661,8 +1661,21 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func addOverflowFromPositionedObjects() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let positionedDescendants = positionedObjects()
+    if positionedDescendants == nil {
+      return
+    }
+
+    let clientBoxRect = flippedClientBoxRect()
+    for positionedObject in positionedDescendants! {
+      // Fixed positioned elements don't contribute to layout overflow, since they don't scroll with the content.
+      if positionedObject.style().position() != .Fixed {
+        addOverflowFromChild(
+          child: positionedObject,
+          delta: LayoutSizeWrapper(width: positionedObject.x(), height: positionedObject.y()),
+          flippedClientRect: clientBoxRect)
+      }
+    }
   }
 
   private func addVisualOverflowFromTheme() {
