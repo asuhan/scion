@@ -205,7 +205,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
     let rSpan = cell.rowSpan()
     var cSpan = cell.colSpan()
-    let columns = table()!.columns[...]
+    let columns = table()!.columns()
     let nCols = columns.count
     let insertionRow = row.rowIndex()
 
@@ -1007,7 +1007,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
 
     let totalRows = grid.count
-    let totalCols = table()!.columns.count
+    let totalCols = table()!.columns().count
 
     if totalRows == 0 || totalCols == 0 {
       return
@@ -1087,8 +1087,8 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
         var endCol = startColumn
         var cspan = cell!.colSpan()
         while cspan != 0 && endCol < cols {
-          assert(endCol < table()!.columns.count)
-          cspan -= table()!.columns[endCol].span
+          assert(endCol < table()!.columns().count)
+          cspan -= table()!.columns()[endCol].span
           endCol += 1
         }
         let tableLayoutLogicalWidth =

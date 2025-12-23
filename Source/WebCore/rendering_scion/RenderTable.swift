@@ -408,6 +408,8 @@ class RenderTableWrapper: RenderBlockWrapper {
     var span: UInt32 = 1
   }
 
+  func columns() -> ArraySlice<ColumnStruct> { return m_columns[...] }
+
   func columnPositions() -> ArraySlice<LayoutUnit> { return columnPos[...] }
 
   func setColumnPosition(index: Int, position: LayoutUnit) {
@@ -465,9 +467,9 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func splitColumn(position: UInt32, firstSpan: UInt32) {
     // We split the column at "position", taking "firstSpan" cells from the span.
-    assert(columns[Int(position)].span > firstSpan)
-    columns.insert(ColumnStruct(span: firstSpan), at: Int(position))
-    columns[Int(position + 1)].span -= firstSpan
+    assert(m_columns[Int(position)].span > firstSpan)
+    m_columns.insert(ColumnStruct(span: firstSpan), at: Int(position))
+    m_columns[Int(position + 1)].span -= firstSpan
 
     // Propagate the change in our columns representation to the sections that don't need
     // cell recalc. If they do, they will be synced up directly with m_columns later.
@@ -485,8 +487,8 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   func appendColumn(span: UInt32) {
-    let newColumnIndex = UInt32(columns.count)
-    columns.append(ColumnStruct(span: span))
+    let newColumnIndex = UInt32(m_columns.count)
+    m_columns.append(ColumnStruct(span: span))
 
     // Unless the table has cell(s) with colspan that exceed the number of columns afforded
     // by the other rows in the table we can use the fast path when mapping columns to effective columns.
@@ -507,9 +509,9 @@ class RenderTableWrapper: RenderBlockWrapper {
     }
   }
 
-  func numEffCols() -> UInt32 { return UInt32(columns.count) }
+  func numEffCols() -> UInt32 { return UInt32(m_columns.count) }
 
-  func spanOfEffCol(effCol: UInt32) -> UInt32 { return columns[Int(effCol)].span }
+  func spanOfEffCol(effCol: UInt32) -> UInt32 { return m_columns[Int(effCol)].span }
 
   func colToEffCol(column: UInt32) -> UInt32 {
     if !hasCellColspanThatDeterminesTableWidth {
@@ -519,8 +521,8 @@ class RenderTableWrapper: RenderBlockWrapper {
     var effColumn: UInt32 = 0
     let numColumns = numEffCols()
     var c: UInt32 = 0
-    while effColumn < numColumns && c + columns[Int(effColumn)].span - 1 < column {
-      c += columns[Int(effColumn)].span
+    while effColumn < numColumns && c + m_columns[Int(effColumn)].span - 1 < column {
+      c += m_columns[Int(effColumn)].span
       effColumn += 1
     }
     return effColumn
@@ -533,7 +535,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
     var c: UInt32 = 0
     for i in 0..<effCol {
-      c += columns[Int(i)].span
+      c += m_columns[Int(i)].span
     }
     return c
   }
@@ -1610,9 +1612,9 @@ class RenderTableWrapper: RenderBlockWrapper {
       }
     }
 
-    assert(maxCols >= columns.count)
-    while columns.count < maxCols {
-      columns.append(ColumnStruct())
+    assert(maxCols >= m_columns.count)
+    while m_columns.count < maxCols {
+      m_columns.append(ColumnStruct())
     }
     assert(maxCols + 1 >= columnPos.count)
     while columnPos.count < maxCols + 1 {
@@ -1694,7 +1696,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   private func computeHasCellColspanThatDeterminesTableWidth() -> Bool {
     for c in 0..<Int(numEffCols()) {
-      if columns[c].span > 1 {
+      if m_columns[c].span > 1 {
         return true
       }
     }
@@ -1702,7 +1704,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   private var columnPos: [LayoutUnit] = []
-  var columns: [ColumnStruct] = []
+  private var m_columns: [ColumnStruct] = []
   private let captions: [RenderTableCaptionWrapper?] = []
 
   private var head: RenderTableSectionWrapper? = nil
