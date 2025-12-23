@@ -93,8 +93,17 @@ class RenderBlockWrapper: RenderBoxWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Inline blocks are replaced elements. Otherwise, just pass off to
+    // the base class.  If we're being queried as though we're the root line
+    // box, then the fact that we're an inline-block is irrelevant, and we behave
+    // just like a block.
+    if isReplacedOrInlineBlock() && linePositionMode == .PositionOnContainingLine {
+      return super.lineHeight(
+        firstLine: firstLine, direction: direction, linePositionMode: linePositionMode)
+    }
+
+    let lineStyle = firstLine ? firstLineStyle() : style()
+    return LayoutUnit.fromFloatCeil(value: lineStyle.computedLineHeight())
   }
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
