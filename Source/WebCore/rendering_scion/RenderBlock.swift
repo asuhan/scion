@@ -2227,8 +2227,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func fragmentAtBlockOffset(blockOffset: LayoutUnit) -> RenderFragmentContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let fragmentedFlow = enclosingFragmentedFlow(), fragmentedFlow.hasValidFragmentInfo() {
+      return fragmentedFlow.fragmentAtBlockOffset(
+        clampBox: self, offset: offsetFromLogicalTopOfFirstPage() + blockOffset,
+        extendLastFragment: true)
+    }
+    return nil
   }
 
   var floatingObjectSet: FloatingObjectSet? = nil
