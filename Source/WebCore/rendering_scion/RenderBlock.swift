@@ -34,6 +34,20 @@ enum ContainingBlockState {
   case SameContainingBlock
 }
 
+private class PositionedDescendantsMap {
+  func addDescendant(containingBlock: RenderBlockWrapper, positionedDescendant: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeDescendant(positionedDescendant: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+private let positionedDescendantsMap = PositionedDescendantsMap()
+
 private func isRenderBlockFlowOrRenderButton(renderElement: RenderElementWrapper) -> Bool {
   // We include isRenderButton in this check because buttons are implemented
   // using flex box but should still support first-line|first-letter.
@@ -120,13 +134,24 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func insertPositionedObject(positioned: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isAnonymousBlock())
+
+    positioned.clearOverridingContainingBlockContentSize()
+
+    if positioned.isRenderFragmentedFlow() {
+      return
+    }
+    // FIXME: Find out if we can do this as part of positioned.setChildNeedsLayout(MarkOnlyThis)
+    if positioned.needsLayout() {
+      // We should turn this bit on only while in layout.
+      assert(posChildNeedsLayout() || view().frameView().layoutContext().isInLayout())
+      setPosChildNeedsLayoutBit(b: true)
+    }
+    positionedDescendantsMap.addDescendant(containingBlock: self, positionedDescendant: positioned)
   }
 
   static func removePositionedObject(rendererToRemove: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    positionedDescendantsMap.removeDescendant(positionedDescendant: rendererToRemove)
   }
 
   func removePositionedObjects(
