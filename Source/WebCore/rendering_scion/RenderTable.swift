@@ -408,7 +408,7 @@ class RenderTableWrapper: RenderBlockWrapper {
     var span: UInt32 = 1
   }
 
-  func columnPositions() -> [LayoutUnit] { return columnPos }
+  func columnPositions() -> ArraySlice<LayoutUnit> { return columnPos[...] }
 
   func setColumnPosition(index: Int, position: LayoutUnit) {
     // Note that if our horizontal border-spacing changed, our position will change but not
