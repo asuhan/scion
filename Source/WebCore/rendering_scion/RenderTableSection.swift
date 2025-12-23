@@ -38,9 +38,11 @@ enum CollapsedBorderSide {
 
 private let gMaxAllowedOverflowingCellRatioForFastPaintPath: Float32 = 0.1
 
-private func setRowLogicalHeightToRowStyleLogicalHeight(row: RenderTableSectionWrapper.RowStruct) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+private func setRowLogicalHeightToRowStyleLogicalHeight(
+  row: inout RenderTableSectionWrapper.RowStruct
+) {
+  assert(row.rowRenderer != nil)
+  row.logicalHeight = row.rowRenderer!.style().logicalHeight()
 }
 
 private func updateLogicalHeightForCell(
@@ -810,7 +812,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
       grid[Int(insertionRow)].rowRenderer = row
       row!.setRowIndex(rowIndex: insertionRow)
-      setRowLogicalHeightToRowStyleLogicalHeight(row: grid[Int(insertionRow)])
+      setRowLogicalHeightToRowStyleLogicalHeight(row: &grid[Int(insertionRow)])
 
       var cell = row!.firstCell()
       while cell != nil {
@@ -958,7 +960,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     child.setRowIndex(rowIndex: insertionRow)
 
     if beforeChild == nil {
-      setRowLogicalHeightToRowStyleLogicalHeight(row: grid[Int(insertionRow)])
+      setRowLogicalHeightToRowStyleLogicalHeight(row: &grid[Int(insertionRow)])
     }
   }
 
