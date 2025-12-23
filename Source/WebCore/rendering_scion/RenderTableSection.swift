@@ -1651,8 +1651,26 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func setLogicalPositionForCell(cell: RenderTableCellWrapper, effectiveColumn: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldCellLocation = cell.location()
+
+    var cellLocation = LayoutPointWrapper(
+      x: LayoutUnit(value: UInt64(0)), y: rowPos[Int(cell.rowIndex())])
+    let horizontalBorderSpacing = table()!.hBorderSpacing()
+
+    // The table's writing mode determines in which direction the rows flow.
+    if !table()!.style().isLeftToRightDirection() {
+      cellLocation.setX(
+        x: table()!.columnPositions()[Int(table()!.numEffCols())]
+          - table()!.columnPositions()[
+            Int(table()!.colToEffCol(column: cell.col() + cell.colSpan()))]
+          + horizontalBorderSpacing)
+    } else {
+      cellLocation.setX(
+        x: table()!.columnPositions()[Int(effectiveColumn)] + horizontalBorderSpacing)
+    }
+
+    cell.setLogicalLocation(location: cellLocation)
+    view().frameView().layoutContext().addLayoutDelta(delta: oldCellLocation - cell.location())
   }
 
   private var grid: [RowStruct] = []
