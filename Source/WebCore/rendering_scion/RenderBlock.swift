@@ -1208,8 +1208,25 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplyLayoutContainment() {
+      return nil
+    }
+
+    if isWritingModeRoot() {
+      return nil
+    }
+
+    var child = lastInFlowChildBox()
+    while child != nil {
+      if child!.isLegend() && child!.isExcludedFromNormalLayout() {
+        continue
+      }
+      if let baseline = child!.lastLineBaseline() {
+        return LayoutUnit(value: floorToInt(value: child!.logicalTop() + baseline))
+      }
+      child = child!.previousInFlowSiblingBox()
+    }
+    return nil
   }
 
   // Delay updating scrollbars until endAndCommitUpdateScrollInfoAfterLayoutTransaction() is called. These functions are used
