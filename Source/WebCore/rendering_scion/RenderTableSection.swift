@@ -1372,8 +1372,25 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func distributeRemainingExtraLogicalHeight(extraLogicalHeight: inout LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let totalRows = grid.count
+
+    if extraLogicalHeight <= Int32(0) || !rowPos[totalRows].bool() {
+      return
+    }
+
+    // FIXME: rowPos[totalRows] - rowPos[0] is the total rows' size.
+    let totalRowSize = rowPos[totalRows]
+    var totalLogicalHeightAdded = LayoutUnit()
+    var previousRowPosition = rowPos[0]
+    for r in 0..<totalRows {
+      // weight with the original height
+      totalLogicalHeightAdded +=
+        extraLogicalHeight * (rowPos[r + 1] - previousRowPosition) / totalRowSize
+      previousRowPosition = rowPos[r + 1]
+      rowPos[r + 1] += totalLogicalHeightAdded
+    }
+
+    extraLogicalHeight -= totalLogicalHeightAdded
   }
 
   private func computeOverflowFromCells(totalRows: UInt32, nEffCols: UInt32) {
