@@ -541,6 +541,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setOverridingLogicalHeightFromRowHeight(rowHeight: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func cellWidthChanged() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

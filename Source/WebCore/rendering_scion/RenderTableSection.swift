@@ -81,6 +81,13 @@ private func resolveLogicalHeightForRow(rowLogicalHeight: LengthWrapper) -> Layo
   return LayoutUnit(value: 0)
 }
 
+private func shouldFlexCellChild(cell: RenderTableCellWrapper, cellDescendant: RenderBoxWrapper)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func compareCellPositions(
   elem1: WeakNullableRef<RenderTableCellWrapper>, elem2: WeakNullableRef<RenderTableCellWrapper>
 ) -> Bool {
@@ -377,7 +384,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
         let rowIndex = cell!.rowIndex()
         let rHeight = rowPos[Int(rowIndex + cell!.rowSpan())] - rowPos[Int(rowIndex)] - vspacing
 
-        relayoutCellIfFlexed(cell: cell!, rowIndex: Int32(r), rowHeight: rHeight)
+        relayoutCellIfFlexed(cell: cell!, rowIndex: r, rowHeight: rHeight)
 
         cell!.computeIntrinsicPadding(rowHeight: rHeight)
 
@@ -1312,10 +1319,69 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   private func relayoutCellIfFlexed(
-    cell: RenderTableCellWrapper, rowIndex: Int32, rowHeight: LayoutUnit
+    cell: RenderTableCellWrapper, rowIndex: Int, rowHeight: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Force percent height children to lay themselves out again.
+    // This will cause these children to grow to fill the cell.
+    // FIXME: There is still more work to do here to fully match WinIE (should
+    // it become necessary to do so). In quirks mode, WinIE behaves like we
+    // do, but it will clip the cells that spill out of the table section. In
+    // strict mode, Mozilla and WinIE both regrow the table to accommodate the
+    // new height of the cell (thus letting the percentages cause growth one
+    // time only). We may also not be handling row-spanning cells correctly.
+    //
+    // Note also the oddity where replaced elements always flex, and yet blocks/tables do
+    // not necessarily flex. WinIE is crazy and inconsistent, and we can't hope to
+    // match the behavior perfectly, but we'll continue to refine it as we discover new
+    // bugs. :)
+    var cellChildrenFlex = false
+    let flexAllChildren =
+      cell.style().logicalHeight().isFixed()
+      || (!table()!.style().logicalHeight().isAuto() && rowHeight != cell.logicalHeight())
+
+    for renderer: RenderBoxWrapper in childrenOfType(parent: cell) {
+      if renderer.style().logicalHeight().isPercentOrCalculated()
+        && (flexAllChildren || shouldFlexCellChild(cell: cell, cellDescendant: renderer))
+      {
+        let renderTable = renderer as? RenderTableWrapper
+        if renderTable == nil || renderTable!.hasSections() {
+          cellChildrenFlex = true
+          break
+        }
+      }
+    }
+
+    if !cellChildrenFlex {
+      if let percentHeightDescendants = cell.percentHeightDescendants() {
+        for descendant in percentHeightDescendants {
+          if flexAllChildren || shouldFlexCellChild(cell: cell, cellDescendant: descendant) {
+            cellChildrenFlex = true
+            break
+          }
+        }
+      }
+    }
+
+    if !cellChildrenFlex {
+      return
+    }
+
+    cell.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    // Alignment within a cell is based off the calculated
+    // height, which becomes irrelevant once the cell has
+    // been resized based off its percentage.
+    cell.setOverridingLogicalHeightFromRowHeight(rowHeight: rowHeight)
+    cell.layoutIfNeeded()
+
+    if !cell.isBaselineAligned() {
+      return
+    }
+
+    // If the baseline moved, we may have to update the data for our row. Find out the new baseline.
+    let baseline = cell.cellBaselinePosition()
+    if baseline > cell.borderAndPaddingBefore() {
+      grid[rowIndex].baseline = max(grid[rowIndex].baseline, baseline)
+    }
   }
 
   private func distributeExtraLogicalHeightToPercentRows(

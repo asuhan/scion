@@ -778,6 +778,8 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func currentBorderValue() -> CollapsedBorderValue? { return currentBorder }
 
+  func hasSections() -> Bool { return head != nil || foot != nil || firstBody != nil }
+
   private func recalcSectionsIfNeeded() {
     if needsSectionRecalc {
       recalcSections()
