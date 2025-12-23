@@ -825,8 +825,36 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   // distributeExtraLogicalHeightToRows methods return the *consumed* extra logical height.
   // FIXME: We may want to introduce a structure holding the in-flux layout information.
   func distributeExtraLogicalHeightToRows(extraLogicalHeight: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !extraLogicalHeight.bool() {
+      return extraLogicalHeight
+    }
+
+    let totalRows = grid.count
+    if totalRows == 0 {
+      return extraLogicalHeight
+    }
+
+    if !rowPos[totalRows].bool() && nextSibling() != nil {
+      return extraLogicalHeight
+    }
+
+    var autoRowsCount: UInt32 = 0
+    var totalPercent = 0
+    for row in grid {
+      if row.logicalHeight.isAuto() {
+        autoRowsCount += 1
+      } else if row.logicalHeight.isPercent() {
+        totalPercent += Int(row.logicalHeight.percent())
+      }
+    }
+
+    var remainingExtraLogicalHeight = extraLogicalHeight
+    distributeExtraLogicalHeightToPercentRows(
+      extraLogicalHeight: &remainingExtraLogicalHeight, totalPercent: totalPercent)
+    distributeExtraLogicalHeightToAutoRows(
+      extraLogicalHeight: &remainingExtraLogicalHeight, autoRowsCount: autoRowsCount)
+    distributeRemainingExtraLogicalHeight(extraLogicalHeight: &remainingExtraLogicalHeight)
+    return extraLogicalHeight - remainingExtraLogicalHeight
   }
 
   static func createAnonymousWithParentRenderer(parent: RenderTableWrapper)
@@ -1286,6 +1314,25 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   private func relayoutCellIfFlexed(
     cell: RenderTableCellWrapper, rowIndex: Int32, rowHeight: LayoutUnit
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func distributeExtraLogicalHeightToPercentRows(
+    extraLogicalHeight: inout LayoutUnit, totalPercent: Int
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func distributeExtraLogicalHeightToAutoRows(
+    extraLogicalHeight: inout LayoutUnit, autoRowsCount: UInt32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func distributeRemainingExtraLogicalHeight(extraLogicalHeight: inout LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
