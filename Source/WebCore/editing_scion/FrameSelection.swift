@@ -25,7 +25,31 @@
 
 class CaretBaseWrapper {}
 
+final class DragCaretControllerWrapper: CaretBaseWrapper {
+  func caretRenderer() -> RenderBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintDragCaret(
+    frame: LocalFrameWrapper, p: GraphicsContextWrapper, paintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isContentEditable() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
+  func selection() -> VisibleSelectionWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum RevealSelectionAfterUpdate {
     case NotForced
     case Forced
@@ -36,7 +60,18 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
     fatalError("Not implemented")
   }
 
+  // Return the renderer that is responsible for painting the caret (in the selection start node).
+  func caretRendererWithoutUpdatingLayout() -> RenderBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isCaret() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintCaret(context: GraphicsContextWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

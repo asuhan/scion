@@ -4,4 +4,5 @@ target_sources(layout_scion PRIVATE
     Editor.swift
     FrameSelection.swift
     TextManipulationController.swift
+    VisibleSelection.swift
 )

@@ -29,6 +29,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func dragCaretController() -> DragCaretControllerWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func focusController() -> FocusControllerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

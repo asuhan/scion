@@ -2100,8 +2100,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func paintCaret(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, type: CaretType
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shouldPaintCaret = {
+      [self] (_ caretPainter: RenderBlockWrapper, _ isContentEditable: Bool) in
+      if CPtrToInt(caretPainter.p) != CPtrToInt(p) {
+        return false
+      }
+
+      return isContentEditable || settings().caretBrowsingEnabled()
+    }
+
+    switch type {
+    case .CursorCaret:
+      if let caretPainter = frame().selection().caretRendererWithoutUpdatingLayout() {
+        let isContentEditable = frame().selection().selection().hasEditableStyle()
+
+        if shouldPaintCaret(caretPainter, isContentEditable) {
+          frame().selection().paintCaret(context: paintInfo.context(), paintOffset: paintOffset)
+        }
+      }
+    case .DragCaret:
+      if let caretPainter = page().dragCaretController().caretRenderer() {
+        let isContentEditable = page().dragCaretController().isContentEditable()
+
+        if shouldPaintCaret(caretPainter, isContentEditable) {
+          page().dragCaretController().paintDragCaret(
+            frame: frame(), p: paintInfo.context(), paintOffset: paintOffset)
+        }
+      }
+    }
   }
 
   private func paintCarets(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
