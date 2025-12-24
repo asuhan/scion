@@ -87,6 +87,16 @@ private func setIsSimplifiedLayoutRootForLayerIfApplicable(renderElement: Render
   fatalError("Not reached")
 }
 
+private func nearestNonAnonymousContainingBlockIncludingSelf(renderer: RenderElementWrapper?)
+  -> RenderBlockWrapper?
+{
+  var renderer = renderer
+  while renderer != nil && (!(renderer is RenderBlockWrapper) || renderer!.isAnonymousBlock()) {
+    renderer = renderer!.containingBlock()
+  }
+  return renderer as! RenderBlockWrapper?
+}
+
 class RenderObjectWrapper: CachedImageClientWrapper {
   enum `Type` {
     case BlockFlow
@@ -1044,8 +1054,43 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   )
     -> RenderBlockWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if positionType == .Static || positionType == .Relative || positionType == .Sticky {
+      var ancestor = renderer.parent()
+      while ancestor != nil
+        && ((ancestor!.isInline() && !ancestor!.isReplacedOrInlineBlock())
+          || !ancestor!.isRenderBlock())
+      {
+        ancestor = ancestor!.parent()
+      }
+      return ancestor as! RenderBlockWrapper?
+    }
+
+    if positionType == .Absolute {
+      if renderer is RenderInlineWrapper && renderer.style().position() == .Relative {
+        // A relatively positioned RenderInline forwards its absolute positioned descendants to
+        // its nearest non-anonymous containing block (to avoid having positioned objects list in RenderInlines).
+        return nearestNonAnonymousContainingBlockIncludingSelf(renderer: renderer.parent())
+      }
+      var ancestor = renderer.parent()
+      while ancestor != nil && !ancestor!.canContainAbsolutelyPositionedObjects() {
+        ancestor = ancestor!.parent()
+      }
+      // Make sure we only return non-anonymous RenderBlock as containing block.
+      return nearestNonAnonymousContainingBlockIncludingSelf(renderer: ancestor)
+    }
+
+    if positionType == .Fixed {
+      var ancestor = renderer.parent()
+      while ancestor != nil && !ancestor!.canContainFixedPositionObjects() {
+        if isInTopLayerOrBackdrop(style: ancestor!.style(), element: ancestor!.element()) {
+          return renderer.view()
+        }
+        ancestor = ancestor!.parent()
+      }
+      return nearestNonAnonymousContainingBlockIncludingSelf(renderer: ancestor)
+    }
+
+    fatalError("Not reached")
   }
 
   // Convert the given local point to absolute coordinates. If OptionSet<MapCoordinatesMode> includes UseTransforms, take transforms into account.
