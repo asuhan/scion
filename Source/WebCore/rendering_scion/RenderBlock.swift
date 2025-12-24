@@ -891,8 +891,19 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginIntrinsicLogicalWidthForChild(child: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // A margin has three types: fixed, percentage, and auto (variable).
+    // Auto and percentage margins become 0 when computing min/max width.
+    // Fixed margins can be added in as is.
+    let marginLeft = child.style().marginStartUsing(otherStyle: style())
+    let marginRight = child.style().marginEndUsing(otherStyle: style())
+    var margin = LayoutUnit()
+    if marginLeft.isFixed() && !shouldTrimChildMarginForBox(type: .InlineStart, child: child) {
+      margin += marginLeft.value()
+    }
+    if marginRight.isFixed() && !shouldTrimChildMarginForBox(type: .InlineEnd, child: child) {
+      margin += marginRight.value()
+    }
+    return margin
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

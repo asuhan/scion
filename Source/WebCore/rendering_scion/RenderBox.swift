@@ -3859,7 +3859,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return nil
   }
 
-  private func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
+  func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
