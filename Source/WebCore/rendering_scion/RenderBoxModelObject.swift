@@ -717,8 +717,19 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func borderShapeForContentClipping(
     borderBoxRect: LayoutRectWrapper, includeLeftEdge: Bool = true, includeRightEdge: Bool = true
   ) -> BorderShape {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let borderWidths = borderWidths()
+    let padding = padding()
+
+    let contentBoxInsets: RectEdges<LayoutUnit> = RectEdges(
+      top: borderWidths.top + padding.top,
+      right: borderWidths.right + padding.right,
+      bottom: borderWidths.bottom + padding.bottom,
+      left: borderWidths.left + padding.left
+    )
+
+    return BorderShape.shapeForBorderRect(
+      style: style(), borderRect: borderBoxRect, overrideBorderWidths: contentBoxInsets,
+      includeLogicalLeftEdge: includeLeftEdge, includeLogicalRightEdge: includeRightEdge)
   }
 
   func containingBlockLogicalWidthForContent() -> LayoutUnit {
