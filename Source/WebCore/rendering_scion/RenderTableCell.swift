@@ -583,8 +583,56 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func computeIntrinsicPadding(rowHeight: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldIntrinsicPaddingBefore = intrinsicPaddingBefore()
+    let oldIntrinsicPaddingAfter = intrinsicPaddingAfter()
+    let logicalHeightWithoutIntrinsicPadding =
+      logicalHeight() - oldIntrinsicPaddingBefore - oldIntrinsicPaddingAfter
+
+    var intrinsicPaddingBefore = oldIntrinsicPaddingBefore
+    var alignment = style().verticalAlign()
+    let alignContent = style().alignContent()
+    if !alignContent.isNormal() {
+      // align-content overrides vertical-align
+      if alignContent.position == .Baseline {
+        alignment = .Baseline
+      } else if alignContent.isCentered() {
+        alignment = .Middle
+      } else if alignContent.isStartward() {
+        alignment = .Top
+      } else if alignContent.isEndward() {
+        alignment = .Bottom
+      }
+    }
+    switch alignment {
+    case .Sub, .Super, .TextTop, .TextBottom, .Length, .Baseline:
+      let baseline = cellBaselinePosition()
+      let needsIntrinsicPadding = baseline > borderAndPaddingBefore() || !logicalHeight().bool()
+      if needsIntrinsicPadding {
+        intrinsicPaddingBefore =
+          section()!.rowBaseline(row: rowIndex()) - (baseline - oldIntrinsicPaddingBefore)
+      }
+    case .Top:
+      break
+    case .Middle:
+      intrinsicPaddingBefore = (rowHeight - logicalHeightWithoutIntrinsicPadding) / 2
+    case .Bottom:
+      intrinsicPaddingBefore = rowHeight - logicalHeightWithoutIntrinsicPadding
+    case .BaselineMiddle:
+      break
+    }
+
+    let intrinsicPaddingAfter =
+      rowHeight - logicalHeightWithoutIntrinsicPadding - intrinsicPaddingBefore
+    setIntrinsicPaddingBefore(p: intrinsicPaddingBefore)
+    setIntrinsicPaddingAfter(p: intrinsicPaddingAfter)
+
+    // FIXME: Changing an intrinsic padding shouldn't trigger a relayout as it only shifts the cell inside the row but
+    // doesn't change the logical height.
+    if intrinsicPaddingBefore != oldIntrinsicPaddingBefore
+      || intrinsicPaddingAfter != oldIntrinsicPaddingAfter
+    {
+      setNeedsLayout(markParents: .MarkOnlyThis)
+    }
   }
 
   func clearIntrinsicPadding() {
@@ -593,6 +641,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func intrinsicPaddingBefore() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intrinsicPaddingAfter() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -820,6 +873,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   private func setIntrinsicPaddingBefore(p: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setIntrinsicPaddingAfter(p: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
