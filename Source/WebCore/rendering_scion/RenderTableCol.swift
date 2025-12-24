@@ -66,8 +66,27 @@ final class RenderTableColWrapper: RenderBoxWrapper {
 
   // Returns the next column or column-group.
   func nextColumn() -> RenderTableColWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If |this| is a column-group, the next column is the colgroup's first child column.
+    if let firstChild = firstChild() {
+      return firstChild as! RenderTableColWrapper?
+    }
+
+    // Otherwise it's the next column along.
+    var next = nextSibling()
+
+    // Failing that, the child is the last column in a column-group, so the next column is the next column/column-group after its column-group.
+    if next == nil && parent() is RenderTableColWrapper {
+      next = parent()!.nextSibling()
+    }
+
+    while next != nil {
+      if let column = next as? RenderTableColWrapper {
+        return column
+      }
+      next = next!.nextSibling()
+    }
+
+    return nil
   }
 
   func borderAdjoiningCellStartBorder() -> BorderValue {
