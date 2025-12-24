@@ -30,6 +30,63 @@ enum RepaintOutlineBounds {
   case Yes
 }
 
+private func objectIsRelayoutBoundary(object: RenderElementWrapper) -> Bool {
+  // FIXME: In future it may be possible to broaden these conditions in order to improve performance.
+  if object.isRenderView() {
+    return true
+  }
+
+  if let textControl = object as? RenderTextControlWrapper {
+    if !textControl.isFlexItem() && !textControl.isGridItem() {
+      // Flexing type of layout systems may compute different size than what input's preferred width is which won't happen unless they run their layout as well.
+      return true
+    }
+  }
+
+  if object.shouldApplyLayoutContainment() && object.shouldApplySizeContainment() {
+    return true
+  }
+
+  if object.isRenderOrLegacyRenderSVGRoot() {
+    return true
+  }
+
+  if !object.hasNonVisibleOverflow() {
+    return false
+  }
+
+  if object.document().settings().layerBasedSVGEngineEnabled() && object.isSVGLayerAwareRenderer() {
+    return false
+  }
+
+  if object.style().width().isIntrinsicOrAuto() || object.style().height().isIntrinsicOrAuto()
+    || object.style().height().isPercentOrCalculated()
+  {
+    return false
+  }
+
+  // Table parts can't be relayout roots since the table is responsible for layouting all the parts.
+  if object.isTablePart() {
+    return false
+  }
+
+  return true
+}
+
+private func setIsSimplifiedLayoutRootForLayerIfApplicable(renderElement: RenderElementWrapper) {
+  assert(renderElement.isOutOfFlowPositioned())
+
+  if !renderElement.normalChildNeedsLayout() {
+    return
+  }
+
+  if let renderer = renderElement as? RenderLayerModelObjectWrapper, let layer = renderer.layer() {
+    return layer.setIsSimplifiedLayoutRoot()
+  }
+
+  fatalError("Not reached")
+}
+
 class RenderObjectWrapper: CachedImageClientWrapper {
   enum `Type` {
     case BlockFlow
@@ -860,8 +917,72 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func markContainingBlocksForLayout(layoutRoot: RenderElementWrapper? = nil)
     -> RenderElementWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isSetNeedsLayoutForbidden())
+    if self is RenderViewWrapper {
+      return self as! RenderElementWrapper?
+    }
+
+    var ancestor = container()
+
+    var simplifiedNormalFlowLayout =
+      needsSimplifiedNormalFlowLayout() && !selfNeedsLayout() && !normalChildNeedsLayout()
+    var hasOutOfFlowPosition = isOutOfFlowPositioned()
+
+    while ancestor != nil {
+      // TODO(asuhan): SetLayoutNeededForbiddenScope
+
+      // Don't mark the outermost object of an unrooted subtree. That object will be
+      // marked when the subtree is added to the document.
+      var container = ancestor!.container()
+      if container == nil && !ancestor!.isRenderView() {
+        // Internal render tree shuffle.
+        return nil
+      }
+
+      if hasOutOfFlowPosition {
+        let willSkipRelativelyPositionedInlines =
+          !ancestor!.isRenderBlock() || ancestor!.isAnonymousBlock()
+        // Skip relatively positioned inlines and anonymous blocks to get to the enclosing RenderBlock.
+        while ancestor != nil && (!ancestor!.isRenderBlock() || ancestor!.isAnonymousBlock()) {
+          ancestor = ancestor!.container()
+        }
+        if ancestor == nil || ancestor!.posChildNeedsLayout() {
+          return nil
+        }
+        if willSkipRelativelyPositionedInlines {
+          container = ancestor!.container()
+        }
+        ancestor!.setPosChildNeedsLayoutBit(b: true)
+        simplifiedNormalFlowLayout = true
+      } else if simplifiedNormalFlowLayout {
+        if ancestor!.needsSimplifiedNormalFlowLayout() {
+          return nil
+        }
+        ancestor!.setNeedsSimplifiedNormalFlowLayoutBit(b: true)
+      } else {
+        if ancestor!.normalChildNeedsLayout() {
+          return nil
+        }
+        ancestor!.setNormalChildNeedsLayoutBit(b: true)
+      }
+      assert(!ancestor!.isSetNeedsLayoutForbidden())
+
+      if layoutRoot != nil {
+        // Having a valid layout root also mean we should not stop at layout boundaries.
+        if CPtrToInt(ancestor!.p) == CPtrToInt(layoutRoot!.p) {
+          return layoutRoot
+        }
+      } else if objectIsRelayoutBoundary(object: ancestor!) {
+        return ancestor
+      }
+
+      hasOutOfFlowPosition = ancestor!.isOutOfFlowPositioned()
+      if hasOutOfFlowPosition {
+        setIsSimplifiedLayoutRootForLayerIfApplicable(renderElement: ancestor!)
+      }
+      ancestor = container
+    }
+    return nil
   }
 
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
@@ -1098,6 +1219,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func scheduleLayout(layoutRoot: RenderElementWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setNormalChildNeedsLayoutBit(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

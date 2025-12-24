@@ -2090,6 +2090,8 @@ class RenderLayerWrapper {
       || repaintStatus == .NeedsFullRepaintForPositionedMovementLayout
   }
 
+  func setIsSimplifiedLayoutRoot() { isSimplifiedLayoutRoot = true }
+
   func staticInlinePosition() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
   }
@@ -5103,6 +5105,8 @@ class RenderLayerWrapper {
   private var hasIntrinsicallyCompositedDescendantsStatusDirty = true
 
   private var wasOmittedFromZOrderTree = false
+
+  private var isSimplifiedLayoutRoot = false
 
   private var m_parent: RenderLayerWrapper? = nil
   private var m_previous: RenderLayerWrapper? = nil
