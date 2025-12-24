@@ -852,8 +852,23 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+
+    // Table cells call layoutBlock directly, so don't add any logic here.  Put code into
+    // layoutBlock().
+    layoutBlock(relayoutChildren: false)
+
+    // It's safe to check for control clip here, since controls can never be table cells.
+    // If we have a lightweight clip, there can never be any overflow from children.
+    let transaction = view().frameView().layoutContext()
+      .updateScrollInfoAfterLayoutTransactionIfExists()
+    let isDelayingUpdateScrollInfoAfterLayoutInView =
+      transaction != nil && transaction!.nestedCount != 0
+    if hasControlClip() && overflow != nil && !isDelayingUpdateScrollInfoAfterLayoutInView {
+      clearLayoutOverflow()
+    }
+
+    invalidateBackgroundObscurationStatus()
   }
 
   func layoutPositionedObjects(relayoutChildren: Bool, fixedPositionObjectsOnly: Bool = false) {
@@ -1383,6 +1398,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
     return renderBlockComputeOverflow(
       oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: recomputeFloats)
+  }
+
+  private func clearLayoutOverflow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func renderBlockComputeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool) {
