@@ -886,6 +886,98 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func layoutPositionedObject(
     r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
   ) {
+    if isSkippedContentRoot() {
+      r.clearNeedsLayoutForSkippedContent()
+      return
+    }
+
+    estimateFragmentRangeForBoxChild(box: r)
+
+    // A fixed position element with an absolute positioned ancestor has no way of knowing if the latter has changed position. So
+    // if this is a fixed position element, mark it for layout if it has an abspos ancestor and needs to move with that ancestor, i.e.
+    // it has static position.
+    markFixedPositionObjectForLayoutIfNeeded(positionedChild: r)
+    if fixedPositionObjectsOnly {
+      r.layoutIfNeeded()
+      return
+    }
+
+    // When a non-positioned block element moves, it may have positioned children that are implicitly positioned relative to the
+    // non-positioned block.  Rather than trying to detect all of these movement cases, we just always lay out positioned
+    // objects that are positioned implicitly like this.  Such objects are rare, and so in typical DHTML menu usage (where everything is
+    // positioned explicitly) this should not incur a performance penalty.
+    if relayoutChildren
+      || (r.style().hasStaticBlockPosition(horizontal: isHorizontalWritingMode())
+        && CPtrToInt(r.parent()?.p) != CPtrToInt(p))
+    {
+      r.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
+
+    // If relayoutChildren is set and the child has percentage padding or an embedded content box, we also need to invalidate the childs pref widths.
+    if relayoutChildren && r.needsPreferredWidthsRecalculation() {
+      r.setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+    }
+
+    r.markForPaginationRelayoutIfNeeded()
+
+    // We don't have to do a full layout.  We just have to update our position. Try that first. If we have shrink-to-fit width
+    // and we hit the available width constraint, the layoutIfNeeded() will catch it and do a full layout.
+    if r.needsPositionedMovementLayoutOnly() && r.tryLayoutDoingPositionedMovementOnly() {
+      r.clearNeedsLayout()
+    }
+
+    // If we are paginated or in a line grid, compute a vertical position for our object now.
+    // If it's wrong we'll lay out again.
+    var oldLogicalTop = LayoutUnit()
+    let layoutState = view().frameView().layoutContext().layoutState()
+    let needsBlockDirectionLocationSetBeforeLayout =
+      r.needsLayout() && layoutState != nil
+      && layoutState!.needsBlockDirectionLocationSetBeforeLayout()
+    if needsBlockDirectionLocationSetBeforeLayout {
+      if isHorizontalWritingMode() == r.isHorizontalWritingMode() {
+        r.updateLogicalHeight()
+      } else {
+        r.updateLogicalWidth()
+      }
+      oldLogicalTop = logicalTopForChild(child: r)
+    }
+
+    r.layoutIfNeeded()
+
+    let parent = r.parent()
+    var layoutChanged = false
+    if let flexibleBox = parent as? RenderFlexibleBoxWrapper,
+      flexibleBox.setStaticPositionForPositionedLayout(flexItem: r)
+    {
+      // The static position of an abspos child of a flexbox depends on its size
+      // (for example, they can be centered). So we may have to reposition the
+      // item after layout.
+      // FIXME: We could probably avoid a layout here and just reposition?
+      layoutChanged = true
+    }
+
+    // Lay out again if our estimate was wrong.
+    if layoutChanged
+      || (needsBlockDirectionLocationSetBeforeLayout
+        && logicalTopForChild(child: r) != oldLogicalTop)
+    {
+      r.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      r.layoutIfNeeded()
+    }
+
+    if updateFragmentRangeForBoxChild(box: r) {
+      r.setNeedsLayout(markParents: .MarkOnlyThis)
+      r.layoutIfNeeded()
+    }
+
+    if layoutState != nil && layoutState!.isPaginated(),
+      let blockFlow = self as? RenderBlockFlowWrapper
+    {
+      blockFlow.adjustSizeContainmentChildForPagination(child: r, offset: r.logicalTop())
+    }
+  }
+
+  private func markFixedPositionObjectForLayoutIfNeeded(positionedChild: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

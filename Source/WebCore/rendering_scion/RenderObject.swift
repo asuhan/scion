@@ -796,6 +796,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func needsPositionedMovementLayoutOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func posChildNeedsLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

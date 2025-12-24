@@ -85,6 +85,11 @@ class RenderLayoutStateWrapper {
     fatalError("Not implemented")
   }
 
+  func needsBlockDirectionLocationSetBeforeLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func renderer() -> RenderElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

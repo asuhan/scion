@@ -2253,8 +2253,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func adjustSizeContainmentChildForPagination(child: RenderBoxWrapper, offset: LayoutUnit)
-  {
+  func adjustSizeContainmentChildForPagination(child: RenderBoxWrapper, offset: LayoutUnit) {
     if !child.shouldApplySizeContainment() {
       return
     }

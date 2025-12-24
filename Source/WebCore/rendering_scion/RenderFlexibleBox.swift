@@ -605,6 +605,13 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     intrinsicContentLogicalHeights.removeValue(forKey: CPtrToInt(flexItem.p))
   }
 
+  // Returns true if the position changed. In that case, the flexItem will have to
+  // be laid out again.
+  func setStaticPositionForPositionedLayout(flexItem: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private enum GapType {
     case BetweenLines
     case BetweenItems
