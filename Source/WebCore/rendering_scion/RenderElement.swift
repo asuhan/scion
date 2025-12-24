@@ -309,8 +309,17 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Recursive function that computes the size and position of this object and all its descendants.
   func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+    var child = firstChild()
+    while child != nil {
+      if child!.needsLayout() {
+        (child! as! RenderElementWrapper).layout()
+      }
+      assert(!child!.needsLayout())
+      child = child!.nextSibling()
+    }
+    clearNeedsLayout()
   }
 
   /* This function performs a layout only if one is needed. */
