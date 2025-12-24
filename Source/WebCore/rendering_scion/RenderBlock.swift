@@ -872,6 +872,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func layoutPositionedObjects(relayoutChildren: Bool, fixedPositionObjectsOnly: Bool = false) {
+    if let positionedDescendants = positionedObjects() {
+      // Do not cache positionedDescendants->end() in a local variable, since |positionedDescendants| can be mutated
+      // as it is walked. We always need to fetch the new end() value dynamically.
+      for descendant in positionedDescendants {
+        layoutPositionedObject(
+          r: descendant, relayoutChildren: relayoutChildren,
+          fixedPositionObjectsOnly: fixedPositionObjectsOnly)
+      }
+    }
+  }
+
+  func layoutPositionedObject(
+    r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

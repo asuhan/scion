@@ -1678,6 +1678,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
       : gridItem.style().hasStaticBlockPosition(horizontal: isHorizontalWritingMode())
   }
 
+  override func layoutPositionedObject(
+    r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeTrackSizesForDefiniteSize(
     direction: GridTrackSizingDirection, availableSpace: LayoutUnit,
     gridLayoutState: inout GridLayoutState
