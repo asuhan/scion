@@ -538,8 +538,26 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var allowance = allowedLayoutOverflowForBox()
+
+    let isColumnar = style().isColumnFlexDirection()
+    if isHorizontalWritingMode() {
+      allowance.top = isColumnar ? justifyContentStartOverflow : alignContentStartOverflow
+      if style().isLeftToRightDirection() {
+        allowance.left = isColumnar ? alignContentStartOverflow : justifyContentStartOverflow
+      } else {
+        allowance.right = isColumnar ? alignContentStartOverflow : justifyContentStartOverflow
+      }
+    } else {
+      allowance.left = isColumnar ? justifyContentStartOverflow : alignContentStartOverflow
+      if style().isLeftToRightDirection() {
+        allowance.top = isColumnar ? alignContentStartOverflow : justifyContentStartOverflow
+      } else {
+        allowance.bottom = isColumnar ? alignContentStartOverflow : justifyContentStartOverflow
+      }
+    }
+
+    return allowance
   }
 
   func isFlexibleBoxImpl() -> Bool {
