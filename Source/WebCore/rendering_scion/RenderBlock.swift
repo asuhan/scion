@@ -978,8 +978,41 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func markFixedPositionObjectForLayoutIfNeeded(positionedChild: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if positionedChild.style().position() != .Fixed {
+      return
+    }
+
+    let hasStaticBlockPosition = positionedChild.style().hasStaticBlockPosition(
+      horizontal: isHorizontalWritingMode())
+    let hasStaticInlinePosition = positionedChild.style().hasStaticInlinePosition(
+      horizontal: isHorizontalWritingMode())
+    if !hasStaticBlockPosition && !hasStaticInlinePosition {
+      return
+    }
+
+    var parent = positionedChild.parent()
+    while parent != nil && !(parent is RenderViewWrapper) && parent!.style().position() != .Absolute
+    {
+      parent = parent!.parent()
+    }
+    if parent == nil || parent!.style().position() != .Absolute {
+      return
+    }
+
+    if hasStaticInlinePosition {
+      var computedValues = LogicalExtentComputedValues()
+      positionedChild.computeLogicalWidthInFragment(computedValues: &computedValues)
+      let newLeft = computedValues.position
+      if newLeft != positionedChild.logicalLeft() {
+        positionedChild.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    } else if hasStaticBlockPosition {
+      let oldTop = positionedChild.logicalTop()
+      positionedChild.updateLogicalHeight()
+      if positionedChild.logicalTop() != oldTop {
+        positionedChild.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    }
   }
 
   func marginIntrinsicLogicalWidthForChild(child: RenderBoxWrapper) -> LayoutUnit {
