@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     HTMLImageElement.swift
     HTMLInputElement.swift
     HTMLLegendElement.swift
+    HTMLOptionElement.swift
     HTMLSelectElement.swift
     HTMLSlotElement.swift
     HTMLTableElement.swift

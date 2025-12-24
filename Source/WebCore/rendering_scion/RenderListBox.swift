@@ -60,6 +60,13 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     return nodeForNonAnonymous() as! HTMLSelectElementWrapper
   }
 
+  private func itemBoundingBoxRect(additionalOffset: LayoutPointWrapper, index: Int32)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   private func scrollToRevealElementAtListIndex(index: Int32) -> Bool {
     if index < 0 || index >= numItems() || listIndexIsVisible(index: index) {
@@ -190,8 +197,30 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !selectElement().allowsNonContiguousSelection() {
+      return super.addFocusRingRects(
+        rects: &rects, additionalOffset: additionalOffset, paintContainer: paintContainer)
+    }
+
+    // Focus the last selected item.
+    let selectedItem = selectElement().activeSelectionEndListIndex()
+    if selectedItem >= 0 {
+      rects.append(
+        LayoutRectWrapper(
+          rect: snappedIntRect(
+            rect: itemBoundingBoxRect(additionalOffset: additionalOffset, index: selectedItem))))
+      return
+    }
+
+    // No selected items, find the first non-disabled item.
+    var indexOfFirstEnabledOption: Int32 = 0
+    for item in selectElement().listItems() {
+      if item is HTMLOptionElementWrapper && !item.isDisabledFormControl() {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      indexOfFirstEnabledOption += 1
+    }
   }
 
   override func verticalScrollbarWidth() -> Int32 {

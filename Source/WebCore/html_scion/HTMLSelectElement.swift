@@ -32,12 +32,22 @@ class HTMLSelectElementWrapper: HTMLFormControlElementWrapper {
     fatalError("Not implemented")
   }
 
+  func listItems() -> [HTMLElementWrapper] {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func activeSelectionStartListIndex() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func activeSelectionEndListIndex() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func allowsNonContiguousSelection() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
