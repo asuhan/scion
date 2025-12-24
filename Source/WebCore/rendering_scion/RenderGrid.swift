@@ -2367,8 +2367,21 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func setLogicalOffsetForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(gridItem.parent()?.p) != CPtrToInt(p)
+      && hasStaticPositionForGridItem(gridItem: gridItem, direction: direction)
+    {
+      return
+    }
+    // 'setLogicalLeft' and 'setLogicalTop' only take into account the grid item's writing-mode, that's why 'flowAwareDirectionForGridItem' is needed.
+    if GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: self, gridItem: gridItem, direction: direction) == .ForColumns
+    {
+      gridItem.setLogicalLeft(
+        left: logicalOffsetForGridItem(gridItem: gridItem, direction: direction))
+    } else {
+      gridItem.setLogicalTop(
+        top: logicalOffsetForGridItem(gridItem: gridItem, direction: direction))
+    }
   }
 
   private func logicalOffsetForGridItem(
