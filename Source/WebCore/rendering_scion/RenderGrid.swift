@@ -1681,8 +1681,26 @@ final class RenderGridWrapper: RenderBlockWrapper {
   override func layoutPositionedObject(
     r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isSkippedContentRoot() {
+      r.clearNeedsLayoutForSkippedContent()
+      return
+    }
+
+    let columnBreadth = gridAreaBreadthForOutOfFlowGridItem(gridItem: r, direction: .ForColumns)
+    let rowBreadth = gridAreaBreadthForOutOfFlowGridItem(gridItem: r, direction: .ForRows)
+
+    r.setOverridingContainingBlockContentLogicalWidth(logicalWidth: columnBreadth)
+    r.setOverridingContainingBlockContentLogicalHeight(logicalHeight: rowBreadth)
+
+    // Mark for layout as we're resetting the position before and we relay in generic layout logic
+    // for positioned items in order to get the offsets properly resolved.
+    r.setChildNeedsLayout(markParents: .MarkOnlyThis)
+
+    super.layoutPositionedObject(
+      r: r, relayoutChildren: relayoutChildren, fixedPositionObjectsOnly: fixedPositionObjectsOnly)
+
+    setLogicalOffsetForGridItem(gridItem: r, direction: .ForColumns)
+    setLogicalOffsetForGridItem(gridItem: r, direction: .ForRows)
   }
 
   private func computeTrackSizesForDefiniteSize(
@@ -1912,6 +1930,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
         positions[lastLine] += gapAccumulator - offsetAccumulator
       }
     }
+  }
+
+  private func gridAreaBreadthForOutOfFlowGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func logicalOffsetForOutOfFlowGridItem(
@@ -2293,6 +2318,13 @@ final class RenderGridWrapper: RenderBlockWrapper {
     gridItem.setLogicalLocation(
       location: GridLayoutFunctions.isOrthogonalGridItem(grid: self, gridItem: gridItem)
         ? gridItemLocation.transposedPoint() : gridItemLocation)
+  }
+
+  private func setLogicalOffsetForGridItem(
+    gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func logicalOffsetForGridItem(
