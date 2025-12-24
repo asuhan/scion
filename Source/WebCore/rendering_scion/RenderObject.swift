@@ -539,6 +539,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case InsideFlow
   }
 
+  private enum SkipDescendentFragmentedFlow {
+    case No
+    case Yes
+  }
+
+  private func setFragmentedFlowStateIncludingDescendants(
+    state: FragmentedFlowState, skipDescendentFragmentedFlow: SkipDescendentFragmentedFlow
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fragmentedFlowState() -> FragmentedFlowState {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1221,8 +1233,20 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func initializeFragmentedFlowStateOnInsertion() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(parent() != nil)
+
+    // A RenderFragmentedFlow is always considered to be inside itself, so it never has to change its state in response to parent changes.
+    if isRenderFragmentedFlow() {
+      return
+    }
+
+    let computedState = RenderObjectWrapper.computedFragmentedFlowState(renderer: self)
+    if fragmentedFlowState() == computedState {
+      return
+    }
+
+    setFragmentedFlowStateIncludingDescendants(
+      state: computedState, skipDescendentFragmentedFlow: .No)
   }
 
   func addPDFURLRect(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -1279,6 +1303,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNeedsSimplifiedNormalFlowLayoutBit(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func computedFragmentedFlowState(renderer: RenderObjectWrapper)
+    -> FragmentedFlowState
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
