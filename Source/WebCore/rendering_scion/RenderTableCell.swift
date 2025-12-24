@@ -678,8 +678,13 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // RenderTableCell has the RenderTableRow as the container, but is positioned relatively
+    // to the RenderTableSection. The sticky positioning algorithm assumes that elements are
+    // positioned relatively to their container, so we correct for that here.
+    assert(parentBox() != nil)
+    var returnValue = frameRect()
+    returnValue.move(size: -parentBox()!.locationOffset())
+    return returnValue
   }
 
   override func updateLogicalWidth() {
