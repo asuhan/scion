@@ -1426,8 +1426,17 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func clearLayoutOverflow() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if overflow == nil {
+      return
+    }
+
+    if visualOverflowRect() == borderBoxRect() {
+      // FIXME: Implement complete solution for fragments overflow.
+      clearOverflow()
+      return
+    }
+
+    overflow!.layoutOverflow = borderBoxRect()
   }
 
   func renderBlockComputeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool) {

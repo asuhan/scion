@@ -44,7 +44,7 @@ class RenderOverflow {
     fatalError("Not implemented")
   }
 
-  private let layoutOverflow: LayoutRectWrapper
+  var layoutOverflow: LayoutRectWrapper
   private let visualOverflow: LayoutRectWrapper
 
   var layoutClientAfterEdge = LayoutUnit()
