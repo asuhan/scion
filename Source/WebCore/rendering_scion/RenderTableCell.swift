@@ -66,11 +66,75 @@ private struct CollapsedBorders {
   private var borders: [CollapsedBorder] = []
 }
 
+// The following rules apply for resolving conflicts and figuring out which border
+// to use.
+// (1) Borders with the 'border-style' of 'hidden' take precedence over all other conflicting
+// borders. Any border with this value suppresses all borders at this location.
+// (2) Borders with a style of 'none' have the lowest priority. Only if the border properties of all
+// the elements meeting at this edge are 'none' will the border be omitted (but note that 'none' is
+// the default value for the border style.)
+// (3) If none of the styles are 'hidden' and at least one of them is not 'none', then narrow borders
+// are discarded in favor of wider ones. If several have the same 'border-width' then styles are preferred
+// in this order: 'double', 'solid', 'dashed', 'dotted', 'ridge', 'outset', 'groove', and the lowest: 'inset'.
+// (4) If border styles differ only in color, then a style set on a cell wins over one on a row,
+// which wins over a row group, column, column group and, lastly, table. It is undefined which color
+// is used when two elements of the same type disagree.
+private func compareBorders(border1: CollapsedBorderValue, border2: CollapsedBorderValue) -> Int {
+  // Sanity check the values passed in. The null border have lowest priority.
+  if !border2.exists() {
+    if !border1.exists() {
+      return 0
+    }
+    return 1
+  }
+  if !border1.exists() {
+    return -1
+  }
+
+  // Rule #1 above.
+  if border2.style == .Hidden {
+    if border1.style == .Hidden {
+      return 0
+    }
+    return -1
+  }
+  if border1.style == .Hidden {
+    return 1
+  }
+
+  // Rule #2 above.  A style of 'none' has lowest priority and always loses to any other border.
+  if border2.style == .None {
+    if border1.style == .None {
+      return 0
+    }
+    return 1
+  }
+  if border1.style == .None {
+    return -1
+  }
+
+  // The first part of rule #3 above. Wider borders win.
+  if border1.width() != border2.width() {
+    return border1.width() < border2.width() ? -1 : 1
+  }
+
+  // The borders have equal width.  Sort by border style.
+  if border1.style != border2.style {
+    return border1.style.rawValue < border2.style.rawValue ? -1 : 1
+  }
+
+  // The border have the same width and style.  Rely on precedence (cell over row over row group, etc.)
+  if border1.precedence == border2.precedence {
+    return 0
+  }
+  return border1.precedence.rawValue < border2.precedence.rawValue ? -1 : 1
+}
+
 private func chooseBorder(border1: CollapsedBorderValue, border2: CollapsedBorderValue)
   -> CollapsedBorderValue
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let border = compareBorders(border1: border1, border2: border2) < 0 ? border2 : border1
+  return border.style == .Hidden ? CollapsedBorderValue() : border
 }
 
 private func emptyBorder() -> CollapsedBorderValue {
