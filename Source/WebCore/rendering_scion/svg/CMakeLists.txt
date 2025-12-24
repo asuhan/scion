@@ -16,6 +16,7 @@ target_sources(layout_scion PRIVATE
     RenderSVGText.swift
     RenderSVGTransformableContainer.swift
     RenderSVGViewportContainer.swift
+    SVGRenderSupport.swift
     SVGTextLayoutAttributes.swift
 )
 add_subdirectory(legacy)

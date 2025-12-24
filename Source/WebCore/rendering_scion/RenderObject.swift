@@ -1310,8 +1310,33 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private static func computedFragmentedFlowState(renderer: RenderObjectWrapper)
     -> FragmentedFlowState
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.parent() == nil {
+      return renderer.fragmentedFlowState()
+    }
+
+    if renderer is RenderMultiColumnFlowWrapper {
+      // Multicolumn flows do not inherit the flow state.
+      return .InsideFlow
+    }
+
+    var inheritedFlowState: FragmentedFlowState = .NotInsideFlow
+    if renderer is RenderTextWrapper {
+      inheritedFlowState = renderer.parent()!.fragmentedFlowState()
+    } else if renderer is RenderSVGBlockWrapper || renderer is RenderSVGInlineWrapper
+      || renderer is LegacyRenderSVGModelObject
+    {
+      // containingBlock() skips svg boundary (SVG root is a RenderReplaced).
+      if let svgRoot = SVGRenderSupport.findTreeRootObject(start: renderer as! RenderElementWrapper)
+      {
+        inheritedFlowState = svgRoot.fragmentedFlowState()
+      }
+    } else if let container = renderer.container() {
+      inheritedFlowState = container.fragmentedFlowState()
+    } else {
+      // Splitting lines or doing continuation, so just keep the current state.
+      inheritedFlowState = renderer.fragmentedFlowState()
+    }
+    return inheritedFlowState
   }
 
   func isSetNeedsLayoutForbidden() -> Bool {
