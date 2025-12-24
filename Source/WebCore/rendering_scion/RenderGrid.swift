@@ -1935,8 +1935,52 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func gridAreaBreadthForOutOfFlowGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(gridItem.isOutOfFlowPositioned())
+    let isRowAxis = direction == .ForColumns
+    let lastLine = numTracks(direction: direction)
+
+    let gridPositions = computeGridPositionsForOutOfFlowGridItem(
+      gridItem: gridItem, direction: direction)
+    if gridPositions == nil {
+      return isRowAxis ? clientLogicalWidth() : clientLogicalHeight()
+    }
+
+    if gridPositions!.startIsAuto && gridPositions!.endIsAuto {
+      return isRowAxis ? clientLogicalWidth() : clientLogicalHeight()
+    }
+
+    var start = LayoutUnit()
+    var end = LayoutUnit()
+    let positions = isRowAxis ? columnPositions[...] : rowPositions[...]
+    let borderEdge = isRowAxis ? borderStart() : borderBefore()
+    if gridPositions!.startIsAuto {
+      start = borderEdge
+    } else {
+      let key = CPtrToInt(gridItem.p)
+      if isRowAxis {
+        outOfFlowItemColumn.updateValue(UInt64(gridPositions!.startLine), forKey: key)
+      } else {
+        outOfFlowItemRow.updateValue(UInt64(gridPositions!.startLine), forKey: key)
+      }
+      start = positions[Int(gridPositions!.startLine)]
+    }
+
+    if gridPositions!.endIsAuto {
+      end = ((direction == .ForRows) ? clientLogicalHeight() : clientLogicalWidth()) + borderEdge
+    } else {
+      end = positions[Int(gridPositions!.endLine)]
+      // These vectors store line positions including gaps, but we shouldn't consider them for the edges of the grid.
+      let availableSizeForGutters = availableSpaceForGutters(direction: direction)
+      if gridPositions!.endLine > 0 && gridPositions!.endLine < lastLine {
+        assert(!currentGrid().needsItemsPlacement())
+        end -= guttersSize(
+          direction: direction, startLine: UInt32(gridPositions!.endLine - 1), span: 2,
+          availableSize: availableSizeForGutters)
+        end -=
+          isRowAxis ? offsetBetweenColumns.distributionOffset : offsetBetweenRows.distributionOffset
+      }
+    }
+    return max(end - start, LayoutUnit(value: UInt64(0)))
   }
 
   private func logicalOffsetForOutOfFlowGridItem(
