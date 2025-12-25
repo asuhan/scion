@@ -197,9 +197,19 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func unextendedBackgroundRect() -> LayoutRectWrapper {
+    // FIXME: What is this? Need to patch for new columns?
+    return LayoutRectWrapper(rect: unscaledDocumentRect())
+  }
+
   func backgroundRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: New columns care about this?
+    let frameView = frameView()
+    if frameView.hasExtendedBackgroundRectForPainting() {
+      return LayoutRectWrapper(rect: frameView.extendedBackgroundRectForPainting())
+    }
+
+    return unextendedBackgroundRect()
   }
 
   func rootElementShouldPaintBaseBackground() -> Bool {
