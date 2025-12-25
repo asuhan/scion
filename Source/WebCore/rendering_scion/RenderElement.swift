@@ -302,8 +302,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func clearChildNeedsLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setNormalChildNeedsLayoutBit(b: false)
+    setPosChildNeedsLayoutBit(b: false)
+    setNeedsSimplifiedNormalFlowLayoutBit(b: false)
+    setNeedsPositionedMovementLayoutBit(b: false)
+    setOutOfFlowChildNeedsStaticPositionLayoutBit(b: false)
   }
 
   func setNeedsSimplifiedNormalFlowLayout() {
