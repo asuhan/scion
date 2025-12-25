@@ -28,8 +28,7 @@ typealias OrderedTrackIndexSet = ListSet<UInt64, UInt64>
 
 final class Grid {
   init(grid: RenderGridWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    orderIterator = OrderIterator(containerBox: grid)
   }
 
   func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
