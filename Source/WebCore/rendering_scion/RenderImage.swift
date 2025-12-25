@@ -37,6 +37,36 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
+    // Recomputing overflow is required only when child content is present.
+    if needsSimplifiedNormalFlowLayoutOnly() && !hasShadowContent() {
+      clearNeedsLayout()
+      return
+    }
+
+    // TODO(asuhan): add stack stats
+
+    let oldSize = contentBoxRect().size()
+    super.layout()
+
+    updateInnerContentRect()
+
+    if hasShadowContent() {
+      layoutShadowContent(oldSize: oldSize)
+    }
+  }
+
+  // Update the size of the image to be rendered. Object-fit may cause this to be different from the CSS box's content rect.
+  private func updateInnerContentRect() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutShadowContent(oldSize: LayoutSizeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasShadowContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
