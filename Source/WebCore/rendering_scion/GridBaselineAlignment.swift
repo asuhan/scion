@@ -192,11 +192,16 @@ struct GridBaselineAlignment {
       : !isHorizontalWritingMode(writingMode: writingMode)
   }
 
+  private func isOrthogonalGridItemForBaseline(gridItem: RenderBoxWrapper) -> Bool {
+    return isHorizontalWritingMode(writingMode: writingMode) != gridItem.isHorizontalWritingMode()
+  }
+
   private func isParallelToAlignmentAxisForGridItem(
     _ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return alignmentAxis == .GridColumnAxis
+      ? !isOrthogonalGridItemForBaseline(gridItem: gridItem)
+      : isOrthogonalGridItemForBaseline(gridItem: gridItem)
   }
 
   // TODO(asuhan): disallow 0 and UInt32.max
