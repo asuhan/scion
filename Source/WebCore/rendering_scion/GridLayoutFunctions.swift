@@ -31,7 +31,7 @@ struct GridAxis: OptionSet {
 }
 
 struct ExtraMarginsFromSubgrids {
-  private func extraTrackStartMargin() -> LayoutUnit { return extraMarginsFirst }
+  func extraTrackStartMargin() -> LayoutUnit { return extraMarginsFirst }
   private func extraTrackEndMargin() -> LayoutUnit { return extraMarginsSecond }
   func extraTotalMargin() -> LayoutUnit { return extraMarginsFirst + extraMarginsSecond }
 
@@ -156,7 +156,7 @@ class GridLayoutFunctions {
     return extraMargins
   }
 
-  private static func extraMarginForSubgridAncestors(
+  static func extraMarginForSubgridAncestors(
     direction: GridTrackSizingDirection, gridItem: RenderBoxWrapper
   ) -> ExtraMarginsFromSubgrids {
     var extraMargins = ExtraMarginsFromSubgrids()

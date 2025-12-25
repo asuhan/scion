@@ -73,6 +73,51 @@ struct GridBaselineAlignment {
   private func logicalAscentForGridItem(
     gridItem: RenderBoxWrapper, alignmentAxis: GridAxis, position: ItemPosition
   ) -> LayoutUnit {
+    let hasOrthogonalAncestorSubgrids = { () -> Bool in
+      for currentAncestorSubgrid in ancestorSubgridsOfGridItem(
+        gridItem: gridItem, direction: .ForRows)
+      {
+        if currentAncestorSubgrid.isHorizontalWritingMode()
+          != currentAncestorSubgrid.parent()!.isHorizontalWritingMode()
+        {
+          return true
+        }
+      }
+      return false
+    }
+
+    var extraMarginsFromAncestorSubgrids = ExtraMarginsFromSubgrids()
+    if alignmentAxis == .GridColumnAxis && !hasOrthogonalAncestorSubgrids() {
+      extraMarginsFromAncestorSubgrids = GridLayoutFunctions.extraMarginForSubgridAncestors(
+        direction: .ForRows, gridItem: gridItem)
+    }
+
+    let ascent =
+      ascentForGridItem(gridItem, alignmentAxis, position)
+      + extraMarginsFromAncestorSubgrids.extraTrackStartMargin()
+    return (isDescentBaselineForGridItem(gridItem, alignmentAxis) || position == .LastBaseline)
+      ? descentForGridItem(gridItem, ascent, alignmentAxis, extraMarginsFromAncestorSubgrids)
+      : ascent
+  }
+
+  private func ascentForGridItem(
+    _ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis, _ position: ItemPosition
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func descentForGridItem(
+    _ gridItem: RenderBoxWrapper, _ ascent: LayoutUnit, _ alignmentAxis: GridAxis,
+    _ extraMarginsFromAncestorSubgrids: ExtraMarginsFromSubgrids
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isDescentBaselineForGridItem(_ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
