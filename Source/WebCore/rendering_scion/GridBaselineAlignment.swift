@@ -179,8 +179,11 @@ struct GridBaselineAlignment {
   private func isDescentBaselineForGridItem(_ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isVerticalAlignmentContext(alignmentAxis)
+      && ((gridItem.style().isFlippedBlocksWritingMode()
+        && !isFlippedWritingMode(writingMode: writingMode))
+        || (gridItem.style().isFlippedLinesWritingMode()
+          && isFlippedWritingMode(writingMode: writingMode)))
   }
 
   private func isVerticalAlignmentContext(_ alignmentAxis: GridAxis) -> Bool {
