@@ -23,8 +23,57 @@ import wk_interop
 
 class RenderViewWrapper: RenderBlockFlowWrapper {
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    if !document().paginated() {
+      pageLogicalSize = nil
+    }
+
+    if shouldUsePrintingLayout() {
+      if pageLogicalSize == nil {
+        pageLogicalSize = LayoutSizeWrapper(
+          width: logicalWidth(), height: LayoutUnit(value: UInt64(0)))
+      }
+      minPreferredLogicalWidth = pageLogicalSize!.width()
+      maxPreferredLogicalWidth = minPreferredLogicalWidth
+    }
+
+    // Use calcWidth/Height to get the new width/height, since this will take the full page zoom factor into account.
+    let relayoutChildren =
+      !shouldUsePrintingLayout() && (width() != viewWidth() || height() != viewHeight())
+    if relayoutChildren {
+      setChildNeedsLayout(markParents: .MarkOnlyThis)
+
+      for box: RenderBoxWrapper in childrenOfType(parent: self) {
+        if box.hasRelativeLogicalHeight()
+          || box.style().logicalHeight().isPercentOrCalculated()
+          || box.style().logicalMinHeight().isPercentOrCalculated()
+          || box.style().logicalMaxHeight().isPercentOrCalculated()
+          || box.isRenderOrLegacyRenderSVGRoot()
+        {
+          box.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+      }
+    }
+
+    assert(frameView().layoutContext().layoutState() == nil)
+    if !needsLayout() {
+      return
+    }
+
+    let _ = LayoutStateMaintainer(
+      root: self, offset: LayoutSizeWrapper(), disablePaintOffsetCache: false,
+      pageHeight: (pageLogicalSize ?? LayoutSizeWrapper()).height(),
+      pageHeightChanged: pageLogicalHeightChanged)
+
+    pageLogicalHeightChanged = false
+
+    // FIXME: This should be called only when frame view (or the canvas we render onto) size changes.
+    updateInitialContainingBlockSize()
+    super.layout()
+
+    #if !NDEBUG
+      frameView().layoutContext().checkLayoutState()
+    #endif
   }
 
   override func updateLogicalWidth() {
@@ -40,6 +89,17 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // The same as the FrameView's layoutHeight/layoutWidth but with null check guards.
+  private func viewHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func viewWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -154,4 +214,17 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func updateInitialContainingBlockSize() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldUsePrintingLayout() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var pageLogicalSize: LayoutSizeWrapper? = nil
+  private var pageLogicalHeightChanged = false
 }

@@ -5677,6 +5677,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     overflow!.addLayoutOverflow(rect: overflowRect)
   }
 
+  // The preferred logical width of the element if it were to break its lines at every possible opportunity.
+  var minPreferredLogicalWidth = LayoutUnit()
+
+  // The preferred logical width of the element if it never breaks any lines at all.
+  var maxPreferredLogicalWidth = LayoutUnit()
+
   // Our overflow information.
   var overflow: RenderOverflow? = nil
 }
