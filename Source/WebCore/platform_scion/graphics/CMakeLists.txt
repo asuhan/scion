@@ -47,6 +47,7 @@ target_sources(layout_scion PRIVATE
     LayoutSize.swift
     Path.swift
     PathSegmentData.swift
+    PathUtilities.swift
     RenderingResource.swift
     RenderingResourceIdentifier.swift
     RotationDirection.swift

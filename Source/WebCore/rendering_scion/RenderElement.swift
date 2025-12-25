@@ -34,6 +34,31 @@ private func paintPhase(
   fatalError("Not implemented")
 }
 
+private func usePlatformFocusRingColorForOutlineStyleAuto() -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func useShrinkWrappedFocusRingForOutlineStyleAuto() -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func drawFocusRing(
+  context: GraphicsContextWrapper, path: PathWrapper, style: RenderStyleWrapper, color: ColorWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func drawFocusRing(
+  context: GraphicsContextWrapper, rects: [FloatRectWrapper], style: RenderStyleWrapper,
+  color: ColorWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class RenderElementWrapper: RenderObjectWrapper {
   // FIXME: Style shouldn't be mutated.
   func mutableStyle() -> RenderStyleWrapper {
@@ -646,10 +671,42 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func paintFocusRing(
-    paintInfo: PaintInfoWrapper, style: RenderStyleWrapper, focusRingRects: [LayoutRectWrapper]
+    paintInfo: PaintInfoWrapper, style: RenderStyleWrapper,
+    focusRingRects: ArraySlice<LayoutRectWrapper>
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(style.outlineStyleIsAuto() == .On)
+    let outlineOffset = style.outlineOffset()
+    var pixelSnappedFocusRingRects: [FloatRectWrapper] = []
+    let deviceScaleFactor = document().deviceScaleFactor()
+    for rect in focusRingRects {
+      var rect = rect
+      rect.inflate(d: outlineOffset)
+      pixelSnappedFocusRingRects.append(
+        snapRectToDevicePixels(rect: rect, pixelSnappingFactor: deviceScaleFactor))
+    }
+    var styleOptions = styleColorOptions()
+    styleOptions.update(with: .UseSystemAppearance)
+    let focusRingColor =
+      usePlatformFocusRingColorForOutlineStyleAuto()
+      ? RenderTheme.singleton().focusRingColor(options: styleOptions)
+      : style.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyOutlineColor)
+    if useShrinkWrappedFocusRingForOutlineStyleAuto() && style.hasBorderRadius() {
+      let path = PathUtilities.pathWithShrinkWrappedRectsForOutline(
+        rects: pixelSnappedFocusRingRects, borderData: style.border(), outlineOffset: outlineOffset,
+        direction: style.direction(),
+        writingMode: style.writingMode(),
+        deviceScaleFactor: document().deviceScaleFactor())
+      if path.isEmpty() {
+        for rect in pixelSnappedFocusRingRects {
+          path.addRect(rect: rect)
+        }
+      }
+      drawFocusRing(context: paintInfo.context(), path: path, style: style, color: focusRingColor)
+    } else {
+      drawFocusRing(
+        context: paintInfo.context(), rects: pixelSnappedFocusRingRects, style: style,
+        color: focusRingColor)
+    }
   }
 
   func establishesIndependentFormattingContext() -> Bool {

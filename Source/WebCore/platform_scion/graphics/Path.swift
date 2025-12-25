@@ -65,6 +65,11 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func length() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

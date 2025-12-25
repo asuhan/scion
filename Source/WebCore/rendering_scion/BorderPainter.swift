@@ -373,7 +373,7 @@ class BorderPainter {
         rects: &focusRingRects, additionalOffset: paintRectToUse.location(),
         paintContainer: paintInfo.paintContainer)
       renderer.paintFocusRing(
-        paintInfo: paintInfo, style: styleToUse, focusRingRects: focusRingRects)
+        paintInfo: paintInfo, style: styleToUse, focusRingRects: focusRingRects[...])
     }
 
     if renderer.hasOutlineAnnotation() && styleToUse.outlineStyleIsAuto() == .Off
