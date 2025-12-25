@@ -441,9 +441,13 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func requiresRenderingConsolidationForViewTransition() -> Bool {
+  func hasViewTransitionName() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func requiresRenderingConsolidationForViewTransition() -> Bool {
+    return hasViewTransitionName() || capturedInViewTransition()
   }
 
   func hasOutlineAnnotation() -> Bool {
