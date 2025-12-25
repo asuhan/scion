@@ -168,8 +168,12 @@ struct GridBaselineAlignment {
     _ gridItem: RenderBoxWrapper, _ ascent: LayoutUnit, _ alignmentAxis: GridAxis,
     _ extraMarginsFromAncestorSubgrids: ExtraMarginsFromSubgrids
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!gridItem.needsLayout())
+    if isParallelToAlignmentAxisForGridItem(gridItem, alignmentAxis) {
+      return extraMarginsFromAncestorSubgrids.extraTotalMargin() + gridItem.marginLogicalHeight()
+        + gridItem.logicalHeight() - ascent
+    }
+    return gridItem.marginLogicalWidth() + gridItem.logicalWidth() - ascent
   }
 
   private func isDescentBaselineForGridItem(_ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis)
