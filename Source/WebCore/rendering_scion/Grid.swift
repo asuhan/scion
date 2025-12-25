@@ -40,8 +40,21 @@ final class Grid {
   }
 
   func ensureGridSize(maximumRowSize: UInt32, maximumColumnSize: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(maximumRowSize < GridPosition.max() * 2)
+    assert(maximumColumnSize < GridPosition.max() * 2)
+    let oldColumnSize = numTracks(direction: GridTrackSizingDirection.ForColumns)
+    let oldRowSize = numTracks(direction: GridTrackSizingDirection.ForRows)
+    if maximumRowSize > oldRowSize {
+      grid.append(contentsOf: [[GridCell]](repeating: [], count: Int(maximumRowSize) - grid.count))
+    }
+
+    // Just grow the first row for now so that we know the requested size,
+    // and we'll lazily allocate the others when they get used.
+    if maximumColumnSize > oldColumnSize && maximumRowSize != 0 {
+      grid[0].append(
+        contentsOf: [GridCell](repeating: GridCell(), count: Int(maximumColumnSize) - grid[0].count)
+      )
+    }
   }
 
   @discardableResult
@@ -149,7 +162,7 @@ final class Grid {
 
   let orderIterator: OrderIterator
 
-  private let grid: GridAsMatrix = []
+  private var grid: GridAsMatrix = []
 }
 
 class GridIterator {
