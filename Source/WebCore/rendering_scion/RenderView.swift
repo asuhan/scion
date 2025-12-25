@@ -193,8 +193,9 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func unscaledDocumentRect() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var overflowRect = layoutOverflowRect()
+    flipForWritingMode(rect: &overflowRect)
+    return snappedIntRect(rect: overflowRect)
   }
 
   func unextendedBackgroundRect() -> LayoutRectWrapper {
