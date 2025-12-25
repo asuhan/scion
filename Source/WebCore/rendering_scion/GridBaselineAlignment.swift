@@ -57,9 +57,12 @@ struct GridBaselineAlignment {
   mutating func setWritingMode(writingMode: WritingMode) { self.writingMode = writingMode }
 
   // Clearing the Baseline Alignment context and their internal classes and data structures.
-  func clear(alignmentAxis: GridAxis) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func clear(alignmentAxis: GridAxis) {
+    if alignmentAxis == .GridColumnAxis {
+      rowAxisBaselineAlignmentStates.removeAll()
+    } else {
+      colAxisBaselineAlignmentStates.removeAll()
+    }
   }
 
   private func baselineGroupForGridItem(
@@ -183,6 +186,11 @@ struct GridBaselineAlignment {
     fatalError("Not implemented")
   }
 
+  // TODO(asuhan): disallow 0 and UInt32.max
+  private typealias BaselineAlignmentStateMap = [UInt32: BaselineAlignmentState]
+
   // Grid Container's WritingMode, used to determine grid item's orthogonality.
   private var writingMode: WritingMode = .HorizontalTb
+  private var rowAxisBaselineAlignmentStates = BaselineAlignmentStateMap()
+  private var colAxisBaselineAlignmentStates = BaselineAlignmentStateMap()
 }
