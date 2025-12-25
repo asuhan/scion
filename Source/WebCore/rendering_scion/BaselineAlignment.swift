@@ -76,6 +76,11 @@ struct BaselineAlignmentState {
     fatalError("Not implemented")
   }
 
+  func sharedGroup(child: RenderBoxWrapper, preference: ItemPosition) -> BaselineGroup {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Updates the baseline-sharing group compatible with the item.
   // We pass the item's baseline-preference to avoid dependencies with the LayoutGrid class, which is the one
   // managing the alignment behavior of the Grid Items.

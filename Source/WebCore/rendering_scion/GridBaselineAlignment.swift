@@ -69,8 +69,13 @@ struct GridBaselineAlignment {
     preference: ItemPosition, sharedContext: UInt32, gridItem: RenderBoxWrapper,
     alignmentAxis: GridAxis
   ) -> BaselineGroup {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isBaselinePosition(position: preference))
+    let isRowAxisContext = alignmentAxis == .GridColumnAxis
+    let baselineAlignmentState =
+      isRowAxisContext
+      ? rowAxisBaselineAlignmentStates[sharedContext]!
+      : colAxisBaselineAlignmentStates[sharedContext]!
+    return baselineAlignmentState.sharedGroup(child: gridItem, preference: preference)
   }
 
   private func logicalAscentForGridItem(
