@@ -194,6 +194,20 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func rootElementShouldPaintBaseBackground() -> Bool {
+    let documentElement = document().documentElement()
+    if let rootRenderer = documentElement != nil ? documentElement!.renderer() : nil {
+      // The document element's renderer is currently forced to be a block, but may not always be.
+      if let rootBox = rootRenderer as? RenderBoxWrapper, rootBox.hasLayer() {
+        let layer = rootBox.layer()!
+        if layer.isolatesBlending() || layer.isBackdropRoot() {
+          return false
+        }
+      }
+    }
+    return shouldPaintBaseBackground()
+  }
+
+  private func shouldPaintBaseBackground() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
