@@ -291,8 +291,14 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setOutOfFlowChildNeedsStaticPositionLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Currently this dirty bit has a very limited useage but should be expanded to
+    // optimize all kinds of out-of-flow cases.
+    // It's also assumed that regular, positioned child related bits are already set.
+    assert(!isSetNeedsLayoutForbidden())
+    assert(
+      posChildNeedsLayout() || selfNeedsLayout() || needsSimplifiedNormalFlowLayout()
+        || parent() == nil)
+    setOutOfFlowChildNeedsStaticPositionLayoutBit(b: true)
   }
 
   func clearChildNeedsLayout() {

@@ -1322,6 +1322,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setOutOfFlowChildNeedsStaticPositionLayoutBit(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private static func computedFragmentedFlowState(renderer: RenderObjectWrapper)
     -> FragmentedFlowState
   {
