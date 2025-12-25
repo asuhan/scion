@@ -59,8 +59,27 @@ final class Grid {
 
   @discardableResult
   func insert(gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var clampedArea = area
+    if maxRows != 0 {
+      clampedArea.rows.clamp(max: Int32(maxRows))
+    }
+    if maxColumns != 0 {
+      clampedArea.columns.clamp(max: Int32(maxColumns))
+    }
+
+    assert(clampedArea.rows.isTranslatedDefinite() && clampedArea.columns.isTranslatedDefinite())
+    ensureGridSize(
+      maximumRowSize: clampedArea.rows.endLine(), maximumColumnSize: clampedArea.columns.endLine())
+
+    for row in clampedArea.rows {
+      ensureStorageForRow(row: row)
+      for column in clampedArea.columns {
+        grid[Int(row)][Int(column)].append(gridItem)
+      }
+    }
+
+    setGridItemArea(item: gridItem, area: clampedArea)
+    return clampedArea
   }
 
   // Note that each in flow child of a grid container becomes a grid item. This means that
@@ -160,7 +179,15 @@ final class Grid {
     fatalError("Not implemented")
   }
 
+  private func ensureStorageForRow(row: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let orderIterator: OrderIterator
+
+  private let maxColumns = 0
+  private let maxRows = 0
 
   private var grid: GridAsMatrix = []
 }
