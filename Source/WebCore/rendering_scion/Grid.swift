@@ -24,6 +24,7 @@
  */
 
 typealias GridCell = [RenderBoxWrapper]
+private typealias GridAsMatrix = [[GridCell]]
 typealias OrderedTrackIndexSet = ListSet<UInt64, UInt64>
 
 final class Grid {
@@ -32,8 +33,10 @@ final class Grid {
   }
 
   func numTracks(direction: GridTrackSizingDirection) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if direction == .ForRows {
+      return UInt32(grid.count)
+    }
+    return grid.isEmpty ? 0 : UInt32(grid[0].count)
   }
 
   func ensureGridSize(maximumRowSize: UInt32, maximumColumnSize: UInt32) {
@@ -145,6 +148,8 @@ final class Grid {
   }
 
   let orderIterator: OrderIterator
+
+  private let grid: GridAsMatrix = []
 }
 
 class GridIterator {
