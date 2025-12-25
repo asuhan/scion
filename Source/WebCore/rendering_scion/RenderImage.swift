@@ -62,8 +62,39 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   private func layoutShadowContent(oldSize: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for renderBox: RenderBoxWrapper in childrenOfType(parent: self) {
+      var childNeedsLayout = renderBox.needsLayout()
+      // If the region chain has changed we also need to relayout the children to update the region box info.
+      // FIXME: We can do better once we compute region box info for RenderReplaced, not only for RenderBlock.
+      if let fragmentedFlow = enclosingFragmentedFlow(), !childNeedsLayout {
+        if fragmentedFlow.pageLogicalSizeChanged {
+          childNeedsLayout = true
+        }
+      }
+
+      let newSize = contentBoxRect().size()
+      if newSize == oldSize && !childNeedsLayout {
+        continue
+      }
+
+      // When calling layout() on a child node, a parent must either push a LayoutStateMaintainer, or
+      // instantiate LayoutStateDisabler. Since using a LayoutStateMaintainer is slightly more efficient,
+      // and this method might be called many times per second during video playback, use a LayoutStateMaintainer:
+      let _ = LayoutStateMaintainer(
+        root: self, offset: locationOffset(),
+        disablePaintOffsetCache: isTransformed() || hasReflection()
+          || style().isFlippedBlocksWritingMode())
+      renderBox.setLocation(
+        p: LayoutPointWrapper(x: borderLeft(), y: borderTop())
+          + LayoutSizeWrapper(width: paddingLeft(), height: paddingTop()))
+      renderBox.mutableStyle().setHeight(
+        length: LengthWrapper(value: newSize.height(), type: .Fixed))
+      renderBox.mutableStyle().setWidth(length: LengthWrapper(value: newSize.width(), type: .Fixed))
+      renderBox.setNeedsLayout(markParents: .MarkOnlyThis)
+      renderBox.layout()
+    }
+
+    clearChildNeedsLayout()
   }
 
   private func hasShadowContent() -> Bool {

@@ -35,6 +35,12 @@ private func paintPhase(
 }
 
 class RenderElementWrapper: RenderObjectWrapper {
+  // FIXME: Style shouldn't be mutated.
+  func mutableStyle() -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func initializeStyle() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -260,6 +266,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setOutOfFlowChildNeedsStaticPositionLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearChildNeedsLayout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

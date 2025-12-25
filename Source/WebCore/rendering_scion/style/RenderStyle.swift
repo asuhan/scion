@@ -2052,6 +2052,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setWidth(length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHeight(length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMaskBorder(image: NinePieceImage) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
