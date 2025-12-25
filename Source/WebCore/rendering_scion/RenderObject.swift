@@ -1157,6 +1157,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Actually do the repaint of rect r for this object which has been computed in the coordinate space
+  // of repaintContainer. If repaintContainer is nullptr, repaint via the view.
+  func repaintUsingContainer(
+    repaintContainer: RenderLayerModelObjectWrapper?, r: LayoutRectWrapper,
+    shouldClipToLayer: Bool = true
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Repaint the entire object.  Called when, e.g., the color of a border changes, or when a border
   // style changes.
   enum ForceRepaint {
@@ -1178,6 +1188,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Returns the rect that should be repainted whenever this object changes. The rect is in the view's
   // coordinate space. This method deals with outlines and overflow.
   func absoluteClippedOverflowRectForRepaint() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeRectForRepaint(
+    rect: LayoutRectWrapper, repaintContainer: RenderLayerModelObjectWrapper?
+  ) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
