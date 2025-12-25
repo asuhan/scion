@@ -380,8 +380,38 @@ final class GridTrackSizingAlgorithm {
   func gridAreaBreadthForGridItem(gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection)
     -> LayoutUnit?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderGrid!.areMasonryColumns() {
+      return renderGrid!.contentLogicalWidth()
+    }
+
+    var addContentAlignmentOffset =
+      direction == .ForColumns
+      && (sizingState == .RowSizingFirstIteration
+        || sizingState == .RowSizingExtraIterationForSizeContainment)
+    // To determine the column track's size based on an orthogonal grid item we need it's logical
+    // height, which may depend on the row track's size. It's possible that the row tracks sizing
+    // logic has not been performed yet, so we will need to do an estimation.
+    if direction == .ForRows
+      && (sizingState == .ColumnSizingFirstIteration || sizingState == .ColumnSizingSecondIteration)
+      && !renderGrid!.areMasonryColumns()
+    {
+      assert(GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid!, gridItem: gridItem))
+      // FIXME (jfernandez) Content Alignment should account for this heuristic.
+      // https://github.com/w3c/csswg-drafts/issues/2697
+      if sizingState == .ColumnSizingFirstIteration {
+        return estimatedGridAreaBreadthForGridItem(gridItem: gridItem, direction: .ForRows)
+      }
+      addContentAlignmentOffset = true
+    }
+
+    let span = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
+    return computeGridSpanSize(
+      tracks: tracks(direction: direction), gridSpan: span,
+      gridItemOffset: addContentAlignmentOffset
+        ? renderGrid!.gridItemOffset(direction: direction) : nil,
+      totalGuttersSize: renderGrid!.guttersSize(
+        direction: direction, startLine: span.startLine(), span: span.integerSpan(),
+        availableSize: availableSpace(direction: direction)))
   }
 
   func estimatedGridAreaBreadthForGridItem(
