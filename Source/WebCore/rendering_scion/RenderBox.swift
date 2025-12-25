@@ -1162,6 +1162,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func marginBlockStart(writingMode: WritingMode) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func marginInlineStart(writingMode: WritingMode) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMarginBefore(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

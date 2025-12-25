@@ -100,11 +100,60 @@ struct GridBaselineAlignment {
       : ascent
   }
 
+  private static let noValidBaseline = LayoutUnit(value: -1)
+
   private func ascentForGridItem(
     _ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis, _ position: ItemPosition
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(position == .Baseline || position == .LastBaseline)
+    var baseline = LayoutUnit(value: UInt64(0))
+    let gridItemMargin =
+      alignmentAxis == .GridColumnAxis
+      ? gridItem.marginBlockStart(writingMode: writingMode)
+      : gridItem.marginInlineStart(writingMode: writingMode)
+    let parentStyle = gridItem.parent()!.style()
+
+    if alignmentAxis == .GridColumnAxis {
+      let alignmentContextDirection: LineDirectionMode =
+        parentStyle.isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine
+
+      if !isParallelToAlignmentAxisForGridItem(gridItem, alignmentAxis) {
+        return gridItemMargin
+          + synthesizedBaseline(
+            box: gridItem, parentStyle: parentStyle, direction: alignmentContextDirection,
+            edge: .BorderBox)
+      }
+      if let ascent = position == .Baseline
+        ? gridItem.firstLineBaseline() : gridItem.lastLineBaseline()
+      {
+        baseline = ascent
+      } else {
+        return gridItemMargin
+          + synthesizedBaseline(
+            box: gridItem, parentStyle: parentStyle, direction: alignmentContextDirection,
+            edge: .BorderBox)
+      }
+    } else {
+      let computedBaselineValue =
+        position == .Baseline ? gridItem.firstLineBaseline() : gridItem.lastLineBaseline()
+      baseline =
+        isParallelToAlignmentAxisForGridItem(gridItem, alignmentAxis)
+        ? (computedBaselineValue ?? GridBaselineAlignment.noValidBaseline)
+        : GridBaselineAlignment.noValidBaseline
+      // We take border-box's under edge if no valid baseline.
+      if baseline == GridBaselineAlignment.noValidBaseline {
+        assert(!gridItem.needsLayout())
+        if isVerticalAlignmentContext(alignmentAxis) {
+          return isFlippedWritingMode(writingMode: writingMode)
+            ? gridItemMargin + gridItem.size().width().toInt() : gridItemMargin
+        }
+        return gridItemMargin
+          + synthesizedBaseline(
+            box: gridItem, parentStyle: parentStyle, direction: .HorizontalLine, edge: .BorderBox)
+      }
+    }
+
+    return gridItemMargin + baseline
   }
 
   private func descentForGridItem(
@@ -118,6 +167,18 @@ struct GridBaselineAlignment {
   private func isDescentBaselineForGridItem(_ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis)
     -> Bool
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isVerticalAlignmentContext(_ alignmentAxis: GridAxis) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isParallelToAlignmentAxisForGridItem(
+    _ gridItem: RenderBoxWrapper, _ alignmentAxis: GridAxis
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
