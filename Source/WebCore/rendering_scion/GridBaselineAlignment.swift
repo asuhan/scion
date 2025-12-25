@@ -187,8 +187,9 @@ struct GridBaselineAlignment {
   }
 
   private func isVerticalAlignmentContext(_ alignmentAxis: GridAxis) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return alignmentAxis == .GridRowAxis
+      ? isHorizontalWritingMode(writingMode: writingMode)
+      : !isHorizontalWritingMode(writingMode: writingMode)
   }
 
   private func isParallelToAlignmentAxisForGridItem(
