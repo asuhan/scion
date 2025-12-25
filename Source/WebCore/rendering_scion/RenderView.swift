@@ -19,6 +19,7 @@
  *
  */
 
+import Foundation
 import wk_interop
 
 class RenderViewWrapper: RenderBlockFlowWrapper {
@@ -95,13 +96,25 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   // The same as the FrameView's layoutHeight/layoutWidth but with null check guards.
   private func viewHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var height: Int32 = 0
+    if !shouldUsePrintingLayout() {
+      let frameView = frameView()
+      height = frameView.layoutHeight()
+      height = Int32(
+        frameView.useFixedLayout() ? ceilf(style().usedZoom() * Float32(height)) : Float32(height))
+    }
+    return height
   }
 
   private func viewWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var width: Int32 = 0
+    if !shouldUsePrintingLayout() {
+      let frameView = frameView()
+      width = frameView.layoutWidth()
+      width = Int32(
+        frameView.useFixedLayout() ? ceilf(style().usedZoom() * Float32(width)) : Float32(width))
+    }
+    return width
   }
 
   func clientLogicalWidthForFixedPosition() -> LayoutUnit {
