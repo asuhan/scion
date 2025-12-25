@@ -1354,7 +1354,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       }
 
       var area = currentGrid().gridItemArea(item: gridItem!)
-      currentGrid().clampAreaToSubgridIfNeeded(area: area)
+      currentGrid().clampAreaToSubgridIfNeeded(area: &area)
       if !area.rows.isIndefinite() {
         area.rows.translate(offset: currentGrid().explicitGridStart(direction: .ForRows))
       }

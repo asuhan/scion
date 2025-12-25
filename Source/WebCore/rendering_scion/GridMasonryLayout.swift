@@ -172,8 +172,8 @@ class GridMasonryLayout {
 
       itemSpan.translate(
         offset: renderGrid.currentGrid().explicitGridStart(direction: gridAxisDirection()))
-      let gridArea = gridAreaForDefiniteGridAxisItem(gridItem: item)
-      renderGrid.currentGrid().clampAreaToSubgridIfNeeded(area: gridArea)
+      var gridArea = gridAreaForDefiniteGridAxisItem(gridItem: item)
+      renderGrid.currentGrid().clampAreaToSubgridIfNeeded(area: &gridArea)
       insertIntoGridAndLayoutItem(gridItem: item, area: gridArea)
     }
   }

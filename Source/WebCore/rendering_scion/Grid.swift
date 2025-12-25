@@ -61,10 +61,10 @@ final class Grid {
   func insert(gridItem: RenderBoxWrapper, area: GridArea) -> GridArea {
     var clampedArea = area
     if maxRows != 0 {
-      clampedArea.rows.clamp(max: Int32(maxRows))
+      clampedArea.rows.clamp(max: maxRows)
     }
     if maxColumns != 0 {
-      clampedArea.columns.clamp(max: Int32(maxColumns))
+      clampedArea.columns.clamp(max: maxColumns)
     }
 
     assert(clampedArea.rows.isTranslatedDefinite() && clampedArea.columns.isTranslatedDefinite())
@@ -134,9 +134,17 @@ final class Grid {
     fatalError("Not implemented")
   }
 
-  func clampAreaToSubgridIfNeeded(area: GridArea) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func clampAreaToSubgridIfNeeded(area: inout GridArea) {
+    if !area.rows.isIndefinite() {
+      if maxRows != 0 {
+        area.rows.clamp(max: maxRows)
+      }
+    }
+    if !area.columns.isIndefinite() {
+      if maxColumns != 0 {
+        area.columns.clamp(max: maxColumns)
+      }
+    }
   }
 
   func setAutoRepeatEmptyColumns(autoRepeatEmptyColumns: OrderedTrackIndexSet?) {
@@ -186,8 +194,8 @@ final class Grid {
 
   let orderIterator: OrderIterator
 
-  private let maxColumns = 0
-  private let maxRows = 0
+  private let maxColumns: Int32 = 0
+  private let maxRows: Int32 = 0
 
   private var grid: GridAsMatrix = []
 }
