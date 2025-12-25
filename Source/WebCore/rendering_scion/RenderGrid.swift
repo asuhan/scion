@@ -1862,8 +1862,61 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func layoutMasonryItems(gridLayoutState: inout GridLayoutState) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    populateGridPositionsForDirection(direction: .ForColumns)
+    populateGridPositionsForDirection(direction: .ForRows)
+
+    var gridItem = firstChildBox()
+    while gridItem != nil {
+      if currentGrid().orderIterator.shouldSkipChild(child: gridItem!) {
+        if gridItem!.isOutOfFlowPositioned() {
+          prepareGridItemForPositionedLayout(gridItem: gridItem!)
+        }
+        gridItem = gridItem!.nextSiblingBox()
+        continue
+      }
+
+      if let renderGrid = gridItem as? RenderGridWrapper,
+        renderGrid.isSubgridColumns() || renderGrid.isSubgridRows()
+      {
+        gridItem!.setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+
+      // Setting the definite grid area's sizes. It may imply that the
+      // item must perform a layout if its area differs from the one
+      // used during the track sizing algorithm.
+      updateGridAreaLogicalSize(
+        gridItem: gridItem!,
+        width: gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+          gridItem: gridItem!, direction: .ForColumns),
+        height: gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+          gridItem: gridItem!, direction: .ForRows))
+
+      let oldGridItemRect = gridItem!.frameRect()
+
+      // Stretching logic might force a grid item layout, so we need to run it before the layoutIfNeeded
+      // call to avoid unnecessary relayouts. This might imply that grid item margins, needed to correctly
+      // determine the available space before stretching, are not set yet.
+      applyStretchAlignmentToGridItemIfNeeded(
+        gridItem: gridItem!, gridLayoutState: &gridLayoutState)
+      applySubgridStretchAlignmentToGridItemIfNeeded(gridItem: gridItem!)
+
+      gridItem!.layoutIfNeeded()
+
+      // We need pending layouts to be done in order to compute auto-margins properly.
+      updateAutoMarginsInColumnAxisIfNeeded(gridItem: gridItem!)
+      updateAutoMarginsInRowAxisIfNeeded(gridItem: gridItem!)
+
+      setLogicalPositionForGridItem(gridItem: gridItem!)
+
+      // If the grid item moved, we have to repaint it as well as any floating/positioned
+      // descendants. An exception is if we need a layout. In this case, we know we're going to
+      // repaint ourselves (and the grid item) anyway.
+      if !selfNeedsLayout() && gridItem!.checkForRepaintDuringLayout() {
+        gridItem!.repaintDuringLayoutIfMoved(oldRect: oldGridItemRect)
+      }
+
+      gridItem = gridItem!.nextSiblingBox()
+    }
   }
 
   func populateGridPositionsForDirection(direction: GridTrackSizingDirection) {
