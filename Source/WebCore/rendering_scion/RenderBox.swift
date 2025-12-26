@@ -3722,11 +3722,29 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: LayoutUnit.fromRawValue(value: raw.height))
   }
 
-  private func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper?)
+  private func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the writing modes of the child and parent match, then we don't have to
+    // do anything fancy. Just return the result.
+    var rect = visualOverflowRect()
+    if parentStyle.blockFlowDirection() == style().blockFlowDirection() {
+      return rect
+    }
+
+    // We are putting ourselves into our parent's coordinate space.  If there is a flipped block mismatch
+    // in a particular axis, then we have to flip the rect along that axis.
+    if style().blockFlowDirection() == .RightToLeft
+      || parentStyle.blockFlowDirection() == .RightToLeft
+    {
+      rect.setX(x: width() - rect.maxX())
+    } else if style().blockFlowDirection() == .BottomToTop
+      || parentStyle.blockFlowDirection() == .BottomToTop
+    {
+      rect.setY(y: height() - rect.maxY())
+    }
+
+    return rect
   }
 
   func layoutOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
