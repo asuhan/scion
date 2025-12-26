@@ -3605,8 +3605,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func enclosingFloatPaintingLayer() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for box in RenderAncestorIteratorAdapter<RenderBoxWrapper>.lineageOfType(first: self) {
+      if box.layer() != nil && box.layer()!.isSelfPaintingLayer {
+        return box.layer()
+      }
+    }
+    return nil
   }
 
   func firstLineBaseline() -> LayoutUnit? {
