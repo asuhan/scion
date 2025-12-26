@@ -138,6 +138,16 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
+  func setFrameRect(_ rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func frameRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paint(
     _ context: GraphicsContextWrapper, _ rect: IntRect,
     _ securityOriginPaintPolicy: SecurityOriginPaintPolicy = .AnyOrigin,

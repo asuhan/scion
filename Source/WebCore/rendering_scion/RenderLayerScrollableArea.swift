@@ -367,8 +367,33 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func positionOverflowControls(offsetFromRoot: IntSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hBar == nil && vBar == nil && !m_layer.canResize() {
+      return
+    }
+
+    if m_layer.renderBox() == nil {
+      return
+    }
+
+    var rects = overflowControlsRects()
+
+    if vBar != nil {
+      rects.verticalScrollbar.move(offsetFromRoot)
+      vBar!.setFrameRect(rects.verticalScrollbar)
+    }
+
+    if hBar != nil {
+      rects.horizontalScrollbar.move(offsetFromRoot)
+      hBar!.setFrameRect(rects.horizontalScrollbar)
+    }
+
+    if scrollCorner != nil {
+      scrollCorner!.setFrameRect(rect: LayoutRectWrapper(rect: rects.scrollCorner))
+    }
+
+    if resizer != nil {
+      resizer!.setFrameRect(rect: LayoutRectWrapper(rect: rects.resizer))
+    }
   }
 
   func updateAllScrollbarRelatedStyle() {

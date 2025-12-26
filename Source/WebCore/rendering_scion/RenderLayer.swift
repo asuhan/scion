@@ -852,6 +852,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func canResize() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositor() -> RenderLayerCompositorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -5052,6 +5057,9 @@ class RenderLayerWrapper {
   func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
 
   struct OverflowControlRects {
+    var horizontalScrollbar: IntRect
+    var verticalScrollbar: IntRect
+    let scrollCorner: IntRect
     let resizer: IntRect
   }
 

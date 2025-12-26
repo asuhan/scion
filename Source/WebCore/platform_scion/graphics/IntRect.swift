@@ -43,6 +43,8 @@ struct IntRect {
 
   func isEmpty() -> Bool { return size.isEmpty() }
 
+  mutating func move(_ size: IntSize) { location += size }
+
   mutating func moveBy(offset: IntPoint) {
     location.move(dx: offset.x, dy: offset.y)
   }

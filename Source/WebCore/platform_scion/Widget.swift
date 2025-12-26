@@ -56,6 +56,10 @@ protocol Widget {
 
   func size() -> IntSize
 
+  func setFrameRect(_ rect: IntRect)
+
+  func frameRect() -> IntRect
+
   func paint(
     _ context: GraphicsContextWrapper, _ rect: IntRect,
     _ securityOriginPaintPolicy: SecurityOriginPaintPolicy, _ regionContext: RegionContext?)

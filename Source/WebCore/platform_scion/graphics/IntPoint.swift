@@ -43,6 +43,12 @@ struct IntPoint {
     return IntPoint(x: y, y: x)
   }
 
+  @discardableResult
+  static func += (a: inout IntPoint, b: IntSize) -> IntPoint {
+    a.move(dx: b.width, dy: b.height)
+    return a
+  }
+
   static func - (a: IntPoint, b: IntPoint) -> IntSize {
     return IntSize(width: a.x - b.x, height: a.y - b.y)
   }
