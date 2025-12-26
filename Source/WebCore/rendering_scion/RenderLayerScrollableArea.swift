@@ -138,8 +138,23 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
   ) -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hBar != nil && hBar!.isOverlayScrollbar()
+      && (relevancy == .IgnoreOverlayScrollbarSize || !hBar!.shouldParticipateInHitTesting())
+    {
+      return 0
+    }
+
+    if hBar == nil && !isHorizontalWritingMode
+      && !(scrollbarGutterStyle().isAuto || ScrollbarTheme.theme().usesOverlayScrollbars())
+    {
+      return ScrollbarTheme.theme().scrollbarThickness(scrollbarWidth: scrollbarWidthStyle())
+    }
+
+    if hBar == nil || !showsOverflowControls() {
+      return 0
+    }
+
+    return hBar!.height()
   }
 
   func paintOverflowControls(
