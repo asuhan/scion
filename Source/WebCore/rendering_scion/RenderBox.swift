@@ -3790,13 +3790,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRelativeLogicalHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().logicalHeight().isPercentOrCalculated()
+      || style().logicalMinHeight().isPercentOrCalculated()
+      || style().logicalMaxHeight().isPercentOrCalculated()
   }
 
   func hasRelativeLogicalWidth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().logicalWidth().isPercentOrCalculated()
+      || style().logicalMinWidth().isPercentOrCalculated()
+      || style().logicalMaxWidth().isPercentOrCalculated()
   }
 
   func hasHorizontalLayoutOverflow() -> Bool {
