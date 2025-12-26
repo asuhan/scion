@@ -3134,9 +3134,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  func hasAlwaysPresentScrollbar(_ orientationorientation: ScrollbarOrientation) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func hasAlwaysPresentScrollbar(_ orientation: ScrollbarOrientation) -> Bool {
+    if !hasNonVisibleOverflow() {
+      return false
+    }
+
+    let isAlwaysVisibleScrollbar = { [self] (overflow: Overflow) in
+      return overflow == .Scroll && !canUseOverlayScrollbars()
+    }
+
+    switch orientation {
+    case .Horizontal:
+      return isAlwaysVisibleScrollbar(style().overflowX())
+    case .Vertical:
+      return isAlwaysVisibleScrollbar(style().overflowY())
+    }
   }
 
   func scrollsOverflowX() -> Bool {
