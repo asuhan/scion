@@ -45,6 +45,12 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  // This returns information about existing scrollbars, not scrollbars that may be created in future.
+  func hasOverlayScrollbars() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollingNodeID() -> ScrollingNodeIDWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -95,7 +101,22 @@ class ScrollableAreaWrapper {
     case Yes
   }
 
+  func layerForHorizontalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func layerForVerticalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateScrollCornerRect(rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func layerForScrollCorner() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

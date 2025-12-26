@@ -143,6 +143,16 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  override func layerForHorizontalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func layerForVerticalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerAccessPrevented() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

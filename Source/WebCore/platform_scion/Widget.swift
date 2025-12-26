@@ -42,6 +42,11 @@
 
 typealias PlatformWidget = UnsafeMutableRawPointer?
 
+enum SecurityOriginPaintPolicy {
+  case AnyOrigin
+  case AccessibleOriginOnly
+}
+
 protocol Widget {
   func platformWidget() -> PlatformWidget
 
@@ -50,4 +55,8 @@ protocol Widget {
   func height() -> Int32
 
   func size() -> IntSize
+
+  func paint(
+    _ context: GraphicsContextWrapper, _ rect: IntRect,
+    _ securityOriginPaintPolicy: SecurityOriginPaintPolicy, _ regionContext: RegionContext?)
 }

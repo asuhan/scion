@@ -1123,6 +1123,14 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // Enclosing compositing layer; if includeSelf is true, may return this.
+  func enclosingCompositingLayer(includeSelf: IncludeSelfOrNot = .IncludeSelf)
+    -> RenderLayerWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct EnclosingCompositingLayerStatus {
     init(fullRepaintAlreadyScheduled: Bool = false, layer: RenderLayerWrapper? = nil) {
       self.fullRepaintAlreadyScheduled = fullRepaintAlreadyScheduled

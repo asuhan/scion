@@ -44,6 +44,15 @@ class Scrollbar: Widget {
     fatalError("Not implemented")
   }
 
+  func paint(
+    _ context: GraphicsContextWrapper, _ rect: IntRect,
+    _ securityOriginPaintPolicy: SecurityOriginPaintPolicy = .AnyOrigin,
+    _ regionContext: RegionContext? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func frameRect() -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
