@@ -501,8 +501,25 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func overflowControlsIntersectRect(localRect: IntRect) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rects = overflowControlsRects()
+
+    if rects.horizontalScrollbar.intersects(other: localRect) {
+      return true
+    }
+
+    if rects.verticalScrollbar.intersects(other: localRect) {
+      return true
+    }
+
+    if rects.scrollCorner.intersects(other: localRect) {
+      return true
+    }
+
+    if rects.resizer.intersects(other: localRect) {
+      return true
+    }
+
+    return false
   }
 
   func computeHasCompositedScrollableOverflow(layoutUpToDate: LayoutUpToDate) {
