@@ -3118,8 +3118,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasAutoScrollbar(_ orientation: ScrollbarOrientation) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasNonVisibleOverflow() {
+      return false
+    }
+
+    let isAutoOrScrollWithOverlayScrollbar = { [self] (overflow: Overflow) in
+      return overflow == .Auto || (overflow == .Scroll && canUseOverlayScrollbars())
+    }
+
+    switch orientation {
+    case .Horizontal:
+      return isAutoOrScrollWithOverlayScrollbar(style().overflowX())
+    case .Vertical:
+      return isAutoOrScrollWithOverlayScrollbar(style().overflowY())
+    }
   }
 
   func hasAlwaysPresentScrollbar(_ orientationorientation: ScrollbarOrientation) -> Bool {
