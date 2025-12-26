@@ -12,6 +12,7 @@ target_sources(layout_scion PRIVATE
     ScrollableArea.swift
     Scrollbar.swift
     ScrollbarTheme.swift
+    ScrollbarThemeComposite.swift
     ScrollTypes.swift
     ScrollView.swift
     StyleAppearance.swift

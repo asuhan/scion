@@ -29,6 +29,14 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func paintIntoRect(
+    graphicsContext: GraphicsContextWrapper, paintOffset: LayoutPointWrapper,
+    rect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func marginBottom() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

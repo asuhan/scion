@@ -243,8 +243,29 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private func paintScrollCorner(
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var absRect = scrollCornerRect()
+    absRect.moveBy(offset: paintOffset)
+    if !absRect.intersects(other: damageRect) {
+      return
+    }
+
+    if context.invalidatingControlTints() {
+      updateScrollCornerStyle()
+      return
+    }
+
+    if scrollCorner != nil {
+      scrollCorner!.paintIntoRect(
+        graphicsContext: context, paintOffset: LayoutPointWrapper(point: paintOffset),
+        rect: LayoutRectWrapper(rect: absRect))
+      return
+    }
+
+    // We don't want to paint a corner if we have overlay scrollbars, since we need
+    // to see what is behind it.
+    if !hasOverlayScrollbars() {
+      ScrollbarTheme.theme().paintScrollCorner(self, context, absRect)
+    }
   }
 
   private func paintResizer(
@@ -326,6 +347,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private func updateScrollCornerStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var m_hasCompositedScrollableOverflow = false
 
   private var containsDirtyOverlayScrollbars = false
@@ -337,4 +363,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private let vBar: Scrollbar? = nil
 
   private var cachedOverlayScrollbarOffset = IntPoint()
+
+  // Renderers to hold our custom scroll corner and resizer.
+  private let scrollCorner: RenderScrollbarPartWrapper? = nil
 }

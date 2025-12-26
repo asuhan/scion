@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2011 Apple Inc. All Rights Reserved.
+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,30 +23,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ScrollbarTheme {
-  func scrollbarThickness(
-    scrollbarWidth: ScrollbarWidth = .Auto, expansionState: ScrollbarExpansionState = .Expanded
-  )
-    -> Int32
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func usesOverlayScrollbars() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func paintScrollCorner(
-    _ area: ScrollableAreaWrapper, _ context: GraphicsContextWrapper, _ cornerRect: IntRect
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  static func theme() -> ScrollbarTheme {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+class ScrollbarThemeComposite: ScrollbarTheme {}
