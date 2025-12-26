@@ -3856,8 +3856,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldIgnoreLogicalMinMaxHeightSizes() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isFlexItem() {
+      return false
+    }
+    if let flexBox = parent() as? RenderFlexibleBoxWrapper {
+      return flexBox.isComputingFlexBaseSizes
+        && style().isHorizontalWritingMode() != flexBox.isHorizontalFlow()
+    }
+    fatalError("Not reached")
   }
 
   func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
