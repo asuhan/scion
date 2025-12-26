@@ -412,6 +412,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     updateResizerStyle()
   }
 
+  func overflowTop() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func overflowLeft() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
     let renderBox = m_layer.renderer() as! RenderBoxWrapper
     // Scrollbars sit inside the border box.
@@ -560,8 +570,22 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func computeScrollOrigin() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let box = m_layer.renderBox()!
+
+    var scrollableLeftOverflow = Int32(roundToInt(value: overflowLeft() - box.borderLeft()))
+    if shouldPlaceVerticalScrollbarOnLeft() {
+      scrollableLeftOverflow -= verticalScrollbarWidth(
+        relevancy: .IgnoreOverlayScrollbarSize,
+        isHorizontalWritingMode: box.style().isHorizontalWritingMode())
+    }
+    let scrollableTopOverflow = Int32(roundToInt(value: overflowTop() - box.borderTop()))
+    setScrollOrigin(IntPoint(x: -scrollableLeftOverflow, y: -scrollableTopOverflow))
+
+    // Horizontal scrollbar offsets depend on the scroll origin when vertical
+    // scrollbars are on the left.
+    if hBar != nil {
+      hBar!.offsetDidChange()
+    }
   }
 
   private func updateScrollableAreaSet(_ hasOverflow: Bool) {

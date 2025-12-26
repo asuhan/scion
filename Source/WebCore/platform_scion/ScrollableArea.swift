@@ -121,6 +121,11 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func setScrollOrigin(_ origin: IntPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateScrollCornerRect(rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
