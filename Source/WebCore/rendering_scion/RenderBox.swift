@@ -4442,8 +4442,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func isRenderReplacedWithIntrinsicRatio() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let replaced = self as? RenderReplacedWrapper {
+      return replaced.computeIntrinsicAspectRatio() != 0
+    }
+    return false
   }
 
   private func shouldComputeLogicalWidthFromAspectRatio() -> Bool {
