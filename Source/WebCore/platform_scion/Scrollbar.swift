@@ -83,4 +83,14 @@ class Scrollbar: Widget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isOverlayScrollbar() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shouldParticipateInHitTesting() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

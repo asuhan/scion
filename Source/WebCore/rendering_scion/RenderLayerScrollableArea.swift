@@ -95,6 +95,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  override func scrollbarGutterStyle() -> ScrollbarGutter {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func scrollbarWidthStyle() -> ScrollbarWidth {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
   func canUseCompositedScrolling() -> Bool {
     // TODO(asuhan): implement this
@@ -105,8 +115,23 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
   ) -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if vBar != nil && vBar!.isOverlayScrollbar()
+      && (relevancy == .IgnoreOverlayScrollbarSize || !vBar!.shouldParticipateInHitTesting())
+    {
+      return 0
+    }
+
+    if vBar == nil && isHorizontalWritingMode
+      && !(scrollbarGutterStyle().isAuto || ScrollbarTheme.theme().usesOverlayScrollbars())
+    {
+      return ScrollbarTheme.theme().scrollbarThickness(scrollbarWidth: scrollbarWidthStyle())
+    }
+
+    if vBar == nil || !showsOverflowControls() {
+      return 0
+    }
+
+    return vBar!.width()
   }
 
   func horizontalScrollbarHeight(

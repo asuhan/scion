@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Apple Inc.  All rights reserved.
+ * Copyright (C) 2008, 2011 Apple Inc. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,35 +23,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// scrollPosition is in content coordinates (0,0 is at scrollOrigin), so may have negative components.
-typealias ScrollPosition = IntPoint
-// scrollOffset() is the value used by scrollbars (min is 0,0), and should never have negative components.
-typealias ScrollOffset = IntPoint
+class ScrollbarTheme {
+  func scrollbarThickness(
+    scrollbarWidth: ScrollbarWidth = .Auto, expansionState: ScrollbarExpansionState = .Expanded
+  )
+    -> Int32
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
-enum OverscrollBehavior: UInt8 {
-  case Auto
-  case Contain
-  case None
-}
+  func usesOverlayScrollbars() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
-enum ScrollbarOrientation: UInt8 {
-  case Horizontal
-  case Vertical
-}
-
-enum ScrollbarMode: UInt8 {
-  case Auto
-  case AlwaysOff
-  case AlwaysOn
-}
-
-enum ScrollbarExpansionState: UInt8 {
-  case Regular
-  case Expanded
-}
-
-enum ScrollbarWidth: UInt8 {
-  case Auto
-  case Thin
-  case None
+  static func theme() -> ScrollbarTheme {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

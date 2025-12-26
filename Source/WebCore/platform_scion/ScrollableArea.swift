@@ -40,6 +40,16 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollbarGutterStyle() -> ScrollbarGutter {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollbarWidthStyle() -> ScrollbarWidth {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func inLiveResize() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
