@@ -24,6 +24,23 @@
  */
 
 struct ColorWrapper: Equatable {
+  struct Flags: OptionSet {
+    let rawValue: UInt8
+
+    static let Semantic = Flags(rawValue: 1 << 0)
+    static let UseColorFunctionSerialization = Flags(rawValue: 1 << 1)
+  }
+
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(_ color: SRGBA<UInt8>, _ flags: Flags = []) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isValid() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

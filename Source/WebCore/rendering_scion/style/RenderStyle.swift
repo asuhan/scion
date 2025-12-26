@@ -1945,6 +1945,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func scrollbarWidth() -> ScrollbarWidth {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func writingMode() -> WritingMode {
     if p == nil {
       // TODO(asuhan): implement this

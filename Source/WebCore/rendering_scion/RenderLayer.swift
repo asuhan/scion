@@ -5051,6 +5051,10 @@ class RenderLayerWrapper {
 
   func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
 
+  struct OverflowControlRects {
+    let resizer: IntRect
+  }
+
   let p: UnsafeMutableRawPointer
   // Native fields below.
 

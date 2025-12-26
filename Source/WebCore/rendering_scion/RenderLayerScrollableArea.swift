@@ -271,8 +271,50 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private func paintResizer(
     context: GraphicsContextWrapper, paintOffset: LayoutPointWrapper, damageRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = m_layer.renderer()
+    if renderer.style().resize() == .None {
+      return
+    }
+
+    let rects = overflowControlsRects()
+
+    var resizerAbsRect = LayoutRectWrapper(rect: rects.resizer)
+    resizerAbsRect.moveBy(offset: paintOffset)
+    if !resizerAbsRect.intersects(other: damageRect) {
+      return
+    }
+
+    if context.invalidatingControlTints() {
+      updateResizerStyle()
+      return
+    }
+
+    if resizer != nil {
+      resizer!.paintIntoRect(
+        graphicsContext: context, paintOffset: paintOffset, rect: resizerAbsRect)
+      return
+    }
+
+    drawPlatformResizerImage(context: context, resizerCornerRect: resizerAbsRect)
+
+    // Draw a frame around the resizer (1px grey line) if there are any scrollbars present.
+    // Clipping will exclude the right and bottom edges of this frame.
+    if !hasOverlayScrollbars() && (vBar != nil || hBar != nil)
+      && renderer.style().scrollbarWidth() != .None
+    {
+      let _ = GraphicsContextStateSaver(context: context)
+      context.clip(rect: resizerAbsRect.FloatRect())
+      var largerCorner = resizerAbsRect
+      let one = LayoutUnit(value: UInt64(1))
+      largerCorner.setSize(
+        size: LayoutSizeWrapper(
+          width: largerCorner.width() + one, height: largerCorner.height() + one))
+      context.setStrokeColor(
+        color: ColorWrapper(SRGBA(red: UInt8(217), green: UInt8(217), blue: UInt8(217))))
+      context.setStrokeThickness(thickness: 1.0)
+      context.setFillColor(color: .transparentBlack)
+      context.drawRect(rect: FloatRectWrapper(r: snappedIntRect(rect: largerCorner)))
+    }
   }
 
   override func layerForHorizontalScrollbar() -> GraphicsLayer? {
@@ -301,6 +343,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func updateAllScrollbarRelatedStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -352,6 +399,18 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private func updateResizerStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func drawPlatformResizerImage(
+    context: GraphicsContextWrapper, resizerCornerRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var m_hasCompositedScrollableOverflow = false
 
   private var containsDirtyOverlayScrollbars = false
@@ -366,4 +425,5 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
 
   // Renderers to hold our custom scroll corner and resizer.
   private let scrollCorner: RenderScrollbarPartWrapper? = nil
+  private let resizer: RenderScrollbarPartWrapper? = nil
 }
