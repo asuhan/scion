@@ -2048,6 +2048,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setDisplay(value: DisplayType) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

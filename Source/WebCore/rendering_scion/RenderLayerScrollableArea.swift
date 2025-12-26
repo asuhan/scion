@@ -95,6 +95,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func hasVerticalScrollbar() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func scrollbarGutterStyle() -> ScrollbarGutter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -333,8 +338,32 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func updateScrollbarsAfterStyleChange(oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Overflow is a box concept.
+    let box = m_layer.renderBox()
+    if box == nil {
+      return
+    }
+
+    // List box parts handle the scrollbars by themselves so we have nothing to do.
+    if box!.style().usedAppearance() == .Listbox {
+      return
+    }
+
+    let hadVerticalScrollbar = hasVerticalScrollbar()
+    updateScrollbarPresenceAndState()
+    let hasVerticalScrollbar = hasVerticalScrollbar()
+
+    if hadVerticalScrollbar != hasVerticalScrollbar
+      || (hasVerticalScrollbar && oldStyle != nil
+        && oldStyle!.shouldPlaceVerticalScrollbarOnLeft()
+          != box!.style().shouldPlaceVerticalScrollbarOnLeft())
+    {
+      computeScrollOrigin()
+    }
+
+    if !scrollDimensionsDirty {
+      updateScrollableAreaSet(hasScrollableHorizontalOverflow() || hasScrollableVerticalOverflow())
+    }
   }
 
   private func positionOverflowControls(offsetFromRoot: IntSize) {
@@ -394,6 +423,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeScrollOrigin() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollableAreaSet(_ hasOverflow: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateScrollCornerStyle() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -411,6 +450,14 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private func updateScrollbarPresenceAndState(
+    hasHorizontalOverflow: Bool? = nil, hasVerticalOverflow: Bool? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let scrollDimensionsDirty = false
   private var m_hasCompositedScrollableOverflow = false
 
   private var containsDirtyOverlayScrollbars = false
