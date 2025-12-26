@@ -3866,14 +3866,63 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not reached")
   }
 
+  // The explicit intrinsic inner size of contain-intrinsic-size
+  private func explicitIntrinsicInnerWidth() -> LayoutUnit? {
+    assert(
+      isHorizontalWritingMode()
+        ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment())
+    if style().containIntrinsicWidthType() == .None {
+      return nil
+    }
+
+    if element() != nil && style().containIntrinsicWidthHasAuto()
+      && layout_scion.isSkippedContentRoot(style: style(), element: element()),
+      let width = isHorizontalWritingMode()
+        ? element()!.lastRememberedLogicalWidth() : element()!.lastRememberedLogicalHeight()
+    {
+      return width
+    }
+
+    if style().containIntrinsicWidthType() == .AutoAndNone {
+      return nil
+    }
+
+    let width = style().containIntrinsicWidth()!
+    return LayoutUnit(value: width.value())
+  }
+
+  private func explicitIntrinsicInnerHeight() -> LayoutUnit? {
+    assert(
+      isHorizontalWritingMode()
+        ? shouldApplySizeContainment() : shouldApplySizeOrInlineSizeContainment())
+    if style().containIntrinsicHeightType() == .None {
+      return nil
+    }
+
+    if element() != nil && style().containIntrinsicHeightHasAuto()
+      && layout_scion.isSkippedContentRoot(style: style(), element: element()),
+      let height = isHorizontalWritingMode()
+        ? element()!.lastRememberedLogicalHeight() : element()!.lastRememberedLogicalWidth()
+    {
+      return height
+    }
+
+    if style().containIntrinsicHeightType() == .AutoAndNone {
+      return nil
+    }
+
+    let height = style().containIntrinsicHeight()!
+    return LayoutUnit(value: height.value())
+  }
+
   func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().isHorizontalWritingMode()
+      ? explicitIntrinsicInnerWidth() : explicitIntrinsicInnerHeight()
   }
 
   func explicitIntrinsicInnerLogicalHeight() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().isHorizontalWritingMode()
+      ? explicitIntrinsicInnerHeight() : explicitIntrinsicInnerWidth()
   }
 
   override func establishesIndependentFormattingContext() -> Bool {

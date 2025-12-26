@@ -1423,12 +1423,42 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func containIntrinsicWidthType() -> ContainIntrinsicSizeType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containIntrinsicHeightType() -> ContainIntrinsicSizeType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containIntrinsicWidthHasAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containIntrinsicHeightHasAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containIntrinsicLogicalWidthHasAuto() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func containIntrinsicLogicalHeightHasAuto() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containIntrinsicWidth() -> LengthWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func containIntrinsicHeight() -> LengthWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -144,6 +144,16 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func lastRememberedLogicalWidth() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastRememberedLogicalHeight() -> LayoutUnit? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearLastRememberedLogicalWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

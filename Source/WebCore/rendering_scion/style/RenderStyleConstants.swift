@@ -770,6 +770,13 @@ enum PaintType: UInt8 {
   case Markers
 }
 
+enum ContainIntrinsicSizeType: UInt8 {
+  case None
+  case Length
+  case AutoAndLength
+  case AutoAndNone
+}
+
 enum ContentVisibility: UInt8 {
   case Visible
   case Auto
