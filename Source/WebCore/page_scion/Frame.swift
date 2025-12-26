@@ -43,4 +43,9 @@ class FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func ownerElement() -> HTMLFrameOwnerElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

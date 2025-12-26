@@ -589,8 +589,18 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func updateScrollableAreaSet(_ hasOverflow: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = m_layer.renderer()
+    let frameView = renderer.view().frameView()
+
+    var isVisibleToHitTest = renderer.visibleToHitTesting()
+    if let owner = frameView.frame().ownerElement() {
+      isVisibleToHitTest =
+        isVisibleToHitTest && owner.containerRenderer() != nil
+        && owner.containerRenderer()!.visibleToHitTesting()
+    }
+
+    registeredScrollableArea =
+      (hasOverflow && isVisibleToHitTest) || scrollAnimationStatus == .Animating
   }
 
   private func updateScrollCornerStyle() {
@@ -617,7 +627,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
-  private let scrollDimensionsDirty = false
+  private let scrollDimensionsDirty = true
+  private var registeredScrollableArea = false
   private var m_hasCompositedScrollableOverflow = false
 
   private var containsDirtyOverlayScrollbars = false

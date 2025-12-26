@@ -135,4 +135,7 @@ class ScrollableAreaWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // This reflects animated scrolls triggered by CSS OM View "smooth" scrolls.
+  let scrollAnimationStatus: ScrollAnimationStatus = .NotAnimating
 }

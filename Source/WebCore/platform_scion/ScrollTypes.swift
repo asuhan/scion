@@ -34,6 +34,11 @@ enum OverscrollBehavior: UInt8 {
   case None
 }
 
+enum ScrollAnimationStatus {
+  case NotAnimating
+  case Animating
+}
+
 enum ScrollbarOrientation: UInt8 {
   case Horizontal
   case Vertical
