@@ -397,8 +397,14 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func updateAllScrollbarRelatedStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hBar != nil {
+      hBar!.styleChanged()
+    }
+    if vBar != nil {
+      vBar!.styleChanged()
+    }
+    updateScrollCornerStyle()
+    updateResizerStyle()
   }
 
   private func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
