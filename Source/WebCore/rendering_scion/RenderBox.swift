@@ -4490,8 +4490,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   private func computeLogicalWidthFromAspectRatio(fragment: RenderFragmentContainerWrapper? = nil)
     -> LayoutUnit
-  {  // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  {
+    let logicalWidth = computeLogicalWidthFromAspectRatioInternal()
+    let containerWidthInInlineDirection = max(
+      LayoutUnit(value: 0), containingBlockLogicalWidthForContentInFragment(fragment: fragment))
+    return constrainLogicalWidthInFragmentByMinMax(
+      logicalWidth: logicalWidth, availableWidth: containerWidthInInlineDirection,
+      cb: containingBlock()!, fragment: fragment, allowIntrinsic: .No)
   }
 
   func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
