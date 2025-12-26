@@ -505,7 +505,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       + baselineFlexItem!.logicalTop()
   }
 
-  private func isHorizontalFlow() -> Bool {
+  func isHorizontalFlow() -> Bool {
     if isHorizontalWritingMode() {
       return !isColumnFlow()
     }
