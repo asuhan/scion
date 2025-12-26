@@ -61,6 +61,10 @@ struct IntPoint {
   var y: Int32
 }
 
+func - (a: IntPoint, b: IntSize) -> IntPoint {
+  return IntPoint(x: a.x - b.width, y: a.y - b.height)
+}
+
 func toIntSize(_ a: IntPoint) -> IntSize {
   return IntSize(width: a.x, height: a.y)
 }

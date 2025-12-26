@@ -41,6 +41,11 @@ struct IntRect {
   func width() -> Int32 { return size.width }
   func height() -> Int32 { return size.height }
 
+  private mutating func setX(x: Int32) { location.x = x }
+  private mutating func setY(y: Int32) { location.y = y }
+  mutating func setWidth(width: Int32) { size.width = width }
+  private mutating func setHeight(height: Int32) { size.height = height }
+
   func isEmpty() -> Bool { return size.isEmpty() }
 
   mutating func move(_ size: IntSize) { location += size }
@@ -49,13 +54,37 @@ struct IntRect {
     location.move(dx: offset.x, dy: offset.y)
   }
 
+  mutating func contract(dw: Int32, dh: Int32) {
+    size.expand(width: -dw, height: -dh)
+  }
+
+  mutating func shiftXEdgeTo(_ edge: Int32) {
+    let delta = edge - x()
+    setX(x: edge)
+    setWidth(width: max(0, width() - delta))
+  }
+
+  mutating func shiftYEdgeTo(_ edge: Int32) {
+    let delta = edge - y()
+    setY(y: edge)
+    setHeight(height: max(0, height() - delta))
+  }
+
+  func minXMaxYCorner() -> IntPoint {
+    return IntPoint(x: location.x, y: location.y + size.height)
+  }  // typically bottomLeft
+
+  func maxXMaxYCorner() -> IntPoint {
+    return IntPoint(x: location.x + size.width, y: location.y + size.height)
+  }  // typically bottomRight
+
   func intersects(other: IntRect) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   var location: IntPoint
-  let size: IntSize
+  var size: IntSize
 }
 
 func intersection(a: IntRect, b: IntRect) -> IntRect {

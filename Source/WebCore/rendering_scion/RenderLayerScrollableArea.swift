@@ -337,6 +337,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private final func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateScrollbarsAfterStyleChange(oldStyle: RenderStyleWrapper?) {
     // Overflow is a box concept.
     let box = m_layer.renderBox()
@@ -408,8 +413,91 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderBox = m_layer.renderer() as! RenderBoxWrapper
+    // Scrollbars sit inside the border box.
+    let overflowControlsPositioningRect = snappedIntRect(
+      rect: renderBox.paddingBoxRectIncludingScrollbar())
+
+    let horizontalScrollbarHeight = hBar?.height() ?? 0
+    let verticalScrollbarWidth = vBar?.width() ?? 0
+
+    let isNonOverlayScrollbar = { (scrollbar: Scrollbar?) in
+      return scrollbar != nil && !scrollbar!.isOverlayScrollbar()
+    }
+
+    let haveNonOverlayHorizontalScrollbar = isNonOverlayScrollbar(hBar)
+    let haveNonOverlayVerticalScrollbar = isNonOverlayScrollbar(vBar)
+    let placeVerticalScrollbarOnTheLeft = shouldPlaceVerticalScrollbarOnLeft()
+    let haveResizer = renderBox.style().resize() != .None
+    let scrollbarsAvoidCorner =
+      ((haveNonOverlayHorizontalScrollbar && haveNonOverlayVerticalScrollbar)
+        || (haveResizer && (haveNonOverlayHorizontalScrollbar || haveNonOverlayVerticalScrollbar)))
+      && renderBox.style().scrollbarWidth() != .None
+
+    // If only one scrollbar is present, the corner is square.
+    let cornerSize =
+      scrollbarsAvoidCorner
+      ? IntSize(
+        width: verticalScrollbarWidth != 0 ? verticalScrollbarWidth : horizontalScrollbarHeight,
+        height: horizontalScrollbarHeight != 0 ? horizontalScrollbarHeight : verticalScrollbarWidth)
+      : IntSize()
+
+    var result = RenderLayerWrapper.OverflowControlRects()
+
+    if hBar != nil {
+      var barRect = overflowControlsPositioningRect
+      barRect.shiftYEdgeTo(barRect.maxY() - horizontalScrollbarHeight)
+      if scrollbarsAvoidCorner {
+        if placeVerticalScrollbarOnTheLeft {
+          barRect.shiftXEdgeTo(barRect.x() + cornerSize.width)
+        } else {
+          barRect.contract(dw: cornerSize.width, dh: 0)
+        }
+      }
+
+      result.horizontalScrollbar = barRect
+    }
+
+    if vBar != nil {
+      var barRect = overflowControlsPositioningRect
+      if placeVerticalScrollbarOnTheLeft {
+        barRect.setWidth(width: verticalScrollbarWidth)
+      } else {
+        barRect.shiftXEdgeTo(barRect.maxX() - verticalScrollbarWidth)
+      }
+
+      if scrollbarsAvoidCorner {
+        barRect.contract(dw: 0, dh: cornerSize.height)
+      }
+
+      result.verticalScrollbar = barRect
+    }
+
+    let cornerRect = { (cornerSize: IntSize) in
+      if placeVerticalScrollbarOnTheLeft {
+        let bottomLeftCorner = overflowControlsPositioningRect.minXMaxYCorner()
+        return IntRect(
+          location: IntPoint(x: bottomLeftCorner.x, y: bottomLeftCorner.y - cornerSize.height),
+          size: cornerSize)
+      }
+      return IntRect(
+        location: overflowControlsPositioningRect.maxXMaxYCorner() - cornerSize, size: cornerSize)
+    }
+
+    if scrollbarsAvoidCorner {
+      result.scrollCorner = cornerRect(cornerSize)
+    }
+
+    if haveResizer {
+      if scrollbarsAvoidCorner {
+        result.resizer = result.scrollCorner
+      } else {
+        let scrollbarThickness = ScrollbarTheme.theme().scrollbarThickness()
+        result.resizer = cornerRect(IntSize(width: scrollbarThickness, height: scrollbarThickness))
+      }
+    }
+
+    return result
   }
 
   private func overflowControlsIntersectRect(localRect: IntRect) -> Bool {

@@ -26,6 +26,11 @@
 struct IntSize: Equatable {
   func isEmpty() -> Bool { return width <= 0 || height <= 0 }
 
+  mutating func expand(width: Int32, height: Int32) {
+    self.width += width
+    self.height += height
+  }
+
   var width: Int32 = 0
   var height: Int32 = 0
 }

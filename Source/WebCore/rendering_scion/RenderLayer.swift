@@ -5057,10 +5057,10 @@ class RenderLayerWrapper {
   func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
 
   struct OverflowControlRects {
-    var horizontalScrollbar: IntRect
-    var verticalScrollbar: IntRect
-    let scrollCorner: IntRect
-    let resizer: IntRect
+    var horizontalScrollbar = IntRect()
+    var verticalScrollbar = IntRect()
+    var scrollCorner = IntRect()
+    var resizer = IntRect()
   }
 
   let p: UnsafeMutableRawPointer
