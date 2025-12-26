@@ -3117,6 +3117,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasAutoScrollbar(_ orientation: ScrollbarOrientation) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAlwaysPresentScrollbar(_ orientationorientation: ScrollbarOrientation) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollsOverflowX() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

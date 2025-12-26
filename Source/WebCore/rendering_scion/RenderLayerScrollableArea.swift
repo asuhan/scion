@@ -100,6 +100,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private func setHasHorizontalScrollbar(_ hasScrollbar: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setHasVerticalScrollbar(_ hasScrollbar: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func scrollbarGutterStyle() -> ScrollbarGutter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -620,11 +630,56 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private enum ScrollbarState {
+    case NoScrollbar
+    case Enabled
+    case Disabled
+  }
+
   private func updateScrollbarPresenceAndState(
     hasHorizontalOverflow: Bool? = nil, hasVerticalOverflow: Bool? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let box = m_layer.renderBox()!
+
+    let scrollbarForAxis = { [self] (orientation: ScrollbarOrientation) in
+      return orientation == .Horizontal ? hBar : vBar
+    }
+
+    let stateForScrollbar = {
+      (orientation: ScrollbarOrientation, hasOverflow: Bool?, nonScrollableState: ScrollbarState) in
+      if hasOverflow != nil {
+        return hasOverflow! ? .Enabled : nonScrollableState
+      }
+
+      // If we don't have information about overflow (because we haven't done layout yet), just return the current state of the scrollbar.
+      let existingScrollbar = scrollbarForAxis(orientation)
+      return (existingScrollbar != nil && existingScrollbar!.enabled())
+        ? .Enabled : nonScrollableState
+    }
+
+    let stateForScrollbarOnAxis = { (orientation: ScrollbarOrientation, hasOverflow: Bool?) in
+      if box.hasAlwaysPresentScrollbar(orientation) {
+        return stateForScrollbar(orientation, hasOverflow, .Disabled)
+      }
+
+      if box.hasAutoScrollbar(orientation) {
+        return stateForScrollbar(orientation, hasOverflow, .NoScrollbar)
+      }
+
+      return .NoScrollbar
+    }
+
+    let horizontalBarState = stateForScrollbarOnAxis(.Horizontal, hasHorizontalOverflow)
+    setHasHorizontalScrollbar(horizontalBarState != .NoScrollbar)
+    if horizontalBarState != .NoScrollbar {
+      hBar!.setEnabled(e: horizontalBarState == .Enabled)
+    }
+
+    let verticalBarState = stateForScrollbarOnAxis(.Vertical, hasVerticalOverflow)
+    setHasVerticalScrollbar(verticalBarState != .NoScrollbar)
+    if verticalBarState != .NoScrollbar {
+      vBar!.setEnabled(e: verticalBarState == .Enabled)
+    }
   }
 
   private let scrollDimensionsDirty = true

@@ -84,6 +84,11 @@ class Scrollbar: Widget {
     fatalError("Not implemented")
   }
 
+  func enabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setEnabled(e: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
