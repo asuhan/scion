@@ -505,6 +505,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       + baselineFlexItem!.logicalTop()
   }
 
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isHorizontalFlow() -> Bool {
     if isHorizontalWritingMode() {
       return !isColumnFlow()

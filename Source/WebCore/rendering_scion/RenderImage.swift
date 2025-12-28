@@ -36,6 +36,16 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // Recomputing overflow is required only when child content is present.
     if needsSimplifiedNormalFlowLayoutOnly() && !hasShadowContent() {

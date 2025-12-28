@@ -37,4 +37,9 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -21,6 +21,11 @@
  */
 
 final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
+  override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) {

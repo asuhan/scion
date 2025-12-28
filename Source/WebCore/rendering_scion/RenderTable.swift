@@ -842,6 +842,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     return height
   }
 
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func simplifiedNormalFlowLayout() {
     for caption in captions {
       caption!.layoutIfNeeded()

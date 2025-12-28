@@ -67,8 +67,22 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func initializeStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    Style.loadPendingResources(style!, protectedDocument(), protectedElement())
+
+    styleWillChange(diff: .NewStyle, newStyle: style())
+    hasInitializedStyle = true
+    styleDidChange(diff: .NewStyle, oldStyle: nil)
+
+    // We shouldn't have any text children that would need styleDidChange at this point.
+    let it: RenderChildIteratorAdapter<RenderTextWrapper> = childrenOfType(parent: self)
+    assert(it.first() == nil)
+
+    // It would be nice to assert that !parent() here, but some RenderLayer subrenderers
+    // have their parent set before getting a call to initializeStyle() :|
+
+    if let styleable = StyleableWrapper.fromRenderer(self) {
+      setCapturedInViewTransition(styleable.capturedInViewTransition())
+    }
   }
 
   // Calling with minimalStyleDifference > StyleDifference::Equal indicates that
@@ -99,11 +113,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // This is null for anonymous renderers.
   func element() -> ElementWrapper? {
     if let elementRaw = wk_interop.RenderElement_element(p) {
       return ElementWrapper(p: elementRaw)
     }
     return nil
+  }
+
+  func protectedElement() -> ElementWrapper? {
+    return element()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
   func firstChild() -> RenderObjectWrapper? {
@@ -785,6 +804,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     return true
   }
 
+  func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
     if paintInfo.context().paintingDisabled() {
       return
@@ -810,10 +839,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private var m_firstChild: RenderObjectWrapper? = nil
+  private var hasInitializedStyle = false
 
   let renderBlockHasMarginBeforeQuirk = false
   let renderBlockHasMarginAfterQuirk = false
   var renderBlockShouldForceRelayoutChildren = false
 
   private var m_lastChild: RenderObjectWrapper? = nil
+
+  private let style: RenderStyleWrapper? = nil  // TODO(asuhan): not nil once we have initializers
 }

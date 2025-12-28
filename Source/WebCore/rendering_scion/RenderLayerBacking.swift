@@ -1009,7 +1009,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       return false
     }
 
-    if let styleable = StyleableWrapper.fromRenderer(renderer: renderer()) {
+    if let styleable = StyleableWrapper.fromRenderer(renderer()) {
       if !styleable.mayHaveNonZeroOpacity() {
         return false
       }

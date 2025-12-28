@@ -102,6 +102,11 @@ final class RenderQuoteWrapper: RenderInlineWrapper {
     }
   }
 
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeText() -> StringWrapper {
     if m_depth < 0 {
       return emptyString()

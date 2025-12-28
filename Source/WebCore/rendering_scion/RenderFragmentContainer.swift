@@ -29,6 +29,11 @@
  */
 
 class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

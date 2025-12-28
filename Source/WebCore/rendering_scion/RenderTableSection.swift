@@ -1049,6 +1049,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     }
   }
 
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private enum ShouldIncludeAllIntersectingCells {
     case IncludeAllIntersectingCells
     case DoNotIncludeAllIntersectingCells

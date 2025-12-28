@@ -25,6 +25,11 @@
  */
 
 class RenderMathMLBlockWrapper: RenderBlockWrapper {
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func avoidsFloats() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -198,6 +198,11 @@ private func resolveContentDistributionFallback(distribution: ContentDistributio
 }
 
 final class RenderGridWrapper: RenderBlockWrapper {
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) {

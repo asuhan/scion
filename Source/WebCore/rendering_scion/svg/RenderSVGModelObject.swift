@@ -30,6 +30,11 @@
  */
 
 class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func currentSVGLayoutRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

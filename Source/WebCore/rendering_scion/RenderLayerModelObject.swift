@@ -40,6 +40,16 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }

@@ -860,6 +860,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setCapturedInViewTransition(_ captured: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // When the document element is captured, the captured contents uses the RenderView
   // instead. Returns the capture state with this adjustment applied.
   func effectiveCapturedInViewTransition() -> Bool {
@@ -879,6 +884,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func document() -> Document {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func protectedDocument() -> Document {
+    return document()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
   func treeScopeForSVGReferences() -> TreeScopeWrapper {

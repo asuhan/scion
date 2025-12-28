@@ -177,4 +177,9 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     // RenderTableSection.layoutRows will set our logical height and width later, so it calls updateLayerTransform().
     clearNeedsLayout()
   }
+
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

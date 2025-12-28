@@ -18,4 +18,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGResourceContainerWrapper: RenderSVGHiddenContainerWrapper {}
+class RenderSVGResourceContainerWrapper: RenderSVGHiddenContainerWrapper {
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

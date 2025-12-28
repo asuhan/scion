@@ -34,12 +34,17 @@ struct StyleableWrapper {
     fatalError("Not implemented")
   }
 
-  static func fromRenderer(renderer: RenderElementWrapper) -> StyleableWrapper? {
+  static func fromRenderer(_ renderer: RenderElementWrapper) -> StyleableWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func mayHaveNonZeroOpacity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func capturedInViewTransition() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -24,6 +24,11 @@ class LegacyRenderSVGResourceContainer: LegacyRenderSVGHiddenContainer {
     fatalError("Not implemented")
   }
 
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addClientRenderLayer(client: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

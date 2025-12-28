@@ -27,6 +27,11 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

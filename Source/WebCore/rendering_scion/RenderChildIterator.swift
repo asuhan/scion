@@ -35,6 +35,11 @@ class RenderChildIteratorAdapter<T>: Sequence {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func first() -> T? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 func childrenOfType<T>(parent: RenderElementWrapper) -> RenderChildIteratorAdapter<T> {
