@@ -770,6 +770,13 @@ enum PaintType: UInt8 {
   case Markers
 }
 
+struct EventListenerRegionType: OptionSet {
+  let rawValue: UInt8
+  static let Wheel = EventListenerRegionType(rawValue: 1 << 0)
+  static let NonPassiveWheel = EventListenerRegionType(rawValue: 1 << 1)
+  static let MouseClick = EventListenerRegionType(rawValue: 1 << 2)
+}
+
 enum ContainIntrinsicSizeType: UInt8 {
   case None
   case Length

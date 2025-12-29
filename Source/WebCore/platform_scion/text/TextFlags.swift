@@ -56,6 +56,11 @@ struct ExpansionBehaviorWrapper: Equatable {
   var right: Behavior
 }
 
+enum AllowUserInstalledFonts {
+  case No
+  case Yes
+}
+
 enum ColorGlyphType: UInt8 {
   case Outline
   case Color

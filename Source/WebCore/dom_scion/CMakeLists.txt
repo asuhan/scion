@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     CharacterData.swift
     ComposedTreeIterator.swift
     ContainerNode.swift
+    ContentVisibilityDocumentState.swift
     Document.swift
     DocumentMarker.swift
     DocumentMarkerController.swift

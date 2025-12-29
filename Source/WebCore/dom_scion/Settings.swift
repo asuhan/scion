@@ -99,6 +99,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldAllowUserInstalledFonts() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPrintBackgrounds() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

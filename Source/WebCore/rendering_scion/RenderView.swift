@@ -131,6 +131,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return LocalFrameViewWrapper(p: wk_interop.RenderView_frameView(p))
   }
 
+  func protectedFrameView() -> LocalFrameViewWrapper {
+    return frameView()  // TODO(asuhan): just remove this wrapper, not needed in Swift
+  }
+
   func layoutState() -> LayoutStateWrapper {
     return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
   }
@@ -192,6 +196,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func compositor() -> RenderLayerCompositorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unscaledDocumentRect() -> IntRect {
     var overflowRect = layoutOverflowRect()
     flipForWritingMode(rect: &overflowRect)
@@ -233,6 +242,16 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func hasQuotesNeedingUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func incrementRendersWithOutline() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func decrementRendersWithOutline() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

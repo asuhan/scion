@@ -421,6 +421,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasAnyFixedBackground() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasEntirelyFixedBackground() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasUsedAppearance() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1968,6 +1978,16 @@ class RenderStyleWrapper: Equatable {
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_initialLetterHeight(p)
+  }
+
+  func eventListenerRegionTypes() -> EventListenerRegionType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func effectiveInert() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func scrollbarGutter() -> ScrollbarGutter {

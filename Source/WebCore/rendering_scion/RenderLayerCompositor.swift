@@ -197,6 +197,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       other: LayoutRectWrapper(rect: enclosingIntRect(rect: absoluteBounds)))
   }
 
+  func supportsFixedRootBackgroundCompositing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fixedRootBackgroundLayer() -> GraphicsLayer? {
     // Get the fixed root background from the RenderView layer's backing.
     let viewLayer = m_renderView.layer()

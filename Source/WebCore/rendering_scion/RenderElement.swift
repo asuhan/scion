@@ -805,8 +805,162 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      settings().shouldAllowUserInstalledFonts()
+        || newStyle.fontDescription().shouldAllowUserInstalledFonts() == .No)
+
+    let oldStyle = hasInitializedStyle ? style() : nil
+
+    let updateContentVisibilityDocumentStateIfNeeded = { [self] () in
+      if element() == nil {
+        return
+      }
+      let contentVisibilityChanged =
+        oldStyle != nil && oldStyle!.contentVisibility() != newStyle.contentVisibility()
+      if contentVisibilityChanged {
+        if oldStyle!.contentVisibility() == .Auto {
+          ContentVisibilityDocumentState.unobserve(protectedElement()!)
+        }
+        let wasSkippedContent: IsSkippedContent =
+          oldStyle!.contentVisibility() == .Hidden ? .Yes : .No
+        let isSkippedContent: IsSkippedContent =
+          newStyle.contentVisibility() == .Hidden ? .Yes : .No
+        ContentVisibilityDocumentState.updateAnimations(
+          element()!, wasSkippedContent, isSkippedContent)
+      }
+      if (contentVisibilityChanged || oldStyle == nil) && newStyle.contentVisibility() == .Auto {
+        ContentVisibilityDocumentState.observe(protectedElement()!)
+      }
+    }
+
+    if oldStyle != nil {
+      if diff.rawValue >= StyleDifference.Repaint.rawValue && layoutBox() != nil {
+        // FIXME: It is highly unlikely that a style mutation has effect on both the formatting context the box lives in
+        // and the one it establishes but calling only one would require to come up with a list of properties that only affects one or the other.
+        if let inlineFormattingContextRoot = self as? RenderBlockFlowWrapper,
+          inlineFormattingContextRoot.inlineLayout() != nil
+        {
+          inlineFormattingContextRoot.inlineLayout()!.rootStyleWillChange(
+            root: inlineFormattingContextRoot, newStyle: newStyle)
+        }
+        if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
+          lineLayout.styleWillChange(renderer: self, newStyle: newStyle, diff: diff)
+        }
+      }
+      // If our z-index changes value or our visibility changes,
+      // we need to dirty our stacking context's z-order list.
+      let visibilityChanged =
+        style!.usedVisibility() != newStyle.usedVisibility()
+        || style!.usedZIndex() != newStyle.usedZIndex()
+        || style!.hasAutoUsedZIndex() != newStyle.hasAutoUsedZIndex()
+
+      if visibilityChanged {
+        protectedDocument().invalidateRenderingDependentRegions()
+      }
+
+      let inertChanged = style!.effectiveInert() != newStyle.effectiveInert()
+
+      if visibilityChanged || inertChanged {
+        if let cache = document().existingAXObjectCache() {
+          cache.childrenChanged(renderer: checkedParent()!, changedChild: self)
+        }
+      }
+
+      // Keep layer hierarchy visibility bits up to date if visibility or skipped content state changes.
+      let wasVisible = style!.usedVisibility() == .Visible && !style!.hasSkippedContent()
+      let willBeVisible = newStyle.usedVisibility() == .Visible && !newStyle.hasSkippedContent()
+      if wasVisible != willBeVisible, let layer = enclosingLayer() {
+        if willBeVisible {
+          if style!.hasSkippedContent() && isSkippedContentRoot() {
+            layer.dirtyVisibleContentStatus()
+          } else {
+            layer.setHasVisibleContent()
+          }
+        } else if layer.hasVisibleContent
+          && (CPtrToInt(p) == CPtrToInt(layer.renderer().p)
+            || layer.renderer().style().usedVisibility() != .Visible)
+        {
+          layer.dirtyVisibleContentStatus()
+        }
+      }
+
+      let needsInvalidateEventRegion = { [self] () in
+        if style!.usedPointerEvents() != newStyle.usedPointerEvents() {
+          return true
+        }
+
+        if style!.eventListenerRegionTypes() != newStyle.eventListenerRegionTypes() {
+          return true
+        }
+
+        return false
+      }
+
+      if needsInvalidateEventRegion(), let layer = enclosingLayer() {
+        // Usually the event region gets updated as a result of paint invalidation. Here we need to request an update explicitly.
+        layer.invalidateEventRegion(reason: .Style)
+      }
+
+      if isFloating() && style!.floating() != newStyle.floating() {
+        // For changes in float styles, we need to conceivably remove ourselves
+        // from the floating objects list.
+        (self as! RenderBoxWrapper).removeFloatingOrPositionedChildFromBlockLists()
+      } else if isOutOfFlowPositioned() && style!.position() != newStyle.position() {
+        // For changes in positioning styles, we need to conceivably remove ourselves
+        // from the positioned objects list.
+        (self as! RenderBoxWrapper).removeFloatingOrPositionedChildFromBlockLists()
+      }
+
+      // reset style flags
+      if diff == .Layout || diff == .LayoutPositionedMovementOnly {
+        setFloating(false)
+        clearPositionedState()
+      }
+
+      setHorizontalWritingMode(true)
+      setHasVisibleBoxDecorations(false)
+      setHasNonVisibleOverflow(false)
+      setHasTransformRelatedProperty(false)
+      setHasReflection(false)
+    }
+
+    updateContentVisibilityDocumentStateIfNeeded()
+
+    let hadOutline = oldStyle != nil && oldStyle!.hasOutline()
+    let hasOutline = newStyle.hasOutline()
+    if hadOutline != hasOutline {
+      if hasOutline {
+        checkedView().incrementRendersWithOutline()
+      } else {
+        checkedView().decrementRendersWithOutline()
+      }
+    }
+
+    var newStyleSlowScroll = false
+    if newStyle.hasAnyFixedBackground() && !settings().fixedBackgroundsPaintRelativeToDocument() {
+      newStyleSlowScroll = true
+      let drawsRootBackground =
+        isDocumentElementRenderer()
+        || (isBody()
+          && !rendererHasBackground(renderer: document().documentElement()!.containerRenderer()))
+      if drawsRootBackground && newStyle.hasEntirelyFixedBackground()
+        && view().compositor().supportsFixedRootBackgroundCompositing()
+      {
+        newStyleSlowScroll = false
+      }
+    }
+
+    if view().frameView().hasSlowRepaintObject(self) {
+      if !newStyleSlowScroll {
+        view().protectedFrameView().removeSlowRepaintObject(self)
+      }
+    } else if newStyleSlowScroll {
+      view().protectedFrameView().addSlowRepaintObject(self)
+    }
+
+    if isDocumentElementRenderer() || isBody() {
+      view().protectedFrameView().updateExtendBackgroundIfNecessary()
+    }
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

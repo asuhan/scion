@@ -55,6 +55,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func updateExtendBackgroundIfNecessary() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasExtendedBackgroundRectForPainting() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -76,6 +81,21 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func setContentIsOpaque(contentIsOpaque: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addSlowRepaintObject(_ renderer: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeSlowRepaintObject(_ renderer: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasSlowRepaintObject(_ renderer: RenderElementWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

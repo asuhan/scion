@@ -101,6 +101,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func invalidateRenderingDependentRegions() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func visualUpdatesAllowed() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

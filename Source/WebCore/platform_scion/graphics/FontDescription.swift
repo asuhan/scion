@@ -39,6 +39,11 @@ class FontDescriptionWrapper {
     return FontOrientation(rawValue: wk_interop.FontDescription_orientation(p))!
   }
 
+  func shouldAllowUserInstalledFonts() -> AllowUserInstalledFonts {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setComputedSize(s: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

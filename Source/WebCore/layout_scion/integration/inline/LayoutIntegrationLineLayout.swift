@@ -537,6 +537,7 @@ class LayoutIntegration {
         : invalidation.textWillBeRemoved(damagedInlineTextBox: inlineTextBox, offset: offset)
     }
 
+    @discardableResult
     func rootStyleWillChange(root: RenderBlockFlowWrapper, newStyle: RenderStyleWrapper) -> Bool {
       if root.layoutBox() == nil || !root.layoutBox()!.isElementBox() {
         fatalError("Not reached")
@@ -553,6 +554,7 @@ class LayoutIntegration {
         formattingContextRoot: root.layoutBox()!, newStyle: newStyle)
     }
 
+    @discardableResult
     func styleWillChange(
       renderer: RenderElementWrapper, newStyle: RenderStyleWrapper, diff: StyleDifference
     ) -> Bool {

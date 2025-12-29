@@ -992,6 +992,11 @@ class RenderLayerWrapper {
     }
   }
 
+  func setHasVisibleContent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func dirtyVisibleContentStatus() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2382,6 +2387,19 @@ class RenderLayerWrapper {
   }
 
   func isInsideFragmentedFlow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  enum EventRegionInvalidationReason {
+    case Paint
+    case SettingDidChange
+    case Style
+    case NonCompositedFrame
+  }
+
+  @discardableResult
+  func invalidateEventRegion(reason: EventRegionInvalidationReason) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

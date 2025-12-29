@@ -246,6 +246,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return RenderElementWrapper(p: unwrapped!)
   }
 
+  func checkedParent() -> RenderElementWrapper? {
+    return parent()  // TODO(asuhan): just remove this wrapper, not needed in Swift
+  }
+
   func isDescendantOf(ancestor: RenderObjectWrapper?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -876,6 +880,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }
 
+  func checkedView() -> RenderViewWrapper {
+    return view()  // TODO(asuhan): just remove this wrapper, not needed in Swift
+  }
+
   func node() -> NodeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1050,7 +1058,47 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setPositionState(_ position: PositionType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearPositionedState() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFloating(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasVisibleBoxDecorations(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateBackgroundObscurationStatus() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHorizontalWritingMode(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasNonVisibleOverflow(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasTransformRelatedProperty(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasReflection(_ hasReflection: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
