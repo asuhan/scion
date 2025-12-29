@@ -1224,8 +1224,15 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func shouldRepaintForStyleDifference(_ diff: StyleDifference) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hasImmediateNonWhitespaceTextChild = { () in
+      for child: RenderTextWrapper in childrenOfType(parent: self) {
+        if !child.containsOnlyCollapsibleWhitespace() {
+          return true
+        }
+      }
+      return false
+    }
+    return diff == .Repaint || (diff == .RepaintIfText && hasImmediateNonWhitespaceTextChild())
   }
 
   private func updateFillImages(oldLayers: FillLayerWrapper?, newLayers: FillLayerWrapper?) {

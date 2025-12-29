@@ -164,6 +164,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 
+  func containsOnlyCollapsibleWhitespace() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removeAndDestroyLegacyTextBoxes() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
