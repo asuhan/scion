@@ -465,6 +465,11 @@ class LayoutIntegration {
       fatalError("Not implemented")
     }
 
+    static func updateStyle(_ renderer: RenderObjectWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     // Partial invalidation.
     func insertedIntoTree(parent: RenderElementWrapper, child: RenderObjectWrapper) -> Bool {
       if inlineContent == nil {

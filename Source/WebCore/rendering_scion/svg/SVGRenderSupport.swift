@@ -26,6 +26,11 @@
 
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
+  static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func findTreeRootObject(start: RenderElementWrapper) -> LegacyRenderSVGRootWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1245,9 +1245,17 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func protectedBackgroundLayers() -> FillLayerWrapper {
+    return backgroundLayers()  // TODO(asuhan): just remove this wrapper, not needed in Swift
+  }
+
   func maskLayers() -> FillLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func protectedMaskLayers() -> FillLayerWrapper {
+    return maskLayers()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
   func maskBorder() -> NinePieceImage {
@@ -2181,6 +2189,11 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
   }
 
+  func protectedShapeOutside() -> ShapeValue? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clipPath() -> PathOperation? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2443,6 +2456,16 @@ class RenderStyleWrapper: Equatable {
   }
 
   func blockStepSize() -> LengthWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollAnchoringSuppressionStyleDidChange(_ other: RenderStyleWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func outOfFlowPositionStyleDidChange(_ other: RenderStyleWrapper?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

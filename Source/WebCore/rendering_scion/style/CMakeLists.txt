@@ -19,6 +19,7 @@ target_sources(layout_scion PRIVATE
     RenderStyleConstants.swift
     ScrollbarGutter.swift
     ShadowData.swift
+    ShapeValue.swift
     StyleCachedImage.swift
     StyleContentAlignmentData.swift
     StyleGeneratedImage.swift

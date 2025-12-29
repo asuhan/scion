@@ -26,6 +26,11 @@ private func rendererHasBackground(renderer: RenderElementWrapper?) -> Bool {
   return renderer != nil && renderer!.hasBackground()
 }
 
+private func areCursorsEqual(_ a: RenderStyleWrapper, _ b: RenderStyleWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func paintPhase(
   element: RenderElementWrapper, phase: PaintPhase, paintInfo: inout PaintInfoWrapper,
   childPoint: LayoutPointWrapper
@@ -328,6 +333,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     setOutOfFlowChildNeedsStaticPositionLayoutBit(b: false)
   }
 
+  private func setNeedsPositionedMovementLayout(_ oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsSimplifiedNormalFlowLayout() {
     assert(!isSetNeedsLayoutForbidden())
     if needsSimplifiedNormalFlowLayout() {
@@ -389,6 +399,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   /* This function performs a layout only if one is needed. */
   func layoutIfNeeded() {
     wk_interop.RenderElement_layoutIfNeeded(p)
+  }
+
+  private func repaintClientsOfReferencedSVGResources() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func borderImageIsLoadedAndCanBeRendered() -> Bool {
@@ -964,8 +979,113 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let registerImages = { [self] (style: RenderStyleWrapper?, oldStyle: RenderStyleWrapper?) in
+      if style == nil && oldStyle == nil {
+        return
+      }
+      updateFillImages(
+        oldLayers: oldStyle?.protectedBackgroundLayers(),
+        newLayers: style?.protectedBackgroundLayers())
+      updateFillImages(
+        oldLayers: oldStyle?.protectedMaskLayers(), newLayers: style?.protectedMaskLayers())
+      updateImage(
+        oldImage: oldStyle?.borderImage().protectedImage(),
+        newImage: style?.borderImage().protectedImage())
+      updateShapeImage(
+        oldShapeValue: oldStyle?.protectedShapeOutside(),
+        newShapeValue: style?.protectedShapeOutside())
+    }
+
+    registerImages(style(), oldStyle)
+
+    // Are there other pseudo-elements that need the resources to be registered?
+    registerImages(
+      style().getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine)),
+      oldStyle?.getCachedPseudoStyle(
+        pseudoElementIdentifier: Style.PseudoElementIdentifier(pseudoId: .FirstLine)))
+
+    SVGRenderSupport.styleChanged(renderer: self, oldStyle: oldStyle)
+
+    if diff.rawValue >= StyleDifference.Repaint.rawValue {
+      updateReferencedSVGResources()
+      if oldStyle != nil && diff.rawValue <= StyleDifference.RepaintLayer.rawValue {
+        repaintClientsOfReferencedSVGResources()
+      }
+    }
+
+    if parent() == nil {
+      return
+    }
+
+    if diff == .Layout || diff == .SimplifiedLayout {
+      RenderCounter.rendererStyleChanged(renderer: self, oldStyle: oldStyle, newStyle: style!)
+
+      // If the object already needs layout, then setNeedsLayout won't do
+      // any work. But if the containing block has changed, then we may need
+      // to mark the new containing blocks for layout. The change that can
+      // directly affect the containing block of this object is a change to
+      // the position style.
+      if needsLayout() && oldStyle != nil && oldStyle!.position() != style!.position() {
+        scheduleLayout(layoutRoot: markContainingBlocksForLayout())
+      }
+
+      if diff == .Layout {
+        setNeedsLayoutAndPrefWidthsRecalc()
+      } else {
+        setNeedsSimplifiedNormalFlowLayout()
+      }
+    } else if diff == .SimplifiedLayoutAndPositionedMovement {
+      setNeedsPositionedMovementLayout(oldStyle)
+      setNeedsSimplifiedNormalFlowLayout()
+    } else if diff == .LayoutPositionedMovementOnly {
+      setNeedsPositionedMovementLayout(oldStyle)
+    }
+
+    // Don't check for repaint here; we need to wait until the layer has been
+    // updated by subclasses before we know if we have to repaint (in setStyle()).
+
+    if oldStyle != nil && !areCursorsEqual(oldStyle!, style()) {
+      protectedFrame().checkedEventHandler().scheduleCursorUpdate()
+    }
+
+    let hadOutlineAuto = oldStyle != nil && oldStyle!.outlineStyleIsAuto() == .On
+    let hasOutlineAuto = outlineStyleForRepaint().outlineStyleIsAuto() == .On
+    if hasOutlineAuto != hadOutlineAuto {
+      updateOutlineAutoAncestor(hasOutlineAuto)
+      issueRepaintForOutlineAuto(
+        hasOutlineAuto ? outlineStyleForRepaint().outlineSize() : oldStyle!.outlineSize())
+    }
+
+    let notifyChildHadSuppressingStyleChange = { (shouldCheckIfInAncestorChain: Bool) in
+      if let controller = RenderObjectWrapper.searchParentChainForScrollAnchoringController(self),
+        !shouldCheckIfInAncestorChain
+          || (shouldCheckIfInAncestorChain && controller.isInScrollAnchoringAncestorChain(self))
+      {
+        controller.notifyChildHadSuppressingStyleChange()
+      }
+    }
+
+    if frame().settings().cssScrollAnchoringEnabled()
+      && (style().outOfFlowPositionStyleDidChange(oldStyle)
+        || style().scrollAnchoringSuppressionStyleDidChange(oldStyle))
+    {
+      if style().outOfFlowPositionStyleDidChange(oldStyle) {
+        notifyChildHadSuppressingStyleChange(false)
+      } else {
+        notifyChildHadSuppressingStyleChange(
+          style().scrollAnchoringSuppressionStyleDidChange(oldStyle))
+      }
+    }
+
+    // FIXME: First line change on the block comes in as equal on inline boxes.
+    let needsLayoutBoxStyleUpdate =
+      (diff.rawValue >= StyleDifference.Repaint.rawValue
+        || ((self is RenderInlineWrapper) && CPtrToInt(style().p) != CPtrToInt(firstLineStyle().p)))
+      && layoutBox() != nil
+    if needsLayoutBoxStyleUpdate {
+      LayoutIntegration.LineLayout.updateStyle(self)
+    }
   }
 
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
@@ -981,6 +1101,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     painter.paintOutline(paintRect: paintRect)
   }
 
+  private func updateOutlineAutoAncestor(_ hasOutlineAuto: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isVisibleInViewport() -> Bool {
     let frameView = view().frameView()
     let visibleRect = frameView.windowToContents(windowRect: frameView.windowClipRect())
@@ -988,6 +1113,31 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateFillImages(oldLayers: FillLayerWrapper?, newLayers: FillLayerWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateImage(oldImage: StyleImage?, newImage: StyleImage?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateShapeImage(oldShapeValue: ShapeValue?, newShapeValue: ShapeValue?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func issueRepaintForOutlineAuto(_ outlineSize: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateReferencedSVGResources() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

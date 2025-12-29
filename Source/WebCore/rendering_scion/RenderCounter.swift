@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2000 Lars Knoll (knoll@kde.org)
- *           (C) 2000 Antti Koivisto (koivisto@kde.org)
- *           (C) 2000 Dirk Mueller (mueller@kde.org)
- * Copyright (C) 2003-2017 Apple Inc. All rights reserved.
+ * Copyright (C) 2004 Allan Sandfeld Jensen (kde@carewolf.com)
+ * Copyright (C) 2006-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2015 Google Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,18 +20,9 @@
  *
  */
 
-struct NinePieceImage {
-  func image() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func protectedImage() -> StyleImage? { return image() }  // TODO(asuhan): just remove this wrapper, not needed in Swift
-
-  func paint(
-    graphicsContext: GraphicsContextWrapper, renderer: RenderElementWrapper?,
-    style: RenderStyleWrapper, destination: LayoutRectWrapper, source: LayoutSizeWrapper,
-    deviceScaleFactor: Float32, op: CompositeOperator
+final class RenderCounter: RenderTextWrapper {
+  static func rendererStyleChanged(
+    renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?, newStyle: RenderStyleWrapper
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

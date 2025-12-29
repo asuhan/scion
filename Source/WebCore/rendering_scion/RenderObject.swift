@@ -528,6 +528,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  static func searchParentChainForScrollAnchoringController(_ renderer: RenderObjectWrapper)
+    -> ScrollAnchoringControllerWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func childrenInline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -907,6 +914,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func protectedFrame() -> LocalFrameWrapper { return frame() }  // TODO(asuhan): just remove this wrapper, not needed in Swift
 
   func page() -> PageWrapper {
     // TODO(asuhan): implement this
