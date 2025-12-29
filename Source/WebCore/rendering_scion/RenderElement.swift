@@ -94,8 +94,69 @@ class RenderElementWrapper: RenderObjectWrapper {
   // out-of-band state (e.g. animations) requires that styleDidChange processing
   // continue even if the style isn't different from the current style.
   func setStyle(style: RenderStyleWrapper, minimalStyleDifference: StyleDifference = .Equal) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Should change RenderView so it can use initializeStyle too.
+    // If we do that, we can assert m_hasInitializedStyle unconditionally,
+    // and remove the check of m_hasInitializedStyle below too.
+    assert(hasInitializedStyle || isRenderView())
+
+    var diff: StyleDifference = .Equal
+    var contextSensitiveProperties = StyleDifferenceContextSensitiveProperty()
+    if hasInitializedStyle {
+      (diff, contextSensitiveProperties) = self.style!.diff(style)
+    }
+
+    diff = StyleDifference(rawValue: max(diff.rawValue, minimalStyleDifference.rawValue))!
+
+    diff = adjustStyleDifference(diff, contextSensitiveProperties)
+
+    Style.loadPendingResources(style, protectedDocument(), protectedElement())
+
+    let didRepaint = repaintBeforeStyleChange(diff: diff, oldStyle: self.style!, newStyle: style)
+    styleWillChange(diff: diff, newStyle: style)
+    let oldStyle = self.style!.replace(style)
+    let detachedFromParent = parent() == nil
+
+    adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
+      oldStyle: oldStyle, newStyle: self.style!)
+
+    styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    // Text renderers use their parent style. Notify them about the change.
+    for child: RenderTextWrapper in childrenOfType(parent: self) {
+      child.styleDidChange(diff: diff, oldStyle: oldStyle)
+    }
+
+    // FIXME: |this| might be destroyed here. This can currently happen for a RenderTextFragment when
+    // its first-letter block gets an update in RenderTextFragment::styleDidChange. For RenderTextFragment(s),
+    // we will safely bail out with the detachedFromParent flag. We might want to broaden this condition
+    // in the future as we move renderer changes out of layout and into style changes.
+    if detachedFromParent {
+      return
+    }
+
+    // Now that the layer (if any) has been updated, we need to adjust the diff again,
+    // check whether we should layout now, and decide if we need to repaint.
+    let updatedDiff = adjustStyleDifference(diff, contextSensitiveProperties)
+
+    if diff.rawValue <= StyleDifference.LayoutPositionedMovementOnly.rawValue {
+      if updatedDiff == .Layout {
+        setNeedsLayoutAndPrefWidthsRecalc()
+      } else if updatedDiff == .LayoutPositionedMovementOnly {
+        setNeedsPositionedMovementLayout(oldStyle)
+      } else if updatedDiff == .SimplifiedLayoutAndPositionedMovement {
+        setNeedsPositionedMovementLayout(oldStyle)
+        setNeedsSimplifiedNormalFlowLayout()
+      } else if updatedDiff == .SimplifiedLayout {
+        setNeedsSimplifiedNormalFlowLayout()
+      }
+    }
+
+    if !didRepaint && (updatedDiff == .RepaintLayer || shouldRepaintForStyleDifference(updatedDiff))
+    {
+      // Do a repaint with the new style now, e.g., for example if we go from
+      // not having an outline to having an outline.
+      repaint()
+    }
   }
 
   // The pseudo element style can be cached or uncached. Use the uncached method if the pseudo element
@@ -819,6 +880,13 @@ class RenderElementWrapper: RenderObjectWrapper {
     return true
   }
 
+  private func repaintBeforeStyleChange(
+    diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     assert(
       settings().shouldAllowUserInstalledFonts()
@@ -1106,6 +1174,13 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
+    oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isVisibleInViewport() -> Bool {
     let frameView = view().frameView()
     let visibleRect = frameView.windowToContents(windowRect: frameView.windowClipRect())
@@ -1113,6 +1188,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldRepaintForStyleDifference(_ diff: StyleDifference) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1128,6 +1208,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateShapeImage(oldShapeValue: ShapeValue?, newShapeValue: ShapeValue?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustStyleDifference(
+    _ diff: StyleDifference, _ contextSensitiveProperties: StyleDifferenceContextSensitiveProperty
+  ) -> StyleDifference {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

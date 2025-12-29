@@ -51,6 +51,20 @@ enum StyleDifference: UInt8 {
   case NewStyle
 }
 
+// When some style properties change, different amounts of work have to be done depending on
+// context (e.g. whether the property is changing on an element which has a compositing layer).
+// A simple StyleDifference does not provide enough information so we return a bit mask of
+// StyleDifferenceContextSensitiveProperties from RenderStyle::diff() too.
+struct StyleDifferenceContextSensitiveProperty: OptionSet {
+  let rawValue: UInt8
+  static let Transform = StyleDifferenceContextSensitiveProperty(rawValue: 1 << 0)
+  static let Opacity = StyleDifferenceContextSensitiveProperty(rawValue: 1 << 1)
+  static let Filter = StyleDifferenceContextSensitiveProperty(rawValue: 1 << 2)
+  static let ClipRect = StyleDifferenceContextSensitiveProperty(rawValue: 1 << 3)
+  static let ClipPath = StyleDifferenceContextSensitiveProperty(rawValue: 1 << 4)
+  static let WillChange = StyleDifferenceContextSensitiveProperty(rawValue: 1 << 5)
+}
+
 // Static pseudo styles. Dynamic ones are produced on the fly.
 enum PseudoId: UInt32 {
   // The order must be None, public IDs, and then internal IDs.

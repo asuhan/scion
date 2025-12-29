@@ -87,6 +87,11 @@ class RenderStyleWrapper: Equatable {
     inheritedFlags.textWrapMode = textWrapMode
   }
 
+  func replace(_ newStyle: RenderStyleWrapper) -> RenderStyleWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func create() -> RenderStyleWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2408,6 +2413,13 @@ class RenderStyleWrapper: Equatable {
   }
 
   func willChange() -> WillChangeData? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func diff(_ other: RenderStyleWrapper) -> (
+    StyleDifference, StyleDifferenceContextSensitiveProperty
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
