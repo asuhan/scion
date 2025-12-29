@@ -1177,8 +1177,39 @@ class RenderElementWrapper: RenderObjectWrapper {
   private func adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
     oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fragmentedFlowState() == .NotInsideFlow {
+      return
+    }
+
+    // Make sure we invalidate the containing block cache for flows when the contianing block context changes
+    // so that styleDidChange can safely use RenderBlock::locateEnclosingFragmentedFlow()
+    // FIXME: Share some code with RenderElement::canContain*.
+    let mayNotBeContainingBlockForDescendantsAnymore =
+      oldStyle.position() != style!.position()
+      || oldStyle.hasTransformRelatedProperty() != style!.hasTransformRelatedProperty()
+      || oldStyle.willChange() != newStyle.willChange()
+      || oldStyle.hasBackdropFilter() != newStyle.hasBackdropFilter()
+      || oldStyle.containsLayout() != newStyle.containsLayout()
+      || oldStyle.containsSize() != newStyle.containsSize()
+    if !mayNotBeContainingBlockForDescendantsAnymore {
+      return
+    }
+
+    // Invalidate the containing block caches.
+    if let block = self as? RenderBlockWrapper {
+      block.resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants()
+    } else {
+      // Relatively positioned inline boxes can have absolutely positioned block descendants. We need to reset them as well.
+      for descendant: RenderBlockWrapper in descendantsOfType(root: self) {
+        descendant.resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants()
+      }
+    }
+
+    // Adjust the flow tread state on the subtree.
+    setFragmentedFlowState(RenderObjectWrapper.computedFragmentedFlowState(self))
+    for descendant: RenderObjectWrapper in descendantsOfType(root: self) {
+      descendant.setFragmentedFlowState(RenderObjectWrapper.computedFragmentedFlowState(descendant))
+    }
   }
 
   func isVisibleInViewport() -> Bool {

@@ -567,7 +567,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func setFragmentedFlowState(state: FragmentedFlowState) {
+  func setFragmentedFlowState(_ state: FragmentedFlowState) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1338,7 +1338,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       return
     }
 
-    let computedState = RenderObjectWrapper.computedFragmentedFlowState(renderer: self)
+    let computedState = RenderObjectWrapper.computedFragmentedFlowState(self)
     if fragmentedFlowState() == computedState {
       return
     }
@@ -1415,7 +1415,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  private static func computedFragmentedFlowState(renderer: RenderObjectWrapper)
+  static func computedFragmentedFlowState(_ renderer: RenderObjectWrapper)
     -> FragmentedFlowState
   {
     if renderer.parent() == nil {

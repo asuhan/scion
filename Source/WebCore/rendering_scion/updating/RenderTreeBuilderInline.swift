@@ -78,7 +78,7 @@ private func cloneAsContinuation(renderer: RenderInlineWrapper) -> RenderInlineW
   let cloneInline = CreateRenderer.RenderInline(
     type: .Inline, element: renderer.element()!, style: continuationStyle)
   cloneInline.initializeStyle()
-  cloneInline.setFragmentedFlowState(state: renderer.fragmentedFlowState())
+  cloneInline.setFragmentedFlowState(renderer.fragmentedFlowState())
   cloneInline.setHasOutlineAutoAncestor(hasOutlineAutoAncestor: renderer.hasOutlineAutoAncestor())
   cloneInline.setIsContinuation()
   return cloneInline

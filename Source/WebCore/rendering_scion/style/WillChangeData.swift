@@ -44,3 +44,8 @@ class WillChangeData {
     fatalError("Not implemented")
   }
 }
+
+func != (_ a: WillChangeData?, _ b: WillChangeData?) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
