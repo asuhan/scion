@@ -78,6 +78,11 @@ class FloatingObjectWrapper: Hashable {
       frameRect.height().rawValue())
   }
 
+  func setPaginationStrut(strut: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldPaint() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -130,6 +135,11 @@ class FloatingObjects {
 
   @discardableResult
   func add(floatingObject: FloatingObjectWrapper) -> FloatingObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addPlacedObject(_ floatingObject: FloatingObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

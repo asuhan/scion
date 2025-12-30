@@ -2000,7 +2000,19 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
 
+  private func logicalTopForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func logicalBottomForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setLogicalHeightForFloat(
+    floatingObject: FloatingObjectWrapper, logicalHeight: LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -3115,12 +3127,137 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeLogicalLocationForFloat(
+    floatingObject: FloatingObjectWrapper, logicalTopOffset: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called from lineWidth, to position the floats added in the last line.
   // Returns true if and only if it has positioned any floats.
   @discardableResult
   private func positionNewFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if floatingObjects == nil {
+      return false
+    }
+
+    let floatingObjectSet = floatingObjects!.set()
+    if floatingObjectSet.isEmpty() {
+      return false
+    }
+
+    // If all floats have already been positioned, then we have no work to do.
+    if floatingObjectSet.last().isPlaced {
+      return false
+    }
+
+    // Move backwards through our floating object list until we find a float that has
+    // already been positioned. Then we'll be able to move forward, positioning all of
+    // the new floats that need it.
+    let it = floatingObjectSet.end()
+    --it  // Go to last item.
+    let begin = floatingObjectSet.begin()
+    var lastPlacedFloatingObject: FloatingObjectWrapper? = nil
+    while it != begin {
+      --it
+      if (*it).isPlaced {
+        lastPlacedFloatingObject = *it
+        ++it
+        break
+      }
+    }
+
+    var logicalTop = logicalHeight()
+
+    // The float cannot start above the top position of the last positioned float.
+    if lastPlacedFloatingObject != nil {
+      logicalTop = max(logicalTopForFloat(floatingObject: lastPlacedFloatingObject!), logicalTop)
+    }
+
+    let end = floatingObjectSet.end()
+    // Now walk through the set of unpositioned floats and place them.
+    while it != end {
+      let floatingObject = *it
+      // The containing block is responsible for positioning floats, so if we have floats in our
+      // list that come from somewhere else, do not attempt to position them.
+      let childBox = floatingObject.renderer!
+      if CPtrToInt(childBox.containingBlock()!.p) != CPtrToInt(p) {
+        ++it
+        continue
+      }
+
+      let oldRect = childBox.frameRect()
+      let childBoxUsedClear = RenderStyleWrapper.usedClear(renderer: childBox)
+      if childBoxUsedClear == .Left || childBoxUsedClear == .Both {
+        logicalTop = max(lowestFloatLogicalBottom(floatType: .FloatLeft), logicalTop)
+      }
+      if childBoxUsedClear == .Right || childBoxUsedClear == .Both {
+        logicalTop = max(lowestFloatLogicalBottom(floatType: .FloatRight), logicalTop)
+      }
+
+      computeLogicalLocationForFloat(floatingObject: floatingObject, logicalTopOffset: logicalTop)
+      let childLogicalTop = logicalTopForChild(child: childBox)
+
+      estimateFragmentRangeForBoxChild(box: childBox)
+
+      childBox.markForPaginationRelayoutIfNeeded()
+      childBox.layoutIfNeeded()
+
+      let layoutState = view().frameView().layoutContext().layoutState()!
+      let isPaginated = layoutState.isPaginated()
+      if isPaginated {
+        // If we are unsplittable and don't fit, then we need to move down.
+        // We include our margins as part of the unsplittable area.
+        var newLogicalTop = adjustForUnsplittableChild(
+          child: childBox, logicalOffset: logicalTop,
+          childBeforeMargin: childLogicalTop - logicalTop,
+          childAfterMargin: marginAfterForChild(child: childBox))
+
+        // See if we have a pagination strut that is making us move down further.
+        // Note that an unsplittable child can't also have a pagination strut, so this
+        // is exclusive with the case above.
+        let childBlock = childBox as? RenderBlockWrapper
+        if childBlock != nil && childBlock!.paginationStrut().bool() {
+          newLogicalTop += childBlock!.paginationStrut()
+          childBlock!.setPaginationStrut(strut: LayoutUnit(value: 0))
+        }
+
+        if newLogicalTop != logicalTop {
+          floatingObject.setPaginationStrut(strut: newLogicalTop - logicalTop)
+          computeLogicalLocationForFloat(
+            floatingObject: floatingObject, logicalTopOffset: newLogicalTop)
+          if childBlock != nil {
+            childBlock!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+          }
+          childBox.layoutIfNeeded()
+          logicalTop = newLogicalTop
+        }
+
+        if updateFragmentRangeForBoxChild(box: childBox) {
+          childBox.setNeedsLayout(markParents: .MarkOnlyThis)
+          childBox.layoutIfNeeded()
+        }
+      }
+
+      setLogicalHeightForFloat(
+        floatingObject: floatingObject,
+        logicalHeight: logicalHeightForChildForFragmentation(child: childBox)
+          + (logicalTopForChild(child: childBox) - logicalTop)
+          + marginAfterForChild(child: childBox))
+
+      floatingObjects!.addPlacedObject(floatingObject)
+
+      if let shapeOutside = childBox.shapeOutsideInfo() {
+        shapeOutside.invalidateForSizeChangeIfNeeded()
+      }
+      // If the child moved, we have to repaint it.
+      if childBox.checkForRepaintDuringLayout() {
+        childBox.repaintDuringLayoutIfMoved(oldRect: oldRect)
+      }
+      ++it
+    }
+    return true
   }
 
   private func nextFloatLogicalBottomBelowForBlock(logicalHeight: LayoutUnit) -> LayoutUnit {

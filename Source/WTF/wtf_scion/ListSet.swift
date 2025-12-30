@@ -29,8 +29,19 @@ final class ListSetIterator<T, KeyType>: IteratorProtocol, Equatable {
     fatalError("Not implemented")
   }
 
+  static prefix func * (it: ListSetIterator<T, KeyType>) -> T {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   static prefix func ++ (it: ListSetIterator<T, KeyType>) -> ListSetIterator<T, KeyType> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  static prefix func -- (it: ListSetIterator<T, KeyType>) -> ListSetIterator<T, KeyType> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -47,6 +58,11 @@ final class ListSet<T, KeyType>: Sequence {
   }
 
   func size() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -34,6 +34,11 @@ struct ShapeOutsideInfoWrapper {
     self.p = p
   }
 
+  func invalidateForSizeChangeIfNeeded() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computedShape() -> ShapeWrapper {
     return ShapeWrapper(p: wk_interop.ShapeOutsideInfo_computedShape(p))
   }
