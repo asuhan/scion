@@ -52,6 +52,9 @@ enum StyleDifference: UInt8 {
 }
 
 func < (_ a: StyleDifference, _ b: StyleDifference) -> Bool { return a.rawValue < b.rawValue }
+func <= (_ a: StyleDifference, _ b: StyleDifference) -> Bool { return a.rawValue <= b.rawValue }
+func > (_ a: StyleDifference, _ b: StyleDifference) -> Bool { return a.rawValue > b.rawValue }
+func >= (_ a: StyleDifference, _ b: StyleDifference) -> Bool { return a.rawValue >= b.rawValue }
 
 func max(_ a: StyleDifference, _ b: StyleDifference) -> StyleDifference {
   return StyleDifference(rawValue: max(a.rawValue, b.rawValue))!

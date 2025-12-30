@@ -105,7 +105,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       (diff, contextSensitiveProperties) = self.style!.diff(style)
     }
 
-    diff = StyleDifference(rawValue: max(diff.rawValue, minimalStyleDifference.rawValue))!
+    diff = max(diff, minimalStyleDifference)
 
     diff = adjustStyleDifference(diff, contextSensitiveProperties)
 
@@ -138,7 +138,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     // check whether we should layout now, and decide if we need to repaint.
     let updatedDiff = adjustStyleDifference(diff, contextSensitiveProperties)
 
-    if diff.rawValue <= StyleDifference.LayoutPositionedMovementOnly.rawValue {
+    if diff <= .LayoutPositionedMovementOnly {
       if updatedDiff == .Layout {
         setNeedsLayoutAndPrefWidthsRecalc()
       } else if updatedDiff == .LayoutPositionedMovementOnly {
@@ -973,7 +973,7 @@ class RenderElementWrapper: RenderObjectWrapper {
         }
       }
 
-      if diff.rawValue > StyleDifference.RepaintLayer.rawValue
+      if diff > .RepaintLayer
         && oldStyle.usedVisibility() != newStyle.usedVisibility(),
         let enclosingLayer = enclosingLayer()
       {
@@ -986,7 +986,7 @@ class RenderElementWrapper: RenderObjectWrapper {
         }
       }
 
-      if diff.rawValue > StyleDifference.RepaintLayer.rawValue
+      if diff > .RepaintLayer
         && oldStyle.usedContentVisibility() != newStyle.usedContentVisibility()
         && isOutOfFlowPositioned(), let enclosingLayer = enclosingLayer()
       {
@@ -1062,7 +1062,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
 
     if oldStyle != nil {
-      if diff.rawValue >= StyleDifference.Repaint.rawValue && layoutBox() != nil {
+      if diff >= .Repaint && layoutBox() != nil {
         // FIXME: It is highly unlikely that a style mutation has effect on both the formatting context the box lives in
         // and the one it establishes but calling only one would require to come up with a list of properties that only affects one or the other.
         if let inlineFormattingContextRoot = self as? RenderBlockFlowWrapper,
@@ -1220,9 +1220,9 @@ class RenderElementWrapper: RenderObjectWrapper {
 
     SVGRenderSupport.styleChanged(renderer: self, oldStyle: oldStyle)
 
-    if diff.rawValue >= StyleDifference.Repaint.rawValue {
+    if diff >= .Repaint {
       updateReferencedSVGResources()
-      if oldStyle != nil && diff.rawValue <= StyleDifference.RepaintLayer.rawValue {
+      if oldStyle != nil && diff <= .RepaintLayer {
         repaintClientsOfReferencedSVGResources()
       }
     }
@@ -1293,7 +1293,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
     // FIXME: First line change on the block comes in as equal on inline boxes.
     let needsLayoutBoxStyleUpdate =
-      (diff.rawValue >= StyleDifference.Repaint.rawValue
+      (diff >= .Repaint
         || ((self is RenderInlineWrapper) && CPtrToInt(style().p) != CPtrToInt(firstLineStyle().p)))
       && layoutBox() != nil
     if needsLayoutBoxStyleUpdate {
