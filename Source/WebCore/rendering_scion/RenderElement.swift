@@ -1305,8 +1305,30 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateOutlineAutoAncestor(_ hasOutlineAuto: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let placeholder = self as? RenderMultiColumnSpannerPlaceholderWrapper {
+      let spanner = placeholder.spanner()!
+      spanner.setHasOutlineAutoAncestor(hasOutlineAutoAncestor: hasOutlineAuto)
+      spanner.updateOutlineAutoAncestor(hasOutlineAuto)
+    }
+
+    for child: RenderObjectWrapper in childrenOfType(parent: self) {
+      if hasOutlineAuto == child.hasOutlineAutoAncestor() {
+        continue
+      }
+      child.setHasOutlineAutoAncestor(hasOutlineAutoAncestor: hasOutlineAuto)
+      let childHasOutlineAuto = child.outlineStyleForRepaint().outlineStyleIsAuto() == .On
+      if childHasOutlineAuto {
+        continue
+      }
+      if let element = child as? RenderElementWrapper {
+        element.updateOutlineAutoAncestor(hasOutlineAuto)
+      }
+    }
+    if let modelObject = self as? RenderBoxModelObjectWrapper,
+      let continuation = modelObject.continuation()
+    {
+      continuation.updateOutlineAutoAncestor(hasOutlineAuto)
+    }
   }
 
   private func adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
