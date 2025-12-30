@@ -2010,8 +2010,35 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalWidthForFloat(_ floatingObject: FloatingObjectWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setLogicalTopForFloat(
+    _ floatingObject: FloatingObjectWrapper, logicalTop: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setLogicalLeftForFloat(
+    _ floatingObject: FloatingObjectWrapper, logicalLeft: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setLogicalHeightForFloat(
-    floatingObject: FloatingObjectWrapper, logicalHeight: LayoutUnit
+    _ floatingObject: FloatingObjectWrapper, logicalHeight: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setLogicalMarginsForFloat(
+    _ floatingObject: FloatingObjectWrapper, logicalLeftMargin: LayoutUnit,
+    logicalBeforeMargin: LayoutUnit
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3130,8 +3157,102 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func computeLogicalLocationForFloat(
     floatingObject: FloatingObjectWrapper, logicalTopOffset: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let childBox = floatingObject.renderer!
+    var logicalLeftOffset = logicalLeftOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of left offset.
+    var logicalRightOffset = logicalRightOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of right offset.
+
+    var floatLogicalWidth = min(
+      logicalWidthForFloat(floatingObject), logicalRightOffset - logicalLeftOffset)  // The width we look for.
+
+    var floatLogicalLeft = LayoutUnit()
+
+    let insideFragmentedFlow = enclosingFragmentedFlow() != nil
+    let isInitialLetter =
+      childBox.style().pseudoElementType() == .FirstLetter
+      && childBox.style().initialLetterDrop() > 0
+
+    var logicalTopOffset = logicalTopOffset
+    if isInitialLetter, let lowestInitialLetterLogicalBottom = lowestInitialLetterLogicalBottom() {
+      let letterClearance = lowestInitialLetterLogicalBottom - logicalTopOffset
+      if letterClearance > 0 {
+        logicalTopOffset += letterClearance
+        setLogicalHeight(size: logicalHeight() + letterClearance)
+      }
+    }
+
+    if RenderStyleWrapper.usedFloat(renderer: childBox) == .Left {
+      var heightRemainingLeft = LayoutUnit(value: UInt64(1))
+      var heightRemainingRight = LayoutUnit(value: UInt64(1))
+      floatLogicalLeft = logicalLeftOffsetForPositioningFloat(
+        logicalTop: logicalTopOffset, fixedOffset: logicalLeftOffset,
+        heightRemaining: &heightRemainingLeft)
+      while logicalRightOffsetForPositioningFloat(
+        logicalTop: logicalTopOffset, fixedOffset: logicalRightOffset,
+        heightRemaining: &heightRemainingRight) - floatLogicalLeft
+        < floatLogicalWidth
+      {
+        logicalTopOffset += min(heightRemainingLeft, heightRemainingRight)
+        floatLogicalLeft = logicalLeftOffsetForPositioningFloat(
+          logicalTop: logicalTopOffset, fixedOffset: logicalLeftOffset,
+          heightRemaining: &heightRemainingLeft)
+        if insideFragmentedFlow {
+          // Have to re-evaluate all of our offsets, since they may have changed.
+          logicalRightOffset = logicalRightOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of right offset.
+          logicalLeftOffset = logicalLeftOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of left offset.
+          floatLogicalWidth = min(
+            logicalWidthForFloat(floatingObject), logicalRightOffset - logicalLeftOffset)
+        }
+      }
+      floatLogicalLeft = max(logicalLeftOffset - borderAndPaddingLogicalLeft(), floatLogicalLeft)
+    } else {
+      var heightRemainingLeft = LayoutUnit(value: UInt64(1))
+      var heightRemainingRight = LayoutUnit(value: UInt64(1))
+      floatLogicalLeft = logicalRightOffsetForPositioningFloat(
+        logicalTop: logicalTopOffset, fixedOffset: logicalRightOffset,
+        heightRemaining: &heightRemainingRight)
+      while floatLogicalLeft
+        - logicalLeftOffsetForPositioningFloat(
+          logicalTop: logicalTopOffset, fixedOffset: logicalLeftOffset,
+          heightRemaining: &heightRemainingLeft) < floatLogicalWidth
+      {
+        logicalTopOffset += min(heightRemainingLeft, heightRemainingRight)
+        floatLogicalLeft = logicalRightOffsetForPositioningFloat(
+          logicalTop: logicalTopOffset, fixedOffset: logicalRightOffset,
+          heightRemaining: &heightRemainingRight)
+        if insideFragmentedFlow {
+          // Have to re-evaluate all of our offsets, since they may have changed.
+          logicalRightOffset = logicalRightOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of right offset.
+          logicalLeftOffset = logicalLeftOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of left offset.
+          floatLogicalWidth = min(
+            logicalWidthForFloat(floatingObject), logicalRightOffset - logicalLeftOffset)
+        }
+      }
+      // Use the original width of the float here, since the local variable
+      // |floatLogicalWidth| was capped to the available line width. See
+      // fast/block/float/clamped-right-float.html.
+      floatLogicalLeft -= logicalWidthForFloat(floatingObject)
+    }
+
+    let childLogicalLeftMargin =
+      style().isLeftToRightDirection()
+      ? marginStartForChild(child: childBox) : marginEndForChild(child: childBox)
+    var childBeforeMargin = marginBeforeForChild(child: childBox)
+
+    if isInitialLetter {
+      adjustInitialLetterPosition(
+        childBox: childBox, logicalTopOffset: &logicalTopOffset,
+        marginBeforeOffset: &childBeforeMargin)
+    }
+
+    setLogicalLeftForFloat(floatingObject, logicalLeft: floatLogicalLeft)
+    setLogicalLeftForChild(child: childBox, logicalLeft: floatLogicalLeft + childLogicalLeftMargin)
+
+    setLogicalTopForFloat(floatingObject, logicalTop: logicalTopOffset)
+    setLogicalTopForChild(child: childBox, logicalTop: logicalTopOffset + childBeforeMargin)
+
+    setLogicalMarginsForFloat(
+      floatingObject, logicalLeftMargin: childLogicalLeftMargin,
+      logicalBeforeMargin: childBeforeMargin)
   }
 
   // Called from lineWidth, to position the floats added in the last line.
@@ -3241,7 +3362,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       }
 
       setLogicalHeightForFloat(
-        floatingObject: floatingObject,
+        floatingObject,
         logicalHeight: logicalHeightForChildForFragmentation(child: childBox)
           + (logicalTopForChild(child: childBox) - logicalTop)
           + marginAfterForChild(child: childBox))
@@ -3258,6 +3379,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       ++it
     }
     return true
+  }
+
+  private func logicalRightOffsetForPositioningFloat(
+    logicalTop: LayoutUnit, fixedOffset: LayoutUnit, heightRemaining: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func logicalLeftOffsetForPositioningFloat(
+    logicalTop: LayoutUnit, fixedOffset: LayoutUnit, heightRemaining: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func nextFloatLogicalBottomBelowForBlock(logicalHeight: LayoutUnit) -> LayoutUnit {
@@ -4284,6 +4419,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       preferredWidth(preferredWidth: minLogicalWidth, result: inlineMin),
       preferredWidth(preferredWidth: maxLogicalWidth, result: inlineMax)
     )
+  }
+
+  private func adjustInitialLetterPosition(
+    childBox: RenderBoxWrapper, logicalTopOffset: inout LayoutUnit,
+    marginBeforeOffset: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func selfCollapsingMarginBeforeWithClear(candidate: RenderObjectWrapper?) -> LayoutUnit? {

@@ -614,7 +614,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  private func marginEndForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
+  func marginEndForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -734,6 +734,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func endOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalLeftOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalRightOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
