@@ -93,6 +93,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

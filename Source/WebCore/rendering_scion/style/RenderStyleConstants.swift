@@ -51,6 +51,12 @@ enum StyleDifference: UInt8 {
   case NewStyle
 }
 
+func < (_ a: StyleDifference, _ b: StyleDifference) -> Bool { return a.rawValue < b.rawValue }
+
+func max(_ a: StyleDifference, _ b: StyleDifference) -> StyleDifference {
+  return StyleDifference(rawValue: max(a.rawValue, b.rawValue))!
+}
+
 // When some style properties change, different amounts of work have to be done depending on
 // context (e.g. whether the property is changing on an element which has a compositing layer).
 // A simple StyleDifference does not provide enough information so we return a bit mask of

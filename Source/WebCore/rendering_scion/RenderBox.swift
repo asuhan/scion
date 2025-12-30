@@ -430,6 +430,11 @@ enum StretchingMode {
 }
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
+  override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresLayerWithScrollableArea() -> Bool {
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
     if isRenderView() || isDocumentElementRenderer() {

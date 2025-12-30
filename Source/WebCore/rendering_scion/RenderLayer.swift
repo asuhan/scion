@@ -456,6 +456,11 @@ class RenderLayerWrapper {
     }
   }
 
+  func willCompositeClipPath() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCompositingConfigurationUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

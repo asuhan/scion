@@ -23,6 +23,11 @@ import Foundation
 import wk_interop
 
 class RenderViewWrapper: RenderBlockFlowWrapper {
+  override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     if !document().paginated() {

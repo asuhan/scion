@@ -467,6 +467,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return LayoutSizeWrapper()
   }
 
+  override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These return the CSS computed padding values.
   func computedCSSPaddingTop() -> LayoutUnit {
     // TODO(asuhan): implement this

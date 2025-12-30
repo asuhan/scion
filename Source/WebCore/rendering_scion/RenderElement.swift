@@ -1374,8 +1374,75 @@ class RenderElementWrapper: RenderObjectWrapper {
   private func adjustStyleDifference(
     _ diff: StyleDifference, _ contextSensitiveProperties: StyleDifferenceContextSensitiveProperty
   ) -> StyleDifference {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var diff = diff
+    // If transform changed, and we are not composited, need to do a layout.
+    if contextSensitiveProperties.contains(.Transform) {
+      // FIXME: when transforms are taken into account for overflow, we will need to do a layout.
+      if !hasLayer() || !(self as! RenderLayerModelObjectWrapper).layer()!.isComposited() {
+        if !hasLayer() {
+          diff = max(diff, .Layout)
+        } else {
+          // We need to set at least SimplifiedLayout, but if PositionedMovementOnly is already set
+          // then we actually need SimplifiedLayoutAndPositionedMovement.
+          diff = max(
+            diff,
+            (diff == .LayoutPositionedMovementOnly)
+              ? .SimplifiedLayoutAndPositionedMovement : .SimplifiedLayout)
+        }
+
+      } else {
+        diff = max(diff, .RecompositeLayer)
+      }
+    }
+
+    if contextSensitiveProperties.contains(.Opacity) {
+      if !hasLayer() || !(self as! RenderLayerModelObjectWrapper).layer()!.isComposited() {
+        diff = max(diff, .RepaintLayer)
+      } else {
+        diff = max(diff, .RecompositeLayer)
+      }
+    }
+
+    if contextSensitiveProperties.contains(.ClipPath) {
+      if hasLayer() && (self as! RenderLayerModelObjectWrapper).layer()!.willCompositeClipPath() {
+        diff = max(diff, .RecompositeLayer)
+      } else {
+        diff = max(diff, .Repaint)
+      }
+    }
+
+    if contextSensitiveProperties.contains(.WillChange) {
+      if style().willChange() != nil && style().willChange()!.canTriggerCompositing() {
+        diff = max(diff, .RecompositeLayer)
+      }
+    }
+
+    if contextSensitiveProperties.contains(.Filter) && hasLayer() {
+      let layer = (self as! RenderLayerModelObjectWrapper).layer()!
+      if !layer.isComposited() || layer.paintsWithFilters() {
+        diff = max(diff, .RepaintLayer)
+      } else {
+        diff = max(diff, .RecompositeLayer)
+      }
+    }
+
+    // The answer to requiresLayer() for plugins, iframes, and canvas can change without the actual
+    // style changing, since it depends on whether we decide to composite these elements. When the
+    // layer status of one of these elements changes, we need to force a layout.
+    if diff < .Layout {
+      if let modelObject = self as? RenderLayerModelObjectWrapper {
+        if hasLayer() != modelObject.requiresLayer() {
+          diff = .Layout
+        }
+      }
+    }
+
+    // If we have no layer(), just treat a RepaintLayer hint as a normal Repaint.
+    if diff == .RepaintLayer && !hasLayer() {
+      diff = .Repaint
+    }
+
+    return diff
   }
 
   private func issueRepaintForOutlineAuto(_ outlineSize: Float32) {

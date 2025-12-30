@@ -24,6 +24,11 @@
  */
 
 final class RenderVideoWrapper: RenderMediaWrapper {
+  override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

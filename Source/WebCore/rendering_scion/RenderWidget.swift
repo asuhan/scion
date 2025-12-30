@@ -37,6 +37,11 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func needsPreferredWidthsRecalculation() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
