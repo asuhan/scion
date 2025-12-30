@@ -2442,6 +2442,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func diffRequiresLayerRepaint(_ style: RenderStyleWrapper, isComposited: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Resolves the currentColor keyword, but must not be used for the "color" property which has a different semantic.
   func colorResolvingCurrentColor(color: StyleColorWrapper, visitedLink: Bool = false)
     -> ColorWrapper

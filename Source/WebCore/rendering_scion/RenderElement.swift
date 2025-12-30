@@ -395,8 +395,22 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func setNeedsPositionedMovementLayout(_ oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isSetNeedsLayoutForbidden())
+    if needsPositionedMovementLayout() {
+      return
+    }
+    setNeedsPositionedMovementLayoutBit(b: true)
+    scheduleLayout(layoutRoot: markContainingBlocksForLayout())
+    if hasLayer() {
+      if oldStyle != nil
+        && style().diffRequiresLayerRepaint(
+          oldStyle!, isComposited: (self as! RenderLayerModelObjectWrapper).layer()!.isComposited())
+      {
+        setLayerNeedsFullRepaint()
+      } else {
+        setLayerNeedsFullRepaintForPositionedMovementLayout()
+      }
+    }
   }
 
   func setNeedsSimplifiedNormalFlowLayout() {

@@ -1457,6 +1457,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setLayerNeedsFullRepaintForPositionedMovementLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setEverHadLayout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
