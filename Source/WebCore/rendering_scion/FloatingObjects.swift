@@ -66,6 +66,34 @@ class FloatingObjectWrapper: Hashable {
     wk_interop.FloatingObject_setIsPlaced(p, placed)
   }
 
+  func setX(x: LayoutUnit) {
+    #if ASSERT_ENABLED
+      assert(!isInPlacedTree)
+    #endif
+    frameRect.setX(x: x)
+  }
+
+  func setY(y: LayoutUnit) {
+    #if ASSERT_ENABLED
+      assert(!isInPlacedTree)
+    #endif
+    frameRect.setY(y: y)
+  }
+
+  func setWidth(width: LayoutUnit) {
+    #if ASSERT_ENABLED
+      assert(!isInPlacedTree)
+    #endif
+    frameRect.setWidth(width: width)
+  }
+
+  func setHeight(height: LayoutUnit) {
+    #if ASSERT_ENABLED
+      assert(!isInPlacedTree)
+    #endif
+    frameRect.setHeight(height: height)
+  }
+
   func setMarginOffset(offset: LayoutSizeWrapper) {
     wk_interop.FloatingObject_setMarginOffset(
       p, offset.width().rawValue(), offset.height().rawValue())
@@ -122,6 +150,9 @@ class FloatingObjectWrapper: Hashable {
   var frameRect = LayoutRectWrapper()
   let type: `Type` = .FloatLeft  // Type (left or right aligned)
   let isPlaced = false
+  #if ASSERT_ENABLED
+    var isInPlacedTree = false
+  #endif
   private var p: UnsafeMutableRawPointer
 }
 

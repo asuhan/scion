@@ -2018,30 +2018,44 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func setLogicalTopForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalTop: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      floatingObject.setY(y: logicalTop)
+    } else {
+      floatingObject.setX(x: logicalTop)
+    }
   }
 
   private func setLogicalLeftForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalLeft: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      floatingObject.setX(x: logicalLeft)
+    } else {
+      floatingObject.setY(y: logicalLeft)
+    }
   }
 
   private func setLogicalHeightForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalHeight: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      floatingObject.setHeight(height: logicalHeight)
+    } else {
+      floatingObject.setWidth(width: logicalHeight)
+    }
   }
 
   private func setLogicalMarginsForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalLeftMargin: LayoutUnit,
     logicalBeforeMargin: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      floatingObject.setMarginOffset(
+        offset: LayoutSizeWrapper(width: logicalLeftMargin, height: logicalBeforeMargin))
+    } else {
+      floatingObject.setMarginOffset(
+        offset: LayoutSizeWrapper(width: logicalBeforeMargin, height: logicalLeftMargin))
+    }
   }
 
   func flipFloatForWritingModeForChild(child: FloatingObjectWrapper, point: LayoutPointWrapper)
