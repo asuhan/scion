@@ -21,7 +21,12 @@
  *
  */
 
-class StyleImage {
+class StyleImage: Equatable {
+  static func == (_ a: StyleImage, _ b: StyleImage) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLoaded(renderer: RenderElementWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -31,6 +36,22 @@ class StyleImage {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func usesDataProtocol() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasImage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addClient(_ renderer: RenderElementWrapper) { fatalError("Not reached") }
+
+  func removeClient(_ renderer: RenderElementWrapper) { fatalError("Not reached") }
+
+  func hasClient(_ renderer: RenderElementWrapper) -> Bool { fatalError("Not reached") }
 
   // Size / scale.
   func computeIntrinsicDimensions(

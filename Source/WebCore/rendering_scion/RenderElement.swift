@@ -1393,8 +1393,70 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateFillImages(oldLayers: FillLayerWrapper?, newLayers: FillLayerWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fillImagesAreIdentical = { (layer1: FillLayerWrapper?, layer2: FillLayerWrapper?) in
+      if (layer1 == nil && layer2 == nil)
+        || (ObjectIdentifier(layer1!) == ObjectIdentifier(layer2!))
+      {
+        return true
+      }
+
+      var layer1 = layer1
+      var layer2 = layer2
+      while layer1 != nil && layer2 != nil {
+        if !arePointingToEqualData(layer1!.image(), layer2!.image()) {
+          return false
+        }
+        if layer1!.image() != nil && layer1!.image()!.usesDataProtocol() {
+          return false
+        }
+        if let styleImage = layer1!.image() {
+          if styleImage.errorOccurred() || !styleImage.hasImage() || styleImage.usesDataProtocol() {
+            return false
+          }
+        }
+        layer1 = layer1!.next()
+        layer2 = layer2!.next()
+      }
+
+      return layer1 == nil && layer2 == nil
+    }
+
+    let isRegisteredWithNewFillImages = { () in
+      var layer = newLayers
+      while layer != nil {
+        if layer!.image() != nil && !layer!.image()!.hasClient(self) {
+          return false
+        }
+        layer = layer!.next()
+      }
+      return true
+    }
+
+    // If images have the same characteristics and this element is already registered as a
+    // client to the new images, there is nothing to do.
+    if fillImagesAreIdentical(oldLayers, newLayers) && isRegisteredWithNewFillImages() {
+      return
+    }
+
+    // Add before removing, to avoid removing all clients of an image that is in both sets.
+    do {
+      var layer = newLayers
+      while layer != nil {
+        if let image = layer!.image() {
+          image.addClient(self)
+        }
+        layer = layer!.next()
+      }
+    }
+    do {
+      var layer = oldLayers
+      while layer != nil {
+        if let image = layer!.image() {
+          image.removeClient(self)
+        }
+        layer = layer!.next()
+      }
+    }
   }
 
   private func updateImage(oldImage: StyleImage?, newImage: StyleImage?) {
