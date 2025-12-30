@@ -407,6 +407,11 @@ class RenderLayerWrapper {
     return isNormalFlowOnly ? m_parent : stackingContext()
   }
 
+  func cachedClippedOverflowRect() -> LayoutRectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func dirtyNormalFlowList() {
     if normalFlowList != nil {
       normalFlowList!.removeAll()
@@ -666,6 +671,11 @@ class RenderLayerWrapper {
       || hasSelfPaintingLayerDescendantDirty
       || hasNotIsolatedBlendingDescendantsStatusDirty
       || hasIntrinsicallyCompositedDescendantsStatusDirty
+  }
+
+  func repaintIncludingDescendants() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Indicate that the layer contents need to be repainted. Only has an effect

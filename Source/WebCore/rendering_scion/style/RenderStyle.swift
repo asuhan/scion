@@ -1871,6 +1871,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func affectsTransform() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textEmphasisMarkString() -> AtomStringWrapper {
     if p == nil {
       // TODO(asuhan): implement this

@@ -154,8 +154,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     // This should be cleaned up via webkit.org/b/159913 and webkit.org/b/159914.
     let repaintContainer = containerForRepaint().renderer
     repaintUsingContainer(
-      repaintContainer: repaintContainer,
-      r: computeRectForRepaint(rect: layoutOverflowRect(), repaintContainer: repaintContainer))
+      repaintContainer,
+      computeRectForRepaint(rect: layoutOverflowRect(), repaintContainer: repaintContainer))
   }
 
   // Return the renderer whose background style is used to paint the root background.

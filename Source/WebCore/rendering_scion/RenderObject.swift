@@ -1226,8 +1226,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Actually do the repaint of rect r for this object which has been computed in the coordinate space
   // of repaintContainer. If repaintContainer is nullptr, repaint via the view.
   func repaintUsingContainer(
-    repaintContainer: RenderLayerModelObjectWrapper?, r: LayoutRectWrapper,
-    shouldClipToLayer: Bool = true
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ r: LayoutRectWrapper,
+    _ shouldClipToLayer: Bool = true
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

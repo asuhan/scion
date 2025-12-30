@@ -883,8 +883,129 @@ class RenderElementWrapper: RenderObjectWrapper {
   private func repaintBeforeStyleChange(
     diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if oldStyle.usedVisibility() == .Hidden {
+      // Repaint on hidden renderer is a no-op.
+      return false
+    }
+
+    enum RequiredRepaint {
+      case None
+      case RendererOnly
+      case RendererAndDescendantsRenderersWithLayers
+    }
+
+    let shouldRepaintBeforeStyleChange = { [self] () -> RequiredRepaint in
+      if parent() == nil {
+        // Can't resolve absolute coordinates.
+        return .None
+      }
+
+      if self is RenderLayerModelObjectWrapper && hasLayer() {
+        if diff == .RepaintLayer {
+          return .RendererAndDescendantsRenderersWithLayers
+        }
+
+        if diff == .Layout || diff == .SimplifiedLayout {
+          // Certain style changes require layer repaint, since the layer could end up being destroyed.
+          let layerMayGetDestroyed =
+            oldStyle.position() != newStyle.position()
+            || oldStyle.usedZIndex() != newStyle.usedZIndex()
+            || oldStyle.hasAutoUsedZIndex() != newStyle.hasAutoUsedZIndex()
+            || oldStyle.clip() != newStyle.clip()
+            || oldStyle.hasClip() != newStyle.hasClip()
+            || oldStyle.hasOpacity() != newStyle.hasOpacity()
+            || oldStyle.hasTransform() != newStyle.hasTransform()
+            || oldStyle.hasFilter() != newStyle.hasFilter()
+          if layerMayGetDestroyed {
+            return .RendererAndDescendantsRenderersWithLayers
+          }
+        }
+      }
+
+      if shouldRepaintForStyleDifference(diff) {
+        return .RendererOnly
+      }
+
+      if newStyle.outlineSize() < oldStyle.outlineSize() {
+        return .RendererOnly
+      }
+
+      if let modelObject = self as? RenderLayerModelObjectWrapper {
+        // If we don't have a layer yet, but we are going to get one because of transform or opacity, then we need to repaint the old position of the object.
+        let hasLayer = modelObject.hasLayer()
+        let willHaveLayer =
+          newStyle.affectsTransform() || newStyle.hasOpacity() || newStyle.hasFilter()
+          || newStyle.hasBackdropFilter()
+        if !hasLayer && willHaveLayer {
+          return .RendererOnly
+        }
+      }
+
+      if self is RenderBoxWrapper {
+        if diff == .Layout && oldStyle.position() != newStyle.position()
+          && oldStyle.position() == .Static
+        {
+          return .RendererOnly
+        }
+      }
+
+      if diff.rawValue > StyleDifference.RepaintLayer.rawValue
+        && oldStyle.usedVisibility() != newStyle.usedVisibility(),
+        let enclosingLayer = enclosingLayer()
+      {
+        let rendererWillBeHidden = newStyle.usedVisibility() != .Visible
+        if rendererWillBeHidden && enclosingLayer.hasVisibleContent
+          && (CPtrToInt(p) == CPtrToInt(enclosingLayer.renderer().p)
+            || enclosingLayer.renderer().style().usedVisibility() != .Visible)
+        {
+          return .RendererOnly
+        }
+      }
+
+      if diff.rawValue > StyleDifference.RepaintLayer.rawValue
+        && oldStyle.usedContentVisibility() != newStyle.usedContentVisibility()
+        && isOutOfFlowPositioned(), let enclosingLayer = enclosingLayer()
+      {
+        let rendererWillBeHidden = isSkippedContent()
+        if rendererWillBeHidden && enclosingLayer.hasVisibleContent
+          && (CPtrToInt(p) == CPtrToInt(enclosingLayer.renderer().p)
+            || enclosingLayer.renderer().style().usedVisibility() != .Visible)
+        {
+          return .RendererOnly
+        }
+      }
+
+      if diff == .Layout && parent()!.style().isFlippedBlocksWritingMode() {
+        // FIXME: Repaint during (after) layout is currently broken for flipped writing modes in block direction (mostly affecting vertical-rl) (see webkit.org/b/70762)
+        // This repaint call here ensures we invalidate at least the current rect which should cover the non-moving type of cases.
+        return .RendererOnly
+      }
+
+      return .None
+    }()
+
+    if shouldRepaintBeforeStyleChange == .RendererAndDescendantsRenderersWithLayers {
+      assert(hasLayer())
+      (self as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintIncludingDescendants()
+      return true
+    }
+
+    if shouldRepaintBeforeStyleChange == .RendererOnly {
+      if isOutOfFlowPositioned()
+        && (self as! RenderLayerModelObjectWrapper).checkedLayer()!.isSelfPaintingLayer
+      {
+        if let cachedClippedOverflowRect = (self as! RenderLayerModelObjectWrapper).checkedLayer()!
+          .cachedClippedOverflowRect()
+        {
+          repaintUsingContainer(containerForRepaint().renderer, cachedClippedOverflowRect)
+          return true
+        }
+      }
+      repaint()
+      return true
+    }
+
+    return false
   }
 
   func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
