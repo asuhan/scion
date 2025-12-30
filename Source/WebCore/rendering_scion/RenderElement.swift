@@ -894,6 +894,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     return true
   }
 
+  enum StylePropagationType {
+    case AllChildren
+    case BlockAndRubyChildren
+  }
+
+  func propagateStyleToAnonymousChildren(propagationType: StylePropagationType) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func repaintBeforeStyleChange(
     diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) -> Bool {
@@ -1331,7 +1341,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
   }
 
-  private func adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
+  func adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
     oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) {
     if fragmentedFlowState() == .NotInsideFlow {

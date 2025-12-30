@@ -48,6 +48,22 @@ private class PositionedDescendantsMap {
 
 private let positionedDescendantsMap = PositionedDescendantsMap()
 
+private func borderOrPaddingLogicalWidthChanged(
+  oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+) -> Bool {
+  if newStyle.isHorizontalWritingMode() {
+    return oldStyle.borderLeftWidth() != newStyle.borderLeftWidth()
+      || oldStyle.borderRightWidth() != newStyle.borderRightWidth()
+      || oldStyle.paddingLeft() != newStyle.paddingLeft()
+      || oldStyle.paddingRight() != newStyle.paddingRight()
+  }
+
+  return oldStyle.borderTopWidth() != newStyle.borderTopWidth()
+    || oldStyle.borderBottomWidth() != newStyle.borderBottomWidth()
+    || oldStyle.paddingTop() != newStyle.paddingTop()
+    || oldStyle.paddingBottom() != newStyle.paddingBottom()
+}
+
 private func isRenderBlockFlowOrRenderButton(renderElement: RenderElementWrapper) -> Bool {
   // We include isRenderButton in this check because buttons are implemented
   // using flex box but should still support first-line|first-letter.
@@ -1437,8 +1453,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if oldStyle != nil {
+      adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
+        oldStyle: oldStyle!, newStyle: style())
+    }
+
+    propagateStyleToAnonymousChildren(propagationType: .BlockAndRubyChildren)
+
+    // It's possible for our border/padding to change, but for the overall logical width of the block to
+    // end up being the same. We keep track of this change so in layoutBlock, we can know to set relayoutChildren=true.
+    setShouldForceRelayoutChildren(
+      b: oldStyle != nil && diff == .Layout && needsLayout()
+        && borderOrPaddingLogicalWidthChanged(oldStyle: oldStyle!, newStyle: style()))
   }
 
   func canPerformSimplifiedLayout() -> Bool {
