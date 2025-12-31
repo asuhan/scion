@@ -22,6 +22,8 @@
 
 import wk_interop
 
+private let backgroundObscurationTestMaxDepth = 4
+
 enum AvailableLogicalHeightType {
   case ExcludeMarginBorderPadding
   case IncludeMarginBorderPadding
@@ -4058,8 +4060,105 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Horizontal writing mode definition is updated in RenderBoxModelObject::updateFromStyle,
+    // (as part of the RenderBoxModelObject::styleDidChange call below). So, we can safely cache the horizontal
+    // writing mode value before style change here.
+    let oldHorizontalWritingMode = isHorizontalWritingMode()
+
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    let newStyle = style()
+    if needsLayout() && oldStyle != nil {
+      RenderBlockWrapper.removePercentHeightDescendantIfNeeded(descendant: self)
+
+      // Normally we can do optimized positioning layout for absolute/fixed positioned objects. There is one special case, however, which is
+      // when the positioned object's margin-before is changed. In this case the parent has to get a layout in order to run margin collapsing
+      // to determine the new static position.
+      if isOutOfFlowPositioned()
+        && newStyle.hasStaticBlockPosition(horizontal: isHorizontalWritingMode())
+        && oldStyle!.marginBefore() != newStyle.marginBefore()
+        && parent() != nil && !parent()!.normalChildNeedsLayout()
+      {
+        parent()!.setChildNeedsLayout()
+      }
+    }
+
+    if RenderBlockWrapper.hasPercentHeightContainerMap() && firstChild() != nil
+      && oldHorizontalWritingMode != isHorizontalWritingMode()
+    {
+      RenderBlockWrapper.clearPercentHeightDescendantsFrom(parent: self)
+    }
+
+    // If our zoom factor changes and we have a defined scrollLeft/Top, we need to adjust that value into the
+    // new zoomed coordinate space.
+    if hasNonVisibleOverflow() && layer() != nil && oldStyle != nil
+      && oldStyle!.usedZoom() != newStyle.usedZoom(), let scrollableArea = layer()!.scrollableArea()
+    {
+      var scrollPosition = scrollableArea.scrollPosition()
+      let zoomScaleFactor = newStyle.usedZoom() / oldStyle!.usedZoom()
+      scrollPosition.scale(zoomScaleFactor)
+      scrollableArea.setPostLayoutScrollPosition(scrollPosition)
+    }
+
+    if layer() != nil && oldStyle != nil
+      && oldStyle!.shouldPlaceVerticalScrollbarOnLeft()
+        != newStyle.shouldPlaceVerticalScrollbarOnLeft(),
+      let scrollableArea = layer()!.scrollableArea()
+    {
+      scrollableArea.scrollbarsController().scrollbarLayoutDirectionChanged(
+        shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() ? .RTL : .LTR)
+    }
+
+    let isDocElementRenderer = isDocumentElementRenderer()
+
+    if layer() != nil && oldStyle != nil && oldStyle!.scrollbarWidth() != newStyle.scrollbarWidth()
+    {
+      if isDocElementRenderer {
+        view().frameView().scrollbarWidthChanged(newStyle.scrollbarWidth())
+      } else if let scrollableArea = layer()!.scrollableArea() {
+        scrollableArea.scrollbarWidthChanged(newStyle.scrollbarWidth())
+      }
+    }
+
+    // Our opaqueness might have changed without triggering layout.
+    if diff >= .Repaint && diff <= .RepaintLayer {
+      var parentToInvalidate = parent()
+      for _ in 0..<backgroundObscurationTestMaxDepth {
+        if parentToInvalidate == nil {
+          break
+        }
+        parentToInvalidate!.invalidateBackgroundObscurationStatus()
+        parentToInvalidate = parentToInvalidate!.parent()
+      }
+    }
+
+    let isBodyRenderer = isBody()
+
+    if isDocElementRenderer || isBodyRenderer {
+      view().frameView().recalculateScrollbarOverlayStyle()
+
+      if diff != .Equal {
+        view().compositor().rootOrBodyStyleChanged(renderer: self, oldStyle: oldStyle)
+      }
+    }
+
+    if (oldStyle != nil && oldStyle!.shapeOutside() != nil) || style().shapeOutside() != nil {
+      updateShapeOutsideInfoAfterStyleChange(style: style(), oldStyle: oldStyle)
+    }
+    updateGridPositionAfterStyleChange(style: style(), oldStyle: oldStyle)
+
+    // Changing the position from/to absolute can potentially create/remove flex/grid items, as absolutely positioned
+    // children of a flex/grid box are out-of-flow, and thus, not flex/grid items. This means that we need to clear
+    // any override content size set by our container, because it would likely be incorrect after the style change.
+    if isOutOfFlowPositioned() && parent() != nil
+      && parent()!.style().isDisplayFlexibleBoxIncludingDeprecatedOrGridBox()
+    {
+      clearOverridingContentSize()
+    }
+
+    if oldStyle != nil && oldStyle!.hasOutOfFlowPosition() != style().hasOutOfFlowPosition() {
+      clearOverridingContainingBlockContentSize()
+    }
   }
 
   func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
@@ -4764,6 +4863,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return false
+  }
+
+  private func updateShapeOutsideInfoAfterStyleChange(
+    style: RenderStyleWrapper, oldStyle: RenderStyleWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateGridPositionAfterStyleChange(
+    style: RenderStyleWrapper, oldStyle: RenderStyleWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computeOrTrimInlineMargin(

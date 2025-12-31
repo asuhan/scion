@@ -70,6 +70,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func setPostLayoutScrollPosition(_ position: ScrollPosition?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -572,6 +577,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     if m_hasCompositedScrollableOverflow {
       m_layer.compositor().layerGainedCompositedScrollableOverflow(layer: m_layer)
     }
+  }
+
+  override func scrollbarWidthChanged(_ width: ScrollbarWidth) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func showsOverflowControls() -> Bool {

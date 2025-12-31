@@ -45,6 +45,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func recalculateScrollbarOverlayStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTransparent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -169,6 +174,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   override func layerForVerticalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func scrollbarWidthChanged(_ width: ScrollbarWidth) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

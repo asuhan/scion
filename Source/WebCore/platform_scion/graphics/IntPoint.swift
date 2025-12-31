@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
+
 struct IntPoint {
   init() {
     x = 0
@@ -37,6 +39,15 @@ struct IntPoint {
   mutating func move(dx: Int32, dy: Int32) {
     x += dx
     y += dy
+  }
+
+  mutating func scale(sx: Float32, sy: Float32) {
+    self.x = Int32(lroundf(Float32(self.x) * sx))
+    self.y = Int32(lroundf(Float32(self.y) * sy))
+  }
+
+  mutating func scale(_ scale: Float32) {
+    self.scale(sx: scale, sy: scale)
   }
 
   func transposedPoint() -> IntPoint {

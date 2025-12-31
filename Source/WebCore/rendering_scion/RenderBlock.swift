@@ -271,6 +271,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  static func clearPercentHeightDescendantsFrom(parent: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func removePercentHeightDescendantIfNeeded(descendant: RenderBoxWrapper) {
     // We query the map directly, rather than looking at style's
     // logicalHeight()/logicalMinHeight()/logicalMaxHeight() since those

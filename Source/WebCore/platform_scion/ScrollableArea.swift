@@ -66,6 +66,11 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollbarsController() -> ScrollbarsControllerWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateScrollbar(scrollbar: Scrollbar, rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -117,6 +122,11 @@ class ScrollableAreaWrapper {
   }
 
   func layerForVerticalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollbarWidthChanged(_ width: ScrollbarWidth) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

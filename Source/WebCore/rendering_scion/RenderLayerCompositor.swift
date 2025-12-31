@@ -216,6 +216,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return nil
   }
 
+  // We can't rely on getting layerStyleChanged() for a style change that affects the root background, because the style change may
+  // be on the body which has no RenderLayer.
+  func rootOrBodyStyleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
   func repaintOnCompositingChange(layer: RenderLayerWrapper) {
     // If the renderer is not attached yet, no need to repaint.

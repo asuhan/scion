@@ -11,11 +11,13 @@ target_sources(layout_scion PRIVATE
     RectEdges.swift
     ScrollableArea.swift
     Scrollbar.swift
+    ScrollbarsController.swift
     ScrollbarTheme.swift
     ScrollbarThemeComposite.swift
     ScrollTypes.swift
     ScrollView.swift
     StyleAppearance.swift
+    UserInterfaceLayoutDirection.swift
     Widget.swift
 )
 add_subdirectory(graphics)

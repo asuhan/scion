@@ -2222,9 +2222,13 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
   }
 
-  func protectedShapeOutside() -> ShapeValue? {
+  func shapeOutside() -> ShapeValue? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func protectedShapeOutside() -> ShapeValue? {
+    return shapeOutside()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
   func clipPath() -> PathOperation? {
@@ -2256,6 +2260,11 @@ class RenderStyleWrapper: Equatable {
       fatalError("Not implemented")
     }
     return wk_interop.RenderStyle_isOriginalDisplayInlineType(p)
+  }
+
+  func isDisplayFlexibleBoxIncludingDeprecatedOrGridBox() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isDisplayBlockLevel() -> Bool {
