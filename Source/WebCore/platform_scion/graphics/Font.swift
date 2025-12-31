@@ -50,6 +50,11 @@ class FontWrapper: Hashable {
     return FontMetricsWrapper(p: wk_interop.Font_fontMetrics(p))
   }
 
+  func maxCharWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boundsForGlyph(glyph: Glyph) -> FloatRectWrapper {
     let raw = wk_interop.Font_boundsForGlyph(p, glyph)
     return FloatRectWrapper(

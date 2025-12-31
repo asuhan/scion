@@ -446,6 +446,12 @@ struct LayoutUnit: Comparable {
     return a
   }
 
+  @discardableResult
+  static func -= (a: inout LayoutUnit, b: Float32) -> LayoutUnit {
+    a = LayoutUnit(value: a - b)
+    return a
+  }
+
   // For returning the remainder after a division with integer results.
   static func intMod(a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
     // This calculates the modulo so that: a = static_cast<int>(a / b) * b + intMod(a, b).

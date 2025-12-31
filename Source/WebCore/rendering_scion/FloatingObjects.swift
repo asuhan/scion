@@ -146,6 +146,13 @@ class FloatingObjectWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func logicalRightOffsetForPositioningFloat(
+    fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var renderer: RenderBoxWrapper? = nil
   var frameRect = LayoutRectWrapper()
   let type: `Type` = .FloatLeft  // Type (left or right aligned)
@@ -180,7 +187,19 @@ class FloatingObjects {
     fatalError("Not implemented")
   }
 
+  func hasRightObjects() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func set() -> FloatingObjectSet { return m_set }
+
+  func logicalRightOffsetForPositioningFloat(
+    fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func shiftFloatsBy(blockShift: LayoutUnit) {
     // TODO(asuhan): implement this

@@ -75,6 +75,11 @@ class RenderLayoutStateWrapper {
     return nil
   }
 
+  func lineGridOffset() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutOffset() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

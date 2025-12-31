@@ -20,6 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import Foundation
 import wk_interop
 
 typealias TrackedRendererListHashSet = ListSet<RenderBoxWrapper, UInt>
@@ -2169,6 +2170,51 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
     newBox!.initializeStyle()
     return newBox
+  }
+
+  func adjustLogicalRightOffsetForLine(_ offsetFromFloats: LayoutUnit) -> LayoutUnit {
+    var right = offsetFromFloats
+
+    if style().lineAlign() == .None {
+      return right
+    }
+
+    // Push in our right offset so that it is aligned with the character grid.
+    let layoutState = view().frameView().layoutContext().layoutState()
+    if layoutState == nil {
+      return right
+    }
+
+    let lineGrid = layoutState!.lineGrid()
+    if lineGrid == nil || lineGrid!.style().writingMode() != style().writingMode() {
+      return right
+    }
+
+    // FIXME: Should letter-spacing apply? This is complicated since it doesn't apply at the edge?
+    let maxCharWidth = lineGrid!.style().fontCascade().primaryFont().maxCharWidth()
+    if maxCharWidth == 0 {
+      return right
+    }
+
+    let lineGridOffset =
+      lineGrid!.isHorizontalWritingMode()
+      ? layoutState!.lineGridOffset().width() : layoutState!.lineGridOffset().height()
+    let layoutOffset =
+      lineGrid!.isHorizontalWritingMode()
+      ? layoutState!.layoutOffset().width() : layoutState!.layoutOffset().height()
+
+    // Push in to the nearest character width (truncated so that we pixel snap right).
+    // FIXME: Should be patched when subpixel layout lands, since this calculation doesn't have to pixel snap
+    // any more (https://bugs.webkit.org/show_bug.cgi?id=79946).
+    // FIXME: This is wrong for RTL (https://bugs.webkit.org/show_bug.cgi?id=79945).
+    // FIXME: This doesn't work with columns or fragments (https://bugs.webkit.org/show_bug.cgi?id=79942).
+    // FIXME: This doesn't work when the inline position of the object isn't set ahead of time.
+    // FIXME: Dynamic changes to the font or to the inline position need to result in a deep relayout.
+    // (https://bugs.webkit.org/show_bug.cgi?id=79944)
+    let remainder = fmodf(
+      fmodf((right + layoutOffset - lineGridOffset).float(), maxCharWidth), maxCharWidth)
+    right -= ceilf(remainder)
+    return right
   }
 
   override func isSelfCollapsingBlock() -> Bool {
