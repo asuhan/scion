@@ -753,6 +753,21 @@ class RenderBlockWrapper: RenderBoxWrapper {
       firstLetter: firstLetter, firstLetterContainer: firstLetterContainer)
   }
 
+  private func logicalLeftOffsetForContent(_ fragment: RenderFragmentContainerWrapper?)
+    -> LayoutUnit
+  {
+    var logicalLeftOffset =
+      style().isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
+    if shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() && isHorizontalWritingMode() {
+      logicalLeftOffset += verticalScrollbarWidth()
+    }
+    if fragment == nil {
+      return logicalLeftOffset
+    }
+    let boxRect = borderBoxRectInFragment(fragment: fragment)
+    return logicalLeftOffset + (isHorizontalWritingMode() ? boxRect.x() : boxRect.y())
+  }
+
   func startOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -764,8 +779,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalLeftOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return logicalLeftOffsetForContent(fragmentAtBlockOffset(blockOffset: blockOffset))
   }
 
   func logicalRightOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
