@@ -489,6 +489,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func rootLayerConfigurationChanged() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerTiledBackingUsageChanged(graphicsLayer: GraphicsLayer?, usingTiledBacking: Bool) {
     if usingTiledBacking {
       m_layersWithTiledBackingCount += 1

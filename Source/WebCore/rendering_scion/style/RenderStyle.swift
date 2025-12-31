@@ -1432,6 +1432,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func containerType() -> ContainerType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentVisibility() -> ContentVisibility {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2017,6 +2022,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func effectiveInert() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasSnapPosition() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

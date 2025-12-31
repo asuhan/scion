@@ -800,6 +800,12 @@ struct EventListenerRegionType: OptionSet {
   static let MouseClick = EventListenerRegionType(rawValue: 1 << 2)
 }
 
+enum ContainerType: UInt8 {
+  case Normal
+  case Size
+  case InlineSize
+}
+
 enum ContainIntrinsicSizeType: UInt8 {
   case None
   case Length

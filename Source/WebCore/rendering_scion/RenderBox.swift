@@ -4004,8 +4004,57 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    RenderBoxWrapper.hadNonVisibleOverflow = hasNonVisibleOverflow()
+
+    let oldStyle = hasInitializedStyle ? style() : nil
+    if oldStyle != nil {
+      // The background of the root element or the body element could propagate up to
+      // the canvas. Issue full repaint, when our style changes substantially.
+      if diff >= .Repaint && (isDocumentElementRenderer() || isBody()) {
+        view().repaintRootContents()
+        if oldStyle!.hasEntirelyFixedBackground() != newStyle.hasEntirelyFixedBackground() {
+          view().compositor().rootLayerConfigurationChanged()
+        }
+      }
+
+      // When a layout hint happens and an object's position style changes, we have to do a layout
+      // to dirty the render tree using the old position value now.
+      if diff == .Layout && parent() != nil && oldStyle!.position() != newStyle.position() {
+        if !oldStyle!.hasOutOfFlowPosition() && newStyle.hasOutOfFlowPosition() {
+          // We are about to go out of flow. Before that takes place, we need to mark the
+          // current containing block chain for preferred widths recalculation.
+          setNeedsLayoutAndPrefWidthsRecalc()
+        } else {
+          scheduleLayout(layoutRoot: markContainingBlocksForLayout())
+        }
+
+        if oldStyle!.position() != .Static && newStyle.hasOutOfFlowPosition() {
+          parent()!.setChildNeedsLayout()
+        }
+        if isFloating() && !isOutOfFlowPositioned() && newStyle.hasOutOfFlowPosition() {
+          removeFloatingOrPositionedChildFromBlockLists()
+        }
+      }
+    } else if isBody() {
+      view().repaintRootContents()
+    }
+
+    let boxContributesSnapPositions = newStyle.hasSnapPosition()
+    if boxContributesSnapPositions || (oldStyle != nil && oldStyle!.hasSnapPosition()) {
+      if boxContributesSnapPositions {
+        view().registerBoxWithScrollSnapPositions(self)
+      } else {
+        view().unregisterBoxWithScrollSnapPositions(self)
+      }
+    }
+
+    if newStyle.containerType() != .Normal {
+      view().registerContainerQueryBox(self)
+    } else if oldStyle != nil && oldStyle!.containerType() != .Normal {
+      view().unregisterContainerQueryBox(self)
+    }
+
+    super.styleWillChange(diff: diff, newStyle: newStyle)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -5842,6 +5891,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Our overflow information.
   var overflow: RenderOverflow? = nil
+
+  // Used to store state between styleWillChange and styleDidChange
+  private static var hadNonVisibleOverflow = false
 }
 
 func synthesizedBaseline(

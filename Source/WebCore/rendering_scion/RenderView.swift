@@ -266,6 +266,26 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func registerBoxWithScrollSnapPositions(_ box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func unregisterBoxWithScrollSnapPositions(_ box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func registerContainerQueryBox(_ box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func unregisterContainerQueryBox(_ box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewTransitionRoot() -> RenderElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
