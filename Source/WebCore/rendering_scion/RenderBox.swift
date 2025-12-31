@@ -47,6 +47,17 @@ private func outermostBlockContainingFloatingObject(box: RenderBoxWrapper)
   return parentBlock
 }
 
+private func gridStyleHasNotChanged(style: RenderStyleWrapper, oldStyle: RenderStyleWrapper) -> Bool
+{
+  return
+    (oldStyle.gridItemColumnStart() == style.gridItemColumnStart()
+    && oldStyle.gridItemColumnEnd() == style.gridItemColumnEnd()
+    && oldStyle.gridItemRowStart() == style.gridItemRowStart()
+    && oldStyle.gridItemRowEnd() == style.gridItemRowEnd()
+    && oldStyle.order() == style.order()
+    && oldStyle.hasOutOfFlowPosition() == style.hasOutOfFlowPosition())
+}
+
 private func inlineSizeFromAspectRatio(
   borderPaddingInlineSum: LayoutUnit, borderPaddingBlockSum: LayoutUnit, aspectRatio: Float64,
   boxSizing: BoxSizing, blockSize: LayoutUnit, aspectRatioType: AspectRatioType,
@@ -4906,8 +4917,26 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func updateGridPositionAfterStyleChange(
     style: RenderStyleWrapper, oldStyle: RenderStyleWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if oldStyle == nil {
+      return
+    }
+    let parentGrid = parent() as? RenderGridWrapper
+    if parentGrid == nil {
+      return
+    }
+
+    // Positioned items don't participate on the layout of the grid,
+    // so we don't need to mark the grid as dirty if they change positions.
+    if (oldStyle!.hasOutOfFlowPosition() && style.hasOutOfFlowPosition())
+      || gridStyleHasNotChanged(style: style, oldStyle: oldStyle!)
+    {
+      return
+    }
+
+    // It should be possible to not dirty the grid in some cases (like moving an
+    // explicitly placed grid item).
+    // For now, it's more simple to just always recompute the grid.
+    parentGrid!.dirtyGrid()
   }
 
   private func computeOrTrimInlineMargin(

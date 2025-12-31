@@ -43,7 +43,7 @@ enum GridPositionSide {
   case RowEndSide
 }
 
-struct GridPosition {
+struct GridPosition: Equatable {
   func isPositive() -> Bool { return integerPosition() > 0 }
 
   func isAuto() -> Bool { return type == .AutoPosition }
