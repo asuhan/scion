@@ -1940,8 +1940,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func containingBlockAvailableLineWidthInFragment(fragment: RenderFragmentContainerWrapper?)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let cb = containingBlock()
+    var containingBlockFragment: RenderFragmentContainerWrapper? = nil
+    var logicalTopPosition = logicalTop()
+    if fragment != nil {
+      let offsetFromLogicalTopOfFragment =
+        fragment != nil
+        ? fragment!.logicalTopForFragmentedFlowContent() - offsetFromLogicalTopOfFirstPage()
+        : LayoutUnit(value: UInt64(0))
+      logicalTopPosition = max(
+        logicalTopPosition, logicalTopPosition + offsetFromLogicalTopOfFragment)
+      containingBlockFragment = cb!.clampToStartAndEndFragments(fragment: fragment)
+    }
+    return cb!.availableLogicalWidthForLineInFragment(
+      position: logicalTopPosition, fragment: containingBlockFragment,
+      logicalHeight: availableLogicalHeight(heightType: .IncludeMarginBorderPadding))
   }
 
   func perpendicularContainingBlockLogicalHeight() -> LayoutUnit {
