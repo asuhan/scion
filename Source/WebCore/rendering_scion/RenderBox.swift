@@ -1958,8 +1958,38 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func perpendicularContainingBlockLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let overridingContainingBlockContentLogicalHeight =
+      overridingContainingBlockContentLogicalHeight(),
+      let overridingContainingBlockContentLogicalHeightValue =
+        overridingContainingBlockContentLogicalHeight
+    {
+      return overridingContainingBlockContentLogicalHeightValue
+    }
+
+    let containingBlock = containingBlock()!
+    if let overridingLogicalHeight = containingBlock.overridingLogicalHeight() {
+      return containingBlock.overridingContentLogicalHeight(
+        overridingLogicalHeight: overridingLogicalHeight)
+    }
+
+    let containingBlockStyle = containingBlock.style()
+    let logicalHeightLength = containingBlockStyle.logicalHeight()
+
+    // FIXME: For now just support fixed heights.  Eventually should support percentage heights as well.
+    if !logicalHeightLength.isFixed() {
+      let fillFallbackExtent = LayoutUnit(
+        value: containingBlockStyle.isHorizontalWritingMode()
+          ? view().frameView().layoutSize().height : view().frameView().layoutSize().width)
+      let fillAvailableExtent = containingBlock.availableLogicalHeight(
+        heightType: .ExcludeMarginBorderPadding)
+      view().addPercentHeightDescendant(descendant: self)
+      // FIXME: https://bugs.webkit.org/show_bug.cgi?id=158286 We also need to perform the same percentHeightDescendant treatment to the element which dictates the return value for containingBlock()->availableLogicalHeight() above.
+      return min(fillAvailableExtent, fillFallbackExtent)
+    }
+
+    // Use the content box logical height as specified by the style.
+    return containingBlock.adjustContentBoxLogicalHeightForBoxSizing(
+      height: LayoutUnit(value: logicalHeightLength.value()))
   }
 
   func updateLogicalWidth() {

@@ -67,6 +67,13 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
+  // Functions for getting/setting the size webkit should use to layout the contents. By default this is the same as the visible
+  // content size. Explicitly setting a layout size value will cause webkit to layout the contents using this size instead.
+  func layoutSize() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
