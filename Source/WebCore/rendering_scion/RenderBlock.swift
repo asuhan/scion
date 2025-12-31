@@ -25,6 +25,10 @@ import wk_interop
 
 typealias TrackedRendererListHashSet = ListSet<RenderBoxWrapper, UInt>
 
+private typealias TrackedDescendantsMap = [UInt: TrackedRendererListHashSet]
+
+private var percentHeightDescendantsMap: TrackedDescendantsMap? = nil
+
 enum CaretType {
   case CursorCaret
   case DragCaret
@@ -2597,8 +2601,46 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func dirtyForLayoutFromPercentageHeightDescendants() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if percentHeightDescendantsMap == nil {
+      return
+    }
+
+    let descendants = percentHeightDescendantsMap![CPtrToInt(p)]
+    if descendants == nil {
+      return
+    }
+
+    for descendant in descendants! {
+      // Let's not dirty the height perecentage descendant when it has an absolutely positioned containing block ancestor. We should be able to dirty such boxes through the regular invalidation logic.
+      var descendantNeedsLayout = true
+      var ancestor = descendant.containingBlock()
+      while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(p) {
+        if ancestor!.isOutOfFlowPositioned() {
+          descendantNeedsLayout = false
+          break
+        }
+        ancestor = ancestor!.containingBlock()
+      }
+      if !descendantNeedsLayout {
+        continue
+      }
+
+      var renderer: RenderElementWrapper = descendant
+      while CPtrToInt(renderer.p) != CPtrToInt(p) {
+        if renderer.normalChildNeedsLayout() {
+          break
+        }
+        renderer.setChildNeedsLayout(markParents: .MarkOnlyThis)
+
+        // If the width of an image is affected by the height of a child (e.g., an image with an aspect ratio),
+        // then we have to dirty preferred widths, since even enclosing blocks can become dirty as a result.
+        // (A horizontal flexbox that contains an inline image wrapped in an anonymous block for example.)
+        if renderer.hasIntrinsicAspectRatio() || renderer.style().hasAspectRatio() {
+          renderer.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+        }
+        renderer = renderer.container()!
+      }
+    }
   }
 
   func recomputeLogicalWidth() -> Bool {
