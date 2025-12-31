@@ -2281,6 +2281,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return false
   }
 
+  private func updateStylesForColumnChildren(oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func needsLayoutAfterFragmentRangeChange() -> Bool {
     // A block without floats or that expands to enclose them won't need a relayout
     // after a fragment range change. There is no overflow content needing relayout
@@ -2755,8 +2760,48 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    // After our style changed, if we lose our ability to propagate floats into next sibling
+    // blocks, then we need to find the top most parent containing that overhanging float and
+    // then mark its descendants with floats for layout and clear all floats from its next
+    // sibling blocks that exist in our floating objects list. See bug 56299 and 62875.
+    let canPropagateFloatIntoSibling = !isFloatingOrOutOfFlowPositioned() && !avoidsFloats()
+    if diff == .Layout && RenderBlockWrapper.canPropagateFloatIntoSibling
+      && !canPropagateFloatIntoSibling && hasOverhangingFloats()
+    {
+      var parentBlock: RenderBlockFlowWrapper = self
+      let floatingObjectSet = floatingObjects!.set()
+
+      for ancestor: RenderBlockFlowWrapper in ancestorsOfType(descendant: self) {
+        if ancestor.isRenderView() {
+          break
+        }
+        if ancestor.hasOverhangingFloats() {
+          for floatingObject in floatingObjectSet {
+            if ancestor.hasOverhangingFloat(floatingObject.renderer!) {
+              parentBlock = ancestor
+              break
+            }
+          }
+        }
+      }
+
+      parentBlock.markAllDescendantsWithFloatsForLayout()
+      parentBlock.markSiblingsWithFloatsForLayout()
+    }
+
+    if diff == .Layout && selfNeedsLayout() && childrenInline() {
+      let walker = InlineWalker(root: self)
+      while !walker.atEnd() {
+        walker.current()!.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+        walker.advance()
+      }
+    }
+
+    if multiColumnFlowForBlockFlow() == nil {
+      updateStylesForColumnChildren(oldStyle: oldStyle)
+    }
   }
 
   private func createFloatingObjects() {
@@ -3507,6 +3552,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       }
     }
     return lowestFloatLogicalBottom
+  }
+
+  private func hasOverhangingFloat(_ renderer: RenderBoxWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func addIntrudingFloats(
