@@ -3719,8 +3719,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isReplacedOrInlineBlock() {
+      return direction == .HorizontalLine
+        ? marginBox!.top + height() + marginBox!.bottom
+        : marginBox!.right + width() + marginBox!.left
+    }
+    return LayoutUnit(value: 0)
   }
 
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
@@ -6112,6 +6116,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let marginBox: LayoutBoxExtent? = nil
 
   // The preferred logical width of the element if it were to break its lines at every possible opportunity.
   var minPreferredLogicalWidth = LayoutUnit()
