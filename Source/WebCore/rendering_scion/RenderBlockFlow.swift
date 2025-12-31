@@ -4439,8 +4439,38 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     childBox: RenderBoxWrapper, logicalTopOffset: inout LayoutUnit,
     marginBeforeOffset: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let style = firstLineStyle()
+    let fontMetrics = style.metricsOfPrimaryFont()
+    if fontMetrics.capHeight() == nil {
+      return
+    }
+
+    let heightOfLine = lineHeight(
+      firstLine: true, direction: isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+      linePositionMode: .PositionOfInteriorLineBoxes)
+    let beforeMarginBorderPadding = childBox.borderAndPaddingBefore() + childBox.marginBefore()
+
+    // Make an adjustment to align with the cap height of a theoretical block line.
+    let adjustment =
+      fontMetrics.intAscent() + (heightOfLine - fontMetrics.intHeight()) / 2
+      - fontMetrics.intCapHeight() - beforeMarginBorderPadding
+    logicalTopOffset += adjustment
+
+    // For sunken and raised caps, we have to make some adjustments. Test if we're sunken or raised (dropHeightDelta will be
+    // positive for raised and negative for sunken).
+    let dropHeightDelta =
+      childBox.style().initialLetterHeight() - childBox.style().initialLetterDrop()
+
+    // If we're sunken, the float needs to shift down but lines still need to avoid it. In order to do that we increase the float's margin.
+    if dropHeightDelta < 0 {
+      marginBeforeOffset += -dropHeightDelta * heightOfLine
+    }
+
+    // If we're raised, then we actually have to grow the height of the block, since the lines have to be pushed down as though we're placing
+    // empty lines beside the first letter.
+    if dropHeightDelta > 0 {
+      setLogicalHeight(size: logicalHeight() + dropHeightDelta * heightOfLine)
+    }
   }
 
   private func selfCollapsingMarginBeforeWithClear(candidate: RenderObjectWrapper?) -> LayoutUnit? {
