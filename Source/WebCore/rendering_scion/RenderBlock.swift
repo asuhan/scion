@@ -2541,8 +2541,52 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func removePositionedObjectsIfNeeded(
     oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let hadTransform = oldStyle.hasTransformRelatedProperty()
+    let willHaveTransform = newStyle.hasTransformRelatedProperty()
+    let hadLayoutContainment = oldStyle.containsLayout()
+    let willHaveLayoutContainment = newStyle.containsLayout()
+    if oldStyle.position() == newStyle.position() && hadTransform == willHaveTransform
+      && hadLayoutContainment == willHaveLayoutContainment
+    {
+      return
+    }
+
+    // We are no longer the containing block for out-of-flow descendants.
+    var outOfFlowDescendantsHaveNewContainingBlock =
+      (hadTransform && !willHaveTransform) || (newStyle.position() == .Static && !willHaveTransform)
+    if hadLayoutContainment != willHaveLayoutContainment {
+      outOfFlowDescendantsHaveNewContainingBlock =
+        hadLayoutContainment && !willHaveLayoutContainment
+    }
+    if outOfFlowDescendantsHaveNewContainingBlock {
+      // Our out-of-flow descendants will be inserted into a new containing block's positioned objects list during the next layout.
+      removePositionedObjects(
+        newContainingBlockCandidate: nil, containingBlockState: .NewContainingBlock)
+      return
+    }
+
+    // We are a new containing block.
+    if oldStyle.position() == .Static && !hadTransform {
+      // Remove our absolutely positioned descendants from their current containing block.
+      // They will be inserted into our positioned objects list during layout.
+      var containingBlock = parent()
+      while containingBlock != nil && !(containingBlock is RenderViewWrapper)
+        && (containingBlock!.style().position() == .Static
+          || (containingBlock!.isInline() && !containingBlock!.isReplacedOrInlineBlock()))
+      {
+        if containingBlock!.style().position() == .Relative && containingBlock!.isInline()
+          && !containingBlock!.isReplacedOrInlineBlock()
+        {
+          containingBlock = containingBlock!.containingBlock()
+          break
+        }
+        containingBlock = containingBlock!.parent()
+      }
+      if let renderBlock = containingBlock as? RenderBlockWrapper {
+        renderBlock.removePositionedObjects(
+          newContainingBlockCandidate: self, containingBlockState: .NewContainingBlock)
+      }
+    }
   }
 
   private func paintDebugBoxShadowIfApplicable(
