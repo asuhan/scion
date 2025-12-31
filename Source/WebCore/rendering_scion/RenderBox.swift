@@ -4736,8 +4736,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func includeVerticalScrollbarSize() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasNonVisibleOverflow() && layer() != nil && !layer()!.hasOverlayScrollbars()
+      && (style().overflowY() == .Scroll || style().overflowY() == .Auto
+        || (style().overflowY() == .Hidden && !style().scrollbarGutter().isAuto))
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
