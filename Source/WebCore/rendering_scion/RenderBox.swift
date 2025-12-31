@@ -1693,8 +1693,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeAndSetBlockDirectionMargins(containingBlock: RenderBlockWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var marginBefore = LayoutUnit()
+    var marginAfter = LayoutUnit()
+    computeBlockDirectionMargins(
+      containingBlock: containingBlock, marginBefore: &marginBefore, marginAfter: &marginAfter)
+    containingBlock.setMarginBeforeForChild(child: self, value: marginBefore)
+    containingBlock.setMarginAfterForChild(child: self, value: marginAfter)
   }
 
   enum RenderBoxFragmentInfoFlags {

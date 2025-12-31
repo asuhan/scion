@@ -644,7 +644,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  private func setMarginAfterForChild(child: RenderBoxWrapper, value: LayoutUnit) {
+  func setMarginAfterForChild(child: RenderBoxWrapper, value: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
