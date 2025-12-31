@@ -1564,7 +1564,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private var m_firstChild: RenderObjectWrapper? = nil
-  private var hasInitializedStyle = false
+  var hasInitializedStyle = false
 
   let renderBlockHasMarginBeforeQuirk = false
   let renderBlockHasMarginAfterQuirk = false

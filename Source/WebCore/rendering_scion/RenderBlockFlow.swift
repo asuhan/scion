@@ -2734,8 +2734,24 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldStyle = hasInitializedStyle ? style() : nil
+    RenderBlockWrapper.canPropagateFloatIntoSibling =
+      oldStyle != nil ? !isFloatingOrOutOfFlowPositioned() && !avoidsFloats() : false
+
+    if oldStyle != nil {
+      let oldPosition = oldStyle!.position()
+      let newPosition = newStyle.position()
+
+      if parent() != nil && diff == .Layout && oldPosition != newPosition {
+        if containsFloats() && !isFloating() && !isOutOfFlowPositioned()
+          && newStyle.hasOutOfFlowPosition()
+        {
+          markAllDescendantsWithFloatsForLayout()
+        }
+      }
+    }
+
+    super.styleWillChange(diff: diff, newStyle: newStyle)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
