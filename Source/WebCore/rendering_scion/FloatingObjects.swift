@@ -187,12 +187,24 @@ class FloatingObjects {
     fatalError("Not implemented")
   }
 
+  func hasLeftObjects() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasRightObjects() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func set() -> FloatingObjectSet { return m_set }
+
+  func logicalLeftOffsetForPositioningFloat(
+    fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   func logicalRightOffsetForPositioningFloat(
     fixedOffset: LayoutUnit, logicalTop: LayoutUnit, heightRemaining: inout LayoutUnit

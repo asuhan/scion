@@ -3470,8 +3470,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func logicalLeftOffsetForPositioningFloat(
     logicalTop: LayoutUnit, fixedOffset: LayoutUnit, heightRemaining: inout LayoutUnit
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var offset = fixedOffset
+    if floatingObjects != nil && floatingObjects!.hasLeftObjects() {
+      offset = floatingObjects!.logicalLeftOffsetForPositioningFloat(
+        fixedOffset: fixedOffset, logicalTop: logicalTop, heightRemaining: &heightRemaining)
+    }
+    return adjustLogicalLeftOffsetForLine(offset)
   }
 
   private func nextFloatLogicalBottomBelowForBlock(logicalHeight: LayoutUnit) -> LayoutUnit {

@@ -2217,6 +2217,52 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return right
   }
 
+  func adjustLogicalLeftOffsetForLine(_ offsetFromFloats: LayoutUnit) -> LayoutUnit {
+    var left = offsetFromFloats
+
+    if style().lineAlign() == .None {
+      return left
+    }
+
+    // Push in our left offset so that it is aligned with the character grid.
+    let layoutState = view().frameView().layoutContext().layoutState()
+    if layoutState == nil {
+      return left
+    }
+
+    let lineGrid = layoutState!.lineGrid()
+    if lineGrid == nil || lineGrid!.style().writingMode() != style().writingMode() {
+      return left
+    }
+
+    // FIXME: Should letter-spacing apply? This is complicated since it doesn't apply at the edge?
+    let maxCharWidth = lineGrid!.style().fontCascade().primaryFont().maxCharWidth()
+    if maxCharWidth == 0 {
+      return left
+    }
+
+    let lineGridOffset =
+      lineGrid!.isHorizontalWritingMode()
+      ? layoutState!.lineGridOffset().width() : layoutState!.lineGridOffset().height()
+    let layoutOffset =
+      lineGrid!.isHorizontalWritingMode()
+      ? layoutState!.layoutOffset().width() : layoutState!.layoutOffset().height()
+
+    // Push in to the nearest character width (truncated so that we pixel snap left).
+    // FIXME: Should be patched when subpixel layout lands, since this calculation doesn't have to pixel snap
+    // any more (https://bugs.webkit.org/show_bug.cgi?id=79946).
+    // FIXME: This is wrong for RTL (https://bugs.webkit.org/show_bug.cgi?id=79945).
+    // FIXME: This doesn't work with columns or fragments (https://bugs.webkit.org/show_bug.cgi?id=79942).
+    // FIXME: This doesn't work when the inline position of the object isn't set ahead of time.
+    // FIXME: Dynamic changes to the font or to the inline position need to result in a deep relayout.
+    // (https://bugs.webkit.org/show_bug.cgi?id=79944)
+    let remainder = fmodf(
+      maxCharWidth - fmodf((left + layoutOffset - lineGridOffset).float(), maxCharWidth),
+      maxCharWidth)
+    left += remainder
+    return left
+  }
+
   override func isSelfCollapsingBlock() -> Bool {
     // We are not self-collapsing if we
     // (a) have a non-zero height according to layout (an optimization to avoid wasting time)
