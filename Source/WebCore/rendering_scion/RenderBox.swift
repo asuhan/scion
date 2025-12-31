@@ -3827,6 +3827,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func markShapeOutsideDependentsForLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // True if this box can have a range in an outside fragmentation context.
   func canHaveOutsideFragmentRange() -> Bool { return !isRenderFragmentedFlow() }
 
@@ -4868,8 +4873,34 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func updateShapeOutsideInfoAfterStyleChange(
     style: RenderStyleWrapper, oldStyle: RenderStyleWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shapeOutside = style.shapeOutside()
+    let oldShapeOutside = oldStyle != nil ? oldStyle!.shapeOutside() : nil
+
+    let shapeMargin = style.shapeMargin()
+    let oldShapeMargin =
+      oldStyle != nil ? oldStyle!.shapeMargin() : RenderStyleWrapper.initialShapeMargin()
+
+    let shapeImageThreshold = style.shapeImageThreshold()
+    let oldShapeImageThreshold =
+      oldStyle != nil
+      ? oldStyle!.shapeImageThreshold() : RenderStyleWrapper.initialShapeImageThreshold()
+
+    // FIXME: A future optimization would do a deep comparison for equality. (bug 100811)
+    if shapeOutside === oldShapeOutside && shapeMargin == oldShapeMargin
+      && shapeImageThreshold == oldShapeImageThreshold
+    {
+      return
+    }
+
+    if shapeOutside == nil {
+      removeShapeOutsideInfo()
+    } else {
+      ensureShapeOutsideInfo().markShapeAsDirty()
+    }
+
+    if shapeOutside != nil || shapeOutside !== oldShapeOutside {
+      markShapeOutsideDependentsForLayout()
+    }
   }
 
   private func updateGridPositionAfterStyleChange(
@@ -5994,6 +6025,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     overflow!.addLayoutOverflow(rect: overflowRect)
+  }
+
+  func ensureShapeOutsideInfo() -> ShapeOutsideInfoWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeShapeOutsideInfo() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // The preferred logical width of the element if it were to break its lines at every possible opportunity.

@@ -29,12 +29,17 @@
 
 import wk_interop
 
-struct ShapeOutsideInfoWrapper {
+class ShapeOutsideInfoWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func invalidateForSizeChangeIfNeeded() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func markShapeAsDirty() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

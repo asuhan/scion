@@ -2231,6 +2231,26 @@ class RenderStyleWrapper: Equatable {
     return shapeOutside()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
+  func shapeMargin() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func initialShapeMargin() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shapeImageThreshold() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func initialShapeImageThreshold() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clipPath() -> PathOperation? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
