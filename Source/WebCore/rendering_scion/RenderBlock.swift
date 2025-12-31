@@ -370,6 +370,21 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return false
   }
 
+  override func markForPaginationRelayoutIfNeeded() {
+    let layoutState = view().frameView().layoutContext().layoutState()
+    if needsLayout() || layoutState == nil || !layoutState!.isPaginated() {
+      return
+    }
+
+    if layoutState!.pageLogicalHeightChanged()
+      || (layoutState!.pageLogicalHeight().bool()
+        && layoutState!.pageLogicalOffset(child: self, childLogicalOffset: logicalTop())
+          != pageLogicalOffset())
+    {
+      setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
+  }
+
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
   func containsFloats() -> Bool {
     return wk_interop.RenderBlock_containsFloats(p)
