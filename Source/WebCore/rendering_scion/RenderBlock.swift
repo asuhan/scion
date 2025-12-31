@@ -1459,8 +1459,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldStyle = hasInitializedStyle ? style() : nil
+    // FIXME: Should change the expression below to newStyle.display() == DisplayType::InlineBlock.
+    setReplacedOrInlineBlock(newStyle.isDisplayInlineType())
+    if oldStyle != nil {
+      removePositionedObjectsIfNeeded(oldStyle: oldStyle!, newStyle: newStyle)
+      if isLegend() && !oldStyle!.isFloating() && newStyle.isFloating() {
+        setIsExcludedFromNormalLayout(excluded: false)
+      }
+    }
+    super.styleWillChange(diff: diff, newStyle: newStyle)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -2526,6 +2534,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func removePositionedObjectsIfNeeded(
+    oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

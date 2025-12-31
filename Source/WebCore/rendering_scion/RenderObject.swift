@@ -1092,6 +1092,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setReplacedOrInlineBlock(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setHorizontalWritingMode(_ b: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
