@@ -252,8 +252,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Called after the view transparency, or the document or base background color change.
   private func rootBackgroundColorOrTransparencyChanged() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !usesCompositing() {
+      return
+    }
+
+    var backgroundColor: ColorWrapper? = ColorWrapper()
+    let isTransparent = viewHasTransparentBackground(&backgroundColor)
+
+    let extendedBackgroundColor =
+      m_renderView.settings().backgroundShouldExtendBeyondPage() ? backgroundColor! : ColorWrapper()
+
+    let transparencyChanged = m_viewBackgroundIsTransparent != isTransparent
+    let backgroundColorChanged = m_viewBackgroundColor != backgroundColor!
+    let extendedBackgroundColorChanged = m_rootExtendedBackgroundColor != extendedBackgroundColor
+
+    if !transparencyChanged && !backgroundColorChanged && !extendedBackgroundColorChanged {
+      return
+    }
+
+    m_viewBackgroundIsTransparent = isTransparent
+    m_viewBackgroundColor = backgroundColor!
+    m_rootExtendedBackgroundColor = extendedBackgroundColor
+
+    if extendedBackgroundColorChanged {
+      page().chrome().client().pageExtendedBackgroundColorDidChange()
+    }
+
+    rootLayerConfigurationChanged()
   }
 
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
@@ -561,7 +586,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func viewHasTransparentBackground() -> Bool {
+    var dummy: ColorWrapper? = nil
+    return viewHasTransparentBackgroundHelper(&dummy)
+  }
+
+  func viewHasTransparentBackground(_ backgroundColor: inout ColorWrapper?) -> Bool {
+    return viewHasTransparentBackgroundHelper(&backgroundColor)
+  }
+
+  func viewHasTransparentBackgroundHelper(_ backgroundColor: inout ColorWrapper?) -> Bool {
     if m_renderView.frameView().isTransparent() {
+      if backgroundColor != nil {
+        backgroundColor = ColorWrapper()  // Return an invalid color.
+      }
       return true
     }
 
@@ -571,6 +608,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     assert(documentBackgroundColor.isValid())
+
+    if backgroundColor != nil {
+      backgroundColor = documentBackgroundColor
+    }
 
     return !documentBackgroundColor.isOpaque()
   }
@@ -1685,4 +1726,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private var m_layerForHorizontalScrollbar: GraphicsLayer? = nil
   private var m_layerForVerticalScrollbar: GraphicsLayer? = nil
   private var m_layerForScrollCorner: GraphicsLayer? = nil
+
+  private var m_viewBackgroundIsTransparent = false
+
+  private var m_viewBackgroundColor = ColorWrapper()
+  private var m_rootExtendedBackgroundColor = ColorWrapper()
 }

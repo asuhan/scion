@@ -44,6 +44,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func backgroundShouldExtendBeyondPage() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func caretBrowsingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
