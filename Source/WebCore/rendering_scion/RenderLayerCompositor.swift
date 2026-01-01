@@ -57,8 +57,30 @@ private let allScrollCoordinationRoles: ScrollCoordinationRole = [
 ]
 
 private func frameHostingNodeForFrame(_ frame: LocalFrameWrapper) -> ScrollingNodeIDWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if frame.document() == nil || frame.view() == nil {
+    return nil
+  }
+
+  // Find the frame's enclosing layer in our render tree.
+  let ownerElement = frame.document()!.ownerElement()
+  if ownerElement == nil {
+    return nil
+  }
+
+  let widgetRenderer = ownerElement!.renderer() as? RenderWidgetWrapper
+  if widgetRenderer == nil {
+    return nil
+  }
+
+  if !widgetRenderer!.hasLayer() || !widgetRenderer!.layer()!.isComposited() {
+    // TODO(asuhan): add logging
+    return nil
+  }
+
+  let frameHostingNodeID = widgetRenderer!.layer()!.backing!.scrollingNodeIDForRole(
+    role: .FrameHosting)
+
+  return frameHostingNodeID
 }
 
 private func clippingChanged(oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper) -> Bool {
