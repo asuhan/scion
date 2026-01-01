@@ -219,6 +219,39 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // We can't rely on getting layerStyleChanged() for a style change that affects the root background, because the style change may
   // be on the body which has no RenderLayer.
   func rootOrBodyStyleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
+    if !usesCompositing() {
+      return
+    }
+
+    var oldBackgroundColor = ColorWrapper()
+    if oldStyle != nil {
+      oldBackgroundColor = oldStyle!.visitedDependentColorWithColorFilter(
+        colorProperty: .CSSPropertyBackgroundColor)
+    }
+
+    if oldBackgroundColor
+      != renderer.style().visitedDependentColorWithColorFilter(
+        colorProperty: .CSSPropertyBackgroundColor)
+    {
+      rootBackgroundColorOrTransparencyChanged()
+    }
+
+    let hadFixedBackground = oldStyle != nil && oldStyle!.hasEntirelyFixedBackground()
+    if hadFixedBackground != renderer.style().hasEntirelyFixedBackground() {
+      rootLayerConfigurationChanged()
+    }
+
+    if oldStyle != nil
+      && (oldStyle!.overscrollBehaviorX() != renderer.style().overscrollBehaviorX()
+        || oldStyle!.overscrollBehaviorY() != renderer.style().overscrollBehaviorY()),
+      let layer = m_renderView.layer()
+    {
+      layer.setNeedsCompositingGeometryUpdate()
+    }
+  }
+
+  // Called after the view transparency, or the document or base background color change.
+  private func rootBackgroundColorOrTransparencyChanged() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
