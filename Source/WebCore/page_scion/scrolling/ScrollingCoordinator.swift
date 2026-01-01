@@ -65,6 +65,11 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  func hasSubscrollers(_ rootFrameID: FrameIdentifierWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollableAreaScrollbarLayerDidChange(
     scrollableArea: ScrollableAreaWrapper, orientation: ScrollbarOrientation
   ) {

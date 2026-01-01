@@ -144,6 +144,16 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
   }
 
+  func needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(_ value: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func needsEventRegionUpdateForNonCompositedFrame() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

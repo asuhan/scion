@@ -64,6 +64,13 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // Returns true if the child list changed.
+  @discardableResult
+  func setChildren(newChildren: [GraphicsLayer]) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Add child layers. If the child is already parented, it will be removed from its old parent.
   func addChild(childLayer: GraphicsLayer) {
     // TODO(asuhan): implement this

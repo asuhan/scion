@@ -23,6 +23,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum CompositingUpdateType {
+  case AfterStyleChange
+  case AfterLayout
+  case OnScroll
+  case OnCompositedScroll
+}
+
+struct ScrollingTreeState {
+  var parentNodeID: ScrollingNodeIDWrapper?
+  let nextChildIndex: UInt64
+  let needSynchronousScrollingReasonsUpdate = false
+}
+
 struct ScrollCoordinationRole: OptionSet {
   let rawValue: UInt8
 
@@ -42,6 +55,11 @@ private let allScrollCoordinationRoles: ScrollCoordinationRole = [
   .PluginHosting,
   .Positioning,
 ]
+
+private func frameHostingNodeForFrame(_ frame: LocalFrameWrapper) -> ScrollingNodeIDWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
 
 private func clippingChanged(oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper) -> Bool {
   return oldStyle.overflowX() != newStyle.overflowX()
@@ -130,6 +148,23 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
 //
 // There is one RenderLayerCompositor per RenderView.
 final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
+  private struct CompositingState {
+    init(compAncestor: RenderLayerWrapper?, testOverlap: Bool = true) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private struct UpdateBackingTraversalState {
+    init(
+      compAncestor: RenderLayerWrapper? = nil, clippedLayers: ArraySlice<RenderLayerWrapper>? = nil,
+      overflowScrollers: ArraySlice<RenderLayerWrapper>? = nil
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   init(renderView: RenderViewWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -160,6 +195,151 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func hasContentCompositingLayers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Rebuild the tree of compositing layers
+  func updateCompositingLayers(
+    updateType: CompositingUpdateType, updateRoot: RenderLayerWrapper? = nil
+  ) -> Bool {
+    // TODO(asuhan): add logging and tree debugging
+    let _ = TraceScope(.CompositingUpdateStart, .CompositingUpdateEnd)
+
+    if updateType == .AfterStyleChange || updateType == .AfterLayout {
+      cacheAcceleratedCompositingFlagsAfterLayout()  // Some flags (e.g. forceCompositingMode) depend on layout.
+    }
+
+    m_updateCompositingLayersTimer.stop()
+
+    assert(
+      m_renderView.document().backForwardCacheState() == .NotInBackForwardCache
+        || m_renderView.document().backForwardCacheState() == .AboutToEnterBackForwardCache)
+
+    // Compositing layers will be updated in Document::setVisualUpdatesAllowed(bool) if suppressed here.
+    if !m_renderView.document().visualUpdatesAllowed() {
+      return false
+    }
+
+    // Avoid updating the layers with old values. Compositing layers will be updated after the layout is finished.
+    // This happens when m_updateCompositingLayersTimer fires before layout is updated.
+    if m_renderView.needsLayout() {
+      return false
+    }
+
+    if !m_compositing
+      && (m_forceCompositingMode
+        || (isRootFrameCompositor() && page().pageOverlayController().overlayCount() != 0))
+    {
+      enableCompositingMode(enable: true)
+    }
+
+    let isPageScroll =
+      updateRoot == nil || CPtrToInt(updateRoot!.p) == CPtrToInt(rootRenderLayer().p)
+    let updateRoot = rootRenderLayer()
+
+    if updateType == .OnScroll || updateType == .OnCompositedScroll {
+      // We only get here if we didn't scroll on the scrolling thread, so this update needs to re-position viewport-constrained layers.
+      if m_renderView.settings().acceleratedCompositingForFixedPositionEnabled() && isPageScroll,
+        let viewportConstrainedObjects = m_renderView.frameView().viewportConstrainedObjects()
+      {
+        for renderer in viewportConstrainedObjects {
+          if let layer = renderer.layer() {
+            layer.setNeedsCompositingGeometryUpdate()
+          }
+        }
+      }
+
+      // Scrolling can affect overlap. FIXME: avoid for page scrolling.
+      updateRoot.setDescendantsNeedCompositingRequirementsTraversal()
+    }
+
+    if updateType == .AfterLayout {
+      // Ensure that post-layout updates push new scroll position and viewport rects onto the root node.
+      rootRenderLayer().setNeedsScrollingTreeUpdate()
+    }
+
+    if !updateRoot.hasDescendantNeedingCompositingRequirementsTraversal() && !m_compositing {
+      return true
+    }
+
+    if !updateRoot.needsAnyCompositingTraversal() {
+      return true
+    }
+
+    m_compositingUpdateCount += 1
+
+    // FIXME: optimize root-only update.
+    if updateRoot.hasDescendantNeedingCompositingRequirementsTraversal()
+      || updateRoot.needsCompositingRequirementsTraversal()
+    {
+      let rootLayer = rootRenderLayer()
+      let compositingState = CompositingState(compAncestor: updateRoot)
+      let backingSharingState = BackingSharingState(
+        allowOverlappingProviders: m_renderView.settings().overlappingBackingStoreProvidersEnabled()
+      )
+      let overlapMap = LayerOverlapMap(rootLayer: rootLayer)
+
+      var descendantHas3DTransform = false
+      computeCompositingRequirements(
+        ancestorLayer: nil, layer: rootLayer, overlapMap, compositingState, backingSharingState,
+        &descendantHas3DTransform
+      )
+    }
+
+    if updateRoot.hasDescendantNeedingUpdateBackingOrHierarchyTraversal()
+      || updateRoot.needsUpdateBackingOrHierarchyTraversal()
+    {
+      // TODO(asuhan): assert layersWithUnresolvedRelations is empty (ignoring nulls)
+      var scrollingTreeState = ScrollingTreeState(
+        parentNodeID: ScrollingNodeIDWrapper(), nextChildIndex: 0)
+
+      if !m_renderView.frame().isMainFrame() {
+        scrollingTreeState.parentNodeID = frameHostingNodeForFrame(m_renderView.frame())
+      }
+
+      let scrollingCoordinator = scrollingCoordinator()
+      let hadSubscrollers =
+        scrollingCoordinator != nil
+        ? scrollingCoordinator!.hasSubscrollers(m_renderView.frame().rootFrame().frameID()) : false
+
+      let traversalState = UpdateBackingTraversalState()
+      let childList: [GraphicsLayer] = []
+      updateBackingAndHierarchy(updateRoot, childList[...], traversalState, scrollingTreeState)
+
+      if scrollingTreeState.needSynchronousScrollingReasonsUpdate {
+        updateSynchronousScrollingNodes()
+      }
+
+      // Host the document layer in the RenderView's root layer.
+      appendDocumentOverlayLayers(childList[...])
+      // Even when childList is empty, don't drop out of compositing mode if there are
+      // composited layers that we didn't hit in our traversal (e.g. because of visibility:hidden).
+      if childList.isEmpty && !needsCompositingForContentOrOverlays() {
+        destroyRootLayer()
+      } else if m_rootContentsLayer != nil {
+        m_rootContentsLayer!.setChildren(newChildren: childList)
+      }
+
+      if scrollingCoordinator != nil
+        && scrollingCoordinator!.hasSubscrollers(m_renderView.frame().rootFrame().frameID())
+          != hadSubscrollers
+      {
+        invalidateEventRegionForAllFrames()
+      }
+
+      resolveScrollingTreeRelationships()
+    }
+
+    // FIXME: Only do if dirty.
+    updateRootLayerPosition()
+
+    // TODO(asuhan): call into InspectorInstrumentation
+
+    if m_renderView.needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() {
+      m_renderView.repaintRootContents()
+      m_renderView.setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(false)
+    }
+
+    return true
   }
 
   struct RequiresCompositingData {
@@ -513,6 +693,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
+  private func rootRenderLayer() -> RenderLayerWrapper {
+    return m_renderView.layer()!
+  }
+
   func rootGraphicsLayer() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -532,6 +716,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func rootLayerAttachment() -> RootLayerAttachment { return m_rootLayerAttachment }
 
   func updateRootLayerAttachment() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateRootLayerPosition() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func invalidateEventRegionForAllFrames() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -622,6 +816,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   class BackingSharingState {
+    init(allowOverlappingProviders: Bool) {
+      self.allowOverlappingProviders = allowOverlappingProviders
+    }
+
     struct Provider {
       let providerLayer: RenderLayerWrapper? = nil
       let sharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
@@ -646,6 +844,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     let backingProviderCandidates: [Provider] = []
+    private let allowOverlappingProviders: Bool
+  }
+
+  private func cacheAcceleratedCompositingFlagsAfterLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Whether the given RL needs a compositing layer.
@@ -887,6 +1091,41 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  private func computeCompositingRequirements(
+    ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper, _ overlapMap: LayerOverlapMap,
+    _ compositingState: CompositingState, _ backingSharingState: BackingSharingState,
+    _ descendantHas3DTransform: inout Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct UpdateLevel: OptionSet {
+    let rawValue: UInt8
+    static let AllDescendants = UpdateLevel(rawValue: 1 << 0)
+    static let CompositedChildren = UpdateLevel(rawValue: 1 << 1)
+  }
+
+  // Recurses down the tree, parenting descendant compositing layers and collecting an array of child layers for the current compositing layer.
+  private func updateBackingAndHierarchy(
+    _ layer: RenderLayerWrapper, _ childLayersOfEnclosingLayer: ArraySlice<GraphicsLayer>,
+    _ traversalState: UpdateBackingTraversalState, _ scrollingTreeState: ScrollingTreeState,
+    _ updateLevel: UpdateLevel = []
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func appendDocumentOverlayLayers(_ childList: ArraySlice<GraphicsLayer>) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func needsCompositingForContentOrOverlays() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func scheduleRenderingUpdate() {
@@ -1595,6 +1834,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func resolveScrollingTreeRelationships() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateSynchronousScrollingNodes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {
     let frameView = m_renderView.frameView()
 
@@ -1696,6 +1945,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private let m_renderView: RenderViewWrapper
+  private let m_updateCompositingLayersTimer: Timer
 
   private let m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
   private let m_hasAcceleratedCompositing = true
@@ -1707,8 +1957,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private var m_compositing = false
   private var m_shouldFlushOnReattach = false
+  private let m_forceCompositingMode = false
 
   private var m_layersWithTiledBackingCount: UInt32 = 0
+  private var m_compositingUpdateCount: UInt32 = 0
 
   private var m_rootLayerAttachment: RootLayerAttachment = .RootLayerUnattached
 

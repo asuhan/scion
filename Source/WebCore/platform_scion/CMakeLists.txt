@@ -17,6 +17,7 @@ target_sources(layout_scion PRIVATE
     ScrollTypes.swift
     ScrollView.swift
     StyleAppearance.swift
+    Timer.swift
     UserInterfaceLayoutDirection.swift
     Widget.swift
 )

@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     PriorityQueue.swift
     SaturatedArithmetic.swift
     SetForScope.swift
+    SystemTracing.swift
     WeakHashSet.swift
     WeakNullableRef.swift
 )

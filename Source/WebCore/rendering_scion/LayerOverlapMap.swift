@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Apple Inc. All rights reserved.
+ * Copyright (C) 2019 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,33 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class FrameWrapper {
-  func frameID() -> FrameIdentifierWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func page() -> PageWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func settings() -> SettingsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isMainFrame() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isRootFrame() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func ownerElement() -> HTMLFrameOwnerElementWrapper? {
+struct LayerOverlapMap {
+  init(rootLayer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

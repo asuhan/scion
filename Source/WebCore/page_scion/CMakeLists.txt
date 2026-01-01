@@ -4,6 +4,7 @@ target_sources(layout_scion PRIVATE
     EventHandler.swift
     FocusController.swift
     Frame.swift
+    FrameIdentifier.swift
     FrameView.swift
     LocalFrame.swift
     LocalFrameView.swift

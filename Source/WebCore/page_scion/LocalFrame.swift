@@ -50,4 +50,9 @@ final class LocalFrameWrapper: FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func rootFrame() -> LocalFrameWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

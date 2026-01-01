@@ -28,4 +28,9 @@ final class PageOverlayControllerWrapper: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func overlayCount() -> Int {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
