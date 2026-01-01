@@ -538,6 +538,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func updateAllowsBackingStoreDetaching(absoluteBounds: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func tiledBacking() -> TiledBackingWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

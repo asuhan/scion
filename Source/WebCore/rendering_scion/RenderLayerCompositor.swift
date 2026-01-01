@@ -170,11 +170,46 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
 //
 // There is one RenderLayerCompositor per RenderView.
 final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
+  private struct OverlapExtent {
+    var bounds = LayoutRectWrapper()
+    var hasTransformAnimation = false
+    var animationCausesExtentUncertainty = false
+  }
+
   private struct CompositingState {
     init(compAncestor: RenderLayerWrapper?, testOverlap: Bool = true) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func stateForPaintOrderChildren(_ layer: RenderLayerWrapper) -> CompositingState {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func updateWithDescendantStateAndLayer(
+      _ childState: CompositingState, layer: RenderLayerWrapper, ancestorLayer: RenderLayerWrapper?,
+      _ layerExtent: OverlapExtent, _ isUnchangedSubtree: Bool = false
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func hasNonRootCompositedAncestor() -> Bool {
+      return compositingAncestor != nil && !compositingAncestor!.isRenderViewLayer
+    }
+
+    var compositingAncestor: RenderLayerWrapper?
+    var backingSharingAncestor: RenderLayerWrapper? = nil
+    let stackingContextAncestor: RenderLayerWrapper? = nil
+    var subtreeIsCompositing = false
+    var testingOverlap = true
+    var fullPaintOrderTraversalRequired = false
+    var descendantsRequireCompositingUpdate = false
+    var ancestorHasTransformAnimation = false
+    let hasCompositedNonContainedDescendants = false
+    let hasNotIsolatedCompositedBlendingDescendants = false
+    let hasBackdropFilterDescendantsWithoutRoot = false
   }
 
   private struct UpdateBackingTraversalState {
@@ -294,7 +329,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       || updateRoot.needsCompositingRequirementsTraversal()
     {
       let rootLayer = rootRenderLayer()
-      let compositingState = CompositingState(compAncestor: updateRoot)
+      var compositingState = CompositingState(compAncestor: updateRoot)
       let backingSharingState = BackingSharingState(
         allowOverlappingProviders: m_renderView.settings().overlappingBackingStoreProvidersEnabled()
       )
@@ -302,7 +337,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       var descendantHas3DTransform = false
       computeCompositingRequirements(
-        ancestorLayer: nil, layer: rootLayer, overlapMap, compositingState, backingSharingState,
+        ancestorLayer: nil, layer: rootLayer, overlapMap, &compositingState, backingSharingState,
         &descendantHas3DTransform
       )
     }
@@ -837,7 +872,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  class BackingSharingState {
+  private class BackingSharingState {
     init(allowOverlappingProviders: Bool) {
       self.allowOverlappingProviders = allowOverlappingProviders
     }
@@ -846,6 +881,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       let providerLayer: RenderLayerWrapper? = nil
       let sharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
       let absoluteBounds = LayoutRectWrapper()
+    }
+
+    func backingProviderCandidateForLayer(
+      _ layer: RenderLayerWrapper, _ compositor: RenderLayerCompositorWrapper,
+      _ overlapMap: LayerOverlapMap, _ overlap: OverlapExtent
+    ) -> Provider? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
     }
 
     func backingProviderForLayer(layer: RenderLayerWrapper) -> Provider? {
@@ -1071,6 +1114,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return layerChanged
   }
 
+  private func updateLayerCompositingState(
+    layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
+    _ queryData: inout RequiresCompositingData, _ backingSharingState: BackingSharingState
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func repaintTargetsSharedBacking(
     layer: RenderLayerWrapper, backingSharingState: BackingSharingState?
   ) -> Bool {
@@ -1115,7 +1166,366 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func computeExtent(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: OverlapExtent
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOverlapMap(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ layerExtent: OverlapExtent,
+    didPushContainer: Bool, addLayerToOverlap: Bool, addDescendantsToOverlap: Bool = false
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layerOverlaps(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: OverlapExtent
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct BackingSharingSnapshot {}
+
+  private func updateBackingSharingBeforeDescendantTraversal(
+    _ sharingState: BackingSharingState, _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
+    _ layerExtent: OverlapExtent, _ willBeComposited: Bool,
+    stackingContextAncestor: RenderLayerWrapper?
+  ) -> BackingSharingSnapshot? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateBackingSharingAfterDescendantTraversal(
+    _ sharingState: BackingSharingState, _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
+    _ layerExtent: OverlapExtent, stackingContextAncestor: RenderLayerWrapper?,
+    _ backingSharingSnapshot: BackingSharingSnapshot?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeCompositingRequirements(
+    ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper, _ overlapMap: LayerOverlapMap,
+    _ compositingState: inout CompositingState, _ backingSharingState: BackingSharingState,
+    _ descendantHas3DTransform: inout Bool
+  ) {
+    // TODO(asuhan): add logging
+
+    layer.updateDescendantDependentFlags()
+    layer.updateLayerListsIfNeeded()
+
+    if !layer.hasDescendantNeedingCompositingRequirementsTraversal()
+      && !layer.needsCompositingRequirementsTraversal()
+      && !compositingState.fullPaintOrderTraversalRequired
+      && !compositingState.descendantsRequireCompositingUpdate
+    {
+      traverseUnchangedSubtree(
+        ancestorLayer: ancestorLayer, layer: layer, overlapMap, compositingState,
+        backingSharingState,
+        &descendantHas3DTransform)
+      return
+    }
+
+    // FIXME: maybe we can avoid updating all remaining layers in paint order.
+    compositingState.fullPaintOrderTraversalRequired =
+      compositingState.fullPaintOrderTraversalRequired
+      || layer.needsCompositingRequirementsTraversal()
+    compositingState.descendantsRequireCompositingUpdate =
+      compositingState.descendantsRequireCompositingUpdate
+      || layer.descendantsNeedCompositingRequirementsTraversal()
+
+    layer.setHasCompositingDescendant(false)
+
+    // We updated compositing for direct reasons in layerStyleChanged(). Here, check for compositing that can only be evaluated after layout.
+    var queryData = RequiresCompositingData()
+    var willBeComposited = layer.isComposited()
+    var becameCompositedAfterDescendantTraversal = false
+    var compositingReason: IndirectCompositingReason =
+      compositingState.subtreeIsCompositing ? .Stacking : .None
+
+    if layer.needsPostLayoutCompositingUpdate() || compositingState.fullPaintOrderTraversalRequired
+      || compositingState.descendantsRequireCompositingUpdate
+    {
+      layer.setIndirectCompositingReason(.None)
+      willBeComposited = needsToBeComposited(layer: layer, queryData: &queryData)
+    }
+
+    compositingState.fullPaintOrderTraversalRequired =
+      compositingState.fullPaintOrderTraversalRequired
+      || layer.subsequentLayersNeedCompositingRequirementsTraversal()
+
+    var layerExtent = OverlapExtent()
+
+    // Use the fact that we're composited as a hint to check for an animating transform.
+    // FIXME: Maybe needsToBeComposited() should return a bitmask of reasons, to avoid the need to recompute things.
+    if willBeComposited && !layer.isRenderViewLayer {
+      layerExtent.hasTransformAnimation = isRunningTransformAnimation(layer.renderer())
+    }
+
+    let respectTransforms = !layerExtent.hasTransformAnimation
+    overlapMap.geometryMap.pushMappingsToAncestor(
+      layer: layer, ancestorLayer: ancestorLayer, respectTransforms: respectTransforms)
+
+    var layerPaintsIntoProvidedBacking = false
+    if !willBeComposited && compositingState.subtreeIsCompositing && canBeComposited(layer: layer),
+      let provider = backingSharingState.backingProviderCandidateForLayer(
+        layer, self, overlapMap, layerExtent)
+    {
+      provider.sharingLayers.add(value: layer)
+      compositingReason = .None
+      layerPaintsIntoProvidedBacking = true
+    }
+
+    // If we know for sure the layer is going to be composited, don't bother looking it up in the overlap map
+    if !willBeComposited && !layerPaintsIntoProvidedBacking && !overlapMap.isEmpty
+      && compositingState.testingOverlap
+    {
+      // If we're testing for overlap, we only need to composite if we overlap something that is already composited.
+      if layerOverlaps(overlapMap, layer, layerExtent) {
+        compositingReason = .Overlap
+      } else {
+        compositingReason = .None
+      }
+    }
+
+    if compositingReason != .None {
+      layer.setIndirectCompositingReason(compositingReason)
+    }
+
+    // Check if the computed indirect reason will force the layer to become composited.
+    if !willBeComposited && layer.mustCompositeForIndirectReasons() && canBeComposited(layer: layer)
+    {
+      willBeComposited = true
+      layerPaintsIntoProvidedBacking = false
+    }
+
+    // The children of this layer don't need to composite, unless there is
+    // a compositing layer among them, so start by inheriting the compositing
+    // ancestor with subtreeIsCompositing set to false.
+    var currentState = compositingState.stateForPaintOrderChildren(layer)
+    var didPushOverlapContainer = false
+
+    let layerWillComposite = { () in
+      // This layer is going to be composited, so children can safely ignore the fact that there's an
+      // animation running behind this layer, meaning they can rely on the overlap map testing again.
+      currentState.testingOverlap = true
+      // This layer now acts as the ancestor for kids.
+      currentState.compositingAncestor = layer
+      // Compositing turns off backing sharing.
+      currentState.backingSharingAncestor = nil
+
+      if layerPaintsIntoProvidedBacking {
+        layerPaintsIntoProvidedBacking = false
+        // layerPaintsIntoProvidedBacking was only true for layers that would otherwise composite because of overlap. If we can
+        // no longer share, put this this indirect reason back on the layer so that requiresOwnBackingStore() sees it.
+        layer.setIndirectCompositingReason(.Overlap)
+      } else if !didPushOverlapContainer {
+        overlapMap.pushCompositingContainer(layer)
+        didPushOverlapContainer = true
+      }
+
+      willBeComposited = true
+    }
+
+    let layerWillCompositePostDescendants = { () in
+      layerWillComposite()
+      currentState.subtreeIsCompositing = true
+      becameCompositedAfterDescendantTraversal = true
+    }
+
+    if willBeComposited {
+      layerWillComposite()
+
+      computeExtent(overlapMap, layer, layerExtent)
+      currentState.ancestorHasTransformAnimation =
+        currentState.ancestorHasTransformAnimation || layerExtent.hasTransformAnimation
+      // Too hard to compute animated bounds if both us and some ancestor is animating transform.
+      layerExtent.animationCausesExtentUncertainty =
+        layerExtent.animationCausesExtentUncertainty
+        || layerExtent.hasTransformAnimation && compositingState.ancestorHasTransformAnimation
+    } else if layerPaintsIntoProvidedBacking {
+      currentState.backingSharingAncestor = layer
+      overlapMap.pushCompositingContainer(layer)
+      didPushOverlapContainer = true
+    }
+
+    let backingSharingSnapshot = updateBackingSharingBeforeDescendantTraversal(
+      backingSharingState, overlapMap, layer, layerExtent, willBeComposited,
+      stackingContextAncestor: compositingState.stackingContextAncestor)
+
+    var anyDescendantHas3DTransform = false
+    let descendantsAddedToOverlap = currentState.hasNonRootCompositedAncestor()
+
+    if layer.hasNegativeZOrderLayers() {
+      // Speculatively push this layer onto the overlap map.
+      var didSpeculativelyPushOverlapContainer = false
+      if !didPushOverlapContainer {
+        overlapMap.pushSpeculativeCompositingContainer(layer)
+        didPushOverlapContainer = true
+        didSpeculativelyPushOverlapContainer = true
+      }
+
+      for childLayer in layer.negativeZOrderLayers() {
+        computeCompositingRequirements(
+          ancestorLayer: layer, layer: childLayer, overlapMap, &currentState, backingSharingState,
+          &anyDescendantHas3DTransform)
+
+        // If we have to make a layer for this child, make one now so we can have a contents layer
+        // (since we need to ensure that the -ve z-order child renders underneath our contents).
+        if !willBeComposited && currentState.subtreeIsCompositing {
+          layer.setIndirectCompositingReason(.BackgroundLayer)
+          layerWillComposite()
+          overlapMap.confirmSpeculativeCompositingContainer()
+        }
+      }
+
+      if didSpeculativelyPushOverlapContainer {
+        if overlapMap.maybePopSpeculativeCompositingContainer() {
+          didPushOverlapContainer = false
+        } else if !willBeComposited {
+          layer.setIndirectCompositingReason(.BackgroundLayer)
+          layerWillComposite()
+        }
+      }
+    }
+
+    for childLayer in layer.normalFlowLayers() {
+      computeCompositingRequirements(
+        ancestorLayer: layer, layer: childLayer, overlapMap, &currentState, backingSharingState,
+        &anyDescendantHas3DTransform)
+    }
+
+    for childLayer in layer.positiveZOrderLayers() {
+      computeCompositingRequirements(
+        ancestorLayer: layer, layer: childLayer, overlapMap, &currentState, backingSharingState,
+        &anyDescendantHas3DTransform)
+    }
+
+    // Set the flag to say that this layer has compositing children.
+    layer.setHasCompositingDescendant(currentState.subtreeIsCompositing)
+    layer.setHasCompositedNonContainedDescendants(currentState.hasCompositedNonContainedDescendants)
+
+    // If we just entered compositing mode, the root will have become composited (as long as accelerated compositing is enabled).
+    if layer.isRenderViewLayer {
+      if usesCompositing() && m_hasAcceleratedCompositing {
+        willBeComposited = true
+      }
+    }
+
+    let isolatedCompositedBlending = layer.isolatesCompositedBlending()
+    layer.hasNotIsolatedCompositedBlendingDescendants =
+      currentState.hasNotIsolatedCompositedBlendingDescendants
+    if layer.isolatesCompositedBlending() != isolatedCompositedBlending {
+      // isolatedCompositedBlending affects the result of clippedByAncestor().
+      layer.setChildrenNeedCompositingGeometryUpdate()
+    }
+
+    assert(
+      !layer.hasNotIsolatedCompositedBlendingDescendants
+        || layer.hasNotIsolatedBlendingDescendants)
+
+    let isBackdropRoot = layer.isBackdropRoot()
+    layer.hasBackdropFilterDescendantsWithoutRoot =
+      currentState.hasBackdropFilterDescendantsWithoutRoot
+    if layer.isBackdropRoot() != isBackdropRoot {
+      layer.setNeedsCompositingConfigurationUpdate()
+    }
+
+    // Now check for reasons to become composited that depend on the state of descendant layers.
+    if !willBeComposited && canBeComposited(layer: layer) {
+      let indirectReason = computeIndirectCompositingReason(
+        layer, hasCompositedDescendants: currentState.subtreeIsCompositing,
+        has3DTransformedDescendants: anyDescendantHas3DTransform,
+        paintsIntoProvidedBacking: layerPaintsIntoProvidedBacking)
+      if indirectReason != .None {
+        layer.setIndirectCompositingReason(indirectReason)
+        layerWillCompositePostDescendants()
+      }
+    }
+
+    if let reflectionLayer = layer.reflectionLayer() {
+      // FIXME: Shouldn't we call computeCompositingRequirements to handle a reflection overlapping with another renderer?
+      reflectionLayer.setIndirectCompositingReason(willBeComposited ? .Stacking : .None)
+    }
+
+    // If we're back at the root, and no other layers need to be composited, and the root layer itself doesn't need
+    // to be composited, then we can drop out of compositing mode altogether. However, don't drop out of compositing mode
+    // if there are composited layers that we didn't hit in our traversal (e.g. because of visibility:hidden).
+    var rootLayerQueryData = RequiresCompositingData()
+    if layer.isRenderViewLayer && !currentState.subtreeIsCompositing
+      && !requiresCompositingLayer(layer: layer, queryData: &rootLayerQueryData)
+      && !m_forceCompositingMode
+      && !needsCompositingForContentOrOverlays()
+    {
+      // Don't drop out of compositing on iOS, because we may flash. See <rdar://problem/8348337>.
+      #if !WTF_PLATFORM_IOS_FAMILY
+        enableCompositingMode(enable: false)
+        willBeComposited = false
+      #endif
+    }
+
+    assert(willBeComposited == needsToBeComposited(layer: layer, queryData: &queryData))
+
+    // Create or destroy backing here. However, we can't update geometry because layers above us may become composited
+    // during post-order traversal (e.g. for clipping).
+    if updateBacking(
+      layer: layer, queryData: &queryData, backingSharingState: backingSharingState,
+      backingRequired: willBeComposited ? .Yes : .No)
+    {
+      layer.setNeedsCompositingLayerConnection()
+      // Child layers need to get a geometry update to recompute their position.
+      layer.setChildrenNeedCompositingGeometryUpdate()
+      // The composited bounds of enclosing layers depends on which descendants are composited, so they need a geometry update.
+      layer.setNeedsCompositingGeometryUpdateOnAncestors()
+    }
+
+    // Update layer state bits.
+    if let reflectionLayer = layer.reflectionLayer(),
+      updateLayerCompositingState(
+        layer: reflectionLayer, compositingAncestor: layer, &queryData, backingSharingState)
+    {
+      layer.setNeedsCompositingLayerConnection()
+    }
+
+    // FIXME: clarify needsCompositingPaintOrderChildrenUpdate. If a composited layer gets a new ancestor, it needs geometry computations.
+    if layer.needsCompositingPaintOrderChildrenUpdate() {
+      layer.setChildrenNeedCompositingGeometryUpdate()
+      layer.setNeedsCompositingLayerConnection()
+    }
+
+    layer.clearCompositingRequirementsTraversalState()
+
+    // Compute state passed to the caller.
+    descendantHas3DTransform =
+      descendantHas3DTransform || anyDescendantHas3DTransform || layer.has3DTransform()
+    compositingState.updateWithDescendantStateAndLayer(
+      currentState, layer: layer, ancestorLayer: ancestorLayer, layerExtent)
+    updateBackingSharingAfterDescendantTraversal(
+      backingSharingState, overlapMap, layer, layerExtent,
+      stackingContextAncestor: compositingState.stackingContextAncestor, backingSharingSnapshot)
+
+    let layerContributesToOverlap =
+      (currentState.compositingAncestor != nil
+        && !currentState.compositingAncestor!.isRenderViewLayer)
+      || currentState.backingSharingAncestor != nil
+    updateOverlapMap(
+      overlapMap, layer, layerExtent, didPushContainer: didPushOverlapContainer,
+      addLayerToOverlap: layerContributesToOverlap,
+      addDescendantsToOverlap: becameCompositedAfterDescendantTraversal
+        && !descendantsAddedToOverlap)
+
+    if layer.isComposited() {
+      layer.backing!.updateAllowsBackingStoreDetaching(absoluteBounds: layerExtent.bounds)
+    }
+
+    overlapMap.geometryMap.popMappingsToAncestor(ancestorLayer: ancestorLayer)
+  }
+
+  private func traverseUnchangedSubtree(
     ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper, _ overlapMap: LayerOverlapMap,
     _ compositingState: CompositingState, _ backingSharingState: BackingSharingState,
     _ descendantHas3DTransform: inout Bool
@@ -1136,6 +1546,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ traversalState: UpdateBackingTraversalState, _ scrollingTreeState: ScrollingTreeState,
     _ updateLevel: UpdateLevel = []
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isRunningTransformAnimation(_ renderer: RenderLayerModelObjectWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1746,6 +2161,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return true
+  }
+
+  private func computeIndirectCompositingReason(
+    _ layer: RenderLayerWrapper, hasCompositedDescendants: Bool, has3DTransformedDescendants: Bool,
+    paintsIntoProvidedBacking: Bool
+  ) -> IndirectCompositingReason {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private static func styleChangeMayAffectIndirectCompositingReasons(

@@ -471,12 +471,22 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func needsCompositingPaintOrderChildrenUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCompositingConfigurationUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func setNeedsScrollingTreeUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearCompositingRequirementsTraversalState() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -554,6 +564,21 @@ class RenderLayerWrapper {
     }
   }
 
+  func needsPostLayoutCompositingUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func descendantsNeedCompositingRequirementsTraversal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func subsequentLayersNeedCompositingRequirementsTraversal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setRequirementsTraversalDirtyBit(v: Compositing) {
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingRequirementsTraversal)
@@ -600,6 +625,11 @@ class RenderLayerWrapper {
     setBackingAndHierarchyTraversalDirtyBit(v: .DescendantsNeedBackingAndHierarchyTraversal)
   }
 
+  func setNeedsCompositingGeometryUpdateOnAncestors() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func needsCompositingRequirementsTraversal() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -618,6 +648,10 @@ class RenderLayerWrapper {
   func positiveZOrderLayers() -> LayerList {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func hasNegativeZOrderLayers() -> Bool {
+    return negZOrderList != nil && !negZOrderList!.isEmpty
   }
 
   func negativeZOrderLayers() -> LayerList {
@@ -5117,6 +5151,21 @@ class RenderLayerWrapper {
     }
   }
 
+  func setHasCompositingDescendant(_ b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasCompositedNonContainedDescendants(_ value: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setIndirectCompositingReason(_ reason: IndirectCompositingReason) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
 
   struct OverflowControlRects {
@@ -5139,6 +5188,7 @@ class RenderLayerWrapper {
   private var isNormalFlowOnly = false
   private var m_isCSSStackingContext = false
   private var canBeBackdropRoot = false
+  var hasBackdropFilterDescendantsWithoutRoot = false
   private var isOpportunisticStackingContext = false
 
   private var zOrderListsDirty = false
@@ -5178,8 +5228,8 @@ class RenderLayerWrapper {
     .NoNotCompositedReason
 
   private var blendMode: BlendMode = .Normal
-  private let hasNotIsolatedCompositedBlendingDescendants = false
-  private var hasNotIsolatedBlendingDescendants = false
+  var hasNotIsolatedCompositedBlendingDescendants = false
+  var hasNotIsolatedBlendingDescendants = false
   private var hasNotIsolatedBlendingDescendantsStatusDirty = false
   private var repaintRectsValid = false
 
@@ -5201,7 +5251,7 @@ class RenderLayerWrapper {
 
   // For layers that establish stacking contexts, m_posZOrderList holds a sorted list of all the
   // descendant layers within the stacking context that have z-indices of 0 or greater
-  // (auto will count as 0). m_negZOrderList holds descendants within our stacking context with negative
+  // (auto will count as 0). negZOrderList holds descendants within our stacking context with negative
   // z-indices.
   private var posZOrderList: [RenderLayerWrapper]? = nil
   private var negZOrderList: [RenderLayerWrapper]? = nil

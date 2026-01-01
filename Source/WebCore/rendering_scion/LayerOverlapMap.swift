@@ -28,4 +28,27 @@ struct LayerOverlapMap {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func pushCompositingContainer(_ layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pushSpeculativeCompositingContainer(_ layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func confirmSpeculativeCompositingContainer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func maybePopSpeculativeCompositingContainer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let geometryMap: RenderGeometryMap
+  let isEmpty = true
 }

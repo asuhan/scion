@@ -72,6 +72,7 @@ target_sources(layout_scion PRIVATE
     RenderFragmentedFlow.swift
     RenderFrameBase.swift
     RenderFrameSet.swift
+    RenderGeometryMap.swift
     RenderGrid.swift
     RenderHighlight.swift
     RenderHTMLCanvas.swift
