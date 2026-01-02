@@ -2065,6 +2065,21 @@ class RenderLayerWrapper {
     return referenceBoxRect
   }
 
+  // Bounds used for layer overlap testing in RenderLayerCompositor.
+  func overlapBounds() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Takes transform animations into account, returning true if they could be cheaply computed.
+  // Unlike overlapBounds, these bounds include descendant layers.
+  func getOverlapBoundsIncludingChildrenAccountingForTransformAnimations(
+    _ bounds: inout LayoutRectWrapper, additionalFlags: CalculateLayerBoundsFlag = []
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Can pass offsetFromRoot if known.
   func calculateLayerBounds(
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper,

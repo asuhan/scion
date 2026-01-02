@@ -163,6 +163,15 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  // This function "smears" the "position:fixed" uninflatedBounds for scrolling, returning a rect that is the union of
+  // all possible locations of the given rect under page scrolling.
+  func fixedScrollableAreaBoundsInflatedForScrolling(uninflatedBounds: LayoutRectWrapper)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFlippedBlockRenderers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

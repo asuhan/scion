@@ -218,6 +218,8 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
 final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private struct OverlapExtent {
     var bounds = LayoutRectWrapper()
+
+    var extentComputed = false
     var hasTransformAnimation = false
     var animationCausesExtentUncertainty = false
   }
@@ -1227,10 +1229,42 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func computeExtent(
-    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: OverlapExtent
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if extent.extentComputed {
+      return
+    }
+
+    var layerBounds = LayoutRectWrapper()
+    if extent.hasTransformAnimation {
+      extent.animationCausesExtentUncertainty =
+        !layer.getOverlapBoundsIncludingChildrenAccountingForTransformAnimations(&layerBounds)
+    } else {
+      layerBounds = layer.overlapBounds()
+    }
+
+    // In the animating transform case, we avoid double-accounting for the transform because
+    // we told pushMappingsToAncestor() to ignore transforms earlier.
+    extent.bounds = enclosingLayoutRect(
+      rect: overlapMap.geometryMap.absoluteRect(layerBounds.FloatRect()))
+
+    // Empty rects never intersect, but we need them to for the purposes of overlap testing.
+    if extent.bounds.isEmpty() {
+      extent.bounds.setSize(size: LayoutSizeWrapper(width: Int32(1), height: Int32(1)))
+    }
+
+    let renderer = layer.renderer()
+    if renderer.isFixedPositioned()
+      && CPtrToInt(renderer.container()?.p) == CPtrToInt(m_renderView.p)
+    {
+      // Because fixed elements get moved around without re-computing overlap, we have to compute an overlap
+      // rect that covers all the locations that the fixed element could move to.
+      // FIXME: need to handle sticky too.
+      extent.bounds = m_renderView.frameView().fixedScrollableAreaBoundsInflatedForScrolling(
+        uninflatedBounds: extent.bounds)
+    }
+
+    extent.extentComputed = true
   }
 
   private func updateOverlapMap(
@@ -1399,7 +1433,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     if willBeComposited {
       layerWillComposite()
 
-      computeExtent(overlapMap, layer, layerExtent)
+      computeExtent(overlapMap, layer, &layerExtent)
       currentState.ancestorHasTransformAnimation =
         currentState.ancestorHasTransformAnimation || layerExtent.hasTransformAnimation
       // Too hard to compute animated bounds if both us and some ancestor is animating transform.
@@ -1612,7 +1646,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // If we know for sure the layer is going to be composited, don't bother looking it up in the overlap map
     if !layerIsComposited && !overlapMap.isEmpty && compositingState.testingOverlap {
-      computeExtent(overlapMap, layer, layerExtent)
+      computeExtent(overlapMap, layer, &layerExtent)
     }
 
     if layer.paintsIntoProvidedBacking() {
@@ -1634,7 +1668,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       overlapMap.pushCompositingContainer(layer)
       didPushOverlapContainer = true
 
-      computeExtent(overlapMap, layer, layerExtent)
+      computeExtent(overlapMap, layer, &layerExtent)
       currentState.ancestorHasTransformAnimation =
         currentState.ancestorHasTransformAnimation || layerExtent.hasTransformAnimation
       // Too hard to compute animated bounds if both us and some ancestor is animating transform.

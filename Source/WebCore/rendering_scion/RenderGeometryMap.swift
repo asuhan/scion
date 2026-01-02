@@ -25,6 +25,11 @@
 
 // Can be used while walking the Renderer tree to cache data about offsets and transforms.
 class RenderGeometryMap {
+  func absoluteRect(_ rect: FloatRectWrapper) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called by code walking the renderer or layer trees.
   func pushMappingsToAncestor(
     layer: RenderLayerWrapper?, ancestorLayer: RenderLayerWrapper?, respectTransforms: Bool = true
