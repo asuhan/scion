@@ -5238,6 +5238,7 @@ class RenderLayerWrapper {
 
   private var m_3DTransformedDescendantStatusDirty = false
   var hasCompositingDescendant = false  // In the z-order tree.
+  let hasCompositedNonContainedDescendants = false  // Set when a layer has a composited descendant in z-order which is not a descendant in containing block order (e.g. opacity layer with an abspos descendant).
 
   let hasCompositedScrollingAncestor = false
 

@@ -195,6 +195,24 @@ private func traverseAncestorLayers(
   return .Continue
 }
 
+private func canUseDescendantClippingLayer(_ layer: RenderLayerWrapper) -> Bool {
+  if layer.isolatesCompositedBlending() {
+    return false
+  }
+
+  // We can only use the "descendant clipping layer" strategy when the clip rect is entirely within
+  // the border box, because of interactions with border-radius clipping and compositing.
+  if let renderer = layer.renderBox(), renderer.hasClip() {
+    let borderBoxRect = renderer.borderBoxRect()
+    let clipRect = renderer.clipRect(location: LayoutPointWrapper(), fragment: nil)
+
+    let clipRectInsideBorderRect = intersection(a: borderBoxRect, b: clipRect) == clipRect
+    return clipRectInsideBorderRect
+  }
+
+  return true
+}
+
 private func styleHas3DTransformOperation(style: RenderStyleWrapper) -> Bool {
   return style.transform().has3DOperation()
     || (style.translate() != nil && style.translate()!.is3DOperation())
@@ -538,8 +556,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // layers that it needs to clip. In this case we insert a clipping GraphicsLayer
   // into the hierarchy between this layer and its children in the z-order hierarchy.
   private static func clipsCompositingDescendants(_ layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !(layer.hasCompositingDescendant && layer.renderer().hasClipOrNonVisibleOverflow()) {
+      return false
+    }
+
+    if layer.hasCompositedNonContainedDescendants {
+      return false
+    }
+
+    return canUseDescendantClippingLayer(layer)
   }
 
   func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
