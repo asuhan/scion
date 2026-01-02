@@ -227,8 +227,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private struct CompositingState {
     init(compAncestor: RenderLayerWrapper?, testOverlap: Bool = true) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      compositingAncestor = compAncestor
+      testingOverlap = testOverlap
     }
 
     func stateForPaintOrderChildren(_ layer: RenderLayerWrapper) -> CompositingState {
