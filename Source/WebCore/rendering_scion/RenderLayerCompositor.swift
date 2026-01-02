@@ -232,8 +232,26 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     func stateForPaintOrderChildren(_ layer: RenderLayerWrapper) -> CompositingState {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      var childState = CompositingState(compAncestor: compositingAncestor)
+      if layer.isStackingContext() {
+        childState.stackingContextAncestor = layer
+      } else {
+        childState.stackingContextAncestor = stackingContextAncestor
+      }
+
+      childState.backingSharingAncestor = backingSharingAncestor
+      childState.subtreeIsCompositing = false
+      childState.testingOverlap = testingOverlap
+      childState.fullPaintOrderTraversalRequired = fullPaintOrderTraversalRequired
+      childState.descendantsRequireCompositingUpdate = descendantsRequireCompositingUpdate
+      childState.ancestorHasTransformAnimation = ancestorHasTransformAnimation
+      childState.hasCompositedNonContainedDescendants = false
+      childState.hasNotIsolatedCompositedBlendingDescendants = false  // FIXME: should this only be reset for stacking contexts?
+      childState.hasBackdropFilterDescendantsWithoutRoot = false
+      #if !LOG_DISABLED
+        childState.depth = depth + 1
+      #endif
+      return childState
     }
 
     func updateWithDescendantStateAndLayer(
@@ -250,15 +268,18 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     var compositingAncestor: RenderLayerWrapper?
     var backingSharingAncestor: RenderLayerWrapper? = nil
-    let stackingContextAncestor: RenderLayerWrapper? = nil
+    var stackingContextAncestor: RenderLayerWrapper? = nil
     var subtreeIsCompositing = false
     var testingOverlap = true
     var fullPaintOrderTraversalRequired = false
     var descendantsRequireCompositingUpdate = false
     var ancestorHasTransformAnimation = false
-    let hasCompositedNonContainedDescendants = false
-    let hasNotIsolatedCompositedBlendingDescendants = false
-    let hasBackdropFilterDescendantsWithoutRoot = false
+    var hasCompositedNonContainedDescendants = false
+    var hasNotIsolatedCompositedBlendingDescendants = false
+    var hasBackdropFilterDescendantsWithoutRoot = false
+    #if !LOG_DISABLED
+      var depth: UInt32 = 0
+    #endif
   }
 
   private struct UpdateBackingTraversalState {
