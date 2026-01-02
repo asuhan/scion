@@ -254,6 +254,8 @@ private func backgroundClipRectForPosition(parentRects: ClipRects, position: Pos
   return parentRects.overflowClipRect
 }
 
+typealias ScrollingScope = UInt64
+
 class RenderLayerWrapper {
   init(p: UnsafeMutableRawPointer) {
     self.p = p
@@ -5265,6 +5267,10 @@ class RenderLayerWrapper {
   private let layerSize = IntSize()
 
   private var clipRectsCache: ClipRectsCache? = nil
+
+  // Layers with the same ScrollingScope are scrolled by some common ancestor scroller. Used for async scrolling.
+  let boxScrollingScope: ScrollingScope? = nil
+  let contentsScrollingScope: ScrollingScope? = nil
 
   // Note that this transform has the transform-origin baked in.
   var transform: TransformationMatrix? = nil

@@ -149,6 +149,52 @@ private func rendererForCompositingTests(layer: RenderLayerWrapper) -> RenderLay
   return renderer
 }
 
+private enum AncestorTraversal {
+  case Continue
+  case Stop
+}
+
+// This is a simplified version of containing block walking that only handles absolute and fixed position.
+@discardableResult
+private func traverseAncestorLayers(
+  _ layer: RenderLayerWrapper,
+  _ function: (RenderLayerWrapper, Bool, Bool) -> AncestorTraversal
+) -> AncestorTraversal {
+  var positioningBehavior = layer.renderer().style().position()
+  var nextPaintOrderParent = layer.paintOrderParent()
+
+  var ancestorLayer = layer.parent()
+  while ancestorLayer != nil {
+    var inContainingBlockChain = true
+
+    switch positioningBehavior {
+    case .Static, .Relative, .Sticky:
+      break
+    case .Absolute:
+      inContainingBlockChain = ancestorLayer!.renderer().canContainAbsolutelyPositionedObjects()
+    case .Fixed:
+      inContainingBlockChain = ancestorLayer!.renderer().canContainFixedPositionObjects()
+    }
+
+    let isPaintOrderAncestor = CPtrToInt(ancestorLayer!.p) == CPtrToInt(nextPaintOrderParent?.p)
+    if function(ancestorLayer!, inContainingBlockChain, isPaintOrderAncestor) == .Stop {
+      return .Stop
+    }
+
+    if inContainingBlockChain {
+      positioningBehavior = ancestorLayer!.renderer().style().position()
+    }
+
+    if isPaintOrderAncestor {
+      nextPaintOrderParent = ancestorLayer!.paintOrderParent()
+    }
+
+    ancestorLayer = ancestorLayer!.parent()
+  }
+
+  return .Continue
+}
+
 private func styleHas3DTransformOperation(style: RenderStyleWrapper) -> Bool {
   return style.transform().has3DOperation()
     || (style.translate() != nil && style.translate()!.is3DOperation())
@@ -2334,8 +2380,43 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   )
     -> ScrollPositioningBehavior
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !layer.hasCompositedScrollingAncestor {
+      return .None
+    }
+
+    let needsMovesNode = { () in
+      var result = false
+      traverseAncestorLayers(
+        layer,
+        {
+          (
+            ancestorLayer: RenderLayerWrapper, isContainingBlockChain: Bool,
+            _ /* isPaintOrderAncestor */: Bool
+          ) in
+          if CPtrToInt(ancestorLayer.p) == CPtrToInt(compositedAncestor.p) {
+            return .Stop
+          }
+
+          if isContainingBlockChain && ancestorLayer.hasCompositedScrollableOverflow() {
+            result = true
+            return .Stop
+          }
+
+          return .Continue
+        })
+
+      return result
+    }
+
+    if needsMovesNode() {
+      return .Moves
+    }
+
+    if layer.boxScrollingScope != compositedAncestor.contentsScrollingScope {
+      return .Stationary
+    }
+
+    return .None
   }
 
   private static func styleChangeMayAffectIndirectCompositingReasons(
