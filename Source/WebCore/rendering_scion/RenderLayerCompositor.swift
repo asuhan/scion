@@ -217,6 +217,10 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
 // There is one RenderLayerCompositor per RenderView.
 final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private struct OverlapExtent {
+    func knownToBeHaveExtentUncertainty() -> Bool {
+      return extentComputed && animationCausesExtentUncertainty
+    }
+
     var bounds = LayoutRectWrapper()
     let clippingScopes: LayerOverlapMap.LayerAndBoundsVector = []
 
@@ -254,12 +258,64 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return childState
     }
 
-    func updateWithDescendantStateAndLayer(
+    mutating func updateWithDescendantStateAndLayer(
       _ childState: CompositingState, layer: RenderLayerWrapper, ancestorLayer: RenderLayerWrapper?,
       _ layerExtent: OverlapExtent, _ isUnchangedSubtree: Bool = false
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // Subsequent layers in the parent stacking context also need to composite.
+      subtreeIsCompositing =
+        subtreeIsCompositing || childState.subtreeIsCompositing || layer.isComposited()
+      if !isUnchangedSubtree {
+        fullPaintOrderTraversalRequired =
+          fullPaintOrderTraversalRequired || childState.fullPaintOrderTraversalRequired
+      }
+
+      // Turn overlap testing off for later layers if it's already off, or if we have an animating transform.
+      // Note that if the layer clips its descendants, there's no reason to propagate the child animation to the parent layers. That's because
+      // we know for sure the animation is contained inside the clipping rectangle, which is already added to the overlap map.
+      let canReenableOverlapTesting = { [layer] () in
+        return layer.isComposited()
+          && RenderLayerCompositorWrapper.clipsCompositingDescendants(layer)
+      }
+      if (!childState.testingOverlap && !canReenableOverlapTesting())
+        || layerExtent.knownToBeHaveExtentUncertainty()
+      {
+        testingOverlap = false
+      }
+
+      let computeHasCompositedNonContainedDescendants = { [self] () in
+        if hasCompositedNonContainedDescendants {
+          return true
+        }
+        if ancestorLayer == nil {
+          return false
+        }
+        if !layer.isComposited() {
+          return false
+        }
+        if !layer.renderer().isOutOfFlowPositioned() {
+          return false
+        }
+        if layer.ancestorLayerIsInContainingBlockChain(ancestor: ancestorLayer!) {
+          return false
+        }
+        return true
+      }
+
+      hasCompositedNonContainedDescendants = computeHasCompositedNonContainedDescendants()
+
+      if (layer.isComposited() && layer.hasBlendMode())
+        || (layer.hasNotIsolatedCompositedBlendingDescendants
+          && !layer.isolatesCompositedBlending())
+      {
+        hasNotIsolatedCompositedBlendingDescendants = true
+      }
+
+      if (layer.isComposited() && layer.hasBackdropFilter())
+        || (layer.hasBackdropFilterDescendantsWithoutRoot && !layer.isBackdropRoot())
+      {
+        hasBackdropFilterDescendantsWithoutRoot = true
+      }
     }
 
     func hasNonRootCompositedAncestor() -> Bool {
@@ -1432,7 +1488,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       && !compositingState.descendantsRequireCompositingUpdate
     {
       traverseUnchangedSubtree(
-        ancestorLayer: ancestorLayer, layer: layer, overlapMap, compositingState,
+        ancestorLayer: ancestorLayer, layer: layer, overlapMap, &compositingState,
         backingSharingState,
         &descendantHas3DTransform)
       return
@@ -1736,7 +1792,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func traverseUnchangedSubtree(
     ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper,
     _ overlapMap: LayerOverlapMap,
-    _ compositingState: CompositingState, _ backingSharingState: BackingSharingState,
+    _ compositingState: inout CompositingState, _ backingSharingState: BackingSharingState,
     _ descendantHas3DTransform: inout Bool
   ) {
     layer.updateDescendantDependentFlags()
@@ -1804,20 +1860,20 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     for childLayer in layer.negativeZOrderLayers() {
       traverseUnchangedSubtree(
-        ancestorLayer: layer, layer: childLayer, overlapMap, currentState, backingSharingState,
+        ancestorLayer: layer, layer: childLayer, overlapMap, &currentState, backingSharingState,
         &anyDescendantHas3DTransform)
       assert(!currentState.subtreeIsCompositing || layerIsComposited)
     }
 
     for childLayer in layer.normalFlowLayers() {
       traverseUnchangedSubtree(
-        ancestorLayer: layer, layer: childLayer, overlapMap, currentState, backingSharingState,
+        ancestorLayer: layer, layer: childLayer, overlapMap, &currentState, backingSharingState,
         &anyDescendantHas3DTransform)
     }
 
     for childLayer in layer.positiveZOrderLayers() {
       traverseUnchangedSubtree(
-        ancestorLayer: layer, layer: childLayer, overlapMap, currentState, backingSharingState,
+        ancestorLayer: layer, layer: childLayer, overlapMap, &currentState, backingSharingState,
         &anyDescendantHas3DTransform)
     }
 

@@ -2275,6 +2275,11 @@ class RenderLayerWrapper {
     return renderer().style().filterOutsets()
   }
 
+  func hasBackdropFilter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isBackdropRoot() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
