@@ -60,3 +60,9 @@ enum ScrollbarWidth: UInt8 {
   case Thin
   case None
 }
+
+enum ScrollPositioningBehavior {
+  case None
+  case Moves
+  case Stationary
+}

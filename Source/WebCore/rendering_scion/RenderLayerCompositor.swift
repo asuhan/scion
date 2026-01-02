@@ -2289,6 +2289,51 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, hasCompositedDescendants: Bool, has3DTransformedDescendants: Bool,
     paintsIntoProvidedBacking: Bool
   ) -> IndirectCompositingReason {
+    // When a layer has composited descendants, some effects, like 2d transforms, filters, masks etc must be implemented
+    // via compositing so that they also apply to those composited descendants.
+    let renderer = layer.renderer()
+    if hasCompositedDescendants
+      && (layer.isolatesCompositedBlending() || layer.isBackdropRoot() || layer.transform != nil
+        || renderer.createsGroup() || renderer.hasReflection())
+    {
+      return .GraphicalEffect
+    }
+
+    // A layer with preserve-3d or perspective only needs to be composited if there are descendant layers that
+    // will be affected by the preserve-3d or perspective.
+    if has3DTransformedDescendants {
+      if renderer.style().preserves3D() {
+        return .Preserve3D
+      }
+
+      if renderer.style().hasPerspective() {
+        return .Perspective
+      }
+    }
+
+    // If this layer scrolls independently from the layer that it would paint into, it needs to get composited.
+    if !paintsIntoProvidedBacking && layer.hasCompositedScrollingAncestor {
+      if let paintDestination = layer.paintOrderParent(),
+        RenderLayerCompositorWrapper.layerScrollBehahaviorRelativeToCompositedAncestor(
+          layer, compositedAncestor: paintDestination) != .None
+      {
+        return .OverflowScrollPositioning
+      }
+    }
+
+    // Check for clipping last; if compositing just for clipping, the layer doesn't need its own backing store.
+    if hasCompositedDescendants && RenderLayerCompositorWrapper.clipsCompositingDescendants(layer) {
+      return .Clipping
+    }
+
+    return .None
+  }
+
+  private static func layerScrollBehahaviorRelativeToCompositedAncestor(
+    _ layer: RenderLayerWrapper, compositedAncestor: RenderLayerWrapper
+  )
+    -> ScrollPositioningBehavior
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -5217,6 +5217,8 @@ class RenderLayerWrapper {
   private var m_3DTransformedDescendantStatusDirty = false
   var hasCompositingDescendant = false  // In the z-order tree.
 
+  let hasCompositedScrollingAncestor = false
+
   private let m_hasTransformedAncestor = false
   let has3DTransformedAncestor = false
 
@@ -5265,7 +5267,7 @@ class RenderLayerWrapper {
   private var clipRectsCache: ClipRectsCache? = nil
 
   // Note that this transform has the transform-origin baked in.
-  private var transform: TransformationMatrix? = nil
+  var transform: TransformationMatrix? = nil
 
   // May ultimately be extended to many replicas (with their own paint order).
   private var reflection: RenderReplicaWrapper? = nil

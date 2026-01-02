@@ -519,6 +519,11 @@ class RenderElementWrapper: RenderObjectWrapper {
       || style.hasBackdropFilter() || style.hasBlendMode()
   }
 
+  func createsGroup() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTransparent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
