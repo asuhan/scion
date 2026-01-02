@@ -1471,8 +1471,35 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
     ancestorLayer: RenderLayerWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !canBeComposited(layer) {
+      return
+    }
+
+    // A null ancestorLayer is an indication that 'layer' has already been pushed.
+    if ancestorLayer != nil {
+      overlapMap.geometryMap.pushMappingsToAncestor(layer: layer, ancestorLayer: ancestorLayer!)
+
+      var layerExtent = OverlapExtent()
+      addToOverlapMap(overlapMap, layer, &layerExtent)
+    }
+
+    // TODO(asuhan): mutation checker
+
+    for renderLayer in layer.negativeZOrderLayers() {
+      addDescendantsToOverlapMapRecursive(overlapMap, renderLayer, ancestorLayer: layer)
+    }
+
+    for renderLayer in layer.normalFlowLayers() {
+      addDescendantsToOverlapMapRecursive(overlapMap, renderLayer, ancestorLayer: layer)
+    }
+
+    for renderLayer in layer.positiveZOrderLayers() {
+      addDescendantsToOverlapMapRecursive(overlapMap, renderLayer, ancestorLayer: layer)
+    }
+
+    if ancestorLayer != nil {
+      overlapMap.geometryMap.popMappingsToAncestor(ancestorLayer: ancestorLayer!)
+    }
   }
 
   private func updateOverlapMap(
