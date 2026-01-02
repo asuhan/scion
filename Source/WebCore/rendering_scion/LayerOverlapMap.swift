@@ -36,6 +36,14 @@ class LayerOverlapMap {
 
   typealias LayerAndBoundsVector = [LayerAndBounds]
 
+  func add(
+    _ layer: RenderLayerWrapper, bounds: LayoutRectWrapper,
+    enclosingClippingLayers: LayerAndBoundsVector
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overlapsLayers(
     _ layer: RenderLayerWrapper, bounds: LayoutRectWrapper,
     enclosingClippingLayers: ArraySlice<LayerAndBounds>

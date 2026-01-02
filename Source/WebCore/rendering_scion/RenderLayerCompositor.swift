@@ -1295,6 +1295,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func addToOverlapMap(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) {
+    if layer.isRenderViewLayer {
+      return
+    }
+
+    let clippedBounds = computeClippedOverlapBounds(overlapMap, layer, &extent)
+
+    computeClippingScopes(layer, &extent)
+    overlapMap.add(layer, bounds: clippedBounds, enclosingClippingLayers: extent.clippingScopes)
+  }
+
+  private func computeClippedOverlapBounds(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
+  ) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
