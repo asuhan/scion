@@ -23,13 +23,18 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct LayerOverlapMap {
+class LayerOverlapMap {
   init(rootLayer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func pushCompositingContainer(_ layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func popCompositingContainer(_ layer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -1267,12 +1267,39 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     extent.extentComputed = true
   }
 
-  private func updateOverlapMap(
-    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ layerExtent: OverlapExtent,
-    didPushContainer: Bool, addLayerToOverlap: Bool, addDescendantsToOverlap: Bool = false
+  private func addToOverlapMap(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func addDescendantsToOverlapMapRecursive(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
+    ancestorLayer: RenderLayerWrapper? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOverlapMap(
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
+    _ layerExtent: inout OverlapExtent,
+    didPushContainer: Bool, addLayerToOverlap: Bool, addDescendantsToOverlap: Bool = false
+  ) {
+    // TODO(asuhan): add logging
+    if addLayerToOverlap {
+      addToOverlapMap(overlapMap, layer, &layerExtent)
+    }
+
+    if addDescendantsToOverlap {
+      // If this is the first non-root layer to composite, we need to add all the descendants we already traversed to the overlap map.
+      addDescendantsToOverlapMapRecursive(overlapMap, layer)
+    }
+
+    if didPushContainer {
+      overlapMap.popCompositingContainer(layer)
+    }
   }
 
   private func layerOverlaps(
@@ -1294,7 +1321,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateBackingSharingAfterDescendantTraversal(
-    _ sharingState: BackingSharingState, _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
+    _ sharingState: BackingSharingState, _ overlapMap: LayerOverlapMap,
+    _ layer: RenderLayerWrapper,
     _ layerExtent: OverlapExtent, stackingContextAncestor: RenderLayerWrapper?,
     _ backingSharingSnapshot: BackingSharingSnapshot?
   ) {
@@ -1303,7 +1331,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func computeCompositingRequirements(
-    ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper, _ overlapMap: LayerOverlapMap,
+    ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper,
+    _ overlapMap: LayerOverlapMap,
     _ compositingState: inout CompositingState, _ backingSharingState: BackingSharingState,
     _ descendantHas3DTransform: inout Bool
   ) {
@@ -1606,7 +1635,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         && !currentState.compositingAncestor!.isRenderViewLayer)
       || currentState.backingSharingAncestor != nil
     updateOverlapMap(
-      overlapMap, layer, layerExtent, didPushContainer: didPushOverlapContainer,
+      overlapMap, layer, &layerExtent, didPushContainer: didPushOverlapContainer,
       addLayerToOverlap: layerContributesToOverlap,
       addDescendantsToOverlap: becameCompositedAfterDescendantTraversal
         && !descendantsAddedToOverlap)
@@ -1620,7 +1649,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // We have to traverse unchanged layers to fill in the overlap map.
   private func traverseUnchangedSubtree(
-    ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper, _ overlapMap: LayerOverlapMap,
+    ancestorLayer: RenderLayerWrapper?, layer: RenderLayerWrapper,
+    _ overlapMap: LayerOverlapMap,
     _ compositingState: CompositingState, _ backingSharingState: BackingSharingState,
     _ descendantHas3DTransform: inout Bool
   ) {
@@ -1728,7 +1758,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         && !currentState.compositingAncestor!.isRenderViewLayer)
       || currentState.backingSharingAncestor != nil
     updateOverlapMap(
-      overlapMap, layer, layerExtent, didPushContainer: didPushOverlapContainer,
+      overlapMap, layer, &layerExtent, didPushContainer: didPushOverlapContainer,
       addLayerToOverlap: layerContributesToOverlap)
 
     overlapMap.geometryMap.popMappingsToAncestor(ancestorLayer: ancestorLayer)
