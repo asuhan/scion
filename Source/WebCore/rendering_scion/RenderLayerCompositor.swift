@@ -1123,9 +1123,27 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     private let allowOverlappingProviders: Bool
   }
 
-  private func cacheAcceleratedCompositingFlagsAfterLayout() {
+  // Copy the accelerated compositing related flags from Settings
+  private func cacheAcceleratedCompositingFlags() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func cacheAcceleratedCompositingFlagsAfterLayout() {
+    cacheAcceleratedCompositingFlags()
+
+    if isRootFrameCompositor() {
+      return
+    }
+
+    var queryData = RequiresCompositingData()
+    let forceCompositingMode =
+      m_hasAcceleratedCompositing && m_renderView.settings().forceCompositingMode()
+      && requiresCompositingForScrollableFrame(&queryData)
+    if forceCompositingMode != m_forceCompositingMode {
+      m_forceCompositingMode = forceCompositingMode
+      rootRenderLayer().setDescendantsNeedCompositingRequirementsTraversal()
+    }
   }
 
   // Whether the given RL needs a compositing layer.
@@ -2509,6 +2527,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return !snappedIntRect(rect: frameRenderer!.contentBoxRect()).isEmpty()
   }
 
+  private func requiresCompositingForScrollableFrame(_ queryData: inout RequiresCompositingData)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func requiresCompositingForOverflowScrolling(
     layer: RenderLayerWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
@@ -2907,7 +2932,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private var m_compositing = false
   private var m_shouldFlushOnReattach = false
-  private let m_forceCompositingMode = false
+  private var m_forceCompositingMode = false
 
   private var m_layersWithTiledBackingCount: UInt32 = 0
   private var m_compositingUpdateCount: UInt32 = 0

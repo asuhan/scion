@@ -74,6 +74,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func forceCompositingMode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func grammarAndSpellingPseudoElementsEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
