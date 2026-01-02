@@ -1077,8 +1077,35 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       _ candidateLayer: RenderLayerWrapper, _ candidateAbsoluteBounds: LayoutRectWrapper,
       stackingContextAncestor: RenderLayerWrapper?
     ) -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(!backingProviderCandidates.isEmpty)
+      if stackingContextAncestor == nil
+        || CPtrToInt(stackingContextAncestor!.p) != CPtrToInt(backingSharingStackingContext?.p)
+      {
+        return false
+      }
+
+      if !allowOverlappingProviders {
+        // Only allow multiple providers for overflow scroll, which we know clips its descendants.
+        if !(backingProviderCandidates[0].providerLayer!.canUseCompositedScrolling()
+          && candidateLayer.canUseCompositedScrolling())
+        {
+          return false
+        }
+
+        // Disallow overlap between backing providers.
+        for candidate in backingProviderCandidates {
+          if candidateAbsoluteBounds.intersects(other: candidate.absoluteBounds) {
+            return false
+          }
+        }
+        return true
+      }
+
+      if !backingProviderCandidates[0].providerLayer!.canUseCompositedScrolling() {
+        return false
+      }
+
+      return backingProviderCandidates.count < 10
     }
 
     func endBackingSharingSequence(_ endLayer: RenderLayerWrapper) {
