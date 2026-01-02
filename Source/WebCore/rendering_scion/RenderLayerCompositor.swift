@@ -218,6 +218,7 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
 final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private struct OverlapExtent {
     var bounds = LayoutRectWrapper()
+    let clippingScopes: LayerOverlapMap.LayerAndBoundsVector = []
 
     var extentComputed = false
     var hasTransformAnimation = false
@@ -1286,6 +1287,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     extent.extentComputed = true
   }
 
+  private func computeClippingScopes(_ layer: RenderLayerWrapper, _ extent: inout OverlapExtent) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func addToOverlapMap(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) {
@@ -1322,10 +1328,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func layerOverlaps(
-    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: OverlapExtent
+    _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    computeExtent(overlapMap, layer, &extent)
+    computeClippingScopes(layer, &extent)
+
+    return overlapMap.overlapsLayers(
+      layer, bounds: extent.bounds, enclosingClippingLayers: extent.clippingScopes[...])
   }
 
   private struct BackingSharingSnapshot {}
@@ -1450,7 +1459,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       && compositingState.testingOverlap
     {
       // If we're testing for overlap, we only need to composite if we overlap something that is already composited.
-      if layerOverlaps(overlapMap, layer, layerExtent) {
+      if layerOverlaps(overlapMap, layer, &layerExtent) {
         compositingReason = .Overlap
       } else {
         compositingReason = .None

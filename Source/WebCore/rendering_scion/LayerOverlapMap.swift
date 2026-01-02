@@ -29,6 +29,21 @@ class LayerOverlapMap {
     fatalError("Not implemented")
   }
 
+  struct LayerAndBounds {
+    let layer: RenderLayerWrapper
+    let bounds: LayoutRectWrapper
+  }
+
+  typealias LayerAndBoundsVector = [LayerAndBounds]
+
+  func overlapsLayers(
+    _ layer: RenderLayerWrapper, bounds: LayoutRectWrapper,
+    enclosingClippingLayers: ArraySlice<LayerAndBounds>
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pushCompositingContainer(_ layer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
