@@ -1347,8 +1347,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
     _ queryData: inout RequiresCompositingData, _ backingSharingState: BackingSharingState
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layerChanged = updateBacking(
+      layer: layer, queryData: &queryData, backingSharingState: backingSharingState)
+
+    // See if we need content or clipping layers. Methods called here should assume
+    // that the compositing state of descendant layers has not been updated yet.
+    if layer.backing != nil && layer.backing!.updateConfiguration(compositingAncestor!) {
+      layerChanged = true
+    }
+
+    return layerChanged
   }
 
   private func repaintTargetsSharedBacking(

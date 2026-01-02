@@ -422,6 +422,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     updateContentsScalingFilters(style: style)
   }
 
+  // Returns true if layer configuration changed.
+  func updateConfiguration(_ compositingAncestor: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Update contents and clipping structure.
   func updateDrawsContent() {
     var contentsInfo = PaintedContentsInfo(inBacking: self)
