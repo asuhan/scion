@@ -94,6 +94,11 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
+  override func contentsSize() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentsWidth() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

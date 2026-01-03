@@ -116,6 +116,11 @@ class ScrollableAreaWrapper {
     case Yes
   }
 
+  func contentsSize() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerForHorizontalScrollbar() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

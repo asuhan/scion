@@ -963,8 +963,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateRootLayerPosition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_rootContentsLayer != nil {
+      m_rootContentsLayer!.setSize(size: FloatSize(size: m_renderView.frameView().contentsSize()))
+      m_rootContentsLayer!.setPosition(p: m_renderView.frameView().positionForRootContentLayer())
+      m_rootContentsLayer!.setAnchorPoint(p: FloatPoint3D())
+    }
+
+    updateScrollLayerClipping()
   }
 
   private func invalidateEventRegionForAllFrames() {
