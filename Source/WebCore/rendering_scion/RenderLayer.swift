@@ -319,6 +319,15 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // This does an ancestor tree walk. Avoid it!
+  private func root() -> RenderLayerWrapper? {
+    var curr: RenderLayerWrapper? = self
+    while curr!.parent() != nil {
+      curr = curr!.parent()
+    }
+    return curr
+  }
+
   func removeChild(oldChild: RenderLayerWrapper) {
     if !renderer().renderTreeBeingDestroyed() {
       compositor().layerWillBeRemoved(parent: self, child: oldChild)
@@ -805,8 +814,19 @@ class RenderLayerWrapper {
   func setBackingNeedsRepaintInRect(
     r: LayoutRectWrapper, shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // https://bugs.webkit.org/show_bug.cgi?id=61159 describes an unreproducible crash here,
+    // so assert but check that the layer is composited.
+    assert(isComposited())
+    if !isComposited() || backing!.paintsIntoWindow() {
+      // If we're trying to repaint the placeholder document layer, propagate the
+      // repaint to the native view system.
+      var absRect = r
+      absRect.move(size: offsetFromAncestor(ancestorLayer: root()))
+
+      renderer().view().repaintViewRectangle(absRect)
+    } else {
+      backing!.setContentsNeedDisplayInRect(r, shouldClip)
+    }
   }
 
   func repaintIncludingNonCompositingDescendants(repaintContainer: RenderLayerModelObjectWrapper?) {

@@ -584,6 +584,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  // r is in the coordinate space of the layer's render object
+  func setContentsNeedDisplayInRect(
+    _ r: LayoutRectWrapper, _ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositedBounds() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
