@@ -569,6 +569,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isViewTransitionRoot() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresRenderingConsolidationForViewTransition() -> Bool {
     return hasViewTransitionName() || capturedInViewTransition()
   }

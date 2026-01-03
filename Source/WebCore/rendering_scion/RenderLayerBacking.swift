@@ -428,7 +428,19 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   // Returns true if layer configuration changed.
-  func updateConfiguration(_ compositingAncestor: RenderLayerWrapper) -> Bool {
+  func updateConfiguration(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Update graphics layer position and bounds.
+  func updateGeometry(_ compositingAncestor: RenderLayerWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Update state the requires that descendant layers have been updated.
+  func updateAfterDescendants() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -440,6 +452,19 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func graphicsLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Layer to clip children
+  func hasClippingLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAncestorClippingLayers() -> Bool { return ancestorClippingStack != nil }
+
+  func hasScrollingLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -519,6 +544,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func parentForSublayers() -> GraphicsLayer {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func childForSuperlayers() -> GraphicsLayer {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // RenderLayers with backing normally short-circuit paintLayer() because
   // their content is rendered via callbacks from GraphicsLayer. However, the document
   // layer is special, because it has a GraphicsLayer to act as a container for the GraphicsLayers
@@ -545,6 +580,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func compositedBounds() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Returns true if changed.
+  @discardableResult
+  func updateCompositedBounds() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1157,7 +1199,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
   private var m_graphicsLayer: GraphicsLayer? = nil
-  private let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
+  let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
@@ -1165,7 +1207,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private let layerForHorizontalScrollbar: GraphicsLayer? = nil
   private let layerForVerticalScrollbar: GraphicsLayer? = nil
   private let layerForScrollCorner: GraphicsLayer? = nil
-  private let overflowControlsContainer: GraphicsLayer? = nil
+  let overflowControlsContainer: GraphicsLayer? = nil
 
   private let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
   private let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.

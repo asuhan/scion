@@ -26,6 +26,11 @@
 // This class encapsulates the set of layers and their scrolling tree nodes representing clipping in the layer's containing block ancestry,
 // but not in its paint order ancestry.
 class LayerAncestorClippingStack {
+  func hasAnyScrollingLayers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func detachFromScrollingCoordinator(scrollingCoordinator: ScrollingCoordinatorWrapper) {
     for var entry in stack {
       if entry.overflowScrollProxyNodeID.bool() {

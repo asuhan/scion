@@ -478,6 +478,21 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func needsScrollingTreeUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func childrenNeedCompositingGeometryUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func descendantsNeedUpdateBackingAndHierarchyTraversal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsCompositingConfigurationUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -581,6 +596,21 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func needsCompositingLayerConnection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func needsCompositingGeometryUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func needsCompositingConfigurationUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setRequirementsTraversalDirtyBit(v: Compositing) {
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingRequirementsTraversal)
@@ -638,6 +668,11 @@ class RenderLayerWrapper {
   }
 
   func needsUpdateBackingOrHierarchyTraversal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clearUpdateBackingOrHierarchyTraversalState() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

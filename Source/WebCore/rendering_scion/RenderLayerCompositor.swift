@@ -32,8 +32,8 @@ enum CompositingUpdateType {
 
 struct ScrollingTreeState {
   var parentNodeID: ScrollingNodeIDWrapper?
-  let nextChildIndex: UInt64
-  let needSynchronousScrollingReasonsUpdate = false
+  var nextChildIndex: UInt64
+  var needSynchronousScrollingReasonsUpdate = false
 }
 
 struct ScrollCoordinationRole: OptionSet {
@@ -377,6 +377,18 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func stateForDescendants() -> UpdateBackingTraversalState {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    var compositingAncestor: RenderLayerWrapper?
+
+    // List of layers in the current stacking context that are clipped by ancestor scrollers.
+    var layersClippedByScrollers: ArraySlice<RenderLayerWrapper>
+    // List of layers with composited overflow:scroll.
+    var overflowScrollLayers: ArraySlice<RenderLayerWrapper>
   }
 
   init(renderView: RenderViewWrapper) {
@@ -515,9 +527,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         scrollingCoordinator != nil
         ? scrollingCoordinator!.hasSubscrollers(m_renderView.frame().rootFrame().frameID()) : false
 
-      let traversalState = UpdateBackingTraversalState()
-      let childList: [GraphicsLayer] = []
-      updateBackingAndHierarchy(updateRoot, childList[...], traversalState, scrollingTreeState)
+      var traversalState = UpdateBackingTraversalState()
+      var childList: [GraphicsLayer] = []
+      updateBackingAndHierarchy(updateRoot, &childList[...], &traversalState, &scrollingTreeState)
 
       if scrollingTreeState.needSynchronousScrollingReasonsUpdate {
         updateSynchronousScrollingNodes()
@@ -974,6 +986,25 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func frameContentsCompositor(renderer: RenderWidgetWrapper) -> RenderLayerCompositorWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct WidgetLayerAttachment {
+    let widgetLayersAttachedAsChildren = false
+    let layerHierarchyChanged = false
+  }
+
+  private func attachWidgetContentLayersIfNecessary(_ renderer: RenderWidgetWrapper)
+    -> WidgetLayerAttachment
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collectViewTransitionNewContentLayers(
+    _ layer: RenderLayerWrapper, _ childList: inout ArraySlice<GraphicsLayer>
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2415,9 +2446,206 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Recurses down the tree, parenting descendant compositing layers and collecting an array of child layers for the current compositing layer.
   private func updateBackingAndHierarchy(
-    _ layer: RenderLayerWrapper, _ childLayersOfEnclosingLayer: ArraySlice<GraphicsLayer>,
-    _ traversalState: UpdateBackingTraversalState, _ scrollingTreeState: ScrollingTreeState,
+    _ layer: RenderLayerWrapper, _ childLayersOfEnclosingLayer: inout ArraySlice<GraphicsLayer>,
+    _ traversalState: inout UpdateBackingTraversalState,
+    _ scrollingTreeState: inout ScrollingTreeState,
     _ updateLevel: UpdateLevel = []
+  ) {
+    layer.updateDescendantDependentFlags()
+    layer.updateLayerListsIfNeeded()
+
+    var layerNeedsUpdate = !updateLevel.isEmpty
+    var updateLevel = updateLevel
+    if layer.descendantsNeedUpdateBackingAndHierarchyTraversal() {
+      updateLevel.update(with: .AllDescendants)
+    }
+
+    var scrollingStateForDescendants = scrollingTreeState
+    var traversalStateForDescendants = traversalState.stateForDescendants()
+    let layersClippedByScrollers: [RenderLayerWrapper] = []
+    let compositedOverflowScrollLayers: [RenderLayerWrapper] = []
+
+    if layer.needsScrollingTreeUpdate() {
+      scrollingTreeState.needSynchronousScrollingReasonsUpdate = true
+    }
+
+    let layerBacking = layer.backing
+    if layerBacking != nil {
+      updateLevel.remove(.CompositedChildren)
+
+      // We updated the composited bounds in RenderLayerBacking::updateAfterLayout(), but it may have changed
+      // based on which descendants are now composited.
+      if layerBacking!.updateCompositedBounds() {
+        layer.setNeedsCompositingGeometryUpdate()
+        // Our geometry can affect descendants.
+        updateLevel.update(with: .CompositedChildren)
+      }
+
+      if layerNeedsUpdate || layer.needsCompositingConfigurationUpdate() {
+        if layerBacking!.updateConfiguration(traversalState.compositingAncestor) {
+          layerNeedsUpdate = true  // We also need to update geometry.
+          layer.setNeedsCompositingLayerConnection()
+        }
+
+        layerBacking!.updateDebugIndicators(
+          showBorder: m_showDebugBorders, showRepaintCounter: m_showRepaintCounter)
+      }
+
+      var scrollingNodeChanges: ScrollingNodeChangeFlags = .Layer
+      if layerNeedsUpdate || layer.needsCompositingGeometryUpdate() {
+        layerBacking!.updateGeometry(traversalState.compositingAncestor)
+        scrollingNodeChanges.update(with: .LayerGeometry)
+      } else if layer.needsScrollingTreeUpdate() {
+        scrollingNodeChanges.update(with: .LayerGeometry)
+      }
+
+      if let reflection = layer.reflectionLayer(), let reflectionBacking = reflection.backing {
+        reflectionBacking.updateCompositedBounds()
+        reflectionBacking.updateGeometry(layer)
+        reflectionBacking.updateAfterDescendants()
+      }
+
+      if layer.parent() == nil {
+        updateRootLayerPosition()
+      }
+
+      // FIXME: do based on dirty flags. Need to do this for changes of geometry, configuration and hierarchy.
+      // Need to be careful to do the right thing when a scroll-coordinated layer loses a scroll-coordinated ancestor.
+      scrollingStateForDescendants.parentNodeID = updateScrollCoordinationForLayer(
+        layer: layer, compositingAncestor: traversalState.compositingAncestor, scrollingTreeState,
+        scrollingNodeChanges)
+      scrollingStateForDescendants.nextChildIndex = 0
+
+      traversalStateForDescendants.compositingAncestor = layer
+      traversalStateForDescendants.layersClippedByScrollers = layersClippedByScrollers[...]
+      traversalStateForDescendants.overflowScrollLayers = compositedOverflowScrollLayers[...]
+
+      // TODO(asuhan): add logging
+    }
+
+    if layer.childrenNeedCompositingGeometryUpdate() {
+      updateLevel.update(with: .CompositedChildren)
+    }
+
+    // If this layer has backing, then we are collecting its children, otherwise appending
+    // to the compositing child list of an enclosing layer.
+    var layerChildren: [GraphicsLayer] = []
+    var childList = layerBacking != nil ? layerChildren[...] : childLayersOfEnclosingLayer
+
+    let requireDescendantTraversal =
+      layer.hasDescendantNeedingUpdateBackingOrHierarchyTraversal()
+      || (layer.hasCompositingDescendant
+        && (layerBacking == nil || layer.needsCompositingLayerConnection()
+          || !updateLevel.isEmpty))
+
+    let requiresChildRebuild =
+      layerBacking != nil && layer.needsCompositingLayerConnection()
+      && !layer.hasCompositingDescendant
+
+    // TODO(asuhan): mutation checker
+
+    let appendForegroundLayerIfNecessary = { () in
+      // If a negative z-order child is compositing, we get a foreground layer which needs to get parented.
+      if layer.negativeZOrderLayers().size() == 0 {
+        return
+      }
+      if layerBacking != nil && layerBacking!.foregroundLayer != nil {
+        childList.append(layerBacking!.foregroundLayer!)
+      }
+    }
+
+    if requireDescendantTraversal {
+      for renderLayer in layer.negativeZOrderLayers() {
+        updateBackingAndHierarchy(
+          renderLayer, &childList, &traversalStateForDescendants, &scrollingStateForDescendants,
+          updateLevel)
+      }
+
+      appendForegroundLayerIfNecessary()
+
+      for renderLayer in layer.normalFlowLayers() {
+        updateBackingAndHierarchy(
+          renderLayer, &childList, &traversalStateForDescendants, &scrollingStateForDescendants,
+          updateLevel)
+      }
+
+      for renderLayer in layer.positiveZOrderLayers() {
+        updateBackingAndHierarchy(
+          renderLayer, &childList, &traversalStateForDescendants, &scrollingStateForDescendants,
+          updateLevel)
+      }
+
+      // Pass needSynchronousScrollingReasonsUpdate back up.
+      scrollingTreeState.needSynchronousScrollingReasonsUpdate =
+        scrollingTreeState.needSynchronousScrollingReasonsUpdate
+        || scrollingStateForDescendants.needSynchronousScrollingReasonsUpdate
+      if scrollingTreeState.parentNodeID == scrollingStateForDescendants.parentNodeID {
+        scrollingTreeState.nextChildIndex = scrollingStateForDescendants.nextChildIndex
+      }
+    } else if requiresChildRebuild {
+      appendForegroundLayerIfNecessary()
+    }
+
+    if layerBacking != nil {
+      if requireDescendantTraversal || requiresChildRebuild {
+        var widgetLayerAttachment = WidgetLayerAttachment()
+        if let renderWidget = layer.renderer() as? RenderWidgetWrapper {
+          widgetLayerAttachment = attachWidgetContentLayersIfNecessary(renderWidget)
+        }
+
+        collectViewTransitionNewContentLayers(layer, &childList)
+
+        if !widgetLayerAttachment.widgetLayersAttachedAsChildren {
+          // If the layer has a clipping layer the overflow controls layers will be siblings of the clipping layer.
+          // Otherwise, the overflow control layers are normal children.
+          if !layerBacking!.hasClippingLayer() && !layerBacking!.hasScrollingLayer(),
+            let overflowControlLayer = layerBacking!.overflowControlsContainer
+          {
+            layerChildren.append(overflowControlLayer)
+          }
+
+          adjustOverflowScrollbarContainerLayers(
+            stackingContextLayer: layer, overflowScrollLayers: compositedOverflowScrollLayers[...],
+            layersClippedByScrollers: layersClippedByScrollers[...], layerChildren: &layerChildren)
+          layerBacking!.parentForSublayers().setChildren(newChildren: layerChildren)
+        }
+      }
+
+      // Layers that are captured in a view transition get manually parented to their pseudo in collectViewTransitionNewContentLayers.
+      // The view transition root (when the document element is captured) gets parented in RenderLayerBacking::childForSuperlayers.
+      var skipAddToEnclosing =
+        layer.renderer().capturedInViewTransition() && !layer.renderer().isDocumentElementRenderer()
+      if layer.renderer().isViewTransitionRoot()
+        && layer.renderer().document().activeViewTransitionCapturedDocumentElement()
+      {
+        skipAddToEnclosing = true
+      }
+
+      if !skipAddToEnclosing {
+        childLayersOfEnclosingLayer.append(layerBacking!.childForSuperlayers())
+      }
+
+      if layerBacking!.hasAncestorClippingLayers()
+        && layerBacking!.ancestorClippingStack!.hasAnyScrollingLayers()
+      {
+        traversalState.layersClippedByScrollers.append(layer)
+      }
+
+      if layer.hasCompositedScrollableOverflow() {
+        traversalState.overflowScrollLayers.append(layer)
+      }
+
+      layerBacking!.updateAfterDescendants()
+    }
+
+    layer.clearUpdateBackingOrHierarchyTraversalState()
+  }
+
+  // Finds the set of overflow:scroll layers whose overflow controls hosting layer needs to be reparented,
+  // to ensure that the scrollbars show on top of positioned content inside the scroller.
+  private func adjustOverflowScrollbarContainerLayers(
+    stackingContextLayer: RenderLayerWrapper, overflowScrollLayers: ArraySlice<RenderLayerWrapper>,
+    layersClippedByScrollers: ArraySlice<RenderLayerWrapper>, layerChildren: inout [GraphicsLayer]
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3156,6 +3384,21 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  private struct ScrollingNodeChangeFlags: OptionSet {
+    let rawValue: UInt8
+    static let Layer = ScrollingNodeChangeFlags(rawValue: 1 << 0)
+    static let LayerGeometry = ScrollingNodeChangeFlags(rawValue: 1 << 1)
+  }
+
+  // Returns the ScrollingNodeID which acts as the parent for children.
+  private func updateScrollCoordinationForLayer(
+    layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
+    _ treeState: ScrollingTreeState, _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func detachScrollCoordinatedLayer(

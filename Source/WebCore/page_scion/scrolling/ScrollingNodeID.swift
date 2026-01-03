@@ -29,3 +29,8 @@ class ScrollingNodeIDWrapper {
     fatalError("Not implemented")
   }
 }
+
+func == (_ a: ScrollingNodeIDWrapper?, _ b: ScrollingNodeIDWrapper?) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

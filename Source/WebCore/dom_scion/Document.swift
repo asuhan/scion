@@ -147,6 +147,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func activeViewTransitionCapturedDocumentElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasViewTransitionPseudoElementTree() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
