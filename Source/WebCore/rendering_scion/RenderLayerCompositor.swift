@@ -61,6 +61,11 @@ private struct BackingSharingSequenceIdentifierWrapper: Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func generate() -> BackingSharingSequenceIdentifierWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 private func frameHostingNodeForFrame(_ frame: LocalFrameWrapper) -> ScrollingNodeIDWrapper? {
@@ -1297,8 +1302,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     func endBackingSharingSequence(_ endLayer: RenderLayerWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(backingSharingStackingContext != nil)
+
+      let candidates = backingProviderCandidates
+      backingProviderCandidates = []
+
+      for candidate in candidates {
+        candidate.sharingLayers.remove(value: endLayer)
+        candidate.providerLayer!.backing!.setBackingSharingLayers(candidate.sharingLayers)
+      }
+      backingSharingStackingContext = nil
+      m_sequenceIdentifier = BackingSharingSequenceIdentifierWrapper.generate()
+
+      issuePendingRepaints()
     }
 
     func snapshot() -> BackingSharingSnapshot? {
@@ -1311,8 +1327,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       fatalError("Not implemented")
     }
 
+    private func issuePendingRepaints() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     var backingProviderCandidates: [Provider] = []
     var backingSharingStackingContext: RenderLayerWrapper? = nil
+    private var m_sequenceIdentifier = BackingSharingSequenceIdentifierWrapper.generate()
     private let allowOverlappingProviders: Bool
   }
 

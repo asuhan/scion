@@ -382,6 +382,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     clearBackingSharingLayers()
   }
 
+  func setBackingSharingLayers(_ sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasBackingSharingLayers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
