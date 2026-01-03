@@ -1096,9 +1096,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     struct Provider {
-      let providerLayer: RenderLayerWrapper? = nil
-      let sharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
-      let absoluteBounds = LayoutRectWrapper()
+      let providerLayer: RenderLayerWrapper?
+      let sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>
+      let absoluteBounds: LayoutRectWrapper
     }
 
     func backingProviderCandidateForLayer(
@@ -1218,8 +1218,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       candidateLayer: RenderLayerWrapper, candidateAbsoluteBounds: LayoutRectWrapper,
       candidateStackingContext: RenderLayerWrapper, backingSharingSnapshot: BackingSharingSnapshot?
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(CPtrToInt(backingSharingStackingContext?.p) == CPtrToInt(candidateStackingContext.p))
+      assert(
+        !backingProviderCandidates.contains(where: { candidate in
+          CPtrToInt(candidate.providerLayer?.p) == CPtrToInt(candidateLayer.p)
+        }))
+
+      // Inserts candidateLayer into the provider list in z-order, using the state snapshot that
+      // was taken before any descendant layers were traversed.
+
+      if backingSharingSnapshot == nil
+        || sequenceIdentifier() != backingSharingSnapshot!.sequenceIdentifier
+      {
+        // If a new sharing sequence has been started since the snapshot was taken, then this candidate
+        // will be before any of the current ones in z-order (which must have been added by descendants of this layer).
+        backingProviderCandidates.insert(
+          Provider(
+            providerLayer: candidateLayer,
+            sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>(),
+            absoluteBounds: candidateAbsoluteBounds), at: 0)
+      } else {
+        // Otherwise insert it at the position captured in the snapshot
+        backingProviderCandidates.insert(
+          Provider(
+            providerLayer: candidateLayer,
+            sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>(),
+            absoluteBounds: candidateAbsoluteBounds), at: backingSharingSnapshot!.providerCount)
+      }
     }
 
     func isAdditionalProviderCandidate(
@@ -1280,7 +1305,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       fatalError("Not implemented")
     }
 
-    let backingProviderCandidates: [Provider] = []
+    var backingProviderCandidates: [Provider] = []
     let backingSharingStackingContext: RenderLayerWrapper? = nil
     private let allowOverlappingProviders: Bool
   }
@@ -1804,6 +1829,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private struct BackingSharingSnapshot {
     let sequenceIdentifier: BackingSharingSequenceIdentifierWrapper
+    let providerCount: Int = 0
   }
 
   private func updateBackingSharingBeforeDescendantTraversal(
