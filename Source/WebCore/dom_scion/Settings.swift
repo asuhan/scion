@@ -24,7 +24,17 @@
  */
 
 class SettingsWrapper {
+  func acceleratedCompositingEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func acceleratedCompositingForFixedPositionEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func acceleratedDrawingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -130,6 +140,11 @@ class SettingsWrapper {
   }
 
   func showDebugBorders() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func showRepaintCounter() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

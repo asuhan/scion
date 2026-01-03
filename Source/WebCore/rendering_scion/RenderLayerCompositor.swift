@@ -1032,6 +1032,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Returns true if the policy changed.
+  private func updateCompositingPolicy() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private class BackingSharingState {
     init(allowOverlappingProviders: Bool) {
       self.allowOverlappingProviders = allowOverlappingProviders
@@ -1208,8 +1214,51 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Copy the accelerated compositing related flags from Settings
   private func cacheAcceleratedCompositingFlags() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let settings = m_renderView.settings()
+    var hasAcceleratedCompositing = settings.acceleratedCompositingEnabled()
+
+    // We allow the chrome to override the settings, in case the page is rendered
+    // on a chrome that doesn't allow accelerated compositing.
+    if hasAcceleratedCompositing {
+      m_compositingTriggers = page().chrome().client().allowedCompositingTriggers()
+      hasAcceleratedCompositing = !m_compositingTriggers.isEmpty
+    }
+
+    let showDebugBorders = settings.showDebugBorders()
+    let showRepaintCounter = settings.showRepaintCounter()
+    let acceleratedDrawingEnabled = settings.acceleratedDrawingEnabled()
+
+    // forceCompositingMode for subframes can only be computed after layout.
+    var forceCompositingMode = m_forceCompositingMode
+    if isRootFrameCompositor() {
+      forceCompositingMode =
+        m_renderView.settings().forceCompositingMode() && hasAcceleratedCompositing
+    }
+
+    if hasAcceleratedCompositing != m_hasAcceleratedCompositing
+      || showDebugBorders != m_showDebugBorders || showRepaintCounter != m_showRepaintCounter
+      || forceCompositingMode != m_forceCompositingMode, let rootLayer = m_renderView.layer()
+    {
+      rootLayer.setNeedsCompositingConfigurationUpdate()
+      rootLayer.setDescendantsNeedUpdateBackingAndHierarchyTraversal()
+    }
+
+    let debugBordersChanged = m_showDebugBorders != showDebugBorders
+    m_hasAcceleratedCompositing = hasAcceleratedCompositing
+    m_forceCompositingMode = forceCompositingMode
+    m_showDebugBorders = showDebugBorders
+    m_showRepaintCounter = showRepaintCounter
+    m_acceleratedDrawingEnabled = acceleratedDrawingEnabled
+
+    if debugBordersChanged {
+      m_layerForHorizontalScrollbar?.setShowDebugBorder(show: m_showDebugBorders)
+      m_layerForVerticalScrollbar?.setShowDebugBorder(show: m_showDebugBorders)
+      m_layerForScrollCorner?.setShowDebugBorder(show: m_showDebugBorders)
+    }
+
+    if updateCompositingPolicy() {
+      rootRenderLayer().setDescendantsNeedCompositingRequirementsTraversal()
+    }
   }
 
   private func cacheAcceleratedCompositingFlagsAfterLayout() {
@@ -3040,13 +3089,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private let m_renderView: RenderViewWrapper
   private let m_updateCompositingLayersTimer: Timer
 
-  private let m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
-  private let m_hasAcceleratedCompositing = true
+  private var m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
+  private var m_hasAcceleratedCompositing = true
 
   private let m_compositingPolicy: CompositingPolicy = .Normal
 
-  private let m_showDebugBorders = false
-  private let m_showRepaintCounter = false
+  private var m_showDebugBorders = false
+  private var m_showRepaintCounter = false
+  private var m_acceleratedDrawingEnabled = false
 
   private var m_compositing = false
   private var m_shouldFlushOnReattach = false

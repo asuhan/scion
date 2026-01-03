@@ -51,6 +51,12 @@ class ChromeClient {
     static let AllTriggers = CompositingTriggerFlags(rawValue: 0xFFFF_FFFF)
   }
 
+  // Returns a bitfield indicating conditions that can trigger the compositor.
+  func allowedCompositingTriggers() -> CompositingTriggerFlags {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldUseTiledBackingForFrameView(frameView: LocalFrameViewWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
