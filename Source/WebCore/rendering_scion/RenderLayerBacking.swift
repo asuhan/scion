@@ -579,6 +579,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setContentsNeedDisplay(_ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositedBounds() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -173,6 +173,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
       computeRectForRepaint(rect: layoutOverflowRect(), repaintContainer: repaintContainer))
   }
 
+  func repaintViewRectangle(_ repaintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Return the renderer whose background style is used to paint the root background.
   func rendererForRootBackground() -> RenderElementWrapper? {
     // TODO(asuhan): implement this

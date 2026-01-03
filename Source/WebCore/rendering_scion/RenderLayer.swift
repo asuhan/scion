@@ -791,8 +791,14 @@ class RenderLayerWrapper {
   // Indicate that the layer contents need to be repainted. Only has an effect
   // if layer compositing is being used.
   func setBackingNeedsRepaint(shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isComposited())
+    if backing!.paintsIntoWindow() {
+      // If we're trying to repaint the placeholder document layer, propagate the
+      // repaint to the native view system.
+      renderer().view().repaintViewRectangle(LayoutRectWrapper(rect: absoluteBoundingBox()))
+    } else {
+      backing!.setContentsNeedDisplay(shouldClip)
+    }
   }
 
   // The rect is in the coordinate space of the layer's render object.
@@ -2077,6 +2083,12 @@ class RenderLayerWrapper {
       }
     }
     return result
+  }
+
+  // Deprecated: Pixel snapped bounding box relative to the root.
+  private func absoluteBoundingBox() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // Returns the 'reference box' used for clip-path handling (different rules for inlines, wrt. to boxes).
