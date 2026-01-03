@@ -1330,13 +1330,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     private func issuePendingRepaints() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      for layer in layersPendingRepaint {
+        // TODO(asuhan): add logging
+        layer.computeRepaintRectsIncludingDescendants()
+        layer.compositor().repaintOnCompositingChange(layer: layer)
+      }
+
+      layersPendingRepaint.clear()
     }
 
     var backingProviderCandidates: [Provider] = []
     var backingSharingStackingContext: RenderLayerWrapper? = nil
     private var m_sequenceIdentifier = BackingSharingSequenceIdentifierWrapper.generate()
+    private let layersPendingRepaint = WeakHashSet<RenderLayerWrapper>()
     private let allowOverlappingProviders: Bool
   }
 
