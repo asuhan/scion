@@ -780,8 +780,12 @@ class RenderLayerWrapper {
   }
 
   func repaintIncludingDescendants() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    renderer().repaint()
+    var current = firstChild()
+    while current != nil {
+      current!.repaintIncludingDescendants()
+      current = current!.nextSibling()
+    }
   }
 
   // Indicate that the layer contents need to be repainted. Only has an effect
