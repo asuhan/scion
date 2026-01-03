@@ -240,11 +240,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     var bounds = LayoutRectWrapper()
-    let clippingScopes: LayerOverlapMap.LayerAndBoundsVector = []
+    var clippingScopes: LayerOverlapMap.LayerAndBoundsVector = []
 
     var extentComputed = false
     var hasTransformAnimation = false
     var animationCausesExtentUncertainty = false
+    var clippingScopesComputed = false
   }
 
   private struct CompositingState {
@@ -1614,8 +1615,39 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func computeClippingScopes(_ layer: RenderLayerWrapper, _ extent: inout OverlapExtent) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if extent.clippingScopesComputed {
+      return
+    }
+
+    // FIXME: constrain the scopes (by composited stacking context ancestor I think).
+    let rootLayer = rootRenderLayer()
+    extent.clippingScopes.append(
+      LayerOverlapMap.LayerAndBounds(layer: rootLayer, bounds: LayoutRectWrapper()))
+
+    if !layer.hasCompositedScrollingAncestor {
+      return
+    }
+
+    traverseAncestorLayers(
+      layer,
+      { (ancestorLayer: RenderLayerWrapper, inContainingBlockChain: Bool, _: Bool) in
+        if inContainingBlockChain && ancestorLayer.hasCompositedScrollableOverflow() {
+          var clipRect = LayoutRectWrapper()
+          if let box = ancestorLayer.renderer() as? RenderBoxWrapper {
+            // FIXME: This is expensive. Broken with transforms.
+            let offsetFromRoot = ancestorLayer.convertToLayerCoords(
+              ancestorLayer: rootLayer, location: LayoutPointWrapper())
+            clipRect = box.overflowClipRect(location: offsetFromRoot)
+          }
+
+          let layerAndBounds = LayerOverlapMap.LayerAndBounds(
+            layer: ancestorLayer, bounds: clipRect)
+          extent.clippingScopes.insert(layerAndBounds, at: 1)  // Order is roots to leaves.
+        }
+        return .Continue
+      })
+
+    extent.clippingScopesComputed = true
   }
 
   private func addToOverlapMap(
