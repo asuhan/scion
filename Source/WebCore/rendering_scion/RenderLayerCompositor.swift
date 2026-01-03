@@ -1130,8 +1130,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     func existingBackingProviderCandidateForLayer(_ layer: RenderLayerWrapper) -> Provider? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(layer.paintsIntoProvidedBacking())
+      for candidate in backingProviderCandidates {
+        if CPtrToInt(layer.backingProviderLayer?.p) == CPtrToInt(candidate.providerLayer?.p) {
+          return candidate
+        }
+      }
+      return nil
     }
 
     func backingProviderForLayer(layer: RenderLayerWrapper) -> Provider? {
