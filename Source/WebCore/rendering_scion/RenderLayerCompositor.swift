@@ -1286,8 +1286,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       candidateLayer: RenderLayerWrapper, candidateAbsoluteBounds: LayoutRectWrapper,
       candidateStackingContext: RenderLayerWrapper
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      assert(backingSharingStackingContext != nil)
+      assert(backingProviderCandidates.isEmpty)
+      backingProviderCandidates.append(
+        Provider(
+          providerLayer: candidateLayer,
+          sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>(),
+          absoluteBounds: candidateAbsoluteBounds))
+      backingSharingStackingContext = candidateStackingContext
     }
 
     func endBackingSharingSequence(_ endLayer: RenderLayerWrapper) {
@@ -1306,7 +1312,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     var backingProviderCandidates: [Provider] = []
-    let backingSharingStackingContext: RenderLayerWrapper? = nil
+    var backingSharingStackingContext: RenderLayerWrapper? = nil
     private let allowOverlappingProviders: Bool
   }
 
