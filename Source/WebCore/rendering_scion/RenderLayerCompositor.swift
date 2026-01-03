@@ -536,7 +536,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       }
 
       // Host the document layer in the RenderView's root layer.
-      appendDocumentOverlayLayers(childList[...])
+      appendDocumentOverlayLayers(&childList[...])
       // Even when childList is empty, don't drop out of compositing mode if there are
       // composited layers that we didn't hit in our traversal (e.g. because of visibility:hidden).
       if childList.isEmpty && !needsCompositingForContentOrOverlays() {
@@ -2656,9 +2656,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
-  private func appendDocumentOverlayLayers(_ childList: ArraySlice<GraphicsLayer>) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func appendDocumentOverlayLayers(_ childList: inout ArraySlice<GraphicsLayer>) {
+    if !isRootFrameCompositor() || !m_compositing {
+      return
+    }
+
+    if !page().pageOverlayController().hasDocumentOverlays() {
+      return
+    }
+
+    let overlayHost = page().pageOverlayController().layerWithDocumentOverlays()
+    childList.append(overlayHost)
   }
 
   private func needsCompositingForContentOrOverlays() -> Bool {

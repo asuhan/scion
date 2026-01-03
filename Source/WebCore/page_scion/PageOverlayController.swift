@@ -24,6 +24,11 @@
  */
 
 final class PageOverlayControllerWrapper: GraphicsLayerClientWrapper {
+  func hasDocumentOverlays() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerWithDocumentOverlays() -> GraphicsLayer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
