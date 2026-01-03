@@ -56,6 +56,13 @@ private let allScrollCoordinationRoles: ScrollCoordinationRole = [
   .Positioning,
 ]
 
+private struct BackingSharingSequenceIdentifierWrapper: Equatable {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 private func frameHostingNodeForFrame(_ frame: LocalFrameWrapper) -> ScrollingNodeIDWrapper? {
   if frame.document() == nil || frame.view() == nil {
     return nil
@@ -1207,6 +1214,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       fatalError("Not implemented")
     }
 
+    func addBackingSharingCandidate(
+      candidateLayer: RenderLayerWrapper, candidateAbsoluteBounds: LayoutRectWrapper,
+      candidateStackingContext: RenderLayerWrapper, backingSharingSnapshot: BackingSharingSnapshot?
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isAdditionalProviderCandidate(
       _ candidateLayer: RenderLayerWrapper, _ candidateAbsoluteBounds: LayoutRectWrapper,
       stackingContextAncestor: RenderLayerWrapper?
@@ -1242,12 +1257,25 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return backingProviderCandidates.count < 10
     }
 
+    func startBackingSharingSequence(
+      candidateLayer: RenderLayerWrapper, candidateAbsoluteBounds: LayoutRectWrapper,
+      candidateStackingContext: RenderLayerWrapper
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func endBackingSharingSequence(_ endLayer: RenderLayerWrapper) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
     func snapshot() -> BackingSharingSnapshot? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func sequenceIdentifier() -> BackingSharingSequenceIdentifierWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -1774,7 +1802,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       layer, bounds: extent.bounds, enclosingClippingLayers: extent.clippingScopes[...])
   }
 
-  private struct BackingSharingSnapshot {}
+  private struct BackingSharingSnapshot {
+    let sequenceIdentifier: BackingSharingSequenceIdentifierWrapper
+  }
 
   private func updateBackingSharingBeforeDescendantTraversal(
     _ sharingState: BackingSharingState, _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
@@ -1811,11 +1841,72 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func updateBackingSharingAfterDescendantTraversal(
     _ sharingState: BackingSharingState, _ overlapMap: LayerOverlapMap,
     _ layer: RenderLayerWrapper,
-    _ layerExtent: OverlapExtent, stackingContextAncestor: RenderLayerWrapper?,
+    _ layerExtent: inout OverlapExtent, stackingContextAncestor: RenderLayerWrapper?,
     _ backingSharingSnapshot: BackingSharingSnapshot?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add logging
+
+    if layer.isComposited() {
+      // If this layer is being composited, clean up sharing-related state.
+      layer.disconnectFromBackingProviderLayer()
+      for candidate in sharingState.backingProviderCandidates {
+        candidate.sharingLayers.remove(value: layer)
+      }
+    }
+
+    // Backing sharing is constrained to layers in the same stacking context.
+    if CPtrToInt(layer.p) == CPtrToInt(sharingState.backingSharingStackingContext?.p) {
+      assert(
+        !sharingState.backingProviderCandidates.contains(where: { candidate in
+          return CPtrToInt(candidate.providerLayer?.p) == CPtrToInt(layer.p)
+        }))
+      sharingState.endBackingSharingSequence(layer)
+
+      if layer.isComposited() {
+        layer.backing!.clearBackingSharingLayers()
+      }
+
+      return
+    }
+
+    if !layer.isComposited() {
+      return
+    }
+
+    if stackingContextAncestor == nil {
+      return
+    }
+
+    let canBeBackingProvider = !layer.hasCompositingDescendant
+    if canBeBackingProvider {
+      if sharingState.backingSharingStackingContext == nil {
+        computeExtent(overlapMap, layer, &layerExtent)
+        sharingState.startBackingSharingSequence(
+          candidateLayer: layer, candidateAbsoluteBounds: layerExtent.bounds,
+          candidateStackingContext: stackingContextAncestor!)
+        return
+      }
+
+      computeExtent(overlapMap, layer, &layerExtent)
+      if sharingState.isAdditionalProviderCandidate(
+        layer, layerExtent.bounds, stackingContextAncestor: stackingContextAncestor)
+      {
+        sharingState.addBackingSharingCandidate(
+          candidateLayer: layer, candidateAbsoluteBounds: layerExtent.bounds,
+          candidateStackingContext: stackingContextAncestor!,
+          backingSharingSnapshot: backingSharingSnapshot)
+        return
+      }
+    }
+
+    layer.backing!.clearBackingSharingLayers()
+
+    // A layer that composites resets backing-sharing, since subsequent layers need to composite to overlap it. If a descendant didn't already end the sharing sequence that was current when processing of this layer started, end it now.
+    if backingSharingSnapshot != nil
+      && backingSharingSnapshot!.sequenceIdentifier == sharingState.sequenceIdentifier()
+    {
+      sharingState.endBackingSharingSequence(layer)
+    }
   }
 
   private func computeCompositingRequirements(
@@ -2115,7 +2206,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     compositingState.updateWithDescendantStateAndLayer(
       currentState, layer: layer, ancestorLayer: ancestorLayer, layerExtent)
     updateBackingSharingAfterDescendantTraversal(
-      backingSharingState, overlapMap, layer, layerExtent,
+      backingSharingState, overlapMap, layer, &layerExtent,
       stackingContextAncestor: compositingState.stackingContextAncestor, backingSharingSnapshot)
 
     let layerContributesToOverlap =
@@ -2237,7 +2328,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     compositingState.updateWithDescendantStateAndLayer(
       currentState, layer: layer, ancestorLayer: ancestorLayer, layerExtent, true)
     updateBackingSharingAfterDescendantTraversal(
-      backingSharingState, overlapMap, layer, layerExtent,
+      backingSharingState, overlapMap, layer, &layerExtent,
       stackingContextAncestor: compositingState.stackingContextAncestor,
       backingSharingSnapshot)
 
