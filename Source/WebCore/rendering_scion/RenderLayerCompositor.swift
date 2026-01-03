@@ -1318,8 +1318,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     func snapshot() -> BackingSharingSnapshot? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      if backingSharingStackingContext == nil {
+        return nil
+      }
+      return BackingSharingSnapshot(
+        sequenceIdentifier: m_sequenceIdentifier, providerCount: backingProviderCandidates.count)
     }
 
     func sequenceIdentifier() -> BackingSharingSequenceIdentifierWrapper {
@@ -1856,7 +1859,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private struct BackingSharingSnapshot {
     let sequenceIdentifier: BackingSharingSequenceIdentifierWrapper
-    let providerCount: Int = 0
+    let providerCount: Int
   }
 
   private func updateBackingSharingBeforeDescendantTraversal(
