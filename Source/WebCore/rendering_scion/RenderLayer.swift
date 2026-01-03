@@ -5094,7 +5094,7 @@ class RenderLayerWrapper {
     return parentClipRects
   }
 
-  private func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
+  func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
     assert(parent() != nil)
     let parentRects = parentClipRects(clipRectsContext: clipRectsContext)
     var backgroundClipRect = backgroundClipRectForPosition(

@@ -971,6 +971,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  override func pageScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerTiledBackingUsageChanged(graphicsLayer: GraphicsLayer?, usingTiledBacking: Bool) {
     if usingTiledBacking {
       m_layersWithTiledBackingCount += 1
@@ -1666,8 +1671,42 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeClippedOverlapBounds(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    computeExtent(overlapMap, layer, &extent)
+    computeClippingScopes(layer, &extent)
+
+    var clipRect = LayoutRectWrapper()
+    if layer.hasCompositedScrollingAncestor {
+      // Compute a clip up to the composited scrolling ancestor, then convert it to absolute coordinates.
+      let scopeLayer = extent.clippingScopes.last!.layer
+      clipRect =
+        layer.backgroundClipRect(
+          clipRectsContext: RenderLayerWrapper.ClipRectsContext(
+            inRootLayer: scopeLayer, inClipRectsType: .TemporaryClipRects, inOptions: [])
+        ).rect
+      if !clipRect.isInfinite() {
+        clipRect.setLocation(
+          location: scopeLayer.convertToLayerCoords(
+            ancestorLayer: rootRenderLayer(), location: clipRect.location()))
+      }
+    } else {
+      clipRect =
+        layer.backgroundClipRect(
+          clipRectsContext: RenderLayerWrapper.ClipRectsContext(
+            inRootLayer: rootRenderLayer(), inClipRectsType: .AbsoluteClipRects)
+        ).rect  // FIXME: Incorrect for CSS regions.
+    }
+
+    var clippedBounds = extent.bounds
+    if !clipRect.isInfinite() {
+      // With delegated page scaling, pageScaleFactor() is not applied by RenderView, so we should not scale here.
+      if !page().delegatesScaling() {
+        clipRect.scale(pageScaleFactor())
+      }
+
+      clippedBounds.intersect(other: clipRect)
+    }
+
+    return clippedBounds
   }
 
   private func addDescendantsToOverlapMapRecursive(

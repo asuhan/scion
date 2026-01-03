@@ -35,4 +35,7 @@ struct GraphicsLayerPaintingPhase: OptionSet {
   static let ChildClippingMask = GraphicsLayerPaintingPhase(rawValue: 1 << 6)
 }
 
-class GraphicsLayerClientWrapper {}
+class GraphicsLayerClientWrapper {
+  // Page scale factor.
+  func pageScaleFactor() -> Float32 { return 1 }
+}

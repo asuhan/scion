@@ -629,7 +629,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
-  func pageScaleFactor() -> Float32 {
+  override func pageScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

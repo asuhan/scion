@@ -44,6 +44,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func delegatesScaling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func deviceScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

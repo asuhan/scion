@@ -272,6 +272,18 @@ struct LayoutRectWrapper: Equatable {
     inflateY(dy: d)
   }
 
+  mutating func scale(_ scaleValue: Float32) {
+    scale(xScale: scaleValue, yScale: scaleValue)
+  }
+
+  private mutating func scale(xScale: Float32, yScale: Float32) {
+    if isInfinite() {
+      return
+    }
+    m_location.scale(sx: xScale, sy: yScale)
+    m_size.scale(widthScale: xScale, heightScale: yScale)
+  }
+
   func transposedRect() -> LayoutRectWrapper {
     return LayoutRectWrapper(location: m_location.transposedPoint(), size: m_size.transposedSize())
   }
