@@ -1045,10 +1045,88 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     func backingProviderCandidateForLayer(
       _ layer: RenderLayerWrapper, _ compositor: RenderLayerCompositorWrapper,
-      _ overlapMap: LayerOverlapMap, _ overlap: OverlapExtent
+      _ overlapMap: LayerOverlapMap, _ overlap: inout OverlapExtent
     ) -> Provider? {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      // TODO(asuhan): add logging
+
+      if layer.hasReflection() {
+        return nil
+      }
+
+      if !allowOverlappingProviders {
+        for candidate in backingProviderCandidates {
+          if layer.ancestorLayerIsInContainingBlockChain(ancestor: candidate.providerLayer!) {
+            return candidate
+          }
+        }
+
+        return nil
+      }
+
+      if backingProviderCandidates.isEmpty {
+        return nil
+      }
+
+      // First, find the frontmost provider that is an ancestor in the containing block chain.
+      let candidateIndex = backingProviderCandidates.lastIndex(where: { provider in
+        let providerLayer = provider.providerLayer!
+
+        if CPtrToInt(layer.p) == CPtrToInt(providerLayer.p) {
+          return false
+        }
+
+        return layer.ancestorLayerIsInContainingBlockChain(ancestor: providerLayer)
+      })
+
+      if candidateIndex == nil {
+        return nil
+      }
+
+      let candidate = backingProviderCandidates[candidateIndex!]
+
+      // Only allow adding to providers that clip their descendants, unless there's only a single provider.
+      // Unclipped providers in-front are tracked for overlap testing only.
+      // FIXME: We could accumulate the union of the overlap bounds for a provider and its sharing layers to avoid this restriction.
+      if backingProviderCandidates.count > 1
+        && !candidate.providerLayer!.canUseCompositedScrolling()
+      {
+        return nil
+      }
+
+      if candidateIndex! == backingProviderCandidates.count - 1 {
+        // No other provider is in front of the candidate, so no need to check for overlap.
+        return candidate
+      }
+
+      let providerLayer = candidate.providerLayer!
+      var overlapBounds = candidate.absoluteBounds
+      if providerLayer.canUseCompositedScrolling() && providerLayer.scrollableArea() != nil
+        && providerLayer.scrollableArea()!.hasScrollableHorizontalOverflow()
+          != providerLayer.scrollableArea()!.hasScrollableVerticalOverflow()
+      {
+        // If the provider uses composited scrolling but only supports scrolling
+        // in one axis, we can use the clipped overlap bounds in the other axis,
+        // when checking for overlap.
+        let clippedOverlapBounds = compositor.computeClippedOverlapBounds(
+          overlapMap, layer, &overlap)
+        if providerLayer.scrollableArea()!.hasScrollableHorizontalOverflow() {
+          overlapBounds.setY(y: clippedOverlapBounds.y())
+          overlapBounds.setHeight(height: clippedOverlapBounds.height())
+        } else {
+          overlapBounds.setX(x: clippedOverlapBounds.x())
+          overlapBounds.setWidth(width: clippedOverlapBounds.width())
+        }
+      }
+
+      // Check if any of the other candidates that are in front of the selected provider will
+      // overlap the bounds of the layer to be added.
+      for provider in backingProviderCandidates[(candidateIndex! + 1)...] {
+        if overlapBounds.intersects(other: provider.absoluteBounds) {
+          return nil
+        }
+      }
+
+      return candidate
     }
 
     func existingBackingProviderCandidateForLayer(_ layer: RenderLayerWrapper) -> Provider? {
@@ -1642,7 +1720,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var layerPaintsIntoProvidedBacking = false
     if !willBeComposited && compositingState.subtreeIsCompositing && canBeComposited(layer),
       let provider = backingSharingState.backingProviderCandidateForLayer(
-        layer, self, overlapMap, layerExtent)
+        layer, self, overlapMap, &layerExtent)
     {
       provider.sharingLayers.add(value: layer)
       compositingReason = .None
