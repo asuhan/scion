@@ -1323,8 +1323,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     func sequenceIdentifier() -> BackingSharingSequenceIdentifierWrapper {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return m_sequenceIdentifier
     }
 
     private func issuePendingRepaints() {
