@@ -33,6 +33,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/css_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/css_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/style_scion
     ${CMAKE_BINARY_DIR}/Source/WebCore/style_scion)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WebCore/PAL/pal_scion
+    ${CMAKE_BINARY_DIR}/Source/WebCore/PAL/pal_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WTF/wtf_scion
     ${CMAKE_BINARY_DIR}/Source/WTF/wtf_scion)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/WTF/icu_scion/unicode

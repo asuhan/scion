@@ -4,6 +4,7 @@ target_sources(layout_scion PRIVATE
     IteratorRange.swift
     ListSet.swift
     MathExtras.swift
+    MemoryPressureHandler.swift
     MonotonicTime.swift
     ObjectIdentifierHashSet.swift
     OptionalComparison.swift

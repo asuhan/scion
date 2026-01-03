@@ -1034,9 +1034,48 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Returns true if the policy changed.
   private func updateCompositingPolicy() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !usesCompositing() {
+      return false
+    }
+
+    let currentPolicy = m_compositingPolicy
+    if let compositingPolicyOverride = page().compositingPolicyOverride() {
+      m_compositingPolicy = compositingPolicyOverride
+      return m_compositingPolicy != currentPolicy
+    }
+
+    if !canUpdateCompositingPolicy() {
+      return false
+    }
+
+    let nowUnderMemoryPressure =
+      MemoryPressureHandler.singleton().isUnderMemoryPressure()
+      || MemoryPressureHandler.singleton().isUnderMemoryWarning()
+    RenderLayerCompositorWrapper.cachedIsUnderMemoryPressureOrWarning = nowUnderMemoryPressure
+
+    if RenderLayerCompositorWrapper.cachedIsUnderMemoryPressureOrWarning != nowUnderMemoryPressure {
+      RenderLayerCompositorWrapper.cachedMemoryPolicy = MemoryPressureHandler.singleton()
+        .currentMemoryUsagePolicy()
+      RenderLayerCompositorWrapper.cachedIsUnderMemoryPressureOrWarning = nowUnderMemoryPressure
+    }
+
+    m_compositingPolicy =
+      RenderLayerCompositorWrapper.cachedMemoryPolicy == .Unrestricted ? .Normal : .Conservative
+
+    let didChangePolicy = currentPolicy != m_compositingPolicy
+    if didChangePolicy && m_compositingPolicy == .Conservative {
+      m_compositingPolicyHysteresis.impulse()
+    }
+
+    return didChangePolicy
   }
+
+  private func canUpdateCompositingPolicy() -> Bool {
+    return m_compositingPolicyHysteresis.state() == .Stopped
+  }
+
+  private static var cachedMemoryPolicy: MemoryUsagePolicy = .Unrestricted
+  private static var cachedIsUnderMemoryPressureOrWarning = false
 
   private class BackingSharingState {
     init(allowOverlappingProviders: Bool) {
@@ -3092,7 +3131,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private var m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
   private var m_hasAcceleratedCompositing = true
 
-  private let m_compositingPolicy: CompositingPolicy = .Normal
+  private var m_compositingPolicy: CompositingPolicy = .Normal
+  private let m_compositingPolicyHysteresis = PAL.HysteresisActivity()
 
   private var m_showDebugBorders = false
   private var m_showRepaintCounter = false

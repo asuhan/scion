@@ -79,6 +79,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func compositingPolicyOverride() -> CompositingPolicy? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lastRenderingUpdateTimestamp() -> MonotonicTime {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
