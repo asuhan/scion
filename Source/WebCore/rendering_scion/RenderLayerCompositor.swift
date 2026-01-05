@@ -1210,7 +1210,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
   }
 
-  func useCoordinatedScrollingForLayer(layer: RenderLayerWrapper) -> Bool {
+  // FIXME: make the coordinated/async terminology consistent.
+  private func isViewportConstrainedFixedOrStickyLayer(_ layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func useCoordinatedScrollingForLayer(_ layer: RenderLayerWrapper) -> Bool {
     if layer.isRenderViewLayer && hasCoordinatedScrolling() {
       return true
     }
@@ -1225,6 +1231,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeCoordinatedPositioningForLayer(
     _ layer: RenderLayerWrapper, compositedAncestor: RenderLayerWrapper?
   ) -> ScrollPositioningBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isLayerForIFrameWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1743,7 +1754,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       if layer.backing == nil {
         layer.ensureBacking()
 
-        if layer.isRenderViewLayer && useCoordinatedScrollingForLayer(layer: layer) {
+        if layer.isRenderViewLayer && useCoordinatedScrollingForLayer(layer) {
           let frameView = m_renderView.frameView()
           if let scrollingCoordinator = scrollingCoordinator() {
             scrollingCoordinator.frameViewRootLayerDidChange(frameView: frameView)
@@ -3733,8 +3744,35 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func coordinatedScrollingRolesForLayer(
     _ layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?
   ) -> ScrollCoordinationRole {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var coordinationRoles: ScrollCoordinationRole = []
+    if isViewportConstrainedFixedOrStickyLayer(layer) {
+      coordinationRoles.update(with: .ViewportConstrained)
+    }
+
+    if useCoordinatedScrollingForLayer(layer) {
+      coordinationRoles.update(with: .Scrolling)
+    }
+
+    let coordinatedPositioning = computeCoordinatedPositioningForLayer(
+      layer, compositedAncestor: compositingAncestor)
+    switch coordinatedPositioning {
+    case .Moves:
+      coordinationRoles.update(with: .ScrollingProxy)
+    case .Stationary:
+      coordinationRoles.update(with: .Positioning)
+    case .None:
+      break
+    }
+
+    if isLayerForIFrameWithScrollCoordinatedContents(layer) {
+      coordinationRoles.update(with: .FrameHosting)
+    }
+
+    if isLayerForPluginWithScrollCoordinatedContents(layer) {
+      coordinationRoles.update(with: .PluginHosting)
+    }
+
+    return coordinationRoles
   }
 
   // Returns the ScrollingNodeID which acts as the parent for children.
