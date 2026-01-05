@@ -57,6 +57,13 @@ class ChromeClient {
     fatalError("Not implemented")
   }
 
+  func ensureScrollbarsController(
+    _ page: PageWrapper, _ area: ScrollableAreaWrapper, _ update: Bool = false
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldUseTiledBackingForFrameView(frameView: LocalFrameViewWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

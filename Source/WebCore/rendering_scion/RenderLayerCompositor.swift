@@ -3825,8 +3825,52 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = scrollingCoordinator()
+
+    var newNodeID = ScrollingNodeIDWrapper()
+
+    if layer.isRenderViewLayer {
+      let frameView = m_renderView.frameView()
+      assert(scrollingCoordinator!.coordinatesScrollingForFrameView(frameView: frameView))
+
+      newNodeID = attachScrollingNode(
+        m_renderView.layer()!, m_renderView.frame().isMainFrame() ? .MainFrame : .Subframe,
+        treeState)
+
+      if !newNodeID.bool() {
+        fatalError("Not reached")
+      }
+
+      if changes.contains(.Layer) {
+        updateScrollingNodeLayers(newNodeID, layer, scrollingCoordinator!)
+      }
+
+      if changes.contains(.LayerGeometry) {
+        scrollingCoordinator!.setScrollingNodeScrollableAreaGeometry(newNodeID, frameView)
+        scrollingCoordinator!.setFrameScrollingNodeState(newNodeID, frameView)
+      }
+      page().chrome().client().ensureScrollbarsController(page(), frameView, true)
+    } else {
+      newNodeID = attachScrollingNode(layer, .Overflow, treeState)
+      if !newNodeID.bool() {
+        fatalError("Not reached")
+      }
+
+      if changes.contains(.Layer) {
+        updateScrollingNodeLayers(newNodeID, layer, scrollingCoordinator!)
+      }
+
+      if changes.contains(.LayerGeometry) && treeState.v.parentNodeID != nil,
+        let scrollableArea = layer.scrollableArea()
+      {
+        scrollingCoordinator!.setScrollingNodeScrollableAreaGeometry(newNodeID, scrollableArea)
+      }
+      if let scrollableArea = layer.scrollableArea() {
+        page().chrome().client().ensureScrollbarsController(page(), scrollableArea, true)
+      }
+    }
+
+    return newNodeID
   }
 
   private func updateScrollingNodeForScrollingProxyRole(
@@ -3857,6 +3901,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
     _ treeState: ScrollingTreeStateRef, _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingNodeLayers(
+    _ nodeID: ScrollingNodeIDWrapper, _ layer: RenderLayerWrapper,
+    _ scrollingCoordinator: ScrollingCoordinatorWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

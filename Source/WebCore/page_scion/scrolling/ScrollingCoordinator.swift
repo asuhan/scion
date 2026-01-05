@@ -84,6 +84,20 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  func setScrollingNodeScrollableAreaGeometry(
+    _ nodeID: ScrollingNodeIDWrapper, _ scrollableArea: ScrollableAreaWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFrameScrollingNodeState(
+    _ nodeID: ScrollingNodeIDWrapper, _ frameView: LocalFrameViewWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setViewportConstraintedNodeConstraints(
     _ nodeID: ScrollingNodeIDWrapper, _ constraints: ViewportConstraints
   ) {
