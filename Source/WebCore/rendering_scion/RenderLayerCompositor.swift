@@ -3960,8 +3960,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let newNodeID = attachScrollingNode(layer, .PluginHosting, treeState)
+    if !newNodeID.bool() {
+      fatalError("Not reached")
+    }
+
+    return newNodeID
   }
 
   private func updateScrollingNodeForPositioningRole(
