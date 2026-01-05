@@ -1239,6 +1239,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
+  let viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
 
   private let layerForHorizontalScrollbar: GraphicsLayer? = nil

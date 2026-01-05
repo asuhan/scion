@@ -75,6 +75,22 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  struct NodeLayers {
+    let layer: GraphicsLayer?
+  }
+
+  func setNodeLayers(_ nodeID: ScrollingNodeIDWrapper, _ nodeLayers: NodeLayers) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setViewportConstraintedNodeConstraints(
+    _ nodeID: ScrollingNodeIDWrapper, _ constraints: ViewportConstraints
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSubscrollers(_ rootFrameID: FrameIdentifierWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

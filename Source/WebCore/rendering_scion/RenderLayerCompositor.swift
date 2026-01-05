@@ -3696,6 +3696,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     static let LayerGeometry = ScrollingNodeChangeFlags(rawValue: 1 << 1)
   }
 
+  private func attachScrollingNode(
+    _ layer: RenderLayerWrapper, _ nodeType: ScrollingNodeType, _ treeState: ScrollingTreeStateRef
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func coordinatedScrollingRolesForLayer(
     _ layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?
   ) -> ScrollCoordinationRole {
@@ -3775,8 +3782,43 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = scrollingCoordinator()
+
+    var nodeType: ScrollingNodeType = .Fixed
+    if layer.renderer().style().position() == .Sticky {
+      nodeType = .Sticky
+    } else {
+      assert(layer.renderer().isFixedPositioned())
+    }
+
+    let newNodeID = attachScrollingNode(layer, nodeType, treeState)
+    if !newNodeID.bool() {
+      fatalError("Not reached")
+    }
+
+    // TODO(asuhan): add logging
+
+    if changes.contains(.Layer) {
+      assert(layer.backing!.viewportAnchorLayer != nil)
+      scrollingCoordinator!.setNodeLayers(
+        newNodeID,
+        ScrollingCoordinatorWrapper.NodeLayers(layer: layer.backing!.viewportAnchorLayer))
+    }
+
+    if changes.contains(.LayerGeometry) {
+      switch nodeType {
+      case .Fixed:
+        scrollingCoordinator!.setViewportConstraintedNodeConstraints(
+          newNodeID, computeFixedViewportConstraints(layer))
+      case .Sticky:
+        scrollingCoordinator!.setViewportConstraintedNodeConstraints(
+          newNodeID, computeStickyViewportConstraints(layer))
+      default:
+        break
+      }
+    }
+
+    return newNodeID
   }
 
   private func updateScrollingNodeForScrollingRole(
@@ -3906,6 +3948,20 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateSynchronousScrollingNodes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeFixedViewportConstraints(_ layer: RenderLayerWrapper)
+    -> FixedPositionViewportConstraints
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeStickyViewportConstraints(_ layer: RenderLayerWrapper)
+    -> StickyPositionViewportConstraints
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

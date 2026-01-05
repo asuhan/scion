@@ -41,6 +41,8 @@ class ViewportConstraints {
   }
 }
 
+final class FixedPositionViewportConstraints: ViewportConstraints {}
+
 final class StickyPositionViewportConstraints: ViewportConstraints {
   func computeStickyOffset(constrainingRect: FloatRectWrapper) -> FloatSize {
     // TODO(asuhan): implement this
