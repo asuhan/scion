@@ -31,9 +31,22 @@ enum CompositingUpdateType {
 }
 
 struct ScrollingTreeState {
+  init() { self.init(parentNodeID: nil, nextChildIndex: 0) }
+
+  init(parentNodeID: ScrollingNodeIDWrapper?, nextChildIndex: UInt64) {
+    self.parentNodeID = parentNodeID
+    self.nextChildIndex = nextChildIndex
+  }
+
   var parentNodeID: ScrollingNodeIDWrapper?
   var nextChildIndex: UInt64
   var needSynchronousScrollingReasonsUpdate = false
+}
+
+class ScrollingTreeStateRef {
+  init(_ v: ScrollingTreeState) { self.v = v }
+
+  var v: ScrollingTreeState
 }
 
 struct ScrollCoordinationRole: OptionSet {
@@ -520,11 +533,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       || updateRoot.needsUpdateBackingOrHierarchyTraversal()
     {
       // TODO(asuhan): assert layersWithUnresolvedRelations is empty (ignoring nulls)
-      var scrollingTreeState = ScrollingTreeState(
-        parentNodeID: ScrollingNodeIDWrapper(), nextChildIndex: 0)
+      let scrollingTreeState = ScrollingTreeStateRef(
+        ScrollingTreeState(
+          parentNodeID: ScrollingNodeIDWrapper(), nextChildIndex: 0))
 
       if !m_renderView.frame().isMainFrame() {
-        scrollingTreeState.parentNodeID = frameHostingNodeForFrame(m_renderView.frame())
+        scrollingTreeState.v.parentNodeID = frameHostingNodeForFrame(m_renderView.frame())
       }
 
       let scrollingCoordinator = scrollingCoordinator()
@@ -534,9 +548,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       var traversalState = UpdateBackingTraversalState()
       var childList: [GraphicsLayer] = []
-      updateBackingAndHierarchy(updateRoot, &childList[...], &traversalState, &scrollingTreeState)
+      updateBackingAndHierarchy(updateRoot, &childList[...], &traversalState, scrollingTreeState)
 
-      if scrollingTreeState.needSynchronousScrollingReasonsUpdate {
+      if scrollingTreeState.v.needSynchronousScrollingReasonsUpdate {
         updateSynchronousScrollingNodes()
       }
 
@@ -2607,7 +2621,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func updateBackingAndHierarchy(
     _ layer: RenderLayerWrapper, _ childLayersOfEnclosingLayer: inout ArraySlice<GraphicsLayer>,
     _ traversalState: inout UpdateBackingTraversalState,
-    _ scrollingTreeState: inout ScrollingTreeState,
+    _ scrollingTreeState: ScrollingTreeStateRef,
     _ updateLevel: UpdateLevel = []
   ) {
     layer.updateDescendantDependentFlags()
@@ -2619,13 +2633,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       updateLevel.update(with: .AllDescendants)
     }
 
-    var scrollingStateForDescendants = scrollingTreeState
+    let scrollingStateForDescendants = ScrollingTreeStateRef(scrollingTreeState.v)
     var traversalStateForDescendants = traversalState.stateForDescendants()
     let layersClippedByScrollers: [RenderLayerWrapper] = []
     let compositedOverflowScrollLayers: [RenderLayerWrapper] = []
 
     if layer.needsScrollingTreeUpdate() {
-      scrollingTreeState.needSynchronousScrollingReasonsUpdate = true
+      scrollingTreeState.v.needSynchronousScrollingReasonsUpdate = true
     }
 
     let layerBacking = layer.backing
@@ -2670,10 +2684,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       // FIXME: do based on dirty flags. Need to do this for changes of geometry, configuration and hierarchy.
       // Need to be careful to do the right thing when a scroll-coordinated layer loses a scroll-coordinated ancestor.
-      scrollingStateForDescendants.parentNodeID = updateScrollCoordinationForLayer(
+      scrollingStateForDescendants.v.parentNodeID = updateScrollCoordinationForLayer(
         layer: layer, compositingAncestor: traversalState.compositingAncestor, scrollingTreeState,
         scrollingNodeChanges)
-      scrollingStateForDescendants.nextChildIndex = 0
+      scrollingStateForDescendants.v.nextChildIndex = 0
 
       traversalStateForDescendants.compositingAncestor = layer
       traversalStateForDescendants.layersClippedByScrollers = layersClippedByScrollers[...]
@@ -2716,7 +2730,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     if requireDescendantTraversal {
       for renderLayer in layer.negativeZOrderLayers() {
         updateBackingAndHierarchy(
-          renderLayer, &childList, &traversalStateForDescendants, &scrollingStateForDescendants,
+          renderLayer, &childList, &traversalStateForDescendants, scrollingStateForDescendants,
           updateLevel)
       }
 
@@ -2724,22 +2738,22 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       for renderLayer in layer.normalFlowLayers() {
         updateBackingAndHierarchy(
-          renderLayer, &childList, &traversalStateForDescendants, &scrollingStateForDescendants,
+          renderLayer, &childList, &traversalStateForDescendants, scrollingStateForDescendants,
           updateLevel)
       }
 
       for renderLayer in layer.positiveZOrderLayers() {
         updateBackingAndHierarchy(
-          renderLayer, &childList, &traversalStateForDescendants, &scrollingStateForDescendants,
+          renderLayer, &childList, &traversalStateForDescendants, scrollingStateForDescendants,
           updateLevel)
       }
 
       // Pass needSynchronousScrollingReasonsUpdate back up.
-      scrollingTreeState.needSynchronousScrollingReasonsUpdate =
-        scrollingTreeState.needSynchronousScrollingReasonsUpdate
-        || scrollingStateForDescendants.needSynchronousScrollingReasonsUpdate
-      if scrollingTreeState.parentNodeID == scrollingStateForDescendants.parentNodeID {
-        scrollingTreeState.nextChildIndex = scrollingStateForDescendants.nextChildIndex
+      scrollingTreeState.v.needSynchronousScrollingReasonsUpdate =
+        scrollingTreeState.v.needSynchronousScrollingReasonsUpdate
+        || scrollingStateForDescendants.v.needSynchronousScrollingReasonsUpdate
+      if scrollingTreeState.v.parentNodeID == scrollingStateForDescendants.v.parentNodeID {
+        scrollingTreeState.v.nextChildIndex = scrollingStateForDescendants.v.nextChildIndex
       }
     } else if requiresChildRebuild {
       appendForegroundLayerIfNecessary()
@@ -3682,10 +3696,124 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     static let LayerGeometry = ScrollingNodeChangeFlags(rawValue: 1 << 1)
   }
 
+  private func coordinatedScrollingRolesForLayer(
+    _ layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?
+  ) -> ScrollCoordinationRole {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns the ScrollingNodeID which acts as the parent for children.
   private func updateScrollCoordinationForLayer(
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
-    _ treeState: ScrollingTreeState, _ changes: ScrollingNodeChangeFlags
+    _ treeState: ScrollingTreeStateRef, _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    let roles = coordinatedScrollingRolesForLayer(layer, compositingAncestor: compositingAncestor)
+
+    if !hasCoordinatedScrolling() {
+      // If this frame isn't coordinated, it cannot contain any scrolling tree nodes.
+      return ScrollingNodeIDWrapper()
+    }
+
+    var newNodeID = treeState.v.parentNodeID ?? ScrollingNodeIDWrapper()
+
+    let childTreeState = ScrollingTreeStateRef(ScrollingTreeState())
+    var currentTreeState = treeState
+
+    // If there's a positioning node, it's the parent scrolling node for fixed/sticky/scrolling/frame hosting.
+    if roles.contains(.Positioning) {
+      newNodeID = updateScrollingNodeForPositioningRole(
+        layer: layer, compositingAncestor: compositingAncestor, currentTreeState, changes)
+      childTreeState.v.parentNodeID = newNodeID
+      currentTreeState = childTreeState
+    } else {
+      detachScrollCoordinatedLayer(layer: layer, roles: .Positioning)
+    }
+
+    // If there's a scrolling proxy node, it's the parent scrolling node for fixed/sticky/scrolling/frame hosting.
+    if roles.contains(.ScrollingProxy) {
+      newNodeID = updateScrollingNodeForScrollingProxyRole(layer, currentTreeState, changes)
+      childTreeState.v.parentNodeID = newNodeID
+      currentTreeState = childTreeState
+    } else {
+      detachScrollCoordinatedLayer(layer: layer, roles: .ScrollingProxy)
+    }
+
+    // If is fixed or sticky, it's the parent scrolling node for scrolling/frame hosting.
+    if roles.contains(.ViewportConstrained) {
+      newNodeID = updateScrollingNodeForViewportConstrainedRole(layer, currentTreeState, changes)
+      // ViewportConstrained nodes are the parent of same-layer scrolling nodes, so adjust the ScrollingTreeState.
+      childTreeState.v.parentNodeID = newNodeID
+      currentTreeState = childTreeState
+    } else {
+      detachScrollCoordinatedLayer(layer: layer, roles: .ViewportConstrained)
+    }
+
+    if roles.contains(.Scrolling) {
+      newNodeID = updateScrollingNodeForScrollingRole(layer, currentTreeState, changes)
+    } else {
+      detachScrollCoordinatedLayer(layer: layer, roles: .Scrolling)
+    }
+
+    if roles.contains(.FrameHosting) {
+      newNodeID = updateScrollingNodeForFrameHostingRole(layer, currentTreeState, changes)
+    } else {
+      detachScrollCoordinatedLayer(layer: layer, roles: .FrameHosting)
+    }
+
+    if roles.contains(.PluginHosting) {
+      newNodeID = updateScrollingNodeForPluginHostingRole(layer, currentTreeState, changes)
+    } else {
+      detachScrollCoordinatedLayer(layer: layer, roles: .PluginHosting)
+    }
+
+    return newNodeID
+  }
+
+  // These return the ScrollingNodeID which acts as the parent for children.
+  private func updateScrollingNodeForViewportConstrainedRole(
+    _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
+    _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingNodeForScrollingRole(
+    _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
+    _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingNodeForScrollingProxyRole(
+    _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
+    _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingNodeForFrameHostingRole(
+    _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
+    _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingNodeForPluginHostingRole(
+    _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
+    _ changes: ScrollingNodeChangeFlags
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingNodeForPositioningRole(
+    layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
+    _ treeState: ScrollingTreeStateRef, _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
