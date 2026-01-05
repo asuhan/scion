@@ -43,6 +43,7 @@ target_sources(layout_scion PRIVATE
     IntRect.swift
     IntSize.swift
     Latin1TextIterator.swift
+    LayerHostingContextIdentifier.swift
     LayoutPoint.swift
     LayoutRect.swift
     LayoutSize.swift

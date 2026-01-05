@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     LocalFrameViewLayoutContext.swift
     Page.swift
     PageOverlayController.swift
+    RemoteFrame.swift
     SecurityOrigin.swift
     SecurityOriginData.swift
 )

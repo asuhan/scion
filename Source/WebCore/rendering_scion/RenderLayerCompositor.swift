@@ -3934,8 +3934,26 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = scrollingCoordinator()
+
+    let newNodeID = attachScrollingNode(layer, .FrameHosting, treeState)
+    if !newNodeID.bool() {
+      fatalError("Not reached")
+    }
+
+    if changes.contains(.Layer) {
+      scrollingCoordinator!.setNodeLayers(
+        newNodeID, ScrollingCoordinatorWrapper.NodeLayers(layer: layer.backing!.graphicsLayer()))
+    }
+
+    if let renderWidget = layer.renderer() as? RenderWidgetWrapper,
+      let frame = renderWidget.frameOwnerElement().contentFrame(),
+      let remoteFrame = frame as? RemoteFrameWrapper
+    {
+      scrollingCoordinator!.setLayerHostingContextIdentifierForFrameHostingNode(
+        newNodeID, remoteFrame.layerHostingContextIdentifier())
+    }
+    return newNodeID
   }
 
   private func updateScrollingNodeForPluginHostingRole(

@@ -116,4 +116,11 @@ class ScrollingCoordinatorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setLayerHostingContextIdentifierForFrameHostingNode(
+    _ scrollingNodeID: ScrollingNodeIDWrapper, _ identifier: LayerHostingContextIdentifierWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

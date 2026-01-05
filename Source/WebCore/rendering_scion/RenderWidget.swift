@@ -22,6 +22,11 @@
 
 // TODO(asuhan): inherit from OverlapTestRequestClient as well
 class RenderWidgetWrapper: RenderReplacedWrapper {
+  func frameOwnerElement() -> HTMLFrameOwnerElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresAcceleratedCompositing() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
