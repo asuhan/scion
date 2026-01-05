@@ -3466,8 +3466,20 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForScrollableFrame(_ queryData: inout RequiresCompositingData)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isRootFrameCompositor() {
+      return false
+    }
+
+    if !(m_compositingTriggers.contains(.ScrollableNonMainFrameTrigger)) {
+      return false
+    }
+
+    if queryData.layoutUpToDate == .No {
+      queryData.reevaluateAfterLayout = true
+      return m_renderView.isComposited()
+    }
+
+    return m_renderView.frameView().isScrollable()
   }
 
   private func requiresCompositingForOverflowScrolling(

@@ -157,6 +157,21 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  // isScrollable() takes an optional Scrollability parameter that allows the caller to define what they mean by 'scrollable.'
+  // Most callers are interested in the default value, Scrollability::Scrollable, which means that there is actually content
+  // to scroll to, and a scrollbar that will allow you to access it. In some cases, callers want to know if the FrameView is allowed
+  // to rubber-band, which the main frame might be allowed to do even if there is no content to scroll to. In that case,
+  // callers use Scrollability::ScrollableOrRubberbandable.
+  enum Scrollability {
+    case Scrollable
+    case ScrollableOrRubberbandable
+  }
+
+  func isScrollable(definitionOfScrollable: Scrollability = .Scrollable) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Page and LocalFrameView both store a Pagination value. Page::pagination() is set only by API,
   // and LocalFrameView::pagination() is set only by CSS. Page::pagination() will affect all
   // FrameViews in the back/forward cache, but LocalFrameView::pagination() only affects the current
