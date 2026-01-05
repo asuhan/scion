@@ -55,6 +55,11 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func canUseExistingLayers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Scale factor between the intrinsic size and the replaced content rect size.
   let scale = FloatSize()
 }

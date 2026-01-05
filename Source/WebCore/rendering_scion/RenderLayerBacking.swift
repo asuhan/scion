@@ -554,6 +554,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func childForSuperlayersExcludingViewTransitions() -> GraphicsLayer {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // RenderLayers with backing normally short-circuit paintLayer() because
   // their content is rendered via callbacks from GraphicsLayer. However, the document
   // layer is special, because it has a GraphicsLayer to act as a container for the GraphicsLayers

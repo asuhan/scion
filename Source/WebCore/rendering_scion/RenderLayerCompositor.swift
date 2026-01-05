@@ -1122,8 +1122,46 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func collectViewTransitionNewContentLayers(
     _ layer: RenderLayerWrapper, _ childList: inout ArraySlice<GraphicsLayer>
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layer.renderer().style().pseudoElementType() != .ViewTransitionNew
+      || !layer.hasVisibleContent
+    {
+      return
+    }
+
+    if !(layer.renderer() as! RenderViewTransitionCaptureWrapper).canUseExistingLayers() {
+      return
+    }
+
+    let activeViewTransition = layer.renderer().document().activeViewTransition()
+    if activeViewTransition == nil {
+      return
+    }
+
+    let capturedElement = activeViewTransition!.namedElements().find(
+      key: layer.renderer().style().pseudoElementNameArgument())
+    if capturedElement == nil {
+      return
+    }
+
+    let newStyleable = capturedElement!.newElement.styleable()
+    if newStyleable == nil {
+      return
+    }
+
+    var capturedRenderer = newStyleable!.renderer()
+    if capturedRenderer == nil || !capturedRenderer!.hasLayer() {
+      return
+    }
+
+    if capturedRenderer!.isDocumentElementRenderer() {
+      capturedRenderer = capturedRenderer!.view()
+      assert(capturedRenderer!.hasLayer())
+    }
+
+    let modelObject = capturedRenderer! as! RenderLayerModelObjectWrapper
+    if let backing = modelObject.layer()!.backing {
+      childList.append(backing.childForSuperlayersExcludingViewTransitions())
+    }
   }
 
   func rootLayerConfigurationChanged() {

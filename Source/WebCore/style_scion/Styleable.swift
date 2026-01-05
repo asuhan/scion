@@ -39,6 +39,11 @@ struct StyleableWrapper {
     fatalError("Not implemented")
   }
 
+  func renderer() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func mayHaveNonZeroOpacity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -67,6 +72,11 @@ class WeakStyleableWrapper {
   }
 
   func bool() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func styleable() -> StyleableWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
