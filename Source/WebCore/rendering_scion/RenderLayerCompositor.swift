@@ -1197,8 +1197,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isLayerForPluginWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return (layer.renderer() as? RenderEmbeddedObjectWrapper)?.usesAsyncScrolling() ?? false
   }
 
   func removeFromScrollCoordinatedLayers(layer: RenderLayerWrapper) {
