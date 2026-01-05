@@ -53,6 +53,16 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  // Parent a node in the scrolling tree. This may return a new nodeID if the node type changed. parentID = 0 sets the root node.
+  @discardableResult
+  func insertNode(
+    rootFrameID: FrameIdentifierWrapper, nodeType: ScrollingNodeType,
+    newNodeID: ScrollingNodeIDWrapper, parentID: ScrollingNodeIDWrapper, childIndex: UInt64
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Node will be unparented, but not destroyed. It's the client's responsibility to either re-parent or destroy this node.
   func unparentNode(nodeID: ScrollingNodeIDWrapper) {
     // TODO(asuhan): implement this

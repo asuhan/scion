@@ -207,6 +207,11 @@ private func traverseAncestorLayers(
   return .Continue
 }
 
+private func frameContentsRenderView(_ renderer: RenderWidgetWrapper) -> RenderViewWrapper? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func canUseDescendantClippingLayer(_ layer: RenderLayerWrapper) -> Bool {
   if layer.isolatesCompositedBlending() {
     return false
@@ -996,15 +1001,122 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private struct WidgetLayerAttachment {
-    let widgetLayersAttachedAsChildren = false
-    let layerHierarchyChanged = false
+    init(widgetLayersAttachedAsChildren: Bool, layerHierarchyChanged: Bool) {
+      self.widgetLayersAttachedAsChildren = widgetLayersAttachedAsChildren
+      self.layerHierarchyChanged = layerHierarchyChanged
+    }
+
+    init() {
+      self.init(widgetLayersAttachedAsChildren: false, layerHierarchyChanged: false)
+    }
+
+    var widgetLayersAttachedAsChildren: Bool
+    var layerHierarchyChanged: Bool
   }
 
   private func attachWidgetContentLayersIfNecessary(_ renderer: RenderWidgetWrapper)
     -> WidgetLayerAttachment
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let layer = renderer.layer()!
+    if !layer.isComposited() {
+      return WidgetLayerAttachment(
+        widgetLayersAttachedAsChildren: false, layerHierarchyChanged: false)
+    }
+
+    let backing = layer.backing!
+    let hostingLayer = backing.parentForSublayers()
+
+    let isVisible = renderer.style().usedVisibility() == .Visible
+
+    let addContentsLayerChildIfNecessary = { (contentsLayer: GraphicsLayer, isVisible: Bool) in
+      if isVisible && hostingLayer.children().count == 1
+        && ObjectIdentifier(hostingLayer.children()[0]) == ObjectIdentifier(contentsLayer)
+      {
+        return false
+      }
+
+      if !isVisible && hostingLayer.children().isEmpty {
+        return false
+      }
+
+      hostingLayer.removeAllChildren()
+      if isVisible {
+        hostingLayer.addChild(childLayer: contentsLayer)
+      }
+      return true
+    }
+
+    var result = WidgetLayerAttachment()
+    if isCompositedPlugin(renderer: renderer), let contentsLayer = backing.layerForContents() {
+      result.widgetLayersAttachedAsChildren = isVisible
+      result.layerHierarchyChanged = addContentsLayerChildIfNecessary(contentsLayer, isVisible)
+      if !isLayerForPluginWithScrollCoordinatedContents(layer) {
+        return result
+      }
+
+      let scrollingCoordinator = scrollingCoordinator()
+      if scrollingCoordinator == nil {
+        return result
+      }
+
+      let pluginHostingNodeID = backing.scrollingNodeIDForRole(role: .PluginHosting)
+      if !pluginHostingNodeID.bool() {
+        return result
+      }
+
+      let renderEmbeddedObject = renderer as! RenderEmbeddedObjectWrapper
+      renderEmbeddedObject.willAttachScrollingNode()
+
+      let pluginScrollingNodeID = renderEmbeddedObject.scrollingNodeID()
+      if pluginScrollingNodeID.bool() {
+        if isVisible {
+          scrollingCoordinator!.insertNode(
+            rootFrameID: m_renderView.frameView().frame().rootFrame().frameID(),
+            nodeType: .PluginScrolling, newNodeID: pluginScrollingNodeID,
+            parentID: pluginHostingNodeID, childIndex: 0)
+          renderEmbeddedObject.didAttachScrollingNode()
+        } else {
+          scrollingCoordinator!.unparentNode(nodeID: pluginScrollingNodeID)
+        }
+      }
+      return result
+    }
+
+    let innerCompositor = frameContentsCompositor(renderer: renderer)
+    if innerCompositor == nil || !innerCompositor!.usesCompositing()
+      || innerCompositor!.rootLayerAttachment() != .RootLayerAttachedViaEnclosingFrame
+    {
+      return result
+    }
+
+    result.widgetLayersAttachedAsChildren = isVisible
+    if let iframeRootLayer = innerCompositor!.rootGraphicsLayer() {
+      result.layerHierarchyChanged = addContentsLayerChildIfNecessary(iframeRootLayer, isVisible)
+    }
+
+    let frameHostingNodeID = backing.scrollingNodeIDForRole(role: .FrameHosting)
+    if frameHostingNodeID.bool() {
+      let scrollingCoordinator = scrollingCoordinator()
+      if scrollingCoordinator == nil {
+        return result
+      }
+
+      if let contentsRenderView = frameContentsRenderView(renderer) {
+        let frameRootScrollingNodeID = contentsRenderView.frameView().scrollingNodeID()
+        if frameRootScrollingNodeID.bool() {
+          if isVisible {
+            scrollingCoordinator!.insertNode(
+              rootFrameID: m_renderView.frameView().frame().rootFrame().frameID(),
+              nodeType: .Subframe, newNodeID: frameRootScrollingNodeID,
+              parentID: frameHostingNodeID, childIndex: 0)
+          } else {
+            scrollingCoordinator!.unparentNode(nodeID: frameRootScrollingNodeID)
+          }
+        }
+      }
+    }
+
+    return result
   }
 
   private func collectViewTransitionNewContentLayers(
@@ -1044,6 +1156,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  private func isLayerForPluginWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func removeFromScrollCoordinatedLayers(layer: RenderLayerWrapper) {
