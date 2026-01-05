@@ -119,6 +119,12 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // The position of the layer (the location of its top-left corner in its parent)
+  func position() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPosition(p: FloatPoint) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -201,6 +207,11 @@ class GraphicsLayer {
   }
 
   func setShowRepaintCounter(show: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pixelAlignmentOffset() -> FloatSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

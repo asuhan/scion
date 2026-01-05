@@ -257,6 +257,13 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
     && (style.rotate() != nil || style.rotate()!.isRepresentableIn2D())
 }
 
+private func collectRelatedCoordinatedScrollingNodes(
+  _ layer: RenderLayerWrapper, _ positioningBehavior: ScrollPositioningBehavior
+) -> [ScrollingNodeIDWrapper] {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -1208,6 +1215,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return false
+  }
+
+  private func computeCoordinatedPositioningForLayer(
+    _ layer: RenderLayerWrapper, compositedAncestor: RenderLayerWrapper?
+  ) -> ScrollPositioningBehavior {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func isLayerForPluginWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
@@ -3972,8 +3986,34 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
     _ treeState: ScrollingTreeStateRef, _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = scrollingCoordinator()
+
+    let newNodeID = attachScrollingNode(layer, .Positioned, treeState)
+    if !newNodeID.bool() {
+      fatalError("Not reached")
+    }
+
+    if changes.contains(.Layer) {
+      let backing = layer.backing!
+      scrollingCoordinator!.setNodeLayers(
+        newNodeID, ScrollingCoordinatorWrapper.NodeLayers(layer: backing.graphicsLayer()))
+    }
+
+    if changes.contains(.LayerGeometry) && treeState.v.parentNodeID != nil {
+      // Would be nice to avoid calling computeCoordinatedPositioningForLayer() again.
+      let positioningBehavior = computeCoordinatedPositioningForLayer(
+        layer, compositedAncestor: compositingAncestor)
+      let relatedNodeIDs = collectRelatedCoordinatedScrollingNodes(layer, positioningBehavior)
+      scrollingCoordinator!.setRelatedOverflowScrollingNodes(newNodeID, relatedNodeIDs[...])
+
+      let graphicsLayer = layer.backing!.graphicsLayer()!
+      let constraints = AbsolutePositionConstraints(
+        alignmentOffset: graphicsLayer.pixelAlignmentOffset(),
+        layerPositionAtLastLayout: graphicsLayer.position())
+      scrollingCoordinator!.setPositionedNodeConstraints(newNodeID, constraints)
+    }
+
+    return newNodeID
   }
 
   private func updateScrollingNodeLayers(

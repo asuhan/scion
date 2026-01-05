@@ -105,6 +105,20 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  func setPositionedNodeConstraints(
+    _ nodeID: ScrollingNodeIDWrapper, _ constraints: AbsolutePositionConstraints
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setRelatedOverflowScrollingNodes(
+    _ nodeID: ScrollingNodeIDWrapper, _ relatedNodes: ArraySlice<ScrollingNodeIDWrapper>
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSubscrollers(_ rootFrameID: FrameIdentifierWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
