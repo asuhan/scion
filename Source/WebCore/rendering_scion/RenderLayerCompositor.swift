@@ -3266,8 +3266,34 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Non layout-dependent
   private func requiresCompositingForAnimation(renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_compositingTriggers.contains(.AnimationTrigger) {
+      return false
+    }
+
+    if let styleable = StyleableWrapper.fromRenderer(renderer) {
+      if styleable.hasRunningAcceleratedAnimations() {
+        return true
+      }
+      if let effectsStack = styleable.keyframeEffectStack() {
+        return
+          (effectsStack.isCurrentlyAffectingProperty(.CSSPropertyOpacity)
+          && (usesCompositing() || m_compositingTriggers.contains(.AnimatedOpacityTrigger)))
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyFilter)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyBackdropFilter)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyWebkitBackdropFilter)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyTranslate)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyScale)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyRotate)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyTransform)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyOffsetAnchor)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyOffsetDistance)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyOffsetPath)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyOffsetPosition)
+          || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyOffsetRotate)
+      }
+    }
+
+    return false
   }
 
   private func requiresCompositingForTransform(renderer: RenderLayerModelObjectWrapper) -> Bool {

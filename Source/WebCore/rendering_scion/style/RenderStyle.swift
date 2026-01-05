@@ -31,7 +31,15 @@ enum CSSPropertyID {
   case CSSPropertyInvalid
   case CSSPropertyColor
   case CSSPropertyDisplay
+  case CSSPropertyBackdropFilter
   case CSSPropertyBackgroundColor
+  case CSSPropertyFilter
+  case CSSPropertyOffsetAnchor
+  case CSSPropertyOffsetDistance
+  case CSSPropertyOffsetPath
+  case CSSPropertyOffsetPosition
+  case CSSPropertyOffsetRotate
+  case CSSPropertyOpacity
   case CSSPropertyOutlineColor
   case CSSPropertyRotate
   case CSSPropertyScale
@@ -39,6 +47,7 @@ enum CSSPropertyID {
   case CSSPropertyTextEmphasisColor
   case CSSPropertyTransform
   case CSSPropertyTranslate
+  case CSSPropertyWebkitBackdropFilter
   case CSSPropertyWebkitTextFillColor
   case CSSPropertyBorderBlockEndColor
   case CSSPropertyBorderBlockStartColor

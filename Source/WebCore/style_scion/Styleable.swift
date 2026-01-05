@@ -49,6 +49,16 @@ struct StyleableWrapper {
     fatalError("Not implemented")
   }
 
+  func isRunningAcceleratedTransformAnimation() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasRunningAcceleratedAnimations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func capturedInViewTransition() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
