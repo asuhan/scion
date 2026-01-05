@@ -54,6 +54,11 @@ struct StyleableWrapper {
     fatalError("Not implemented")
   }
 
+  func keyframeEffectStack() -> KeyframeEffectStackWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func willChangeRenderer() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

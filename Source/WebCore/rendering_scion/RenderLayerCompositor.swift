@@ -2884,8 +2884,20 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isRunningTransformAnimation(_ renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_compositingTriggers.contains(.AnimationTrigger) {
+      return false
+    }
+
+    if let styleable = StyleableWrapper.fromRenderer(renderer),
+      let effectsStack = styleable.keyframeEffectStack()
+    {
+      return effectsStack.isCurrentlyAffectingProperty(.CSSPropertyTransform)
+        || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyRotate)
+        || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyScale)
+        || effectsStack.isCurrentlyAffectingProperty(.CSSPropertyTranslate)
+    }
+
+    return false
   }
 
   private func appendDocumentOverlayLayers(_ childList: inout ArraySlice<GraphicsLayer>) {
