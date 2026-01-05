@@ -76,7 +76,41 @@ class ScrollingCoordinatorWrapper {
   }
 
   struct NodeLayers {
+    init(layer: GraphicsLayer?) {
+      self.layer = layer
+      self.scrollContainerLayer = nil
+      self.scrolledContentsLayer = nil
+      self.counterScrollingLayer = nil
+      self.insetClipLayer = nil
+      self.rootContentsLayer = nil
+      self.horizontalScrollbarLayer = nil
+      self.verticalScrollbarLayer = nil
+    }
+
+    init(
+      layer: GraphicsLayer?, scrollContainerLayer: GraphicsLayer?,
+      scrolledContentsLayer: GraphicsLayer?, counterScrollingLayer: GraphicsLayer?,
+      insetClipLayer: GraphicsLayer?, rootContentsLayer: GraphicsLayer?,
+      horizontalScrollbarLayer: GraphicsLayer?, verticalScrollbarLayer: GraphicsLayer?
+    ) {
+      self.layer = layer
+      self.scrollContainerLayer = scrollContainerLayer
+      self.scrolledContentsLayer = scrolledContentsLayer
+      self.counterScrollingLayer = counterScrollingLayer
+      self.insetClipLayer = insetClipLayer
+      self.rootContentsLayer = rootContentsLayer
+      self.horizontalScrollbarLayer = horizontalScrollbarLayer
+      self.verticalScrollbarLayer = verticalScrollbarLayer
+    }
+
     let layer: GraphicsLayer?
+    let scrollContainerLayer: GraphicsLayer?
+    let scrolledContentsLayer: GraphicsLayer?
+    let counterScrollingLayer: GraphicsLayer?
+    let insetClipLayer: GraphicsLayer?
+    let rootContentsLayer: GraphicsLayer?
+    let horizontalScrollbarLayer: GraphicsLayer?
+    let verticalScrollbarLayer: GraphicsLayer?
   }
 
   func setNodeLayers(_ nodeID: ScrollingNodeIDWrapper, _ nodeLayers: NodeLayers) {

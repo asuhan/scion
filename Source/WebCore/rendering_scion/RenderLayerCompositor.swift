@@ -970,6 +970,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func scrollContainerLayer() -> GraphicsLayer? { return m_scrollContainerLayer }
+  private func scrolledContentsLayer() -> GraphicsLayer? { return m_scrolledContentsLayer }
+  private func clipLayer() -> GraphicsLayer? { return m_clipLayer }
+  private func rootContentsLayer() -> GraphicsLayer? { return m_rootContentsLayer }
+
   func layerForClipping() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -4020,8 +4025,36 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ nodeID: ScrollingNodeIDWrapper, _ layer: RenderLayerWrapper,
     _ scrollingCoordinator: ScrollingCoordinatorWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Plugins handle their own scrolling node layers.
+    if isLayerForPluginWithScrollCoordinatedContents(layer) {
+      return
+    }
+
+    if layer.isRenderViewLayer {
+      let frameView = m_renderView.frameView()
+      scrollingCoordinator.setNodeLayers(
+        nodeID,
+        ScrollingCoordinatorWrapper.NodeLayers(
+          layer: nil, scrollContainerLayer: scrollContainerLayer(),
+          scrolledContentsLayer: scrolledContentsLayer(),
+          counterScrollingLayer: fixedRootBackgroundLayer(), insetClipLayer: clipLayer(),
+          rootContentsLayer: rootContentsLayer(),
+          horizontalScrollbarLayer: frameView.layerForHorizontalScrollbar(),
+          verticalScrollbarLayer: frameView.layerForVerticalScrollbar()))
+    } else {
+      let scrollableArea = layer.scrollableArea()!
+
+      let backing = layer.backing!
+      scrollingCoordinator.setNodeLayers(
+        nodeID,
+        ScrollingCoordinatorWrapper.NodeLayers(
+          layer: backing.graphicsLayer(),
+          scrollContainerLayer: backing.scrollContainerLayer,
+          scrolledContentsLayer: backing.scrolledContentsLayer,
+          counterScrollingLayer: nil, insetClipLayer: nil, rootContentsLayer: nil,
+          horizontalScrollbarLayer: scrollableArea.layerForHorizontalScrollbar(),
+          verticalScrollbarLayer: scrollableArea.layerForVerticalScrollbar()))
+    }
   }
 
   private func detachScrollCoordinatedLayer(

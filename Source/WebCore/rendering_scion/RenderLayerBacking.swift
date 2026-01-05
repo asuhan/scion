@@ -1247,8 +1247,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private let layerForScrollCorner: GraphicsLayer? = nil
   let overflowControlsContainer: GraphicsLayer? = nil
 
-  private let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
-  private let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+  let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+  let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
 
   private var viewportConstrainedNodeID = ScrollingNodeIDWrapper()
   private var scrollingNodeID = ScrollingNodeIDWrapper()
