@@ -64,7 +64,8 @@ class LayerAncestorClippingStack {
     let clipData: CompositedClipData
     var overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
     let clippingLayer: GraphicsLayer? = nil
+    let scrollingLayer: GraphicsLayer? = nil  // Only present for scrolling entries.
   }
 
-  let stack: [ClippingStackEntry] = []
+  var stack: [ClippingStackEntry] = []
 }

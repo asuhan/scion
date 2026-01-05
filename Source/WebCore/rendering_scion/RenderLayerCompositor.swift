@@ -3703,6 +3703,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func registerScrollingNodeID(
+    _ scrollingCoordinator: ScrollingCoordinatorWrapper, _ nodeID: ScrollingNodeIDWrapper,
+    _ nodeType: ScrollingNodeType, _ treeState: ScrollingTreeStateRef
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func coordinatedScrollingRolesForLayer(
     _ layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?
   ) -> ScrollCoordinationRole {
@@ -3877,8 +3885,49 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = scrollingCoordinator()
+    let clippingStack = layer.backing!.ancestorClippingStack
+    if clippingStack == nil {
+      return treeState.v.parentNodeID ?? ScrollingNodeIDWrapper()
+    }
+
+    var nodeID = ScrollingNodeIDWrapper()
+    for i in 0..<clippingStack!.stack.count {
+      if !clippingStack!.stack[i].clipData.isOverflowScroll {
+        continue
+      }
+
+      nodeID = registerScrollingNodeID(
+        scrollingCoordinator!, clippingStack!.stack[i].overflowScrollProxyNodeID, .OverflowProxy,
+        treeState)
+      if !nodeID.bool() {
+        fatalError("Not reached")
+      }
+      clippingStack!.stack[i].overflowScrollProxyNodeID = nodeID
+
+      if changes.contains(.Layer) {
+        scrollingCoordinator!.setNodeLayers(
+          clippingStack!.stack[i].overflowScrollProxyNodeID,
+          ScrollingCoordinatorWrapper.NodeLayers(layer: clippingStack!.stack[i].scrollingLayer))
+      }
+
+      if changes.contains(.LayerGeometry) {
+        if !setupScrollProxyRelatedOverflowScrollingNode(
+          scrollingCoordinator!, clippingStack!.stack[i].overflowScrollProxyNodeID,
+          clippingStack!.stack[i].clipData.clippingLayer!)
+        {
+          layersWithUnresolvedRelations.add(value: layer)
+        }
+      }
+    }
+
+    // FIXME: also m_overflowControlsHostLayerAncestorClippingStack
+
+    if !nodeID.bool() {
+      return treeState.v.parentNodeID ?? ScrollingNodeIDWrapper()
+    }
+
+    return nodeID
   }
 
   private func updateScrollingNodeForFrameHostingRole(
@@ -3995,6 +4044,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func resolveScrollingTreeRelationships() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setupScrollProxyRelatedOverflowScrollingNode(
+    _ scrollingCoordinator: ScrollingCoordinatorWrapper,
+    _ scrollingProxyNodeID: ScrollingNodeIDWrapper, _ overflowScrollingLayer: RenderLayerWrapper
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -4159,4 +4216,6 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private var m_viewBackgroundColor = ColorWrapper()
   private var m_rootExtendedBackgroundColor = ColorWrapper()
+
+  private let layersWithUnresolvedRelations = WeakHashSet<RenderLayerWrapper>()
 }
