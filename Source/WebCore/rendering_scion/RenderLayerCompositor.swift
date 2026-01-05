@@ -2806,8 +2806,81 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     stackingContextLayer: RenderLayerWrapper, overflowScrollLayers: ArraySlice<RenderLayerWrapper>,
     layersClippedByScrollers: ArraySlice<RenderLayerWrapper>, layerChildren: inout [GraphicsLayer]
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layersClippedByScrollers.isEmpty {
+      return
+    }
+
+    var overflowScrollToLastContainedLayerMap: [UInt: RenderLayerWrapper] = [:]
+
+    for clippedLayer in layersClippedByScrollers {
+      let clippingStack = clippedLayer.backing!.ancestorClippingStack!
+
+      for stackEntry in clippingStack.stack {
+        if !stackEntry.clipData.isOverflowScroll {
+          continue
+        }
+
+        if let layer = stackEntry.clipData.clippingLayer {
+          overflowScrollToLastContainedLayerMap[CPtrToInt(layer.p)] = clippedLayer
+        }
+      }
+    }
+
+    for overflowScrollingLayer in overflowScrollLayers {
+      let lastContainedDescendant = overflowScrollToLastContainedLayerMap[
+        CPtrToInt(overflowScrollingLayer.p)]
+      if lastContainedDescendant == nil || !lastContainedDescendant!.isComposited() {
+        continue
+      }
+
+      let lastContainedDescendantBacking = lastContainedDescendant!.backing
+      let overflowBacking = overflowScrollingLayer.backing
+      if overflowBacking == nil {
+        continue
+      }
+
+      var overflowContainerLayer = overflowBacking!.overflowControlsContainer
+      if overflowContainerLayer == nil {
+        continue
+      }
+
+      overflowContainerLayer!.removeFromParent()
+
+      if overflowBacking!.hasAncestorClippingLayers() {
+        overflowBacking!.ensureOverflowControlsHostLayerAncestorClippingStack(
+          compositedAncestor: stackingContextLayer)
+      }
+
+      if let overflowControlsAncestorClippingStack = overflowBacking!
+        .overflowControlsHostLayerAncestorClippingStack
+      {
+        overflowControlsAncestorClippingStack.lastLayer()!.setChildren(newChildren: [
+          overflowContainerLayer!
+        ])
+        overflowContainerLayer = overflowControlsAncestorClippingStack.firstLayer()
+      }
+
+      let lastDescendantGraphicsLayer = lastContainedDescendantBacking!.childForSuperlayers()
+      let overflowScrollerGraphicsLayer = overflowBacking!.childForSuperlayers()
+
+      var lastDescendantLayerIndex: Int? = nil
+      var scrollerLayerIndex: Int? = nil
+      for (i, graphicsLayer) in layerChildren.enumerated() {
+        if graphicsLayer === lastDescendantGraphicsLayer {
+          lastDescendantLayerIndex = i
+        } else if graphicsLayer === overflowScrollerGraphicsLayer {
+          scrollerLayerIndex = i
+        }
+      }
+
+      if lastDescendantLayerIndex != nil && scrollerLayerIndex != nil {
+        let insertionIndex = max(lastDescendantLayerIndex! + 1, scrollerLayerIndex! + 1)
+        // TODO(asuhan): add logging
+        layerChildren.insert(overflowContainerLayer!, at: insertionIndex)
+      }
+
+      overflowBacking!.adjustOverflowControlsPositionRelativeToAncestor(stackingContextLayer)
+    }
   }
 
   private func isRunningTransformAnimation(_ renderer: RenderLayerModelObjectWrapper) -> Bool {

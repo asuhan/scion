@@ -23,6 +23,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct CompositedClipData {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let clippingLayer: RenderLayerWrapper? = nil  // For scroller entries, the scrolling layer. For other entries, the most-descendant layer that has a clip.
+  let isOverflowScroll = false
+}
+
 // This class encapsulates the set of layers and their scrolling tree nodes representing clipping in the layer's containing block ancestry,
 // but not in its paint order ancestry.
 class LayerAncestorClippingStack {
@@ -40,7 +50,18 @@ class LayerAncestorClippingStack {
     }
   }
 
+  func firstLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct ClippingStackEntry {
+    let clipData: CompositedClipData
     var overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
     let clippingLayer: GraphicsLayer? = nil
   }

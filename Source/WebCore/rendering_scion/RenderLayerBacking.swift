@@ -464,6 +464,12 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   func hasAncestorClippingLayers() -> Bool { return ancestorClippingStack != nil }
 
+  func ensureOverflowControlsHostLayerAncestorClippingStack(compositedAncestor: RenderLayerWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasScrollingLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -720,6 +726,13 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func layerForContents() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func adjustOverflowControlsPositionRelativeToAncestor(
+    _ ancestorLayer: RenderLayerWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1219,6 +1232,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
 
   let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
+  let overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.
 
   private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
   private var m_graphicsLayer: GraphicsLayer? = nil
