@@ -4390,8 +4390,46 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeFixedViewportConstraints(_ layer: RenderLayerWrapper)
     -> FixedPositionViewportConstraints
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(layer.isComposited())
+
+    guard let anchorLayer = layer.backing!.viewportAnchorLayer else {
+      fatalError("Not reached")
+    }
+
+    let constraints = FixedPositionViewportConstraints()
+    constraints.setLayerPositionAtLastLayout(anchorLayer.position())
+    constraints.setViewportRectAtLastLayout(
+      m_renderView.frameView().rectForFixedPositionLayout().FloatRect())
+    constraints.setAlignmentOffset(anchorLayer.pixelAlignmentOffset())
+
+    let style = layer.renderer().style()
+    if !style.left().isAuto() {
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeLeft)
+    }
+
+    if !style.right().isAuto() {
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeRight)
+    }
+
+    if !style.top().isAuto() {
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeTop)
+    }
+
+    if !style.bottom().isAuto() {
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeBottom)
+    }
+
+    // If left and right are auto, use left.
+    if style.left().isAuto() && style.right().isAuto() {
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeLeft)
+    }
+
+    // If top and bottom are auto, use top.
+    if style.top().isAuto() && style.bottom().isAuto() {
+      constraints.addAnchorEdge(edgeFlag: .AnchorEdgeTop)
+    }
+
+    return constraints
   }
 
   private func computeStickyViewportConstraints(_ layer: RenderLayerWrapper)

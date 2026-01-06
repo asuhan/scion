@@ -44,9 +44,24 @@ class ViewportConstraints {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setAlignmentOffset(_ offset: FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
-final class FixedPositionViewportConstraints: ViewportConstraints {}
+final class FixedPositionViewportConstraints: ViewportConstraints {
+  func setViewportRectAtLastLayout(_ rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLayerPositionAtLastLayout(_ position: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
 
 final class StickyPositionViewportConstraints: ViewportConstraints {
   func computeStickyOffset(constrainingRect: FloatRectWrapper) -> FloatSize {
