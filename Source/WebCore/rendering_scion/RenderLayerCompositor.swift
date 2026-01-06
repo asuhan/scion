@@ -1359,8 +1359,28 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeCoordinatedPositioningForLayer(
     _ layer: RenderLayerWrapper, compositedAncestor: RenderLayerWrapper?
   ) -> ScrollPositioningBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layer.isRenderViewLayer {
+      return .None
+    }
+
+    if layer.renderer().isFixedPositioned() && layer.behavesAsFixed {
+      return .None
+    }
+
+    if !layer.hasCompositedScrollingAncestor {
+      return .None
+    }
+
+    if scrollingCoordinator() == nil {
+      return .None
+    }
+
+    if compositedAncestor == nil {
+      fatalError("Not reached")
+    }
+
+    return RenderLayerCompositorWrapper.layerScrollBehahaviorRelativeToCompositedAncestor(
+      layer, compositedAncestor: compositedAncestor!)
   }
 
   private func isLayerForIFrameWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
