@@ -670,11 +670,46 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Returns the ScrollingNodeID for the containing async-scrollable layer that scrolls this renderer's border box.
   // May return 0 for position-fixed content.
+  // Note that this returns the ScrollingNodeID of the scroller this layer is embedded in, not the layer's own ScrollingNodeID if it has one.
   private static func asyncScrollableContainerNodeID(_ renderer: RenderObjectWrapper)
     -> ScrollingNodeIDWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let enclosingLayer = renderer.enclosingLayer() else {
+      return ScrollingNodeIDWrapper()
+    }
+
+    let layerScrollingNodeID = { (layer: RenderLayerWrapper) -> ScrollingNodeIDWrapper in
+      if layer.isComposited() {
+        return layer.backing!.scrollingNodeIDForRole(role: .Scrolling)
+      }
+      return ScrollingNodeIDWrapper()
+    }
+
+    // If the renderer is inside the layer, we care about the layer's scrollability. Otherwise, we let traverseAncestorLayers look at ancestors.
+    if !renderer.hasLayer() {
+      let scrollingNodeID = layerScrollingNodeID(enclosingLayer)
+      if scrollingNodeID.bool() {
+        return scrollingNodeID
+      }
+    }
+
+    var containerScrollingNodeID = ScrollingNodeIDWrapper()
+    traverseAncestorLayers(
+      enclosingLayer,
+      {
+        (
+          ancestorLayer: RenderLayerWrapper, isContainingBlockChain: Bool,
+          isPaintOrderAncestor: Bool
+        )
+        in
+        if isContainingBlockChain && ancestorLayer.hasCompositedScrollableOverflow() {
+          containerScrollingNodeID = layerScrollingNodeID(ancestorLayer)
+          return .Stop
+        }
+        return .Continue
+      })
+
+    return containerScrollingNodeID
   }
 
   // Whether layer's backing needs a graphics layer to clip z-order children of the given layer.
