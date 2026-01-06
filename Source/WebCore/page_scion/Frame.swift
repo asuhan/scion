@@ -24,6 +24,11 @@
  */
 
 class FrameWrapper {
+  func tree() -> FrameTreeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func frameID() -> FrameIdentifierWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1114,8 +1114,25 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func invalidateEventRegionForAllFrames() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var frame: FrameWrapper? = page().mainFrame()
+    while frame != nil {
+      guard let localFrame = frame as? LocalFrameWrapper else {
+        frame = frame!.tree().traverseNext()
+        continue
+      }
+      if let view = localFrame.contentRenderer() {
+        view.compositor().invalidateEventRegionForAllLayers()
+      }
+      frame = frame!.tree().traverseNext()
+    }
+  }
+
+  private func invalidateEventRegionForAllLayers() {
+    applyToCompositedLayerIncludingDescendants(
+      m_renderView.layer()!,
+      { (layer: RenderLayerWrapper) in
+        layer.invalidateEventRegion(reason: .SettingDidChange)
+      })
   }
 
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
@@ -2024,6 +2041,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return layerChanged
+  }
+
+  private func applyToCompositedLayerIncludingDescendants(
+    _ layer: RenderLayerWrapper, _ function: (RenderLayerWrapper) -> Void
+  ) {
+    if layer.isComposited() {
+      function(layer)
+    }
+    var childLayer = layer.firstChild()
+    while childLayer != nil {
+      applyToCompositedLayerIncludingDescendants(childLayer!, function)
+      childLayer = childLayer!.nextSibling()
+    }
   }
 
   private func repaintTargetsSharedBacking(

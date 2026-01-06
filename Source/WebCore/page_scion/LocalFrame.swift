@@ -55,4 +55,9 @@ final class LocalFrameWrapper: FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func contentRenderer() -> RenderViewWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
