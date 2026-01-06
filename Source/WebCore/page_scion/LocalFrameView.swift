@@ -105,6 +105,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func slowRepaintObjects() -> WeakHashSet<RenderElementWrapper>? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewportConstrainedObjects() -> WeakHashSet<RenderLayerModelObjectWrapper>? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

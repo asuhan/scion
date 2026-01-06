@@ -23,6 +23,21 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct SynchronousScrollingReason: OptionSet {
+  let rawValue: UInt8
+
+  // Flags for frame scrolling.
+  static let ForcedOnMainThread = SynchronousScrollingReason(rawValue: 1 << 0)
+  static let HasViewportConstrainedObjectsWithoutSupportingFixedLayers = SynchronousScrollingReason(
+    rawValue: 1 << 1)
+  static let HasNonLayerViewportConstrainedObjects = SynchronousScrollingReason(rawValue: 1 << 2)
+  static let IsImageDocument = SynchronousScrollingReason(rawValue: 1 << 3)
+  // Flags for frame and overflow scrolling.
+  static let HasSlowRepaintObjects = SynchronousScrollingReason(rawValue: 1 << 4)
+  static let DescendantScrollersHaveSynchronousScrolling = SynchronousScrollingReason(
+    rawValue: 1 << 5)
+}
+
 enum ScrollingNodeType {
   case MainFrame
   case Subframe

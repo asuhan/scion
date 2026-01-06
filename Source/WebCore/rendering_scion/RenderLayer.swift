@@ -5306,6 +5306,7 @@ class RenderLayerWrapper {
   var hasVisibleContent = false
   private var visibleDescendantStatusDirty = false
   var hasVisibleDescendant = false
+  let behavesAsFixed = false
 
   private var m_3DTransformedDescendantStatusDirty = false
   var hasCompositingDescendant = false  // In the z-order tree.

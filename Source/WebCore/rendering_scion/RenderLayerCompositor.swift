@@ -621,6 +621,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var intrinsic = false
   }
 
+  // Returns the ScrollingNodeID for the containing async-scrollable layer that scrolls this renderer's border box.
+  // May return 0 for position-fixed content.
+  private static func asyncScrollableContainerNodeID(_ renderer: RenderObjectWrapper)
+    -> ScrollingNodeIDWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Whether layer's backing needs a graphics layer to clip z-order children of the given layer.
   // Return true if the given layer is a stacking context and has compositing child
   // layers that it needs to clip. In this case we insert a clipping GraphicsLayer
@@ -4291,8 +4300,91 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateSynchronousScrollingNodes() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasCoordinatedScrolling() {
+      return
+    }
+
+    if m_renderView.settings().fixedBackgroundsPaintRelativeToDocument() {
+      return
+    }
+
+    let scrollingCoordinator = scrollingCoordinator()!
+
+    let rootScrollingNodeID = m_renderView.frameView().scrollingNodeID()
+    var nodesToClear: Set<ScrollingNodeIDWrapper> = []
+    nodesToClear.reserveCapacity(scrollingNodeToLayerMap.count)
+    for key in scrollingNodeToLayerMap.keys {
+      nodesToClear.update(with: key)
+    }
+
+    let clearSynchronousReasonsOnNonRootNodes = { () in
+      for nodeID in nodesToClear {
+        if nodeID == rootScrollingNodeID {
+          continue
+        }
+
+        // Harmless to call setSynchronousScrollingReasons on a non-scrolling node.
+        scrollingCoordinator.setSynchronousScrollingReasons(nodeID, [])
+      }
+    }
+
+    let setHasSlowRepaintObjectsSynchronousScrollingReasonOnRootNode = {
+      (hasSlowRepaintObjects: Bool) in
+      // ScrollingCoordinator manages all bits other than HasSlowRepaintObjects, so maintain their current value.
+      var reasons = scrollingCoordinator.synchronousScrollingReasons(rootScrollingNodeID)
+      if hasSlowRepaintObjects {
+        reasons.update(with: .HasSlowRepaintObjects)
+      } else {
+        reasons.remove(.HasSlowRepaintObjects)
+      }
+      scrollingCoordinator.setSynchronousScrollingReasons(rootScrollingNodeID, reasons)
+    }
+
+    let slowRepaintObjects = m_renderView.frameView().slowRepaintObjects()
+    if slowRepaintObjects == nil {
+      setHasSlowRepaintObjectsSynchronousScrollingReasonOnRootNode(false)
+      clearSynchronousReasonsOnNonRootNodes()
+      return
+    }
+
+    let relevantScrollingScope = { (renderer: RenderObjectWrapper, layer: RenderLayerWrapper) in
+      return CPtrToInt(layer.renderer().p) == CPtrToInt(renderer.p)
+        ? layer.boxScrollingScope : layer.contentsScrollingScope
+    }
+
+    var rootHasSlowRepaintObjects = false
+    for renderer in slowRepaintObjects! {
+      guard let layer = renderer.enclosingLayer() else {
+        continue
+      }
+
+      if relevantScrollingScope(renderer, layer) == nil {
+        continue
+      }
+
+      let enclosingScrollingNodeID = RenderLayerCompositorWrapper.asyncScrollableContainerNodeID(
+        renderer)
+      // TODO(asuhan): add logging
+      if enclosingScrollingNodeID.bool() {
+        scrollingCoordinator.setSynchronousScrollingReasons(
+          enclosingScrollingNodeID, [.HasSlowRepaintObjects])
+        nodesToClear.remove(enclosingScrollingNodeID)
+
+        // Although the root scrolling layer does not have a slow repaint object in it directly,
+        // we need to set some synchronous scrolling reason on it so that
+        // ScrollingCoordinator::shouldUpdateScrollLayerPositionSynchronously returns an
+        // appropriate value. (Scrolling itself would be correct without this, since the
+        // scrolling tree propagates DescendantScrollersHaveSynchronousScrolling bits up the
+        // tree, but shouldUpdateScrollLayerPositionSynchronously looks at the scrolling state
+        // tree instead.)
+        rootHasSlowRepaintObjects = true
+      } else if !layer.behavesAsFixed {
+        rootHasSlowRepaintObjects = true
+      }
+    }
+
+    setHasSlowRepaintObjectsSynchronousScrollingReasonOnRootNode(rootHasSlowRepaintObjects)
+    clearSynchronousReasonsOnNonRootNodes()
   }
 
   private func computeFixedViewportConstraints(_ layer: RenderLayerWrapper)

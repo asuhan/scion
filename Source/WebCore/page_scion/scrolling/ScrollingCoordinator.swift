@@ -162,6 +162,18 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  func setSynchronousScrollingReasons(
+    _ nodeID: ScrollingNodeIDWrapper, _ reasons: SynchronousScrollingReason
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func synchronousScrollingReasons(_ nodeID: ScrollingNodeIDWrapper) -> SynchronousScrollingReason {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSubscrollers(_ rootFrameID: FrameIdentifierWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
