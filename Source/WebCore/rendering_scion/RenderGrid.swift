@@ -1107,8 +1107,8 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func subgridDidChange(_ oldStyle: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return oldStyle.gridSubgridRows() != style().gridSubgridRows()
+      || oldStyle.gridSubgridColumns() != style().gridSubgridColumns()
   }
 
   private func explicitGridDidResize(_ oldStyle: RenderStyleWrapper) -> Bool {
