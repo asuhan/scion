@@ -4435,8 +4435,22 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeStickyViewportConstraints(_ layer: RenderLayerWrapper)
     -> StickyPositionViewportConstraints
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(layer.isComposited())
+
+    let renderer = layer.renderer() as! RenderBoxModelObjectWrapper
+
+    guard let anchorLayer = layer.backing!.viewportAnchorLayer else {
+      fatalError("Not reached")
+    }
+
+    let constraints = renderer.computeStickyPositionConstraints(
+      constrainingRect: renderer.constrainingRectForStickyPosition())
+
+    constraints.setLayerPositionAtLastLayout(anchorLayer.position())
+    constraints.setStickyOffsetAtLastLayout(renderer.stickyPositionOffset().FloatSize())
+    constraints.setAlignmentOffset(anchorLayer.pixelAlignmentOffset())
+
+    return constraints
   }
 
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {

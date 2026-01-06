@@ -69,6 +69,16 @@ final class StickyPositionViewportConstraints: ViewportConstraints {
     fatalError("Not implemented")
   }
 
+  func setStickyOffsetAtLastLayout(_ offset: FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLayerPositionAtLastLayout(_ position: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLeftOffset(offset: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

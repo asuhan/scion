@@ -262,7 +262,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return overridingContainingBlockContentHeight ?? containingBlock!.availableHeight()
   }
 
-  private func constrainingRectForStickyPosition() -> FloatRectWrapper {
+  func constrainingRectForStickyPosition() -> FloatRectWrapper {
     if let enclosingClippingLayer =
       hasLayer() ? layer()!.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf) : nil
     {
@@ -306,7 +306,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func computeStickyPositionConstraints(constrainingRect: FloatRectWrapper)
+  func computeStickyPositionConstraints(constrainingRect: FloatRectWrapper)
     -> StickyPositionViewportConstraints
   {
     let constraints = StickyPositionViewportConstraints()
