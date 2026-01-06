@@ -1078,8 +1078,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func rootGraphicsLayer() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_overflowControlsHostLayer ?? m_rootContentsLayer
   }
 
   private func scrollContainerLayer() -> GraphicsLayer? { return m_scrollContainerLayer }
