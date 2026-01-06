@@ -22,8 +22,13 @@
 private func hasIntrinsicSize(
   _ contentRenderer: RenderBoxWrapper?, hasIntrinsicWidth: Bool, hasIntrinsicHeight: Bool
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if hasIntrinsicWidth && hasIntrinsicHeight {
+    return true
+  }
+  if hasIntrinsicWidth || hasIntrinsicHeight {
+    return contentRenderer != nil && contentRenderer!.isRenderOrLegacyRenderSVGRoot()
+  }
+  return false
 }
 
 private func resolveHeightForRatio(
