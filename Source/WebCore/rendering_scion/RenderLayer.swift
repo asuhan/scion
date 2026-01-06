@@ -1325,6 +1325,11 @@ class RenderLayerWrapper {
     return EnclosingCompositingLayerStatus()
   }
 
+  // Ancestor compositing layer, excluding this.
+  func ancestorCompositingLayer() -> RenderLayerWrapper? {
+    return enclosingCompositingLayer(includeSelf: .ExcludeSelf)
+  }
+
   private static func repaintTargetForLayer(layer: RenderLayerWrapper) -> RenderLayerWrapper? {
     if compositedWithOwnBackingStore(layer: layer) {
       return layer

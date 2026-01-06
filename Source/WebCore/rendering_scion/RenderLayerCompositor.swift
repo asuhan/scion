@@ -256,11 +256,59 @@ private func styleTransformOperationsAreRepresentableIn2D(style: RenderStyleWrap
     && (style.rotate() != nil || style.rotate()!.isRepresentableIn2D())
 }
 
+private func collectStationaryLayerRelatedOverflowNodes(_ layer: RenderLayerWrapper)
+  -> [ScrollingNodeIDWrapper]
+{
+  var scrollingNodes: [ScrollingNodeIDWrapper] = []
+
+  let appendOverflowLayerNodeID = { (overflowLayer: RenderLayerWrapper) in
+    assert(overflowLayer.isComposited())
+    if overflowLayer.isComposited() {
+      let scrollingNodeID = overflowLayer.backing!.scrollingNodeIDForRole(role: .Scrolling)
+      if scrollingNodeID.bool() {
+        scrollingNodes.append(scrollingNodeID)
+        return
+      }
+    }
+    // TODO(asuhan): add logging
+  }
+
+  // Collect all the composited scrollers which affect the position of this layer relative to its compositing ancestor (which might be inside the scroller or the scroller itself).
+  var seenPaintOrderAncestor = false
+  traverseAncestorLayers(
+    layer,
+    {
+      (ancestorLayer: RenderLayerWrapper, isContainingBlockChain: Bool, isPaintOrderAncestor: Bool)
+      in
+      seenPaintOrderAncestor = seenPaintOrderAncestor || isPaintOrderAncestor
+      if isContainingBlockChain && isPaintOrderAncestor {
+        return .Stop
+      }
+
+      if seenPaintOrderAncestor && !isContainingBlockChain
+        && ancestorLayer.hasCompositedScrollableOverflow()
+      {
+        appendOverflowLayerNodeID(ancestorLayer)
+      }
+
+      return .Continue
+    })
+
+  return scrollingNodes
+}
+
 private func collectRelatedCoordinatedScrollingNodes(
   _ layer: RenderLayerWrapper, _ positioningBehavior: ScrollPositioningBehavior
 ) -> [ScrollingNodeIDWrapper] {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch positioningBehavior {
+  case .Stationary:
+    if layer.ancestorCompositingLayer() != nil {
+      return collectStationaryLayerRelatedOverflowNodes(layer)
+    }
+    return []
+  case .Moves, .None:
+    fatalError("Not reached")
+  }
 }
 
 private func scrollCoordinationRoleForNodeType(_ nodeType: ScrollingNodeType)
