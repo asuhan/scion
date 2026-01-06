@@ -51,4 +51,9 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override final func embeddedContentBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

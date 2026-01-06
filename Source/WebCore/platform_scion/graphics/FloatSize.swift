@@ -48,6 +48,8 @@ struct FloatSize {
     return abs(width) < Float32.ulpOfOne && abs(height) < Float32.ulpOfOne
   }
 
+  func aspectRatioDouble() -> Float64 { return Float64(width) / Float64(height) }
+
   mutating func expand(width: Float32, height: Float32) {
     self.width += width
     self.height += height

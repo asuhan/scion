@@ -1357,6 +1357,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func overridingContentLogicalWidth(_ overridingLogicalWidth: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func overridingContentLogicalHeight(overridingLogicalHeight: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2985,7 +2990,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  private func computeReplacedLogicalHeightRespectingMinMaxHeight(logicalHeight: LayoutUnit)
+  func computeReplacedLogicalHeightRespectingMinMaxHeight(logicalHeight: LayoutUnit)
     -> LayoutUnit
   {
     var minLogicalHeight = LayoutUnit()
@@ -2999,6 +3004,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         heightType: .MaxSize, logicalHeight: style().logicalMaxHeight())
     }
     return max(minLogicalHeight, min(logicalHeight, maxLogicalHeight))
+  }
+
+  func computeReplacedLogicalHeightRespectingMinMaxHeight(logicalHeight: Float32)
+    -> LayoutUnit
+  {
+    return computeReplacedLogicalHeightRespectingMinMaxHeight(
+      logicalHeight: LayoutUnit(value: logicalHeight))
   }
 
   func computeReplacedLogicalWidth(shouldComputePreferred: ShouldComputePreferred = .ComputeActual)

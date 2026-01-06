@@ -36,6 +36,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func embeddedContentBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
