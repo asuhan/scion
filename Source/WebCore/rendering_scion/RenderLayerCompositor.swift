@@ -4275,8 +4275,19 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ scrollingCoordinator: ScrollingCoordinatorWrapper,
     _ scrollingProxyNodeID: ScrollingNodeIDWrapper, _ overflowScrollingLayer: RenderLayerWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let backing = overflowScrollingLayer.backing
+    if backing == nil {
+      return false
+    }
+
+    let overflowScrollNodeID = backing!.scrollingNodeIDForRole(role: .Scrolling)
+    if !overflowScrollNodeID.bool() {
+      return false
+    }
+
+    scrollingCoordinator.setRelatedOverflowScrollingNodes(
+      scrollingProxyNodeID, [overflowScrollNodeID][...])
+    return true
   }
 
   private func updateSynchronousScrollingNodes() {
