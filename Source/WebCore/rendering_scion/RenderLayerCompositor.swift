@@ -1334,10 +1334,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
   }
 
-  override func pageScaleFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func pageScaleFactor() -> Float32 { return page().pageScaleFactor() }
 
   func layerTiledBackingUsageChanged(graphicsLayer: GraphicsLayer?, usingTiledBacking: Bool) {
     if usingTiledBacking {
