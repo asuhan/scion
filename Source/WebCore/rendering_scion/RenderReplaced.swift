@@ -189,7 +189,22 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   private func hasReplacedLogicalHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().logicalHeight().isAuto() {
+      return false
+    }
+
+    if style().logicalHeight().isFixed() {
+      return true
+    }
+
+    if style().logicalHeight().isPercentOrCalculated() {
+      return !hasAutoHeightOrContainingBlockWithAutoHeight()
+    }
+
+    if style().logicalHeight().isIntrinsic() {
+      return !style().hasAspectRatio()
+    }
+
+    return false
   }
 }
