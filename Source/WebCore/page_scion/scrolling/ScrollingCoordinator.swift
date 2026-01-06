@@ -53,11 +53,20 @@ class ScrollingCoordinatorWrapper {
     fatalError("Not implemented")
   }
 
+  // Create an unparented node.
+  func createNode(
+    _ rootFrameID: FrameIdentifierWrapper, _ nodeType: ScrollingNodeType,
+    _ newNodeID: ScrollingNodeIDWrapper
+  ) -> ScrollingNodeIDWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Parent a node in the scrolling tree. This may return a new nodeID if the node type changed. parentID = 0 sets the root node.
   @discardableResult
   func insertNode(
-    rootFrameID: FrameIdentifierWrapper, nodeType: ScrollingNodeType,
-    newNodeID: ScrollingNodeIDWrapper, parentID: ScrollingNodeIDWrapper, childIndex: UInt64
+    _ rootFrameID: FrameIdentifierWrapper, _ nodeType: ScrollingNodeType,
+    _ newNodeID: ScrollingNodeIDWrapper, parentID: ScrollingNodeIDWrapper, childIndex: UInt64
   ) -> ScrollingNodeIDWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -154,6 +163,12 @@ class ScrollingCoordinatorWrapper {
   }
 
   func hasSubscrollers(_ rootFrameID: FrameIdentifierWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Generated a unique id for scrolling nodes.
+  func uniqueScrollingNodeID() -> ScrollingNodeIDWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

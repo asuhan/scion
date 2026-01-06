@@ -1116,9 +1116,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       if pluginScrollingNodeID.bool() {
         if isVisible {
           scrollingCoordinator!.insertNode(
-            rootFrameID: m_renderView.frameView().frame().rootFrame().frameID(),
-            nodeType: .PluginScrolling, newNodeID: pluginScrollingNodeID,
-            parentID: pluginHostingNodeID, childIndex: 0)
+            m_renderView.frameView().frame().rootFrame().frameID(), .PluginScrolling,
+            pluginScrollingNodeID, parentID: pluginHostingNodeID, childIndex: 0)
           renderEmbeddedObject.didAttachScrollingNode()
         } else {
           scrollingCoordinator!.unparentNode(nodeID: pluginScrollingNodeID)
@@ -1151,9 +1150,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         if frameRootScrollingNodeID.bool() {
           if isVisible {
             scrollingCoordinator!.insertNode(
-              rootFrameID: m_renderView.frameView().frame().rootFrame().frameID(),
-              nodeType: .Subframe, newNodeID: frameRootScrollingNodeID,
-              parentID: frameHostingNodeID, childIndex: 0)
+              m_renderView.frameView().frame().rootFrame().frameID(), .Subframe,
+              frameRootScrollingNodeID, parentID: frameHostingNodeID, childIndex: 0)
           } else {
             scrollingCoordinator!.unparentNode(nodeID: frameRootScrollingNodeID)
           }
@@ -3781,8 +3779,31 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ scrollingCoordinator: ScrollingCoordinatorWrapper, _ nodeID: ScrollingNodeIDWrapper,
     _ nodeType: ScrollingNodeType, _ treeState: ScrollingTreeStateRef
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var nodeID = nodeID
+    if !nodeID.bool() {
+      nodeID = scrollingCoordinator.uniqueScrollingNodeID()
+    }
+
+    if nodeType == .Subframe && treeState.v.parentNodeID == nil {
+      nodeID = scrollingCoordinator.createNode(
+        m_renderView.frameView().frame().rootFrame().frameID(), nodeType, nodeID)
+    } else {
+      let newNodeID = scrollingCoordinator.insertNode(
+        m_renderView.frameView().frame().rootFrame().frameID(), nodeType, nodeID,
+        parentID: treeState.v.parentNodeID ?? ScrollingNodeIDWrapper(),
+        childIndex: treeState.v.nextChildIndex)
+      if newNodeID != nodeID {
+        // We'll get a new nodeID if the type changed (and not if the node is new).
+        scrollingCoordinator.unparentChildrenAndDestroyNode(nodeID: nodeID)
+        scrollingNodeToLayerMap.removeValue(forKey: nodeID)
+      }
+      nodeID = newNodeID
+    }
+
+    assert(nodeID.bool())
+
+    treeState.v.nextChildIndex += 1
+    return nodeID
   }
 
   private func coordinatedScrollingRolesForLayer(
