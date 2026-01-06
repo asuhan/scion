@@ -47,7 +47,7 @@ enum GridTrackSizeType {
 // m_maxTrackBreadth. The reason why we don't do it is because the maxTrackBreadh() call is a hot
 // spot, so adding a conditional statement there (to distinguish between fit-content and any other
 // case) was causing a severe performance drop.
-struct GridTrackSize {
+struct GridTrackSize: Equatable {
   init(length: GridLength, trackSizeType: GridTrackSizeType = .LengthTrackSizing) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -124,6 +124,11 @@ struct GridTrackSize {
   }
 
   func hasAutoOrMinContentMinTrackBreadthAndIntrinsicMaxTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

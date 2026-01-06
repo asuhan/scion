@@ -733,6 +733,27 @@ enum RubyOverhang: UInt8 {
   case None
 }
 
+struct GridAutoFlow: OptionSet {
+  let rawValue: UInt8
+
+  static let InternalAutoFlowAlgorithmSparse = GridAutoFlow(rawValue: 1 << 0)
+  static let InternalAutoFlowAlgorithmDense = GridAutoFlow(rawValue: 1 << 1)
+  static let InternalAutoFlowDirectionRow = GridAutoFlow(rawValue: 1 << 2)
+  static let InternalAutoFlowDirectionColumn = GridAutoFlow(rawValue: 1 << 3)
+  static let AutoFlowRow: GridAutoFlow = [
+    .InternalAutoFlowAlgorithmSparse, .InternalAutoFlowDirectionRow,
+  ]
+  static let AutoFlowColumn: GridAutoFlow = [
+    .InternalAutoFlowAlgorithmSparse, .InternalAutoFlowDirectionColumn,
+  ]
+  static let AutoFlowRowDense: GridAutoFlow = [
+    .InternalAutoFlowAlgorithmDense, .InternalAutoFlowDirectionRow,
+  ]
+  static let AutoFlowColumnDense: GridAutoFlow = [
+    .InternalAutoFlowAlgorithmDense, .InternalAutoFlowDirectionColumn,
+  ]
+}
+
 enum MasonryAutoFlowPlacementAlgorithm {
   case Pack
   case Next

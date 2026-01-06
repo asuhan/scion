@@ -199,8 +199,56 @@ private func resolveContentDistributionFallback(distribution: ContentDistributio
 
 final class RenderGridWrapper: RenderBlockWrapper {
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    if oldStyle == nil || diff != .Layout {
+      return
+    }
+
+    let newStyle = style()
+
+    let hasDifferentTrackSizes = { (direction: GridTrackSizingDirection) in
+      return newStyle.gridTrackSizes(direction) != oldStyle!.gridTrackSizes(direction)
+    }
+
+    if hasDifferentTrackSizes(.ForColumns) || hasDifferentTrackSizes(.ForRows) {
+      for gridItem: RenderBoxWrapper in childrenOfType(parent: self) {
+        gridItem.setChildNeedsLayout()
+      }
+    }
+
+    if oldStyle!.resolvedAlignItems(selfAlignmentNormalBehavior(gridItem: self)).position
+      == .Stretch
+    {
+      // Style changes on the grid container implying stretching (to-stretch) or
+      // shrinking (from-stretch) require the affected items to be laid out again.
+      // These logic only applies to 'stretch' since the rest of the alignment
+      // values don't change the size of the box.
+      // In any case, the items' overrideSize will be cleared and recomputed (if
+      // necessary)  as part of the Grid layout logic, triggered by this style
+      // change.
+      for gridItem: RenderBoxWrapper in childrenOfType(parent: self) {
+        if gridItem.isOutOfFlowPositioned() {
+          continue
+        }
+        if selfAlignmentChangedToStretch(.GridRowAxis, oldStyle!, newStyle, gridItem)
+          || selfAlignmentChangedFromStretch(.GridRowAxis, oldStyle!, newStyle, gridItem)
+          || selfAlignmentChangedToStretch(.GridColumnAxis, oldStyle!, newStyle, gridItem)
+          || selfAlignmentChangedFromStretch(.GridColumnAxis, oldStyle!, newStyle, gridItem)
+        {
+          gridItem.setNeedsLayout()
+        }
+      }
+    }
+
+    let subgridChanged = subgridDidChange(oldStyle!)
+    if explicitGridDidResize(oldStyle!) || namedGridLinesDefinitionDidChange(oldStyle!)
+      || implicitGridLinesDefinitionDidChange(oldStyle!)
+      || oldStyle!.gridAutoFlow() != style().gridAutoFlow()
+      || (!style().gridAutoRepeatColumns().isEmpty || !style().gridAutoRepeatRows().isEmpty)
+      || subgridChanged
+    {
+      dirtyGrid(subgridChanged: subgridChanged)
+    }
   }
 
   override func layoutBlock(
@@ -1036,6 +1084,46 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let scrollbarWidth = intrinsicScrollbarLogicalWidthIncludingGutter()
     minLogicalWidth += scrollbarWidth
     maxLogicalWidth += scrollbarWidth
+  }
+
+  private func selfAlignmentChangedToStretch(
+    _ axis: GridAxis, _ oldStyle: RenderStyleWrapper, _ newStyle: RenderStyleWrapper,
+    _ gridItem: RenderBoxWrapper
+  ) -> Bool {
+    return selfAlignmentForGridItem(axis: axis, gridItem: gridItem, gridStyle: oldStyle).position
+      != .Stretch
+      && selfAlignmentForGridItem(axis: axis, gridItem: gridItem, gridStyle: newStyle).position
+        == .Stretch
+  }
+
+  private func selfAlignmentChangedFromStretch(
+    _ axis: GridAxis, _ oldStyle: RenderStyleWrapper, _ newStyle: RenderStyleWrapper,
+    _ gridItem: RenderBoxWrapper
+  ) -> Bool {
+    return selfAlignmentForGridItem(axis: axis, gridItem: gridItem, gridStyle: oldStyle).position
+      == .Stretch
+      && selfAlignmentForGridItem(axis: axis, gridItem: gridItem, gridStyle: newStyle).position
+        != .Stretch
+  }
+
+  private func subgridDidChange(_ oldStyle: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func explicitGridDidResize(_ oldStyle: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func namedGridLinesDefinitionDidChange(_ oldStyle: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func implicitGridLinesDefinitionDidChange(_ oldStyle: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func computeAutoRepeatTracksCount(

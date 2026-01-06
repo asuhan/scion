@@ -182,6 +182,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func resolvedAlignItems(_ normalValueBehaviour: ItemPosition) -> StyleSelfAlignmentData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func resolvedAlignSelf(parentStyle: RenderStyleWrapper?, normalValueBehaviour: ItemPosition)
     -> StyleSelfAlignmentData
   {
@@ -868,6 +873,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func gridTrackSizes(_ direction: GridTrackSizingDirection) -> ArraySlice<GridTrackSize> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func gridAutoRepeatColumns() -> ArraySlice<GridTrackSize> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -904,6 +914,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func namedGridAreaColumnCount() -> UInt64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func gridAutoFlow() -> GridAutoFlow {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
