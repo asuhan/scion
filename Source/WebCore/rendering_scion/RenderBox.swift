@@ -4791,7 +4791,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return (transferredMinSize, transferredMaxSize)
   }
 
-  private func computeMinMaxLogicalHeightFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
+  func computeMinMaxLogicalHeightFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
     var transferredMinSize = LayoutUnit()
     var transferredMaxSize = LayoutUnit.max()
     let aspectRatio = resolveAspectRatio()

@@ -142,11 +142,50 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (
+    FloatSize, FloatSize
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeIntrinsicSizesConstrainedByTransferredMinMaxSizes(
     _ contentRenderer: RenderBoxWrapper?
   ) -> (FloatSize, FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var (intrinsicSize, intrinsicRatio) = computeAspectRatioInformationForRenderBox(contentRenderer)
+
+    // Now constrain the intrinsic size along each axis according to minimum and maximum width/heights along the
+    // opposite axis. So for example a maximum width that shrinks our width will result in the height we compute here
+    // having to shrink in order to preserve the aspect ratio. Because we compute these values independently along
+    // each axis, the final returned size may in fact not preserve the aspect ratio.
+    if !intrinsicRatio.isZero() && style().logicalWidth().isAuto()
+      && style().logicalHeight().isAuto()
+    {
+      let removeBorderAndPaddingFromMinMaxSizes = {
+        (minSize: inout LayoutUnit, maxSize: inout LayoutUnit, borderAndPadding: LayoutUnit) in
+        minSize = max(LayoutUnit(value: UInt64(0)), minSize - borderAndPadding)
+        maxSize = max(LayoutUnit(value: UInt64(0)), maxSize - borderAndPadding)
+      }
+
+      var (minLogicalWidth, maxLogicalWidth) = computeMinMaxLogicalWidthFromAspectRatio()
+      removeBorderAndPaddingFromMinMaxSizes(
+        &minLogicalWidth, &maxLogicalWidth, borderAndPaddingLogicalWidth())
+
+      var (minLogicalHeight, maxLogicalHeight) = computeMinMaxLogicalHeightFromAspectRatio()
+      removeBorderAndPaddingFromMinMaxSizes(
+        &minLogicalHeight, &maxLogicalHeight, borderAndPaddingLogicalHeight())
+
+      intrinsicSize.setWidth(
+        width: clamp(
+          val: LayoutUnit(value: intrinsicSize.width), lo: minLogicalWidth, hi: maxLogicalWidth
+        ).float()
+      )
+      intrinsicSize.setHeight(
+        height: clamp(
+          val: LayoutUnit(value: intrinsicSize.height), lo: minLogicalHeight, hi: maxLogicalHeight
+        ).float())
+    }
+    return (intrinsicSize, intrinsicRatio)
   }
 
   private func hasReplacedLogicalHeight() -> Bool {
