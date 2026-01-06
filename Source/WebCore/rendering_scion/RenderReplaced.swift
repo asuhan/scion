@@ -1,6 +1,9 @@
 /*
  * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
- * Copyright (C) 2004, 2005, 2006, 2007, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2000 Dirk Mueller (mueller@kde.org)
+ * Copyright (C) 2004-2024 Apple Inc. All rights reserved.
+ * Copyright (C) 2018 Google Inc. All rights reserved.
+ * Copyright (C) Research In Motion Limited 2011-2012. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -107,10 +110,43 @@ class RenderReplacedWrapper: RenderBoxWrapper {
       logicalHeight: intrinsicLogicalHeight())
   }
 
-  func replacedContentRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func replacedContentRect(_ intrinsicSize: LayoutSizeWrapper) -> LayoutRectWrapper {
+    let contentRect = contentBoxRect()
+    if intrinsicSize.isEmpty() {
+      return contentRect
+    }
+
+    let objectFit = style().objectFit()
+
+    var finalRect = contentRect
+    switch objectFit {
+    case .Contain, .ScaleDown, .Cover:
+      finalRect.setSize(
+        size: finalRect.size().fitToAspectRatio(
+          intrinsicSize, objectFit == .Cover ? .AspectRatioFitGrow : .AspectRatioFitShrink))
+      if objectFit != .ScaleDown || finalRect.width() <= intrinsicSize.width() {
+        break
+      }
+      fallthrough
+    case .None:
+      finalRect.setSize(size: intrinsicSize)
+    case .Fill:
+      break
+    }
+
+    let objectPosition = style().objectPosition()
+
+    let xOffset = minimumValueForLength(
+      length: objectPosition.x, maximumValue: contentRect.width() - finalRect.width())
+    let yOffset = minimumValueForLength(
+      length: objectPosition.y, maximumValue: contentRect.height() - finalRect.height())
+
+    finalRect.move(dx: xOffset, dy: yOffset)
+
+    return finalRect
   }
+
+  func replacedContentRect() -> LayoutRectWrapper { return replacedContentRect(intrinsicSize()) }
 
   override func intrinsicSize() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this

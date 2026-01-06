@@ -1954,6 +1954,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func objectFit() -> ObjectFit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func objectPosition() -> LengthPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Return true if any transform related property (currently transform, translate, scale, rotate, transformStyle3D or perspective)
   // indicates that we are transforming. The usedTransformStyle3D is not used here because in many cases (such as for deciding
   // whether or not to establish a containing block), the computed value is what matters.

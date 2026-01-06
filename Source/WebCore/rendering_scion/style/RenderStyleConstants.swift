@@ -387,6 +387,15 @@ enum UserSelect: UInt8 {
   case All
 }
 
+// CSS3 Image Values
+enum ObjectFit: UInt8 {
+  case Fill
+  case Contain
+  case Cover
+  case None
+  case ScaleDown
+}
+
 enum AspectRatioType: UInt8 {
   case Auto
   case Ratio

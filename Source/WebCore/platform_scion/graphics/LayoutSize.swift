@@ -28,6 +28,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum AspectRatioFit {
+  case AspectRatioFitShrink
+  case AspectRatioFitGrow
+}
+
 class LayoutSizeWrapper: Equatable {
   init() {}
 
@@ -141,6 +146,13 @@ class LayoutSizeWrapper: Equatable {
 
   func FloatSize() -> FloatSize {
     return layout_scion.FloatSize(width: width_.float(), height: height_.float())
+  }
+
+  func fitToAspectRatio(_ aspectRatio: LayoutSizeWrapper, _ fit: AspectRatioFit)
+    -> LayoutSizeWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func deepCopy() -> LayoutSizeWrapper {
