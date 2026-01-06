@@ -660,6 +660,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return true
   }
 
+  // This is only used when state changes and we do not exepect a style update or layout to happen soon (e.g. when
+  // we discover that an iframe is overlapped during painting).
+  func scheduleCompositingLayerUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct RequiresCompositingData {
     var layoutUpToDate: LayoutUpToDate = .Yes
     var nonCompositedForPositionReason: RenderLayerWrapper.ViewportConstrainedNotCompositedReason =
@@ -1319,8 +1326,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func rootLayerConfigurationChanged() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderViewBacking = m_renderView.layer()!.backing,
+      renderViewBacking.isFrameLayerWithTiledBacking
+    {
+      m_renderView.layer()!.setNeedsCompositingConfigurationUpdate()
+      scheduleCompositingLayerUpdate()
+    }
   }
 
   override func pageScaleFactor() -> Float32 {
