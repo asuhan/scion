@@ -756,8 +756,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func supportsFixedRootBackgroundCompositing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderViewBacking = m_renderView.layer()!.backing {
+      return renderViewBacking.isFrameLayerWithTiledBacking
+    }
+    return false
   }
 
   func fixedRootBackgroundLayer() -> GraphicsLayer? {
