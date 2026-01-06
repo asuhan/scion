@@ -32,12 +32,14 @@ private func hasIntrinsicSize(
 }
 
 private func resolveHeightForRatio(
-  _ borderAndPaddingLogicalWidthborderAndPaddingLogicalWidth: LayoutUnit,
-  _ borderAndPaddingLogicalHeight: LayoutUnit, _ logicalWidth: LayoutUnit, _ aspectRatio: Float64,
-  _ boxSizing: BoxSizing
+  _ borderAndPaddingLogicalWidth: LayoutUnit, _ borderAndPaddingLogicalHeight: LayoutUnit,
+  _ logicalWidth: LayoutUnit, _ aspectRatio: Float64, _ boxSizing: BoxSizing
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if boxSizing == .BorderBox {
+    return LayoutUnit(value: (logicalWidth + borderAndPaddingLogicalWidth) * aspectRatio)
+      - borderAndPaddingLogicalHeight
+  }
+  return LayoutUnit(value: logicalWidth * aspectRatio)
 }
 
 class RenderReplacedWrapper: RenderBoxWrapper {
