@@ -545,6 +545,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  func setScrollingNodeIDForRole(_ nodeID: ScrollingNodeIDWrapper, _ role: ScrollCoordinationRole) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasMaskLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -264,6 +264,25 @@ private func collectRelatedCoordinatedScrollingNodes(
   fatalError("Not implemented")
 }
 
+private func scrollCoordinationRoleForNodeType(_ nodeType: ScrollingNodeType)
+  -> ScrollCoordinationRole
+{
+  switch nodeType {
+  case .MainFrame, .Subframe, .Overflow, .PluginScrolling:
+    return .Scrolling
+  case .OverflowProxy:
+    return .ScrollingProxy
+  case .FrameHosting:
+    return .FrameHosting
+  case .PluginHosting:
+    return .PluginHosting
+  case .Fixed, .Sticky:
+    return .ViewportConstrained
+  case .Positioned:
+    return .Positioning
+  }
+}
+
 // RenderLayerCompositor manages the hierarchy of
 // composited RenderLayers. It determines which RenderLayers
 // become compositing, and creates and maintains a hierarchy of
@@ -3729,8 +3748,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func attachScrollingNode(
     _ layer: RenderLayerWrapper, _ nodeType: ScrollingNodeType, _ treeState: ScrollingTreeStateRef
   ) -> ScrollingNodeIDWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = scrollingCoordinator()
+    if scrollingCoordinator == nil {
+      return ScrollingNodeIDWrapper()
+    }
+
+    // Crash logs suggest that backing can be null here, but we don't know how: rdar://problem/18545452.
+    let backing = layer.backing!
+
+    assert(treeState.v.parentNodeID != nil || nodeType == .Subframe)
+    assert(nodeType != .MainFrame || !treeState.v.parentNodeID!.bool())
+
+    let role = scrollCoordinationRoleForNodeType(nodeType)
+    var nodeID = backing.scrollingNodeIDForRole(role: role)
+
+    nodeID = registerScrollingNodeID(scrollingCoordinator!, nodeID, nodeType, treeState)
+
+    // TODO(asuhan): add logging
+
+    if !nodeID.bool() {
+      return ScrollingNodeIDWrapper()
+    }
+
+    backing.setScrollingNodeIDForRole(nodeID, role)
+
+    scrollingNodeToLayerMap.updateValue(layer, forKey: nodeID)
+
+    return nodeID
   }
 
   private func registerScrollingNodeID(
@@ -4350,5 +4394,6 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private var m_viewBackgroundColor = ColorWrapper()
   private var m_rootExtendedBackgroundColor = ColorWrapper()
 
+  private var scrollingNodeToLayerMap: [ScrollingNodeIDWrapper: RenderLayerWrapper?]
   private let layersWithUnresolvedRelations = WeakHashSet<RenderLayerWrapper>()
 }

@@ -23,8 +23,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ScrollingNodeIDWrapper {
+class ScrollingNodeIDWrapper: Hashable {
   func bool() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (_ a: ScrollingNodeIDWrapper, _ b: ScrollingNodeIDWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hash(into hasher: inout Hasher) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
