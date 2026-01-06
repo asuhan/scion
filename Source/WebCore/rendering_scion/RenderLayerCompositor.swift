@@ -1100,8 +1100,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func rootLayerAttachment() -> RootLayerAttachment { return m_rootLayerAttachment }
 
   func updateRootLayerAttachment() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    ensureRootLayer()
   }
 
   private func updateRootLayerPosition() {
