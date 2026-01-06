@@ -221,8 +221,7 @@ private func traverseAncestorLayers(
 }
 
 private func frameContentsRenderView(_ renderer: RenderWidgetWrapper) -> RenderViewWrapper? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return renderer.frameOwnerElement().contentDocument()?.renderView()
 }
 
 private func canUseDescendantClippingLayer(_ layer: RenderLayerWrapper) -> Bool {

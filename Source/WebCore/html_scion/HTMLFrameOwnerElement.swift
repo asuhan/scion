@@ -25,6 +25,11 @@ class HTMLFrameOwnerElementWrapper: HTMLElementWrapper {
     fatalError("Not implemented")
   }
 
+  func contentDocument() -> Document? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scheduleInvalidateStyleAndLayerComposition() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
