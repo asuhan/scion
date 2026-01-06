@@ -1136,8 +1136,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): Inform the inspector that the given RenderLayer was destroyed.
+
+    if CPtrToInt(layer.p) != CPtrToInt(m_renderView.layer()?.p) {
+      assert(contentLayersCount > 0)
+      contentLayersCount -= 1
+    }
   }
 
   func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
@@ -4741,6 +4745,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private var m_shouldFlushOnReattach = false
   private var m_forceCompositingMode = false
 
+  private var contentLayersCount: UInt32 = 0
   private var m_layersWithTiledBackingCount: UInt32 = 0
   private var m_compositingUpdateCount: UInt32 = 0
 
