@@ -1112,8 +1112,12 @@ final class RenderGridWrapper: RenderBlockWrapper {
   }
 
   private func explicitGridDidResize(_ oldStyle: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return oldStyle.gridColumnTrackSizes().count != style().gridColumnTrackSizes().count
+      || oldStyle.gridRowTrackSizes().count != style().gridRowTrackSizes().count
+      || oldStyle.namedGridAreaColumnCount() != style().namedGridAreaColumnCount()
+      || oldStyle.namedGridAreaRowCount() != style().namedGridAreaRowCount()
+      || oldStyle.gridAutoRepeatColumns().count != style().gridAutoRepeatColumns().count
+      || oldStyle.gridAutoRepeatRows().count != style().gridAutoRepeatRows().count
   }
 
   private func namedGridLinesDefinitionDidChange(_ oldStyle: RenderStyleWrapper) -> Bool {
