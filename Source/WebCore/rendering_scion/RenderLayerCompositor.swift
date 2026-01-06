@@ -4242,8 +4242,33 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func resolveScrollingTreeRelationships() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layersWithUnresolvedRelations.isEmptyIgnoringNullReferences() {
+      return
+    }
+
+    let scrollingCoordinator = scrollingCoordinator()
+
+    for layer in layersWithUnresolvedRelations {
+      // TODO(asuhan): add logging
+
+      if !layer.isComposited() {
+        continue
+      }
+
+      if let clippingStack = layer.backing!.ancestorClippingStack {
+        for entry in clippingStack.stack {
+          if !entry.clipData.isOverflowScroll {
+            continue
+          }
+
+          let succeeded = setupScrollProxyRelatedOverflowScrollingNode(
+            scrollingCoordinator!, entry.overflowScrollProxyNodeID, entry.clipData.clippingLayer!)
+          assert(succeeded)
+        }
+      }
+    }
+
+    layersWithUnresolvedRelations.clear()
   }
 
   private func setupScrollProxyRelatedOverflowScrollingNode(
