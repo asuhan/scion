@@ -1384,8 +1384,27 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isLayerForIFrameWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let renderWidget = layer.renderer() as? RenderWidgetWrapper else {
+      return false
+    }
+
+    if let frame = renderWidget.frameOwnerElement().contentFrame(), frame is RemoteFrameWrapper {
+      return renderWidget.hasLayer() && renderWidget.layer()!.isComposited()
+    }
+
+    guard let contentDocument = renderWidget.frameOwnerElement().contentDocument() else {
+      return false
+    }
+
+    guard let view = contentDocument.renderView() else {
+      return false
+    }
+
+    if let scrollingCoordinator = scrollingCoordinator() {
+      return scrollingCoordinator.coordinatesScrollingForFrameView(frameView: view.frameView())
+    }
+
+    return false
   }
 
   private func isLayerForPluginWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
