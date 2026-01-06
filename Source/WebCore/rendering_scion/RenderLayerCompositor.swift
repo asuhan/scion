@@ -1320,8 +1320,28 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // FIXME: make the coordinated/async terminology consistent.
   private func isViewportConstrainedFixedOrStickyLayer(_ layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layer.renderer().isStickilyPositioned() {
+      return isAsyncScrollableStickyLayer(layer: layer)
+    }
+
+    if !(layer.renderer().isFixedPositioned() && layer.behavesAsFixed) {
+      return false
+    }
+
+    var ancestor = layer.parent()
+    while ancestor != nil {
+      if ancestor!.hasCompositedScrollableOverflow() {
+        return true
+      }
+      if ancestor!.isStackingContext() && ancestor!.isComposited()
+        && ancestor!.renderer().isFixedPositioned()
+      {
+        return false
+      }
+      ancestor = ancestor!.parent()
+    }
+
+    return true
   }
 
   private func useCoordinatedScrollingForLayer(_ layer: RenderLayerWrapper) -> Bool {
