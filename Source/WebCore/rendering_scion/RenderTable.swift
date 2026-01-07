@@ -1265,6 +1265,11 @@ class RenderTableWrapper: RenderBlockWrapper {
     (minLogicalWidth, maxLogicalWidth) = computeIntrinsicLogicalWidths(intrinsics: .ForKeyword)
   }
 
+  override func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func firstLineBaseline() -> LayoutUnit? {
     // The baseline of a 'table' is the same as the 'inline-table' baseline per CSS 3 Flexbox (CSS 2.1
     // doesn't define the baseline of a 'table' only an 'inline-table').

@@ -41,4 +41,9 @@ final class RenderReplicaWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

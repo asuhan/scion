@@ -630,6 +630,55 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   func embeddedContentBox() -> RenderBoxWrapper? { return nil }
 
+  override final func computePreferredLogicalWidths() {
+    assert(preferredLogicalWidthsDirty())
+
+    // We cannot resolve any percent logical width here as the available logical
+    // width may not be set on our containing block.
+    if style().logicalWidth().isPercentOrCalculated() {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    } else {
+      maxPreferredLogicalWidth = computeReplacedLogicalWidth(
+        shouldComputePreferred: .ComputePreferred)
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+    }
+
+    let ignoreMinMaxSizes = shouldIgnoreLogicalMinMaxWidthSizes()
+    let styleToUse = style()
+    if styleToUse.logicalWidth().isPercentOrCalculated()
+      || styleToUse.logicalMaxWidth().isPercentOrCalculated()
+    {
+      minPreferredLogicalWidth = LayoutUnit(value: 0)
+    }
+
+    if !ignoreMinMaxSizes && styleToUse.logicalMinWidth().isFixed()
+      && styleToUse.logicalMinWidth().value() > 0
+    {
+      maxPreferredLogicalWidth = max(
+        maxPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
+      minPreferredLogicalWidth = max(
+        minPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
+    }
+
+    if !ignoreMinMaxSizes && styleToUse.logicalMaxWidth().isFixed() {
+      maxPreferredLogicalWidth = min(
+        maxPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMaxWidth()))
+      minPreferredLogicalWidth = min(
+        minPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMaxWidth()))
+    }
+
+    let borderAndPadding = borderAndPaddingLogicalWidth()
+    minPreferredLogicalWidth += borderAndPadding
+    maxPreferredLogicalWidth += borderAndPadding
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+  }
+
   func paintReplaced(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {}
 
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (

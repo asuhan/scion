@@ -735,6 +735,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
     // RenderTableCell has the RenderTableRow as the container, but is positioned relatively
     // to the RenderTableSection. The sticky positioning algorithm assumes that elements are

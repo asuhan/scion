@@ -1449,6 +1449,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     minLogicalWidth += scrollbarWidth
   }
 
+  override func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func firstLineBaseline() -> LayoutUnit? {
     if shouldApplyLayoutContainment() {
       return nil

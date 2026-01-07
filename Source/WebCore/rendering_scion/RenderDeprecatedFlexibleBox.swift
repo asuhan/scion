@@ -49,4 +49,9 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

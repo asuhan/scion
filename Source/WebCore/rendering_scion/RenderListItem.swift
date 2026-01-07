@@ -50,6 +50,11 @@ final class RenderListItemWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override final func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 func isHTMLListElement(node: NodeWrapper) -> Bool {

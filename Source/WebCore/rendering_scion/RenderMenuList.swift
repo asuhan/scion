@@ -51,6 +51,11 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

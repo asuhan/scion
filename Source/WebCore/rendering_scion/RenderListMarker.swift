@@ -37,6 +37,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     return nil
   }
 
+  override final func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

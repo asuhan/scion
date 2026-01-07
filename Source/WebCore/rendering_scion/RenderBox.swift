@@ -3963,7 +3963,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         && !percentageLogicalHeightIsResolvable())
   }
 
-  private func shouldIgnoreLogicalMinMaxWidthSizes() -> Bool {
+  func shouldIgnoreLogicalMinMaxWidthSizes() -> Bool {
     if !isFlexItem() {
       return false
     }
@@ -6092,6 +6092,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   ) {
     computeIntrinsicLogicalWidths(
       minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+  }
+
+  // This function calculates the minimum and maximum preferred widths for an object.
+  // These values are used in shrink-to-fit layout systems.
+  // These include tables, positioned objects, floats and flexible boxes.
+  func computePreferredLogicalWidths() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
