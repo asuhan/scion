@@ -48,6 +48,15 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func computeReplacedLogicalWidth(
+    shouldComputePreferred: ShouldComputePreferred = .ComputeActual
+  )
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

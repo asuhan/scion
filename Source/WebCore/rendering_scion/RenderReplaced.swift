@@ -29,6 +29,17 @@ private func isVideoWithDefaultObjectSize(_ maybeVideo: RenderReplacedWrapper?) 
   return (maybeVideo as? RenderVideoWrapper)?.hasDefaultObjectSize() ?? false
 }
 
+private func resolveWidthForRatio(
+  _ borderAndPaddingLogicalHeight: LayoutUnit, _ borderAndPaddingLogicalWidth: LayoutUnit,
+  _ logicalHeight: LayoutUnit, _ aspectRatio: Float64, _ boxSizing: BoxSizing
+) -> LayoutUnit {
+  if boxSizing == .BorderBox {
+    return LayoutUnit(value: (logicalHeight + borderAndPaddingLogicalHeight) * aspectRatio)
+      - borderAndPaddingLogicalWidth
+  }
+  return LayoutUnit(value: logicalHeight * aspectRatio)
+}
+
 private func hasIntrinsicSize(
   _ contentRenderer: RenderBoxWrapper?, hasIntrinsicWidth: Bool, hasIntrinsicHeight: Bool
 ) -> Bool {
@@ -53,6 +64,100 @@ private func resolveHeightForRatio(
 }
 
 class RenderReplacedWrapper: RenderBoxWrapper {
+  override func computeReplacedLogicalWidth(
+    shouldComputePreferred: ShouldComputePreferred = .ComputeActual
+  )
+    -> LayoutUnit
+  {
+    if style().logicalWidth().isSpecified() {
+      return computeReplacedLogicalWidthRespectingMinMaxWidth(
+        computeReplacedLogicalWidthUsing(.MainOrPreferredSize, style().logicalWidth()),
+        shouldComputePreferred)
+    }
+    if style().logicalWidth().isIntrinsic() {
+      return computeReplacedLogicalWidthRespectingMinMaxWidth(
+        computeReplacedLogicalWidthUsing(.MainOrPreferredSize, style().logicalWidth()),
+        shouldComputePreferred)
+    }
+
+    let contentRenderer = embeddedContentBox()
+
+    // 10.3.2 Inline, replaced elements: http://www.w3.org/TR/CSS21/visudet.html#inline-replaced-width
+    let (constrainedSize, intrinsicRatio) =
+      computeIntrinsicSizesConstrainedByTransferredMinMaxSizes(contentRenderer)
+
+    if style().logicalWidth().isAuto() {
+      let computedHeightIsAuto = style().logicalHeight().isAuto()
+      let hasIntrinsicWidth = constrainedSize.width > 0 || shouldApplySizeOrInlineSizeContainment()
+      let hasIntrinsicHeight = constrainedSize.height > 0 || shouldApplySizeContainment()
+
+      // For flex or grid items where the logical height has been overriden then we should use that size to compute the replaced width as long as the flex or
+      // grid item has an intrinsic size. It is possible (indeed, common) for an SVG graphic to have an intrinsic aspect ratio but not to have an intrinsic
+      // width or height. There are also elements with intrinsic sizes but without intrinsic ratio (like an iframe).
+      if let overridingLogicalHeight =
+        (!intrinsicRatio.isEmpty() && (isFlexItem() || isGridItem())
+          && hasIntrinsicSize(
+            contentRenderer, hasIntrinsicWidth: hasIntrinsicWidth,
+            hasIntrinsicHeight: hasIntrinsicHeight)
+          ? overridingLogicalHeight() : nil)
+      {
+        return computeReplacedLogicalWidthRespectingMinMaxWidth(
+          overridingContentLogicalHeight(overridingLogicalHeight: overridingLogicalHeight)
+            * intrinsicRatio.aspectRatioDouble(), shouldComputePreferred)
+      }
+
+      // If 'height' and 'width' both have computed values of 'auto' and the element also has an intrinsic width, then that intrinsic width is the used value of 'width'.
+      if computedHeightIsAuto && hasIntrinsicWidth {
+        return computeReplacedLogicalWidthRespectingMinMaxWidth(
+          constrainedSize.width, shouldComputePreferred)
+      }
+
+      if !intrinsicRatio.isEmpty() {
+        // If 'height' and 'width' both have computed values of 'auto' and the element has no intrinsic width, but does have an intrinsic height and intrinsic ratio;
+        // or if 'width' has a computed value of 'auto', 'height' has some other computed value, and the element does have an intrinsic ratio; then the used value
+        // of 'width' is: (used height) * (intrinsic ratio)
+        if !computedHeightIsAuto || (!hasIntrinsicWidth && hasIntrinsicHeight) {
+          let estimatedUsedWidth =
+            hasIntrinsicWidth
+            ? LayoutUnit(value: constrainedSize.width)
+            : computeConstrainedLogicalWidth(shouldComputePreferred)
+          let logicalHeight = computeReplacedLogicalHeight(estimatedUsedWidth: estimatedUsedWidth)
+          let boxSizing = style().hasAspectRatio() ? style().boxSizingForAspectRatio() : .ContentBox
+          return computeReplacedLogicalWidthRespectingMinMaxWidth(
+            resolveWidthForRatio(
+              borderAndPaddingLogicalHeight(), borderAndPaddingLogicalWidth(), logicalHeight,
+              intrinsicRatio.aspectRatioDouble(), boxSizing), shouldComputePreferred)
+        }
+
+        // If 'height' and 'width' both have computed values of 'auto' and the
+        // element has an intrinsic ratio but no intrinsic height or width, then
+        // the used value of 'width' is undefined in CSS 2.1. However, it is
+        // suggested that, if the containing block's width does not itself depend
+        // on the replaced element's width, then the used value of 'width' is
+        // calculated from the constraint equation used for block-level,
+        // non-replaced elements in normal flow.
+        if computedHeightIsAuto && !hasIntrinsicWidth && !hasIntrinsicHeight {
+          return computeConstrainedLogicalWidth(shouldComputePreferred)
+        }
+      }
+
+      // Otherwise, if 'width' has a computed value of 'auto', and the element has an intrinsic width, then that intrinsic width is the used value of 'width'.
+      if hasIntrinsicWidth {
+        return computeReplacedLogicalWidthRespectingMinMaxWidth(
+          constrainedSize.width, shouldComputePreferred)
+      }
+
+      // Otherwise, if 'width' has a computed value of 'auto', but none of the conditions above are met, then the used value of 'width' becomes 300px. If 300px is too
+      // wide to fit the device, UAs should use the width of the largest rectangle that has a 2:1 ratio and fits the device instead.
+      // Note: We fall through and instead return intrinsicLogicalWidth() here - to preserve existing WebKit behavior, which might or might not be correct, or desired.
+      // Changing this to return cDefaultWidth, will affect lots of test results. Eg. some tests assume that a blank <img> tag (which implies width/height=auto)
+      // has no intrinsic size, which is wrong per CSS 2.1, but matches our behavior since a long time.
+    }
+
+    return computeReplacedLogicalWidthRespectingMinMaxWidth(
+      intrinsicLogicalWidth(), shouldComputePreferred)
+  }
+
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
     // 10.5 Content height: the 'height' property: http://www.w3.org/TR/CSS21/visudet.html#propdef-height
     if hasReplacedLogicalHeight() {
@@ -254,6 +359,13 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     let scaledHeight = Int32(Float32(cDefaultHeight) * style().usedZoom())
     m_intrinsicSize = LayoutSizeWrapper(size: IntSize(width: scaledWidth, height: scaledHeight))
     setNeedsLayoutAndPrefWidthsRecalc()
+  }
+
+  private func computeConstrainedLogicalWidth(_ shouldComputePreferred: ShouldComputePreferred)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func embeddedContentBox() -> RenderBoxWrapper? { return nil }
