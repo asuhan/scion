@@ -402,8 +402,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   private func isSelected() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isHighlighted(selectionState(), view().selection())
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -727,6 +726,30 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   private func calculateHighlightColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func isHighlighted(_ state: HighlightState, _ rangeData: RenderHighlight) -> Bool {
+    if state == .None {
+      return false
+    }
+    if state == .Inside {
+      return true
+    }
+
+    let selectionStart = rangeData.startOffset()
+    let selectionEnd = rangeData.endOffset()
+    if state == .Start {
+      return selectionStart == 0
+    }
+
+    let end = element()!.nodeHasChildNodes() ? element()!.countChildNodes() : 1
+    if state == .End {
+      return selectionEnd == end
+    }
+    if state == .Both {
+      return selectionStart == 0 && selectionEnd == end
+    }
+    fatalError("Not reached")
   }
 
   private func hasReplacedLogicalHeight() -> Bool {

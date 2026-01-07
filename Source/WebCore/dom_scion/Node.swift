@@ -39,6 +39,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func nodeHasChildNodes() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isPseudoElement() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -109,6 +114,8 @@ class NodeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func countChildNodes() -> UInt32 { return 0 }
 
   // -----------------------------------------------------------------------------
   // Integration with rendering tree

@@ -34,6 +34,16 @@ class RenderHighlight {
     fatalError("Not implemented")
   }
 
+  func startOffset() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func endOffset() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
     -> RenderObjectWrapper.HighlightState
   {

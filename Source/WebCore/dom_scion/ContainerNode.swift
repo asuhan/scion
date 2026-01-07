@@ -27,6 +27,11 @@ class ContainerNodeWrapper: NodeWrapper {
     fatalError("Not implemented")
   }
 
+  override func countChildNodes() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containerRenderer() -> RenderElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
