@@ -170,8 +170,8 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   func computeIntrinsicAspectRatio() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (_, intrinsicRatio) = computeAspectRatioInformationForRenderBox(embeddedContentBox())
+    return intrinsicRatio.aspectRatioDouble()
   }
 
   override func layout() {
