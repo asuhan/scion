@@ -25,6 +25,13 @@
 private let cDefaultWidth: Int32 = 300
 private let cDefaultHeight: Int32 = 150
 
+private func contentContainsReplacedElement(
+  _ markers: ArraySlice<RenderedDocumentMarker>, _ element: ElementWrapper
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func isVideoWithDefaultObjectSize(_ maybeVideo: RenderReplacedWrapper?) -> Bool {
   return (maybeVideo as? RenderVideoWrapper)?.hasDefaultObjectSize() ?? false
 }
@@ -409,6 +416,142 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     setNeedsLayoutAndPrefWidthsRecalc()
   }
 
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if !shouldPaint(&paintInfo, paintOffset) {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    if paintInfo.phase == .EventRegion {
+      if visibleToHitTesting() {
+        let borderRect = LayoutRectWrapper(location: adjustedPaintOffset, size: size())
+        let borderShape = BorderShape.shapeForBorderRect(style: style(), borderRect: borderRect)
+        paintInfo.eventRegionContext()!.unite(
+          roundedRect: borderShape.deprecatedPixelSnappedRoundedRect(
+            deviceScaleFactor: document().deviceScaleFactor()), renderer: self, style: style())
+      }
+      return
+    }
+
+    if paintInfo.phase == .Accessibility {
+      paintInfo.accessibilityRegionContext()!.takeBounds(
+        renderBox: self, paintOffset: adjustedPaintOffset)
+      return
+    }
+
+    // TODO(asuhan): add layout needed forbidden scope
+
+    let savedGraphicsContext = GraphicsContextStateSaver(
+      context: paintInfo.context(), saveAndRestore: false)
+    if let element = element(), let parentContainer = element.parentOrShadowHostElement(),
+      let markers = document().markersIfExists()
+    {
+      if contentContainsReplacedElement(
+        markers.markersFor(node: parentContainer, .DraggedContent)[...], element)
+      {
+        savedGraphicsContext.save()
+        paintInfo.context().setAlpha(alpha: 0.25)
+      }
+      if contentContainsReplacedElement(
+        markers.markersFor(node: parentContainer, .TransparentContent)[...], element)
+      {
+        savedGraphicsContext.save()
+        paintInfo.context().setAlpha(alpha: 0)
+      }
+    }
+
+    if hasVisibleBoxDecorations() && paintInfo.phase == .Foreground {
+      paintBoxDecorations(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+    }
+
+    if paintInfo.phase == .Mask {
+      paintMask(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+      return
+    }
+
+    let paintRect = LayoutRectWrapper(location: adjustedPaintOffset, size: size())
+    if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+      if style().outlineWidth() != 0 {
+        paintOutline(paintInfo: paintInfo, paintRect: paintRect)
+      }
+      return
+    }
+
+    if paintInfo.phase != .Foreground && paintInfo.phase != .Selection {
+      return
+    }
+
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    var highlightColor = ColorWrapper()
+    if !document().printing() && !paintInfo.paintBehavior.contains(.ExcludeSelection) {
+      highlightColor = calculateHighlightColor()
+    }
+
+    var drawSelectionTint = shouldDrawSelectionTint()
+    if paintInfo.phase == .Selection {
+      if selectionState() == .None {
+        return
+      }
+      drawSelectionTint = false
+    }
+
+    var completelyClippedOut = false
+    if style().hasBorderRadius() {
+      completelyClippedOut = size().isEmpty()
+      if !completelyClippedOut {
+        // Push a clip if we have a border radius, since we want to round the foreground content that gets painted.
+        paintInfo.context().save()
+        clipToContentBoxShape(
+          paintInfo.context(), adjustedPaintOffset, document().deviceScaleFactor())
+      }
+    }
+
+    if !completelyClippedOut {
+      if !isSkippedContentRoot() {
+        paintReplaced(&paintInfo, adjustedPaintOffset)
+      }
+
+      if style().hasBorderRadius() {
+        paintInfo.context().restore()
+      }
+    }
+
+    // The selection tint never gets clipped by border-radius rounding, since we want it to run right up to the edges of
+    // surrounding content.
+    if drawSelectionTint {
+      var selectionPaintingRect = localSelectionRect()
+      selectionPaintingRect.moveBy(offset: adjustedPaintOffset)
+      paintInfo.context().fillRect(
+        rect: FloatRectWrapper(r: snappedIntRect(rect: selectionPaintingRect)),
+        color: selectionBackgroundColor())
+    }
+
+    if highlightColor.isVisible() {
+      var selectionPaintingRect = localSelectionRect(false)
+      selectionPaintingRect.moveBy(offset: adjustedPaintOffset)
+      paintInfo.context().fillRect(
+        rect: FloatRectWrapper(r: snappedIntRect(rect: selectionPaintingRect)),
+        color: highlightColor)
+    }
+  }
+
+  private func shouldPaint(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // This is in local coordinates, but it's a physical rect (so the top left corner is physical top left).
+  private func localSelectionRect(_ checkWhetherSelected: Bool = true) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeConstrainedLogicalWidth(_ shouldComputePreferred: ShouldComputePreferred)
     -> LayoutUnit
   {
@@ -439,6 +582,8 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   func embeddedContentBox() -> RenderBoxWrapper? { return nil }
+
+  func paintReplaced(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {}
 
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (
     FloatSize, FloatSize
@@ -524,6 +669,16 @@ class RenderReplacedWrapper: RenderBoxWrapper {
         ).float())
     }
     return (intrinsicSize, intrinsicRatio)
+  }
+
+  private func shouldDrawSelectionTint() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func calculateHighlightColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func hasReplacedLogicalHeight() -> Bool {

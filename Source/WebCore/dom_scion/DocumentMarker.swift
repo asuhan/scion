@@ -19,40 +19,58 @@
  */
 
 class DocumentMarker {
-  enum `Type`: UInt32 {
-    case Spelling = 1
-    case Grammar = 2
-    case TextMatch = 4
+  struct `Type`: OptionSet {
+    let rawValue: UInt32
+
+    static let Spelling = `Type`(rawValue: 1 << 0)
+    static let Grammar = `Type`(rawValue: 1 << 1)
+    static let TextMatch = `Type`(rawValue: 1 << 2)
     // Text has been modified by spell correction, reversion of spell correction or other type of substitution.
     // On some platforms, this prevents the text from being autocorrected again. On post Snow Leopard Mac OS X,
     // if a Replacement marker contains non-empty description, a reversion UI will be shown.
-    case Replacement = 8
+    static let Replacement = `Type`(rawValue: 1 << 3)
     // Renderer needs to add underline indicating that the text has been modified by spell
     // correction. Text with Replacement marker doesn't necessarily has CorrectionIndicator
     // marker. For instance, after some text has been corrected, it will have both Replacement
     // and CorrectionIndicator. However, if user further modifies such text, we would remove
     // CorrectionIndicator marker, but retain Replacement marker.
-    case CorrectionIndicator = 16
+    static let CorrectionIndicator = `Type`(rawValue: 1 << 4)
     // Correction suggestion has been offered, but got rejected by user.
-    case RejectedCorrection = 32
+    static let RejectedCorrection = `Type`(rawValue: 1 << 5)
     // Text has been modified by autocorrection. The description of this marker is the original text before autocorrection.
-    case Autocorrected = 64
+    static let Autocorrected = `Type`(rawValue: 1 << 6)
     // On some platforms, this prevents the text from being spellchecked again.
-    case SpellCheckingExemption = 128
+    static let SpellCheckingExemption = `Type`(rawValue: 1 << 7)
     // This marker indicates user has deleted an autocorrection starting at the end of the
     // range that bears this marker. In some platforms, if the user later inserts the same original
     // word again at this position, it will not be autocorrected again. The description of this
     // marker is the original word before autocorrection was applied.
-    case DeletedAutocorrection = 256
+    static let DeletedAutocorrection = `Type`(rawValue: 1 << 8)
     // This marker indicates that the range of text spanned by the marker is entered by voice dictation,
     // and it has alternative text.
-    case DictationAlternatives = 512
+    static let DictationAlternatives = `Type`(rawValue: 1 << 9)
     // This marker indicates that the user has selected a text candidate.
-    case AcceptedCandidate = 8192
+    static let AcceptedCandidate = `Type`(rawValue: 1 << 13)
     // This marker indicates that the user has initiated a drag with this content.
-    case DraggedContent = 16384
-    case TransparentContent = 131072
+    static let DraggedContent = `Type`(rawValue: 1 << 14)
+    static let TransparentContent = `Type`(rawValue: 1 << 17)
   }
+
+  static let allMarkers: `Type` = [
+    .AcceptedCandidate,
+    .Autocorrected,
+    .CorrectionIndicator,
+    .DeletedAutocorrection,
+    .DictationAlternatives,
+    .DraggedContent,
+    .Grammar,
+    .RejectedCorrection,
+    .Replacement,
+    .SpellCheckingExemption,
+    .Spelling,
+    .TextMatch,
+    .TransparentContent,
+  ]
 
   func startOffset() -> UInt32 {
     // TODO(asuhan): implement this

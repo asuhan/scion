@@ -44,6 +44,13 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
     fatalError("Not implemented")
   }
 
+  override final func paintReplaced(
+    _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

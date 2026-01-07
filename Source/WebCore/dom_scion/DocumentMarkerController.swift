@@ -30,8 +30,7 @@ class DocumentMarkerControllerWrapper {
     fatalError("Not implemented")
   }
 
-  // TODO(asuhan): add types parameter
-  func markersFor(node: NodeWrapper)
+  func markersFor(node: NodeWrapper, _ types: DocumentMarker.`Type` = DocumentMarker.allMarkers)
     -> [RenderedDocumentMarker]
   {
     // TODO(asuhan): implement this

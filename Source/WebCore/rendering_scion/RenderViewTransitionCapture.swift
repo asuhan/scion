@@ -44,6 +44,13 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func paintReplaced(
+    _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func intrinsicSizeChanged() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

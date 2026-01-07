@@ -90,6 +90,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func parentOrShadowHostElement() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRootEditableElement() -> Bool {
     return wk_interop.Node_isRootEditableElement(p)
   }

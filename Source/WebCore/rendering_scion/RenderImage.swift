@@ -85,6 +85,13 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func paintReplaced(
+    _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func minimumReplacedHeight() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

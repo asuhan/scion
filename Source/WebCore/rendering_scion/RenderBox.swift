@@ -4336,6 +4336,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clipToContentBoxShape(
+    _ context: GraphicsContextWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ deviceScaleFactor: Float32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // --------------------- painting stuff -------------------------------
 
   func determineBackgroundBleedAvoidance(context: GraphicsContextWrapper)

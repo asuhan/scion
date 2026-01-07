@@ -1288,6 +1288,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case Both  // The object contains an entire run or is the sole selected object in that run
   }
 
+  // The current selection state for an object.  For blocks, the state refers to the state of the leaf
+  // descendants (as described above in the HighlightState enum declaration).
+  func selectionState() -> HighlightState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // When performing a global document tear-down, or when going into the back/forward cache, the renderer of the document is cleared.
   func renderTreeBeingDestroyed() -> Bool {
     // TODO(asuhan): implement this
