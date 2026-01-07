@@ -31,12 +31,22 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func imageDevicePixelRatio() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func needsPreferredWidthsRecalculation() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   override final func embeddedContentBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

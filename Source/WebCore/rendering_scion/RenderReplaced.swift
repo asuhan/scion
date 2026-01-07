@@ -177,6 +177,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     return intrinsicRatio.aspectRatioDouble()
   }
 
+  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())
@@ -233,8 +238,48 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (
     FloatSize, FloatSize
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var intrinsicSize = FloatSize()
+    var intrinsicRatio = FloatSize()
+    if shouldApplySizeOrInlineSizeContainment() {
+      (intrinsicSize, intrinsicRatio) = computeIntrinsicRatioInformation()
+    } else if contentRenderer != nil {
+      (intrinsicSize, intrinsicRatio) = contentRenderer!.computeIntrinsicRatioInformation()
+
+      if style().aspectRatioType() == .Ratio
+        || (style().aspectRatioType() == .AutoAndRatio && intrinsicRatio.isEmpty())
+      {
+        intrinsicRatio = FloatSize.narrowPrecision(
+          width: style().aspectRatioWidth(), height: style().aspectRatioHeight())
+      }
+
+      // Handle zoom & vertical writing modes here, as the embedded document doesn't know about them.
+      intrinsicSize.scale(style().usedZoom())
+
+      if let image = self as? RenderImageWrapper {
+        intrinsicSize.scale(image.imageDevicePixelRatio())
+      }
+
+      // Update our intrinsic size to match what the content renderer has computed, so that when we
+      // constrain the size below, the correct intrinsic size will be obtained for comparison against
+      // min and max widths.
+      if !intrinsicRatio.isEmpty() && !intrinsicSize.isZero() {
+        m_intrinsicSize = LayoutSizeWrapper(size: intrinsicSize)
+      }
+
+      if !isHorizontalWritingMode() {
+        if !intrinsicRatio.isEmpty() {
+          intrinsicRatio = intrinsicRatio.transposedSize()
+        }
+        intrinsicSize = intrinsicSize.transposedSize()
+      }
+    } else {
+      (intrinsicSize, intrinsicRatio) = computeIntrinsicRatioInformation()
+      if !intrinsicRatio.isEmpty() && !intrinsicSize.isZero() {
+        m_intrinsicSize = LayoutSizeWrapper(
+          size: isHorizontalWritingMode() ? intrinsicSize : intrinsicSize.transposedSize())
+      }
+    }
+    return (intrinsicSize, intrinsicRatio)
   }
 
   private func computeIntrinsicSizesConstrainedByTransferredMinMaxSizes(

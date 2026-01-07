@@ -3867,6 +3867,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    return (FloatSize(), FloatSize())
+  }
+
   func scrollPosition() -> ScrollPosition {
     if !hasPotentiallyScrollableOverflow() {
       return ScrollPosition(x: 0, y: 0)

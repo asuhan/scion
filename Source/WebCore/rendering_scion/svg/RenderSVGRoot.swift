@@ -23,6 +23,11 @@
  */
 
 final class RenderSVGRootWrapper: RenderReplacedWrapper {
+  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func hasIntrinsicAspectRatio() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

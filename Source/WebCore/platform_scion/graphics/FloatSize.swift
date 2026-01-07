@@ -39,6 +39,10 @@ struct FloatSize {
     height = Float32(size.height)
   }
 
+  static func narrowPrecision(width: Float64, height: Float64) -> FloatSize {
+    return FloatSize(width: narrowPrecisionToFloat(width), height: narrowPrecisionToFloat(height))
+  }
+
   mutating func setWidth(width: Float32) { self.width = width }
   mutating func setHeight(height: Float32) { self.height = height }
 
@@ -53,6 +57,11 @@ struct FloatSize {
   mutating func expand(width: Float32, height: Float32) {
     self.width += width
     self.height += height
+  }
+
+  mutating func scale(_ s: Float32) {
+    width *= s
+    height *= s
   }
 
   mutating func scale(scaleX: Float32, scaleY: Float32) {
