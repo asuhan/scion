@@ -401,6 +401,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     minLogicalWidth = maxLogicalWidth
   }
 
+  private func isSelected() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     let previousUsedZoom = oldStyle != nil ? oldStyle!.usedZoom() : RenderStyleWrapper.initialZoom()
@@ -542,8 +547,51 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   private func shouldPaint(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if (paintInfo.paintBehavior.contains(.ExcludeSelection)) && isSelected() {
+      return false
+    }
+
+    if paintInfo.paintBehavior.contains(.ExcludeReplacedContent) {
+      return false
+    }
+
+    if paintInfo.phase != .Foreground
+      && paintInfo.phase != .Outline
+      && paintInfo.phase != .SelfOutline
+      && paintInfo.phase != .Selection
+      && paintInfo.phase != .Mask
+      && paintInfo.phase != .EventRegion
+      && paintInfo.phase != .Accessibility
+    {
+      return false
+    }
+
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return false
+    }
+
+    // if we're invisible or haven't received a layout yet, then just bail.
+    if style().usedVisibility() != .Visible {
+      return false
+    }
+
+    var paintRect = visualOverflowRect()
+    paintRect.moveBy(offset: paintOffset + location())
+
+    // Early exit if the element touches the edges.
+    let top = paintRect.y()
+    let bottom = paintRect.maxY()
+
+    let localRepaintRect = paintInfo.rect
+    if paintRect.x() >= localRepaintRect.maxX() || paintRect.maxX() <= localRepaintRect.x() {
+      return false
+    }
+
+    if top >= localRepaintRect.maxY() || bottom <= localRepaintRect.y() {
+      return false
+    }
+
+    return true
   }
 
   // This is in local coordinates, but it's a physical rect (so the top left corner is physical top left).
