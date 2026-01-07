@@ -25,6 +25,10 @@
 private let cDefaultWidth: Int32 = 300
 private let cDefaultHeight: Int32 = 150
 
+private func isVideoWithDefaultObjectSize(_ maybeVideo: RenderReplacedWrapper?) -> Bool {
+  return (maybeVideo as? RenderVideoWrapper)?.hasDefaultObjectSize() ?? false
+}
+
 private func hasIntrinsicSize(
   _ contentRenderer: RenderBoxWrapper?, hasIntrinsicWidth: Bool, hasIntrinsicHeight: Bool
 ) -> Bool {
@@ -178,8 +182,30 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If there's an embeddedContentBox() of a remote, referenced document available, this code-path should never be used.
+    assert(embeddedContentBox() == nil || shouldApplySizeOrInlineSizeContainment())
+    let intrinsicSize = FloatSize(
+      width: intrinsicLogicalWidth().float(), height: intrinsicLogicalHeight().float())
+
+    var intrinsicRatio = FloatSize()
+    if style().hasAspectRatio() {
+      intrinsicRatio = FloatSize.narrowPrecision(
+        width: style().aspectRatioLogicalWidth(), height: style().aspectRatioLogicalHeight())
+      if style().aspectRatioType() == .Ratio || isVideoWithDefaultObjectSize(self) {
+        return (intrinsicSize, intrinsicRatio)
+      }
+    }
+    // Figure out if we need to compute an intrinsic ratio.
+    if !hasIntrinsicAspectRatio() && !isRenderOrLegacyRenderSVGRoot() {
+      return (intrinsicSize, intrinsicRatio)
+    }
+
+    // After supporting contain-intrinsic-size, the intrinsicSize of size containment is not always empty.
+    if intrinsicSize.isEmpty() || shouldApplySizeContainment() {
+      return (intrinsicSize, intrinsicRatio)
+    }
+
+    return (intrinsicSize, FloatSize(width: intrinsicSize.width, height: intrinsicSize.height))
   }
 
   override func layout() {

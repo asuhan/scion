@@ -838,6 +838,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func aspectRatioLogicalWidth() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func aspectRatioLogicalHeight() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalAspectRatio() -> Float64 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
