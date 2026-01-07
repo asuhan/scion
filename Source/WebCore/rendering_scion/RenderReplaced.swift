@@ -203,8 +203,8 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    maxLogicalWidth = intrinsicLogicalWidth()
+    minLogicalWidth = maxLogicalWidth
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
