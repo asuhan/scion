@@ -22,6 +22,9 @@
  *
  */
 
+private let cDefaultWidth: Int32 = 300
+private let cDefaultHeight: Int32 = 150
+
 private func hasIntrinsicSize(
   _ contentRenderer: RenderBoxWrapper?, hasIntrinsicWidth: Bool, hasIntrinsicHeight: Bool
 ) -> Bool {
@@ -216,8 +219,10 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   func intrinsicSizeChanged() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scaledWidth = Int32(Float32(cDefaultWidth) * style().usedZoom())
+    let scaledHeight = Int32(Float32(cDefaultHeight) * style().usedZoom())
+    m_intrinsicSize = LayoutSizeWrapper(size: IntSize(width: scaledWidth, height: scaledHeight))
+    setNeedsLayoutAndPrefWidthsRecalc()
   }
 
   func embeddedContentBox() -> RenderBoxWrapper? {
@@ -291,5 +296,5 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     return false
   }
 
-  private let m_intrinsicSize = LayoutSizeWrapper()
+  private var m_intrinsicSize = LayoutSizeWrapper()
 }
