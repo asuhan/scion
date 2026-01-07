@@ -486,7 +486,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func isVisibleIgnoringGeometry() -> Bool {
+  func isVisibleIgnoringGeometry() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -202,6 +202,14 @@ struct LayoutRectWrapper: Equatable {
     return x() <= other.x() && maxX() >= other.maxX() && y() <= other.y() && maxY() >= other.maxY()
   }
 
+  // This checks to see if the rect contains x,y in the traditional sense.
+  // Equivalent to checking if the rect contains a 1x1 rect below and to the right of (px,py).
+  private func contains(px: LayoutUnit, py: LayoutUnit) -> Bool {
+    return px >= x() && px < maxX() && py >= y() && py < maxY()
+  }
+
+  func contains(point: LayoutPointWrapper) -> Bool { return contains(px: point.x, py: point.y) }
+
   mutating func intersect(other: LayoutRectWrapper) {
     var newLocation = LayoutPointWrapper(x: max(x(), other.x()), y: max(y(), other.y()))
     var newMaxPoint = LayoutPointWrapper(x: min(maxX(), other.maxX()), y: min(maxY(), other.maxY()))

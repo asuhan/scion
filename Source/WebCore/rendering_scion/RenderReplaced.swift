@@ -288,7 +288,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     return false
   }
 
-  override func intrinsicSize() -> LayoutSizeWrapper {
+  override final func intrinsicSize() -> LayoutSizeWrapper {
     let size = m_intrinsicSize.deepCopy()
     if isHorizontalWritingMode()
       ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment()
@@ -301,6 +301,26 @@ class RenderReplacedWrapper: RenderBoxWrapper {
       size.setHeight(height: explicitIntrinsicInnerHeight() ?? LayoutUnit(value: 0))
     }
     return size
+  }
+
+  func isContentLikelyVisibleInViewport() -> Bool {
+    if !isVisibleIgnoringGeometry() {
+      return false
+    }
+
+    let frameView = view().frameView()
+    let visibleRect = LayoutRectWrapper(
+      rect: frameView.windowToContents(windowRect: frameView.windowClipRect()))
+    let contentRect = computeRectForRepaint(rect: replacedContentRect(), repaintContainer: nil)
+
+    // Content rectangle may be empty because it is intrinsically sized and the content has not loaded yet.
+    if contentRect.isEmpty()
+      && (style().logicalWidth().isAuto() || style().logicalHeight().isAuto())
+    {
+      return visibleRect.contains(point: contentRect.location())
+    }
+
+    return visibleRect.intersects(other: contentRect)
   }
 
   override func needsPreferredWidthsRecalculation() -> Bool {
