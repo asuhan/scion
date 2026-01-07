@@ -208,6 +208,14 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    let previousUsedZoom = oldStyle != nil ? oldStyle!.usedZoom() : RenderStyleWrapper.initialZoom()
+    if previousUsedZoom != style().usedZoom() {
+      intrinsicSizeChanged()
+    }
+  }
+
+  func intrinsicSizeChanged() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

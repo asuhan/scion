@@ -24,6 +24,11 @@
  */
 
 final class RenderVideoWrapper: RenderMediaWrapper {
+  override func intrinsicSizeChanged() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

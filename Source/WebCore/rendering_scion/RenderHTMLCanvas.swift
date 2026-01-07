@@ -33,4 +33,9 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func intrinsicSizeChanged() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

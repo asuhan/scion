@@ -2384,6 +2384,8 @@ class RenderStyleWrapper: Equatable {
     return LengthWrapper(type: .Fixed)
   }
 
+  static func initialZoom() -> Float32 { return 1 }
+
   static func initialBoxDecorationBreak() -> BoxDecorationBreak {
     return .Slice
   }
