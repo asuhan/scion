@@ -499,6 +499,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setHeight<T>(height: T) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalLeft() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(p))
   }
@@ -1321,6 +1326,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func minimumReplacedHeight() -> LayoutUnit { return LayoutUnit(value: 0) }
 
   func overridingLogicalWidth() -> LayoutUnit? {
     // TODO(asuhan): implement this

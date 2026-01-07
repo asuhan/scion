@@ -38,4 +38,9 @@ final class RenderVideoWrapper: RenderMediaWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func minimumReplacedHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

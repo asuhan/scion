@@ -70,6 +70,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     }
   }
 
+  override func minimumReplacedHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Update the size of the image to be rendered. Object-fit may cause this to be different from the CSS box's content rect.
   private func updateInnerContentRect() {
     // TODO(asuhan): implement this

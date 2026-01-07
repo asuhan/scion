@@ -175,8 +175,29 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    let repainter = LayoutRepainter(renderer: self)
+
+    let oldContentRect = replacedContentRect()
+
+    setHeight(height: minimumReplacedHeight())
+
+    updateLogicalWidth()
+    updateLogicalHeight()
+
+    clearOverflow()
+    addVisualEffectOverflow()
+    updateLayerTransform()
+    invalidateBackgroundObscurationStatus()
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
+
+    if replacedContentRect() != oldContentRect {
+      setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+    }
   }
 
   override func computeIntrinsicLogicalWidths(
