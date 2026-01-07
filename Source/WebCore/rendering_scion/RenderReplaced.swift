@@ -256,10 +256,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     setNeedsLayoutAndPrefWidthsRecalc()
   }
 
-  func embeddedContentBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func embeddedContentBox() -> RenderBoxWrapper? { return nil }
 
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (
     FloatSize, FloatSize
