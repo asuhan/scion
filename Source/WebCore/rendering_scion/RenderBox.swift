@@ -3964,7 +3964,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   // The explicit intrinsic inner size of contain-intrinsic-size
-  private func explicitIntrinsicInnerWidth() -> LayoutUnit? {
+  func explicitIntrinsicInnerWidth() -> LayoutUnit? {
     assert(
       isHorizontalWritingMode()
         ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment())
@@ -3988,7 +3988,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit(value: width.value())
   }
 
-  private func explicitIntrinsicInnerHeight() -> LayoutUnit? {
+  func explicitIntrinsicInnerHeight() -> LayoutUnit? {
     assert(
       isHorizontalWritingMode()
         ? shouldApplySizeContainment() : shouldApplySizeOrInlineSizeContainment())

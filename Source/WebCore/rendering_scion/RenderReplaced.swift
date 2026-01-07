@@ -149,8 +149,18 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   func replacedContentRect() -> LayoutRectWrapper { return replacedContentRect(intrinsicSize()) }
 
   override func intrinsicSize() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let size = m_intrinsicSize.deepCopy()
+    if isHorizontalWritingMode()
+      ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment()
+    {
+      size.setWidth(width: explicitIntrinsicInnerWidth() ?? LayoutUnit(value: 0))
+    }
+    if isHorizontalWritingMode()
+      ? shouldApplySizeContainment() : shouldApplySizeOrInlineSizeContainment()
+    {
+      size.setHeight(height: explicitIntrinsicInnerHeight() ?? LayoutUnit(value: 0))
+    }
+    return size
   }
 
   override func needsPreferredWidthsRecalculation() -> Bool {
@@ -250,4 +260,6 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
     return false
   }
+
+  private let m_intrinsicSize = LayoutSizeWrapper()
 }
