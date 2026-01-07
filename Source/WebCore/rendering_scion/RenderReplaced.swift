@@ -260,6 +260,34 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   func replacedContentRect() -> LayoutRectWrapper { return replacedContentRect(intrinsicSize()) }
 
+  func setNeedsLayoutIfNeededAfterIntrinsicSizeChange() -> Bool {
+    setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+
+    // If the actual area occupied by the image has changed and it is not constrained by style then a layout is required.
+    let imageSizeIsConstrained =
+      style().logicalWidth().isSpecified() && style().logicalHeight().isSpecified()
+      && !style().logicalMinWidth().isIntrinsic() && !style().logicalMaxWidth().isIntrinsic()
+      && !hasAutoHeightOrContainingBlockWithAutoHeight(updatePercentageDescendants: .No)
+
+    // FIXME: We only need to recompute the containing block's preferred size
+    // if the containing block's size depends on the image's size (i.e., the container uses shrink-to-fit sizing).
+    // There's no easy way to detect that shrink-to-fit is needed, always force a layout.
+    let containingBlockNeedsToRecomputePreferredSize =
+      style().logicalWidth().isPercentOrCalculated()
+      || style().logicalMaxWidth().isPercentOrCalculated()
+      || style().logicalMinWidth().isPercentOrCalculated()
+
+    // Flex and grid layout use the intrinsic image width/height even if width/height are specified.
+    if !imageSizeIsConstrained || containingBlockNeedsToRecomputePreferredSize || isFlexItem()
+      || isGridItem()
+    {
+      setNeedsLayout()
+      return true
+    }
+
+    return false
+  }
+
   override func intrinsicSize() -> LayoutSizeWrapper {
     let size = m_intrinsicSize.deepCopy()
     if isHorizontalWritingMode()
