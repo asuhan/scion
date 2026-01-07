@@ -364,8 +364,30 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   private func computeConstrainedLogicalWidth(_ shouldComputePreferred: ShouldComputePreferred)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldComputePreferred == .ComputePreferred {
+      return computeReplacedLogicalWidthRespectingMinMaxWidth(
+        LayoutUnit(value: UInt64(0)), .ComputePreferred)
+    }
+
+    // The aforementioned 'constraint equation' used for block-level, non-replaced
+    // elements in normal flow:
+    // 'margin-left' + 'border-left-width' + 'padding-left' + 'width' +
+    // 'padding-right' + 'border-right-width' + 'margin-right' = width of
+    // containing block
+    // see https://www.w3.org/TR/CSS22/visudet.html#blockwidth
+    var logicalWidth = containingBlock()!.availableLogicalWidth()
+
+    // This solves above equation for 'width' (== logicalWidth).
+    let marginStart = minimumValueForLength(
+      length: style().marginStart(), maximumValue: logicalWidth)
+    let marginEnd = minimumValueForLength(length: style().marginEnd(), maximumValue: logicalWidth)
+
+    logicalWidth = max(
+      LayoutUnit(value: 0),
+      (logicalWidth
+        - (marginStart + marginEnd + borderLeft() + borderRight() + paddingLeft() + paddingRight()))
+    )
+    return computeReplacedLogicalWidthRespectingMinMaxWidth(logicalWidth, shouldComputePreferred)
   }
 
   func embeddedContentBox() -> RenderBoxWrapper? { return nil }
