@@ -1266,8 +1266,44 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+
+    computeIntrinsicLogicalWidths(
+      minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+
+    let bordersPaddingAndSpacing = bordersPaddingAndSpacingInRowDirection()
+    minPreferredLogicalWidth += bordersPaddingAndSpacing
+    maxPreferredLogicalWidth += bordersPaddingAndSpacing
+
+    tableLayout!.applyPreferredLogicalWidthQuirks(
+      minWidth: &minPreferredLogicalWidth, maxWidth: &maxPreferredLogicalWidth)
+
+    for caption in captions {
+      minPreferredLogicalWidth = max(minPreferredLogicalWidth, caption!.minPreferredLogicalWidth())
+    }
+
+    let styleToUse = style()
+    // FIXME: This should probably be checking for isSpecified since you should be able to use percentage or calc values for min-width.
+    if styleToUse.logicalMinWidth().isFixed() && styleToUse.logicalMinWidth().value() > 0 {
+      maxPreferredLogicalWidth = max(
+        maxPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
+      minPreferredLogicalWidth = max(
+        minPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
+    }
+
+    // FIXME: This should probably be checking for isSpecified since you should be able to use percentage or calc values for maxWidth.
+    if styleToUse.logicalMaxWidth().isFixed() {
+      maxPreferredLogicalWidth = min(
+        maxPreferredLogicalWidth,
+        adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMaxWidth()))
+      maxPreferredLogicalWidth = max(maxPreferredLogicalWidth, minPreferredLogicalWidth)
+    }
+
+    // FIXME: We should be adding borderAndPaddingLogicalWidth here, but m_tableLayout->computePreferredLogicalWidths already does,
+    // so a bunch of tests break doing this naively.
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func firstLineBaseline() -> LayoutUnit? {

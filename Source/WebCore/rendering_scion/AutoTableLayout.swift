@@ -21,6 +21,13 @@
  */
 
 final class AutoTableLayout: TableLayout {
+  override func applyPreferredLogicalWidthQuirks(
+    minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // table layout based on the values collected in the layout structure.
     let tableLogicalWidth = (table.logicalWidth() - table.bordersPaddingAndSpacingInRowDirection())

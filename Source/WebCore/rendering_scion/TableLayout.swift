@@ -34,6 +34,10 @@ class TableLayout {
     fatalError("Not implemented")
   }
 
+  func applyPreferredLogicalWidthQuirks(minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit) {
+    fatalError("Not reached")
+  }
+
   func layout() { fatalError("Not reached") }
 
   // FIXME: Once we enable SATURATED_LAYOUT_ARITHMETHIC, this should just be LayoutUnit.nearlyMax().

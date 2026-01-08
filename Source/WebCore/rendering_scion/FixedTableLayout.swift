@@ -24,6 +24,13 @@ final class FixedTableLayout: TableLayout {
     super.init(table: table)
   }
 
+  override func applyPreferredLogicalWidthQuirks(
+    minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     let tableLogicalWidth = (table.logicalWidth() - table.bordersPaddingAndSpacingInRowDirection())
       .float()
