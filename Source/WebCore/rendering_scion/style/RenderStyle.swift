@@ -2212,6 +2212,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setLogicalWidth(_ width: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalHeight(_ height: LengthWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

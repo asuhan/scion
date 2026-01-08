@@ -55,7 +55,19 @@ final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
   }
 
   override func layoutExcludedChildren(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.layoutExcludedChildren(relayoutChildren: relayoutChildren)
+    let placeholder = textFormControlElement().placeholderElement()
+    guard let placeholderRenderer = placeholder?.renderer() else {
+      return
+    }
+    guard let placeholderBox = placeholderRenderer as? RenderBoxWrapper else {
+      return
+    }
+    placeholderBox.mutableStyle().setLogicalWidth(
+      LengthWrapper(
+        value: contentLogicalWidth() - placeholderBox.borderAndPaddingLogicalWidth(), type: .Fixed))
+    placeholderBox.layoutIfNeeded()
+    placeholderBox.setX(x: borderLeft() + paddingLeft())
+    placeholderBox.setY(y: borderTop() + paddingTop())
   }
 }
