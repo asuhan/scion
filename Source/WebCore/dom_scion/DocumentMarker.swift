@@ -72,6 +72,15 @@ class DocumentMarker {
     .TransparentContent,
   ]
 
+  struct TransparentContentData {
+    let node: NodeWrapper
+  }
+
+  enum Data {
+    case Node(NodeWrapper)
+    case TransparentContentData(TransparentContentData)
+  }
+
   func startOffset() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -83,6 +92,11 @@ class DocumentMarker {
   }
 
   var type: `Type` {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var data: Data {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

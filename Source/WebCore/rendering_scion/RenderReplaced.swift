@@ -28,8 +28,20 @@ private let cDefaultHeight: Int32 = 150
 private func contentContainsReplacedElement(
   _ markers: ArraySlice<RenderedDocumentMarker>, _ element: ElementWrapper
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  for marker in markers {
+    if marker.type == .DraggedContent {
+      if case .Node(let node) = marker.data, CPtrToInt(node.p) == CPtrToInt(element.p) {
+        return true
+      }
+    } else if marker.type == .TransparentContent {
+      if case .TransparentContentData(let transparentContentData) = marker.data,
+        CPtrToInt(transparentContentData.node.p) == CPtrToInt(element.p)
+      {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 private func isVideoWithDefaultObjectSize(_ maybeVideo: RenderReplacedWrapper?) -> Bool {
