@@ -783,8 +783,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   private func shouldDrawSelectionTint() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return selectionState() != .None && !document().printing()
   }
 
   private func calculateHighlightColor() -> ColorWrapper {
