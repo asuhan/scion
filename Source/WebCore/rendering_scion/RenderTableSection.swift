@@ -933,6 +933,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func rowLogicalHeightChanged(_ rowIndex: UInt32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearCachedCollapsedBorders() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -66,6 +66,10 @@ private struct CollapsedBorders {
   private var borders: [CollapsedBorder] = []
 }
 
+private func markCellDirtyWhenCollapsedBorderChanges(_ cell: RenderTableCellWrapper?) {
+  cell?.setNeedsLayoutAndPrefWidthsRecalc()
+}
+
 // The following rules apply for resolving conflicts and figuring out which border
 // to use.
 // (1) Borders with the 'border-style' of 'hidden' take precedence over all other conflicting
@@ -733,8 +737,37 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(style().display() == .TableCell)
+    assert(row()?.rowIndexWasSet() ?? true)
+
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    setHasVisibleBoxDecorations(true)  // FIXME: Optimize this to only set to true if necessary.
+
+    if parent() != nil && section() != nil && oldStyle != nil
+      && style().height() != oldStyle!.height()
+    {
+      section()!.rowLogicalHeightChanged(rowIndex())
+    }
+
+    // Our intrinsic padding pushes us down to align with the baseline of other cells on the row. If our vertical-align
+    // has changed then so will the padding needed to align with other cells - clear it so we can recalculate it from scratch.
+    if oldStyle != nil
+      && (style().verticalAlign() != oldStyle!.verticalAlign()
+        || style().alignContent() != oldStyle!.alignContent())
+    {
+      clearIntrinsicPadding()
+    }
+
+    // If border was changed, notify table.
+    if let table = table(), oldStyle != nil && !oldStyle!.borderIsEquivalentForPainting(style()) {
+      table.invalidateCollapsedBorders(cellWithStyleChange: self)
+      if table.collapseBorders() && diff == .Layout {
+        markCellDirtyWhenCollapsedBorderChanges(table.cellBelow(cell: self))
+        markCellDirtyWhenCollapsedBorderChanges(table.cellAbove(cell: self))
+        markCellDirtyWhenCollapsedBorderChanges(table.cellBefore(cell: self))
+        markCellDirtyWhenCollapsedBorderChanges(table.cellAfter(cell: self))
+      }
+    }
   }
 
   override func computePreferredLogicalWidths() {

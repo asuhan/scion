@@ -80,6 +80,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func rowIndexWasSet() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rowIndex() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

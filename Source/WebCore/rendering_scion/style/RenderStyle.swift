@@ -1126,6 +1126,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func borderIsEquivalentForPainting(_ otherStyle: RenderStyleWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func outlineSize() -> Float32 {
     if p == nil {
       fatalError("Not implemented")

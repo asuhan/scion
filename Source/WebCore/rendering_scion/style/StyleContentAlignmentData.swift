@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class StyleContentAlignmentData {
+class StyleContentAlignmentData: Equatable {
   // Style data for Content-Distribution properties: align-content, justify-content.
   // <content-distribution> || [ <overflow-position>? && <content-position> ]
   init(
@@ -106,6 +106,11 @@ class StyleContentAlignmentData {
   // Pass std::nullopt if neither the inline axis nor the physical left-right axis matches the justify-content axis (e.g. in flexbox).
   func isCentered() -> Bool {
     return position == .Center || distribution == .SpaceAround || distribution == .SpaceEvenly
+  }
+
+  static func == (_ lhs: StyleContentAlignmentData, _ rhs: StyleContentAlignmentData) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   var position: ContentPosition = .Normal
