@@ -1,6 +1,8 @@
-/*
- * Copyright (C) 2008 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
- * Copyright (C) 2009 Apple Inc. All rights reserved.
+/**
+ * Copyright (C) 2006, 2007, 2009, 2010, 2015 Apple Inc. All rights reserved.
+ *           (C) 2008 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
+ * Copyright (C) 2010 Google Inc. All rights reserved.
+ * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,27 +21,13 @@
  *
  */
 
-final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
-  override final func getAverageCharWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override final func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
+// TODO(asuhan): also inherit from PopupMenuClient
+final class RenderSearchFieldWrapper: RenderTextControlSingleLineWrapper {
   override final func computeControlLogicalHeight(
     lineHeight: LayoutUnit, nonContentHeight: LayoutUnit
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func layoutExcludedChildren(relayoutChildren: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

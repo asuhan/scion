@@ -107,6 +107,7 @@ target_sources(layout_scion PRIVATE
     RenderReplica.swift
     RenderScrollbar.swift
     RenderScrollbarPart.swift
+    RenderSearchField.swift
     RenderSelection.swift
     RenderSlider.swift
     RenderTable.swift

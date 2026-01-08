@@ -42,6 +42,15 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeControlLogicalHeight(
+    lineHeight: LayoutUnit, nonContentHeight: LayoutUnit
+  )
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

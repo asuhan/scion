@@ -31,6 +31,11 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func scrollbarThickness() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -46,11 +51,51 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func computeControlLogicalHeight(lineHeight: LayoutUnit, nonContentHeight: LayoutUnit)
+    -> LayoutUnit
+  {
+    fatalError("Not reached")
+  }
+
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let innerText = innerTextElement() else {
+      return boxComputeLogicalHeight(logicalHeight: LayoutUnit(), logicalTop: LayoutUnit())
+    }
+
+    if style().fieldSizing() == .Content {
+      return boxComputeLogicalHeight(logicalHeight: logicalHeight, logicalTop: logicalTop)
+    }
+
+    var logicalHeight = logicalHeight
+    if let innerTextBox = innerText.renderBox() {
+      let nonContentHeight =
+        innerTextBox.borderAndPaddingLogicalHeight() + innerTextBox.marginLogicalHeight()
+      logicalHeight = computeControlLogicalHeight(
+        lineHeight: innerTextBox.lineHeight(
+          firstLine: true, direction: .HorizontalLine,
+          linePositionMode: .PositionOfInteriorLineBoxes),
+        nonContentHeight: nonContentHeight)
+
+      // We are able to have a horizontal scrollbar if the overflow style is scroll, or if its auto and there's no word wrap.
+      let style = style()
+      let isHorizontalWritingMode = isHorizontalWritingMode()
+      let shouldIncludeScrollbarHeight =
+        (isHorizontalWritingMode && style.overflowX() == .Scroll)
+        || (!isHorizontalWritingMode && style.overflowY() == .Scroll)
+      if shouldIncludeScrollbarHeight {
+        logicalHeight += scrollbarThickness()
+      }
+
+      // FIXME: The logical height of the inner text box should have been added
+      // before calling computeLogicalHeight to avoid this hack.
+      cacheIntrinsicContentLogicalHeightForFlexItem(height: logicalHeight)
+
+      logicalHeight += borderAndPaddingLogicalHeight()
+    }
+
+    return boxComputeLogicalHeight(logicalHeight: logicalHeight, logicalTop: logicalTop)
   }
 
   override func layoutExcludedChildren(relayoutChildren: Bool) {
