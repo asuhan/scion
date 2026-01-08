@@ -6098,8 +6098,43 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // These values are used in shrink-to-fit layout systems.
   // These include tables, positioned objects, floats and flexible boxes.
   func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+
+    computePreferredLogicalWidths(
+      minWidth: style().logicalMinWidth(), maxWidth: style().logicalMaxWidth(),
+      borderAndPadding: borderAndPaddingLogicalWidth())
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+  }
+
+  private func computePreferredLogicalWidths(
+    minWidth: LengthWrapper, maxWidth: LengthWrapper, borderAndPadding: LayoutUnit
+  ) {
+    if !style().logicalWidth().isFixed() && shouldComputeLogicalHeightFromAspectRatio() {
+      var (logicalMinWidth, logicalMaxWidth) = computeMinMaxLogicalWidthFromAspectRatio()
+      logicalMinWidth = max(logicalMinWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
+      logicalMaxWidth = max(logicalMaxWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
+      minPreferredLogicalWidth = clamp(
+        val: minPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
+      maxPreferredLogicalWidth = clamp(
+        val: maxPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
+    }
+
+    if maxWidth.isFixed() {
+      let adjustContentBoxLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: maxWidth)
+      maxPreferredLogicalWidth = min(maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      minPreferredLogicalWidth = min(minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+    }
+
+    if minWidth.isFixed() && minWidth.value() > 0 {
+      let adjustContentBoxLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: minWidth)
+      maxPreferredLogicalWidth = max(maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      minPreferredLogicalWidth = max(minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+    }
+
+    minPreferredLogicalWidth += borderAndPadding
+    maxPreferredLogicalWidth += borderAndPadding
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
