@@ -1450,8 +1450,34 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+
+    minPreferredLogicalWidth = LayoutUnit(value: 0)
+    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    let styleToUse = style()
+    let lengthToUse = overridingLogicalWidthLength() ?? styleToUse.logicalWidth()
+    if !isRenderTableCell() && lengthToUse.isFixed() && lengthToUse.value() >= 0
+      && !(isDeprecatedFlexItem() && lengthToUse.intValue() == 0)
+    {
+      minPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: lengthToUse)
+      maxPreferredLogicalWidth = minPreferredLogicalWidth
+    } else if shouldComputeLogicalWidthFromAspectRatio() {
+      maxPreferredLogicalWidth =
+        computeLogicalWidthFromAspectRatio() - borderAndPaddingLogicalWidth()
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+      minPreferredLogicalWidth = max(LayoutUnit(value: UInt64(0)), minPreferredLogicalWidth)
+      maxPreferredLogicalWidth = max(LayoutUnit(value: UInt64(0)), maxPreferredLogicalWidth)
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    }
+
+    super.computePreferredLogicalWidths(
+      minWidth: styleToUse.logicalMinWidth(), maxWidth: styleToUse.logicalMaxWidth(),
+      borderAndPadding: borderAndPaddingLogicalWidth())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func firstLineBaseline() -> LayoutUnit? {

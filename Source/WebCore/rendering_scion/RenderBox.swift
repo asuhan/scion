@@ -4731,7 +4731,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
-  private func shouldComputeLogicalWidthFromAspectRatio() -> Bool {
+  func shouldComputeLogicalWidthFromAspectRatio() -> Bool {
     if shouldIgnoreAspectRatio() {
       return false
     }
@@ -4773,7 +4773,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       aspectRatioType: style().aspectRatioType(), isRenderReplaced: isRenderReplaced())
   }
 
-  private func computeLogicalWidthFromAspectRatio(fragment: RenderFragmentContainerWrapper? = nil)
+  func computeLogicalWidthFromAspectRatio(fragment: RenderFragmentContainerWrapper? = nil)
     -> LayoutUnit
   {
     let logicalWidth = computeLogicalWidthFromAspectRatioInternal()
@@ -6106,7 +6106,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
-  private func computePreferredLogicalWidths(
+  func computePreferredLogicalWidths(
     minWidth: LengthWrapper, maxWidth: LengthWrapper, borderAndPadding: LayoutUnit
   ) {
     if !style().logicalWidth().isFixed() && shouldComputeLogicalHeightFromAspectRatio() {

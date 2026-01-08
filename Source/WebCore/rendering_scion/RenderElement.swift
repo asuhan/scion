@@ -792,6 +792,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }
 
+  func isDeprecatedFlexItem() -> Bool {
+    return !isInline() && !isFloatingOrOutOfFlowPositioned() && parent() != nil
+      && parent()!.isRenderDeprecatedFlexibleBox()
+  }
+
   func isFlexItemIncludingDeprecated() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
