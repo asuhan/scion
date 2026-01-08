@@ -99,8 +99,20 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   }
 
   override func layoutExcludedChildren(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.layoutExcludedChildren(relayoutChildren: relayoutChildren)
+
+    let placeholder = textFormControlElement().placeholderElement()
+    guard let placeholderRenderer = placeholder?.containerRenderer() else {
+      return
+    }
+    placeholderRenderer.setIsExcludedFromNormalLayout(excluded: true)
+
+    if relayoutChildren {
+      // The markParents arguments should be false because this function is
+      // called from layout() of the parent and the placeholder layout doesn't
+      // affect the parent layout.
+      placeholderRenderer.setChildNeedsLayout(markParents: .MarkOnlyThis)
+    }
   }
 
   override func computeIntrinsicLogicalWidths(
