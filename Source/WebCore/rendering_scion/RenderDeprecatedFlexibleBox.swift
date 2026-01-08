@@ -20,6 +20,27 @@
  *
  */
 
+private func marginWidthForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
+  // A margin basically has three types: fixed, percentage, and auto (variable).
+  // Auto and percentage margins simply become 0 when computing min/max width.
+  // Fixed margins can be added in as is.
+  let marginLeft = child.style().marginLeft()
+  let marginRight = child.style().marginRight()
+  var margin = LayoutUnit()
+  if marginLeft.isFixed() {
+    margin += marginLeft.value()
+  }
+  if marginRight.isFixed() {
+    margin += marginRight.value()
+  }
+  return margin
+}
+
+private func childDoesNotAffectWidthOrFlexing(_ child: RenderObjectWrapper) -> Bool {
+  // Positioned children don't affect the min/max width.
+  return child.isOutOfFlowPositioned()
+}
+
 final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
@@ -46,8 +67,56 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let width = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = width
+        maxLogicalWidth = width
+      }
+      addScrollbarWidth(minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+      return
+    }
+
+    if hasMultipleLines() || isVertical() {
+      var child = firstChildBox()
+      while child != nil {
+        if childDoesNotAffectWidthOrFlexing(child!) {
+          child = child!.nextSiblingBox()
+          continue
+        }
+
+        let margin = marginWidthForChild(child!)
+        var width = child!.minPreferredLogicalWidth() + margin
+        minLogicalWidth = max(width, minLogicalWidth)
+
+        width = child!.maxPreferredLogicalWidth() + margin
+        maxLogicalWidth = max(width, maxLogicalWidth)
+        child = child!.nextSiblingBox()
+      }
+    } else {
+      var child = firstChildBox()
+      while child != nil {
+        if childDoesNotAffectWidthOrFlexing(child!) {
+          child = child!.nextSiblingBox()
+          continue
+        }
+
+        let margin = marginWidthForChild(child!)
+        minLogicalWidth += child!.minPreferredLogicalWidth() + margin
+        maxLogicalWidth += child!.maxPreferredLogicalWidth() + margin
+        child = child!.nextSiblingBox()
+      }
+    }
+
+    maxLogicalWidth = max(minLogicalWidth, maxLogicalWidth)
+    addScrollbarWidth(minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+  }
+
+  private func addScrollbarWidth(
+    minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
+  ) {
+    let scrollbarWidth = intrinsicScrollbarLogicalWidthIncludingGutter()
+    maxLogicalWidth += scrollbarWidth
+    minLogicalWidth += scrollbarWidth
   }
 
   override func computePreferredLogicalWidths() {
@@ -69,5 +138,15 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
       borderAndPadding: borderAndPaddingLogicalWidth())
 
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+  }
+
+  private func hasMultipleLines() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func isVertical() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }
