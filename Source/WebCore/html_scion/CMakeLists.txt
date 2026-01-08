@@ -2,6 +2,7 @@ target_sources(layout_scion PRIVATE
     HTMLAnchorElement.swift
     HTMLButtonElement.swift
     HTMLCanvasElement.swift
+    HTMLDivElement.swift
     HTMLElement.swift
     HTMLFormControlElement.swift
     HTMLFrameOwnerElement.swift
@@ -16,3 +17,4 @@ target_sources(layout_scion PRIVATE
     HTMLTextFormControlElement.swift
 )
 add_subdirectory(canvas)
+add_subdirectory(shadow)

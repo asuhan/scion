@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2008 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
- * Copyright (C) 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 1999 Lars Knoll (knoll@kde.org)
+ *           (C) 1999 Antti Koivisto (koivisto@kde.org)
+ * Copyright (C) 2003-2018 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,19 +20,4 @@
  *
  */
 
-final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
-  override final func getAverageCharWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override final func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func layoutExcludedChildren(relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+class HTMLDivElementWrapper: HTMLElementWrapper {}

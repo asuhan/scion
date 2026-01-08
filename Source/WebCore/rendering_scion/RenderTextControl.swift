@@ -25,7 +25,23 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // This convenience function should not be made public because innerTextElement may outlive the render tree.
+  private func innerTextElement() -> TextControlInnerTextElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func getAverageCharWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -45,8 +61,32 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Fix field-sizing: content with size containment
+    // https://bugs.webkit.org/show_bug.cgi?id=269169
+    if style().fieldSizing() == .Content {
+      return super.computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+    }
+
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let width = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = width
+        maxLogicalWidth = width
+      }
+      return
+    }
+    // Use average character width. Matches IE.
+    maxLogicalWidth = preferredContentLogicalWidth(getAverageCharWidth())
+    if let innerTextRenderBox = innerTextElement() != nil ? innerTextElement()!.renderBox() : nil {
+      maxLogicalWidth += innerTextRenderBox.paddingStart() + innerTextRenderBox.paddingEnd()
+    }
+    let logicalWidth = style().logicalWidth()
+    if logicalWidth.isCalculated() {
+      let zero = LayoutUnit(value: UInt64(0))
+      minLogicalWidth = max(zero, valueForLength(length: logicalWidth, maximumValue: zero))
+    } else if !logicalWidth.isPercent() {
+      minLogicalWidth = maxLogicalWidth
+    }
   }
 
   override func computePreferredLogicalWidths() {

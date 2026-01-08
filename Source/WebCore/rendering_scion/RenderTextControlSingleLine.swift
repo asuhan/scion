@@ -32,6 +32,16 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
     fatalError("Not implemented")
   }
 
+  override final func getAverageCharWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
