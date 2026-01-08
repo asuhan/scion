@@ -23,4 +23,9 @@
  *
  */
 
-final class HTMLTextAreaElementWrapper: HTMLTextFormControlElementWrapper {}
+final class HTMLTextAreaElementWrapper: HTMLTextFormControlElementWrapper {
+  override func placeholderElement() -> HTMLElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

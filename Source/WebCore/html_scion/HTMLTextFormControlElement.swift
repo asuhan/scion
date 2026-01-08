@@ -23,6 +23,10 @@
  */
 
 class HTMLTextFormControlElementWrapper: HTMLFormControlElementWrapper {
+  func placeholderElement() -> HTMLElementWrapper? {
+    fatalError("Not reached")
+  }
+
   func isInnerTextElementEditable() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

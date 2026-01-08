@@ -26,4 +26,19 @@
  *
  */
 
-final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {}
+final class HTMLInputElementWrapper: HTMLTextFormControlElementWrapper {
+  override func placeholderElement() -> HTMLElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func autoFillButtonElement() -> HTMLElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasAutoFillStrongPasswordButton() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

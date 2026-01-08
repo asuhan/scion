@@ -24,4 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final class TextControlInnerTextElementWrapper: HTMLDivElementWrapper {}
+final class TextControlInnerTextElementWrapper: HTMLDivElementWrapper {
+  override func renderer() -> RenderTextControlInnerBlockWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

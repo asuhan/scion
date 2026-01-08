@@ -26,7 +26,7 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   }
 
   // This convenience function should not be made public because innerTextElement may outlive the render tree.
-  private func innerTextElement() -> TextControlInnerTextElementWrapper? {
+  func innerTextElement() -> TextControlInnerTextElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
