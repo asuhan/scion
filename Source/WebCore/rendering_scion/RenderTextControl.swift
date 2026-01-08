@@ -90,8 +90,29 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+    if style().fieldSizing() == .Content {
+      super.computePreferredLogicalWidths()
+      return
+    }
+
+    minPreferredLogicalWidth = LayoutUnit(value: 0)
+    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    if style().logicalWidth().isFixed() && style().logicalWidth().value() >= 0 {
+      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: style().logicalWidth())
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    }
+
+    super.computePreferredLogicalWidths(
+      minWidth: style().logicalMinWidth(), maxWidth: style().logicalMaxWidth(),
+      borderAndPadding: borderAndPaddingLogicalWidth())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func avoidsFloats() -> Bool {
