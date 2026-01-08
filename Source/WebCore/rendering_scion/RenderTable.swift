@@ -782,7 +782,7 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   func hasSections() -> Bool { return head != nil || foot != nil || firstBody != nil }
 
-  private func recalcSectionsIfNeeded() {
+  func recalcSectionsIfNeeded() {
     if needsSectionRecalc {
       recalcSections()
     }

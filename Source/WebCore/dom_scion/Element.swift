@@ -23,6 +23,11 @@
  */
 
 class ElementWrapper: ContainerNodeWrapper {
+  func hasNowrapAttr() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFontTag() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

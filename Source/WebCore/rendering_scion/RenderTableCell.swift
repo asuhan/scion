@@ -736,8 +736,25 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The child cells rely on the grids up in the sections to do their computePreferredLogicalWidths work.  Normally the sections are set up early, as table
+    // cells are added, but relayout can cause the cells to be freed, leaving stale pointers in the sections'
+    // grids.  We must refresh those grids before the child cells try to use them.
+    table()!.recalcSectionsIfNeeded()
+
+    super.computePreferredLogicalWidths()
+    if element() == nil || !style().autoWrap() || !element()!.hasNowrapAttr() {
+      return
+    }
+
+    let w = styleOrColLogicalWidth()
+    if w.isFixed() {
+      // Nowrap is set, but we didn't actually use it because of the
+      // fixed width set on the cell. Even so, it is a WinIE/Moz trait
+      // to make the minwidth of the cell into the fixed width. They do this
+      // even in strict mode, so do not make this a quirk. Affected the top
+      // of hiptop.com.
+      minPreferredLogicalWidth = max(LayoutUnit(value: w.value()), minPreferredLogicalWidth)
+    }
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
