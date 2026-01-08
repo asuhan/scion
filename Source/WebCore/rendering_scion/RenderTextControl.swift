@@ -31,7 +31,7 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
-  private func scrollbarThickness() -> Int32 {
+  func scrollbarThickness() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

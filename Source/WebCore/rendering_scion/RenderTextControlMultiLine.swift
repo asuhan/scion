@@ -19,15 +19,30 @@
  *
  */
 
+import Foundation
+
 final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
+  private func textAreaElement() -> HTMLTextAreaElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func getAverageCharWidth() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   override final func preferredContentLogicalWidth(_ charWidth: Float32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var width = ceilf(charWidth * Float32(textAreaElement().cols()))
+
+    let overflow = style().isHorizontalWritingMode() ? style().overflowY() : style().overflowX()
+
+    // We are able to have a vertical scrollbar if the overflow style is scroll or auto
+    if (overflow == .Scroll) || (overflow == .Auto) {
+      width += Float32(scrollbarThickness())
+    }
+
+    return LayoutUnit(value: width)
   }
 
   override final func computeControlLogicalHeight(
