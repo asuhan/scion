@@ -51,7 +51,23 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+
+    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+    minPreferredLogicalWidth = maxPreferredLogicalWidth
+    if style().width().isFixed() && style().width().value() > 0 {
+      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: style().width())
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    }
+
+    super.computePreferredLogicalWidths(
+      minWidth: style().minWidth(), maxWidth: style().maxWidth(),
+      borderAndPadding: borderAndPaddingLogicalWidth())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 }
