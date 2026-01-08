@@ -607,8 +607,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   // This is in local coordinates, but it's a physical rect (so the top left corner is physical top left).
   private func localSelectionRect(_ checkWhetherSelected: Bool = true) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if checkWhetherSelected && !isSelected() {
+      return LayoutRectWrapper()
+    }
+
+    return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
   }
 
   private func computeConstrainedLogicalWidth(_ shouldComputePreferred: ShouldComputePreferred)
