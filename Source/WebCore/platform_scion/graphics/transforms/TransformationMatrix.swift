@@ -31,6 +31,13 @@ class TransformationMatrix {
     fatalError("Not implemented")
   }
 
+  // If the matrix has 3D components, the z component of the result is
+  // dropped, effectively projecting the rect into the z=0 plane.
+  func mapRect(_ rect: FloatRectWrapper) -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func mapRect(r: LayoutRectWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

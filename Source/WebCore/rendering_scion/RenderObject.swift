@@ -1234,8 +1234,51 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ r: LayoutRectWrapper,
     _ shouldClipToLayer: Bool = true
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if r.isEmpty() {
+      return
+    }
+
+    var repaintContainer = repaintContainer
+    if repaintContainer == nil {
+      repaintContainer = view()
+    }
+
+    if let fragmentedFlow = repaintContainer as? RenderFragmentedFlowWrapper {
+      fragmentedFlow.repaintRectangleInFragments(r)
+      return
+    }
+
+    propagateRepaintToParentWithOutlineAutoIfNeeded(repaintContainer!, r)
+
+    if repaintContainer!.hasFilter() && repaintContainer!.layer() != nil
+      && repaintContainer!.layer()!.requiresFullLayerImageForFilters()
+    {
+      repaintContainer!.checkedLayer()!.setFilterBackendNeedsRepaintingInRect(r)
+      return
+    }
+
+    if repaintContainer!.isRenderView() {
+      let view = view()
+      assert(CPtrToInt(repaintContainer!.p) == CPtrToInt(view.p))
+      let viewHasCompositedLayer = view.isComposited()
+      if !viewHasCompositedLayer || view.layer()!.backing!.paintsIntoWindow() {
+        var rect = r
+        if viewHasCompositedLayer && view.layer()!.transform != nil {
+          rect = LayoutRectWrapper(
+            rect: view.layer()!.transform!.mapRect(
+              snapRectToDevicePixels(
+                rect: rect, pixelSnappingFactor: document().deviceScaleFactor())))
+        }
+        view.repaintViewRectangle(rect)
+        return
+      }
+    }
+
+    if view().usesCompositing() {
+      assert(repaintContainer!.isComposited())
+      repaintContainer!.checkedLayer()!.setBackingNeedsRepaintInRect(
+        r: r, shouldClip: shouldClipToLayer ? .ClipToLayer : .DoNotClipToLayer)
+    }
   }
 
   // Repaint the entire object.  Called when, e.g., the color of a border changes, or when a border
@@ -1470,6 +1513,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setLayerNeedsFullRepaintForPositionedMovementLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func propagateRepaintToParentWithOutlineAutoIfNeeded(
+    _ repaintContainer: RenderLayerModelObjectWrapper, _ repaintRect: LayoutRectWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -221,6 +221,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func usesCompositing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unscaledDocumentRect() -> IntRect {
     var overflowRect = layoutOverflowRect()
     flipForWritingMode(rect: &overflowRect)

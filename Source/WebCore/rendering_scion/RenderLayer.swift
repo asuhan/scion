@@ -1330,6 +1330,12 @@ class RenderLayerWrapper {
     return enclosingCompositingLayer(includeSelf: .ExcludeSelf)
   }
 
+  // FIXME: This needs a better name.
+  func setFilterBackendNeedsRepaintingInRect(_ rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private static func repaintTargetForLayer(layer: RenderLayerWrapper) -> RenderLayerWrapper? {
     if compositedWithOwnBackingStore(layer: layer) {
       return layer
@@ -2495,6 +2501,11 @@ class RenderLayerWrapper {
     }
 
     return !backing!.canCompositeFilters()
+  }
+
+  func requiresFullLayerImageForFilters() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func topLayerRenderLayers(renderView: RenderViewWrapper) -> [RenderLayerWrapper] {
