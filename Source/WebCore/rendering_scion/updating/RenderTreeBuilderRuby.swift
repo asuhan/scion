@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-private func createAnonymousStyleForRuby(parentStyle: RenderStyleWrapper, display: DisplayType)
+func createAnonymousStyleForRuby(parentStyle: RenderStyleWrapper, display: DisplayType)
   -> RenderStyleWrapper
 {
   assert(display == .Ruby || display == .RubyBase)

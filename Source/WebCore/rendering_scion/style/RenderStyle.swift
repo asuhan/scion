@@ -2252,6 +2252,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setColumnSpan(_ span: ColumnSpan) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inheritColumnPropertiesFrom(_ parent: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTransform(operations: TransformOperations) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

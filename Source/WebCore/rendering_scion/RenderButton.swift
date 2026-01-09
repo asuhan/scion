@@ -35,6 +35,11 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func innerRenderer() -> RenderBlockWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

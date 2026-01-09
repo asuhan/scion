@@ -611,6 +611,10 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // Called before anonymousChild.setStyle(). Override to set custom styles for
+  // the child.
+  func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {}
+
   func hasContinuationChainNode() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -915,8 +919,51 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func propagateStyleToAnonymousChildren(propagationType: StylePropagationType) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: We could save this call when the change only affected non-inherited properties.
+    for elementChild: RenderElementWrapper in childrenOfType(parent: self) {
+      if !elementChild.isAnonymous() || elementChild.style().pseudoElementType() != .None {
+        continue
+      }
+
+      let isBlockOrRuby =
+        (elementChild is RenderBlockWrapper) || elementChild.style().display() == .Ruby
+      if propagationType == .BlockAndRubyChildren && !isBlockOrRuby {
+        continue
+      }
+
+      // RenderFragmentedFlows are updated through the RenderView::styleDidChange function.
+      if elementChild is RenderFragmentedFlowWrapper {
+        continue
+      }
+
+      let newStyle = { () in
+        let display = elementChild.style().display()
+        if display == .RubyBase || display == .Ruby {
+          return createAnonymousStyleForRuby(parentStyle: style(), display: display)
+        }
+        return RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: style(), display: display)
+      }()
+
+      if style().specifiesColumns() {
+        if elementChild.style().specifiesColumns() {
+          newStyle.inheritColumnPropertiesFrom(style())
+        }
+        if elementChild.style().columnSpan() == .All {
+          newStyle.setColumnSpan(.All)
+        }
+      }
+
+      // Preserve the position style of anonymous block continuations as they can have relative or sticky position when
+      // they contain block descendants of relative or sticky positioned inlines.
+      if elementChild.isInFlowPositioned() && elementChild.isContinuation() {
+        newStyle.setPosition(v: elementChild.style().position())
+      }
+
+      updateAnonymousChildStyle(newStyle)
+
+      elementChild.setStyle(style: newStyle)
+    }
   }
 
   private func repaintBeforeStyleChange(
