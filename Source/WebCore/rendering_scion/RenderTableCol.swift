@@ -120,8 +120,40 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    guard let table = table() else {
+      return
+    }
+    // If border was changed, notify table.
+    guard let oldStyle = oldStyle else {
+      return
+    }
+    if !oldStyle.borderIsEquivalentForPainting(style()) {
+      table.invalidateCollapsedBorders()
+      return
+    }
+    if oldStyle.width() != style().width() {
+      table.recalcSectionsIfNeeded()
+      for section: RenderTableSectionWrapper in childrenOfType(parent: table) {
+        let nEffCols = table.numEffCols()
+        for j in 0..<nEffCols {
+          let rowCount = section.numRows()
+          for i in 0..<rowCount {
+            if let cell = section.primaryCellAt(row: i, col: j) {
+              cell.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private func table() -> RenderTableWrapper? {
+    var table = parent()
+    if table != nil && !(table is RenderTableWrapper) {
+      table = table!.parent()
+    }
+    return table as? RenderTableWrapper
   }
 
   let span: UInt32 = 1
