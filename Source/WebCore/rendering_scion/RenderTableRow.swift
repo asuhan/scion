@@ -23,6 +23,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func borderWidthChanged(_ oldStyle: RenderStyleWrapper, _ newStyle: RenderStyleWrapper)
+  -> Bool
+{
+  return oldStyle.borderLeftWidth() != newStyle.borderLeftWidth()
+    || oldStyle.borderTopWidth() != newStyle.borderTopWidth()
+    || oldStyle.borderRightWidth() != newStyle.borderRightWidth()
+    || oldStyle.borderBottomWidth() != newStyle.borderBottomWidth()
+}
+
 final class RenderTableRowWrapper: RenderBoxWrapper {
   func nextRow() -> RenderTableRowWrapper? {
     // TODO(asuhan): implement this
@@ -189,7 +198,44 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(style().display() == .TableRow)
+
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    propagateStyleToAnonymousChildren(propagationType: .AllChildren)
+
+    if section() != nil && oldStyle != nil && style().logicalHeight() != oldStyle!.logicalHeight() {
+      section()!.rowLogicalHeightChanged(rowIndex())
+    }
+
+    // If border was changed, notify table.
+    guard let table = table() else {
+      return
+    }
+
+    if oldStyle != nil && !oldStyle!.borderIsEquivalentForPainting(style()) {
+      table.invalidateCollapsedBorders()
+    }
+
+    if oldStyle != nil && diff == .Layout && needsLayout() && table.collapseBorders()
+      && borderWidthChanged(oldStyle!, style())
+    {
+      // If the border width changes on a row, we need to make sure the cells in the row know to lay out again.
+      // This only happens when borders are collapsed, since they end up affecting the border sides of the cell
+      // itself.
+      let propagageNeedsLayoutOnBorderSizeChange = { (row: RenderTableRowWrapper) in
+        var cell = row.firstCell()
+        while cell != nil {
+          cell!.setNeedsLayoutAndPrefWidthsRecalc()
+          cell = cell!.nextCell()
+        }
+      }
+      propagageNeedsLayoutOnBorderSizeChange(self)
+      if let previousRow = previousRow() {
+        propagageNeedsLayoutOnBorderSizeChange(previousRow)
+      }
+      if let nextRow = nextRow() {
+        propagageNeedsLayoutOnBorderSizeChange(nextRow)
+      }
+    }
   }
 }
