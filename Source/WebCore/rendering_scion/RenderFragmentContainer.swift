@@ -123,8 +123,13 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isValid {
+      super.computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+      return
+    }
+    maxLogicalWidth = LayoutUnit()
+    minLogicalWidth = LayoutUnit()
   }
 
   private let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
