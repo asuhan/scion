@@ -2643,8 +2643,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func columnFlexItemHasStretchAlignment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // auto margins mean we don't stretch. Note that this function will only be
+    // used for widths, so we don't have to check marginBefore/marginAfter.
+    let parentStyle = parent()!.style()
+    assert(parentStyle.isColumnFlexDirection())
+    if style().marginStart().isAuto() || style().marginEnd().isAuto() {
+      return false
+    }
+    return style().resolvedAlignSelf(
+      parentStyle: parentStyle,
+      normalValueBehaviour: containingBlock()!.selfAlignmentNormalBehavior()
+    )
+    .position == .Stretch
   }
 
   func shrinkLogicalWidthToAvoidFloats(
