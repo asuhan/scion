@@ -454,8 +454,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
     if isColumnFlow() && mainAxisIsFlexItemInlineAxis(flexItem: baselineFlexItem!) {
       return LayoutUnit(
-        value: (mainAxisExtentForFlexItem(flexItem: baselineFlexItem!)
-          + baselineFlexItem!.logicalTop())
+        value: (mainAxisExtentForFlexItem(baselineFlexItem!) + baselineFlexItem!.logicalTop())
           .toInt())
     }
 
@@ -489,8 +488,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
     if isColumnFlow() && mainAxisIsFlexItemInlineAxis(flexItem: baselineFlexItem!) {
       return LayoutUnit(
-        value: (mainAxisExtentForFlexItem(flexItem: baselineFlexItem!)
-          + baselineFlexItem!.logicalTop()).toInt())
+        value: (mainAxisExtentForFlexItem(baselineFlexItem!) + baselineFlexItem!.logicalTop())
+          .toInt())
     }
 
     if let baseline = baselineFlexItem!.lastLineBaseline() {
@@ -639,15 +638,33 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   private func staticMainAxisPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let flexItemMainExtent =
+      mainAxisMarginExtentForFlexItem(flexItem) + mainAxisExtentForFlexItem(flexItem)
+    let availableSpace =
+      mainAxisContentExtent(contentLogicalHeight: contentLogicalHeight()) - flexItemMainExtent
+    let isReverse = isColumnOrRowReverse()
+    var offset = initialJustifyContentOffset(
+      style: style(), availableFreeSpace: availableSpace, numberOfFlexItems: 0,
+      isReversed: isReverse)
+    if isReverse {
+      offset = availableSpace - offset
+    }
+    return offset
   }
 
   private func staticCrossAxisPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let availableSpace = availableAlignmentSpaceForFlexItem(
+      lineCrossAxisExtent: crossAxisContentExtent(), flexItem: flexItem)
+    let safety = overflowAlignmentForFlexItem(flexItem: flexItem)
+    var align = alignmentForFlexItem(flexItem: flexItem)
+    if availableSpace < Int32(0) && safety == .Safe {
+      align = .FlexStart
+    }
+    return alignmentOffset(
+      availableFreeSpace: availableSpace, position: align, ascent: nil, maxAscent: nil,
+      isWrapReverse: style().flexWrap() == .Reverse)
   }
 
   private func staticInlinePositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
@@ -966,7 +983,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return values.extent
   }
 
-  private func mainAxisExtentForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+  private func mainAxisExtentForFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit {
     return isHorizontalFlow() ? flexItem.size().width() : flexItem.size().height()
   }
 
@@ -1208,6 +1225,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         marginStart: &marginStart, marginEnd: &marginEnd)
     }
     return marginStart + marginEnd
+  }
+
+  private func mainAxisMarginExtentForFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func crossAxisScrollbarExtent() -> LayoutUnit {
@@ -2677,7 +2699,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
       mainAxisOffset += flowAwareMarginStartForFlexItem(flexItem: flexItem)
 
-      let flexItemMainExtent = mainAxisExtentForFlexItem(flexItem: flexItem)
+      let flexItemMainExtent = mainAxisExtentForFlexItem(flexItem)
       // In an RTL column situation, this will apply the margin-right/margin-end
       // on the left. This will be fixed later in flipForRightToLeftColumn.
       let location = LayoutPointWrapper(
@@ -2742,8 +2764,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       let flexItem = flexLayoutItem.renderer
       assert(!flexItem.isOutOfFlowPositioned())
       mainAxisOffset -=
-        mainAxisExtentForFlexItem(flexItem: flexItem)
-        + flowAwareMarginEndForFlexItem(flexItem: flexItem)
+        mainAxisExtentForFlexItem(flexItem) + flowAwareMarginEndForFlexItem(flexItem: flexItem)
       setFlowAwareLocationForFlexItem(
         flexItem: flexItem,
         location: LayoutPointWrapper(
