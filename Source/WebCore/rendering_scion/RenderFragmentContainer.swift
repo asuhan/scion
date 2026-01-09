@@ -30,8 +30,15 @@
 
 class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if !isValid {
+      return
+    }
+
+    if oldStyle != nil && oldStyle!.writingMode() != style().writingMode() {
+      fragmentedFlow!.fragmentChangedWritingMode(self)
+    }
   }
 
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
@@ -95,4 +102,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
+  private let isValid = false
 }
