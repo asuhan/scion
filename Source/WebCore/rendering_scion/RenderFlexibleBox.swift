@@ -1711,8 +1711,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     let gapBetweenItems = computeGap(gapType: .BetweenItems)
     let gapBetweenLines = computeGap(gapType: .BetweenLines)
     let flexAlgorithm = FlexLayoutAlgorithm(
-      flexbox: self, lineBreakLength: lineBreakLength, allItems: allItems,
-      gapBetweenItems: gapBetweenItems, gapBetweenLines: gapBetweenLines)
+      flexbox: self, lineBreakLength: lineBreakLength, allItems: allItems[...],
+      gapBetweenItems: gapBetweenItems)
     var crossAxisOffset = flowAwareBorderBefore() + flowAwarePaddingBefore()
     var lineItems = FlexLayoutItems()
     var nextIndex: UInt64 = 0

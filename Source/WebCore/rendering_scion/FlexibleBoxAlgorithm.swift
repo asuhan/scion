@@ -72,11 +72,14 @@ struct FlexLayoutItem {
 
 struct FlexLayoutAlgorithm {
   init(
-    flexbox: RenderFlexibleBoxWrapper, lineBreakLength: LayoutUnit, allItems: [FlexLayoutItem],
-    gapBetweenItems: LayoutUnit, gapBetweenLines: LayoutUnit
+    flexbox: RenderFlexibleBoxWrapper, lineBreakLength: LayoutUnit,
+    allItems: ArraySlice<FlexLayoutItem>,
+    gapBetweenItems: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.flexbox = flexbox
+    self.lineBreakLength = lineBreakLength
+    self.allItems = allItems
+    self.gapBetweenItems = gapBetweenItems
   }
 
   struct NextFlexLine {
