@@ -51,13 +51,11 @@ struct FlexLayoutItem {
   }
 
   func flexBaseMarginBoxSize() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return flexBaseContentSize + mainAxisBorderAndPadding + mainAxisMargin
   }
 
   func flexedMarginBoxSize() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return flexedContentSize + mainAxisBorderAndPadding + mainAxisMargin
   }
 
   func style() -> RenderStyleWrapper { return renderer.style() }
