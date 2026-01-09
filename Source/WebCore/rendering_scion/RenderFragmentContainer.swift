@@ -92,8 +92,32 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+
+    if !isValid {
+      super.computePreferredLogicalWidths()
+      return
+    }
+
+    // FIXME: Currently, the code handles only the <length> case for min-width/max-width.
+    // It should also support other values, like percentage, calc or viewport relative.
+    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+    minPreferredLogicalWidth = maxPreferredLogicalWidth
+
+    let styleToUse = style()
+    if styleToUse.logicalWidth().isFixed() && styleToUse.logicalWidth().value() > 0 {
+      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: styleToUse.logicalWidth())
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    }
+
+    computePreferredLogicalWidths(
+      style().logicalMinWidth(), style().logicalMaxWidth(), borderAndPaddingLogicalWidth())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func computeIntrinsicLogicalWidths(

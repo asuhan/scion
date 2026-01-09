@@ -4942,6 +4942,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       + borderPaddingBlockSum
   }
 
+  func computePreferredLogicalWidths(
+    _ minWidth: LengthWrapper, _ maxWidth: LengthWrapper, _ borderAndPadding: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func replacedMinMaxLogicalHeightComputesAsNone(sizeType: SizeType) -> Bool {
     assert(sizeType == .MinSize || sizeType == .MaxSize)
 
