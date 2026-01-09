@@ -636,11 +636,38 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     intrinsicContentLogicalHeights.removeValue(forKey: CPtrToInt(flexItem.p))
   }
 
+  private func staticInlinePositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func staticBlockPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true if the position changed. In that case, the flexItem will have to
   // be laid out again.
   func setStaticPositionForPositionedLayout(flexItem: RenderBoxWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var positionChanged = false
+    let layer = flexItem.layer()
+    if flexItem.style().hasStaticInlinePosition(horizontal: style().isHorizontalWritingMode()) {
+      let inlinePosition = staticInlinePositionForPositionedFlexItem(flexItem)
+      if layer!.staticInlinePosition() != inlinePosition {
+        layer!.setStaticInlinePosition(position: inlinePosition)
+        positionChanged = true
+      }
+    }
+    if flexItem.style().hasStaticBlockPosition(horizontal: style().isHorizontalWritingMode()) {
+      let blockPosition = staticBlockPositionForPositionedFlexItem(flexItem)
+      if layer!.staticBlockPosition() != blockPosition {
+        layer!.setStaticBlockPosition(position: blockPosition)
+        positionChanged = true
+      }
+    }
+    return positionChanged
   }
 
   private enum GapType {
