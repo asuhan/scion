@@ -196,4 +196,10 @@ class Document: TreeScopeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // TODO(asuhan): move to ScriptExecutionContext
+  func activeDOMObjectsAreSuspended() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

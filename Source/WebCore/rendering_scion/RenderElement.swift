@@ -487,8 +487,17 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isVisibleIgnoringGeometry() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().activeDOMObjectsAreSuspended() {
+      return false
+    }
+    if style().usedVisibility() != .Visible {
+      return false
+    }
+    if view().frameView().isOffscreen() {
+      return false
+    }
+
+    return true
   }
 
   private func isVisibleInDocumentRect(documentRect: IntRect) -> Bool {

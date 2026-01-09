@@ -125,6 +125,13 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
+  // The purpose of this function is to answer whether or not the scroll view is currently visible. Animations and painting updates can be suspended if
+  // we know that we are either not in a window right now or if that window is not visible.
+  func isOffscreen() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func managesScrollbars() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
