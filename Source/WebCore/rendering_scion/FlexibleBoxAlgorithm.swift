@@ -76,7 +76,7 @@ struct FlexLayoutItem {
   let renderer: RenderBoxWrapper
   let flexBaseContentSize: LayoutUnit
   let mainAxisBorderAndPadding: LayoutUnit
-  let mainAxisMargin: LayoutUnit
+  var mainAxisMargin: LayoutUnit
   let minMaxSizes: (LayoutUnit, LayoutUnit)
   let hypotheticalMainContentSize: LayoutUnit
   var flexedContentSize = LayoutUnit()
@@ -107,7 +107,7 @@ struct FlexLayoutAlgorithm {
 
   // The hypothetical main size of an item is the flex base size clamped
   // according to its min and max main size properties
-  func computeNextFlexLine(nextIndex: inout UInt64) -> NextFlexLine {
+  mutating func computeNextFlexLine(nextIndex: inout UInt64) -> NextFlexLine {
     var lineItems: [FlexLayoutItem] = []
     var sumFlexBaseSize = LayoutUnit(value: UInt64(0))
     var totalFlexGrow: Float64 = 0
@@ -117,7 +117,7 @@ struct FlexLayoutAlgorithm {
 
     // Trim main axis margin for item at the start of the flex line
     if nextIndex < allItems.count && flexbox.shouldTrimMainAxisMarginStart() {
-      flexbox.trimMainAxisMarginStart(allItems[Int(nextIndex)])
+      flexbox.trimMainAxisMarginStart(&allItems[Int(nextIndex)])
     }
     while nextIndex < allItems.count {
       let flexLayoutItem = allItems[Int(nextIndex)]
@@ -151,9 +151,9 @@ struct FlexLayoutAlgorithm {
     assert(lineItems.count > 0 || nextIndex == allItems.count)
     // Trim main axis margin for item at the end of the flex line
     if lineItems.count != 0 && flexbox.shouldTrimMainAxisMarginEnd() {
-      let lastItem = lineItems.last!
+      var lastItem = lineItems.last!
       removeMarginEndFromFlexSizes(lastItem, &sumFlexBaseSize, &sumHypotheticalMainSize)
-      flexbox.trimMainAxisMarginEnd(lastItem)
+      flexbox.trimMainAxisMarginEnd(&lastItem)
     }
     return NextFlexLine(
       lineItems: lineItems, sumFlexBaseSize: sumFlexBaseSize, totalFlexGrow: totalFlexGrow,
@@ -193,7 +193,7 @@ struct FlexLayoutAlgorithm {
 
   private let flexbox: RenderFlexibleBoxWrapper
   private let lineBreakLength: LayoutUnit
-  private let allItems: ArraySlice<FlexLayoutItem>
+  private var allItems: ArraySlice<FlexLayoutItem>
 
   private let gapBetweenItems: LayoutUnit
 }

@@ -1736,7 +1736,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     let lineBreakLength = mainAxisContentExtent(contentLogicalHeight: LayoutUnit.max())
     let gapBetweenItems = computeGap(gapType: .BetweenItems)
     let gapBetweenLines = computeGap(gapType: .BetweenLines)
-    let flexAlgorithm = FlexLayoutAlgorithm(
+    var flexAlgorithm = FlexLayoutAlgorithm(
       flexbox: self, lineBreakLength: lineBreakLength, allItems: allItems[...],
       gapBetweenItems: gapBetweenItems)
     var crossAxisOffset = flowAwareBorderBefore() + flowAwarePaddingBefore()
@@ -1953,14 +1953,32 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return style().marginTrim().contains(.InlineEnd)
   }
 
-  func trimMainAxisMarginStart(_ flexLayoutItem: FlexLayoutItem) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func trimMainAxisMarginStart(_ flexLayoutItem: inout FlexLayoutItem) {
+    let horizontalFlow = isHorizontalFlow()
+    flexLayoutItem.mainAxisMargin -=
+      horizontalFlow
+      ? flexLayoutItem.renderer.marginStart(otherStyle: style())
+      : flexLayoutItem.renderer.marginBefore(otherStyle: style())
+    if horizontalFlow {
+      setTrimmedMarginForChild(child: flexLayoutItem.renderer, marginTrimType: .InlineStart)
+    } else {
+      setTrimmedMarginForChild(child: flexLayoutItem.renderer, marginTrimType: .BlockStart)
+    }
+    marginTrimItems.itemsAtFlexLineStart.add(value: flexLayoutItem.renderer)
   }
 
-  func trimMainAxisMarginEnd(_ flexLayoutItem: FlexLayoutItem) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func trimMainAxisMarginEnd(_ flexLayoutItem: inout FlexLayoutItem) {
+    let horizontalFlow = isHorizontalFlow()
+    flexLayoutItem.mainAxisMargin -=
+      horizontalFlow
+      ? flexLayoutItem.renderer.marginEnd(otherStyle: style())
+      : flexLayoutItem.renderer.marginAfter(otherStyle: style())
+    if horizontalFlow {
+      setTrimmedMarginForChild(child: flexLayoutItem.renderer, marginTrimType: .InlineEnd)
+    } else {
+      setTrimmedMarginForChild(child: flexLayoutItem.renderer, marginTrimType: .BlockEnd)
+    }
+    marginTrimItems.itemsAtFlexLineEnd.add(value: flexLayoutItem.renderer)
   }
 
   private func trimCrossAxisMarginStart(flexLayoutItem: FlexLayoutItem) {
