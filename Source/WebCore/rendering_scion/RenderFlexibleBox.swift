@@ -636,16 +636,34 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     intrinsicContentLogicalHeights.removeValue(forKey: CPtrToInt(flexItem.p))
   }
 
-  private func staticInlinePositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
+  private func staticMainAxisPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper)
+    -> LayoutUnit
   {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func staticBlockPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
+  private func staticCrossAxisPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper)
+    -> LayoutUnit
   {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func staticInlinePositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
+  {
+    return startOffsetForContent()
+      + (isColumnFlow()
+        ? staticCrossAxisPositionForPositionedFlexItem(flexItem)
+        : staticMainAxisPositionForPositionedFlexItem(flexItem))
+  }
+
+  private func staticBlockPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper) -> LayoutUnit
+  {
+    return borderAndPaddingBefore()
+      + (isColumnFlow()
+        ? staticMainAxisPositionForPositionedFlexItem(flexItem)
+        : staticCrossAxisPositionForPositionedFlexItem(flexItem))
   }
 
   // Returns true if the position changed. In that case, the flexItem will have to

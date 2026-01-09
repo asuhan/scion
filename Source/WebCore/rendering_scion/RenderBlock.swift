@@ -834,6 +834,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func startOffsetForContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canDropAnonymousBlockChild() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
