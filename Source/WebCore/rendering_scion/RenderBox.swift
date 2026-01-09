@@ -1472,15 +1472,22 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let width = LayoutUnit(value: logicalWidth.value())
+    if style().boxSizing() == .ContentBox || logicalWidth.isIntrinsicOrAuto() {
+      return max(LayoutUnit(value: UInt64(0)), width)
+    }
+    return max(LayoutUnit(value: UInt64(0)), width - borderAndPaddingLogicalWidth())
   }
 
   func adjustContentBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if originalType == .Calculated {
+      return adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: LengthWrapper(value: computedLogicalWidth, type: .Fixed, hasQuirk: false))
+    }
+    return adjustContentBoxLogicalWidthForBoxSizing(
+      logicalWidth: LengthWrapper(value: computedLogicalWidth, type: originalType, hasQuirk: false))
   }
 
   func adjustBorderBoxLogicalWidthForBoxSizing(
