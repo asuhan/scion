@@ -1924,14 +1924,18 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
   // Start margin parallel with the cross axis
   func shouldTrimMainAxisMarginStart() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      return style().marginTrim().contains(.InlineStart)
+    }
+    return style().marginTrim().contains(.BlockStart)
   }
 
   // End margin parallel with the cross axis
   func shouldTrimMainAxisMarginEnd() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalFlow() {
+      return style().marginTrim().contains(.InlineEnd)
+    }
+    return style().marginTrim().contains(.BlockEnd)
   }
 
   // Margins parallel with the main axis
