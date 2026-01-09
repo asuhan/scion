@@ -34,8 +34,16 @@ struct FlexLayoutItem {
     mainAxisBorderAndPadding: LayoutUnit, mainAxisMargin: LayoutUnit,
     minMaxSizes: (LayoutUnit, LayoutUnit), everHadLayout: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.renderer = flexItem
+    self.flexBaseContentSize = flexBaseContentSize
+    self.mainAxisBorderAndPadding = mainAxisBorderAndPadding
+    self.mainAxisMargin = mainAxisMargin
+    self.minMaxSizes = minMaxSizes
+    self.hypotheticalMainContentSize = FlexLayoutItem.constrainSizeByMinMax(
+      flexBaseContentSize, minMaxSizes)
+    self.frozen = false
+    self.everHadLayout = everHadLayout
+    assert(!flexItem.isOutOfFlowPositioned())
   }
 
   func hypotheticalMainAxisMarginBoxSize() -> LayoutUnit {
@@ -55,6 +63,14 @@ struct FlexLayoutItem {
   func style() -> RenderStyleWrapper { return renderer.style() }
 
   func constrainSizeByMinMax(size: LayoutUnit) -> LayoutUnit {
+    return FlexLayoutItem.constrainSizeByMinMax(size, minMaxSizes)
+  }
+
+  private static func constrainSizeByMinMax(
+    _ size: LayoutUnit, _ minMaxSizes: (LayoutUnit, LayoutUnit)
+  )
+    -> LayoutUnit
+  {
     let (minSize, maxSize) = minMaxSizes
     return max(minSize, min(size, maxSize))
   }
@@ -65,9 +81,9 @@ struct FlexLayoutItem {
   let mainAxisMargin: LayoutUnit
   let minMaxSizes: (LayoutUnit, LayoutUnit)
   let hypotheticalMainContentSize: LayoutUnit
-  var flexedContentSize: LayoutUnit
-  var frozen = false
-  let everHadLayout = false
+  var flexedContentSize = LayoutUnit()
+  var frozen: Bool
+  let everHadLayout: Bool
 }
 
 struct FlexLayoutAlgorithm {
