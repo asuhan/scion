@@ -506,8 +506,34 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    if oldStyle == nil || diff != .Layout {
+      return
+    }
+
+    let oldStyleAlignItemsIsStretch =
+      oldStyle!.resolvedAlignItems(selfAlignmentNormalBehavior()).position == .Stretch
+    for flexItem: RenderBoxWrapper in childrenOfType(parent: self) {
+      // Flex items that were previously stretching need to be relayed out so we
+      // can compute new available cross axis space. This is only necessary for
+      // stretching since other alignment values don't change the size of the
+      // box.
+      if !oldStyleAlignItemsIsStretch {
+        continue
+      }
+      let previousAlignment =
+        flexItem.style().resolvedAlignSelf(
+          parentStyle: oldStyle, normalValueBehaviour: selfAlignmentNormalBehavior()
+        ).position
+      if previousAlignment == .Stretch
+        && previousAlignment
+          != flexItem.style().resolvedAlignSelf(
+            parentStyle: style(), normalValueBehaviour: selfAlignmentNormalBehavior()
+          ).position
+      {
+        flexItem.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+    }
   }
 
   func isHorizontalFlow() -> Bool {
