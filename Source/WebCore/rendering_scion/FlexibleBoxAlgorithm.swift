@@ -38,6 +38,10 @@ struct FlexLayoutItem {
     fatalError("Not implemented")
   }
 
+  func hypotheticalMainAxisMarginBoxSize() -> LayoutUnit {
+    return hypotheticalMainContentSize + mainAxisBorderAndPadding + mainAxisMargin
+  }
+
   func flexBaseMarginBoxSize() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -57,6 +61,8 @@ struct FlexLayoutItem {
 
   let renderer: RenderBoxWrapper
   let flexBaseContentSize: LayoutUnit
+  let mainAxisBorderAndPadding: LayoutUnit
+  let mainAxisMargin: LayoutUnit
   let minMaxSizes: (LayoutUnit, LayoutUnit)
   let hypotheticalMainContentSize: LayoutUnit
   var flexedContentSize: LayoutUnit
@@ -79,13 +85,85 @@ struct FlexLayoutAlgorithm {
     let totalFlexGrow: Float64
     let totalFlexShrink: Float64
     let totalWeightedFlexShrink: Float64
-    let sumHypotheticalMainSize: Float64
+    let sumHypotheticalMainSize: LayoutUnit
   }
 
   // The hypothetical main size of an item is the flex base size clamped
   // according to its min and max main size properties
   func computeNextFlexLine(nextIndex: inout UInt64) -> NextFlexLine {
+    var lineItems: [FlexLayoutItem] = []
+    var sumFlexBaseSize = LayoutUnit(value: UInt64(0))
+    var totalFlexGrow: Float64 = 0
+    var totalFlexShrink: Float64 = 0
+    var totalWeightedFlexShrink: Float64 = 0
+    var sumHypotheticalMainSize = LayoutUnit(value: UInt64(0))
+
+    // Trim main axis margin for item at the start of the flex line
+    if nextIndex < allItems.count && flexbox.shouldTrimMainAxisMarginStart() {
+      flexbox.trimMainAxisMarginStart(allItems[Int(nextIndex)])
+    }
+    while nextIndex < allItems.count {
+      let flexLayoutItem = allItems[Int(nextIndex)]
+      let style = flexLayoutItem.style()
+      assert(!flexLayoutItem.renderer.isOutOfFlowPositioned())
+      if isMultiline()
+        && (sumHypotheticalMainSize + flexLayoutItem.hypotheticalMainAxisMarginBoxSize()
+          > lineBreakLength
+          && !canFitItemWithTrimmedMarginEnd(flexLayoutItem, sumHypotheticalMainSize))
+        && !lineItems.isEmpty
+      {
+        break
+      }
+      lineItems.append(flexLayoutItem)
+      sumFlexBaseSize += flexLayoutItem.flexBaseMarginBoxSize() + gapBetweenItems
+      totalFlexGrow += Float64(style.flexGrow())
+      totalFlexShrink += Float64(style.flexShrink())
+      totalWeightedFlexShrink += Float64(style.flexShrink() * flexLayoutItem.flexBaseContentSize)
+      sumHypotheticalMainSize +=
+        flexLayoutItem.hypotheticalMainAxisMarginBoxSize() + gapBetweenItems
+      nextIndex += 1
+    }
+
+    if !lineItems.isEmpty {
+      // We added a gap after every item but there shouldn't be one after the last item, so subtract it here. Note that
+      // sums might be negative here due to negative margins in flex items.
+      sumHypotheticalMainSize -= gapBetweenItems
+      sumFlexBaseSize -= gapBetweenItems
+    }
+
+    assert(lineItems.count > 0 || nextIndex == allItems.count)
+    // Trim main axis margin for item at the end of the flex line
+    if lineItems.count != 0 && flexbox.shouldTrimMainAxisMarginEnd() {
+      let lastItem = lineItems.last!
+      removeMarginEndFromFlexSizes(lastItem, &sumFlexBaseSize, &sumHypotheticalMainSize)
+      flexbox.trimMainAxisMarginEnd(lastItem)
+    }
+    return NextFlexLine(
+      lineItems: lineItems, sumFlexBaseSize: sumFlexBaseSize, totalFlexGrow: totalFlexGrow,
+      totalFlexShrink: totalFlexShrink, totalWeightedFlexShrink: totalWeightedFlexShrink,
+      sumHypotheticalMainSize: sumHypotheticalMainSize)
+  }
+
+  private func isMultiline() -> Bool { return flexbox.style().flexWrap() != .NoWrap }
+
+  private func canFitItemWithTrimmedMarginEnd(
+    _ flexLayoutItem: FlexLayoutItem, _ sumHypotheticalMainSize: LayoutUnit
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func removeMarginEndFromFlexSizes(
+    _ flexLayoutItem: FlexLayoutItem, _ sumFlexBaseSize: inout LayoutUnit,
+    _ sumHypotheticalMainSize: inout LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let flexbox: RenderFlexibleBoxWrapper
+  private let lineBreakLength: LayoutUnit
+  private let allItems: ArraySlice<FlexLayoutItem>
+
+  private let gapBetweenItems: LayoutUnit
 }

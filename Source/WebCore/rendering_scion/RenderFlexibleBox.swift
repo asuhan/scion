@@ -1896,6 +1896,18 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  // Start margin parallel with the cross axis
+  func shouldTrimMainAxisMarginStart() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // End margin parallel with the cross axis
+  func shouldTrimMainAxisMarginEnd() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Margins parallel with the main axis
   private func shouldTrimCrossAxisMarginStart() -> Bool {
     if isHorizontalFlow() {
@@ -1909,6 +1921,16 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       return style().marginTrim().contains(.BlockEnd)
     }
     return style().marginTrim().contains(.InlineEnd)
+  }
+
+  func trimMainAxisMarginStart(_ flexLayoutItem: FlexLayoutItem) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func trimMainAxisMarginEnd(_ flexLayoutItem: FlexLayoutItem) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func trimCrossAxisMarginStart(flexLayoutItem: FlexLayoutItem) {
