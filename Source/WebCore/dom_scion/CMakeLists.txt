@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     RenderedDocumentMarker.swift
     Settings.swift
     ShadowRoot.swift
+    ShadowRootMode.swift
     SimpleRange.swift
     StaticRange.swift
     StyledElement.swift

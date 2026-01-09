@@ -80,6 +80,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func containingShadowRoot() -> ShadowRootWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasEverPaintedImages() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

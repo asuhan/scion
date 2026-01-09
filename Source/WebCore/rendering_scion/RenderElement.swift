@@ -1448,8 +1448,17 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let root = element()!.containingShadowRoot() else { return nil }
+    if root.mode() != .UserAgent {
+      return nil
+    }
+    var currentElement = element()!.shadowHost()
+    // When an element has display: contents, this element doesn't have a renderer
+    // and its children will render as children of the parent element.
+    while currentElement != nil && currentElement!.hasDisplayContents() {
+      currentElement = currentElement!.parentElement()
+    }
+    return currentElement?.containerRenderer()
   }
 
   private func shouldRepaintForStyleDifference(_ diff: StyleDifference) -> Bool {

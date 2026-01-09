@@ -26,4 +26,9 @@
  */
 
 // TODO(asuhan): inherit from DocumentFragment as well
-final class ShadowRootWrapper: TreeScopeWrapper {}
+final class ShadowRootWrapper: TreeScopeWrapper {
+  func mode() -> ShadowRootMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
