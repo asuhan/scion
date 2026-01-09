@@ -42,6 +42,11 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func addLineTo(point: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addBezierCurveTo(controlPoint1: FloatPoint, controlPoint2: FloatPoint, endPoint: FloatPoint)
   {
     // TODO(asuhan): implement this
@@ -55,6 +60,14 @@ class PathWrapper {
 
   func addRoundedRect(
     roundedRect: FloatRoundedRect, strategy: PathRoundedRect.Strategy = .PreferNative
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addRoundedRect(
+    _ rect: FloatRectWrapper, _ roundingRadii: FloatSize,
+    _ strategy: PathRoundedRect.Strategy = .PreferNative
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

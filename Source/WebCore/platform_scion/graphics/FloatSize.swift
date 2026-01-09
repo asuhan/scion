@@ -105,6 +105,10 @@ struct FloatSize {
     return lhs.width == rhs.width && lhs.height == rhs.height
   }
 
+  static func / (_ a: FloatSize, b: Float32) -> FloatSize {
+    return FloatSize(width: a.width / b, height: a.height / b)
+  }
+
   var width: Float32 = 0
   var height: Float32 = 0
 }

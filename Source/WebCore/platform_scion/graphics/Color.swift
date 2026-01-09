@@ -86,6 +86,11 @@ struct ColorWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func colorWithAlphaByte(_ overrideAlpha: UInt8) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func opaqueColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -24,8 +24,15 @@
  */
 
 struct SRGBA<T: BinaryInteger> {
+  init(red: T, green: T, blue: T, alpha: T = 255) {
+    self.red = red
+    self.green = green
+    self.blue = blue
+    self.alpha = alpha
+  }
+
   let red: T
   let green: T
   let blue: T
-  let alpha: T = 255
+  let alpha: T
 }

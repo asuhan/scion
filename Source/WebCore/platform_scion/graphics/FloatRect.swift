@@ -84,6 +84,8 @@ struct FloatRectWrapper {
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
+  func center() -> FloatPoint { return location() + size() / 2 }
+
   mutating func move(delta: FloatSize) { m_location += delta }
 
   mutating func moveBy(delta: FloatPoint) { m_location.move(dx: delta.x, dy: delta.y) }
