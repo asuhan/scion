@@ -790,7 +790,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return isHorizontalFlow() == flexItem.isHorizontalWritingMode()
   }
 
-  private func isColumnFlow() -> Bool {
+  func isColumnFlow() -> Bool {
     return style().isColumnFlexDirection()
   }
 
@@ -1098,7 +1098,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     return isLeftToRightFlow() ? flexItem.marginTop() : flexItem.marginBottom()
   }
 
-  private func flowAwareMarginEndForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
+  func flowAwareMarginEndForFlexItem(flexItem: RenderBoxWrapper) -> LayoutUnit {
     if isHorizontalFlow() {
       return isLeftToRightFlow() ? flexItem.marginRight() : flexItem.marginLeft()
     }

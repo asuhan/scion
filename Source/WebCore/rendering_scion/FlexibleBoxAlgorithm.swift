@@ -149,8 +149,15 @@ struct FlexLayoutAlgorithm {
   private func canFitItemWithTrimmedMarginEnd(
     _ flexLayoutItem: FlexLayoutItem, _ sumHypotheticalMainSize: LayoutUnit
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let marginTrim = flexbox.style().marginTrim()
+    if (flexbox.isHorizontalFlow() && marginTrim.contains(.InlineEnd))
+      || (flexbox.isColumnFlow() && marginTrim.contains(.BlockEnd))
+    {
+      return sumHypotheticalMainSize + flexLayoutItem.hypotheticalMainAxisMarginBoxSize()
+        - flexbox.flowAwareMarginEndForFlexItem(flexItem: flexLayoutItem.renderer)
+        <= lineBreakLength
+    }
+    return false
   }
 
   private func removeMarginEndFromFlexSizes(
