@@ -23,9 +23,13 @@
 
 import Foundation
 
+private let replacementTextRoundedRectHeight: Float32 = 22
 private let replacementTextRoundedRectLeftTextMargin: Float32 = 10
+private let replacementTextRoundedRectRightTextMargin: Float32 = 10
+private let replacementTextRoundedRectRightTextMarginWithArrow: Float32 = 5
 private let replacementTextRoundedRectTopTextMargin: Float32 = -1
 private let replacementTextRoundedRectRadius: Float32 = 11
+private let replacementArrowLeftMargin: Float32 = -4
 private let replacementArrowPadding: Float32 = 4
 private let replacementArrowCirclePadding: Float32 = 3
 
@@ -115,7 +119,7 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
       return
     }
 
-    var r = getReplacementTextGeometry()
+    var r = getReplacementTextGeometry(paintOffset)
 
     let background = PathWrapper()
     background.addRoundedRect(
@@ -202,11 +206,53 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
     let textWidth: Float32
   }
 
-  private func getReplacementTextGeometry() -> ReplacementTextGeometry {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func getReplacementTextGeometry(_ accumulatedOffset: LayoutPointWrapper)
+    -> ReplacementTextGeometry
+  {
+    let includesArrow = shouldUnavailablePluginMessageBeButton(page(), pluginUnavailabilityReason)
+
+    var contentRect = contentBoxRect().FloatRect()
+    contentRect.moveBy(delta: FloatPoint(p: roundedIntPoint(point: accumulatedOffset)))
+
+    let fontDescription = FontCascadeDescriptionWrapper()
+    fontDescription.setOneFamily(
+      SystemFontDatabase.singleton().systemFontShorthandFamily(.WebkitSmallControl))
+    fontDescription.setWeight(boldWeightValue())
+    fontDescription.setComputedSize(s: 12)
+    let font = FontCascadeWrapper(fontDescription)
+    font.update(fontSelector: nil)
+
+    let run = TextRunWrapper(text: unavailablePluginReplacementText)
+    let textWidth = font.width(run: run)
+
+    var replacementTextRect = FloatRectWrapper()
+    replacementTextRect.setSize(
+      FloatSize(
+        width: textWidth + replacementTextRoundedRectLeftTextMargin
+          + (includesArrow
+            ? replacementTextRoundedRectRightTextMarginWithArrow
+            : replacementTextRoundedRectRightTextMargin),
+        height: replacementTextRoundedRectHeight))
+    replacementTextRect.setLocation(
+      location: contentRect.location() + (contentRect.size() / 2 - replacementTextRect.size() / 2))
+
+    var indicatorRect = replacementTextRect
+
+    var arrowRect = FloatRectWrapper()
+    // Expand the background rect to include the arrow, if it will be used.
+    if includesArrow {
+      arrowRect = indicatorRect
+      arrowRect.setX(x: ceilf(arrowRect.maxX() + replacementArrowLeftMargin))
+      arrowRect.setWidth(width: arrowRect.height())
+      indicatorRect.unite(other: arrowRect)
+    }
+    return ReplacementTextGeometry(
+      accumulatedOffset: accumulatedOffset, contentRect: contentRect, indicatorRect: indicatorRect,
+      replacementTextRect: replacementTextRect, arrowRect: arrowRect, font: font, run: run,
+      textWidth: textWidth)
   }
 
   private let pluginUnavailabilityReason: PluginUnavailabilityReason = .PluginMissing
+  private let unavailablePluginReplacementText = StringWrapper()
   private let unavailablePluginIndicatorIsPressed = false
 }

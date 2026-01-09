@@ -20,6 +20,7 @@ target_sources(layout_scion PRIVATE
     FontCascadeDescription.swift
     FontDescription.swift
     FontMetrics.swift
+    FontSelectionAlgorithm.swift
     FontSelector.swift
     GeometryUtilities.swift
     Glyph.swift
@@ -55,6 +56,7 @@ target_sources(layout_scion PRIVATE
     RotationDirection.swift
     RoundedRect.swift
     SurrogatePairAwareTextIterator.swift
+    SystemFontDatabase.swift
     TabSize.swift
     TextIterator.swift
     TextRun.swift

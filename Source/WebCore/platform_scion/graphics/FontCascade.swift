@@ -31,6 +31,11 @@ class FontCascadeWrapper {
     self.p = p
   }
 
+  init(_ description: FontCascadeDescriptionWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fontDescription() -> FontCascadeDescriptionWrapper {
     if p == nil {
       // TODO(asuhan): implement this

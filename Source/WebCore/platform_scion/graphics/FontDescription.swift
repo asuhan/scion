@@ -48,4 +48,9 @@ class FontDescriptionWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setWeight(_ weight: FontSelectionValue) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -25,6 +25,17 @@ import wk_interop
 
 class TextRunWrapper {
   init(
+    text: StringWrapper, xpos: Float32 = 0, expansion: Float32 = 0,
+    expansionBehavior: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior(),
+    direction: TextDirection = .LTR,
+    directionalOverride: Bool = false,
+    characterScanForCodePath: Bool = true
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(
     stringView: StringWrapperView, xpos: Float32 = 0, expansion: Float32 = 0,
     expansionBehavior: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior(),
     direction: TextDirection = .LTR,

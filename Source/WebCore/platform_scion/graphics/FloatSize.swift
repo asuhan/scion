@@ -97,6 +97,10 @@ struct FloatSize {
     return a
   }
 
+  static func - (_ a: FloatSize, _ b: FloatSize) -> FloatSize {
+    return FloatSize(width: a.width - b.width, height: a.height - b.height)
+  }
+
   static prefix func - (size: FloatSize) -> FloatSize {
     return FloatSize(width: -size.width, height: -size.height)
   }

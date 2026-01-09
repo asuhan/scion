@@ -23,7 +23,21 @@
  */
 
 class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
+  override init(p: UnsafeRawPointer) {
+    super.init(p: p)
+  }
+
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func specifiedSize() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setOneFamily(_ family: AtomStringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
