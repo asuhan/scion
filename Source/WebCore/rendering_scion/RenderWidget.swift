@@ -27,6 +27,11 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func widget() -> Widget? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func requiresAcceleratedCompositing() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

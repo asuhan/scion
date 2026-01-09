@@ -166,8 +166,24 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
   }
 
   override final func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    updateLogicalWidth()
+    updateLogicalHeight()
+
+    super.layout()
+
+    clearOverflow()
+    addVisualEffectOverflow()
+
+    updateLayerTransform()
+
+    if widget() == nil {
+      view().frameView().addEmbeddedObjectToUpdate(self)
+    }
+
+    clearNeedsLayout()
   }
 
   private func showsUnavailablePluginIndicator() -> Bool {
