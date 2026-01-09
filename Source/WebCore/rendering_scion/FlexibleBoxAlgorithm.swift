@@ -164,8 +164,14 @@ struct FlexLayoutAlgorithm {
     _ flexLayoutItem: FlexLayoutItem, _ sumFlexBaseSize: inout LayoutUnit,
     _ sumHypotheticalMainSize: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var margin = LayoutUnit()
+    if flexbox.isHorizontalFlow() {
+      margin = flexLayoutItem.renderer.marginEnd(otherStyle: flexbox.style())
+    } else {
+      margin = flexLayoutItem.renderer.marginAfter(otherStyle: flexbox.style())
+    }
+    sumFlexBaseSize -= margin
+    sumHypotheticalMainSize -= margin
   }
 
   private let flexbox: RenderFlexibleBoxWrapper
