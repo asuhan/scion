@@ -675,6 +675,20 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var intrinsic = false
   }
 
+  // Whether layer's backing needs a graphics layer to do clipping by an ancestor (non-stacking-context parent with overflow).
+  // Return true if the given layer has some ancestor in the RenderLayer hierarchy that clips,
+  // up to the enclosing compositing ancestor. This is required because compositing layers are parented
+  // according to the z-order hierarchy, yet clipping goes down the renderer hierarchy.
+  // Thus, a RenderLayer can be clipped by a RenderLayer that is an ancestor in the renderer hierarchy,
+  // but a sibling in the z-order hierarchy.
+  // FIXME: can we do this without a tree walk?
+  func clippedByAncestor(_ layer: RenderLayerWrapper, _ compositingAncestor: RenderLayerWrapper?)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns the ScrollingNodeID for the containing async-scrollable layer that scrolls this renderer's border box.
   // May return 0 for position-fixed content.
   // Note that this returns the ScrollingNodeID of the scroller this layer is embedded in, not the layer's own ScrollingNodeID if it has one.
@@ -723,7 +737,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Return true if the given layer is a stacking context and has compositing child
   // layers that it needs to clip. In this case we insert a clipping GraphicsLayer
   // into the hierarchy between this layer and its children in the z-order hierarchy.
-  private static func clipsCompositingDescendants(_ layer: RenderLayerWrapper) -> Bool {
+  static func clipsCompositingDescendants(_ layer: RenderLayerWrapper) -> Bool {
     if !(layer.hasCompositingDescendant && layer.renderer().hasClipOrNonVisibleOverflow()) {
       return false
     }
@@ -733,6 +747,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     return canUseDescendantClippingLayer(layer)
+  }
+
+  // Whether the given layer needs an extra 'contents' layer.
+  // If an element has composited negative z-index children, those children render in front of the
+  // layer background, so we need an extra 'contents' layer for the foreground of the layer object.
+  func needsContentsCompositingLayer(_ layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
@@ -767,6 +789,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return renderViewBacking.isFrameLayerWithTiledBacking
     }
     return false
+  }
+
+  func needsFixedRootBackgroundLayer(_ layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func fixedRootBackgroundLayer() -> GraphicsLayer? {
@@ -1347,7 +1374,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   // FIXME: make the coordinated/async terminology consistent.
-  private func isViewportConstrainedFixedOrStickyLayer(_ layer: RenderLayerWrapper) -> Bool {
+  func isViewportConstrainedFixedOrStickyLayer(_ layer: RenderLayerWrapper) -> Bool {
     if layer.renderer().isStickilyPositioned() {
       return isAsyncScrollableStickyLayer(layer: layer)
     }

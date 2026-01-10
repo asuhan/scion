@@ -464,6 +464,77 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Returns true if layer configuration changed.
   func updateConfiguration(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
+    assert(!owningLayer!.normalFlowListDirty)
+    assert(!owningLayer!.zOrderListsDirty)
+    assert(!renderer().view().needsLayout())
+
+    var layerConfigChanged = false
+    let compositor = compositor()
+
+    if updateTransformFlatteningLayer(compositingAncestor) {
+      layerConfigChanged = true
+    }
+
+    if updateViewportConstrainedAnchorLayer(
+      compositor.isViewportConstrainedFixedOrStickyLayer(owningLayer!))
+    {
+      layerConfigChanged = true
+    }
+
+    setBackgroundLayerPaintsFixedRootBackground(
+      compositor.needsFixedRootBackgroundLayer(owningLayer!))
+
+    if updateBackgroundLayer(backgroundLayerPaintsFixedRootBackground || requiresBackgroundLayer) {
+      layerConfigChanged = true
+    }
+
+    if updateForegroundLayer(compositor.needsContentsCompositingLayer(owningLayer!)) {
+      layerConfigChanged = true
+    }
+
+    var needsDescendantsClippingLayer = false
+    let usesCompositedScrolling = owningLayer!.hasCompositedScrollableOverflow()
+
+    if usesCompositedScrolling {
+      // If it's scrollable, it has to be a box.
+      let renderBox = renderer() as! RenderBoxWrapper
+      let borderShape = BorderShape.shapeForBorderRect(
+        style: renderBox.style(), borderRect: renderBox.borderBoxRect())
+      let contentsClippingRect = borderShape.deprecatedPixelSnappedInnerRoundedRect(
+        deviceScaleFactor())
+      needsDescendantsClippingLayer = contentsClippingRect.isRounded()
+    } else {
+      needsDescendantsClippingLayer = RenderLayerCompositorWrapper.clipsCompositingDescendants(
+        owningLayer!)
+    }
+
+    if updateScrollingLayers(usesCompositedScrolling) {
+      layerConfigChanged = true
+    }
+
+    if updateDescendantClippingLayer(needsDescendantsClippingLayer) {
+      layerConfigChanged = true
+    }
+
+    assert(
+      CPtrToInt(compositingAncestor?.p) == CPtrToInt(owningLayer!.ancestorCompositingLayer()?.p))
+    if updateAncestorClipping(
+      compositor.clippedByAncestor(owningLayer!, compositingAncestor), compositingAncestor)
+    {
+      layerConfigChanged = true
+    }
+
+    if updateOverflowControlsLayers(
+      requiresHorizontalScrollbarLayer(), requiresVerticalScrollbarLayer(),
+      requiresScrollCornerLayer())
+    {
+      layerConfigChanged = true
+    }
+
+    if layerConfigChanged {
+      updateInternalHierarchy()
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -745,6 +816,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  override func deviceScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func pageScaleFactor() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -850,6 +926,46 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func updateInternalHierarchy() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateViewportConstrainedAnchorLayer(_ needsAnchorLayer: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateAncestorClipping(
+    _ needsAncestorClip: Bool, _ compositingAncestor: RenderLayerWrapper?
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateDescendantClippingLayer(_ needsDescendantClip: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOverflowControlsLayers(
+    _ needsHorizontalScrollbarLayer: Bool, _ needsVerticalScrollbarLayer: Bool,
+    _ needsScrollCornerLayer: Bool
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateForegroundLayer(_ needsForegroundLayer: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateBackgroundLayer(_ needsBackgroundLayer: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Masking layer is used for masks or clip-path.
   @discardableResult
   private func updateMaskingLayer(hasMask: Bool, hasClipPath: Bool) -> Bool {
@@ -894,6 +1010,38 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
 
     return layerChanged
+  }
+
+  private func updateTransformFlatteningLayer(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresHorizontalScrollbarLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresVerticalScrollbarLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func requiresScrollCornerLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateScrollingLayers(_ needsScrollingLayers: Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setBackgroundLayerPaintsFixedRootBackground(
+    _ backgroundLayerPaintsFixedRootBackground: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func contentOffsetInCompositingLayer() -> LayoutSizeWrapper {
@@ -1306,6 +1454,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var isRootFrameRenderViewLayer = false
   var isFrameLayerWithTiledBacking = false
   let backgroundLayerPaintsFixedRootBackground = false
+  private let requiresBackgroundLayer = false
 }
 
 enum CanvasCompositingStrategy {

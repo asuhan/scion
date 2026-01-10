@@ -36,6 +36,8 @@ struct GraphicsLayerPaintingPhase: OptionSet {
 }
 
 class GraphicsLayerClientWrapper {
+  // Multiplier for backing store size, related to high DPI.
+  func deviceScaleFactor() -> Float32 { return 1 }
   // Page scale factor.
   func pageScaleFactor() -> Float32 { return 1 }
 }

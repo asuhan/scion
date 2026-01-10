@@ -5300,8 +5300,8 @@ class RenderLayerWrapper {
   var hasBackdropFilterDescendantsWithoutRoot = false
   private var isOpportunisticStackingContext = false
 
-  private var zOrderListsDirty = false
-  private var normalFlowListDirty = false
+  var zOrderListsDirty = false
+  var normalFlowListDirty = false
   private var hadNegativeZOrderList = false
 
   var isSelfPaintingLayer = false
