@@ -131,6 +131,10 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
+    fatalError("Not reached")
+  }
+
   func scrollbarWidthChanged(_ width: ScrollbarWidth) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

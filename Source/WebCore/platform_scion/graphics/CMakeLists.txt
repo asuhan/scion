@@ -51,6 +51,7 @@ target_sources(layout_scion PRIVATE
     Path.swift
     PathSegmentData.swift
     PathUtilities.swift
+    Region.swift
     RenderingResource.swift
     RenderingResourceIdentifier.swift
     RotationDirection.swift

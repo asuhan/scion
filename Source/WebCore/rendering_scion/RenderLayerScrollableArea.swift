@@ -352,7 +352,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
-  private final func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
+  override final func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

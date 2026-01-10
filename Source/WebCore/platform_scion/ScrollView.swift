@@ -175,4 +175,9 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func repaintContentRectangle(_ rect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

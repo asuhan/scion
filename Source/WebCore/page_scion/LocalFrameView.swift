@@ -207,6 +207,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func addTrackedRepaintRect(_ r: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewExposedRect() -> FloatRectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -228,6 +233,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func layerAccessPrevented() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func repaintContentRectangle(_ r: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

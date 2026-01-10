@@ -174,8 +174,54 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func repaintViewRectangle(_ repaintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !shouldRepaint(repaintRect) {
+      return
+    }
+
+    // FIXME: enclosingRect is needed as long as we integral snap ScrollView/FrameView/RenderWidget size/position.
+    let enclosingRect = enclosingIntRect(rect: repaintRect)
+    if let ownerElement = document().ownerElement() {
+      guard let ownerBox = ownerElement.renderBox() else { return }
+      let viewRect = self.viewRect()
+      // TODO(asuhan): add iOS support
+      var adjustedRect = intersection(a: LayoutRectWrapper(rect: enclosingRect), b: viewRect)
+      if adjustedRect.isEmpty() {
+        return
+      }
+
+      adjustedRect.moveBy(offset: -viewRect.location())
+      adjustedRect.moveBy(offset: ownerBox.contentBoxRect().location())
+
+      // A dirty rect in an iframe is relative to the contents of that iframe.
+      // When we traverse between parent frames and child frames, we need to make sure
+      // that the coordinate system is mapped appropriately between the iframe's contents
+      // and the Renderer that contains the iframe. This transformation must account for a
+      // left scrollbar (if one exists).
+      let frameView = frameView()
+      if frameView.shouldPlaceVerticalScrollbarOnLeft() && frameView.verticalScrollbar() != nil {
+        adjustedRect.move(
+          size: LayoutSizeWrapper(width: frameView.verticalScrollbar()!.occupiedWidth(), height: 0))
+      }
+
+      ownerBox.repaintRectangle(repaintRect: adjustedRect)
+      return
+    }
+
+    protectedFrameView().addTrackedRepaintRect(
+      snapRectToDevicePixels(rect: repaintRect, pixelSnappingFactor: document().deviceScaleFactor())
+    )
+    if accumulatedRepaintRegion == nil {
+      protectedFrameView().repaintContentRectangle(enclosingRect)
+      return
+    }
+    accumulatedRepaintRegion!.unite(Region(enclosingRect))
+
+    // Region will get slow if it gets too complex. Merge all rects so far to bounds if this happens.
+    // FIXME: Maybe there should be a region type that does this automatically.
+    let maximumRepaintRegionGridSize = 16 * 16
+    if accumulatedRepaintRegion!.gridSize() > maximumRepaintRegionGridSize {
+      accumulatedRepaintRegion = Region(accumulatedRepaintRegion!.bounds)
+    }
   }
 
   // Return the renderer whose background style is used to paint the root background.
@@ -190,6 +236,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func printing() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func viewRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -331,6 +382,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func shouldRepaint(_ rect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateInitialContainingBlockSize() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -341,6 +397,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private var accumulatedRepaintRegion: Region? = nil
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
 }
