@@ -464,8 +464,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func computeColumnCountAndWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var columnWidth = contentLogicalWidth().int()
+    if style().hasInlineColumnAxis() {
+      let pageLength = protectedFrameView().pagination().pageLength
+      if pageLength != 0 {
+        columnWidth = Int32(pageLength)
+      }
+    }
+    setComputedColumnCountAndWidth(count: 1, width: LayoutUnit(value: columnWidth))
   }
 
   private func shouldRepaint(_ rect: LayoutRectWrapper) -> Bool {

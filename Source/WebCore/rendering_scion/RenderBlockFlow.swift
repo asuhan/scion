@@ -2867,7 +2867,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not reached")
   }
 
-  private func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {
+  func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {
     assert((multiColumnFlowForBlockFlow() != nil) == requiresColumns(desiredColumnCount: count))
     if let multiColumnFlow = multiColumnFlowForBlockFlow() {
       multiColumnFlow.setColumnCountAndWidth(count: UInt32(count), width: width)
