@@ -101,7 +101,7 @@ struct PaintedContentsInfo {
 }
 
 private func clearBackingSharingLayerProviders(
-  sharingLayers: ListSet<RenderLayerWrapper, UInt>, providerLayer: RenderLayerWrapper
+  sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>, providerLayer: RenderLayerWrapper
 ) {
   for layer in sharingLayers {
     if CPtrToInt(layer.backingProviderLayer?.p) == CPtrToInt(providerLayer.p) {
@@ -383,8 +383,43 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func setBackingSharingLayers(_ sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var sharingLayersChanged = backingSharingLayers.computeSize() != sharingLayers.computeSize()
+    // For layers that used to share and no longer do, and are not composited, recompute repaint rects.
+    for oldSharingLayer in backingSharingLayers {
+      // Layers that go from shared to composited have their repaint rects recomputed in RenderLayerCompositor::updateBacking().
+      if !sharingLayers.contains(value: oldSharingLayer) {
+        sharingLayersChanged = true
+        if !oldSharingLayer.isComposited() {
+          oldSharingLayer.computeRepaintRectsIncludingDescendants()
+        }
+      }
+    }
+
+    clearBackingSharingLayerProviders(
+      sharingLayers: backingSharingLayers, providerLayer: owningLayer!)
+
+    if sharingLayersChanged {
+      if !sharingLayers.isEmptyIgnoringNullReferences() {
+        setRequiresOwnBackingStore(true)
+      }
+      setContentsNeedDisplay()  // This could be optimized to only repaint rects for changed layers.
+    }
+
+    let oldSharingLayers = backingSharingLayers.deepCopy()
+    backingSharingLayers = sharingLayers
+
+    for layer in backingSharingLayers {
+      layer.setBackingProviderLayer(backingProvider: owningLayer)
+    }
+
+    if sharingLayersChanged {
+      // For layers that are newly sharing, recompute repaint rects.
+      for currentSharingLayer in backingSharingLayers {
+        if !oldSharingLayers.contains(value: currentSharingLayer) {
+          currentSharingLayer.computeRepaintRectsIncludingDescendants()
+        }
+      }
+    }
   }
 
   func hasBackingSharingLayers() -> Bool {
@@ -591,6 +626,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // Returns true for a composited layer that has no backing store of its own, so
   // paints into some ancestor layer.
   func paintsIntoCompositedAncestor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setRequiresOwnBackingStore(_ requiresOwnBacking: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1234,7 +1274,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var owningLayer: RenderLayerWrapper? = nil
 
   // A list other layers that paint into this backing store, later than owningLayer in paint order.
-  private let backingSharingLayers = ListSet<RenderLayerWrapper, UInt>()
+  private var backingSharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
 
   let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
   let overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.

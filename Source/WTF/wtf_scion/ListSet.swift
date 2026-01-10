@@ -128,6 +128,11 @@ final class ListSet<T, KeyType>: Sequence {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func deepCopy() -> ListSet<T, KeyType> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 typealias WeakListSet<T, KeyType> = ListSet<T, KeyType>
