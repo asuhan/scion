@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2009-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2012 Google Inc. All rights reserved.
+ * Copyright (C) 2020 Sony Interactive Entertainment Inc. All Rights reserved.
+ * Copyright (C) 2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,15 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// TODO(asuhan): inherit from ScriptWrappable
-class CanvasRenderingContextWrapper {
-  func delegatesDisplay() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setContentsToLayer(_ layer: GraphicsLayer) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+typealias PlatformLayer = UInt64

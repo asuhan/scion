@@ -1178,7 +1178,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
   }
 
-  func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
+  static func hasCompositedWidgetContents(_ renderer: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
     if let renderEmbeddedObject = renderer as? RenderEmbeddedObjectWrapper {
       return renderEmbeddedObject.requiresAcceleratedCompositing()
     }
@@ -1190,7 +1195,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return frameContentsRenderView(renderer)?.compositor()
   }
 
-  private struct WidgetLayerAttachment {
+  struct WidgetLayerAttachment {
     init(widgetLayersAttachedAsChildren: Bool, layerHierarchyChanged: Bool) {
       self.widgetLayersAttachedAsChildren = widgetLayersAttachedAsChildren
       self.layerHierarchyChanged = layerHierarchyChanged
@@ -1204,7 +1209,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var layerHierarchyChanged: Bool
   }
 
-  private func attachWidgetContentLayersIfNecessary(_ renderer: RenderWidgetWrapper)
+  func attachWidgetContentLayersIfNecessary(_ renderer: RenderWidgetWrapper)
     -> WidgetLayerAttachment
   {
     let layer = renderer.layer()!
@@ -1237,7 +1242,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     var result = WidgetLayerAttachment()
-    if isCompositedPlugin(renderer: renderer), let contentsLayer = backing.layerForContents() {
+    if RenderLayerCompositorWrapper.isCompositedPlugin(renderer: renderer),
+      let contentsLayer = backing.layerForContents()
+    {
       result.widgetLayersAttachedAsChildren = isVisible
       result.layerHierarchyChanged = addContentsLayerChildIfNecessary(contentsLayer, isVisible)
       if !isLayerForPluginWithScrollCoordinatedContents(layer) {
@@ -3697,7 +3704,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return false
     }
 
-    if !isCompositedPlugin(renderer: renderer) {
+    if !RenderLayerCompositorWrapper.isCompositedPlugin(renderer: renderer) {
       return false
     }
 

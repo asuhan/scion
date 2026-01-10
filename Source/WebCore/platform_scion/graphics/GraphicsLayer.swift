@@ -64,6 +64,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func parent() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func children() -> ArraySlice<GraphicsLayer> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -180,7 +185,35 @@ class GraphicsLayer {
     case ClipToLayer
   }
 
+  func setContentsRectClipsDescendants(_ b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldDirectlyCompositeImage(image: ImageWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  enum ContentsLayerPurpose {
+    case None
+    case Image
+    case Media
+    case Canvas
+    case BackgroundColor
+    case Plugin
+    case Model
+    case HostedModel
+    case Host
+  }
+
+  func setContentsToPlatformLayer(_ platformLayer: PlatformLayer?, _ purpose: ContentsLayerPurpose)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContentsToPlatformLayerHost(_ identifier: LayerHostingContextIdentifierWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -221,6 +254,16 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setAppliesDeviceScale(_ appliesScale: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func appliesDeviceScale() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Whether this layer can throw away backing store to save memory. False for layers that can be revealed by async scrolling.
   func setAllowsBackingStoreDetaching(allowDetaching: Bool) {
     // TODO(asuhan): implement this
@@ -253,6 +296,11 @@ class GraphicsLayer {
   }
 
   static func supportsContentsTiling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setShouldPaintUsingCompositeCopy(_ copy: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

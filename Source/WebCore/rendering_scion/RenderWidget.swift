@@ -37,6 +37,11 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func remoteFrame() -> RemoteFrameWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

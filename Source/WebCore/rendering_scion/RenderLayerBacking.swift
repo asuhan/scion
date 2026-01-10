@@ -93,6 +93,10 @@ struct PaintedContentsInfo {
     return contentsTypeDetermination() == .DirectlyCompositedImage
   }
 
+  mutating func isUnscaledBitmapOnly() -> Bool {
+    return contentsTypeDetermination() == .UnscaledBitmapOnly
+  }
+
   let backing: RenderLayerBacking
   var boxDecorations: RequestState = .Unknown
   var content: RequestState = .Unknown
@@ -535,8 +539,116 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       updateInternalHierarchy()
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // RenderLayerCompositor::adjustOverflowScrollbarContainerLayers() may have reparented the overflowControlsContainer
+    // in an earlier update, so always put it back here. We don't yet know if it will get reparented again.
+    if overflowControlsContainer != nil
+      && !optEq(overflowControlsContainer!.parent(), m_graphicsLayer)
+    {
+      m_graphicsLayer!.addChild(childLayer: overflowControlsContainer!)
+      // Ensure that we fix up the position of m_overflowControlsContainer.
+      owningLayer!.setNeedsCompositingGeometryUpdate()
+    }
+
+    // FIXME: Overlow controls need to be above the flattening layer?
+    if let flatteningLayer = tileCacheFlatteningLayer(),
+      layerConfigChanged || !optEq(flatteningLayer.parent(), m_graphicsLayer)
+    {
+      // FIXME: m_graphicsLayer children are clobbered in RenderLayerCompositor::updateBackingAndHierarchy(); this probably doesn't work.
+      m_graphicsLayer!.addChild(childLayer: flatteningLayer)
+    }
+
+    if updateMaskingLayer(hasMask: renderer().hasMask(), hasClipPath: renderer().hasClipPath()) {
+      layerConfigChanged = true
+    }
+
+    if owningLayer!.hasReflection() {
+      if owningLayer!.reflectionLayer()!.backing != nil {
+        let reflectionLayer = owningLayer!.reflectionLayer()!.backing!.graphicsLayer()
+        m_graphicsLayer!.setReplicatedByLayer(layer: reflectionLayer)
+      }
+    } else {
+      m_graphicsLayer!.setReplicatedByLayer(layer: nil)
+    }
+
+    var contentsInfo = PaintedContentsInfo(inBacking: self)
+
+    // Requires layout.
+    if !owningLayer!.isRenderViewLayer {
+      updateDirectlyCompositedBoxDecorations(contentsInfo)
+    } else {
+      updateRootLayerConfiguration()
+    }
+
+    // Requires layout.
+    if contentsInfo.isDirectlyCompositedImage() {
+      updateImageContents(contentsInfo)
+    }
+
+    let unscaledBitmap = contentsInfo.isUnscaledBitmapOnly()
+    if unscaledBitmap == m_graphicsLayer!.appliesDeviceScale() {
+      m_graphicsLayer!.setAppliesDeviceScale(!unscaledBitmap)
+      layerConfigChanged = true
+    }
+
+    let shouldPaintUsingCompositeCopy =
+      unscaledBitmap && (renderer() is RenderHTMLCanvasWrapper) && owningLayer!.hasVisibleContent
+    if shouldPaintUsingCompositeCopy != m_shouldPaintUsingCompositeCopy {
+      m_shouldPaintUsingCompositeCopy = shouldPaintUsingCompositeCopy
+      m_graphicsLayer!.setShouldPaintUsingCompositeCopy(shouldPaintUsingCompositeCopy)
+      layerConfigChanged = true
+    }
+
+    let attachPluginLayer = { [self] (_ rendererEmbeddedObject: RenderEmbeddedObjectWrapper) in
+      guard let pluginViewBase = rendererEmbeddedObject.widget() as? PluginViewBase else { return }
+
+      switch pluginViewBase.layerHostingStrategy() {
+      case .None:
+        break
+      case .PlatformLayer:
+        m_graphicsLayer!.setContentsToPlatformLayer(pluginViewBase.platformLayer(), .Plugin)
+      case .GraphicsLayer:
+        // layer is parented in RenderLayerCompositor::updateBackingAndHierarchy().
+        break
+      }
+    }
+
+    if RenderLayerCompositorWrapper.isCompositedPlugin(renderer: renderer()) {
+      attachPluginLayer(renderer() as! RenderEmbeddedObjectWrapper)
+    } else if let remoteFrame = (renderer() as? RenderWidgetWrapper)?.remoteFrame(),
+      let contextIdentifier = remoteFrame.layerHostingContextIdentifier()
+    {
+      m_graphicsLayer!.setContentsToPlatformLayerHost(contextIdentifier)
+    } else if shouldSetContentsDisplayDelegate() {
+      let canvas = renderer().element() as! HTMLCanvasElementWrapper
+      if let context = canvas.renderingContext() {
+        context.setContentsToLayer(m_graphicsLayer!)
+      }
+
+      layerConfigChanged = true
+    }
+
+    // FIXME: Why do we do this twice?
+    if let widget = renderer() as? RenderWidgetWrapper,
+      compositor.attachWidgetContentLayersIfNecessary(widget).layerHierarchyChanged
+    {
+      owningLayer!.setNeedsCompositingGeometryUpdate()
+      layerConfigChanged = true
+    }
+
+    if RenderLayerCompositorWrapper.hasCompositedWidgetContents(renderer()) {
+      m_graphicsLayer!.setContentsRectClipsDescendants(true)
+      updateContentsRects()
+    }
+
+    if updateBackdropRoot() {
+      layerConfigChanged = true
+    }
+
+    if layerConfigChanged {
+      updatePaintingPhases()
+    }
+
+    return layerConfigChanged
   }
 
   // Update graphics layer position and bounds.
@@ -1037,6 +1149,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func updateRootLayerConfiguration() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updatePaintingPhases() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setBackgroundLayerPaintsFixedRootBackground(
     _ backgroundLayerPaintsFixedRootBackground: Bool
   ) {
@@ -1341,6 +1463,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func updateImageContents(_ contentsInfo: PaintedContentsInfo) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isUnscaledBitmapOnly() -> Bool {
     if !(renderer() is RenderImageWrapper) && !(renderer() is RenderHTMLCanvasWrapper) {
       return false
@@ -1392,6 +1519,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return false
   }
 
+  private func updateDirectlyCompositedBoxDecorations(_ contentsInfo: PaintedContentsInfo) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateContentsRects() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Conservative test for having no rendered children.
   func isPaintDestinationForDescendantLayers(
     request: inout RenderLayerWrapper.PaintedContentRequest
@@ -1417,6 +1554,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       })
 
     return hasPaintingDescendant
+  }
+
+  private func tileCacheFlatteningLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldSetContentsDisplayDelegate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private var owningLayer: RenderLayerWrapper? = nil
@@ -1455,6 +1602,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   var isFrameLayerWithTiledBacking = false
   let backgroundLayerPaintsFixedRootBackground = false
   private let requiresBackgroundLayer = false
+  private var m_shouldPaintUsingCompositeCopy = false
 }
 
 enum CanvasCompositingStrategy {
