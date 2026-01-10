@@ -7,6 +7,7 @@ target_sources(layout_scion PRIVATE
     HTMLElement.swift
     HTMLFormControlElement.swift
     HTMLFrameOwnerElement.swift
+    HTMLFrameSetElement.swift
     HTMLHtmlElement.swift
     HTMLImageElement.swift
     HTMLInputElement.swift

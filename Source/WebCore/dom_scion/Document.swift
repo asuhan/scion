@@ -37,6 +37,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func hasSVGRootNode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func view() -> LocalFrameViewWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -104,6 +109,13 @@ class Document: TreeScopeWrapper {
   // This is the "HTML body element" as defined by CSSOM View spec, the first body child of the
   // document element. See http://dev.w3.org/csswg/cssom-view/#the-html-body-element.
   func body() -> HTMLBodyElement? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // This is the "body element" as defined by HTML5, the first body or frameset child of the
+  // document element. See https://html.spec.whatwg.org/multipage/dom.html#the-body-element-2.
+  func bodyOrFrameset() -> HTMLElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -351,8 +351,43 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func shouldPaintBaseBackground() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let document = document()
+    let frameView = frameView()
+    let ownerElement = document.ownerElement()
+
+    // Fill with a base color if we're the root document.
+    if frameView.frame().isMainFrame() {
+      return !frameView.isTransparent()
+    }
+
+    if ownerElement?.hasFrameTag() ?? false {
+      return true
+    }
+
+    // Locate the <body> element using the DOM. This is easier than trying
+    // to crawl around a render tree with potential :before/:after content and
+    // anonymous blocks created by inline <body> tags etc. We can locate the <body>
+    // render object very easily via the DOM.
+    guard let body = document.bodyOrFrameset() else {
+      // SVG documents and XML documents with SVG root nodes are transparent.
+      return !document.hasSVGRootNode()
+    }
+
+    // Can't scroll a frameset document anyway.
+    if body is HTMLFrameSetElementWrapper {
+      return true
+    }
+
+    guard let frameRenderer = ownerElement?.renderer() else { return false }
+
+    // iframes should fill with a base color if the used color scheme of the
+    // element and the used color scheme of the embedded document’s root
+    // element do not match.
+    if frameView.useDarkAppearance() != frameRenderer.useDarkAppearance() {
+      return !frameView.isTransparent()
+    }
+
+    return false
   }
 
   func hasQuotesNeedingUpdate() -> Bool {
