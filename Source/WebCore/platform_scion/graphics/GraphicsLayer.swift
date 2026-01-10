@@ -124,6 +124,42 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setReplicatedLayerPosition(_ p: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  enum ShouldSetNeedsDisplay {
+    case DontSetNeedsDisplay
+    case SetNeedsDisplay
+  }
+
+  // Offset is origin of the renderer minus origin of the graphics layer.
+  func offsetFromRenderer() -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setOffsetFromRenderer(
+    _ offset: FloatSize, _ shouldSetNeedsDisplay: ShouldSetNeedsDisplay = .SetNeedsDisplay
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Scroll offset of the content layer inside its scrolling parent layer.
+  func scrollOffset() -> ScrollOffset {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setScrollOffset(
+    _ offset: ScrollOffset, _ shouldSetNeedsDisplay: ShouldSetNeedsDisplay = .SetNeedsDisplay
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The position of the layer (the location of its top-left corner in its parent)
   func position() -> FloatPoint {
     // TODO(asuhan): implement this
@@ -140,12 +176,23 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // The size of the layer.
+  func size() -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setSize(size: FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func setTransform(matrix: TransformationMatrix) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setPreserves3D(_ b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -161,6 +208,11 @@ class GraphicsLayer {
   }
 
   func setContentsOpaque(b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setBackfaceVisibility(_ b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -183,6 +235,16 @@ class GraphicsLayer {
   enum ShouldClipToLayer {
     case DoNotClipToLayer
     case ClipToLayer
+  }
+
+  func setNeedsDisplay() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContentsClippingRect(_ roundedRect: FloatRoundedRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func setContentsRectClipsDescendants(_ b: Bool) {
@@ -301,6 +363,11 @@ class GraphicsLayer {
   }
 
   func setShouldPaintUsingCompositeCopy(_ copy: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAnimationExtent(_ animationExtent: FloatRectWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -67,11 +67,18 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  // Rect covered by the captured contents, in RenderLayer coordinates of the captured renderer
+  func captureOverflowRect() -> LayoutRectWrapper { return overflowRect }
+
   func canUseExistingLayers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  // The overflow rect that the captured image represents, in RenderLayer coordinates
+  // of the captured renderer (see layerToLayoutOffset in ViewTransition.cpp).
+  // The intrisic size subset of the image is stored as the intrinsic size of the RenderReplaced.
+  let overflowRect = LayoutRectWrapper()
   // Scale factor between the intrinsic size and the replaced content rect size.
   let scale = FloatSize()
 }

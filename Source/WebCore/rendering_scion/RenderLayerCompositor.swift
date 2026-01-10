@@ -1107,6 +1107,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
+  // Returns true if the given layer needs it own backing store.
+  func requiresOwnBackingStore(
+    _ layer: RenderLayerWrapper, _ compositingAncestorLayer: RenderLayerWrapper?,
+    _ layerCompositedBoundsInAncestor: LayoutRectWrapper,
+    _ ancestorCompositedBounds: LayoutRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func rootRenderLayer() -> RenderLayerWrapper {
     return m_renderView.layer()!
   }

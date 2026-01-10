@@ -3285,6 +3285,11 @@ class RenderLayerWrapper {
     return LayoutPointWrapper()
   }
 
+  func rendererBorderBoxRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func rendererBorderBoxRectInFragment(
     fragment: RenderFragmentContainerWrapper?,
     flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo

@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct FloatSize {
+struct FloatSize: Equatable {
   init() {}
 
   init(width: Float32, height: Float32) {

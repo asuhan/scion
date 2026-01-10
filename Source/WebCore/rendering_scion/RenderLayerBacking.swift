@@ -165,6 +165,94 @@ private func computeOverflowTiledBackingCoverage(layer: RenderLayerWrapper)
   return tileCoverage
 }
 
+private func scrollContainerLayerBox(_ renderBox: RenderBoxWrapper) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func clippingLayerBox(_ renderer: RenderLayerModelObjectWrapper) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func overflowControlsHostLayerRect(_ renderBox: RenderBoxWrapper) -> LayoutRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func subpixelOffsetFromRendererChanged(
+  _ oldSubpixelOffsetFromRenderer: LayoutSizeWrapper,
+  _ newSubpixelOffsetFromRenderer: LayoutSizeWrapper, _ deviceScaleFactor: Float32
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func subpixelForLayerPainting(_ point: LayoutPointWrapper, _ pixelSnappingFactor: Float32)
+  -> FloatSize
+{
+  var x = point.x
+  var y = point.y
+  x = LayoutUnit(
+    value: x >= Int32(0)
+      ? floorToDevicePixel(value: x, pixelSnappingFactor: pixelSnappingFactor)
+      : ceilToDevicePixel(value: x, pixelSnappingFactor: pixelSnappingFactor))
+  y = LayoutUnit(
+    value: y >= Int32(0)
+      ? floorToDevicePixel(value: y, pixelSnappingFactor: pixelSnappingFactor)
+      : ceilToDevicePixel(value: y, pixelSnappingFactor: pixelSnappingFactor))
+  return (point - LayoutPointWrapper(x: x, y: y)).FloatSize()
+}
+
+struct OffsetFromRenderer {
+  // 1.2px - > { m_devicePixelOffset = 1px m_subpixelOffset = 0.2px }
+  var devicePixelOffset = LayoutSizeWrapper()
+  var subpixelOffset = LayoutSizeWrapper()
+}
+
+private func computeOffsetFromRenderer(_ offset: LayoutSizeWrapper, _ deviceScaleFactor: Float32)
+  -> OffsetFromRenderer
+{
+  var offsetFromRenderer = OffsetFromRenderer()
+  offsetFromRenderer.subpixelOffset = LayoutSizeWrapper(
+    size: subpixelForLayerPainting(toLayoutPoint(size: offset), deviceScaleFactor))
+  offsetFromRenderer.devicePixelOffset = offset - offsetFromRenderer.subpixelOffset
+  return offsetFromRenderer
+}
+
+struct SnappedRectInfo {
+  let snappedRect: LayoutRectWrapper
+  let snapDelta: LayoutSizeWrapper
+}
+
+private func snappedGraphicsLayer(
+  _ offset: LayoutSizeWrapper, _ size: LayoutSizeWrapper, _ renderer: RenderLayerModelObjectWrapper
+) -> SnappedRectInfo {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+struct ComputedOffsets {
+  init(
+    renderLayer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
+    localRect: LayoutRectWrapper, parentGraphicsLayerRect: LayoutRectWrapper,
+    primaryGraphicsLayerRect: LayoutRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fromParentGraphicsLayer() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fromPrimaryGraphicsLayer() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 // FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.
 private func hasVisibleBoxDecorations(style: RenderStyleWrapper) -> Bool {
   return style.hasVisibleBorder() || style.hasBorderRadius() || style.hasOutline()
@@ -652,9 +740,293 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   // Update graphics layer position and bounds.
-  func updateGeometry(_ compositingAncestor: RenderLayerWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func updateGeometry(_ compositedAncestor: RenderLayerWrapper?) {
+    assert(!owningLayer!.normalFlowListDirty)
+    assert(!owningLayer!.zOrderListsDirty)
+    assert(!owningLayer!.descendantDependentFlagsAreDirty())
+    assert(!renderer().view().needsLayout())
+
+    let style = renderer().style()
+    let deviceScaleFactor = deviceScaleFactor()
+
+    var isRunningAcceleratedTransformAnimation = false
+    if let styleable = StyleableWrapper.fromRenderer(renderer()) {
+      isRunningAcceleratedTransformAnimation = styleable.isRunningAcceleratedTransformAnimation()
+    }
+
+    updateTransform(style: style)
+    updateOpacity(style: style)
+    updateFilters(style: style)
+    updateBackdropFilters(style: style)
+    updateBackdropRoot()
+    updateBlendMode(style: style)
+    updateContentsScalingFilters(style: style)
+
+    assert(optEq(compositedAncestor, owningLayer!.ancestorCompositingLayer()))
+    var parentGraphicsLayerRect = computeParentGraphicsLayerRect(compositedAncestor)
+
+    // If our content is being used in a view-transition, then all positioning is handled using a synthesized 'transform' property on the wrapping
+    // ::view-transition-new element. Set the parent graphics layer rect to that of the pseudo, adjusted into coordinates of the parent layer.
+    if renderer().effectiveCapturedInViewTransition() && renderer().element() != nil,
+      let activeViewTransition = renderer().document().activeViewTransition(),
+      let viewTransitionCapture = activeViewTransition.viewTransitionNewPseudoForCapturedElement(
+        renderer: renderer())
+    {
+      let computedOffsets = ComputedOffsets(
+        renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
+        localRect: viewTransitionCapture.captureOverflowRect(),
+        parentGraphicsLayerRect: LayoutRectWrapper(), primaryGraphicsLayerRect: LayoutRectWrapper())
+      parentGraphicsLayerRect = LayoutRectWrapper(
+        location: LayoutPointWrapper(
+          x: computedOffsets.fromParentGraphicsLayer().width(),
+          y: computedOffsets.fromParentGraphicsLayer().height()),
+        size: viewTransitionCapture.captureOverflowRect().size())
+    }
+
+    if ancestorClippingStack != nil {
+      updateClippingStackLayerGeometry(
+        ancestorClippingStack!, compositedAncestor, &parentGraphicsLayerRect)
+    }
+
+    let primaryGraphicsLayerRect = computePrimaryGraphicsLayerRect(
+      compositedAncestor, parentGraphicsLayerRect)
+
+    let compositedBoundsOffset = ComputedOffsets(
+      renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
+      localRect: compositedBounds(), parentGraphicsLayerRect: parentGraphicsLayerRect,
+      primaryGraphicsLayerRect: primaryGraphicsLayerRect)
+    let rendererOffset = ComputedOffsets(
+      renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
+      localRect: LayoutRectWrapper(), parentGraphicsLayerRect: parentGraphicsLayerRect,
+      primaryGraphicsLayerRect: primaryGraphicsLayerRect)
+
+    compositedBoundsOffsetFromGraphicsLayer = compositedBoundsOffset.fromPrimaryGraphicsLayer()
+
+    var primaryLayerPosition = primaryGraphicsLayerRect.location()
+
+    // FIXME: reflections should force transform-style to be flat in the style: https://bugs.webkit.org/show_bug.cgi?id=106959
+    let preserves3D = style.preserves3D() && !renderer().hasReflection()
+
+    if viewportAnchorLayer != nil {
+      viewportAnchorLayer!.setPosition(p: primaryLayerPosition.FloatPoint())
+      primaryLayerPosition = LayoutPointWrapper()
+    }
+
+    if contentsContainmentLayer != nil {
+      contentsContainmentLayer!.setPreserves3D(preserves3D)
+      contentsContainmentLayer!.setPosition(p: primaryLayerPosition.FloatPoint())
+      primaryLayerPosition = LayoutPointWrapper()
+      // Use the same size as m_graphicsLayer so transforms behave correctly.
+      contentsContainmentLayer!.setSize(size: primaryGraphicsLayerRect.size().FloatSize())
+    }
+
+    let computeAnimationExtent = { [self] () -> FloatRectWrapper? in
+      var animatedBounds = LayoutRectWrapper()
+      if isRunningAcceleratedTransformAnimation
+        && owningLayer!.getOverlapBoundsIncludingChildrenAccountingForTransformAnimations(
+          &animatedBounds, additionalFlags: .IncludeCompositedDescendants)
+      {
+        return animatedBounds.FloatRect()
+      }
+      return nil
+    }
+    m_graphicsLayer!.setAnimationExtent(computeAnimationExtent())
+    m_graphicsLayer!.setPreserves3D(preserves3D)
+    m_graphicsLayer!.setBackfaceVisibility(style.backfaceVisibility() == .Visible)
+
+    m_graphicsLayer!.setPosition(p: primaryLayerPosition.FloatPoint())
+    m_graphicsLayer!.setSize(size: primaryGraphicsLayerRect.size().FloatSize())
+
+    // Compute renderer offset from primary graphics layer. Note that primaryGraphicsLayerRect is in parentGraphicsLayer's coordinate system which is not necessarily
+    // the same as the ancestor graphics layer.
+    var primaryGraphicsLayerOffsetFromRenderer = OffsetFromRenderer()
+    let oldSubpixelOffsetFromRenderer = subpixelOffsetFromRenderer
+    primaryGraphicsLayerOffsetFromRenderer = computeOffsetFromRenderer(
+      -rendererOffset.fromPrimaryGraphicsLayer(), deviceScaleFactor)
+    subpixelOffsetFromRenderer = primaryGraphicsLayerOffsetFromRenderer.subpixelOffset
+    hasSubpixelRounding =
+      !subpixelOffsetFromRenderer.isZero()
+      || compositedBounds().size() != primaryGraphicsLayerRect.size()
+
+    if primaryGraphicsLayerOffsetFromRenderer.devicePixelOffset.FloatSize()
+      != m_graphicsLayer!.offsetFromRenderer()
+    {
+      m_graphicsLayer!.setOffsetFromRenderer(
+        primaryGraphicsLayerOffsetFromRenderer.devicePixelOffset.FloatSize())
+    }
+
+    // If we have a layer that clips children, position it.
+    var clippingBox = LayoutRectWrapper()
+    if let clipLayer = clippingLayer() {
+      // clipLayer is the m_childContainmentLayer.
+      clippingBox = clippingLayerBox(renderer())
+      // Clipping layer is parented in the primary graphics layer.
+      let clipBoxOffsetFromGraphicsLayer =
+        toLayoutSize(point: clippingBox.location()) + rendererOffset.fromPrimaryGraphicsLayer()
+      let snappedClippingGraphicsLayer = snappedGraphicsLayer(
+        clipBoxOffsetFromGraphicsLayer, clippingBox.size(), renderer())
+      clipLayer.setPosition(p: snappedClippingGraphicsLayer.snappedRect.location().FloatPoint())
+      clipLayer.setSize(size: snappedClippingGraphicsLayer.snappedRect.size().FloatSize())
+      clipLayer.setOffsetFromRenderer(
+        toLayoutSize(point: clippingBox.location() - snappedClippingGraphicsLayer.snapDelta)
+          .FloatSize())
+
+      let computeMasksToBoundsRect = { [self] () in
+        if renderer().style().clipPath() != nil || renderer().style().hasBorderRadius() {
+          let borderShape = BorderShape.shapeForBorderRect(
+            style: renderer().style(), borderRect: owningLayer!.rendererBorderBoxRect())
+          var contentsClippingRect = borderShape.deprecatedPixelSnappedInnerRoundedRect(
+            deviceScaleFactor)
+          contentsClippingRect.move(
+            size: LayoutSizeWrapper(size: -clipLayer.offsetFromRenderer()).FloatSize())
+          return contentsClippingRect
+        }
+
+        return FloatRoundedRect(
+          rect: FloatRectWrapper(
+            location: FloatPoint(),
+            size: snappedClippingGraphicsLayer.snappedRect.size().FloatSize()))
+      }
+
+      clipLayer.setContentsClippingRect(computeMasksToBoundsRect())
+    }
+
+    if maskLayer != nil {
+      updateMaskingLayerGeometry()
+    }
+
+    updateChildrenTransformAndAnchorPoint(
+      primaryGraphicsLayerRect, rendererOffset.fromParentGraphicsLayer())
+
+    if owningLayer!.reflectionLayer() != nil && owningLayer!.reflectionLayer()!.isComposited() {
+      let reflectionBacking = owningLayer!.reflectionLayer()!.backing!
+      reflectionBacking.updateGeometry(owningLayer)
+
+      // The reflection layer has the bounds of m_owningLayer.reflectionLayer(),
+      // but the reflected layer is the bounds of this layer, so we need to position it appropriately.
+      let layerBounds = compositedBounds().FloatRect()
+      let reflectionLayerBounds = reflectionBacking.compositedBounds().FloatRect()
+      reflectionBacking.graphicsLayer()!.setReplicatedLayerPosition(
+        FloatPoint(layerBounds.location() - reflectionLayerBounds.location()))
+    }
+
+    if scrollContainerLayer != nil {
+      assert(scrolledContentsLayer != nil)
+      let scrollContainerBox = scrollContainerLayerBox(renderer() as! RenderBoxWrapper)
+      let parentLayerBounds = clippingLayer() != nil ? scrollContainerBox : compositedBounds()
+
+      // FIXME: need to do some pixel snapping here.
+      scrollContainerLayer!.setPosition(
+        p: FloatPoint((scrollContainerBox.location() - parentLayerBounds.location()).FloatSize()))
+      scrollContainerLayer!.setSize(
+        size: FloatSize(
+          size: roundedIntSize(
+            s: LayoutSizeWrapper(
+              width: scrollContainerBox.width(), height: scrollContainerBox.height()))))
+
+      let scrollableArea = owningLayer!.scrollableArea()!
+
+      let scrollOffset = scrollableArea.scrollOffset()
+      updateScrollOffset(scrollOffset)
+
+      let oldScrollingLayerOffset = scrollContainerLayer!.offsetFromRenderer()
+      scrollContainerLayer!.setOffsetFromRenderer(
+        toFloatSize(a: scrollContainerBox.location().FloatPoint()))
+
+      let paddingBoxOffsetChanged =
+        oldScrollingLayerOffset != scrollContainerLayer!.offsetFromRenderer()
+
+      let scrollSize = IntSize(
+        width: scrollableArea.scrollWidth(), height: scrollableArea.scrollHeight())
+      if FloatSize(size: scrollSize) != scrolledContentsLayer!.size() || paddingBoxOffsetChanged {
+        scrolledContentsLayer!.setNeedsDisplay()
+      }
+
+      scrolledContentsLayer!.setSize(size: FloatSize(size: scrollSize))
+      scrolledContentsLayer!.setScrollOffset(scrollOffset, .DontSetNeedsDisplay)
+      scrolledContentsLayer!.setOffsetFromRenderer(
+        toLayoutSize(point: scrollContainerBox.location()).FloatSize(), .DontSetNeedsDisplay)
+
+      adjustTiledBackingCoverage()
+    }
+
+    if overflowControlsContainer != nil {
+      let overflowControlsBox = overflowControlsHostLayerRect(renderer() as! RenderBoxWrapper)
+      let boxOffsetFromGraphicsLayer =
+        toLayoutSize(point: overflowControlsBox.location())
+        + rendererOffset.fromPrimaryGraphicsLayer()
+      let snappedBoxInfo = snappedGraphicsLayer(
+        boxOffsetFromGraphicsLayer, overflowControlsBox.size(), renderer())
+
+      overflowControlsContainer!.setPosition(p: snappedBoxInfo.snappedRect.location().FloatPoint())
+      overflowControlsContainer!.setSize(size: snappedBoxInfo.snappedRect.size().FloatSize())
+      overflowControlsContainer!.setMasksToBounds(b: true)
+    }
+
+    if foregroundLayer != nil {
+      var foregroundSize = FloatSize()
+      var foregroundOffset = FloatSize()
+      var needsDisplayOnOffsetChange: GraphicsLayer.ShouldSetNeedsDisplay = .SetNeedsDisplay
+      if scrolledContentsLayer != nil {
+        foregroundSize = scrolledContentsLayer!.size()
+        foregroundOffset =
+          scrolledContentsLayer!.offsetFromRenderer()
+          - toLayoutSize(point: LayoutPointWrapper(point: scrolledContentsLayer!.scrollOffset()))
+          .FloatSize()
+        needsDisplayOnOffsetChange = .DontSetNeedsDisplay
+      } else if hasClippingLayer() {
+        // If we have a clipping layer (which clips descendants), then the foreground layer is a child of it,
+        // so that it gets correctly sorted with children. In that case, position relative to the clipping layer.
+        foregroundSize = clippingBox.size().FloatSize()
+        foregroundOffset = toFloatSize(a: clippingBox.location().FloatPoint())
+      } else {
+        foregroundSize = primaryGraphicsLayerRect.size().FloatSize()
+        foregroundOffset = m_graphicsLayer!.offsetFromRenderer()
+      }
+
+      foregroundLayer!.setPosition(p: FloatPoint())
+      foregroundLayer!.setSize(size: foregroundSize)
+      foregroundLayer!.setOffsetFromRenderer(foregroundOffset, needsDisplayOnOffsetChange)
+    }
+
+    if backgroundLayer != nil {
+      var backgroundPosition = FloatPoint()
+      var backgroundSize = primaryGraphicsLayerRect.size().FloatSize()
+      if backgroundLayerPaintsFixedRootBackground {
+        let frameView = renderer().view().frameView()
+        backgroundPosition = frameView.scrollPositionForFixedPosition().FloatPoint()
+        backgroundSize = FloatSize(size: frameView.layoutSize())
+      } else {
+        let boundingBox = renderer().objectBoundingBox()
+        backgroundPosition = boundingBox.location()
+        backgroundSize = boundingBox.size()
+      }
+      backgroundLayer!.setPosition(p: backgroundPosition)
+      backgroundLayer!.setSize(size: backgroundSize)
+      backgroundLayer!.setOffsetFromRenderer(m_graphicsLayer!.offsetFromRenderer())
+    }
+
+    // If this layer was created just for clipping or to apply perspective, it doesn't need its own backing store.
+    let ancestorCompositedBounds =
+      compositedAncestor?.backing!.compositedBounds() ?? LayoutRectWrapper()
+    setRequiresOwnBackingStore(
+      compositor().requiresOwnBackingStore(
+        owningLayer!, compositedAncestor,
+        LayoutRectWrapper(
+          location: toLayoutPoint(size: compositedBoundsOffset.fromParentGraphicsLayer()),
+          size: compositedBounds().size()
+        ), ancestorCompositedBounds))
+    updateBackdropFiltersGeometry()
+    updateAfterWidgetResize()
+
+    positionOverflowControlsLayers()
+
+    if subpixelOffsetFromRendererChanged(
+      oldSubpixelOffsetFromRenderer, subpixelOffsetFromRenderer, deviceScaleFactor)
+      && canIssueSetNeedsDisplay()
+    {
+      setContentsNeedDisplay()
+    }
   }
 
   // Update state the requires that descendant layers have been updated.
@@ -676,6 +1048,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Layer to clip children
   func hasClippingLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clippingLayer() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -844,6 +1221,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func updateAllowsBackingStoreDetaching(absoluteBounds: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateAfterWidgetResize() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func positionOverflowControlsLayers() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1149,6 +1536,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func updateScrollOffset(_ scrollOffset: ScrollOffset) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateMaskingLayerGeometry() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateRootLayerConfiguration() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1167,6 +1564,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func contentOffsetInCompositingLayer() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateClippingStackLayerGeometry(
+    _ clippingStack: LayerAncestorClippingStack, _ compositedAncestor: RenderLayerWrapper?,
+    _ parentGraphicsLayerRect: inout LayoutRectWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1207,6 +1612,14 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  private func updateChildrenTransformAndAnchorPoint(
+    _ primaryGraphicsLayerRect: LayoutRectWrapper,
+    _ offsetFromParentGraphicsLayer: LayoutSizeWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateFilters(style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1235,6 +1648,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     m_graphicsLayer!.setIsBackdropRoot(isBackdropRoot: willBeBackdropRoot)
     return true
+  }
+
+  private func updateBackdropFiltersGeometry() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updateBlendMode(style: RenderStyleWrapper) {
@@ -1566,6 +1984,25 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func canIssueSetNeedsDisplay() -> Bool {
+    return !paintsIntoWindow() && !paintsIntoCompositedAncestor()
+  }
+
+  // FIXME: See if we need this now that updateGeometry() is always called in post-order traversal.
+  private func computeParentGraphicsLayerRect(_ compositedAncestor: RenderLayerWrapper?)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computePrimaryGraphicsLayerRect(
+    _ compositedAncestor: RenderLayerWrapper?, _ parentGraphicsLayerRect: LayoutRectWrapper
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var owningLayer: RenderLayerWrapper? = nil
 
   // A list other layers that paint into this backing store, later than owningLayer in paint order.
@@ -1590,6 +2027,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
   let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
 
+  var subpixelOffsetFromRenderer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the associated renderer's bounds.
+  var compositedBoundsOffsetFromGraphicsLayer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the render layer bounds.
+
   private var viewportConstrainedNodeID = ScrollingNodeIDWrapper()
   private var scrollingNodeID = ScrollingNodeIDWrapper()
   private var frameHostingNodeID = ScrollingNodeIDWrapper()
@@ -1602,6 +2042,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   var isFrameLayerWithTiledBacking = false
   let backgroundLayerPaintsFixedRootBackground = false
   private let requiresBackgroundLayer = false
+  private var hasSubpixelRounding = false
   private var m_shouldPaintUsingCompositeCopy = false
 }
 

@@ -25,6 +25,8 @@
  */
 
 struct FloatPoint {
+  init() {}
+
   init(x: Float32, y: Float32) {
     self.x = x
     self.y = y
@@ -35,7 +37,10 @@ struct FloatPoint {
     fatalError("Not implemented")
   }
 
-  init() {}
+  init(_ size: FloatSize) {
+    x = size.width
+    y = size.height
+  }
 
   mutating func setX(x: Float32) { self.x = x }
 
