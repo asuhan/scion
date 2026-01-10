@@ -116,6 +116,18 @@ class ScrollableAreaWrapper {
     case Yes
   }
 
+  enum VisibleContentRectBehavior {
+    case ContentsVisibleRect
+    case LegacyIOSDocumentVisibleRect
+  }
+
+  func visibleContentRect(
+    _ visibleContentRectBehavior: VisibleContentRectBehavior = .ContentsVisibleRect
+  ) -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentsSize() -> IntSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

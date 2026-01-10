@@ -261,8 +261,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func viewRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldUsePrintingLayout() {
+      return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
+    }
+    return LayoutRectWrapper(
+      rect: protectedFrameView().visibleContentRect(.LegacyIOSDocumentVisibleRect))
   }
 
   func pageOrViewLogicalHeight() -> LayoutUnit {
