@@ -101,6 +101,13 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  // This is the "HTML body element" as defined by CSSOM View spec, the first body child of the
+  // document element. See http://dev.w3.org/csswg/cssom-view/#the-html-body-element.
+  func body() -> HTMLBodyElement? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markersIfExists() -> DocumentMarkerControllerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -226,8 +226,28 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   // Return the renderer whose background style is used to paint the root background.
   func rendererForRootBackground() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let firstChild = firstChild() else { return nil }
+
+    let documentRenderer = firstChild as! RenderElementWrapper
+    if documentRenderer.hasBackground() {
+      return documentRenderer
+    }
+
+    // We propagate the background only for HTML content.
+    if !(documentRenderer.element() is HTMLHtmlElement) {
+      return documentRenderer
+    }
+
+    if documentRenderer.shouldApplyAnyContainment() {
+      return nil
+    }
+
+    if let body = document().body(), let renderer = body.containerRenderer() {
+      if !renderer.shouldApplyAnyContainment() {
+        return renderer
+      }
+    }
+    return documentRenderer
   }
 
   func selection() -> RenderSelection {

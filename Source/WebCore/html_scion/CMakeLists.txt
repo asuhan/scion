@@ -1,11 +1,13 @@
 target_sources(layout_scion PRIVATE
     HTMLAnchorElement.swift
+    HTMLBodyElement.swift
     HTMLButtonElement.swift
     HTMLCanvasElement.swift
     HTMLDivElement.swift
     HTMLElement.swift
     HTMLFormControlElement.swift
     HTMLFrameOwnerElement.swift
+    HTMLHtmlElement.swift
     HTMLImageElement.swift
     HTMLInputElement.swift
     HTMLLegendElement.swift
