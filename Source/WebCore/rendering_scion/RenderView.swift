@@ -441,8 +441,21 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    let writingModeChanged = oldStyle != nil && style().writingMode() != oldStyle!.writingMode()
+    let directionChanged = oldStyle != nil && style().direction() != oldStyle!.direction()
+
+    if (writingModeChanged || directionChanged) && multiColumnFlowForBlockFlow() != nil {
+      if protectedFrameView().pagination().mode != .Unpaginated {
+        updateColumnProgressionFromStyle(style())
+      }
+      updateStylesForColumnChildren(oldStyle)
+    }
+
+    if directionChanged {
+      frameView().topContentDirectionDidChange()
+    }
   }
 
   override func requiresColumns(desiredColumnCount: Int32) -> Bool {

@@ -2281,6 +2281,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return false
   }
 
+  func updateColumnProgressionFromStyle(_ style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateStylesForColumnChildren(_ oldStyle: RenderStyleWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateStylesForColumnChildren(oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

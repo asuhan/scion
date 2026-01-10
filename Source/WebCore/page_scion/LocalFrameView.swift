@@ -202,6 +202,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func topContentDirectionDidChange() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFlippedBlockRenderers() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
