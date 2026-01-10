@@ -35,4 +35,5 @@ struct Pagination {
   typealias Mode = PaginationMode
 
   let mode: Mode = .Unpaginated
+  let pageLength: UInt32 = 0
 }

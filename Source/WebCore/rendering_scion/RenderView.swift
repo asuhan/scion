@@ -122,6 +122,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return width
   }
 
+  private func viewLogicalHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clientLogicalWidthForFixedPosition() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -269,8 +274,18 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func pageOrViewLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldUsePrintingLayout() {
+      return pageLogicalSize!.height()
+    }
+
+    if multiColumnFlowForBlockFlow() != nil && !style().hasInlineColumnAxis() {
+      let pageLength = protectedFrameView().pagination().pageLength
+      if pageLength != 0 {
+        return LayoutUnit(value: pageLength)
+      }
+    }
+
+    return LayoutUnit(value: viewLogicalHeight())
   }
 
   func setBestTruncatedAt(
