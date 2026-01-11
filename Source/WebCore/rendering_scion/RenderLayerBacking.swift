@@ -253,6 +253,11 @@ struct ComputedOffsets {
   }
 }
 
+private func layerRendererStyleHas3DTransformOperation(_ layer: RenderLayerWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.
 private func hasVisibleBoxDecorations(style: RenderStyleWrapper) -> Bool {
   return style.hasVisibleBorder() || style.hasBorderRadius() || style.hasOutline()
@@ -1031,8 +1036,43 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   // Update state the requires that descendant layers have been updated.
   func updateAfterDescendants() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: this potentially duplicates work we did in updateConfiguration().
+    var contentsInfo = PaintedContentsInfo(inBacking: self)
+
+    if !owningLayer!.isRenderViewLayer {
+      updateDirectlyCompositedBoxDecorations(contentsInfo)
+      if m_graphicsLayer!.usesContentsLayer() {
+        resetContentsRect()
+      }
+    }
+
+    updateDrawsContent(contentsInfo: &contentsInfo)
+
+    if !isMainFrameRenderViewLayer && !isFrameLayerWithTiledBacking && !requiresBackgroundLayer {
+      // For non-root layers, background is always painted by the primary graphics layer.
+      assert(backgroundLayer == nil)
+      m_graphicsLayer!.setContentsOpaque(
+        b: !hasSubpixelRounding
+          && owningLayer!.backgroundIsKnownToBeOpaqueInRect(compositedBounds()))
+    }
+
+    if layerRendererStyleHas3DTransformOperation(owningLayer!)
+      || owningLayer!.hasCompositedScrollableOverflow()
+    {
+      m_graphicsLayer!.markDamageRectsUnreliable()
+    }
+
+    m_graphicsLayer!.setContentsVisible(
+      owningLayer!.hasVisibleContent || hasVisibleNonCompositedDescendants())
+    if scrollContainerLayer != nil {
+      scrollContainerLayer!.setContentsVisible(renderer().style().usedVisibility() == .Visible)
+
+      let userInteractive = renderer().visibleToHitTesting()
+      scrollContainerLayer!.setUserInteractionEnabled(userInteractive)
+      layerForHorizontalScrollbar?.setUserInteractionEnabled(userInteractive)
+      layerForVerticalScrollbar?.setUserInteractionEnabled(userInteractive)
+      layerForScrollCorner?.setUserInteractionEnabled(userInteractive)
+    }
   }
 
   // Update contents and clipping structure.
@@ -1942,6 +1982,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func resetContentsRect() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateContentsRects() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1972,6 +2017,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       })
 
     return hasPaintingDescendant
+  }
+
+  private func hasVisibleNonCompositedDescendants() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func tileCacheFlatteningLayer() -> GraphicsLayer? {

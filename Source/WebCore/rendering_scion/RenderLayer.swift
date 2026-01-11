@@ -2482,6 +2482,13 @@ class RenderLayerWrapper {
       || paintFlags.contains(.CollectingEventRegion)
   }
 
+  // Returns true if background phase is painted opaque in the given rect.
+  // The query rect is given in local coordinates.
+  func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintsWithFilters() -> Bool {
     let filter = renderer().style().filter()
     if filter.isEmpty() {

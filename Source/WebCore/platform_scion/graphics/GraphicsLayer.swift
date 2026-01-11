@@ -207,6 +207,16 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setContentsVisible(_ b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setUserInteractionEnabled(_ b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setContentsOpaque(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -238,6 +248,11 @@ class GraphicsLayer {
   }
 
   func setNeedsDisplay() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func markDamageRectsUnreliable() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -276,6 +291,11 @@ class GraphicsLayer {
   }
 
   func setContentsToPlatformLayerHost(_ identifier: LayerHostingContextIdentifierWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func usesContentsLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
