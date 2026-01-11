@@ -61,4 +61,7 @@ class TiledBackingWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Includes margins.
+  func bounds() -> IntRect { fatalError("Not reached") }
 }

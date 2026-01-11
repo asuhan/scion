@@ -2122,6 +2122,12 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // Device pixel snapped bounding box relative to the root. absoluteBoundingBox() callers will be directed to this.
+  func absoluteBoundingBoxForPainting() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns the 'reference box' used for clip-path handling (different rules for inlines, wrt. to boxes).
   func referenceBoxRectForClipPath(
     boxType: CSSBoxType, offsetFromRoot: LayoutSizeWrapper, rootRelativeBounds: LayoutRectWrapper

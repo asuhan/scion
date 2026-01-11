@@ -202,6 +202,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func drawsContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setDrawsContent(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -248,6 +253,14 @@ class GraphicsLayer {
   }
 
   func setNeedsDisplay() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // mark the given rect (in layer coords) as needing dispay. Never goes deep.
+  func setNeedsDisplayInRect(
+    _ initialRect: FloatRectWrapper, _ shouldClip: ShouldClipToLayer = .ClipToLayer
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

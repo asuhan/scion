@@ -182,6 +182,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func isTrackingRepaints() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Page and LocalFrameView both store a Pagination value. Page::pagination() is set only by API,
   // and LocalFrameView::pagination() is set only by CSS. Page::pagination() will affect all
   // FrameViews in the back/forward cache, but LocalFrameView::pagination() only affects the current

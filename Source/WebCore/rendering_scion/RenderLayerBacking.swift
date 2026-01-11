@@ -1298,8 +1298,47 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func setContentsNeedDisplay(_ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!paintsIntoCompositedAncestor())
+
+    // Use the repaint as a trigger to re-evaluate direct compositing (which is never used on the root layer).
+    if !owningLayer!.isRenderViewLayer {
+      owningLayer!.setNeedsCompositingConfigurationUpdate()
+    }
+
+    owningLayer!.invalidateEventRegion(reason: .Paint)
+
+    let frameView = renderer().view().frameView()
+    if isMainFrameRenderViewLayer && frameView.isTrackingRepaints() {
+      frameView.addTrackedRepaintRect(owningLayer!.absoluteBoundingBoxForPainting())
+    }
+
+    if m_graphicsLayer?.drawsContent() ?? false {
+      // By default, setNeedsDisplay will clip to the size of the GraphicsLayer, which does not include margin tiles.
+      // So if the TiledBacking has a margin that needs to be invalidated, we need to send in a rect to setNeedsDisplayInRect
+      // that is large enough to include the margin. TiledBacking::bounds() includes the margin.
+      let tiledBacking = tiledBacking()
+      let rectToRepaint =
+        tiledBacking != nil
+        ? FloatRectWrapper(r: tiledBacking!.bounds())
+        : FloatRectWrapper(location: FloatPoint(x: 0, y: 0), size: m_graphicsLayer!.size())
+      m_graphicsLayer!.setNeedsDisplayInRect(rectToRepaint, shouldClip)
+    }
+
+    if foregroundLayer?.drawsContent() ?? false {
+      foregroundLayer!.setNeedsDisplay()
+    }
+
+    if backgroundLayer?.drawsContent() ?? false {
+      backgroundLayer!.setNeedsDisplay()
+    }
+
+    if maskLayer?.drawsContent() ?? false {
+      maskLayer!.setNeedsDisplay()
+    }
+
+    if scrolledContentsLayer?.drawsContent() ?? false {
+      scrolledContentsLayer!.setNeedsDisplay()
+    }
   }
 
   // r is in the coordinate space of the layer's render object
