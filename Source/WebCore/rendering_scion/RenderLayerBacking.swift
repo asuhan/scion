@@ -1345,8 +1345,62 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   func setContentsNeedDisplayInRect(
     _ r: LayoutRectWrapper, _ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!paintsIntoCompositedAncestor())
+
+    // Use the repaint as a trigger to re-evaluate direct compositing (which is never used on the root layer).
+    if !owningLayer!.isRenderViewLayer {
+      owningLayer!.setNeedsCompositingConfigurationUpdate()
+    }
+
+    owningLayer!.invalidateEventRegion(reason: .Paint)
+
+    let pixelSnappedRectForPainting = snapRectToDevicePixelsIfNeeded(rect: r, renderer: renderer())
+    let frameView = renderer().view().frameView()
+    if isMainFrameRenderViewLayer && frameView.isTrackingRepaints() {
+      frameView.addTrackedRepaintRect(pixelSnappedRectForPainting)
+    }
+
+    if m_graphicsLayer?.drawsContent() ?? false {
+      var layerDirtyRect = pixelSnappedRectForPainting
+      layerDirtyRect.move(
+        delta: -m_graphicsLayer!.offsetFromRenderer() - subpixelOffsetFromRenderer.FloatSize())
+      m_graphicsLayer!.setNeedsDisplayInRect(layerDirtyRect, shouldClip)
+    }
+
+    if foregroundLayer?.drawsContent() ?? false {
+      var layerDirtyRect = pixelSnappedRectForPainting
+      layerDirtyRect.move(
+        delta: -foregroundLayer!.offsetFromRenderer() - subpixelOffsetFromRenderer.FloatSize())
+      foregroundLayer!.setNeedsDisplayInRect(layerDirtyRect, shouldClip)
+    }
+
+    // FIXME: need to split out repaints for the background.
+    if backgroundLayer?.drawsContent() ?? false {
+      var layerDirtyRect = pixelSnappedRectForPainting
+      layerDirtyRect.move(
+        delta: -backgroundLayer!.offsetFromRenderer() - subpixelOffsetFromRenderer.FloatSize())
+      backgroundLayer!.setNeedsDisplayInRect(layerDirtyRect, shouldClip)
+    }
+
+    if maskLayer?.drawsContent() ?? false {
+      var layerDirtyRect = pixelSnappedRectForPainting
+      layerDirtyRect.move(
+        delta: -maskLayer!.offsetFromRenderer() - subpixelOffsetFromRenderer.FloatSize())
+      maskLayer!.setNeedsDisplayInRect(layerDirtyRect, shouldClip)
+    }
+
+    if scrolledContentsLayer?.drawsContent() ?? false {
+      var layerDirtyRect = pixelSnappedRectForPainting
+      var scrollOffset = ScrollOffset()
+      if let scrollableArea = owningLayer!.scrollableArea() {
+        scrollOffset = scrollableArea.scrollOffset()
+      }
+      layerDirtyRect.move(
+        delta: -scrolledContentsLayer!.offsetFromRenderer()
+          + toLayoutSize(point: LayoutPointWrapper(point: scrollOffset)).FloatSize()
+          - subpixelOffsetFromRenderer.FloatSize())
+      scrolledContentsLayer!.setNeedsDisplayInRect(layerDirtyRect, shouldClip)
+    }
   }
 
   func compositedBounds() -> LayoutRectWrapper {

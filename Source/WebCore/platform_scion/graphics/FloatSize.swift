@@ -97,6 +97,10 @@ struct FloatSize: Equatable {
     return a
   }
 
+  static func + (_ a: FloatSize, _ b: FloatSize) -> FloatSize {
+    return FloatSize(width: a.width + b.width, height: a.height + b.height)
+  }
+
   static func - (_ a: FloatSize, _ b: FloatSize) -> FloatSize {
     return FloatSize(width: a.width - b.width, height: a.height - b.height)
   }
