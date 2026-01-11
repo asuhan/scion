@@ -36,7 +36,25 @@ struct CompositedClipData {
 // This class encapsulates the set of layers and their scrolling tree nodes representing clipping in the layer's containing block ancestry,
 // but not in its paint order ancestry.
 class LayerAncestorClippingStack {
+  init(_ clipDataStack: [CompositedClipData]) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasAnyScrollingLayers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func updateWithClipData(
+    _ scrollingCoordinator: ScrollingCoordinatorWrapper, _ clipDataStack: [CompositedClipData]
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func compositedClipData() -> [CompositedClipData] {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

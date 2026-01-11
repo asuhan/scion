@@ -1108,8 +1108,23 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   func ensureOverflowControlsHostLayerAncestorClippingStack(compositedAncestor: RenderLayerWrapper)
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scrollingCoordinator = owningLayer!.page().scrollingCoordinator()
+    let clippingData = ancestorClippingStack!.compositedClipData()
+
+    if overflowControlsHostLayerAncestorClippingStack != nil {
+      overflowControlsHostLayerAncestorClippingStack!.updateWithClipData(
+        scrollingCoordinator!, clippingData)
+    } else {
+      overflowControlsHostLayerAncestorClippingStack = LayerAncestorClippingStack(clippingData)
+    }
+
+    ensureClippingStackLayers(overflowControlsHostLayerAncestorClippingStack!)
+
+    var parentGraphicsLayerRect = computeParentGraphicsLayerRect(compositedAncestor)
+    updateClippingStackLayerGeometry(
+      overflowControlsHostLayerAncestorClippingStack!, compositedAncestor, &parentGraphicsLayerRect)
+
+    connectClippingStackLayers(overflowControlsHostLayerAncestorClippingStack!)
   }
 
   func hasScrollingLayer() -> Bool {
@@ -1615,10 +1630,20 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func ensureClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func updateClippingStackLayerGeometry(
     _ clippingStack: LayerAncestorClippingStack, _ compositedAncestor: RenderLayerWrapper?,
     _ parentGraphicsLayerRect: inout LayoutRectWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func connectClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2066,7 +2091,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var backingSharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
 
   let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
-  let overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.
+  var overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.
 
   private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
   private var m_graphicsLayer: GraphicsLayer? = nil
