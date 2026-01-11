@@ -23,8 +23,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct CompositedClipData {
+struct CompositedClipData: Equatable {
   init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (_ a: Self, _b: Self) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -48,10 +53,51 @@ class LayerAncestorClippingStack {
 
   @discardableResult
   func updateWithClipData(
-    _ scrollingCoordinator: ScrollingCoordinatorWrapper, _ clipDataStack: [CompositedClipData]
+    _ scrollingCoordinator: ScrollingCoordinatorWrapper?, _ clipDataStack: [CompositedClipData]
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var stackChanged = false
+
+    let clipEntryCount = clipDataStack.count
+    let stackEntryCount = stack.count
+    for i in 0..<clipEntryCount {
+      let clipDataEntry = clipDataStack[i]
+
+      if i >= stackEntryCount {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+
+      if stack[i].clipData != clipDataEntry {
+        stackChanged = true
+      }
+
+      if stack[i].clipData.isOverflowScroll && !clipDataEntry.isOverflowScroll {
+        scrollingCoordinator!.unparentChildrenAndDestroyNode(
+          nodeID: stack[i].overflowScrollProxyNodeID)
+        stack[i].overflowScrollProxyNodeID = ScrollingNodeIDWrapper()
+      }
+
+      stack[i].clipData = clipDataEntry
+    }
+
+    if stackEntryCount > clipEntryCount {
+      for i in clipEntryCount..<stackEntryCount {
+        let entry = stack[i]
+        if entry.overflowScrollProxyNodeID.bool() {
+          scrollingCoordinator!.unparentChildrenAndDestroyNode(
+            nodeID: entry.overflowScrollProxyNodeID)
+        }
+        GraphicsLayer.unparentAndClear(layer: entry.clippingLayer)
+      }
+
+      assert(stack.count >= clipEntryCount)
+      while stack.count > clipEntryCount {
+        stack.removeLast()
+      }
+      stackChanged = true
+    }
+    // TODO(asuhan): shrink capacity of stack to fit
+    return stackChanged
   }
 
   func compositedClipData() -> [CompositedClipData] {
@@ -79,7 +125,7 @@ class LayerAncestorClippingStack {
   }
 
   struct ClippingStackEntry {
-    let clipData: CompositedClipData
+    var clipData: CompositedClipData
     var overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
     let clippingLayer: GraphicsLayer? = nil
     let scrollingLayer: GraphicsLayer? = nil  // Only present for scrolling entries.

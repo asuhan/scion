@@ -1113,7 +1113,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     if overflowControlsHostLayerAncestorClippingStack != nil {
       overflowControlsHostLayerAncestorClippingStack!.updateWithClipData(
-        scrollingCoordinator!, clippingData)
+        scrollingCoordinator, clippingData)
     } else {
       overflowControlsHostLayerAncestorClippingStack = LayerAncestorClippingStack(clippingData)
     }
