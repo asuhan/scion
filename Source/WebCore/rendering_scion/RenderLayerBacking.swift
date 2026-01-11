@@ -1238,8 +1238,23 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func childForSuperlayersExcludingViewTransitions() -> GraphicsLayer {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if transformFlatteningLayer != nil {
+      return transformFlatteningLayer!
+    }
+
+    if ancestorClippingStack != nil {
+      return ancestorClippingStack!.firstLayer()!
+    }
+
+    if viewportAnchorLayer != nil {
+      return viewportAnchorLayer!
+    }
+
+    if contentsContainmentLayer != nil {
+      return contentsContainmentLayer!
+    }
+
+    return graphicsLayer()!
   }
 
   // RenderLayers with backing normally short-circuit paintLayer() because
@@ -2115,6 +2130,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   let viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
+  private let transformFlatteningLayer: GraphicsLayer? = nil
 
   private let layerForHorizontalScrollbar: GraphicsLayer? = nil
   private let layerForVerticalScrollbar: GraphicsLayer? = nil
