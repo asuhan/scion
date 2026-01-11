@@ -1283,8 +1283,18 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func setRequiresOwnBackingStore(_ requiresOwnBacking: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if requiresOwnBacking == requiresOwnBackingStore {
+      return
+    }
+
+    requiresOwnBackingStore = requiresOwnBacking
+
+    // This affects the answer to paintsIntoCompositedAncestor(), which in turn affects
+    // cached clip rects, so when it changes we have to clear clip rects on descendants.
+    owningLayer!.clearClipRectsIncludingDescendants(typeToClear: .PaintingClipRects)
+    owningLayer!.computeRepaintRectsIncludingDescendants()
+
+    compositor().repaintInCompositedAncestor(layer: owningLayer!, rect: compositedBounds())
   }
 
   func setContentsNeedDisplay(_ shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
@@ -2153,6 +2163,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var isMainFrameRenderViewLayer = false
   private var isRootFrameRenderViewLayer = false
   var isFrameLayerWithTiledBacking = false
+  var requiresOwnBackingStore = true
   let backgroundLayerPaintsFixedRootBackground = false
   private let requiresBackgroundLayer = false
   private var hasSubpixelRounding = false
