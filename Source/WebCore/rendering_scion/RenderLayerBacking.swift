@@ -1203,8 +1203,23 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func setScrollingNodeIDForRole(_ nodeID: ScrollingNodeIDWrapper, _ role: ScrollCoordinationRole) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch role {
+    case .Scrolling:
+      scrollingNodeID = nodeID
+    case .ScrollingProxy:
+      // These nodeIDs are stored in ancestorClippingStack.
+      fatalError("Not reached")
+    case .FrameHosting:
+      frameHostingNodeID = nodeID
+    case .PluginHosting:
+      pluginHostingNodeID = nodeID
+    case .ViewportConstrained:
+      viewportConstrainedNodeID = nodeID
+    case .Positioning:
+      positioningNodeID = nodeID
+    default:
+      fatalError("Not reached")
+    }
   }
 
   func hasMaskLayer() -> Bool {
