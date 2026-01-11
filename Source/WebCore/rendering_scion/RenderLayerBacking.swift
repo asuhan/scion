@@ -254,8 +254,15 @@ struct ComputedOffsets {
 }
 
 private func layerRendererStyleHas3DTransformOperation(_ layer: RenderLayerWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var renderer = layer.renderer()
+  if layer.isReflection() {
+    renderer = renderer.parent() as! RenderLayerModelObjectWrapper
+  }
+  let style = renderer.style()
+  return style.transform().has3DOperation()
+    || (style.translate()?.is3DOperation() ?? false)
+    || (style.scale()?.is3DOperation() ?? false)
+    || (style.rotate()?.is3DOperation() ?? false)
 }
 
 // FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.
