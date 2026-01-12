@@ -2292,8 +2292,39 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updatePaintingPhases() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Phases for m_maskLayer are set elsewhere.
+    var primaryLayerPhases: GraphicsLayerPaintingPhase = [.Background, .Foreground]
+
+    if foregroundLayer != nil {
+      var foregroundLayerPhases: GraphicsLayerPaintingPhase = [.Foreground]
+
+      if scrolledContentsLayer != nil {
+        foregroundLayerPhases.update(with: .OverflowContents)
+      }
+
+      foregroundLayer!.setPaintingPhase(phase: foregroundLayerPhases)
+      primaryLayerPhases.remove(.Foreground)
+    }
+
+    if backgroundLayer != nil {
+      backgroundLayer!.setPaintingPhase(phase: .Background)
+      primaryLayerPhases.remove(.Background)
+    }
+
+    if scrolledContentsLayer != nil {
+      var scrolledContentLayerPhases: GraphicsLayerPaintingPhase = [
+        .OverflowContents, .CompositedScroll,
+      ]
+      if foregroundLayer == nil {
+        scrolledContentLayerPhases.update(with: .Foreground)
+      }
+      scrolledContentsLayer!.setPaintingPhase(phase: scrolledContentLayerPhases)
+
+      primaryLayerPhases.remove(.Foreground)
+      primaryLayerPhases.update(with: .CompositedScroll)
+    }
+
+    m_graphicsLayer!.setPaintingPhase(phase: primaryLayerPhases)
   }
 
   private func setBackgroundLayerPaintsFixedRootBackground(
