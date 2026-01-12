@@ -78,6 +78,11 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func translate(_ delta: FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

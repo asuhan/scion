@@ -285,6 +285,16 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setShapeLayerPath(_ path: PathWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setShapeLayerWindRule(_ windRule: WindRule) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldDirectlyCompositeImage(image: ImageWrapper?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

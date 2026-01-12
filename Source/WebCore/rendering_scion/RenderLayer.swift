@@ -3389,7 +3389,7 @@ class RenderLayerWrapper {
     return (true, didQuantizeFonts)
   }
 
-  private func computeClipPath(
+  func computeClipPath(
     offsetFromRoot: LayoutSizeWrapper, rootRelativeBoundsForNonBoxes: LayoutRectWrapper
   ) -> (PathWrapper, WindRule) {
     let style = renderer().style()

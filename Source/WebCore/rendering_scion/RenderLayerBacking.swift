@@ -2239,9 +2239,34 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: Avoid repaints when clip path changes.
   private func updateMaskingLayerGeometry() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    maskLayer!.setSize(size: m_graphicsLayer!.size())
+    maskLayer!.setPosition(p: FloatPoint())
+    maskLayer!.setOffsetFromRenderer(m_graphicsLayer!.offsetFromRenderer())
+
+    if !maskLayer!.drawsContent() && renderer().hasClipPath() {
+      assert(renderer().style().clipPath()!.type != .Reference)
+
+      // FIXME: Use correct reference box for inlines: https://bugs.webkit.org/show_bug.cgi?id=129047, https://github.com/w3c/csswg-drafts/issues/6383
+      let boundingBox = owningLayer!.boundingBox(ancestorLayer: owningLayer)
+      let referenceBoxForClippedInline = LayoutRectWrapper(
+        r: snapRectToDevicePixelsIfNeeded(rect: boundingBox, renderer: renderer()))
+      let offset = LayoutSizeWrapper(
+        size: snapSizeToDevicePixel(
+          size: -subpixelOffsetFromRenderer, location: LayoutPointWrapper(),
+          pixelSnappingFactor: deviceScaleFactor()))
+      let (clipPath, windRule) = owningLayer!.computeClipPath(
+        offsetFromRoot: offset, rootRelativeBoundsForNonBoxes: referenceBoxForClippedInline)
+
+      let pathOffset = maskLayer!.offsetFromRenderer()
+      if !pathOffset.isZero() {
+        clipPath.translate(-pathOffset)
+      }
+
+      maskLayer!.setShapeLayerPath(clipPath)
+      maskLayer!.setShapeLayerWindRule(windRule)
+    }
   }
 
   private func updateRootLayerConfiguration() {
