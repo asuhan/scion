@@ -2183,8 +2183,37 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollingLayers(_ needsScrollingLayers: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if needsScrollingLayers == (scrollContainerLayer != nil) {
+      return false
+    }
+
+    if scrollContainerLayer == nil {
+      // Outer layer which corresponds with the scroll view. This never paints content.
+      scrollContainerLayer = createGraphicsLayer("scroll container", .ScrollContainer)
+      scrollContainerLayer!.setPaintingPhase(phase: [])
+      scrollContainerLayer!.setDrawsContent(b: false)
+      scrollContainerLayer!.setMasksToBounds(b: true)
+
+      // Inner layer which renders the content that scrolls.
+      scrolledContentsLayer = createGraphicsLayer("scrolled contents", .ScrolledContents)
+      scrolledContentsLayer!.setDrawsContent(b: true)
+      scrolledContentsLayer!.setAnchorPoint(p: FloatPoint3D())
+      scrollContainerLayer!.addChild(childLayer: scrolledContentsLayer!)
+    } else {
+      compositor().willRemoveScrollingLayerWithBacking(owningLayer!, self)
+
+      willDestroyLayer(layer: scrollContainerLayer)
+      willDestroyLayer(layer: scrolledContentsLayer)
+
+      GraphicsLayer.unparentAndClear(layer: scrollContainerLayer)
+      GraphicsLayer.unparentAndClear(layer: scrolledContentsLayer)
+    }
+
+    if scrollContainerLayer != nil {
+      compositor().didAddScrollingLayer(owningLayer!)
+    }
+
+    return true
   }
 
   private func updateScrollOffset(_ scrollOffset: ScrollOffset) {
@@ -2701,8 +2730,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var layerForScrollCorner: GraphicsLayer? = nil
   var overflowControlsContainer: GraphicsLayer? = nil
 
-  let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
-  let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+  var scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
+  var scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
 
   private var m_compositedBounds = LayoutRectWrapper()
   var subpixelOffsetFromRenderer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the associated renderer's bounds.

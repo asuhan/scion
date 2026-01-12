@@ -1507,6 +1507,18 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     detachScrollCoordinatedLayer(layer: layer, roles: allScrollCoordinationRoles)
   }
 
+  func willRemoveScrollingLayerWithBacking(
+    _ layer: RenderLayerWrapper, _ backing: RenderLayerBacking
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func didAddScrollingLayer(_ layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewHasTransparentBackground() -> Bool {
     var dummy: ColorWrapper? = nil
     return viewHasTransparentBackgroundHelper(&dummy)
