@@ -319,6 +319,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func isDescendantOf(_ layer: RenderLayerWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // This does an ancestor tree walk. Avoid it!
   private func root() -> RenderLayerWrapper? {
     var curr: RenderLayerWrapper? = self
@@ -2009,7 +2014,7 @@ class RenderLayerWrapper {
       rawValue: 2048)
   }
 
-  private static let defaultCalculateLayerBoundsFlags: CalculateLayerBoundsFlag = [
+  static let defaultCalculateLayerBoundsFlags: CalculateLayerBoundsFlag = [
     .IncludeSelfTransform, .UseLocalClipRectIfPossible, .IncludePaintedFilterOutsets,
     .UseFragmentBoxesExcludingCompositing,
   ]

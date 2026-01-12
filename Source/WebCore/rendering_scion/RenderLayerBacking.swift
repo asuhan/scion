@@ -180,6 +180,12 @@ private func overflowControlsHostLayerRect(_ renderBox: RenderBoxWrapper) -> Lay
   fatalError("Not implemented")
 }
 
+private func hasNonZeroTransformOrigin(_ renderer: RenderObjectWrapper) -> Bool {
+  let style = renderer.style()
+  return (style.transformOriginX().isFixed() && style.transformOriginX().value() != 0)
+    || (style.transformOriginY().isFixed() && style.transformOriginY().value() != 0)
+}
+
 private func subpixelOffsetFromRendererChanged(
   _ oldSubpixelOffsetFromRenderer: LayoutSizeWrapper,
   _ newSubpixelOffsetFromRenderer: LayoutSizeWrapper, _ deviceScaleFactor: Float32
@@ -1404,15 +1410,84 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func compositedBounds() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_compositedBounds
+  }
+
+  // Returns true if changed.
+  func setCompositedBounds(_ bounds: LayoutRectWrapper) -> Bool {
+    if bounds == m_compositedBounds {
+      return false
+    }
+
+    m_compositedBounds = bounds
+    return true
   }
 
   // Returns true if changed.
   @discardableResult
   func updateCompositedBounds() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layerBounds = owningLayer!.calculateLayerBounds(
+      ancestorLayer: owningLayer, offsetFromRoot: LayoutSizeWrapper(),
+      flags: RenderLayerWrapper.defaultCalculateLayerBoundsFlags.union([
+        .ExcludeHiddenDescendants, .DontConstrainForMask,
+      ]))
+    // Clip to the size of the document or enclosing overflow-scroll layer.
+    // If this or an ancestor is transformed, we can't currently compute the correct rect to intersect with.
+    // We'd need RenderObject::convertContainerToLocalQuad(), which doesn't yet exist.
+    if shouldClipCompositedBounds() {
+      let view = renderer().view()
+      let rootLayer = view.layer()
+
+      var clippingBounds =
+        (renderer().isFixedPositioned()
+          && CPtrToInt(renderer().container()?.p) == CPtrToInt(view.p))
+        ? view.frameView().rectForFixedPositionLayout()
+        : LayoutRectWrapper(rect: view.unscaledDocumentRect())
+
+      if CPtrToInt(owningLayer!.p) != CPtrToInt(rootLayer?.p) {
+        clippingBounds.intersect(
+          other: owningLayer!.backgroundClipRect(
+            clipRectsContext: RenderLayerWrapper.ClipRectsContext(
+              inRootLayer: rootLayer, inClipRectsType: .AbsoluteClipRects)
+          ).rect)  // FIXME: Incorrect for CSS regions.
+      }
+
+      let delta = owningLayer!.convertToLayerCoords(
+        ancestorLayer: rootLayer, location: LayoutPointWrapper(),
+        adjustForColumns: .AdjustForColumns)
+      clippingBounds.move(dx: -delta.x, dy: -delta.y)
+
+      layerBounds.intersect(other: clippingBounds)
+    }
+
+    // If the backing provider has overflow:clip, we know all sharing layers are affected by the clip because they are containing-block descendants.
+    if !renderer().hasNonVisibleOverflow() {
+      for layer in backingSharingLayers {
+        assert(layer.isDescendantOf(owningLayer!))
+        let offset = layer.offsetFromAncestor(ancestorLayer: owningLayer)
+        let bounds = layer.calculateLayerBounds(
+          ancestorLayer: owningLayer, offsetFromRoot: offset,
+          flags: RenderLayerWrapper.defaultCalculateLayerBoundsFlags.union([
+            .ExcludeHiddenDescendants, .DontConstrainForMask,
+          ]))
+        layerBounds.unite(other: bounds)
+      }
+    }
+
+    // If the element has a transform-origin that has fixed lengths, and the renderer has zero size,
+    // then we need to ensure that the compositing layer has non-zero size so that we can apply
+    // the transform-origin via the GraphicsLayer anchorPoint (which is expressed as a fractional value).
+    if layerBounds.isEmpty()
+      && (hasNonZeroTransformOrigin(renderer()) || renderer().style().hasPerspective())
+    {
+      layerBounds.setWidth(width: 1)
+      layerBounds.setHeight(height: 1)
+      artificiallyInflatedBounds = true
+    } else {
+      artificiallyInflatedBounds = false
+    }
+
+    return setCompositedBounds(layerBounds)
   }
 
   func updateAllowsBackingStoreDetaching(absoluteBounds: LayoutRectWrapper) {
@@ -2189,6 +2264,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  private func shouldClipCompositedBounds() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func tileCacheFlatteningLayer() -> GraphicsLayer? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2243,6 +2323,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
   let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
 
+  private var m_compositedBounds = LayoutRectWrapper()
   var subpixelOffsetFromRenderer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the associated renderer's bounds.
   var compositedBoundsOffsetFromGraphicsLayer = LayoutSizeWrapper()  // This is the subpixel distance between the primary graphics layer and the render layer bounds.
 
@@ -2252,7 +2333,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var pluginHostingNodeID = ScrollingNodeIDWrapper()
   private var positioningNodeID = ScrollingNodeIDWrapper()
 
-  private let artificiallyInflatedBounds = false  // bounds had to be made non-zero to make transform-origin work
+  private var artificiallyInflatedBounds = false  // bounds had to be made non-zero to make transform-origin work
   private var isMainFrameRenderViewLayer = false
   private var isRootFrameRenderViewLayer = false
   var isFrameLayerWithTiledBacking = false
