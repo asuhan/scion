@@ -1809,8 +1809,80 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateInternalHierarchy() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // foregroundLayer has to be inserted in the correct order with child layers,
+    // so it's not inserted here.
+    var lastClippingLayer: GraphicsLayer? = nil
+    if ancestorClippingStack != nil {
+      connectClippingStackLayers(ancestorClippingStack!)
+      lastClippingLayer = ancestorClippingStack!.lastLayer()
+    }
+
+    // TODO(asuhan): create with initial capacity
+    var orderedLayers: [GraphicsLayer] = []
+
+    if lastClippingLayer != nil {
+      orderedLayers.append(lastClippingLayer!)
+    }
+
+    if viewportAnchorLayer != nil {
+      orderedLayers.append(viewportAnchorLayer!)
+    }
+
+    if contentsContainmentLayer != nil {
+      contentsContainmentLayer!.removeAllChildren()
+
+      assert(backgroundLayer != nil)
+      contentsContainmentLayer!.addChild(childLayer: backgroundLayer!)
+
+      // The loop below will add a second child to the contentsContainmentLayer.
+      orderedLayers.append(contentsContainmentLayer!)
+    }
+
+    orderedLayers.append(m_graphicsLayer!)
+
+    // The transform flattening layer is outside the clipping stack, so we need
+    // to make sure we add the first layer in the clipping stack as its child.
+    if transformFlatteningLayer != nil {
+      if lastClippingLayer != nil {
+        transformFlatteningLayer!.addChild(childLayer: ancestorClippingStack!.firstLayer()!)
+      } else {
+        transformFlatteningLayer!.addChild(childLayer: orderedLayers[0])
+      }
+    }
+
+    if childContainmentLayer != nil {
+      orderedLayers.append(childContainmentLayer!)
+    }
+
+    if scrollContainerLayer != nil {
+      orderedLayers.append(scrollContainerLayer!)
+    }
+
+    var previousLayer: GraphicsLayer? = nil
+    for layer in orderedLayers {
+      previousLayer?.addChild(childLayer: layer)
+      previousLayer = layer
+    }
+
+    // The clip for child layers does not include space for overflow controls, so they exist as
+    // siblings of the clipping layer if we have one. Normal children of this layer are set as
+    // children of the clipping layer.
+    if overflowControlsContainer != nil {
+      if layerForHorizontalScrollbar != nil {
+        overflowControlsContainer!.addChild(childLayer: layerForHorizontalScrollbar!)
+      }
+
+      if layerForVerticalScrollbar != nil {
+        overflowControlsContainer!.addChild(childLayer: layerForVerticalScrollbar!)
+      }
+
+      if layerForScrollCorner != nil {
+        overflowControlsContainer!.addChild(childLayer: layerForScrollCorner!)
+      }
+
+      // overflowControlsContainer may get reparented later.
+      m_graphicsLayer!.addChild(childLayer: overflowControlsContainer!)
+    }
   }
 
   private func updateViewportConstrainedAnchorLayer(_ needsAnchorLayer: Bool) -> Bool {
