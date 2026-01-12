@@ -1934,9 +1934,24 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return layersChanged
   }
 
+  // Return true if the layer changed.
   private func updateDescendantClippingLayer(_ needsDescendantClip: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layersChanged = false
+
+    if needsDescendantClip {
+      if childContainmentLayer == nil && !isFrameLayerWithTiledBacking {
+        childContainmentLayer = createGraphicsLayer("child clipping")
+        childContainmentLayer!.setMasksToBounds(b: true)
+        childContainmentLayer!.setContentsRectClipsDescendants(true)
+        layersChanged = true
+      }
+    } else if hasClippingLayer() {
+      willDestroyLayer(layer: childContainmentLayer)
+      GraphicsLayer.unparentAndClear(layer: childContainmentLayer)
+      layersChanged = true
+    }
+
+    return layersChanged
   }
 
   private func updateOverflowControlsLayers(
