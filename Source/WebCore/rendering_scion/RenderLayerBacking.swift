@@ -1491,8 +1491,29 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func updateAllowsBackingStoreDetaching(absoluteBounds: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let setAllowsBackingStoreDetaching = { [self] (allowDetaching: Bool) in
+      m_graphicsLayer?.setAllowsBackingStoreDetaching(allowDetaching: allowDetaching)
+      foregroundLayer?.setAllowsBackingStoreDetaching(allowDetaching: allowDetaching)
+      backgroundLayer?.setAllowsBackingStoreDetaching(allowDetaching: allowDetaching)
+      scrolledContentsLayer?.setAllowsBackingStoreDetaching(allowDetaching: allowDetaching)
+    }
+
+    if !owningLayer!.behavesAsFixed {
+      setAllowsBackingStoreDetaching(true)
+      return
+    }
+
+    // We'll allow detaching if the layer is outside the layout viewport. Fixed layers inside
+    // the layout viewport can be revealed by async scrolling, so we want to pin their backing store.
+    let frameView = renderer().view().frameView()
+    let fixedLayoutRect =
+      frameView.useFixedLayout()
+      ? LayoutRectWrapper(rect: renderer().view().unscaledDocumentRect())
+      : frameView.rectForFixedPositionLayout()
+
+    let allowDetaching = !fixedLayoutRect.intersects(other: absoluteBounds)
+    // TODO(asuhan): add logging
+    setAllowsBackingStoreDetaching(allowDetaching)
   }
 
   private func updateAfterWidgetResize() {
