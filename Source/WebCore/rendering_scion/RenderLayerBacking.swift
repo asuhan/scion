@@ -1901,11 +1901,37 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return layerChanged
   }
 
+  // Return true if the layer changed.
   private func updateAncestorClipping(
     _ needsAncestorClip: Bool, _ compositingAncestor: RenderLayerWrapper?
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layersChanged = false
+
+    if needsAncestorClip {
+      if compositor().updateAncestorClippingStack(
+        owningLayer!, compositingAncestor: compositingAncestor)
+      {
+        if ancestorClippingStack != nil {
+          ensureClippingStackLayers(ancestorClippingStack!)
+        }
+
+        layersChanged = true
+      }
+    } else if ancestorClippingStack != nil {
+      let scrollingCoordinator = owningLayer!.page().scrollingCoordinator()
+
+      ancestorClippingStack!.clear(scrollingCoordinator)
+      ancestorClippingStack = nil
+
+      if overflowControlsHostLayerAncestorClippingStack != nil {
+        overflowControlsHostLayerAncestorClippingStack!.clear(scrollingCoordinator)
+        overflowControlsHostLayerAncestorClippingStack = nil
+      }
+
+      layersChanged = true
+    }
+
+    return layersChanged
   }
 
   private func updateDescendantClippingLayer(_ needsDescendantClip: Bool) -> Bool {
@@ -2499,7 +2525,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   // A list other layers that paint into this backing store, later than owningLayer in paint order.
   private var backingSharingLayers = ListSet<RenderLayerWrapper, ObjectIdentifier>()
 
-  let ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
+  var ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
   var overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.
 
   private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.

@@ -689,6 +689,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     fatalError("Not implemented")
   }
 
+  func updateAncestorClippingStack(
+    _ layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns the ScrollingNodeID for the containing async-scrollable layer that scrolls this renderer's border box.
   // May return 0 for position-fixed content.
   // Note that this returns the ScrollingNodeID of the scroller this layer is embedded in, not the layer's own ScrollingNodeID if it has one.

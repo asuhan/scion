@@ -105,6 +105,11 @@ class LayerAncestorClippingStack {
     fatalError("Not implemented")
   }
 
+  func clear(_ scrollingCoordinator: ScrollingCoordinatorWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func detachFromScrollingCoordinator(scrollingCoordinator: ScrollingCoordinatorWrapper) {
     for var entry in stack {
       if entry.overflowScrollProxyNodeID.bool() {
