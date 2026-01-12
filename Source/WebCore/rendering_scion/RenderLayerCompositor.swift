@@ -1201,7 +1201,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return false
   }
 
-  func frameContentsCompositor(renderer: RenderWidgetWrapper) -> RenderLayerCompositorWrapper? {
+  static func frameContentsCompositor(renderer: RenderWidgetWrapper)
+    -> RenderLayerCompositorWrapper?
+  {
     return frameContentsRenderView(renderer)?.compositor()
   }
 
@@ -1288,7 +1290,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return result
     }
 
-    let innerCompositor = frameContentsCompositor(renderer: renderer)
+    let innerCompositor = Self.frameContentsCompositor(renderer: renderer)
     if innerCompositor == nil || !innerCompositor!.usesCompositing()
       || innerCompositor!.rootLayerAttachment() != .RootLayerAttachedViaEnclosingFrame
     {
@@ -1367,6 +1369,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     if let backing = modelObject.layer()!.backing {
       childList.append(backing.childForSuperlayersExcludingViewTransitions())
     }
+  }
+
+  // Update the geometry of the layers used for clipping and scrolling in frames.
+  func frameViewDidChangeLocation(_ contentsOffset: IntPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func frameViewDidChangeSize() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func rootLayerConfigurationChanged() {
@@ -2047,7 +2060,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if layerChanged {
       if let renderWidget = layer.renderer() as? RenderWidgetWrapper {
-        if let innerCompositor = frameContentsCompositor(renderer: renderWidget),
+        if let innerCompositor = Self.frameContentsCompositor(renderer: renderWidget),
           innerCompositor.usesCompositing()
         {
           innerCompositor.updateRootLayerAttachment()

@@ -1517,8 +1517,18 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateAfterWidgetResize() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let renderWidget = renderer() as? RenderWidgetWrapper else { return }
+
+    if let innerCompositor = RenderLayerCompositorWrapper.frameContentsCompositor(
+      renderer: renderWidget)
+    {
+      innerCompositor.frameViewDidChangeSize()
+      innerCompositor.frameViewDidChangeLocation(flooredIntPoint(point: contentsBox().location()))
+    }
+
+    if let contentsLayer = layerForContents() {
+      contentsLayer.setPosition(p: FloatPoint(p: flooredIntPoint(point: contentsBox().location())))
+    }
   }
 
   private func positionOverflowControlsLayers() {
