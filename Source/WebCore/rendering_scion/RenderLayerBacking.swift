@@ -2141,14 +2141,29 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return layerChanged
   }
 
+  private func requiresLayerForScrollbar(_ scrollbar: Scrollbar?) -> Bool {
+    if scrollbar == nil {
+      return false
+    }
+    var requiresLayer = scrollbar!.isOverlayScrollbar()
+    #if !WTF_PLATFORM_IOS_FAMILY  // FIXME: This should be an #if ENABLE(): webkit.org/b/210460
+      requiresLayer = requiresLayer || renderer().settings().asyncOverflowScrollingEnabled()
+    #endif
+    return requiresLayer
+  }
+
   private func requiresHorizontalScrollbarLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollableArea = owningLayer!.scrollableArea() {
+      return requiresLayerForScrollbar(scrollableArea.horizontalScrollbar())
+    }
+    return false
   }
 
   private func requiresVerticalScrollbarLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollableArea = owningLayer!.scrollableArea() {
+      return requiresLayerForScrollbar(scrollableArea.verticalScrollbar())
+    }
+    return false
   }
 
   private func requiresScrollCornerLayer() -> Bool {
