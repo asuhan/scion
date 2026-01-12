@@ -222,6 +222,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setBackgroundColor(_ color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setContentsOpaque(b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -2270,8 +2270,25 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateRootLayerConfiguration() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isFrameLayerWithTiledBacking {
+      return
+    }
+
+    var backgroundColor: ColorWrapper? = ColorWrapper()
+    let viewIsTransparent = compositor().viewHasTransparentBackground(&backgroundColor)
+
+    if backgroundLayerPaintsFixedRootBackground && backgroundLayer != nil {
+      if isMainFrameRenderViewLayer {
+        backgroundLayer!.setBackgroundColor(backgroundColor!)
+        backgroundLayer!.setContentsOpaque(b: !viewIsTransparent)
+      }
+
+      m_graphicsLayer!.setBackgroundColor(ColorWrapper())
+      m_graphicsLayer!.setContentsOpaque(b: false)
+    } else if isMainFrameRenderViewLayer {
+      m_graphicsLayer!.setBackgroundColor(backgroundColor!)
+      m_graphicsLayer!.setContentsOpaque(b: !viewIsTransparent)
+    }
   }
 
   private func updatePaintingPhases() {
