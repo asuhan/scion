@@ -2167,8 +2167,19 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollCornerLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !(owningLayer!.renderer() is RenderBoxWrapper) {
+      return false
+    }
+
+    guard let scrollableArea = owningLayer!.scrollableArea() else { return false }
+
+    let cornerRect = scrollableArea.overflowControlsRects().scrollCornerOrResizerRect()
+    if cornerRect.isEmpty() {
+      return false
+    }
+
+    let scrollbar = scrollableArea.verticalScrollbar() ?? scrollableArea.horizontalScrollbar()
+    return requiresLayerForScrollbar(scrollbar)
   }
 
   private func updateScrollingLayers(_ needsScrollingLayers: Bool) -> Bool {
