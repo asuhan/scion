@@ -187,6 +187,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setBoundsOrigin(_ origin: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTransform(matrix: TransformationMatrix) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

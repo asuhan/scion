@@ -35,6 +35,7 @@ struct CompositedClipData: Equatable {
   }
 
   let clippingLayer: RenderLayerWrapper? = nil  // For scroller entries, the scrolling layer. For other entries, the most-descendant layer that has a clip.
+  let clipRect: RoundedRect  // In the coordinate system of the RenderLayer that owns the stack.
   let isOverflowScroll = false
 }
 

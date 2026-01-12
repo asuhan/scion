@@ -238,6 +238,14 @@ private func snappedGraphicsLayer(
   fatalError("Not implemented")
 }
 
+private func computeOffsetFromAncestorGraphicsLayer(
+  _ compositedAncestor: RenderLayerWrapper?, _ location: LayoutPointWrapper,
+  _ deviceScaleFactor: Float32
+) -> LayoutSizeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 struct ComputedOffsets {
   init(
     renderLayer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
@@ -2357,8 +2365,48 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     _ clippingStack: LayerAncestorClippingStack, _ compositedAncestor: RenderLayerWrapper?,
     _ parentGraphicsLayerRect: inout LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // All clipRects in the stack are computed relative to owningLayer, so convert them back to compositedAncestor.
+    let offsetFromCompositedAncestor = toLayoutSize(
+      point: owningLayer!.convertToLayerCoords(
+        ancestorLayer: compositedAncestor, location: LayoutPointWrapper(),
+        adjustForColumns: .AdjustForColumns))
+    var lastClipLayerRect = parentGraphicsLayerRect
+
+    let deviceScaleFactor = deviceScaleFactor()
+    for entry in clippingStack.stack {
+      var roundedClipRect = entry.clipData.clipRect
+      var clipRect = roundedClipRect.rect
+      let clippingOffset = computeOffsetFromAncestorGraphicsLayer(
+        compositedAncestor, clipRect.location() + offsetFromCompositedAncestor, deviceScaleFactor)
+      let snappedClippingLayerRect = snappedGraphicsLayer(
+        clippingOffset, clipRect.size(), renderer()
+      ).snappedRect
+
+      let clippingLayerPosition = toLayoutPoint(
+        size: snappedClippingLayerRect.location() - lastClipLayerRect.location())
+      entry.clippingLayer!.setPosition(p: clippingLayerPosition.FloatPoint())
+      entry.clippingLayer!.setSize(size: snappedClippingLayerRect.size().FloatSize())
+
+      clipRect.setLocation(location: LayoutPointWrapper())
+      roundedClipRect.rect = clipRect
+      entry.clippingLayer!.setContentsClippingRect(FloatRoundedRect(rect: roundedClipRect))
+      entry.clippingLayer!.setContentsRectClipsDescendants(true)
+
+      lastClipLayerRect = snappedClippingLayerRect
+
+      if entry.clipData.isOverflowScroll {
+        var scrollOffset = ScrollOffset()
+        if let scrollableArea = entry.clipData.clippingLayer?.scrollableArea() {
+          scrollOffset = scrollableArea.scrollOffset()
+        }
+
+        // scrollingLayer size and position are always 0,0.
+        entry.scrollingLayer!.setBoundsOrigin(FloatPoint(p: scrollOffset))
+        lastClipLayerRect.moveBy(offset: LayoutPointWrapper(point: -scrollOffset))
+      }
+    }
+
+    parentGraphicsLayerRect = lastClipLayerRect
   }
 
   private func connectClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
