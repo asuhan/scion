@@ -2346,6 +2346,11 @@ class RenderLayerWrapper {
     return renderer().style().preserves3D()
   }
 
+  func hasPerspective() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func has3DTransform() -> Bool {
     if let transform = transform {
       return !transform.isAffine()

@@ -271,6 +271,13 @@ private func layerRendererStyleHas3DTransformOperation(_ layer: RenderLayerWrapp
     || (style.rotate()?.is3DOperation() ?? false)
 }
 
+private func ancestorLayerWillCombineTransform(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
+  if compositingAncestor == nil {
+    return false
+  }
+  return compositingAncestor!.preserves3D() || compositingAncestor!.hasPerspective()
+}
+
 // FIXME: Code is duplicated in RenderLayer. Also, we should probably not consider filters a box decoration here.
 private func hasVisibleBoxDecorations(style: RenderStyleWrapper) -> Bool {
   return style.hasVisibleBorder() || style.hasBorderRadius() || style.hasOutline()
@@ -2111,8 +2118,27 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateTransformFlatteningLayer(_ compositingAncestor: RenderLayerWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var needsFlatteningLayer = false
+    // If our parent layer has preserve-3d or perspective, and it's not our DOM parent, then we need a flattening layer to block that from being applied in 3d.
+    if ancestorLayerWillCombineTransform(compositingAncestor)
+      && !owningLayer!.ancestorLayerIsDOMParent(ancestor: compositingAncestor)
+    {
+      needsFlatteningLayer = true
+    }
+
+    var layerChanged = false
+    if needsFlatteningLayer {
+      if transformFlatteningLayer == nil {
+        transformFlatteningLayer = createGraphicsLayer("3d flattening")  // TODO(asuhan): set name correctly
+        layerChanged = true
+      }
+    } else if transformFlatteningLayer != nil {
+      willDestroyLayer(layer: transformFlatteningLayer)
+      GraphicsLayer.unparentAndClear(layer: transformFlatteningLayer)
+      layerChanged = true
+    }
+
+    return layerChanged
   }
 
   private func requiresHorizontalScrollbarLayer() -> Bool {
@@ -2642,7 +2668,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   var viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
-  private let transformFlatteningLayer: GraphicsLayer? = nil
+  private var transformFlatteningLayer: GraphicsLayer? = nil
 
   private var layerForHorizontalScrollbar: GraphicsLayer? = nil
   private var layerForVerticalScrollbar: GraphicsLayer? = nil
