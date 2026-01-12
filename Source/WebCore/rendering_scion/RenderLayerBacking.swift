@@ -1746,10 +1746,10 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func createPrimaryGraphicsLayer() {
     let layerName = owningLayer!.name()
     m_graphicsLayer = createGraphicsLayer(
-      name: layerName, layerType: isFrameLayerWithTiledBacking ? .PageTiledBacking : .Normal)
+      layerName, isFrameLayerWithTiledBacking ? .PageTiledBacking : .Normal)
 
     if isFrameLayerWithTiledBacking {
-      childContainmentLayer = createGraphicsLayer(name: "Page TiledBacking containment")
+      childContainmentLayer = createGraphicsLayer("Page TiledBacking containment")
       m_graphicsLayer!.addChild(childLayer: childContainmentLayer!)
     }
 
@@ -1777,7 +1777,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
-  private func createGraphicsLayer(name: String, layerType: GraphicsLayer.`Type` = .Normal)
+  private func createGraphicsLayer(_ name: String, _ layerType: GraphicsLayer.`Type` = .Normal)
     -> GraphicsLayer
   {
     let graphicsLayerFactory = renderer().page().chrome().client().graphicsLayerFactory()
@@ -1886,8 +1886,19 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateViewportConstrainedAnchorLayer(_ needsAnchorLayer: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layerChanged = false
+    if needsAnchorLayer {
+      if viewportAnchorLayer == nil {
+        viewportAnchorLayer = createGraphicsLayer("ViewportConstrainedAnchorLayer", .Structural)  // // TODO(asuhan): set name correctly
+        layerChanged = true
+      }
+    } else if viewportAnchorLayer != nil {
+      willDestroyLayer(layer: viewportAnchorLayer)
+      GraphicsLayer.unparentAndClear(layer: viewportAnchorLayer)
+      layerChanged = true
+    }
+
+    return layerChanged
   }
 
   private func updateAncestorClipping(
@@ -1948,7 +1959,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       }
 
       if maskLayer == nil {
-        maskLayer = createGraphicsLayer(name: "mask", layerType: requiredLayerType)
+        maskLayer = createGraphicsLayer("mask", requiredLayerType)
         layerChanged = true
         m_graphicsLayer!.setMaskLayer(layer: maskLayer)
         // We need a geometry update to size the new mask layer.
@@ -2496,7 +2507,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
-  let viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
+  var viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private let transformFlatteningLayer: GraphicsLayer? = nil
 
