@@ -1706,8 +1706,36 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   func adjustOverflowControlsPositionRelativeToAncestor(
     _ ancestorLayer: RenderLayerWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(overflowControlsContainer != nil)
+    assert(ancestorLayer.isComposited())
+    if ancestorLayer.backing == nil {
+      return
+    }
+
+    var parentGraphicsLayerRect = computeParentGraphicsLayerRect(ancestorLayer)
+    let primaryGraphicsLayerRect = computePrimaryGraphicsLayerRect(
+      ancestorLayer, parentGraphicsLayerRect)
+
+    let overflowControlsRect = overflowControlsHostLayerRect(renderer() as! RenderBoxWrapper)
+
+    if overflowControlsHostLayerAncestorClippingStack != nil {
+      updateClippingStackLayerGeometry(
+        overflowControlsHostLayerAncestorClippingStack!, ancestorLayer, &parentGraphicsLayerRect)
+    }
+
+    let rendererOffset = ComputedOffsets(
+      renderLayer: owningLayer!, compositingAncestor: ancestorLayer, localRect: LayoutRectWrapper(),
+      parentGraphicsLayerRect: parentGraphicsLayerRect,
+      primaryGraphicsLayerRect: primaryGraphicsLayerRect)
+
+    let boxOffsetFromGraphicsLayer =
+      toLayoutSize(point: overflowControlsRect.location())
+      + rendererOffset.fromParentGraphicsLayer()
+    let snappedBoxInfo = snappedGraphicsLayer(
+      boxOffsetFromGraphicsLayer, overflowControlsRect.size(), renderer())
+
+    overflowControlsContainer!.setPosition(p: snappedBoxInfo.snappedRect.location().FloatPoint())
+    overflowControlsContainer!.setSize(size: snappedBoxInfo.snappedRect.size().FloatSize())
   }
 
   func canCompositeFilters() -> Bool {
