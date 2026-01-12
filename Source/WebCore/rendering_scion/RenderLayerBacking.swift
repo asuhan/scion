@@ -1688,8 +1688,19 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func layerForContents() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !RenderLayerCompositorWrapper.isCompositedPlugin(renderer: renderer()) {
+      return nil
+    }
+
+    guard
+      let pluginViewBase = (renderer() as! RenderEmbeddedObjectWrapper).widget() as? PluginViewBase
+    else { return nil }
+
+    if pluginViewBase.layerHostingStrategy() != .GraphicsLayer {
+      return nil
+    }
+
+    return pluginViewBase.graphicsLayer()
   }
 
   func adjustOverflowControlsPositionRelativeToAncestor(

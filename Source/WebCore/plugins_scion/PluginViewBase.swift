@@ -37,6 +37,11 @@ class PluginViewBase: Widget {
     fatalError("Not implemented")
   }
 
+  func graphicsLayer() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
