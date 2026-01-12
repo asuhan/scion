@@ -2015,8 +2015,20 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateForegroundLayer(_ needsForegroundLayer: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layerChanged = false
+    if needsForegroundLayer {
+      if foregroundLayer == nil {
+        foregroundLayer = createGraphicsLayer("ForegroundLayer")
+        foregroundLayer!.setDrawsContent(b: true)
+        layerChanged = true
+      }
+    } else if foregroundLayer != nil {
+      willDestroyLayer(layer: foregroundLayer)
+      GraphicsLayer.unparentAndClear(layer: foregroundLayer)
+      layerChanged = true
+    }
+
+    return layerChanged
   }
 
   private func updateBackgroundLayer(_ needsBackgroundLayer: Bool) -> Bool {
@@ -2597,7 +2609,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
   private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
   private var m_graphicsLayer: GraphicsLayer? = nil
-  let foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
+  var foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
   let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   var viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
