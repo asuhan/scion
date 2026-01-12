@@ -1958,8 +1958,60 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     _ needsHorizontalScrollbarLayer: Bool, _ needsVerticalScrollbarLayer: Bool,
     _ needsScrollCornerLayer: Bool
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let createOrDestroyLayer = {
+      [self] (layer: inout GraphicsLayer?, needLayer: Bool, drawsContent: Bool, layerName: String)
+      in
+      if needLayer == (layer != nil) {
+        return false
+      }
+
+      if needLayer {
+        layer = createGraphicsLayer(layerName)
+        if drawsContent {
+          layer!.setAllowsBackingStoreDetaching(allowDetaching: false)
+          layer!.setAllowsTiling(allowsTiling: false)
+        } else {
+          layer!.setPaintingPhase(phase: [])
+          layer!.setDrawsContent(b: false)
+        }
+      } else {
+        willDestroyLayer(layer: layer)
+        GraphicsLayer.unparentAndClear(layer: layer)
+      }
+      return true
+    }
+
+    var layersChanged = createOrDestroyLayer(
+      &overflowControlsContainer,
+      needsHorizontalScrollbarLayer || needsVerticalScrollbarLayer || needsScrollCornerLayer, false,
+      "overflow controls container")
+
+    let horizontalScrollbarLayerChanged = createOrDestroyLayer(
+      &layerForHorizontalScrollbar, needsHorizontalScrollbarLayer, true, "horizontal scrollbar")
+    layersChanged = layersChanged || horizontalScrollbarLayerChanged
+
+    let verticalScrollbarLayerChanged = createOrDestroyLayer(
+      &layerForVerticalScrollbar, needsVerticalScrollbarLayer, true, "vertical scrollbar")
+    layersChanged = layersChanged || verticalScrollbarLayerChanged
+
+    layersChanged =
+      layersChanged
+      || createOrDestroyLayer(&layerForScrollCorner, needsScrollCornerLayer, true, "scroll corner")
+
+    if let scrollingCoordinator = owningLayer!.page().scrollingCoordinator(),
+      let scrollableArea = owningLayer!.scrollableArea()
+    {
+      if horizontalScrollbarLayerChanged {
+        scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+          scrollableArea: scrollableArea, orientation: .Horizontal)
+      }
+      if verticalScrollbarLayerChanged {
+        scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
+          scrollableArea: scrollableArea, orientation: .Vertical)
+      }
+    }
+
+    return layersChanged
   }
 
   private func updateForegroundLayer(_ needsForegroundLayer: Bool) -> Bool {
@@ -2552,10 +2604,10 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private let transformFlatteningLayer: GraphicsLayer? = nil
 
-  private let layerForHorizontalScrollbar: GraphicsLayer? = nil
-  private let layerForVerticalScrollbar: GraphicsLayer? = nil
-  private let layerForScrollCorner: GraphicsLayer? = nil
-  let overflowControlsContainer: GraphicsLayer? = nil
+  private var layerForHorizontalScrollbar: GraphicsLayer? = nil
+  private var layerForVerticalScrollbar: GraphicsLayer? = nil
+  private var layerForScrollCorner: GraphicsLayer? = nil
+  var overflowControlsContainer: GraphicsLayer? = nil
 
   let scrollContainerLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
   let scrolledContentsLayer: GraphicsLayer? = nil  // Only used if the layer is using composited scrolling.
