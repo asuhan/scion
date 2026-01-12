@@ -50,3 +50,9 @@ enum ScrollingNodeType {
   case Sticky
   case Positioned
 }
+
+enum ScrollingLayerPositionAction {
+  case Set
+  case SetApproximate
+  case Sync
+}

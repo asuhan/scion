@@ -111,6 +111,11 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func currentScrollType() -> ScrollType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum VisibleContentRectIncludesScrollbars {
     case No
     case Yes

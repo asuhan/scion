@@ -2217,6 +2217,24 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollOffset(_ scrollOffset: ScrollOffset) {
+    let scrollableArea = owningLayer!.scrollableArea()!
+
+    if scrollableArea.currentScrollType() == .User {
+      // If scrolling is happening externally, we don't want to touch the layer bounds origin here because that will cause jitter.
+      setLocationOfScrolledContents(scrollOffset, .Sync)
+      scrollableArea.setRequiresScrollPositionReconciliation(true)
+    } else {
+      // Note that we implement the contents offset via the bounds origin on this layer, rather than a position on the sublayer.
+      setLocationOfScrolledContents(scrollOffset, .Set)
+      scrollableArea.setRequiresScrollPositionReconciliation(false)
+    }
+
+    assert(scrolledContentsLayer!.position().isZero())
+  }
+
+  private func setLocationOfScrolledContents(
+    _ scrollOffset: ScrollOffset, _ setOrSync: ScrollingLayerPositionAction
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

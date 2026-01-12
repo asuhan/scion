@@ -28,6 +28,11 @@ typealias ScrollPosition = IntPoint
 // scrollOffset() is the value used by scrollbars (min is 0,0), and should never have negative components.
 typealias ScrollOffset = IntPoint
 
+enum ScrollType {
+  case User
+  case Programmatic
+}
+
 enum OverscrollBehavior: UInt8 {
   case Auto
   case Contain
