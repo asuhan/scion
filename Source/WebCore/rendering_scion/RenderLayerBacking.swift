@@ -2018,7 +2018,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     var layerChanged = false
     if needsForegroundLayer {
       if foregroundLayer == nil {
-        foregroundLayer = createGraphicsLayer("ForegroundLayer")
+        foregroundLayer = createGraphicsLayer("ForegroundLayer")  // TODO(asuhan): set name correctly
         foregroundLayer!.setDrawsContent(b: true)
         layerChanged = true
       }
@@ -2032,8 +2032,36 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateBackgroundLayer(_ needsBackgroundLayer: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layerChanged = false
+    if needsBackgroundLayer {
+      if backgroundLayer == nil {
+        backgroundLayer = createGraphicsLayer("BackgroundLayer")  // TODO(asuhan): set name correctly
+        backgroundLayer!.setDrawsContent(b: true)
+        backgroundLayer!.setAnchorPoint(p: FloatPoint3D())
+        layerChanged = true
+      }
+
+      if contentsContainmentLayer == nil {
+        contentsContainmentLayer = createGraphicsLayer("contents containment")
+        contentsContainmentLayer!.setAppliesPageScale(appliesScale: true)
+        m_graphicsLayer!.setAppliesPageScale(appliesScale: false)
+        layerChanged = true
+      }
+    } else {
+      if backgroundLayer != nil {
+        willDestroyLayer(layer: backgroundLayer)
+        GraphicsLayer.unparentAndClear(layer: backgroundLayer)
+        layerChanged = true
+      }
+      if contentsContainmentLayer != nil {
+        willDestroyLayer(layer: contentsContainmentLayer)
+        GraphicsLayer.unparentAndClear(layer: contentsContainmentLayer)
+        layerChanged = true
+        m_graphicsLayer!.setAppliesPageScale(appliesScale: true)
+      }
+    }
+
+    return layerChanged
   }
 
   // Masking layer is used for masks or clip-path.
@@ -2607,10 +2635,10 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   var ancestorClippingStack: LayerAncestorClippingStack? = nil  // Only used if we are clipped by an ancestor which is not a stacking context.
   var overflowControlsHostLayerAncestorClippingStack: LayerAncestorClippingStack? = nil  // Used when we have an overflow controls host layer which was reparented, and needs clipping by ancestors.
 
-  private let contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
+  private var contentsContainmentLayer: GraphicsLayer? = nil  // Only used if we have a background layer; takes the transform.
   private var m_graphicsLayer: GraphicsLayer? = nil
   var foregroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the foreground separately.
-  let backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
+  var backgroundLayer: GraphicsLayer? = nil  // Only used in cases where we need to draw the background separately.
   private var childContainmentLayer: GraphicsLayer? = nil  // Only used if we have clipping on a stacking context with compositing children, or if the layer has a tile cache.
   var viewportAnchorLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
   private var maskLayer: GraphicsLayer? = nil  // Only used if we have a mask and/or clip-path.
