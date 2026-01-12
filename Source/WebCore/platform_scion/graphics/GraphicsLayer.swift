@@ -270,6 +270,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setContentsRect(_ r: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setContentsClippingRect(_ roundedRect: FloatRoundedRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1532,8 +1532,49 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func positionOverflowControlsLayers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let scrollableArea = owningLayer!.scrollableArea() else { return }
+    if !scrollableArea.hasScrollbars() {
+      return
+    }
+    // FIXME: Should do device-pixel snapping.
+    let box = renderBox()!
+    let borderBox = snappedIntRect(rect: box.borderBoxRect())
+
+    // overflowControlsContainer is positioned using the paddingBoxRectIncludingScrollbar.
+    let paddingBox = snappedIntRect(rect: box.paddingBoxRectIncludingScrollbar())
+    let paddingBoxInset = paddingBox.location - borderBox.location
+
+    let positionScrollbarLayer = {
+      (layer: GraphicsLayer, scrollbarRect: IntRect, paddingBoxInset: IntSize) in
+      layer.setPosition(p: FloatPoint(p: scrollbarRect.location - paddingBoxInset))
+      layer.setSize(size: FloatSize(size: scrollbarRect.size))
+      if layer.usesContentsLayer() {
+        let barRect = FloatRectWrapper(r: IntRect(location: IntPoint(), size: scrollbarRect.size))
+        layer.setContentsRect(barRect)
+        layer.setContentsClippingRect(FloatRoundedRect(rect: barRect))
+      }
+    }
+
+    // These rects are relative to the borderBoxRect.
+    let rects = scrollableArea.overflowControlsRects()
+    if let layer = layerForHorizontalScrollbar {
+      positionScrollbarLayer(layer, rects.horizontalScrollbar, paddingBoxInset)
+      layer.setDrawsContent(
+        b: scrollableArea.horizontalScrollbar() != nil && !layer.usesContentsLayer())
+    }
+
+    if let layer = layerForVerticalScrollbar {
+      positionScrollbarLayer(layer, rects.verticalScrollbar, paddingBoxInset)
+      layer.setDrawsContent(
+        b: scrollableArea.verticalScrollbar() != nil && !layer.usesContentsLayer())
+    }
+
+    if let layer = layerForScrollCorner {
+      let cornerRect = rects.scrollCornerOrResizerRect()
+      layer.setPosition(p: FloatPoint(p: cornerRect.location - paddingBoxInset))
+      layer.setSize(size: FloatSize(size: cornerRect.size))
+      layer.setDrawsContent(b: !cornerRect.isEmpty())
+    }
   }
 
   func tiledBacking() -> TiledBackingWrapper? {
@@ -1720,6 +1761,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func renderBox() -> RenderBoxWrapper? { return owningLayer!.renderBox() }
 
   private func compositor() -> RenderLayerCompositorWrapper {
     // TODO(asuhan): implement this

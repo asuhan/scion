@@ -442,7 +442,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
-  private func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
+  func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
     let renderBox = m_layer.renderer() as! RenderBoxWrapper
     // Scrollbars sit inside the border box.
     let overflowControlsPositioningRect = snappedIntRect(

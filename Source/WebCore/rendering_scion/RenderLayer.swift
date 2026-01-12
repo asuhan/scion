@@ -5305,6 +5305,9 @@ class RenderLayerWrapper {
     var verticalScrollbar = IntRect()
     var scrollCorner = IntRect()
     var resizer = IntRect()
+    func scrollCornerOrResizerRect() -> IntRect {
+      return !scrollCorner.isEmpty() ? scrollCorner : resizer
+    }
   }
 
   let p: UnsafeMutableRawPointer
