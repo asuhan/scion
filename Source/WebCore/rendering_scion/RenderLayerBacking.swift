@@ -2330,8 +2330,17 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func setBackgroundLayerPaintsFixedRootBackground(
     _ backgroundLayerPaintsFixedRootBackground: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if backgroundLayerPaintsFixedRootBackground == self.backgroundLayerPaintsFixedRootBackground {
+      return
+    }
+
+    self.backgroundLayerPaintsFixedRootBackground = backgroundLayerPaintsFixedRootBackground
+
+    if self.backgroundLayerPaintsFixedRootBackground {
+      assert(self.isFrameLayerWithTiledBacking)
+      renderer().view().frameView().removeSlowRepaintObject(
+        renderer().view().rendererForRootBackground()!)
+    }
   }
 
   private func contentOffsetInCompositingLayer() -> LayoutSizeWrapper {
@@ -2839,7 +2848,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var isRootFrameRenderViewLayer = false
   var isFrameLayerWithTiledBacking = false
   var requiresOwnBackingStore = true
-  let backgroundLayerPaintsFixedRootBackground = false
+  var backgroundLayerPaintsFixedRootBackground = false
   private let requiresBackgroundLayer = false
   private var hasSubpixelRounding = false
   private var m_shouldPaintUsingCompositeCopy = false
