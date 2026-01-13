@@ -305,15 +305,42 @@ struct ComputedOffsets {
     fatalError("Not implemented")
   }
 
-  func fromParentGraphicsLayer() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func fromParentGraphicsLayer() -> LayoutSizeWrapper {
+    if m_fromParentGraphicsLayer == nil {
+      m_fromParentGraphicsLayer = fromAncestorGraphicsLayer() - parentGraphicsLayerOffset
+    }
+    return m_fromParentGraphicsLayer!
   }
 
-  func fromPrimaryGraphicsLayer() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func fromPrimaryGraphicsLayer() -> LayoutSizeWrapper {
+    if m_fromPrimaryGraphicsLayer == nil {
+      m_fromPrimaryGraphicsLayer =
+        fromAncestorGraphicsLayer() - parentGraphicsLayerOffset - primaryGraphicsLayerOffset
+    }
+    return m_fromPrimaryGraphicsLayer!
   }
+
+  private mutating func fromAncestorGraphicsLayer() -> LayoutSizeWrapper {
+    if m_fromAncestorGraphicsLayer == nil {
+      let localPointInAncestorRenderLayerCoords = renderLayer.convertToLayerCoords(
+        ancestorLayer: compositingAncestor, location: location, adjustForColumns: .AdjustForColumns)
+      m_fromAncestorGraphicsLayer = computeOffsetFromAncestorGraphicsLayer(
+        compositingAncestor, localPointInAncestorRenderLayerCoords, deviceScaleFactor)
+    }
+    return m_fromAncestorGraphicsLayer!
+  }
+
+  private var m_fromAncestorGraphicsLayer: LayoutSizeWrapper? = nil
+  private var m_fromParentGraphicsLayer: LayoutSizeWrapper? = nil
+  private var m_fromPrimaryGraphicsLayer: LayoutSizeWrapper? = nil
+
+  private let renderLayer: RenderLayerWrapper
+  private let compositingAncestor: RenderLayerWrapper?
+  // Location is relative to the renderer.
+  private let location: LayoutPointWrapper
+  private let parentGraphicsLayerOffset: LayoutSizeWrapper
+  private let primaryGraphicsLayerOffset: LayoutSizeWrapper
+  private let deviceScaleFactor: Float32
 }
 
 private func layerRendererStyleHas3DTransformOperation(_ layer: RenderLayerWrapper) -> Bool {
@@ -854,7 +881,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
       let viewTransitionCapture = activeViewTransition.viewTransitionNewPseudoForCapturedElement(
         renderer: renderer())
     {
-      let computedOffsets = ComputedOffsets(
+      var computedOffsets = ComputedOffsets(
         renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
         localRect: viewTransitionCapture.captureOverflowRect(),
         parentGraphicsLayerRect: LayoutRectWrapper(), primaryGraphicsLayerRect: LayoutRectWrapper())
@@ -873,11 +900,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     let primaryGraphicsLayerRect = computePrimaryGraphicsLayerRect(
       compositedAncestor, parentGraphicsLayerRect)
 
-    let compositedBoundsOffset = ComputedOffsets(
+    var compositedBoundsOffset = ComputedOffsets(
       renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
       localRect: compositedBounds(), parentGraphicsLayerRect: parentGraphicsLayerRect,
       primaryGraphicsLayerRect: primaryGraphicsLayerRect)
-    let rendererOffset = ComputedOffsets(
+    var rendererOffset = ComputedOffsets(
       renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
       localRect: LayoutRectWrapper(), parentGraphicsLayerRect: parentGraphicsLayerRect,
       primaryGraphicsLayerRect: primaryGraphicsLayerRect)
@@ -1797,7 +1824,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
         overflowControlsHostLayerAncestorClippingStack!, ancestorLayer, &parentGraphicsLayerRect)
     }
 
-    let rendererOffset = ComputedOffsets(
+    var rendererOffset = ComputedOffsets(
       renderLayer: owningLayer!, compositingAncestor: ancestorLayer, localRect: LayoutRectWrapper(),
       parentGraphicsLayerRect: parentGraphicsLayerRect,
       primaryGraphicsLayerRect: primaryGraphicsLayerRect)
