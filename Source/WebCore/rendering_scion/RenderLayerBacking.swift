@@ -195,8 +195,15 @@ private func overflowControlsHostLayerRect(_ renderBox: RenderBoxWrapper) -> Lay
 private func layerOrAncestorIsTransformedOrUsingCompositedScrolling(_ layer: RenderLayerWrapper)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var curr: RenderLayerWrapper? = layer
+  while curr != nil {
+    if curr!.isTransformed() || curr!.hasCompositedScrollableOverflow() {
+      return true
+    }
+    curr = curr!.parent()
+  }
+
+  return false
 }
 
 private func hasNonZeroTransformOrigin(_ renderer: RenderObjectWrapper) -> Bool {
