@@ -2346,8 +2346,42 @@ class RenderLayerWrapper {
   // Returns true if the layer has a perspective.
   // Note that this transform has the perspective-origin baked in.
   func perspectiveTransform() -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().hasTransformRelatedProperty() {
+      return TransformationMatrix()
+    }
+
+    let style = renderer().style()
+    if !style.hasPerspective() {
+      return TransformationMatrix()
+    }
+
+    let transformReferenceBoxRect = snapRectToDevicePixelsIfNeeded(
+      rect: renderer().transformReferenceBoxRect(style: style), renderer: renderer())
+    let perspectiveOrigin = style.computePerspectiveOrigin(boundingBox: transformReferenceBoxRect)
+
+    // In the regular case of a non-clipped, non-scrolled GraphicsLayer, all transformations
+    // (via CSS 'transform' / 'perspective') are applied with respect to a predefined anchor point,
+    // which depends on the chosen CSS 'transform-box' / 'transform-origin' properties.
+    //
+    // A transformation given by the CSS 'transform' property is applied, by translating
+    // to the 'transform origin', applying the transformation, and translating back.
+    // When an element specifies a CSS 'perspective' property, the perspective transformation matrix
+    // that's computed here is propagated to the GraphicsLayer by calling setChildrenTransform().
+    //
+    // However the GraphicsLayer platform implementations (e.g. CA on macOS) apply the children transform,
+    // defined on the parent, with respect to the anchor point of the parent, when rendering child elements.
+    // This is wrong, as the perspective transformation (applied to a child of the element defining the
+    // 3d effect), must be independant of the chosen transform-origin (the parents transform origin
+    // must not affect its children).
+    //
+    // To circumvent this, explicitely remove the transform-origin dependency in the perspective matrix.
+    let transformOrigin = transformOriginPixelSnappedIfNeeded()
+
+    let transform = TransformationMatrix()
+    style.unapplyTransformOrigin(transform, transformOrigin)
+    style.applyPerspective(transform, FloatPoint3D(perspectiveOrigin))
+    style.applyTransformOrigin(transform, transformOrigin)
+    return transform
   }
 
   func transformOriginPixelSnappedIfNeeded() -> FloatPoint3D {

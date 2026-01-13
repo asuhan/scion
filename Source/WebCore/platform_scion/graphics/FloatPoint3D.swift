@@ -29,6 +29,8 @@ struct FloatPoint3D {
     self.z = z
   }
 
+  init(_ p: FloatPoint) { self.init(x: p.x, y: p.y, z: 0) }
+
   let x: Float32
   let y: Float32
   let z: Float32

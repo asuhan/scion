@@ -2005,6 +2005,26 @@ class RenderStyleWrapper: Equatable {
     .Translate, .Rotate, .Scale, .Offset,
   ]
 
+  func computePerspectiveOrigin(boundingBox: FloatRectWrapper) -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func applyPerspective(_ transform: TransformationMatrix, _ originTranslate: FloatPoint3D) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func applyTransformOrigin(_ transform: TransformationMatrix, _ originTranslate: FloatPoint3D) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func unapplyTransformOrigin(_ transform: TransformationMatrix, _ originTranslate: FloatPoint3D) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasMask() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
