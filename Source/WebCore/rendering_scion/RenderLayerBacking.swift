@@ -3133,8 +3133,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func resetContentsRect() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    updateContentsRects()
+    m_graphicsLayer!.setContentsTileSize(FloatSize(size: IntSize()))
+    m_graphicsLayer!.setContentsTilePhase(FloatSize(size: IntSize()))
   }
 
   private func updateContentsRects() {
