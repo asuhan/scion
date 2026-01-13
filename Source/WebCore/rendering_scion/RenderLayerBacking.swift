@@ -548,6 +548,19 @@ private func intersectsWithAncestor(
   return overlap.intersects(other: ancestorCompositedBounds)
 }
 
+private func backgroundRectForBox(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
+  switch box.style().backgroundClip() {
+  case .BorderBox:
+    return box.borderBoxRect()
+  case .PaddingBox:
+    return box.paddingBoxRect()
+  case .ContentBox:
+    return box.contentBoxRect()
+  default:
+    fatalError("Not reached")
+  }
+}
+
 // RenderLayerBacking controls the compositing behavior for a single RenderLayer.
 // It holds the various GraphicsLayers, and makes decisions about intra-layer rendering
 // optimizations.
@@ -1849,8 +1862,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func backgroundBoxForSimpleContainerPainting() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let box = renderer() as? RenderBoxWrapper else { return FloatRectWrapper() }
+
+    var backgroundBox = backgroundRectForBox(box)
+    backgroundBox.move(size: contentOffsetInCompositingLayer())
+    return snapRectToDevicePixels(rect: backgroundBox, pixelSnappingFactor: deviceScaleFactor())
   }
 
   private func createPrimaryGraphicsLayer() {
