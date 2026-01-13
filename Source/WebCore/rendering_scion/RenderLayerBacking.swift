@@ -3170,8 +3170,9 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     traverseVisibleNonCompositedDescendantLayers(
       parent: owningLayer!,
       layerFunc: { layer in
-        let localRequest = RenderLayerWrapper.PaintedContentRequest()
-        if layer.isVisuallyNonEmpty(request: localRequest) {
+        var localRequest: RenderLayerWrapper.PaintedContentRequest? =
+          RenderLayerWrapper.PaintedContentRequest()
+        if layer.isVisuallyNonEmpty(request: &localRequest) {
           let mayIntersect =
             intersectsWithAncestor(
               child: layer, ancestor: owningLayer!, ancestorCompositedBounds: compositedBounds())

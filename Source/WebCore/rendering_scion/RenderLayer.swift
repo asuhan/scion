@@ -1240,9 +1240,41 @@ class RenderLayerWrapper {
   }
 
   // Returns true if this layer has visible content (ignoring any child layers).
-  func isVisuallyNonEmpty(request: PaintedContentRequest? = nil) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func isVisuallyNonEmpty(request: inout PaintedContentRequest?) -> Bool {
+    assert(!visibleDescendantStatusDirty)
+
+    if !hasVisibleContent || renderer().style().opacity() == 0 {
+      return false
+    }
+
+    if renderer().isRenderReplaced() || (m_scrollableArea?.hasOverflowControls() ?? false) {
+      if request == nil {
+        return true
+      }
+
+      request!.setHasPaintedContent()
+      if request!.isSatisfied() {
+        return true
+      }
+    }
+
+    if hasVisibleBoxDecorationsOrBackground() {
+      if request == nil {
+        return true
+      }
+
+      request!.setHasPaintedContent()
+      if request!.isSatisfied() {
+        return true
+      }
+    }
+
+    return hasNonEmptyChildRenderers(request: request ?? PaintedContentRequest())
+  }
+
+  func isVisuallyNonEmpty() -> Bool {
+    var dummy: PaintedContentRequest? = nil
+    return isVisuallyNonEmpty(request: &dummy)
   }
 
   // True if this layer container renderers that paint.
