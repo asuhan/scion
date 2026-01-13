@@ -1174,8 +1174,24 @@ class RenderLayerWrapper {
   }
 
   func setHasVisibleContent() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hasVisibleContent && !visibleContentStatusDirty {
+      assert(
+        parent() == nil || parent()!.visibleDescendantStatusDirty
+          || parent()!.hasVisibleDescendant)
+      return
+    }
+
+    visibleContentStatusDirty = false
+    hasVisibleContent = true
+    computeRepaintRects(renderer().containerForRepaint().renderer)
+    if !isNormalFlowOnly {
+      // We don't collect invisible layers in z-order lists if they are not composited.
+      // As we became visible, we need to dirty our stacking containers ancestors to be properly
+      // collected.
+      dirtyHiddenStackingContextAncestorZOrderLists()
+    }
+
+    parent()?.dirtyAncestorChainVisibleDescendantStatus()
   }
 
   func dirtyVisibleContentStatus() {
@@ -3301,6 +3317,11 @@ class RenderLayerWrapper {
       layer!.hasSelfPaintingLayerDescendantDirty = true
       layer = layer!.parent()
     }
+  }
+
+  func computeRepaintRects(_ repaintContainer: RenderLayerModelObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computeRepaintRectsIncludingDescendants() {
