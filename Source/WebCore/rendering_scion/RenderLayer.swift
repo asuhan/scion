@@ -849,9 +849,21 @@ class RenderLayerWrapper {
     }
   }
 
+  // Since we're only painting non-composited layers, we know that they all share the same repaintContainer.
   func repaintIncludingNonCompositingDescendants(repaintContainer: RenderLayerModelObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let clippedOverflowRect =
+      repaintRectsValid
+      ? m_repaintRects.clippedOverflowRect
+      : renderer().clippedOverflowRectForRepaint(repaintContainer)
+    renderer().repaintUsingContainer(repaintContainer, clippedOverflowRect)
+
+    var curr = firstChild()
+    while curr != nil {
+      if !curr!.isComposited() {
+        curr!.repaintIncludingNonCompositingDescendants(repaintContainer: repaintContainer)
+      }
+      curr = curr!.nextSibling()
+    }
   }
 
   func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -5543,6 +5555,9 @@ class RenderLayerWrapper {
 
   // This list contains child layers that cannot create stacking contexts and appear in normal flow order.
   private var normalFlowList: [RenderLayerWrapper]? = nil
+
+  // Only valid if repaintRectsValid is set.
+  private let m_repaintRects = RenderObjectWrapper.RepaintRects()
 
   // The layer's width/height
   private let layerSize = IntSize()

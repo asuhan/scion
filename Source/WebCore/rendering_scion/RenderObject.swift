@@ -1299,9 +1299,24 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  struct RepaintRects {
+    let clippedOverflowRect: LayoutRectWrapper  // Some rect (normally the visual overflow rect) mapped up to the repaint container, respecting clipping.
+    init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   // Returns the rect that should be repainted whenever this object changes. The rect is in the view's
   // coordinate space. This method deals with outlines and overflow.
   func absoluteClippedOverflowRectForRepaint() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clippedOverflowRectForRepaint(_ repaintContainer: RenderLayerModelObjectWrapper?)
+    -> LayoutRectWrapper
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
