@@ -31,7 +31,14 @@ struct FloatPoint3D {
 
   init(_ p: FloatPoint) { self.init(x: p.x, y: p.y, z: 0) }
 
-  let x: Float32
-  let y: Float32
+  func xy() -> FloatPoint { return FloatPoint(x: x, y: y) }
+
+  mutating func setXY(_ p: FloatPoint) {
+    x = p.x
+    y = p.y
+  }
+
+  var x: Float32
+  var y: Float32
   let z: Float32
 }

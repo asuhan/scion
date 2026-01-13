@@ -2015,6 +2015,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func computeTransformOrigin(_ boundingBox: FloatRectWrapper) -> FloatPoint3D {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func applyTransformOrigin(_ transform: TransformationMatrix, _ originTranslate: FloatPoint3D) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -2385,8 +2385,21 @@ class RenderLayerWrapper {
   }
 
   func transformOriginPixelSnappedIfNeeded() -> FloatPoint3D {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().hasTransformRelatedProperty() {
+      return FloatPoint3D()
+    }
+
+    let style = renderer().style()
+    let referenceBoxRect = renderer().transformReferenceBoxRect(style: style)
+
+    var origin = style.computeTransformOrigin(referenceBoxRect)
+    if rendererNeedsPixelSnapping(renderer: renderer()) {
+      origin.setXY(
+        roundPointToDevicePixels(
+          point: LayoutPointWrapper(size: origin.xy()),
+          pixelSnappingFactor: renderer().document().deviceScaleFactor()))
+    }
+    return origin
   }
 
   func preserves3D() -> Bool {
