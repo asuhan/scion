@@ -478,8 +478,18 @@ class RenderLayerWrapper {
   }
 
   func willCompositeClipPath() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isComposited() {
+      return false
+    }
+
+    guard let clipPath = renderer().style().clipPath() else { return false }
+
+    if renderer().hasMask() {
+      return false
+    }
+
+    return (clipPath.type != .Shape || clipPath.type == .Shape)
+      && GraphicsLayer.supportsLayerType(type: .Shape)
   }
 
   func hasDescendantNeedingCompositingRequirementsTraversal() -> Bool {
