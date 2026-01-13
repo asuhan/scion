@@ -301,8 +301,12 @@ struct ComputedOffsets {
     localRect: LayoutRectWrapper, parentGraphicsLayerRect: LayoutRectWrapper,
     primaryGraphicsLayerRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.renderLayer = renderLayer
+    self.compositingAncestor = compositingAncestor
+    self.location = localRect.location()
+    self.parentGraphicsLayerOffset = toLayoutSize(point: parentGraphicsLayerRect.location())
+    self.primaryGraphicsLayerOffset = toLayoutSize(point: primaryGraphicsLayerRect.location())
+    self.deviceScaleFactor = renderLayer.renderer().document().deviceScaleFactor()
   }
 
   mutating func fromParentGraphicsLayer() -> LayoutSizeWrapper {
