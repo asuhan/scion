@@ -21,7 +21,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-final class CachedImageWrapper {
+final class CachedImageWrapper: CachedResourceWrapper {
   func image() -> ImageWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

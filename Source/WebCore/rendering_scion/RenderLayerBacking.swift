@@ -702,7 +702,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     // Requires layout.
     if contentsInfo.isDirectlyCompositedImage() {
-      updateImageContents(contentsInfo)
+      updateImageContents(&contentsInfo)
     }
 
     let unscaledBitmap = contentsInfo.isUnscaledBitmapOnly()
@@ -2862,9 +2862,27 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return false
   }
 
-  private func updateImageContents(_ contentsInfo: PaintedContentsInfo) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func updateImageContents(_ contentsInfo: inout PaintedContentsInfo) {
+    let imageRenderer = renderer() as! RenderImageWrapper
+
+    guard let cachedImage = imageRenderer.cachedImage() else { return }
+
+    guard let image = cachedImage.imageForRenderer(renderer: imageRenderer) else { return }
+
+    // We have to wait until the image is fully loaded before setting it on the layer.
+    if !cachedImage.isLoaded() {
+      return
+    }
+
+    updateContentsRects()
+    m_graphicsLayer!.setContentsToImage(image)
+
+    updateDrawsContent(contentsInfo: &contentsInfo)
+
+    // Image animation is "lazy", in that it automatically stops unless someone is drawing
+    // the image. So we have to kick the animation each time; this has the downside that the
+    // image will keep animating, even if its layer is not visible.
+    image.startAnimation()
   }
 
   func isUnscaledBitmapOnly() -> Bool {

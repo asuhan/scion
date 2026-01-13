@@ -31,4 +31,9 @@ class CachedResourceWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isLoaded() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

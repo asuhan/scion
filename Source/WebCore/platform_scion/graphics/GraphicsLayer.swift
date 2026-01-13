@@ -315,6 +315,12 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // Layer contents
+  func setContentsToImage(_ image: ImageWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldDirectlyCompositeImage(image: ImageWrapper?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
