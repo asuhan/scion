@@ -1362,8 +1362,15 @@ class RenderLayerWrapper {
   }
 
   func enclosingOverflowClipLayer(includeSelf: IncludeSelfOrNot) -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var layer = (includeSelf == .IncludeSelf) ? self : parent()
+    while layer != nil {
+      if layer!.renderer().hasPotentiallyScrollableOverflow() {
+        return layer
+      }
+
+      layer = layer!.parent()
+    }
+    return nil
   }
 
   // Enclosing compositing layer; if includeSelf is true, may return this.
