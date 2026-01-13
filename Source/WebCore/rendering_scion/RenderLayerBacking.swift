@@ -260,8 +260,11 @@ struct SnappedRectInfo {
 private func snappedGraphicsLayer(
   _ offset: LayoutSizeWrapper, _ size: LayoutSizeWrapper, _ renderer: RenderLayerModelObjectWrapper
 ) -> SnappedRectInfo {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let graphicsLayerRect = LayoutRectWrapper(location: toLayoutPoint(size: offset), size: size)
+  let snappedRect = LayoutRectWrapper(
+    r: snapRectToDevicePixelsIfNeeded(rect: graphicsLayerRect, renderer: renderer))
+  let snapDelta = snappedRect.location() - toLayoutPoint(size: offset)
+  return SnappedRectInfo(snappedRect: snappedRect, snapDelta: snapDelta)
 }
 
 private func computeOffsetFromAncestorGraphicsLayer(
