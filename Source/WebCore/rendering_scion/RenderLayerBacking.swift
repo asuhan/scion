@@ -216,8 +216,13 @@ private func subpixelOffsetFromRendererChanged(
   _ oldSubpixelOffsetFromRenderer: LayoutSizeWrapper,
   _ newSubpixelOffsetFromRenderer: LayoutSizeWrapper, _ deviceScaleFactor: Float32
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let previous = snapSizeToDevicePixel(
+    size: oldSubpixelOffsetFromRenderer, location: LayoutPointWrapper(),
+    pixelSnappingFactor: deviceScaleFactor)
+  let current = snapSizeToDevicePixel(
+    size: newSubpixelOffsetFromRenderer, location: LayoutPointWrapper(),
+    pixelSnappingFactor: deviceScaleFactor)
+  return previous != current
 }
 
 private func subpixelForLayerPainting(_ point: LayoutPointWrapper, _ pixelSnappingFactor: Float32)
