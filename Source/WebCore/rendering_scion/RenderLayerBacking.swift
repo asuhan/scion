@@ -2482,8 +2482,100 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     _ primaryGraphicsLayerRect: LayoutRectWrapper,
     _ offsetFromParentGraphicsLayer: LayoutSizeWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var defaultAnchorPoint = FloatPoint3D(x: 0.5, y: 0.5, z: 0)
+
+    if owningLayer!.isRenderViewLayer || renderer().effectiveCapturedInViewTransition() {
+      defaultAnchorPoint = FloatPoint3D()
+    }
+
+    if !renderer().hasTransformRelatedProperty() || renderer().effectiveCapturedInViewTransition() {
+      m_graphicsLayer!.setAnchorPoint(p: defaultAnchorPoint)
+      contentsContainmentLayer?.setAnchorPoint(p: defaultAnchorPoint)
+      childContainmentLayer?.setAnchorPoint(p: defaultAnchorPoint)
+      scrollContainerLayer?.setAnchorPoint(p: defaultAnchorPoint)
+      scrolledContentsLayer?.setPreserves3D(false)
+      return
+    }
+
+    let deviceScaleFactor = deviceScaleFactor()
+    let transformOrigin = owningLayer!.transformOriginPixelSnappedIfNeeded()
+    let layerOffset = roundPointToDevicePixels(
+      point: toLayoutPoint(size: offsetFromParentGraphicsLayer),
+      pixelSnappingFactor: deviceScaleFactor)
+    let anchor = FloatPoint3D(
+      x: primaryGraphicsLayerRect.width() != 0
+        ? ((layerOffset.x - primaryGraphicsLayerRect.x()) + transformOrigin.x)
+          / primaryGraphicsLayerRect.width() : 0.5,
+      y: primaryGraphicsLayerRect.height() != 0
+        ? ((layerOffset.y - primaryGraphicsLayerRect.y()) + transformOrigin.y)
+          / primaryGraphicsLayerRect.height() : 0.5,
+      z: transformOrigin.z
+    )
+
+    if contentsContainmentLayer != nil {
+      contentsContainmentLayer!.setAnchorPoint(p: anchor)
+    } else {
+      m_graphicsLayer!.setAnchorPoint(p: anchor)
+    }
+
+    let removeChildrenTransformFromLayers = { [self] (layerToIgnore: GraphicsLayer?) in
+      if let clippingLayer = clippingLayer(), !optEq(clippingLayer, layerToIgnore) {
+        clippingLayer.setChildrenTransform(TransformationMatrix())
+        clippingLayer.setAnchorPoint(p: defaultAnchorPoint)
+      }
+
+      if scrollContainerLayer != nil && !optEq(scrollContainerLayer, layerToIgnore) {
+        scrollContainerLayer!.setChildrenTransform(TransformationMatrix())
+        scrollContainerLayer!.setAnchorPoint(p: defaultAnchorPoint)
+        scrolledContentsLayer!.setPreserves3D(false)
+      }
+
+      if !optEq(m_graphicsLayer, layerToIgnore) {
+        m_graphicsLayer!.setChildrenTransform(TransformationMatrix())
+      }
+    }
+
+    if !renderer().style().hasPerspective() {
+      removeChildrenTransformFromLayers(nil)
+      return
+    }
+
+    let layerForChildrenTransform = { [self] () in
+      if scrollContainerLayer != nil {
+        // Scroll container layers are only created for RenderBox derived renderers.
+        return (
+          scrollContainerLayer, scrollContainerLayerBox(renderer() as! RenderBoxWrapper).FloatRect()
+        )
+      }
+      if let layer = clippingLayer() {
+        return (layer, clippingLayerBox(renderer()).FloatRect())
+      }
+
+      return (m_graphicsLayer, renderer().transformReferenceBoxRect())
+    }
+
+    let (layerForPerspective, layerForPerspectiveRect) = layerForChildrenTransform()
+    if !optEq(layerForPerspective, m_graphicsLayer) {
+      // If we have scrolling layers, we need the children transform on m_scrollContainerLayer to
+      // affect children of m_scrolledContentsLayer, so set setPreserves3D(true).
+      if optEq(layerForPerspective, scrollContainerLayer) {
+        scrolledContentsLayer!.setPreserves3D(true)
+      }
+
+      let perspectiveAnchorPoint = FloatPoint3D(
+        x: layerForPerspectiveRect.width() != 0
+          ? (transformOrigin.x - layerForPerspectiveRect.x()) / layerForPerspectiveRect.width()
+          : 0.5,
+        y: layerForPerspectiveRect.height() != 0
+          ? (transformOrigin.y - layerForPerspectiveRect.y()) / layerForPerspectiveRect.height()
+          : 0.5,
+        z: transformOrigin.z)
+
+      layerForPerspective!.setAnchorPoint(p: perspectiveAnchorPoint)
+    }
+
+    layerForPerspective!.setChildrenTransform(owningLayer!.perspectiveTransform())
+    removeChildrenTransformFromLayers(layerForPerspective)
   }
 
   private func updateFilters(style: RenderStyleWrapper) {

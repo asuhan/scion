@@ -701,6 +701,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func transformReferenceBoxRect() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // https://www.w3.org/TR/css-transforms-1/#reference-box
   func referenceBoxRect(boxType: CSSBoxType) -> FloatRectWrapper {
     // CSS box model code is implemented in RenderBox::referenceBoxRect().

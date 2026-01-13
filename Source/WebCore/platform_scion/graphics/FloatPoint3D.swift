@@ -20,4 +20,16 @@
     Boston, MA 02110-1301, USA.
 */
 
-struct FloatPoint3D {}
+struct FloatPoint3D {
+  init() { self.init(x: 0, y: 0, z: 0) }
+
+  init(x: Float32, y: Float32, z: Float32) {
+    self.x = x
+    self.y = y
+    self.z = z
+  }
+
+  let x: Float32
+  let y: Float32
+  let z: Float32
+}

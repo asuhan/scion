@@ -197,6 +197,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setChildrenTransform(_ matrix: TransformationMatrix) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPreserves3D(_ b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

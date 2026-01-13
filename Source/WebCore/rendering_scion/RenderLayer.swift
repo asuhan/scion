@@ -2342,6 +2342,19 @@ class RenderLayerWrapper {
     return TransformationMatrix()
   }
 
+  // Get the children transform (to apply a perspective on children), which is applied to transformed sublayers, but not this layer.
+  // Returns true if the layer has a perspective.
+  // Note that this transform has the perspective-origin baked in.
+  func perspectiveTransform() -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformOriginPixelSnappedIfNeeded() -> FloatPoint3D {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func preserves3D() -> Bool {
     return renderer().style().preserves3D()
   }
