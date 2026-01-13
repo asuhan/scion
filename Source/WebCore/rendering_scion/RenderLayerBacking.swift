@@ -2468,9 +2468,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  // Return the offset from the top-left of this compositing layer at which the renderer's contents are painted.
   private func contentOffsetInCompositingLayer() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutSizeWrapper(
+      width: -m_compositedBounds.x() + compositedBoundsOffsetFromGraphicsLayer.width(),
+      height: -m_compositedBounds.y() + compositedBoundsOffsetFromGraphicsLayer.height())
   }
 
   private func ensureClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
