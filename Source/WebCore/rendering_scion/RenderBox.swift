@@ -470,8 +470,50 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !BackgroundPainter.paintsOwnBackground(renderer: self) {
+      return false
+    }
+
+    let backgroundColor = style().visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor)
+    if !backgroundColor.isOpaque() {
+      return false
+    }
+
+    // If the element has appearance, it might be painted by theme.
+    // We cannot be sure if theme paints the background opaque.
+    // In this case it is safe to not assume opaqueness.
+    // FIXME: May be ask theme if it paints opaque.
+    if style().hasUsedAppearance() {
+      return false
+    }
+    // FIXME: Check the opaqueness of background images.
+
+    if hasClip() || hasClipPath() {
+      return false
+    }
+
+    // FIXME: Use rounded rect if border radius is present.
+    if style().hasBorderRadius() {
+      return false
+    }
+
+    // FIXME: The background color clip is defined by the last layer.
+    if style().backgroundLayers().next() != nil {
+      return false
+    }
+    var backgroundRect = LayoutRectWrapper()
+    switch style().backgroundClip() {
+    case .BorderBox:
+      backgroundRect = borderBoxRect()
+    case .PaddingBox:
+      backgroundRect = paddingBoxRect()
+    case .ContentBox:
+      backgroundRect = contentBoxRect()
+    default:
+      break
+    }
+    return backgroundRect.contains(other: localRect)
   }
 
   func x() -> LayoutUnit {

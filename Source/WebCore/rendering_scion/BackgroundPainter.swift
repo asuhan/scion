@@ -910,7 +910,7 @@ class BackgroundPainter {
       includeLogicalRightEdge: includeLogicalRightEdge)
   }
 
-  private static func paintsOwnBackground(renderer: RenderBoxModelObjectWrapper) -> Bool {
+  static func paintsOwnBackground(renderer: RenderBoxModelObjectWrapper) -> Bool {
     if !renderer.isBody() {
       return true
     }
