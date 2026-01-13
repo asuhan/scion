@@ -2357,8 +2357,23 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func ensureClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for i in 0..<clippingStack.stack.count {
+      if clippingStack.stack[i].clippingLayer == nil {
+        clippingStack.stack[i].clippingLayer = createGraphicsLayer(
+          clippingStack.stack[i].clipData.isOverflowScroll
+            ? "clip for scroller" : "ancestor clipping")
+        clippingStack.stack[i].clippingLayer!.setMasksToBounds(b: true)
+        clippingStack.stack[i].clippingLayer!.setPaintingPhase(phase: [])
+      }
+
+      if clippingStack.stack[i].clipData.isOverflowScroll {
+        if clippingStack.stack[i].scrollingLayer == nil {
+          clippingStack.stack[i].scrollingLayer = createGraphicsLayer("scrolling proxy")
+        }
+      } else if clippingStack.stack[i].scrollingLayer != nil {
+        GraphicsLayer.unparentAndClear(layer: clippingStack.stack[i].scrollingLayer)
+      }
+    }
   }
 
   private func updateClippingStackLayerGeometry(
