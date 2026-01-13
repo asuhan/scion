@@ -180,6 +180,13 @@ private func overflowControlsHostLayerRect(_ renderBox: RenderBoxWrapper) -> Lay
   fatalError("Not implemented")
 }
 
+private func layerOrAncestorIsTransformedOrUsingCompositedScrolling(_ layer: RenderLayerWrapper)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func hasNonZeroTransformOrigin(_ renderer: RenderObjectWrapper) -> Bool {
   let style = renderer.style()
   return (style.transformOriginX().isFixed() && style.transformOriginX().value() != 0)
@@ -2984,8 +2991,29 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func shouldClipCompositedBounds() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if !WTF_PLATFORM_IOS_FAMILY
+      // Scrollbar layers use this layer for relative positioning, so don't clip.
+      if layerForHorizontalScrollbar != nil || layerForVerticalScrollbar != nil {
+        return false
+      }
+    #endif
+
+    if renderer().effectiveCapturedInViewTransition() {
+      return false
+    }
+    if renderer().style().pseudoElementType() == .ViewTransitionNew {
+      return false
+    }
+
+    if isFrameLayerWithTiledBacking {
+      return false
+    }
+
+    if layerOrAncestorIsTransformedOrUsingCompositedScrolling(owningLayer!) {
+      return false
+    }
+
+    return true
   }
 
   private func tileCacheFlatteningLayer() -> GraphicsLayer? {
