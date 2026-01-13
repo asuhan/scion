@@ -252,6 +252,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setBackdropFiltersRect(_ backdropFiltersRect: FloatRoundedRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setBlendMode(blendMode: BlendMode) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

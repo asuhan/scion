@@ -2609,8 +2609,31 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateBackdropFiltersGeometry() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !canCompositeBackdropFilters {
+      return
+    }
+
+    guard let renderBox = renderer() as? RenderBoxWrapper else { return }
+
+    var backdropFiltersRect = FloatRoundedRect()
+    if renderBox.style().hasBorderRadius() && !renderBox.hasClip() {
+      let borderShape = BorderShape.shapeForBorderRect(
+        style: renderBox.style(), borderRect: renderBox.borderBoxRect())
+      var roundedBoxRect = borderShape.deprecatedRoundedRect()
+      roundedBoxRect.move(size: contentOffsetInCompositingLayer())
+      backdropFiltersRect = roundedBoxRect.pixelSnappedRoundedRectForPainting(
+        deviceScaleFactor: deviceScaleFactor())
+    } else {
+      var boxRect = renderBox.borderBoxRect()
+      if renderBox.hasClip() {
+        boxRect.intersect(other: renderBox.clipRect(location: LayoutPointWrapper(), fragment: nil))
+      }
+      boxRect.move(size: contentOffsetInCompositingLayer())
+      backdropFiltersRect = FloatRoundedRect(
+        rect: snapRectToDevicePixels(rect: boxRect, pixelSnappingFactor: deviceScaleFactor()))
+    }
+
+    m_graphicsLayer!.setBackdropFiltersRect(backdropFiltersRect)
   }
 
   private func updateBlendMode(style: RenderStyleWrapper) {
@@ -3016,6 +3039,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private var isRootFrameRenderViewLayer = false
   var isFrameLayerWithTiledBacking = false
   var requiresOwnBackingStore = true
+  var canCompositeBackdropFilters = false
   var backgroundLayerPaintsFixedRootBackground = false
   private let requiresBackgroundLayer = false
   private var hasSubpixelRounding = false
