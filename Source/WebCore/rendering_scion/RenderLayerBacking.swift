@@ -1298,8 +1298,18 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func childForSuperlayers() -> GraphicsLayer {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if owningLayer!.isRenderViewLayer {
+      // If the document element is captured, then the RenderView's layer will get attached
+      // into the view-transition tree, and we instead want to attach the root of the VT tree to our ancestor.
+      if owningLayer!.renderer().protectedDocument().activeViewTransitionCapturedDocumentElement() {
+        if let viewTransitionRoot = owningLayer!.lastChild(),
+          viewTransitionRoot.renderer().isViewTransitionRoot() && viewTransitionRoot.backing != nil
+        {
+          return viewTransitionRoot.backing!.childForSuperlayers()
+        }
+      }
+    }
+    return childForSuperlayersExcludingViewTransitions()
   }
 
   func childForSuperlayersExcludingViewTransitions() -> GraphicsLayer {

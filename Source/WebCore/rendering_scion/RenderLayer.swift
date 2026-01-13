@@ -319,6 +319,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func lastChild() -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isDescendantOf(_ layer: RenderLayerWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
