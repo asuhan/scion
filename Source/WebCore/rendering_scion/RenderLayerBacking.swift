@@ -3222,8 +3222,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func shouldSetContentsDisplayDelegate() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer().isRenderHTMLCanvas() {
+      return false
+    }
+
+    return canvasCompositingStrategy(renderer: renderer()) == .CanvasAsLayerContents
   }
 
   private func canIssueSetNeedsDisplay() -> Bool {
