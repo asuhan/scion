@@ -182,6 +182,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     return hBar!.height()
   }
 
+  func hasOverflowControls() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintOverflowControls(
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect,
     paintingOverlayControls: Bool = false

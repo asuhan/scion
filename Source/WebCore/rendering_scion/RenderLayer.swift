@@ -1204,8 +1204,12 @@ class RenderLayerWrapper {
   }
 
   func hasVisibleBoxDecorations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasVisibleContent {
+      return false
+    }
+
+    return hasVisibleBoxDecorationsOrBackground()
+      || (m_scrollableArea?.hasOverflowControls() ?? false)
   }
 
   private static func isContainerForPositioned(
