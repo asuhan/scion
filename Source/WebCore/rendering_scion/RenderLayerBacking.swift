@@ -171,8 +171,20 @@ private func scrollContainerLayerBox(_ renderBox: RenderBoxWrapper) -> LayoutRec
 }
 
 private func clippingLayerBox(_ renderer: RenderLayerModelObjectWrapper) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var result = LayoutRectWrapper.infiniteRect()
+  if renderer.hasNonVisibleOverflow() {
+    if let box = renderer as? RenderBoxWrapper {
+      result = box.overflowClipRect(location: LayoutPointWrapper(), fragment: nil)  // FIXME: Incorrect for CSS regions.
+    } else if let modelObject = renderer as? RenderSVGModelObjectWrapper {
+      result = modelObject.overflowClipRect(location: LayoutPointWrapper(), fragment: nil)  // FIXME: Incorrect for CSS regions.
+    }
+  }
+
+  if renderer.hasClip(), let box = renderer as? RenderBoxWrapper {
+    result.intersect(other: box.clipRect(location: LayoutPointWrapper(), fragment: nil))  // FIXME: Incorrect for CSS regions.
+  }
+
+  return result
 }
 
 private func overflowControlsHostLayerRect(_ renderBox: RenderBoxWrapper) -> LayoutRectWrapper {
