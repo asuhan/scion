@@ -2561,8 +2561,67 @@ class RenderLayerWrapper {
   // Returns true if background phase is painted opaque in the given rect.
   // The query rect is given in local coordinates.
   func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isSelfPaintingLayer && !hasSelfPaintingLayerDescendant {
+      return false
+    }
+
+    if paintsWithTransparency(paintBehavior: .Normal) {
+      return false
+    }
+
+    if renderer().isDocumentElementRenderer() {
+      // Normally the document element doens't have a layer.  If it does have a layer, its background propagates to the RenderView
+      // so this layer doesn't draw it.
+      return false
+    }
+
+    // We can't use hasVisibleContent(), because that will be true if our renderer is hidden, but some child
+    // is visible and that child doesn't cover the entire rect.
+    if renderer().style().usedVisibility() != .Visible {
+      return false
+    }
+
+    if paintsWithFilters() && renderer().style().filter().hasFilterThatAffectsOpacity() {
+      return false
+    }
+
+    // FIXME: Handle simple transforms.
+    if paintsWithTransform(paintBehavior: .Normal) {
+      return false
+    }
+
+    // FIXME: Remove this check.
+    // This function should not be called when layer-lists are dirty.
+    // It is somehow getting triggered during style update.
+    if zOrderListsDirty || normalFlowListDirty {
+      return false
+    }
+
+    // Table painting is special; a table paints its sections.
+    if renderer().isTablePart() {
+      return false
+    }
+
+    // A fieldset with a legend will have an irregular shape, so can't be treated as opaque.
+    if renderer().isFieldset() {
+      return false
+    }
+
+    // FIXME: We currently only check the immediate renderer,
+    // which will miss many cases.
+    if renderer().backgroundIsKnownToBeOpaqueInRect(localRect) {
+      return true
+    }
+
+    // We can't consult child layers if we clip, since they might cover
+    // parts of the rect that are clipped out.
+    if renderer().hasNonVisibleOverflow() {
+      return false
+    }
+
+    return listBackgroundIsKnownToBeOpaqueInRect(positiveZOrderLayers(), localRect)
+      || listBackgroundIsKnownToBeOpaqueInRect(negativeZOrderLayers(), localRect)
+      || listBackgroundIsKnownToBeOpaqueInRect(normalFlowLayers(), localRect)
   }
 
   func paintsWithFilters() -> Bool {
@@ -4984,6 +5043,13 @@ class RenderLayerWrapper {
         context.setCompositeOperation(operation: context.compositeOperation(), blendMode: .Normal)
       }
     }
+  }
+
+  private func listBackgroundIsKnownToBeOpaqueInRect(
+    _ list: LayerList, _ localRect: LayoutRectWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func shouldBeSelfPaintingLayer() -> Bool {

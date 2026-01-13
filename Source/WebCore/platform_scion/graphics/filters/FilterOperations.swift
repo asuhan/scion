@@ -39,6 +39,11 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
     fatalError("Not implemented")
   }
 
+  func hasFilterThatAffectsOpacity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFilterThatMovesPixels() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

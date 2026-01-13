@@ -52,6 +52,10 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
   func requiresLayer() -> Bool { fatalError("Not reached") }
 
+  // Returns true if the background is painted opaque in the given rect.
+  // The query rect is given in local coordinate system.
+  func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool { return false }
+
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }

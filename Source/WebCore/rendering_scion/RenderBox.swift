@@ -469,6 +469,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return false
   }
 
+  override final func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func x() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
