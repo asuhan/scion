@@ -3179,8 +3179,15 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func hasVisibleNonCompositedDescendants() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var hasVisibleDescendant = false
+    traverseVisibleNonCompositedDescendantLayers(
+      parent: owningLayer!,
+      layerFunc: { (_ layer: RenderLayerWrapper) in
+        hasVisibleDescendant = hasVisibleDescendant || layer.hasVisibleContent
+        return hasVisibleDescendant ? .Stop : .Continue
+      })
+
+    return hasVisibleDescendant
   }
 
   private func shouldClipCompositedBounds() -> Bool {
