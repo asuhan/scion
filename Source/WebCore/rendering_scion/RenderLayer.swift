@@ -1031,8 +1031,11 @@ class RenderLayerWrapper {
   }
 
   func canResize() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We need a special case for <iframe> because they never have
+    // hasNonVisibleOverflow(). However, they do "implicitly" clip their contents, so
+    // we want to allow resizing them also.
+    return (renderer().hasNonVisibleOverflow() || renderer().isRenderIFrame())
+      && renderer().style().resize() != .None
   }
 
   func compositor() -> RenderLayerCompositorWrapper {
