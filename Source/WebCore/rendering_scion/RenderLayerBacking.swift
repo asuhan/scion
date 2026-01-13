@@ -2354,8 +2354,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func setLocationOfScrolledContents(
     _ scrollOffset: ScrollOffset, _ setOrSync: ScrollingLayerPositionAction
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if setOrSync == .Sync {
+      scrollContainerLayer!.syncBoundsOrigin(FloatPoint(p: scrollOffset))
+    } else {
+      scrollContainerLayer!.setBoundsOrigin(FloatPoint(p: scrollOffset))
+    }
   }
 
   // FIXME: Avoid repaints when clip path changes.

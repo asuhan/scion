@@ -192,6 +192,12 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // For platforms that move underlying platform layers on a different thread for scrolling; just update the GraphicsLayer state.
+  func syncBoundsOrigin(_ origin: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTransform(matrix: TransformationMatrix) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
