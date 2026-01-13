@@ -1377,8 +1377,19 @@ class RenderLayerWrapper {
   func enclosingCompositingLayer(includeSelf: IncludeSelfOrNot = .IncludeSelf)
     -> RenderLayerWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if includeSelf == .IncludeSelf && isComposited() {
+      return self
+    }
+
+    var curr = paintOrderParent()
+    while curr != nil {
+      if curr!.isComposited() {
+        return curr
+      }
+      curr = curr!.paintOrderParent()
+    }
+
+    return nil
   }
 
   struct EnclosingCompositingLayerStatus {
