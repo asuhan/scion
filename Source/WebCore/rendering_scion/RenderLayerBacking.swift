@@ -739,7 +739,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     // Requires layout.
     if !owningLayer!.isRenderViewLayer {
-      updateDirectlyCompositedBoxDecorations(contentsInfo)
+      updateDirectlyCompositedBoxDecorations(&contentsInfo)
     } else {
       updateRootLayerConfiguration()
     }
@@ -1112,7 +1112,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     var contentsInfo = PaintedContentsInfo(inBacking: self)
 
     if !owningLayer!.isRenderViewLayer {
-      updateDirectlyCompositedBoxDecorations(contentsInfo)
+      updateDirectlyCompositedBoxDecorations(&contentsInfo)
       if m_graphicsLayer!.usesContentsLayer() {
         resetContentsRect()
       }
@@ -1808,6 +1808,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func canCompositeFilters() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func backgroundBoxForSimpleContainerPainting() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2739,6 +2744,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return finalOpacity
   }
 
+  private func rendererBackgroundColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintsBoxDecorations() -> Bool {
     if !owningLayer!.hasVisibleBoxDecorations() {
       return false
@@ -2990,9 +3000,77 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     return false
   }
 
-  private func updateDirectlyCompositedBoxDecorations(_ contentsInfo: PaintedContentsInfo) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func updateDirectlyCompositedBoxDecorations(_ contentsInfo: inout PaintedContentsInfo) {
+    if !owningLayer!.hasVisibleContent {
+      return
+    }
+
+    // The order of operations here matters, since the last valid type of contents needs
+    // to also update the contentsRect.
+    updateDirectlyCompositedBackgroundColor(&contentsInfo)
+    updateDirectlyCompositedBackgroundImage(&contentsInfo)
+  }
+
+  private func updateDirectlyCompositedBackgroundColor(_ contentsInfo: inout PaintedContentsInfo) {
+    if backgroundLayer != nil && !backgroundLayerPaintsFixedRootBackground
+      && !contentsInfo.paintsBoxDecorations()
+    {
+      m_graphicsLayer!.setContentsToSolidColor(ColorWrapper())
+      backgroundLayer!.setContentsToSolidColor(rendererBackgroundColor())
+
+      var contentsRect = backgroundBoxForSimpleContainerPainting()
+      // NOTE: This is currently only used by RenderFullScreen, which we want to be
+      // big enough to hide overflow areas of the root.
+      contentsRect.inflate(size: contentsRect.size())
+      backgroundLayer!.setContentsRect(contentsRect)
+      backgroundLayer!.setContentsClippingRect(FloatRoundedRect(rect: contentsRect))
+      return
+    }
+
+    if !contentsInfo.isSimpleContainer()
+      || ((renderer() is RenderBoxWrapper)
+        && !BackgroundPainter.paintsOwnBackground(renderer: renderBox()!))
+    {
+      m_graphicsLayer!.setContentsToSolidColor(ColorWrapper())
+      return
+    }
+
+    let backgroundColor = rendererBackgroundColor()
+
+    // An unset (invalid) color will remove the solid color.
+    m_graphicsLayer!.setContentsToSolidColor(backgroundColor)
+    let contentsRect = backgroundBoxForSimpleContainerPainting()
+    m_graphicsLayer!.setContentsRect(contentsRect)
+    m_graphicsLayer!.setContentsClippingRect(FloatRoundedRect(rect: contentsRect))
+  }
+
+  private func updateDirectlyCompositedBackgroundImage(_ contentsInfo: inout PaintedContentsInfo) {
+    if !GraphicsLayer.supportsContentsTiling() {
+      return
+    }
+
+    if contentsInfo.isDirectlyCompositedImage() {
+      return
+    }
+
+    let style = renderer().style()
+    if !contentsInfo.isSimpleContainer() || !style.hasBackgroundImage() {
+      m_graphicsLayer!.setContentsToImage(nil)
+      return
+    }
+
+    let backgroundBox = LayoutRectWrapper(r: backgroundBoxForSimpleContainerPainting())
+    // FIXME: Absolute paint location is required here.
+    let geometry = BackgroundPainter.calculateBackgroundImageGeometry(
+      renderer: renderBox()!, paintContainer: renderBox(), fillLayer: style.backgroundLayers(),
+      paintOffset: LayoutPointWrapper(), borderBoxRect: backgroundBox)
+
+    m_graphicsLayer!.setContentsTileSize(geometry.tileSize.FloatSize())
+    m_graphicsLayer!.setContentsTilePhase(geometry.phase.FloatSize())
+    m_graphicsLayer!.setContentsRect(geometry.destinationRect.FloatRect())
+    m_graphicsLayer!.setContentsClippingRect(
+      FloatRoundedRect(rect: geometry.destinationRect.FloatRect()))
+    m_graphicsLayer!.setContentsToImage(style.backgroundLayers().image()!.cachedImage()!.image())
   }
 
   private func resetContentsRect() {

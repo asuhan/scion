@@ -290,6 +290,17 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  // The tile phase is relative to the GraphicsLayer bounds.
+  func setContentsTilePhase(_ p: FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setContentsTileSize(_ s: FloatSize) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setContentsRect(_ r: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -336,6 +347,12 @@ class GraphicsLayer {
     case Model
     case HostedModel
     case Host
+  }
+
+  // Pass an invalid color to remove the contents layer.
+  func setContentsToSolidColor(_ color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func setContentsToPlatformLayer(_ platformLayer: PlatformLayer?, _ purpose: ContentsLayerPurpose)

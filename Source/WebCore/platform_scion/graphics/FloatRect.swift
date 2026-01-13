@@ -206,6 +206,11 @@ struct FloatRectWrapper {
     inflateY(dy: d)
   }
 
+  mutating func inflate(size: FloatSize) {
+    inflateX(dx: size.width)
+    inflateY(dy: size.height)
+  }
+
   mutating func inflate(deltaX: Float32, deltaY: Float32, deltaMaxX: Float32, deltaMaxY: Float32) {
     setX(x: x() - deltaX)
     setY(y: y() - deltaY)
