@@ -3285,8 +3285,16 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func computePrimaryGraphicsLayerRect(
     _ compositedAncestor: RenderLayerWrapper?, _ parentGraphicsLayerRect: LayoutRectWrapper
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var compositedBoundsOffset = ComputedOffsets(
+      renderLayer: owningLayer!, compositingAncestor: compositedAncestor,
+      localRect: compositedBounds(), parentGraphicsLayerRect: parentGraphicsLayerRect,
+      primaryGraphicsLayerRect: LayoutRectWrapper())
+    return LayoutRectWrapper(
+      r: encloseRectToDevicePixels(
+        rect: LayoutRectWrapper(
+          location: toLayoutPoint(size: compositedBoundsOffset.fromParentGraphicsLayer()),
+          size: compositedBounds().size()
+        ), pixelSnappingFactor: deviceScaleFactor()))
   }
 
   private var owningLayer: RenderLayerWrapper? = nil
