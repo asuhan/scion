@@ -2797,8 +2797,15 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func rendererBackgroundColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var backgroundRenderer =
+      renderer().isDocumentElementRenderer() ? renderer().view().rendererForRootBackground() : nil
+
+    if backgroundRenderer == nil {
+      backgroundRenderer = renderer()
+    }
+
+    return backgroundRenderer!.style().visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor)
   }
 
   func paintsBoxDecorations() -> Bool {
