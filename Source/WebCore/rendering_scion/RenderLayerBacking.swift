@@ -2425,8 +2425,21 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func connectClippingStackLayers(_ clippingStack: LayerAncestorClippingStack) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let connectEntryLayers = { (entry: LayerAncestorClippingStack.ClippingStackEntry) -> Void in
+      entry.clippingLayer?.setChildren(newChildren: [entry.scrollingLayer!])
+    }
+
+    let clippingEntryStack = clippingStack.stack[...]
+    for i in 0..<clippingEntryStack.count - 1 {
+      connectEntryLayers(clippingEntryStack[i])
+
+      let entryParentForSublayers = clippingEntryStack[i].parentForSublayers()
+      let childLayer = clippingEntryStack[i + 1].childForSuperlayers()
+      entryParentForSublayers!.setChildren(newChildren: [childLayer!])
+    }
+
+    connectEntryLayers(clippingEntryStack.last!)
+    clippingEntryStack.last!.parentForSublayers()!.removeAllChildren()
   }
 
   private func updateOpacity(style: RenderStyleWrapper) {

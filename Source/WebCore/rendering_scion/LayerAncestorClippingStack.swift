@@ -135,6 +135,14 @@ class LayerAncestorClippingStack {
     var overflowScrollProxyNodeID = ScrollingNodeIDWrapper()  // The node for repositioning the scrolling proxy layer.
     var clippingLayer: GraphicsLayer? = nil
     var scrollingLayer: GraphicsLayer? = nil  // Only present for scrolling entries.
+
+    func parentForSublayers() -> GraphicsLayer? {
+      return scrollingLayer ?? clippingLayer
+    }
+
+    func childForSuperlayers() -> GraphicsLayer? {
+      return clippingLayer
+    }
   }
 
   var stack: [ClippingStackEntry] = []
