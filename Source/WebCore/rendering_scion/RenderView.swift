@@ -336,6 +336,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return unextendedBackgroundRect()
   }
 
+  func documentRect() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rootElementShouldPaintBaseBackground() -> Bool {
     let documentElement = document().documentElement()
     if let rootRenderer = documentElement != nil ? documentElement!.renderer() : nil {

@@ -3034,8 +3034,45 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   private func computeParentGraphicsLayerRect(_ compositedAncestor: RenderLayerWrapper?)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if compositedAncestor?.backing == nil {
+      return LayoutRectWrapper(rect: renderer().view().documentRect())
+    }
+
+    let ancestorBacking = compositedAncestor!.backing!
+    var parentGraphicsLayerRect = LayoutRectWrapper()
+    if owningLayer!.isInsideFragmentedFlow() {
+      // FIXME: flows/columns need work.
+      var ancestorCompositedBounds = ancestorBacking.compositedBounds()
+      ancestorCompositedBounds.setLocation(location: LayoutPointWrapper())
+      parentGraphicsLayerRect = ancestorCompositedBounds
+    }
+
+    guard let ancestorRenderBox = compositedAncestor!.renderer() as? RenderBoxWrapper else {
+      return parentGraphicsLayerRect
+    }
+
+    if ancestorBacking.hasClippingLayer() {
+      // If the compositing ancestor has a layer to clip children, we parent in that, and therefore position relative to it.
+      let clippingBox = clippingLayerBox(ancestorRenderBox)
+      let clippingBoxOffset = computeOffsetFromAncestorGraphicsLayer(
+        compositedAncestor, clippingBox.location(), deviceScaleFactor())
+      parentGraphicsLayerRect =
+        snappedGraphicsLayer(clippingBoxOffset, clippingBox.size(), renderer()).snappedRect
+    }
+
+    if compositedAncestor!.hasCompositedScrollableOverflow() {
+      let scrollableArea = compositedAncestor!.scrollableArea()!
+
+      let ancestorCompositedBounds = ancestorBacking.compositedBounds()
+      let scrollContainerBox = scrollContainerLayerBox(ancestorRenderBox)
+      let scrollOffset = LayoutPointWrapper(point: scrollableArea.scrollOffset())
+      parentGraphicsLayerRect = LayoutRectWrapper(
+        location: (scrollContainerBox.location()
+          - toLayoutSize(point: ancestorCompositedBounds.location())
+          - toLayoutSize(point: scrollOffset)), size: scrollContainerBox.size())
+    }
+
+    return parentGraphicsLayerRect
   }
 
   private func computePrimaryGraphicsLayerRect(
