@@ -3138,8 +3138,17 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   private func updateContentsRects() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_graphicsLayer!.setContentsRect(
+      snapRectToDevicePixelsIfNeeded(rect: contentsBox(), renderer: renderer()))
+
+    guard let renderReplaced = renderer() as? RenderReplacedWrapper else { return }
+
+    let borderShape = renderReplaced.borderShapeForContentClipping(
+      borderBoxRect: renderReplaced.borderBoxRect())
+    var contentsClippingRect = borderShape.deprecatedPixelSnappedInnerRoundedRect(
+      deviceScaleFactor())
+    contentsClippingRect.move(size: contentOffsetInCompositingLayer().FloatSize())
+    m_graphicsLayer!.setContentsClippingRect(contentsClippingRect)
   }
 
   // Conservative test for having no rendered children.
