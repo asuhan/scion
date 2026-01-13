@@ -1342,8 +1342,11 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
   }
 
   func parentForSublayers() -> GraphicsLayer {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if scrolledContentsLayer != nil {
+      return scrolledContentsLayer!
+    }
+
+    return childContainmentLayer ?? m_graphicsLayer!
   }
 
   func childForSuperlayers() -> GraphicsLayer {
