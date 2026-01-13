@@ -271,8 +271,23 @@ private func computeOffsetFromAncestorGraphicsLayer(
   _ compositedAncestor: RenderLayerWrapper?, _ location: LayoutPointWrapper,
   _ deviceScaleFactor: Float32
 ) -> LayoutSizeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if compositedAncestor == nil {
+    return toLayoutSize(point: location)
+  }
+
+  // FIXME: This is a workaround until after webkit.org/b/162634 gets fixed. ancestorSubpixelOffsetFromRenderer
+  // could be stale when a dynamic composited state change triggers a pre-order updateGeometry() traversal.
+  let ancestorSubpixelOffsetFromRenderer = compositedAncestor!.backing!.subpixelOffsetFromRenderer
+  let ancestorCompositedBounds = compositedAncestor!.backing!.compositedBounds()
+  let floored = toLayoutSize(
+    point: LayoutPointWrapper(
+      size: floorPointToDevicePixels(
+        ancestorCompositedBounds.location() - ancestorSubpixelOffsetFromRenderer,
+        deviceScaleFactor)
+    ))
+  let ancestorRendererOffsetFromAncestorGraphicsLayer =
+    -(floored + ancestorSubpixelOffsetFromRenderer)
+  return ancestorRendererOffsetFromAncestorGraphicsLayer + toLayoutSize(point: location)
 }
 
 struct ComputedOffsets {
