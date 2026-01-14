@@ -1513,10 +1513,57 @@ class RenderLayerWrapper {
     return enclosingCompositingLayer(includeSelf: .ExcludeSelf)
   }
 
-  // FIXME: This needs a better name.
-  func setFilterBackendNeedsRepaintingInRect(_ rect: LayoutRectWrapper) {
+  func enclosingFilterRepaintLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // FIXME: This needs a better name.
+  func setFilterBackendNeedsRepaintingInRect(_ rect: LayoutRectWrapper) {
+    assert(requiresFullLayerImageForFilters())
+    assert(filters != nil)
+
+    if rect.isEmpty() {
+      return
+    }
+
+    var rectForRepaint = rect
+    rectForRepaint.expand(box: toLayoutBoxExtent(extent: filterOutsets()))
+
+    filters!.expandDirtySourceRect(rectForRepaint)
+
+    var parentLayer = enclosingFilterRepaintLayer()!
+    let repaintQuad = FloatQuad(inRect: rectForRepaint.FloatRect())
+    var parentLayerRect = LayoutRectWrapper(
+      rect: renderer().localToContainerQuad(
+        localQuad: repaintQuad, container: parentLayer.renderer()
+      ).enclosingBoundingBox())
+
+    if parentLayer.isComposited() {
+      if !parentLayer.backing!.paintsIntoWindow() {
+        parentLayer.setBackingNeedsRepaintInRect(r: parentLayerRect)
+        return
+      }
+      // If the painting goes to window, redirect the painting to the parent RenderView.
+      parentLayer = renderer().view().layer()!
+      parentLayerRect = LayoutRectWrapper(
+        rect: renderer().localToContainerQuad(
+          localQuad: repaintQuad, container: parentLayer.renderer()
+        )
+        .enclosingBoundingBox())
+    }
+
+    if parentLayer.paintsWithFilters() {
+      parentLayer.setFilterBackendNeedsRepaintingInRect(parentLayerRect)
+      return
+    }
+
+    if parentLayer.isRenderViewLayer {
+      (parentLayer.renderer() as! RenderViewWrapper).repaintViewRectangle(parentLayerRect)
+      return
+    }
+
+    fatalError("Not reached")
   }
 
   private static func repaintTargetForLayer(layer: RenderLayerWrapper) -> RenderLayerWrapper? {

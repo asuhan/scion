@@ -34,6 +34,11 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     fatalError("Not implemented")
   }
 
+  func expandDirtySourceRect(_ rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clearFilter() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

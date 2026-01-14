@@ -44,4 +44,9 @@ struct FloatQuad {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func enclosingBoundingBox() -> IntRect {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
