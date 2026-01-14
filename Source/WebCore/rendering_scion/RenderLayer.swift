@@ -2746,8 +2746,13 @@ class RenderLayerWrapper {
 
   @discardableResult
   func ensureBacking() -> RenderLayerBacking? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if backing == nil {
+      backing = RenderLayerBacking(layer: self)
+      compositor().layerBecameComposited(self)
+
+      updateFilterPaintingStrategy()
+    }
+    return backing
   }
 
   func clearBacking(layerBeingDestroyed: Bool = false) {

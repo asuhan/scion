@@ -1186,6 +1186,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       })
   }
 
+  func layerBecameComposited(_ layer: RenderLayerWrapper) {
+    if CPtrToInt(layer.p) != CPtrToInt(m_renderView.layer()?.p) {
+      contentLayersCount += 1
+    }
+  }
+
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
     // TODO(asuhan): Inform the inspector that the given RenderLayer was destroyed.
 
