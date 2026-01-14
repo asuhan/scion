@@ -3915,8 +3915,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func avoidsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isReplacedOrInlineBlock() || isLegend() || isFieldset() || createsNewFormattingContext()
+      || (element()?.isFormControlElement() ?? false)
   }
 
   func markForPaginationRelayoutIfNeeded() {
