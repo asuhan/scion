@@ -2732,8 +2732,14 @@ class RenderLayerWrapper {
   }
 
   func disconnectFromBackingProviderLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if backingProviderLayer == nil {
+      return
+    }
+
+    assert(backingProviderLayer!.isComposited())
+    if backingProviderLayer!.isComposited() {
+      backingProviderLayer!.backing!.removeBackingSharingLayer(layer: self)
+    }
   }
 
   func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
