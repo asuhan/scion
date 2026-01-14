@@ -5359,8 +5359,27 @@ class RenderLayerWrapper {
   private func listBackgroundIsKnownToBeOpaqueInRect(
     _ list: LayerList, _ localRect: LayoutRectWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if list.size() == 0 {
+      return false
+    }
+
+    for childLayer in list.reversed() {
+      if childLayer.isComposited() {
+        continue
+      }
+
+      if !childLayer.canUseOffsetFromAncestor() {
+        continue
+      }
+
+      var childLocalRect = localRect
+      childLocalRect.move(size: -childLayer.offsetFromAncestor(ancestorLayer: self))
+
+      if childLayer.backgroundIsKnownToBeOpaqueInRect(childLocalRect) {
+        return true
+      }
+    }
+    return false
   }
 
   private func shouldBeSelfPaintingLayer() -> Bool {
