@@ -5627,14 +5627,49 @@ class RenderLayerWrapper {
     }
   }
 
+  private func updateAncestorChainHasIntrinsicallyCompositedDescendants() {
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if !layer!.hasIntrinsicallyCompositedDescendantsStatusDirty
+        && layer!.hasIntrinsicallyCompositedDescendants
+      {
+        break
+      }
+      layer!.hasIntrinsicallyCompositedDescendants = true
+      layer!.hasIntrinsicallyCompositedDescendantsStatusDirty = false
+      layer = layer!.parent()
+    }
+  }
+
+  private func dirtyAncestorChainHasIntrinsicallyCompositedDescendants() {
+    var layer: RenderLayerWrapper? = self
+    while layer != nil {
+      if layer!.hasIntrinsicallyCompositedDescendantsStatusDirty {
+        break
+      }
+
+      layer!.hasIntrinsicallyCompositedDescendantsStatusDirty = true
+      layer = layer!.parent()
+    }
+  }
+
   private func isIntrinsicallyComposited() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func setIntrinsicallyComposited(composited: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if intrinsicallyComposited != composited {
+      intrinsicallyComposited = composited
+      if composited {
+        updateAncestorChainHasIntrinsicallyCompositedDescendants()
+      } else {
+        dirtyAncestorChainHasIntrinsicallyCompositedDescendants()
+      }
+      if !hasVisibleContent && !isNormalFlowOnly {
+        dirtyHiddenStackingContextAncestorZOrderLists()
+      }
+    }
   }
 
   private func parentClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
@@ -5833,7 +5868,7 @@ class RenderLayerWrapper {
   private var hasNotIsolatedBlendingDescendantsStatusDirty = false
   private var repaintRectsValid = false
 
-  private let intrinsicallyComposited = false
+  private var intrinsicallyComposited = false
   private var hasIntrinsicallyCompositedDescendants = false
   private var hasIntrinsicallyCompositedDescendantsStatusDirty = true
 
