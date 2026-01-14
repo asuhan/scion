@@ -4709,8 +4709,27 @@ class RenderLayerWrapper {
     layerIterator: LayerList, context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
     paintFlags: PaintLayerFlag
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layerIterator.size() == 0 {
+      return
+    }
+
+    if !hasSelfPaintingLayerDescendant {
+      return
+    }
+
+    // TODO(asuhan): mutation checker
+
+    for childLayer in layerIterator {
+      if paintFlags.contains(.PaintingSkipDescendantViewTransition) {
+        if childLayer.renderer().effectiveCapturedInViewTransition() {
+          continue
+        }
+        if childLayer.renderer().isViewTransitionPseudo() {
+          continue
+        }
+      }
+      childLayer.paintLayer(context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
+    }
   }
 
   private func updatePaintingInfoForFragments(
@@ -5822,7 +5841,7 @@ class RenderLayerWrapper {
   private var normalFlowList: [RenderLayerWrapper]? = nil
 
   // Only valid if repaintRectsValid is set.
-  private let m_repaintRects = RenderObjectWrapper.RepaintRects()
+  private var m_repaintRects = RenderObjectWrapper.RepaintRects()
 
   // The layer's width/height
   private let layerSize = IntSize()
