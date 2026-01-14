@@ -413,7 +413,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     minLogicalWidth = maxLogicalWidth
   }
 
-  private func isSelected() -> Bool {
+  func isSelected() -> Bool {
     return isHighlighted(selectionState(), view().selection())
   }
 
@@ -555,7 +555,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     }
   }
 
-  private func shouldPaint(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
+  func shouldPaint(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
     -> Bool
   {
     if (paintInfo.paintBehavior.contains(.ExcludeSelection)) && isSelected() {
@@ -606,7 +606,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   // This is in local coordinates, but it's a physical rect (so the top left corner is physical top left).
-  private func localSelectionRect(_ checkWhetherSelected: Bool = true) -> LayoutRectWrapper {
+  func localSelectionRect(_ checkWhetherSelected: Bool = true) -> LayoutRectWrapper {
     if checkWhetherSelected && !isSelected() {
       return LayoutRectWrapper()
     }

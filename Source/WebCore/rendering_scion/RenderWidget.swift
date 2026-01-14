@@ -52,6 +52,86 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if !shouldPaint(&paintInfo, paintOffset) {
+      return
+    }
+
+    if paintInfo.context().detectingContentfulPaint() {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    if hasVisibleBoxDecorations()
+      && (paintInfo.phase == .Foreground || paintInfo.phase == .Selection)
+    {
+      paintBoxDecorations(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+    }
+
+    if paintInfo.phase == .Mask {
+      paintMask(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+      return
+    }
+
+    if (paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline) && hasOutline() {
+      paintOutline(
+        paintInfo: paintInfo,
+        paintRect: LayoutRectWrapper(location: adjustedPaintOffset, size: size()))
+    }
+
+    // FIXME: Shouldn't check if the frame view needs layout during event region painting. This is a workaround
+    // for the fact that non-composited frames depend on their enclosing compositing layer to perform an event
+    // region update on their behalf. See <https://webkit.org/b/210311> for more details.
+    let frameView = m_widget as? LocalFrameViewWrapper
+    let needsEventRegionContentPaint =
+      paintInfo.phase == .EventRegion && frameView != nil && !frameView!.needsLayout()
+    if paintInfo.phase != .Foreground && !needsEventRegionContentPaint {
+      return
+    }
+
+    if style().hasBorderRadius() {
+      let borderRect = LayoutRectWrapper(location: adjustedPaintOffset, size: size())
+
+      if borderRect.isEmpty() {
+        return
+      }
+
+      // Push a clip if we have a border radius, since we want to round the foreground content that gets painted.
+      paintInfo.context().save()
+      clipToContentBoxShape(
+        paintInfo.context(), adjustedPaintOffset, document().deviceScaleFactor())
+    }
+
+    if m_widget != nil && !isSkippedContentRoot() {
+      paintContents(paintInfo, paintOffset)
+    }
+
+    if style().hasBorderRadius() {
+      paintInfo.context().restore()
+    }
+
+    if paintInfo.phase == .EventRegion || paintInfo.phase == .Accessibility {
+      return
+    }
+
+    // Paint a partially transparent wash over selected widgets.
+    if isSelected() && !document().printing() {
+      var rect = localSelectionRect()
+      rect.moveBy(offset: adjustedPaintOffset)
+      paintInfo.context().fillRect(
+        rect: FloatRectWrapper(r: snappedIntRect(rect: rect)), color: selectionBackgroundColor())
+    }
+
+    if hasLayer() && layer()!.canResize() {
+      assert(layer()!.scrollableArea() != nil)
+      layer()!.scrollableArea()!.paintResizer(
+        context: paintInfo.context(),
+        paintOffset: LayoutPointWrapper(point: roundedIntPoint(point: adjustedPaintOffset)),
+        damageRect: paintInfo.rect)
+    }
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -66,4 +146,11 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func paintContents(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let m_widget: Widget? = nil
 }

@@ -298,7 +298,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     }
   }
 
-  private func paintResizer(
+  func paintResizer(
     context: GraphicsContextWrapper, paintOffset: LayoutPointWrapper, damageRect: LayoutRectWrapper
   ) {
     let renderer = m_layer.renderer()
