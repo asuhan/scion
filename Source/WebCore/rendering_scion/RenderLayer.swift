@@ -3553,8 +3553,16 @@ class RenderLayerWrapper {
   }
 
   func computeRepaintRectsIncludingDescendants() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: computeRepaintRects() has to walk up the parent chain for every layer to compute the rects.
+    // We should make this more efficient.
+    // FIXME: it's wrong to call this when layout is not up-to-date, which we do.
+    computeRepaintRects(renderer().containerForRepaint().renderer)
+
+    var layer = firstChild()
+    while layer != nil {
+      layer!.computeRepaintRectsIncludingDescendants()
+      layer = layer!.nextSibling()
+    }
   }
 
   private func setRepaintRects(_ rects: RenderObjectWrapper.RepaintRects) {
