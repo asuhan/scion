@@ -2402,8 +2402,22 @@ class RenderLayerWrapper {
   func getOverlapBoundsIncludingChildrenAccountingForTransformAnimations(
     _ bounds: inout LayoutRectWrapper, additionalFlags: CalculateLayerBoundsFlag = []
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The animation will override the display transform, so don't include it.
+    let boundsFlags = additionalFlags.union(
+      RenderLayerWrapper.defaultCalculateLayerBoundsFlags.subtracting([.IncludeSelfTransform]))
+
+    bounds = calculateLayerBounds(
+      ancestorLayer: self, offsetFromRoot: LayoutSizeWrapper(), flags: boundsFlags)
+
+    var animatedBounds = bounds
+    if let styleable = StyleableWrapper.fromRenderer(renderer()),
+      styleable.computeAnimationExtent(&animatedBounds)
+    {
+      bounds = animatedBounds
+      return true
+    }
+
+    return false
   }
 
   // If true, this layer's children are included in its bounds for overlap testing.

@@ -44,6 +44,14 @@ struct StyleableWrapper {
     fatalError("Not implemented")
   }
 
+  // If possible, compute the visual extent of any transform animation using the given rect,
+  // returning the result in the rect. Return false if there is some transform animation but
+  // we were unable to cheaply compute its effect on the extent.
+  func computeAnimationExtent(_ bounds: inout LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func mayHaveNonZeroOpacity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
