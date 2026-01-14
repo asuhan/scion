@@ -58,6 +58,40 @@ private func gridStyleHasNotChanged(style: RenderStyleWrapper, oldStyle: RenderS
     && oldStyle.hasOutOfFlowPosition() == style.hasOutOfFlowPosition())
 }
 
+private func isCandidateForOpaquenessTest(_ childBox: RenderBoxWrapper) -> Bool {
+  let childStyle = childBox.style()
+  if childStyle.position() != .Static
+    && CPtrToInt(childBox.containingBlock()?.p) != CPtrToInt(childBox.parent()?.p)
+  {
+    return false
+  }
+  if childStyle.usedVisibility() != .Visible {
+    return false
+  }
+  if childStyle.shapeOutside() != nil {
+    return false
+  }
+  if !childBox.width().bool() || !childBox.height().bool() {
+    return false
+  }
+  if let childLayer = childBox.layer() {
+    if childLayer.isComposited() {
+      return false
+    }
+    // FIXME: Deal with z-index.
+    if !childStyle.hasAutoUsedZIndex() {
+      return false
+    }
+    if childLayer.isTransformed() || childLayer.isTransparent() || childLayer.hasFilter() {
+      return false
+    }
+    if !childBox.scrollPosition().isZero() {
+      return false
+    }
+  }
+  return true
+}
+
 private func inlineSizeFromAspectRatio(
   borderPaddingInlineSum: LayoutUnit, borderPaddingBlockSum: LayoutUnit, aspectRatio: Float64,
   boxSizing: BoxSizing, blockSize: LayoutUnit, aspectRatioType: AspectRatioType,
@@ -4365,8 +4399,42 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func foregroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if maxDepthToTest == 0 {
+      return false
+    }
+
+    if isSkippedContentRoot() {
+      return false
+    }
+
+    for childBox: RenderBoxWrapper in childrenOfType(parent: self) {
+      if !isCandidateForOpaquenessTest(childBox) {
+        continue
+      }
+      var childLocation = childBox.location()
+      if childBox.isRelativelyPositioned() {
+        childLocation.move(s: childBox.relativePositionOffset())
+      }
+      var childLocalRect = localRect
+      childLocalRect.moveBy(offset: -childLocation)
+      if childLocalRect.y() < Int32(0) || childLocalRect.x() < Int32(0) {
+        // If there is unobscured area above/left of a static positioned box then the rect is probably not covered.
+        if childBox.style().position() == .Static {
+          return false
+        }
+        continue
+      }
+      if childLocalRect.maxY() > childBox.height() || childLocalRect.maxX() > childBox.width() {
+        continue
+      }
+      if childBox.backgroundIsKnownToBeOpaqueInRect(childLocalRect) {
+        return true
+      }
+      if childBox.foregroundIsKnownToBeOpaqueInRect(childLocalRect, maxDepthToTest - 1) {
+        return true
+      }
+    }
+    return false
   }
 
   override func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper)

@@ -36,6 +36,8 @@ struct IntPoint {
     self.y = y
   }
 
+  func isZero() -> Bool { return x == 0 && y == 0 }
+
   mutating func move(dx: Int32, dy: Int32) {
     x += dx
     y += dy
