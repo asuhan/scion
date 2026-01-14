@@ -3337,8 +3337,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func horizontalScrollbarHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let scrollableArea = layer() != nil ? layer()!.scrollableArea() : nil {
+      return includeHorizontalScrollbarSize()
+        ? scrollableArea.horizontalScrollbarHeight(
+          relevancy: .IgnoreOverlayScrollbarSize, isHorizontalWritingMode: isHorizontalWritingMode()
+        ) : 0
+    }
+    return 0
   }
 
   func intrinsicScrollbarLogicalWidthIncludingGutter() -> Int32 {
@@ -5352,6 +5357,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return hasNonVisibleOverflow() && layer() != nil && !layer()!.hasOverlayScrollbars()
       && (style().overflowY() == .Scroll || style().overflowY() == .Auto
         || (style().overflowY() == .Hidden && !style().scrollbarGutter().isAuto))
+  }
+
+  private func includeHorizontalScrollbarSize() -> Bool {
+    return hasNonVisibleOverflow() && layer() != nil && !layer()!.hasOverlayScrollbars()
+      && (style().overflowX() == .Scroll || style().overflowX() == .Auto
+        || (style().overflowX() == .Hidden && !style().scrollbarGutter().isAuto))
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
