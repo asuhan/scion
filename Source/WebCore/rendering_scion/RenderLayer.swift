@@ -2912,8 +2912,11 @@ class RenderLayerWrapper {
   }
 
   func requiresFullLayerImageForFilters() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintsWithFilters() {
+      return false
+    }
+
+    return filters?.hasFilterThatMovesPixels() ?? false
   }
 
   static func topLayerRenderLayers(renderView: RenderViewWrapper) -> [RenderLayerWrapper] {
