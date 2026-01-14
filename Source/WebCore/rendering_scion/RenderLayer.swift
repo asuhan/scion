@@ -3566,8 +3566,8 @@ class RenderLayerWrapper {
   }
 
   private func setRepaintRects(_ rects: RenderObjectWrapper.RepaintRects) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_repaintRects = rects
+    repaintRectsValid = true
   }
 
   private func clearRepaintRects() {
