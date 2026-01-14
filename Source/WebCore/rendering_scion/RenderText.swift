@@ -227,4 +227,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func rectsForRepaintingAfterLayout(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
+  ) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

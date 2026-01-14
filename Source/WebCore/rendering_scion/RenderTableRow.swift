@@ -192,7 +192,14 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     clearNeedsLayout()
   }
 
-  override func requiresLayer() -> Bool {
+  override func rectsForRepaintingAfterLayout(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
+  ) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

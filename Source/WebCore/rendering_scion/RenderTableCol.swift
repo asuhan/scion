@@ -119,6 +119,13 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override func rectsForRepaintingAfterLayout(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
+  ) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     guard let table = table() else {

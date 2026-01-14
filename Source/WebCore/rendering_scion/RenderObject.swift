@@ -1328,6 +1328,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func rectsForRepaintingAfterLayout(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
+  ) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFloatingOrOutOfFlowPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

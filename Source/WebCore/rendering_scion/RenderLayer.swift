@@ -3543,11 +3543,21 @@ class RenderLayerWrapper {
   }
 
   func computeRepaintRects(_ repaintContainer: RenderLayerModelObjectWrapper?) {
+    assert(!visibleContentStatusDirty)
+
+    if !isSelfPaintingLayer {
+      clearRepaintRects()
+    } else {
+      setRepaintRects(renderer().rectsForRepaintingAfterLayout(repaintContainer, .Yes))
+    }
+  }
+
+  func computeRepaintRectsIncludingDescendants() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func computeRepaintRectsIncludingDescendants() {
+  private func setRepaintRects(_ rects: RenderObjectWrapper.RepaintRects) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
