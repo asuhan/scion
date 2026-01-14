@@ -2385,8 +2385,16 @@ class RenderLayerWrapper {
 
   // Bounds used for layer overlap testing in RenderLayerCompositor.
   func overlapBounds() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if overlapBoundsIncludeChildren() {
+      return calculateLayerBounds(
+        ancestorLayer: self, offsetFromRoot: LayoutSizeWrapper(),
+        flags: [
+          .UseLocalClipRectExcludingCompositingIfPossible, .IncludeFilterOutsets,
+          .UseFragmentBoxesExcludingCompositing,
+        ])
+    }
+
+    return localBoundingBox()
   }
 
   // Takes transform animations into account, returning true if they could be cheaply computed.
@@ -2396,6 +2404,12 @@ class RenderLayerWrapper {
   ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // If true, this layer's children are included in its bounds for overlap testing.
+  // We can't rely on the children's positions if this layer has a filter that could have moved the children's pixels around.
+  private func overlapBoundsIncludeChildren() -> Bool {
+    return hasFilter() && renderer().style().filter().hasFilterThatMovesPixels()
   }
 
   // Can pass offsetFromRoot if known.
@@ -2649,6 +2663,8 @@ class RenderLayerWrapper {
     return ancestorLayerIsDOMParent(ancestor: parent()) && parent()!.preserves3D()
       && (transform != nil || renderer().style().backfaceVisibility() == .Hidden || preserves3D())
   }
+
+  func hasFilter() -> Bool { return renderer().hasFilter() }
 
   func filterOutsets() -> IntOutsets {
     if filters != nil {
