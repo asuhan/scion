@@ -3232,8 +3232,86 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return constrainContentBoxLogicalHeightByMinMax(
+      logicalHeight: availableLogicalHeightUsing(style().logicalHeight(), heightType),
+      intrinsicContentHeight: nil)
+  }
+
+  private func availableLogicalHeightUsing(
+    _ h: LengthWrapper, _ heightType: AvailableLogicalHeightType
+  ) -> LayoutUnit {
+    // We need to stop here, since we don't want to increase the height of the table
+    // artificially.  We're going to rely on this cell getting expanded to some new
+    // height, and then when we lay out again we'll use the calculation below.
+    if isRenderTableCell() && (h.isAuto() || h.isPercentOrCalculated()) {
+      if let overridingLogicalHeight = overridingLogicalHeight() {
+        return overridingLogicalHeight - computedCSSPaddingBefore() - computedCSSPaddingAfter()
+          - borderBefore() - borderAfter() - scrollbarLogicalHeight()
+      }
+      return logicalHeight() - borderAndPaddingLogicalHeight()
+    }
+
+    if let usedFlexItemOverridingLogicalHeightForPercentageResolutionForFlex = isFlexItem()
+      ? (parent() as! RenderFlexibleBoxWrapper)
+        .usedFlexItemOverridingLogicalHeightForPercentageResolution(flexItem: self) : nil
+    {
+      return overridingContentLogicalHeight(
+        overridingLogicalHeight: usedFlexItemOverridingLogicalHeightForPercentageResolutionForFlex)
+    }
+
+    if shouldComputeLogicalHeightFromAspectRatio() {
+      let borderAndPaddingLogicalHeight = borderAndPaddingLogicalHeight()
+      let borderBoxLogicalHeight = RenderBoxWrapper.blockSizeFromAspectRatio(
+        borderPaddingInlineSum: borderAndPaddingLogicalWidth(),
+        borderPaddingBlockSum: borderAndPaddingLogicalHeight,
+        aspectRatio: style().logicalAspectRatio(),
+        boxSizing: style().boxSizingForAspectRatio(), inlineSize: logicalWidth(),
+        aspectRatioType: style().aspectRatioType(),
+        isRenderReplaced: isRenderReplaced())
+      if heightType == .ExcludeMarginBorderPadding {
+        return borderBoxLogicalHeight - borderAndPaddingLogicalHeight
+      }
+      return borderBoxLogicalHeight
+    }
+
+    if h.isPercentOrCalculated() && isOutOfFlowPositioned() && !isRenderFragmentedFlow() {
+      // FIXME: This is wrong if the containingBlock has a perpendicular writing mode.
+      let availableHeight = containingBlockLogicalHeightForPositioned(
+        containingBlock: containingBlock()!)
+      return adjustContentBoxLogicalHeightForBoxSizing(
+        height: valueForLength(length: h, maximumValue: availableHeight))
+    }
+
+    if let heightIncludingScrollbar = computeContentAndScrollbarLogicalHeightUsing(
+      heightType: .MainOrPreferredSize, height: h, intrinsicContentHeight: nil)
+    {
+      return max(
+        LayoutUnit(value: 0),
+        adjustContentBoxLogicalHeightForBoxSizing(height: heightIncludingScrollbar)
+          - scrollbarLogicalHeight())
+    }
+
+    // Height of absolutely positioned, non-replaced elements section 5.3 rule 5
+    // https://www.w3.org/TR/css-position-3/#abs-non-replaced-height
+    if let block = self as? RenderBlockWrapper,
+      isOutOfFlowPositioned() && style().logicalHeight().isAuto()
+        && !(style().logicalTop().isAuto() || style().logicalBottom().isAuto())
+    {
+      let computedValues = block.computeLogicalHeight(
+        logicalHeight: block.logicalHeight(), logicalTop: LayoutUnit(value: 0))
+      let contentHeight = computedValues.extent - block.borderAndPaddingLogicalHeight()
+      return contentHeight - block.scrollbarLogicalHeight()
+    }
+
+    var availableHeight =
+      isOrthogonal(renderer: self, ancestor: containingBlock()!)
+      ? containingBlockLogicalWidthForContent()
+      : containingBlockLogicalHeightForContent(heightType: heightType)
+    if heightType == .ExcludeMarginBorderPadding {
+      // FIXME: Margin collapsing hasn't happened yet, so this incorrectly removes collapsed margins.
+      availableHeight -= marginBefore() + marginAfter() + borderAndPaddingLogicalHeight()
+    }
+    return availableHeight
   }
 
   // There are a few cases where we need to refer specifically to the available physical width and available physical height.
