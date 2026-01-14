@@ -2829,7 +2829,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
     var paintsContent = false
 
-    if owningLayer!.hasVisibleContent && owningLayer!.hasNonEmptyChildRenderers(request: request) {
+    if owningLayer!.hasVisibleContent && owningLayer!.hasNonEmptyChildRenderers(&request) {
       paintsContent = true
     }
 

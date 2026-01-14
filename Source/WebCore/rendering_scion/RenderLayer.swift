@@ -186,6 +186,68 @@ private func hasVisibleBoxDecorationsOrBackground(renderer: RenderElementWrapper
   return renderer.hasVisibleBoxDecorations() || renderer.style().hasOutline()
 }
 
+// Constrain the depth and breadth of the search for performance.
+private let maxRendererTraversalCount: UInt32 = 200
+
+private func determineNonLayerDescendantsPaintedContent(
+  _ renderer: RenderElementWrapper, _ renderersTraversed: inout UInt32,
+  _ request: inout RenderLayerWrapper.PaintedContentRequest
+) {
+  for child: RenderObjectWrapper in childrenOfType(parent: renderer) {
+    renderersTraversed += 1
+    if renderersTraversed > maxRendererTraversalCount {
+      request.makeStatesUndetermined()
+      return
+    }
+
+    if let renderText = child as? RenderTextWrapper {
+      if !renderText.hasRenderedText() {
+        continue
+      }
+
+      if renderer.style().usedUserSelect() != .None {
+        request.setHasPaintedContent()
+      }
+
+      if !renderText.text().containsOnly(isASCIIWhitespace) {
+        request.setHasPaintedContent()
+      }
+
+      if request.isSatisfied() {
+        return
+      }
+    }
+
+    guard let childElement = child as? RenderElementWrapper else { continue }
+
+    if let modelObject = childElement as? RenderLayerModelObjectWrapper,
+      modelObject.hasSelfPaintingLayer()
+    {
+      continue
+    }
+
+    if hasVisibleBoxDecorationsOrBackground(renderer: childElement) {
+      request.setHasPaintedContent()
+      if request.isSatisfied() {
+        return
+      }
+    }
+
+    if childElement is RenderReplacedWrapper {
+      request.setHasPaintedContent()
+
+      if request.isSatisfied() {
+        return
+      }
+    }
+
+    determineNonLayerDescendantsPaintedContent(childElement, &renderersTraversed, &request)
+    if request.isSatisfied() {
+      return
+    }
+  }
+}
+
 class ClipRects: Equatable {
   static func create() -> ClipRects {
     return ClipRects()
@@ -1232,7 +1294,17 @@ class RenderLayerWrapper {
   }
 
   struct PaintedContentRequest {
+    mutating func makeStatesUndetermined() {
+      if hasPaintedContent == .Unknown {
+        hasPaintedContent = .Undetermined
+      }
+    }
+
     mutating func setHasPaintedContent() { hasPaintedContent = .True }
+
+    func probablyHasPaintedContent() -> Bool {
+      return hasPaintedContent == .True || hasPaintedContent == .Undetermined
+    }
 
     func isSatisfied() -> Bool { return hasPaintedContent != .Unknown }
 
@@ -1269,7 +1341,12 @@ class RenderLayerWrapper {
       }
     }
 
-    return hasNonEmptyChildRenderers(request: request ?? PaintedContentRequest())
+    if request != nil {
+      return hasNonEmptyChildRenderers(&request!)
+    }
+
+    var localRequest = PaintedContentRequest()
+    return hasNonEmptyChildRenderers(&localRequest)
   }
 
   func isVisuallyNonEmpty() -> Bool {
@@ -1278,9 +1355,10 @@ class RenderLayerWrapper {
   }
 
   // True if this layer container renderers that paint.
-  func hasNonEmptyChildRenderers(request: PaintedContentRequest) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func hasNonEmptyChildRenderers(_ request: inout PaintedContentRequest) -> Bool {
+    var renderersTraversed: UInt32 = 0
+    determineNonLayerDescendantsPaintedContent(renderer(), &renderersTraversed, &request)
+    return request.probablyHasPaintedContent()
   }
 
   func ancestorLayerIsInContainingBlockChain(

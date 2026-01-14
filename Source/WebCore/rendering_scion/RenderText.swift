@@ -160,6 +160,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasRenderedText() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsVisualReordering() {
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }

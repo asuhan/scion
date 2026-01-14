@@ -126,6 +126,11 @@ class StringWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  func containsOnly(_ isSpecialCharacter: (UChar) -> Bool) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (this: StringWrapper, other: StringWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
