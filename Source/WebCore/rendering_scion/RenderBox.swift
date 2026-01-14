@@ -1021,8 +1021,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverflow() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    overflow = nil
+    if let fragmentedFlow = enclosingFragmentedFlow() {
+      fragmentedFlow.clearFragmentsOverflow(self)
+    }
   }
 
   func addVisualEffectOverflow() {
