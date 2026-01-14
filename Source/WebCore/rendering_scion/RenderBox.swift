@@ -4392,8 +4392,24 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func getBackgroundPaintedExtent(_ paintOffset: LayoutPointWrapper) -> (
     LayoutRectWrapper, Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasBackground())
+    let backgroundRect = LayoutRectWrapper(rect: snappedIntRect(rect: borderBoxRect()))
+
+    let backgroundColor = style().visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyBackgroundColor)
+    if backgroundColor.isVisible() {
+      return (backgroundRect, true)
+    }
+
+    let layers = style().backgroundLayers()
+    if layers.image() == nil || layers.next() != nil {
+      return (backgroundRect, true)
+    }
+
+    let geometry = BackgroundPainter.calculateBackgroundImageGeometry(
+      renderer: self, paintContainer: nil, fillLayer: layers, paintOffset: paintOffset,
+      borderBoxRect: backgroundRect)
+    return (geometry.destinationRect, !geometry.hasNonLocalGeometry)
   }
 
   func foregroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32)
