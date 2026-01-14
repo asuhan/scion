@@ -22,7 +22,7 @@
 
 import wk_interop
 
-private let backgroundObscurationTestMaxDepth = 4
+private let backgroundObscurationTestMaxDepth: UInt32 = 4
 
 enum AvailableLogicalHeightType {
   case ExcludeMarginBorderPadding
@@ -4352,6 +4352,47 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Returns false if it could not cheaply compute the extent (e.g. fixed background), in which case the returned rect may be incorrect.
+  private func getBackgroundPaintedExtent(_ paintOffset: LayoutPointWrapper) -> (
+    LayoutRectWrapper, Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func foregroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper)
+    -> Bool
+  {
+    // Test to see if the children trivially obscure the background.
+    // FIXME: This test can be much more comprehensive.
+    if !hasBackground() {
+      return false
+    }
+    // Table and root background painting is special.
+    if isRenderTable() || isDocumentElementRenderer() {
+      return false
+    }
+
+    let (backgroundRect, isBackground) = getBackgroundPaintedExtent(paintOffset)
+    if !isBackground {
+      return false
+    }
+
+    if let scrollableArea = layer()?.scrollableArea() ?? nil,
+      scrollableArea.scrollingMayRevealBackground()
+    {
+      return false
+    }
+    return foregroundIsKnownToBeOpaqueInRect(backgroundRect, backgroundObscurationTestMaxDepth)
   }
 
   func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {

@@ -69,4 +69,13 @@ final class RenderVideoWrapper: RenderMediaWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override final func foregroundIsKnownToBeOpaqueInRect(
+    _ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32
+  )
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

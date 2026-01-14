@@ -562,6 +562,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     return false
   }
 
+  func scrollingMayRevealBackground() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeHasCompositedScrollableOverflow(layoutUpToDate: LayoutUpToDate) {
     var hasCompositedScrollableOverflow = m_hasCompositedScrollableOverflow
 

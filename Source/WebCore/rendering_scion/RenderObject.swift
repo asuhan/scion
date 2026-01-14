@@ -1097,6 +1097,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper) -> Bool {
+    return false
+  }
+
   func setReplacedOrInlineBlock(_ b: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

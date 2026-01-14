@@ -51,6 +51,15 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func foregroundIsKnownToBeOpaqueInRect(
+    _ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32
+  )
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -88,6 +97,13 @@ class RenderImageWrapper: RenderReplacedWrapper {
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
