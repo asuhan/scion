@@ -26,6 +26,11 @@
  */
 
 class RenderImageWrapper: RenderReplacedWrapper {
+  private func imageResource() -> RenderImageResource {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func cachedImage() -> CachedImageWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -165,12 +170,40 @@ class RenderImageWrapper: RenderReplacedWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldCollapseToEmpty() {
+      return LayoutUnit()
+    }
+    return super.computeReplacedLogicalWidth(shouldComputePreferred: shouldComputePreferred)
   }
 
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldCollapseToEmpty() {
+      return LayoutUnit()
+    }
+    return super.computeReplacedLogicalHeight(estimatedUsedWidth: estimatedUsedWidth)
   }
+
+  private func shouldCollapseToEmpty() -> Bool {
+    let imageRepresentsNothing = { [self] () in
+      if !element()!.hasAltAttr() {
+        return false
+      }
+      return imageResource().errorOccurred() && altText.isEmpty()
+    }
+    if element() == nil {
+      // Images with no associated elements do not fall under the category of unwanted content.
+      return false
+    }
+    if !isInline() {
+      return false
+    }
+    if !imageRepresentsNothing() {
+      return false
+    }
+    return document().inNoQuirksMode()
+      || (style().logicalWidth().isAuto() && style().logicalHeight().isAuto())
+  }
+
+  // Text to display as long as the image isn't available.
+  private let altText = StringWrapper()
 }

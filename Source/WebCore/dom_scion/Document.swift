@@ -94,6 +94,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func inNoQuirksMode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func focusedElement() -> ElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -78,6 +78,8 @@ target_sources(layout_scion PRIVATE
     RenderHTMLCanvas.swift
     RenderIFrame.swift
     RenderImage.swift
+    RenderImageResource.swift
+    RenderImageResourceStyleImage.swift
     RenderInline.swift
     RenderIterator.swift
     RenderLayer.swift

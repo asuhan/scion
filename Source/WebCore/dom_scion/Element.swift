@@ -28,6 +28,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func hasAltAttr() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFontTag() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
