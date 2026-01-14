@@ -4055,8 +4055,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func needsPreferredWidthsRecalculation() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().paddingStart().isPercentOrCalculated()
+      || style().paddingEnd().isPercentOrCalculated()
+      || (style().hasAspectRatio()
+        && (hasRelativeLogicalHeight() || (isFlexItem() && hasStretchedLogicalHeight())))
   }
 
   func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
