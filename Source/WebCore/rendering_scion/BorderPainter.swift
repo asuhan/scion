@@ -462,8 +462,58 @@ class BorderPainter {
   }
 
   func paintOutline(_ paintOffset: LayoutPointWrapper, _ lineRects: ArraySlice<LayoutRectWrapper>) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if lineRects.count == 1 {
+      var adjustedPaintRect = lineRects[0]
+      adjustedPaintRect.moveBy(offset: paintOffset)
+      paintOutline(paintRect: adjustedPaintRect)
+      return
+    }
+
+    let styleToUse = renderer.style()
+    let outlineOffset = styleToUse.outlineOffset()
+    let outlineWidth = styleToUse.outlineWidth()
+    let deviceScaleFactor = document().deviceScaleFactor()
+
+    var pixelSnappedRects: [FloatRectWrapper] = []
+    for rect in lineRects {
+      var rect = rect
+
+      rect.moveBy(offset: paintOffset)
+      rect.inflate(d: outlineOffset + outlineWidth / 2)
+      pixelSnappedRects.append(
+        snapRectToDevicePixels(rect: rect, pixelSnappingFactor: deviceScaleFactor))
+    }
+    let path = PathUtilities.pathWithShrinkWrappedRectsForOutline(
+      rects: pixelSnappedRects, borderData: styleToUse.border(), outlineOffset: outlineOffset,
+      direction: styleToUse.direction(),
+      writingMode: styleToUse.writingMode(), deviceScaleFactor: deviceScaleFactor)
+    if path.isEmpty() {
+      // Disjoint line spanning inline boxes.
+      for rect in lineRects {
+        var rect = rect
+        rect.moveBy(offset: paintOffset)
+        paintOutline(paintRect: rect)
+      }
+      return
+    }
+
+    let graphicsContext = paintInfo.context()
+    var outlineColor = styleToUse.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyOutlineColor)
+    let useTransparencyLayer = !outlineColor.isOpaque()
+    if useTransparencyLayer {
+      graphicsContext.beginTransparencyLayer(opacity: outlineColor.alphaAsFloat())
+      outlineColor = outlineColor.opaqueColor()
+    }
+
+    graphicsContext.setStrokeColor(color: outlineColor)
+    graphicsContext.setStrokeThickness(thickness: outlineWidth)
+    graphicsContext.setStrokeStyle(style: .SolidStroke)
+    graphicsContext.strokePath(path: path)
+
+    if useTransparencyLayer {
+      graphicsContext.endTransparencyLayer()
+    }
   }
 
   @discardableResult
