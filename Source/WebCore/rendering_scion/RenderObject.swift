@@ -659,8 +659,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBlockContainer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let display = style().display()
+    return
+      (display == .Block
+      || display == .InlineBlock
+      || display == .FlowRoot
+      || display == .ListItem
+      || display == .TableCell
+      || display == .TableCaption) && !isRenderReplaced()
   }
 
   func isFloating() -> Bool {
