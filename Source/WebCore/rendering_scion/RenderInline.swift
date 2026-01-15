@@ -119,8 +119,54 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func innerPaddingBoxHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var innerPaddingBoxLogicalHeight = LayoutUnit(
+      value: isHorizontalWritingMode() ? linesBoundingBox().height() : linesBoundingBox().width())
+    innerPaddingBoxLogicalHeight -= (borderBefore() + borderAfter())
+    return innerPaddingBoxLogicalHeight
+  }
+
+  private func linesBoundingBox() -> IntRect {
+    if let layout = LayoutIntegration.LineLayout.containing(renderer: self) {
+      if layoutBox() == nil || !layout.contains(renderer: self) {
+        // Repaint may be issued on subtrees during content mutation with newly inserted renderers
+        // (or we just forgot to initiate layout before querying geometry on stale content after moving inline boxes between blocks).
+        assert(needsLayout())
+        return IntRect()
+      }
+      return enclosingIntRect(rect: layout.enclosingBorderBoxRectFor(renderInline: self))
+    }
+
+    // See <rdar://problem/5289721>, for an unknown reason the linked list here is sometimes inconsistent, first is non-zero and last is zero.  We have been
+    // unable to reproduce this at all (and consequently unable to figure ot why this is happening).  The assert will hopefully catch the problem in debug
+    // builds and help us someday figure out why.  We also put in a redundant check of lastLineBox() to avoid the crash for now.
+    assert((firstLegacyInlineBox() == nil) == (lastLegacyInlineBox() == nil))  // Either both are null or both exist.
+    if firstLegacyInlineBox() == nil || lastLegacyInlineBox() == nil {
+      return IntRect()
+    }
+
+    // Return the width of the minimal left side and the maximal right side.
+    var logicalLeftSide: Float32 = 0
+    var logicalRightSide: Float32 = 0
+    var curr = firstLegacyInlineBox()
+    while curr != nil {
+      if curr === firstLegacyInlineBox() || curr!.logicalLeft() < logicalLeftSide {
+        logicalLeftSide = curr!.logicalLeft()
+      }
+      if curr === firstLegacyInlineBox() || curr!.logicalRight() > logicalRightSide {
+        logicalRightSide = curr!.logicalRight()
+      }
+      curr = curr!.nextLineBox()
+    }
+
+    let isHorizontal = style().isHorizontalWritingMode()
+
+    let x = isHorizontal ? logicalLeftSide : firstLegacyInlineBox()!.x()
+    let y = isHorizontal ? firstLegacyInlineBox()!.y() : logicalLeftSide
+    let width =
+      isHorizontal ? logicalRightSide - logicalLeftSide : lastLegacyInlineBox()!.logicalBottom() - x
+    let height =
+      isHorizontal ? lastLegacyInlineBox()!.logicalBottom() - y : logicalRightSide - logicalLeftSide
+    return enclosingIntRect(rect: FloatRectWrapper(x: x, y: y, width: width, height: height))
   }
 
   func linesVisualOverflowBoundingBox() -> LayoutRectWrapper {

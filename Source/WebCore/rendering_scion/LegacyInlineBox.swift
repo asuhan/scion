@@ -58,6 +58,16 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  func x() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func y() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The logicalLeft position is the left edge of the line box in a horizontal line and the top edge in a vertical line.
   func logicalLeft() -> Float32 {
     // TODO(asuhan): implement this
@@ -65,6 +75,11 @@ class LegacyInlineBox {
   }
 
   func logicalRight() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func logicalBottom() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
