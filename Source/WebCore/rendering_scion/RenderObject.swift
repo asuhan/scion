@@ -97,6 +97,17 @@ private func nearestNonAnonymousContainingBlockIncludingSelf(renderer: RenderEle
   return renderer as! RenderBlockWrapper?
 }
 
+private func canRelyOnAncestorLayerFullRepaint(
+  _ rendererToRepaint: RenderObjectWrapper, _ ancestorLayer: RenderLayerWrapper
+) -> Bool {
+  if let renderElement = rendererToRepaint as? RenderElementWrapper,
+    renderElement.hasSelfPaintingLayer()
+  {
+    return ancestorLayer.renderer().hasNonVisibleOverflow()
+  }
+  return true
+}
+
 class RenderObjectWrapper: CachedImageClientWrapper {
   enum `Type` {
     case BlockFlow
@@ -1285,13 +1296,48 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Return the RenderLayerModelObject in the container chain which is responsible for painting this object, or nullptr
   // if painting is root-relative. This is the container that should be passed to the 'forRepaint' functions.
   struct RepaintContainerStatus {
-    let fullRepaintIsScheduled = false  // Either the repaint container or a layer in-between has already been scheduled for full repaint.
-    let renderer: RenderLayerModelObjectWrapper? = nil
+    let fullRepaintIsScheduled: Bool  // Either the repaint container or a layer in-between has already been scheduled for full repaint.
+    let renderer: RenderLayerModelObjectWrapper?
   }
 
   func containerForRepaint() -> RepaintContainerStatus {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var repaintContainer: RenderLayerModelObjectWrapper? = nil
+    var fullRepaintAlreadyScheduled = false
+
+    if view().usesCompositing(), let parentLayer = enclosingLayer() {
+      let compLayerStatus = parentLayer.enclosingCompositingLayerForRepaint()
+      if compLayerStatus.layer != nil {
+        repaintContainer = compLayerStatus.layer!.renderer()
+        fullRepaintAlreadyScheduled =
+          compLayerStatus.fullRepaintAlreadyScheduled
+          && canRelyOnAncestorLayerFullRepaint(self, compLayerStatus.layer!)
+      }
+    }
+    if view().hasSoftwareFilters(), let parentLayer = enclosingLayer(),
+      let enclosingFilterLayer = parentLayer.enclosingFilterLayer()
+    {
+      fullRepaintAlreadyScheduled =
+        parentLayer.needsFullRepaint() && canRelyOnAncestorLayerFullRepaint(self, parentLayer)
+      return RepaintContainerStatus(
+        fullRepaintIsScheduled: fullRepaintAlreadyScheduled,
+        renderer: enclosingFilterLayer.renderer())
+    }
+
+    // If we have a flow thread, then we need to do individual repaints within the RenderFragmentContainers instead.
+    // Return the flow thread as a repaint container in order to create a chokepoint that allows us to change
+    // repainting to do individual region repaints.
+    if let parentRenderFragmentedFlow = enclosingFragmentedFlow() {
+      // If we have already found a repaint container then we will repaint into that container only if it is part of the same
+      // flow thread. Otherwise we will need to catch the repaint call and send it to the flow thread.
+      let repaintContainerFragmentedFlow = repaintContainer?.enclosingFragmentedFlow()
+      if repaintContainerFragmentedFlow == nil
+        || CPtrToInt(repaintContainerFragmentedFlow!.p) != CPtrToInt(parentRenderFragmentedFlow.p)
+      {
+        repaintContainer = parentRenderFragmentedFlow
+      }
+    }
+    return RepaintContainerStatus(
+      fullRepaintIsScheduled: fullRepaintAlreadyScheduled, renderer: repaintContainer)
   }
 
   // Actually do the repaint of rect r for this object which has been computed in the coordinate space

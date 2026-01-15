@@ -1513,6 +1513,11 @@ class RenderLayerWrapper {
     return enclosingCompositingLayer(includeSelf: .ExcludeSelf)
   }
 
+  func enclosingFilterLayer(_ includeSelf: IncludeSelfOrNot = .IncludeSelf) -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func enclosingFilterRepaintLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
