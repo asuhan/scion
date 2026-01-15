@@ -291,8 +291,9 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isInFlowPositioned() || createsGroup() || hasClipPath() || shouldApplyPaintContainment()
+      || willChangeCreatesStackingContext() || hasRunningAcceleratedAnimations()
+      || requiresRenderingConsolidationForViewTransition()
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
@@ -328,6 +329,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutUnit
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func willChangeCreatesStackingContext() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

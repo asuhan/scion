@@ -794,6 +794,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasRunningAcceleratedAnimations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderObscuresBackgroundEdge(contextScale: FloatSize) -> Bool {
     let edges = borderEdges(style: style(), deviceScaleFactor: document().deviceScaleFactor())
 
