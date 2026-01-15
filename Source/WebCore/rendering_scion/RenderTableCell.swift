@@ -726,6 +726,11 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateHasEmptyCollapsedBorders() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

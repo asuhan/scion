@@ -696,6 +696,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   func paintReplaced(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {}
 
+  override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (
     FloatSize, FloatSize
   ) {

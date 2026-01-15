@@ -30,4 +30,9 @@ final class RenderSVGGradientStopWrapper: RenderElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

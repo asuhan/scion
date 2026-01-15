@@ -1858,6 +1858,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return containerBlock.offsetFromLogicalTopOfFirstPage() + logicalTop()
   }
 
+  override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
       p,

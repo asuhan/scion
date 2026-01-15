@@ -1440,8 +1440,30 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     issueRepaint(dirtyRect, shouldClipToLayer, forceRepaint, additionalRepaintOutsets)
   }
 
+  private struct VisibleRectContextOption: OptionSet {
+    let rawValue: UInt8
+
+    static let UseEdgeInclusiveIntersection = VisibleRectContextOption(rawValue: 1 << 0)
+    static let ApplyCompositedClips = VisibleRectContextOption(rawValue: 1 << 1)
+    static let ApplyCompositedContainerScrolls = VisibleRectContextOption(rawValue: 1 << 2)
+    static let ApplyContainerClip = VisibleRectContextOption(rawValue: 1 << 3)
+    static let CalculateAccurateRepaintRect = VisibleRectContextOption(rawValue: 1 << 4)
+  }
+
+  private struct VisibleRectContext {
+    init(
+      hasPositionFixedDescendant: Bool = false, dirtyRectIsFlipped: Bool = false,
+      _ options: VisibleRectContextOption = []
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   struct RepaintRects {
     let clippedOverflowRect: LayoutRectWrapper  // Some rect (normally the visual overflow rect) mapped up to the repaint container, respecting clipping.
+    var outlineBoundsRect: LayoutRectWrapper?  // A rect repsenting the extent of outlines and shadows, mapped to the repaint container, but not clipped.
+
     init() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -1462,6 +1484,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Given a rect in the object's coordinate space, compute a rect  in the coordinate space
+  // of repaintContainer suitable for the given VisibleRectContext.
+  private func computeRects(
+    _ rects: RepaintRects, _ repaintContainer: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeRectForRepaint(
     rect: LayoutRectWrapper, repaintContainer: RenderLayerModelObjectWrapper?
   ) -> LayoutRectWrapper {
@@ -1472,8 +1504,20 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let localRects = localRectsForRepaint(repaintOutlineBounds)
+    if localRects.clippedOverflowRect.isEmpty() {
+      return RepaintRects()
+    }
+
+    var result = computeRects(
+      localRects, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
+    if result.outlineBoundsRect != nil {
+      result.outlineBoundsRect = LayoutRectWrapper(
+        r: snapRectToDevicePixels(
+          rect: result.outlineBoundsRect!, pixelSnappingFactor: document().deviceScaleFactor()))
+    }
+
+    return result
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {
@@ -1665,6 +1709,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return inheritedFlowState
   }
 
+  private static let visibleRectContextForRepaint = VisibleRectContext(
+    hasPositionFixedDescendant: false, dirtyRectIsFlipped: false,
+    [.ApplyContainerClip, .ApplyCompositedContainerScrolls])
+
   func isSetNeedsLayoutForbidden() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1674,6 +1722,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ partialRepaintRect: LayoutRectWrapper? = nil, _ clipRepaintToLayer: ClipRepaintToLayer = .No,
     _ forceRepaint: ForceRepaint = .No, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

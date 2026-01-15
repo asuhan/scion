@@ -55,6 +55,11 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
