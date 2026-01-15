@@ -563,8 +563,31 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private func setFragmentedFlowStateIncludingDescendants(
     state: FragmentedFlowState, skipDescendentFragmentedFlow: SkipDescendentFragmentedFlow
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setFragmentedFlowState(state)
+
+    guard let renderElement = self as? RenderElementWrapper else { return }
+
+    for child: RenderObjectWrapper in childrenOfType(parent: renderElement) {
+      // If the child is a fragmentation context it already updated the descendants flag accordingly.
+      if child.isRenderFragmentedFlow() && skipDescendentFragmentedFlow == .Yes {
+        continue
+      }
+      if child.isOutOfFlowPositioned() {
+        // Fragmented status propagation stops at out-of-flow boundary.
+        let isInsideMulticolumnFlow = { () in
+          guard let containingBlock = child.containingBlock() else {
+            fatalError("Not reached")
+          }
+          return containingBlock.fragmentedFlowState() == .InsideFlow
+        }
+        if !isInsideMulticolumnFlow() {
+          continue
+        }
+      }
+      assert(skipDescendentFragmentedFlow == .No || state != child.fragmentedFlowState())
+      child.setFragmentedFlowStateIncludingDescendants(
+        state: state, skipDescendentFragmentedFlow: skipDescendentFragmentedFlow)
+    }
   }
 
   func fragmentedFlowState() -> FragmentedFlowState {
