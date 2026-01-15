@@ -929,8 +929,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // When the document element is captured, the captured contents uses the RenderView
   // instead. Returns the capture state with this adjustment applied.
   func effectiveCapturedInViewTransition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isDocumentElementRenderer() {
+      return false
+    }
+    if isRenderView() {
+      return document().activeViewTransitionCapturedDocumentElement()
+    }
+    return capturedInViewTransition()
   }
 
   func view() -> RenderViewWrapper {
