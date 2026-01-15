@@ -1401,14 +1401,25 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func repaint(forceRepaint: ForceRepaint = .No) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper
+        || self is RenderReplicaWrapper)
+
+    if view().printing() {
+      return
+    }
+    issueRepaint(nil, .No, forceRepaint)
   }
 
   // Repaint a specific subrectangle within a given object. The rect |r| is in the object's coordinate space.
   func repaintRectangle(repaintRect: LayoutRectWrapper, shouldClipToLayer: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private enum ClipRepaintToLayer {
+    case No
+    case Yes
   }
 
   struct RepaintRects {
@@ -1637,6 +1648,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSetNeedsLayoutForbidden() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func issueRepaint(
+    _ partialRepaintRect: LayoutRectWrapper? = nil, _ clipRepaintToLayer: ClipRepaintToLayer = .No,
+    _ forceRepaint: ForceRepaint = .No, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
