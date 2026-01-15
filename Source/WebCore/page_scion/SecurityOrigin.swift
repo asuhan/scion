@@ -31,6 +31,17 @@ struct SecurityOriginWrapper {
     self.p = p
   }
 
+  // This method implements the "same origin-domain" algorithm from the HTML Standard:
+  // https://html.spec.whatwg.org/#same-origin-domain
+  // Returns true if this SecurityOrigin can script objects in the given
+  // SecurityOrigin. For example, call this function before allowing
+  // script from one security origin to read or write objects from
+  // another SecurityOrigin.
+  func isSameOriginDomain(_ other: SecurityOriginWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var p: UnsafeRawPointer?
   var data: SecurityOriginData = SecurityOriginData()
 }

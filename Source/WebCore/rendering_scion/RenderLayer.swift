@@ -139,7 +139,7 @@ private func performOverlapTests(
   overlapTestRequests: inout OverlapTestRequestMap, rootLayer: RenderLayerWrapper?,
   layer: RenderLayerWrapper
 ) {
-  if overlapTestRequests.isEmpty {
+  if overlapTestRequests.isEmpty() {
     return
   }
 
@@ -151,11 +151,11 @@ private func performOverlapTests(
       continue
     }
 
-    client.setOverlapTestResult(isOverlapped: true)
+    client.setOverlapTestResult(true)
     overlappedRequestClients.append(client)
   }
   for client in overlappedRequestClients {
-    overlapTestRequests.removeValue(forKey: client)
+    overlapTestRequests.remove(client)
   }
 }
 
@@ -1852,8 +1852,8 @@ class RenderLayerWrapper {
     }
     paintLayer(context: context, paintingInfo: paintingInfo, paintFlags: paintFlags)
 
-    for widget in overlapTestRequests.keys {
-      widget.setOverlapTestResult(isOverlapped: false)
+    for widget in overlapTestRequests.keys() {
+      widget.setOverlapTestResult(false)
     }
   }
 

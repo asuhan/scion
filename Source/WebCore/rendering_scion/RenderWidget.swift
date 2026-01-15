@@ -21,7 +21,7 @@
  */
 
 // TODO(asuhan): inherit from OverlapTestRequestClient as well
-class RenderWidgetWrapper: RenderReplacedWrapper {
+class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   func frameOwnerElement() -> HTMLFrameOwnerElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -147,9 +147,75 @@ class RenderWidgetWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
-  private func paintContents(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+  final func setOverlapTestResult(_ isOverlapped: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func paintContents(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+    if paintInfo.requireSecurityOriginAccessForWidgets {
+      if let contentDocument = frameOwnerElement().contentDocument() {
+        if !document().protectedSecurityOrigin().isSameOriginDomain(
+          contentDocument.securityOrigin())
+        {
+          return
+        }
+      }
+    }
+
+    let contentPaintOffset = roundedIntPoint(
+      point: paintOffset + location() + contentBoxRect().location())
+    // Tell the widget to paint now. This is the only time the widget is allowed
+    // to paint itself. That way it will composite properly with z-indexed layers.
+    var paintRect = paintInfo.rect
+
+    var oldBehavior: PaintBehavior = .Normal
+    if paintInfo.paintBehavior.contains(.DefaultAsynchronousImageDecode),
+      let frameView = m_widget as? LocalFrameViewWrapper
+    {
+      oldBehavior = frameView.paintBehavior()
+      frameView.setPaintBehavior(oldBehavior.union(.DefaultAsynchronousImageDecode))
+    }
+
+    let widgetLocation = m_widget!.frameRect().location
+    let widgetPaintOffset = contentPaintOffset - widgetLocation
+    // When painting widgets into compositing layers, tx and ty are relative to the enclosing compositing layer,
+    // not the root. In this case, shift the CTM and adjust the paintRect to be root-relative to fix plug-in drawing.
+    if !widgetPaintOffset.isZero() {
+      paintInfo.context().translate(size: FloatSize(size: widgetPaintOffset))
+      paintRect.move(size: LayoutSizeWrapper(size: -widgetPaintOffset))
+    }
+
+    if paintInfo.regionContext != nil {
+      let transform = AffineTransform()
+      transform.translate(FloatPoint(p: contentPaintOffset))
+      paintInfo.regionContext!.pushTransform(transform: transform)
+    }
+
+    // FIXME: Remove repaintrect enclosing/integral snapping when RenderWidget becomes device pixel snapped.
+    m_widget!.paint(
+      paintInfo.context(), snappedIntRect(rect: paintRect),
+      paintInfo.requireSecurityOriginAccessForWidgets ? .AccessibleOriginOnly : .AnyOrigin,
+      paintInfo.regionContext)
+
+    paintInfo.regionContext?.popTransform()
+
+    if !widgetPaintOffset.isZero() {
+      paintInfo.context().translate(size: FloatSize(size: -widgetPaintOffset))
+    }
+
+    if let frameView = m_widget as? LocalFrameViewWrapper {
+      let runOverlapTests = !frameView.useSlowRepaintsIfNotOverlapped()
+      if paintInfo.overlapTestRequests != nil && runOverlapTests {
+        assert(
+          !paintInfo.overlapTestRequests!.contains(self)
+            || (paintInfo.overlapTestRequests!.get(self) == m_widget!.frameRect()))
+        paintInfo.overlapTestRequests!.set(self, m_widget!.frameRect())
+      }
+      if paintInfo.paintBehavior.contains(.DefaultAsynchronousImageDecode) {
+        frameView.setPaintBehavior(oldBehavior)
+      }
+    }
   }
 
   private let m_widget: Widget? = nil

@@ -25,7 +25,7 @@
 
 import Foundation
 
-struct IntPoint {
+struct IntPoint: Equatable {
   init() {
     x = 0
     y = 0

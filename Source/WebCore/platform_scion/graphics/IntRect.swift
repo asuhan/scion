@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct IntRect {
+struct IntRect: Equatable {
   init() {
     location = IntPoint()
     size = IntSize()

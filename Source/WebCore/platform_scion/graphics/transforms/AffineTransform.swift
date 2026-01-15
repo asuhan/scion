@@ -28,6 +28,10 @@
 import Foundation
 
 class AffineTransform {
+  init() {
+    self.transform = [1, 0, 0, 1, 0, 0]
+  }
+
   init(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64) {
     self.transform = [a, b, c, d, e, f]
   }
@@ -43,6 +47,12 @@ class AffineTransform {
   func b() -> Float64 { return transform[1] }
   func c() -> Float64 { return transform[2] }
   func d() -> Float64 { return transform[3] }
+
+  @discardableResult
+  func translate(_ t: FloatPoint) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   // These functions get the length of an axis-aligned unit vector
   // once it has been mapped through the transform

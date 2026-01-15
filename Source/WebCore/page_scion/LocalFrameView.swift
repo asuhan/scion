@@ -147,6 +147,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func setPaintBehavior(_ behavior: PaintBehavior) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintBehavior() -> PaintBehavior {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -248,6 +253,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func layerAccessPrevented() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func useSlowRepaintsIfNotOverlapped() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

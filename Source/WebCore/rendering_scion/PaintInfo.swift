@@ -30,7 +30,7 @@
 
 import wk_interop
 
-typealias OverlapTestRequestMap = [OverlapTestRequestClient: IntRect]
+typealias OverlapTestRequestMap = HashMap<OverlapTestRequestClient, IntRect>
 
 struct PaintInfoWrapper {
   init(
@@ -275,6 +275,23 @@ struct PaintInfoWrapper {
     }
   }
 
+  var requireSecurityOriginAccessForWidgets: Bool {
+    get {
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return n!.requireSecurityOriginAccessForWidgets
+    }
+    set {
+      if n == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      n!.requireSecurityOriginAccessForWidgets = newValue
+    }
+  }
+
   private struct native {
     let rect: LayoutRectWrapper
     var phase: PaintPhase
@@ -283,7 +300,7 @@ struct PaintInfoWrapper {
     var outlineObjects: WeakListSet<RenderInlineWrapper, UInt>?  // used to list outlines that should be painted by a block with inline children
     let overlapTestRequests: OverlapTestRequestMap?
     let paintContainer: RenderLayerModelObjectWrapper?  // the layer object that originates the current painting
-    let requireSecurityOriginAccessForWidgets: Bool
+    var requireSecurityOriginAccessForWidgets: Bool
     let enclosingSelfPaintingLayer: RenderLayerWrapper?
     var regionContext: RegionContext? = nil  // For PaintPhase::EventRegion and PaintPhase::Accessibility.
     let context: GraphicsContextWrapper

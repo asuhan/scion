@@ -161,6 +161,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func protectedSecurityOrigin() -> SecurityOriginWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func observeForContainIntrinsicSize(element: ElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

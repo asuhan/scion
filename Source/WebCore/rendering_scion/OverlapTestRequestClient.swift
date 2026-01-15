@@ -23,9 +23,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct OverlapTestRequestClient: Hashable {
-  func setOverlapTestResult(isOverlapped: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+protocol OverlapTestRequestClient {
+  func setOverlapTestResult(_ isOverlapped: Bool)
 }

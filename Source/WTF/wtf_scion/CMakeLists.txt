@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     ASCIICType.swift
     GenericTimeMixin.swift
+    HashMap.swift
     IteratorRange.swift
     ListSet.swift
     MathExtras.swift
