@@ -440,8 +440,26 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func generateLineBoxRects(_ context: AbsoluteRectsGeneratorContext) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
+      let inlineBoxRects = lineLayout.collectInlineBoxRects(renderInline: self)
+      if inlineBoxRects.isEmpty {
+        context.addRect(FloatRectWrapper())
+        return
+      }
+      for inlineBoxRect in inlineBoxRects {
+        context.addRect(inlineBoxRect)
+      }
+      return
+    }
+    var curr = firstLegacyInlineBox()
+    if curr == nil {
+      context.addRect(FloatRectWrapper())
+      return
+    }
+    while curr != nil {
+      context.addRect(FloatRectWrapper(location: curr!.topLeft(), size: curr!.size()))
+      curr = curr!.nextLineBox()
+    }
   }
 
   override func layout() {
