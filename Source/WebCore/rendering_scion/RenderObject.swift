@@ -1413,13 +1413,31 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Repaint a specific subrectangle within a given object. The rect |r| is in the object's coordinate space.
   func repaintRectangle(repaintRect: LayoutRectWrapper, shouldClipToLayer: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper)
+    return repaintRectangle(repaintRect, shouldClipToLayer ? .Yes : .No, .No)
   }
 
   private enum ClipRepaintToLayer {
     case No
     case Yes
+  }
+
+  private func repaintRectangle(
+    _ repaintRect: LayoutRectWrapper, _ shouldClipToLayer: ClipRepaintToLayer,
+    _ forceRepaint: ForceRepaint, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
+  ) {
+    assert(
+      isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper
+        || self is RenderReplicaWrapper)
+
+    if view().printing() {
+      return
+    }
+    // FIXME: layoutDelta needs to be applied in parts before/after transforms and
+    // repaint containers. https://bugs.webkit.org/show_bug.cgi?id=23308
+    var dirtyRect = repaintRect
+    dirtyRect.move(size: view().frameView().layoutContext().layoutDelta())
+    issueRepaint(dirtyRect, shouldClipToLayer, forceRepaint, additionalRepaintOutsets)
   }
 
   struct RepaintRects {
