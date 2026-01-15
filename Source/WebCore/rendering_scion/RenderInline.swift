@@ -20,11 +20,44 @@
  *
  */
 
+private func inFlowPositionedInlineAncestor(_ p: RenderElementWrapper?) -> RenderElementWrapper? {
+  var p = p
+  while p != nil && p!.isRenderInline() {
+    if p!.isInFlowPositioned() {
+      return p
+    }
+    p = p!.parent()
+  }
+  return nil
+}
+
 private func updateStyleOfAnonymousBlockContinuations(
   _ block: RenderBlockWrapper, _ newStyle: RenderStyleWrapper, _ oldStyle: RenderStyleWrapper?
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // If any descendant blocks exist then they will be in the next anonymous block and its siblings.
+  var box = block.nextSiblingBox()
+  while box != nil && box!.isAnonymousBlock() {
+    if box!.style().position() == newStyle.position() {
+      continue
+    }
+
+    guard let block = box as? RenderBlockWrapper else { continue }
+    if !block.isContinuation() {
+      continue
+    }
+
+    // If we are no longer in-flow positioned but our descendant block(s) still have an in-flow positioned ancestor then
+    // their containing anonymous block should keep its in-flow positioning.
+    let continuation = block.inlineContinuation()
+    if oldStyle!.hasInFlowPosition() && inFlowPositionedInlineAncestor(continuation) != nil {
+      continue
+    }
+    let blockStyle = RenderStyleWrapper.createAnonymousStyleWithDisplay(
+      parentStyle: block.style(), display: .Block)
+    blockStyle.setPosition(v: newStyle.position())
+    block.setStyle(style: blockStyle)
+    box = box!.nextSiblingBox()
+  }
 }
 
 private func computeMargin(_ renderer: RenderInlineWrapper?, _ margin: LengthWrapper) -> LayoutUnit
