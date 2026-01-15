@@ -266,6 +266,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasInFlowPosition() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func width() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

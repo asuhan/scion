@@ -20,6 +20,13 @@
  *
  */
 
+private func updateStyleOfAnonymousBlockContinuations(
+  _ block: RenderBlockWrapper, _ newStyle: RenderStyleWrapper, _ oldStyle: RenderStyleWrapper?
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func computeMargin(_ renderer: RenderInlineWrapper?, _ margin: LengthWrapper) -> LayoutUnit
 {
   if margin.isAuto() {
@@ -310,8 +317,33 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    // Ensure that all of the split inlines pick up the new style. We
+    // only do this if we're an inline, since we don't want to propagate
+    // a block's style to the other inlines.
+    // e.g., <font>foo <h4>goo</h4> moo</font>.  The <font> inlines before
+    // and after the block share the same style, but the block doesn't
+    // need to pass its style on to anyone else.
+    let newStyle = style()
+    if let continuation = inlineContinuation(), !isContinuation() {
+      var currCont: RenderInlineWrapper? = continuation
+      while currCont != nil {
+        currCont!.setStyle(style: RenderStyleWrapper.clone(style: newStyle))
+        currCont = currCont!.inlineContinuation()
+      }
+      // If an inline's in-flow positioning has changed and it is part of an active continuation as a descendant of an anonymous containing block,
+      // then any descendant blocks will need to change their in-flow positioning accordingly.
+      // Do this by updating the position of the descendant blocks' containing anonymous blocks - there may be more than one.
+      if containingBlock()!.isAnonymousBlock() && oldStyle != nil
+        && newStyle.position() != oldStyle!.position()
+        && (newStyle.hasInFlowPosition() || oldStyle!.hasInFlowPosition())
+      {
+        updateStyleOfAnonymousBlockContinuations(containingBlock()!, newStyle, oldStyle)
+      }
+    }
+
+    propagateStyleToAnonymousChildren(propagationType: .AllChildren)
   }
 
   override func layout() {
