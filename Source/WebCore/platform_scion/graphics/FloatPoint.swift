@@ -58,6 +58,11 @@ struct FloatPoint {
     y += dy
   }
 
+  mutating func move(_ a: FloatSize) {
+    x += a.width
+    y += a.height
+  }
+
   mutating func moveBy(a: FloatPoint) {
     x += a.x
     y += a.y
@@ -114,6 +119,11 @@ struct FloatPoint {
 
   var x: Float32 = 0
   var y: Float32 = 0
+}
+
+func flooredIntPoint(_ p: FloatPoint) -> IntPoint {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
 
 func toFloatSize(a: FloatPoint) -> FloatSize {

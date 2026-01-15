@@ -76,6 +76,30 @@ private func computeMargin(_ renderer: RenderInlineWrapper?, _ margin: LengthWra
   return LayoutUnit(value: 0)
 }
 
+private class AbsoluteRectsGeneratorContext {
+  init(_ rects: ArraySlice<LayoutRectWrapper>, _ accumulatedOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func addRect(_ rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+private class AbsoluteRectsIgnoringEmptyGeneratorContext: AbsoluteRectsGeneratorContext {
+  override init(_ rects: ArraySlice<LayoutRectWrapper>, _ accumulatedOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func addRect(_ rect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override init(p: UnsafeMutableRawPointer?) {
     if p != nil {
@@ -264,8 +288,44 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = AbsoluteRectsIgnoringEmptyGeneratorContext(rects[...], additionalOffset)
+    generateLineBoxRects(context)
+
+    for child: RenderElementWrapper in childrenOfType(parent: self) {
+      if child is RenderListMarkerWrapper {
+        continue
+      }
+      var pos = additionalOffset.FloatPoint()
+      // FIXME: This doesn't work correctly with transforms.
+      if child.hasLayer() {
+        pos = child.localToContainerPoint(localPoint: FloatPoint(), container: paintContainer)
+      } else if let box = child as? RenderBoxWrapper {
+        pos.move(box.locationOffset().FloatSize())
+      }
+      child.addFocusRingRects(
+        rects: &rects, additionalOffset: LayoutPointWrapper(point: flooredIntPoint(pos)),
+        paintContainer: paintContainer
+      )
+    }
+
+    guard let continuation = continuation() else { return }
+    if continuation.isInline() {
+      continuation.addFocusRingRects(
+        rects: &rects,
+        additionalOffset: flooredLayoutPoint(
+          p: LayoutPointWrapper(
+            size: additionalOffset + continuation.containingBlock()!.location()
+              - containingBlock()!.location()
+          ).FloatPoint()), paintContainer: paintContainer)
+    } else {
+      continuation.addFocusRingRects(
+        rects: &rects,
+        additionalOffset: flooredLayoutPoint(
+          p: LayoutPointWrapper(
+            size: additionalOffset + (continuation as! RenderBoxWrapper).location()
+              - containingBlock()!.location()
+          ).FloatPoint()), paintContainer: paintContainer)
+    }
   }
 
   func paintOutline(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -377,6 +437,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     }
 
     propagateStyleToAnonymousChildren(propagationType: .AllChildren)
+  }
+
+  private func generateLineBoxRects(_ context: AbsoluteRectsGeneratorContext) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   override func layout() {
