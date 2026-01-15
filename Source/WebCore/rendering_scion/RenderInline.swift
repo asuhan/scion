@@ -73,8 +73,49 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func innerPaddingBoxWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var firstInlineBoxPaddingBoxLeft = LayoutUnit()
+    var lastInlineBoxPaddingBoxRight = LayoutUnit()
+
+    if LayoutIntegration.LineLayout.containing(renderer: self) != nil {
+      let inlineBox = InlineIterator.firstInlineBoxFor(renderInline: self)
+      if inlineBox.bool() {
+        if style().isLeftToRightDirection() {
+          firstInlineBoxPaddingBoxLeft =
+            LayoutUnit(value: inlineBox.get().logicalLeftIgnoringInlineDirection() + borderStart())
+          while inlineBox.get().nextInlineBox().bool() {
+            inlineBox.traverseNextInlineBox()
+          }
+          assert(inlineBox.bool())
+          lastInlineBoxPaddingBoxRight =
+            LayoutUnit(value: inlineBox.get().logicalRightIgnoringInlineDirection() - borderEnd())
+        } else {
+          lastInlineBoxPaddingBoxRight = LayoutUnit(
+            value: inlineBox.get().logicalRightIgnoringInlineDirection() - borderStart())
+          while inlineBox.get().nextInlineBox().bool() {
+            inlineBox.traverseNextInlineBox()
+          }
+          assert(inlineBox.bool())
+          firstInlineBoxPaddingBoxLeft =
+            LayoutUnit(value: inlineBox.get().logicalLeftIgnoringInlineDirection() + borderEnd())
+        }
+        return max(
+          LayoutUnit(value: UInt64(0)), lastInlineBoxPaddingBoxRight - firstInlineBoxPaddingBoxLeft)
+      }
+      return LayoutUnit()
+    }
+
+    guard let firstInlineBox = firstLegacyInlineBox() else { return LayoutUnit() }
+    guard let lastInlineBox = lastLegacyInlineBox() else { return LayoutUnit() }
+
+    if style().isLeftToRightDirection() {
+      firstInlineBoxPaddingBoxLeft = LayoutUnit(value: firstInlineBox.logicalLeft())
+      lastInlineBoxPaddingBoxRight = LayoutUnit(value: lastInlineBox.logicalRight())
+    } else {
+      lastInlineBoxPaddingBoxRight = LayoutUnit(value: firstInlineBox.logicalRight())
+      firstInlineBoxPaddingBoxLeft = LayoutUnit(value: lastInlineBox.logicalLeft())
+    }
+    return max(
+      LayoutUnit(value: UInt64(0)), lastInlineBoxPaddingBoxRight - firstInlineBoxPaddingBoxLeft)
   }
 
   func innerPaddingBoxHeight() -> LayoutUnit {
@@ -88,6 +129,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstLegacyInlineBox() -> LegacyInlineFlowBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastLegacyInlineBox() -> LegacyInlineFlowBox? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

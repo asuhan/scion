@@ -67,6 +67,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func logicalRightIgnoringInlineDirection() -> Float32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isHorizontal() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
