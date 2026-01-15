@@ -297,8 +297,16 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleWillChange(diff: diff, newStyle: newStyle)
+    // RenderInlines forward their absolute positioned descendants to their (non-anonymous) containing block.
+    // Check if this non-anonymous containing block can hold the absolute positioned elements when the inline is no longer positioned.
+    if canContainAbsolutelyPositionedObjects() && newStyle.position() == .Static,
+      let container = RenderObjectWrapper.containingBlockForPositionType(
+        positionType: .Absolute, renderer: self), !container.canContainAbsolutelyPositionedObjects()
+    {
+      container.removePositionedObjects(
+        newContainingBlockCandidate: nil, containingBlockState: .NewContainingBlock)
+    }
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
