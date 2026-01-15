@@ -192,6 +192,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func embeddedContentBox() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isTrackingRepaints() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

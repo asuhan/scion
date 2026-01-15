@@ -165,8 +165,11 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override final func embeddedContentBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !(self is RenderEmbeddedObjectWrapper) {
+      return nil
+    }
+    let frameView = widget() as? LocalFrameViewWrapper
+    return frameView?.embeddedContentBox()
   }
 
   final func setOverlapTestResult(_ isOverlapped: Bool) {
