@@ -889,8 +889,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSelectionBorder() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let st = selectionState()
+    return st == .Start
+      || st == .End
+      || st == .Both
+      || CPtrToInt(view().selection().start()?.p) == CPtrToInt(p)
+      || CPtrToInt(view().selection().end()?.p) == CPtrToInt(p)
   }
 
   func hasNonVisibleOverflow() -> Bool {

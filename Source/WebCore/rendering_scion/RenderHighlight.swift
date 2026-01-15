@@ -34,6 +34,16 @@ class RenderHighlight {
     fatalError("Not implemented")
   }
 
+  func start() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func end() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func startOffset() -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
