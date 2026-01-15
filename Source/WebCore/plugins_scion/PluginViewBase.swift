@@ -71,6 +71,10 @@ class PluginViewBase: Widget {
     fatalError("Not implemented")
   }
 
+  func show() {}
+
+  func hide() {}
+
   func setFrameRect(_ rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

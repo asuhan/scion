@@ -29,6 +29,11 @@ final class AXObjectCacheWrapper {
     fatalError("Not implemented")
   }
 
+  func onWidgetVisibilityChanged(_ widget: RenderWidgetWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called when a RenderObject is created for an Element. Depending on the
   // presence of a RenderObject, we may have instatiated an AXRenderObject or
   // an AXNodeObject. This occurs when an Element with no renderer is

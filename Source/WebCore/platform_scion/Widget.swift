@@ -63,4 +63,8 @@ protocol Widget {
   func paint(
     _ context: GraphicsContextWrapper, _ rect: IntRect,
     _ securityOriginPaintPolicy: SecurityOriginPaintPolicy, _ regionContext: RegionContext?)
+
+  func show()
+
+  func hide()
 }

@@ -53,8 +53,18 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    if m_widget != nil {
+      if style().usedVisibility() != .Visible {
+        m_widget!.hide()
+      } else {
+        m_widget!.show()
+      }
+
+      if let cache = document().existingAXObjectCache() {
+        cache.onWidgetVisibilityChanged(self)
+      }
+    }
   }
 
   override func layout() {
