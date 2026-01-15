@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     Page.swift
     PageOverlayController.swift
     RemoteFrame.swift
+    RemoteFrameView.swift
     SecurityOrigin.swift
     SecurityOriginData.swift
 )

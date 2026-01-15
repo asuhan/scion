@@ -33,8 +33,18 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
   }
 
   func requiresAcceleratedCompositing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If this is a renderer with a contentDocument and that document needs a layer, then we need a layer.
+    if let contentDocument = frameOwnerElement().contentDocument(),
+      let view = contentDocument.renderView()
+    {
+      return view.usesCompositing()
+    }
+
+    if widget() is RemoteFrameViewWrapper {
+      return true
+    }
+
+    return false
   }
 
   func remoteFrame() -> RemoteFrameWrapper? {
