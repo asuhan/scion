@@ -667,8 +667,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymousBlock() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().
+    // FIXME: That seems difficult. Can we come up with a simpler way to make behavior correct?
+    // FIXME: Does this relatively long function benefit from being inlined?
+    return isAnonymous()
+      && (style().display() == .Block || style().display() == .Box)
+      && style().pseudoElementType() == .None
+      && isRenderBlock()
+      && !isRenderListMarker()
+      && !isRenderFragmentedFlow()
+      && !isRenderMultiColumnSet()
+      && !isRenderView()
   }
 
   func isAnonymousForPercentageResolution() -> Bool {
