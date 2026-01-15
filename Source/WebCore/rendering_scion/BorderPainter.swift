@@ -461,6 +461,11 @@ class BorderPainter {
       ))
   }
 
+  func paintOutline(_ paintOffset: LayoutPointWrapper, _ lineRects: ArraySlice<LayoutRectWrapper>) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func paintNinePieceImage(
     rect: LayoutRectWrapper, style: RenderStyleWrapper, ninePieceImage: NinePieceImage,

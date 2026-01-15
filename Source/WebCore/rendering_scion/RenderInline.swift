@@ -229,8 +229,65 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintOutline(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasOutline() {
+      return
+    }
+
+    let styleToUse = style()
+    // Only paint the focus ring by hand if the theme isn't able to draw it.
+    if styleToUse.outlineStyleIsAuto() == .On && !theme().supportsFocusRing(style: styleToUse) {
+      var focusRingRects: [LayoutRectWrapper] = []
+      addFocusRingRects(
+        rects: &focusRingRects, additionalOffset: paintOffset,
+        paintContainer: paintInfo.paintContainer)
+      paintFocusRing(paintInfo: paintInfo, style: styleToUse, focusRingRects: focusRingRects[...])
+    }
+
+    if hasOutlineAnnotation() && styleToUse.outlineStyleIsAuto() == .Off
+      && !theme().supportsFocusRing(style: styleToUse)
+    {
+      addPDFURLRect(paintInfo: paintInfo, paintOffset: paintOffset)
+    }
+
+    let graphicsContext = paintInfo.context()
+    if graphicsContext.paintingDisabled() {
+      return
+    }
+
+    if styleToUse.outlineStyleIsAuto() == .On || !styleToUse.hasOutline() {
+      return
+    }
+
+    if containingBlock() == nil {
+      fatalError("Not reached")
+    }
+
+    let isHorizontalWritingMode = isHorizontalWritingMode()
+    let containingBlock = containingBlock()!
+    let isFlippedBlocksWritingMode = containingBlock.style().isFlippedBlocksWritingMode()
+    var rects: [LayoutRectWrapper] = []
+    let box = InlineIterator.firstInlineBoxFor(renderInline: self)
+    while box.bool() {
+      let lineBox = box.get().lineBox()
+      let logicalTop = max(lineBox.get().contentLogicalTop(), box.get().logicalTop())
+      box.traverseNextInlineBox()
+      let logicalBottom = min(lineBox.get().contentLogicalBottom(), box.get().logicalBottom())
+      var enclosingVisualRect = FloatRectWrapper(
+        x: box.get().logicalLeftIgnoringInlineDirection(), y: logicalTop,
+        width: box.get().logicalWidth(), height: logicalBottom - logicalTop)
+
+      if !isHorizontalWritingMode {
+        enclosingVisualRect = enclosingVisualRect.transposedRect()
+      }
+
+      if isFlippedBlocksWritingMode {
+        containingBlock.flipForWritingMode(rect: &enclosingVisualRect)
+      }
+
+      rects.append(LayoutRectWrapper(r: enclosingVisualRect))
+    }
+    let painter = BorderPainter(renderer: self, paintInfo: paintInfo)
+    painter.paintOutline(paintOffset, rects[...])
   }
 
   override func requiresLayer() -> Bool {
