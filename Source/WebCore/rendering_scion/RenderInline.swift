@@ -170,8 +170,44 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func linesVisualOverflowBoundingBox() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let layout = LayoutIntegration.LineLayout.containing(renderer: self) {
+      if layoutBox() == nil {
+        // Repaint may be issued on subtrees during content mutation with newly inserted renderers.
+        assert(needsLayout())
+        return LayoutRectWrapper()
+      }
+      return layout.visualOverflowBoundingBoxRectFor(renderInline: self)
+    }
+
+    if firstLegacyInlineBox() == nil || lastLegacyInlineBox() == nil {
+      return LayoutRectWrapper()
+    }
+
+    // Return the width of the minimal left side and the maximal right side.
+    var logicalLeftSide = LayoutUnit.max()
+    var logicalRightSide = LayoutUnit.min()
+    var curr = firstLegacyInlineBox()
+    while curr != nil {
+      logicalLeftSide = min(logicalLeftSide, curr!.logicalLeftVisualOverflow())
+      logicalRightSide = max(logicalRightSide, curr!.logicalRightVisualOverflow())
+      curr = curr!.nextLineBox()
+    }
+
+    let firstRootBox = firstLegacyInlineBox()!.root()
+    let lastRootBox = lastLegacyInlineBox()!.root()
+
+    let logicalTop = firstLegacyInlineBox()!.logicalTopVisualOverflow(lineTop: firstRootBox.lineTop)
+    let logicalWidth = logicalRightSide - logicalLeftSide
+    let logicalHeight =
+      lastLegacyInlineBox()!.logicalBottomVisualOverflow(lineBottom: lastRootBox.lineBottom)
+      - logicalTop
+
+    var rect = LayoutRectWrapper(
+      x: logicalLeftSide, y: logicalTop, width: logicalWidth, height: logicalHeight)
+    if !style().isHorizontalWritingMode() {
+      rect = rect.transposedRect()
+    }
+    return rect
   }
 
   func firstLegacyInlineBox() -> LegacyInlineFlowBox? {
