@@ -20,6 +20,22 @@
  *
  */
 
+private func computeMargin(_ renderer: RenderInlineWrapper?, _ margin: LengthWrapper) -> LayoutUnit
+{
+  if margin.isAuto() {
+    return LayoutUnit(value: 0)
+  }
+  if margin.isFixed() {
+    return LayoutUnit(value: margin.value())
+  }
+  if margin.isPercentOrCalculated() {
+    return minimumValueForLength(
+      length: margin,
+      maximumValue: max(LayoutUnit(value: 0), renderer!.containingBlock()!.availableLogicalWidth()))
+  }
+  return LayoutUnit(value: 0)
+}
+
 class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override init(p: UnsafeMutableRawPointer?) {
     if p != nil {
@@ -41,23 +57,19 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func marginLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeMargin(self, style().marginLeft())
   }
 
   override func marginBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeMargin(self, style().marginBottom())
   }
 
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeMargin(self, style().marginBeforeUsing(otherStyle: otherStyle ?? style()))
   }
 
   override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeMargin(self, style().marginAfterUsing(otherStyle: otherStyle ?? style()))
   }
 
   func innerPaddingBoxWidth() -> LayoutUnit {
