@@ -30,6 +30,13 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override final func clippedOverflowRect(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {

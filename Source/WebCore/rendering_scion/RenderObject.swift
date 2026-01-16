@@ -1440,7 +1440,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     issueRepaint(dirtyRect, shouldClipToLayer, forceRepaint, additionalRepaintOutsets)
   }
 
-  private struct VisibleRectContextOption: OptionSet {
+  struct VisibleRectContextOption: OptionSet {
     let rawValue: UInt8
 
     static let UseEdgeInclusiveIntersection = VisibleRectContextOption(rawValue: 1 << 0)
@@ -1450,7 +1450,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     static let CalculateAccurateRepaintRect = VisibleRectContextOption(rawValue: 1 << 4)
   }
 
-  private struct VisibleRectContext {
+  struct VisibleRectContext {
     init(
       hasPositionFixedDescendant: Bool = false, dirtyRectIsFlipped: Bool = false,
       _ options: VisibleRectContextOption = []
@@ -1477,11 +1477,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func clippedOverflowRect(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clippedOverflowRectForRepaint(_ repaintContainer: RenderLayerModelObjectWrapper?)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
   }
 
   // Given a rect in the object's coordinate space, compute a rect  in the coordinate space

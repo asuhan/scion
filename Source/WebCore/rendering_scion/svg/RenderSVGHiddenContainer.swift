@@ -24,6 +24,13 @@ class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
     fatalError("Not implemented")
   }
 
+  override final func clippedOverflowRect(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func addFocusRingRects(
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
