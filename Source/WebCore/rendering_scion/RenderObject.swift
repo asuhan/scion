@@ -1489,7 +1489,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     var hasPositionFixedDescendant: Bool
     var dirtyRectIsFlipped: Bool
     var descendantNeedsEnclosingIntRect: Bool
-    let options: VisibleRectContextOption
+    var options: VisibleRectContextOption
   }
 
   struct RepaintRects {

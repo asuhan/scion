@@ -585,6 +585,59 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
+    // Repaint offset cache is only valid for root-relative repainting
+    if view().frameView().layoutContext().isPaintOffsetCacheEnabled() && container == nil
+      && !context.options.contains(.UseEdgeInclusiveIntersection)
+    {
+      return computeVisibleRectsUsingPaintOffset(rects)
+    }
+
+    if CPtrToInt(container?.p) == CPtrToInt(p) {
+      return rects
+    }
+
+    let (localContainer, containerSkipped) = self.container(container)
+    if localContainer == nil {
+      return rects
+    }
+
+    var adjustedRects = rects
+    if style().hasInFlowPosition() && layer() != nil {
+      // Apply the in-flow position offset when invalidating a rectangle. The layer
+      // is translated, but the render box isn't, so we need to do this to get the
+      // right dirty rect. Since this is called from RenderObject::setStyle, the relative or sticky position
+      // flag on the RenderObject has been cleared, so use the one on the style().
+      let offsetForInFlowPosition = layer()!.offsetForInFlowPosition()
+      adjustedRects.move(offsetForInFlowPosition)
+    }
+
+    var context = context
+    if localContainer!.hasNonVisibleOverflow() {
+      // FIXME: Respect the value of context.options.
+      let _ = SetForScope(
+        scopedVariable: &context.options,
+        newValue: context.options.union(.ApplyCompositedContainerScrolls))
+      let isEmpty = !(localContainer! as! RenderLayerModelObjectWrapper)
+        .applyCachedClipAndScrollPosition(&adjustedRects, container, context)
+      if isEmpty {
+        if context.options.contains(.UseEdgeInclusiveIntersection) {
+          return nil
+        }
+        return adjustedRects
+      }
+    }
+
+    if containerSkipped {
+      // If the repaintContainer is below o, then we need to map the rect into repaintContainer's coordinates.
+      let containerOffset = container!.offsetFromAncestorContainer(localContainer!)
+      adjustedRects.move(-containerOffset)
+      return adjustedRects
+    }
+
+    return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
+  }
+
+  private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
