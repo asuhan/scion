@@ -1208,6 +1208,8 @@ class RenderLayerWrapper {
     blendMode = renderer().style().blendMode()
   }
 
+  func offsetForInFlowPosition() -> LayoutSizeWrapper { return offsetForPosition }
+
   func clearClipRectsIncludingDescendants(typeToClear: ClipRectsType = .AllClipRectTypes) {
     // FIXME: it's not clear how this layer not having clip rects guarantees that no descendants have any.
     if clipRectsCache == nil {
@@ -5901,6 +5903,9 @@ class RenderLayerWrapper {
 
   // Only valid if repaintRectsValid is set.
   private var m_repaintRects = RenderObjectWrapper.RepaintRects()
+
+  // Our current relative or absolute position offset.
+  private let offsetForPosition = LayoutSizeWrapper()
 
   // The layer's width/height
   private let layerSize = IntSize()

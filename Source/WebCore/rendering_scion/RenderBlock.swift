@@ -2640,6 +2640,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
     maxLogicalWidth = max(floatLeftWidth + floatRightWidth, maxLogicalWidth)
   }
 
+  override final func rectWithOutlineForRepaint(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

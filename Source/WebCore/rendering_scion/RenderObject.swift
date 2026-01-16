@@ -1528,9 +1528,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
   }
 
+  func rectWithOutlineForRepaint(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Given a rect in the object's coordinate space, compute a rect  in the coordinate space
   // of repaintContainer suitable for the given VisibleRectContext.
-  private func computeRects(
+  func computeRects(
     _ rects: inout RepaintRects, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects {

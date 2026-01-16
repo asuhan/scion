@@ -470,13 +470,108 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Only first-letter renderers are allowed in here during layout. They mutate the tree triggering repaints.
+    #if !NDEBUG
+      let insideSelfPaintingInlineBox = { [self] () in
+        if hasSelfPaintingLayer() {
+          return true
+        }
+        let containingBlock = self.containingBlock()
+        var ancestor = parent()
+        while ancestor != nil && CPtrToInt(ancestor?.p) != CPtrToInt(containingBlock?.p) {
+          if ancestor!.hasSelfPaintingLayer() {
+            return true
+          }
+          ancestor = ancestor!.parent()
+        }
+        return false
+      }
+      assert(
+        !view().frameView().layoutContext().isPaintOffsetCacheEnabled()
+          || style().pseudoElementType() == .FirstLetter || insideSelfPaintingInlineBox())
+    #endif
+
+    let knownEmpty = { [self] () in
+      if firstLegacyInlineBox() != nil {
+        return false
+      }
+      if continuation() != nil {
+        return false
+      }
+      if LayoutIntegration.LineLayout.containing(renderer: self) != nil {
+        return false
+      }
+      return true
+    }
+
+    if knownEmpty() {
+      return LayoutRectWrapper()
+    }
+
+    var repaintRect = linesVisualOverflowBoundingBox()
+    var hitRepaintContainer = false
+
+    // We need to add in the in-flow position offsets of any inlines (including us) up to our
+    // containing block.
+    let containingBlock = self.containingBlock()
+    var inlineFlow: RenderElementWrapper? = self
+    while inlineFlow != nil {
+      guard let renderInline = inlineFlow as? RenderInlineWrapper else { break }
+      if CPtrToInt(inlineFlow!.p) == CPtrToInt(containingBlock?.p) {
+        break
+      }
+      if CPtrToInt(inlineFlow!.p) == CPtrToInt(repaintContainer?.p) {
+        hitRepaintContainer = true
+        break
+      }
+      if inlineFlow!.style().hasInFlowPosition() && inlineFlow!.hasLayer() {
+        repaintRect.move(size: renderInline.layer()!.offsetForInFlowPosition())
+      }
+      inlineFlow = inlineFlow!.parent()
+    }
+
+    let outlineSize = LayoutUnit(value: style().outlineSize())
+    repaintRect.inflate(d: outlineSize)
+
+    if hitRepaintContainer || containingBlock == nil {
+      return repaintRect
+    }
+
+    var rects = RepaintRects(rect: repaintRect)
+
+    if containingBlock!.hasNonVisibleOverflow() {
+      containingBlock!.applyCachedClipAndScrollPosition(&rects, repaintContainer, context)
+    }
+
+    rects = containingBlock!.computeRects(&rects, repaintContainer, context)
+    repaintRect = rects.clippedOverflowRect
+
+    if outlineSize.bool() {
+      for child: RenderElementWrapper in childrenOfType(parent: self) {
+        repaintRect.unite(other: child.rectWithOutlineForRepaint(repaintContainer, outlineSize))
+      }
+
+      if let continuation = self.continuation(),
+        !continuation.isInline() && continuation.parent() != nil
+      {
+        repaintRect.unite(
+          other: continuation.rectWithOutlineForRepaint(repaintContainer, outlineSize))
+      }
+    }
+
+    return repaintRect
   }
 
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func rectWithOutlineForRepaint(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
+  ) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

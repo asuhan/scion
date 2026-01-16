@@ -108,6 +108,7 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
   // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
+  @discardableResult
   override final func applyCachedClipAndScrollPosition(
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
