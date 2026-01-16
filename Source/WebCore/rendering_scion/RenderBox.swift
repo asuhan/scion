@@ -1864,7 +1864,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func computeVisibleRectsInContainer(
-    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // TODO(asuhan): implement this
@@ -4091,6 +4091,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
 
     return ScrollPosition(x: 0, y: 0)
+  }
+
+  // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
+  // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
+  override final func applyCachedClipAndScrollPosition(
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func hasRelativeDimensions() -> Bool {

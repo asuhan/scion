@@ -45,7 +45,7 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
   }
 
   override final func computeVisibleRectsInContainer(
-    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // TODO(asuhan): implement this

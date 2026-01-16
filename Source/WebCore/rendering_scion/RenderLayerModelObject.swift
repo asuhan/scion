@@ -56,6 +56,13 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   // The query rect is given in local coordinate system.
   func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool { return false }
 
+  // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
+  // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
+  func applyCachedClipAndScrollPosition(
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> Bool { return false }
+
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }

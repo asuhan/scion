@@ -1458,6 +1458,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    let options: VisibleRectContextOption
   }
 
   struct RepaintRects {
@@ -1480,12 +1482,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    let repaintRects = localRectsForRepaint(.No)
+    var repaintRects = localRectsForRepaint(.No)
     if repaintRects.clippedOverflowRect.isEmpty() {
       return LayoutRectWrapper()
     }
 
-    return computeRects(repaintRects, repaintContainer, context).clippedOverflowRect
+    return computeRects(&repaintRects, repaintContainer, context).clippedOverflowRect
   }
 
   func clippedOverflowRectForRepaint(_ repaintContainer: RenderLayerModelObjectWrapper?)
@@ -1497,31 +1499,31 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Given a rect in the object's coordinate space, compute a rect  in the coordinate space
   // of repaintContainer suitable for the given VisibleRectContext.
   private func computeRects(
-    _ rects: RepaintRects, _ repaintContainer: RenderLayerModelObjectWrapper?,
+    _ rects: inout RepaintRects, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects {
-    return computeVisibleRectsInContainer(rects, repaintContainer, context)!
+    return computeVisibleRectsInContainer(&rects, repaintContainer, context)!
   }
 
   func computeRectForRepaint(
     rect: LayoutRectWrapper, repaintContainer: RenderLayerModelObjectWrapper?
   ) -> LayoutRectWrapper {
+    var repaintRects = RepaintRects(rect: rect)
     return computeRects(
-      RepaintRects(rect: rect), repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint
-    )
-    .clippedOverflowRect
+      &repaintRects, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint
+    ).clippedOverflowRect
   }
 
   func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    let localRects = localRectsForRepaint(repaintOutlineBounds)
+    var localRects = localRectsForRepaint(repaintOutlineBounds)
     if localRects.clippedOverflowRect.isEmpty() {
       return RepaintRects()
     }
 
     var result = computeRects(
-      localRects, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
+      &localRects, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
     if result.outlineBoundsRect != nil {
       result.outlineBoundsRect = LayoutRectWrapper(
         r: snapRectToDevicePixels(
@@ -1535,11 +1537,27 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // when clipping and scrolling as specified by the context. When using edge-inclusive intersection, return std::nullopt
   // rather than an empty rect if the rect is completely clipped out in container space.
   func computeVisibleRectsInContainer(
-    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(container?.p) == CPtrToInt(p) {
+      return rects
+    }
+
+    guard let parent = parent() else { return rects }
+
+    var adjustedRects = rects
+    if parent.hasNonVisibleOverflow() {
+      let isEmpty = !(parent as! RenderLayerModelObjectWrapper).applyCachedClipAndScrollPosition(
+        &adjustedRects, container, context)
+      if isEmpty {
+        if context.options.contains(.UseEdgeInclusiveIntersection) {
+          return nil
+        }
+        return adjustedRects
+      }
+    }
+    return parent.computeVisibleRectsInContainer(&adjustedRects, container, context)
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {

@@ -91,7 +91,7 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func computeVisibleRectsInContainer(
-    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // TODO(asuhan): implement this
@@ -102,6 +102,16 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
+  // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
+  override final func applyCachedClipAndScrollPosition(
+    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
