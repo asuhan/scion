@@ -863,8 +863,18 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(container?.p) == CPtrToInt(p) {
+      return rects
+    }
+
+    var adjustedRects = rects
+    if (!view().frameView().layoutContext().isPaintOffsetCacheEnabled() || container != nil
+      || context.options.contains(.UseEdgeInclusiveIntersection)) && parent() != nil
+    {
+      adjustedRects.moveBy(-parentBox()!.location())  // Rows are in the same coordinate space, so don't add their offset in.
+    }
+
+    return super.computeVisibleRectsInContainer(&adjustedRects, container, context)
   }
 
   private func borderHalfLeft(outer: Bool) -> LayoutUnit {
