@@ -231,8 +231,24 @@ class RenderTextWrapper: RenderObjectWrapper {
   override final func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var rendererToRepaint: RenderObjectWrapper? = containingBlock()
+
+    // Do not cross self-painting layer boundaries.
+    let enclosingLayerRenderer = enclosingLayer()!.renderer()
+    if CPtrToInt(enclosingLayerRenderer.p) != CPtrToInt(rendererToRepaint?.p)
+      && !rendererToRepaint!.isDescendantOf(ancestor: enclosingLayerRenderer)
+    {
+      rendererToRepaint = enclosingLayerRenderer
+    }
+
+    // The renderer we chose to repaint may be an ancestor of repaintContainer, but we need to do a repaintContainer-relative repaint.
+    if repaintContainer != nil && CPtrToInt(repaintContainer!.p) != CPtrToInt(rendererToRepaint?.p)
+      && !rendererToRepaint!.isDescendantOf(ancestor: repaintContainer)
+    {
+      return repaintContainer!.clippedOverflowRect(repaintContainer, context)
+    }
+
+    return rendererToRepaint!.clippedOverflowRect(repaintContainer, context)
   }
 
   override func rectsForRepaintingAfterLayout(
