@@ -1464,9 +1464,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     let clippedOverflowRect: LayoutRectWrapper  // Some rect (normally the visual overflow rect) mapped up to the repaint container, respecting clipping.
     var outlineBoundsRect: LayoutRectWrapper?  // A rect repsenting the extent of outlines and shadows, mapped to the repaint container, but not clipped.
 
-    init() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    init(rect: LayoutRectWrapper = LayoutRectWrapper(), outlineBounds: LayoutRectWrapper? = nil) {
+      clippedOverflowRect = rect
+      outlineBoundsRect = outlineBounds
     }
   }
 
@@ -1506,8 +1506,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func computeRectForRepaint(
     rect: LayoutRectWrapper, repaintContainer: RenderLayerModelObjectWrapper?
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeRects(
+      RepaintRects(rect: rect), repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint
+    )
+    .clippedOverflowRect
   }
 
   func rectsForRepaintingAfterLayout(
