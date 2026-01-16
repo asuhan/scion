@@ -253,6 +253,11 @@ struct LayoutRectWrapper: Equatable {
     setLocationAndSizeFromEdges(left: minX, top: minY, right: maxX, bottom: maxY)
   }
 
+  mutating func uniteIfNonZero(_ other: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   mutating func checkedUnite(other: LayoutRectWrapper) -> Bool {
     // TODO(asuhan): implement this

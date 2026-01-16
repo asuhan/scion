@@ -195,8 +195,19 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(parent() != nil)
+    // Rows and cells are in the same coordinate space. We need to both compute our overflow rect (which
+    // will accommodate a row outline and any visual effects on the row itself), but we also need to add in
+    // the repaint rects of cells.
+    var result = super.clippedOverflowRect(repaintContainer, context)
+    var cell = firstCell()
+    while cell != nil {
+      // Even if a cell is a repaint container, it's the row that paints the background behind it.
+      // So we don't care if a cell is a repaintContainer here.
+      result.uniteIfNonZero(cell!.clippedOverflowRect(repaintContainer, context))
+      cell = cell!.nextCell()
+    }
+    return result
   }
 
   override func rectsForRepaintingAfterLayout(
