@@ -108,6 +108,20 @@ private func canRelyOnAncestorLayerFullRepaint(
   return true
 }
 
+private func fullRepaintIsScheduled(_ renderer: RenderObjectWrapper) -> Bool {
+  if !renderer.view().usesCompositing() && renderer.document().ownerElement() == nil {
+    return false
+  }
+  var ancestorLayer = renderer.enclosingLayer()
+  while ancestorLayer != nil {
+    if ancestorLayer!.needsFullRepaint() {
+      return canRelyOnAncestorLayerFullRepaint(renderer, ancestorLayer!)
+    }
+    ancestorLayer = ancestorLayer!.paintOrderParent()
+  }
+  return false
+}
+
 class RenderObjectWrapper: CachedImageClientWrapper {
   enum `Type` {
     case BlockFlow
@@ -572,7 +586,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   private func setFragmentedFlowStateIncludingDescendants(
-    state: FragmentedFlowState, skipDescendentFragmentedFlow: SkipDescendentFragmentedFlow
+    state: FragmentedFlowState, skipDescendentFragmentedFlow: SkipDescendentFragmentedFlow = .Yes
   ) {
     setFragmentedFlowState(state)
 
@@ -1646,8 +1660,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func resetFragmentedFlowStateOnRemoval() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!renderTreeBeingDestroyed())
+
+    if fragmentedFlowState() == .NotInsideFlow {
+      return
+    }
+
+    if let renderElement = self as? RenderElementWrapper {
+      renderElement.removeFromRenderFragmentedFlow()
+      return
+    }
+
+    // A RenderFragmentedFlow is always considered to be inside itself, so it never has to change its state in response to parent changes.
+    if isRenderFragmentedFlow() {
+      return
+    }
+
+    setFragmentedFlowStateIncludingDescendants(state: .NotInsideFlow)
   }
 
   func initializeFragmentedFlowStateOnInsertion() {
@@ -1780,8 +1809,28 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ partialRepaintRect: LayoutRectWrapper? = nil, _ clipRepaintToLayer: ClipRepaintToLayer = .No,
     _ forceRepaint: ForceRepaint = .No, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var repaintContainer = containerForRepaint()
+    if repaintContainer.renderer == nil {
+      repaintContainer = RepaintContainerStatus(
+        fullRepaintIsScheduled: fullRepaintIsScheduled(self), renderer: view())
+    }
+
+    if repaintContainer.fullRepaintIsScheduled && forceRepaint == .No {
+      return
+    }
+
+    var repaintRect = LayoutRectWrapper()
+    if partialRepaintRect != nil {
+      repaintRect = computeRectForRepaint(
+        rect: partialRepaintRect!, repaintContainer: repaintContainer.renderer)
+      if additionalRepaintOutsets != nil {
+        repaintRect.expand(box: additionalRepaintOutsets!)
+      }
+    } else {
+      repaintRect = clippedOverflowRectForRepaint(repaintContainer.renderer)
+    }
+
+    repaintUsingContainer(repaintContainer.renderer, repaintRect, clipRepaintToLayer == .Yes)
   }
 
   func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {

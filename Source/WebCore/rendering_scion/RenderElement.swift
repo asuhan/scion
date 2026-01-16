@@ -620,6 +620,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func removeFromRenderFragmentedFlow() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called before anonymousChild.setStyle(). Override to set custom styles for
   // the child.
   func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {}
