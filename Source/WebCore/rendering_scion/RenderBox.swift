@@ -1863,6 +1863,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeVisibleRectsInContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
       p,

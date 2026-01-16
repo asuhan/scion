@@ -164,6 +164,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeVisibleRectsInContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func repaintRootContents() {
     if layer()!.isComposited() {
       layer()!.setBackingNeedsRepaint(shouldClip: .DoNotClipToLayer)

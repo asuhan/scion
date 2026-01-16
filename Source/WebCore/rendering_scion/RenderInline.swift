@@ -481,6 +481,14 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func computeVisibleRectsInContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

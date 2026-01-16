@@ -90,6 +90,14 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func computeVisibleRectsInContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func addFocusRingRects(
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil

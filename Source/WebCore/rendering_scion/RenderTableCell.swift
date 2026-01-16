@@ -859,6 +859,14 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
   }
 
+  override func computeVisibleRectsInContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func borderHalfLeft(outer: Bool) -> LayoutUnit {
     let styleForCellFlow = styleForCellFlow()
     if styleForCellFlow.isHorizontalWritingMode() {

@@ -1500,8 +1500,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ rects: RepaintRects, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeVisibleRectsInContainer(rects, repaintContainer, context)!
   }
 
   func computeRectForRepaint(
@@ -1528,6 +1527,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
 
     return result
+  }
+
+  // Given a rect in the object's coordinate space, compute the location in container space where this rect is visible,
+  // when clipping and scrolling as specified by the context. When using edge-inclusive intersection, return std::nullopt
+  // rather than an empty rect if the rect is completely clipped out in container space.
+  func computeVisibleRectsInContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {
