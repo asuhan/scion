@@ -2589,6 +2589,11 @@ class RenderLayerWrapper {
     makeMatrixRenderable(matrix: transform, has3DRendering: canRender3DTransforms())
   }
 
+  func currentTransform() -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
     if let matrix = transform {
       if paintBehavior.contains(.FlattenCompositingLayers) {

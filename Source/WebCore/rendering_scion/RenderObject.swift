@@ -1015,6 +1015,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func container(_ repaintContainer: RenderLayerModelObjectWrapper?) -> (
+    RenderElementWrapper?, Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setPreferredLogicalWidthsDirty(
     shouldBeDirty: Bool, markParents: MarkingBehavior = .MarkContainingBlockChain
   ) {
@@ -1052,6 +1059,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func localToContainerPoint(localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?)
     -> FloatPoint
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Return the offset from an object up the container() chain. Asserts that none of the intermediate objects have transforms.
+  func offsetFromAncestorContainer(_ container: RenderElementWrapper) -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1473,6 +1486,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       fatalError("Not implemented")
     }
 
+    var hasPositionFixedDescendant: Bool
+    var dirtyRectIsFlipped: Bool
+    var descendantNeedsEnclosingIntRect: Bool
     let options: VisibleRectContextOption
   }
 
@@ -1485,9 +1501,33 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       outlineBoundsRect = outlineBounds
     }
 
+    mutating func move(_ size: LayoutSizeWrapper) {
+      clippedOverflowRect.move(size: size)
+      outlineBoundsRect?.move(size: size)
+    }
+
     mutating func moveBy(_ size: LayoutPointWrapper) {
       clippedOverflowRect.moveBy(offset: size)
       outlineBoundsRect?.moveBy(offset: size)
+    }
+
+    mutating func expand(_ size: LayoutSizeWrapper) {
+      clippedOverflowRect.expand(size: size)
+      outlineBoundsRect?.expand(size: size)
+    }
+
+    mutating func encloseToIntRects() {
+      clippedOverflowRect = LayoutRectWrapper(rect: enclosingIntRect(rect: clippedOverflowRect))
+      if outlineBoundsRect != nil {
+        outlineBoundsRect = LayoutRectWrapper(rect: enclosingIntRect(rect: outlineBoundsRect!))
+      }
+    }
+
+    mutating func unite(_ other: RepaintRects) {
+      clippedOverflowRect.unite(other: other.clippedOverflowRect)
+      if outlineBoundsRect != nil && other.outlineBoundsRect != nil {
+        outlineBoundsRect!.unite(other: other.outlineBoundsRect!)
+      }
     }
 
     // Returns true if intersecting (clippedOverflowRect remains non-empty).
@@ -1501,6 +1541,20 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     func edgeInclusiveIntersect(_ clipRect: LayoutRectWrapper) -> Bool {
       // Note the we only intersect clippedOverflowRect.
       return clippedOverflowRect.edgeInclusiveIntersect(clipRect)
+    }
+
+    mutating func transform(_ matrix: TransformationMatrix, _ deviceScaleFactor: Float32) {
+      let identicalRects = outlineBoundsRect != nil && outlineBoundsRect! == clippedOverflowRect
+      clippedOverflowRect = LayoutRectWrapper(
+        r: encloseRectToDevicePixels(
+          rect: matrix.mapRect(r: clippedOverflowRect), pixelSnappingFactor: deviceScaleFactor))
+      if identicalRects {
+        outlineBoundsRect = clippedOverflowRect
+      } else if outlineBoundsRect != nil {
+        outlineBoundsRect = LayoutRectWrapper(
+          r: encloseRectToDevicePixels(
+            rect: matrix.mapRect(r: outlineBoundsRect!), pixelSnappingFactor: deviceScaleFactor))
+      }
     }
   }
 

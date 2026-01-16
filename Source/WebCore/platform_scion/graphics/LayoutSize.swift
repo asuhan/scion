@@ -167,6 +167,10 @@ class LayoutSizeWrapper: Equatable {
   private var height_: LayoutUnit = LayoutUnit()
 }
 
+func flooredIntSize(_ s: LayoutSizeWrapper) -> IntSize {
+  return IntSize(width: s.width().floor(), height: s.height().floor())
+}
+
 internal func ceiledIntSize(s: LayoutSizeWrapper) -> IntSize {
   return IntSize(width: s.width().ceil(), height: s.height().ceil())
 }

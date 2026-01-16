@@ -1867,8 +1867,121 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The rect we compute at each step is shifted by our x/y offset in the parent container's coordinate space.
+    // Only when we cross a writing mode boundary will we have to possibly flipForWritingMode (to convert into a more appropriate
+    // offset corner for the enclosing container).  This allows for a fully RL or BT document to repaint
+    // properly even during layout, since the rect remains flipped all the way until the end.
+    //
+    // RenderView::computeVisibleRectInContainer then converts the rect to physical coordinates. We also convert to
+    // physical when we hit a repaint container boundary. Therefore the final rect returned is always in the
+    // physical coordinate space of the container.
+    let styleToUse = style()
+    // Paint offset cache is only valid for root-relative, non-fixed position repainting
+    if view().frameView().layoutContext().isPaintOffsetCacheEnabled() && container == nil
+      && styleToUse.position() != .Fixed && !context.options.contains(.UseEdgeInclusiveIntersection)
+    {
+      return computeVisibleRectsUsingPaintOffset(rects)
+    }
+
+    var adjustedRects = rects
+    if hasReflection() {
+      let reflectedRects = RepaintRects(rect: reflectedRect(r: adjustedRects.clippedOverflowRect))
+      adjustedRects.unite(reflectedRects)
+    }
+
+    if CPtrToInt(container?.p) == CPtrToInt(p) {
+      if container!.style().isFlippedBlocksWritingMode() {
+        flipForWritingMode(&adjustedRects)
+      }
+      if context.descendantNeedsEnclosingIntRect {
+        adjustedRects.encloseToIntRects()
+      }
+      return adjustedRects
+    }
+
+    let (localContainer, containerIsSkipped) = self.container(container)
+    if localContainer == nil {
+      return adjustedRects
+    }
+
+    var context = context
+    if isWritingModeRoot() {
+      if !isOutOfFlowPositioned() || !context.dirtyRectIsFlipped {
+        flipForWritingMode(&adjustedRects)
+        context.dirtyRectIsFlipped = true
+      }
+    }
+
+    var locationOffset = self.locationOffset()
+
+    // FIXME: This is needed as long as RenderWidget snaps to integral size/position.
+    // TODO(asuhan): optimize this to avoid virtual calls on the fast path
+    if self is RenderWidgetWrapper {
+      let flooredLocationOffset = LayoutSizeWrapper(size: flooredIntSize(locationOffset))
+      adjustedRects.expand(locationOffset - flooredLocationOffset)
+      locationOffset = flooredLocationOffset
+      context.descendantNeedsEnclosingIntRect = true
+    } else if let columnFlow = self as? RenderMultiColumnFlowWrapper {
+      // We won't normally run this code. Only when the container is null (i.e., we're trying
+      // to get the rect in view coordinates) will we come in here, since normally container
+      // will be set and we'll stop at the flow thread. This case is mainly hit by the check for whether
+      // or not images should animate.
+      // FIXME: Just as with offsetFromContainer, we aren't really handling objects that span multiple columns properly.
+      let physicalPoint = flipForWritingMode(position: adjustedRects.clippedOverflowRect.location())
+      if let fragment = columnFlow.physicalTranslationFromFlowToFragment(
+        physicalPoint: physicalPoint)
+      {
+        adjustedRects.clippedOverflowRect.setLocation(
+          location: fragment.flipForWritingMode(position: physicalPoint))
+        return fragment.computeVisibleRectsInContainer(&adjustedRects, container, context)
+      }
+    }
+
+    // We are now in our parent container's coordinate space. Apply our transform to obtain a bounding box
+    // in the parent's coordinate space that encloses us.
+    let position = styleToUse.position()
+    if hasLayer() && layer()!.isTransformed() {
+      context.hasPositionFixedDescendant = position == .Fixed
+      adjustedRects.transform(layer()!.currentTransform(), document().deviceScaleFactor())
+    } else if position == .Fixed {
+      context.hasPositionFixedDescendant = true
+    }
+
+    adjustedRects.move(locationOffset)
+
+    if position == .Absolute && localContainer!.isInFlowPositioned()
+      && localContainer is RenderInlineWrapper
+    {
+      let offsetForInFlowPosition = (localContainer as! RenderInlineWrapper)
+        .offsetForInFlowPositionedInline(self)
+      adjustedRects.move(offsetForInFlowPosition)
+    } else if styleToUse.hasInFlowPosition() && layer() != nil {
+      // Apply the relative position offset when invalidating a rectangle.  The layer
+      // is translated, but the render box isn't, so we need to do this to get the
+      // right dirty rect. Since this is called from render object's setStyle, the relative position
+      // flag on the RenderObject has been cleared, so use the one on the style().
+      let offsetForInFlowPosition = layer()!.offsetForInFlowPosition()
+      adjustedRects.move(offsetForInFlowPosition)
+    }
+
+    if localContainer!.hasNonVisibleOverflow() {
+      let isEmpty = !(localContainer! as! RenderLayerModelObjectWrapper)
+        .applyCachedClipAndScrollPosition(&adjustedRects, container, context)
+      if isEmpty {
+        if context.options.contains(.UseEdgeInclusiveIntersection) {
+          return nil
+        }
+        return adjustedRects
+      }
+    }
+
+    if containerIsSkipped {
+      // If the container is below localContainer, then we need to map the rect into container's coordinates.
+      let containerOffset = container!.offsetFromAncestorContainer(localContainer!)
+      adjustedRects.move(-containerOffset)
+      return adjustedRects
+    }
+    return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
   }
 
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
@@ -6523,6 +6636,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

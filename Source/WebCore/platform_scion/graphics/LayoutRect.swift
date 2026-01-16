@@ -109,6 +109,8 @@ struct LayoutRectWrapper: Equatable {
 
   mutating func move(dx: Int32, dy: Int32) { m_location.move(dx: dx, dy: dy) }
 
+  mutating func expand(size: LayoutSizeWrapper) { m_size += size }
+
   mutating func expand(dw: LayoutUnit, dh: LayoutUnit) { m_size.expand(width: dw, height: dh) }
 
   mutating func expand(box: LayoutBoxExtent) {
