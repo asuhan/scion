@@ -1530,6 +1530,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       }
     }
 
+    mutating func flipForWritingMode(
+      _ containerSize: LayoutSizeWrapper, _ isHorizontalWritingMode: Bool
+    ) {
+      if isHorizontalWritingMode {
+        clippedOverflowRect.setY(y: containerSize.height() - clippedOverflowRect.maxY())
+        if outlineBoundsRect != nil {
+          outlineBoundsRect!.setY(y: containerSize.height() - outlineBoundsRect!.maxY())
+        }
+      } else {
+        clippedOverflowRect.setX(x: containerSize.width() - clippedOverflowRect.maxX())
+        if outlineBoundsRect != nil {
+          outlineBoundsRect!.setX(x: containerSize.width() - outlineBoundsRect!.maxX())
+        }
+      }
+    }
+
     // Returns true if intersecting (clippedOverflowRect remains non-empty).
     mutating func intersect(_ clipRect: LayoutRectWrapper) -> Bool {
       // Note the we only intersect clippedOverflowRect.

@@ -222,6 +222,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollPositionRespectingCustomFixedPosition() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func topContentDirectionDidChange() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

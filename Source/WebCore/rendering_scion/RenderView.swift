@@ -168,8 +168,33 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If a container was specified, and was not nullptr or the RenderView,
+    // then we should have found it by now.
+    assert(container == nil || CPtrToInt(container!.p) == CPtrToInt(p))
+
+    if printing() {
+      return rects
+    }
+
+    var adjustedRects = rects
+    if style().isFlippedBlocksWritingMode() {
+      // We have to flip by hand since the view's logical height has not been determined.  We
+      // can use the viewport width and height.
+      adjustedRects.flipForWritingMode(
+        LayoutSizeWrapper(width: viewWidth(), height: viewHeight()),
+        style().isHorizontalWritingMode())
+    }
+
+    if context.hasPositionFixedDescendant {
+      adjustedRects.moveBy(protectedFrameView().scrollPositionRespectingCustomFixedPosition())
+    }
+
+    // Apply our transform if we have one (because of full page zooming).
+    if container == nil && hasLayer() && layer()!.transform != nil {
+      adjustedRects.transform(layer()!.transform!, document().deviceScaleFactor())
+    }
+
+    return adjustedRects
   }
 
   func repaintRootContents() {
