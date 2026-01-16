@@ -1463,12 +1463,30 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   struct RepaintRects {
-    let clippedOverflowRect: LayoutRectWrapper  // Some rect (normally the visual overflow rect) mapped up to the repaint container, respecting clipping.
+    var clippedOverflowRect: LayoutRectWrapper  // Some rect (normally the visual overflow rect) mapped up to the repaint container, respecting clipping.
     var outlineBoundsRect: LayoutRectWrapper?  // A rect repsenting the extent of outlines and shadows, mapped to the repaint container, but not clipped.
 
     init(rect: LayoutRectWrapper = LayoutRectWrapper(), outlineBounds: LayoutRectWrapper? = nil) {
       clippedOverflowRect = rect
       outlineBoundsRect = outlineBounds
+    }
+
+    mutating func moveBy(_ size: LayoutPointWrapper) {
+      clippedOverflowRect.moveBy(offset: size)
+      outlineBoundsRect?.moveBy(offset: size)
+    }
+
+    // Returns true if intersecting (clippedOverflowRect remains non-empty).
+    mutating func intersect(_ clipRect: LayoutRectWrapper) -> Bool {
+      // Note the we only intersect clippedOverflowRect.
+      clippedOverflowRect.intersect(other: clipRect)
+      return !clippedOverflowRect.isEmpty()
+    }
+
+    // Returns true if intersecting (clippedOverflowRect remains non-empty).
+    func edgeInclusiveIntersect(_ clipRect: LayoutRectWrapper) -> Bool {
+      // Note the we only intersect clippedOverflowRect.
+      return clippedOverflowRect.edgeInclusiveIntersect(clipRect)
     }
   }
 

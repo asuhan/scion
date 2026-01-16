@@ -224,6 +224,11 @@ struct LayoutRectWrapper: Equatable {
     m_size = newMaxPoint - newLocation
   }
 
+  func edgeInclusiveIntersect(_ other: LayoutRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func unite(other: LayoutRectWrapper) {
     // Handle empty special cases first.
     if other.isEmpty() {

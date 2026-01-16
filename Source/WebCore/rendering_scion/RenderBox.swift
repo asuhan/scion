@@ -3477,6 +3477,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func usesCompositedScrolling() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func percentageLogicalHeightIsResolvable() -> Bool {
     // Do this to avoid duplicating all the logic that already exists when computing
     // an actual percentage height.
@@ -4003,6 +4008,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  private func flipForWritingMode(_ rects: inout RepaintRects) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These represent your location relative to your container as a physical offset.
   // In layout related methods you almost always want the logical location (e.g. x() and y()).
   func topLeftLocation() -> LayoutPointWrapper {
@@ -4093,14 +4103,52 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return ScrollPosition(x: 0, y: 0)
   }
 
+  private func cachedSizeForOverflowClip() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
   // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
   override final func applyCachedClipAndScrollPosition(
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    flipForWritingMode(&rects)
+
+    if context.options.contains(.ApplyCompositedContainerScrolls)
+      || CPtrToInt(p) != CPtrToInt(container?.p)
+      || !usesCompositedScrolling()
+    {
+      rects.moveBy(LayoutPointWrapper(point: -scrollPosition()))  // For overflow:auto/scroll/hidden.
+    }
+
+    // Do not clip scroll layer contents to reduce the number of repaints while scrolling.
+    if (!context.options.contains(.ApplyCompositedClips) && usesCompositedScrolling())
+      || (!context.options.contains(.ApplyContainerClip) && CPtrToInt(p) == CPtrToInt(container?.p))
+    {
+      flipForWritingMode(&rects)
+      return true
+    }
+
+    // height() is inaccurate if we're in the middle of a layout of this RenderBox, so use the
+    // layer's size instead. Even if the layer's size is wrong, the layer itself will repaint
+    // anyway if its size does change.
+    var clipRect = LayoutRectWrapper(
+      location: LayoutPointWrapper(), size: cachedSizeForOverflowClip())
+    if effectiveOverflowX() == .Visible {
+      clipRect.expandToInfiniteX()
+    }
+    if effectiveOverflowY() == .Visible {
+      clipRect.expandToInfiniteY()
+    }
+
+    let intersects =
+      context.options.contains(.UseEdgeInclusiveIntersection)
+      ? rects.edgeInclusiveIntersect(clipRect) : rects.intersect(clipRect)
+
+    flipForWritingMode(&rects)
+    return intersects
   }
 
   func hasRelativeDimensions() -> Bool {
