@@ -1851,8 +1851,58 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private func propagateRepaintToParentWithOutlineAutoIfNeeded(
     _ repaintContainer: RenderLayerModelObjectWrapper, _ repaintRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasOutlineAutoAncestor() {
+      return
+    }
+
+    // FIXME: We should really propagate only when the child renderer sticks out.
+    var repaintRectNeedsConverting = false
+    // Issue repaint on the renderer with outline: auto.
+    var renderer: RenderObjectWrapper? = self
+    while renderer != nil {
+      let originalRenderer = renderer
+      if let previousMultiColumnSet = renderer!.previousSibling() as? RenderMultiColumnSetWrapper,
+        !renderer!.isLegend()
+      {
+        let enclosingMultiColumnFlow = previousMultiColumnSet.multiColumnFlowForBlockFlow()!
+        let renderMultiColumnPlaceholder = enclosingMultiColumnFlow.findColumnSpannerPlaceholder(
+          spanner: renderer as! RenderBoxWrapper?)!
+        renderer = renderMultiColumnPlaceholder
+      }
+
+      let rendererHasOutlineAutoAncestor =
+        renderer!.hasOutlineAutoAncestor() || originalRenderer!.hasOutlineAutoAncestor()
+      assert(
+        rendererHasOutlineAutoAncestor
+          || originalRenderer!.outlineStyleForRepaint().outlineStyleIsAuto() == .On
+          || (renderer is RenderBoxModelObjectWrapper
+            && (renderer as! RenderBoxModelObjectWrapper).isContinuation())
+      )
+      if CPtrToInt(originalRenderer?.p) == CPtrToInt(repaintContainer.p)
+        && rendererHasOutlineAutoAncestor
+      {
+        repaintRectNeedsConverting = true
+      }
+      if rendererHasOutlineAutoAncestor {
+        renderer = renderer!.parent()
+        continue
+      }
+      // Issue repaint on the correct repaint container.
+      var adjustedRepaintRect = repaintRect
+      adjustedRepaintRect.inflate(d: originalRenderer!.outlineStyleForRepaint().outlineSize())
+      if !repaintRectNeedsConverting {
+        repaintContainer.repaintRectangle(repaintRect: adjustedRepaintRect)
+      } else if let rendererWithOutline = originalRenderer as? RenderLayerModelObjectWrapper {
+        adjustedRepaintRect = LayoutRectWrapper(
+          r: repaintContainer.localToContainerQuad(
+            localQuad: FloatQuad(inRect: adjustedRepaintRect.FloatRect()),
+            container: rendererWithOutline
+          ).boundingBox())
+        rendererWithOutline.repaintRectangle(repaintRect: adjustedRepaintRect)
+      }
+      return
+    }
+    fatalError("Not reached")
   }
 
   func setEverHadLayout() {
