@@ -122,8 +122,14 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For now, just repaint the whole table.
+    // FIXME: Find a better way to do this, e.g., need to repaint all the cells that we
+    // might have propagated a background color or borders into.
+    // FIXME: check for repaintContainer each time here?
+
+    guard let parentTable = table() else { return LayoutRectWrapper() }
+
+    return parentTable.clippedOverflowRect(repaintContainer, context)
   }
 
   override func rectsForRepaintingAfterLayout(
