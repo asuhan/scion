@@ -25,11 +25,21 @@ private let borderStartEdgeColor = SRGBA<UInt8>(red: 170, green: 170, blue: 170)
 private let borderEndEdgeColor = ColorWrapper.black
 private let borderFillColor = SRGBA<UInt8>(red: 208, green: 208, blue: 208)
 
+enum FrameEdge: UInt8 {
+  case LeftFrameEdge = 0
+  case RightFrameEdge = 1
+  case TopFrameEdge = 2
+  case BottomFrameEdge = 3
+}
+
 struct FrameEdgeInfo {
   init(preventResize: Bool = false, allowBorder: Bool = true) {
     self.preventResize = [Bool](repeating: preventResize, count: 4)
     self.allowBorder = [Bool](repeating: allowBorder, count: 4)
   }
+
+  func preventResize(_ edge: FrameEdge) -> Bool { return preventResize[Int(edge.rawValue)] }
+  func allowBorder(_ edge: FrameEdge) -> Bool { return allowBorder[Int(edge.rawValue)] }
 
   private let preventResize: [Bool]
   private let allowBorder: [Bool]
@@ -411,8 +421,31 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
   }
 
   private func fillFromEdgeInfo(_ edgeInfo: FrameEdgeInfo, _ r: Int, _ c: Int) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if edgeInfo.allowBorder(.LeftFrameEdge) {
+      m_cols.allowBorder[c] = true
+    }
+    if edgeInfo.allowBorder(.RightFrameEdge) {
+      m_cols.allowBorder[c + 1] = true
+    }
+    if edgeInfo.preventResize(.LeftFrameEdge) {
+      m_cols.preventResize[c] = true
+    }
+    if edgeInfo.preventResize(.RightFrameEdge) {
+      m_cols.preventResize[c + 1] = true
+    }
+
+    if edgeInfo.allowBorder(.TopFrameEdge) {
+      m_rows.allowBorder[r] = true
+    }
+    if edgeInfo.allowBorder(.BottomFrameEdge) {
+      m_rows.allowBorder[r + 1] = true
+    }
+    if edgeInfo.preventResize(.TopFrameEdge) {
+      m_rows.preventResize[r] = true
+    }
+    if edgeInfo.preventResize(.BottomFrameEdge) {
+      m_rows.preventResize[r + 1] = true
+    }
   }
 
   func positionFrames() {
