@@ -35,6 +35,13 @@ struct FrameEdgeInfo {
   private let allowBorder: [Bool]
 }
 
+private func resetFrameRendererAndDescendants(
+  _ frameSetChild: RenderBoxWrapper?, _ parentFrameSet: RenderFrameSetWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderFrameSetWrapper: RenderBoxWrapper {
   func frameSetElement() -> HTMLFrameSetElementWrapper {
     // TODO(asuhan): implement this
@@ -409,8 +416,45 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
   }
 
   func positionFrames() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = firstChildBox()
+    if child == nil {
+      return
+    }
+
+    let rows = Int(frameSetElement().totalRows())
+    let cols = Int(frameSetElement().totalCols())
+
+    var yPos: Int32 = 0
+    let borderThickness = frameSetElement().border()
+    for r in 0..<rows {
+      var xPos: Int32 = 0
+      let height = m_rows.sizes[r]
+      for c in 0..<cols {
+        child!.setLocation(p: LayoutPointWrapper(point: IntPoint(x: xPos, y: yPos)))
+        let width = m_cols.sizes[c]
+
+        // has to be resized and itself resize its contents
+        child!.setWidth(width: width)
+        child!.setHeight(height: height)
+        #if WTF_PLATFORM_IOS_FAMILY
+          // FIXME: Is this iOS-specific?
+          child!.setNeedsLayout(markParents: .MarkOnlyThis)
+        #else
+          child!.setNeedsLayout()
+        #endif
+        child!.layout()
+
+        xPos += width + borderThickness
+
+        child = child!.nextSiblingBox()
+        if child == nil {
+          return
+        }
+      }
+      yPos += height + borderThickness
+    }
+
+    resetFrameRendererAndDescendants(child, self)
   }
 
   private func paintRowBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
