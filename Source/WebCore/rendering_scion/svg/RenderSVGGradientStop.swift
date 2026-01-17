@@ -35,4 +35,6 @@ final class RenderSVGGradientStopWrapper: RenderElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
 }

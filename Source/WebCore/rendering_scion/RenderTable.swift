@@ -863,6 +863,11 @@ class RenderTableWrapper: RenderBlockWrapper {
 
   override final func avoidsFloats() -> Bool { return true }
 
+  override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private final func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     var paintPhase = paintInfo.phase
     if (paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground)

@@ -287,6 +287,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func paintBoxDecorations(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {

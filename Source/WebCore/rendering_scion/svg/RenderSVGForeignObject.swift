@@ -21,6 +21,11 @@
  */
 
 final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -24,6 +24,11 @@ class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
     fatalError("Not implemented")
   }
 
+  override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {

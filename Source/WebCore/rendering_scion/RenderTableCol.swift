@@ -168,6 +168,8 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     }
   }
 
+  override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
+
   private func table() -> RenderTableWrapper? {
     var table = parent()
     if table != nil && !(table is RenderTableWrapper) {

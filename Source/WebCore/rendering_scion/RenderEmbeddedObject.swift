@@ -169,6 +169,11 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
     }
   }
 
+  override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())

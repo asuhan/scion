@@ -67,6 +67,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateLayerTransform() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

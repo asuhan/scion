@@ -75,6 +75,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // Recomputing overflow is required only when child content is present.
     if needsSimplifiedNormalFlowLayoutOnly() && !hasShadowContent() {
