@@ -26,4 +26,9 @@ final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasBorderColor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

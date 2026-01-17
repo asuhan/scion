@@ -21,6 +21,10 @@
  *
  */
 
+private let borderStartEdgeColor = SRGBA<UInt8>(red: 170, green: 170, blue: 170)
+private let borderEndEdgeColor = ColorWrapper.black
+private let borderFillColor = SRGBA<UInt8>(red: 208, green: 208, blue: 208)
+
 final class RenderFrameSetWrapper: RenderBoxWrapper {
   func frameSetElement() -> HTMLFrameSetElementWrapper {
     // TODO(asuhan): implement this
@@ -101,8 +105,35 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
   }
 
   private func paintColumnBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.rect.intersects(other: LayoutRectWrapper(rect: borderRect)) {
+      return
+    }
+
+    // FIXME: We should do something clever when borders from distinct framesets meet at a join.
+
+    // Fill first.
+    let context = paintInfo.context()
+    context.fillRect(
+      rect: FloatRectWrapper(r: borderRect),
+      color: frameSetElement().hasBorderColor()
+        ? style().visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyBorderLeftColor)
+        : ColorWrapper(borderFillColor))
+
+    // Now stroke the edges but only if we have enough room to paint both edges with a little
+    // bit of the fill color showing through.
+    if borderRect.width() >= 3 {
+      context.fillRect(
+        rect: FloatRectWrapper(
+          r: IntRect(location: borderRect.location, size: IntSize(width: 1, height: height().int()))
+        ),
+        color: ColorWrapper(borderStartEdgeColor))
+      context.fillRect(
+        rect: FloatRectWrapper(
+          r: IntRect(
+            location: IntPoint(x: borderRect.maxX() - 1, y: borderRect.y()),
+            size: IntSize(width: 1, height: height().int()))),
+        color: borderEndEdgeColor)
+    }
   }
 
   private let m_rows = GridAxis()
