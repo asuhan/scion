@@ -100,8 +100,34 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
   }
 
   private func paintRowBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !paintInfo.rect.intersects(other: LayoutRectWrapper(rect: borderRect)) {
+      return
+    }
+
+    // FIXME: We should do something clever when borders from distinct framesets meet at a join.
+
+    // Fill first.
+    let context = paintInfo.context()
+    context.fillRect(
+      rect: FloatRectWrapper(r: borderRect),
+      color: frameSetElement().hasBorderColor()
+        ? style().visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyBorderLeftColor)
+        : ColorWrapper(borderFillColor))
+
+    // Now stroke the edges but only if we have enough room to paint both edges with a little
+    // bit of the fill color showing through.
+    if borderRect.height() >= 3 {
+      context.fillRect(
+        rect: FloatRectWrapper(
+          r: IntRect(location: borderRect.location, size: IntSize(width: width().int(), height: 1))),
+        color: ColorWrapper(borderStartEdgeColor))
+      context.fillRect(
+        rect: FloatRectWrapper(
+          r: IntRect(
+            location: IntPoint(x: borderRect.x(), y: borderRect.maxY() - 1),
+            size: IntSize(width: width().int(), height: 1))),
+        color: borderEndEdgeColor)
+    }
   }
 
   private func paintColumnBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
