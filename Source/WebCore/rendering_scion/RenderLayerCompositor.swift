@@ -852,7 +852,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   // Called after the view transparency, or the document or base background color change.
-  private func rootBackgroundColorOrTransparencyChanged() {
+  func rootBackgroundColorOrTransparencyChanged() {
     if !usesCompositing() {
       return
     }

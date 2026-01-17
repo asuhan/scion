@@ -47,6 +47,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func page() -> PageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func settings() -> SettingsWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

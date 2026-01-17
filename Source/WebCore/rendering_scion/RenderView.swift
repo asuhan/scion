@@ -22,6 +22,31 @@
 import Foundation
 import wk_interop
 
+private func rendererObscuresBackground(_ rootElement: RenderElementWrapper) -> Bool {
+  let style = rootElement.style()
+  if style.usedVisibility() != .Visible || style.opacity() != 1 || style.hasTransform() {
+    return false
+  }
+
+  if style.hasBorderRadius() {
+    return false
+  }
+
+  if rootElement.isComposited() {
+    return false
+  }
+
+  if rootElement.hasClipPath() && rootElement.isRenderOrLegacyRenderSVGRoot() {
+    return false
+  }
+
+  if let rendererForBackground = rootElement.view().rendererForRootBackground() {
+    return rendererForBackground.style().backgroundClip() != .Text
+  }
+
+  return false
+}
+
 class RenderViewWrapper: RenderBlockFlowWrapper {
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
@@ -259,6 +284,98 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     let maximumRepaintRegionGridSize = 16 * 16
     if accumulatedRepaintRegion!.gridSize() > maximumRepaintRegionGridSize {
       accumulatedRepaintRegion = Region(accumulatedRepaintRegion!.bounds)
+    }
+  }
+
+  override final func paintBoxDecorations(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    // Check to see if we are enclosed by a layer that requires complex painting rules.  If so, we cannot blit
+    // when scrolling, and we need to use slow repaints.  Examples of layers that require this are transparent layers,
+    // layers with reflections, or transformed layers.
+    // FIXME: This needs to be dynamic.  We should be able to go back to blitting if we ever stop being inside
+    // a transform, transparency layer, etc.
+    var element = document().ownerElement()
+    while element != nil && element!.renderer() != nil {
+      let layer = element!.renderer()!.enclosingLayer()!
+      if layer.cannotBlitToWindow() {
+        protectedFrameView().setCannotBlitToWindow()
+        break
+      }
+
+      if let compositingLayer = layer.enclosingCompositingLayerForRepaint().layer {
+        if !compositingLayer.backing!.paintsIntoWindow() {
+          protectedFrameView().setCannotBlitToWindow()
+          break
+        }
+      }
+
+      element = element!.document().ownerElement()
+    }
+
+    if !shouldPaintBaseBackground() {
+      return
+    }
+
+    if paintInfo.skipRootBackground() {
+      return
+    }
+
+    var rootFillsViewport = false
+    var rootObscuresBackground = false
+    var shouldPropagateBackgroundPaintingToInitialContainingBlock = true
+    let documentElement = document().documentElement()
+    if let rootRenderer = documentElement?.containerRenderer() {
+      // The document element's renderer is currently forced to be a block, but may not always be.
+      let rootBox = rootRenderer as? RenderBoxWrapper
+      rootFillsViewport =
+        rootBox != nil && !rootBox!.x().bool() && !rootBox!.y().bool()
+        && rootBox!.width() >= width()
+        && rootBox!.height() >= height()
+      rootObscuresBackground = rendererObscuresBackground(rootRenderer)
+      shouldPropagateBackgroundPaintingToInitialContainingBlock =
+        (rendererForRootBackground() != nil)
+    }
+
+    compositor().rootBackgroundColorOrTransparencyChanged()
+
+    let page = document().page()
+    let pageScaleFactor = page?.pageScaleFactor() ?? 1
+
+    // If painting will entirely fill the view, no need to fill the background.
+    if rootFillsViewport && rootObscuresBackground && pageScaleFactor >= 1
+      && rootElementShouldPaintBaseBackground()
+    {
+      return
+    }
+
+    // This code typically only executes if the root element's visibility has been set to hidden,
+    // if there is a transform on the <html>, or if there is a page scale factor less than 1.
+    // Only fill with a background color (typically white) if we're the root document,
+    // since iframes/frames with no background in the child document should show the parent's background.
+    // We use the base background color unless the backgroundShouldExtendBeyondPage setting is set,
+    // in which case we use the document's background color.
+    let frameView = frameView()
+    if frameView.isTransparent() {  // FIXME: This needs to be dynamic. We should be able to go back to blitting if we ever stop being transparent.
+      frameView.setCannotBlitToWindow()  // The parent must show behind the child.
+    } else {
+      let documentBackgroundColor = frameView.documentBackgroundColor()
+      let backgroundColor =
+        (shouldPropagateBackgroundPaintingToInitialContainingBlock
+          && settings().backgroundShouldExtendBeyondPage() && documentBackgroundColor.isValid())
+        ? documentBackgroundColor : frameView.baseBackgroundColor()
+      if backgroundColor.isVisible() {
+        let previousOperator = paintInfo.context().compositeOperation()
+        paintInfo.context().setCompositeOperation(operation: .Copy)
+        paintInfo.context().fillRect(rect: paintInfo.rect.FloatRect(), color: backgroundColor)
+        paintInfo.context().setCompositeOperation(operation: previousOperator)
+      } else {
+        paintInfo.context().clearRect(rect: paintInfo.rect.FloatRect())
+      }
     }
   }
 

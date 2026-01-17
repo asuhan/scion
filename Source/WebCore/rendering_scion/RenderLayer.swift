@@ -1011,6 +1011,11 @@ class RenderLayerWrapper {
     updateFilterPaintingStrategy()
   }
 
+  func cannotBlitToWindow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
   func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
 
