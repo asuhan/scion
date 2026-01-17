@@ -25,8 +25,23 @@ private let borderStartEdgeColor = SRGBA<UInt8>(red: 170, green: 170, blue: 170)
 private let borderEndEdgeColor = ColorWrapper.black
 private let borderFillColor = SRGBA<UInt8>(red: 208, green: 208, blue: 208)
 
+struct FrameEdgeInfo {
+  init(preventResize: Bool = false, allowBorder: Bool = true) {
+    self.preventResize = [Bool](repeating: preventResize, count: 4)
+    self.allowBorder = [Bool](repeating: allowBorder, count: 4)
+  }
+
+  private let preventResize: [Bool]
+  private let allowBorder: [Bool]
+}
+
 final class RenderFrameSetWrapper: RenderBoxWrapper {
   func frameSetElement() -> HTMLFrameSetElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func edgeInfo() -> FrameEdgeInfo {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -45,7 +60,8 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
 
     let sizes: [Int32] = []
     var deltas: [Int32] = []
-    let allowBorder: [Bool] = []
+    var preventResize: [Bool] = []
+    var allowBorder: [Bool] = []
     let splitBeingResized: Int32
   }
 
@@ -353,6 +369,41 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
   }
 
   private func computeEdgeInfo() {
+    for i in 0..<m_rows.preventResize.count {
+      m_rows.preventResize[i] = frameSetElement().noResize()
+    }
+    for i in 0..<m_rows.allowBorder.count {
+      m_rows.allowBorder[i] = false
+    }
+    for i in 0..<m_cols.preventResize.count {
+      m_cols.preventResize[i] = frameSetElement().noResize()
+    }
+    for i in 0..<m_cols.allowBorder.count {
+      m_cols.allowBorder[i] = false
+    }
+
+    var child = firstChild()
+
+    let rows = m_rows.sizes.count
+    let cols = m_cols.sizes.count
+    for r in 0..<rows {
+      for c in 0..<cols {
+        var edgeInfo = FrameEdgeInfo()
+        if let frameSet = child as? RenderFrameSetWrapper {
+          edgeInfo = frameSet.edgeInfo()
+        } else {
+          edgeInfo = (child as! RenderFrameWrapper).edgeInfo()
+        }
+        fillFromEdgeInfo(edgeInfo, r, c)
+        child = child!.nextSibling()
+        if child == nil {
+          return
+        }
+      }
+    }
+  }
+
+  private func fillFromEdgeInfo(_ edgeInfo: FrameEdgeInfo, _ r: Int, _ c: Int) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

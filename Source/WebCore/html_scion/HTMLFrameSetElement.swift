@@ -22,6 +22,11 @@
  */
 
 final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
+  func noResize() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func totalRows() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

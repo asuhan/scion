@@ -70,6 +70,7 @@ target_sources(layout_scion PRIVATE
     RenderFragmentContainer.swift
     RenderFragmentContainerSet.swift
     RenderFragmentedFlow.swift
+    RenderFrame.swift
     RenderFrameBase.swift
     RenderFrameSet.swift
     RenderGeometryMap.swift
