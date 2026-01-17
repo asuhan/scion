@@ -38,14 +38,66 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
       splitBeingResized = noSplit
     }
 
+    mutating func resize(_ size: Int32) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     let sizes: [Int32] = []
     let allowBorder: [Bool] = []
     let splitBeingResized: Int32
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    let doFullRepaint = selfNeedsLayout() && checkForRepaintDuringLayout()
+    var oldBounds = LayoutRectWrapper()
+    var repaintContainer: RenderLayerModelObjectWrapper? = nil
+    if doFullRepaint {
+      repaintContainer = containerForRepaint().renderer
+      oldBounds = clippedOverflowRectForRepaint(repaintContainer)
+    }
+
+    if !parent()!.isRenderFrameSet() && !document().printing() {
+      setWidth(width: view().viewWidth())
+      setHeight(height: view().viewHeight())
+    }
+
+    let cols = frameSetElement().totalCols()
+    let rows = frameSetElement().totalRows()
+
+    if m_rows.sizes.count != rows || m_cols.sizes.count != cols {
+      m_rows.resize(rows)
+      m_cols.resize(cols)
+    }
+
+    let borderThickness = LayoutUnit(value: frameSetElement().border())
+    layOutAxis(
+      &m_rows, frameSetElement().rowLengths(), (height() - (rows - 1) * borderThickness).int())
+    layOutAxis(
+      &m_cols, frameSetElement().colLengths(), (width() - (cols - 1) * borderThickness).int())
+
+    positionFrames()
+
+    super.layout()
+
+    computeEdgeInfo()
+
+    updateLayerTransform()
+
+    if doFullRepaint {
+      repaintUsingContainer(
+        repaintContainer, LayoutRectWrapper(rect: snappedIntRect(rect: oldBounds)))
+      let newBounds = clippedOverflowRectForRepaint(repaintContainer)
+      if newBounds != oldBounds {
+        repaintUsingContainer(
+          repaintContainer, LayoutRectWrapper(rect: snappedIntRect(rect: newBounds)))
+      }
+    }
+
+    clearNeedsLayout()
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -97,6 +149,21 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
         yPos += borderThickness
       }
     }
+  }
+
+  private func layOutAxis(_ axis: inout GridAxis, _ grid: LengthWrapper?, _ availableLen: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computeEdgeInfo() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func positionFrames() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func paintRowBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
@@ -162,6 +229,6 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
     }
   }
 
-  private let m_rows = GridAxis()
-  private let m_cols = GridAxis()
+  private var m_rows = GridAxis()
+  private var m_cols = GridAxis()
 }

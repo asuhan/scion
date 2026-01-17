@@ -22,12 +22,32 @@
  */
 
 final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
+  func totalRows() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func totalCols() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func border() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func hasBorderColor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func rowLengths() -> LengthWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func colLengths() -> LengthWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

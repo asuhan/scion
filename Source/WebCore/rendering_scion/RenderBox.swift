@@ -580,6 +580,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setWidth<T>(width: T) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setHeight<T>(height: T) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

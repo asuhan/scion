@@ -125,7 +125,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   // The same as the FrameView's layoutHeight/layoutWidth but with null check guards.
-  private func viewHeight() -> Int32 {
+  func viewHeight() -> Int32 {
     var height: Int32 = 0
     if !shouldUsePrintingLayout() {
       let frameView = frameView()
@@ -136,7 +136,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return height
   }
 
-  private func viewWidth() -> Int32 {
+  func viewWidth() -> Int32 {
     var width: Int32 = 0
     if !shouldUsePrintingLayout() {
       let frameView = frameView()
