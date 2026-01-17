@@ -21,4 +21,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class HTMLFrameSetElementWrapper: HTMLElementWrapper {}
+final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
+  func border() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

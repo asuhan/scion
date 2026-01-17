@@ -22,13 +22,89 @@
  */
 
 final class RenderFrameSetWrapper: RenderBoxWrapper {
+  func frameSetElement() -> HTMLFrameSetElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static let noSplit: Int32 = -1
+
+  private struct GridAxis: ~Copyable {
+    init() {
+      splitBeingResized = noSplit
+    }
+
+    let sizes: [Int32] = []
+    let allowBorder: [Bool] = []
+    let splitBeingResized: Int32
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    if paintInfo.phase != .Foreground {
+      return
+    }
+
+    var child = firstChild()
+    if child == nil {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    let rows = m_rows.sizes.count
+    let cols = m_cols.sizes.count
+    let borderThickness = LayoutUnit(value: frameSetElement().border())
+
+    var yPos = LayoutUnit()
+    for r in 0..<rows {
+      var xPos = LayoutUnit()
+      for c in 0..<cols {
+        (child as! RenderElementWrapper).paint(
+          paintInfo: &paintInfo, paintOffset: adjustedPaintOffset)
+        xPos += m_cols.sizes[c]
+        if borderThickness.bool() && m_cols.allowBorder[c + 1] {
+          paintColumnBorder(
+            paintInfo,
+            snappedIntRect(
+              rect: LayoutRectWrapper(
+                x: adjustedPaintOffset.x + xPos, y: adjustedPaintOffset.y + yPos,
+                width: borderThickness,
+                height: height())))
+          xPos += borderThickness
+        }
+        child = child!.nextSibling()
+        if child == nil {
+          return
+        }
+      }
+      yPos += m_rows.sizes[r]
+      if borderThickness.bool() && m_rows.allowBorder[r + 1] {
+        paintRowBorder(
+          paintInfo,
+          snappedIntRect(
+            rect: LayoutRectWrapper(
+              x: adjustedPaintOffset.x, y: adjustedPaintOffset.y + yPos, width: width(),
+              height: borderThickness)))
+        yPos += borderThickness
+      }
+    }
+  }
+
+  private func paintRowBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func paintColumnBorder(_ paintInfo: PaintInfoWrapper, _ borderRect: IntRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let m_rows = GridAxis()
+  private let m_cols = GridAxis()
 }
