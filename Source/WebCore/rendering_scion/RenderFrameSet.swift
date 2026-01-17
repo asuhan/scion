@@ -44,6 +44,7 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
     }
 
     let sizes: [Int32] = []
+    var deltas: [Int32] = []
     let allowBorder: [Bool] = []
     let splitBeingResized: Int32
   }
@@ -151,9 +152,204 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
     }
   }
 
-  private func layOutAxis(_ axis: inout GridAxis, _ grid: LengthWrapper?, _ availableLen: Int32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func layOutAxis(
+    _ axis: inout GridAxis, _ grid: ArraySlice<LengthWrapper>, _ availableLen: Int32
+  ) {
+    let availableLen = max(availableLen, 0)
+
+    var gridLayout = axis.sizes[...]
+
+    if grid.isEmpty {
+      gridLayout[0] = availableLen
+      return
+    }
+
+    let gridLen = axis.sizes.count
+    assert(gridLen != 0)
+
+    var totalRelative: Int32 = 0
+    var totalFixed: Int32 = 0
+    var totalPercent: Int32 = 0
+    var countRelative = 0
+    var countFixed: Int32 = 0
+    var countPercent: Int32 = 0
+
+    // First we need to investigate how many columns of each type we have and
+    // how much space these columns are going to require.
+    for i in 0..<gridLen {
+      // Count the total length of all of the fixed columns/rows -> totalFixed
+      // Count the number of columns/rows which are fixed -> countFixed
+      if grid[i].isFixed() {
+        gridLayout[i] = max(grid[i].intValue(), 0)
+        totalFixed += gridLayout[i]
+        countFixed += 1
+      }
+
+      // Count the total percentage of all of the percentage columns/rows -> totalPercent
+      // Count the number of columns/rows which are percentages -> countPercent
+      if grid[i].isPercentOrCalculated() {
+        gridLayout[i] = max(
+          intValueForLength(length: grid[i], maximumValue: LayoutUnit(value: availableLen)), 0)
+        totalPercent += gridLayout[i]
+        countPercent += 1
+      }
+
+      // Count the total relative of all the relative columns/rows -> totalRelative
+      // Count the number of columns/rows which are relative -> countRelative
+      if grid[i].isRelative() {
+        totalRelative += max(grid[i].intValue(), 1)
+        countRelative += 1
+      }
+    }
+
+    var remainingLen = availableLen
+
+    // Fixed columns/rows are our first priority. If there is not enough space to fit all fixed
+    // columns/rows we need to proportionally adjust their size.
+    if totalFixed > remainingLen {
+      let remainingFixed = remainingLen
+
+      for i in 0..<gridLen {
+        if grid[i].isFixed() {
+          gridLayout[i] = (gridLayout[i] * remainingFixed) / totalFixed
+          remainingLen -= gridLayout[i]
+        }
+      }
+    } else {
+      remainingLen -= totalFixed
+    }
+
+    // Percentage columns/rows are our second priority. Divide the remaining space proportionally
+    // over all percentage columns/rows. IMPORTANT: the size of each column/row is not relative
+    // to 100%, but to the total percentage. For example, if there are three columns, each of 75%,
+    // and the available space is 300px, each column will become 100px in width.
+    if totalPercent > remainingLen {
+      let remainingPercent = remainingLen
+
+      for i in 0..<gridLen {
+        if grid[i].isPercentOrCalculated() {
+          gridLayout[i] = (gridLayout[i] * remainingPercent) / totalPercent
+          remainingLen -= gridLayout[i]
+        }
+      }
+    } else {
+      remainingLen -= totalPercent
+    }
+
+    // Relative columns/rows are our last priority. Divide the remaining space proportionally
+    // over all relative columns/rows. IMPORTANT: the relative value of 0* is treated as 1*.
+    if countRelative != 0 {
+      var lastRelative = 0
+      let remainingRelative = remainingLen
+
+      for i in 0..<gridLen {
+        if grid[i].isRelative() {
+          gridLayout[i] = (max(grid[i].intValue(), 1) * remainingRelative) / totalRelative
+          remainingLen -= gridLayout[i]
+          lastRelative = i
+        }
+      }
+
+      // If we could not evenly distribute the available space of all of the relative
+      // columns/rows, the remainder will be added to the last column/row.
+      // For example: if we have a space of 100px and three columns (*,*,*), the remainder will
+      // be 1px and will be added to the last column: 33px, 33px, 34px.
+      if remainingLen != 0 {
+        gridLayout[lastRelative] += remainingLen
+        remainingLen = 0
+      }
+    }
+
+    // If we still have some left over space we need to divide it over the already existing
+    // columns/rows
+    if remainingLen != 0 {
+      // Our first priority is to spread if over the percentage columns. The remaining
+      // space is spread evenly, for example: if we have a space of 100px, the columns
+      // definition of 25%,25% used to result in two columns of 25px. After this the
+      // columns will each be 50px in width.
+      if countPercent != 0 && totalPercent != 0 {
+        let remainingPercent = remainingLen
+        var changePercent: Int32 = 0
+
+        for i in 0..<gridLen {
+          if grid[i].isPercentOrCalculated() {
+            changePercent = (remainingPercent * gridLayout[i]) / totalPercent
+            gridLayout[i] += changePercent
+            remainingLen -= changePercent
+          }
+        }
+      } else if totalFixed != 0 {
+        // Our last priority is to spread the remaining space over the fixed columns.
+        // For example if we have 100px of space and two column of each 40px, both
+        // columns will become exactly 50px.
+        let remainingFixed = remainingLen
+        var changeFixed: Int32 = 0
+
+        for i in 0..<gridLen {
+          if grid[i].isFixed() {
+            changeFixed = (remainingFixed * gridLayout[i]) / totalFixed
+            gridLayout[i] += changeFixed
+            remainingLen -= changeFixed
+          }
+        }
+      }
+    }
+
+    // If we still have some left over space we probably ended up with a remainder of
+    // a division. We cannot spread it evenly anymore. If we have any percentage
+    // columns/rows simply spread the remainder equally over all available percentage columns,
+    // regardless of their size.
+    if remainingLen != 0 && countPercent != 0 {
+      let remainingPercent = remainingLen
+      var changePercent: Int32 = 0
+
+      for i in 0..<gridLen {
+        if grid[i].isPercentOrCalculated() {
+          changePercent = remainingPercent / countPercent
+          gridLayout[i] += changePercent
+          remainingLen -= changePercent
+        }
+      }
+    } else if remainingLen != 0 && countFixed != 0 {
+      // If we don't have any percentage columns/rows we only have
+      // fixed columns. Spread the remainder equally over all fixed
+      // columns/rows.
+      let remainingFixed = remainingLen
+      var changeFixed: Int32 = 0
+
+      for i in 0..<gridLen {
+        if grid[i].isFixed() {
+          changeFixed = remainingFixed / countFixed
+          gridLayout[i] += changeFixed
+          remainingLen -= changeFixed
+        }
+      }
+    }
+
+    // Still some left over. Add it to the last column, because it is impossible
+    // spread it evenly or equally.
+    if remainingLen != 0 {
+      gridLayout[gridLen - 1] += remainingLen
+    }
+
+    // now we have the final layout, distribute the delta over it
+    var worked = true
+    let gridDelta = axis.deltas[...]
+    for i in 0..<gridLen {
+      if gridLayout[i] != 0 && gridLayout[i] + gridDelta[i] <= 0 {
+        worked = false
+      }
+      gridLayout[i] += gridDelta[i]
+    }
+    // if the deltas broke something, undo them
+    if !worked {
+      for i in 0..<gridLen {
+        gridLayout[i] -= gridDelta[i]
+      }
+      for i in 0..<axis.deltas.count {
+        axis.deltas[i] = 0
+      }
+    }
   }
 
   private func computeEdgeInfo() {

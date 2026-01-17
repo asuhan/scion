@@ -42,12 +42,12 @@ final class HTMLFrameSetElementWrapper: HTMLElementWrapper {
     fatalError("Not implemented")
   }
 
-  func rowLengths() -> LengthWrapper? {
+  func rowLengths() -> ArraySlice<LengthWrapper> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func colLengths() -> LengthWrapper? {
+  func colLengths() -> ArraySlice<LengthWrapper> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
