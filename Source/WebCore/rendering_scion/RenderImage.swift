@@ -30,6 +30,14 @@ enum ImageSizeChangeType {
   case ImageSizeChangeForAltText
 }
 
+// If we'll be displaying either alt text or an image, add some padding.
+private let paddingWidth: UInt16 = 4
+private let paddingHeight: UInt16 = 4
+
+private func isDeferredImage(_ element: ElementWrapper?) -> Bool {
+  return (element as? HTMLImageElementWrapper)?.isDeferred() ?? false
+}
+
 class RenderImageWrapper: RenderReplacedWrapper {
   private func imageResource() -> RenderImageResource {
     // TODO(asuhan): implement this
@@ -47,6 +55,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   func imageDevicePixelRatio() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shouldDisplayBrokenImageIcon() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -96,6 +109,13 @@ class RenderImageWrapper: RenderReplacedWrapper {
     }
   }
 
+  private func paintIntoRect(_ paintInfo: PaintInfoWrapper, _ rect: FloatRectWrapper)
+    -> ImageDrawResult
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
 
@@ -130,6 +150,222 @@ class RenderImageWrapper: RenderReplacedWrapper {
 
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
+  ) {
+    let context = paintInfo.context()
+    if context.invalidatingImagesWithAsyncDecodes() {
+      if cachedImage() != nil && cachedImage()!.isClientWaitingForAsyncDecoding(client: self) {
+        cachedImage()!.removeAllClientsWaitingForAsyncDecoding()
+      }
+      return
+    }
+
+    let contentSize = self.contentSize()
+    let deviceScaleFactor = document().deviceScaleFactor()
+    let missingImageBorderWidth = LayoutUnit(value: 1 / deviceScaleFactor)
+
+    if isDeferredImage(element()) {
+      return
+    }
+
+    if context.detectingContentfulPaint() {
+      if !context.contentfulPaintDetected() && cachedImage() != nil
+        && cachedImage()!.canRender(self, deviceScaleFactor) && !contentSize.isEmpty()
+      {
+        context.setContentfulPaintDetected()
+      }
+
+      return
+    }
+
+    if imageResource().cachedImage() == nil || shouldDisplayBrokenImageIcon() {
+      if paintInfo.phase == .Selection {
+        return
+      }
+
+      if paintInfo.phase == .Foreground {
+        page().addRelevantUnpaintedObject(object: self, objectPaintRect: visualOverflowRect())
+      }
+
+      paintIncompleteImageOutline(paintInfo, paintOffset, missingImageBorderWidth)
+
+      if contentSize.width() > 2 && contentSize.height() > 2 {
+        let leftBorder = borderLeft()
+        let topBorder = borderTop()
+        let leftPadding = paddingLeft()
+        let topPadding = paddingTop()
+
+        var errorPictureDrawn = false
+        var imageOffset = LayoutSizeWrapper()
+        // When calculating the usable dimensions, exclude the pixels of
+        // the outline rect so the error image/alt text doesn't draw on it.
+        let usableSize =
+          contentSize
+          - LayoutSizeWrapper(
+            width: 2 * missingImageBorderWidth, height: 2 * missingImageBorderWidth)
+
+        var image = imageResource().image()
+
+        if shouldDisplayBrokenImageIcon() && !image!.isNull()
+          && usableSize.width() >= image!.width() && usableSize.height() >= image!.height()
+        {
+          // Call brokenImage() explicitly to ensure we get the broken image icon at the appropriate resolution.
+          let (brokenImage, scaleFactor) = cachedImage()!.brokenImage(deviceScaleFactor)
+          image = brokenImage
+          var imageSize = image!.size()
+          imageSize.scale(1 / scaleFactor)
+
+          // Center the error image, accounting for border and padding.
+          var centerX = LayoutUnit(value: (usableSize.width() - imageSize.width) / 2)
+          if centerX < Int32(0) {
+            centerX = LayoutUnit(value: 0)
+          }
+          var centerY = LayoutUnit(value: (usableSize.height() - imageSize.height) / 2)
+          if centerY < Int32(0) {
+            centerY = LayoutUnit(value: 0)
+          }
+          imageOffset = LayoutSizeWrapper(
+            width: leftBorder + leftPadding + centerX + missingImageBorderWidth,
+            height: topBorder + topPadding + centerY + missingImageBorderWidth)
+
+          context.drawImage(
+            image!,
+            snapRectToDevicePixels(
+              rect: LayoutRectWrapper(
+                location: paintOffset + imageOffset, size: LayoutSizeWrapper(size: imageSize)),
+              pixelSnappingFactor: deviceScaleFactor),
+            ImagePaintingOptionsWrapper(imageOrientation()))
+          errorPictureDrawn = true
+        }
+
+        if !altText.isEmpty() {
+          let style = self.style()
+          let fontCascade = style.fontCascade()
+          let fontMetrics = fontCascade.metricsOfPrimaryFont()
+          let isHorizontal = style.isHorizontalWritingMode()
+          let encodedDisplayString = document().displayStringModifiedByEncoding(altText)
+          let textRun = RenderBlockWrapper.constructTextRun(
+            encodedDisplayString, style, ExpansionBehaviorWrapper.defaultBehavior(),
+            [.RespectDirection, .RespectDirectionOverride])
+          let textWidth = LayoutUnit(value: fontCascade.width(run: textRun))
+
+          let hasRoomForAltText = { () in
+            // Only draw the alt text if it fits within the content box (content width) and above the error image (content height).
+            // Error picture is always visually below the text regardless of writing direction.
+            let availableLogicalWidth =
+              isHorizontal
+              ? usableSize.width()
+              : (errorPictureDrawn ? imageOffset.height() : usableSize.height())
+            if availableLogicalWidth < textWidth {
+              return false
+            }
+            let availableLogicalHeight =
+              isHorizontal
+              ? (errorPictureDrawn ? imageOffset.height() : usableSize.height())
+              : usableSize.width()
+            return availableLogicalHeight >= Int32(fontMetrics.intHeight())
+          }
+          if hasRoomForAltText() {
+            context.setFillColor(
+              color: style.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor))
+            if isHorizontal {
+              let altTextLocation = { () in
+                var contentHorizontalOffset =
+                  leftBorder + leftPadding + Int32(paddingWidth / 2) - missingImageBorderWidth
+                let contentVerticalOffset =
+                  topBorder + topPadding + Int32(fontMetrics.intAscent()) + Int32(paddingHeight / 2)
+                  - missingImageBorderWidth
+                if !style.isLeftToRightDirection() {
+                  contentHorizontalOffset += contentSize.width() - textWidth
+                }
+                return paintOffset
+                  + LayoutPointWrapper(x: contentHorizontalOffset, y: contentVerticalOffset)
+              }
+              context.drawBidiText(
+                font: fontCascade, run: textRun, point: altTextLocation().FloatPoint())
+            } else {
+              // FIXME: TextBoxPainter has this logic already, maybe we should transition to some painter class.
+              let contentLogicalHeight = Int32(fontMetrics.intHeight())
+              let adjustedPaintOffset = LayoutPointWrapper(
+                x: paintOffset.x, y: paintOffset.y - contentLogicalHeight)
+
+              var visualLeft = size().width() / 2 - contentLogicalHeight / 2
+              let visualRight = visualLeft + contentLogicalHeight
+              if style.isFlippedBlocksWritingMode() {
+                visualLeft = size().width() - visualRight
+              }
+              visualLeft += adjustedPaintOffset.x
+
+              let rotationRect = LayoutRectWrapper(
+                x: visualLeft, y: adjustedPaintOffset.y, width: textWidth,
+                height: LayoutUnit(value: contentLogicalHeight))
+              context.concatCTM(
+                transform: rotation(boxRect: rotationRect.FloatRect(), direction: .Clockwise))
+              let textOrigin = LayoutPointWrapper(
+                x: visualLeft,
+                y: adjustedPaintOffset.y + Int32(fontCascade.metricsOfPrimaryFont().intAscent()))
+              context.drawBidiText(font: fontCascade, run: textRun, point: textOrigin.FloatPoint())
+              context.concatCTM(
+                transform: rotation(boxRect: rotationRect.FloatRect(), direction: .Counterclockwise)
+              )
+            }
+          }
+        }
+      }
+      return
+    }
+
+    if contentSize.isEmpty() {
+      return
+    }
+
+    let showBorderForIncompleteImage = settings().incompleteImageBorderEnabled()
+
+    let img = imageResource().image(flooredIntSize(contentSize))
+    if img?.isNull() ?? true {
+      if showBorderForIncompleteImage {
+        paintIncompleteImageOutline(paintInfo, paintOffset, missingImageBorderWidth)
+      }
+
+      if paintInfo.phase == .Foreground {
+        page().addRelevantUnpaintedObject(object: self, objectPaintRect: visualOverflowRect())
+      }
+      return
+    }
+
+    var contentBoxRect = self.contentBoxRect()
+    contentBoxRect.moveBy(offset: paintOffset)
+    var replacedContentRect = self.replacedContentRect()
+    replacedContentRect.moveBy(offset: paintOffset)
+    let clip = !contentBoxRect.contains(other: replacedContentRect)
+    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clip)
+    if clip {
+      context.clip(rect: contentBoxRect.FloatRect())
+    }
+
+    let result = paintIntoRect(
+      paintInfo,
+      snapRectToDevicePixels(rect: replacedContentRect, pixelSnappingFactor: deviceScaleFactor))
+
+    if showBorderForIncompleteImage
+      && (result != .DidDraw || (cachedImage()?.isLoading() ?? false))
+    {
+      paintIncompleteImageOutline(paintInfo, paintOffset, missingImageBorderWidth)
+    }
+
+    if cachedImage() != nil && paintInfo.phase == .Foreground {
+      // For now, count images as unpainted if they are still progressively loading. We may want
+      // to refine this in the future to account for the portion of the image that has painted.
+      let visibleRect = intersection(a: replacedContentRect, b: contentBoxRect)
+      if cachedImage()!.isLoading() || result == .DidRequestDecoding {
+        page().addRelevantUnpaintedObject(object: self, objectPaintRect: visibleRect)
+      } else {
+        page().addRelevantRepaintedObject(object: self, objectPaintRect: visibleRect)
+      }
+    }
+  }
+
+  private func paintIncompleteImageOutline(
+    _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ borderWidth: LayoutUnit
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

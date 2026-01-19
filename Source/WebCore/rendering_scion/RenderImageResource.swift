@@ -31,6 +31,16 @@ class RenderImageResource {
     fatalError("Not implemented")
   }
 
+  func cachedImage() -> CachedImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func image(_ size: IntSize = IntSize()) -> ImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func errorOccurred() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

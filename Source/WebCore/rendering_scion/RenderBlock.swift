@@ -120,6 +120,14 @@ private func canComputeFragmentRangeForBox(
   return enclosingFragmentedFlow!.hasCachedFragmentRangeForBox(box: parentBlock)
 }
 
+struct TextRunFlags: OptionSet {
+  let rawValue: UInt8
+
+  static let DefaultTextRunFlags = TextRunFlags([])
+  static let RespectDirection = TextRunFlags(rawValue: 1 << 0)
+  static let RespectDirectionOverride = TextRunFlags(rawValue: 1 << 1)
+}
+
 class RenderBlockWrapper: RenderBoxWrapper {
   // These two functions are overridden for inline-block.
   override func lineHeight(
@@ -474,6 +482,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
     return createAnonymousBlockWithStyleAndDisplay(
       document: document(), style: renderer.style(), display: style().display())
+  }
+
+  static func constructTextRun(
+    _ string: StringWrapper, _ style: RenderStyleWrapper, _ expansion: ExpansionBehaviorWrapper,
+    _ flags: TextRunFlags
+  ) -> TextRunWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func paginationStrut() -> LayoutUnit {

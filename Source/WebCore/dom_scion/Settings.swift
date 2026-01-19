@@ -104,6 +104,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func incompleteImageBorderEnabled() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func largeImageAsyncDecodingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

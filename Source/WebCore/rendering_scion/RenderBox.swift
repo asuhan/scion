@@ -1151,6 +1151,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return childVisualOverflowRect
   }
 
+  func contentSize() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func contentWidth() -> LayoutUnit {
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentWidth(p))
   }

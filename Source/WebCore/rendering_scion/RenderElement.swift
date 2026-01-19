@@ -620,6 +620,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func imageOrientation() -> ImageOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removeFromRenderFragmentedFlow() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

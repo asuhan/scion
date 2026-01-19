@@ -259,6 +259,15 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func drawImage(
+    _ image: ImageWrapper, _ destination: FloatRectWrapper,
+    _ imagePaintingOptions: ImagePaintingOptionsWrapper
+  ) -> ImageDrawResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func drawTiledImage(
     image: ImageWrapper, destination: FloatRectWrapper, source: FloatPoint, tileSize: FloatSize,
     spacing: FloatSize, options: ImagePaintingOptionsWrapper = ImagePaintingOptionsWrapper()

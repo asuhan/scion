@@ -94,6 +94,11 @@ class PageWrapper {
     fatalError("Not implemented")
   }
 
+  func addRelevantUnpaintedObject(object: RenderObjectWrapper, objectPaintRect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func compositingPolicyOverride() -> CompositingPolicy? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

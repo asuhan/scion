@@ -30,10 +30,18 @@ class ImageWrapper {
     fatalError("Not implemented")
   }
 
+  func isNull() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func size(orientation: ImageOrientation.Orientation = .FromImage) -> FloatSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func width() -> Float32 { return size().width }
+  func height() -> Float32 { return size().height }
 
   // Animation begins whenever someone draws the image, so startAnimation() is not normally called.
   // It will automatically pause once all observers no longer want to render the image anywhere.

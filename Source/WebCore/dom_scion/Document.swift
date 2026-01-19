@@ -146,6 +146,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func displayStringModifiedByEncoding(_ string: StringWrapper) -> StringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateRenderingDependentRegions() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

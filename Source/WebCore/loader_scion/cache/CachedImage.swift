@@ -37,6 +37,16 @@ final class CachedImageWrapper: CachedResourceWrapper {
     fatalError("Not implemented")
   }
 
+  func brokenImage(_ deviceScaleFactor: Float32) -> (ImageWrapper?, Float32) {  // Returns an image and the image's resolution scale factor.
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func canRender(_ renderer: RenderElementWrapper, _ multiplier: Float32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isClientWaitingForAsyncDecoding(client: CachedImageClientWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

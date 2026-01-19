@@ -26,6 +26,11 @@
  */
 
 final class RenderImageResourceStyleImage: RenderImageResource {
+  override final func image(_ size: IntSize = IntSize()) -> ImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func errorOccurred() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

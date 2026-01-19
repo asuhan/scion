@@ -25,4 +25,9 @@ class HTMLImageElementWrapper: HTMLElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func isDeferred() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
