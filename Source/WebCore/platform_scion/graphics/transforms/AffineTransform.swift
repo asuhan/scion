@@ -49,6 +49,12 @@ class AffineTransform {
   func d() -> Float64 { return transform[3] }
 
   @discardableResult
+  func scale(_ s: Float64) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
   func translate(_ t: FloatPoint) -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

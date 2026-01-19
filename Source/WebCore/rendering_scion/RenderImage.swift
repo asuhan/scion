@@ -76,8 +76,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+
+    if paintInfo.phase == .Outline {
+      paintAreaElementFocusRing(&paintInfo, paintOffset)
+    }
   }
 
   override func layout() {
@@ -127,6 +130,51 @@ class RenderImageWrapper: RenderReplacedWrapper {
   private func updateInnerContentRect() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func paintAreaElementFocusRing(
+    _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
+  ) {
+    if document().printing() || !frame().selection().isFocusedAndActive() {
+      return
+    }
+
+    if paintInfo.context().paintingDisabled() && !paintInfo.context().performingPaintInvalidation()
+    {
+      return
+    }
+
+    guard let areaElement = document().focusedElement() as? HTMLAreaElementWrapper else { return }
+    if CPtrToInt(areaElement.imageElement()?.p) != CPtrToInt(element()?.p) {
+      return
+    }
+
+    guard let areaElementStyle = areaElement.computedStyle() else { return }
+
+    let outlineWidth = areaElementStyle.outlineWidth()
+    if outlineWidth == 0 {
+      return
+    }
+
+    // Even if the theme handles focus ring drawing for entire elements, it won't do it for
+    // an area within an image, so we don't call RenderTheme::supportsFocusRing here.
+    let path = areaElement.computePathForFocusRing(size())
+    if path.isEmpty() {
+      return
+    }
+
+    let zoomTransform = AffineTransform()
+    zoomTransform.scale(Float64(style().usedZoom()))
+    path.transform(zoomTransform)
+
+    var adjustedOffset = paintOffset
+    adjustedOffset.moveBy(offset: location())
+    path.translate(toFloatSize(a: adjustedOffset.FloatPoint()))
+
+    paintInfo.context().drawFocusRing(
+      path, outlineWidth,
+      areaElementStyle.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyOutlineColor)
+    )
   }
 
   private func layoutShadowContent(oldSize: LayoutSizeWrapper) {

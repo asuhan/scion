@@ -83,6 +83,11 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func transform(_ transform: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

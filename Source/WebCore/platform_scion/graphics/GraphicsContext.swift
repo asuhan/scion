@@ -371,6 +371,13 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  // Focus Rings
+
+  func drawFocusRing(_ path: PathWrapper, _ outlineWidth: Float32, _ color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func translate(size: FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

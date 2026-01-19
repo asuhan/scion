@@ -1,5 +1,6 @@
 target_sources(layout_scion PRIVATE
     HTMLAnchorElement.swift
+    HTMLAreaElement.swift
     HTMLBodyElement.swift
     HTMLButtonElement.swift
     HTMLCanvasElement.swift
