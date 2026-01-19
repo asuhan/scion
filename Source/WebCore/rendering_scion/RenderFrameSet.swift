@@ -41,8 +41,16 @@ struct FrameEdgeInfo {
   func preventResize(_ edge: FrameEdge) -> Bool { return preventResize[Int(edge.rawValue)] }
   func allowBorder(_ edge: FrameEdge) -> Bool { return allowBorder[Int(edge.rawValue)] }
 
-  private let preventResize: [Bool]
-  private let allowBorder: [Bool]
+  mutating func setPreventResize(_ edge: FrameEdge, _ preventResize: Bool) {
+    self.preventResize[Int(edge.rawValue)] = preventResize
+  }
+
+  mutating func setAllowBorder(_ edge: FrameEdge, _ allowBorder: Bool) {
+    self.allowBorder[Int(edge.rawValue)] = allowBorder
+  }
+
+  private var preventResize: [Bool]
+  private var allowBorder: [Bool]
 }
 
 private func resetFrameRendererAndDescendants(
@@ -59,8 +67,22 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
   }
 
   private func edgeInfo() -> FrameEdgeInfo {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var result = FrameEdgeInfo(preventResize: frameSetElement().noResize(), allowBorder: true)
+
+    let rows = Int(frameSetElement().totalRows())
+    let cols = Int(frameSetElement().totalCols())
+    if rows != 0 && cols != 0 {
+      result.setPreventResize(.LeftFrameEdge, m_cols.preventResize[0])
+      result.setAllowBorder(.LeftFrameEdge, m_cols.allowBorder[0])
+      result.setPreventResize(.RightFrameEdge, m_cols.preventResize[cols])
+      result.setAllowBorder(.RightFrameEdge, m_cols.allowBorder[cols])
+      result.setPreventResize(.TopFrameEdge, m_rows.preventResize[0])
+      result.setAllowBorder(.TopFrameEdge, m_rows.allowBorder[0])
+      result.setPreventResize(.BottomFrameEdge, m_rows.preventResize[rows])
+      result.setAllowBorder(.BottomFrameEdge, m_rows.allowBorder[rows])
+    }
+
+    return result
   }
 
   private static let noSplit: Int32 = -1
