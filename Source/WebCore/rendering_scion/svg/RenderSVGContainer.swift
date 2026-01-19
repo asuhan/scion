@@ -24,8 +24,36 @@
 
 class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let relevantPaintPhases: PaintPhase = [
+      .Foreground, .ClippingMask, .Mask, .Outline, .SelfOutline,
+    ]
+    if !shouldPaintSVGRenderer(paintInfo, relevantPaintPhases) {
+      return
+    }
+
+    if paintInfo.phase == .ClippingMask {
+      paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: objectBoundingBox())
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + currentSVGLayoutLocation()
+    if paintInfo.phase == .Mask {
+      paintSVGMask(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    var visualOverflowRect = visualOverflowRectEquivalent()
+    visualOverflowRect.moveBy(offset: adjustedPaintOffset)
+    if !visualOverflowRect.intersects(other: paintInfo.rect) {
+      return
+    }
+
+    if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+      paintSVGOutline(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    assert(paintInfo.phase == .Foreground)
   }
 
   override func layout() {

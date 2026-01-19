@@ -106,6 +106,11 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func paintSVGOutline(_ paintInfo: PaintInfoWrapper, _ adjustedPaintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
   // intersection, this return value allows distinguishing between no intersection and zero-area intersection.
   @discardableResult

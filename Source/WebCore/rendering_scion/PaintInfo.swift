@@ -62,7 +62,7 @@ struct PaintInfoWrapper {
         y: LayoutUnit.fromRawValue(value: from.rect.y),
         width: LayoutUnit.fromRawValue(value: from.rect.width),
         height: LayoutUnit.fromRawValue(value: from.rect.height)),
-      phase: PaintPhase(rawValue: from.phase)!,
+      phase: PaintPhase(rawValue: from.phase),
       paintBehavior: PaintBehavior(rawValue: from.paint_behavior),
       subtreePaintRoot: from.subtree_paint_root != nil
         ? RenderObjectWrapper(p: from.subtree_paint_root!) : nil,
@@ -191,7 +191,7 @@ struct PaintInfoWrapper {
   var phase: PaintPhase {
     get {
       if let p = p {
-        return PaintPhase(rawValue: PaintInfo_phase(p))!
+        return PaintPhase(rawValue: PaintInfo_phase(p))
       }
       return n!.phase
     }

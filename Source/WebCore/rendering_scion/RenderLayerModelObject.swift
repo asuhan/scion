@@ -68,6 +68,15 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }
 
+  // Single source of truth deciding if a SVG renderer should be painted. All SVG renderers
+  // use this method to test if they should continue processing in the paint() function or stop.
+  func shouldPaintSVGRenderer(_ paintInfo: PaintInfoWrapper, _ relevantPaintPhases: PaintPhase)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nominalSVGLayoutLocation() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -79,6 +88,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func paintSVGClippingMask(paintInfo: PaintInfoWrapper, objectBoundingBox: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func paintSVGMask(_ paintInfo: PaintInfoWrapper, _ adjustedPaintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

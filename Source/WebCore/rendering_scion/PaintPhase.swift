@@ -32,22 +32,23 @@
  *  three phases invoked on them during this phase.
  */
 
-enum PaintPhase: UInt16 {
-  case BlockBackground = 0
-  case ChildBlockBackground = 1
-  case ChildBlockBackgrounds = 2
-  case Float = 4
-  case Foreground = 8
-  case Outline = 16
-  case ChildOutlines = 32
-  case SelfOutline = 64
-  case Selection = 128
-  case CollapsedTableBorders = 256
-  case TextClip = 512
-  case Mask = 1024
-  case ClippingMask = 2048
-  case EventRegion = 4096
-  case Accessibility = 8192
+struct PaintPhase: OptionSet {
+  let rawValue: UInt16
+  static let BlockBackground = PaintPhase()
+  static let ChildBlockBackground = PaintPhase(rawValue: 1 << 0)
+  static let ChildBlockBackgrounds = PaintPhase(rawValue: 1 << 1)
+  static let Float = PaintPhase(rawValue: 1 << 2)
+  static let Foreground = PaintPhase(rawValue: 1 << 3)
+  static let Outline = PaintPhase(rawValue: 1 << 4)
+  static let ChildOutlines = PaintPhase(rawValue: 1 << 5)
+  static let SelfOutline = PaintPhase(rawValue: 1 << 6)
+  static let Selection = PaintPhase(rawValue: 1 << 7)
+  static let CollapsedTableBorders = PaintPhase(rawValue: 1 << 8)
+  static let TextClip = PaintPhase(rawValue: 1 << 9)
+  static let Mask = PaintPhase(rawValue: 1 << 10)
+  static let ClippingMask = PaintPhase(rawValue: 1 << 11)
+  static let EventRegion = PaintPhase(rawValue: 1 << 12)
+  static let Accessibility = PaintPhase(rawValue: 1 << 13)
 }
 
 struct PaintBehavior: OptionSet {
