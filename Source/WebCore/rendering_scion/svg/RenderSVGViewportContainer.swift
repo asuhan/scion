@@ -23,12 +23,17 @@
  */
 
 final class RenderSVGViewportContainerWrapper: RenderSVGContainerWrapper {
+  init(parent: RenderSVGRootWrapper, style: RenderStyleWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func svgSVGElement() -> SVGSVGElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  init(parent: RenderSVGRootWrapper, style: RenderStyleWrapper) {
+  override final func updateLayoutSizeIfNeeded() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

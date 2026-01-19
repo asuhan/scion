@@ -57,7 +57,43 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   }
 
   override func layout() {
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    let checkForRepaintOverride: LayoutRepainter.CheckForRepaint? =
+      isRenderSVGResourceMarker() ? .No : nil
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: checkForRepaintOverride)
+
+    // Update layer transform before laying out children (SVG needs access to the transform matrices during layout for on-screen text font-size calculations).
+    // Eventually re-update if the transform reference box, relevant for transform-origin, has changed during layout.
+    //
+    // FIXME: LBSE should not repeat the same mistake -- remove the on-screen text font-size hacks that predate the modern solutions to this.
+    do {
+      assert(!isLayoutSizeChanged)
+      let _ = SetForScope(
+        scopedVariable: &isLayoutSizeChanged, newValue: updateLayoutSizeIfNeeded())
+
+      assert(!didTransformToRootUpdate)
+      let transformUpdater = SVGLayerTransformUpdater(self)
+      let _ = SetForScope(
+        scopedVariable: &didTransformToRootUpdate,
+        newValue: transformUpdater.layerTransformChanged()
+          || SVGContainerLayout.transformToRootChanged(parent()))
+      layoutChildren()
+    }
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
+  }
+
+  private func layoutChildren() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func updateLayoutSizeIfNeeded() -> Bool { return false }
+
+  private var isLayoutSizeChanged = false
+  private var didTransformToRootUpdate = false
 }
