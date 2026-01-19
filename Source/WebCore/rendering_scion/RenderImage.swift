@@ -367,8 +367,28 @@ class RenderImageWrapper: RenderReplacedWrapper {
   private func paintIncompleteImageOutline(
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ borderWidth: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let contentSize = self.contentSize()
+    if contentSize.width() <= Int32(2) || contentSize.height() <= Int32(2) {
+      return
+    }
+
+    let leftBorder = borderLeft()
+    let topBorder = borderTop()
+    let leftPadding = paddingLeft()
+    let topPadding = paddingTop()
+
+    // Draw an outline rect where the image should be.
+    let context = paintInfo.context()
+    context.setStrokeStyle(style: .SolidStroke)
+    context.setStrokeColor(color: ColorWrapper.lightGray)
+    context.setFillColor(color: ColorWrapper.transparentBlack)
+    context.drawRect(
+      rect: snapRectToDevicePixels(
+        rect: LayoutRectWrapper(
+          location: LayoutPointWrapper(
+            x: paintOffset.x + leftBorder + leftPadding,
+            y: paintOffset.y + topBorder + topPadding), size: contentSize),
+        pixelSnappingFactor: document().deviceScaleFactor()), borderThickness: borderWidth.float())
   }
 
   override final func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper)

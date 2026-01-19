@@ -110,6 +110,11 @@ struct ColorWrapper: Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static var lightGray: ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 func equalIgnoringSemanticColor(a: ColorWrapper, b: ColorWrapper) -> Bool {
