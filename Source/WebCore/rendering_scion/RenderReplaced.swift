@@ -699,8 +699,24 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   func paintReplaced(_ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {}
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isInsideEntirelyHiddenLayer() {
+      return RepaintRects()
+    }
+
+    // The selectionRect can project outside of the overflowRect, so take their union
+    // for repainting to avoid selection painting glitches.
+    var overflowRect = unionRect(a: localSelectionRect(false), b: visualOverflowRect())
+
+    // FIXME: layoutDelta needs to be applied in parts before/after transforms and
+    // repaint containers. https://bugs.webkit.org/show_bug.cgi?id=23308
+    overflowRect.move(size: view().frameView().layoutContext().layoutDelta())
+
+    var rects = RepaintRects(rect: overflowRect)
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = localOutlineBoundsRepaintRect()
+    }
+
+    return rects
   }
 
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (

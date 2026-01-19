@@ -522,6 +522,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return true
   }
 
+  func isInsideEntirelyHiddenLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true if this renderer requires a new stacking context.
   static func createsGroupForStyle(style: RenderStyleWrapper) -> Bool {
     return style.hasOpacity() || style.hasMask() || style.clipPath() != nil || style.hasFilter()

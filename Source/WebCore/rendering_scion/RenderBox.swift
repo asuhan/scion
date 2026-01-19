@@ -5142,6 +5142,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func localOutlineBoundsRepaintRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func skipContainingBlockForPercentHeightCalculation(
     containingBlock: RenderBoxWrapper, isPerpendicularWritingMode: Bool
   ) -> Bool {
