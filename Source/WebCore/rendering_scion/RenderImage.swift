@@ -95,6 +95,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func isShowingAltText() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldDisplayBrokenImageIcon() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -111,8 +116,31 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!shouldApplySizeContainment())
+    var (intrinsicSize, intrinsicRatio) = super.computeIntrinsicRatioInformation()
+
+    // Our intrinsicSize is empty if we're rendering generated images with relative width/height. Figure out the right intrinsic size to use.
+    if intrinsicSize.isEmpty()
+      && (imageResource().imageHasRelativeWidth() || imageResource().imageHasRelativeHeight())
+    {
+      let containingBlock = isOutOfFlowPositioned() ? container()! : self.containingBlock()!
+      if let box = containingBlock as? RenderBoxWrapper {
+        intrinsicSize.setWidth(width: box.availableLogicalWidth().float())
+        intrinsicSize.setHeight(
+          height: box.availableLogicalHeight(heightType: .IncludeMarginBorderPadding).float())
+      }
+    }
+
+    // Don't compute an intrinsic ratio to preserve historical WebKit behavior if we're painting alt text and/or a broken image.
+    if shouldDisplayBrokenImageIcon() {
+      if style().aspectRatioType() == .AutoAndRatio && !isShowingAltText() {
+        intrinsicRatio = FloatSize.narrowPrecision(
+          width: style().aspectRatioLogicalWidth(), height: style().aspectRatioLogicalHeight())
+      } else {
+        intrinsicRatio = FloatSize(width: 1, height: 1)
+      }
+    }
+    return (intrinsicSize, intrinsicRatio)
   }
 
   override func foregroundIsKnownToBeOpaqueInRect(

@@ -46,6 +46,16 @@ class RenderImageResource {
     fatalError("Not implemented")
   }
 
+  func imageHasRelativeWidth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func imageHasRelativeHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageSize(_ multiplier: Float32) -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

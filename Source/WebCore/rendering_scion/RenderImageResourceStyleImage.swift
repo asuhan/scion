@@ -35,4 +35,14 @@ final class RenderImageResourceStyleImage: RenderImageResource {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override final func imageHasRelativeWidth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func imageHasRelativeHeight() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
