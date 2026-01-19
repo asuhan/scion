@@ -2604,6 +2604,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  static func initialObjectPosition() -> LengthPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func initialMinSize() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

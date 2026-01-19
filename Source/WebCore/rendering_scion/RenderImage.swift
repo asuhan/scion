@@ -148,8 +148,37 @@ class RenderImageWrapper: RenderReplacedWrapper {
   )
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if imageResource().cachedImage() == nil || imageResource().errorOccurred() {
+      return false
+    }
+    if cachedImage() != nil && !cachedImage()!.isLoaded() {
+      return false
+    }
+    if !contentBoxRect().contains(other: localRect) {
+      return false
+    }
+    let backgroundClip = style().backgroundClip()
+    // Background paints under borders.
+    if backgroundClip == .BorderBox && style().hasBorder() && !borderObscuresBackground() {
+      return false
+    }
+    // Background shows in padding area.
+    if (backgroundClip == .BorderBox || backgroundClip == .PaddingBox) && style().hasPadding() {
+      return false
+    }
+    // Object-fit may leave parts of the content box empty.
+    let objectFit = style().objectFit()
+    if objectFit != .Fill && objectFit != .Cover {
+      return false
+    }
+
+    let objectPosition = style().objectPosition()
+    if objectPosition != RenderStyleWrapper.initialObjectPosition() {
+      return false
+    }
+
+    // Check for image with alpha.
+    return cachedImage()?.currentFrameKnownToBeOpaque(self) ?? false
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
