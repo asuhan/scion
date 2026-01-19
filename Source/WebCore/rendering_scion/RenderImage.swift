@@ -487,8 +487,15 @@ class RenderImageWrapper: RenderReplacedWrapper {
   override final func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasBackground() {
+      return false
+    }
+
+    let (paintedExtent, hasNonLocalGeometry) = getBackgroundPaintedExtent(paintOffset)
+    if !hasNonLocalGeometry {
+      return false
+    }
+    return foregroundIsKnownToBeOpaqueInRect(paintedExtent, 0)
   }
 
   override func minimumReplacedHeight() -> LayoutUnit {

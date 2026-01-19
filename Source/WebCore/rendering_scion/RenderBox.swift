@@ -4674,7 +4674,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   // Returns false if it could not cheaply compute the extent (e.g. fixed background), in which case the returned rect may be incorrect.
-  private func getBackgroundPaintedExtent(_ paintOffset: LayoutPointWrapper) -> (
+  func getBackgroundPaintedExtent(_ paintOffset: LayoutPointWrapper) -> (
     LayoutRectWrapper, Bool
   ) {
     assert(hasBackground())
