@@ -55,3 +55,10 @@ class RenderIterator<T>: IteratorProtocol, Equatable {
     fatalError("Not implemented")
   }
 }
+
+class RenderObjectTraversal {
+  static func next<U>(_ current: U, _ stayWithin: RenderObjectWrapper) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

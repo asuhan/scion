@@ -56,8 +56,17 @@ struct FrameEdgeInfo {
 private func resetFrameRendererAndDescendants(
   _ frameSetChild: RenderBoxWrapper?, _ parentFrameSet: RenderFrameSetWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if frameSetChild == nil {
+    return
+  }
+
+  var descendant: RenderBoxWrapper? = frameSetChild
+  while descendant != nil {
+    descendant!.setWidth(width: 0)
+    descendant!.setHeight(height: 0)
+    descendant!.clearNeedsLayout()
+    descendant = RenderObjectTraversal.next(descendant, parentFrameSet) as! RenderBoxWrapper?
+  }
 }
 
 final class RenderFrameSetWrapper: RenderBoxWrapper {
