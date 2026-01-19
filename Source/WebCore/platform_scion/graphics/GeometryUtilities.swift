@@ -43,6 +43,14 @@ func findIntersection(p1: FloatPoint, p2: FloatPoint, d1: FloatPoint, d2: FloatP
   return FloatPoint(x: p1.x + param * pxLength, y: p1.y + param * pyLength)
 }
 
+// Map rect from srcRect to an equivalent rect in destRect.
+func mapRect(_ r: FloatRectWrapper, srcRect: FloatRectWrapper, destRect: FloatRectWrapper)
+  -> FloatRectWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func ellipseContainsPoint(center: FloatPoint, radii: FloatSize, point: FloatPoint) -> Bool {
   if radii.width <= 0 || radii.height <= 0 {
     return false

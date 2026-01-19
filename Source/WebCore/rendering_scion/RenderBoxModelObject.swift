@@ -47,6 +47,17 @@ enum BaseBackgroundColorUsage {
   case BaseBackgroundColorSkip
 }
 
+enum ContentChangeType {
+  case ImageChanged
+  case MaskImageChanged
+  case BackgroundImageChanged
+  case CanvasChanged
+  case CanvasPixelsChanged
+  case VideoChanged
+  case FullScreenChanged
+  case ModelChanged
+}
+
 private func accumulateInFlowPositionOffsets(child: RenderObjectWrapper) -> LayoutSizeWrapper {
   if !child.isAnonymousBlock() || !child.isInFlowPositioned() {
     return LayoutSizeWrapper()
@@ -768,6 +779,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func canHaveBoxInfoInFragment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func contentChanged(_ changeType: ContentChangeType) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

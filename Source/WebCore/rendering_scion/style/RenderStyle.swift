@@ -2172,6 +2172,11 @@ class RenderStyleWrapper: Equatable {
     return FlowDirection(rawValue: wk_interop.RenderStyle_blockFlowDirection(p))!
   }
 
+  func imageOrientation() -> ImageOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageRendering() -> ImageRendering {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

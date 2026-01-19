@@ -35,4 +35,14 @@ class RenderImageResource {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func imageSize(_ multiplier: Float32) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intrinsicSize(_ multiplier: Float32) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

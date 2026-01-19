@@ -25,6 +25,11 @@
  *
  */
 
+enum ImageSizeChangeType {
+  case ImageSizeChangeNone
+  case ImageSizeChangeForAltText
+}
+
 class RenderImageWrapper: RenderReplacedWrapper {
   private func imageResource() -> RenderImageResource {
     // TODO(asuhan): implement this
@@ -32,6 +37,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   func cachedImage() -> CachedImageWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setImageSizeForAltText(_ newImage: CachedImageWrapper? = nil) -> ImageSizeChangeType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -71,8 +81,19 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    if needsToSetSizeForAltText {
+      if !altText.isEmpty() && setImageSizeForAltText(cachedImage()) == .ImageSizeChangeForAltText {
+        repaintOrMarkForLayout(.ImageSizeChangeForAltText)
+      }
+      needsToSetSizeForAltText = false
+    }
+
+    if oldStyle != nil && diff == .Layout {
+      if oldStyle!.imageOrientation() != style().imageOrientation() {
+        return repaintOrMarkForLayout(.ImageSizeChangeNone)
+      }
+    }
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -122,6 +143,66 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func minimumReplacedHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func repaintOrMarkForLayout(
+    _ imageSizeChange: ImageSizeChangeType, _ rect: IntRect? = nil
+  ) {
+    let newIntrinsicSize = imageResource().intrinsicSize(style().usedZoom())
+    let oldIntrinsicSize = intrinsicSize()
+
+    updateIntrinsicSizeIfNeeded(newIntrinsicSize)
+
+    // In the case of generated image content using :before/:after/content, we might not be
+    // in the render tree yet. In that case, we just need to update our intrinsic size.
+    // layout() will be called after we are inserted in the tree which will take care of
+    // what we are doing here.
+    if containingBlock() == nil {
+      return
+    }
+
+    let imageSourceHasChangedSize =
+      oldIntrinsicSize != newIntrinsicSize || imageSizeChange != .ImageSizeChangeNone
+
+    if imageSourceHasChangedSize && setNeedsLayoutIfNeededAfterIntrinsicSizeChange() {
+      return
+    }
+
+    if everHadLayout() && !selfNeedsLayout() {
+      // The inner content rectangle is calculated during layout, but may need an update now
+      // (unless the box has already been scheduled for layout). In order to calculate it, we
+      // may need values from the containing block, though, so make sure that we're not too
+      // early. It may be that layout hasn't even taken place once yet.
+
+      // FIXME: we should not have to trigger another call to setContainerContextForRenderer()
+      // from here, since it's already being done during layout.
+      updateInnerContentRect()
+    }
+
+    if parent() != nil {
+      var repaintRect = contentBoxRect()
+      if rect != nil {
+        // The image changed rect is in source image coordinates (pre-zooming),
+        // so map from the bounds of the image to the contentsBox.
+        repaintRect.intersect(
+          other: LayoutRectWrapper(
+            rect: enclosingIntRect(
+              rect: mapRect(
+                FloatRectWrapper(r: rect!),
+                srcRect: FloatRectWrapper(
+                  location: FloatPoint(), size: imageResource().imageSize(1.0).FloatSize()),
+                destRect: repaintRect.FloatRect()))))
+      }
+      repaintRectangle(repaintRect: repaintRect)
+    }
+
+    // Tell any potential compositing layers that the image needs updating.
+    contentChanged(.ImageChanged)
+  }
+
+  private func updateIntrinsicSizeIfNeeded(_ newSize: LayoutSizeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -259,4 +340,5 @@ class RenderImageWrapper: RenderReplacedWrapper {
 
   // Text to display as long as the image isn't available.
   private let altText = StringWrapper()
+  private var needsToSetSizeForAltText = false
 }
