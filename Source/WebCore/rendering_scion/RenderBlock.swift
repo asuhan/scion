@@ -485,8 +485,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   static func constructTextRun(
-    _ string: StringWrapper, _ style: RenderStyleWrapper, _ expansion: ExpansionBehaviorWrapper,
-    _ flags: TextRunFlags
+    _ string: StringWrapper, _ style: RenderStyleWrapper,
+    _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior(),
+    _ flags: TextRunFlags = .DefaultTextRunFlags
   ) -> TextRunWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

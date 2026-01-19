@@ -25,6 +25,8 @@
  *
  */
 
+import Foundation
+
 enum ImageSizeChangeType {
   case ImageSizeChangeNone
   case ImageSizeChangeForAltText
@@ -33,6 +35,11 @@ enum ImageSizeChangeType {
 // If we'll be displaying either alt text or an image, add some padding.
 private let paddingWidth: UInt16 = 4
 private let paddingHeight: UInt16 = 4
+
+// Alt text is restricted to this maximum size, in pixels.  These are
+// signed integers because they are compared with other signed values.
+private let maxAltTextWidth: Float32 = 1024
+private let maxAltTextHeight: Int32 = 256
 
 private func isDeferredImage(_ element: ElementWrapper?) -> Bool {
   return (element as? HTMLImageElementWrapper)?.isDeferred() ?? false
@@ -49,9 +56,38 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  // Sets the image height and width to fit the alt text.  Returns true if the
+  // image size changed.
   func setImageSizeForAltText(_ newImage: CachedImageWrapper? = nil) -> ImageSizeChangeType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var imageSize = IntSize()
+    if newImage?.imageForRenderer(renderer: self) != nil {
+      imageSize = imageSizeForError(newImage)
+    } else if !altText.isEmpty() || newImage != nil {
+      // If we'll be displaying either text or an image, add a little padding.
+      imageSize = IntSize(width: Int32(paddingWidth), height: Int32(paddingHeight))
+    }
+
+    // we have an alt and the user meant it (its not a text we invented)
+    if !altText.isEmpty() {
+      let font = style().fontCascade()
+      let paddedTextSize = IntSize(
+        width: Int32(
+          Float32(paddingWidth)
+            + min(
+              ceilf(font.width(run: RenderBlockWrapper.constructTextRun(altText, style()))),
+              maxAltTextWidth)),
+        height: Int32(paddingHeight)
+          + min(Int32(font.metricsOfPrimaryFont().intHeight()), maxAltTextHeight)
+      )
+      imageSize = imageSize.expandedTo(paddedTextSize)
+    }
+
+    if LayoutSizeWrapper(size: imageSize) == intrinsicSize() {
+      return .ImageSizeChangeNone
+    }
+
+    setIntrinsicSize(LayoutSizeWrapper(size: imageSize))
+    return .ImageSizeChangeForAltText
   }
 
   func imageDevicePixelRatio() -> Float32 {
@@ -399,6 +435,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func minimumReplacedHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func imageSizeForError(_ newImage: CachedImageWrapper?) -> IntSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

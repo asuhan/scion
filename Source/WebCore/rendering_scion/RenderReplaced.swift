@@ -425,6 +425,8 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     }
   }
 
+  func setIntrinsicSize(_ intrinsicSize: LayoutSizeWrapper) { m_intrinsicSize = intrinsicSize }
+
   func intrinsicSizeChanged() {
     let scaledWidth = Int32(Float32(cDefaultWidth) * style().usedZoom())
     let scaledHeight = Int32(Float32(cDefaultHeight) * style().usedZoom())

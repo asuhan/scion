@@ -32,6 +32,10 @@ struct IntSize: Equatable {
     self.height += height
   }
 
+  func expandedTo(_ other: IntSize) -> IntSize {
+    return IntSize(width: max(width, other.width), height: max(height, other.height))
+  }
+
   var width: Int32 = 0
   var height: Int32 = 0
 }
