@@ -504,8 +504,22 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   private func imageSizeForError(_ newImage: CachedImageWrapper?) -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(newImage!.imageForRenderer(renderer: self) != nil)
+
+    var imageSize = FloatSize()
+    if newImage!.willPaintBrokenImage() {
+      let (brokenImage, scaleFactor) = newImage!.brokenImage(document().deviceScaleFactor())
+      imageSize = brokenImage!.size()
+      imageSize.scale(1 / scaleFactor)
+    } else {
+      imageSize = newImage!.imageForRenderer(renderer: self)!.size()
+    }
+
+    // imageSize() returns 0 for the error image. We need the true size of the
+    // error image, so we have to get it by grabbing image() directly.
+    return IntSize(
+      width: Int32(Float32(paddingWidth) + imageSize.width * style().usedZoom()),
+      height: Int32(Float32(paddingHeight) + imageSize.height * style().usedZoom()))
   }
 
   private func repaintOrMarkForLayout(
