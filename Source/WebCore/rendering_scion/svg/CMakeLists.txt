@@ -1,12 +1,14 @@
 target_sources(layout_scion PRIVATE
     RenderSVGBlock.swift
     RenderSVGContainer.swift
+    RenderSVGEllipse.swift
     RenderSVGHiddenContainer.swift
     RenderSVGImage.swift
     RenderSVGInline.swift
     RenderSVGInlineText.swift
     RenderSVGModelObject.swift
     RenderSVGPath.swift
+    RenderSVGRect.swift
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
     RenderSVGResourceFilter.swift
