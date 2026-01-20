@@ -88,12 +88,42 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   }
 
   private func layoutChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let containerLayout = SVGContainerLayout(self)
+    containerLayout.layoutChildren(selfNeedsLayout())
+
+    let boundingBoxComputation = SVGBoundingBoxComputation(self)
+    objectBoundingBox = boundingBoxComputation.computeDecoratedBoundingBox(
+      SVGBoundingBoxComputation.objectBoundingBoxDecoration, &objectBoundingBoxValid)
+    strokeBoundingBox = nil
+
+    if let objectBoundingBoxWithoutTransformations =
+      overridenObjectBoundingBoxWithoutTransformations()
+    {
+      m_objectBoundingBoxWithoutTransformations = objectBoundingBoxWithoutTransformations
+    } else {
+      let objectBoundingBoxDecorationWithoutTransformations = SVGBoundingBoxComputation
+        .objectBoundingBoxDecoration.union(.IgnoreTransformations)
+      m_objectBoundingBoxWithoutTransformations =
+        boundingBoxComputation.computeDecoratedBoundingBox(
+          objectBoundingBoxDecorationWithoutTransformations)
+    }
+
+    setCurrentSVGLayoutRect(enclosingLayoutRect(rect: m_objectBoundingBoxWithoutTransformations))
+
+    containerLayout.positionChildrenRelativeToContainer()
   }
 
   func updateLayoutSizeIfNeeded() -> Bool { return false }
 
+  private func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var objectBoundingBoxValid = false
   private var isLayoutSizeChanged = false
   private var didTransformToRootUpdate = false
+  private var objectBoundingBox = FloatRectWrapper()
+  private var m_objectBoundingBoxWithoutTransformations = FloatRectWrapper()
+  private var strokeBoundingBox: FloatRectWrapper? = nil
 }

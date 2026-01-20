@@ -16,6 +16,7 @@ target_sources(layout_scion PRIVATE
     RenderSVGText.swift
     RenderSVGTransformableContainer.swift
     RenderSVGViewportContainer.swift
+    SVGBoundingBoxComputation.swift
     SVGContainerLayout.swift
     SVGLayerTransformUpdater.swift
     SVGRenderSupport.swift

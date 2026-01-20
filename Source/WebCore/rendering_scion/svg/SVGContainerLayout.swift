@@ -26,8 +26,26 @@
  */
 
 struct SVGContainerLayout {
+  init(_ container: RenderLayerModelObjectWrapper) {
+    self.container = container
+  }
+
+  // 'containerNeedsLayout' denotes if the container for which the
+  // SVGContainerLayout object was created needs to be laid out or not.
+  func layoutChildren(_ containerNeedsLayout: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func positionChildrenRelativeToContainer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func transformToRootChanged(_ ancestor: RenderObjectWrapper?) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let container: RenderLayerModelObjectWrapper
 }
