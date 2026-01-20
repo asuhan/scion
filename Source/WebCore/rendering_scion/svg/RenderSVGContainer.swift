@@ -123,7 +123,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? { return nil }
 
   private var objectBoundingBoxValid = false
-  private var isLayoutSizeChanged = false
+  var isLayoutSizeChanged = false
   var didTransformToRootUpdate = false
   private var objectBoundingBox = FloatRectWrapper()
   private var m_objectBoundingBoxWithoutTransformations = FloatRectWrapper()

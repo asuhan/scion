@@ -78,4 +78,5 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   let didTransformToRootUpdate = false
+  let isLayoutSizeChanged = false
 }

@@ -119,8 +119,23 @@ struct SVGContainerLayout {
   }
 
   private func layoutSizeOfNearestViewportChanged() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var ancestor: RenderElementWrapper? = container
+    while ancestor != nil && !(ancestor is RenderSVGRootWrapper)
+      && !(ancestor is RenderSVGViewportContainerWrapper)
+    {
+      ancestor = ancestor!.parent()
+    }
+
+    assert(ancestor != nil)
+    if let viewportContainer = ancestor as? RenderSVGViewportContainerWrapper {
+      return viewportContainer.isLayoutSizeChanged
+    }
+
+    if let svgRoot = ancestor as? RenderSVGRootWrapper {
+      return svgRoot.isLayoutSizeChanged
+    }
+
+    return false
   }
 
   private let container: RenderLayerModelObjectWrapper
