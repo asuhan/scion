@@ -21,9 +21,18 @@
  */
 
 final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
+  private func viewport() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func updateLayoutSizeIfNeeded() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override final func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? {
+    return viewport()
   }
 
   override func updateLayerTransform() {

@@ -115,10 +115,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
 
   func updateLayoutSizeIfNeeded() -> Bool { return false }
 
-  private func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? { return nil }
 
   private var objectBoundingBoxValid = false
   private var isLayoutSizeChanged = false
