@@ -5,5 +5,6 @@ target_sources(layout_scion PRIVATE
     TransformationMatrix.swift
     TransformOperation.swift
     TransformOperations.swift
+    TransformState.swift
     TranslateTransformOperation.swift
 )

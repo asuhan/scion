@@ -43,6 +43,16 @@ class AffineTransform {
     fatalError("Not implemented")
   }
 
+  func mapRect(rect: FloatRectWrapper) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isIdentity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func a() -> Float64 { return transform[0] }
   func b() -> Float64 { return transform[1] }
   func c() -> Float64 { return transform[2] }

@@ -154,8 +154,116 @@ struct SVGBoundingBoxComputation: ~Copyable {
   private func handleRootOrContainer(_ options: DecorationOptions, _ boundingBoxValid: inout Bool)
     -> FloatRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let uniteBoundingBoxRespectingValidity = {
+      (
+        boxValid: inout Bool, box: inout FloatRectWrapper, child: RenderLayerModelObjectWrapper,
+        childBoundingBox: FloatRectWrapper
+      ) in
+      let containerChild = child as? RenderSVGContainerWrapper
+      let isBoundingBoxValid = containerChild?.isObjectBoundingBoxValid() ?? true
+      if !isBoundingBoxValid {
+        return
+      }
+
+      if boxValid {
+        box.uniteEvenIfEmpty(other: childBoundingBox)
+        return
+      }
+
+      box = childBoundingBox
+      boxValid = true
+    }
+
+    // 1. Let box be a rectangle initialized to (0, 0, 0, 0).
+    var box = FloatRectWrapper()
+    var boxValid = false
+
+    // 2. Let parent be the container element if it is one, or the root of the "use" element's shadow tree otherwise.
+
+    // 3. For each descendant graphics element child of parent:
+    //    - If child is not rendered then continue to the next descendant graphics element.
+    //    - Otherwise, set box to be the union of box and the result of invoking the algorithm to compute a bounding box with child
+    //      as the element and the same values for space, fill, stroke, markers and clipped as the corresponding algorithm input values.
+    for child: RenderLayerModelObjectWrapper in childrenOfType(parent: renderer) {
+      if child is RenderSVGHiddenContainerWrapper {
+        continue
+      }
+      if let shape = child as? RenderSVGShapeWrapper, shape.isRenderingDisabled() {
+        continue
+      }
+
+      let childBoundingBoxComputation = SVGBoundingBoxComputation(child)
+      var childBox = childBoundingBoxComputation.computeDecoratedBoundingBox(options)
+      if options.contains(.OverrideBoxWithFilterBoxForChildren)
+        && (child is RenderSVGContainerWrapper)
+      {
+        var optionsForChild: DecorationOptions = [.OverrideBoxWithFilterBox]
+        if options.contains(.CalculateFastRepaintRect) {
+          optionsForChild.update(with: .CalculateFastRepaintRect)
+        }
+        childBoundingBoxComputation.adjustBoxForClippingAndEffects(optionsForChild, childBox)
+      }
+
+      if !options.contains(.IgnoreTransformations),
+        let transform = transformationMatrixFromChild(child)
+      {
+        childBox = transform.mapRect(rect: childBox)
+      }
+
+      if options == SVGBoundingBoxComputation.objectBoundingBoxDecoration {
+        uniteBoundingBoxRespectingValidity(&boxValid, &box, child, childBox)
+      } else {
+        box.unite(other: childBox)
+      }
+    }
+
+    // 4. If clipped is true:
+    //    - If the value of clip-path on element is not none, then set box to be the tightest rectangle in coordinate system space that
+    //      contains the intersection of box and the clipping path.
+    //    - If the overflow property applies to the element and does not have a value of visible, then set box to be the tightest rectangle
+    //      in coordinate system space that contains the intersection of box and the element's overflow bounds.
+    //    - If the clip property applies to the element and does not have a value of auto, then set box to be the tightest rectangle in coordinate
+    //      system space that contains the intersection of box and the rectangle specified by clip. (TODO!)
+    adjustBoxForClippingAndEffects(options, box, [.OverrideBoxWithFilterBox])
+
+    if options.contains(.IncludeClippers) && renderer.hasNonVisibleOverflow() {
+      assert(renderer.hasLayer())
+
+      assert(
+        (renderer is RenderSVGViewportContainerWrapper)
+          || (renderer is RenderSVGResourceMarkerWrapper) || (renderer is RenderSVGRootWrapper))
+
+      var overflowClipRect = LayoutRectWrapper()
+      if let svgModelObject = renderer as? RenderSVGModelObjectWrapper {
+        overflowClipRect = svgModelObject.overflowClipRect(
+          location: svgModelObject.currentSVGLayoutLocation())
+      } else if let box = renderer as? RenderBoxWrapper {
+        overflowClipRect = box.overflowClipRect(location: box.location())
+      } else {
+        fatalError("Not reached")
+      }
+
+      box.intersect(other: overflowClipRect.FloatRect())
+    }
+
+    // 5. Return box.
+    boundingBoxValid = boxValid
+    return box
+  }
+
+  private func transformationMatrixFromChild(_ child: RenderLayerModelObjectWrapper)
+    -> AffineTransform?
+  {
+    if !child.isTransformed() || !child.hasLayer() {
+      return nil
+    }
+
+    assert(child.isSVGLayerAwareRenderer())
+    assert(!child.isRenderSVGRoot())
+
+    let transform = SVGLayerTransformComputation(child).computeAccumulatedTransform(
+      renderer, .TrackSVGCTMMatrix)
+    return transform.isIdentity() ? nil : transform
   }
 
   private func handleForeignObjectOrImage(

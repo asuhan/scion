@@ -56,6 +56,11 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     assert(paintInfo.phase == .Foreground)
   }
 
+  func isObjectBoundingBoxValid() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())

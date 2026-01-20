@@ -29,6 +29,8 @@
  */
 
 class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
+  func isRenderingDisabled() -> Bool { fatalError("Not reached") }
+
   func approximateStrokeBoundingBox() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
