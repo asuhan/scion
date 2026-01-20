@@ -76,4 +76,6 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let didTransformToRootUpdate = false
 }

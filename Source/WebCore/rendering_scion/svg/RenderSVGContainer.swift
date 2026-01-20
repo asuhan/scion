@@ -124,7 +124,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
 
   private var objectBoundingBoxValid = false
   private var isLayoutSizeChanged = false
-  private var didTransformToRootUpdate = false
+  var didTransformToRootUpdate = false
   private var objectBoundingBox = FloatRectWrapper()
   private var m_objectBoundingBoxWithoutTransformations = FloatRectWrapper()
   private var strokeBoundingBox: FloatRectWrapper? = nil

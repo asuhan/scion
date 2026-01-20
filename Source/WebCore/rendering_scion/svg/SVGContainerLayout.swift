@@ -99,8 +99,23 @@ struct SVGContainerLayout {
   }
 
   static func transformToRootChanged(_ ancestor: RenderObjectWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var ancestor = ancestor
+    while ancestor != nil {
+      if let container = ancestor as? RenderSVGTransformableContainerWrapper {
+        return container.didTransformToRootUpdate
+      }
+
+      if let container = ancestor as? RenderSVGViewportContainerWrapper {
+        return container.didTransformToRootUpdate
+      }
+
+      if let svgRoot = ancestor as? RenderSVGRootWrapper {
+        return svgRoot.didTransformToRootUpdate
+      }
+      ancestor = ancestor!.parent()
+    }
+
+    return false
   }
 
   private func layoutSizeOfNearestViewportChanged() -> Bool {
