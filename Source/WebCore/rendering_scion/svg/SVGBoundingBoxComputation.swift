@@ -52,11 +52,63 @@ struct SVGBoundingBoxComputation: ~Copyable {
   func computeDecoratedBoundingBox(_ options: DecorationOptions, _ boundingBoxValid: inout Bool)
     -> FloatRectWrapper
   {
+    // SVG2: Bounding boxes algorithm (https://svgwg.org/svg2-draft/coords.html#BoundingBoxes)
+
+    // The following algorithm defines how to compute a bounding box for a given element. The inputs to the algorithm are:
+    // - element, the element we are computing a bounding box for;
+    // - space, a coordinate space in which the bounding box will be computed;
+    // - fill, a boolean indicating whether the bounding box includes the geometry of the element and its descendants;
+    // - stroke, a boolean indicating whether the bounding box includes the stroke of the element and its descendants;
+    // - markers, a boolean indicating whether the bounding box includes the markers of the element and its descendants; and
+    // - clipped, a boolean indicating whether the bounding box is affected by any clipping paths applied to the element and its descendants.
+
+    // The algorithm to compute the bounding box is as follows, depending on the type of element:
+    // - a shape (RenderSVGShape)
+    // - a text content element (RenderSVGText or RenderSVGInline)
+    // - an "a" element within a text content element (-> creates RenderSVGInline)
+    if (renderer is RenderSVGShapeWrapper) || (renderer is RenderSVGTextWrapper)
+      || (renderer is RenderSVGInlineWrapper)
+    {
+      return handleShapeOrTextOrInline(options, &boundingBoxValid)
+    }
+
+    // - a container element (RenderSVGRoot / RenderSVGContainer)
+    // - "use" (RenderSVGTransformableContainer)
+    if (renderer is RenderSVGRootWrapper) || (renderer is RenderSVGContainerWrapper) {
+      return handleRootOrContainer(options, &boundingBoxValid)
+    }
+
+    // - "foreignObject"
+    // - "image"
+    if (renderer is RenderSVGForeignObjectWrapper) || (renderer is RenderSVGImageWrapper) {
+      return handleForeignObjectOrImage(options, &boundingBoxValid)
+    }
+
+    fatalError("Not reached")
+  }
+
+  func computeDecoratedBoundingBox(_ options: DecorationOptions) -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func computeDecoratedBoundingBox(_ options: DecorationOptions) -> FloatRectWrapper {
+  private func handleShapeOrTextOrInline(
+    _ options: DecorationOptions, _ boundingBoxValid: inout Bool
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func handleRootOrContainer(_ options: DecorationOptions, _ boundingBoxValid: inout Bool)
+    -> FloatRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func handleForeignObjectOrImage(
+    _ options: DecorationOptions, _ boundingBoxValid: inout Bool
+  ) -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
