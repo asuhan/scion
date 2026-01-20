@@ -9,7 +9,10 @@ target_sources(layout_scion PRIVATE
     RenderSVGPath.swift
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
+    RenderSVGResourceFilter.swift
     RenderSVGResourceMarker.swift
+    RenderSVGResourceMasker.swift
+    RenderSVGResourcePaintServer.swift
     RenderSVGForeignObject.swift
     RenderSVGGradientStop.swift
     RenderSVGRoot.swift

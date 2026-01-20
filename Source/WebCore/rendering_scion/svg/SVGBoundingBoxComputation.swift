@@ -144,7 +144,7 @@ struct SVGBoundingBoxComputation: ~Copyable {
 
     // 6. If clipped is true and the value of clip-path on element is not none, then set box to be the tightest rectangle
     //    in coordinate system space that contains the intersection of box and the clipping path.
-    adjustBoxForClippingAndEffects(options, box)
+    adjustBoxForClippingAndEffects(options, &box)
 
     // 7. Return box.
     boundingBoxValid = true
@@ -201,7 +201,7 @@ struct SVGBoundingBoxComputation: ~Copyable {
         if options.contains(.CalculateFastRepaintRect) {
           optionsForChild.update(with: .CalculateFastRepaintRect)
         }
-        childBoundingBoxComputation.adjustBoxForClippingAndEffects(optionsForChild, childBox)
+        childBoundingBoxComputation.adjustBoxForClippingAndEffects(optionsForChild, &childBox)
       }
 
       if !options.contains(.IgnoreTransformations),
@@ -224,7 +224,7 @@ struct SVGBoundingBoxComputation: ~Copyable {
     //      in coordinate system space that contains the intersection of box and the element's overflow bounds.
     //    - If the clip property applies to the element and does not have a value of auto, then set box to be the tightest rectangle in coordinate
     //      system space that contains the intersection of box and the rectangle specified by clip. (TODO!)
-    adjustBoxForClippingAndEffects(options, box, [.OverrideBoxWithFilterBox])
+    adjustBoxForClippingAndEffects(options, &box, [.OverrideBoxWithFilterBox])
 
     if options.contains(.IncludeClippers) && renderer.hasNonVisibleOverflow() {
       assert(renderer.hasLayer())
@@ -273,11 +273,11 @@ struct SVGBoundingBoxComputation: ~Copyable {
     //    defined by the "x", "y", "width" and "height" geometric properties of the element.
     //
     // Note: The fill, stroke and markers input arguments to this algorithm do not affect the bounding box returned for these elements.
-    let box = renderer.objectBoundingBox()
+    var box = renderer.objectBoundingBox()
 
     // 2. If clipped is true and the value of clip-path on element is not none, then set box to be the tightest rectangle
     //    in coordinate system space that contains the intersection of box and the clipping path.
-    adjustBoxForClippingAndEffects(options, box)
+    adjustBoxForClippingAndEffects(options, &box)
 
     // 3. Return box.
     boundingBoxValid = true
@@ -285,13 +285,55 @@ struct SVGBoundingBoxComputation: ~Copyable {
   }
 
   private func adjustBoxForClippingAndEffects(
-    _ options: DecorationOptions, _ box: FloatRectWrapper,
+    _ options: DecorationOptions, _ box: inout FloatRectWrapper,
     _ optionsToCheckForFilters: DecorationOptions = SVGBoundingBoxComputation
       .filterBoundingBoxDecoration
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let includeFilter = !options.isDisjoint(with: optionsToCheckForFilters)
+
+    if includeFilter, let referencedFilterRenderer = renderer.svgFilterResourceFromStyle() {
+      let repaintRectCalculation: RepaintRectCalculation =
+        options.contains(.CalculateFastRepaintRect) ? .Fast : .Accurate
+
+      let resourceRect = referencedFilterRenderer.resourceBoundingBox(
+        renderer, repaintRectCalculation)
+      if box.isEmpty() && options.contains(.UseFilterBoxOnEmptyRect) {
+        box = resourceRect
+      } else {
+        box.intersect(other: resourceRect)
+      }
+    }
+
+    if options.contains(.IncludeClippers),
+      let referencedClipperRenderer = renderer.svgClipperResourceFromStyle()
+    {
+      let repaintRectCalculation: RepaintRectCalculation =
+        options.contains(.CalculateFastRepaintRect) ? .Fast : .Accurate
+      box.intersect(
+        other: referencedClipperRenderer.resourceBoundingBox(renderer, repaintRectCalculation))
+    }
+
+    if options.contains(.IncludeMaskers),
+      let referencedMaskerRenderer = renderer.svgMaskerResourceFromStyle()
+    {
+      // When masks are nested, the inner masks do not affect the outer mask dimension, so skip the computation for inner masks.
+      SVGBoundingBoxComputation.s_maskBoundingBoxNestingLevel += 1
+      defer {
+        SVGBoundingBoxComputation.s_maskBoundingBoxNestingLevel -= 1
+      }
+      if SVGBoundingBoxComputation.s_maskBoundingBoxNestingLevel < 2 {
+        let repaintRectCalculation: RepaintRectCalculation =
+          options.contains(.CalculateFastRepaintRect) ? .Fast : .Accurate
+        box.intersect(
+          other: referencedMaskerRenderer.resourceBoundingBox(renderer, repaintRectCalculation))
+      }
+    }
+
+    if options.contains(.IncludeOutline) {
+      box.inflate(d: renderer.outlineStyleForRepaint().outlineSize())
+    }
   }
 
   private let renderer: RenderLayerModelObjectWrapper
+  private static var s_maskBoundingBoxNestingLevel: UInt32 = 0
 }

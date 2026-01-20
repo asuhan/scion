@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2004, 2005, 2007, 2008 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2006, 2007, 2008 Rob Buis <buis@kde.org>
  * Copyright (C) Research In Motion Limited 2009-2010. All rights reserved.
- * Copyright (C) 2011 Dirk Schulze <krit@webkit.org>
- * Copyright (C) 2021, 2022, 2023, 2024 Igalia S.L.
+ * Copyright (C) 2021, 2022, 2023 Igalia S.L.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,28 +18,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
-  func shouldApplyPathClipping() -> SVGGraphicsElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func applyPathClipping(
-    context: GraphicsContextWrapper, targetRenderer: RenderLayerModelObjectWrapper,
-    objectBoundingBox: FloatRectWrapper, graphicsElement: SVGGraphicsElementWrapper
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
+final class RenderSVGResourceMasker: RenderSVGResourceContainerWrapper {
   func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

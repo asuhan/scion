@@ -25,6 +25,11 @@
 
 import wk_interop
 
+enum RepaintRectCalculation {
+  case Fast
+  case Accurate
+}
+
 enum RepaintOutlineBounds {
   case No
   case Yes
