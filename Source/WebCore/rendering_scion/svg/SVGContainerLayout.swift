@@ -32,9 +32,65 @@ struct SVGContainerLayout {
 
   // 'containerNeedsLayout' denotes if the container for which the
   // SVGContainerLayout object was created needs to be laid out or not.
-  func layoutChildren(_ containerNeedsLayout: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func layoutChildren(_ containerNeedsLayout: Bool) {
+    let layoutSizeChanged = layoutSizeOfNearestViewportChanged()
+    let transformChanged = SVGContainerLayout.transformToRootChanged(container)
+
+    positionedChildren.removeAll()
+    for child: RenderObjectWrapper in childrenOfType(parent: container) {
+      if child.isSVGLayerAwareRenderer() {
+        positionedChildren.append(child as! RenderLayerModelObjectWrapper)
+      }
+
+      var needsLayout = containerNeedsLayout
+      let childEverHadLayout = child.everHadLayout()
+
+      if transformChanged {
+        // If the transform changed we need to update the text metrics (note: this also happens for layoutSizeChanged=true).
+        if let text = child as? RenderSVGTextWrapper {
+          text.setNeedsTextMetricsUpdate()
+        }
+        needsLayout = true
+      }
+
+      if layoutSizeChanged {
+        if child.isAnonymous() {
+          assert(child is RenderSVGViewportContainerWrapper)
+          needsLayout = true
+        } else if let element = child.node() as? SVGElementWrapper, element.hasRelativeLengths() {
+          // When containerNeedsLayout is false and the layout size changed, we have to check whether this child uses relative lengths
+
+          // When the layout size changed and when using relative values tell the RenderSVGShape to update its shape object
+          if let shape = child as? RenderSVGShapeWrapper {
+            shape.setNeedsShapeUpdate()
+            needsLayout = true
+          } else if let svgText = child as? RenderSVGTextWrapper {
+            svgText.setNeedsTextMetricsUpdate()
+            svgText.setNeedsPositioningValuesUpdate()
+            needsLayout = true
+          } else if let resource = child as? RenderSVGResourceGradient {
+            resource.invalidateGradient()
+          }
+          // FIXME: [LBSE] Add pattern support.
+        }
+      }
+
+      if needsLayout {
+        child.setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+
+      if let element = child as? RenderElementWrapper {
+        if element.needsLayout() {
+          element.layout()
+        }
+
+        if !childEverHadLayout && element.checkForRepaintDuringLayout() {
+          element.repaint()
+        }
+      }
+
+      assert(!child.needsLayout())
+    }
   }
 
   func positionChildrenRelativeToContainer() {
@@ -47,5 +103,11 @@ struct SVGContainerLayout {
     fatalError("Not implemented")
   }
 
+  private func layoutSizeOfNearestViewportChanged() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let container: RenderLayerModelObjectWrapper
+  private var positionedChildren: [RenderLayerModelObjectWrapper] = []
 }

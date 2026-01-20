@@ -93,7 +93,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   }
 
   private func layoutChildren() {
-    let containerLayout = SVGContainerLayout(self)
+    var containerLayout = SVGContainerLayout(self)
     containerLayout.layoutChildren(selfNeedsLayout())
 
     let boundingBoxComputation = SVGBoundingBoxComputation(self)

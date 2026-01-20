@@ -25,6 +25,16 @@
  */
 
 final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
+  func setNeedsPositioningValuesUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setNeedsTextMetricsUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func locateRenderSVGTextAncestor(start: RenderObjectWrapper) -> RenderSVGTextWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

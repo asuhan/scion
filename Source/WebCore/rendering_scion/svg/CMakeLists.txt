@@ -10,9 +10,12 @@ target_sources(layout_scion PRIVATE
     RenderSVGResourceClipper.swift
     RenderSVGResourceContainer.swift
     RenderSVGResourceFilter.swift
+    RenderSVGResourceGradient.swift
+    RenderSVGResourceLinearGradient.swift
     RenderSVGResourceMarker.swift
     RenderSVGResourceMasker.swift
     RenderSVGResourcePaintServer.swift
+    RenderSVGResourceRadialGradient.swift
     RenderSVGForeignObject.swift
     RenderSVGGradientStop.swift
     RenderSVGRoot.swift
