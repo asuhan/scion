@@ -91,8 +91,8 @@ struct SVGBoundingBoxComputation: ~Copyable {
   }
 
   func computeDecoratedBoundingBox(_ options: DecorationOptions) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var boundingBoxValid = false
+    return computeDecoratedBoundingBox(options, &boundingBoxValid)
   }
 
   private func handleShapeOrTextOrInline(
