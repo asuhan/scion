@@ -48,6 +48,9 @@ struct SVGBoundingBoxComputation: ~Copyable {
   }
 
   static let objectBoundingBoxDecoration: DecorationOptions = [.IncludeFillShape]
+  private static let filterBoundingBoxDecoration: DecorationOptions = [
+    .OverrideBoxWithFilterBox, .OverrideBoxWithFilterBoxForChildren,
+  ]
 
   func computeDecoratedBoundingBox(_ options: DecorationOptions, _ boundingBoxValid: inout Bool)
     -> FloatRectWrapper
@@ -95,8 +98,57 @@ struct SVGBoundingBoxComputation: ~Copyable {
   private func handleShapeOrTextOrInline(
     _ options: DecorationOptions, _ boundingBoxValid: inout Bool
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // 1. Let box be a rectangle initialized to (0, 0, 0, 0).
+    var box = FloatRectWrapper()
+
+    // 2. Let fill-shape be the equivalent path of element if it is a shape, or a shape that includes each of the
+    //    glyph cells corresponding to the text within the elements otherwise.
+    // 3. If fill is true, then set box to the tightest rectangle in the coordinate system space that contains fill-shape.
+    //
+    // Note: The values of the fill, fill-opacity and fill-rule properties do not affect fill-shape.
+    if options.contains(.IncludeFillShape) {
+      box = renderer.objectBoundingBox()
+    }
+
+    // 4. If stroke is true and the element's stroke is anything other than none, then set box to be the union of box
+    //    and the tightest rectangle in coordinate system space that contains the stroke shape of the element, with the
+    //    assumption that the element has no dash pattern.
+    //
+    // Note: The values of the stroke-opacity, stroke-dasharray and stroke-dashoffset do not affect the calculation of the stroke shape.
+    if options.contains(.IncludeStrokeShape) {
+      if options.contains(.CalculateFastRepaintRect) && (renderer is RenderSVGShapeWrapper) {
+        box.unite(other: (renderer as! RenderSVGShapeWrapper).approximateStrokeBoundingBox())
+      } else {
+        box.unite(other: renderer.strokeBoundingBox())
+      }
+    }
+
+    // 5. If markers is true, then for each marker marker rendered on the element:
+    // - For each descendant graphics element child of the "marker" element that defines marker's content:
+    //   - If child has an ancestor element within the "marker" that is 'display: none', has a failing conditional processing attribute,
+    //     or is not an "a", "g", "svg" or "switch" element, then continue to the next descendant graphics element.
+    //   - Otherwise, set box to be the union of box and the result of invoking the algorithm to compute a bounding box with child as
+    //     the element, space as the target coordinate space, true for fill, stroke and markers, and clipped for clipped.
+    if options.contains(.IncludeMarkers), let svgPath = renderer as? RenderSVGPathWrapper {
+      var optionsForMarker: DecorationOptions = [
+        .IncludeFillShape, .IncludeStrokeShape, .IncludeMarkers,
+      ]
+      if options.contains(.IncludeClippers) {
+        optionsForMarker.update(with: .IncludeClippers)
+      }
+      if options.contains(.CalculateFastRepaintRect) {
+        optionsForMarker.update(with: .CalculateFastRepaintRect)
+      }
+      box.unite(other: svgPath.computeMarkerBoundingBox(optionsForMarker))
+    }
+
+    // 6. If clipped is true and the value of clip-path on element is not none, then set box to be the tightest rectangle
+    //    in coordinate system space that contains the intersection of box and the clipping path.
+    adjustBoxForClippingAndEffects(options, box)
+
+    // 7. Return box.
+    boundingBoxValid = true
+    return box
   }
 
   private func handleRootOrContainer(_ options: DecorationOptions, _ boundingBoxValid: inout Bool)
@@ -109,6 +161,15 @@ struct SVGBoundingBoxComputation: ~Copyable {
   private func handleForeignObjectOrImage(
     _ options: DecorationOptions, _ boundingBoxValid: inout Bool
   ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func adjustBoxForClippingAndEffects(
+    _ options: DecorationOptions, _ box: FloatRectWrapper,
+    _ optionsToCheckForFilters: DecorationOptions = SVGBoundingBoxComputation
+      .filterBoundingBoxDecoration
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

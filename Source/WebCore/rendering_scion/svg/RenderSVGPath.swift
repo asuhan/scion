@@ -9,8 +9,7 @@
  * Copyright (C) 2009 Jeff Schiller <codedread@gmail.com>
  * Copyright (C) 2011 Renata Hodovan <reni@webkit.org>
  * Copyright (C) 2011 University of Szeged
- * Copyright (C) 2018 Adobe Systems Incorporated. All rights reserved.
- * Copyright (C) 2020, 2021, 2022 Igalia S.L.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024 Igalia S.L.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -28,23 +27,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
-  func approximateStrokeBoundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
+  func computeMarkerBoundingBox(_ options: SVGBoundingBoxComputation.DecorationOptions)
+    -> FloatRectWrapper
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
