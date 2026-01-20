@@ -269,8 +269,19 @@ struct SVGBoundingBoxComputation: ~Copyable {
   private func handleForeignObjectOrImage(
     _ options: DecorationOptions, _ boundingBoxValid: inout Bool
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // 1. Let box be the tightest rectangle in coordinate space space that contains the positioning rectangle
+    //    defined by the "x", "y", "width" and "height" geometric properties of the element.
+    //
+    // Note: The fill, stroke and markers input arguments to this algorithm do not affect the bounding box returned for these elements.
+    let box = renderer.objectBoundingBox()
+
+    // 2. If clipped is true and the value of clip-path on element is not none, then set box to be the tightest rectangle
+    //    in coordinate system space that contains the intersection of box and the clipping path.
+    adjustBoxForClippingAndEffects(options, box)
+
+    // 3. Return box.
+    boundingBoxValid = true
+    return box
   }
 
   private func adjustBoxForClippingAndEffects(
