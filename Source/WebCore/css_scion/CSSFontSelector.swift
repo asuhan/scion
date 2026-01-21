@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2003-2023 Apple Inc.  All rights reserved.
+ * Copyright (C) 2007-2023 Apple Inc. All rights reserved.
+ *           (C) 2007, 2008 Nikolas Zimmermann <zimmermann@kde.org>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,49 +24,5 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum FontOrientation: UInt8 {
-  case Horizontal
-  case Vertical
-}
-
-struct ExpansionBehaviorWrapper: Equatable {
-  enum Behavior: UInt8 {
-    case Forbid
-    case Allow
-    case Force
-  }
-
-  init() {
-    self.init(left: .Forbid, right: .Allow)
-  }
-
-  init(left: Behavior, right: Behavior) {
-    self.left = left
-    self.right = right
-  }
-
-  static func defaultBehavior() -> ExpansionBehaviorWrapper {
-    return ExpansionBehaviorWrapper()
-  }
-
-  static func allowRightOnly() -> ExpansionBehaviorWrapper {
-    return ExpansionBehaviorWrapper(left: .Forbid, right: .Allow)
-  }
-
-  static func forbidAll() -> ExpansionBehaviorWrapper {
-    return ExpansionBehaviorWrapper(left: .Forbid, right: .Forbid)
-  }
-
-  var left: Behavior
-  var right: Behavior
-}
-
-enum AllowUserInstalledFonts {
-  case No
-  case Yes
-}
-
-enum ColorGlyphType: UInt8 {
-  case Outline
-  case Color
-}
+// TODO(asuhan): also inherit from CSSFontFaceClient, ActiveDOMObject
+final class CSSFontSelectorWrapper: FontSelectorWrapper {}

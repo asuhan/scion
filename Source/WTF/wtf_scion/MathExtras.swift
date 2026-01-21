@@ -64,3 +64,5 @@ extension WTF {
     return 0 &- v
   }
 }
+
+let piOverTwoFloat: Float32 = 1.57079632679489661923

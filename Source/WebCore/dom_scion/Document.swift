@@ -47,6 +47,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func fontSelector() -> CSSFontSelectorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func view() -> LocalFrameViewWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

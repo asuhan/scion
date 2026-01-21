@@ -387,6 +387,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func rotate(_ angleInRadians: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func translate(size: FloatSize) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

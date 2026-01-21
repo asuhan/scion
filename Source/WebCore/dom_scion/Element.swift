@@ -60,6 +60,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func computedStyleForEditability() -> RenderStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func ensurePseudoElement(pseudoId: PseudoId) -> PseudoElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

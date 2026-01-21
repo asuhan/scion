@@ -36,6 +36,14 @@ private let optionsSpacingInlineStart: Int32 = 2
 // Default size when the multiple attribute is present but size attribute is absent.
 private let defaultSize: Int32 = 4
 
+private func itemOffsetForAlignment(
+  _ textRun: TextRunWrapper, _ elementStyle: RenderStyleWrapper, _ itemStyle: RenderStyleWrapper,
+  _ itemFont: FontCascadeWrapper, _ itemBoundingBox: LayoutRectWrapper
+) -> LayoutSizeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // TODO(asuhan): also inherit from ScrollableArea
 final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   // TODO(asuhan): move to ScrollableArea
@@ -358,8 +366,74 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   private func paintItemForeground(
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ listIndex: Int32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let listItems = selectElement().listItems()
+    let listItemElement = listItems[Int(listIndex)]
+
+    guard let itemStyle = listItemElement.computedStyleForEditability() else { return }
+
+    if itemStyle.usedVisibility() == .Hidden {
+      return
+    }
+
+    var itemText = StringWrapper()
+    let optionElement = listItemElement as? HTMLOptionElementWrapper
+    let optGroupElement = listItemElement as? HTMLOptGroupElementWrapper
+    if optionElement != nil {
+      itemText = optionElement!.textIndentedToRespectGroupLabel()
+    } else if optGroupElement != nil {
+      itemText = optGroupElement!.groupLabelText()
+    }
+    itemText = applyTextTransform(style(), itemText, UChar(Character(" ").asciiValue!))
+
+    if itemText.isNull() {
+      return
+    }
+
+    var textColor = itemStyle.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor)
+    if optionElement?.selected() ?? false {
+      if frame().selection().isFocusedAndActive()
+        && CPtrToInt(document().focusedElement()?.p) == CPtrToInt(selectElement().p)
+      {
+        textColor = theme().activeListBoxSelectionForegroundColor(styleColorOptions())
+      }  // Honor the foreground color for disabled items
+      else if !listItemElement.isDisabledFormControl() && !selectElement().isDisabledFormControl() {
+        textColor = theme().inactiveListBoxSelectionForegroundColor(styleColorOptions())
+      }
+    }
+
+    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+
+    paintInfo.context().setFillColor(color: textColor)
+
+    let textRun = TextRunWrapper(
+      text: itemText, xpos: 0, expansion: 0,
+      expansionBehavior: ExpansionBehaviorWrapper.allowRightOnly(),
+      direction: itemStyle.direction(), directionalOverride: isOverride(itemStyle.unicodeBidi()),
+      characterScanForCodePath: true)
+    var itemFont = style().fontCascade()
+    var r = itemBoundingBoxRect(additionalOffset: paintOffset, index: listIndex)
+    r.move(size: itemOffsetForAlignment(textRun, style(), itemStyle, itemFont, r))
+
+    let isHorizontalWritingMode = style().isHorizontalWritingMode()
+    if !isHorizontalWritingMode {
+      let rotationOrigin = roundedIntPoint(point: r.maxXMinYCorner())
+      paintInfo.context().translate(p: FloatPoint(p: rotationOrigin))
+      paintInfo.context().rotate(piOverTwoFloat)
+      paintInfo.context().translate(p: FloatPoint(p: -rotationOrigin))
+    }
+
+    if optGroupElement != nil {
+      let description = itemFont.fontDescription()
+      description.setWeight(description.bolderWeight())
+      itemFont = FontCascadeWrapper(description, itemFont)
+      itemFont.update(fontSelector: document().fontSelector())
+    }
+
+    // Draw the item text
+    paintInfo.context().drawBidiText(
+      font: itemFont, run: textRun,
+      point: FloatPoint(
+        p: roundedIntPoint(point: isHorizontalWritingMode ? r.location() : r.maxXMinYCorner())))
   }
 
   private func paintItemBackground(

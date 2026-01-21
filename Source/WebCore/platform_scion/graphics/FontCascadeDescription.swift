@@ -37,6 +37,11 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     fatalError("Not implemented")
   }
 
+  func bolderWeight() -> FontSelectionValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setOneFamily(_ family: AtomStringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

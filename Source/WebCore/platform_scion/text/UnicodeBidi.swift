@@ -31,3 +31,7 @@ enum UnicodeBidi: UInt8 {
   case Plaintext
   case IsolateOverride
 }
+
+func isOverride(_ unicodeBidi: UnicodeBidi) -> Bool {
+  return unicodeBidi == .Override || unicodeBidi == .IsolateOverride
+}

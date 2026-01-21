@@ -258,3 +258,10 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 }
+
+func applyTextTransform(
+  _ style: RenderStyleWrapper, _ text: StringWrapper, _ previousCharacter: UChar
+) -> StringWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

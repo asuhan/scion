@@ -298,6 +298,16 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func activeListBoxSelectionForegroundColor(_ options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inactiveListBoxSelectionForegroundColor(_ options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Highlighting color for search matches.
   func textSearchHighlightColor(options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this

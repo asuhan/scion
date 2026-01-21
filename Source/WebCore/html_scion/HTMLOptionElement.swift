@@ -24,4 +24,19 @@
  *
  */
 
-final class HTMLOptionElementWrapper: HTMLElementWrapper {}
+enum AllowStyleInvalidation {
+  case No
+  case Yes
+}
+
+final class HTMLOptionElementWrapper: HTMLElementWrapper {
+  func selected(_ allowStyleInvalidation: AllowStyleInvalidation = .Yes) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func textIndentedToRespectGroupLabel() -> StringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
