@@ -401,8 +401,12 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper,
     _ paintFunction: (PaintInfoWrapper, LayoutPointWrapper, Int32) -> Void
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let listItemsSize = numItems()
+    let firstVisibleItem = indexOfFirstVisibleItemInsidePaddingBeforeArea ?? indexOffset()
+    let endIndex = firstVisibleItem + numVisibleItems(considerPadding: .Yes)
+    for i in firstVisibleItem..<min(listItemsSize, endIndex) {
+      paintFunction(paintInfo, paintOffset, i)
+    }
   }
 
   private func setHasScrollbar(_ orientation: ScrollbarOrientation) {
