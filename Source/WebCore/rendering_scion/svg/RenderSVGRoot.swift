@@ -258,6 +258,70 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   override final func paintObject(
     paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
+    if (paintInfo.phase == .BlockBackground || paintInfo.phase == .ChildBlockBackground)
+      && style().usedVisibility() == .Visible
+    {
+      if hasVisibleBoxDecorations() {
+        paintBoxDecorations(paintInfo: paintInfo, paintOffset: paintOffset)
+      }
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+    if paintInfo.phase == .Mask && style().usedVisibility() == .Visible {
+      paintSVGMask(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    if paintInfo.phase == .ClippingMask && style().usedVisibility() == .Visible {
+      paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: objectBoundingBox())
+      return
+    }
+
+    if paintInfo.paintRootBackgroundOnly() {
+      return
+    }
+
+    let context = paintInfo.context()
+    if context.detectingContentfulPaint() {
+      for current: RenderObjectWrapper in childrenOfType(parent: self) {
+        if !current.isRenderSVGHiddenContainer() {
+          context.setContentfulPaintDetected()
+          return
+        }
+      }
+      return
+    }
+
+    // Don't paint if we don't have kids, except if we have filters we should paint those.
+    if firstChild() == nil {
+      // FIXME: We should only call addRelevantUnpaintedObject() if there is no filter. Revisit this if we add filter support to LBSE.
+      if paintInfo.phase == .Foreground {
+        page().addRelevantUnpaintedObject(object: self, objectPaintRect: visualOverflowRect())
+      }
+      return
+    }
+
+    if paintInfo.phase == .BlockBackground {
+      return
+    }
+
+    var scrolledOffset = paintOffset
+    scrolledOffset.moveBy(offset: LayoutPointWrapper(point: -scrollPosition()))
+
+    if paintInfo.phase != .SelfOutline {
+      paintContents(paintInfo, scrolledOffset)
+    }
+
+    if (paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline) && hasOutline()
+      && style().usedVisibility() == .Visible
+    {
+      paintOutline(
+        paintInfo: paintInfo,
+        paintRect: LayoutRectWrapper(location: adjustedPaintOffset, size: size()))
+    }
+  }
+
+  private func paintContents(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
