@@ -439,8 +439,33 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   private func paintItemBackground(
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ listIndex: Int32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let listItems = selectElement().listItems()
+    let listItemElement = listItems[Int(listIndex)]
+    guard let itemStyle = listItemElement.computedStyleForEditability() else { return }
+
+    var backColor = ColorWrapper()
+    if let option = listItemElement as? HTMLOptionElementWrapper, option.selected() {
+      if frame().selection().isFocusedAndActive()
+        && CPtrToInt(document().focusedElement()?.p) == CPtrToInt(selectElement().p)
+      {
+        backColor = theme().activeListBoxSelectionBackgroundColor(styleColorOptions())
+      } else {
+        backColor = theme().inactiveListBoxSelectionBackgroundColor(styleColorOptions())
+      }
+    } else {
+      backColor = itemStyle.visitedDependentColorWithColorFilter(
+        colorProperty: .CSSPropertyBackgroundColor)
+    }
+
+    // Draw the background for this list box item
+    if itemStyle.usedVisibility() == .Hidden {
+      return
+    }
+
+    var itemRect = itemBoundingBoxRect(additionalOffset: paintOffset, index: listIndex)
+    itemRect.intersect(other: controlClipRect(additionalOffset: paintOffset))
+    paintInfo.context().fillRect(
+      rect: FloatRectWrapper(r: snappedIntRect(rect: itemRect)), color: backColor)
   }
 
   private func scrollToRevealSelection() {

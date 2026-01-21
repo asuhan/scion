@@ -298,7 +298,18 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  // List box selection colors
+  func activeListBoxSelectionBackgroundColor(_ options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func activeListBoxSelectionForegroundColor(_ options: StyleColorOptions) -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func inactiveListBoxSelectionBackgroundColor(_ options: StyleColorOptions) -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
