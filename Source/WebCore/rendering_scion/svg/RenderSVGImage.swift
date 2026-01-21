@@ -25,13 +25,30 @@
  */
 
 final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
-  override func layout() {
+  @discardableResult
+  private func updateImageViewport() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func layout() {
+    // TODO(asuhan): add stack stats
+
+    let repainter = LayoutRepainter(renderer: self)
+
+    updateImageViewport()
+    setCurrentSVGLayoutRect(enclosingLayoutRect(rect: objectBoundingBox))
+
+    updateLayerTransform()
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let objectBoundingBox = FloatRectWrapper()
 }
