@@ -2569,6 +2569,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func svgStyle() -> SVGRenderStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasExplicitlySetColor() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

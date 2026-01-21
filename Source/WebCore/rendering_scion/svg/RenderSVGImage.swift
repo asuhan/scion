@@ -46,9 +46,67 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    let relevantPaintPhases: PaintPhase = [
+      .Foreground, .ClippingMask, .Mask, .Outline, .SelfOutline,
+    ]
+    if !shouldPaintSVGRenderer(paintInfo, relevantPaintPhases)
+      || imageResource!.cachedImage() == nil
+    {
+      return
+    }
+
+    if paintInfo.phase == .ClippingMask {
+      paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: objectBoundingBox())
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + currentSVGLayoutLocation()
+    if paintInfo.phase == .Mask {
+      paintSVGMask(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    var visualOverflowRect = visualOverflowRectEquivalent()
+    visualOverflowRect.moveBy(offset: adjustedPaintOffset)
+    if !visualOverflowRect.intersects(other: paintInfo.rect) {
+      return
+    }
+
+    if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+      paintSVGOutline(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    assert(paintInfo.phase == .Foreground)
+    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+
+    let coordinateSystemOriginTranslation =
+      adjustedPaintOffset - flooredLayoutPoint(p: objectBoundingBox().location())
+    paintInfo.context().translate(
+      x: coordinateSystemOriginTranslation.width().float(),
+      y: coordinateSystemOriginTranslation.height().float())
+
+    if style().svgStyle().bufferedRendering() == .Static
+      && bufferForeground(paintInfo, flooredLayoutPoint(p: objectBoundingBox().location()))
+    {
+      return
+    }
+
+    paintForeground(paintInfo, flooredLayoutPoint(p: objectBoundingBox().location()))
+  }
+
+  private func paintForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func bufferForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
+    -> Bool
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private let objectBoundingBox = FloatRectWrapper()
+  private let imageResource: RenderImageResource? = nil
 }

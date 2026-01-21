@@ -31,6 +31,7 @@ target_sources(layout_scion PRIVATE
     StyleReflection.swift
     StyleSelfAlignmentData.swift
     StyleTextEdge.swift
+    SVGRenderStyle.swift
     TextDecorationThickness.swift
     WillChangeData.swift
 )
