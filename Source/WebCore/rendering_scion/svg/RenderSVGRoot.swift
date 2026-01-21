@@ -186,8 +186,20 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func layoutChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var containerLayout = SVGContainerLayout(self)
+    containerLayout.layoutChildren(selfNeedsLayout())
+
+    let boundingBoxComputation = SVGBoundingBoxComputation(self)
+    objectBoundingBox = boundingBoxComputation.computeDecoratedBoundingBox(
+      SVGBoundingBoxComputation.objectBoundingBoxDecoration)
+    strokeBoundingBox = nil
+
+    let objectBoundingBoxDecorationWithoutTransformations = SVGBoundingBoxComputation
+      .objectBoundingBoxDecoration.union(.IgnoreTransformations)
+    objectBoundingBoxWithoutTransformations = boundingBoxComputation.computeDecoratedBoundingBox(
+      objectBoundingBoxDecorationWithoutTransformations)
+
+    containerLayout.positionChildrenRelativeToContainer()
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -210,4 +222,7 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   var isLayoutSizeChanged = false
 
   let containerSize = IntSize()
+  private var objectBoundingBox = FloatRectWrapper()
+  private var objectBoundingBoxWithoutTransformations = FloatRectWrapper()
+  private var strokeBoundingBox: FloatRectWrapper? = nil
 }
