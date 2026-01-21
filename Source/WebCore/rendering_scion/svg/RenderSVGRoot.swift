@@ -322,8 +322,20 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func paintContents(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We don't paint our own background, but we do let the kids paint their backgrounds.
+    var paintInfoForChild = paintInfo.deepCopy()
+    if paintInfo.phase == .ChildOutlines {
+      paintInfoForChild.phase = .Outline
+    } else if paintInfo.phase == .ChildBlockBackgrounds {
+      paintInfoForChild.phase = .ChildBlockBackground
+    }
+
+    paintInfoForChild.updateSubtreePaintRootForChildren(renderer: self)
+    for child: RenderElementWrapper in childrenOfType(parent: self) {
+      if !child.hasSelfPaintingLayer() {
+        child.paint(paintInfo: &paintInfoForChild, paintOffset: paintOffset)
+      }
+    }
   }
 
   override func updateLayerTransform() {
