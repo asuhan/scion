@@ -102,8 +102,8 @@ struct SVGBoundingBoxComputation: ~Copyable {
   private static func computeDecoratedBoundingBox(
     _ renderer: RenderLayerModelObjectWrapper, _ options: DecorationOptions
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let boundingBoxComputation = SVGBoundingBoxComputation(renderer)
+    return boundingBoxComputation.computeDecoratedBoundingBox(options)
   }
 
   static func computeVisualOverflowRect(_ renderer: RenderLayerModelObjectWrapper)
