@@ -92,8 +92,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   func viewportContainer() -> RenderSVGViewportContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let child = firstChild()
+    if !(child?.isAnonymous() ?? false) {
+      return nil
+    }
+    return child as? RenderSVGViewportContainerWrapper
   }
 
   override func requiresLayer() -> Bool {
