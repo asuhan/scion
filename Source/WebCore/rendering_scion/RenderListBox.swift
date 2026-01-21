@@ -106,6 +106,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
     // Clip against the padding box, to give <option>s and overlay scrollbar some extra space
     // to get painted.

@@ -202,7 +202,62 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     containerLayout.positionChildrenRelativeToContainer()
   }
 
+  // FIXME: Basically a copy of RenderBlock::paint() - ideally one would share this code.
+  // However with LFC on the horizon that investment is useless, we should concentrate
+  // on LFC/SVG integration once the LBSE is upstreamed.
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    // Don't paint, if the context explicitly disabled it.
+    if paintInfo.context().paintingDisabled() && !paintInfo.context().detectingContentfulPaint() {
+      return
+    }
+
+    // An empty viewport disables rendering.
+    if borderBoxRect().isEmpty() {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    // Check if we need to do anything at all.
+    // FIXME: Could eliminate the isDocumentElementRenderer() check if we fix background painting so that the RenderView
+    // paints the root's background.
+    if !isDocumentElementRenderer()
+      && !paintInfo.paintBehavior.contains(.CompositedOverflowScrollContent)
+    {
+      var overflowBox = visualOverflowRect()
+      flipForWritingMode(rect: &overflowBox)
+      overflowBox.moveBy(offset: adjustedPaintOffset)
+      if !overflowBox.intersects(other: paintInfo.rect) {
+        return
+      }
+    }
+
+    let pushedClip = pushContentsClip(paintInfo: &paintInfo, accumulatedOffset: adjustedPaintOffset)
+    paintObject(paintInfo: &paintInfo, paintOffset: adjustedPaintOffset)
+    if pushedClip {
+      popContentsClip(
+        paintInfo: &paintInfo, originalPhase: paintInfo.phase,
+        accumulatedOffset: adjustedPaintOffset
+      )
+    }
+
+    // Our scrollbar widgets paint exactly when we tell them to, so that they work properly with
+    // z-index. We paint after we painted the background/border, so that the scrollbars will
+    // sit above the background/border.
+    if (paintInfo.phase == .BlockBackground || paintInfo.phase == .ChildBlockBackground)
+      && hasNonVisibleOverflow() && layer() != nil && (layer()!.scrollableArea() != nil)
+      && style().usedVisibility() == .Visible && paintInfo.shouldPaintWithinRoot(renderer: self)
+      && !paintInfo.paintRootBackgroundOnly()
+    {
+      layer()!.scrollableArea()!.paintOverflowControls(
+        context: paintInfo.context(), paintOffset: roundedIntPoint(point: adjustedPaintOffset),
+        damageRect: snappedIntRect(rect: paintInfo.rect))
+    }
+  }
+
+  override final func paintObject(
+    paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

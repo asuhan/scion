@@ -868,7 +868,9 @@ class RenderTableWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private final func paintObject(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+  override final func paintObject(
+    paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
+  ) {
     var paintPhase = paintInfo.phase
     if (paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground)
       && hasVisibleBoxDecorations() && style().usedVisibility() == .Visible
