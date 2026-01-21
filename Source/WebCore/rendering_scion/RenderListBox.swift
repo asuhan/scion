@@ -40,8 +40,35 @@ private func itemOffsetForAlignment(
   _ textRun: TextRunWrapper, _ elementStyle: RenderStyleWrapper, _ itemStyle: RenderStyleWrapper,
   _ itemFont: FontCascadeWrapper, _ itemBoundingBox: LayoutRectWrapper
 ) -> LayoutSizeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var actualAlignment = itemStyle.textAlign()
+  // FIXME: Firefox doesn't respect .Justify. Should we?
+  // FIXME: Handle .End here
+  if actualAlignment == .Start || actualAlignment == .Justify {
+    actualAlignment = itemStyle.isLeftToRightDirection() ? .Left : .Right
+  }
+
+  let isHorizontalWritingMode = elementStyle.isHorizontalWritingMode()
+
+  let itemBoundingBoxLogicalWidth =
+    isHorizontalWritingMode ? itemBoundingBox.width() : itemBoundingBox.height()
+  let offset = LayoutSizeWrapper(
+    width: Int32(0), height: Int32(itemFont.metricsOfPrimaryFont().intAscent()))
+  if actualAlignment == .Right || actualAlignment == .WebKitRight {
+    let textWidth = itemFont.width(run: textRun)
+    offset.setWidth(
+      width: itemBoundingBoxLogicalWidth - textWidth - Float32(optionsSpacingInlineStart))
+  } else if actualAlignment == .Center || actualAlignment == .WebKitCenter {
+    let textWidth = itemFont.width(run: textRun)
+    offset.setWidth(width: (itemBoundingBoxLogicalWidth - textWidth) / 2)
+  } else {
+    offset.setWidth(width: optionsSpacingInlineStart)
+  }
+
+  if !isHorizontalWritingMode {
+    return LayoutSizeWrapper(width: -offset.height(), height: offset.width())
+  }
+
+  return offset
 }
 
 // TODO(asuhan): also inherit from ScrollableArea

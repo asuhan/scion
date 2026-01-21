@@ -69,6 +69,8 @@ class LayoutSizeWrapper: Equatable {
 
   func setWidth(width: Float32) { width_ = LayoutUnit(value: width) }
 
+  func setWidth(width: Int32) { width_ = LayoutUnit(value: width) }
+
   func setHeight(height: LayoutUnit) { height_ = height }
 
   func setHeight(height: Float32) { height_ = LayoutUnit(value: height) }

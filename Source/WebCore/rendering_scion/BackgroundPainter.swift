@@ -1102,7 +1102,7 @@ class BackgroundPainter {
         width: tileSize.width().bool()
           ? tileSize.width()
             - fmodf((computedXPosition + left).float(), tileSize.width().float()) : 0)
-      spaceSize.setWidth(width: 0)
+      spaceSize.setWidth(width: Int32(0))
     } else if backgroundRepeatX == .Space && tileSize.width() > 0 {
       if let space = getSpace(areaSize: positioningAreaSize.width(), tileSize: tileSize.width()) {
         let actualWidth = tileSize.width() + space
@@ -1126,7 +1126,7 @@ class BackgroundPainter {
       xOffset = min(xOffset, LayoutUnit(value: 0))
       phase.setWidth(width: -xOffset)
       destinationRect.setWidth(width: tileSize.width() + xOffset)
-      spaceSize.setWidth(width: 0)
+      spaceSize.setWidth(width: Int32(0))
     }
 
     if backgroundRepeatY == .Repeat {
