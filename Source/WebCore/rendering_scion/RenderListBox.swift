@@ -316,8 +316,10 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     var indexOfFirstEnabledOption: Int32 = 0
     for item in selectElement().listItems() {
       if item is HTMLOptionElementWrapper && !item.isDisabledFormControl() {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        selectElement().setActiveSelectionEndIndex(indexOfFirstEnabledOption)
+        rects.append(
+          itemBoundingBoxRect(additionalOffset: additionalOffset, index: indexOfFirstEnabledOption))
+        return
       }
       indexOfFirstEnabledOption += 1
     }
