@@ -6,5 +6,6 @@ target_sources(layout_scion PRIVATE
     StyleChange.swift
     StylePendingResources.swift
     StyleScrollbarState.swift
+    StyleTreeResolver.swift
     StyleUpdate.swift
 )

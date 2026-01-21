@@ -245,8 +245,27 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Nested style recal do not fire post recal callbacks. see webkit.org/b/153767
+    assert(!optionsChanged || Style.postResolutionCallbacksAreSuspended())
+
+    minPreferredLogicalWidth = LayoutUnit(value: 0)
+    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    if style().logicalWidth().isFixed() && style().logicalWidth().value() > 0 {
+      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: style().logicalWidth())
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    }
+
+    computePreferredLogicalWidths(
+      style().logicalMinWidth(), style().logicalMaxWidth(),
+      style().isHorizontalWritingMode()
+        ? horizontalBorderAndPaddingExtent() : verticalBorderAndPaddingExtent())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
@@ -584,6 +603,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     return abs(scrollPosition.y)
   }
 
+  private let optionsChanged = true
   private var scrollToRevealSelectionAfterLayout = false
   private let optionsLogicalWidth: Int32 = 0
 
