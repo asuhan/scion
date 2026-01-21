@@ -98,8 +98,25 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   private func itemBoundingBoxRect(additionalOffset: LayoutPointWrapper, index: Int32)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var x = additionalOffset.x + borderLeft() + paddingLeft()
+    let y = additionalOffset.y + borderTop() + paddingTop()
+
+    if let vBar = verticalScrollbar(), shouldPlaceVerticalScrollbarOnLeft() {
+      x += vBar.occupiedWidth()
+    }
+
+    var itemOffset = itemLogicalHeight() * (index - indexOffset())
+    if style().isFlippedBlocksWritingMode() {
+      itemOffset = contentLogicalHeight() - itemLogicalHeight() - itemOffset
+    }
+
+    if style().isVerticalWritingMode() {
+      return LayoutRectWrapper(
+        x: x + itemOffset, y: y, width: itemLogicalHeight(), height: contentHeight())
+    }
+
+    return LayoutRectWrapper(
+      x: x, y: y + itemOffset, width: contentWidth(), height: itemLogicalHeight())
   }
 
   @discardableResult
@@ -316,6 +333,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func verticalScrollbar() -> Scrollbar? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   final override func useDarkAppearance() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -506,6 +528,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func scrollbarOrientationForWritingMode() -> ScrollbarOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
