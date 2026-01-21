@@ -361,13 +361,19 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func verticalScrollbar() -> Scrollbar? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if scrollbar != nil && scrollbar!.orientation() == .Vertical {
+      return scrollbar
+    }
+
+    return nil
   }
 
   private func horizontalScrollbar() -> Scrollbar? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if scrollbar != nil && scrollbar!.orientation() == .Horizontal {
+      return scrollbar
+    }
+
+    return nil
   }
 
   final override func useDarkAppearance() -> Bool {
