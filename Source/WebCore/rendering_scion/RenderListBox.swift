@@ -210,8 +210,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if oldStyle != nil && oldStyle!.writingMode() != style().writingMode() && scrollbar != nil {
+      setHasScrollbar(scrollbarOrientationForWritingMode())
+    }
   }
 
   override func computeIntrinsicLogicalWidths(
@@ -345,6 +348,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func horizontalScrollbar() -> Scrollbar? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   final override func useDarkAppearance() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -370,6 +378,30 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper,
     _ paintFunction: (PaintInfoWrapper, LayoutPointWrapper, Int32) -> Void
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setHasScrollbar(_ orientation: ScrollbarOrientation) {
+    if verticalScrollbar() != nil && orientation == .Vertical {
+      return
+    }
+
+    if horizontalScrollbar() != nil && orientation == .Horizontal {
+      return
+    }
+
+    destroyScrollbar()
+    scrollbar = createScrollbar(orientation)
+    scrollbar!.styleChanged()
+  }
+
+  private func createScrollbar(_ orientation: ScrollbarOrientation) -> Scrollbar {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func destroyScrollbar() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -555,7 +587,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   private var scrollToRevealSelectionAfterLayout = false
   private let optionsLogicalWidth: Int32 = 0
 
-  private let scrollbar: Scrollbar? = nil
+  private var scrollbar: Scrollbar? = nil
 
   // Note: This is based on item index rather than a pixel offset.
   private var scrollPosition = ScrollPosition()
