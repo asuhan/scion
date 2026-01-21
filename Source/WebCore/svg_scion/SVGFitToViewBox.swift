@@ -1,9 +1,7 @@
 /*
- * Copyright (C) 2004, 2005, 2006, 2019 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2006, 2007, 2008, 2010 Rob Buis <buis@kde.org>
- * Copyright (C) 2007-2022 Apple Inc. All rights reserved.
- * Copyright (C) 2015 Google Inc. All rights reserved.
- * Copyright (C) 2014 Adobe Systems Incorporated. All rights reserved.
+ * Copyright (C) 2004, 2005, 2008 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2004, 2005, 2006, 2007, 2010 Rob Buis <buis@kde.org>
+ * Copyright (C) 2018-2019 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,10 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// TODO(asuhan): also inherit from SVGFitToViewBox and SVGZoomAndPan
-final class SVGSVGElementWrapper: SVGGraphicsElementWrapper {
-  func viewBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+protocol SVGFitToViewBox {
+  func viewBox() -> FloatRectWrapper
 }

@@ -23,9 +23,44 @@
  */
 
 final class RenderSVGRootWrapper: RenderReplacedWrapper {
-  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+  func svgSVGElement() -> SVGSVGElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    assert(!shouldApplySizeContainment())
+
+    // https://www.w3.org/TR/SVG/coords.html#IntrinsicSizing
+    let intrinsicSize = calculateIntrinsicSize()
+    var intrinsicRatio = FloatSize()
+
+    if style().aspectRatioType() == .Ratio {
+      intrinsicRatio = FloatSize.narrowPrecision(
+        width: style().aspectRatioLogicalWidth(), height: style().aspectRatioLogicalHeight())
+      return (intrinsicSize, intrinsicRatio)
+    }
+
+    var intrinsicRatioValue: LayoutSizeWrapper? = nil
+    if !intrinsicSize.isEmpty() {
+      intrinsicRatioValue = LayoutSizeWrapper(
+        width: intrinsicSize.width, height: intrinsicSize.height)
+    } else {
+      let viewBoxSize = svgSVGElement().viewBox().size()
+      if !viewBoxSize.isEmpty() {
+        // The viewBox can only yield an intrinsic ratio, not an intrinsic size.
+        intrinsicRatioValue = LayoutSizeWrapper(
+          width: viewBoxSize.width, height: viewBoxSize.height)
+      }
+    }
+
+    if intrinsicRatioValue != nil {
+      intrinsicRatio = intrinsicRatioValue!.FloatSize()
+    } else if style().aspectRatioType() == .AutoAndRatio {
+      intrinsicRatio = FloatSize.narrowPrecision(
+        width: style().aspectRatioLogicalWidth(), height: style().aspectRatioLogicalHeight())
+    }
+    return (intrinsicSize, intrinsicRatio)
   }
 
   override final func hasIntrinsicAspectRatio() -> Bool {
@@ -73,6 +108,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func updateLayerTransform() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func calculateIntrinsicSize() -> FloatSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
