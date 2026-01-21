@@ -21,4 +21,5 @@
 
 protocol SVGFitToViewBox {
   func viewBox() -> FloatRectWrapper
+  func hasEmptyViewBox() -> Bool
 }

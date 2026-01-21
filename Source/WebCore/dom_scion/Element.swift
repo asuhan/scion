@@ -33,6 +33,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func hasViewBoxAttr() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFontTag() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

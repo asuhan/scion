@@ -352,8 +352,16 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func updateLayerTransform() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateLayerTransform()
+
+    if !hasLayer() {
+      return
+    }
+
+    // An empty viewBox disables the rendering -- dirty the visible descendant status!
+    if svgSVGElement().hasViewBoxAttr() && svgSVGElement().hasEmptyViewBox() {  // TODO(asuhan): replace hasEmptyViewBox with general hasAttribute test
+      layer()!.dirtyVisibleContentStatus()
+    }
   }
 
   private func calculateIntrinsicSize() -> FloatSize {

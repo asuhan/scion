@@ -21,9 +21,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// TODO(asuhan): also inherit from SVGFitToViewBox and SVGZoomAndPan
-final class SVGSVGElementWrapper: SVGGraphicsElementWrapper {
+// TODO(asuhan): also inherit from SVGZoomAndPan
+final class SVGSVGElementWrapper: SVGGraphicsElementWrapper, SVGFitToViewBox {
   func viewBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasEmptyViewBox() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
