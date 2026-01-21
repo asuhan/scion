@@ -353,13 +353,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func verticalScrollbarWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return verticalScrollbar()?.occupiedWidth() ?? 0
   }
 
   override func horizontalScrollbarHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return horizontalScrollbar()?.occupiedHeight() ?? 0
   }
 
   private func verticalScrollbar() -> Scrollbar? {

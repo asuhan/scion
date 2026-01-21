@@ -83,6 +83,11 @@ class Scrollbar: Widget {
     fatalError("Not implemented")
   }
 
+  func occupiedHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setSteps(lineStep: Int32, pageStep: Int32, pixelsPerStep: Int32 = 1) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
