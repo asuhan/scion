@@ -58,4 +58,9 @@ class FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func ownerRenderer() -> RenderWidgetWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

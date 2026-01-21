@@ -29,8 +29,13 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   func isEmbeddedThroughFrameContainingSVGDocument() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If our frame has an owner renderer, we're embedded through eg. object/embed/iframe,
+    // but we only negotiate if we're in an SVG document inside object/embed, not iframe.
+    if !(frame().ownerRenderer()?.isRenderEmbeddedObject() ?? false) || !isDocumentElementRenderer()
+    {
+      return false
+    }
+    return frame().document()!.isSVGDocument()
   }
 
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
