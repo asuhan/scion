@@ -365,8 +365,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func calculateIntrinsicSize() -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FloatSize(
+      width: floatValueForLength(
+        length: svgSVGElement().intrinsicWidth(), maximumValue: LayoutUnit(value: 0)),
+      height: floatValueForLength(
+        length: svgSVGElement().intrinsicHeight(), maximumValue: LayoutUnit(value: 0)))
   }
 
   var inLayout = false

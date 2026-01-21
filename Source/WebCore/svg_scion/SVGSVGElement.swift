@@ -42,4 +42,14 @@ final class SVGSVGElementWrapper: SVGGraphicsElementWrapper, SVGFitToViewBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func intrinsicWidth() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func intrinsicHeight() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
