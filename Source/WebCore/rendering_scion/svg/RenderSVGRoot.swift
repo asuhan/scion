@@ -105,8 +105,10 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func updateLayoutSizeIfNeeded() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let previousSize = size()
+    updateLogicalWidth()
+    updateLogicalHeight()
+    return selfNeedsLayout() || previousSize != size()
   }
 
   override final func computeReplacedLogicalWidth(
