@@ -28,6 +28,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  func isEmbeddedThroughFrameContainingSVGDocument() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
     assert(!shouldApplySizeContainment())
 
@@ -88,8 +93,25 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When we're embedded through SVGImage (border-image/background-image/<html:img>/...) we're forced to resize to a specific size.
+    if !containerSize.isEmpty() {
+      return LayoutUnit(value: containerSize.width)
+    }
+
+    if isEmbeddedThroughFrameContainingSVGDocument() {
+      return containingBlock()!.availableLogicalWidth()
+    }
+
+    // Standalone SVG / SVG embedded via SVGImage (background-image/border-image/etc) / Inline SVG.
+    var result = super.computeReplacedLogicalWidth(shouldComputePreferred: shouldComputePreferred)
+    if svgSVGElement().hasIntrinsicWidth() {
+      return result
+    }
+
+    // Percentage units are not scaled, Length(100, %) resolves to 100% of the unzoomed RenderView content size.
+    // However for SVGs purposes we need to always include zoom in the RenderSVGRoot boundaries.
+    result *= style().usedZoom()
+    return result
   }
 
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
@@ -119,4 +141,6 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
 
   let didTransformToRootUpdate = false
   let isLayoutSizeChanged = false
+
+  let containerSize = IntSize()
 }

@@ -27,4 +27,9 @@ final class SVGSVGElementWrapper: SVGGraphicsElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasIntrinsicWidth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
