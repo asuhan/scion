@@ -94,8 +94,55 @@ struct SVGContainerLayout {
   }
 
   func positionChildrenRelativeToContainer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if positionedChildren.isEmpty {
+      return
+    }
+
+    let verifyPositionedChildRendererExpectation = { (renderer: RenderObjectWrapper) in
+      #if !NDEBUG
+        assert(renderer.isSVGLayerAwareRenderer())  // Pre-condition to enter m_positionedChildren
+        assert(!renderer.isRenderSVGRoot())  // There is only one outermost RenderSVGRoot object
+        assert(!renderer.isRenderSVGInline())  // Inlines are only allowed within a RenderSVGText tree
+
+        if (renderer is RenderSVGModelObjectWrapper) || (renderer is RenderSVGBlockWrapper) {
+          return
+        }
+
+        fatalError("Not reached")
+      #endif
+    }
+
+    let computeContainerLayoutLocation = { () in
+      // The nominal SVG layout location (== flooredLayoutPoint(objectBoundingBoxWithoutTransformsTopLeft), where
+      // objectBoundingBoxWithoutTransforms = union of child boxes, not mapped through their tranforms) is
+      // only meaningful for the children of the RenderSVGRoot. RenderSVGRoot itself is positioned according to
+      // the CSS box model object, where we need to respect border & padding, encoded in the contentBoxLocation().
+      // -> Position all RenderSVGRoot children relative to the contentBoxLocation() to avoid intruding border/padding area.
+      if let svgRoot = container as? RenderSVGRootWrapper {
+        return -svgRoot.contentBoxLocation()
+      }
+
+      // For (inner) RenderSVGViewportContainer nominalSVGLayoutLocation() returns the viewport boundaries,
+      // including the effect of the 'x'/'y' attribute values. Do not subtract the location, otherwise the
+      // effect of the x/y translation is removed.
+      if (container is RenderSVGViewportContainerWrapper) && !container.isAnonymous() {
+        return LayoutPointWrapper()
+      }
+
+      return container.nominalSVGLayoutLocation()
+    }
+
+    // Arrange layout location for all child renderers relative to the container layout location.
+    let parentLayoutLocation = computeContainerLayoutLocation()
+    for child in positionedChildren {
+      verifyPositionedChildRendererExpectation(child)
+
+      let desiredLayoutLocation = toLayoutPoint(
+        size: child.nominalSVGLayoutLocation() - parentLayoutLocation)
+      if child.currentSVGLayoutLocation() != desiredLayoutLocation {
+        child.setCurrentSVGLayoutLocation(desiredLayoutLocation)
+      }
+    }
   }
 
   static func transformToRootChanged(_ ancestor: RenderObjectWrapper?) -> Bool {

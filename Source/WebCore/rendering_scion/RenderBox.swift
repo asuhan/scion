@@ -857,6 +857,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutRectWrapper(location: location, size: size)
   }
 
+  func contentBoxLocation() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // This returns the content area of the box (excluding padding and border). The only difference with contentBoxRect is that computedCSSContentBoxRect
   // does include the intrinsic padding in the content box as this is what some callers expect (like getComputedStyle).
   func computedCSSContentBoxRect() -> LayoutRectWrapper {

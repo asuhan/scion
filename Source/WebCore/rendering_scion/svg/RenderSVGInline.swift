@@ -26,6 +26,16 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  override final func currentSVGLayoutLocation() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func setCurrentSVGLayoutLocation(_ location: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {

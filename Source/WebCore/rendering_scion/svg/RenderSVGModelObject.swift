@@ -50,7 +50,12 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func currentSVGLayoutLocation() -> LayoutPointWrapper {
+  override final func currentSVGLayoutLocation() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func setCurrentSVGLayoutLocation(_ location: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

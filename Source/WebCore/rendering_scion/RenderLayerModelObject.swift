@@ -82,6 +82,16 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  func currentSVGLayoutLocation() -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setCurrentSVGLayoutLocation(_ location: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func svgClipperResourceFromStyle() -> RenderSVGResourceClipperWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
