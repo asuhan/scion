@@ -2697,3 +2697,7 @@ func collapsedBorderStyle(style: BorderStyle) -> BorderStyle {
 func pseudoElementRendererIsNeeded(style: RenderStyleWrapper?) -> Bool {
   return style != nil && style!.display() != .None && style!.contentData() != nil
 }
+
+func isNonVisibleOverflow(_ overflow: Overflow) -> Bool {
+  return overflow == .Hidden || overflow == .Scroll || overflow == .Clip
+}
