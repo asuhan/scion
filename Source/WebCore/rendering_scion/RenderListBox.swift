@@ -136,8 +136,13 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func listIndexIsVisible(index: Int32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let firstIndex = indexOfFirstVisibleItemInsidePaddingBeforeArea ?? indexOffset()
+    let endIndex =
+      indexOfFirstVisibleItemInsidePaddingAfterArea != nil
+      ? indexOfFirstVisibleItemInsidePaddingAfterArea! + numberOfVisibleItemsInPaddingAfter()
+      : indexOffset() + numVisibleItems()
+
+    return index >= firstIndex && index < endIndex
   }
 
   private func size() -> UInt32 {
@@ -554,4 +559,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
 
   // Note: This is based on item index rather than a pixel offset.
   private var scrollPosition = ScrollPosition()
+
+  private var indexOfFirstVisibleItemInsidePaddingBeforeArea: Int32? = nil
+  private var indexOfFirstVisibleItemInsidePaddingAfterArea: Int32? = nil
 }
