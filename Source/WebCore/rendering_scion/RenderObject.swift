@@ -685,6 +685,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: Those belong into a SVG specific base-class for all renderers (see above)
+  // Unfortunately we don't have such a class yet, because it's not possible for all renderers
+  // to inherit from RenderSVGObject -> RenderObject (some need RenderBlock inheritance for instance)
+  func invalidateCachedBoundaries() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Per SVG 1.1 objectBoundingBox ignores clipping, masking, filter effects, opacity and stroke-width.
   // This is used for all computation of objectBoundingBox relative units and by SVGLocatable::getBBox().
   // NOTE: Markers are not specifically ignored here by SVG 1.1 spec, but we ignore them

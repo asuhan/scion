@@ -51,7 +51,15 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      super.styleDidChange(diff: diff, oldStyle: oldStyle)
+      return
+    }
+
+    if diff == .Layout {
+      invalidateCachedBoundaries()
+    }
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    SVGResourcesCache.clientStyleChanged(self, diff, oldStyle: oldStyle, newStyle: style())
   }
 }
