@@ -87,8 +87,7 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func visualOverflowRectEquivalent() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return SVGBoundingBoxComputation.computeVisualOverflowRect(self)
   }
 
   func viewportContainer() -> RenderSVGViewportContainerWrapper? {

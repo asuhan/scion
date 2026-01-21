@@ -51,6 +51,10 @@ struct SVGBoundingBoxComputation: ~Copyable {
   private static let filterBoundingBoxDecoration: DecorationOptions = [
     .OverrideBoxWithFilterBox, .OverrideBoxWithFilterBoxForChildren,
   ]
+  private static let repaintBoundingBoxDecoration: DecorationOptions = [
+    .IncludeFillShape, .IncludeStrokeShape, .IncludeMarkers, .IncludeClippers, .IncludeMaskers,
+    .OverrideBoxWithFilterBox, .CalculateFastRepaintRect,
+  ]
 
   func computeDecoratedBoundingBox(_ options: DecorationOptions, _ boundingBoxValid: inout Bool)
     -> FloatRectWrapper
@@ -93,6 +97,30 @@ struct SVGBoundingBoxComputation: ~Copyable {
   func computeDecoratedBoundingBox(_ options: DecorationOptions) -> FloatRectWrapper {
     var boundingBoxValid = false
     return computeDecoratedBoundingBox(options, &boundingBoxValid)
+  }
+
+  private static func computeDecoratedBoundingBox(
+    _ renderer: RenderLayerModelObjectWrapper, _ options: DecorationOptions
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func computeVisualOverflowRect(_ renderer: RenderLayerModelObjectWrapper)
+    -> LayoutRectWrapper
+  {
+    var options = repaintBoundingBoxDecoration.union([.IncludeOutline, .IgnoreTransformations])
+    if renderer is RenderSVGContainerWrapper {
+      options.update(with: .UseFilterBoxOnEmptyRect)
+    }
+    let repaintBoundingBoxWithoutTransformations = computeDecoratedBoundingBox(renderer, options)
+    if repaintBoundingBoxWithoutTransformations.isEmpty() {
+      return LayoutRectWrapper()
+    }
+
+    var visualOverflowRect = enclosingLayoutRect(rect: repaintBoundingBoxWithoutTransformations)
+    visualOverflowRect.moveBy(offset: -renderer.nominalSVGLayoutLocation())
+    return visualOverflowRect
   }
 
   private func handleShapeOrTextOrInline(
