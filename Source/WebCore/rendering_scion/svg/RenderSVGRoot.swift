@@ -78,12 +78,22 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  private func visualOverflowRectEquivalent() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewportContainer() -> RenderSVGViewportContainerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   override func requiresLayer() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateLayoutSizeIfNeeded() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -137,6 +147,45 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
+    let _ = SetForScope(scopedVariable: &inLayout, newValue: true)
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    // Arbitrary affine transforms are incompatible with RenderLayoutState.
+    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+
+    let repainter = LayoutRepainter(renderer: self)
+
+    // Update layer transform before laying out children (SVG needs access to the transform matrices during layout for on-screen text font-size calculations).
+    // Eventually re-update if the transform reference box, relevant for transform-origin, has changed during layout.
+    //
+    // FIXME: LBSE should not repeat the same mistake -- remove the on-screen text font-size hacks that predate the modern solutions to this.
+    do {
+      assert(!isLayoutSizeChanged)
+      let _ = SetForScope(
+        scopedVariable: &isLayoutSizeChanged, newValue: updateLayoutSizeIfNeeded())
+
+      assert(!didTransformToRootUpdate)
+      let transformUpdater = SVGLayerTransformUpdater(self)
+      let _ = SetForScope(
+        scopedVariable: &didTransformToRootUpdate,
+        newValue: transformUpdater.layerTransformChanged())
+      layoutChildren()
+    }
+
+    clearOverflow()
+    if !shouldApplyViewportClip() {
+      addVisualOverflow(rect: visualOverflowRectEquivalent())
+    }
+    addVisualEffectOverflow()
+
+    invalidateBackgroundObscurationStatus()
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
+  }
+
+  private func layoutChildren() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -156,8 +205,9 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
-  let didTransformToRootUpdate = false
-  let isLayoutSizeChanged = false
+  var inLayout = false
+  var didTransformToRootUpdate = false
+  var isLayoutSizeChanged = false
 
   let containerSize = IntSize()
 }
