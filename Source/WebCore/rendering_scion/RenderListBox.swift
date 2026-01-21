@@ -107,8 +107,41 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().usedVisibility() != .Visible {
+      return
+    }
+
+    if paintInfo.phase == .Foreground {
+      paintItem(
+        paintInfo, paintOffset,
+        { (paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, listItemIndex: Int32) in
+          paintItemForeground(paintInfo, paintOffset, listItemIndex)
+        })
+    }
+
+    // Paint the children.
+    super.paintObject(paintInfo: &paintInfo, paintOffset: paintOffset)
+
+    switch paintInfo.phase {
+    // Depending on whether we have overlay scrollbars they
+    // get rendered in the foreground or background phases
+    case .Foreground:
+      if scrollbar!.isOverlayScrollbar() {
+        paintScrollbar(paintInfo, paintOffset, scrollbar!)
+      }
+    case .BlockBackground:
+      if !scrollbar!.isOverlayScrollbar() {
+        paintScrollbar(paintInfo, paintOffset, scrollbar!)
+      }
+    case .ChildBlockBackground, .ChildBlockBackgrounds:
+      paintItem(
+        paintInfo, paintOffset,
+        { (paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, listItemIndex: Int32) in
+          paintItemBackground(paintInfo, paintOffset, listItemIndex)
+        })
+    default:
+      break
+    }
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
@@ -269,6 +302,14 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     scrollToOffsetWithoutAnimation(orientation: orientation, offset: Float32(offsetIndex))
   }
 
+  private func paintItem(
+    _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper,
+    _ paintFunction: (PaintInfoWrapper, LayoutPointWrapper, Int32) -> Void
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func numberOfVisibleItemsInPaddingBefore() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -303,6 +344,27 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func numItems() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintScrollbar(
+    _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ scrollbar: Scrollbar
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintItemForeground(
+    _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ listIndex: Int32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func paintItemBackground(
+    _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ listIndex: Int32
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
