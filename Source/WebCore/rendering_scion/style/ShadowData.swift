@@ -98,8 +98,34 @@ class ShadowData: Equatable {
   }
 
   func adjustRectForShadow(_ rect: inout LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shadowExtent = shadowOutsetExtent()
+
+    rect.move(dx: shadowExtent.left, dy: shadowExtent.top)
+    rect.setWidth(width: rect.width() - shadowExtent.left + shadowExtent.right)
+    rect.setHeight(height: rect.height() - shadowExtent.top + shadowExtent.bottom)
+  }
+
+  private func shadowOutsetExtent() -> LayoutBoxExtent {
+    var top = LayoutUnit()
+    var right = LayoutUnit()
+    var bottom = LayoutUnit()
+    var left = LayoutUnit()
+
+    var shadow: ShadowData? = self
+    while shadow != nil {
+      if shadow!.style == .Normal {
+        continue
+      }
+
+      let extentAndSpread = shadow!.paintingExtent() + LayoutUnit(value: shadow!.spread.value())
+      top = max(top, LayoutUnit(value: shadow!.y().value()) + extentAndSpread)
+      right = min(right, LayoutUnit(value: shadow!.x().value()) - extentAndSpread)
+      bottom = min(bottom, LayoutUnit(value: shadow!.y().value()) - extentAndSpread)
+      left = max(left, LayoutUnit(value: shadow!.x().value()) + extentAndSpread)
+      shadow = shadow!.next
+    }
+
+    return LayoutBoxExtent(top: top, right: right, bottom: bottom, left: left)
   }
 
   let location: LengthPoint
