@@ -140,8 +140,39 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   func subtreeChildWillBeRemoved(
     child: RenderObjectWrapper, affectedAttributes: inout [SVGTextLayoutAttributes]
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !shouldHandleSubtreeMutations() {
+      return
+    }
+
+    checkLayoutAttributesConsistency(self, layoutAttributes[...])
+
+    // The positioning elements cache depends on the size of each text renderer in the
+    // subtree. If this changes, clear the cache. It's going to be rebuilt below.
+    layoutAttributesBuilder.clearTextPositioningElements()
+    if layoutAttributes.isEmpty || !child.isRenderSVGInlineText() {
+      return
+    }
+
+    // This logic requires that the 'text' child is still inserted in the tree.
+    let text = child as! RenderSVGInlineTextWrapper
+    var stopAfterNext = false
+    var previous: SVGTextLayoutAttributes? = nil
+    var next: SVGTextLayoutAttributes? = nil
+    if !renderTreeBeingDestroyed() {
+      findPreviousAndNextAttributes(self, text, &stopAfterNext, &previous, &next)
+    }
+
+    if previous != nil {
+      affectedAttributes.append(previous!)
+    }
+    if next != nil {
+      affectedAttributes.append(next!)
+    }
+
+    let indexToRemove = layoutAttributes.firstIndex(where: { (element: SVGTextLayoutAttributes) in
+      return element === text.layoutAttributes()
+    })
+    layoutAttributes.remove(at: indexToRemove!)
   }
 
   func subtreeChildWasRemoved(affectedAttributes: [SVGTextLayoutAttributes]) {
