@@ -59,6 +59,9 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  // FIXME: [LBSE] Only needed for legacy SVG engine.
+  override func setNeedsTransformUpdate() { needsTransformUpdate = true }
+
   static func locateRenderSVGTextAncestor(start: RenderObjectWrapper) -> RenderSVGTextWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -238,8 +241,33 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let needsTransformUpdate = { [self] () in
+      if document().settings().layerBasedSVGEngineEnabled() {
+        return false
+      }
+      if diff != .Layout {
+        return false
+      }
+
+      let newStyle = style()
+      if oldStyle == nil {
+        return newStyle.affectsTransform()
+      }
+
+      return
+        (oldStyle!.affectsTransform() != newStyle.affectsTransform()
+        || oldStyle!.transform() != newStyle.transform()
+        || oldStyle!.translate() !== newStyle.translate()
+        || oldStyle!.scale() !== newStyle.scale()
+        || oldStyle!.rotate() !== newStyle.rotate()
+        || oldStyle!.offsetPath() !== newStyle.offsetPath())
+    }
+
+    if needsTransformUpdate() {
+      setNeedsTransformUpdate()
+    }
+
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
   }
 
   private func shouldHandleSubtreeMutations() -> Bool {

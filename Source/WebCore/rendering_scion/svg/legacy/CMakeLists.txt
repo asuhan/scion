@@ -11,5 +11,7 @@ target_sources(layout_scion PRIVATE
     LegacyRenderSVGResourceMarker.swift
     LegacyRenderSVGRoot.swift
     LegacyRenderSVGShape.swift
+    LegacyRenderSVGTransformableContainer.swift
+    LegacyRenderSVGViewportContainer.swift
     SVGResourcesCache.swift
 )

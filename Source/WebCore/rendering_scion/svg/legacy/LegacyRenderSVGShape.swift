@@ -28,6 +28,8 @@
  */
 
 final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
+  override func setNeedsTransformUpdate() { needsTransformUpdate = true }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -45,4 +47,6 @@ final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var needsTransformUpdate = false
 }

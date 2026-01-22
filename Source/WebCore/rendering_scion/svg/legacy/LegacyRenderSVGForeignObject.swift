@@ -35,6 +35,8 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func setNeedsTransformUpdate() { needsTransformUpdate = true }
+
   override func updateLogicalWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -46,4 +48,6 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var needsTransformUpdate = true
 }

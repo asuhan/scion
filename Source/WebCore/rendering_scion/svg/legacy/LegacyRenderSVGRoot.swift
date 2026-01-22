@@ -33,6 +33,8 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func setNeedsTransformUpdate() { needsBoundariesOrTransformUpdate = true }
+
   override final func computeReplacedLogicalWidth(
     shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   )
@@ -79,4 +81,5 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   let isLayoutSizeChanged = false
+  private var needsBoundariesOrTransformUpdate = false
 }

@@ -25,6 +25,8 @@
  */
 
 final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
+  override func setNeedsTransformUpdate() { needsTransformUpdate = true }
+
   override func addFocusRingRects(
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
@@ -42,4 +44,6 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var needsTransformUpdate = true
 }
