@@ -25,6 +25,11 @@
  */
 
 final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
+  func protectedImageElement() -> SVGImageElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   private func updateImageViewport() -> Bool {
     // TODO(asuhan): implement this
@@ -96,6 +101,54 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
   }
 
   private func paintForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+    let context = paintInfo.context()
+    if context.invalidatingImagesWithAsyncDecodes() {
+      if cachedImage()?.isClientWaitingForAsyncDecoding(client: self) ?? false {
+        cachedImage()!.removeAllClientsWaitingForAsyncDecoding()
+      }
+      return
+    }
+
+    if imageResource!.cachedImage() == nil {
+      page().addRelevantUnpaintedObject(
+        object: self, objectPaintRect: visualOverflowRectEquivalent())
+      return
+    }
+
+    let image = imageResource!.image()
+    if image?.isNull() ?? true {
+      page().addRelevantUnpaintedObject(
+        object: self, objectPaintRect: visualOverflowRectEquivalent())
+      return
+    }
+
+    var contentBoxRect = borderBoxRectEquivalent().FloatRect()
+    var replacedContentRect = FloatRectWrapper(
+      x: 0, y: 0, width: image!.width(), height: image!.height())
+    protectedImageElement().preserveAspectRatio().transformRect(
+      destRect: &contentBoxRect, srcRect: &replacedContentRect)
+
+    contentBoxRect.moveBy(delta: paintOffset.FloatPoint())
+
+    let result = paintIntoRect(paintInfo, contentBoxRect, sourceRect: replacedContentRect)
+
+    if cachedImage() != nil {
+      // For now, count images as unpainted if they are still progressively loading. We may want
+      // to refine this in the future to account for the portion of the image that has painted.
+      let visibleRect = intersection(replacedContentRect, contentBoxRect)
+      if cachedImage()!.isLoading() || result == .DidRequestDecoding {
+        page().addRelevantUnpaintedObject(
+          object: self, objectPaintRect: enclosingLayoutRect(rect: visibleRect))
+      } else {
+        page().addRelevantRepaintedObject(
+          object: self, objectPaintRect: enclosingLayoutRect(rect: visibleRect))
+      }
+    }
+  }
+
+  private func paintIntoRect(
+    _ paintInfo: PaintInfoWrapper, _ rect: FloatRectWrapper, sourceRect: FloatRectWrapper
+  ) -> ImageDrawResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -103,6 +156,11 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
   private func bufferForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
     -> Bool
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cachedImage() -> CachedImageWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

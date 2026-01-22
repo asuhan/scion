@@ -242,6 +242,12 @@ struct FloatRectWrapper {
   private var m_size = FloatSize()
 }
 
+func intersection(_ a: FloatRectWrapper, _ b: FloatRectWrapper) -> FloatRectWrapper {
+  var c = a
+  c.intersect(other: b)
+  return c
+}
+
 func enclosingIntRect(rect: FloatRectWrapper) -> IntRect {
   // TODO(asuhan): implement this
   fatalError("Not implemented")

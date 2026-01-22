@@ -60,6 +60,12 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  // Mimic the RenderBox accessors - by sharing the same terminology the painting / hit testing / layout logic is
+  // similar to read compared to non-SVG renderers such as RenderBox & friends.
+  func borderBoxRectEquivalent() -> LayoutRectWrapper {
+    return LayoutRectWrapper(location: LayoutPointWrapper(), size: layoutRect.size())
+  }
+
   func visualOverflowRectEquivalent() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -131,4 +137,6 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let layoutRect = LayoutRectWrapper()
 }

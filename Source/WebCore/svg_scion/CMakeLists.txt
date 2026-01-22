@@ -3,7 +3,9 @@ target_sources(layout_scion PRIVATE
     SVGFilterElement.swift
     SVGFitToViewBox.swift
     SVGGraphicsElement.swift
+    SVGImageElement.swift
     SVGLengthContext.swift
+    SVGPreserveAspectRatioValue.swift
     SVGSVGElement.swift
 )
 add_subdirectory(graphics)
