@@ -97,6 +97,11 @@ class ShadowData: Equatable {
       && a.isWebkitBoxShadow == b.isWebkitBoxShadow
   }
 
+  func adjustRectForShadow(_ rect: inout LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let location: LengthPoint
   let spread: LengthWrapper
   let radius: LengthWrapper  // This is the "blur radius", or twice the standard deviation of the Gaussian blur.
