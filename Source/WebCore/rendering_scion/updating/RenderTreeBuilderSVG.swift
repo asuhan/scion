@@ -128,7 +128,7 @@ extension RenderTreeBuilder {
       textAncestor!.subtreeChildWillBeRemoved(child: child, affectedAttributes: &affectedAttributes)
       let takenChild = builder.detachFromRenderElement(
         parent: parent, child: child, willBeDestroyed: willBeDestroyed)
-      textAncestor!.subtreeChildWasRemoved(affectedAttributes: affectedAttributes)
+      textAncestor!.subtreeChildWasRemoved(affectedAttributes: affectedAttributes[...])
       return takenChild
     }
 
@@ -144,7 +144,7 @@ extension RenderTreeBuilder {
       parent.subtreeChildWillBeRemoved(child: child, affectedAttributes: &affectedAttributes)
       let takenChild = builder.blockBuilder!.detach(
         parent: parent, child: child, willBeDestroyed: willBeDestroyed)
-      parent.subtreeChildWasRemoved(affectedAttributes: affectedAttributes)
+      parent.subtreeChildWasRemoved(affectedAttributes: affectedAttributes[...])
       return takenChild
     }
 

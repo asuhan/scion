@@ -175,9 +175,17 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     layoutAttributes.remove(at: indexToRemove!)
   }
 
-  func subtreeChildWasRemoved(affectedAttributes: [SVGTextLayoutAttributes]) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func subtreeChildWasRemoved(affectedAttributes: ArraySlice<SVGTextLayoutAttributes>) {
+    if !shouldHandleSubtreeMutations() || renderTreeBeingDestroyed() {
+      assert(affectedAttributes.isEmpty)
+      return
+    }
+
+    // This is called immediately after subtreeChildWillBeDestroyed, once the RenderSVGInlineText.willBeDestroyed() method
+    // passes on to the base class, which removes us from the render tree. At this point we can update the layout attributes.
+    for affectedAttribute in affectedAttributes {
+      layoutAttributesBuilder.buildLayoutAttributesForTextRenderer(affectedAttribute.context())
+    }
   }
 
   func updatePositionAndOverflow(_ boundaries: FloatRectWrapper) {
