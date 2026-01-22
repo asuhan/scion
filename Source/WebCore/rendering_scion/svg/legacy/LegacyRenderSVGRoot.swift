@@ -77,4 +77,6 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let isLayoutSizeChanged = false
 }

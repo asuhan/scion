@@ -26,6 +26,13 @@
 
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
+  static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)
+    -> LayoutRepainter.CheckForRepaint
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

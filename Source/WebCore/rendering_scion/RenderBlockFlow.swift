@@ -435,7 +435,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // repopulates the list with any floats that intrude from previous siblings or parents. Floats that were added by
   // descendants are gone when this call completes and will get added back later on after the children have gotten
   // a relayout.
-  private func rebuildFloatingObjectSetFromIntrudingFloats() {
+  func rebuildFloatingObjectSetFromIntrudingFloats() {
     if floatingObjects != nil {
       floatingObjects!.setHorizontalWritingMode(b: isHorizontalWritingMode())
     }
@@ -698,7 +698,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     return true
   }
 
-  private func layoutInlineChildren(
+  func layoutInlineChildren(
     relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit
   ) {

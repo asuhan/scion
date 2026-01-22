@@ -7,5 +7,8 @@ target_sources(layout_scion PRIVATE
     SVGLengthContext.swift
     SVGPreserveAspectRatioValue.swift
     SVGSVGElement.swift
+    SVGTextContentElement.swift
+    SVGTextElement.swift
+    SVGTextPositioningElement.swift
 )
 add_subdirectory(graphics)

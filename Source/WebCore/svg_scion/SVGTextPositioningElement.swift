@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2004, 2005, 2008 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2006, 2007 Rob Buis <buis@kde.org>
+ * Copyright (C) 2004, 2005, 2006, 2007, 2008 Rob Buis <buis@kde.org>
+ * Copyright (C) 2014 Adobe Systems Incorporated. All rights reserved.
  * Copyright (C) 2018-2019 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -19,10 +20,4 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// TODO(asuhan): also inherit from SVGTransformable, SVGTests
-class SVGGraphicsElementWrapper: SVGElementWrapper {
-  func animatedLocalTransform() -> AffineTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+class SVGTextPositioningElementWrapper: SVGTextContentElementWrapper {}

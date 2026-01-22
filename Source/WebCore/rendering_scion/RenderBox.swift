@@ -3575,6 +3575,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  func scrollsOverflow() -> Bool { return scrollsOverflowX() || scrollsOverflowY() }
+
   func scrollsOverflowX() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -31,5 +31,6 @@ target_sources(layout_scion PRIVATE
     SVGLayerTransformUpdater.swift
     SVGRenderSupport.swift
     SVGTextLayoutAttributes.swift
+    SVGTextLayoutAttributesBuilder.swift
 )
 add_subdirectory(legacy)

@@ -30,6 +30,12 @@ class SVGResourcesCache {
     fatalError("Not implemented")
   }
 
+  // Called from all SVG renderers layout() methods.
+  static func clientLayoutChanged(_ renderer: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called from all SVG renderers styleDidChange() methods.
   static func clientStyleChanged(
     _ renderer: RenderElementWrapper, _ diff: StyleDifference, oldStyle: RenderStyleWrapper?,

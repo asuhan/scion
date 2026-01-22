@@ -24,7 +24,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func collectLayoutAttributes(
+  _ text: RenderObjectWrapper?, _ attributes: inout [SVGTextLayoutAttributes]
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func checkLayoutAttributesConsistency(
+  _ text: RenderSVGTextWrapper, _ expectedLayoutAttributes: ArraySlice<SVGTextLayoutAttributes>
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func updateFontInAllDescendants(_ text: RenderSVGTextWrapper) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
+  func textElement() -> SVGTextElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsPositioningValuesUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -57,6 +81,11 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func updatePositionAndOverflow(_ boundaries: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -68,12 +97,161 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isLayerBasedSVGEngineEnabled = { [self] () in
+      return document().settings().layerBasedSVGEngineEnabled()
+    }
+
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    if shouldHandleSubtreeMutations() && !renderTreeBeingDestroyed() {
+      checkLayoutAttributesConsistency(self, layoutAttributes[...])
+    }
+
+    let checkForRepaintOverride =
+      !isLayerBasedSVGEngineEnabled() ? SVGRenderSupport.checkForSVGRepaintDuringLayout(self) : nil
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: checkForRepaintOverride)
+
+    var updateCachedBoundariesInParents = false
+    let previousReferenceBoxRect = transformReferenceBoxRect()
+
+    // We update the transform now because updateScaledFont() needs it, but we do it a second time at the end of the layout,
+    // since the transform reference box may change because of the font change.
+    if !isLayerBasedSVGEngineEnabled() && needsTransformUpdate {
+      localTransform = textElement().animatedLocalTransform()
+      updateCachedBoundariesInParents = true
+    }
+
+    if !everHadLayout() {
+      // When laying out initially, collect all layout attributes, build the character data map,
+      // and propogate resulting SVGLayoutAttributes to all RenderSVGInlineText children in the subtree.
+      assert(layoutAttributes.isEmpty)
+      collectLayoutAttributes(self, &layoutAttributes)
+      updateFontInAllDescendants(self)
+      layoutAttributesBuilder.buildLayoutAttributesForForSubtree(self)
+
+      needsReordering = true
+      needsTextMetricsUpdate = false
+      needsPositioningValuesUpdate = false
+      updateCachedBoundariesInParents = true
+    } else if needsPositioningValuesUpdate {
+      // When the x/y/dx/dy/rotate lists change, recompute the layout attributes, and eventually
+      // update the on-screen font objects as well in all descendants.
+      if needsTextMetricsUpdate {
+        updateFontInAllDescendants(self)
+      }
+      layoutAttributesBuilder.buildLayoutAttributesForForSubtree(self)
+      needsReordering = true
+      needsTextMetricsUpdate = false
+      needsPositioningValuesUpdate = false
+      updateCachedBoundariesInParents = true
+    } else {
+      var isLayoutSizeChanged = false
+      if let legacyRootObject = RenderAncestorIteratorAdapter<LegacyRenderSVGRootWrapper>
+        .lineageOfType(first: self).first()
+      {
+        isLayoutSizeChanged = legacyRootObject.isLayoutSizeChanged
+      } else if let rootObject = RenderAncestorIteratorAdapter<RenderSVGRootWrapper>.lineageOfType(
+        first: self
+      ).first() {
+        isLayoutSizeChanged = rootObject.isLayoutSizeChanged
+      }
+
+      if needsTextMetricsUpdate || isLayoutSizeChanged {
+        // If the root layout size changed (eg. window size changes) or the transform to the root
+        // context has changed then recompute the on-screen font size.
+        updateFontInAllDescendants(self)
+
+        assert(!needsReordering)
+        assert(!needsPositioningValuesUpdate)
+        needsTextMetricsUpdate = false
+        updateCachedBoundariesInParents = true
+      }
+      layoutAttributesBuilder.rebuildMetricsForSubtree(self)
+    }
+
+    checkLayoutAttributesConsistency(self, layoutAttributes[...])
+
+    // Reduced version of RenderBlock::layoutBlock(), which only takes care of SVG text.
+    // All if branches that could cause early exit in RenderBlocks layoutBlock() method are turned into assertions.
+    assert(!isInline())
+    assert(!scrollsOverflow())
+    assert(!hasControlClip())
+    assert(multiColumnFlowForBlockFlow() == nil)
+    assert(positionedObjects() == nil)
+    assert(!isAnonymousBlock())
+    if !isLayerBasedSVGEngineEnabled() {
+      assert(!simplifiedLayout())
+      assert(overflow == nil)
+    }
+
+    // FIXME: We need to find a way to only layout the child boxes, if needed.
+    var layoutChanged = everHadLayout() && selfNeedsLayout()
+    let oldBoundaries = objectBoundingBox()
+
+    if firstChild() == nil {
+      updatePositionAndOverflow(FloatRectWrapper())
+      setChildrenInline(b: true)
+    }
+
+    assert(childrenInline())
+
+    var repaintLogicalTop = LayoutUnit()
+    var repaintLogicalBottom = LayoutUnit()
+    rebuildFloatingObjectSetFromIntrudingFloats()
+    layoutInlineChildren(
+      relayoutChildren: true, repaintLogicalTop: &repaintLogicalTop,
+      repaintLogicalBottom: &repaintLogicalBottom)
+
+    // updatePositionAndOverflow() is called by SVGRootInlineBox, after forceLayoutInlineChildren() ran, before this point is reached.
+    needsReordering = false
+
+    if isLayerBasedSVGEngineEnabled() {
+      updateLayerTransform()
+      updateCachedBoundariesInParents = false  // No longer needed for LBSE.
+      layoutChanged = false  // No longer needed for LBSE.
+    } else {
+      if needsTransformUpdate {
+        if previousReferenceBoxRect != transformReferenceBoxRect() {
+          localTransform = textElement().animatedLocalTransform()
+        }
+        needsTransformUpdate = false
+      }
+      if !updateCachedBoundariesInParents {
+        updateCachedBoundariesInParents = oldBoundaries != objectBoundingBox()
+      }
+    }
+
+    // Invalidate all resources of this client if our layout changed.
+    if layoutChanged {
+      SVGResourcesCache.clientLayoutChanged(self)
+    }
+
+    // If our bounds changed, notify the parents.
+    if updateCachedBoundariesInParents, let parent = parent() {
+      parent.invalidateCachedBoundaries()
+    }
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func shouldHandleSubtreeMutations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var needsReordering = false
+  private var needsPositioningValuesUpdate = false
+  private var needsTransformUpdate = true  // FIXME: [LBSE] Only needed for legacy SVG engine.
+  private var needsTextMetricsUpdate = false
+  private var localTransform = AffineTransform()  // FIXME: [LBSE] Only needed for legacy SVG engine.
+  private let layoutAttributesBuilder = SVGTextLayoutAttributesBuilder()
+  private var layoutAttributes: [SVGTextLayoutAttributes] = []
 }
