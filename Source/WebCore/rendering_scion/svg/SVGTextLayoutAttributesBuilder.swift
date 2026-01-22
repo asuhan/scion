@@ -27,13 +27,26 @@
 // to create the InlineBox tree based on text chunk boundaries & BiDi information.
 // The second layout phase is carried out by SVGTextLayoutEngine.
 
-struct SVGTextLayoutAttributesBuilder {
+struct SVGTextLayoutAttributesBuilder: ~Copyable {
   init() { self.textLength = 0 }
 
   @discardableResult
-  func buildLayoutAttributesForForSubtree(_ textRoot: RenderSVGTextWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func buildLayoutAttributesForForSubtree(_ textRoot: RenderSVGTextWrapper) -> Bool {
+    characterDataMap.removeAll()
+
+    if textPositions.isEmpty {
+      textLength = 0
+      var lastCharacterWasSpace = true
+      collectTextPositioningElements(textRoot, &lastCharacterWasSpace)
+    }
+
+    if textLength == 0 {
+      return false
+    }
+
+    buildCharacterDataMap(textRoot)
+    metricsBuilder.buildMetricsAndLayoutAttributes(textRoot, nil, &characterDataMap)
+    return true
   }
 
   func buildLayoutAttributesForTextRenderer(_ text: RenderSVGInlineTextWrapper) {
@@ -57,5 +70,26 @@ struct SVGTextLayoutAttributesBuilder {
     fatalError("Not implemented")
   }
 
-  private let textLength: UInt32
+  private struct TextPosition {
+    let element: SVGTextPositioningElementWrapper?
+    let start: UInt32
+    let length: UInt32
+  }
+
+  private func buildCharacterDataMap(_ textRoot: RenderSVGTextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func collectTextPositioningElements(
+    _ start: RenderBoxModelObjectWrapper, _ lastCharacterWasSpace: inout Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var textLength: UInt32
+  private var textPositions: [TextPosition] = []
+  private var characterDataMap: SVGCharacterDataMap = [:]
+  private let metricsBuilder = SVGTextMetricsBuilder()
 }

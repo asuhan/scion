@@ -478,7 +478,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   private var needsTransformUpdate = true  // FIXME: [LBSE] Only needed for legacy SVG engine.
   private var needsTextMetricsUpdate = false
   private var localTransform = AffineTransform()  // FIXME: [LBSE] Only needed for legacy SVG engine.
-  private let layoutAttributesBuilder = SVGTextLayoutAttributesBuilder()
+  private var layoutAttributesBuilder = SVGTextLayoutAttributesBuilder()
   private var layoutAttributes: [SVGTextLayoutAttributes] = []
   private var objectBoundingBox = FloatRectWrapper()
 }
