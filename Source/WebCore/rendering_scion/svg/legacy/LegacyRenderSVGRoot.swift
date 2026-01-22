@@ -66,6 +66,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {

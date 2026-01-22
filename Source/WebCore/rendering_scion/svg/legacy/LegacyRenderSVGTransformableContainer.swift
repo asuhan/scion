@@ -21,6 +21,11 @@
  */
 
 final class LegacyRenderSVGTransformableContainer: LegacyRenderSVGContainer {
+  override func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   private var needsTransformUpdate = false

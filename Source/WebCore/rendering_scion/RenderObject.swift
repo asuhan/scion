@@ -711,6 +711,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Returns the full transform mapping from local coordinates to local coords for the parent SVG renderer
+  // This includes any viewport transforms and x/y offsets as well as the transform="" value off the element.
+  func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasIntrinsicAspectRatio() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -90,8 +90,67 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      let relevantPaintPhases: PaintPhase = [
+        .Foreground, .ClippingMask, .Mask, .Outline, .SelfOutline,
+      ]
+      if !shouldPaintSVGRenderer(paintInfo, relevantPaintPhases) {
+        return
+      }
+
+      if paintInfo.phase == .ClippingMask {
+        paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: objectBoundingBox())
+        return
+      }
+
+      let adjustedPaintOffset = paintOffset + location()
+      if paintInfo.phase == .Mask {
+        paintSVGMask(paintInfo, adjustedPaintOffset)
+        return
+      }
+
+      if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+        super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+        return
+      }
+
+      assert(paintInfo.phase == .Foreground)
+      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+
+      let coordinateSystemOriginTranslation = adjustedPaintOffset - nominalSVGLayoutLocation()
+      paintInfo.context().translate(
+        x: coordinateSystemOriginTranslation.width().float(),
+        y: coordinateSystemOriginTranslation.height().float())
+
+      super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+      return
+    }
+
+    if paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    if paintInfo.phase != .ClippingMask && paintInfo.phase != .Mask
+      && paintInfo.phase != .Foreground && paintInfo.phase != .Outline
+      && paintInfo.phase != .SelfOutline
+    {
+      return
+    }
+
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return
+    }
+
+    var blockInfo = paintInfo.deepCopy()
+    let _ = GraphicsContextStateSaver(context: blockInfo.context())
+    blockInfo.applyTransform(localToParentTransform())
+    super.paint(paintInfo: &blockInfo, paintOffset: LayoutPointWrapper())
+
+    // Paint the outlines, if any
+    if paintInfo.phase == .Foreground {
+      blockInfo.phase = .SelfOutline
+      super.paint(paintInfo: &blockInfo, paintOffset: LayoutPointWrapper())
+    }
   }
 
   override func requiresLayer() -> Bool {
@@ -268,6 +327,11 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     }
 
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
+  }
+
+  override func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func shouldHandleSubtreeMutations() -> Bool {

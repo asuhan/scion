@@ -30,6 +30,11 @@
 final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
+  override func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

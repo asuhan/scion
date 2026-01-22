@@ -157,6 +157,11 @@ struct PaintInfoWrapper {
     return n!.enclosingSelfPaintingLayer
   }
 
+  func applyTransform(_ localToAncestorTransform: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func eventRegionContext() -> EventRegionContext? {
     if n == nil {
       // TODO(asuhan): implement this

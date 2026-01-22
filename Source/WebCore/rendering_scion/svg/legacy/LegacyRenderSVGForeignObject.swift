@@ -49,5 +49,10 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var needsTransformUpdate = true
 }
