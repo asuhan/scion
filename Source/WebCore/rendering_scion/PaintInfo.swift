@@ -92,6 +92,11 @@ struct PaintInfoWrapper {
     return n!.context
   }
 
+  func setContext(_ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateSubtreePaintRootForChildren(renderer: RenderObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

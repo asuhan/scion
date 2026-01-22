@@ -259,6 +259,14 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func createAlignedImageBuffer(
+    _ size: FloatSize, _ colorSpace: DestinationColorSpace = DestinationColorSpace.SRGB(),
+    _ renderingMethod: RenderingMethod? = nil
+  ) -> ImageBufferWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func drawImage(
     _ image: ImageWrapper, _ destination: FloatRectWrapper,
@@ -272,6 +280,14 @@ class GraphicsContextWrapper {
     image: ImageWrapper, destination: FloatRectWrapper, source: FloatPoint, tileSize: FloatSize,
     spacing: FloatSize, options: ImagePaintingOptionsWrapper = ImagePaintingOptionsWrapper()
   ) -> ImageDrawResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawImageBuffer(
+    _ image: ImageBufferWrapper, _ destination: FloatRectWrapper,
+    _ imagePaintingOptions: ImagePaintingOptionsWrapper = ImagePaintingOptionsWrapper()
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

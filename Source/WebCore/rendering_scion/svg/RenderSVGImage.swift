@@ -156,8 +156,49 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
   private func bufferForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let destinationContext = paintInfo.context()
+
+    var repaintBoundingBox = borderBoxRectEquivalent()
+    repaintBoundingBox.moveBy(offset: paintOffset)
+
+    // Invalidate an existing buffer if the scale is not correct.
+    let absoluteTransform = destinationContext.getCTM(includeScale: .DefinitelyIncludeDeviceScale)
+
+    let absoluteTargetRect = enclosingIntRect(
+      rect: absoluteTransform.mapRect(rect: repaintBoundingBox.FloatRect()))
+    if bufferedForeground != nil {
+      if absoluteTargetRect.size != bufferedForeground!.backendSize() {
+        bufferedForeground = nil
+      } else {
+        let absoluteTransformBuffer = bufferedForeground!.context().getCTM(
+          includeScale: .DefinitelyIncludeDeviceScale)
+        if absoluteTransformBuffer != absoluteTransform {
+          bufferedForeground = nil
+        }
+      }
+    }
+
+    // Create a new buffer and paint the foreground into it.
+    if bufferedForeground == nil {
+      bufferedForeground = destinationContext.createAlignedImageBuffer(
+        FloatSize(size: expandedIntSize(repaintBoundingBox.size().FloatSize())))
+      if bufferedForeground == nil {
+        return false
+      }
+    }
+
+    let bufferedContext = bufferedForeground!.context()
+    bufferedContext.clearRect(rect: FloatRectWrapper(r: absoluteTargetRect))
+
+    let bufferedInfo = paintInfo.deepCopy()
+    bufferedInfo.setContext(bufferedContext)
+    paintForeground(bufferedInfo, paintOffset)
+
+    destinationContext.concatCTM(transform: absoluteTransform.inverse() ?? AffineTransform())
+    destinationContext.drawImageBuffer(bufferedForeground!, FloatRectWrapper(r: absoluteTargetRect))
+    destinationContext.concatCTM(transform: absoluteTransform)
+
+    return true
   }
 
   private func cachedImage() -> CachedImageWrapper? {
@@ -167,4 +208,5 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
 
   private let objectBoundingBox = FloatRectWrapper()
   private let imageResource: RenderImageResource? = nil
+  private var bufferedForeground: ImageBufferWrapper? = nil
 }

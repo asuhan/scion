@@ -26,6 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
+
 struct FloatSize: Equatable {
   init() {}
 
@@ -119,4 +121,9 @@ struct FloatSize: Equatable {
 
   var width: Float32 = 0
   var height: Float32 = 0
+}
+
+func expandedIntSize(_ p: FloatSize) -> IntSize {
+  return IntSize(
+    width: clampToInteger(value: ceilf(p.width)), height: clampToInteger(value: ceilf(p.height)))
 }

@@ -1,9 +1,5 @@
 /*
- * Copyright (C) 2006 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2007-2023 Apple Inc. All rights reserved.
- * Copyright (C) 2009 Dirk Schulze <krit@webkit.org>
- * Copyright (C) 2010 Torch Mobile (Beijing) Co. Ltd. All rights reserved.
- * Copyright (C) Research In Motion Limited 2011. All rights reserved.
+ * Copyright (C) 2020-2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,19 +23,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ImageBufferWrapper {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func context() -> GraphicsContextWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func backendSize() -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+enum RenderingMethod {
+  case Local
 }

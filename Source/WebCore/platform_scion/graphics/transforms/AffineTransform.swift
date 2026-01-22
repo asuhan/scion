@@ -27,7 +27,7 @@
 
 import Foundation
 
-class AffineTransform {
+class AffineTransform: Equatable {
   init() {
     self.transform = [1, 0, 0, 1, 0, 0]
   }
@@ -80,6 +80,11 @@ class AffineTransform {
     return hypot(transform[2], transform[3])
   }
 
+  func inverse() -> AffineTransform? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isIdentityOrTranslationOrFlipped() -> Bool {
     return transform[0] == 1 && transform[1] == 0 && transform[2] == 0
       && (transform[3] == 1 || transform[3] == -1)
@@ -89,6 +94,10 @@ class AffineTransform {
   static func * (this: AffineTransform, t: AffineTransform) -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func == (_ a: AffineTransform, _ b: AffineTransform) -> Bool {
+    return a.transform == b.transform
   }
 
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
