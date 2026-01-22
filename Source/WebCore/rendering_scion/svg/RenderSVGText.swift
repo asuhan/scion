@@ -31,6 +31,16 @@ private func collectLayoutAttributes(
   fatalError("Not implemented")
 }
 
+@discardableResult
+private func findPreviousAndNextAttributes(
+  _ start: RenderElementWrapper, _ locateElement: RenderSVGInlineTextWrapper,
+  _ stopAfterNext: inout Bool, _ previous: inout SVGTextLayoutAttributes?,
+  _ next: inout SVGTextLayoutAttributes?
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func checkLayoutAttributesConsistency(
   _ text: RenderSVGTextWrapper, _ expectedLayoutAttributes: ArraySlice<SVGTextLayoutAttributes>
 ) {
@@ -68,8 +78,63 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   func subtreeChildWasAdded(child: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(child != nil)
+    if !shouldHandleSubtreeMutations() || renderTreeBeingDestroyed() {
+      return
+    }
+
+    // The positioning elements cache doesn't include the new 'child' yet. Clear the
+    // cache, as the next buildLayoutAttributesForTextRenderer() call rebuilds it.
+    layoutAttributesBuilder.clearTextPositioningElements()
+
+    if !child!.isRenderSVGInlineText() && !child!.isRenderSVGInline() {
+      return
+    }
+
+    // Detect changes in layout attributes and only measure those text parts that have changed!
+    var newLayoutAttributes: [SVGTextLayoutAttributes] = []
+    collectLayoutAttributes(self, &newLayoutAttributes)
+    if newLayoutAttributes.isEmpty {
+      assert(layoutAttributes.isEmpty)
+      return
+    }
+
+    // Compare layoutAttributes with newLayoutAttributes to figure out which attribute got added.
+    var attributes_: SVGTextLayoutAttributes? = nil
+    for attributes in newLayoutAttributes {
+      attributes_ = attributes
+      if layoutAttributes.contains(where: { (element: SVGTextLayoutAttributes) in
+        return element === attributes
+      }) {
+        continue
+      }
+      // Every time this is invoked, there's only a single new entry in the newLayoutAttributes list, compared to the old in layoutAttributes.
+      var stopAfterNext = false
+      var previous: SVGTextLayoutAttributes? = nil
+      var next: SVGTextLayoutAttributes? = nil
+      findPreviousAndNextAttributes(self, attributes.context(), &stopAfterNext, &previous, &next)
+
+      if previous != nil {
+        layoutAttributesBuilder.buildLayoutAttributesForTextRenderer(previous!.context())
+      }
+      layoutAttributesBuilder.buildLayoutAttributesForTextRenderer(attributes.context())
+      if next != nil {
+        layoutAttributesBuilder.buildLayoutAttributesForTextRenderer(next!.context())
+      }
+      break
+    }
+
+    #if !NDEBUG
+      // Verify that layoutAttributes only differs by a maximum of one entry.
+      for newAttr in newLayoutAttributes {
+        assert(
+          layoutAttributes.contains(where: { (element: SVGTextLayoutAttributes) in
+            return element === newAttr
+          }) || newAttr === attributes_)
+      }
+    #endif
+
+    layoutAttributes = newLayoutAttributes
   }
 
   func subtreeChildWillBeRemoved(

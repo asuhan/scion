@@ -36,7 +36,18 @@ struct SVGTextLayoutAttributesBuilder {
     fatalError("Not implemented")
   }
 
+  func buildLayoutAttributesForTextRenderer(_ text: RenderSVGInlineTextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rebuildMetricsForSubtree(_ text: RenderSVGTextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Invoked whenever the underlying DOM tree changes, so that m_textPositions is rebuild.
+  func clearTextPositioningElements() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

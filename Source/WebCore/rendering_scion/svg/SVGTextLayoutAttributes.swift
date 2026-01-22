@@ -19,4 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGTextLayoutAttributes {}
+class SVGTextLayoutAttributes {
+  func context() -> RenderSVGInlineTextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
