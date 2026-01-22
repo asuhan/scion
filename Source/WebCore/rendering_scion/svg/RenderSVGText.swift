@@ -465,8 +465,12 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   private func shouldHandleSubtreeMutations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if beingDestroyed() || !everHadLayout() {
+      assert(layoutAttributes.isEmpty)
+      assert(layoutAttributesBuilder.numberOfTextPositioningElements() == 0)
+      return false
+    }
+    return true
   }
 
   private var needsReordering = false

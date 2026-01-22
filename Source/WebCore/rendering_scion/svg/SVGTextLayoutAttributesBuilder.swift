@@ -52,5 +52,10 @@ struct SVGTextLayoutAttributesBuilder {
     fatalError("Not implemented")
   }
 
+  func numberOfTextPositioningElements() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let textLength: UInt32
 }
