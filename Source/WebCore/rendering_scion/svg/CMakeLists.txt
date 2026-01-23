@@ -29,6 +29,7 @@ target_sources(layout_scion PRIVATE
     SVGContainerLayout.swift
     SVGLayerTransformComputation.swift
     SVGLayerTransformUpdater.swift
+    SVGPaintServerHandling.swift
     SVGRenderSupport.swift
     SVGTextLayoutAttributes.swift
     SVGTextLayoutAttributesBuilder.swift

@@ -40,4 +40,9 @@ final class RenderSVGEllipse: RenderSVGShapeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func fillShape(_ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

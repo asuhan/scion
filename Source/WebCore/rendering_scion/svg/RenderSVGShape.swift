@@ -34,6 +34,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func fillShape(_ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderingDisabled() -> Bool { fatalError("Not reached") }
 
   func approximateStrokeBoundingBox() -> FloatRectWrapper {
@@ -124,8 +129,10 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   }
 
   private func fillShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let paintServerHandling = SVGPaintServerHandling(context)
+    if paintServerHandling.preparePaintOperation(.Fill, self, style) {
+      fillShape(context)
+    }
   }
 
   private func strokeShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
