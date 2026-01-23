@@ -56,7 +56,7 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
 
   @discardableResult
   mutating func buildLayoutAttributesForForSubtree(_ textRoot: RenderSVGTextWrapper) -> Bool {
-    characterDataMap.removeAll()
+    characterDataMap.m.removeAll()
 
     if textPositions.isEmpty {
       textLength = 0
@@ -69,7 +69,7 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     }
 
     buildCharacterDataMap(textRoot)
-    metricsBuilder.buildMetricsAndLayoutAttributes(textRoot, nil, &characterDataMap)
+    metricsBuilder.buildMetricsAndLayoutAttributes(textRoot, nil, characterDataMap)
     return true
   }
 
@@ -79,7 +79,7 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     }
 
     if textPositions.isEmpty {
-      characterDataMap.removeAll()
+      characterDataMap.m.removeAll()
 
       textLength = 0
       var lastCharacterWasSpace = true
@@ -92,7 +92,7 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
       buildCharacterDataMap(textRoot)
     }
 
-    metricsBuilder.buildMetricsAndLayoutAttributes(textRoot, text, &characterDataMap)
+    metricsBuilder.buildMetricsAndLayoutAttributes(textRoot, text, characterDataMap)
   }
 
   func rebuildMetricsForSubtree(_ text: RenderSVGTextWrapper) {
@@ -134,12 +134,12 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     fillCharacterDataMap(wholeTextPosition)
 
     // Handle x/y default attributes.
-    var characterData = characterDataMap[1]
+    var characterData = characterDataMap.m[1]
     if characterData == nil {
       var data = SVGCharacterData()
       data.x = 0
       data.y = 0
-      characterDataMap[1] = data
+      characterDataMap.m[1] = data
     } else {
       if SVGTextLayoutAttributes.isEmptyValue(characterData!.x) {
         characterData!.x = 0
@@ -147,7 +147,7 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
       if SVGTextLayoutAttributes.isEmptyValue(characterData!.y) {
         characterData!.y = 0
       }
-      characterDataMap[1] = characterData!
+      characterDataMap.m[1] = characterData!
     }
 
     // Fill character data map using child text positioning elements in top-down order.
@@ -194,8 +194,12 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     fatalError("Not implemented")
   }
 
+  class SVGCharacterDataMapRef {
+    var m: SVGCharacterDataMap = [:]
+  }
+
   private var textLength: UInt32
   private var textPositions: [TextPosition] = []
-  private var characterDataMap: SVGCharacterDataMap = [:]
+  private var characterDataMap: SVGCharacterDataMapRef = SVGCharacterDataMapRef()
   private let metricsBuilder = SVGTextMetricsBuilder()
 }
