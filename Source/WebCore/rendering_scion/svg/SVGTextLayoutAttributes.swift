@@ -31,10 +31,31 @@ struct SVGCharacterData {
 
 typealias SVGCharacterDataMap = [UInt32: SVGCharacterData]
 
+class SVGTextMetricsArrayRef {
+  init(_ a: [SVGTextMetrics]) { self.a = a }
+
+  var a: [SVGTextMetrics]
+}
+
 class SVGTextLayoutAttributes {
   static func isEmptyValue(_ value: Float32) -> Bool { return value.isNaN }
 
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func context() -> RenderSVGInlineTextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func characterDataMap() -> SVGTextLayoutAttributesBuilder.SVGCharacterDataMapRef {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func textMetricsValues() -> SVGTextMetricsArrayRef {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

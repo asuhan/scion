@@ -18,7 +18,7 @@
  */
 
 struct MeasureTextData {
-  let allCharactersMap: SVGTextLayoutAttributesBuilder.SVGCharacterDataMapRef
+  let allCharactersMap: SVGTextLayoutAttributesBuilder.SVGCharacterDataMapRef?
   var processRenderer = false
 }
 
@@ -34,6 +34,11 @@ struct SVGTextMetricsBuilder {
   ) {
     let data = MeasureTextData(allCharactersMap: allCharactersMap)
     walkTree(textRoot, stopAtLeaf, data)
+  }
+
+  private func initializeMeasurementWithTextRenderer(_ text: RenderSVGInlineTextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func walkTree(
@@ -66,7 +71,74 @@ struct SVGTextMetricsBuilder {
   private func measureTextRenderer(
     _ text: RenderSVGInlineTextWrapper, _ data: MeasureTextData, _ state: (UInt32, UChar)
   ) -> (UInt32, UChar) {
+    var (valueListPosition, lastCharacter) = state
+    let attributes = text.layoutAttributes()
+    let textMetricsValues = attributes.textMetricsValues()
+    if data.processRenderer {
+      if data.allCharactersMap != nil {
+        attributes.clear()
+      } else {
+        textMetricsValues.a.removeAll()
+      }
+    }
+
+    initializeMeasurementWithTextRenderer(text)
+
+    let scaledFont = text.scaledFont()
+    let preserveWhiteSpace = text.style().whiteSpaceCollapse() == .Preserve
+    if canUseSimplifiedTextMeasuring && data.processRenderer {
+      // If we are not specifying specific configuration for characters, data.allCharactersMap has only 1 entry for default case.
+      // This is extremely common, and that's why we crafted a fast path here.
+      // FIXME: For any cases, we are handling one character by one character in SVGTextMetrics. But many texts do not have
+      // characterDataMap. We should handle multiple characters in one SVGTextMetrics. This also makes RTL work.
+      // FIXME: This function is called even though width information is not changed at all. RenderSVGText / RenderSVGInlineText
+      // should track the potential changes to width etc. and invoke this function only when it is actually changed.
+      if data.allCharactersMap != nil && run!.direction() == .LTR
+        && data.allCharactersMap!.m.count == 1
+      {
+        let defaultPosition: UInt32 = 1
+        let characterData = data.allCharactersMap!.m[defaultPosition]!  // "1" is the default value and always exists.
+
+        let view = run!.text()
+        let length = view.length()
+        var skippedCharacters: UInt32 = 0
+        let scalingFactor = text.scalingFactor()
+        assert(scalingFactor != 0)
+        let scaledHeight = scaledFont.metricsOfPrimaryFont().height() / scalingFactor
+
+        // canUseSimplifiedTextMeasuring ensures that this does not include surrogate pairs. So we do not need to consider about them.
+        for i in 0..<length {
+          let currentCharacter = view.characterAt(index: i)
+          assert(!UTF16.isLeadSurrogate(currentCharacter))
+          if currentCharacter == CharacterNames.Unicode.space && !preserveWhiteSpace
+            && (lastCharacter == 0 || lastCharacter == CharacterNames.Unicode.space)
+          {
+            if data.processRenderer {
+              textMetricsValues.a.append(SVGTextMetrics(.SkippedSpaceMetrics))
+            }
+            skippedCharacters += 1
+            continue
+          }
+
+          if (valueListPosition + i - skippedCharacters + 1) == defaultPosition {
+            attributes.characterDataMap().m[i + 1] = characterData
+          }
+
+          let width = scaledFont.widthForTextUsingSimplifiedMeasuring(
+            text: view.substring(start: i, length: 1), textDirection: .LTR)
+          let scaledWidth = width / scalingFactor
+          textMetricsValues.a.append(SVGTextMetrics(1, scaledWidth, scaledHeight))
+          lastCharacter = currentCharacter
+        }
+
+        return (valueListPosition + length - skippedCharacters, lastCharacter)
+      }
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let run: TextRunWrapper? = nil
+  private let canUseSimplifiedTextMeasuring = false
 }

@@ -28,6 +28,16 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  func scalingFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scaledFont() -> FontCascadeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

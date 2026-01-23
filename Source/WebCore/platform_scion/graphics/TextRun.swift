@@ -85,6 +85,11 @@ class TextRunWrapper {
     self.m_size = size
   }
 
+  func direction() -> TextDirection {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rtl() -> Bool {
     assert(self.p != nil)
     return wk_interop.TextRun_rtl(self.p!)
