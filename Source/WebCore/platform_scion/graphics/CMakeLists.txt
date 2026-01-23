@@ -64,6 +64,7 @@ target_sources(layout_scion PRIVATE
     TextIterator.swift
     TextRun.swift
     TiledBacking.swift
+    WidthIterator.swift
     WindRule.swift
 )
 

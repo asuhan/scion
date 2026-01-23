@@ -28,7 +28,7 @@ struct SVGTextMetricsBuilder {
     fatalError("Not implemented")
   }
 
-  func buildMetricsAndLayoutAttributes(
+  mutating func buildMetricsAndLayoutAttributes(
     _ textRoot: RenderSVGTextWrapper, _ stopAtLeaf: RenderSVGInlineTextWrapper?,
     _ allCharactersMap: SVGTextLayoutAttributesBuilder.SVGCharacterDataMapRef
   ) {
@@ -36,12 +36,17 @@ struct SVGTextMetricsBuilder {
     walkTree(textRoot, stopAtLeaf, data)
   }
 
+  private func advance() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func initializeMeasurementWithTextRenderer(_ text: RenderSVGInlineTextWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func walkTree(
+  private mutating func walkTree(
     _ start: RenderElementWrapper, _ stopAtLeaf: RenderSVGInlineTextWrapper?,
     _ data: MeasureTextData
   ) {
@@ -68,7 +73,7 @@ struct SVGTextMetricsBuilder {
     }
   }
 
-  private func measureTextRenderer(
+  private mutating func measureTextRenderer(
     _ text: RenderSVGInlineTextWrapper, _ data: MeasureTextData, _ state: (UInt32, UChar)
   ) -> (UInt32, UChar) {
     var (valueListPosition, lastCharacter) = state
@@ -135,10 +140,57 @@ struct SVGTextMetricsBuilder {
       }
     }
 
+    if !isComplexText {
+      simpleWidthIterator = WidthIteratorWrapper(scaledFont, run!)
+    }
+
+    var surrogatePairCharacters: UInt32 = 0
+    var skippedCharacters: UInt32 = 0
+    while advance() {
+      let currentCharacter = run![textPosition]
+      if currentCharacter == CharacterNames.Unicode.space && !preserveWhiteSpace
+        && (lastCharacter == 0 || lastCharacter == CharacterNames.Unicode.space)
+      {
+        if data.processRenderer {
+          textMetricsValues.a.append(SVGTextMetrics(.SkippedSpaceMetrics))
+        }
+        skippedCharacters += currentMetrics.length
+        continue
+      }
+
+      if data.processRenderer {
+        if data.allCharactersMap != nil {
+          if let characterData = data.allCharactersMap!.m[
+            valueListPosition + textPosition - skippedCharacters - surrogatePairCharacters + 1]
+          {
+            attributes.characterDataMap().m[textPosition + 1] = characterData
+          }
+        }
+        textMetricsValues.a.append(currentMetrics)
+      }
+
+      if data.allCharactersMap != nil && currentCharacterStartsSurrogatePair() {
+        surrogatePairCharacters += 1
+      }
+
+      lastCharacter = currentCharacter
+    }
+
+    simpleWidthIterator = nil
+    return (valueListPosition + textPosition - skippedCharacters, lastCharacter)
+  }
+
+  private func currentCharacterStartsSurrogatePair() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private let run: TextRunWrapper? = nil
+  private let textPosition: UInt32 = 0
+  private let isComplexText = false
   private let canUseSimplifiedTextMeasuring = false
+  private let currentMetrics = SVGTextMetrics()
+
+  // Simple text only.
+  private var simpleWidthIterator: WidthIteratorWrapper? = nil
 }

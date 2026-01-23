@@ -1,5 +1,6 @@
 /*
- * Copyright (C) Research In Motion Limited 2010-2012. All rights reserved.
+ * Copyright (C) 2003-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2008 Holger Hans Peter Freyther
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,28 +16,12 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
+ *
  */
 
-struct SVGTextMetrics {
-  enum MetricsType {
-    case SkippedSpaceMetrics
+class WidthIteratorWrapper {
+  init(_ font: FontCascadeWrapper, _ run: TextRunWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
-
-  init() {
-    self.init(0, 0, 0)
-  }
-
-  init(_ metricsType: MetricsType) {
-    self.init(1, 0, 0)
-  }
-
-  init(_ length: UInt32, _ scaledWidth: Float32, _ scaledHeight: Float32) {
-    self.width = scaledWidth
-    self.height = scaledHeight
-    self.length = length
-  }
-
-  private let width: Float32
-  private let height: Float32
-  let length: UInt32
 }

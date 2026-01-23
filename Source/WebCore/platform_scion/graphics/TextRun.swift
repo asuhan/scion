@@ -56,6 +56,11 @@ class TextRunWrapper {
     fatalError("Not implemented")
   }
 
+  subscript(_ i: UInt32) -> UChar {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func span8() -> CharSpanWrapper<LChar> {
     assert(self.p != nil)
     return CharSpanWrapper<LChar>(p: wk_interop.TextRun_span8(self.p))

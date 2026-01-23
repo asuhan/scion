@@ -201,5 +201,5 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
   private var textLength: UInt32
   private var textPositions: [TextPosition] = []
   private var characterDataMap: SVGCharacterDataMapRef = SVGCharacterDataMapRef()
-  private let metricsBuilder = SVGTextMetricsBuilder()
+  private var metricsBuilder = SVGTextMetricsBuilder()
 }
