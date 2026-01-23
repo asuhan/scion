@@ -41,9 +41,23 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func updateShapeFromElement() { fatalError("Not reached") }
+
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+
+    let repainter = LayoutRepainter(renderer: self)
+    if needsShapeUpdate {
+      updateShapeFromElement()
+
+      needsShapeUpdate = false
+      setCurrentSVGLayoutRect(enclosingLayoutRect(rect: fillBoundingBox))
+    }
+
+    updateLayerTransform()
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -55,4 +69,7 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let fillBoundingBox = FloatRectWrapper()
+  private var needsShapeUpdate = true
 }

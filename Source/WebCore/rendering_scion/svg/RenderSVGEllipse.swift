@@ -26,6 +26,11 @@
  */
 
 final class RenderSVGEllipse: RenderSVGShapeWrapper {
+  override func updateShapeFromElement() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func isRenderingDisabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
