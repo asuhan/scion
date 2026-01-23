@@ -33,6 +33,13 @@ class SVGRenderSupport {
     fatalError("Not implemented")
   }
 
+  static func calculateApproximateStrokeBoundingBox(_ renderer: RenderElementWrapper)
+    -> FloatRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

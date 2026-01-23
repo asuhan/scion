@@ -29,6 +29,16 @@
  */
 
 class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
+  enum ShapeType {
+    case Empty
+    case Path
+    case Line
+    case Rectangle
+    case RoundedRectangle
+    case Ellipse
+    case Circle
+  }
+
   func setNeedsShapeUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -42,8 +52,15 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   func isRenderingDisabled() -> Bool { fatalError("Not reached") }
 
   func approximateStrokeBoundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shapeType == .Empty {
+      return FloatRectWrapper()
+    }
+    if m_approximateStrokeBoundingBox == nil {
+      // Initialize m_approximateStrokeBoundingBox before calling calculateApproximateStrokeBoundingBox, since recursively referenced markers can cause us to re-enter here.
+      m_approximateStrokeBoundingBox = FloatRectWrapper()
+      m_approximateStrokeBoundingBox = calculateApproximateStrokeBoundingBox()
+    }
+    return m_approximateStrokeBoundingBox!
   }
 
   func nonScalingStrokeTransform() -> AffineTransform {
@@ -183,6 +200,13 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func calculateApproximateStrokeBoundingBox() -> FloatRectWrapper {
+    return m_strokeBoundingBox ?? SVGRenderSupport.calculateApproximateStrokeBoundingBox(self)
+  }
+
   private let fillBoundingBox = FloatRectWrapper()
+  private let m_strokeBoundingBox: FloatRectWrapper? = nil
+  private var m_approximateStrokeBoundingBox: FloatRectWrapper? = nil
   private var needsShapeUpdate = true
+  private let shapeType: ShapeType = .Empty
 }
