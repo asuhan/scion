@@ -27,11 +27,28 @@
 // to create the InlineBox tree based on text chunk boundaries & BiDi information.
 // The second layout phase is carried out by SVGTextLayoutEngine.
 
+private let space = UChar(Character(" ").asciiValue!)
+
 private func processRenderSVGInlineText(
   _ text: RenderSVGInlineTextWrapper, _ atCharacter: inout UInt32, lastCharacterWasSpace: inout Bool
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let string = text.text()
+  let length = string.length()
+  if text.style().whiteSpaceCollapse() == .Preserve {
+    atCharacter += length
+    return
+  }
+
+  // FIXME: This is not a complete whitespace collapsing implementation; it doesn't handle newlines or tabs.
+  for i in 0..<length {
+    let character = string[i]
+    if character == space && lastCharacterWasSpace {
+      continue
+    }
+
+    lastCharacterWasSpace = character == space
+    atCharacter += 1
+  }
 }
 
 struct SVGTextLayoutAttributesBuilder: ~Copyable {
