@@ -51,6 +51,16 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
 
   func isRenderingDisabled() -> Bool { fatalError("Not reached") }
 
+  func hasPath() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func path() -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func approximateStrokeBoundingBox() -> FloatRectWrapper {
     if shapeType == .Empty {
       return FloatRectWrapper()
@@ -71,8 +81,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   func updateShapeFromElement() { fatalError("Not reached") }
 
   func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This function should never be called before assigning a new Path to m_path.
+    // But this bug can happen if this renderer was created and its layout was not
+    // done before painting. Assert this did not happen but do not crash.
+    assert(hasPath())
+    return !hasPath() || path().isEmpty()
   }
 
   func hasNonScalingStroke() -> Bool {
