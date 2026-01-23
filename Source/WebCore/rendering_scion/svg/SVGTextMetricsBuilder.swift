@@ -246,8 +246,8 @@ struct SVGTextMetricsBuilder {
   }
 
   private func currentCharacterStartsSurrogatePair() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return UTF16.isLeadSurrogate(run[textPosition]) && (textPosition + 1) < run.length()
+      && UTF16.isTrailSurrogate(run[textPosition + 1])
   }
 
   private var text: RenderSVGInlineTextWrapper?
