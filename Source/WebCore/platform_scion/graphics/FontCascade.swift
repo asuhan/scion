@@ -243,6 +243,18 @@ class FontCascadeWrapper {
     return (UInt64(raw.count), raw.isAfterExpansion)
   }
 
+  enum CodePath {
+    case Auto
+    case Simple
+    case Complex
+    case SimpleWithGlyphOverflow
+  }
+
+  func codePath(_ run: TextRunWrapper, from: UInt32? = nil, to: UInt32? = nil) -> CodePath {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fontSelector() -> FontSelectorWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

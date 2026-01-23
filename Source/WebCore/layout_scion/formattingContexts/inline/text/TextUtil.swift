@@ -590,4 +590,12 @@ class TextUtil {
       inlineTextItem: inlineTextItem, fontCascade: style.fontCascade(), from: trailingPosition,
       to: trailingPosition + 1, contentLogicalLeft: 0)
   }
+
+  static func canUseSimplifiedTextMeasuring(
+    _ textContent: StringWrapperView, _ fontCascade: FontCascadeWrapper,
+    _ whitespaceIsCollapsed: Bool, _ firstLineStyle: RenderStyleWrapper?
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

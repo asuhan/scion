@@ -48,6 +48,13 @@ struct SVGTextMetrics {
     fatalError("Not implemented")
   }
 
+  static func constructTextRun(
+    _ text: RenderSVGInlineTextWrapper, _ position: UInt32 = 0, _ length: UInt32 = UInt32.max
+  ) -> TextRunWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var width: Float32
   private let height: Float32
   let length: UInt32

@@ -84,9 +84,29 @@ struct SVGTextMetricsBuilder {
     totalWidth = complexStartToCurrentMetrics.width
   }
 
-  private func initializeMeasurementWithTextRenderer(_ text: RenderSVGInlineTextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func initializeMeasurementWithTextRenderer(_ text: RenderSVGInlineTextWrapper) {
+    self.text = text
+    textPosition = 0
+    currentMetrics = SVGTextMetrics()
+    complexStartToCurrentMetrics = SVGTextMetrics()
+    totalWidth = 0
+
+    let scaledFont = text.scaledFont()
+    run = SVGTextMetrics.constructTextRun(text)
+    isComplexText = scaledFont.codePath(run!) == .Complex
+
+    canUseSimplifiedTextMeasuring = false
+    if !isComplexText {
+      if let cachedValue = text.canUseSimplifiedTextMeasuring() {
+        canUseSimplifiedTextMeasuring = cachedValue
+      } else {
+        // Currently SVG implementation does not support first-line, so we always pass nullptr for firstLineStyle.
+        // When supporting first-line, we also need to update firstLineStyle's FontCascade to be aligned with scaledFont in RenderSVGInlineText.
+        canUseSimplifiedTextMeasuring = TextUtil.canUseSimplifiedTextMeasuring(
+          run!.text(), scaledFont, text.style().collapseWhiteSpace(), nil)
+        text.setCanUseSimplifiedTextMeasuring(canUseSimplifiedTextMeasuring)
+      }
+    }
   }
 
   private mutating func walkTree(
@@ -228,11 +248,11 @@ struct SVGTextMetricsBuilder {
     fatalError("Not implemented")
   }
 
-  private let text: RenderSVGInlineTextWrapper?
-  private let run: TextRunWrapper? = nil
+  private var text: RenderSVGInlineTextWrapper?
+  private var run: TextRunWrapper? = nil
   private var textPosition: UInt32 = 0
-  private let isComplexText = false
-  private let canUseSimplifiedTextMeasuring = false
+  private var isComplexText = false
+  private var canUseSimplifiedTextMeasuring = false
   private var currentMetrics = SVGTextMetrics()
   private var totalWidth: Float32
 

@@ -213,6 +213,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setCanUseSimplifiedTextMeasuring(_ canUseSimplifiedTextMeasuring: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canUseSimplifiedTextMeasuring() -> Bool? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
