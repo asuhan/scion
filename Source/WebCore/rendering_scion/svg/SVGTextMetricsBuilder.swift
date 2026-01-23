@@ -24,8 +24,10 @@ struct MeasureTextData {
 
 struct SVGTextMetricsBuilder {
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    run = TextRunWrapper(stringView: StringWrapperView())
+    textPosition = 0
+    isComplexText = false
+    totalWidth = 0
   }
 
   mutating func buildMetricsAndLayoutAttributes(
@@ -38,7 +40,7 @@ struct SVGTextMetricsBuilder {
 
   private mutating func advance() -> Bool {
     textPosition += currentMetrics.length
-    if textPosition >= run!.length() {
+    if textPosition >= run.length() {
       return false
     }
 
@@ -93,7 +95,7 @@ struct SVGTextMetricsBuilder {
 
     let scaledFont = text.scaledFont()
     run = SVGTextMetrics.constructTextRun(text)
-    isComplexText = scaledFont.codePath(run!) == .Complex
+    isComplexText = scaledFont.codePath(run) == .Complex
 
     canUseSimplifiedTextMeasuring = false
     if !isComplexText {
@@ -103,7 +105,7 @@ struct SVGTextMetricsBuilder {
         // Currently SVG implementation does not support first-line, so we always pass nullptr for firstLineStyle.
         // When supporting first-line, we also need to update firstLineStyle's FontCascade to be aligned with scaledFont in RenderSVGInlineText.
         canUseSimplifiedTextMeasuring = TextUtil.canUseSimplifiedTextMeasuring(
-          run!.text(), scaledFont, text.style().collapseWhiteSpace(), nil)
+          run.text(), scaledFont, text.style().collapseWhiteSpace(), nil)
         text.setCanUseSimplifiedTextMeasuring(canUseSimplifiedTextMeasuring)
       }
     }
@@ -161,13 +163,13 @@ struct SVGTextMetricsBuilder {
       // characterDataMap. We should handle multiple characters in one SVGTextMetrics. This also makes RTL work.
       // FIXME: This function is called even though width information is not changed at all. RenderSVGText / RenderSVGInlineText
       // should track the potential changes to width etc. and invoke this function only when it is actually changed.
-      if data.allCharactersMap != nil && run!.direction() == .LTR
+      if data.allCharactersMap != nil && run.direction() == .LTR
         && data.allCharactersMap!.m.count == 1
       {
         let defaultPosition: UInt32 = 1
         let characterData = data.allCharactersMap!.m[defaultPosition]!  // "1" is the default value and always exists.
 
-        let view = run!.text()
+        let view = run.text()
         let length = view.length()
         var skippedCharacters: UInt32 = 0
         let scalingFactor = text.scalingFactor()
@@ -204,13 +206,13 @@ struct SVGTextMetricsBuilder {
     }
 
     if !isComplexText {
-      simpleWidthIterator = WidthIteratorWrapper(scaledFont, run!)
+      simpleWidthIterator = WidthIteratorWrapper(scaledFont, run)
     }
 
     var surrogatePairCharacters: UInt32 = 0
     var skippedCharacters: UInt32 = 0
     while advance() {
-      let currentCharacter = run![textPosition]
+      let currentCharacter = run[textPosition]
       if currentCharacter == CharacterNames.Unicode.space && !preserveWhiteSpace
         && (lastCharacter == 0 || lastCharacter == CharacterNames.Unicode.space)
       {
@@ -249,16 +251,16 @@ struct SVGTextMetricsBuilder {
   }
 
   private var text: RenderSVGInlineTextWrapper?
-  private var run: TextRunWrapper? = nil
-  private var textPosition: UInt32 = 0
-  private var isComplexText = false
+  private var run: TextRunWrapper
+  private var textPosition: UInt32
+  private var isComplexText: Bool
   private var canUseSimplifiedTextMeasuring = false
   private var currentMetrics = SVGTextMetrics()
   private var totalWidth: Float32
 
   // Simple text only.
-  private var simpleWidthIterator: WidthIteratorWrapper? = nil
+  private var simpleWidthIterator: WidthIteratorWrapper?
 
   // Complex text only.
-  private var complexStartToCurrentMetrics: SVGTextMetrics
+  private var complexStartToCurrentMetrics = SVGTextMetrics()
 }
