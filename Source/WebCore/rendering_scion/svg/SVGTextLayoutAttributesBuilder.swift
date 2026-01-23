@@ -49,9 +49,26 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     return true
   }
 
-  func buildLayoutAttributesForTextRenderer(_ text: RenderSVGInlineTextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func buildLayoutAttributesForTextRenderer(_ text: RenderSVGInlineTextWrapper) {
+    guard let textRoot = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: text) else {
+      return
+    }
+
+    if textPositions.isEmpty {
+      characterDataMap.removeAll()
+
+      textLength = 0
+      var lastCharacterWasSpace = true
+      collectTextPositioningElements(textRoot, &lastCharacterWasSpace)
+
+      if textLength == 0 {
+        return
+      }
+
+      buildCharacterDataMap(textRoot)
+    }
+
+    metricsBuilder.buildMetricsAndLayoutAttributes(textRoot, text, &characterDataMap)
   }
 
   func rebuildMetricsForSubtree(_ text: RenderSVGTextWrapper) {
