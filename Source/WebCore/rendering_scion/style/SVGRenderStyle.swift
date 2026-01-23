@@ -27,6 +27,13 @@
     Boston, MA 02110-1301, USA.
 */
 
+enum ShapeRendering {
+  case Auto
+  case OptimizeSpeed
+  case CrispEdges
+  case GeometricPrecision
+}
+
 enum BufferedRendering {
   case Auto
   case Dynamic
@@ -35,6 +42,11 @@ enum BufferedRendering {
 
 class SVGRenderStyle {
   func bufferedRendering() -> BufferedRendering {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func shapeRendering() -> ShapeRendering {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -32,6 +32,11 @@ final class RenderSVGRect: RenderSVGShapeWrapper {
     fatalError("Not implemented")
   }
 
+  override func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func isRenderingDisabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

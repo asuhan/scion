@@ -43,6 +43,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
 
   func updateShapeFromElement() { fatalError("Not reached") }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
 
@@ -61,6 +66,51 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    let relevantPaintPhases: PaintPhase = [
+      .Foreground, .ClippingMask, .Mask, .Outline, .SelfOutline,
+    ]
+    if !shouldPaintSVGRenderer(paintInfo, relevantPaintPhases) || isEmpty() {
+      return
+    }
+
+    if paintInfo.phase == .ClippingMask {
+      paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: objectBoundingBox())
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + currentSVGLayoutLocation()
+    if paintInfo.phase == .Mask {
+      paintSVGMask(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    var visualOverflowRect = visualOverflowRectEquivalent()
+    visualOverflowRect.moveBy(offset: adjustedPaintOffset)
+    if !visualOverflowRect.intersects(other: paintInfo.rect) {
+      return
+    }
+
+    if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+      paintSVGOutline(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    assert(paintInfo.phase == .Foreground)
+    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+
+    let coordinateSystemOriginTranslation = adjustedPaintOffset - nominalSVGLayoutLocation()
+    paintInfo.context().translate(
+      x: coordinateSystemOriginTranslation.width().float(),
+      y: coordinateSystemOriginTranslation.height().float())
+
+    if style().svgStyle().shapeRendering() == .CrispEdges {
+      paintInfo.context().setShouldAntialias(shouldAntialias: false)
+    }
+
+    fillStrokeMarkers(paintInfo)
+  }
+
+  private func fillStrokeMarkers(_ childPaintInfo: PaintInfoWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
