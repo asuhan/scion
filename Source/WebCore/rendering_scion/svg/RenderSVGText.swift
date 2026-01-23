@@ -37,8 +37,33 @@ private func findPreviousAndNextAttributes(
   _ stopAfterNext: inout Bool, _ previous: inout SVGTextLayoutAttributes?,
   _ next: inout SVGTextLayoutAttributes?
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // FIXME: Make this iterative.
+  for child: RenderObjectWrapper in childrenOfType(parent: start) {
+    if let text = child as? RenderSVGInlineTextWrapper {
+      if CPtrToInt(locateElement.p) != CPtrToInt(text.p) {
+        if stopAfterNext {
+          next = text.layoutAttributes()
+          return true
+        }
+
+        previous = text.layoutAttributes()
+        continue
+      }
+
+      stopAfterNext = true
+      continue
+    }
+
+    guard let childSVGInline = child as? RenderSVGInlineWrapper else { continue }
+
+    if findPreviousAndNextAttributes(
+      childSVGInline, locateElement, &stopAfterNext, &previous, &next)
+    {
+      return true
+    }
+  }
+
+  return false
 }
 
 private func checkLayoutAttributesConsistency(
