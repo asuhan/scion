@@ -20,4 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGTextPositioningElementWrapper: SVGTextContentElementWrapper {}
+class SVGTextPositioningElementWrapper: SVGTextContentElementWrapper {
+  static func elementFromRenderer(_ renderer: RenderBoxModelObjectWrapper)
+    -> SVGTextPositioningElementWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

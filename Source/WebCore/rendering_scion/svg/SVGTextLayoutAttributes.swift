@@ -24,11 +24,16 @@ struct SVGCharacterData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var x: Float32
+  var y: Float32
 }
 
 typealias SVGCharacterDataMap = [UInt32: SVGCharacterData]
 
 class SVGTextLayoutAttributes {
+  static func isEmptyValue(_ value: Float32) -> Bool { return value.isNaN }
+
   func context() -> RenderSVGInlineTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -93,14 +93,45 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     let length: UInt32
   }
 
-  private func buildCharacterDataMap(_ textRoot: RenderSVGTextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func buildCharacterDataMap(_ textRoot: RenderSVGTextWrapper) {
+    let outermostTextElement = SVGTextPositioningElementWrapper.elementFromRenderer(textRoot)!
+
+    // Grab outermost <text> element value lists and insert them in the character data map.
+    let wholeTextPosition = TextPosition(
+      element: outermostTextElement, start: 0, length: textLength)
+    fillCharacterDataMap(wholeTextPosition)
+
+    // Handle x/y default attributes.
+    var characterData = characterDataMap[1]
+    if characterData == nil {
+      var data = SVGCharacterData()
+      data.x = 0
+      data.y = 0
+      characterDataMap[1] = data
+    } else {
+      if SVGTextLayoutAttributes.isEmptyValue(characterData!.x) {
+        characterData!.x = 0
+      }
+      if SVGTextLayoutAttributes.isEmptyValue(characterData!.y) {
+        characterData!.y = 0
+      }
+      characterDataMap[1] = characterData!
+    }
+
+    // Fill character data map using child text positioning elements in top-down order.
+    for textPosition in textPositions {
+      fillCharacterDataMap(textPosition)
+    }
   }
 
   private func collectTextPositioningElements(
     _ start: RenderBoxModelObjectWrapper, _ lastCharacterWasSpace: inout Bool
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func fillCharacterDataMap(_ position: TextPosition) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
