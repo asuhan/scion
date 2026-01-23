@@ -30,13 +30,25 @@ struct SVGTextMetrics {
     self.init(1, 0, 0)
   }
 
+  init(_ text: RenderSVGInlineTextWrapper, _ length: UInt32, _ width: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(_ length: UInt32, _ scaledWidth: Float32, _ scaledHeight: Float32) {
     self.width = scaledWidth
     self.height = scaledHeight
     self.length = length
   }
 
-  private let width: Float32
+  static func measureCharacterRange(
+    _ text: RenderSVGInlineTextWrapper, _ position: UInt32, _ length: UInt32
+  ) -> SVGTextMetrics {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var width: Float32
   private let height: Float32
   let length: UInt32
 }

@@ -36,9 +36,52 @@ struct SVGTextMetricsBuilder {
     walkTree(textRoot, stopAtLeaf, data)
   }
 
-  private func advance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func advance() -> Bool {
+    textPosition += currentMetrics.length
+    if textPosition >= run!.length() {
+      return false
+    }
+
+    if isComplexText {
+      advanceComplexText()
+    } else {
+      advanceSimpleText()
+    }
+
+    return currentMetrics.length > 0
+  }
+
+  private mutating func advanceSimpleText() {
+    let glyphBuffer = GlyphBufferWrapper()
+    let before = simpleWidthIterator!.currentCharacterIndex()
+    simpleWidthIterator!.advance(textPosition + 1, glyphBuffer)
+    let after = simpleWidthIterator!.currentCharacterIndex()
+    if before == after {
+      currentMetrics = SVGTextMetrics()
+      return
+    }
+
+    let currentWidth = simpleWidthIterator!.runWidthSoFar() - totalWidth
+    totalWidth = simpleWidthIterator!.runWidthSoFar()
+
+    currentMetrics = SVGTextMetrics(text!, after - before, currentWidth)
+  }
+
+  private mutating func advanceComplexText() {
+    let metricsLength: UInt32 = currentCharacterStartsSurrogatePair() ? 2 : 1
+    currentMetrics = SVGTextMetrics.measureCharacterRange(text!, textPosition, metricsLength)
+    complexStartToCurrentMetrics = SVGTextMetrics.measureCharacterRange(
+      text!, 0, textPosition + metricsLength)
+    assert(currentMetrics.length == metricsLength)
+
+    // Frequent case for Arabic text: when measuring a single character the arabic isolated form is taken
+    // when rendering the glyph "in context" (with it's surrounding characters) it changes due to shaping.
+    // So whenever currentWidth != currentMetrics.width(), we are processing a text run whose length is
+    // not equal to the sum of the individual lengths of the glyphs, when measuring them isolated.
+    let currentWidth = complexStartToCurrentMetrics.width - totalWidth
+    currentMetrics.width = currentWidth
+
+    totalWidth = complexStartToCurrentMetrics.width
   }
 
   private func initializeMeasurementWithTextRenderer(_ text: RenderSVGInlineTextWrapper) {
@@ -185,12 +228,17 @@ struct SVGTextMetricsBuilder {
     fatalError("Not implemented")
   }
 
+  private let text: RenderSVGInlineTextWrapper?
   private let run: TextRunWrapper? = nil
-  private let textPosition: UInt32 = 0
+  private var textPosition: UInt32 = 0
   private let isComplexText = false
   private let canUseSimplifiedTextMeasuring = false
-  private let currentMetrics = SVGTextMetrics()
+  private var currentMetrics = SVGTextMetrics()
+  private var totalWidth: Float32
 
   // Simple text only.
   private var simpleWidthIterator: WidthIteratorWrapper? = nil
+
+  // Complex text only.
+  private var complexStartToCurrentMetrics: SVGTextMetrics
 }

@@ -24,6 +24,7 @@ target_sources(layout_scion PRIVATE
     FontSelector.swift
     GeometryUtilities.swift
     Glyph.swift
+    GlyphBuffer.swift
     GlyphPage.swift
     GraphicsContext.swift
     GraphicsContextState.swift

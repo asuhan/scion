@@ -24,4 +24,19 @@ class WidthIteratorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func advance(_ offset: UInt32, _ glyphBuffer: GlyphBufferWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func runWidthSoFar() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func currentCharacterIndex() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
