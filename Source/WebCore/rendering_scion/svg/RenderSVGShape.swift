@@ -196,8 +196,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   func drawMarkers(_ paintInfo: PaintInfoWrapper) {}
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hasInitializedStyle && diff == .Layout {
+      setNeedsShapeUpdate()
+    }
+
+    super.styleWillChange(diff: diff, newStyle: newStyle)
   }
 
   private func calculateApproximateStrokeBoundingBox() -> FloatRectWrapper {
