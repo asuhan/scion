@@ -46,9 +46,19 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func nonScalingStrokeTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateShapeFromElement() { fatalError("Not reached") }
 
   func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasNonScalingStroke() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -115,6 +125,13 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fillStrokeMarkers(paintInfo)
   }
 
+  private func setupNonScalingStrokeContext(
+    _ strokeTransform: AffineTransform, _ stateSaver: GraphicsContextStateSaver
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func fillStrokeMarkers(_ childPaintInfo: PaintInfoWrapper) {
     for type in RenderStyleWrapper.paintTypesForPaintOrder(order: style().paintOrder()) {
       switch type {
@@ -135,9 +152,28 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     }
   }
 
-  private func strokeShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
+  func strokeShape(_ context: GraphicsContextWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func strokeShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
+    if !style.hasVisibleStroke() {
+      return
+    }
+
+    let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+    if hasNonScalingStroke() {
+      let nonScalingTransform = nonScalingStrokeTransform()
+      if !setupNonScalingStrokeContext(nonScalingTransform, stateSaver) {
+        return
+      }
+    }
+
+    let paintServerHandling = SVGPaintServerHandling(context)
+    if paintServerHandling.preparePaintOperation(.Stroke, self, style) {
+      strokeShape(context)
+    }
   }
 
   func drawMarkers(_ paintInfo: PaintInfoWrapper) {}

@@ -2559,6 +2559,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasVisibleStroke() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computedStrokeColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
