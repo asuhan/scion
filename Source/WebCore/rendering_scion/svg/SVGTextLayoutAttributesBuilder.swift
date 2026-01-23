@@ -27,6 +27,13 @@
 // to create the InlineBox tree based on text chunk boundaries & BiDi information.
 // The second layout phase is carried out by SVGTextLayoutEngine.
 
+private func processRenderSVGInlineText(
+  _ text: RenderSVGInlineTextWrapper, _ atCharacter: inout UInt32, lastCharacterWasSpace: inout Bool
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 struct SVGTextLayoutAttributesBuilder: ~Copyable {
   init() { self.textLength = 0 }
 
@@ -88,17 +95,25 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
   }
 
   private struct TextPosition {
+    init(
+      _ newElement: SVGTextPositioningElementWrapper? = nil, _ newStart: UInt32 = 0,
+      _ newLength: UInt32 = 0
+    ) {
+      element = newElement
+      start = newStart
+      length = newLength
+    }
+
     let element: SVGTextPositioningElementWrapper?
     let start: UInt32
-    let length: UInt32
+    var length: UInt32
   }
 
   private mutating func buildCharacterDataMap(_ textRoot: RenderSVGTextWrapper) {
     let outermostTextElement = SVGTextPositioningElementWrapper.elementFromRenderer(textRoot)!
 
     // Grab outermost <text> element value lists and insert them in the character data map.
-    let wholeTextPosition = TextPosition(
-      element: outermostTextElement, start: 0, length: textLength)
+    let wholeTextPosition = TextPosition(outermostTextElement, 0, textLength)
     fillCharacterDataMap(wholeTextPosition)
 
     // Handle x/y default attributes.
@@ -124,11 +139,37 @@ struct SVGTextLayoutAttributesBuilder: ~Copyable {
     }
   }
 
-  private func collectTextPositioningElements(
+  private mutating func collectTextPositioningElements(
     _ start: RenderBoxModelObjectWrapper, _ lastCharacterWasSpace: inout Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!(start is RenderSVGTextWrapper) || textPositions.isEmpty)
+
+    for child: RenderObjectWrapper in childrenOfType(parent: start) {
+      if let inlineText = child as? RenderSVGInlineTextWrapper {
+        processRenderSVGInlineText(
+          inlineText, &textLength, lastCharacterWasSpace: &lastCharacterWasSpace)
+        continue
+      }
+
+      guard let inlineChild = child as? RenderSVGInlineWrapper else { continue }
+
+      let element = SVGTextPositioningElementWrapper.elementFromRenderer(inlineChild)
+
+      let atPosition = textPositions.count
+      if element != nil {
+        textPositions.append(TextPosition(element, textLength))
+      }
+
+      collectTextPositioningElements(inlineChild, &lastCharacterWasSpace)
+
+      if element == nil {
+        continue
+      }
+
+      // Update text position, after we're back from recursion.
+      assert(textPositions[atPosition].length == 0)
+      textPositions[atPosition].length = textLength - textPositions[atPosition].start
+    }
   }
 
   private func fillCharacterDataMap(_ position: TextPosition) {
