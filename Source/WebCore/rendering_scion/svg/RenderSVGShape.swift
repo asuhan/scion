@@ -111,9 +111,29 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   }
 
   private func fillStrokeMarkers(_ childPaintInfo: PaintInfoWrapper) {
+    for type in RenderStyleWrapper.paintTypesForPaintOrder(order: style().paintOrder()) {
+      switch type {
+      case .Fill:
+        fillShape(style(), childPaintInfo.context())
+      case .Stroke:
+        strokeShape(style(), childPaintInfo.context())
+      case .Markers:
+        drawMarkers(childPaintInfo)
+      }
+    }
+  }
+
+  private func fillShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func strokeShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawMarkers(_ paintInfo: PaintInfoWrapper) {}
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this

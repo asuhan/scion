@@ -40,6 +40,11 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     fatalError("Not implemented")
   }
 
+  override func drawMarkers(_ paintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func isRenderingDisabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
