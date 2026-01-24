@@ -34,6 +34,11 @@ final class WeakHashSet<KeyType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  func remove<U>(_ value: U) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clear() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

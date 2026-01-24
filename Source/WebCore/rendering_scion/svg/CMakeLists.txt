@@ -29,11 +29,13 @@ target_sources(layout_scion PRIVATE
     SVGContainerLayout.swift
     SVGLayerTransformComputation.swift
     SVGLayerTransformUpdater.swift
+    SVGMarkerData.swift
     SVGPaintServerHandling.swift
     SVGRenderSupport.swift
     SVGTextLayoutAttributes.swift
     SVGTextLayoutAttributesBuilder.swift
     SVGTextMetrics.swift
     SVGTextMetricsBuilder.swift
+    SVGVisitedRendererTracking.swift
 )
 add_subdirectory(legacy)

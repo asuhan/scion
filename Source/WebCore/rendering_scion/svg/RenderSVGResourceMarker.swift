@@ -21,6 +21,21 @@
  */
 
 final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
+  // Calculates marker boundaries, mapped to the target element's coordinate space
+  func computeMarkerBoundingBox(
+    _ options: SVGBoundingBoxComputation.DecorationOptions, _ markerTransformation: AffineTransform
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func markerTransformation(_ origin: FloatPoint, angle: Float32, strokeWidth: Float32)
+    -> AffineTransform
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func viewport() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -27,13 +27,58 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func markerForType(
+  _ type: SVGMarkerType, _ markerStart: RenderSVGResourceMarkerWrapper?,
+  _ markerMid: RenderSVGResourceMarkerWrapper?, _ markerEnd: RenderSVGResourceMarkerWrapper?
+) -> RenderSVGResourceMarkerWrapper? {
+  switch type {
+  case .StartMarker:
+    return markerStart
+  case .MidMarker:
+    return markerMid
+  case .EndMarker:
+    return markerEnd
+  }
+}
+
 final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   func computeMarkerBoundingBox(_ options: SVGBoundingBoxComputation.DecorationOptions)
     -> FloatRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if markerPositions.isEmpty {
+      return FloatRectWrapper()
+    }
+
+    let recursionTracking = SVGVisitedRendererTracking(RenderSVGPathWrapper.s_visitedSet)
+    if recursionTracking.isVisiting(self) {
+      return FloatRectWrapper()
+    }
+
+    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+
+    let markerStart = svgMarkerStartResourceFromStyle()
+    let markerMid = svgMarkerMidResourceFromStyle()
+    let markerEnd = svgMarkerEndResourceFromStyle()
+    if markerStart == nil && markerMid == nil && markerEnd == nil {
+      return FloatRectWrapper()
+    }
+
+    var boundaries = FloatRectWrapper()
+    for markerPosition in markerPositions {
+      if let marker = markerForType(markerPosition.type, markerStart, markerMid, markerEnd) {
+        boundaries.unite(
+          other: marker.computeMarkerBoundingBox(
+            options,
+            marker.markerTransformation(
+              markerPosition.origin, angle: markerPosition.angle, strokeWidth: strokeWidth()))
+        )
+      }
+    }
+
+    return boundaries
   }
+
+  private static let s_visitedSet = SVGVisitedRendererTracking.VisitedSet()
 
   override func updateShapeFromElement() {
     // TODO(asuhan): implement this
@@ -54,4 +99,6 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let markerPositions: [MarkerPosition] = []
 }

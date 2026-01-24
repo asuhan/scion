@@ -88,6 +88,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     return !hasPath() || path().isEmpty()
   }
 
+  func strokeWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasNonScalingStroke() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

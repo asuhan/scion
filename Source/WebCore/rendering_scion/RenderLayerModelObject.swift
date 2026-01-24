@@ -107,6 +107,21 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  func svgMarkerStartResourceFromStyle() -> RenderSVGResourceMarkerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func svgMarkerMidResourceFromStyle() -> RenderSVGResourceMarkerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func svgMarkerEndResourceFromStyle() -> RenderSVGResourceMarkerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintSVGClippingMask(paintInfo: PaintInfoWrapper, objectBoundingBox: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
