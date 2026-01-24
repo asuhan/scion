@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
+
 struct FloatPoint {
   init() {}
 
@@ -71,6 +73,10 @@ struct FloatPoint {
   mutating func scale(scaleX: Float32, scaleY: Float32) {
     x *= scaleX
     y *= scaleY
+  }
+
+  func slopeAngleRadians() -> Float32 {
+    return atan2f(y, x)
   }
 
   func lengthSquared() -> Float32 {

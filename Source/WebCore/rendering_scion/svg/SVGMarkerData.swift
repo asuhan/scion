@@ -74,8 +74,26 @@ struct SVGMarkerData {
   }
 
   private func currentAngle(_ type: SVGMarkerType) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For details of this calculation, see: http://www.w3.org/TR/SVG/single-page.html#painting-MarkerElement
+    let inSlope = FloatPoint(inslopePoint - inslopeOrigin)
+    let outSlope = FloatPoint(outslopePoint - outslopeOrigin)
+
+    var inAngle = Float64(rad2deg(inSlope.slopeAngleRadians()))
+    let outAngle = Float64(rad2deg(outSlope.slopeAngleRadians()))
+
+    switch type {
+    case .StartMarker:
+      return reverseStart
+        ? narrowPrecisionToFloat(outAngle - 180) : narrowPrecisionToFloat(outAngle)
+    case .MidMarker:
+      // WK193015: Prevent bugs due to angles being non-continuous.
+      if abs(inAngle - outAngle) > 180 {
+        inAngle += 360
+      }
+      return narrowPrecisionToFloat((inAngle + outAngle) / 2)
+    case .EndMarker:
+      return narrowPrecisionToFloat(inAngle)
+    }
   }
 
   private mutating func updateOutslope(_ point: FloatPoint) {
@@ -91,6 +109,8 @@ struct SVGMarkerData {
   private let positions: MarkerPositions
   private var elementIndex: UInt32 = 0
   private let origin = FloatPoint()
+  private var inslopeOrigin = FloatPoint()
+  private var inslopePoint = FloatPoint()
   private var outslopeOrigin = FloatPoint()
   private var outslopePoint = FloatPoint()
   private let reverseStart: Bool

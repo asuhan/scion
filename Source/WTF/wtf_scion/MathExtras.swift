@@ -25,6 +25,10 @@
 
 import wk_interop
 
+private let degreesPerRadianFloat = 180 / Float32.pi
+
+func rad2deg(_ r: Float32) -> Float32 { return r * degreesPerRadianFloat }
+
 func clampTo(
   value: InlineLayoutUnit, min: InlineLayoutUnit = -Float32.greatestFiniteMagnitude,
   max: InlineLayoutUnit = Float32.greatestFiniteMagnitude
