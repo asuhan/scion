@@ -26,6 +26,15 @@
 
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
+  // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
+  static func clippedOverflowRectForRepaint(
+    _ renderer: RenderElementWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,
+    _ context: RenderObjectWrapper.VisibleRectContext
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)
     -> LayoutRepainter.CheckForRepaint
   {
