@@ -29,15 +29,43 @@ struct MarkerPosition {
   let angle: Float32
 }
 
+class MarkerPositions {
+  var a: [MarkerPosition] = []
+}
+
 struct SVGMarkerData {
-  init(_ positions: ArraySlice<MarkerPosition>, _ reverseStart: Bool) {
+  init(_ positions: MarkerPositions, _ reverseStart: Bool) {
     self.positions = positions
     self.reverseStart = reverseStart
   }
 
   static func updateFromPathElement(_ markerData: inout SVGMarkerData, _ element: PathElement) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // First update the outslope for the previous element.
+    if element.type != .MoveToPoint {
+      markerData.updateOutslope(element.points[0])
+    }
+
+    // Record the marker for the previous element.
+    if markerData.elementIndex > 0 {
+      let markerType: SVGMarkerType = markerData.elementIndex == 1 ? .StartMarker : .MidMarker
+      var markerTypeForOrientation: SVGMarkerType = .StartMarker
+      if markerData.previousWasMoveTo {
+        markerTypeForOrientation = .StartMarker
+      } else if element.type == .MoveToPoint {
+        markerTypeForOrientation = .EndMarker
+      } else {
+        markerTypeForOrientation = markerType
+      }
+      markerData.positions.a.append(
+        MarkerPosition(
+          type: markerType, origin: markerData.origin,
+          angle: markerData.currentAngle(markerTypeForOrientation)))
+    }
+
+    // Update our marker data for this element.
+    markerData.updateMarkerDataForPathElement(element)
+    markerData.previousWasMoveTo = element.type == .MoveToPoint
+    markerData.elementIndex += 1
   }
 
   func pathIsDone() {
@@ -45,6 +73,26 @@ struct SVGMarkerData {
     fatalError("Not implemented")
   }
 
-  private let positions: ArraySlice<MarkerPosition>
+  private func currentAngle(_ type: SVGMarkerType) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private mutating func updateOutslope(_ point: FloatPoint) {
+    outslopeOrigin = origin
+    outslopePoint = point
+  }
+
+  private func updateMarkerDataForPathElement(_ element: PathElement) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let positions: MarkerPositions
+  private var elementIndex: UInt32 = 0
+  private let origin = FloatPoint()
+  private var outslopeOrigin = FloatPoint()
+  private var outslopePoint = FloatPoint()
   private let reverseStart: Bool
+  private var previousWasMoveTo = false
 }

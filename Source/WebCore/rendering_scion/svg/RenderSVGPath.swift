@@ -45,7 +45,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   func computeMarkerBoundingBox(_ options: SVGBoundingBoxComputation.DecorationOptions)
     -> FloatRectWrapper
   {
-    if markerPositions.isEmpty {
+    if markerPositions.a.isEmpty {
       return FloatRectWrapper()
     }
 
@@ -64,7 +64,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     }
 
     var boundaries = FloatRectWrapper()
-    for markerPosition in markerPositions {
+    for markerPosition in markerPositions.a {
       if let marker = markerForType(markerPosition.type, markerStart, markerMid, markerEnd) {
         boundaries.unite(
           other: marker.computeMarkerBoundingBox(
@@ -79,7 +79,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   func updateMarkerPositions() {
-    markerPositions.removeAll()
+    markerPositions.a.removeAll()
 
     if !shouldGenerateMarkerPositions() {
       return
@@ -88,7 +88,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     assert(hasPath())
     let markerStart = svgMarkerStartResourceFromStyle()
 
-    var markerData = SVGMarkerData(markerPositions[...], markerStart?.hasReverseStart() ?? false)
+    var markerData = SVGMarkerData(markerPositions, markerStart?.hasReverseStart() ?? false)
     path().applyElements({ (pathElement: PathElement) in
       SVGMarkerData.updateFromPathElement(&markerData, pathElement)
     })
@@ -143,7 +143,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   override func drawMarkers(_ paintInfo: PaintInfoWrapper) {
-    if markerPositions.isEmpty {
+    if markerPositions.a.isEmpty {
       return
     }
 
@@ -162,7 +162,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     }
 
     let strokeWidth = strokeWidth()
-    for markerPosition in markerPositions {
+    for markerPosition in markerPositions.a {
       if let marker = markerForType(markerPosition.type, markerStart, markerMid, markerEnd),
         marker.hasLayer()
       {
@@ -183,5 +183,5 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     fatalError("Not implemented")
   }
 
-  private var markerPositions: [MarkerPosition] = []
+  private var markerPositions = MarkerPositions()
 }
