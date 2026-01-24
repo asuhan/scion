@@ -24,3 +24,10 @@ enum SVGLengthMode {
   case Height
   case Other
 }
+
+struct SVGLengthValue {
+  init(_ lengthMode: SVGLengthMode = .Other, _ valueAsString: StringWrapper = StringWrapper()) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

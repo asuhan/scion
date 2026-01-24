@@ -19,10 +19,38 @@
  */
 
 final class RenderSVGResourceMasker: RenderSVGResourceContainerWrapper {
-  func resourceBoundingBox(
-    _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
-  ) -> FloatRectWrapper {
+  private func maskElement() -> SVGMaskElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func resourceBoundingBox(
+    _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
+  ) -> FloatRectWrapper {
+    let targetBoundingBox = object.objectBoundingBox()
+
+    let recursionTracking = SVGVisitedRendererTracking(
+      RenderSVGResourceMasker.s_visitedSetResourceBoundingBox)
+    if recursionTracking.isVisiting(self) {
+      return targetBoundingBox
+    }
+
+    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+
+    let maskElement = maskElement()
+    var maskRect = maskElement.calculateMaskContentRepaintRect(repaintRectCalculation)
+    if maskElement.maskContentUnits() == .SVG_UNIT_TYPE_OBJECTBOUNDINGBOX {
+      let contentTransform = AffineTransform()
+      contentTransform.translate(targetBoundingBox.location())
+      contentTransform.scale(targetBoundingBox.size())
+      maskRect = contentTransform.mapRect(rect: maskRect)
+    }
+
+    let maskBoundaries = SVGLengthContext.resolveRectangle(
+      maskElement, maskElement.maskUnits(), targetBoundingBox)
+    maskRect.intersect(other: maskBoundaries)
+    return maskRect.isEmpty() ? targetBoundingBox : maskRect
+  }
+
+  private static let s_visitedSetResourceBoundingBox = SVGVisitedRendererTracking.VisitedSet()
 }

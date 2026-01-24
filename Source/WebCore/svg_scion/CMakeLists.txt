@@ -9,6 +9,7 @@ target_sources(layout_scion PRIVATE
     SVGLengthContext.swift
     SVGLengthValue.swift
     SVGMarkerTypes.swift
+    SVGMaskElement.swift
     SVGPreserveAspectRatioValue.swift
     SVGRectElement.swift
     SVGSVGElement.swift

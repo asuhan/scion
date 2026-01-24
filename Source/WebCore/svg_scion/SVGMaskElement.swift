@@ -1,9 +1,11 @@
 /*
- * Copyright (C) 2004, 2005, 2006 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2004, 2005, 2006, 2008 Nikolas Zimmermann <zimmermann@kde.org>
  * Copyright (C) 2004, 2005, 2006, 2007 Rob Buis <buis@kde.org>
- * Copyright (C) 2007-2023 Apple Inc. All rights reserved.
- * Copyright (C) Research In Motion Limited 2011. All rights reserved.
+ * Copyright (C) 2005 Alexander Kellett <lypanov@kde.org>
+ * Copyright (C) 2009 Dirk Schulze <krit@webkit.org>
+ * Copyright (C) Research In Motion Limited 2009-2010. All rights reserved.
  * Copyright (C) 2014 Adobe Systems Incorporated. All rights reserved.
+ * Copyright (C) 2018-2024 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,25 +23,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGLengthContext {
-  init(context: SVGElementWrapper?) {
+// TODO(asuhan): also inherits from SVGTests
+final class SVGMaskElementWrapper: SVGElementWrapper {
+  func maskUnits() -> SVGUnitTypes.SVGUnitType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  static func resolveRectangle<T>(
-    _ context: T, _ type: SVGUnitTypes.SVGUnitType, _ viewport: FloatRectWrapper
-  ) -> FloatRectWrapper {
+  func maskContentUnits() -> SVGUnitTypes.SVGUnitType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func valueForLength(_ length: LengthWrapper, _ lengthMode: SVGLengthMode) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func viewportSize() -> FloatSize? {
+  func calculateMaskContentRepaintRect(_ repaintRectCalculation: RepaintRectCalculation)
+    -> FloatRectWrapper
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
