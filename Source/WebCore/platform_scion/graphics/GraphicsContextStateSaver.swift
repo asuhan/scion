@@ -38,6 +38,11 @@ class GraphicsContextStateSaver {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func context() -> GraphicsContextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 class TransparencyLayerScope {

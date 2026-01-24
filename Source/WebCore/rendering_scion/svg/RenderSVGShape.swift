@@ -165,8 +165,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   private func setupNonScalingStrokeContext(
     _ strokeTransform: AffineTransform, _ stateSaver: GraphicsContextStateSaver
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let inverse = strokeTransform.inverse() else { return false }
+
+    stateSaver.save()
+    stateSaver.context().concatCTM(transform: inverse)
+    return true
   }
 
   private func fillStrokeMarkers(_ childPaintInfo: PaintInfoWrapper) {
