@@ -35,6 +35,11 @@ private func sharedClipAllPath() -> PathWrapper {
 }
 
 final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
+  private func protectedClipPathElement() -> SVGClipPathElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldApplyPathClipping() -> SVGGraphicsElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -83,9 +88,28 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
   func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let recursionTracking = SVGVisitedRendererTracking(
+      RenderSVGResourceClipperWrapper.s_visitedSetResourceBoundingBox)
+    let targetBoundingBox = object.objectBoundingBox()
+    if recursionTracking.isVisiting(self) {
+      return targetBoundingBox
+    }
+
+    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+
+    let clipContentRepaintRect = protectedClipPathElement().calculateClipContentRepaintRect(
+      repaintRectCalculation)
+    if clipPathUnits() == .SVG_UNIT_TYPE_OBJECTBOUNDINGBOX {
+      let contentTransform = AffineTransform()
+      contentTransform.translate(targetBoundingBox.location())
+      contentTransform.scale(targetBoundingBox.size())
+      return contentTransform.mapRect(rect: clipContentRepaintRect)
+    }
+
+    return clipContentRepaintRect
   }
+
+  private static let s_visitedSetResourceBoundingBox = SVGVisitedRendererTracking.VisitedSet()
 
   private func clipPathUnits() -> SVGUnitTypes.SVGUnitType {
     // TODO(asuhan): implement this
