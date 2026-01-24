@@ -101,14 +101,39 @@ struct SVGMarkerData {
     outslopePoint = point
   }
 
-  private func updateMarkerDataForPathElement(_ element: PathElement) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func updateInslope(_ point: FloatPoint) {
+    inslopeOrigin = origin
+    inslopePoint = point
+  }
+
+  private mutating func updateMarkerDataForPathElement(_ element: PathElement) {
+    let points = element.points
+
+    switch element.type {
+    case .AddQuadCurveToPoint:
+      // FIXME: https://bugs.webkit.org/show_bug.cgi?id=33115 (.AddQuadCurveToPoint not handled for <marker>)
+      origin = points[1]
+    case .AddCurveToPoint:
+      inslopeOrigin = points[1]
+      inslopePoint = points[2]
+      origin = points[2]
+    case .MoveToPoint:
+      subpathStart = points[0]
+      fallthrough
+    case .AddLineToPoint:
+      updateInslope(points[0])
+      origin = points[0]
+    case .CloseSubpath:
+      updateInslope(points[0])
+      origin = subpathStart
+      subpathStart = FloatPoint()
+    }
   }
 
   private let positions: MarkerPositions
   private var elementIndex: UInt32 = 0
-  private let origin = FloatPoint()
+  private var origin = FloatPoint()
+  private var subpathStart = FloatPoint()
   private var inslopeOrigin = FloatPoint()
   private var inslopePoint = FloatPoint()
   private var outslopeOrigin = FloatPoint()
