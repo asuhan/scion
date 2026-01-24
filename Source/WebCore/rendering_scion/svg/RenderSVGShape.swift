@@ -93,6 +93,13 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func nonScalingStrokePath(_ path: PathWrapper, _ strokeTransform: AffineTransform)
+    -> PathWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
 
@@ -183,8 +190,13 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   }
 
   func strokeShape(_ context: GraphicsContextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var usePath = m_path!
+
+    if hasNonScalingStroke() {
+      usePath = nonScalingStrokePath(usePath, nonScalingStrokeTransform())
+    }
+
+    context.strokePath(path: usePath)
   }
 
   private func strokeShape(_ style: RenderStyleWrapper, _ context: GraphicsContextWrapper) {
@@ -225,4 +237,5 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   private var m_approximateStrokeBoundingBox: FloatRectWrapper? = nil
   private var needsShapeUpdate = true
   private let shapeType: ShapeType = .Empty
+  private let m_path: PathWrapper? = nil
 }
