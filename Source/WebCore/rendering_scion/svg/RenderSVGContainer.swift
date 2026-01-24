@@ -61,6 +61,11 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())
@@ -97,7 +102,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     containerLayout.layoutChildren(selfNeedsLayout())
 
     let boundingBoxComputation = SVGBoundingBoxComputation(self)
-    objectBoundingBox = boundingBoxComputation.computeDecoratedBoundingBox(
+    m_objectBoundingBox = boundingBoxComputation.computeDecoratedBoundingBox(
       SVGBoundingBoxComputation.objectBoundingBoxDecoration, &objectBoundingBoxValid)
     strokeBoundingBox = nil
 
@@ -125,7 +130,7 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   private var objectBoundingBoxValid = false
   var isLayoutSizeChanged = false
   var didTransformToRootUpdate = false
-  private var objectBoundingBox = FloatRectWrapper()
+  private var m_objectBoundingBox = FloatRectWrapper()
   private var m_objectBoundingBoxWithoutTransformations = FloatRectWrapper()
   private var strokeBoundingBox: FloatRectWrapper? = nil
 }

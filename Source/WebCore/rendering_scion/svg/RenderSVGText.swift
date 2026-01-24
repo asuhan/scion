@@ -213,6 +213,11 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     }
   }
 
+  override final func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func visualOverflowRectEquivalent() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -222,9 +227,9 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     if document().settings().layerBasedSVGEngineEnabled() {
       clearOverflow()
 
-      objectBoundingBox = boundaries
+      m_objectBoundingBox = boundaries
 
-      let boundingRect = enclosingLayoutRect(rect: objectBoundingBox)
+      let boundingRect = enclosingLayoutRect(rect: m_objectBoundingBox)
       setLocation(p: boundingRect.location())
       setSize(boundingRect.size())
 
@@ -240,8 +245,8 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     let boundingRect = enclosingLayoutRect(rect: boundaries)
     setLocation(p: boundingRect.location())
     setSize(boundingRect.size())
-    objectBoundingBox = boundingRect.FloatRect()
-    assert(objectBoundingBox == frameRect().FloatRect())
+    m_objectBoundingBox = boundingRect.FloatRect()
+    assert(m_objectBoundingBox == frameRect().FloatRect())
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -505,5 +510,5 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   private var localTransform = AffineTransform()  // FIXME: [LBSE] Only needed for legacy SVG engine.
   private var layoutAttributesBuilder = SVGTextLayoutAttributesBuilder()
   private var layoutAttributes: [SVGTextLayoutAttributes] = []
-  private var objectBoundingBox = FloatRectWrapper()
+  private var m_objectBoundingBox = FloatRectWrapper()
 }

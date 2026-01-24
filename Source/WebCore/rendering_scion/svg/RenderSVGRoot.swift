@@ -86,6 +86,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
       || self.isDocumentElementRenderer()
   }
 
+  override final func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func visualOverflowRectEquivalent() -> LayoutRectWrapper {
     return SVGBoundingBoxComputation.computeVisualOverflowRect(self)
   }
@@ -202,7 +207,7 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     containerLayout.layoutChildren(selfNeedsLayout())
 
     let boundingBoxComputation = SVGBoundingBoxComputation(self)
-    objectBoundingBox = boundingBoxComputation.computeDecoratedBoundingBox(
+    m_objectBoundingBox = boundingBoxComputation.computeDecoratedBoundingBox(
       SVGBoundingBoxComputation.objectBoundingBoxDecoration)
     strokeBoundingBox = nil
 
@@ -376,7 +381,7 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   var isLayoutSizeChanged = false
 
   let containerSize = IntSize()
-  private var objectBoundingBox = FloatRectWrapper()
+  private var m_objectBoundingBox = FloatRectWrapper()
   private var objectBoundingBoxWithoutTransformations = FloatRectWrapper()
   private var strokeBoundingBox: FloatRectWrapper? = nil
 }

@@ -63,6 +63,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
 
   func clearPath() { m_path = nil }
 
+  override final func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func approximateStrokeBoundingBox() -> FloatRectWrapper {
     if shapeType == .Empty {
       return FloatRectWrapper()

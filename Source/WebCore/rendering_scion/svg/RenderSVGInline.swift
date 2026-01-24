@@ -26,6 +26,16 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  // Chapter 10.4 of the SVG Specification say that we should use the
+  // object bounding box of the parent text element.
+  // We search for the root text element and take its bounding box.
+  // It is also necessary to take the stroke and repaint rect of
+  // this element, since we need it for filters.
+  override final func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func currentSVGLayoutLocation() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -882,6 +882,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Note these functions are not equivalent of childrenOfType<RenderBox>
   func parentBox() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this

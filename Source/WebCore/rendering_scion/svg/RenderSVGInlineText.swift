@@ -42,4 +42,9 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

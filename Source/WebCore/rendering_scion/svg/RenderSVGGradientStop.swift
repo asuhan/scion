@@ -36,5 +36,10 @@ final class RenderSVGGradientStopWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  override func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
 }

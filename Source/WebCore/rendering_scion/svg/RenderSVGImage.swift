@@ -36,13 +36,18 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
 
     let repainter = LayoutRepainter(renderer: self)
 
     updateImageViewport()
-    setCurrentSVGLayoutRect(enclosingLayoutRect(rect: objectBoundingBox))
+    setCurrentSVGLayoutRect(enclosingLayoutRect(rect: m_objectBoundingBox))
 
     updateLayerTransform()
 
@@ -206,7 +211,7 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private let objectBoundingBox = FloatRectWrapper()
+  private let m_objectBoundingBox = FloatRectWrapper()
   private let imageResource: RenderImageResource? = nil
   private var bufferedForeground: ImageBufferWrapper? = nil
 }
