@@ -36,6 +36,11 @@ class AffineTransform: Equatable {
     self.transform = [a, b, c, d, e, f]
   }
 
+  func mapPoint(_ point: FloatPoint) -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Rounds the resulting mapped rectangle out. This is helpful for bounding
   // box computations but may not be what is wanted in other contexts.
   func mapRect(rect: IntRect) -> IntRect {
@@ -71,7 +76,19 @@ class AffineTransform: Equatable {
   }
 
   @discardableResult
+  func scaleNonUniform(_ sx: Float64, _ sy: Float64) -> AffineTransform {  // Same as scale(sx, sy).
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
   func scale(_ s: FloatSize) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func rotate(_ a: Float64) -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

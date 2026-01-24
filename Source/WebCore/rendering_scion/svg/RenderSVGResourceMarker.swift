@@ -34,9 +34,35 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     fatalError("Not implemented")
   }
 
-  func markerTransformation(_ origin: FloatPoint, angle: Float32, strokeWidth: Float32)
+  func markerTransformation(_ origin: FloatPoint, autoAngle: Float32, strokeWidth: Float32)
     -> AffineTransform
   {
+    let transform = AffineTransform()
+    transform.translate(origin)
+    transform.rotate(Float64(angle() ?? autoAngle))
+
+    // The 'referencePoint()' coordinate maps to SVGs refX/refY, given in coordinates relative to the viewport established by the marker
+    let mappedOrigin = supplementalLayerTransform.mapPoint(referencePoint())
+
+    if markerUnits() == .SVGMarkerUnitsStrokeWidth {
+      transform.scaleNonUniform(Float64(strokeWidth), Float64(strokeWidth))
+    }
+
+    transform.translate(-mappedOrigin)
+    return transform
+  }
+
+  private func referencePoint() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func angle() -> Float32? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func markerUnits() -> SVGMarkerUnitsType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -64,4 +90,6 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let supplementalLayerTransform = AffineTransform()
 }

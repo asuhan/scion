@@ -70,7 +70,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
           other: marker.computeMarkerBoundingBox(
             options,
             marker.markerTransformation(
-              markerPosition.origin, angle: markerPosition.angle, strokeWidth: strokeWidth()))
+              markerPosition.origin, autoAngle: markerPosition.angle, strokeWidth: strokeWidth()))
         )
       }
     }
@@ -170,7 +170,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
         let _ = GraphicsContextStateSaver(context: context)
 
         let contentTransform = marker.markerTransformation(
-          markerPosition.origin, angle: markerPosition.angle, strokeWidth: strokeWidth)
+          markerPosition.origin, autoAngle: markerPosition.angle, strokeWidth: strokeWidth)
         marker.checkedLayer()!.paintSVGResourceLayer(context, contentTransform)
       }
     }
