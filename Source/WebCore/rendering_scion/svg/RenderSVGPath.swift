@@ -78,14 +78,35 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     return boundaries
   }
 
-  private static let s_visitedSetCompute = SVGVisitedRendererTracking.VisitedSet()
-
-  override func updateShapeFromElement() {
+  func updateMarkerPositions() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private static let s_visitedSetCompute = SVGVisitedRendererTracking.VisitedSet()
+
+  override func updateShapeFromElement() {
+    clearPath()
+    shapeType = .Empty
+    fillBoundingBox = ensurePath().boundingRect()
+    m_strokeBoundingBox = nil
+    m_approximateStrokeBoundingBox = nil
+    updateMarkerPositions()
+    updateZeroLengthSubpaths()
+
+    assert(hasPath())
+    if path().isEmpty() {
+      return
+    }
+    shapeType = path().definitelySingleLine() ? .Line : .Path
+  }
+
   override func strokeShape(_ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateZeroLengthSubpaths() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

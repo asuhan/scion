@@ -93,6 +93,11 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func definitelySingleLine() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func length() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

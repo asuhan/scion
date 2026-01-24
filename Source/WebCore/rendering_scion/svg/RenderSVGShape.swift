@@ -61,6 +61,8 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clearPath() { m_path = nil }
+
   func approximateStrokeBoundingBox() -> FloatRectWrapper {
     if shapeType == .Empty {
       return FloatRectWrapper()
@@ -74,6 +76,11 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
   }
 
   func nonScalingStrokeTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ensurePath() -> PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -240,10 +247,10 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     return m_strokeBoundingBox ?? SVGRenderSupport.calculateApproximateStrokeBoundingBox(self)
   }
 
-  private let fillBoundingBox = FloatRectWrapper()
-  private let m_strokeBoundingBox: FloatRectWrapper? = nil
-  private var m_approximateStrokeBoundingBox: FloatRectWrapper? = nil
+  var fillBoundingBox = FloatRectWrapper()
+  var m_strokeBoundingBox: FloatRectWrapper? = nil
+  var m_approximateStrokeBoundingBox: FloatRectWrapper? = nil
   private var needsShapeUpdate = true
-  private let shapeType: ShapeType = .Empty
-  private let m_path: PathWrapper? = nil
+  var shapeType: ShapeType = .Empty
+  private var m_path: PathWrapper? = nil
 }
