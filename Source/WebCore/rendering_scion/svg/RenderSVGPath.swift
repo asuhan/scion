@@ -102,11 +102,25 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   override func strokeShape(_ context: GraphicsContextWrapper) {
+    if !style().hasVisibleStroke() {
+      return
+    }
+
+    // This happens only if the layout was never been called for this element.
+    if !hasPath() {
+      return
+    }
+
+    super.strokeShape(context)
+    strokeZeroLengthSubpaths(context)
+  }
+
+  private func updateZeroLengthSubpaths() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func updateZeroLengthSubpaths() {
+  private func strokeZeroLengthSubpaths(_ context: GraphicsContextWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
