@@ -20,7 +20,18 @@
 
 class RenderSVGResourceContainerWrapper: RenderSVGHiddenContainerWrapper {
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if !registered {
+      registered = true
+      registerResource()
+    }
+  }
+
+  private func registerResource() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var registered = false
 }
