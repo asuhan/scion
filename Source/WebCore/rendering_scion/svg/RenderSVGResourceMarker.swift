@@ -75,9 +75,12 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     fatalError("Not implemented")
   }
 
+  private func viewportSize() -> FloatSize { return m_viewport.size() }
+
   override final func updateLayoutSizeIfNeeded() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let previousViewportSize = viewportSize()
+    m_viewport = computeViewport()
+    return selfNeedsLayout() || previousViewportSize != viewportSize()
   }
 
   override final func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? {
@@ -89,10 +92,16 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeViewport() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private let supplementalLayerTransform = AffineTransform()
+  private var m_viewport = FloatRectWrapper()
 }
