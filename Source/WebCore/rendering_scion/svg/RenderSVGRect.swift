@@ -97,7 +97,15 @@ final class RenderSVGRect: RenderSVGShapeWrapper {
   }
 
   override func strokeShape(_ context: GraphicsContextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().hasVisibleStroke() {
+      return
+    }
+
+    if hasPath() {
+      super.strokeShape(context)
+      return
+    }
+
+    context.strokeRect(fillBoundingBox, strokeWidth())
   }
 }
