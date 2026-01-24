@@ -21,6 +21,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
+enum ClippingMode {
+  case NoClipping
+  case PathClipping
+  case MaskClipping
+}
+
+private var currentClippingMode: ClippingMode = .NoClipping
+
+private func sharedClipAllPath() -> PathWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
   func shouldApplyPathClipping() -> SVGGraphicsElementWrapper? {
     // TODO(asuhan): implement this
@@ -31,13 +44,50 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
     context: GraphicsContextWrapper, targetRenderer: RenderLayerModelObjectWrapper,
     objectBoundingBox: FloatRectWrapper, graphicsElement: SVGGraphicsElementWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasLayer())
+    assert(layer()!.isSelfPaintingLayer)
+
+    assert(currentClippingMode == .NoClipping || currentClippingMode == .MaskClipping)
+    let _ = SetForScope(scopedVariable: &currentClippingMode, newValue: ClippingMode.PathClipping)
+
+    let containerRenderer = graphicsElement.containerRenderer()!
+    assert(containerRenderer.hasLayer())
+    let clipRenderer = containerRenderer as! RenderSVGModelObjectWrapper
+
+    let clipPathTransform = AffineTransform()
+    if clipPathUnits() == .SVG_UNIT_TYPE_OBJECTBOUNDINGBOX {
+      clipPathTransform.translate(objectBoundingBox.location())
+      clipPathTransform.scale(objectBoundingBox.size())
+    } else if !targetRenderer.isSVGLayerAwareRenderer() {
+      clipPathTransform.translate(Float64(objectBoundingBox.x()), Float64(objectBoundingBox.y()))
+      clipPathTransform.scale(Float64(targetRenderer.style().usedZoom()))
+    }
+    if layer()!.isTransformed() {
+      clipPathTransform.multiply(layer()!.transform!.toAffineTransform())
+    }
+
+    let clipPath = clipRenderer.computeClipPath(clipPathTransform)
+    let windRule = clipRenderer.style().svgStyle().clipRule()
+
+    // The SVG specification wants us to clip everything, if clip-path doesn't have a child.
+    if clipPath.isEmpty() {
+      context.clipPath(path: sharedClipAllPath(), clipRule: windRule)
+    } else {
+      let ctm = context.getCTM()
+      context.concatCTM(transform: clipPathTransform)
+      context.clipPath(path: clipPath, clipRule: windRule)
+      context.setCTM(transform: ctm)
+    }
   }
 
   func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clipPathUnits() -> SVGUnitTypes.SVGUnitType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

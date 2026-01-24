@@ -59,7 +59,25 @@ class AffineTransform: Equatable {
   func d() -> Float64 { return transform[3] }
 
   @discardableResult
+  func multiply(_ other: AffineTransform) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
   func scale(_ s: Float64) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func scale(_ s: FloatSize) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func translate(_ tx: Float64, _ ty: Float64) -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

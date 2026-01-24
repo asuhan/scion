@@ -46,6 +46,11 @@ class SVGRenderStyle {
     fatalError("Not implemented")
   }
 
+  func clipRule() -> WindRule {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shapeRendering() -> ShapeRendering {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
