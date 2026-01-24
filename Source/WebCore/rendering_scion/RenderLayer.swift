@@ -3024,6 +3024,13 @@ class RenderLayerWrapper {
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
   }
 
+  func paintSVGResourceLayer(
+    _ context: GraphicsContextWrapper, _ layerContentTransform: AffineTransform
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func ancestorLayerIsDOMParent(ancestor: RenderLayerWrapper?) -> Bool {
     if ancestor == nil {
       return false

@@ -49,7 +49,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
       return FloatRectWrapper()
     }
 
-    let recursionTracking = SVGVisitedRendererTracking(RenderSVGPathWrapper.s_visitedSet)
+    let recursionTracking = SVGVisitedRendererTracking(RenderSVGPathWrapper.s_visitedSetCompute)
     if recursionTracking.isVisiting(self) {
       return FloatRectWrapper()
     }
@@ -78,7 +78,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     return boundaries
   }
 
-  private static let s_visitedSet = SVGVisitedRendererTracking.VisitedSet()
+  private static let s_visitedSetCompute = SVGVisitedRendererTracking.VisitedSet()
 
   override func updateShapeFromElement() {
     // TODO(asuhan): implement this
@@ -91,9 +91,40 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   override func drawMarkers(_ paintInfo: PaintInfoWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if markerPositions.isEmpty {
+      return
+    }
+
+    let recursionTracking = SVGVisitedRendererTracking(RenderSVGPathWrapper.s_visitedSetDraw)
+    if recursionTracking.isVisiting(self) {
+      return
+    }
+
+    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+
+    let markerStart = svgMarkerStartResourceFromStyle()
+    let markerMid = svgMarkerMidResourceFromStyle()
+    let markerEnd = svgMarkerEndResourceFromStyle()
+    if markerStart == nil && markerMid == nil && markerEnd == nil {
+      return
+    }
+
+    let strokeWidth = strokeWidth()
+    for markerPosition in markerPositions {
+      if let marker = markerForType(markerPosition.type, markerStart, markerMid, markerEnd),
+        marker.hasLayer()
+      {
+        let context = paintInfo.context()
+        let _ = GraphicsContextStateSaver(context: context)
+
+        let contentTransform = marker.markerTransformation(
+          markerPosition.origin, angle: markerPosition.angle, strokeWidth: strokeWidth)
+        marker.checkedLayer()!.paintSVGResourceLayer(context, contentTransform)
+      }
+    }
   }
+
+  private static let s_visitedSetDraw = SVGVisitedRendererTracking.VisitedSet()
 
   override func isRenderingDisabled() -> Bool {
     // TODO(asuhan): implement this
