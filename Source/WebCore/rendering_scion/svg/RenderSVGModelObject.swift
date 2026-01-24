@@ -119,6 +119,15 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func outlineBoundsForRepaint(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap? = nil
+  )
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func addFocusRingRects(
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil

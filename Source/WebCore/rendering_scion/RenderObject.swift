@@ -1652,6 +1652,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func outlineBoundsForRepaint(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap? = nil
+  )
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Given a rect in the object's coordinate space, compute a rect  in the coordinate space
   // of repaintContainer suitable for the given VisibleRectContext.
   func computeRects(
@@ -1920,7 +1929,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return inheritedFlowState
   }
 
-  private static let visibleRectContextForRepaint = VisibleRectContext(
+  static let visibleRectContextForRepaint = VisibleRectContext(
     hasPositionFixedDescendant: false, dirtyRectIsFlipped: false,
     [.ApplyContainerClip, .ApplyCompositedContainerScrolls])
 
