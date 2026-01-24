@@ -83,11 +83,29 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
     return rects
   }
 
+  override final func computeFloatVisibleRectInContainer(
+    _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> FloatRectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func computeVisibleRectsInContainer(
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return computeVisibleRectsInSVGContainer(rects, container, context)
+    }
+
+    // FIXME: computeFloatVisibleRectInContainer() needs to be merged with computeVisibleRectsInContainer().
+    if let adjustedRect = computeFloatVisibleRectInContainer(
+      rects.clippedOverflowRect.FloatRect(), container, context)
+    {
+      return RepaintRects(rect: enclosingLayoutRect(rect: adjustedRect))
+    }
+
+    return nil
   }
 }

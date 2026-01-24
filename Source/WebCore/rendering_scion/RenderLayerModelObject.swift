@@ -77,6 +77,16 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  // Provides the SVG implementation for computeVisibleRectsInContainer().
+  // This lives in RenderLayerModelObject, which is the common base-class for all SVG renderers.
+  func computeVisibleRectsInSVGContainer(
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ context: RenderObjectWrapper.VisibleRectContext
+  ) -> RepaintRects? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nominalSVGLayoutLocation() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1725,6 +1725,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return parent.computeVisibleRectsInContainer(&adjustedRects, container, context)
   }
 
+  func computeFloatVisibleRectInContainer(
+    _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> FloatRectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isFloatingOrOutOfFlowPositioned() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

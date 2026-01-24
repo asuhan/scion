@@ -115,6 +115,15 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     return selfNeedsLayout() || previousSize != size()
   }
 
+  // To prevent certain legacy code paths to hit assertions in debug builds, when switching off LBSE (during the teardown of the LBSE tree).
+  override final func computeFloatVisibleRectInContainer(
+    _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
+    _ context: VisibleRectContext
+  ) -> FloatRectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func computeReplacedLogicalWidth(
     shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   )
