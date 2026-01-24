@@ -21,8 +21,17 @@
 
 class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
   override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.computeOverflow(oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: recomputeFloats)
+
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return
+    }
+
+    guard let textShadow = style().textShadow() else { return }
+
+    var borderRect = borderBoxRect()
+    textShadow.adjustRectForShadow(&borderRect)
+    addVisualOverflow(rect: LayoutRectWrapper(rect: snappedIntRect(rect: borderRect)))
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
