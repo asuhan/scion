@@ -69,8 +69,8 @@ struct SVGMarkerData {
   }
 
   func pathIsDone() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    positions.a.append(
+      MarkerPosition(type: .EndMarker, origin: origin, angle: currentAngle(.EndMarker)))
   }
 
   private func currentAngle(_ type: SVGMarkerType) -> Float32 {
