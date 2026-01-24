@@ -50,6 +50,7 @@ target_sources(layout_scion PRIVATE
     LayoutRect.swift
     LayoutSize.swift
     Path.swift
+    PathElement.swift
     PathSegmentData.swift
     PathUtilities.swift
     PlatformLayer.swift

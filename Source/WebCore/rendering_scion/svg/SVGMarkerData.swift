@@ -28,3 +28,23 @@ struct MarkerPosition {
   let origin: FloatPoint
   let angle: Float32
 }
+
+struct SVGMarkerData {
+  init(_ positions: ArraySlice<MarkerPosition>, _ reverseStart: Bool) {
+    self.positions = positions
+    self.reverseStart = reverseStart
+  }
+
+  static func updateFromPathElement(_ markerData: inout SVGMarkerData, _ element: PathElement) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pathIsDone() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let positions: ArraySlice<MarkerPosition>
+  private let reverseStart: Bool
+}

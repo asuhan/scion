@@ -21,6 +21,11 @@
  */
 
 final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
+  func hasReverseStart() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Calculates marker boundaries, mapped to the target element's coordinate space
   func computeMarkerBoundingBox(
     _ options: SVGBoundingBoxComputation.DecorationOptions, _ markerTransformation: AffineTransform

@@ -79,8 +79,20 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   func updateMarkerPositions() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    markerPositions.removeAll()
+
+    if !shouldGenerateMarkerPositions() {
+      return
+    }
+
+    assert(hasPath())
+    let markerStart = svgMarkerStartResourceFromStyle()
+
+    var markerData = SVGMarkerData(markerPositions[...], markerStart?.hasReverseStart() ?? false)
+    path().applyElements({ (pathElement: PathElement) in
+      SVGMarkerData.updateFromPathElement(&markerData, pathElement)
+    })
+    markerData.pathIsDone()
   }
 
   private static let s_visitedSetCompute = SVGVisitedRendererTracking.VisitedSet()
@@ -121,6 +133,11 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   private func strokeZeroLengthSubpaths(_ context: GraphicsContextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func shouldGenerateMarkerPositions() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -166,5 +183,5 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     fatalError("Not implemented")
   }
 
-  private let markerPositions: [MarkerPosition] = []
+  private var markerPositions: [MarkerPosition] = []
 }
