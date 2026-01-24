@@ -30,8 +30,11 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
   func computeMarkerBoundingBox(
     _ options: SVGBoundingBoxComputation.DecorationOptions, _ markerTransformation: AffineTransform
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let boundingBoxComputation = SVGBoundingBoxComputation(self)
+    let boundingBox = boundingBoxComputation.computeDecoratedBoundingBox(options)
+
+    // Map repaint rect into parent coordinate space, in which the marker boundaries have to be evaluated
+    return markerTransformation.mapRect(rect: supplementalLayerTransform.mapRect(rect: boundingBox))
   }
 
   func markerTransformation(_ origin: FloatPoint, autoAngle: Float32, strokeWidth: Float32)
