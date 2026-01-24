@@ -1,9 +1,7 @@
 /*
- * Copyright (C) 2004, 2005, 2006 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2006, 2007 Rob Buis <buis@kde.org>
- * Copyright (C) 2007-2023 Apple Inc. All rights reserved.
- * Copyright (C) Research In Motion Limited 2011. All rights reserved.
- * Copyright (C) 2014 Adobe Systems Incorporated. All rights reserved.
+ * Copyright (C) 2004, 2005, 2006, 2008 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2004, 2005, 2006 Rob Buis <buis@kde.org>
+ * Copyright (C) 2019 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,19 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGLengthContext {
-  init(context: SVGElementWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func valueForLength(_ length: LengthWrapper, _ lengthMode: SVGLengthMode) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func viewportSize() -> FloatSize? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+enum SVGLengthMode {
+  case Width
+  case Height
+  case Other
 }
