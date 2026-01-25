@@ -2480,7 +2480,7 @@ class RenderLayerWrapper {
           ? .ExcludeCompositingState : .IncludeCompositingState)
       if !localClipRect.isInfinite() && !clipExceedsBounds {
         if flags.contains(.IncludeSelfTransform) && paintsWithTransform(paintBehavior: .Normal) {
-          localClipRect = transform!.mapRect(r: localClipRect)
+          localClipRect = transform!.mapRect(localClipRect)
         }
 
         localClipRect.move(size: offsetFromAncestor(ancestorLayer: ancestorLayer))
@@ -2533,8 +2533,8 @@ class RenderLayerWrapper {
     }
 
     if flags.contains(.IncludeSelfTransform) && paintsWithTransform(paintBehavior: .Normal) {
-      boundingBoxRect = transform!.mapRect(r: boundingBoxRect)
-      unionBounds = transform!.mapRect(r: unionBounds)
+      boundingBoxRect = transform!.mapRect(boundingBoxRect)
+      unionBounds = transform!.mapRect(unionBounds)
     }
     unionBounds.move(size: offsetFromRoot)
     return unionBounds
@@ -4331,7 +4331,7 @@ class RenderLayerWrapper {
       transformedPaintingInfo.paintDirtyRect = LayoutRectWrapper(
         r: encloseRectToDevicePixels(
           rect: (transform.inverse() ?? TransformationMatrix()).mapRect(
-            r: paintingInfo.paintDirtyRect),
+            paintingInfo.paintDirtyRect),
           pixelSnappingFactor: deviceScaleFactor))
     }
     transformedPaintingInfo.subpixelOffset = adjustedSubpixelOffset
@@ -5297,7 +5297,7 @@ class RenderLayerWrapper {
         transparencyBehavior: transparencyBehavior, paintBehavior: paintBehavior,
         paintDirtyRect: paintDirtyRect)
       clipRect.expand(box: toLayoutBoxExtent(extent: layer.filterOutsets()))
-      var result = transform.mapRect(r: clipRect)
+      var result = transform.mapRect(clipRect)
       if let paginationLayer = paginationLayer {
         // We have to break up the transformed extent across our columns.
         // Split our box up into the actual fragment boxes that render in the columns/pages and unite those together to

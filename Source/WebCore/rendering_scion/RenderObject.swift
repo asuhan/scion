@@ -1607,9 +1607,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
 
     mutating func transform(_ matrix: TransformationMatrix) {
-      clippedOverflowRect = matrix.mapRect(r: clippedOverflowRect)
+      clippedOverflowRect = matrix.mapRect(clippedOverflowRect)
       if outlineBoundsRect != nil {
-        outlineBoundsRect = matrix.mapRect(r: outlineBoundsRect!)
+        outlineBoundsRect = matrix.mapRect(outlineBoundsRect!)
       }
     }
 
@@ -1617,13 +1617,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       let identicalRects = outlineBoundsRect != nil && outlineBoundsRect! == clippedOverflowRect
       clippedOverflowRect = LayoutRectWrapper(
         r: encloseRectToDevicePixels(
-          rect: matrix.mapRect(r: clippedOverflowRect), pixelSnappingFactor: deviceScaleFactor))
+          rect: matrix.mapRect(clippedOverflowRect), pixelSnappingFactor: deviceScaleFactor))
       if identicalRects {
         outlineBoundsRect = clippedOverflowRect
       } else if outlineBoundsRect != nil {
         outlineBoundsRect = LayoutRectWrapper(
           r: encloseRectToDevicePixels(
-            rect: matrix.mapRect(r: outlineBoundsRect!), pixelSnappingFactor: deviceScaleFactor))
+            rect: matrix.mapRect(outlineBoundsRect!), pixelSnappingFactor: deviceScaleFactor))
       }
     }
   }
