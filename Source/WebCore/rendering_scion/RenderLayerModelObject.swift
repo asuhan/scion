@@ -83,8 +83,50 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: RenderObjectWrapper.VisibleRectContext
   ) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(self is RenderSVGModelObjectWrapper || self is RenderSVGBlockWrapper)
+    assert(!style().hasInFlowPosition())
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
+
+    if CPtrToInt(container?.p) == CPtrToInt(p) {
+      return rects
+    }
+
+    let (localContainer, containerIsSkipped) = self.container(container)
+    if localContainer == nil {
+      return rects
+    }
+
+    assert(!containerIsSkipped)
+
+    var adjustedRects = rects
+
+    var locationOffset = LayoutSizeWrapper()
+    if let modelObject = self as? RenderSVGModelObjectWrapper {
+      locationOffset = modelObject.locationOffsetEquivalent()
+    } else if let svgBlock = self as? RenderSVGBlockWrapper {
+      locationOffset = svgBlock.locationOffset()
+    }
+
+    // We are now in our parent container's coordinate space. Apply our transform to obtain a bounding box
+    // in the parent's coordinate space that encloses us.
+    if hasLayer() && layer()!.transform != nil {
+      adjustedRects.transform(layer()!.transform!)
+    }
+
+    adjustedRects.move(locationOffset)
+
+    if localContainer!.hasNonVisibleOverflow() {
+      let isEmpty = !(localContainer as! RenderLayerModelObjectWrapper)
+        .applyCachedClipAndScrollPosition(&adjustedRects, container, context)
+      if isEmpty {
+        if context.options.contains(.UseEdgeInclusiveIntersection) {
+          return nil
+        }
+        return adjustedRects
+      }
+    }
+
+    return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
   }
 
   func nominalSVGLayoutLocation() -> LayoutPointWrapper {

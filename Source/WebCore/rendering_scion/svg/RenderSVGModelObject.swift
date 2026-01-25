@@ -71,6 +71,11 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func locationOffsetEquivalent() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasVisualOverflow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

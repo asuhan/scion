@@ -1451,7 +1451,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
         var rect = r
         if viewHasCompositedLayer && view.layer()!.transform != nil {
           rect = LayoutRectWrapper(
-            rect: view.layer()!.transform!.mapRect(
+            r: view.layer()!.transform!.mapRect(
               snapRectToDevicePixels(
                 rect: rect, pixelSnappingFactor: document().deviceScaleFactor())))
         }
@@ -1604,6 +1604,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     func edgeInclusiveIntersect(_ clipRect: LayoutRectWrapper) -> Bool {
       // Note the we only intersect clippedOverflowRect.
       return clippedOverflowRect.edgeInclusiveIntersect(clipRect)
+    }
+
+    mutating func transform(_ matrix: TransformationMatrix) {
+      clippedOverflowRect = matrix.mapRect(r: clippedOverflowRect)
+      if outlineBoundsRect != nil {
+        outlineBoundsRect = matrix.mapRect(r: outlineBoundsRect!)
+      }
     }
 
     mutating func transform(_ matrix: TransformationMatrix, _ deviceScaleFactor: Float32) {
