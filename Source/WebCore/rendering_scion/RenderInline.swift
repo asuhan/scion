@@ -444,6 +444,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     propagateStyleToAnonymousChildren(propagationType: .AllChildren)
   }
 
+  override func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func generateLineBoxRects(_ context: AbsoluteRectsGeneratorContext) {
     if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
       let inlineBoxRects = lineLayout.collectInlineBoxRects(renderInline: self)

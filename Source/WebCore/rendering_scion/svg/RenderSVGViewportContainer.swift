@@ -38,6 +38,11 @@ final class RenderSVGViewportContainerWrapper: RenderSVGContainerWrapper {
     fatalError("Not implemented")
   }
 
+  override final func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func updateLayoutSizeIfNeeded() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

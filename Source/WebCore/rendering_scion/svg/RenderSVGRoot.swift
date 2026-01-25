@@ -364,6 +364,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     }
   }
 
+  override final func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateLayerTransform() {
     super.updateLayerTransform()
 

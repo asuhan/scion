@@ -26,6 +26,11 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  override final func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Chapter 10.4 of the SVG Specification say that we should use the
   // object bounding box of the parent text element.
   // We search for the root text element and take its bounding box.

@@ -2109,7 +2109,27 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func scrollMargin() -> LengthBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollPadding() -> LengthBox {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSnapPosition() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollSnapAlign() -> ScrollSnapAlign {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scrollSnapStop() -> ScrollSnapStop {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2396,6 +2416,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isDisplayBlockLevel() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isOriginalDisplayBlockType() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

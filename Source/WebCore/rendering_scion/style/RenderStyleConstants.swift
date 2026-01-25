@@ -806,6 +806,18 @@ enum CSSBoxType: UInt8 {
   case ViewBox
 }
 
+enum ScrollSnapAxisAlignType {
+  case None
+  case Start
+  case Center
+  case End
+}
+
+enum ScrollSnapStop {
+  case Normal
+  case Always
+}
+
 // These are all minimized combinations of paint-order.
 enum PaintOrder: UInt8 {
   case Normal

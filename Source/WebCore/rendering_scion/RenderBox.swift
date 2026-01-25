@@ -4672,6 +4672,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
+  override func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

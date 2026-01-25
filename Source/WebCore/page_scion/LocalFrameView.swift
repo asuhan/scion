@@ -120,6 +120,17 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  // Includes fixed- and sticky-position objects.
+  func addViewportConstrainedObject(_ object: RenderLayerModelObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func removeViewportConstrainedObject(_ object: RenderLayerModelObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewportConstrainedObjects() -> WeakHashSet<RenderLayerModelObjectWrapper>? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -258,6 +269,12 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   override func layerForVerticalScrollbar() -> GraphicsLayer? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // ScrollView
+  override func updateScrollbarSteps() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -34,6 +34,11 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
     addVisualOverflow(rect: LayoutRectWrapper(rect: snappedIntRect(rect: borderRect)))
   }
 
+  override func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     if document().settings().layerBasedSVGEngineEnabled() {
       super.styleDidChange(diff: diff, oldStyle: oldStyle)

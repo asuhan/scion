@@ -1097,6 +1097,11 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  func updateScrollbarSteps() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canResize() -> Bool {
     // We need a special case for <iframe> because they never have
     // hasNonVisibleOverflow(). However, they do "implicitly" clip their contents, so
@@ -1211,6 +1216,11 @@ class RenderLayerWrapper {
     }
 
     blendMode = renderer().style().blendMode()
+  }
+
+  func willRemoveChildWithBlendMode() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func offsetForInFlowPosition() -> LayoutSizeWrapper { return offsetForPosition }

@@ -102,6 +102,11 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     fatalError("Not implemented")
   }
 
+  override final func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let supplementalLayerTransform = AffineTransform()
   private var m_viewport = FloatRectWrapper()
 }

@@ -58,8 +58,107 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    updateFromStyle()
+
+    // When an out-of-flow-positioned element changes its display between block and inline-block,
+    // then an incremental layout on the element's containing block lays out the element through
+    // LayoutPositionedObjects, which skips laying out the element's parent.
+    // The element's parent needs to relayout so that it calls
+    // RenderBlockFlow::setStaticInlinePositionForChild with the out-of-flow-positioned child, so
+    // that when it's laid out, its RenderBox::computePositionedLogicalWidth/Height takes into
+    // account its new inline/block position rather than its old block/inline position.
+    // Position changes and other types of display changes are handled elsewhere.
+    if (oldStyle != nil && isOutOfFlowPositioned() && parent() != nil
+      && (CPtrToInt(parent()!.p) != CPtrToInt(containingBlock()?.p)))
+      && (style().position() == oldStyle!.position())
+      && (style().isOriginalDisplayInlineType() != oldStyle!.isOriginalDisplayInlineType())
+      && ((style().isOriginalDisplayBlockType()) || (style().isOriginalDisplayInlineType()))
+      && ((oldStyle!.isOriginalDisplayBlockType()) || (oldStyle!.isOriginalDisplayInlineType()))
+    {
+      parent()!.setChildNeedsLayout()
+    }
+
+    var gainedOrLostLayer = false
+    if requiresLayer() {
+      if layer() == nil && layerCreationAllowedForSubtree() {
+        gainedOrLostLayer = true
+        if RenderLayerModelObjectWrapper.s_wasFloating && isFloating() {
+          setChildNeedsLayout()
+        }
+        createLayer()
+        if parent() != nil && !needsLayout() && containingBlock() != nil {
+          layer()!.repaintStatus = .NeedsFullRepaint
+        }
+      }
+    } else if layer()?.parent() != nil {
+      gainedOrLostLayer = true
+      if oldStyle?.hasBlendMode() ?? false {
+        layer()!.willRemoveChildWithBlendMode()
+      }
+      setHasTransformRelatedProperty(false)  // All transform-related properties force layers, so we know we don't have one or the object doesn't support them.
+      setHasSVGTransform(false)  // Same reason as for setHasTransformRelatedProperty().
+      setHasReflection(false)
+
+      // Repaint the about to be destroyed self-painting layer when style change also triggers repaint.
+      if layer()!.isSelfPaintingLayer && layer()!.repaintStatus == .NeedsFullRepaint
+        && layer()!.cachedClippedOverflowRect() != nil
+      {
+        repaintUsingContainer(containerForRepaint().renderer, layer()!.cachedClippedOverflowRect()!)
+      }
+
+      layer()!.removeOnlyThisLayer(timing: .StyleChange)  // calls destroyLayer() which clears m_layer
+      if RenderLayerModelObjectWrapper.s_wasFloating && isFloating() {
+        setChildNeedsLayout()
+      }
+      if RenderLayerModelObjectWrapper.s_wasTransformed {
+        setNeedsLayoutAndPrefWidthsRecalc()
+      }
+    }
+
+    if gainedOrLostLayer {
+      InspectorInstrumentationWrapper.didAddOrRemoveScrollbars(renderer: self)
+    }
+
+    if layer() != nil {
+      layer()!.styleChanged(diff: diff, oldStyle: oldStyle)
+      if RenderLayerModelObjectWrapper.s_hadLayer
+        && layer()!.isSelfPaintingLayer != RenderLayerModelObjectWrapper.s_layerWasSelfPainting
+      {
+        setChildNeedsLayout()
+      }
+    }
+
+    let newStyleIsViewportConstrained = style().hasViewportConstrainedPosition()
+    let oldStyleIsViewportConstrained = oldStyle?.hasViewportConstrainedPosition() ?? false
+    if newStyleIsViewportConstrained != oldStyleIsViewportConstrained {
+      if newStyleIsViewportConstrained && layer() != nil {
+        view().frameView().addViewportConstrainedObject(self)
+      } else {
+        view().frameView().removeViewportConstrainedObject(self)
+      }
+    }
+
+    let newStyle = style()
+    if oldStyle != nil && oldStyle!.scrollPadding() != newStyle.scrollPadding() {
+      if isDocumentElementRenderer() {
+        let frameView = view().frameView()
+        frameView.updateScrollbarSteps()
+      } else if let renderLayer = layer() {
+        renderLayer.updateScrollbarSteps()
+      }
+    }
+
+    let scrollMarginChanged = oldStyle != nil && oldStyle!.scrollMargin() != newStyle.scrollMargin()
+    let scrollAlignChanged =
+      oldStyle != nil && oldStyle!.scrollSnapAlign() != newStyle.scrollSnapAlign()
+    let scrollSnapStopChanged =
+      oldStyle != nil && oldStyle!.scrollSnapStop() != newStyle.scrollSnapStop()
+    if scrollMarginChanged || scrollAlignChanged || scrollSnapStopChanged,
+      let scrollSnapBox = enclosingScrollableContainer()
+    {
+      scrollSnapBox.setNeedsLayout()
+    }
   }
 
   func requiresLayer() -> Bool { fatalError("Not reached") }
@@ -223,6 +322,13 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func createLayer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateFromStyle() {}
 
   // Used to store state between styleWillChange and styleDidChange
   private static var s_wasFloating = false

@@ -331,6 +331,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func enclosingScrollableContainer() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func styleColorOptions() -> StyleColorOptions {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1077,6 +1082,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHasOutlineAutoAncestor(hasOutlineAutoAncestor: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setHasSVGTransform(_ value: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

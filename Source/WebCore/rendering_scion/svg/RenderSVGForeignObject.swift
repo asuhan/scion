@@ -47,4 +47,9 @@ final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override final func updateFromStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

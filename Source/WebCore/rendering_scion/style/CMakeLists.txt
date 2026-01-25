@@ -29,6 +29,7 @@ target_sources(layout_scion PRIVATE
     StyleMultiImage.swift
     StyleRareInheritedData.swift
     StyleReflection.swift
+    StyleScrollSnapPoints.swift
     StyleSelfAlignmentData.swift
     StyleTextEdge.swift
     SVGRenderStyle.swift

@@ -137,6 +137,11 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
+  func updateScrollbarSteps() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
