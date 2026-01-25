@@ -41,8 +41,20 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    RenderLayerModelObjectWrapper.s_wasFloating = isFloating()
+    RenderLayerModelObjectWrapper.s_hadLayer = hasLayer()
+    RenderLayerModelObjectWrapper.s_wasTransformed = isTransformed()
+    if RenderLayerModelObjectWrapper.s_hadLayer {
+      RenderLayerModelObjectWrapper.s_layerWasSelfPainting = layer()!.isSelfPaintingLayer
+    }
+
+    let oldStyle: RenderStyleWrapper? = hasInitializedStyle ? style() : nil
+    if diff == .RepaintLayer && parent() != nil && oldStyle != nil
+      && oldStyle!.clip() != newStyle.clip()
+    {
+      layer()!.clearClipRectsIncludingDescendants()
+    }
+    super.styleWillChange(diff: diff, newStyle: newStyle)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -211,6 +223,12 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Used to store state between styleWillChange and styleDidChange
+  private static var s_wasFloating = false
+  private static var s_hadLayer = false
+  private static var s_wasTransformed = false
+  private static var s_layerWasSelfPainting = false
 }
 
 // Pixel-snapping (== 'device pixel alignment') helpers.
