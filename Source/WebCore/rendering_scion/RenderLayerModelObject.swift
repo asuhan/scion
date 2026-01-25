@@ -73,8 +73,23 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   func shouldPaintSVGRenderer(_ paintInfo: PaintInfoWrapper, _ relevantPaintPhases: PaintPhase)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.context().paintingDisabled() {
+      return false
+    }
+
+    if !relevantPaintPhases.isEmpty && !relevantPaintPhases.contains(paintInfo.phase) {
+      return false
+    }
+
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) {
+      return false
+    }
+
+    if style().usedVisibility() == .Hidden || style().display() == .None {
+      return false
+    }
+
+    return true
   }
 
   // Provides the SVG implementation for computeVisibleRectsInContainer().
