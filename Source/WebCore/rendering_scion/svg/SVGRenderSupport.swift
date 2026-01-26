@@ -177,7 +177,7 @@ class SVGRenderSupport {
   }
 
   static func findTreeRootObject(start: RenderElementWrapper) -> LegacyRenderSVGRootWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return RenderAncestorIteratorAdapter<LegacyRenderSVGRootWrapper>.lineageOfType(first: start)
+      .first()
   }
 }
