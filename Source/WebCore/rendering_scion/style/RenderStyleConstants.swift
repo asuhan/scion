@@ -842,6 +842,15 @@ struct EventListenerRegionType: OptionSet {
   static let MouseClick = EventListenerRegionType(rawValue: 1 << 2)
 }
 
+struct Containment: OptionSet {
+  let rawValue: UInt8
+  static let Layout = Containment(rawValue: 1 << 0)
+  static let Paint = Containment(rawValue: 1 << 1)
+  static let Size = Containment(rawValue: 1 << 2)
+  static let InlineSize = Containment(rawValue: 1 << 3)
+  static let Style = Containment(rawValue: 1 << 4)
+}
+
 enum ContainerType: UInt8 {
   case Normal
   case Size

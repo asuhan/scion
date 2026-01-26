@@ -1501,7 +1501,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return repaintRectangle(repaintRect, shouldClipToLayer ? .Yes : .No, .No)
   }
 
-  private enum ClipRepaintToLayer {
+  enum ClipRepaintToLayer {
     case No
     case Yes
   }
@@ -1963,7 +1963,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  private func issueRepaint(
+  func issueRepaint(
     _ partialRepaintRect: LayoutRectWrapper? = nil, _ clipRepaintToLayer: ClipRepaintToLayer = .No,
     _ forceRepaint: ForceRepaint = .No, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
   ) {

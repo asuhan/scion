@@ -1470,6 +1470,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func usedContain() -> Containment {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containsLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

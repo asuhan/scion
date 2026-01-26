@@ -4227,6 +4227,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       height: LayoutUnit.fromRawValue(value: raw.height))
   }
 
+  func hasRenderOverflow() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasVisualOverflow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -4509,6 +4514,28 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return floatPainter
   }
 
+  func computeHasTransformRelatedProperty(_ styleToUse: RenderStyleWrapper) -> Bool {
+    if styleToUse.hasTransformRelatedProperty() {
+      return true
+    }
+
+    if !settings().css3DTransformBackfaceVisibilityInteroperabilityEnabled() {
+      return false
+    }
+
+    if styleToUse.backfaceVisibility() != .Hidden {
+      return false
+    }
+
+    guard let element = element() else { return false }
+
+    guard let parent = element.parentElement() else { return false }
+
+    guard let parentRenderer = parent.containerRenderer() else { return false }
+
+    return parentRenderer.style().preserves3D()
+  }
+
   func shapeOutsideInfo() -> ShapeOutsideInfoWrapper? {
     if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(p) {
       return ShapeOutsideInfoWrapper(p: unwrapped)
@@ -4673,8 +4700,56 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    let styleToUse = style()
+    let isDocElementRenderer = isDocumentElementRenderer()
+    let isViewObject = isRenderView()
+
+    // The root and the RenderView always paint their backgrounds/borders.
+    if isDocElementRenderer || isViewObject {
+      setHasVisibleBoxDecorations(true)
+    }
+
+    setFloating(!isOutOfFlowPositioned() && styleToUse.isFloating())
+
+    // We also handle <body> and <html>, whose overflow applies to the viewport.
+    if !(effectiveOverflowX() == .Visible && effectiveOverflowY() == .Visible)
+      && !isDocElementRenderer && isRenderBlock()
+    {
+      var boxHasNonVisibleOverflow = true
+      if isBody() {
+        // Overflow on the body can propagate to the viewport under the following conditions.
+        // (1) The root element is <html>.
+        // (2) We are the primary <body> (can be checked by looking at document.body).
+        // (3) The root element has visible overflow.
+        // (4) No containment is set either on the body or on the html document element.
+        let documentElement = document().documentElement()!
+        let documentElementRenderer = documentElement.containerRenderer()!
+        if documentElement is HTMLHtmlElement
+          && CPtrToInt(document().body()?.p) == CPtrToInt(element()?.p)
+          && documentElementRenderer.effectiveOverflowX() == .Visible
+          && styleToUse.usedContain().isEmpty
+          && documentElementRenderer.style().usedContain().isEmpty
+        {
+          boxHasNonVisibleOverflow = false
+        }
+      }
+      // Check for overflow clip.
+      // It's sufficient to just check one direction, since it's illegal to have visible on only one overflow value.
+      if boxHasNonVisibleOverflow {
+        if !RenderBoxWrapper.hadNonVisibleOverflow && hasRenderOverflow() {
+          // Erase the overflow.
+          // Overflow changes have to result in immediate repaints of the entire layout overflow area because
+          // repaints issued by removal of descendants get clipped using the updated style when they shouldn't.
+          issueRepaint(visualOverflowRect(), .Yes, .Yes)
+          issueRepaint(layoutOverflowRect(), .Yes, .Yes)
+        }
+        setHasNonVisibleOverflow()
+      }
+    }
+    setHasTransformRelatedProperty(computeHasTransformRelatedProperty(styleToUse))
+    setHasReflection(styleToUse.boxReflect() != nil)
   }
 
   func shouldTrimChildMarginForBox(type: MarginTrimType, child: RenderBoxWrapper) -> Bool {
