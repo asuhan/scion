@@ -28,8 +28,10 @@
 class SVGRenderSupport {
   // Helper function determining wheter overflow is hidden
   static func isOverflowHidden(_ renderer: RenderElementWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // LegacyRenderSVGRoot should never query for overflow state - it should always clip itself to the initial viewport size.
+    assert(!renderer.isDocumentElementRenderer())
+
+    return isNonVisibleOverflow(renderer.style().overflowX())
   }
 
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
