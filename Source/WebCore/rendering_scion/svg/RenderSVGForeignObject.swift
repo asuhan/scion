@@ -49,7 +49,10 @@ final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   }
 
   override final func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    if SVGRenderSupport.isOverflowHidden(self) {
+      setHasNonVisibleOverflow()
+    }
   }
 }

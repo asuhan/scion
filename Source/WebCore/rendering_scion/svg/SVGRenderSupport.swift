@@ -26,6 +26,12 @@
 
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
+  // Helper function determining wheter overflow is hidden
+  static func isOverflowHidden(_ renderer: RenderElementWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
   static func clippedOverflowRectForRepaint(
     _ renderer: RenderElementWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,
