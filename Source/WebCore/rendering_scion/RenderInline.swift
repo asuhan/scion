@@ -445,8 +445,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    // FIXME: Support transforms and reflections on inline flows someday.
+    setHasTransformRelatedProperty(false)
+    setHasReflection(false)
   }
 
   private func generateLineBoxRects(_ context: AbsoluteRectsGeneratorContext) {
