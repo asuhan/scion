@@ -35,8 +35,26 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
   }
 
   override func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    if document().settings().layerBasedSVGEngineEnabled() {
+      updateHasSVGTransformFlags()
+      return
+    }
+
+    // RenderSVGlock, used by Render(SVGText|ForeignObject), is not allowed to call setHasNonVisibleOverflow(true).
+    // RenderBlock assumes a layer to be present when the overflow clip functionality is requested. Both
+    // Render(SVGText|ForeignObject) return 'false' on 'requiresLayer'. Fine for RenderSVGText.
+    //
+    // If we want to support overflow rules for <foreignObject> we can choose between two solutions:
+    // a) make LegacyRenderSVGForeignObject require layers and SVG layer aware
+    // b) refactor overflow logic out of RenderLayer (as suggested by dhyatt), which is a large task
+    //
+    // Until this is resolved, disable overflow support. Opera/FF don't support it as well at the moment (Feb 2010).
+    //
+    // Note: This does NOT affect overflow handling on outer/inner <svg> elements - this is handled
+    // manually by LegacyRenderSVGRoot - which owns the documents enclosing root layer and thus works fine.
+    setHasNonVisibleOverflow(false)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

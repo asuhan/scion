@@ -255,6 +255,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
   }
 
+  func updateHasSVGTransformFlags() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nominalSVGLayoutLocation() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
