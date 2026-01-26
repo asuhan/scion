@@ -18,6 +18,11 @@
  */
 
 class LegacyRootInlineBox: LegacyInlineFlowBox {
+  func blockFlow() -> RenderBlockFlowWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextRootBox() -> LegacyRootInlineBox? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

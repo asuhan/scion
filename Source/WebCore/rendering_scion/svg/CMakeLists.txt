@@ -32,8 +32,12 @@ target_sources(layout_scion PRIVATE
     SVGMarkerData.swift
     SVGPaintServerHandling.swift
     SVGRenderSupport.swift
+    SVGRootInlineBox.swift
+    SVGTextChunk.swift
+    SVGTextFragment.swift
     SVGTextLayoutAttributes.swift
     SVGTextLayoutAttributesBuilder.swift
+    SVGTextLayoutEngine.swift
     SVGTextMetrics.swift
     SVGTextMetricsBuilder.swift
     SVGVisitedRendererTracking.swift

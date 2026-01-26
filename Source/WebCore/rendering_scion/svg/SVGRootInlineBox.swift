@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 2006 Oliver Hunt <ojh16@student.canterbury.ac.nz>
+ * Copyright (C) 2006-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2014 Google Inc. All rights reserved.
+ * Copyright (C) 2007 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) Research In Motion Limited 2010. All rights reserved.
+ * Copyright (C) 2011 Torch Mobile (Beijing) CO. Ltd. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+final class SVGRootInlineBox: LegacyRootInlineBox {
+  func computePerCharacterLayoutInformation() {
+    let textRoot = blockFlow() as! RenderSVGTextWrapper
+
+    let layoutAttributes = textRoot.layoutAttributes
+    if layoutAttributes.a.isEmpty {
+      return
+    }
+
+    if textRoot.needsReordering {
+      reorderValueListsToLogicalOrder(layoutAttributes)
+    }
+
+    // Perform SVG text layout phase two (see SVGTextLayoutEngine for details).
+    var characterLayout = SVGTextLayoutEngine(layoutAttributes)
+    layoutCharactersInTextBoxes(self, &characterLayout)
+
+    // Perform SVG text layout phase three (see SVGTextChunkBuilder for details).
+    let fragmentMap = characterLayout.finishLayout()
+
+    // Perform SVG text layout phase four
+    // Position & resize all SVGInlineText/FlowBoxes in the inline box tree, resize the root box as well as the RenderSVGText parent block.
+    let childRect = layoutChildBoxes(self, fragmentMap)
+    layoutRootBox(childRect)
+  }
+
+  private func reorderValueListsToLogicalOrder(
+    _ attributes: RenderSVGTextWrapper.LayoutAttributesRef
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutCharactersInTextBoxes(
+    _ start: LegacyInlineFlowBox, _ characterLayout: inout SVGTextLayoutEngine
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutChildBoxes(_ start: LegacyInlineFlowBox, _ fragmentMap: SVGTextFragmentMap)
+    -> FloatRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutRootBox(_ childRect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

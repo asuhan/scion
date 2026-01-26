@@ -120,7 +120,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     var newLayoutAttributes: [SVGTextLayoutAttributes] = []
     collectLayoutAttributes(self, &newLayoutAttributes)
     if newLayoutAttributes.isEmpty {
-      assert(layoutAttributes.isEmpty)
+      assert(layoutAttributes.a.isEmpty)
       return
     }
 
@@ -128,7 +128,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     var attributes_: SVGTextLayoutAttributes? = nil
     for attributes in newLayoutAttributes {
       attributes_ = attributes
-      if layoutAttributes.contains(where: { (element: SVGTextLayoutAttributes) in
+      if layoutAttributes.a.contains(where: { (element: SVGTextLayoutAttributes) in
         return element === attributes
       }) {
         continue
@@ -153,13 +153,13 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
       // Verify that layoutAttributes only differs by a maximum of one entry.
       for newAttr in newLayoutAttributes {
         assert(
-          layoutAttributes.contains(where: { (element: SVGTextLayoutAttributes) in
+          layoutAttributes.a.contains(where: { (element: SVGTextLayoutAttributes) in
             return element === newAttr
           }) || newAttr === attributes_)
       }
     #endif
 
-    layoutAttributes = newLayoutAttributes
+    layoutAttributes.a = newLayoutAttributes
   }
 
   func subtreeChildWillBeRemoved(
@@ -169,12 +169,12 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
       return
     }
 
-    checkLayoutAttributesConsistency(self, layoutAttributes[...])
+    checkLayoutAttributesConsistency(self, layoutAttributes.a[...])
 
     // The positioning elements cache depends on the size of each text renderer in the
     // subtree. If this changes, clear the cache. It's going to be rebuilt below.
     layoutAttributesBuilder.clearTextPositioningElements()
-    if layoutAttributes.isEmpty || !child.isRenderSVGInlineText() {
+    if layoutAttributes.a.isEmpty || !child.isRenderSVGInlineText() {
       return
     }
 
@@ -194,10 +194,10 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
       affectedAttributes.append(next!)
     }
 
-    let indexToRemove = layoutAttributes.firstIndex(where: { (element: SVGTextLayoutAttributes) in
+    let indexToRemove = layoutAttributes.a.firstIndex(where: { (element: SVGTextLayoutAttributes) in
       return element === text.layoutAttributes()
     })
-    layoutAttributes.remove(at: indexToRemove!)
+    layoutAttributes.a.remove(at: indexToRemove!)
   }
 
   func subtreeChildWasRemoved(affectedAttributes: ArraySlice<SVGTextLayoutAttributes>) {
@@ -334,7 +334,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     assert(needsLayout())
 
     if shouldHandleSubtreeMutations() && !renderTreeBeingDestroyed() {
-      checkLayoutAttributesConsistency(self, layoutAttributes[...])
+      checkLayoutAttributesConsistency(self, layoutAttributes.a[...])
     }
 
     let checkForRepaintOverride =
@@ -355,8 +355,8 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     if !everHadLayout() {
       // When laying out initially, collect all layout attributes, build the character data map,
       // and propogate resulting SVGLayoutAttributes to all RenderSVGInlineText children in the subtree.
-      assert(layoutAttributes.isEmpty)
-      collectLayoutAttributes(self, &layoutAttributes)
+      assert(layoutAttributes.a.isEmpty)
+      collectLayoutAttributes(self, &layoutAttributes.a)
       updateFontInAllDescendants(self)
       layoutAttributesBuilder.buildLayoutAttributesForForSubtree(self)
 
@@ -400,7 +400,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
       layoutAttributesBuilder.rebuildMetricsForSubtree(self)
     }
 
-    checkLayoutAttributesConsistency(self, layoutAttributes[...])
+    checkLayoutAttributesConsistency(self, layoutAttributes.a[...])
 
     // Reduced version of RenderBlock::layoutBlock(), which only takes care of SVG text.
     // All if branches that could cause early exit in RenderBlocks layoutBlock() method are turned into assertions.
@@ -503,19 +503,23 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
 
   private func shouldHandleSubtreeMutations() -> Bool {
     if beingDestroyed() || !everHadLayout() {
-      assert(layoutAttributes.isEmpty)
+      assert(layoutAttributes.a.isEmpty)
       assert(layoutAttributesBuilder.numberOfTextPositioningElements() == 0)
       return false
     }
     return true
   }
 
-  private var needsReordering = false
+  class LayoutAttributesRef {
+    var a: [SVGTextLayoutAttributes] = []
+  }
+
+  var needsReordering = false
   private var needsPositioningValuesUpdate = false
   private var needsTransformUpdate = true  // FIXME: [LBSE] Only needed for legacy SVG engine.
   private var needsTextMetricsUpdate = false
   private var localTransform = AffineTransform()  // FIXME: [LBSE] Only needed for legacy SVG engine.
   private var layoutAttributesBuilder = SVGTextLayoutAttributesBuilder()
-  private var layoutAttributes: [SVGTextLayoutAttributes] = []
+  var layoutAttributes = LayoutAttributesRef()
   private var m_objectBoundingBox = FloatRectWrapper()
 }
