@@ -28,5 +28,10 @@ final class LegacyRenderSVGTransformableContainer: LegacyRenderSVGContainer {
 
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
+  override func didTransformToRootUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var needsTransformUpdate = false
 }

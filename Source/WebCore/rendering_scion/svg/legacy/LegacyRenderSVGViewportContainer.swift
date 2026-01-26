@@ -24,6 +24,11 @@
 // This is used for non-root <svg> elements and <marker> elements, neither of which are SVGTransformable
 // thus we inherit from LegacyRenderSVGContainer instead of LegacyRenderSVGTransformableContainer
 final class LegacyRenderSVGViewportContainer: LegacyRenderSVGContainer {
+  override func didTransformToRootUpdate() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   override func localToParentTransform() -> AffineTransform {

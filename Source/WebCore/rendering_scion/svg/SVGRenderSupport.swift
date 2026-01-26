@@ -54,8 +54,17 @@ class SVGRenderSupport {
   static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)
     -> LayoutRepainter.CheckForRepaint
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !renderer.checkForRepaintDuringLayout() {
+      return .No
+    }
+    // When a parent container is transformed in SVG, all children will be painted automatically
+    // so we are able to skip redundant repaint checks.
+    if let parent = renderer.parent() as? LegacyRenderSVGContainer,
+      parent.isRepaintSuspendedForChildren() || parent.didTransformToRootUpdate()
+    {
+      return .No
+    }
+    return .Yes
   }
 
   static func calculateApproximateStrokeBoundingBox(_ renderer: RenderElementWrapper)

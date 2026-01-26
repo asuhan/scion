@@ -27,6 +27,13 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  func didTransformToRootUpdate() -> Bool { return false }
+
+  func isRepaintSuspendedForChildren() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
