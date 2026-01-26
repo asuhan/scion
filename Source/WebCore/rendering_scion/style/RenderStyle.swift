@@ -2040,6 +2040,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasPositionedMask() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasMask() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

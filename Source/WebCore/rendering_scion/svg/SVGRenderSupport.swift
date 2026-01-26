@@ -149,8 +149,31 @@ class SVGRenderSupport {
   }
 
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if renderer.element() != nil && renderer.element()!.isSVGElement()
+      && (oldStyle == nil || renderer.style().hasBlendMode() != oldStyle!.hasBlendMode())
+    {
+      SVGRenderSupport.updateMaskedAncestorShouldIsolateBlending(renderer)
+    }
+  }
+
+  private static func isolatesBlending(_ style: RenderStyleWrapper) -> Bool {
+    return style.hasPositionedMask() || style.hasFilter() || style.hasBlendMode()
+      || style.opacity() < 1
+  }
+
+  private static func updateMaskedAncestorShouldIsolateBlending(_ renderer: RenderElementWrapper) {
+    let element = renderer.element()!
+    assert(element.isSVGElement())
+    for ancestor: SVGGraphicsElementWrapper in ancestorsOfType(descendant: element) {
+      let style = ancestor.computedStyle()
+      if style == nil || !isolatesBlending(style!) {
+        continue
+      }
+      if style!.hasPositionedMask() {
+        ancestor.setShouldIsolateBlending(renderer.style().hasBlendMode())
+      }
+      return
+    }
   }
 
   static func findTreeRootObject(start: RenderElementWrapper) -> LegacyRenderSVGRootWrapper? {

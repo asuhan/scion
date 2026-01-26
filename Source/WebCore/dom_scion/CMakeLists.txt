@@ -7,6 +7,7 @@ target_sources(layout_scion PRIVATE
     Document.swift
     DocumentMarker.swift
     DocumentMarkerController.swift
+    ElementAncestorIterator.swift
     Element.swift
     Node.swift
     PseudoElement.swift

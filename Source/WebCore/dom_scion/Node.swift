@@ -44,6 +44,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func isSVGElement() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isPseudoElement() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
