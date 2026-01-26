@@ -28,17 +28,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
-  enum ShapeType {
-    case Empty
-    case Path
-    case Line
-    case Rectangle
-    case RoundedRectangle
-    case Ellipse
-    case Circle
-  }
+enum ShapeType {
+  case Empty
+  case Path
+  case Line
+  case Rectangle
+  case RoundedRectangle
+  case Ellipse
+  case Circle
+}
 
+protocol RenderSVGShapeProto {
+  func style() -> RenderStyleWrapper
+  func hasPath() -> Bool
+  func path() -> PathWrapper
+  func objectBoundingBox() -> FloatRectWrapper
+  func strokeWidth() -> Float32
+  func hasNonScalingStroke() -> Bool
+  func nonScalingStrokeTransform() -> AffineTransform
+  func nonScalingStrokePath(_ path: PathWrapper, _ strokeTransform: AffineTransform) -> PathWrapper
+
+  var shapeType: ShapeType { get }
+}
+
+class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper, RenderSVGShapeProto {
   func setNeedsShapeUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -117,8 +130,15 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func nonScalingStrokePath(_ path: PathWrapper, _ strokeTransform: AffineTransform)
+  func nonScalingStrokePath(_ path: PathWrapper, _ strokeTransform: AffineTransform)
     -> PathWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func adjustStrokeBoundingBoxForZeroLengthLinecaps(_ strokeBoundingBox: FloatRectWrapper)
+    -> FloatRectWrapper
   {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

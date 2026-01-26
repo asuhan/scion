@@ -27,8 +27,47 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
+class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapeProto {
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
+
+  func hasPath() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func path() -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokeWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasNonScalingStroke() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nonScalingStrokeTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func nonScalingStrokePath(_ path: PathWrapper, _ strokeTransform: AffineTransform)
+    -> PathWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func adjustStrokeBoundingBoxForMarkersAndZeroLengthLinecaps(
+    _ repaintRectCalculation: RepaintRectCalculation, _ strokeBoundingBox: FloatRectWrapper
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   override final func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
@@ -60,5 +99,11 @@ final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  override func objectBoundingBox() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var needsTransformUpdate = false
+  let shapeType: ShapeType = .Empty
 }

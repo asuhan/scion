@@ -113,6 +113,13 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     shapeType = path().definitelySingleLine() ? .Line : .Path
   }
 
+  override func adjustStrokeBoundingBoxForZeroLengthLinecaps(_ strokeBoundingBox: FloatRectWrapper)
+    -> FloatRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func strokeShape(_ context: GraphicsContextWrapper) {
     if !style().hasVisibleStroke() {
       return

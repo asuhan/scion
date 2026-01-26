@@ -70,8 +70,82 @@ class SVGRenderSupport {
   static func calculateApproximateStrokeBoundingBox(_ renderer: RenderElementWrapper)
     -> FloatRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let calculateApproximateScalingStrokeBoundingBox = {
+      (renderer: RenderSVGShapeProto, fillBoundingBox: FloatRectWrapper) -> FloatRectWrapper in
+      // Implementation of
+      // https://drafts.fxtf.org/css-masking/#compute-stroke-bounding-box
+      // except that we ignore whether the stroke is none.
+
+      assert(renderer.style().svgStyle().hasStroke())
+
+      var strokeBoundingBox = fillBoundingBox
+      let strokeWidth = renderer.strokeWidth()
+      if strokeWidth <= 0 {
+        return strokeBoundingBox
+      }
+
+      var delta = strokeWidth / 2
+      switch renderer.shapeType {
+      case .Empty:
+        // Spec: "A negative value is illegal. A value of zero disables rendering of the element."
+        return strokeBoundingBox
+      case .Ellipse, .Circle:
+        break
+      case .Rectangle, .RoundedRectangle:
+        break
+      case .Path, .Line:
+        let style = renderer.style()
+        if renderer.shapeType == .Path && style.joinStyle() == .Miter {
+          let miter = style.strokeMiterLimit()
+          if Float64(miter) < sqrtOfTwoDouble && style.capStyle() == .Square {
+            delta = Float32(Float64(delta) * sqrtOfTwoDouble)
+          } else {
+            delta *= max(miter, 1)
+          }
+        } else if style.capStyle() == .Square {
+          delta = Float32(Float64(delta) * sqrtOfTwoDouble)
+        }
+      }
+
+      strokeBoundingBox.inflate(d: delta)
+      return strokeBoundingBox
+    }
+
+    let calculateApproximateNonScalingStrokeBoundingBox = {
+      (renderer: RenderSVGShapeProto, fillBoundingBox: FloatRectWrapper) -> FloatRectWrapper in
+      assert(renderer.hasPath())
+      assert(renderer.style().svgStyle().hasStroke())
+      assert(renderer.hasNonScalingStroke())
+
+      var strokeBoundingBox = fillBoundingBox
+      let nonScalingTransform = renderer.nonScalingStrokeTransform()
+      if let inverse = nonScalingTransform.inverse() {
+        let usePath = renderer.nonScalingStrokePath(renderer.path(), nonScalingTransform)
+        var strokeBoundingRect = calculateApproximateScalingStrokeBoundingBox(
+          renderer, usePath.fastBoundingRect())
+        strokeBoundingRect = inverse.mapRect(rect: strokeBoundingRect)
+        strokeBoundingBox.unite(other: strokeBoundingRect)
+      }
+      return strokeBoundingBox
+    }
+
+    let calculate = { (renderer: RenderSVGShapeProto) -> FloatRectWrapper in
+      if !renderer.style().svgStyle().hasStroke() {
+        return renderer.objectBoundingBox()
+      }
+      if renderer.hasNonScalingStroke() {
+        return calculateApproximateNonScalingStrokeBoundingBox(
+          renderer, renderer.objectBoundingBox())
+      }
+      return calculateApproximateScalingStrokeBoundingBox(renderer, renderer.objectBoundingBox())
+    }
+
+    if let shape = renderer as? LegacyRenderSVGShapeWrapper {
+      return shape.adjustStrokeBoundingBoxForMarkersAndZeroLengthLinecaps(.Fast, calculate(shape))
+    }
+
+    let shape = renderer as! RenderSVGShapeWrapper
+    return shape.adjustStrokeBoundingBoxForZeroLengthLinecaps(calculate(shape))
   }
 
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
