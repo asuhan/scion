@@ -27,8 +27,14 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
   }
 
   override final func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    if document().settings().layerBasedSVGEngineEnabled() {
+      updateHasSVGTransformFlags()
+    }
+
+    // SVG text layout code expects us to be an inline-level element.
+    setInline(true)
   }
 
   // Chapter 10.4 of the SVG Specification say that we should use the
