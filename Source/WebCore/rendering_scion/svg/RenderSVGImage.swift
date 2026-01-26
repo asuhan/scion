@@ -41,6 +41,13 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func repaintRectInLocalCoordinates(
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
 

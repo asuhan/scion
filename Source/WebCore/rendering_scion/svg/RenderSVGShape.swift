@@ -80,6 +80,13 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper {
     return m_approximateStrokeBoundingBox!
   }
 
+  override final func repaintRectInLocalCoordinates(
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nonScalingStrokeTransform() -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

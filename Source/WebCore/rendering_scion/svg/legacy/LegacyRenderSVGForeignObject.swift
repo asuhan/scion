@@ -35,6 +35,13 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func repaintRectInLocalCoordinates(
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   override func updateLogicalWidth() {

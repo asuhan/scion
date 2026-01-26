@@ -32,6 +32,13 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  override func repaintRectInLocalCoordinates(
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func addFocusRingRects(
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil

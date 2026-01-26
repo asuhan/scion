@@ -30,6 +30,13 @@
 final class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject {
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
+  override final func repaintRectInLocalCoordinates(
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func localToParentTransform() -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

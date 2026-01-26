@@ -39,8 +39,16 @@ class SVGRenderSupport {
     _ renderer: RenderElementWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ context: RenderObjectWrapper.VisibleRectContext
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Return early for any cases where we don't actually paint
+    if renderer.isInsideEntirelyHiddenLayer() {
+      return LayoutRectWrapper()
+    }
+
+    // Pass our local paint rect to computeFloatVisibleRectInContainer() which will
+    // map to parent coords and recurse up the parent chain.
+    return enclosingLayoutRect(
+      rect: renderer.computeFloatRectForRepaint(
+        renderer.repaintRectInLocalCoordinates(context.repaintRectCalculation()), repaintContainer))
   }
 
   static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)

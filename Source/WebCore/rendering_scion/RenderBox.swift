@@ -892,6 +892,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func repaintRectInLocalCoordinates(
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> FloatRectWrapper { return borderBoxRect().FloatRect() }
+
   override func objectBoundingBox() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
