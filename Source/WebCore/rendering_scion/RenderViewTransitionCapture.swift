@@ -76,8 +76,11 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   }
 
   override func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    if effectiveOverflowX() != .Visible || effectiveOverflowY() != .Visible {
+      setHasNonVisibleOverflow()
+    }
   }
 
   // The overflow rect that the captured image represents, in RenderLayer coordinates
