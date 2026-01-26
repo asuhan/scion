@@ -1086,6 +1086,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setPaintContainmentApplies(_ value: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setHasSVGTransform(_ value: Bool = true) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1235,6 +1240,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setFloating(_ b: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setInline(_ b: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

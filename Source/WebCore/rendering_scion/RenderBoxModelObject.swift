@@ -479,8 +479,19 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    // Set the appropriate bits for a box model object.  Since all bits are cleared in styleWillChange,
+    // we only check for bits that could possibly be set to true.
+    let styleToUse = style()
+    setHasVisibleBoxDecorations(hasVisibleBoxDecorationStyle())
+    setInline(styleToUse.isDisplayInlineType())
+    setPositionState(styleToUse.position())
+    setHorizontalWritingMode(styleToUse.isHorizontalWritingMode())
+    if styleToUse.isFlippedBlocksWritingMode() {
+      view().frameView().setHasFlippedBlockRenderers(true)
+    }
+    setPaintContainmentApplies(shouldApplyPaintContainment())
   }
 
   override func requiresLayer() -> Bool {
@@ -816,6 +827,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func hasRunningAcceleratedAnimations() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hasVisibleBoxDecorationStyle() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

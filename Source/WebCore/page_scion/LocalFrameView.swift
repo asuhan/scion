@@ -253,6 +253,11 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func setHasFlippedBlockRenderers(_ b: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addTrackedRepaintRect(_ r: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
