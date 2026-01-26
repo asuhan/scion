@@ -365,8 +365,18 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override final func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+    updateHasSVGTransformFlags()
+
+    // Additionally update style of the anonymous RenderSVGViewportContainer,
+    // which handles zoom / pan / viewBox transformations.
+    if let viewportContainer = viewportContainer() {
+      viewportContainer.updateFromStyle()
+    }
+
+    if shouldApplyViewportClip() {
+      setHasNonVisibleOverflow()
+    }
   }
 
   override func updateLayerTransform() {
