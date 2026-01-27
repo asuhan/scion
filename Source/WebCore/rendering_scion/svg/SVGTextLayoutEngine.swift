@@ -638,7 +638,7 @@ struct SVGTextLayoutEngine {
     fatalError("Not reached")
   }
 
-  private func currentVisualCharacterMetrics(
+  private mutating func currentVisualCharacterMetrics(
     _ textBox: InlineIterator.SVGTextBox, _ visualMetricsValues: ArraySlice<SVGTextMetrics>,
     _ visualMetrics: inout SVGTextMetrics
   ) -> Bool {
@@ -666,14 +666,14 @@ struct SVGTextLayoutEngine {
     return false
   }
 
-  private func advanceToNextLogicalCharacter(_ logicalMetrics: SVGTextMetrics) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func advanceToNextLogicalCharacter(_ logicalMetrics: SVGTextMetrics) {
+    m_logicalMetricsListOffset += 1
+    m_logicalCharacterOffset += logicalMetrics.length
   }
 
-  private func advanceToNextVisualCharacter(_ visualMetrics: SVGTextMetrics) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func advanceToNextVisualCharacter(_ visualMetrics: SVGTextMetrics) {
+    m_visualMetricsListOffset += 1
+    m_visualCharacterOffset += visualMetrics.length
   }
 
   let layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef
