@@ -27,6 +27,9 @@ struct SVGCharacterData {
 
   var x: Float32
   var y: Float32
+  let dx: Float32
+  let dy: Float32
+  let rotate: Float32
 }
 
 typealias SVGCharacterDataMap = [UInt32: SVGCharacterData]

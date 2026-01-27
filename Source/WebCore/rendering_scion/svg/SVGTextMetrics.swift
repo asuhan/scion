@@ -55,6 +55,11 @@ struct SVGTextMetrics {
     fatalError("Not implemented")
   }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var width: Float32
   private let height: Float32
   let length: UInt32

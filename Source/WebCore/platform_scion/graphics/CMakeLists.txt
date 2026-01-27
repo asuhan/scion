@@ -52,6 +52,7 @@ target_sources(layout_scion PRIVATE
     Path.swift
     PathElement.swift
     PathSegmentData.swift
+    PathTraversalState.swift
     PathUtilities.swift
     PlatformLayer.swift
     Region.swift

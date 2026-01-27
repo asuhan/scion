@@ -51,7 +51,7 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
-    func renderer() -> RenderTextWrapper {
+    override func renderer() -> RenderTextWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

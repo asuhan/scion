@@ -19,7 +19,17 @@
  */
 
 class HashSet<KeyType> {
+  struct AddResult {
+    let isNewEntry: Bool
+  }
+
   func contains(value: KeyType) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func add(_ value: KeyType) -> AddResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

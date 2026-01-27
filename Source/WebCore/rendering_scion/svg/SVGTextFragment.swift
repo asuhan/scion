@@ -24,6 +24,19 @@ class SVGTextFragment {
     fatalError("Not implemented")
   }
 
+  // The first rendered character starts at RenderSVGInlineText::characters() + characterOffset.
+  var characterOffset: UInt32
+  var metricsListOffset: UInt32
+  let length: UInt32
+  var isTextOnPath: Bool
+
+  var x: Float32
+  var y: Float32
+
+  // Includes rotation/glyph-orientation-(horizontal|vertical) transforms, as well as orientation related shifts
+  // (see SVGTextLayoutEngine, which builds this transformation).
+  let transform: AffineTransform
+
   // Contains lengthAdjust related transformations, which are not allowd to influence the SVGTextQuery code.
   var lengthAdjustTransform: AffineTransform
 }

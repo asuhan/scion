@@ -77,6 +77,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func renderer() -> RenderObjectWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func style() -> RenderStyleWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -84,6 +89,11 @@ extension InlineIterator {
 
     // FIXME: Remove. For intermediate porting steps only.
     func legacyInlineBox() -> LegacyInlineBox? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func previousOnLine() -> LeafBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

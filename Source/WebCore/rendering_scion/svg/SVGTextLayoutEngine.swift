@@ -135,12 +135,345 @@ struct SVGTextLayoutEngine {
     return m_fragmentMap
   }
 
-  private func layoutTextOnLineOrPath(
-    _ textBox: InlineIterator.SVGTextBoxIterator, _ text: RenderSVGInlineTextWrapper,
-    _ style: RenderStyleWrapper
+  private func updateCharacterPositionIfNeeded(_ x: inout Float32, _ y: inout Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateCurrentTextPosition(x: Float32, y: Float32, glyphAdvance: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateRelativePositionAdjustmentsIfNeeded(_ dx: Float32, _ dy: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func recordTextFragment(
+    _ textBox: InlineIterator.SVGTextBoxIterator, _ textMetricsValues: ArraySlice<SVGTextMetrics>
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func parentDefinesTextLength(_ parent: RenderObjectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private mutating func layoutTextOnLineOrPath(
+    _ textBox: InlineIterator.SVGTextBoxIterator, _ text: RenderSVGInlineTextWrapper,
+    _ style: RenderStyleWrapper
+  ) {
+    if m_inPathLayout && m_textPath.isEmpty() {
+      return
+    }
+
+    let textParent = text.parent()!
+    let lengthContext = textParent.element() as! SVGElementWrapper
+
+    let definesTextLength = parentDefinesTextLength(textParent)
+
+    let svgStyle = style.svgStyle()
+
+    m_visualMetricsListOffset = 0
+    m_visualCharacterOffset = 0
+
+    let visualMetricsValues = text.layoutAttributes().textMetricsValues()
+    assert(!visualMetricsValues.a.isEmpty)
+
+    let upconvertedCharacters = StringWrapperView(s: text.text()).upconvertedCharacters()
+    let characters = upconvertedCharacters.uchars
+    let font = style.fontCascade()
+
+    let spacingLayout = SVGTextLayoutEngineSpacing(font)
+    let baselineLayout = SVGTextLayoutEngineBaseline(font)
+
+    var didStartTextFragment = false
+    var applySpacingToNextCharacter = false
+
+    var lastAngle: Float32 = 0
+    var baselineShift = baselineLayout.calculateBaselineShift(svgStyle, lengthContext)
+    baselineShift -= baselineLayout.calculateAlignmentBaselineShift(m_isVerticalText, text)
+
+    // Main layout algorithm.
+    while true {
+      // Find the start of the current text box in this list, respecting ligatures.
+      var visualMetrics = SVGTextMetrics(.SkippedSpaceMetrics)
+      if !currentVisualCharacterMetrics(textBox.get(), visualMetricsValues.a[...], &visualMetrics) {
+        break
+      }
+
+      if visualMetrics.isEmpty() {
+        advanceToNextVisualCharacter(visualMetrics)
+        continue
+      }
+
+      var (isValid, logicalAttributes) = currentLogicalCharacterAttributes()
+      if !isValid {
+        break
+      }
+
+      assert(logicalAttributes != nil)
+      var logicalMetrics = SVGTextMetrics(.SkippedSpaceMetrics)
+      if !currentLogicalCharacterMetrics(&logicalAttributes!, &logicalMetrics) {
+        break
+      }
+
+      let characterDataMap = logicalAttributes!.characterDataMap()
+      let data = characterDataMap.m[m_logicalCharacterOffset + 1] ?? SVGCharacterData()
+
+      var x = data.x
+      var y = data.y
+      let previousBoxOnLine = textBox.get().previousOnLine()
+
+      // If we start a new chunk following an chunk that had a textLength set, use that
+      // textLength to determine the chunk start position, instead of glyph advance values.
+      let moveToExpectedChunkStartPositionIfNeeded = { [self] () in
+        if m_inPathLayout || !m_lastChunkHasTextLength || !previousBoxOnLine.bool() {
+          return
+        }
+
+        if m_isVerticalText {
+          if !SVGTextLayoutAttributes.isEmptyValue(y) {
+            return
+          }
+        } else if !SVGTextLayoutAttributes.isEmptyValue(x) {
+          return
+        }
+
+        guard
+          let textContentElement = SVGTextContentElementWrapper.elementFromRenderer(
+            previousBoxOnLine.get().renderer())
+        else { return }
+
+        let lengthContext = SVGLengthContext(context: textContentElement)
+        let specifiedTextLength = textContentElement.specifiedTextLength().value(lengthContext)
+
+        if m_lastChunkIsVerticalText {
+          y = m_lastChunkStartPosition + specifiedTextLength
+        } else {
+          x = m_lastChunkStartPosition + specifiedTextLength
+        }
+      }
+
+      let startsNewTextChunk = { () in
+        // If we're at a position that could start a new text chunk, but doesn't for intrinsic reasons (no x/y information specified for the
+        // current character), check further if there are other conditions met that enforce a new text chunk -- e.g. previous sibiling on the
+        // same line specified 'textLength' (consider: <text><tspan textLength="100">AB</tspan> <tspan dy="1em">...
+        // The space character is not allowed to be part of the 'AB' text chunk -- there is not explicit x/y given for the space character
+        // but because of the textLength attribute, we have to keep the space in a separated chunk, and position it such that it renders
+        // after the user-specified textLength.
+        if logicalAttributes!.context().characterStartsNewTextChunk(m_logicalCharacterOffset) {
+          return true
+        }
+
+        // If we encounter an InlineTextBox that follows an InlineFlowBox with specified textLength,
+        // and if the InlineTextBox content is not positioned by explicit x/y attributes, then we have
+        // to correct the position of the InlineTextBox, to account for the textLength adjustments
+        // that will be applied on chunk-level in the next SVG text layout phase. Failing to do so,
+        // will lay out the remaining content at the nominal position, as if no textLength was given.
+        if m_lastChunkHasTextLength && previousBoxOnLine.bool() {
+          return true
+        }
+
+        return false
+      }()
+
+      // When we've advanced to the box start offset, determine using the original x/y values
+      // whether this character starts a new text chunk before doing any further processing.
+      if m_visualCharacterOffset == textBox.get().start() {
+        moveToExpectedChunkStartPositionIfNeeded()
+        if startsNewTextChunk {
+          m_lineLayoutChunkStarts.add((textBox.get().renderer(), textBox.get().start()))
+        }
+      }
+
+      var angle = SVGTextLayoutAttributes.isEmptyValue(data.rotate) ? 0 : data.rotate
+
+      // Calculate glyph orientation angle.
+      let currentCharacter = characters[Int(m_visualCharacterOffset)]
+      let orientationAngle = baselineLayout.calculateGlyphOrientationAngle(
+        m_isVerticalText, svgStyle, currentCharacter)
+
+      // Calculate glyph advance & x/y orientation shifts.
+      let glyphAdvanceAndOrientation = baselineLayout.calculateGlyphAdvanceAndOrientation(
+        m_isVerticalText, visualMetrics, orientationAngle)
+      let glyphAdvance = glyphAdvanceAndOrientation.advance
+      var xOrientationShift = glyphAdvanceAndOrientation.xOrientationShift
+      var yOrientationShift = glyphAdvanceAndOrientation.yOrientationShift
+
+      // Assign current text position to x/y values, if needed.
+      updateCharacterPositionIfNeeded(&x, &y)
+
+      // Apply dx/dy value adjustments to current text position, if needed.
+      updateRelativePositionAdjustmentsIfNeeded(data.dx, data.dy)
+
+      // Calculate CSS 'letter-spacing' and 'word-spacing' for next character, if needed.
+      let spacing = spacingLayout.calculateCSSSpacing(currentCharacter)
+
+      var textPathOffset: Float32 = 0
+      if m_inPathLayout {
+        let scaledGlyphAdvance = glyphAdvance * m_textPathScaling
+        if m_isVerticalText {
+          // If there's an absolute y position available, it marks the beginning of a new position along the path.
+          if !SVGTextLayoutAttributes.isEmptyValue(y) {
+            m_textPathCurrentOffset = y + m_textPathStartOffset
+          }
+
+          m_textPathCurrentOffset += m_dy
+          m_dy = 0
+
+          // Apply dx/dy correction and setup translations that move to the glyph midpoint.
+          xOrientationShift += m_dx + baselineShift
+          yOrientationShift -= scaledGlyphAdvance / 2
+        } else {
+          // If there's an absolute x position available, it marks the beginning of a new position along the path.
+          if !SVGTextLayoutAttributes.isEmptyValue(x) {
+            m_textPathCurrentOffset = x + m_textPathStartOffset
+          }
+
+          m_textPathCurrentOffset += m_dx
+          m_dx = 0
+
+          // Apply dx/dy correction and setup translations that move to the glyph midpoint.
+          xOrientationShift -= scaledGlyphAdvance / 2
+          yOrientationShift += m_dy - baselineShift
+        }
+
+        // Calculate current offset along path.
+        textPathOffset = m_textPathCurrentOffset + scaledGlyphAdvance / 2
+
+        // Move to next character.
+        m_textPathCurrentOffset +=
+          scaledGlyphAdvance + m_textPathSpacing + spacing * m_textPathScaling
+
+        // Skip character, if we're before the path.
+        if textPathOffset < 0 {
+          advanceToNextLogicalCharacter(logicalMetrics)
+          advanceToNextVisualCharacter(visualMetrics)
+          continue
+        }
+
+        // Stop processing, if the next character lies behind the path.
+        if textPathOffset > m_textPathLength {
+          break
+        }
+
+        let traversalState = m_textPath.traversalStateAtLength(textPathOffset)
+        assert(traversalState.success())
+
+        let point = traversalState.current()
+        x = point.x
+        y = point.y
+
+        angle = traversalState.normalAngle()
+
+        // For vertical text on path, the actual angle has to be rotated 90 degrees anti-clockwise, not the orientation angle!
+        if m_isVerticalText {
+          angle -= 90
+        }
+      } else {
+        // Apply all previously calculated shift values.
+        if m_isVerticalText {
+          x += baselineShift
+        } else {
+          y -= baselineShift
+        }
+
+        x += m_dx
+        y += m_dy
+      }
+
+      // Remember the position / direction of the start position of the new text chunk.
+      if startsNewTextChunk {
+        m_lastChunkStartPosition = m_isVerticalText ? y : x
+        m_lastChunkIsVerticalText = m_isVerticalText
+        m_lastChunkHasTextLength = definesTextLength
+      }
+
+      // Determine whether we have to start a new fragment.
+      let shouldStartNewFragment =
+        m_dx != 0 || m_dy != 0 || m_isVerticalText || m_inPathLayout || angle != 0
+        || angle != lastAngle
+        || orientationAngle != 0 || applySpacingToNextCharacter || definesTextLength
+
+      // If we already started a fragment, close it now.
+      if didStartTextFragment && shouldStartNewFragment {
+        applySpacingToNextCharacter = false
+        recordTextFragment(textBox, visualMetricsValues.a[...])
+      }
+
+      // Eventually start a new fragment, if not yet done.
+      if !didStartTextFragment || shouldStartNewFragment {
+        assert(m_currentTextFragment.characterOffset == 0)
+        assert(m_currentTextFragment.length == 0)
+
+        didStartTextFragment = true
+        m_currentTextFragment.characterOffset = m_visualCharacterOffset
+        m_currentTextFragment.metricsListOffset = m_visualMetricsListOffset
+        m_currentTextFragment.x = x
+        m_currentTextFragment.y = y
+
+        // Build fragment transformation.
+        if angle != 0 {
+          m_currentTextFragment.transform.rotate(Float64(angle))
+        }
+
+        if xOrientationShift != 0 || yOrientationShift != 0 {
+          m_currentTextFragment.transform.translate(
+            Float64(xOrientationShift), Float64(yOrientationShift))
+        }
+
+        if orientationAngle != 0 {
+          m_currentTextFragment.transform.rotate(Float64(orientationAngle))
+        }
+
+        m_currentTextFragment.isTextOnPath = m_inPathLayout && m_textPathScaling != 1
+        if m_currentTextFragment.isTextOnPath {
+          if m_isVerticalText {
+            m_currentTextFragment.lengthAdjustTransform.scaleNonUniform(
+              1, Float64(m_textPathScaling))
+          } else {
+            m_currentTextFragment.lengthAdjustTransform.scaleNonUniform(
+              Float64(m_textPathScaling), 1)
+          }
+        }
+      }
+
+      // Update current text position, after processing of the current character finished.
+      if m_inPathLayout {
+        updateCurrentTextPosition(x: x, y: y, glyphAdvance: glyphAdvance)
+      } else {
+        // Apply CSS 'letter-spacing' and 'word-spacing' to next character, if needed.
+        if spacing != 0 {
+          applySpacingToNextCharacter = true
+        }
+
+        var xNew = x - m_dx
+        var yNew = y - m_dy
+
+        if m_isVerticalText {
+          xNew -= baselineShift
+        } else {
+          yNew += baselineShift
+        }
+
+        updateCurrentTextPosition(x: xNew, y: yNew, glyphAdvance: glyphAdvance + spacing)
+      }
+
+      advanceToNextLogicalCharacter(logicalMetrics)
+      advanceToNextVisualCharacter(visualMetrics)
+      lastAngle = angle
+    }
+
+    if !didStartTextFragment {
+      return
+    }
+
+    // Close last open fragment, if needed.
+    recordTextFragment(textBox, visualMetricsValues.a[...])
   }
 
   private func finalizeTransformMatrices(_ textBoxes: inout [InlineIterator.SVGTextBoxIterator]) {
@@ -166,6 +499,38 @@ struct SVGTextLayoutEngine {
     textBoxes.removeAll()
   }
 
+  private func currentLogicalCharacterAttributes() -> (Bool, SVGTextLayoutAttributes?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func currentLogicalCharacterMetrics(
+    _ logicalAttributes: inout SVGTextLayoutAttributes, _ logicalMetrics: inout SVGTextMetrics
+  )
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func currentVisualCharacterMetrics(
+    _ textBox: InlineIterator.SVGTextBox, _ visualMetricsValues: ArraySlice<SVGTextMetrics>,
+    _ visualMetrics: inout SVGTextMetrics
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func advanceToNextLogicalCharacter(_ logicalMetrics: SVGTextMetrics) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func advanceToNextVisualCharacter(_ visualMetrics: SVGTextMetrics) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef
 
   private var m_lineLayoutBoxes: [InlineIterator.SVGTextBoxIterator] = []
@@ -177,6 +542,15 @@ struct SVGTextLayoutEngine {
   private var m_chunkLayoutBuilder: SVGTextChunkBuilder
   private let m_lineLayoutChunkStarts: HashSet<InlineIterator.SVGTextBox.Key>
 
+  private let m_currentTextFragment = SVGTextFragment()
+  private var m_logicalCharacterOffset: UInt32 = 0
+  private var m_visualCharacterOffset: UInt32 = 0
+  private var m_visualMetricsListOffset: UInt32 = 0
+  private var m_dx: Float32 = 0
+  private var m_dy: Float32 = 0
+  private var m_lastChunkStartPosition: Float32 = 0
+  private var m_lastChunkHasTextLength = false
+  private var m_lastChunkIsVerticalText = false
   private var m_isVerticalText = false
   private var m_inPathLayout = false
 

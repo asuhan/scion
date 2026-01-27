@@ -114,6 +114,11 @@ class StringWrapperView {
       self.p = p
     }
 
+    var uchars: ArraySlice<UChar> {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     var p: UnsafeRawPointer
   }
 

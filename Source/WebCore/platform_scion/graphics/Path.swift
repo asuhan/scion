@@ -108,6 +108,11 @@ class PathWrapper {
     fatalError("Not implemented")
   }
 
+  func traversalStateAtLength(_ length: Float32) -> PathTraversalState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fastBoundingRect() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

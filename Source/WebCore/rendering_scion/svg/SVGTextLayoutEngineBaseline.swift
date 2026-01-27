@@ -1,10 +1,7 @@
 /*
- * Copyright (C) 2006 Oliver Hunt <ojh16@student.canterbury.ac.nz>
- * Copyright (C) 2006-2024 Apple Inc. All rights reserved.
- * Copyright (C) 2015 Google Inc. All rights reserved.
- * Copyright (C) 2007 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2008 Rob Buis <buis@kde.org>
  * Copyright (C) Research In Motion Limited 2010. All rights reserved.
+ * Copyright (C) 2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2014 Google Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,33 +19,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class RenderSVGInlineTextWrapper: RenderTextWrapper {
-  func characterStartsNewTextChunk(_ position: UInt32) -> Bool {
+// Helper class used by SVGTextLayoutEngine to handle 'alignment-baseline' / 'dominant-baseline' and 'baseline-shift'.
+struct SVGTextLayoutEngineBaseline {
+  init(_ font: FontCascadeWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func layoutAttributes() -> SVGTextLayoutAttributes {
+  func calculateBaselineShift(_ style: SVGRenderStyle, _ context: SVGElementWrapper?) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func scalingFactor() -> Float32 {
+  func calculateAlignmentBaselineShift(_ isVerticalText: Bool, _ textRenderer: RenderObjectWrapper)
+    -> Float32
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func scaledFont() -> FontCascadeWrapper {
+  func calculateGlyphOrientationAngle(
+    _ isVerticalText: Bool, _ style: SVGRenderStyle, _ character: UChar
+  ) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  struct GlyphAdvanceAndOrientation {
+    let advance: Float32
+    let xOrientationShift: Float32
+    let yOrientationShift: Float32
   }
 
-  override func objectBoundingBox() -> FloatRectWrapper {
+  func calculateGlyphAdvanceAndOrientation(
+    _ isVerticalText: Bool, _ metrics: SVGTextMetrics, _ angle: Float32
+  ) -> GlyphAdvanceAndOrientation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

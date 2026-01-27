@@ -26,7 +26,7 @@
 extension InlineIterator {
 
   class InlineBox: Box {
-    func renderer() -> RenderBoxModelObjectWrapper {
+    override func renderer() -> RenderBoxModelObjectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

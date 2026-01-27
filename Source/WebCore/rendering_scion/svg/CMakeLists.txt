@@ -42,6 +42,8 @@ target_sources(layout_scion PRIVATE
     SVGTextLayoutAttributes.swift
     SVGTextLayoutAttributesBuilder.swift
     SVGTextLayoutEngine.swift
+    SVGTextLayoutEngineBaseline.swift
+    SVGTextLayoutEngineSpacing.swift
     SVGTextMetrics.swift
     SVGTextMetricsBuilder.swift
     SVGVisitedRendererTracking.swift
