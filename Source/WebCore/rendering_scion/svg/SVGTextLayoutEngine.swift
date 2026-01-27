@@ -623,6 +623,8 @@ struct SVGTextLayoutEngine {
         continue
       }
 
+      assert(textMetricsSize != 0)
+      assert(m_logicalMetricsListOffset < textMetricsSize)
       logicalMetrics = textMetricsValues.a[Int(m_logicalMetricsListOffset)]
       if logicalMetrics.isEmpty() || (logicalMetrics.width == 0 && logicalMetrics.height == 0) {
         advanceToNextLogicalCharacter(logicalMetrics)
