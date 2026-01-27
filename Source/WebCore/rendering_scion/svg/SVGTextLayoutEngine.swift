@@ -100,9 +100,21 @@ struct SVGTextLayoutEngine {
     m_textPathScaling = 1
   }
 
-  func layoutInlineTextBox(_ textBox: InlineIterator.SVGTextBoxIterator) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func layoutInlineTextBox(_ textBox: InlineIterator.SVGTextBoxIterator) {
+    let text = textBox.get().renderer()
+    assert(text.parent()?.element()?.isSVGElement() ?? false)
+
+    let style = text.style()
+
+    m_isVerticalText = style.isVerticalWritingMode()
+    layoutTextOnLineOrPath(textBox, text, style)
+
+    if m_inPathLayout {
+      m_pathLayoutBoxes.append(textBox)
+      return
+    }
+
+    m_lineLayoutBoxes.append(textBox)
   }
 
   func finishLayout() -> SVGTextFragmentMap {
@@ -110,9 +122,18 @@ struct SVGTextLayoutEngine {
     fatalError("Not implemented")
   }
 
+  private func layoutTextOnLineOrPath(
+    _ textBox: InlineIterator.SVGTextBoxIterator, _ text: RenderSVGInlineTextWrapper,
+    _ style: RenderStyleWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef
 
-  private let m_lineLayoutBoxes: [InlineIterator.SVGTextBoxIterator] = []
+  private var m_lineLayoutBoxes: [InlineIterator.SVGTextBoxIterator] = []
+  private var m_pathLayoutBoxes: [InlineIterator.SVGTextBoxIterator] = []
 
   // Output.
   private let m_fragmentMap = HashMap<InlineIterator.SVGTextBox.Key, [SVGTextFragment]>()
@@ -120,6 +141,7 @@ struct SVGTextLayoutEngine {
   private var m_chunkLayoutBuilder: SVGTextChunkBuilder
   private let m_lineLayoutChunkStarts: HashSet<InlineIterator.SVGTextBox.Key>
 
+  private var m_isVerticalText = false
   private var m_inPathLayout = false
 
   // Text on path layout

@@ -30,11 +30,21 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    override func renderer() -> RenderSVGInlineTextWrapper {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     typealias Key = (RenderSVGInlineTextWrapper, UInt32)
   }
 
   class SVGTextBoxIterator: TextBoxIterator {
     init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    override func get() -> SVGTextBox {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
