@@ -19,4 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-typealias SVGTextFragmentMap = HashMap<InlineIterator.SVGTextBox.Key, [SVGTextFragment]>
+class SVGTextFragmentArrayRef {
+  var a: [SVGTextFragment] = []
+}
+
+typealias SVGTextFragmentMap = HashMap<InlineIterator.SVGTextBox.Key, SVGTextFragmentArrayRef>

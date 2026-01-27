@@ -21,6 +21,7 @@
 final class HashMap<KeyType, MappedType>: Sequence, IteratorProtocol {
   struct AddResult {
     let isNewEntry: Bool
+    let value: MappedType?
   }
 
   init() {
@@ -49,6 +50,11 @@ final class HashMap<KeyType, MappedType>: Sequence, IteratorProtocol {
   }
 
   func get(_ key: KeyType) -> MappedType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ensure(_ key: KeyType, _ default: () -> MappedType) -> AddResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

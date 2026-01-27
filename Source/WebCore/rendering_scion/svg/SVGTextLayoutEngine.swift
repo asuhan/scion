@@ -196,11 +196,45 @@ struct SVGTextLayoutEngine {
     m_dy = dy
   }
 
-  private func recordTextFragment(
+  private mutating func recordTextFragment(
     _ textBox: InlineIterator.SVGTextBoxIterator, _ textMetricsValues: ArraySlice<SVGTextMetrics>
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_currentTextFragment.length == 0)
+    assert(m_visualMetricsListOffset > 0)
+
+    // Figure out length of fragment.
+    m_currentTextFragment.length = m_visualCharacterOffset - m_currentTextFragment.characterOffset
+
+    // Figure out fragment metrics.
+    let lastCharacterMetrics = textMetricsValues[Int(m_visualMetricsListOffset - 1)]
+    m_currentTextFragment.width = lastCharacterMetrics.width
+    m_currentTextFragment.height = lastCharacterMetrics.height
+
+    if m_currentTextFragment.length > 1 {
+      // SVGTextLayoutAttributesBuilder assures that the length of the range is equal to the sum of the individual lengths of the glyphs.
+      var length: Float32 = 0
+      if m_isVerticalText {
+        for textMetricsValue in textMetricsValues[
+          Int(m_currentTextFragment.metricsListOffset)..<Int(m_visualMetricsListOffset)]
+        {
+          length += textMetricsValue.height
+        }
+        m_currentTextFragment.height = length
+      } else {
+        for textMetricsValue in textMetricsValues[
+          Int(m_currentTextFragment.metricsListOffset)..<Int(m_visualMetricsListOffset)]
+        {
+          length += textMetricsValue.width
+        }
+        m_currentTextFragment.width = length
+      }
+    }
+
+    let key = (textBox.get().renderer(), textBox.get().start())
+    let fragments = m_fragmentMap.ensure(key, { () in return SVGTextFragmentArrayRef() }).value!
+
+    fragments.a.append(m_currentTextFragment)
+    m_currentTextFragment = SVGTextFragment()
   }
 
   private func parentDefinesTextLength(_ parent: RenderObjectWrapper) -> Bool {
@@ -535,7 +569,7 @@ struct SVGTextLayoutEngine {
 
       let key = (textBox.get().renderer(), textBox.get().start())
       if m_fragmentMap.contains(key) {
-        for fragment in m_fragmentMap.get(key) {
+        for fragment in m_fragmentMap.get(key).a {
           assert(fragment.lengthAdjustTransform.isIdentity())
           fragment.lengthAdjustTransform = textBoxTransformation
         }
@@ -583,12 +617,12 @@ struct SVGTextLayoutEngine {
   private var m_pathLayoutBoxes: [InlineIterator.SVGTextBoxIterator] = []
 
   // Output.
-  private let m_fragmentMap = HashMap<InlineIterator.SVGTextBox.Key, [SVGTextFragment]>()
+  private let m_fragmentMap = HashMap<InlineIterator.SVGTextBox.Key, SVGTextFragmentArrayRef>()
 
   private var m_chunkLayoutBuilder: SVGTextChunkBuilder
   private let m_lineLayoutChunkStarts: HashSet<InlineIterator.SVGTextBox.Key>
 
-  private let m_currentTextFragment = SVGTextFragment()
+  private var m_currentTextFragment = SVGTextFragment()
   private var m_logicalCharacterOffset: UInt32 = 0
   private var m_visualCharacterOffset: UInt32 = 0
   private var m_visualMetricsListOffset: UInt32 = 0

@@ -61,6 +61,6 @@ struct SVGTextMetrics {
   }
 
   var width: Float32
-  private let height: Float32
+  let height: Float32
   let length: UInt32
 }

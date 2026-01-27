@@ -27,11 +27,13 @@ class SVGTextFragment {
   // The first rendered character starts at RenderSVGInlineText::characters() + characterOffset.
   var characterOffset: UInt32
   var metricsListOffset: UInt32
-  let length: UInt32
+  var length: UInt32
   var isTextOnPath: Bool
 
   var x: Float32
   var y: Float32
+  var width: Float32
+  var height: Float32
 
   // Includes rotation/glyph-orientation-(horizontal|vertical) transforms, as well as orientation related shifts
   // (see SVGTextLayoutEngine, which builds this transformation).
