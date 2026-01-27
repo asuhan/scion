@@ -154,9 +154,15 @@ struct SVGTextLayoutEngine {
     m_dy = 0
   }
 
-  private func updateCurrentTextPosition(x: Float32, y: Float32, glyphAdvance: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func updateCurrentTextPosition(x: Float32, y: Float32, glyphAdvance: Float32) {
+    // Update current text position after processing the character.
+    if m_isVerticalText {
+      m_x = x
+      m_y = y + glyphAdvance
+    } else {
+      m_x = x + glyphAdvance
+      m_y = y
+    }
   }
 
   private func updateRelativePositionAdjustmentsIfNeeded(_ dx: Float32, _ dy: Float32) {
