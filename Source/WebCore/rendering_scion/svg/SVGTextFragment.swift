@@ -18,9 +18,12 @@
  */
 
 // A SVGTextFragment describes a text fragment of a RenderSVGInlineText which can be rendered at once.
-struct SVGTextFragment {
+class SVGTextFragment {
   init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Contains lengthAdjust related transformations, which are not allowd to influence the SVGTextQuery code.
+  var lengthAdjustTransform: AffineTransform
 }

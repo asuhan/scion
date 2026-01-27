@@ -26,6 +26,11 @@
 extension InlineIterator {
 
   class TextBox: Box {
+    func start() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func end() -> UInt32 {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

@@ -144,8 +144,26 @@ struct SVGTextLayoutEngine {
   }
 
   private func finalizeTransformMatrices(_ textBoxes: inout [InlineIterator.SVGTextBoxIterator]) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if textBoxes.isEmpty {
+      return
+    }
+
+    for textBox in textBoxes {
+      let textBoxTransformation = m_chunkLayoutBuilder.transformationForTextBox(textBox)
+      if textBoxTransformation.isIdentity() {
+        continue
+      }
+
+      let key = (textBox.get().renderer(), textBox.get().start())
+      if m_fragmentMap.contains(key) {
+        for fragment in m_fragmentMap.get(key) {
+          assert(fragment.lengthAdjustTransform.isIdentity())
+          fragment.lengthAdjustTransform = textBoxTransformation
+        }
+      }
+    }
+
+    textBoxes.removeAll()
   }
 
   let layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef

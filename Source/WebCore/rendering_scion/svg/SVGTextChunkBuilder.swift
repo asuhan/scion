@@ -45,6 +45,11 @@ struct SVGTextChunkBuilder {
     fatalError("Not implemented")
   }
 
+  func transformationForTextBox(_ textBox: InlineIterator.SVGTextBoxIterator) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func buildTextChunks(
     _ lineLayoutBoxes: ArraySlice<InlineIterator.SVGTextBoxIterator>,
     _ chunkStarts: HashSet<InlineIterator.SVGTextBox.Key>, _ fragmentMap: SVGTextFragmentMap
