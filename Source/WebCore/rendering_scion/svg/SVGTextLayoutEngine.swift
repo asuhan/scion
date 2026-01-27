@@ -642,8 +642,28 @@ struct SVGTextLayoutEngine {
     _ textBox: InlineIterator.SVGTextBox, _ visualMetricsValues: ArraySlice<SVGTextMetrics>,
     _ visualMetrics: inout SVGTextMetrics
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!visualMetricsValues.isEmpty)
+    let textMetricsSize = visualMetricsValues.count
+    let boxStart = textBox.start()
+    let boxLength = textBox.length()
+
+    while m_visualMetricsListOffset < textMetricsSize {
+      // Advance to text box start location.
+      if m_visualCharacterOffset < boxStart {
+        advanceToNextVisualCharacter(visualMetricsValues[Int(m_visualMetricsListOffset)])
+        continue
+      }
+
+      // Stop if we've finished processing this text box.
+      if m_visualCharacterOffset >= boxStart + boxLength {
+        return false
+      }
+
+      visualMetrics = visualMetricsValues[Int(m_visualMetricsListOffset)]
+      return true
+    }
+
+    return false
   }
 
   private func advanceToNextLogicalCharacter(_ logicalMetrics: SVGTextMetrics) {
