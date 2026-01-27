@@ -238,8 +238,25 @@ struct SVGTextLayoutEngine {
   }
 
   private func parentDefinesTextLength(_ parent: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var currentParent: RenderObjectWrapper? = parent
+    while currentParent != nil {
+      if let textContentElement = SVGTextContentElementWrapper.elementFromRenderer(currentParent) {
+        let lengthContext = SVGLengthContext(context: textContentElement)
+        if textContentElement.lengthAdjust() == .SVGLengthAdjustSpacing
+          && textContentElement.specifiedTextLength().value(lengthContext) > 0
+        {
+          return true
+        }
+      }
+
+      if currentParent!.isRenderSVGText() {
+        return false
+      }
+
+      currentParent = currentParent!.parent()
+    }
+
+    fatalError("Not reached")
   }
 
   private mutating func layoutTextOnLineOrPath(
