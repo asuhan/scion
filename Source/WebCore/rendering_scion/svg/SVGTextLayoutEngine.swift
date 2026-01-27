@@ -601,13 +601,39 @@ struct SVGTextLayoutEngine {
     return (true, logicalAttributes)
   }
 
-  private func currentLogicalCharacterMetrics(
+  private mutating func currentLogicalCharacterMetrics(
     _ logicalAttributes: inout SVGTextLayoutAttributes, _ logicalMetrics: inout SVGTextMetrics
   )
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var textMetricsValues = logicalAttributes.textMetricsValues()
+    var textMetricsSize = textMetricsValues.a.count
+    while true {
+      if m_logicalMetricsListOffset == textMetricsSize {
+        var isValid = false
+        var newLogicalAttributes: SVGTextLayoutAttributes? = nil
+        (isValid, newLogicalAttributes) = currentLogicalCharacterAttributes()
+        if !isValid {
+          return false
+        }
+        logicalAttributes = newLogicalAttributes!
+
+        textMetricsValues = logicalAttributes.textMetricsValues()
+        textMetricsSize = textMetricsValues.a.count
+        continue
+      }
+
+      logicalMetrics = textMetricsValues.a[Int(m_logicalMetricsListOffset)]
+      if logicalMetrics.isEmpty() || (logicalMetrics.width == 0 && logicalMetrics.height == 0) {
+        advanceToNextLogicalCharacter(logicalMetrics)
+        continue
+      }
+
+      // Stop if we found the next valid logical text metrics object.
+      return true
+    }
+
+    fatalError("Not reached")
   }
 
   private func currentVisualCharacterMetrics(
