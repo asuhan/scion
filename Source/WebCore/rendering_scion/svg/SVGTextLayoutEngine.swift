@@ -579,9 +579,26 @@ struct SVGTextLayoutEngine {
     textBoxes.removeAll()
   }
 
-  private func currentLogicalCharacterAttributes() -> (Bool, SVGTextLayoutAttributes?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func currentLogicalCharacterAttributes() -> (Bool, SVGTextLayoutAttributes?) {
+    if m_layoutAttributesPosition == layoutAttributes.a.count {
+      return (false, nil)
+    }
+
+    var logicalAttributes = layoutAttributes.a[Int(m_layoutAttributesPosition)]
+
+    if m_logicalCharacterOffset != logicalAttributes.context().text().length() {
+      return (true, logicalAttributes)
+    }
+
+    m_layoutAttributesPosition += 1
+    if m_layoutAttributesPosition == layoutAttributes.a.count {
+      return (false, logicalAttributes)
+    }
+
+    logicalAttributes = layoutAttributes.a[Int(m_layoutAttributesPosition)]
+    m_logicalMetricsListOffset = 0
+    m_logicalCharacterOffset = 0
+    return (true, logicalAttributes)
   }
 
   private func currentLogicalCharacterMetrics(
@@ -623,7 +640,9 @@ struct SVGTextLayoutEngine {
   private let m_lineLayoutChunkStarts: HashSet<InlineIterator.SVGTextBox.Key>
 
   private var m_currentTextFragment = SVGTextFragment()
+  private var m_layoutAttributesPosition: UInt32 = 0
   private var m_logicalCharacterOffset: UInt32 = 0
+  private var m_logicalMetricsListOffset: UInt32 = 0
   private var m_visualCharacterOffset: UInt32 = 0
   private var m_visualMetricsListOffset: UInt32 = 0
   private var m_x: Float32 = 0
