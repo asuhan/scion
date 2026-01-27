@@ -90,9 +90,14 @@ struct SVGTextLayoutEngine {
     }
   }
 
-  func endTextPathLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func endTextPathLayout() {
+    m_inPathLayout = false
+    m_textPath = PathWrapper()
+    m_textPathLength = 0
+    m_textPathStartOffset = 0
+    m_textPathCurrentOffset = 0
+    m_textPathSpacing = 0
+    m_textPathScaling = 1
   }
 
   func layoutInlineTextBox(_ textBox: InlineIterator.SVGTextBoxIterator) {
