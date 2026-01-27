@@ -52,4 +52,12 @@ struct SVGTextChunkBuilder {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  mutating func layoutTextChunks(
+    _ lineLayoutBoxes: ArraySlice<InlineIterator.SVGTextBoxIterator>,
+    _ chunkStarts: HashSet<InlineIterator.SVGTextBox.Key>, _ fragmentMap: SVGTextFragmentMap
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -117,15 +117,33 @@ struct SVGTextLayoutEngine {
     m_lineLayoutBoxes.append(textBox)
   }
 
-  func finishLayout() -> SVGTextFragmentMap {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func finishLayout() -> SVGTextFragmentMap {
+    // After all text fragments are stored in their correpsonding SVGInlineTextBoxes, we can layout individual text chunks.
+    // Chunk layouting is only performed for line layout boxes, not for path layout, where it has already been done.
+    m_chunkLayoutBuilder.layoutTextChunks(
+      m_lineLayoutBoxes[...], m_lineLayoutChunkStarts, m_fragmentMap)
+
+    // Finalize transform matrices, after the chunk layout corrections have been applied, and all fragment x/y positions are finalized.
+    if !m_lineLayoutBoxes.isEmpty {
+      finalizeTransformMatrices(&m_lineLayoutBoxes)
+    }
+
+    if !m_pathLayoutBoxes.isEmpty {
+      finalizeTransformMatrices(&m_pathLayoutBoxes)
+    }
+
+    return m_fragmentMap
   }
 
   private func layoutTextOnLineOrPath(
     _ textBox: InlineIterator.SVGTextBoxIterator, _ text: RenderSVGInlineTextWrapper,
     _ style: RenderStyleWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func finalizeTransformMatrices(_ textBoxes: inout [InlineIterator.SVGTextBoxIterator]) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
