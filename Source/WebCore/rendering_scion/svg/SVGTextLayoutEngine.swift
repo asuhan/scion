@@ -29,8 +29,8 @@
 
 struct SVGTextLayoutEngine {
   init(_ layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.layoutAttributes = layoutAttributes
+    assert(!layoutAttributes.a.isEmpty)
   }
 
   mutating func beginTextPathLayout(
@@ -701,8 +701,8 @@ struct SVGTextLayoutEngine {
   // Output.
   private let m_fragmentMap = HashMap<InlineIterator.SVGTextBox.Key, SVGTextFragmentArrayRef>()
 
-  private var m_chunkLayoutBuilder: SVGTextChunkBuilder
-  private let m_lineLayoutChunkStarts: HashSet<InlineIterator.SVGTextBox.Key>
+  private var m_chunkLayoutBuilder = SVGTextChunkBuilder()
+  private let m_lineLayoutChunkStarts = HashSet<InlineIterator.SVGTextBox.Key>()
 
   private var m_currentTextFragment = SVGTextFragment()
   private var m_layoutAttributesPosition: UInt32 = 0
@@ -721,7 +721,7 @@ struct SVGTextLayoutEngine {
   private var m_inPathLayout = false
 
   // Text on path layout
-  private var m_textPath: PathWrapper
+  private var m_textPath = PathWrapper()
   private var m_textPathLength: Float32 = 0
   private var m_textPathStartOffset: Float32 = 0
   private var m_textPathCurrentOffset: Float32 = 0
