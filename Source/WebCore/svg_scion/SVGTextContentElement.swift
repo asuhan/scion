@@ -20,4 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class SVGTextContentElementWrapper: SVGGraphicsElementWrapper {}
+enum SVGLengthAdjustType {
+  case SVGLengthAdjustUnknown
+  case SVGLengthAdjustSpacing
+  case SVGLengthAdjustSpacingAndGlyphs
+}
+
+class SVGTextContentElementWrapper: SVGGraphicsElementWrapper {
+  static func elementFromRenderer(_ renderer: RenderObjectWrapper?) -> SVGTextContentElementWrapper?
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func specifiedTextLength() -> SVGLengthValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lengthAdjust() -> SVGLengthAdjustType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

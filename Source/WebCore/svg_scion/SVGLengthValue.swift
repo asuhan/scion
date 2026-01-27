@@ -19,6 +19,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
+enum SVGLengthType {
+  case Unknown
+  case Number
+  case Percentage
+  case Ems
+  case Exs
+  case Pixels
+  case Centimeters
+  case Millimeters
+  case Inches
+  case Points
+  case Picas
+}
+
 enum SVGLengthMode {
   case Width
   case Height
@@ -30,4 +44,17 @@ struct SVGLengthValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func value(_ context: SVGLengthContext) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func valueAsPercentage() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let valueInSpecifiedUnits: Float32 = 0
+  let lengthType: SVGLengthType = .Number
 }

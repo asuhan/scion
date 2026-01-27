@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006, 2008 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2006, 2007 Rob Buis <buis@kde.org>
- * Copyright (C) 2018-2024 Apple Inc. All rights reserved.
- * Copyright (C) 2018 Adobe Systems Incorporated. All rights reserved.
+ * Copyright (C) 2025 Scion authors. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,10 +15,11 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
+ *
  */
 
-class SVGGeometryElementWrapper: SVGGraphicsElementWrapper {
-  func pathLength() -> Float32 {
+class HashSet<KeyType> {
+  func contains(value: KeyType) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

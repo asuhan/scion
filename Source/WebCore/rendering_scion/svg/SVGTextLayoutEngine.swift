@@ -33,9 +33,61 @@ struct SVGTextLayoutEngine {
     fatalError("Not implemented")
   }
 
-  func beginTextPathLayout(_ textPath: RenderSVGTextPath, _ lineLayout: inout SVGTextLayoutEngine) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func beginTextPathLayout(
+    _ textPath: RenderSVGTextPath, _ lineLayout: inout SVGTextLayoutEngine
+  ) {
+    m_inPathLayout = true
+
+    m_textPath = textPath.layoutPath()
+    if m_textPath.isEmpty() {
+      return
+    }
+
+    let startOffset = textPath.startOffset()
+    m_textPathLength = m_textPath.length()
+
+    if textPath.startOffset().lengthType == .Percentage {
+      m_textPathStartOffset = startOffset.valueAsPercentage() * m_textPathLength
+    } else {
+      m_textPathStartOffset = startOffset.valueInSpecifiedUnits
+      if let targetElement = textPath.targetElement() {
+        // FIXME: A value of zero is valid. Need to differentiate this case from being unspecified.
+        let pathLength = targetElement.pathLength()
+        if pathLength != 0 {
+          m_textPathStartOffset *= m_textPathLength / pathLength
+        }
+      }
+    }
+
+    lineLayout.m_chunkLayoutBuilder.buildTextChunks(
+      lineLayout.m_lineLayoutBoxes[...], lineLayout.m_lineLayoutChunkStarts,
+      lineLayout.m_fragmentMap)
+
+    // Handle text-anchor as additional start offset for text paths.
+    m_textPathStartOffset += lineLayout.m_chunkLayoutBuilder.totalAnchorShift()
+    m_textPathCurrentOffset = m_textPathStartOffset
+
+    // Eventually handle textLength adjustments.
+    guard let textContentElement = SVGTextContentElementWrapper.elementFromRenderer(textPath) else {
+      return
+    }
+
+    let lengthContext = SVGLengthContext(context: textContentElement)
+    let desiredTextLength = textContentElement.specifiedTextLength().value(lengthContext)
+    if desiredTextLength == 0 {
+      return
+    }
+
+    let totalLength = lineLayout.m_chunkLayoutBuilder.totalLength()
+    let totalCharacters = lineLayout.m_chunkLayoutBuilder.totalCharacters()
+
+    if textContentElement.lengthAdjust() == .SVGLengthAdjustSpacing {
+      if totalCharacters > 1 {
+        m_textPathSpacing = (desiredTextLength - totalLength) / Float32(totalCharacters - 1)
+      }
+    } else {
+      m_textPathScaling = desiredTextLength / totalLength
+    }
   }
 
   func endTextPathLayout() {
@@ -54,4 +106,22 @@ struct SVGTextLayoutEngine {
   }
 
   let layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef
+
+  private let m_lineLayoutBoxes: [InlineIterator.SVGTextBoxIterator] = []
+
+  // Output.
+  private let m_fragmentMap = HashMap<InlineIterator.SVGTextBox.Key, [SVGTextFragment]>()
+
+  private var m_chunkLayoutBuilder: SVGTextChunkBuilder
+  private let m_lineLayoutChunkStarts: HashSet<InlineIterator.SVGTextBox.Key>
+
+  private var m_inPathLayout = false
+
+  // Text on path layout
+  private var m_textPath: PathWrapper
+  private var m_textPathLength: Float32 = 0
+  private var m_textPathStartOffset: Float32 = 0
+  private var m_textPathCurrentOffset: Float32 = 0
+  private var m_textPathSpacing: Float32 = 0
+  private var m_textPathScaling: Float32 = 1
 }
