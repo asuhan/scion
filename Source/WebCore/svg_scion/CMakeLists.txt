@@ -15,6 +15,7 @@ target_sources(layout_scion PRIVATE
     SVGSVGElement.swift
     SVGTextContentElement.swift
     SVGTextElement.swift
+    SVGTextPathElement.swift
     SVGTextPositioningElement.swift
     SVGUnitTypes.swift
 )

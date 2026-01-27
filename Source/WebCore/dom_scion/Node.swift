@@ -152,5 +152,10 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func hasTextPathTagName() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let p: UnsafeRawPointer
 }

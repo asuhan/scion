@@ -58,8 +58,35 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
   private func layoutCharactersInTextBoxes(
     _ start: LegacyInlineFlowBox, _ characterLayout: inout SVGTextLayoutEngine
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = start.firstChild()
+    while child != nil {
+      if let legacyTextBox = child as? SVGInlineTextBox {
+        assert(legacyTextBox.renderer() is RenderSVGInlineTextWrapper)
+        characterLayout.layoutInlineTextBox(InlineIterator.svgTextBoxFor(legacyTextBox))
+      } else {
+        // Skip generated content.
+        guard let node = child!.rendererObject().node() else { continue }
+
+        let flowBox = child! as! SVGInlineFlowBox
+        let isTextPath = node.hasTextPathTagName()  // TODO(asuhan): use hasTagName
+        if isTextPath {
+          // Build text chunks for all <textPath> children, using the line layout algorithm.
+          // This is needeed as text-anchor is just an additional startOffset for text paths.
+          var lineLayout = SVGTextLayoutEngine(characterLayout.layoutAttributes)
+          layoutCharactersInTextBoxes(flowBox, &lineLayout)
+
+          characterLayout.beginTextPathLayout(
+            child!.rendererObject() as! RenderSVGTextPath, &lineLayout)
+        }
+
+        layoutCharactersInTextBoxes(flowBox, &characterLayout)
+
+        if isTextPath {
+          characterLayout.endTextPathLayout()
+        }
+      }
+      child = child!.nextOnLine()
+    }
   }
 
   private func layoutChildBoxes(_ start: LegacyInlineFlowBox, _ fragmentMap: SVGTextFragmentMap)

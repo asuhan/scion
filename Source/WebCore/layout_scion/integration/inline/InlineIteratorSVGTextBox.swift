@@ -32,4 +32,16 @@ extension InlineIterator {
 
     typealias Key = (RenderSVGInlineTextWrapper, UInt32)
   }
+
+  class SVGTextBoxIterator: TextBoxIterator {
+    init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  static func svgTextBoxFor(_ box: SVGInlineTextBox?) -> SVGTextBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

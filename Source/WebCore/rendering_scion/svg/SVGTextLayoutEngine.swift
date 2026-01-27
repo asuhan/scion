@@ -19,8 +19,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// SVGTextLayoutEngine performs the second layout phase for SVG text.
+//
+// The InlineBox tree was created, containing the text chunk information, necessary to apply
+// certain SVG specific text layout properties (text-length adjustments and text-anchor).
+// The second layout phase uses the SVGTextLayoutAttributes stored in the individual
+// RenderSVGInlineText renderers to compute the final positions for each character
+// which are stored in the SVGInlineTextBox objects.
+
 struct SVGTextLayoutEngine {
   init(_ layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func beginTextPathLayout(_ textPath: RenderSVGTextPath, _ lineLayout: inout SVGTextLayoutEngine) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func endTextPathLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func layoutInlineTextBox(_ textBox: InlineIterator.SVGTextBoxIterator) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -29,4 +52,6 @@ struct SVGTextLayoutEngine {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let layoutAttributes: RenderSVGTextWrapper.LayoutAttributesRef
 }

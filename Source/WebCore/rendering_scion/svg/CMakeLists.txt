@@ -23,10 +23,13 @@ target_sources(layout_scion PRIVATE
     RenderSVGRoot.swift
     RenderSVGShape.swift
     RenderSVGText.swift
+    RenderSVGTextPath.swift
     RenderSVGTransformableContainer.swift
     RenderSVGViewportContainer.swift
     SVGBoundingBoxComputation.swift
     SVGContainerLayout.swift
+    SVGInlineFlowBox.swift
+    SVGInlineTextBox.swift
     SVGLayerTransformComputation.swift
     SVGLayerTransformUpdater.swift
     SVGMarkerData.swift
