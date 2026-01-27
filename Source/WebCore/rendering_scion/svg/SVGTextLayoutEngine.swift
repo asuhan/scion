@@ -165,9 +165,35 @@ struct SVGTextLayoutEngine {
     }
   }
 
-  private func updateRelativePositionAdjustmentsIfNeeded(_ dx: Float32, _ dy: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func updateRelativePositionAdjustmentsIfNeeded(_ dx: Float32, _ dy: Float32) {
+    // Update relative positioning information.
+    if SVGTextLayoutAttributes.isEmptyValue(dx) && SVGTextLayoutAttributes.isEmptyValue(dy) {
+      return
+    }
+
+    var dx = dx
+    if SVGTextLayoutAttributes.isEmptyValue(dx) {
+      dx = 0
+    }
+    var dy = dy
+    if SVGTextLayoutAttributes.isEmptyValue(dy) {
+      dy = 0
+    }
+
+    if m_inPathLayout {
+      if m_isVerticalText {
+        m_dx += dx
+        m_dy = dy
+      } else {
+        m_dx = dx
+        m_dy += dy
+      }
+
+      return
+    }
+
+    m_dx = dx
+    m_dy = dy
   }
 
   private func recordTextFragment(
