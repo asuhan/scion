@@ -135,9 +135,23 @@ struct SVGTextLayoutEngine {
     return m_fragmentMap
   }
 
-  private func updateCharacterPositionIfNeeded(_ x: inout Float32, _ y: inout Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private mutating func updateCharacterPositionIfNeeded(_ x: inout Float32, _ y: inout Float32) {
+    if m_inPathLayout {
+      return
+    }
+
+    // Replace characters x/y position, with the current text position plus any
+    // relative adjustments, if it doesn't specify an absolute position itself.
+    if SVGTextLayoutAttributes.isEmptyValue(x) {
+      x = m_x + m_dx
+    }
+
+    if SVGTextLayoutAttributes.isEmptyValue(y) {
+      y = m_y + m_dy
+    }
+
+    m_dx = 0
+    m_dy = 0
   }
 
   private func updateCurrentTextPosition(x: Float32, y: Float32, glyphAdvance: Float32) {
@@ -546,6 +560,8 @@ struct SVGTextLayoutEngine {
   private var m_logicalCharacterOffset: UInt32 = 0
   private var m_visualCharacterOffset: UInt32 = 0
   private var m_visualMetricsListOffset: UInt32 = 0
+  private var m_x: Float32 = 0
+  private var m_y: Float32 = 0
   private var m_dx: Float32 = 0
   private var m_dy: Float32 = 0
   private var m_lastChunkStartPosition: Float32 = 0
