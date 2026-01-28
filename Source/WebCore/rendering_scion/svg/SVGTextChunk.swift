@@ -148,8 +148,51 @@ struct SVGTextChunk {
   }
 
   func layout(_ textBoxTransformations: SVGChunkTransformMap) {
+    if hasDesiredTextLength() {
+      if hasLengthAdjustSpacing() {
+        processTextLengthSpacingCorrection()
+      } else {
+        assert(hasLengthAdjustSpacingAndGlyphs())
+        buildBoxTransformations(textBoxTransformations)
+      }
+    }
+
+    if hasTextAnchor() {
+      processTextAnchorCorrection()
+    }
+  }
+
+  private func processTextAnchorCorrection() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func buildBoxTransformations(_ textBoxTransformations: SVGChunkTransformMap) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func processTextLengthSpacingCorrection() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hasDesiredTextLength() -> Bool {
+    return desiredTextLength > 0
+      && (chunkStyle.contains(.LengthAdjustSpacing)
+        || chunkStyle.contains(.LengthAdjustSpacingAndGlyphs))
+  }
+
+  private func hasTextAnchor() -> Bool {
+    return chunkStyle.contains(.RightToLeftText)
+      ? !chunkStyle.contains(.EndAnchor)
+      : !chunkStyle.isDisjoint(with: [.MiddleAnchor, .EndAnchor])
+  }
+
+  private func hasLengthAdjustSpacing() -> Bool { return chunkStyle.contains(.LengthAdjustSpacing) }
+
+  private func hasLengthAdjustSpacingAndGlyphs() -> Bool {
+    return chunkStyle.contains(.LengthAdjustSpacingAndGlyphs)
   }
 
   // Contains all SVGInlineTextBoxes this chunk spans.
