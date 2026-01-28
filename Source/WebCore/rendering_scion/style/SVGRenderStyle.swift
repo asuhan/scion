@@ -41,6 +41,20 @@ enum ShapeRendering {
   case GeometricPrecision
 }
 
+enum AlignmentBaseline {
+  case Baseline
+  case BeforeEdge
+  case TextBeforeEdge
+  case Middle
+  case Central
+  case AfterEdge
+  case TextAfterEdge
+  case Ideographic
+  case Alphabetic
+  case Hanging
+  case Mathematical
+}
+
 enum BufferedRendering {
   case Auto
   case Dynamic
@@ -48,6 +62,12 @@ enum BufferedRendering {
 }
 
 class SVGRenderStyle {
+  // Read accessors for all the properties
+  func alignmentBaseline() -> AlignmentBaseline {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func baselineShift() -> BaselineShift {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

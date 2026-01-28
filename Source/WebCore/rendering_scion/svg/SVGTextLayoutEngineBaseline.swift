@@ -52,8 +52,37 @@ struct SVGTextLayoutEngineBaseline {
   func calculateAlignmentBaselineShift(_ isVerticalText: Bool, _ textRenderer: RenderObjectWrapper)
     -> Float32
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let textRendererParent = textRenderer.parent()!
+
+    var baseline = textRenderer.style().svgStyle().alignmentBaseline()
+    if baseline == .Baseline {
+      baseline = dominantBaselineToAlignmentBaseline(isVerticalText, textRendererParent)
+      assert(baseline != .Baseline)
+    }
+
+    let fontMetrics = font.metricsOfPrimaryFont()
+    let ascent = fontMetrics.ascent()
+    let descent = fontMetrics.descent()
+
+    // Note: http://wiki.apache.org/xmlgraphics-fop/LineLayout/AlignmentHandling
+    switch baseline {
+    case .BeforeEdge, .TextBeforeEdge:
+      return ascent
+    case .Middle:
+      return (fontMetrics.xHeight() ?? 0) / 2
+    case .Central:
+      return (ascent - descent) / 2
+    case .AfterEdge, .TextAfterEdge, .Ideographic:
+      return -descent
+    case .Alphabetic:
+      return 0
+    case .Hanging:
+      return ascent * 8 / 10
+    case .Mathematical:
+      return ascent / 2
+    case .Baseline:
+      fatalError("Not reached")
+    }
   }
 
   func calculateGlyphOrientationAngle(
@@ -72,6 +101,13 @@ struct SVGTextLayoutEngineBaseline {
   func calculateGlyphAdvanceAndOrientation(
     _ isVerticalText: Bool, _ metrics: SVGTextMetrics, _ angle: Float32
   ) -> GlyphAdvanceAndOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func dominantBaselineToAlignmentBaseline(
+    _ isVerticalText: Bool, _ textRenderer: RenderObjectWrapper
+  ) -> AlignmentBaseline {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

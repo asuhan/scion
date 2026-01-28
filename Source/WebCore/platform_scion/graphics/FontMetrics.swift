@@ -50,6 +50,11 @@ class FontMetricsWrapper {
     return Int(wk_interop.FontMetrics_intAscent(p, baselineType.rawValue))
   }
 
+  func descent(_ baselineType: FontBaseline = .AlphabeticBaseline) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func intDescent(baselineType: FontBaseline = .AlphabeticBaseline) -> Int {
     if p == nil {
       // TODO(asuhan): implement this
