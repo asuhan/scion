@@ -137,8 +137,14 @@ struct SVGTextChunk {
   }
 
   func totalAnchorShift() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let length = totalLength()
+    if chunkStyle.contains(.MiddleAnchor) {
+      return -length / 2
+    }
+    if chunkStyle.contains(.EndAnchor) {
+      return chunkStyle.contains(.RightToLeftText) ? 0 : -length
+    }
+    return chunkStyle.contains(.RightToLeftText) ? -length : 0
   }
 
   func layout(_ textBoxTransformations: SVGChunkTransformMap) {
