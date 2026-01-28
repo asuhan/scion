@@ -97,8 +97,13 @@ struct SVGTextChunk {
   }
 
   func totalCharacters() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var characters: UInt32 = 0
+    for box in boxes {
+      for fragment in box.fragments.a {
+        characters += fragment.length
+      }
+    }
+    return characters
   }
 
   func totalLength() -> Float32 {
