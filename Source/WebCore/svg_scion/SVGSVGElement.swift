@@ -33,6 +33,11 @@ final class SVGSVGElementWrapper: SVGGraphicsElementWrapper, SVGFitToViewBox {
     fatalError("Not implemented")
   }
 
+  func currentTranslateValue() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasIntrinsicWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

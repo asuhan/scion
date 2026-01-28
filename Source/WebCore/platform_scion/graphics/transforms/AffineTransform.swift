@@ -63,6 +63,11 @@ class AffineTransform: Equatable {
   func c() -> Float64 { return transform[2] }
   func d() -> Float64 { return transform[3] }
 
+  func makeIdentity() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func multiply(_ other: AffineTransform) -> AffineTransform {
     // TODO(asuhan): implement this
