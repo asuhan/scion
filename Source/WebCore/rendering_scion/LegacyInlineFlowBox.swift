@@ -18,6 +18,10 @@
  */
 
 class LegacyInlineFlowBox: LegacyInlineBox {
+  init(_ renderer: RenderBoxModelObjectWrapper) {
+    super.init(renderer)
+  }
+
   func renderer() -> RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

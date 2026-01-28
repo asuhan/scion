@@ -18,6 +18,11 @@
  */
 
 class LegacyRootInlineBox: LegacyInlineFlowBox {
+  init(_ block: RenderBlockFlowWrapper) {
+    super.init(block)
+    setIsHorizontal(block.isHorizontalWritingMode())
+  }
+
   func blockFlow() -> RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

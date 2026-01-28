@@ -24,8 +24,7 @@
 
 final class SVGRootInlineBox: LegacyRootInlineBox {
   init(_ renderSVGText: RenderSVGTextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(renderSVGText)
   }
 
   private func setLogicalHeight(_ height: Float32) { logicalHeight = height }
@@ -176,5 +175,5 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
       lineBoxBottom: boundingRect.height())
   }
 
-  private var logicalHeight: Float32
+  private var logicalHeight: Float32 = 0
 }
