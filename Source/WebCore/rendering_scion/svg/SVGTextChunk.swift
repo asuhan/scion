@@ -107,8 +107,33 @@ struct SVGTextChunk {
   }
 
   func totalLength() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var firstFragment: SVGTextFragment? = nil
+    var lastFragment: SVGTextFragment? = nil
+
+    for box in boxes {
+      if !box.fragments.a.isEmpty {
+        firstFragment = box.fragments.a.first
+        break
+      }
+    }
+
+    for box in boxes.reversed() {
+      if !box.fragments.a.isEmpty {
+        lastFragment = box.fragments.a.last
+        break
+      }
+    }
+
+    assert((firstFragment == nil) == (lastFragment == nil))
+    if firstFragment == nil {
+      return 0
+    }
+
+    if chunkStyle.contains(.VerticalText) {
+      return (lastFragment!.y + lastFragment!.height) - firstFragment!.y
+    }
+
+    return (lastFragment!.x + lastFragment!.width) - firstFragment!.x
   }
 
   func totalAnchorShift() -> Float32 {
