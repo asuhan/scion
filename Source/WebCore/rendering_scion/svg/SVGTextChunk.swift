@@ -178,8 +178,20 @@ struct SVGTextChunk {
   }
 
   private func buildBoxTransformations(_ textBoxTransformations: SVGChunkTransformMap) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let spacingAndGlyphsTransform = AffineTransform()
+    var foundFirstFragment = false
+
+    for box in boxes {
+      if !foundFirstFragment {
+        if !boxSpacingAndGlyphsTransform(box.fragments.a[...], spacingAndGlyphsTransform) {
+          continue
+        }
+        foundFirstFragment = true
+      }
+
+      let key = (box.box.get().renderer(), box.box.get().start())
+      textBoxTransformations.set(key, spacingAndGlyphsTransform)
+    }
   }
 
   private func processTextLengthSpacingCorrection() {
@@ -219,6 +231,28 @@ struct SVGTextChunk {
 
   private func hasLengthAdjustSpacingAndGlyphs() -> Bool {
     return chunkStyle.contains(.LengthAdjustSpacingAndGlyphs)
+  }
+
+  private func boxSpacingAndGlyphsTransform(
+    _ fragments: ArraySlice<SVGTextFragment>, _ spacingAndGlyphsTransform: AffineTransform
+  ) -> Bool {
+    if fragments.isEmpty {
+      return false
+    }
+
+    let fragment = fragments.first!
+    let scale = Float64(desiredTextLength / totalLength())
+
+    spacingAndGlyphsTransform.translate(Float64(fragment.x), Float64(fragment.y))
+
+    if chunkStyle.contains(.VerticalText) {
+      spacingAndGlyphsTransform.scaleNonUniform(1, scale)
+    } else {
+      spacingAndGlyphsTransform.scaleNonUniform(scale, 1)
+    }
+
+    spacingAndGlyphsTransform.translate(Float64(-fragment.x), Float64(-fragment.y))
+    return true
   }
 
   // Contains all SVGInlineTextBoxes this chunk spans.
