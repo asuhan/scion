@@ -47,8 +47,11 @@ struct SVGTextChunkBuilder {
   }
 
   func totalAnchorShift() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var anchorShift: Float32 = 0
+    for chunk in textChunks {
+      anchorShift += chunk.totalAnchorShift()
+    }
+    return anchorShift
   }
 
   func transformationForTextBox(_ textBox: InlineIterator.SVGTextBoxIterator) -> AffineTransform {

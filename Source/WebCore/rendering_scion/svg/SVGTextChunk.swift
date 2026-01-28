@@ -46,6 +46,11 @@ struct SVGTextChunk {
     fatalError("Not implemented")
   }
 
+  func totalAnchorShift() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layout(_ textBoxTransformations: SVGChunkTransformMap) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
