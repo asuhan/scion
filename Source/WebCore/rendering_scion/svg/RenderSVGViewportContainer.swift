@@ -48,8 +48,11 @@ final class RenderSVGViewportContainerWrapper: RenderSVGContainerWrapper {
   private func viewportSize() -> FloatSize { return m_viewport.size() }
 
   override final func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    if SVGRenderSupport.isOverflowHidden(self) {
+      setHasNonVisibleOverflow()
+    }
   }
 
   private func isOutermostSVGViewportContainer() -> Bool { return isAnonymous() }
