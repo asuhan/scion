@@ -39,8 +39,11 @@ struct SVGTextChunkBuilder {
   }
 
   func totalLength() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var length: Float32 = 0
+    for chunk in textChunks {
+      length += chunk.totalLength()
+    }
+    return length
   }
 
   func totalAnchorShift() -> Float32 {
