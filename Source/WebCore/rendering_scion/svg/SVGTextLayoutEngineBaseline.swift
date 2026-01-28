@@ -94,8 +94,29 @@ struct SVGTextLayoutEngineBaseline {
   func calculateGlyphOrientationAngle(
     _ isVerticalText: Bool, _ style: SVGRenderStyle, _ character: UChar
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch isVerticalText ? style.glyphOrientationVertical() : style.glyphOrientationHorizontal() {
+    case .Auto:
+      // Spec: Fullwidth ideographic and fullwidth Latin text will be set with a glyph-orientation of 0-degrees.
+      // Text which is not fullwidth will be set with a glyph-orientation of 90-degrees.
+      // FIXME: There's not an accurate way to tell if text is fullwidth by looking at a single character.
+      switch UEastAsianWidth(
+        rawValue: UInt8(
+          u_getIntPropertyValue(character: character, property: .UCHAR_EAST_ASIAN_WIDTH)))!
+      {
+      case .U_EA_NEUTRAL, .U_EA_HALFWIDTH, .U_EA_NARROW:
+        return 90
+      case .U_EA_AMBIGUOUS, .U_EA_FULLWIDTH, .U_EA_WIDE:
+        return 0
+      }
+    case .Degrees90:
+      return 90
+    case .Degrees180:
+      return 180
+    case .Degrees270:
+      return 270
+    case .Degrees0:
+      return 0
+    }
   }
 
   struct GlyphAdvanceAndOrientation {

@@ -41,6 +41,14 @@ enum ShapeRendering {
   case GeometricPrecision
 }
 
+enum GlyphOrientation {
+  case Degrees0
+  case Degrees90
+  case Degrees180
+  case Degrees270
+  case Auto
+}
+
 enum AlignmentBaseline {
   case Baseline
   case BeforeEdge
@@ -104,6 +112,16 @@ class SVGRenderStyle {
   }
 
   func shapeRendering() -> ShapeRendering {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func glyphOrientationHorizontal() -> GlyphOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func glyphOrientationVertical() -> GlyphOrientation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

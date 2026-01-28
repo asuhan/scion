@@ -61,6 +61,26 @@ struct UCharMasks {
   }
 }
 
+/// East Asian Width constants.
+///
+/// @see UCHAR_EAST_ASIAN_WIDTH
+/// @see u_getIntPropertyValue
+/// @stable ICU 2.2
+enum UEastAsianWidth: UInt8 {
+  /*
+     * Note: UEastAsianWidth constants are parsed by preparseucd.py.
+     * It matches lines like
+     *     U_EA_<Unicode East_Asian_Width value name>
+     */
+
+  case U_EA_NEUTRAL /*[N]*/
+  case U_EA_AMBIGUOUS /*[A]*/
+  case U_EA_HALFWIDTH /*[H]*/
+  case U_EA_FULLWIDTH /*[F]*/
+  case U_EA_NARROW /*[Na]*/
+  case U_EA_WIDE /*[W]*/
+}
+
 /// Line Break constants.
 ///
 /// @see UCHAR_LINE_BREAK
@@ -82,6 +102,10 @@ enum UProperty: UInt32 {
       Ignorable in most processing.
       <2060..206F, FFF0..FFFB, E0000..E0FFF>+Other_Default_Ignorable_Code_Point+(Cf+Cc+Cs-White_Space) @stable ICU 2.1 */
   case UCHAR_DEFAULT_IGNORABLE_CODE_POINT = 5
+  /** Enumerated property East_Asian_Width.
+      See http://www.unicode.org/reports/tr11/
+      Returns UEastAsianWidth values. @stable ICU 2.2 */
+  case UCHAR_EAST_ASIAN_WIDTH = 0x1004
   /** Enumerated property Line_Break.
       Returns ULineBreak values. @stable ICU 2.2 */
   case UCHAR_LINE_BREAK = 0x1008
