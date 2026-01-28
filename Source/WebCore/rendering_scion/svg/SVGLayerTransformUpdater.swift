@@ -21,10 +21,15 @@ struct SVGLayerTransformUpdater {
   init(_ renderer: RenderLayerModelObjectWrapper) {
     self.renderer = renderer
     if !renderer.hasLayer() {
+      transformReferenceBox = FloatRectWrapper()
+      layerTransform = nil
       return
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+
+    transformReferenceBox = self.renderer.transformReferenceBoxRect()
+    layerTransform = self.renderer.layerTransform()
+
+    self.renderer.updateLayerTransform()
   }
 
   func layerTransformChanged() -> Bool {
@@ -33,4 +38,6 @@ struct SVGLayerTransformUpdater {
   }
 
   private let renderer: RenderLayerModelObjectWrapper
+  private let transformReferenceBox: FloatRectWrapper
+  private let layerTransform: TransformationMatrix?
 }

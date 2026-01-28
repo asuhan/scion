@@ -315,6 +315,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  func layerTransform() -> TransformationMatrix? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateLayerTransform() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
