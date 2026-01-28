@@ -19,6 +19,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import Foundation
+
+private func glyphOrientationIsMultiplyOf180Degrees(_ orientationAngle: Float32) -> Bool {
+  return fmodf(orientationAngle, 180) == 0
+}
+
 // Helper class used by SVGTextLayoutEngine to handle 'alignment-baseline' / 'dominant-baseline' and 'baseline-shift'.
 struct SVGTextLayoutEngineBaseline {
   init(_ font: FontCascadeWrapper) {
@@ -101,8 +107,67 @@ struct SVGTextLayoutEngineBaseline {
   func calculateGlyphAdvanceAndOrientation(
     _ isVerticalText: Bool, _ metrics: SVGTextMetrics, _ angle: Float32
   ) -> GlyphAdvanceAndOrientation {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let orientationIsMultiplyOf180Degrees = glyphOrientationIsMultiplyOf180Degrees(angle)
+
+    // The function is based on spec requirements:
+    //
+    // Spec: If the 'glyph-orientation-horizontal' results in an orientation angle that is not a multiple of
+    // of 180 degrees, then the current text position is incremented according to the vertical metrics of the glyph.
+    //
+    // Spec: If if the 'glyph-orientation-vertical' results in an orientation angle that is not a multiple of
+    // 180 degrees, then the current text position is incremented according to the horizontal metrics of the glyph.
+
+    let fontMetrics = font.metricsOfPrimaryFont()
+    let ascent = fontMetrics.ascent()
+    let descent = fontMetrics.descent()
+
+    var xOrientationShift: Float32 = 0
+    var yOrientationShift: Float32 = 0
+    // Vertical orientation handling.
+    if isVerticalText {
+      let ascentMinusDescent = ascent - descent
+      if angle == 0 {
+        xOrientationShift = (ascentMinusDescent - metrics.width) / 2
+        yOrientationShift = ascent
+      } else if angle == 180 {
+        xOrientationShift = (ascentMinusDescent + metrics.width) / 2
+      } else if angle == 270 {
+        yOrientationShift = metrics.width
+        xOrientationShift = ascentMinusDescent
+      }
+
+      // Vertical advance calculation.
+      if angle != 0 && !orientationIsMultiplyOf180Degrees {
+        return GlyphAdvanceAndOrientation(
+          advance: metrics.width, xOrientationShift: xOrientationShift,
+          yOrientationShift: yOrientationShift)
+      }
+
+      return GlyphAdvanceAndOrientation(
+        advance: metrics.height, xOrientationShift: xOrientationShift,
+        yOrientationShift: yOrientationShift)
+    }
+
+    // Horizontal orientation handling.
+    if angle == 90 {
+      yOrientationShift = -metrics.width
+    } else if angle == 180 {
+      xOrientationShift = metrics.width
+      yOrientationShift = -ascent
+    } else if angle == 270 {
+      xOrientationShift = metrics.width
+    }
+
+    // Horizontal advance calculation.
+    if angle != 0 && !orientationIsMultiplyOf180Degrees {
+      return GlyphAdvanceAndOrientation(
+        advance: metrics.height, xOrientationShift: xOrientationShift,
+        yOrientationShift: yOrientationShift)
+    }
+
+    return GlyphAdvanceAndOrientation(
+      advance: metrics.width, xOrientationShift: xOrientationShift,
+      yOrientationShift: yOrientationShift)
   }
 
   private func dominantBaselineToAlignmentBaseline(
