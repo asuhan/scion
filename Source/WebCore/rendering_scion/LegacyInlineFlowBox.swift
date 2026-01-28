@@ -33,6 +33,11 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  override func adjustPosition(_ dx: Float32, _ dy: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
     lineBottom: LayoutUnit

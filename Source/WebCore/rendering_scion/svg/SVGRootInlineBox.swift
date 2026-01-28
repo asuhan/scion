@@ -23,6 +23,13 @@
  */
 
 final class SVGRootInlineBox: LegacyRootInlineBox {
+  init(_ renderSVGText: RenderSVGTextWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func setLogicalHeight(_ height: Float32) { logicalHeight = height }
+
   func computePerCharacterLayoutInformation() {
     let textRoot = blockFlow() as! RenderSVGTextWrapper
 
@@ -46,6 +53,11 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
     // Position & resize all SVGInlineText/FlowBoxes in the inline box tree, resize the root box as well as the RenderSVGText parent block.
     let childRect = layoutChildBoxes(self, fragmentMap)
     layoutRootBox(childRect)
+  }
+
+  private func renderSVGText() -> RenderSVGTextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func reorderValueListsToLogicalOrder(
@@ -136,7 +148,33 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
   }
 
   private func layoutRootBox(_ childRect: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let parentBlock = renderSVGText()
+
+    // Finally, assign the root block position, now that all content is laid out.
+    parentBlock.updatePositionAndOverflow(childRect)
+
+    // Position all children relative to the parent block.
+    var child = firstChild()
+    while child != nil {
+      // Skip generated content.
+      if child!.rendererObject().node() == nil {
+        continue
+      }
+      child!.adjustPosition(-childRect.x(), -childRect.y())
+      child = child!.nextOnLine()
+    }
+
+    // Position ourselves.
+    setX(0)
+    setY(0)
+    setLogicalWidth(childRect.width())
+    setLogicalHeight(childRect.height())
+
+    let boundingRect = enclosingLayoutRect(rect: childRect)
+    setLineTopBottomPositions(
+      top: LayoutUnit(value: 0), bottom: boundingRect.height(), lineBoxTop: LayoutUnit(value: 0),
+      lineBoxBottom: boundingRect.height())
   }
+
+  private var logicalHeight: Float32
 }

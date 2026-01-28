@@ -25,6 +25,11 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  func adjustPosition(_ dx: Float32, _ dy: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paint(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
     lineBottom: LayoutUnit

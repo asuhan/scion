@@ -33,6 +33,11 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
+  override func adjustPosition(_ dx: Float32, _ dy: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func selectionTop() -> LayoutUnit {
     let selectionTop = lineTop
 
@@ -51,6 +56,13 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
   }
 
   func selectionBottom() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLineTopBottomPositions(
+    top: LayoutUnit, bottom: LayoutUnit, lineBoxTop: LayoutUnit, lineBoxBottom: LayoutUnit
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
