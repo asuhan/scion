@@ -284,7 +284,7 @@ struct SVGTextLayoutEngine {
     let characters = upconvertedCharacters.uchars
     let font = style.fontCascade()
 
-    let spacingLayout = SVGTextLayoutEngineSpacing(font)
+    var spacingLayout = SVGTextLayoutEngineSpacing(font)
     let baselineLayout = SVGTextLayoutEngineBaseline(font)
 
     var didStartTextFragment = false

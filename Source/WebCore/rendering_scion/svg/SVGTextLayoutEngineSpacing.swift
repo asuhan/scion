@@ -22,11 +22,26 @@
 struct SVGTextLayoutEngineSpacing {
   init(_ font: FontCascadeWrapper) { self.font = font }
 
-  func calculateCSSSpacing(_ currentCharacter: UChar) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func calculateCSSSpacing(_ currentCharacter: UChar?) -> Float32 {
+    let lastCharacter = m_lastCharacter
+    m_lastCharacter = currentCharacter
+
+    if font.letterSpacing() == 0 && font.wordSpacing() == 0 {
+      return 0
+    }
+
+    var spacing = font.letterSpacing()
+    if currentCharacter != nil && lastCharacter != nil && font.wordSpacing() != 0 {
+      if FontCascadeWrapper.treatAsSpace(ch: UInt32(currentCharacter!))
+        && !FontCascadeWrapper.treatAsSpace(ch: UInt32(lastCharacter!))
+      {
+        spacing += font.wordSpacing()
+      }
+    }
+
+    return spacing
   }
 
   private let font: FontCascadeWrapper
-  private let m_lastCharacter: UChar? = nil
+  private var m_lastCharacter: UChar? = nil
 }
