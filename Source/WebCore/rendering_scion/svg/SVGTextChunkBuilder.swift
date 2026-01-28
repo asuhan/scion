@@ -54,8 +54,31 @@ struct SVGTextChunkBuilder {
     _ lineLayoutBoxes: ArraySlice<InlineIterator.SVGTextBoxIterator>,
     _ chunkStarts: HashSet<InlineIterator.SVGTextBox.Key>, _ fragmentMap: SVGTextFragmentMap
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if lineLayoutBoxes.isEmpty {
+      return
+    }
+
+    let limit = lineLayoutBoxes.count
+    var first = limit
+
+    for (i, lineLayoutBox) in lineLayoutBoxes.enumerated() {
+      if !chunkStarts.contains(value: (lineLayoutBox.get().renderer(), lineLayoutBox.get().start()))
+      {
+        continue
+      }
+
+      if first == limit {
+        first = i
+      } else {
+        assert(first != i)
+        textChunks.append(SVGTextChunk(lineLayoutBoxes, UInt32(first), UInt32(i), fragmentMap))
+        first = i
+      }
+    }
+
+    if first != limit {
+      textChunks.append(SVGTextChunk(lineLayoutBoxes, UInt32(first), UInt32(limit), fragmentMap))
+    }
   }
 
   mutating func layoutTextChunks(
@@ -65,4 +88,6 @@ struct SVGTextChunkBuilder {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var textChunks: [SVGTextChunk] = []
 }

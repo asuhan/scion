@@ -260,6 +260,11 @@ class FontCascadeWrapper {
     fatalError("Not implemented")
   }
 
+  static func treatAsSpace(ch: UInt32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLoadingCustomFonts() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

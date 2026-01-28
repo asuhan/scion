@@ -24,3 +24,14 @@ class SVGTextFragmentArrayRef {
 }
 
 typealias SVGTextFragmentMap = HashMap<InlineIterator.SVGTextBox.Key, SVGTextFragmentArrayRef>
+
+// A SVGTextChunk describes a range of SVGTextFragments, see the SVG spec definition of a "text chunk".
+struct SVGTextChunk {
+  init(
+    _ lineLayoutBoxes: ArraySlice<InlineIterator.SVGTextBoxIterator>, _ first: UInt32,
+    _ limit: UInt32, _ fragmentMap: SVGTextFragmentMap
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
