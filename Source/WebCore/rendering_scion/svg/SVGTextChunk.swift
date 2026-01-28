@@ -163,8 +163,18 @@ struct SVGTextChunk {
   }
 
   private func processTextAnchorCorrection() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let textAnchorShift = totalAnchorShift()
+    let isVerticalText = chunkStyle.contains(.VerticalText)
+
+    for box in boxes {
+      for fragment in box.fragments.a {
+        if isVerticalText {
+          fragment.y += textAnchorShift
+        } else {
+          fragment.x += textAnchorShift
+        }
+      }
+    }
   }
 
   private func buildBoxTransformations(_ textBoxTransformations: SVGChunkTransformMap) {
