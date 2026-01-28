@@ -25,4 +25,13 @@ final class SVGInlineFlowBox: LegacyInlineFlowBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func calculateBoundaries() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLogicalHeight(_ h: Float32) { logicalHeight = h }
+
+  private var logicalHeight: Float32
 }

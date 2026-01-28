@@ -27,4 +27,19 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setLogicalHeight(_ height: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func calculateBoundaries() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTextFragments(_ fragments: [SVGTextFragment]) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

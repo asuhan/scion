@@ -58,7 +58,19 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  // x() is the left side of the box in the containing block's coordinate system.
+  func setX(_ x: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func x() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // y() is the top side of the box in the containing block's coordinate system.
+  func setY(_ y: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -90,6 +102,12 @@ class LegacyInlineBox {
   }
 
   func logicalBottom() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // The logical width is our extent in the line's overall inline direction, i.e., width for horizontal text and height for vertical text.
+  func setLogicalWidth(_ w: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

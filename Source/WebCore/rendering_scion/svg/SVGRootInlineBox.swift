@@ -89,11 +89,50 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
     }
   }
 
+  @discardableResult
   private func layoutChildBoxes(_ start: LegacyInlineFlowBox, _ fragmentMap: SVGTextFragmentMap)
     -> FloatRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var childRect = FloatRectWrapper()
+
+    var child = start.firstChild()
+    while child != nil {
+      var boxRect = FloatRectWrapper()
+      if let textBox = child as? SVGInlineTextBox {
+        assert(textBox.renderer() is RenderSVGInlineTextWrapper)
+
+        let svgTextBox = InlineIterator.svgTextBoxFor(textBox)
+        let fragmentKey = (svgTextBox.get().renderer(), svgTextBox.get().start())
+        if fragmentMap.contains(fragmentKey) {
+          let textFragments = fragmentMap.get(fragmentKey)
+          textBox.setTextFragments(textFragments.a)
+        }
+
+        boxRect = textBox.calculateBoundaries()
+        textBox.setX(boxRect.x())
+        textBox.setY(boxRect.y())
+        textBox.setLogicalWidth(boxRect.width())
+        textBox.setLogicalHeight(boxRect.height())
+      } else {
+        // Skip generated content.
+        if child!.rendererObject().node() == nil {
+          continue
+        }
+
+        let flowBox = child! as! SVGInlineFlowBox
+        layoutChildBoxes(flowBox, fragmentMap)
+
+        boxRect = flowBox.calculateBoundaries()
+        flowBox.setX(boxRect.x())
+        flowBox.setY(boxRect.y())
+        flowBox.setLogicalWidth(boxRect.width())
+        flowBox.setLogicalHeight(boxRect.height())
+      }
+      childRect.unite(other: boxRect)
+      child = child!.nextOnLine()
+    }
+
+    return childRect
   }
 
   private func layoutRootBox(_ childRect: FloatRectWrapper) {
