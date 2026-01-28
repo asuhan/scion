@@ -20,13 +20,13 @@
 
 // Helper class used by SVGTextLayoutEngine to handle 'letter-spacing' and 'word-spacing'.
 struct SVGTextLayoutEngineSpacing {
-  init(_ font: FontCascadeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(_ font: FontCascadeWrapper) { self.font = font }
 
   func calculateCSSSpacing(_ currentCharacter: UChar) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let font: FontCascadeWrapper
+  private let m_lastCharacter: UChar? = nil
 }
