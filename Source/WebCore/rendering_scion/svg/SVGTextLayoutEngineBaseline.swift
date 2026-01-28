@@ -27,8 +27,26 @@ struct SVGTextLayoutEngineBaseline {
   }
 
   func calculateBaselineShift(_ style: SVGRenderStyle, _ context: SVGElementWrapper?) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style.baselineShift() == .Length {
+      let baselineShiftValueLength = style.baselineShiftValue()
+      if baselineShiftValueLength.lengthType == .Percentage {
+        return baselineShiftValueLength.valueAsPercentage() * font.size()
+      }
+
+      let lengthContext = SVGLengthContext(context: context)
+      return baselineShiftValueLength.value(lengthContext)
+    }
+
+    switch style.baselineShift() {
+    case .Baseline:
+      return 0
+    case .Sub:
+      return -font.metricsOfPrimaryFont().height() / 2
+    case .Super:
+      return font.metricsOfPrimaryFont().height() / 2
+    case .Length:
+      fatalError("Not reached")
+    }
   }
 
   func calculateAlignmentBaselineShift(_ isVerticalText: Bool, _ textRenderer: RenderObjectWrapper)
@@ -57,4 +75,6 @@ struct SVGTextLayoutEngineBaseline {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let font: FontCascadeWrapper
 }

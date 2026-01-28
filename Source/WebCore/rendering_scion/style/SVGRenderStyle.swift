@@ -27,6 +27,13 @@
     Boston, MA 02110-1301, USA.
 */
 
+enum BaselineShift {
+  case Baseline
+  case Sub
+  case Super
+  case Length
+}
+
 enum ShapeRendering {
   case Auto
   case OptimizeSpeed
@@ -41,6 +48,11 @@ enum BufferedRendering {
 }
 
 class SVGRenderStyle {
+  func baselineShift() -> BaselineShift {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func bufferedRendering() -> BufferedRendering {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -52,6 +64,11 @@ class SVGRenderStyle {
   }
 
   func shapeRendering() -> ShapeRendering {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func baselineShiftValue() -> SVGLengthValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
