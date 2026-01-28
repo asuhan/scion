@@ -173,8 +173,44 @@ struct SVGTextLayoutEngineBaseline {
   private func dominantBaselineToAlignmentBaseline(
     _ isVerticalText: Bool, _ textRenderer: RenderObjectWrapper
   ) -> AlignmentBaseline {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(textRenderer.parent() != nil)
+
+    var baseline = textRenderer.style().svgStyle().dominantBaseline()
+    if baseline == .Auto {
+      if isVerticalText {
+        baseline = .Central
+      } else {
+        baseline = .Alphabetic
+      }
+    }
+
+    switch baseline {
+    case .UseScript:
+      // FIXME: The dominant-baseline and the baseline-table components are set by determining the predominant script of the character data content.
+      return .Alphabetic
+    case .NoChange:
+      return dominantBaselineToAlignmentBaseline(isVerticalText, textRenderer.parent()!)
+    case .ResetSize:
+      return dominantBaselineToAlignmentBaseline(isVerticalText, textRenderer.parent()!)
+    case .Ideographic:
+      return .Ideographic
+    case .Alphabetic:
+      return .Alphabetic
+    case .Hanging:
+      return .Hanging
+    case .Mathematical:
+      return .Mathematical
+    case .Central:
+      return .Central
+    case .Middle:
+      return .Middle
+    case .TextAfterEdge:
+      return .TextAfterEdge
+    case .TextBeforeEdge:
+      return .TextBeforeEdge
+    default:
+      fatalError("Not reached")
+    }
   }
 
   private let font: FontCascadeWrapper

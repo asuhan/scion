@@ -55,6 +55,21 @@ enum AlignmentBaseline {
   case Mathematical
 }
 
+enum DominantBaseline {
+  case Auto
+  case UseScript
+  case NoChange
+  case ResetSize
+  case Ideographic
+  case Alphabetic
+  case Hanging
+  case Mathematical
+  case Central
+  case Middle
+  case TextAfterEdge
+  case TextBeforeEdge
+}
+
 enum BufferedRendering {
   case Auto
   case Dynamic
@@ -64,6 +79,11 @@ enum BufferedRendering {
 class SVGRenderStyle {
   // Read accessors for all the properties
   func alignmentBaseline() -> AlignmentBaseline {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func dominantBaseline() -> DominantBaseline {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
