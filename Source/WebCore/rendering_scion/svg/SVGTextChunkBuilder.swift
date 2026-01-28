@@ -85,9 +85,18 @@ struct SVGTextChunkBuilder {
     _ lineLayoutBoxes: ArraySlice<InlineIterator.SVGTextBoxIterator>,
     _ chunkStarts: HashSet<InlineIterator.SVGTextBox.Key>, _ fragmentMap: SVGTextFragmentMap
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    buildTextChunks(lineLayoutBoxes, chunkStarts, fragmentMap)
+    if textChunks.isEmpty {
+      return
+    }
+
+    for chunk in textChunks {
+      chunk.layout(textBoxTransformations)
+    }
+
+    textChunks.removeAll()
   }
 
   private var textChunks: [SVGTextChunk] = []
+  private let textBoxTransformations: SVGChunkTransformMap
 }
