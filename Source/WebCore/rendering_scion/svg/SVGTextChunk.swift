@@ -28,12 +28,72 @@ typealias SVGTextFragmentMap = HashMap<InlineIterator.SVGTextBox.Key, SVGTextFra
 
 // A SVGTextChunk describes a range of SVGTextFragments, see the SVG spec definition of a "text chunk".
 struct SVGTextChunk {
+  struct ChunkStyle: OptionSet {
+    let rawValue: UInt8
+
+    static let DefaultStyle = ChunkStyle(rawValue: 1 << 0)
+    static let MiddleAnchor = ChunkStyle(rawValue: 1 << 1)
+    static let EndAnchor = ChunkStyle(rawValue: 1 << 2)
+    static let RightToLeftText = ChunkStyle(rawValue: 1 << 3)
+    static let VerticalText = ChunkStyle(rawValue: 1 << 4)
+    static let LengthAdjustSpacing = ChunkStyle(rawValue: 1 << 5)
+    static let LengthAdjustSpacingAndGlyphs = ChunkStyle(rawValue: 1 << 6)
+  }
+
   init(
     _ lineLayoutBoxes: ArraySlice<InlineIterator.SVGTextBoxIterator>, _ first: UInt32,
     _ limit: UInt32, _ fragmentMap: SVGTextFragmentMap
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(first < limit)
+    assert(limit <= lineLayoutBoxes.count)
+
+    let firstBox = lineLayoutBoxes[Int(first)]
+    let style = firstBox.get().renderer().style()
+    let svgStyle = style.svgStyle()
+
+    if !style.isLeftToRightDirection() {
+      chunkStyle.update(with: .RightToLeftText)
+    }
+
+    if style.isVerticalWritingMode() {
+      chunkStyle.update(with: .VerticalText)
+    }
+
+    switch svgStyle.textAnchor() {
+    case .Start:
+      break
+    case .Middle:
+      chunkStyle.update(with: .MiddleAnchor)
+    case .End:
+      chunkStyle.update(with: .EndAnchor)
+    }
+
+    if let textContentElement = SVGTextContentElementWrapper.elementFromRenderer(
+      firstBox.get().renderer().parent())
+    {
+      let lengthContext = SVGLengthContext(context: textContentElement)
+      desiredTextLength = textContentElement.specifiedTextLength().value(lengthContext)
+
+      switch textContentElement.lengthAdjust() {
+      case .SVGLengthAdjustUnknown:
+        break
+      case .SVGLengthAdjustSpacing:
+        chunkStyle.update(with: .LengthAdjustSpacing)
+      case .SVGLengthAdjustSpacingAndGlyphs:
+        chunkStyle.update(with: .LengthAdjustSpacingAndGlyphs)
+      }
+    } else {
+      desiredTextLength = 0
+    }
+
+    boxes = []
+    for box in lineLayoutBoxes[Int(first)..<Int(limit)] {
+      let key = (box.get().renderer(), box.get().start())
+      if !fragmentMap.contains(key) {
+        continue
+      }
+      boxes.append(BoxAndFragments(box: box, fragments: fragmentMap.get(key)))
+    }
   }
 
   func totalCharacters() -> UInt32 {
@@ -55,4 +115,14 @@ struct SVGTextChunk {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Contains all SVGInlineTextBoxes this chunk spans.
+  struct BoxAndFragments {
+    let box: InlineIterator.SVGTextBoxIterator
+    let fragments: SVGTextFragmentArrayRef
+  }
+  private var boxes: [BoxAndFragments]
+
+  private var chunkStyle: ChunkStyle = [.DefaultStyle]
+  private let desiredTextLength: Float32
 }

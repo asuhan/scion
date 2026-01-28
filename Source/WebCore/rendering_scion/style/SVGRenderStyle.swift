@@ -34,6 +34,12 @@ enum BaselineShift {
   case Length
 }
 
+enum TextAnchor {
+  case Start
+  case Middle
+  case End
+}
+
 enum ShapeRendering {
   case Auto
   case OptimizeSpeed
@@ -112,6 +118,11 @@ class SVGRenderStyle {
   }
 
   func shapeRendering() -> ShapeRendering {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func textAnchor() -> TextAnchor {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
