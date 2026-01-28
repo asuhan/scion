@@ -27,10 +27,7 @@ private func glyphOrientationIsMultiplyOf180Degrees(_ orientationAngle: Float32)
 
 // Helper class used by SVGTextLayoutEngine to handle 'alignment-baseline' / 'dominant-baseline' and 'baseline-shift'.
 struct SVGTextLayoutEngineBaseline {
-  init(_ font: FontCascadeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(_ font: FontCascadeWrapper) { self.font = font }
 
   func calculateBaselineShift(_ style: SVGRenderStyle, _ context: SVGElementWrapper?) -> Float32 {
     if style.baselineShift() == .Length {
