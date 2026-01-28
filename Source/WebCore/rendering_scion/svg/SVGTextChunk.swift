@@ -183,8 +183,24 @@ struct SVGTextChunk {
   }
 
   private func processTextLengthSpacingCorrection() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let textLengthShift =
+      totalCharacters() > 1
+      ? (desiredTextLength - totalLength()) / Float32(totalCharacters() - 1) : 0
+
+    let isVerticalText = chunkStyle.contains(.VerticalText)
+    var atCharacter: UInt32 = 0
+
+    for box in boxes {
+      for fragment in box.fragments.a {
+        if isVerticalText {
+          fragment.y += textLengthShift * Float32(atCharacter)
+        } else {
+          fragment.x += textLengthShift * Float32(atCharacter)
+        }
+
+        atCharacter += fragment.length
+      }
+    }
   }
 
   private func hasDesiredTextLength() -> Bool {
