@@ -23,6 +23,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum TextRenderingMode: UInt8 {
+  case AutoTextRendering
+  case OptimizeSpeed
+  case OptimizeLegibility
+  case GeometricPrecision
+}
+
 enum FontOrientation: UInt8 {
   case Horizontal
   case Vertical

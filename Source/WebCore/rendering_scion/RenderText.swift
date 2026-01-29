@@ -262,6 +262,8 @@ class RenderTextWrapper: RenderObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var m_canUseSimplifiedTextMeasuring: Bool? = nil
 }
 
 func applyTextTransform(

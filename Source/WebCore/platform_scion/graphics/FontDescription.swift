@@ -35,6 +35,11 @@ class FontDescriptionWrapper {
     return wk_interop.FontDescription_computedSize(p)
   }
 
+  func textRenderingMode() -> TextRenderingMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func orientation() -> FontOrientation {
     return FontOrientation(rawValue: wk_interop.FontDescription_orientation(p))!
   }
@@ -50,6 +55,11 @@ class FontDescriptionWrapper {
   }
 
   func setWeight(_ weight: FontSelectionValue) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setOrientation(_ orientation: FontOrientation) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
