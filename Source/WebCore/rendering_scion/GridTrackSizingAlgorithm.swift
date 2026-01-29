@@ -752,6 +752,15 @@ final class GridTrackSizingAlgorithm {
     return LayoutUnit(value: infinity)
   }
 
+  // Helper methods for step 2. resolveIntrinsicTrackSizes().
+  private func sizeTrackToFitNonSpanningItem(
+    _ span: GridSpan, _ gridItem: RenderBoxWrapper, _ track: GridTrack,
+    _ gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func sizeTrackToFitSingleSpanMasonryGroup(
     span: GridSpan, masonryIndefiniteItems: MasonryMinMaxTrackSize, track: GridTrack
   ) {
@@ -1240,8 +1249,103 @@ final class GridTrackSizingAlgorithm {
   private func computeDefiniteAndIndefiniteItemsForMasonry(gridLayoutState: inout GridLayoutState)
     -> DefiniteAndIndefiniteItemsForMasonry
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var indefiniteSpanSizes: [SpanLength: MasonryMinMaxTrackSize] = [:]
+    var definiteItemSizes: [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]] = [:]
+    var definiteItemSizesSpanFlexTrack: [MasonryMinMaxTrackSizeWithGridSpan] = []
+
+    let allTracks = tracks(direction: direction)
+    let trackLength = UInt32(allTracks.count)
+    for trackIndex in 0..<trackLength {
+      let iterator = GridIterator(grid: grid, direction: direction, fixedTrackIndex: trackIndex)
+
+      while true {
+        guard let gridItem = iterator.nextGridItem() else { break }
+        let gridSpan = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
+        let spanLength = gridSpan.integerSpan()
+
+        if !GridPositionsResolver.resolveGridPositionsFromStyle(
+          gridContainer: renderGrid!, gridItem: gridItem, direction: direction
+        )
+        .isIndefinite() {
+          populateDefiniteItems(
+            trackIndex, gridSpan, spanLength, gridItem, allTracks, &definiteItemSizes,
+            &definiteItemSizesSpanFlexTrack, &gridLayoutState)
+          continue
+        }
+
+        let endLine = trackIndex + spanLength
+        if endLine > trackLength {
+          continue
+        }
+
+        populateIndefiniteItems(gridItem, spanLength, &indefiniteSpanSizes, &gridLayoutState)
+      }
+    }
+    return DefiniteAndIndefiniteItemsForMasonry(
+      indefiniteSpanSizes: indefiniteSpanSizes, definiteItemSizes: definiteItemSizes,
+      definiteItemSizesSpanFlexTrack: definiteItemSizesSpanFlexTrack)
+  }
+
+  private func populateDefiniteItems(
+    _ trackIndex: UInt32, _ gridSpan: GridSpan, _ spanLength: UInt32, _ gridItem: RenderBoxWrapper?,
+    _ allTracks: ArraySlice<GridTrack>,
+    _ definiteItemSizes: inout [SpanLength: [MasonryMinMaxTrackSizeWithGridSpan]],
+    _ definiteItemSizesSpanFlexTrack: inout [MasonryMinMaxTrackSizeWithGridSpan],
+    _ gridLayoutState: inout GridLayoutState
+  ) {
+    if gridSpan.startLine() != trackIndex {
+      return
+    }
+
+    let minContentContributionForGridItem = strategy!.minContentContributionForGridItem(
+      gridItem!, &gridLayoutState)
+    let maxContentContributionForGridItem = strategy!.maxContentContributionForGridItem(
+      gridItem!, &gridLayoutState)
+    let minContributionForGridItem = strategy!.minContributionForGridItem(
+      gridItem!, &gridLayoutState)
+
+    let spansFlexTracks = spanningItemCrossesFlexibleSizedTracks(itemSpan: gridSpan)
+
+    if spanLength == 1 && !spansFlexTracks {
+      sizeTrackToFitNonSpanningItem(
+        gridSpan, gridItem!, allTracks[Int(trackIndex)], &gridLayoutState)
+    } else {
+      let minMaxTrackSizeWithGridSpan = MasonryMinMaxTrackSizeWithGridSpan(
+        trackSize: MasonryMinMaxTrackSize(
+          minContentSize: minContentContributionForGridItem,
+          maxContentSize: maxContentContributionForGridItem, minSize: minContributionForGridItem),
+        gridSpan: gridSpan)
+
+      if spansFlexTracks {
+        definiteItemSizesSpanFlexTrack.append(minMaxTrackSizeWithGridSpan)
+      } else {
+        definiteItemSizes[spanLength]!.append(minMaxTrackSizeWithGridSpan)
+      }
+    }
+  }
+
+  private func populateIndefiniteItems(
+    _ gridItem: RenderBoxWrapper, _ spanLength: UInt32,
+    _ indefiniteSpanSizes: inout [SpanLength: MasonryMinMaxTrackSize],
+    _ gridLayoutState: inout GridLayoutState
+  ) {
+    let minContentContributionForGridItem = strategy!.minContentContributionForGridItem(
+      gridItem, &gridLayoutState)
+    let maxContentContributionForGridItem = strategy!.maxContentContributionForGridItem(
+      gridItem, &gridLayoutState)
+    let minContributionForGridItem = strategy!.minContributionForGridItem(
+      gridItem, &gridLayoutState)
+
+    let trackSize =
+      indefiniteSpanSizes[spanLength]
+      ?? MasonryMinMaxTrackSize(
+        minContentSize: LayoutUnit(value: 0), maxContentSize: LayoutUnit(value: 0),
+        minSize: LayoutUnit(value: 0))
+    let minContentSize = max(trackSize.minContentSize, minContentContributionForGridItem)
+    let maxContentSize = max(trackSize.maxContentSize, maxContentContributionForGridItem)
+    let minSize = max(trackSize.minSize, minContributionForGridItem)
+    indefiniteSpanSizes[spanLength] = MasonryMinMaxTrackSize(
+      minContentSize: minContentSize, maxContentSize: maxContentSize, minSize: minSize)
   }
 
   // Track sizing algorithm steps. Note that the "Maximize Tracks" step is done
@@ -1588,6 +1692,27 @@ final class GridTrackSizingAlgorithm {
 }
 
 private class GridTrackSizingAlgorithmStrategy {
+  func minContentContributionForGridItem(
+    _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func maxContentContributionForGridItem(
+    _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func minContributionForGridItem(
+    _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: LayoutUnit?) {
     fatalError("Not reached")
   }
