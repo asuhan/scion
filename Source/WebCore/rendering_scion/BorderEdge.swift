@@ -166,8 +166,14 @@ func borderEdges(
 }
 
 func borderEdgesForOutline(style: RenderStyleWrapper, deviceScaleFactor: Float32) -> BorderEdges {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let color = style.visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyOutlineColor)
+  let isTransparent = color.isValid() && !color.isVisible()
+  let size = style.outlineWidth()
+  let outlineStyle = style.outlineStyle()
+  let edge = BorderEdge(
+    edgeWidth: size, edgeColor: color, edgeStyle: outlineStyle, edgeIsTransparent: isTransparent,
+    edgeIsPresent: true, devicePixelRatio: deviceScaleFactor)
+  return BorderEdges(top: edge, right: edge, bottom: edge, left: edge)
 }
 
 func edgesShareColor(firstEdge: BorderEdge, secondEdge: BorderEdge) -> Bool {
