@@ -127,8 +127,10 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // RenderSVGResourceContainer inherits from RenderSVGHiddenContainer which has a no-op layout() implementation.
+    // Markers are always painted indirectly, but their children need to be laid out such as they would be regular
+    // children of a SVG container element, thus skip RenderSVGHiddenContainer::layout() and use RenderSVGContainer::layout().
+    layoutRenderSVGContainer()
   }
 
   override final func updateFromStyle() {

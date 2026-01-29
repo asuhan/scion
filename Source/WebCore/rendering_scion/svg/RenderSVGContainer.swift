@@ -104,6 +104,8 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     clearNeedsLayout()
   }
 
+  func layoutRenderSVGContainer() { return layout() }
+
   private func layoutChildren() {
     var containerLayout = SVGContainerLayout(self)
     containerLayout.layoutChildren(selfNeedsLayout())
