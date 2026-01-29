@@ -22,6 +22,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func applySVGWhitespaceRules(_ string: StringWrapper, _ preserveWhiteSpace: Bool)
+  -> StringWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderSVGInlineTextWrapper: RenderTextWrapper {
   func characterStartsNewTextChunk(_ position: UInt32) -> Bool {
     // TODO(asuhan): implement this
@@ -43,9 +50,35 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
-  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+  private func updateScaledFont() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    updateScaledFont()
+
+    let newPreserves = style().whiteSpaceCollapse() == .Preserve
+    let oldPreserves = oldStyle != nil ? oldStyle!.whiteSpaceCollapse() == .Preserve : false
+    if oldPreserves && !newPreserves {
+      setText(newContent: applySVGWhitespaceRules(originalText(), false), force: true)
+      return
+    }
+
+    if !oldPreserves && newPreserves {
+      setText(newContent: applySVGWhitespaceRules(originalText(), true), force: true)
+      return
+    }
+
+    if diff != .Layout {
+      return
+    }
+
+    // The text metrics may be influenced by style changes.
+    if let textAncestor = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: self) {
+      textAncestor.setNeedsLayout()
+    }
   }
 
   override func objectBoundingBox() -> FloatRectWrapper {
