@@ -27,8 +27,32 @@ final class FixedTableLayout: TableLayout {
   override func applyPreferredLogicalWidthQuirks(
     minWidth: inout LayoutUnit, maxWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let tableLogicalWidth = table.style().logicalWidth()
+    if tableLogicalWidth.isFixed() && tableLogicalWidth.isPositive() {
+      maxWidth = max(
+        minWidth,
+        LayoutUnit(value: tableLogicalWidth.value())
+          - table.bordersPaddingAndSpacingInRowDirection())
+      minWidth = maxWidth
+    }
+
+    /*
+        <table style="width:100%; background-color:red"><tr><td>
+            <table style="background-color:blue"><tr><td>
+                <table style="width:100%; background-color:green; table-layout:fixed"><tr><td>
+                    Content
+                </td></tr></table>
+            </td></tr></table>
+        </td></tr></table>
+    */
+    // In this example, the two inner tables should be as large as the outer table.
+    // We can achieve this effect by making the maxwidth of fixed tables with percentage
+    // widths be infinite.
+    if table.style().logicalWidth().isPercentOrCalculated()
+      && maxWidth < Int32(FixedTableLayout.tableMaxWidth)
+    {
+      maxWidth = LayoutUnit(value: Int32(FixedTableLayout.tableMaxWidth))
+    }
   }
 
   override func layout() {
