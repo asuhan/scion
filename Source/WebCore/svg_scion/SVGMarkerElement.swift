@@ -27,6 +27,16 @@ final class SVGMarkerElementWrapper: SVGElementWrapper, SVGFitToViewBox {
     fatalError("Not implemented")
   }
 
+  func markerWidth() -> SVGLengthValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func markerHeight() -> SVGLengthValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func viewBox() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

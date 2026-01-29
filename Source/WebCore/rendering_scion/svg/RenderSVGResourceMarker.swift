@@ -119,8 +119,11 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
   }
 
   private func computeViewport() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let useMarkerElement = markerElement()
+    let lengthContext = SVGLengthContext(context: useMarkerElement)
+    return FloatRectWrapper(
+      x: 0, y: 0, width: useMarkerElement.markerWidth().value(lengthContext),
+      height: useMarkerElement.markerHeight().value(lengthContext))
   }
 
   override func layout() {
