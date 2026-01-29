@@ -24,6 +24,42 @@ class SVGTextFragment {
     fatalError("Not implemented")
   }
 
+  enum TransformType {
+    case TransformRespectingTextLength
+    case TransformIgnoringTextLength
+  }
+
+  func buildFragmentTransform(
+    _ result: inout AffineTransform, _ type: TransformType = .TransformRespectingTextLength
+  ) {
+    if type == .TransformIgnoringTextLength {
+      result = transform
+      transformAroundOrigin(result)
+      return
+    }
+
+    if isTextOnPath {
+      buildTransformForTextOnPath(result)
+    } else {
+      buildTransformForTextOnLine(result)
+    }
+  }
+
+  func transformAroundOrigin(_ result: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func buildTransformForTextOnPath(_ result: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func buildTransformForTextOnLine(_ result: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // The first rendered character starts at RenderSVGInlineText::characters() + characterOffset.
   var characterOffset: UInt32
   var metricsListOffset: UInt32

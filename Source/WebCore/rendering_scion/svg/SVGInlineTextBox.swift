@@ -28,18 +28,43 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     fatalError("Not implemented")
   }
 
+  private func textRenderer() -> RenderSVGInlineTextWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalHeight(_ height: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func calculateBoundaries() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var textRect = FloatRectWrapper()
+
+    let scalingFactor = textRenderer().scalingFactor()
+    assert(scalingFactor != 0)
+
+    let baseline = textRenderer().scaledFont().metricsOfPrimaryFont().ascent() / scalingFactor
+
+    var fragmentTransform = AffineTransform()
+    for fragment in textFragments {
+      var fragmentRect = FloatRectWrapper(
+        x: fragment.x, y: fragment.y - baseline, width: fragment.width, height: fragment.height)
+      fragment.buildFragmentTransform(&fragmentTransform)
+      if !fragmentTransform.isIdentity() {
+        fragmentRect = fragmentTransform.mapRect(rect: fragmentRect)
+      }
+
+      textRect.unite(other: fragmentRect)
+    }
+
+    return textRect
   }
 
   func setTextFragments(_ fragments: [SVGTextFragment]) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let textFragments: [SVGTextFragment]
 }
