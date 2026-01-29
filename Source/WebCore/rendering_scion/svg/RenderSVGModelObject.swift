@@ -140,8 +140,19 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isInsideEntirelyHiddenLayer() {
+      return RepaintRects()
+    }
+
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
+
+    let visualOverflowRect = visualOverflowRectEquivalent()
+    var rects = RepaintRects(rect: visualOverflowRect)
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = visualOverflowRect
+    }
+
+    return rects
   }
 
   override func computeVisibleRectsInContainer(
