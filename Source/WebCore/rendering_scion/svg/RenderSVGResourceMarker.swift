@@ -55,6 +55,11 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     return transform
   }
 
+  func markerElement() -> SVGMarkerElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func referencePoint() -> FloatPoint {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -88,8 +93,29 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
   }
 
   override func updateLayerTransform() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasLayer())
+
+    // First update the supplemental layer transform.
+    let useMarkerElement = markerElement()
+    let viewportSize = viewportSize()
+
+    supplementalLayerTransform.makeIdentity()
+
+    if useMarkerElement.hasViewBoxAttr() {  // TODO(asuhan): implement and use hasAttribute
+      // An empty viewBox disables the rendering -- dirty the visible descendant status!
+      if useMarkerElement.hasEmptyViewBox() {
+        layer()!.dirtyVisibleContentStatus()
+      } else {
+        let viewBoxTransform = useMarkerElement.viewBoxToViewTransform(
+          viewportSize.width, viewportSize.height)
+        if !viewBoxTransform.isIdentity() {
+          supplementalLayerTransform = viewBoxTransform
+        }
+      }
+    }
+
+    // After updating the supplemental layer transform we're able to use it in RenderLayerModelObjects::updateLayerTransform().
+    super.updateLayerTransform()
   }
 
   private func computeViewport() -> FloatRectWrapper {
@@ -107,6 +133,6 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
     fatalError("Not implemented")
   }
 
-  private let supplementalLayerTransform = AffineTransform()
+  private var supplementalLayerTransform = AffineTransform()
   private var m_viewport = FloatRectWrapper()
 }
