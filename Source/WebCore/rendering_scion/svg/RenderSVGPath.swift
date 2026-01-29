@@ -245,8 +245,9 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   private static let s_visitedSetDraw = SVGVisitedRendererTracking.VisitedSet()
 
   override func isRenderingDisabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // For a polygon, polyline or path, rendering is disabled if there is no path data.
+    // No path data is possible in the case of a missing or empty 'd' or 'points' attribute.
+    return !hasPath() || path().isEmpty()
   }
 
   private let zeroLengthLinecapLocations = FloatPointArrayRef()
