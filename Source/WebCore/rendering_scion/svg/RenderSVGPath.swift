@@ -27,6 +27,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func useStrokeStyleToFill(_ context: GraphicsContextWrapper) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func markerForType(
   _ type: SVGMarkerType, _ markerStart: RenderSVGResourceMarkerWrapper?,
   _ markerMid: RenderSVGResourceMarkerWrapper?, _ markerEnd: RenderSVGResourceMarkerWrapper?
@@ -144,6 +149,12 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   private func shouldStrokeZeroLengthSubpath() -> Bool {
+    // Spec(11.4): Any zero length subpath shall not be stroked if the "stroke-linecap" property has a value of butt
+    // but shall be stroked if the "stroke-linecap" property has a value of round or square
+    return style().svgStyle().hasStroke() && style().capStyle() != .Butt
+  }
+
+  private func zeroLengthLinecapPath(_ linecapPosition: FloatPoint) -> PathWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -171,8 +182,22 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   private func strokeZeroLengthSubpaths(_ context: GraphicsContextWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if zeroLengthLinecapLocations.a.isEmpty {
+      return
+    }
+
+    let nonScalingTransform =
+      hasNonScalingStroke() ? nonScalingStrokeTransform() : AffineTransform()
+
+    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: true)
+    useStrokeStyleToFill(context)
+    for zeroLengthLinecapLocation in zeroLengthLinecapLocations.a {
+      var usePath = zeroLengthLinecapPath(zeroLengthLinecapLocation)
+      if hasNonScalingStroke() {
+        usePath = nonScalingStrokePath(usePath, nonScalingTransform)
+      }
+      context.fillPath(path: usePath)
+    }
   }
 
   private func shouldGenerateMarkerPositions() -> Bool {
