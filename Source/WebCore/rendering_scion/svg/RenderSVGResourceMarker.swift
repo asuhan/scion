@@ -134,8 +134,11 @@ final class RenderSVGResourceMarkerWrapper: RenderSVGResourceContainerWrapper {
   }
 
   override final func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.updateFromStyle()
+
+    if SVGRenderSupport.isOverflowHidden(self) {
+      setHasNonVisibleOverflow()
+    }
   }
 
   private var supplementalLayerTransform = AffineTransform()
