@@ -30,6 +30,13 @@ class RenderGeometryMap {
     fatalError("Not implemented")
   }
 
+  func mapToContainer(_ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?)
+    -> FloatQuad
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called by code walking the renderer or layer trees.
   func pushMappingsToAncestor(
     layer: RenderLayerWrapper?, ancestorLayer: RenderLayerWrapper?, respectTransforms: Bool = true

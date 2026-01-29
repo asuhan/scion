@@ -35,6 +35,11 @@
 // mapping a rectangle through transforms. When initialized from a rect, the
 // points are in clockwise order from top left.
 struct FloatQuad {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(inRect: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

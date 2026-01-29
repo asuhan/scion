@@ -168,8 +168,24 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   )
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
+
+    var outlineBounds = visualOverflowRectEquivalent()
+
+    if CPtrToInt(repaintContainer?.p) != CPtrToInt(p) {
+      var containerRelativeQuad = FloatQuad()
+      if geometryMap != nil {
+        containerRelativeQuad = geometryMap!.mapToContainer(
+          outlineBounds.FloatRect(), repaintContainer)
+      } else {
+        containerRelativeQuad = localToContainerQuad(
+          localQuad: FloatQuad(inRect: outlineBounds.FloatRect()), container: repaintContainer)
+      }
+
+      outlineBounds = LayoutRectWrapper(r: containerRelativeQuad.boundingBox())
+    }
+
+    return outlineBounds
   }
 
   override func addFocusRingRects(
