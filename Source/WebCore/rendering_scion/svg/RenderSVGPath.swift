@@ -201,8 +201,11 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   private func shouldGenerateMarkerPositions() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().svgStyle().hasMarkers() && graphicsElement().supportsMarkers() {
+      return svgMarkerStartResourceFromStyle() != nil || svgMarkerMidResourceFromStyle() != nil
+        || svgMarkerEndResourceFromStyle() != nil
+    }
+    return false
   }
 
   override func drawMarkers(_ paintInfo: PaintInfoWrapper) {

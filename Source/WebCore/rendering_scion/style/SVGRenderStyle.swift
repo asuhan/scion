@@ -162,6 +162,12 @@ class SVGRenderStyle {
     fatalError("Not implemented")
   }
 
+  // convenience
+  func hasMarkers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasStroke() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

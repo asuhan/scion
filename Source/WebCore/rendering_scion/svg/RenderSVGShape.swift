@@ -52,6 +52,11 @@ protocol RenderSVGShapeProto {
 }
 
 class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper, RenderSVGShapeProto {
+  func graphicsElement() -> SVGGraphicsElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsShapeUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

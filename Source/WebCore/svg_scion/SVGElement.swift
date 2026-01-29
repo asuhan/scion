@@ -25,6 +25,11 @@
 
 // TODO(asuhan): Inherit from SVGPropertyOwner as well.
 class SVGElementWrapper: StyledElementWrapper {
+  func supportsMarkers() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasRelativeLengths() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
