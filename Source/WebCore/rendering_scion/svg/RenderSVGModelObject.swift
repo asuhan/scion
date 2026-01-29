@@ -36,8 +36,15 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    // SVG masks are painted independent of the target renderers visibility.
+    // FIXME: [LBSE] Upstream RenderElement changes
+    // bool hasSVGMask = hasSVGMask();
+    let hasSVGMask = false
+    if hasSVGMask && hasLayer() && style().usedVisibility() != .Visible {
+      layer()!.setHasVisibleContent()
+    }
   }
 
   func currentSVGLayoutRect() -> LayoutRectWrapper {
