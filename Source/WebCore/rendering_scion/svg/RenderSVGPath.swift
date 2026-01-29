@@ -120,7 +120,7 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     if style().svgStyle().hasStroke() {
       // FIXME: zero-length subpaths do not respect vector-effect = non-scaling-stroke.
       let strokeWidth = strokeWidth()
-      for zeroLengthLinecapLocation in zeroLengthLinecapLocations {
+      for zeroLengthLinecapLocation in zeroLengthLinecapLocations.a {
         strokeBoundingBox.unite(
           other: zeroLengthSubpathRect(zeroLengthLinecapLocation, strokeWidth))
       }
@@ -143,6 +143,11 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     strokeZeroLengthSubpaths(context)
   }
 
+  private func shouldStrokeZeroLengthSubpath() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func zeroLengthSubpathRect(_ linecapPosition: FloatPoint, _ strokeWidth: Float32)
     -> FloatRectWrapper
   {
@@ -152,8 +157,17 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   }
 
   private func updateZeroLengthSubpaths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    zeroLengthLinecapLocations.a.removeAll()
+
+    if strokeWidth() == 0 || !shouldStrokeZeroLengthSubpath() {
+      return
+    }
+
+    var subpathData = SVGSubpathData(zeroLengthLinecapLocations)
+    path().applyElements({ (pathElement: PathElement) in
+      SVGSubpathData.updateFromPathElement(&subpathData, pathElement)
+    })
+    subpathData.pathIsDone()
   }
 
   private func strokeZeroLengthSubpaths(_ context: GraphicsContextWrapper) {
@@ -207,6 +221,6 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     fatalError("Not implemented")
   }
 
-  private let zeroLengthLinecapLocations: [FloatPoint] = []
+  private let zeroLengthLinecapLocations = FloatPointArrayRef()
   private var markerPositions = MarkerPositions()
 }

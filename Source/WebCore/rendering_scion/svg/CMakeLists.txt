@@ -36,6 +36,7 @@ target_sources(layout_scion PRIVATE
     SVGPaintServerHandling.swift
     SVGRenderSupport.swift
     SVGRootInlineBox.swift
+    SVGSubpathData.swift
     SVGTextChunk.swift
     SVGTextChunkBuilder.swift
     SVGTextFragment.swift
