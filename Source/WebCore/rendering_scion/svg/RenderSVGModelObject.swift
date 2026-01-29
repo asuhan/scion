@@ -208,6 +208,31 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> Bool {
+    // Based on render box' applyCachedClipAndScrollPosition -- unused options removed.
+    if !context.options.contains(.ApplyContainerClip) && CPtrToInt(p) == CPtrToInt(container?.p) {
+      return true
+    }
+
+    var clipRect = LayoutRectWrapper(
+      location: LayoutPointWrapper(), size: cachedSizeForOverflowClip())
+    if effectiveOverflowX() == .Visible {
+      clipRect.expandToInfiniteX()
+    }
+    if effectiveOverflowY() == .Visible {
+      clipRect.expandToInfiniteY()
+    }
+
+    var intersects = false
+    if context.options.contains(.UseEdgeInclusiveIntersection) {
+      intersects = rects.edgeInclusiveIntersect(clipRect)
+    } else {
+      intersects = rects.intersect(clipRect)
+    }
+
+    return intersects
+  }
+
+  private func cachedSizeForOverflowClip() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
