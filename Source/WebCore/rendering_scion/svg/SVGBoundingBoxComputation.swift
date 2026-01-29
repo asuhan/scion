@@ -106,6 +106,12 @@ struct SVGBoundingBoxComputation: ~Copyable {
     return boundingBoxComputation.computeDecoratedBoundingBox(options)
   }
 
+  static func computeRepaintBoundingBox(_ renderer: RenderLayerModelObjectWrapper)
+    -> FloatRectWrapper
+  {
+    return computeDecoratedBoundingBox(renderer, repaintBoundingBoxDecoration)
+  }
+
   static func computeVisualOverflowRect(_ renderer: RenderLayerModelObjectWrapper)
     -> LayoutRectWrapper
   {

@@ -221,8 +221,24 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   override final func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      var repaintRect = SVGBoundingBoxComputation.computeRepaintBoundingBox(self)
+
+      if let textShadow = style().textShadow() {
+        textShadow.adjustRectForShadow(&repaintRect)
+      }
+
+      return repaintRect
+    }
+
+    var repaintRect = strokeBoundingBox()
+    SVGRenderSupport.intersectRepaintRectWithResources(self, &repaintRect, repaintRectCalculation)
+
+    if let textShadow = style().textShadow() {
+      textShadow.adjustRectForShadow(&repaintRect)
+    }
+
+    return repaintRect
   }
 
   private func visualOverflowRectEquivalent() -> LayoutRectWrapper {

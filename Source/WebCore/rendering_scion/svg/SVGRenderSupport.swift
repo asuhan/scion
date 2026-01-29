@@ -34,6 +34,15 @@ class SVGRenderSupport {
     return isNonVisibleOverflow(renderer.style().overflowX())
   }
 
+  // Calculates the repaintRect in combination with filter, clipper and masker in local coordinates.
+  static func intersectRepaintRectWithResources(
+    _ renderer: RenderElementWrapper, _ repaintRect: inout FloatRectWrapper,
+    _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
   static func clippedOverflowRectForRepaint(
     _ renderer: RenderElementWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,

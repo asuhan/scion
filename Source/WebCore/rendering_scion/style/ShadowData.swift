@@ -105,6 +105,14 @@ class ShadowData: Equatable {
     rect.setHeight(height: rect.height() - shadowExtent.top + shadowExtent.bottom)
   }
 
+  func adjustRectForShadow(_ rect: inout FloatRectWrapper) {
+    let shadowExtent = shadowOutsetExtent()
+
+    rect.move(dx: shadowExtent.left.float(), dy: shadowExtent.top.float())
+    rect.setWidth(width: rect.width() - shadowExtent.left + shadowExtent.right)
+    rect.setHeight(height: rect.height() - shadowExtent.top + shadowExtent.bottom)
+  }
+
   private func shadowOutsetExtent() -> LayoutBoxExtent {
     var top = LayoutUnit()
     var right = LayoutUnit()
