@@ -146,8 +146,9 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   private func zeroLengthSubpathRect(_ linecapPosition: FloatPoint, _ strokeWidth: Float32)
     -> FloatRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FloatRectWrapper(
+      x: linecapPosition.x - strokeWidth / 2, y: linecapPosition.y - strokeWidth / 2,
+      width: strokeWidth, height: strokeWidth)
   }
 
   private func updateZeroLengthSubpaths() {
