@@ -2604,6 +2604,16 @@ class RenderLayerWrapper {
     makeMatrixRenderable(matrix: transform, has3DRendering: canRender3DTransforms())
   }
 
+  // currentTransform computes a transform which takes accelerated animations into account. The
+  // resulting transform has transform-origin baked in, unless non-default options are given. If
+  // the layer does not have a transform, the identity matrix is returned.
+  func currentTransform(_ options: RenderStyleWrapper.TransformOperationOption)
+    -> TransformationMatrix
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func currentTransform() -> TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

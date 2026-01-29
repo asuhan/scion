@@ -114,8 +114,24 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func computeClipPath(_ transform: AffineTransform) -> PathWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if layer()!.isTransformed() {
+      transform.multiply(
+        layer()!.currentTransform(RenderStyleWrapper.individualTransformOperations)
+          .toAffineTransform())
+    }
+
+    if let useElement = protectedElement() as? SVGUseElementWrapper {
+      if let clipChildRenderer = useElement.rendererClipChild() {
+        transform.multiply(
+          (clipChildRenderer as! RenderLayerModelObjectWrapper).checkedLayer()!
+            .currentTransform(RenderStyleWrapper.individualTransformOperations).toAffineTransform())
+      }
+      if let clipChild = useElement.clipChild() {
+        return pathFromGraphicsElement(clipChild)
+      }
+    }
+
+    return pathFromGraphicsElement(element() as! SVGGraphicsElementWrapper)
   }
 
   override func updateFromStyle() {

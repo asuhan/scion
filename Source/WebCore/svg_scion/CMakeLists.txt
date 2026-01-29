@@ -19,5 +19,6 @@ target_sources(layout_scion PRIVATE
     SVGTextPathElement.swift
     SVGTextPositioningElement.swift
     SVGUnitTypes.swift
+    SVGUseElement.swift
 )
 add_subdirectory(graphics)

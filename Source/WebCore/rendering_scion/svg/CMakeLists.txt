@@ -34,6 +34,7 @@ target_sources(layout_scion PRIVATE
     SVGLayerTransformUpdater.swift
     SVGMarkerData.swift
     SVGPaintServerHandling.swift
+    SVGPathData.swift
     SVGRenderSupport.swift
     SVGRootInlineBox.swift
     SVGSubpathData.swift
