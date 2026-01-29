@@ -116,8 +116,17 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
   override func adjustStrokeBoundingBoxForZeroLengthLinecaps(_ strokeBoundingBox: FloatRectWrapper)
     -> FloatRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var strokeBoundingBox = strokeBoundingBox
+    if style().svgStyle().hasStroke() {
+      // FIXME: zero-length subpaths do not respect vector-effect = non-scaling-stroke.
+      let strokeWidth = strokeWidth()
+      for zeroLengthLinecapLocation in zeroLengthLinecapLocations {
+        strokeBoundingBox.unite(
+          other: zeroLengthSubpathRect(zeroLengthLinecapLocation, strokeWidth))
+      }
+    }
+
+    return strokeBoundingBox
   }
 
   override func strokeShape(_ context: GraphicsContextWrapper) {
@@ -132,6 +141,13 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
 
     super.strokeShape(context)
     strokeZeroLengthSubpaths(context)
+  }
+
+  private func zeroLengthSubpathRect(_ linecapPosition: FloatPoint, _ strokeWidth: Float32)
+    -> FloatRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func updateZeroLengthSubpaths() {
@@ -190,5 +206,6 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     fatalError("Not implemented")
   }
 
+  private let zeroLengthLinecapLocations: [FloatPoint] = []
   private var markerPositions = MarkerPositions()
 }
