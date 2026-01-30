@@ -1290,8 +1290,17 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func updateBaselineAlignmentContext(gridItem: RenderBoxWrapper, baselineAxis: GridAxis) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(wasSetup())
+    assert(canParticipateInBaselineAlignment(gridItem: gridItem, baselineAxis: baselineAxis))
+
+    let align = renderGrid!.selfAlignmentForGridItem(axis: baselineAxis, gridItem: gridItem)
+      .position
+    let span = renderGrid!.gridSpanForGridItem(
+      gridItem: gridItem, direction: gridDirectionForAxis(axis: baselineAxis))
+    let alignmentContext = GridLayoutFunctions.alignmentContextForBaselineAlignment(
+      span: span, alignment: align)
+    baselineAlignment.updateBaselineAlignmentContext(
+      align, alignmentContext, gridItem, baselineAxis)
   }
 
   private func canParticipateInBaselineAlignment(gridItem: RenderBoxWrapper, baselineAxis: GridAxis)

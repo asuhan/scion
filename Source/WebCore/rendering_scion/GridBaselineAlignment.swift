@@ -34,6 +34,17 @@
 // This class also computes the baseline offset for a particular item, based on the max-ascent for its associated
 // baseline-sharing group.
 struct GridBaselineAlignment {
+  // Collects the items participating in baseline alignment and updates the corresponding baseline-sharing
+  // group of the Baseline Context the items belongs to.
+  // All the baseline offsets are updated accordingly based on the added item.
+  func updateBaselineAlignmentContext(
+    _ preference: ItemPosition, _ sharedContext: UInt32, _ gridItem: RenderBoxWrapper,
+    _ alignmentAxis: GridAxis
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns the baseline offset of a particular item, based on the max-ascent for its associated
   // baseline-sharing group
   func baselineOffsetForGridItem(
