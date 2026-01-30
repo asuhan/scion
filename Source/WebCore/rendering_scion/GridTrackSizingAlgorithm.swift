@@ -182,8 +182,18 @@ private func setOverridingContainingBlockContentSizeForGridItem(
   _ grid: RenderGridWrapper, _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection,
   _ size: LayoutUnit?
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var direction = direction
+  // This function sets the dimension based on the writing mode of the containing block.
+  // For subgrids, this might not be the outermost grid, but could be a subgrid. If the
+  // writing mode of the CB and the grid for which we're doing sizing don't match, swap
+  // the directions.
+  direction = GridLayoutFunctions.flowAwareDirectionForGridItem(
+    grid: grid, gridItem: gridItem.containingBlock()!, direction: direction)
+  if direction == .ForColumns {
+    gridItem.setOverridingContainingBlockContentLogicalWidth(logicalWidth: size)
+  } else {
+    gridItem.setOverridingContainingBlockContentLogicalHeight(logicalHeight: size)
+  }
 }
 
 private enum TrackSizeRestriction {
