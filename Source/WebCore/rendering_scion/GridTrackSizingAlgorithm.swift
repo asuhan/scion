@@ -625,7 +625,7 @@ final class GridTrackSizingAlgorithm {
     fatalError("Not implemented")
   }
 
-  private func availableSpace() -> LayoutUnit? {
+  func availableSpace() -> LayoutUnit? {
     assert(wasSetup())
     return availableSpace(direction: direction)
   }
@@ -1808,8 +1808,65 @@ private class GridTrackSizingAlgorithmStrategy {
   func minContributionForGridItem(
     _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid()!, gridItem: gridItem, direction: .ForColumns)
+    let isRowAxis = direction() == gridItemInlineDirection
+    if isRowAxis && isComputingInlineSizeContainment() {
+      return LayoutUnit()
+    }
+    let gridItemSize =
+      isRowAxis ? gridItem.style().logicalWidth() : gridItem.style().logicalHeight()
+    if !gridItemSize.isAuto() && !gridItemSize.isPercentOrCalculated() {
+      return minContentContributionForGridItem(gridItem, &gridLayoutState)
+    }
+
+    let gridItemMinSize =
+      isRowAxis ? gridItem.style().logicalMinWidth() : gridItem.style().logicalMinHeight()
+    let overflowIsVisible =
+      isRowAxis
+      ? gridItem.effectiveOverflowInlineDirection() == .Visible
+      : gridItem.effectiveOverflowBlockDirection() == .Visible
+    let baselineShim = algorithm.baselineOffsetForGridItem(
+      gridItem: gridItem, baselineAxis: gridAxisForDirection(direction: direction()))
+
+    if gridItemMinSize.isAuto() && overflowIsVisible {
+      var minSize = minContentContributionForGridItem(gridItem, &gridLayoutState)
+      let span = algorithm.renderGrid!.gridSpanForGridItem(
+        gridItem: gridItem, direction: direction())
+
+      var maxBreadth = LayoutUnit()
+      let allTracks = algorithm.tracks(direction: direction())
+      var allFixed = true
+      for trackPosition in span {
+        let trackSize = allTracks[Int(trackPosition)].cachedTrackSize()
+        if trackSize.maxTrackBreadth.isFlex() && span.integerSpan() > 1 {
+          return LayoutUnit()
+        }
+        if !trackSize.hasFixedMaxTrackBreadth() {
+          allFixed = false
+        } else if allFixed {
+          maxBreadth += valueForLength(
+            length: trackSize.maxTrackBreadth.length(),
+            maximumValue: availableSpace() ?? LayoutUnit(value: UInt64(0)))
+        }
+      }
+      if !allFixed {
+        return minSize
+      }
+      if minSize > maxBreadth {
+        var marginAndBorderAndPadding = GridLayoutFunctions.marginLogicalSizeForGridItem(
+          grid: renderGrid()!, direction: direction(), gridItem: gridItem)
+        marginAndBorderAndPadding +=
+          isRowAxis
+          ? gridItem.borderAndPaddingLogicalWidth() : gridItem.borderAndPaddingLogicalHeight()
+        minSize = max(maxBreadth, marginAndBorderAndPadding + baselineShim)
+      }
+      return minSize
+    }
+
+    let gridAreaSize = algorithm.gridAreaBreadthForGridItem(
+      gridItem: gridItem, direction: gridItemInlineDirection)
+    return minLogicalSizeForGridItem(gridItem, gridItemMinSize, gridAreaSize) + baselineShim
   }
 
   func maximizeTracks(tracks: ArraySlice<GridTrack>, freeSpace: LayoutUnit?) {
@@ -1839,6 +1896,13 @@ private class GridTrackSizingAlgorithmStrategy {
 
   init(algorithm: GridTrackSizingAlgorithm) { self.algorithm = algorithm }
 
+  private func minLogicalSizeForGridItem(
+    _ gridItem: RenderBoxWrapper, _ gridItemMinSize: LengthWrapper, _ availableSize: LayoutUnit?
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // GridTrackSizingAlgorithmStrategy.
   private func logicalHeightForGridItem(
     _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
@@ -1862,6 +1926,8 @@ private class GridTrackSizingAlgorithmStrategy {
   }
 
   private func renderGrid() -> RenderGridWrapper? { return algorithm.renderGrid }
+
+  private func availableSpace() -> LayoutUnit? { return algorithm.availableSpace() }
 
   private let algorithm: GridTrackSizingAlgorithm
 }

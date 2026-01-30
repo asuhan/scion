@@ -128,6 +128,11 @@ struct GridTrackSize: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasFixedMaxTrackBreadth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (lhs: Self, rhs: Self) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
