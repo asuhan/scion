@@ -154,6 +154,14 @@ private func shouldClearOverridingContainingBlockContentSizeForGridItem(
   fatalError("Not implemented")
 }
 
+private func setOverridingContainingBlockContentSizeForGridItem(
+  _ grid: RenderGridWrapper, _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection,
+  _ size: LayoutUnit?
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private enum TrackSizeRestriction {
   case AllowInfinity
   case ForbidInfinity
@@ -1933,8 +1941,44 @@ private class GridTrackSizingAlgorithmStrategy {
   private func logicalHeightForGridItem(
     _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridItemBlockDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid()!, gridItem: gridItem, direction: .ForRows)
+    // If |gridItem| has a relative logical height, we shouldn't let it override its intrinsic height, which is
+    // what we are interested in here. Thus we need to set the block-axis override size to nullopt (no possible resolution).
+    let hasOverridingContainingBlockContentSizeForGridItem = { () in
+      if let overridingContainingBlockContentSizeForGridItem =
+        GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+          gridItem: gridItem, direction: .ForRows),
+        overridingContainingBlockContentSizeForGridItem != nil
+      {
+        return true
+      }
+      return false
+    }
+    if hasOverridingContainingBlockContentSizeForGridItem()
+      && shouldClearOverridingContainingBlockContentSizeForGridItem(gridItem, .ForRows)
+    {
+      setOverridingContainingBlockContentSizeForGridItem(
+        renderGrid()!, gridItem, gridItemBlockDirection, nil)
+      gridItem.setNeedsLayout(markParents: .MarkOnlyThis)
+
+      if renderGrid()!.canSetColumnAxisStretchRequirementForItem(gridItem: gridItem) {
+        gridLayoutState.setLayoutRequirementForGridItem(
+          gridItem: gridItem, layoutRequirement: .NeedsColumnAxisStretchAlignment)
+      }
+    }
+
+    // We need to clear the stretched content size to properly compute logical height during layout.
+    if gridItem.needsLayout() {
+      gridItem.clearOverridingContentSize()
+    }
+
+    gridItem.layoutIfNeeded()
+    return gridItem.logicalHeight()
+      + GridLayoutFunctions.marginLogicalSizeForGridItem(
+        grid: renderGrid()!, direction: gridItemBlockDirection, gridItem: gridItem)
+      + algorithm.baselineOffsetForGridItem(
+        gridItem: gridItem, baselineAxis: gridAxisForDirection(direction: direction()))
   }
 
   private func updateOverridingContainingBlockContentSizeForGridItem(

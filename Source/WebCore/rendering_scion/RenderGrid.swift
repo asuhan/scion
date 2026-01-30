@@ -1028,7 +1028,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return gridLayoutState
   }
 
-  private func canSetColumnAxisStretchRequirementForItem(gridItem: RenderBoxWrapper) -> Bool {
+  func canSetColumnAxisStretchRequirementForItem(gridItem: RenderBoxWrapper) -> Bool {
     let gridItemBlockFlowDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
       grid: self, gridItem: gridItem, direction: .ForRows)
     return gridItemBlockFlowDirection == .ForRows
