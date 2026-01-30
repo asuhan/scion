@@ -1985,8 +1985,59 @@ private class GridTrackSizingAlgorithmStrategy {
     _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection,
     _ overrideSize: LayoutUnit? = nil
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var overrideSize = overrideSize
+    if overrideSize == nil {
+      overrideSize = algorithm.gridAreaBreadthForGridItem(gridItem: gridItem, direction: direction)
+    }
+
+    if CPtrToInt(renderGrid()?.p) != CPtrToInt(gridItem.parent()?.p) {
+      // If |gridItem| is part of a subgrid, find the nearest ancestor this is directly part of this grid
+      // (either by being a child of the grid, or via being subgridded in this dimension.
+      var grid = gridItem.parent() as! RenderGridWrapper
+      var subgridDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+        grid: renderGrid()!, gridItem: grid, direction: direction)
+      while CPtrToInt(grid.parent()?.p) != CPtrToInt(renderGrid()?.p)
+        && !grid.isSubgridOf(direction: subgridDirection, ancestor: renderGrid()!)
+      {
+        grid = grid.parent() as! RenderGridWrapper
+        subgridDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+          grid: renderGrid()!, gridItem: grid, direction: direction)
+      }
+
+      if CPtrToInt(grid.p) == CPtrToInt(gridItem.parent()?.p)
+        && grid.isSubgrid(direction: subgridDirection)
+      {
+        // If the item is subgridded in this direction (and thus the tracks it covers are tracks
+        // owned by this sizing algorithm), then we want to take the breadth of the tracks we occupy,
+        // and subtract any space occupied by the subgrid itself (and any ancestor subgrids).
+        overrideSize! -= GridLayoutFunctions.extraMarginForSubgridAncestors(
+          direction: subgridDirection, gridItem: gridItem
+        ).extraTotalMargin()
+      } else {
+        // Otherwise the tracks that this grid item covers (in this non-subgridded axis) are owned
+        // by one of the intermediate RenderGrids (which are subgrids in the other axis), which may
+        // be |grid| or a descendent.
+        // Set the override size for |grid| (which is part of the outer grid), and force a layout
+        // so that it computes the track sizes for the non-subgridded dimension and makes the size
+        // of |gridItem| available.
+        let overrideSizeHasChanged = updateOverridingContainingBlockContentSizeForGridItem(
+          grid, direction)
+        layoutGridItemForMinSizeComputation(grid, overrideSizeHasChanged)
+        return overrideSizeHasChanged
+      }
+    }
+
+    if let overridingContainingBlockContentSizeForGridItem =
+      GridLayoutFunctions.overridingContainingBlockContentSizeForGridItem(
+        gridItem: gridItem, direction: direction),
+      overridingContainingBlockContentSizeForGridItem! == overrideSize
+    {
+      return false
+    }
+
+    setOverridingContainingBlockContentSizeForGridItem(
+      renderGrid()!, gridItem, direction, overrideSize)
+    return true
   }
 
   private func direction() -> GridTrackSizingDirection { return algorithm.direction }
