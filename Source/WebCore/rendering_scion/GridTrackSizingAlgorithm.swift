@@ -430,6 +430,26 @@ private final class DefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
   override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
 }
 
+// https://drafts.csswg.org/css-grid-2/#subgrid-edge-placeholders
+// FIXME: This is a simplification of the specified behaviour, where we add the hypothetical
+// items directly to the edge tracks as if they had a span of 1. This matches the current Gecko
+// behavior.
+private func computeSubgridMarginBorderPadding(
+  _ outermost: RenderGridWrapper, _ outermostDirection: GridTrackSizingDirection,
+  _ track: GridTrack, _ trackIndex: UInt32, _ span: GridSpan, _ subgrid: RenderGridWrapper
+) -> LayoutUnit {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func extraMarginFromSubgridAncestorGutters(
+  _ gridItem: RenderBoxWrapper, _ itemSpan: GridSpan, _ trackIndex: UInt32,
+  _ direction: GridTrackSizingDirection
+) -> LayoutUnit? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func removeSubgridMarginBorderPaddingFromTracks(
   tracks: inout ArraySlice<GridTrack>, mbp: LayoutUnit, forwards: Bool
 ) {
@@ -1862,8 +1882,60 @@ final class GridTrackSizingAlgorithm {
     _ itemsSet: HashSet<RenderBoxWrapper>, _ currentAccumulatedMbp: LayoutUnit,
     _ gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var gridItem = iterator.nextGridItem()
+    while gridItem != nil {
+      accumulateIntrinsicSizes(
+        gridItem!, track, trackIndex, iterator, &itemsSortedByIncreasingSpan,
+        &itemsCrossingFlexibleTracks, itemsSet, currentAccumulatedMbp, &gridLayoutState)
+      gridItem = iterator.nextGridItem()
+    }
+  }
+
+  private func accumulateIntrinsicSizes(
+    _ gridItem: RenderBoxWrapper, _ track: GridTrack, _ trackIndex: UInt32,
+    _ iterator: GridIterator, _ itemsSortedByIncreasingSpan: inout [GridItemWithSpan],
+    _ itemsCrossingFlexibleTracks: inout [GridItemWithSpan], _ itemsSet: HashSet<RenderBoxWrapper>,
+    _ currentAccumulatedMbp: LayoutUnit, _ gridLayoutState: inout GridLayoutState
+  ) {
+    let isNewEntry = itemsSet.add(gridItem).isNewEntry
+    let span = renderGrid!.gridSpanForGridItem(gridItem: gridItem, direction: direction)
+
+    if let inner = gridItem as? RenderGridWrapper,
+      inner.isSubgridInParentDirection(parentDirection: iterator.direction)
+    {
+      // Contribute the mbp of wrapper to the first and last tracks that we span.
+      let subgridSpan = (inner.parent() as! RenderGridWrapper).gridSpanForGridItem(
+        gridItem: inner, direction: iterator.direction)
+      let accumulatedMbpWithSubgrid =
+        currentAccumulatedMbp
+        + computeSubgridMarginBorderPadding(
+          renderGrid!, direction, track, trackIndex, span, inner)
+      track.setBaseSize(
+        max(
+          track.baseSize(),
+          accumulatedMbpWithSubgrid
+            + (extraMarginFromSubgridAncestorGutters(
+              gridItem, span, trackIndex, iterator.direction) ?? LayoutUnit(value: UInt64(0)))))
+
+      let subgridIterator = GridIterator.createForSubgrid(inner, iterator, subgridSpan)
+
+      accumulateIntrinsicSizesForTrack(
+        track, trackIndex, subgridIterator, &itemsSortedByIncreasingSpan,
+        &itemsCrossingFlexibleTracks, itemsSet, accumulatedMbpWithSubgrid, &gridLayoutState)
+      return
+    }
+
+    if !isNewEntry {
+      return
+    }
+
+    if spanningItemCrossesFlexibleSizedTracks(itemSpan: span) {
+      itemsCrossingFlexibleTracks.append(GridItemWithSpan(gridItem: gridItem, span: span))
+    } else if span.integerSpan() == 1 {
+      sizeTrackToFitNonSpanningItem(span, gridItem, track, &gridLayoutState)
+    } else {
+      itemsSortedByIncreasingSpan.append(GridItemWithSpan(gridItem: gridItem, span: span))
+    }
   }
 
   private func copyUsedTrackSizesForSubgrid() -> Bool {

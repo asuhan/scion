@@ -211,6 +211,13 @@ class GridIterator {
     fatalError("Not implemented")
   }
 
+  static func createForSubgrid(
+    _ subgrid: RenderGridWrapper, _ outer: GridIterator, _ subgridSpanInOuter: GridSpan
+  ) -> GridIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextGridItem() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -220,4 +227,6 @@ class GridIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let direction: GridTrackSizingDirection
 }
