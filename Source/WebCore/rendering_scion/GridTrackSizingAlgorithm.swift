@@ -198,6 +198,27 @@ private func setOverridingContainingBlockContentSizeForGridItem(
   }
 }
 
+struct GridItemWithSpan: Comparable, Equatable {
+  let gridItem: RenderBoxWrapper
+  let span: GridSpan
+
+  static func < (this: GridItemWithSpan, other: GridItemWithSpan) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func == (this: GridItemWithSpan, other: GridItemWithSpan) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+struct GridItemsSpanGroupRange {
+  let rangeStart: Int
+  let rangeEnd: Int
+  let span: ArraySlice<GridItemWithSpan>
+}
+
 private enum TrackSizeRestriction {
   case AllowInfinity
   case ForbidInfinity
@@ -987,6 +1008,14 @@ final class GridTrackSizingAlgorithm {
     return false
   }
 
+  private func increaseSizesToAccommodateSpanningItems(
+    _ variant: TrackSizeComputationVariant, _ gridItemsWithSpan: GridItemsSpanGroupRange,
+    _ gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // 12.5 Resolve Intrinsic Track Sizing : Step 3
   // https://drafts.csswg.org/css-grid-2/#algo-spanning-items
   //
@@ -1595,8 +1624,47 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func resolveIntrinsicTrackSizes(gridLayoutState: inout GridLayoutState) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if strategy!.isComputingSizeContainment() {
+      handleInfinityGrowthLimit()
+      return
+    }
+
+    let allTracks = tracks(direction: direction)
+    var itemsSortedByIncreasingSpan: [GridItemWithSpan] = []
+    var itemsCrossingFlexibleTracks: [GridItemWithSpan] = []
+    let itemsSet = HashSet<RenderBoxWrapper>()
+
+    if grid.hasGridItems() {
+      for trackIndex in contentSizedTracksIndex {
+        let iterator = GridIterator(grid: grid, direction: direction, fixedTrackIndex: trackIndex)
+        let track = allTracks[Int(trackIndex)]
+
+        accumulateIntrinsicSizesForTrack(
+          track, trackIndex, iterator, &itemsSortedByIncreasingSpan,
+          &itemsCrossingFlexibleTracks,
+          itemsSet, LayoutUnit(value: UInt64(0)), &gridLayoutState)
+      }
+      itemsSortedByIncreasingSpan.sort()
+    }
+
+    var it = 0
+    let end = itemsSortedByIncreasingSpan.count
+    while it != end {
+      let spanGroupRange = GridItemsSpanGroupRange(
+        rangeStart: it,
+        rangeEnd: itemsSortedByIncreasingSpan[it...].partitioningIndex(where: { itemWithSpan in
+          itemsSortedByIncreasingSpan[it] < itemWithSpan
+        }), span: itemsSortedByIncreasingSpan[...])
+      increaseSizesToAccommodateSpanningItems(
+        .NotCrossingFlexibleTracks, spanGroupRange, &gridLayoutState)
+      it = spanGroupRange.rangeEnd
+    }
+    let tracksGroupRange = GridItemsSpanGroupRange(
+      rangeStart: 0, rangeEnd: itemsCrossingFlexibleTracks.count,
+      span: itemsCrossingFlexibleTracks[...])
+    increaseSizesToAccommodateSpanningItems(
+      .CrossingFlexibleTracks, tracksGroupRange, &gridLayoutState)
+    handleInfinityGrowthLimit()
   }
 
   // Masonry Implementation of https://drafts.csswg.org/css-grid-2/#algo-content.
@@ -1704,6 +1772,17 @@ final class GridTrackSizingAlgorithm {
       track.setBaseSize(track.baseSize() + sizeToIncrease)
     }
     setFreeSpace(direction: direction, freeSpace: LayoutUnit(value: UInt64(0)))
+  }
+
+  private func accumulateIntrinsicSizesForTrack(
+    _ track: GridTrack, _ trackIndex: UInt32, _ iterator: GridIterator,
+    _ itemsSortedByIncreasingSpan: inout [GridItemWithSpan],
+    _ itemsCrossingFlexibleTracks: inout [GridItemWithSpan],
+    _ itemsSet: HashSet<RenderBoxWrapper>, _ currentAccumulatedMbp: LayoutUnit,
+    _ gridLayoutState: inout GridLayoutState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func copyUsedTrackSizesForSubgrid() -> Bool {
