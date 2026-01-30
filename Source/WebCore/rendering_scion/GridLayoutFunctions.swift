@@ -188,6 +188,22 @@ class GridLayoutFunctions {
     return margin
   }
 
+  static func setOverridingContentSizeForGridItem(
+    _ renderGrid: RenderGridWrapper, _ gridItem: RenderBoxWrapper, _ logicalSize: LayoutUnit,
+    _ direction: GridTrackSizingDirection
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func clearOverridingContentSizeForGridItem(
+    _ renderGrid: RenderGridWrapper, _ gridItem: RenderBoxWrapper,
+    _ direction: GridTrackSizingDirection
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func isOrthogonalGridItem(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
     return gridItem.isHorizontalWritingMode() != grid.isHorizontalWritingMode()
   }

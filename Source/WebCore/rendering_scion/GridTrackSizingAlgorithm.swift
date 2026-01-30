@@ -147,6 +147,13 @@ private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
   return axis == .GridRowAxis ? .ForColumns : .ForRows
 }
 
+private func shouldClearOverridingContainingBlockContentSizeForGridItem(
+  _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private enum TrackSizeRestriction {
   case AllowInfinity
   case ForbidInfinity
@@ -1616,7 +1623,7 @@ final class GridTrackSizingAlgorithm {
   private var flexibleSizedTracksIndex: [UInt32] = []
   private var autoSizedTracksForStretchIndex: [UInt32] = []
 
-  private var direction: GridTrackSizingDirection
+  var direction: GridTrackSizingDirection
   private var sizingOperation: SizingOperation
 
   // Required to be public by RenderGrid. Try to minimize the exposed surface.
@@ -1640,7 +1647,7 @@ final class GridTrackSizingAlgorithm {
     case ColumnSizingSecondIteration
     case RowSizingSecondIteration
   }
-  private var sizingState: SizingState
+  var sizingState: SizingState
 
   private var baselineAlignment: GridBaselineAlignment
 
@@ -1695,8 +1702,80 @@ private class GridTrackSizingAlgorithmStrategy {
   func minContentContributionForGridItem(
     _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid()!, gridItem: gridItem, direction: .ForColumns)
+    if direction() == gridItemInlineDirection {
+      if isComputingInlineSizeContainment() {
+        return LayoutUnit()
+      }
+
+      let needsGridItemMinContentContributionForSecondColumnPass =
+        sizingState() == .ColumnSizingSecondIteration
+        && gridLayoutState.containsLayoutRequirementForGridItem(
+          gridItem: gridItem, layoutRequirement: .MinContentContributionForSecondColumnPass)
+
+      // FIXME: It's unclear if we should return the intrinsic width or the preferred width.
+      // See http://lists.w3.org/Archives/Public/www-style/2013Jan/0245.html
+      if gridItem.needsPreferredWidthsRecalculation()
+        || needsGridItemMinContentContributionForSecondColumnPass
+      {
+        gridItem.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+      }
+
+      if needsGridItemMinContentContributionForSecondColumnPass {
+        let rowSize = renderGrid()!.gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+          gridItem: gridItem, direction: .ForRows)
+        let stretchedSize =
+          !GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid()!, gridItem: gridItem)
+          ? gridItem.constrainLogicalHeightByMinMax(
+            logicalHeight: rowSize, intrinsicContentHeight: nil)
+          : gridItem.constrainLogicalWidthInFragmentByMinMax(
+            logicalWidth: rowSize, availableWidth: renderGrid()!.contentWidth(), cb: renderGrid()!,
+            fragment: nil)
+        GridLayoutFunctions.setOverridingContentSizeForGridItem(
+          renderGrid()!, gridItem, stretchedSize, .ForRows)
+      }
+
+      let minContentLogicalWidth = gridItem.minPreferredLogicalWidth()
+
+      if needsGridItemMinContentContributionForSecondColumnPass {
+        GridLayoutFunctions.clearOverridingContentSizeForGridItem(renderGrid()!, gridItem, .ForRows)
+      }
+
+      let minLogicalWidth = { () in
+        let gridItemLogicalMinWidth = gridItem.style().logicalMinWidth()
+
+        if gridItemLogicalMinWidth.isFixed() {
+          return LayoutUnit(value: gridItemLogicalMinWidth.value())
+        }
+        if gridItemLogicalMinWidth.isMaxContent() {
+          return gridItem.maxPreferredLogicalWidth()
+        }
+
+        // FIXME: We should be able to handle other values for the logical min width.
+        return LayoutUnit(value: UInt64(0))
+      }()
+
+      return max(minContentLogicalWidth, minLogicalWidth)
+        + GridLayoutFunctions.marginLogicalSizeForGridItem(
+          grid: renderGrid()!, direction: gridItemInlineDirection, gridItem: gridItem)
+        + algorithm.baselineOffsetForGridItem(
+          gridItem: gridItem, baselineAxis: gridAxisForDirection(direction: direction()))
+    }
+
+    if updateOverridingContainingBlockContentSizeForGridItem(gridItem, gridItemInlineDirection) {
+      gridItem.setNeedsLayout(markParents: .MarkOnlyThis)
+      // For a grid item with relative width constraints to the grid area, such as percentaged paddings, we reset the overridingContainingBlockContentSizeForGridItem value for columns when we are executing a definite strategy
+      // for columns. Since we have updated the overridingContainingBlockContentSizeForGridItem inline-axis/width value here, we might need to recompute the grid item's relative width. For some cases, we probably will not
+      // be able to do it during the RenderGrid::layoutGridItems() function as the grid area does't change there any more. Also, as we are doing a layout inside GridTrackSizingAlgorithmStrategy::logicalHeightForGridItem()
+      // function, let's take the advantage and set it here.
+      if shouldClearOverridingContainingBlockContentSizeForGridItem(
+        gridItem, gridItemInlineDirection)
+      {
+        gridItem.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+      }
+    }
+    return logicalHeightForGridItem(gridItem, &gridLayoutState)
   }
 
   func maxContentContributionForGridItem(
@@ -1734,9 +1813,35 @@ private class GridTrackSizingAlgorithmStrategy {
 
   func isComputingSizeContainment() -> Bool { fatalError("Not reached") }
 
+  func isComputingInlineSizeContainment() -> Bool { fatalError("Not reached") }
+
   func isComputingSizeOrInlineSizeContainment() -> Bool { fatalError("Not reached") }
 
   init(algorithm: GridTrackSizingAlgorithm) { self.algorithm = algorithm }
+
+  // GridTrackSizingAlgorithmStrategy.
+  private func logicalHeightForGridItem(
+    _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOverridingContainingBlockContentSizeForGridItem(
+    _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection,
+    _ overrideSize: LayoutUnit? = nil
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func direction() -> GridTrackSizingDirection { return algorithm.direction }
+
+  private func sizingState() -> GridTrackSizingAlgorithm.SizingState {
+    return algorithm.sizingState
+  }
+
+  private func renderGrid() -> RenderGridWrapper? { return algorithm.renderGrid }
 
   private let algorithm: GridTrackSizingAlgorithm
 }

@@ -2552,7 +2552,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     return rowAxisOffset
   }
 
-  private func gridAreaBreadthForGridItemIncludingAlignmentOffsets(
+  func gridAreaBreadthForGridItemIncludingAlignmentOffsets(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> LayoutUnit {
     if direction == .ForRows {
