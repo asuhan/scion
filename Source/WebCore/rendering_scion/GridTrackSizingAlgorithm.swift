@@ -1781,8 +1781,28 @@ private class GridTrackSizingAlgorithmStrategy {
   func maxContentContributionForGridItem(
     _ gridItem: RenderBoxWrapper, _ gridLayoutState: inout GridLayoutState
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid()!, gridItem: gridItem, direction: .ForColumns)
+    if direction() == gridItemInlineDirection {
+      if isComputingInlineSizeContainment() {
+        return LayoutUnit()
+      }
+      // FIXME: It's unclear if we should return the intrinsic width or the preferred width.
+      // See http://lists.w3.org/Archives/Public/www-style/2013Jan/0245.html
+      if gridItem.needsPreferredWidthsRecalculation() {
+        gridItem.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+      }
+      return gridItem.maxPreferredLogicalWidth()
+        + GridLayoutFunctions.marginLogicalSizeForGridItem(
+          grid: renderGrid()!, direction: gridItemInlineDirection, gridItem: gridItem)
+        + algorithm.baselineOffsetForGridItem(
+          gridItem: gridItem, baselineAxis: gridAxisForDirection(direction: direction()))
+    }
+
+    if updateOverridingContainingBlockContentSizeForGridItem(gridItem, gridItemInlineDirection) {
+      gridItem.setNeedsLayout(markParents: .MarkOnlyThis)
+    }
+    return logicalHeightForGridItem(gridItem, &gridLayoutState)
   }
 
   func minContributionForGridItem(
