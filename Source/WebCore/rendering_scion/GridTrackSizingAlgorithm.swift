@@ -244,7 +244,7 @@ private func shouldProcessTrackForTrackSizeComputationPhase(
 }
 
 private func trackSizeForTrackSizeComputationPhase(
-  phase: TrackSizeComputationPhase, track: GridTrack, restriction: TrackSizeRestriction
+  _ phase: TrackSizeComputationPhase, _ track: GridTrack, _ restriction: TrackSizeRestriction
 ) -> LayoutUnit {
   switch phase {
   case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums, .ResolveMaxContentMinimums,
@@ -256,7 +256,7 @@ private func trackSizeForTrackSizeComputationPhase(
 }
 
 private func updateTrackSizeForTrackSizeComputationPhase(
-  phase: TrackSizeComputationPhase, track: GridTrack
+  _ phase: TrackSizeComputationPhase, _ track: GridTrack
 ) {
   switch phase {
   case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums, .ResolveMaxContentMinimums:
@@ -284,14 +284,13 @@ private func trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
 }
 
 private func markAsInfinitelyGrowableForTrackSizeComputationPhase(
-  phase: TrackSizeComputationPhase, track: GridTrack
+  _ phase: TrackSizeComputationPhase, _ track: GridTrack
 ) {
   switch phase {
   case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums, .ResolveMaxContentMinimums:
     return
   case .ResolveIntrinsicMaximums:
-    if trackSizeForTrackSizeComputationPhase(
-      phase: phase, track: track, restriction: .AllowInfinity) == infinity
+    if trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity) == infinity
       && track.plannedSize() != infinity
     {
       track.setInfinitelyGrowable(infinitelyGrowable: true)
@@ -365,9 +364,7 @@ private func distributeItemIncurredIncreaseToTrack(
     ? freeSpaceShare
     : min(
       freeSpaceShare,
-      track.growthLimit()
-        - trackSizeForTrackSizeComputationPhase(
-          phase: phase, track: track, restriction: .ForbidInfinity))
+      track.growthLimit() - trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity))
   clampGrowthShareIfNeeded(phase, track, &growthShare)
   assert(
     growthShare >= Int32(0),
@@ -1009,11 +1006,86 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func increaseSizesToAccommodateSpanningItems(
+    _ variant: TrackSizeComputationVariant, _ phase: TrackSizeComputationPhase,
+    _ gridItemsWithSpan: GridItemsSpanGroupRange, _ gridLayoutState: inout GridLayoutState
+  ) {
+    let allTracks = tracks(direction: direction)
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      track.setPlannedSize(
+        plannedSize: trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity))
+    }
+
+    let growBeyondGrowthLimitsTracks = GridTrackArrayRef()
+    let filteredTracks = GridTrackArrayRef()
+    for gridItemWithSpan in gridItemsWithSpan.span[
+      gridItemsWithSpan.rangeStart..<gridItemsWithSpan.rangeEnd]
+    {
+      let itemSpan = gridItemWithSpan.span
+      assert(variant == .CrossingFlexibleTracks || itemSpan.integerSpan() > 1)
+
+      filteredTracks.a.removeAll()
+      growBeyondGrowthLimitsTracks.a.removeAll()
+      var spanningTracksSize = LayoutUnit()
+      for trackPosition in itemSpan {
+        let track = allTracks[Int(trackPosition)]
+        let trackSize = track.cachedTrackSize()
+        spanningTracksSize += trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity)
+        if variant == .CrossingFlexibleTracks && !trackSize.maxTrackBreadth.isFlex() {
+          continue
+        }
+        if !shouldProcessTrackForTrackSizeComputationPhase(phase: phase, trackSize: trackSize) {
+          continue
+        }
+
+        filteredTracks.a.append(track)
+
+        if trackShouldGrowBeyondGrowthLimitsForTrackSizeComputationPhase(
+          phase: phase, trackSize: trackSize)
+        {
+          growBeyondGrowthLimitsTracks.a.append(track)
+        }
+      }
+
+      if filteredTracks.a.isEmpty {
+        continue
+      }
+
+      spanningTracksSize += renderGrid!.guttersSize(
+        direction: direction, startLine: itemSpan.startLine(), span: itemSpan.integerSpan(),
+        availableSize: availableSpace())
+
+      var extraSpace =
+        itemSizeForTrackSizeComputationPhase(phase, gridItemWithSpan.gridItem, &gridLayoutState)
+        - spanningTracksSize
+      extraSpace = max(extraSpace, LayoutUnit(value: 0))
+      let tracksToGrowBeyondGrowthLimits =
+        growBeyondGrowthLimitsTracks.a.isEmpty ? filteredTracks : growBeyondGrowthLimitsTracks
+      distributeSpaceToTracks(
+        variant, phase, filteredTracks, tracksToGrowBeyondGrowthLimits, &extraSpace)
+    }
+
+    for trackIndex in contentSizedTracksIndex {
+      let track = allTracks[Int(trackIndex)]
+      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase, track)
+      updateTrackSizeForTrackSizeComputationPhase(phase, track)
+    }
+  }
+
+  private func increaseSizesToAccommodateSpanningItems(
     _ variant: TrackSizeComputationVariant, _ gridItemsWithSpan: GridItemsSpanGroupRange,
     _ gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    increaseSizesToAccommodateSpanningItems(
+      variant, .ResolveIntrinsicMinimums, gridItemsWithSpan, &gridLayoutState)
+    increaseSizesToAccommodateSpanningItems(
+      variant, .ResolveContentBasedMinimums, gridItemsWithSpan, &gridLayoutState)
+    increaseSizesToAccommodateSpanningItems(
+      variant, .ResolveMaxContentMinimums, gridItemsWithSpan, &gridLayoutState)
+    increaseSizesToAccommodateSpanningItems(
+      variant, .ResolveIntrinsicMaximums, gridItemsWithSpan, &gridLayoutState)
+    increaseSizesToAccommodateSpanningItems(
+      variant, .ResolveMaxContentMaximums, gridItemsWithSpan, &gridLayoutState)
   }
 
   // 12.5 Resolve Intrinsic Track Sizing : Step 3
@@ -1056,8 +1128,7 @@ final class GridTrackSizingAlgorithm {
     for trackIndex in contentSizedTracksIndex {
       let track = allTracks[Int(trackIndex)]
       track.setPlannedSize(
-        plannedSize: trackSizeForTrackSizeComputationPhase(
-          phase: phase, track: track, restriction: .AllowInfinity))
+        plannedSize: trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity))
     }
 
     let growBeyondGrowthLimitsTracks = GridTrackArrayRef()
@@ -1073,8 +1144,7 @@ final class GridTrackSizingAlgorithm {
       for trackPosition in itemSpan {
         let track = allTracks[Int(trackPosition)]
         let trackSize = track.cachedTrackSize()
-        spanningTracksSize += trackSizeForTrackSizeComputationPhase(
-          phase: phase, track: track, restriction: .ForbidInfinity)
+        spanningTracksSize += trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity)
 
         if !shouldProcessTrackForTrackSizeComputationPhase(phase: phase, trackSize: trackSize) {
           continue
@@ -1104,15 +1174,14 @@ final class GridTrackSizingAlgorithm {
       let tracksToGrowBeyondGrowthLimits =
         growBeyondGrowthLimitsTracks.a.isEmpty ? filteredTracks : growBeyondGrowthLimitsTracks
       distributeSpaceToTracks(
-        variant: .NotCrossingFlexibleTracks, phase: phase, tracks: filteredTracks,
-        growBeyondGrowthLimitsTracks: tracksToGrowBeyondGrowthLimits,
-        freeSpace: &extraSpace)
+        .NotCrossingFlexibleTracks, phase, filteredTracks, tracksToGrowBeyondGrowthLimits,
+        &extraSpace)
     }
 
     for trackIndex in contentSizedTracksIndex {
       let track = allTracks[Int(trackIndex)]
-      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase: phase, track: track)
-      updateTrackSizeForTrackSizeComputationPhase(phase: phase, track: track)
+      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase, track)
+      updateTrackSizeForTrackSizeComputationPhase(phase, track)
     }
   }
 
@@ -1158,8 +1227,7 @@ final class GridTrackSizingAlgorithm {
     for trackIndex in contentSizedTracksIndex {
       let track = allTracks[Int(trackIndex)]
       track.setPlannedSize(
-        plannedSize: trackSizeForTrackSizeComputationPhase(
-          phase: phase, track: track, restriction: .AllowInfinity))
+        plannedSize: trackSizeForTrackSizeComputationPhase(phase, track, .AllowInfinity))
     }
 
     let growBeyondGrowthLimitsTracks = GridTrackArrayRef()
@@ -1174,8 +1242,7 @@ final class GridTrackSizingAlgorithm {
       for trackPosition in itemSpan {
         let track = allTracks[Int(trackPosition)]
         let trackSize = track.cachedTrackSize()
-        spanningTracksSize += trackSizeForTrackSizeComputationPhase(
-          phase: phase, track: track, restriction: .ForbidInfinity)
+        spanningTracksSize += trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity)
         if !trackSize.maxTrackBreadth.isFlex() {
           continue
         }
@@ -1207,14 +1274,13 @@ final class GridTrackSizingAlgorithm {
       let tracksToGrowBeyondGrowthLimits =
         growBeyondGrowthLimitsTracks.a.isEmpty ? filteredTracks : growBeyondGrowthLimitsTracks
       distributeSpaceToTracks(
-        variant: .CrossingFlexibleTracks, phase: phase, tracks: filteredTracks,
-        growBeyondGrowthLimitsTracks: tracksToGrowBeyondGrowthLimits, freeSpace: &extraSpace)
+        .CrossingFlexibleTracks, phase, filteredTracks, tracksToGrowBeyondGrowthLimits, &extraSpace)
     }
 
     for trackIndex in contentSizedTracksIndex {
       let track = allTracks[Int(trackIndex)]
-      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase: phase, track: track)
-      updateTrackSizeForTrackSizeComputationPhase(phase: phase, track: track)
+      markAsInfinitelyGrowableForTrackSizeComputationPhase(phase, track)
+      updateTrackSizeForTrackSizeComputationPhase(phase, track)
     }
   }
 
@@ -1252,6 +1318,14 @@ final class GridTrackSizingAlgorithm {
     }
   }
 
+  private func itemSizeForTrackSizeComputationPhase(
+    _ phase: TrackSizeComputationPhase, _ gridItem: RenderBoxWrapper,
+    _ gridLayoutState: inout GridLayoutState
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private static func itemSizeForTrackSizeComputationPhaseMasonry(
     phase: TrackSizeComputationPhase, trackSize: MasonryMinMaxTrackSize
   ) -> LayoutUnit {
@@ -1268,16 +1342,15 @@ final class GridTrackSizingAlgorithm {
   }
 
   private func distributeSpaceToTracks(
-    variant: TrackSizeComputationVariant, phase: TrackSizeComputationPhase,
-    tracks: GridTrackArrayRef, growBeyondGrowthLimitsTracks: GridTrackArrayRef,
-    freeSpace: inout LayoutUnit
+    _ variant: TrackSizeComputationVariant, _ phase: TrackSizeComputationPhase,
+    _ tracks: GridTrackArrayRef, _ growBeyondGrowthLimitsTracks: GridTrackArrayRef,
+    _ freeSpace: inout LayoutUnit
   ) {
     assert(freeSpace >= Int32(0))
 
     for track in tracks.a {
       track.setTempSize(
-        tempSize: trackSizeForTrackSizeComputationPhase(
-          phase: phase, track: track, restriction: .ForbidInfinity))
+        tempSize: trackSizeForTrackSizeComputationPhase(phase, track, .ForbidInfinity))
     }
 
     if freeSpace > Int32(0) {
