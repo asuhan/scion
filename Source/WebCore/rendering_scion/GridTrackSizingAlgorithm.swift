@@ -1899,9 +1899,35 @@ private class GridTrackSizingAlgorithmStrategy {
   private func minLogicalSizeForGridItem(
     _ gridItem: RenderBoxWrapper, _ gridItemMinSize: LengthWrapper, _ availableSize: LayoutUnit?
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let gridItemInlineDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid()!, gridItem: gridItem, direction: .ForColumns)
+    let isRowAxis = direction() == gridItemInlineDirection
+    if isRowAxis {
+      return isComputingInlineSizeContainment()
+        ? LayoutUnit(value: UInt64(0))
+        : gridItem.computeLogicalWidthInFragmentUsing(
+          widthType: .MinSize, logicalWidth: gridItemMinSize,
+          availableLogicalWidth: availableSize ?? LayoutUnit(value: 0), cb: renderGrid()!,
+          fragment: nil)
+          + GridLayoutFunctions.marginLogicalSizeForGridItem(
+            grid: renderGrid()!, direction: gridItemInlineDirection, gridItem: gridItem)
+    }
+    let overrideSizeHasChanged = updateOverridingContainingBlockContentSizeForGridItem(
+      gridItem, gridItemInlineDirection, availableSize)
+    layoutGridItemForMinSizeComputation(gridItem, overrideSizeHasChanged)
+    let gridItemBlockDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
+      grid: renderGrid()!, gridItem: gridItem, direction: .ForRows)
+    return
+      (gridItem.computeLogicalHeightUsing(
+        heightType: .MinSize, height: gridItemMinSize, intrinsicContentHeight: nil)
+      ?? LayoutUnit(value: 0))
+      + GridLayoutFunctions.marginLogicalSizeForGridItem(
+        grid: renderGrid()!, direction: gridItemBlockDirection, gridItem: gridItem)
   }
+
+  private func layoutGridItemForMinSizeComputation(
+    _ gridItem: RenderBoxWrapper, _ overrideSizeHasChanged: Bool
+  ) { fatalError("Not reached") }
 
   // GridTrackSizingAlgorithmStrategy.
   private func logicalHeightForGridItem(
