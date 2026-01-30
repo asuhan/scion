@@ -147,11 +147,35 @@ private func gridDirectionForAxis(axis: GridAxis) -> GridTrackSizingDirection {
   return axis == .GridRowAxis ? .ForColumns : .ForRows
 }
 
+private func hasRelativeMarginOrPaddingForGridItem(
+  _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection
+) -> Bool {
+  if direction == .ForColumns {
+    return gridItem.style().marginStart().isPercentOrCalculated()
+      || gridItem.style().marginEnd().isPercentOrCalculated()
+      || gridItem.style().paddingStart().isPercentOrCalculated()
+      || gridItem.style().paddingEnd().isPercentOrCalculated()
+  }
+  return gridItem.style().marginBefore().isPercentOrCalculated()
+    || gridItem.style().marginAfter().isPercentOrCalculated()
+    || gridItem.style().paddingBefore().isPercentOrCalculated()
+    || gridItem.style().paddingAfter().isPercentOrCalculated()
+}
+
+private func hasRelativeOrIntrinsicSizeForGridItem(
+  _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection
+) -> Bool {
+  if direction == .ForColumns {
+    return gridItem.hasRelativeLogicalWidth() || gridItem.style().logicalWidth().isIntrinsicOrAuto()
+  }
+  return gridItem.hasRelativeLogicalHeight() || gridItem.style().logicalHeight().isIntrinsicOrAuto()
+}
+
 private func shouldClearOverridingContainingBlockContentSizeForGridItem(
   _ gridItem: RenderBoxWrapper, _ direction: GridTrackSizingDirection
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return hasRelativeOrIntrinsicSizeForGridItem(gridItem, direction)
+    || hasRelativeMarginOrPaddingForGridItem(gridItem, direction)
 }
 
 private func setOverridingContainingBlockContentSizeForGridItem(
