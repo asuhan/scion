@@ -1322,8 +1322,16 @@ final class GridTrackSizingAlgorithm {
     _ phase: TrackSizeComputationPhase, _ gridItem: RenderBoxWrapper,
     _ gridLayoutState: inout GridLayoutState
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch phase {
+    case .ResolveIntrinsicMinimums:
+      return strategy!.minContributionForGridItem(gridItem, &gridLayoutState)
+    case .ResolveContentBasedMinimums, .ResolveIntrinsicMaximums:
+      return strategy!.minContentContributionForGridItem(gridItem, &gridLayoutState)
+    case .ResolveMaxContentMinimums, .ResolveMaxContentMaximums:
+      return strategy!.maxContentContributionForGridItem(gridItem, &gridLayoutState)
+    case .MaximizeTracks:
+      fatalError("Not reached")
+    }
   }
 
   private static func itemSizeForTrackSizeComputationPhaseMasonry(
