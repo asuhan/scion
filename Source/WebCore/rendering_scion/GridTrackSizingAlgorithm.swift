@@ -61,7 +61,7 @@ class GridTrack {
     fatalError("Not implemented")
   }
 
-  func setBaseSize(baseSize: LayoutUnit) {
+  func setBaseSize(_ baseSize: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -239,7 +239,7 @@ private func updateTrackSizeForTrackSizeComputationPhase(
 ) {
   switch phase {
   case .ResolveIntrinsicMinimums, .ResolveContentBasedMinimums, .ResolveMaxContentMinimums:
-    track.setBaseSize(baseSize: track.plannedSize())
+    track.setBaseSize(track.plannedSize())
   case .ResolveIntrinsicMaximums, .ResolveMaxContentMaximums:
     track.setGrowthLimit(growthLimit: track.plannedSize())
   case .MaximizeTracks:
@@ -427,7 +427,7 @@ private func removeSubgridMarginBorderPaddingFromTracks(
       mbp -= size
       size = LayoutUnit(value: 0)
     }
-    tracks[i].setBaseSize(baseSize: size)
+    tracks[i].setBaseSize(size)
 
     if forwards {
       i += 1
@@ -908,8 +908,41 @@ final class GridTrackSizingAlgorithm {
     _ span: GridSpan, _ gridItem: RenderBoxWrapper, _ track: GridTrack,
     _ gridLayoutState: inout GridLayoutState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let trackPosition = Int(span.startLine())
+    let trackSize = tracks(direction: direction)[trackPosition].cachedTrackSize()
+
+    if trackSize.hasMinContentMinTrackBreadth() {
+      track.setBaseSize(
+        max(
+          track.baseSize(), strategy!.minContentContributionForGridItem(gridItem, &gridLayoutState))
+      )
+    } else if trackSize.hasMaxContentMinTrackBreadth() {
+      track.setBaseSize(
+        max(
+          track.baseSize(), strategy!.maxContentContributionForGridItem(gridItem, &gridLayoutState))
+      )
+    } else if trackSize.hasAutoMinTrackBreadth() {
+      track.setBaseSize(
+        max(track.baseSize(), strategy!.minContributionForGridItem(gridItem, &gridLayoutState)))
+    }
+
+    if trackSize.hasMinContentMaxTrackBreadth() {
+      track.setGrowthLimit(
+        growthLimit:
+          max(
+            track.growthLimit(),
+            strategy!.minContentContributionForGridItem(gridItem, &gridLayoutState)))
+    } else if trackSize.hasMaxContentOrAutoMaxTrackBreadth() {
+      var growthLimit = strategy!.maxContentContributionForGridItem(gridItem, &gridLayoutState)
+      if trackSize.isFitContent() {
+        growthLimit = min(
+          growthLimit,
+          valueForLength(
+            length: trackSize.fitContentTrackBreadth().length(),
+            maximumValue: availableSpace() ?? LayoutUnit(value: 0)))
+      }
+      track.setGrowthLimit(growthLimit: max(track.growthLimit(), growthLimit))
+    }
   }
 
   private func sizeTrackToFitSingleSpanMasonryGroup(
@@ -919,11 +952,11 @@ final class GridTrackSizingAlgorithm {
     let trackSize = tracks(direction: direction)[trackPosition].cachedTrackSize()
 
     if trackSize.hasMinContentMinTrackBreadth() {
-      track.setBaseSize(baseSize: max(track.baseSize(), masonryIndefiniteItems.minContentSize))
+      track.setBaseSize(max(track.baseSize(), masonryIndefiniteItems.minContentSize))
     } else if trackSize.hasMaxContentMinTrackBreadth() {
-      track.setBaseSize(baseSize: max(track.baseSize(), masonryIndefiniteItems.maxContentSize))
+      track.setBaseSize(max(track.baseSize(), masonryIndefiniteItems.maxContentSize))
     } else if trackSize.hasAutoMinTrackBreadth() {
-      track.setBaseSize(baseSize: max(track.baseSize(), masonryIndefiniteItems.minSize))
+      track.setBaseSize(max(track.baseSize(), masonryIndefiniteItems.minSize))
     }
 
     if trackSize.hasMinContentMaxTrackBreadth() {
@@ -1515,7 +1548,7 @@ final class GridTrackSizingAlgorithm {
     for (i, track) in allTracks.enumerated() {
       let trackSize = calculateGridTrackSize(direction: direction, translatedIndex: UInt32(i))
       track.setCachedTrackSize(cachedTrackSize: trackSize)
-      track.setBaseSize(baseSize: initialBaseSize(trackSize: trackSize))
+      track.setBaseSize(initialBaseSize(trackSize: trackSize))
       track.setGrowthLimit(
         growthLimit: initialGrowthLimit(trackSize: trackSize, baseSize: track.baseSize()))
       track.setInfinitelyGrowable(infinitelyGrowable: false)
@@ -1636,7 +1669,7 @@ final class GridTrackSizingAlgorithm {
       let track = allTracks[Int(trackIndex)]
       let increment = increments[i]
       if increment.bool() {
-        track.setBaseSize(baseSize: track.baseSize() + increment)
+        track.setBaseSize(track.baseSize() + increment)
       }
       i += 1
     }
@@ -1659,7 +1692,7 @@ final class GridTrackSizingAlgorithm {
     let sizeToIncrease = currentFreeSpace / numberOfAutoSizedTracks
     for trackIndex in autoSizedTracksForStretchIndex {
       let track = allTracks[Int(trackIndex)]
-      track.setBaseSize(baseSize: track.baseSize() + sizeToIncrease)
+      track.setBaseSize(track.baseSize() + sizeToIncrease)
     }
     setFreeSpace(direction: direction, freeSpace: LayoutUnit(value: UInt64(0)))
   }
@@ -1710,7 +1743,7 @@ final class GridTrackSizingAlgorithm {
       if i != numTracks - 1 {
         size -= gapDifference
       }
-      allTracks[i].setBaseSize(baseSize: size)
+      allTracks[i].setBaseSize(size)
     }
     return true
   }
