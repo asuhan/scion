@@ -430,6 +430,15 @@ private final class DefiniteSizeStrategy: GridTrackSizingAlgorithmStrategy {
   override init(algorithm: GridTrackSizingAlgorithm) { super.init(algorithm: algorithm) }
 }
 
+private func marginAndBorderAndPaddingForEdge(
+  _ grid: RenderGridWrapper, _ direction: GridTrackSizingDirection, _ startEdge: Bool
+) -> LayoutUnit {
+  if direction == .ForColumns {
+    return startEdge ? grid.marginAndBorderAndPaddingStart() : grid.marginAndBorderAndPaddingEnd()
+  }
+  return startEdge ? grid.marginAndBorderAndPaddingBefore() : grid.marginAndBorderAndPaddingAfter()
+}
+
 // https://drafts.csswg.org/css-grid-2/#subgrid-edge-placeholders
 // FIXME: This is a simplification of the specified behaviour, where we add the hypothetical
 // items directly to the edge tracks as if they had a span of 1. This matches the current Gecko
@@ -438,8 +447,23 @@ private func computeSubgridMarginBorderPadding(
   _ outermost: RenderGridWrapper, _ outermostDirection: GridTrackSizingDirection,
   _ track: GridTrack, _ trackIndex: UInt32, _ span: GridSpan, _ subgrid: RenderGridWrapper
 ) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Convert the direction into the coordinate space of subgrid (which may not be a direct child
+  // of the outermost grid for which we're running the track sizing algorithm).
+  let direction = GridLayoutFunctions.flowAwareDirectionForGridItem(
+    grid: outermost, gridItem: subgrid, direction: outermostDirection)
+  let reversed = GridLayoutFunctions.isSubgridReversedDirection(
+    grid: outermost, outerDirection: outermostDirection, subgrid: subgrid)
+
+  var subgridMbp = LayoutUnit()
+  if trackIndex == span.startLine() && track.cachedTrackSize().hasIntrinsicMinTrackBreadth() {
+    // If the subgrid has a reversed flow direction relative to the outermost grid, then
+    // we want the MBP from the end edge in its local coordinate space.
+    subgridMbp = marginAndBorderAndPaddingForEdge(subgrid, direction, !reversed)
+  }
+  if trackIndex == span.endLine() - 1 && track.cachedTrackSize().hasIntrinsicMinTrackBreadth() {
+    subgridMbp += marginAndBorderAndPaddingForEdge(subgrid, direction, reversed)
+  }
+  return subgridMbp
 }
 
 private func extraMarginFromSubgridAncestorGutters(
