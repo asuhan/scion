@@ -114,11 +114,30 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    styleDidChangeRenderBlock(diff: diff, oldStyle: oldStyle)
+
+    if innerBlock != nil {  // RenderBlock handled updating the anonymous block's style.
+      adjustInnerStyle()
+    }
+
+    let fontChanged = oldStyle == nil || oldStyle!.fontCascade() != style().fontCascade()
+    if fontChanged {
+      updateOptionsWidth()
+      needsOptionsWidthUpdate = false
+    }
+  }
+
+  override func hasLineIfEmpty() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  override func hasLineIfEmpty() -> Bool {
+  private func adjustInnerStyle() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateOptionsWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -130,5 +149,6 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
 
   private let innerBlock: RenderBlockWrapper? = nil
 
+  private var needsOptionsWidthUpdate = false
   private let optionsWidth: Int32 = 0
 }

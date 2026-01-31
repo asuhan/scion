@@ -1596,6 +1596,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    styleDidChangeRenderBlock(diff: diff, oldStyle: oldStyle)
+  }
+
+  func styleDidChangeRenderBlock(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
 
     if oldStyle != nil {
