@@ -126,6 +126,12 @@ class StringWrapper: Hashable {
     fatalError("Not implemented")
   }
 
+  // Determines the writing direction using the Unicode Bidi Algorithm rules P2 and P3.
+  func defaultWritingDirection() -> UCharDirection? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containsOnly(_ isSpecialCharacter: (UChar) -> Bool) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

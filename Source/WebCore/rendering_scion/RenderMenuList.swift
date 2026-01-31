@@ -133,8 +133,64 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   private func adjustInnerStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let innerStyle = innerBlock!.mutableStyle()
+    innerStyle.setFlexGrow(1)
+    innerStyle.setFlexShrink(1)
+    // min-width: 0; is needed for correct shrinking.
+    innerStyle.setLogicalMinWidth(LengthWrapper(value: Int32(0), type: .Fixed))
+    // Use margin:auto instead of align-items:center to get safe centering, i.e.
+    // when the content overflows, treat it the same as align-items: flex-start.
+    // But we only do that for the cases where html.css would otherwise use center.
+    if style().alignItems().position == .Center {
+      innerStyle.setMarginBefore(LengthWrapper())
+      innerStyle.setMarginAfter(LengthWrapper())
+
+      innerStyle.setAlignSelfPosition(.FlexStart)
+    }
+
+    var paddingBox = theme().popupInternalPaddingBox(style())
+    if !style().isHorizontalWritingMode() {
+      paddingBox = LengthBox(
+        top: Int32(paddingBox.left().value()), right: Int32(paddingBox.top().value()),
+        bottom: Int32(paddingBox.right().value()), left: Int32(paddingBox.bottom().value()))
+    }
+    innerStyle.setPaddingBox(paddingBox)
+
+    if document().page()!.chrome().selectItemWritingDirectionIsNatural() {
+      // Items in the popup will not respect the CSS text-align and direction properties,
+      // so we must adjust our own style to match.
+      innerStyle.setTextAlign(.Left)
+      let direction: TextDirection =
+        (buttonText != nil && buttonText!.text().defaultWritingDirection() == .U_RIGHT_TO_LEFT)
+        ? .RTL : .LTR
+      innerStyle.setDirection(direction)
+    } else if optionStyle != nil  // TODO(asuhan): add iOS support
+      && document().page()!.chrome().selectItemAlignmentFollowsMenuWritingDirection()
+    {
+      if optionStyle!.direction() != innerStyle.direction()
+        || optionStyle!.unicodeBidi() != innerStyle.unicodeBidi()
+      {
+        innerBlock!.setNeedsLayoutAndPrefWidthsRecalc()
+      }
+      innerStyle.setTextAlign(style().isLeftToRightDirection() ? .Left : .Right)
+      innerStyle.setDirection(optionStyle!.direction())
+      innerStyle.setUnicodeBidi(v: optionStyle!.unicodeBidi())
+    }
+
+    if innerBlock?.layoutBox() == nil {
+      return
+    }
+    if let inlineFormattingContextRoot = innerBlock as? RenderBlockFlowWrapper {
+      inlineFormattingContextRoot.inlineLayout()?.rootStyleWillChange(
+        root: inlineFormattingContextRoot, newStyle: innerStyle)
+    }
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: innerBlock!) {
+      lineLayout.styleWillChange(renderer: innerBlock!, newStyle: innerStyle, diff: .Layout)
+    }
+    LayoutIntegration.LineLayout.updateStyle(innerBlock!)
+    for child: RenderTextWrapper in childrenOfType(parent: innerBlock!) {
+      LayoutIntegration.LineLayout.updateStyle(child)
+    }
   }
 
   private func updateOptionsWidth() {
@@ -147,8 +203,11 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private let buttonText: RenderTextWrapper? = nil
   private let innerBlock: RenderBlockWrapper? = nil
 
   private var needsOptionsWidthUpdate = false
   private let optionsWidth: Int32 = 0
+
+  private let optionStyle: RenderStyleWrapper? = nil
 }

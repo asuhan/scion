@@ -25,4 +25,14 @@ class ChromeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func selectItemWritingDirectionIsNatural() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func selectItemAlignmentFollowsMenuWritingDirection() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -363,6 +363,10 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func popupInternalPaddingBox(_ style: RenderStyleWrapper) -> LengthBox {
+    return LengthBox(top: 0, right: 0, bottom: 0, left: 0)
+  }
+
   private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
     -> ControlStyle.State
   {

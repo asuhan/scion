@@ -20,6 +20,16 @@
 */
 
 class LengthBox: Equatable {
+  init(top: Int32, right: Int32, bottom: Int32, left: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func top() -> LengthWrapper { return base.top }
+  func right() -> LengthWrapper { return base.right }
+  func bottom() -> LengthWrapper { return base.bottom }
+  func left() -> LengthWrapper { return base.left }
+
   static func == (lhs: LengthBox, rhs: LengthBox) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

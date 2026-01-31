@@ -2292,7 +2292,42 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setLogicalMinWidth(_ width: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTextIndent(_ length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTextAlign(_ v: TextAlignMode) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setDirection(_ v: TextDirection) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMaskBorder(image: NinePieceImage) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginBefore(_ margin: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginAfter(_ margin: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setPaddingBox(_ box: LengthBox) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2313,6 +2348,21 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setUsedZIndex(index: Int32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFlexGrow(_ grow: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFlexShrink(_ shrink: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAlignSelfPosition(_ position: ItemPosition) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
