@@ -794,8 +794,24 @@ final class GridTrackSizingAlgorithm {
   }
 
   func tracksAreWiderThanMinTrackBreadth() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Subgrids inherit their sizing directly from the parent, so may be unrelated
+    // to their initial base size.
+    if renderGrid!.isSubgrid(direction: direction) {
+      return true
+    }
+
+    if renderGrid!.isMasonry(direction: direction) {
+      return true
+    }
+
+    let allTracks = tracks(direction: direction)
+    for track in allTracks {
+      let trackSize = track.cachedTrackSize()
+      if initialBaseSize(trackSize: trackSize) > track.baseSize() {
+        return false
+      }
+    }
+    return true
   }
 
   private typealias SpanLength = UInt32
