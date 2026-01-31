@@ -37,8 +37,9 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   func setInnerRenderer(innerRenderer: RenderBlockWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(innerBlock == nil)
+    innerBlock = innerRenderer
+    adjustInnerStyle()
   }
 
   override func createsAnonymousWrapper() -> Bool {
@@ -245,7 +246,7 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   private let buttonText: RenderTextWrapper? = nil
-  private let innerBlock: RenderBlockWrapper? = nil
+  private var innerBlock: RenderBlockWrapper? = nil
 
   private var needsOptionsWidthUpdate = false
   private var optionsWidth: Int32 = 0
