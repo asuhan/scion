@@ -301,6 +301,13 @@ enum MarqueeDirection: UInt8 {
 
 // Deprecated Flexible Box Properties
 
+enum BoxPack: UInt8 {
+  case Start
+  case Center
+  case End
+  case Justify
+}
+
 enum BoxAlignment: UInt8 {
   case Stretch
   case Start

@@ -873,7 +873,17 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func boxFlex() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxOrient() -> BoxOrient {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func boxPack() -> BoxPack {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

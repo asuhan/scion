@@ -20,6 +20,23 @@
  *
  */
 
+struct FlexBoxIterator {
+  init(_ parent: RenderDeprecatedFlexibleBoxWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func first() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  mutating func next() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
 private func marginWidthForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
   // A margin basically has three types: fixed, percentage, and auto (variable).
   // Auto and percentage margins simply become 0 when computing min/max width.
@@ -41,8 +58,13 @@ private func childDoesNotAffectWidthOrFlexing(_ child: RenderObjectWrapper) -> B
   return child.isOutOfFlowPositioned()
 }
 
+private func widthForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
+  return child.overridingLogicalWidth() ?? child.logicalWidth()
+}
+
 // TODO(asuhan): use an inline capacity of 8
 typealias ChildFrameRects = [LayoutRectWrapper]
+typealias ChildLayoutDeltas = [LayoutSizeWrapper]
 
 private func appendChildFrameRects(
   _ box: RenderDeprecatedFlexibleBoxWrapper?, _ childFrameRects: inout ChildFrameRects
@@ -51,8 +73,36 @@ private func appendChildFrameRects(
   fatalError("Not implemented")
 }
 
+private func appendChildLayoutDeltas(
+  _ box: RenderDeprecatedFlexibleBoxWrapper?, _ childLayoutDeltas: inout ChildLayoutDeltas
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func repaintChildrenDuringLayoutIfMoved(
   _ box: RenderDeprecatedFlexibleBoxWrapper?, _ oldChildRects: ChildFrameRects
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private struct FlexChildrenInfo {
+  let highestFlexGroup: UInt32
+  let lowestFlexGroup: UInt32
+  let haveFlex: Bool
+}
+
+// The first walk over our kids is to find out if we have any flexible children.
+private func gatherFlexChildrenInfo(_ iterator: inout FlexBoxIterator, _ relayoutChildren: Bool)
+  -> FlexChildrenInfo
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func layoutChildIfNeededApplyingDelta(
+  _ child: RenderBoxWrapper, _ layoutDelta: LayoutSizeWrapper
 ) {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -166,8 +216,359 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func layoutHorizontalBox(_ relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let toAdd = borderBottom() + paddingBottom() + horizontalScrollbarHeight()
+    let yPos = borderTop() + paddingTop()
+    var xPos = borderLeft() + paddingLeft()
+    var heightSpecified = false
+    var oldHeight = LayoutUnit()
+
+    var remainingSpace = LayoutUnit()
+
+    var iterator = FlexBoxIterator(self)
+    let flexChildrenInfo = gatherFlexChildrenInfo(&iterator, relayoutChildren)
+    let highestFlexGroup = flexChildrenInfo.highestFlexGroup
+    let lowestFlexGroup = flexChildrenInfo.lowestFlexGroup
+    var haveFlex = flexChildrenInfo.haveFlex
+    var flexingChildren = false
+
+    beginUpdateScrollInfoAfterLayoutTransaction()
+
+    var childLayoutDeltas = ChildLayoutDeltas()
+    appendChildLayoutDeltas(self, &childLayoutDeltas)
+    var relayoutChildren = relayoutChildren
+
+    // We do 2 passes.  The first pass is simply to lay everyone out at
+    // their preferred widths. The subsequent passes handle flexing the children.
+    // The first pass skips flexible objects completely.
+    repeat {
+      // Reset our height.
+      setHeight(height: yPos)
+
+      xPos = borderLeft() + paddingLeft()
+
+      var childIndex = 0
+
+      // Our first pass is done without flexing.  We simply lay the children
+      // out within the box.  We have to do a layout first in order to determine
+      // our box's intrinsic height.
+      var maxAscent = LayoutUnit()
+      var maxDescent = LayoutUnit()
+      var child_ = iterator.first()
+      while child_ != nil {
+        if relayoutChildren {
+          child_!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+
+        if child_!.isOutOfFlowPositioned() {
+          child_ = iterator.next()
+          continue
+        }
+
+        let childLayoutDelta = childLayoutDeltas[childIndex]
+        childIndex += 1
+
+        // Compute the child's vertical margins.
+        child_!.computeAndSetBlockDirectionMargins(containingBlock: self)
+
+        child_!.markForPaginationRelayoutIfNeeded()
+
+        // Apply the child's current layout delta.
+        layoutChildIfNeededApplyingDelta(child_!, childLayoutDelta)
+
+        // Update our height and overflow height.
+        if style().boxAlign() == .Baseline {
+          let ascent =
+            (child_!.firstLineBaseline() ?? (child_!.height() + child_!.marginBottom()))
+            + child_!.marginTop()
+          let descent = (child_!.height() + child_!.verticalMarginExtent()) - ascent
+
+          // Update our maximum ascent.
+          maxAscent = max(maxAscent, ascent)
+
+          // Update our maximum descent.
+          maxDescent = max(maxDescent, descent)
+
+          // Now update our height.
+          setHeight(height: max(yPos + maxAscent + maxDescent, height()))
+        } else {
+          setHeight(height: max(height(), yPos + child_!.height() + child_!.verticalMarginExtent()))
+        }
+
+        child_ = iterator.next()
+      }
+      assert(childIndex == childLayoutDeltas.count)
+
+      if iterator.first() == nil && hasLineIfEmpty() {
+        setHeight(
+          height: height()
+            + lineHeight(
+              firstLine: true,
+              direction: style().isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+              linePositionMode: .PositionOfInteriorLineBoxes))
+      }
+
+      setHeight(height: height() + toAdd)
+
+      oldHeight = height()
+      updateLogicalHeight()
+
+      relayoutChildren = false
+      if oldHeight != height() {
+        heightSpecified = true
+      }
+
+      // Now that our height is actually known, we can place our boxes.
+      childIndex = 0
+      stretchingChildren = (style().boxAlign() == .Stretch)
+      var child = iterator.first()
+      while child != nil {
+        if child!.isOutOfFlowPositioned() {
+          child!.containingBlock()!.insertPositionedObject(positioned: child!)
+          let childLayer = child!.layer()!
+          childLayer.setStaticInlinePosition(position: xPos)  // FIXME: Not right for regions.
+          if childLayer.staticBlockPosition() != yPos {
+            childLayer.setStaticBlockPosition(position: yPos)
+            if child!.style().hasStaticBlockPosition(horizontal: style().isHorizontalWritingMode())
+            {
+              child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+            }
+          }
+          child = iterator.next()
+          continue
+        }
+
+        var childLayoutDelta = childLayoutDeltas[childIndex]
+        childIndex += 1
+
+        // We need to see if this child's height has changed, since we make block elements
+        // fill the height of a containing box by default.
+        // Now do a layout.
+        let oldChildHeight = child!.height()
+        child!.updateLogicalHeight()
+        if oldChildHeight != child!.height() {
+          child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+
+        child!.markForPaginationRelayoutIfNeeded()
+
+        layoutChildIfNeededApplyingDelta(child!, childLayoutDelta)
+
+        // We can place the child now, using our value of box-align.
+        xPos += child!.marginLeft()
+        var childY = yPos
+        switch style().boxAlign() {
+        case .Center:
+          childY +=
+            child!.marginTop()
+            + max(
+              LayoutUnit(value: 0),
+              (contentHeight() - (child!.height() + child!.verticalMarginExtent())) / 2)
+        case .Baseline:
+          let ascent =
+            (child!.firstLineBaseline() ?? (child!.height() + child!.marginBottom()))
+            + child!.marginTop()
+          childY += child!.marginTop() + (maxAscent - ascent)
+        case .End:
+          childY += contentHeight() - child!.marginBottom() - child!.height()
+        default:  // .Start
+          childY += child!.marginTop()
+        }
+
+        placeChild(child!, LayoutPointWrapper(x: xPos, y: childY), &childLayoutDelta)
+
+        xPos += child!.width() + child!.marginRight()
+
+        child = iterator.next()
+      }
+      assert(childIndex == childLayoutDeltas.count)
+
+      remainingSpace = borderLeft() + paddingLeft() + contentWidth() - xPos
+
+      stretchingChildren = false
+      if flexingChildren {
+        haveFlex = false  // We're done.
+      } else if haveFlex {
+        // We have some flexible objects.  See if we need to grow/shrink them at all.
+        if !remainingSpace.bool() {
+          break
+        }
+
+        // Allocate the remaining space among the flexible objects.  If we are trying to
+        // grow, then we go from the lowest flex group to the highest flex group.  For shrinking,
+        // we go from the highest flex group to the lowest group.
+        let expanding = remainingSpace > 0
+        let start = expanding ? lowestFlexGroup : highestFlexGroup
+        let end = expanding ? highestFlexGroup : lowestFlexGroup
+        for i in start...end {
+          if !remainingSpace.bool() {
+            break
+          }
+          // Always start off by assuming the group can get all the remaining space.
+          var groupRemainingSpace = remainingSpace
+          repeat {
+            // Flexing consists of multiple passes, since we have to change ratios every time an object hits its max/min-width
+            // For a given pass, we always start off by computing the totalFlex of all objects that can grow/shrink at all, and
+            // computing the allowed growth before an object hits its min/max width (and thus
+            // forces a totalFlex recomputation).
+            let groupRemainingSpaceAtBeginning = groupRemainingSpace
+            var totalFlex: Float32 = 0
+            do {
+              var child = iterator.first()
+              while child != nil {
+                if allowedChildFlex(child!, expanding, i).bool() {
+                  totalFlex += child!.style().boxFlex()
+                }
+                child = iterator.next()
+              }
+            }
+            var spaceAvailableThisPass = groupRemainingSpace
+            do {
+              var child = iterator.first()
+              while child != nil {
+                let allowedFlex = allowedChildFlex(child!, expanding, i)
+                if allowedFlex.bool() {
+                  let projectedFlex =
+                    (allowedFlex == LayoutUnit.max())
+                    ? allowedFlex
+                    : LayoutUnit(value: allowedFlex * (totalFlex / child!.style().boxFlex()))
+                  spaceAvailableThisPass =
+                    expanding
+                    ? min(spaceAvailableThisPass, projectedFlex)
+                    : max(spaceAvailableThisPass, projectedFlex)
+                }
+                child = iterator.next()
+              }
+            }
+
+            // The flex groups may not have any flexible objects this time around.
+            if !spaceAvailableThisPass.bool() || totalFlex == 0 {
+              // If we just couldn't grow/shrink any more, then it's time to transition to the next flex group.
+              groupRemainingSpace = LayoutUnit(value: 0)
+              continue
+            }
+
+            // Now distribute the space to objects.
+            var child = iterator.first()
+            while child != nil && spaceAvailableThisPass.bool() && totalFlex != 0 {
+              if allowedChildFlex(child!, expanding, i).bool() {
+                let spaceAdd = LayoutUnit(
+                  value: spaceAvailableThisPass * (child!.style().boxFlex() / totalFlex))
+                if spaceAdd.bool() {
+                  child!.setOverridingLogicalWidth(width: widthForChild(child!) + spaceAdd)
+                  flexingChildren = true
+                  relayoutChildren = true
+                }
+
+                spaceAvailableThisPass -= spaceAdd
+                remainingSpace -= spaceAdd
+                groupRemainingSpace -= spaceAdd
+
+                totalFlex -= child!.style().boxFlex()
+              }
+              child = iterator.next()
+            }
+            if groupRemainingSpace == groupRemainingSpaceAtBeginning {
+              // This is not advancing, avoid getting stuck by distributing the remaining pixels.
+              let spaceAdd = LayoutUnit(value: groupRemainingSpace > 0 ? 1 : -1)
+              var child = iterator.first()
+              while child != nil && groupRemainingSpace.bool() {
+                if allowedChildFlex(child!, expanding, i).bool() {
+                  child!.setOverridingLogicalWidth(width: widthForChild(child!) + spaceAdd)
+                  flexingChildren = true
+                  relayoutChildren = true
+                  remainingSpace -= spaceAdd
+                  groupRemainingSpace -= spaceAdd
+                }
+                child = iterator.next()
+              }
+            }
+          } while groupRemainingSpace.abs() >= Int32(1)
+        }
+
+        // We didn't find any children that could grow.
+        if haveFlex && !flexingChildren {
+          haveFlex = false
+        }
+      }
+    } while haveFlex
+
+    endAndCommitUpdateScrollInfoAfterLayoutTransaction()
+
+    if remainingSpace > 0
+      && ((style().isLeftToRightDirection() && style().boxPack() != .Start)
+        || (!style().isLeftToRightDirection() && style().boxPack() != .End))
+    {
+      // Children must be repositioned.
+      var offset = LayoutUnit()
+      if style().boxPack() == .Justify {
+        // Determine the total number of children.
+        var totalChildren: Int = 0
+        var child = iterator.first()
+        while child != nil {
+          if childDoesNotAffectWidthOrFlexing(child!) {
+            child = iterator.next()
+            continue
+          }
+          totalChildren += 1
+          child = iterator.next()
+        }
+
+        // Iterate over the children and space them out according to the
+        // justification level.
+        if totalChildren > 1 {
+          totalChildren -= 1
+          var firstChild = true
+          var child = iterator.first()
+          while child != nil {
+            if childDoesNotAffectWidthOrFlexing(child!) {
+              child = iterator.next()
+              continue
+            }
+
+            if firstChild {
+              firstChild = false
+              continue
+            }
+
+            offset += remainingSpace / totalChildren
+            remainingSpace -= (remainingSpace / totalChildren)
+            totalChildren -= 1
+
+            placeChild(
+              child!,
+              child!.location()
+                + LayoutSizeWrapper(width: offset, height: LayoutUnit(value: UInt64(0))))
+
+            child = iterator.next()
+          }
+        }
+      } else {
+        if style().boxPack() == .Center {
+          offset += remainingSpace / 2
+        } else {  // .End for LTR, .Start for RTL
+          offset += remainingSpace
+        }
+        var child = iterator.first()
+        while child != nil {
+          if childDoesNotAffectWidthOrFlexing(child!) {
+            child = iterator.next()
+            continue
+          }
+
+          placeChild(
+            child!,
+            child!.location()
+              + LayoutSizeWrapper(width: offset, height: LayoutUnit(value: UInt64(0))))
+          child = iterator.next()
+        }
+      }
+    }
+
+    // So that the computeLogicalHeight in layoutBlock() knows to relayout positioned objects because of
+    // a height change, we revert our height back to the intrinsic height before returning.
+    if heightSpecified {
+      setHeight(height: oldHeight)
+    }
   }
 
   private func layoutVerticalBox(_ relayoutChildren: Bool) {
@@ -259,6 +660,26 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
       borderAndPadding: borderAndPaddingLogicalWidth())
 
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+  }
+
+  private func allowedChildFlex(_ child: RenderBoxWrapper, _ expanding: Bool, _ group: UInt32)
+    -> LayoutUnit
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeChild(
+    _ child: RenderBoxWrapper, _ location: LayoutPointWrapper,
+    _ childLayoutDelta: inout LayoutSizeWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func placeChild(_ child: RenderBoxWrapper, _ location: LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func hasMultipleLines() -> Bool {
