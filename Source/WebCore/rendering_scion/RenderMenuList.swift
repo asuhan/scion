@@ -80,8 +80,8 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     }
     let logicalWidth = style().logicalWidth()
     if logicalWidth.isCalculated() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      let zero = LayoutUnit(value: UInt64(0))
+      minLogicalWidth = max(zero, valueForLength(length: logicalWidth, maximumValue: zero))
     } else if !logicalWidth.isPercent() {
       minLogicalWidth = maxLogicalWidth
     }
