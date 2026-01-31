@@ -358,6 +358,11 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
+  func minimumMenuListSize(_ style: RenderStyleWrapper) -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
     -> ControlStyle.State
   {

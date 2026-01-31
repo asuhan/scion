@@ -61,8 +61,30 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Fix field-sizing: content with size containment
+    // https://bugs.webkit.org/show_bug.cgi?id=269169
+    if style().fieldSizing() == .Content {
+      return super.computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
+    }
+
+    maxLogicalWidth = LayoutUnit(
+      value: shouldApplySizeContainment()
+        ? theme().minimumMenuListSize(style())
+        : max(optionsWidth, theme().minimumMenuListSize(style())))
+    maxLogicalWidth += innerBlock!.paddingStart() + innerBlock!.paddingEnd()
+    if shouldApplySizeOrInlineSizeContainment(),
+      let logicalWidth = explicitIntrinsicInnerLogicalWidth()
+    {
+      maxLogicalWidth = logicalWidth
+    }
+    let logicalWidth = style().logicalWidth()
+    if logicalWidth.isCalculated() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else if !logicalWidth.isPercent() {
+      minLogicalWidth = maxLogicalWidth
+    }
   }
 
   override func computePreferredLogicalWidths() {
@@ -86,4 +108,6 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   private let innerBlock: RenderBlockWrapper? = nil
+
+  private let optionsWidth: Int32 = 0
 }
