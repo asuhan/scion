@@ -2083,6 +2083,11 @@ class RenderStyleWrapper: Equatable {
     return LineBoxContain(rawValue: wk_interop.RenderStyle_lineBoxContain(p))
   }
 
+  func lineClamp() -> LineClampValue {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func blockEllipsis() -> BlockEllipsis {
     if p == nil {
       // TODO(asuhan): implement this

@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     GridPosition.swift
     GridPositionsResolver.swift
     GridTrackSize.swift
+    LineClampValue.swift
     ListStyleType.swift
     NinePieceImage.swift
     OffsetRotation.swift

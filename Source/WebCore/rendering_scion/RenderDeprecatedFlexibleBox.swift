@@ -43,8 +43,20 @@ private func childDoesNotAffectWidthOrFlexing(_ child: RenderObjectWrapper) -> B
 
 final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shouldClearLineClamp = { [self] () in
+      let oldStyle = hasInitializedStyle ? style() : nil
+      if oldStyle == nil || oldStyle!.lineClamp().isNone() {
+        return false
+      }
+      if newStyle.lineClamp().isNone() {
+        return true
+      }
+      return newStyle.boxOrient() == .Horizontal
+    }
+    if shouldClearLineClamp() {
+      clearLineClamp()
+    }
+    super.styleWillChange(diff: diff, newStyle: newStyle)
   }
 
   override func layoutBlock(
@@ -146,6 +158,11 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func isVertical() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clearLineClamp() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

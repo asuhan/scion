@@ -646,6 +646,11 @@ enum TransformBox: UInt8 {
   case ViewBox
 }
 
+enum LineClamp {
+  case LineCount
+  case Percentage
+}
+
 enum Hyphens: UInt8 {
   case None
   case Manual
