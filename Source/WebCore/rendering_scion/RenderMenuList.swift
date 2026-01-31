@@ -40,8 +40,22 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Clip to the intersection of the content box and the content box for the inner box
+    // This will leave room for the arrows which sit in the inner box padding,
+    // and if the inner box ever spills out of the outer box, that will get clipped too.
+    let outerBox = LayoutRectWrapper(
+      x: additionalOffset.x + borderLeft() + paddingLeft(),
+      y: additionalOffset.y + borderTop() + paddingTop(),
+      width: contentWidth(),
+      height: contentHeight())
+
+    let innerBox = LayoutRectWrapper(
+      x: additionalOffset.x + innerBlock!.x() + innerBlock!.paddingLeft(),
+      y: additionalOffset.y + innerBlock!.y() + innerBlock!.paddingTop(),
+      width: innerBlock!.contentWidth(),
+      height: innerBlock!.contentHeight())
+
+    return intersection(a: outerBox, b: innerBox)
   }
 
   override func computeIntrinsicLogicalWidths(
@@ -70,4 +84,6 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let innerBlock: RenderBlockWrapper? = nil
 }
