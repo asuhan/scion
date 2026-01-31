@@ -88,8 +88,29 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().fieldSizing() == .Content {
+      super.computePreferredLogicalWidths()
+      return
+    }
+
+    minPreferredLogicalWidth = LayoutUnit(value: 0)
+    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    if style().logicalWidth().isFixed() && style().logicalWidth().value() > 0 {
+      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: style().logicalWidth())
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+    }
+
+    super.computePreferredLogicalWidths(
+      style().logicalMinWidth(), style().logicalMaxWidth(),
+      style().isHorizontalWritingMode()
+        ? horizontalBorderAndPaddingExtent() : verticalBorderAndPaddingExtent())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
