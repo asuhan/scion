@@ -22,8 +22,15 @@
  *
  */
 
+import Foundation
+
 // TODO(asuhan): inherit from PopupMenuClient as well
 final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
+  private func selectElement() -> HTMLSelectElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func innerRenderer() -> RenderBlockWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -194,8 +201,42 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   }
 
   private func updateOptionsWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var maxOptionWidth: Float32 = 0
+    let listItems = selectElement().listItems()
+
+    for listItem in listItems {
+      guard let option = listItem as? HTMLOptionElementWrapper else { continue }
+
+      var text = option.textIndentedToRespectGroupLabel()
+      text = applyTextTransform(style(), text, UChar(Character(" ").asciiValue!))
+      if theme().popupOptionSupportsTextIndent() {
+        // Add in the option's text indent.  We can't calculate percentage values for now.
+        var optionWidth: Float32 = 0
+        if let optionStyle = option.computedStyleForEditability() {
+          optionWidth += minimumValueForLength(length: optionStyle.textIndent(), maximumValue: 0)
+        }
+        if !text.isEmpty() {
+          let font = style().fontCascade()
+          let run = RenderBlockWrapper.constructTextRun(text, style())
+          optionWidth += font.width(run: run)
+        }
+        maxOptionWidth = max(maxOptionWidth, optionWidth)
+      } else if !text.isEmpty() {
+        let font = style().fontCascade()
+        let run = RenderBlockWrapper.constructTextRun(text, style())
+        maxOptionWidth = max(maxOptionWidth, font.width(run: run))
+      }
+    }
+
+    let width = Int32(ceilf(maxOptionWidth))
+    if optionsWidth == width {
+      return
+    }
+
+    optionsWidth = width
+    if parent() != nil {
+      setNeedsLayoutAndPrefWidthsRecalc()
+    }
   }
 
   override func isFlexibleBoxImpl() -> Bool {
@@ -207,7 +248,7 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
   private let innerBlock: RenderBlockWrapper? = nil
 
   private var needsOptionsWidthUpdate = false
-  private let optionsWidth: Int32 = 0
+  private var optionsWidth: Int32 = 0
 
   private let optionStyle: RenderStyleWrapper? = nil
 }

@@ -367,6 +367,8 @@ struct RenderTheme {
     return LengthBox(top: 0, right: 0, bottom: 0, left: 0)
   }
 
+  func popupOptionSupportsTextIndent() -> Bool { return false }
+
   private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
     -> ControlStyle.State
   {
