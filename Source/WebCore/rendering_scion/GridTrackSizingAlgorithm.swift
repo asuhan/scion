@@ -470,8 +470,37 @@ private func extraMarginFromSubgridAncestorGutters(
   _ gridItem: RenderBoxWrapper, _ itemSpan: GridSpan, _ trackIndex: UInt32,
   _ direction: GridTrackSizingDirection
 ) -> LayoutUnit? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if itemSpan.startLine() != trackIndex && itemSpan.endLine() - 1 != trackIndex {
+    return nil
+  }
+
+  var gutterTotal = LayoutUnit(value: UInt64(0))
+
+  var direction = direction
+  for currentAncestorSubgrid in ancestorSubgridsOfGridItem(gridItem: gridItem, direction: direction)
+  {
+    let gridItemSpanInAncestor = currentAncestorSubgrid.gridSpanForGridItem(
+      gridItem: gridItem, direction: direction)
+    let numTracksForCurrentAncestor = currentAncestorSubgrid.numTracks(direction: direction)
+
+    let currentAncestorSubgridParent = currentAncestorSubgrid.parent() as! RenderGridWrapper
+
+    if gridItemSpanInAncestor.startLine() != 0 {
+      gutterTotal +=
+        (currentAncestorSubgrid.gridGap(direction: direction)
+          - currentAncestorSubgridParent.gridGap(direction: direction))
+        / 2
+    }
+    if itemSpan.endLine() != numTracksForCurrentAncestor {
+      gutterTotal +=
+        (currentAncestorSubgrid.gridGap(direction: direction)
+          - currentAncestorSubgridParent.gridGap(direction: direction))
+        / 2
+    }
+    direction = GridLayoutFunctions.flowAwareDirectionForParent(
+      grid: currentAncestorSubgrid, parent: currentAncestorSubgridParent, direction: direction)
+  }
+  return gutterTotal
 }
 
 private func removeSubgridMarginBorderPaddingFromTracks(

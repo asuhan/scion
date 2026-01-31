@@ -104,7 +104,7 @@ class GridLayoutFunctions {
         ? marginStart : marginStart + marginEnd
   }
 
-  private static func hasRelativeOrIntrinsicSizeForGridItem(
+  static func hasRelativeOrIntrinsicSizeForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) -> Bool {
     if direction == .ForColumns {
