@@ -699,8 +699,29 @@ final class GridTrackSizingAlgorithm {
   func cacheBaselineAlignedItem(
     item: RenderBoxWrapper, axis: GridAxis, cachingRowSubgridsForRootGrid: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      (item.parent() as! RenderGridWrapper).isBaselineAlignmentForGridItem(
+        gridItem: item, baselineAxis: axis))
+
+    var axis = axis
+    if GridLayoutFunctions.isOrthogonalParent(grid: renderGrid!, parent: item.parent()!) {
+      axis = axis == .GridColumnAxis ? .GridRowAxis : .GridColumnAxis
+    }
+
+    if axis == .GridColumnAxis {
+      columnBaselineItemsMap.set(item, true)
+    } else {
+      rowBaselineItemsMap.set(item, true)
+    }
+
+    if let gridItemParent = item.parent() as? RenderGridWrapper {
+      let gridItemParentIsSubgridRowsOfRootGrid =
+        GridLayoutFunctions.isOrthogonalGridItem(grid: renderGrid!, gridItem: gridItemParent)
+        ? gridItemParent.isSubgridColumns() : gridItemParent.isSubgridRows()
+      if cachingRowSubgridsForRootGrid && gridItemParentIsSubgridRowsOfRootGrid {
+        rowSubgridsWithBaselineAlignedItems.add(value: gridItemParent)
+      }
+    }
   }
 
   func copyBaselineItemsCache(source: GridTrackSizingAlgorithm, axis: GridAxis) {

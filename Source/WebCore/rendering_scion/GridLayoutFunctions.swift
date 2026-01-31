@@ -208,9 +208,7 @@ class GridLayoutFunctions {
     return gridItem.isHorizontalWritingMode() != grid.isHorizontalWritingMode()
   }
 
-  private static func isOrthogonalParent(grid: RenderGridWrapper, parent: RenderElementWrapper)
-    -> Bool
-  {
+  static func isOrthogonalParent(grid: RenderGridWrapper, parent: RenderElementWrapper) -> Bool {
     return parent.isHorizontalWritingMode() != grid.isHorizontalWritingMode()
   }
 
