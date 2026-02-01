@@ -531,6 +531,7 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
 
             if firstChild {
               firstChild = false
+              child = iterator.next()
               continue
             }
 
