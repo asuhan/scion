@@ -62,6 +62,10 @@ private func widthForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
   return child.overridingLogicalWidth() ?? child.logicalWidth()
 }
 
+private func heightForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
+  return child.overridingLogicalHeight() ?? child.logicalHeight()
+}
+
 // TODO(asuhan): use an inline capacity of 8
 typealias ChildFrameRects = [LayoutRectWrapper]
 typealias ChildLayoutDeltas = [LayoutSizeWrapper]
@@ -572,8 +576,329 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func layoutVerticalBox(_ relayoutChildren: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var yPos = borderTop() + paddingTop()
+    let toAdd = borderBottom() + paddingBottom() + horizontalScrollbarHeight()
+    var heightSpecified = false
+    var oldHeight = LayoutUnit()
+
+    var remainingSpace = LayoutUnit()
+
+    var iterator = FlexBoxIterator(self)
+    let flexChildrenInfo = gatherFlexChildrenInfo(&iterator, relayoutChildren)
+    let highestFlexGroup = flexChildrenInfo.highestFlexGroup
+    let lowestFlexGroup = flexChildrenInfo.lowestFlexGroup
+    var haveFlex = flexChildrenInfo.haveFlex
+    var flexingChildren = false
+
+    // We confine the line clamp ugliness to vertical flexible boxes (thus keeping it out of
+    // mainstream block layout); this is not really part of the XUL box model.
+    let haveLineClamp = !style().lineClamp().isNone()
+    let clampedContent =
+      haveLineClamp ? applyLineClamp(&iterator, relayoutChildren) : ClampedContent()
+
+    beginUpdateScrollInfoAfterLayoutTransaction()
+
+    var relayoutChildren = relayoutChildren
+
+    // We do 2 passes.  The first pass is simply to lay everyone out at
+    // their preferred widths.  The second pass handles flexing the children.
+    // Our first pass is done without flexing.  We simply lay the children
+    // out within the box.
+    repeat {
+      setHeight(height: borderTop() + paddingTop())
+      let minHeight = height() + toAdd
+
+      var child = iterator.first()
+      while child != nil {
+        // Make sure we relayout children if we need it.
+        if !haveLineClamp && relayoutChildren {
+          child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        }
+
+        if child!.isOutOfFlowPositioned() {
+          child!.containingBlock()!.insertPositionedObject(positioned: child!)
+          let childLayer = child!.layer()!
+          childLayer.setStaticInlinePosition(position: borderAndPaddingStart())  // FIXME: Not right for regions.
+          if childLayer.staticBlockPosition() != height() {
+            childLayer.setStaticBlockPosition(position: height())
+            if child!.style().hasStaticBlockPosition(horizontal: style().isHorizontalWritingMode())
+            {
+              child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+            }
+          }
+          child = iterator.next()
+          continue
+        }
+
+        // Compute the child's vertical margins.
+        child!.computeAndSetBlockDirectionMargins(containingBlock: self)
+
+        // Add in the child's marginTop to our height.
+        setHeight(height: height() + child!.marginTop())
+
+        if !haveLineClamp {
+          child!.markForPaginationRelayoutIfNeeded()
+        }
+
+        // Now do a layout.
+        child!.layoutIfNeeded()
+
+        // We can place the child now, using our value of box-align.
+        var childX = borderLeft() + paddingLeft()
+        switch style().boxAlign() {
+        case .Center, .Baseline:  // Baseline just maps to center for vertical boxes
+          childX +=
+            child!.marginLeft()
+            + max(
+              LayoutUnit(value: 0),
+              (contentWidth() - (child!.width() + child!.horizontalMarginExtent())) / 2)
+        case .End:
+          if !style().isLeftToRightDirection() {
+            childX += child!.marginLeft()
+          } else {
+            childX += contentWidth() - child!.marginRight() - child!.width()
+          }
+        default:  // .Start/.Stretch
+          if style().isLeftToRightDirection() {
+            childX += child!.marginLeft()
+          } else {
+            childX += contentWidth() - child!.marginRight() - child!.width()
+          }
+        }
+
+        // Place the child.
+        placeChild(child!, LayoutPointWrapper(x: childX, y: height()))
+        setHeight(height: height() + child!.height() + child!.marginBottom())
+        child = iterator.next()
+      }
+
+      yPos = height()
+
+      if iterator.first() == nil && hasLineIfEmpty() {
+        setHeight(
+          height: height()
+            + lineHeight(
+              firstLine: true,
+              direction: style().isHorizontalWritingMode() ? .HorizontalLine : .VerticalLine,
+              linePositionMode: .PositionOfInteriorLineBoxes))
+      }
+
+      setHeight(height: height() + toAdd)
+
+      // Negative margins can cause our height to shrink below our minimal height (border/padding).
+      // If this happens, ensure that the computed height is increased to the minimal height.
+      if height() < minHeight {
+        setHeight(height: minHeight)
+      }
+
+      // Now we have to calc our height, so we know how much space we have remaining.
+      oldHeight = height()
+      updateLogicalHeight()
+      if oldHeight != height() {
+        heightSpecified = true
+      }
+
+      remainingSpace = borderTop() + paddingTop() + contentHeight() - yPos
+
+      if flexingChildren {
+        haveFlex = false  // We're done.
+      } else if haveFlex {
+        // We have some flexible objects.  See if we need to grow/shrink them at all.
+        if !remainingSpace.bool() {
+          break
+        }
+
+        // Allocate the remaining space among the flexible objects.  If we are trying to
+        // grow, then we go from the lowest flex group to the highest flex group.  For shrinking,
+        // we go from the highest flex group to the lowest group.
+        let expanding = remainingSpace > 0
+        let start = expanding ? lowestFlexGroup : highestFlexGroup
+        let end = expanding ? highestFlexGroup : lowestFlexGroup
+        for i in start...end {
+          if !remainingSpace.bool() {
+            break
+          }
+          // Always start off by assuming the group can get all the remaining space.
+          var groupRemainingSpace = remainingSpace
+          repeat {
+            // Flexing consists of multiple passes, since we have to change ratios every time an object hits its max/min-width
+            // For a given pass, we always start off by computing the totalFlex of all objects that can grow/shrink at all, and
+            // computing the allowed growth before an object hits its min/max width (and thus
+            // forces a totalFlex recomputation).
+            let groupRemainingSpaceAtBeginning = groupRemainingSpace
+            var totalFlex: Float32 = 0
+            do {
+              var child = iterator.first()
+              while child != nil {
+                if allowedChildFlex(child!, expanding, i).bool() {
+                  totalFlex += child!.style().boxFlex()
+                }
+                child = iterator.next()
+              }
+            }
+            var spaceAvailableThisPass = groupRemainingSpace
+            do {
+              var child = iterator.first()
+              while child != nil {
+                let allowedFlex = allowedChildFlex(child!, expanding, i)
+                if allowedFlex.bool() {
+                  let projectedFlex =
+                    (allowedFlex == LayoutUnit.max())
+                    ? allowedFlex
+                    : LayoutUnit(value: allowedFlex * (totalFlex / child!.style().boxFlex()))
+                  spaceAvailableThisPass =
+                    expanding
+                    ? min(spaceAvailableThisPass, projectedFlex)
+                    : max(spaceAvailableThisPass, projectedFlex)
+                }
+                child = iterator.next()
+              }
+            }
+
+            // The flex groups may not have any flexible objects this time around.
+            if !spaceAvailableThisPass.bool() || totalFlex == 0 {
+              // If we just couldn't grow/shrink any more, then it's time to transition to the next flex group.
+              groupRemainingSpace = LayoutUnit(value: 0)
+              continue
+            }
+
+            // Now distribute the space to objects.
+            var child = iterator.first()
+            while child != nil && spaceAvailableThisPass.bool() && totalFlex != 0 {
+              if allowedChildFlex(child!, expanding, i).bool() {
+                let spaceAdd = LayoutUnit(
+                  value: spaceAvailableThisPass * (child!.style().boxFlex() / totalFlex))
+                if spaceAdd.bool() {
+                  child!.setOverridingLogicalHeight(height: heightForChild(child!) + spaceAdd)
+                  flexingChildren = true
+                  relayoutChildren = true
+                }
+
+                spaceAvailableThisPass -= spaceAdd
+                remainingSpace -= spaceAdd
+                groupRemainingSpace -= spaceAdd
+
+                totalFlex -= child!.style().boxFlex()
+              }
+              child = iterator.next()
+            }
+            if groupRemainingSpace == groupRemainingSpaceAtBeginning {
+              // This is not advancing, avoid getting stuck by distributing the remaining pixels.
+              let spaceAdd = LayoutUnit(value: groupRemainingSpace > 0 ? 1 : -1)
+              var child = iterator.first()
+              while child != nil && groupRemainingSpace.bool() {
+                if allowedChildFlex(child!, expanding, i).bool() {
+                  child!.setOverridingLogicalHeight(height: heightForChild(child!) + spaceAdd)
+                  flexingChildren = true
+                  relayoutChildren = true
+                  remainingSpace -= spaceAdd
+                  groupRemainingSpace -= spaceAdd
+                }
+                child = iterator.next()
+              }
+            }
+          } while groupRemainingSpace.abs() >= Int32(1)
+        }
+
+        // We didn't find any children that could grow.
+        if haveFlex && !flexingChildren {
+          haveFlex = false
+        }
+      }
+    } while haveFlex
+
+    endAndCommitUpdateScrollInfoAfterLayoutTransaction()
+
+    if style().boxPack() != .Start && remainingSpace > 0 {
+      // Children must be repositioned.
+      var offset = LayoutUnit()
+      if style().boxPack() == .Justify {
+        // Determine the total number of children.
+        var totalChildren: Int = 0
+        var child = iterator.first()
+        while child != nil {
+          if childDoesNotAffectWidthOrFlexing(child!) {
+            child = iterator.next()
+            continue
+          }
+          totalChildren += 1
+          child = iterator.next()
+        }
+
+        // Iterate over the children and space them out according to the
+        // justification level.
+        if totalChildren > 1 {
+          totalChildren -= 1
+          var firstChild = true
+          var child = iterator.first()
+          while child != nil {
+            if childDoesNotAffectWidthOrFlexing(child!) {
+              child = iterator.next()
+              continue
+            }
+
+            if firstChild {
+              firstChild = false
+              child = iterator.next()
+              continue
+            }
+
+            offset += remainingSpace / totalChildren
+            remainingSpace -= (remainingSpace / totalChildren)
+            totalChildren -= 1
+
+            placeChild(
+              child!,
+              child!.location()
+                + LayoutSizeWrapper(width: LayoutUnit(value: UInt64(0)), height: offset))
+
+            child = iterator.next()
+          }
+        }
+      } else {
+        if style().boxPack() == .Center {
+          offset += remainingSpace / 2
+        } else {  // .End
+          offset += remainingSpace
+        }
+        var child = iterator.first()
+        while child != nil {
+          if childDoesNotAffectWidthOrFlexing(child!) {
+            child = iterator.next()
+            continue
+          }
+
+          placeChild(
+            child!,
+            child!.location()
+              + LayoutSizeWrapper(width: LayoutUnit(value: UInt64(0)), height: offset))
+          child = iterator.next()
+        }
+      }
+    }
+
+    // So that the computeLogicalHeight in layoutBlock() knows to relayout positioned objects because of
+    // a height change, we revert our height back to the intrinsic height before returning.
+    if heightSpecified {
+      setHeight(height: oldHeight)
+    } else if haveLineClamp && clampedContent.renderer != nil {
+      let contentOffset = { [self] () in
+        let clampedRenderer = clampedContent.renderer!
+        var contentLogicalTop =
+          clampedRenderer.logicalTop() + clampedRenderer.contentBoxLocation().y
+        var ancestor = clampedRenderer.containingBlock()
+        while ancestor != nil {
+          if CPtrToInt(ancestor!.p) == CPtrToInt(p) {
+            return contentLogicalTop
+          }
+          contentLogicalTop += ancestor!.logicalTop()
+          ancestor = ancestor!.containingBlock()
+        }
+        fatalError("Not reached")
+      }
+      setHeight(
+        height: contentOffset() + clampedContent.contentHeight + borderBottom() + paddingBottom())
+    }
   }
 
   func isStretchingChildren() -> Bool {
@@ -698,6 +1023,17 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func clearLineClamp() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct ClampedContent {
+    let contentHeight = LayoutUnit()
+    let renderer: RenderBlockFlowWrapper? = nil
+  }
+  private func applyLineClamp(_ iterator: inout FlexBoxIterator, _ relayoutChildren: Bool)
+    -> ClampedContent
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
