@@ -73,8 +73,14 @@ typealias ChildLayoutDeltas = [LayoutSizeWrapper]
 private func appendChildFrameRects(
   _ box: RenderDeprecatedFlexibleBoxWrapper?, _ childFrameRects: inout ChildFrameRects
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var iterator = FlexBoxIterator(box)
+  var child = iterator.first()
+  while child != nil {
+    if !child!.isOutOfFlowPositioned() {
+      childFrameRects.append(child!.frameRect())
+    }
+    child = iterator.next()
+  }
 }
 
 private func appendChildLayoutDeltas(
