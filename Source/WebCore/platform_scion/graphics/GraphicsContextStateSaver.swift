@@ -61,3 +61,15 @@ class TransparencyLayerScope {
     fatalError("Not implemented")
   }
 }
+
+struct InterpolationQualityMaintainer: ~Copyable {
+  init(_ graphicsContext: GraphicsContextWrapper, _ interpolationQuality: InterpolationQuality?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  deinit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

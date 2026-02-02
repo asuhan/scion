@@ -37,8 +37,39 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
   override final func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = paintInfo.context()
+
+    var contentBoxRect = contentBoxRect()
+
+    if context.detectingContentfulPaint() {
+      if !context.contentfulPaintDetected() && canvasElement().renderingContext() != nil {
+        context.setContentfulPaintDetected()
+      }
+      return
+    }
+
+    contentBoxRect.moveBy(offset: paintOffset)
+    var replacedContentRect = replacedContentRect()
+    replacedContentRect.moveBy(offset: paintOffset)
+
+    // Not allowed to overflow the content box.
+    let clip = !contentBoxRect.contains(other: replacedContentRect)
+    let _ = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: clip)
+    if clip {
+      paintInfo.context().clip(rect: FloatRectWrapper(r: snappedIntRect(rect: contentBoxRect)))
+    }
+
+    if paintInfo.phase == .Foreground {
+      page().addRelevantRepaintedObject(
+        object: self, objectPaintRect: intersection(a: replacedContentRect, b: contentBoxRect))
+    }
+
+    let _ = InterpolationQualityMaintainer(
+      context, ImageQualityController.interpolationQualityFromStyle(style()))
+
+    canvasElement().setIsSnapshotting(paintInfo.paintBehavior.contains(.Snapshotting))
+    canvasElement().paint(context, replacedContentRect)
+    canvasElement().setIsSnapshotting(false)
   }
 
   override func intrinsicSizeChanged() {

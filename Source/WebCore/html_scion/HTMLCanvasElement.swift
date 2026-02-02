@@ -32,6 +32,16 @@ final class HTMLCanvasElementWrapper: HTMLElementWrapper {
     fatalError("Not implemented")
   }
 
+  func paint(_ context: GraphicsContextWrapper, _ r: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setIsSnapshotting(_ isSnapshotting: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // TODO(asuhan): should come from CanvasBase
   func size() -> IntSize {
     // TODO(asuhan): implement this
