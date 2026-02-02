@@ -408,8 +408,12 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
 // Pixel-snapping (== 'device pixel alignment') helpers.
 func rendererNeedsPixelSnapping(renderer: RenderLayerModelObjectWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if renderer.document().settings().layerBasedSVGEngineEnabled()
+    && renderer.isSVGLayerAwareRenderer() && !renderer.isRenderSVGRoot()
+  {
+    return false
+  }
+  return true
 }
 
 func snapRectToDevicePixelsIfNeeded(
