@@ -85,6 +85,14 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
     }
   }
 
+  func applyMaskClipping(
+    _ paintInfo: PaintInfoWrapper, _ targetRenderer: RenderLayerModelObjectWrapper,
+    _ objectBoundingBox: FloatRectWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {

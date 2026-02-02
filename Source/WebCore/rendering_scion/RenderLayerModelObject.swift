@@ -347,8 +347,18 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func paintSVGClippingMask(paintInfo: PaintInfoWrapper, objectBoundingBox: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(paintInfo.phase == .ClippingMask)
+    let context = paintInfo.context()
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) || style().usedVisibility() != .Visible
+      || context.paintingDisabled()
+    {
+      return
+    }
+
+    assert(document().settings().layerBasedSVGEngineEnabled())
+    if let referencedClipperRenderer = svgClipperResourceFromStyle() {
+      referencedClipperRenderer.applyMaskClipping(paintInfo, self, objectBoundingBox)
+    }
   }
 
   func paintSVGMask(_ paintInfo: PaintInfoWrapper, _ adjustedPaintOffset: LayoutPointWrapper) {
