@@ -23,6 +23,8 @@
  */
 
 struct LineClampValue {
+  func isPercentage() -> Bool { return type == .Percentage }
+
   func isNone() -> Bool { return value == -1 }
 
   let type: LineClamp = .LineCount

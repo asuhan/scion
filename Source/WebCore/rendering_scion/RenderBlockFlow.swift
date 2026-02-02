@@ -2165,6 +2165,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  func lineCount() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func svgTextLayout() -> LegacyLineLayout? {
     switch lineLayout {
     case .Legacy(let layout):

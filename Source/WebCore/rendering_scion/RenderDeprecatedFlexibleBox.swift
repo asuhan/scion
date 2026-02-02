@@ -182,6 +182,21 @@ private func layoutChildIfNeededApplyingDelta(
   child.view().frameView().layoutContext().addLayoutDelta(delta: -layoutDelta)
 }
 
+private func lineCountFor(_ blockFlow: RenderBlockFlowWrapper) -> UInt64 {
+  if blockFlow.childrenInline() {
+    return UInt64(blockFlow.lineCount())
+  }
+
+  var count: UInt64 = 0
+  for child: RenderBlockFlowWrapper in childrenOfType(parent: blockFlow) {
+    if blockFlow.isFloatingOrOutOfFlowPositioned() || !blockFlow.style().height().isAuto() {
+      continue
+    }
+    count += lineCountFor(child)
+  }
+  return count
+}
+
 final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     let shouldClearLineClamp = { [self] () in
@@ -1177,14 +1192,97 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private struct ClampedContent {
-    let contentHeight = LayoutUnit()
-    let renderer: RenderBlockFlowWrapper? = nil
+    init(_ contentHeight: LayoutUnit, _ renderer: RenderBlockFlowWrapper?) {
+      self.contentHeight = contentHeight
+      self.renderer = renderer
+    }
+
+    init() { self.init(LayoutUnit(), nil) }
+
+    let contentHeight: LayoutUnit
+    let renderer: RenderBlockFlowWrapper?
   }
   private func applyLineClamp(_ iterator: inout FlexBoxIterator, _ relayoutChildren: Bool)
     -> ClampedContent
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = iterator.first()
+    while child != nil {
+      if childDoesNotAffectWidthOrFlexing(child!) {
+        child = iterator.next()
+        continue
+      }
+
+      child!.clearOverridingContentSize()
+      if relayoutChildren
+        || (child!.isReplacedOrInlineBlock()
+          && (child!.style().width().isPercentOrCalculated()
+            || child!.style().height().isPercentOrCalculated()))
+        || (child!.style().height().isAuto() && child is RenderBlockFlowWrapper)
+      {
+        child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+
+        // Dirty all the positioned objects.
+        (child as? RenderBlockFlowWrapper)?.markPositionedObjectsForLayout()
+      }
+      child = iterator.next()
+    }
+
+    let layoutState = view().frameView().layoutContext().layoutState()!
+    let ancestorLineClamp = layoutState.legacyLineClamp()
+    defer {
+      layoutState.setLegacyLineClamp(legacyLineClamp: ancestorLineClamp)
+    }
+
+    let lineCountForLineClamp = { [self] (iterator: inout FlexBoxIterator) in
+      let lineClamp = style().lineClamp()
+      if !lineClamp.isPercentage() {
+        return UInt64(lineClamp.value)
+      }
+
+      var numberOfLines: UInt64 = 0
+      var child = iterator.first()
+      while child != nil {
+        if childDoesNotAffectWidthOrFlexing(child!) {
+          child = iterator.next()
+          continue
+        }
+
+        child!.layoutIfNeeded()
+        if let blockFlow = child as? RenderBlockFlowWrapper {
+          numberOfLines += lineCountFor(blockFlow)
+        }
+        // FIXME: This should be turned into a partial damange.
+        child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+        child = iterator.next()
+      }
+      return UInt64(max(1, Float32((numberOfLines + 1) * UInt64(lineClamp.value)) / 100))
+    }
+
+    layoutState.setLegacyLineClamp(
+      legacyLineClamp: RenderLayoutStateWrapper.LegacyLineClamp(
+        maximumLineCount: lineCountForLineClamp(&iterator), currentLineCount: 0,
+        clampedContentLogicalHeight: nil, clampedRenderer: nil))
+    do {
+      var child = iterator.first()
+      while child != nil {
+        if child!.isOutOfFlowPositioned() {
+          child = iterator.next()
+          continue
+        }
+
+        child!.markForPaginationRelayoutIfNeeded()
+        child!.layoutIfNeeded()
+        child = iterator.next()
+      }
+    }
+
+    let lineClamp = layoutState.legacyLineClamp()!
+    if lineClamp.clampedContentLogicalHeight == nil {
+      // We've managed to run line clamping but it came back with no clamped content (i.e. there are fewer lines than the line-clamp limit).
+      return ClampedContent()
+    }
+
+    return ClampedContent(lineClamp.clampedContentLogicalHeight!, lineClamp.clampedRenderer)
   }
 
   private var stretchingChildren = false
