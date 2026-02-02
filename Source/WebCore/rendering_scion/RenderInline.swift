@@ -285,8 +285,47 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   func offsetForInFlowPositionedInline(_ child: RenderBoxWrapper?) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: This function isn't right with mixed writing modes.
+
+    assert(isInFlowPositioned())
+    if !isInFlowPositioned() {
+      return LayoutSizeWrapper()
+    }
+
+    // When we have an enclosing relpositioned inline, we need to add in the offset of the first line
+    // box from the rest of the content, but only in the cases where we know we're positioned
+    // relative to the inline itself.
+    var inlinePosition = layer()!.staticInlinePosition()
+    var blockPosition = layer()!.staticBlockPosition()
+    if let inlineBox = firstLegacyInlineBox() {
+      inlinePosition = LayoutUnit.fromFloatRound(value: inlineBox.logicalLeft())
+      blockPosition = LayoutUnit(value: inlineBox.logicalTop())
+    } else if LayoutIntegration.LineLayout.containing(renderer: self) != nil {
+      if layoutBox() == nil {
+        // Repaint may be issued on subtrees during content mutation with newly inserted renderers.
+        assert(needsLayout())
+        return LayoutSizeWrapper()
+      }
+      let inlineBox = InlineIterator.firstInlineBoxFor(renderInline: self)
+      if inlineBox.bool() {
+        inlinePosition = LayoutUnit.fromFloatRound(
+          value: inlineBox.get().logicalLeftIgnoringInlineDirection())
+        blockPosition = LayoutUnit(value: inlineBox.get().logicalTop())
+      }
+    }
+
+    // Per http://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width an absolute positioned box with a static position
+    // should locate itself as though it is a normal flow box in relation to its containing block.
+    let logicalOffset = LayoutSizeWrapper()
+    if !child!.style().hasStaticInlinePosition(horizontal: style().isHorizontalWritingMode()) {
+      logicalOffset.setWidth(width: inlinePosition)
+    }
+
+    if !child!.style().hasStaticBlockPosition(horizontal: style().isHorizontalWritingMode()) {
+      logicalOffset.setHeight(height: blockPosition)
+    }
+
+    return style().isHorizontalWritingMode() ? logicalOffset : logicalOffset.transposedSize()
   }
 
   override func addFocusRingRects(
