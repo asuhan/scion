@@ -165,8 +165,13 @@ private func gatherFlexChildrenInfo(_ iterator: inout FlexBoxIterator, _ relayou
 private func layoutChildIfNeededApplyingDelta(
   _ child: RenderBoxWrapper, _ layoutDelta: LayoutSizeWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !child.needsLayout() {
+    return
+  }
+
+  child.view().frameView().layoutContext().addLayoutDelta(delta: layoutDelta)
+  child.layoutIfNeeded()
+  child.view().frameView().layoutContext().addLayoutDelta(delta: -layoutDelta)
 }
 
 final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
