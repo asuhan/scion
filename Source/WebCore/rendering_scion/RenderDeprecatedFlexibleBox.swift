@@ -99,8 +99,26 @@ private func appendChildLayoutDeltas(
 private func repaintChildrenDuringLayoutIfMoved(
   _ box: RenderDeprecatedFlexibleBoxWrapper?, _ oldChildRects: ChildFrameRects
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var childIndex = 0
+  var iterator = FlexBoxIterator(box)
+  var child = iterator.first()
+  while child != nil {
+    if child!.isOutOfFlowPositioned() {
+      child = iterator.next()
+      continue
+    }
+
+    // If the child moved, we have to repaint it as well as any floating/positioned
+    // descendants. An exception is if we need a layout. In this case, we know we're going to
+    // repaint ourselves (and the child) anyway.
+    if !box!.selfNeedsLayout() && child!.checkForRepaintDuringLayout() {
+      child!.repaintDuringLayoutIfMoved(oldRect: oldChildRects[childIndex])
+    }
+
+    childIndex += 1
+    child = iterator.next()
+  }
+  assert(childIndex == oldChildRects.count)
 }
 
 private struct FlexChildrenInfo {
