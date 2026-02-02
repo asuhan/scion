@@ -131,8 +131,35 @@ private struct FlexChildrenInfo {
 private func gatherFlexChildrenInfo(_ iterator: inout FlexBoxIterator, _ relayoutChildren: Bool)
   -> FlexChildrenInfo
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var highestFlexGroup: UInt32 = 0
+  var lowestFlexGroup: UInt32 = 0
+  var haveFlex = false
+  var child = iterator.first()
+  while child != nil {
+    // Check to see if this child flexes.
+    if !childDoesNotAffectWidthOrFlexing(child!) && child!.style().boxFlex() > 0 {
+      // We always have to lay out flexible objects again, since the flex distribution
+      // may have changed, and we need to reallocate space.
+      child!.clearOverridingContentSize()
+      if !relayoutChildren {
+        child!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+      }
+      haveFlex = true
+      let flexGroup = child!.style().boxFlexGroup()
+      if lowestFlexGroup == 0 {
+        lowestFlexGroup = flexGroup
+      }
+      if flexGroup < lowestFlexGroup {
+        lowestFlexGroup = flexGroup
+      }
+      if flexGroup > highestFlexGroup {
+        highestFlexGroup = flexGroup
+      }
+    }
+    child = iterator.next()
+  }
+  return FlexChildrenInfo(
+    highestFlexGroup: highestFlexGroup, lowestFlexGroup: lowestFlexGroup, haveFlex: haveFlex)
 }
 
 private func layoutChildIfNeededApplyingDelta(

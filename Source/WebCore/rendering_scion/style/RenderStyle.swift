@@ -878,6 +878,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func boxFlexGroup() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxOrient() -> BoxOrient {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
