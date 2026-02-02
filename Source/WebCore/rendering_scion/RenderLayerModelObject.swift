@@ -299,8 +299,31 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func svgFilterResourceFromStyle() -> RenderSVGResourceFilter? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !document().settings().layerBasedSVGEngineEnabled() {
+      return nil
+    }
+
+    let operations = style().filter()
+    if operations.size() != 1 {
+      return nil
+    }
+
+    guard let referenceFilterOperation = operations.at(0) as? ReferenceFilterOperationWrapper else {
+      return nil
+    }
+
+    if let referencedFilterElement = ReferencedSVGResources.referencedFilterElement(
+      treeScope: treeScopeForSVGReferences(), referenceFilter: referenceFilterOperation),
+      let referencedFilterRenderer = referencedFilterElement.renderer() as? RenderSVGResourceFilter
+    {
+      return referencedFilterRenderer
+    }
+
+    if let svgElement = element() as? SVGElementWrapper {
+      document().addPendingSVGResource(referenceFilterOperation.fragment(), svgElement)
+    }
+
+    return nil
   }
 
   func svgMaskerResourceFromStyle() -> RenderSVGResourceMasker? {

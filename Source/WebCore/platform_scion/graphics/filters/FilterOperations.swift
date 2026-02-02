@@ -39,6 +39,16 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
     fatalError("Not implemented")
   }
 
+  func size() -> UInt64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func at(_ index: UInt64) -> FilterOperationWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasFilterThatAffectsOpacity() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
