@@ -80,6 +80,11 @@ class RenderLayoutStateWrapper {
     fatalError("Not implemented")
   }
 
+  func paintOffset() -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layoutOffset() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -96,6 +101,16 @@ class RenderLayoutStateWrapper {
   }
 
   func renderer() -> RenderElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func clipRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isClipped() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -693,8 +693,16 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var adjustedRects = rects
+    let layoutState = view().frameView().layoutContext().layoutState()!
+    if style().hasInFlowPosition() && layer() != nil {
+      adjustedRects.move(layer()!.offsetForInFlowPosition())
+    }
+    adjustedRects.move(layoutState.paintOffset())
+    if layoutState.isClipped() {
+      adjustedRects.clippedOverflowRect.intersect(other: layoutState.clipRect())
+    }
+    return adjustedRects
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
