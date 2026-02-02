@@ -24,6 +24,14 @@ final class RenderSVGResourceMasker: RenderSVGResourceContainerWrapper {
     fatalError("Not implemented")
   }
 
+  func applyMask(
+    _ paintInfo: PaintInfoWrapper, _ targetRenderer: RenderLayerModelObjectWrapper,
+    _ adjustedPaintOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {

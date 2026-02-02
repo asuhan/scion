@@ -362,8 +362,16 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func paintSVGMask(_ paintInfo: PaintInfoWrapper, _ adjustedPaintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(paintInfo.phase == .Mask)
+    let context = paintInfo.context()
+    if !paintInfo.shouldPaintWithinRoot(renderer: self) || context.paintingDisabled() {
+      return
+    }
+
+    assert(isSVGLayerAwareRenderer())
+    if let referencedMaskerRenderer = svgMaskerResourceFromStyle() {
+      referencedMaskerRenderer.applyMask(paintInfo, self, adjustedPaintOffset)
+    }
   }
 
   func layerTransform() -> TransformationMatrix? {
