@@ -429,6 +429,9 @@ func snapRectToDevicePixelsIfNeeded(
 func snapRectToDevicePixelsIfNeeded(
   rect: FloatRectWrapper, renderer: RenderLayerModelObjectWrapper
 ) -> FloatRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !rendererNeedsPixelSnapping(renderer: renderer) {
+    return rect
+  }
+  return snapRectToDevicePixels(
+    rect: LayoutRectWrapper(r: rect), pixelSnappingFactor: renderer.document().deviceScaleFactor())
 }
