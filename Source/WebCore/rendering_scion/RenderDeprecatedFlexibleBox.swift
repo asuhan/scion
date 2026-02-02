@@ -66,6 +66,14 @@ private func heightForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
   return child.overridingLogicalHeight() ?? child.logicalHeight()
 }
 
+private func contentWidthForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
+  return max(LayoutUnit(value: 0), widthForChild(child) - child.borderAndPaddingLogicalWidth())
+}
+
+private func contentHeightForChild(_ child: RenderBoxWrapper) -> LayoutUnit {
+  return max(LayoutUnit(value: 0), heightForChild(child) - child.borderAndPaddingLogicalHeight())
+}
+
 // TODO(asuhan): use an inline capacity of 8
 typealias ChildFrameRects = [LayoutRectWrapper]
 typealias ChildLayoutDeltas = [LayoutSizeWrapper]
@@ -1053,8 +1061,69 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   private func allowedChildFlex(_ child: RenderBoxWrapper, _ expanding: Bool, _ group: UInt32)
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if childDoesNotAffectWidthOrFlexing(child) || child.style().boxFlex() == 0
+      || child.style().boxFlexGroup() != group
+    {
+      return LayoutUnit(value: 0)
+    }
+
+    if expanding {
+      if isHorizontal() {
+        // FIXME: For now just handle fixed values.
+        var maxWidth = LayoutUnit.max()
+        let width = contentWidthForChild(child)
+        if !child.style().maxWidth().isUndefined() && child.style().maxWidth().isFixed() {
+          maxWidth = LayoutUnit(value: child.style().maxWidth().value())
+        } else if child.style().maxWidth().type() == .Intrinsic {
+          maxWidth = child.maxPreferredLogicalWidth()
+        } else if child.style().maxWidth().isMinIntrinsic() {
+          maxWidth = child.minPreferredLogicalWidth()
+        }
+        if maxWidth == LayoutUnit.max() {
+          return maxWidth
+        }
+        return max(LayoutUnit(value: 0), maxWidth - width)
+      } else {
+        // FIXME: For now just handle fixed values.
+        var maxHeight = LayoutUnit.max()
+        let height = contentHeightForChild(child)
+        if !child.style().maxHeight().isUndefined() && child.style().maxHeight().isFixed() {
+          maxHeight = LayoutUnit(value: child.style().maxHeight().value())
+        }
+        if maxHeight == LayoutUnit.max() {
+          return maxHeight
+        }
+        return max(LayoutUnit(value: 0), maxHeight - height)
+      }
+    }
+
+    // FIXME: For now just handle fixed values.
+    if isHorizontal() {
+      var minWidth = child.minPreferredLogicalWidth()
+      let width = contentWidthForChild(child)
+      if child.style().minWidth().isFixed() {
+        minWidth = LayoutUnit(value: child.style().minWidth().value())
+      } else if child.style().minWidth().type() == .Intrinsic {
+        minWidth = child.maxPreferredLogicalWidth()
+      } else if child.style().minWidth().isMinIntrinsic() {
+        minWidth = child.minPreferredLogicalWidth()
+      } else if child.style().minWidth().isAuto() {
+        minWidth = LayoutUnit(value: 0)
+      }
+
+      let allowedShrinkage = min(LayoutUnit(value: 0), minWidth - width)
+      return allowedShrinkage
+    } else {
+      let minHeight = child.style().minHeight()
+      if minHeight.isFixed() || minHeight.isAuto() {
+        let minHeight = LayoutUnit(value: child.style().minHeight().value())
+        let height = contentHeightForChild(child)
+        let allowedShrinkage = min(LayoutUnit(value: 0), minHeight - height)
+        return allowedShrinkage
+      }
+    }
+
+    return LayoutUnit(value: 0)
   }
 
   private func placeChild(
