@@ -86,8 +86,14 @@ private func appendChildFrameRects(
 private func appendChildLayoutDeltas(
   _ box: RenderDeprecatedFlexibleBoxWrapper?, _ childLayoutDeltas: inout ChildLayoutDeltas
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var iterator = FlexBoxIterator(box)
+  var child = iterator.first()
+  while child != nil {
+    if !child!.isOutOfFlowPositioned() {
+      childLayoutDeltas.append(LayoutSizeWrapper())
+    }
+    child = iterator.next()
+  }
 }
 
 private func repaintChildrenDuringLayoutIfMoved(
