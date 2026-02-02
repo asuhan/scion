@@ -1155,8 +1155,25 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   }
 
   private func clearLineClamp() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var iterator = FlexBoxIterator(self)
+    var child = iterator.first()
+    while child != nil {
+      if childDoesNotAffectWidthOrFlexing(child!) {
+        child = iterator.next()
+        continue
+      }
+
+      child!.clearOverridingContentSize()
+      if (child!.isReplacedOrInlineBlock()
+        && (child!.style().width().isPercentOrCalculated()
+          || child!.style().height().isPercentOrCalculated()))
+        || (child!.style().height().isAuto() && child is RenderBlockFlowWrapper)
+      {
+        child!.setChildNeedsLayout()
+        (child as? RenderBlockFlowWrapper)?.markPositionedObjectsForLayout()
+      }
+      child = iterator.next()
+    }
   }
 
   private struct ClampedContent {

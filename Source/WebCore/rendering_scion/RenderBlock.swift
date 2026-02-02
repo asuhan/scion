@@ -378,6 +378,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return false
   }
 
+  func markPositionedObjectsForLayout() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func markForPaginationRelayoutIfNeeded() {
     let layoutState = view().frameView().layoutContext().layoutState()
     if needsLayout() || layoutState == nil || !layoutState!.isPaginated() {
