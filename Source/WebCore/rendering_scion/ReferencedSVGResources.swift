@@ -39,4 +39,11 @@ class ReferencedSVGResources {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  static func referencedClipPathElement(
+    _ treeScope: TreeScopeWrapper, _ referenceFilter: ReferencePathOperation
+  ) -> SVGClipPathElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

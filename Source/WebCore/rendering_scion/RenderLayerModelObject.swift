@@ -276,8 +276,26 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func svgClipperResourceFromStyle() -> RenderSVGResourceClipperWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !document().settings().layerBasedSVGEngineEnabled() {
+      return nil
+    }
+
+    guard let referenceClipPathOperation = style().clipPath() as? ReferencePathOperation
+    else { return nil }
+
+    if let referencedClipPathElement = ReferencedSVGResources.referencedClipPathElement(
+      treeScopeForSVGReferences(), referenceClipPathOperation),
+      let referencedClipperRenderer = referencedClipPathElement.renderer()
+        as? RenderSVGResourceClipperWrapper
+    {
+      return referencedClipperRenderer
+    }
+
+    if let svgElement = element() as? SVGElementWrapper {
+      document().addPendingSVGResource(referenceClipPathOperation.fragment, svgElement)
+    }
+
+    return nil
   }
 
   func svgFilterResourceFromStyle() -> RenderSVGResourceFilter? {

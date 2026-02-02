@@ -31,4 +31,9 @@ class TreeScopeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func addPendingSVGResource(_ id: AtomStringWrapper, _ element: SVGElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

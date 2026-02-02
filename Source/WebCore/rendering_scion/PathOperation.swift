@@ -45,7 +45,14 @@ class PathOperation: Equatable {
   }
 }
 
-final class ReferencePathOperation: PathOperation {}
+final class ReferencePathOperation: PathOperation {
+  override init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  let fragment: AtomStringWrapper
+}
 
 final class ShapePathOperation: PathOperation {
   func windRule() -> WindRule {
