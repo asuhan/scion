@@ -1145,13 +1145,14 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
     _ child: RenderBoxWrapper, _ location: LayoutPointWrapper,
     _ childLayoutDelta: inout LayoutSizeWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Place the child and track the layout delta so we can apply it if we do another layout.
+    childLayoutDelta += LayoutSizeWrapper(
+      width: child.x() - location.x, height: child.y() - location.y)
+    child.setLocation(p: location)
   }
 
   private func placeChild(_ child: RenderBoxWrapper, _ location: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    child.setLocation(p: location)
   }
 
   private func hasMultipleLines() -> Bool {
