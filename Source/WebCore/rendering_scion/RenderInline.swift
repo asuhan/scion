@@ -481,8 +481,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let lineLayout = LayoutIntegration.LineLayout.containing(renderer: self) {
+      lineLayout.paint(paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: self)
+      return
+    }
+    legacyLineBoxes!.paint(renderer: self, paintInfo: paintInfo, paintOffset: paintOffset)
   }
 
   override func clippedOverflowRect(
@@ -674,4 +677,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // All of the line boxes created for this svg inline.
+  private let legacyLineBoxes: RenderLineBoxList? = nil
 }
