@@ -31,8 +31,8 @@
 private func rendererAfterOffset(_ renderer: RenderObjectWrapper, _ offset: UInt32)
   -> RenderObjectWrapper?
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let child = renderer.childAt(offset)
+  return child ?? renderer.nextInPreOrderAfterChildren()
 }
 
 struct RenderRange {
