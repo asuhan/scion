@@ -2287,8 +2287,29 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func updateColumnProgressionFromStyle(_ style: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if multiColumnFlowForBlockFlow() == nil {
+      return
+    }
+
+    var needsLayout = false
+    let oldProgressionIsInline = multiColumnFlowForBlockFlow()!.progressionIsInline()
+    let newProgressionIsInline = style.hasInlineColumnAxis()
+    if oldProgressionIsInline != newProgressionIsInline {
+      multiColumnFlowForBlockFlow()!.setProgressionIsInline(
+        progressionIsInline: newProgressionIsInline)
+      needsLayout = true
+    }
+
+    let oldProgressionIsReversed = multiColumnFlowForBlockFlow()!.progressionIsReversed()
+    let newProgressionIsReversed = style.columnProgression() == .Reverse
+    if oldProgressionIsReversed != newProgressionIsReversed {
+      multiColumnFlowForBlockFlow()!.setProgressionIsReversed(reversed: newProgressionIsReversed)
+      needsLayout = true
+    }
+
+    if needsLayout {
+      setNeedsLayoutAndPrefWidthsRecalc()
+    }
   }
 
   func updateStylesForColumnChildren(_ oldStyle: RenderStyleWrapper?) {

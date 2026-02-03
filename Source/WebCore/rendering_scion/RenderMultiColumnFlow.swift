@@ -89,7 +89,17 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func progressionIsInline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setProgressionIsInline(progressionIsInline: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func progressionIsReversed() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
