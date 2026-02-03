@@ -25,6 +25,11 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func lineHeight(
     firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine

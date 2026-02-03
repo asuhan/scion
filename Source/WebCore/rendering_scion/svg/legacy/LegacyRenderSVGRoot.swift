@@ -92,6 +92,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let isLayoutSizeChanged = false
   private var needsBoundariesOrTransformUpdate = false
 }

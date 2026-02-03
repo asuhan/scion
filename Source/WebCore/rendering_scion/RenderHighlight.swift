@@ -28,10 +28,40 @@
  * SUCH DAMAGE.
  */
 
+private func rendererAfterOffset(_ renderer: RenderObjectWrapper, _ offset: UInt32)
+  -> RenderObjectWrapper?
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 struct RenderRange {
+  init() {
+    self.init(start: nil, end: nil, startOffset: 0, endOffset: 0)
+  }
+
   init(
     start: RenderObjectWrapper?, end: RenderObjectWrapper?, startOffset: UInt32, endOffset: UInt32
   ) {
+    self.start = start
+    self.end = end
+    self.startOffset = startOffset
+    self.endOffset = endOffset
+  }
+
+  let start: RenderObjectWrapper?
+  let end: RenderObjectWrapper?
+  let startOffset: UInt32
+  let endOffset: UInt32
+}
+
+struct RenderRangeIterator {
+  init(_ start: RenderObjectWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func next() -> RenderObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -94,8 +124,43 @@ class RenderHighlight {
   private func highlightStateForRenderer(_ renderer: RenderObjectWrapper)
     -> RenderObjectWrapper.HighlightState
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isSelection {
+      return renderer.selectionState()
+    }
+
+    if CPtrToInt(renderer.p) == CPtrToInt(renderRange.start?.p) {
+      if renderRange.start != nil && renderRange.end != nil
+        && CPtrToInt(renderRange.start!.p) == CPtrToInt(renderRange.end!.p)
+      {
+        return .Both
+      }
+      if renderRange.start != nil {
+        return .Start
+      }
+    }
+    if CPtrToInt(renderer.p) == CPtrToInt(renderRange.end?.p) {
+      return .End
+    }
+
+    let highlightEnd = rendererAfterOffset(renderRange.end!, renderRange.endOffset)
+
+    let highlightIterator = RenderRangeIterator(renderRange.start)
+    var currentRenderer = renderRange.start
+    while currentRenderer != nil && CPtrToInt(currentRenderer!.p) != CPtrToInt(highlightEnd?.p) {
+      if CPtrToInt(currentRenderer!.p) == CPtrToInt(renderRange.start?.p) {
+        currentRenderer = highlightIterator.next()
+        continue
+      }
+      if !currentRenderer!.canBeSelectionLeaf() {
+        currentRenderer = highlightIterator.next()
+        continue
+      }
+      if CPtrToInt(renderer.p) == CPtrToInt(currentRenderer?.p) {
+        return .Inside
+      }
+      currentRenderer = highlightIterator.next()
+    }
+    return .None
   }
 
   func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
@@ -144,4 +209,7 @@ class RenderHighlight {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let renderRange = RenderRange()
+  private let isSelection = false
 }

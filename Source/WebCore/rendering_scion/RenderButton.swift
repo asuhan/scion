@@ -20,6 +20,11 @@
  */
 
 final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
+  override func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func createsAnonymousWrapper() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

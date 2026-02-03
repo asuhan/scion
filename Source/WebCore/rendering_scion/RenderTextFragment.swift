@@ -40,6 +40,11 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  override func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setFirstLetter(firstLetter: RenderBoxModelObjectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

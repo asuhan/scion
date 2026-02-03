@@ -151,6 +151,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func width(
     from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool = false,
     fallbackFonts: Set<UInt>? = nil,

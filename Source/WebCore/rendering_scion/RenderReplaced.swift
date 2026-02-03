@@ -720,6 +720,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     return rects
   }
 
+  override func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func computeAspectRatioInformationForRenderBox(_ contentRenderer: RenderBoxWrapper?) -> (
     FloatSize, FloatSize
   ) {

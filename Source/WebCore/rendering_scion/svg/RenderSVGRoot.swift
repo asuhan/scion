@@ -407,6 +407,11 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
         length: svgSVGElement().intrinsicHeight(), maximumValue: LayoutUnit(value: 0)))
   }
 
+  override final func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var inLayout = false
   var didTransformToRootUpdate = false
   var isLayoutSizeChanged = false
