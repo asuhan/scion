@@ -29,6 +29,24 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  private func canvasSizeChanged() {
+    let canvasSize = canvasElement().size()
+    let zoomedSize = LayoutSizeWrapper(
+      width: Float32(canvasSize.width) * style().usedZoom(),
+      height: Float32(canvasSize.height) * style().usedZoom())
+
+    if zoomedSize == intrinsicSize() {
+      return
+    }
+
+    setIntrinsicSize(zoomedSize)
+
+    if parent() == nil {
+      return
+    }
+    setNeedsLayoutIfNeededAfterIntrinsicSizeChange()
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -72,8 +90,5 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
     canvasElement().setIsSnapshotting(false)
   }
 
-  override func intrinsicSizeChanged() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func intrinsicSizeChanged() { canvasSizeChanged() }
 }

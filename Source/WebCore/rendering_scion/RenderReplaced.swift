@@ -279,6 +279,7 @@ class RenderReplacedWrapper: RenderBoxWrapper {
 
   func replacedContentRect() -> LayoutRectWrapper { return replacedContentRect(intrinsicSize()) }
 
+  @discardableResult
   func setNeedsLayoutIfNeededAfterIntrinsicSizeChange() -> Bool {
     setPreferredLogicalWidthsDirty(shouldBeDirty: true)
 
