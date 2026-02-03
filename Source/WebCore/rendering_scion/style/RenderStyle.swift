@@ -2312,6 +2312,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setMinWidth(_ length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMinHeight(_ length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalMinWidth(_ width: LengthWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2333,6 +2343,26 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setMaskBorder(image: NinePieceImage) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginTop(_ length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginBottom(_ length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginLeft(_ length: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginRight(_ length: LengthWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2382,7 +2412,32 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setAlignContent(_ data: StyleContentAlignmentData) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setAlignItems(_ data: StyleSelfAlignmentData) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setAlignSelfPosition(_ position: ItemPosition) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFlexDirection(_ direction: FlexDirection) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFlexWrap(_ wrap: FlexWrap) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setJustifyContent(_ data: StyleContentAlignmentData) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

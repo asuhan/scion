@@ -41,8 +41,25 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    childStyle.setFlexGrow(1)
+
+    // min-inline-size: 0; is needed for correct shrinking.
+    // Use margin-block:auto instead of align-items:center to get safe centering, i.e.
+    // when the content overflows, treat it the same as align-items: flex-start.
+    if isHorizontalWritingMode() {
+      childStyle.setMinWidth(LengthWrapper(value: Int32(0), type: .Fixed))
+      childStyle.setMarginTop(LengthWrapper())
+      childStyle.setMarginBottom(LengthWrapper())
+    } else {
+      childStyle.setMinHeight(LengthWrapper(value: Int32(0), type: .Fixed))
+      childStyle.setMarginLeft(LengthWrapper())
+      childStyle.setMarginRight(LengthWrapper())
+    }
+    childStyle.setFlexDirection(style().flexDirection())
+    childStyle.setJustifyContent(style().justifyContent())
+    childStyle.setFlexWrap(style().flexWrap())
+    childStyle.setAlignItems(style().alignItems())
+    childStyle.setAlignContent(style().alignContent())
   }
 
   func innerRenderer() -> RenderBlockWrapper? {
