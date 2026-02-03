@@ -25,9 +25,20 @@
 
 // Stores data about how to map from one renderer to its container.
 struct RenderGeometryMapStep {
+  init(
+    renderer: RenderObjectWrapper?, accumulatingTransform: Bool, isNonUniform: Bool,
+    isFixedPosition: Bool, hasTransform: Bool
+  ) {
+    self.renderer = renderer
+    self.accumulatingTransform = accumulatingTransform
+    self.isNonUniform = isNonUniform
+    self.isFixedPosition = isFixedPosition
+    self.hasTransform = hasTransform
+  }
+
   let renderer: RenderObjectWrapper?
-  let offset: LayoutSizeWrapper
-  let transform: TransformationMatrix?  // Includes offset if non-null.
+  var offset = LayoutSizeWrapper()
+  let transform: TransformationMatrix? = nil  // Includes offset if non-null.
   let accumulatingTransform: Bool
   let isNonUniform: Bool  // Mapping depends on the input point, e.g. because of CSS columns.
   let isFixedPosition: Bool
@@ -183,8 +194,17 @@ class RenderGeometryMap {
     accumulatingTransform: Bool = false, isNonUniform: Bool = false, isFixedPosition: Bool = false,
     hasTransform: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(insertionPosition != RenderGeometryMap.notFound)
+
+    mapping.insert(
+      RenderGeometryMapStep(
+        renderer: renderer, accumulatingTransform: accumulatingTransform,
+        isNonUniform: isNonUniform,
+        isFixedPosition: isFixedPosition, hasTransform: hasTransform), at: insertionPosition)
+
+    mapping[insertionPosition].offset = offsetFromContainer
+
+    stepInserted(mapping[insertionPosition])
   }
 
   private func mapToContainer(
@@ -249,6 +269,29 @@ class RenderGeometryMap {
       assert(foundContainer)
     #endif
     transformState.flatten()
+  }
+
+  private func stepInserted(_ step: RenderGeometryMapStep) {
+    // RenderView's offset, is only applied when we have fixed-positions.
+    if !step.renderer!.isRenderView() {
+      accumulatedOffset += step.offset
+      #if ASSERT_ENABLED
+        accumulatedOffsetMightBeSaturated =
+          accumulatedOffset.mightBeSaturated() || accumulatedOffsetMightBeSaturated
+      #endif
+    }
+
+    if step.isNonUniform {
+      nonUniformStepsCount += 1
+    }
+
+    if step.transform != nil {
+      transformedStepsCount += 1
+    }
+
+    if step.isFixedPosition {
+      fixedStepsCount += 1
+    }
   }
 
   private func stepRemoved(_ step: RenderGeometryMapStep) {
