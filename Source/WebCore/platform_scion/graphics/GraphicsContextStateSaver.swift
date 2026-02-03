@@ -63,13 +63,30 @@ class TransparencyLayerScope {
 }
 
 struct InterpolationQualityMaintainer: ~Copyable {
+  init(
+    _ graphicsContext: GraphicsContextWrapper, _ interpolationQualityToUse: InterpolationQuality
+  ) {
+    self.graphicsContext = graphicsContext
+    currentInterpolationQuality = graphicsContext.imageInterpolationQuality()
+    interpolationQualityChanged =
+      interpolationQualityToUse != .Default
+      && currentInterpolationQuality != interpolationQualityToUse
+    if interpolationQualityChanged {
+      graphicsContext.setImageInterpolationQuality(interpolationQualityToUse)
+    }
+  }
+
   init(_ graphicsContext: GraphicsContextWrapper, _ interpolationQuality: InterpolationQuality?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.init(graphicsContext, interpolationQuality ?? graphicsContext.imageInterpolationQuality())
   }
 
   deinit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if interpolationQualityChanged {
+      graphicsContext.setImageInterpolationQuality(currentInterpolationQuality)
+    }
   }
+
+  private let graphicsContext: GraphicsContextWrapper
+  private let currentInterpolationQuality: InterpolationQuality
+  private let interpolationQualityChanged: Bool
 }

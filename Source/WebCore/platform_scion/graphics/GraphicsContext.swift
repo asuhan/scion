@@ -134,6 +134,16 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func imageInterpolationQuality() -> InterpolationQuality {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setImageInterpolationQuality(_ imageInterpolationQuality: InterpolationQuality) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shouldAntialias() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
