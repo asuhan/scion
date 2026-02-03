@@ -48,8 +48,11 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if super.requiresLayer() {
+      return true
+    }
+
+    return canvasCompositingStrategy(renderer: self) != .CanvasPaintedToEnclosingLayer
   }
 
   override final func paintReplaced(
