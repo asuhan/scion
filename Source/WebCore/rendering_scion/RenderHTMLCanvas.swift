@@ -25,8 +25,7 @@
 
 final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
   func canvasElement() -> HTMLCanvasElementWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return nodeForNonAnonymous() as! HTMLCanvasElementWrapper
   }
 
   private func canvasSizeChanged() {
