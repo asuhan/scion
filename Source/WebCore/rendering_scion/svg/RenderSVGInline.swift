@@ -94,6 +94,13 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  override final func pushMappingToContainer(
+    _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     if document().settings().layerBasedSVGEngineEnabled() {
       super.styleDidChange(diff: diff, oldStyle: oldStyle)

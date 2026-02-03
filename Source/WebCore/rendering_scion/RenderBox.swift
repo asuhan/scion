@@ -5266,6 +5266,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func pushMappingToContainer(
+    _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func skipContainingBlockForPercentHeightCalculation(
     containingBlock: RenderBoxWrapper, isPerpendicularWritingMode: Bool
   ) -> Bool {

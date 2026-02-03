@@ -631,6 +631,13 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func pushMappingToContainer(
+    _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func requiresColumns(desiredColumnCount: Int32) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

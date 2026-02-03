@@ -713,6 +713,13 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func pushMappingToContainer(
+    _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

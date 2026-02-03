@@ -100,6 +100,13 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override func pushMappingToContainer(
+    _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
+  ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func canBeSelectionLeaf() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

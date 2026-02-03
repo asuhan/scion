@@ -33,6 +33,37 @@ struct RenderGeometryMapStep {
   let hasTransform: Bool
 }
 
+private func canMapBetweenRenderersViaLayers(
+  _ renderer: RenderLayerModelObjectWrapper, _ ancestor: RenderLayerModelObjectWrapper
+) -> Bool {
+  var current: RenderElementWrapper = renderer
+  while true {
+    let style = current.style()
+    if current.isFixedPositioned() || style.isFlippedBlocksWritingMode() {
+      return false
+    }
+
+    if current.hasTransformOrPerspective() {
+      return false
+    }
+
+    if current.isRenderFragmentedFlow() {
+      return false
+    }
+
+    if current.isLegacyRenderSVGRoot() {
+      return false
+    }
+
+    if CPtrToInt(current.p) == CPtrToInt(ancestor.p) {
+      break
+    }
+    current = current.parent()!
+  }
+
+  return true
+}
+
 // Can be used while walking the Renderer tree to cache data about offsets and transforms.
 class RenderGeometryMap {
   init(_ flags: MapCoordinatesMode = .UseTransforms) {
@@ -70,11 +101,78 @@ class RenderGeometryMap {
   func pushMappingsToAncestor(
     layer: RenderLayerWrapper?, ancestorLayer: RenderLayerWrapper?, respectTransforms: Bool = true
   ) {
+    var layer = layer
+    if ancestorLayer == nil {
+      assert(mapping.isEmpty)
+      pushMappingsToAncestor(layer!.renderer().view(), nil)
+
+      let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+      while layer!.parent() != nil {
+        pushMappingsToAncestor(
+          layer: layer, ancestorLayer: layer!.parent(), respectTransforms: respectTransforms)
+        layer = layer!.parent()
+      }
+      assert(mapping[0].renderer!.isRenderView())
+      return
+    }
+
+    var newFlags = mapCoordinatesFlags
+    if !respectTransforms {
+      newFlags.remove(.UseTransforms)
+    }
+
+    let _ = SetForScope(scopedVariable: &mapCoordinatesFlags, newValue: newFlags)
+
+    let renderer = layer!.renderer()
+
+    // We have to visit all the renderers to detect flipped blocks. This might defeat the gains
+    // from mapping via layers.
+    if canMapBetweenRenderersViaLayers(renderer, ancestorLayer!.renderer()) {
+      let layerOffset = layer!.offsetFromAncestor(ancestorLayer: ancestorLayer)
+
+      // The RenderView must be pushed first.
+      if mapping.isEmpty {
+        assert(ancestorLayer!.renderer().isRenderView())
+        pushMappingsToAncestor(ancestorLayer!.renderer(), nil)
+      }
+
+      let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+      push(
+        renderer, layerOffset, accumulatingTransform: true, isNonUniform: false,
+        isFixedPosition: false, hasTransform: false)
+      return
+    }
+    let ancestorRenderer = ancestorLayer!.renderer()
+    pushMappingsToAncestor(renderer, ancestorRenderer)
+  }
+
+  private func pushMappingsToAncestor(
+    _ renderer: RenderObjectWrapper?, _ ancestorRenderer: RenderLayerModelObjectWrapper?
+  ) {
+    // We need to push mappings in reverse order here, so do insertions rather than appends.
+    let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+    var renderer = renderer
+    repeat {
+      renderer = renderer!.pushMappingToContainer(ancestorRenderer, self)
+    } while renderer != nil && CPtrToInt(renderer!.p) != CPtrToInt(ancestorRenderer?.p)
+
+    assert(mapping.isEmpty || mapping[0].renderer!.isRenderView())
+  }
+
+  func popMappingsToAncestor(ancestorLayer: RenderLayerWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  func popMappingsToAncestor(ancestorLayer: RenderLayerWrapper?) {
+  // The following methods should only be called by renderers inside a call to pushMappingsToAncestor().
+
+  // Push geometry info between this renderer and some ancestor. The ancestor must be its container() or some
+  // stacking context between the renderer and its container.
+  private func push(
+    _ renderer: RenderObjectWrapper, _ offsetFromContainer: LayoutSizeWrapper,
+    accumulatingTransform: Bool = false, isNonUniform: Bool = false, isFixedPosition: Bool = false,
+    hasTransform: Bool = false
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -151,10 +249,12 @@ class RenderGeometryMap {
 
   typealias RenderGeometryMapSteps = [RenderGeometryMapStep]  // TODO(asuhan): use inline storage of 32
 
+  private static let notFound = -1
+  private var insertionPosition: Int = notFound
   private let nonUniformStepsCount: Int32
   private let transformedStepsCount: Int32
   private let fixedStepsCount: Int32
   private let mapping: RenderGeometryMapSteps
   private let accumulatedOffset: LayoutSizeWrapper
-  private let mapCoordinatesFlags: MapCoordinatesMode
+  private var mapCoordinatesFlags: MapCoordinatesMode
 }
