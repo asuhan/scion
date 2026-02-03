@@ -28,6 +28,9 @@ class HighlightRangeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let startPosition = Position()
+  let endPosition = Position()
 }
 
 class HighlightWrapper {

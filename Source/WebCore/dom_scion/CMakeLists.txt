@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     ElementAncestorIterator.swift
     Element.swift
     Node.swift
+    Position.swift
     PseudoElement.swift
     RenderedDocumentMarker.swift
     Settings.swift

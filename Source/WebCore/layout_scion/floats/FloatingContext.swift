@@ -327,12 +327,12 @@ class FloatingContext {
 
   private func alignWithContainingBlock(
     layoutBox: BoxWrapper, boxGeometry: BoxGeometry, horizontalConstraints: HorizontalConstraints
-  ) -> Position {
+  ) -> Layout.Position {
     // If there is no floating to align with, push the box to the left/right edge of its containing block's content box.
     if isFloatingCandidateLeftPositionedInPlacedFloats(floatBox: layoutBox) {
-      return Position(value: horizontalConstraints.logicalLeft + boxGeometry.marginStart())
+      return Layout.Position(value: horizontalConstraints.logicalLeft + boxGeometry.marginStart())
     }
-    return Position(
+    return Layout.Position(
       value: horizontalConstraints.logicalRight() - boxGeometry.marginEnd()
         - boxGeometry.borderBoxWidth())
   }

@@ -28,16 +28,20 @@ typealias InlineLayoutPoint = FloatPoint
 typealias InlineLayoutSize = FloatSize
 typealias InlineLayoutRect = FloatRectWrapper
 
-struct Position: Comparable, Equatable {
-  var value = LayoutUnit()
+class Layout {
 
-  func toLayoutUnit() -> LayoutUnit {
-    return value
+  struct Position: Comparable, Equatable {
+    var value = LayoutUnit()
+
+    func toLayoutUnit() -> LayoutUnit {
+      return value
+    }
+
+    static func < (a: Position, b: Position) -> Bool {
+      return a.value < b.value
+    }
   }
 
-  static func < (a: Position, b: Position) -> Bool {
-    return a.value < b.value
-  }
 }
 
 struct Point {
@@ -71,7 +75,7 @@ struct Point {
 }
 
 typealias PointInContextRoot = Point
-typealias PositionInContextRoot = Position
+typealias PositionInContextRoot = Layout.Position
 
 struct ContentWidthAndMargin {
   var contentWidth = LayoutUnit()

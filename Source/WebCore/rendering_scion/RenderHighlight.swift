@@ -28,10 +28,47 @@
  * SUCH DAMAGE.
  */
 
-class RenderHighlight {
-  func setRenderRange(highlightRange: HighlightRangeWrapper) -> Bool {  // Returns true if successful.
+struct RenderRange {
+  init(
+    start: RenderObjectWrapper?, end: RenderObjectWrapper?, startOffset: UInt32, endOffset: UInt32
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+}
+
+class RenderHighlight {
+  func setRenderRange(_ renderRange: RenderRange) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setRenderRange(highlightRange: HighlightRangeWrapper) -> Bool {  // Returns true if successful.
+    if highlightRange.startPosition.isNull() || highlightRange.endPosition.isNull() {
+      return false
+    }
+
+    let startPosition = highlightRange.startPosition
+    let endPosition = highlightRange.endPosition
+
+    if startPosition.containerNode() == nil || endPosition.containerNode() == nil {
+      return false
+    }
+
+    let startRenderer = startPosition.containerNode()!.renderer()
+    let endRenderer = endPosition.containerNode()!.renderer()
+
+    if startRenderer == nil || endRenderer == nil {
+      return false
+    }
+
+    let startOffset = UInt32(startPosition.computeOffsetInContainerNode())
+    let endOffset = UInt32(endPosition.computeOffsetInContainerNode())
+
+    setRenderRange(
+      RenderRange(
+        start: startRenderer, end: endRenderer, startOffset: startOffset, endOffset: endOffset))
+    return true
   }
 
   func start() -> RenderObjectWrapper? {
