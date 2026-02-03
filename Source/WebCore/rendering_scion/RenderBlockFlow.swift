@@ -2313,13 +2313,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func updateStylesForColumnChildren(_ oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  private func updateStylesForColumnChildren(oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let columnsNeedLayout =
+      oldStyle != nil
+      && (oldStyle!.columnCount() != style().columnCount()
+        || oldStyle!.columnWidth() != style().columnWidth())
+    var child = firstChildBox()
+    while child != nil && (child!.isRenderFragmentedFlow() || child!.isRenderMultiColumnSet()) {
+      child!.setStyle(
+        style: RenderStyleWrapper.createAnonymousStyleWithDisplay(
+          parentStyle: style(), display: .Block))
+      if columnsNeedLayout {
+        child!.setNeedsLayoutAndPrefWidthsRecalc()
+      }
+      child = child!.nextSiblingBox()
+    }
   }
 
   override func needsLayoutAfterFragmentRangeChange() -> Bool {
@@ -2836,7 +2843,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     if multiColumnFlowForBlockFlow() == nil {
-      updateStylesForColumnChildren(oldStyle: oldStyle)
+      updateStylesForColumnChildren(oldStyle)
     }
   }
 
