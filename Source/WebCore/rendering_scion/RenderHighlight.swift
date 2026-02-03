@@ -206,8 +206,20 @@ class RenderHighlight {
   func rangeForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange) -> (
     UInt32, UInt32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let state = highlightStateForTextBox(renderer: renderer, textBoxRange: textBoxRange)
+
+    switch state {
+    case .Inside:
+      return textBoxRange.clamp(startOffset: 0, endOffset: UInt32.max)
+    case .Start:
+      return textBoxRange.clamp(startOffset: startOffset(), endOffset: UInt32.max)
+    case .End:
+      return textBoxRange.clamp(startOffset: 0, endOffset: endOffset())
+    case .Both:
+      return textBoxRange.clamp(startOffset: startOffset(), endOffset: endOffset())
+    case .None:
+      return (0, 0)
+    }
   }
 
   private let renderRange = RenderRange()
