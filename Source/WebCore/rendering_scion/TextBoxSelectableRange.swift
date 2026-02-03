@@ -30,6 +30,7 @@ struct TextBoxSelectableRange {
   let start: UInt32
   let length: UInt32
   let additionalLengthAtEnd: UInt32 = 0
+  let isLineBreak = false
   // FIXME: Consider holding onto the truncation position instead. See webkit.org/b/164999
   let truncation: UInt32? = nil
 

@@ -91,11 +91,51 @@ class RenderHighlight {
     fatalError("Not implemented")
   }
 
-  func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
+  private func highlightStateForRenderer(_ renderer: RenderObjectWrapper)
     -> RenderObjectWrapper.HighlightState
   {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
+    -> RenderObjectWrapper.HighlightState
+  {
+    let state = highlightStateForRenderer(renderer)
+
+    if state == .None || state == .Inside {
+      return state
+    }
+
+    let startOffset = startOffset()
+    let endOffset = endOffset()
+
+    // The position after a hard line break is considered to be past its end.
+    assert(textBoxRange.start + textBoxRange.length >= (textBoxRange.isLineBreak ? 1 : 0))
+    let lastSelectable =
+      textBoxRange.start + textBoxRange.length - (textBoxRange.isLineBreak ? 1 : 0)
+
+    let containsStart =
+      state != .End && startOffset >= textBoxRange.start
+      && startOffset < textBoxRange.start + textBoxRange.length
+    let containsEnd =
+      state != .Start && endOffset > textBoxRange.start && endOffset <= lastSelectable
+    if containsStart && containsEnd {
+      return .Both
+    }
+    if containsStart {
+      return .Start
+    }
+    if containsEnd {
+      return .End
+    }
+    if (state == .End || startOffset < textBoxRange.start)
+      && (state == .Start || endOffset > lastSelectable)
+    {
+      return .Inside
+    }
+
+    return .None
   }
 
   func rangeForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange) -> (
