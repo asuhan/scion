@@ -161,6 +161,10 @@ class LayoutSizeWrapper: Equatable {
     return LayoutSizeWrapper(width: width_, height: height_)
   }
 
+  func mightBeSaturated() -> Bool {
+    return width_.mightBeSaturated() || height_.mightBeSaturated()
+  }
+
   static func == (lhs: LayoutSizeWrapper, rhs: LayoutSizeWrapper) -> Bool {
     return lhs.width_ == rhs.width_ && lhs.height_ == rhs.height_
   }

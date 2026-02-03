@@ -29,6 +29,7 @@ struct RenderGeometryMapStep {
   let offset: LayoutSizeWrapper
   let transform: TransformationMatrix?  // Includes offset if non-null.
   let accumulatingTransform: Bool
+  let isNonUniform: Bool  // Mapping depends on the input point, e.g. because of CSS columns.
   let isFixedPosition: Bool
   let hasTransform: Bool
 }
@@ -146,6 +147,10 @@ class RenderGeometryMap {
     pushMappingsToAncestor(renderer, ancestorRenderer)
   }
 
+  func popMappingsToAncestor(ancestorLayer: RenderLayerWrapper?) {
+    popMappingsToAncestor(ancestorLayer?.renderer())
+  }
+
   private func pushMappingsToAncestor(
     _ renderer: RenderObjectWrapper?, _ ancestorRenderer: RenderLayerModelObjectWrapper?
   ) {
@@ -159,9 +164,14 @@ class RenderGeometryMap {
     assert(mapping.isEmpty || mapping[0].renderer!.isRenderView())
   }
 
-  func popMappingsToAncestor(ancestorLayer: RenderLayerWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func popMappingsToAncestor(_ ancestorRenderer: RenderLayerModelObjectWrapper?) {
+    assert(!mapping.isEmpty)
+
+    while !mapping.isEmpty && CPtrToInt(mapping.last!.renderer?.p) != CPtrToInt(ancestorRenderer?.p)
+    {
+      stepRemoved(mapping.last!)
+      mapping.removeLast()
+    }
   }
 
   // The following methods should only be called by renderers inside a call to pushMappingsToAncestor().
@@ -241,6 +251,32 @@ class RenderGeometryMap {
     transformState.flatten()
   }
 
+  private func stepRemoved(_ step: RenderGeometryMapStep) {
+    // RenderView's offset, is only applied when we have fixed-positions.
+    if !step.renderer!.isRenderView() {
+      accumulatedOffset -= step.offset
+      #if ASSERT_ENABLED
+        accumulatedOffsetMightBeSaturated =
+          accumulatedOffset.mightBeSaturated() || accumulatedOffsetMightBeSaturated
+      #endif
+    }
+
+    if step.isNonUniform {
+      assert(nonUniformStepsCount != 0)
+      nonUniformStepsCount -= 1
+    }
+
+    if step.transform != nil {
+      assert(transformedStepsCount != 0)
+      transformedStepsCount -= 1
+    }
+
+    if step.isFixedPosition {
+      assert(fixedStepsCount != 0)
+      fixedStepsCount -= 1
+    }
+  }
+
   private func hasNonUniformStep() -> Bool { return nonUniformStepsCount != 0 }
 
   private func hasTransformStep() -> Bool { return transformedStepsCount != 0 }
@@ -251,10 +287,13 @@ class RenderGeometryMap {
 
   private static let notFound = -1
   private var insertionPosition: Int = notFound
-  private let nonUniformStepsCount: Int32
-  private let transformedStepsCount: Int32
-  private let fixedStepsCount: Int32
-  private let mapping: RenderGeometryMapSteps
-  private let accumulatedOffset: LayoutSizeWrapper
+  private var nonUniformStepsCount: Int32
+  private var transformedStepsCount: Int32
+  private var fixedStepsCount: Int32
+  private var mapping: RenderGeometryMapSteps
+  private var accumulatedOffset: LayoutSizeWrapper
   private var mapCoordinatesFlags: MapCoordinatesMode
+  #if ASSERT_ENABLED
+    private var accumulatedOffsetMightBeSaturated: Bool
+  #endif
 }
