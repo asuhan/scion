@@ -24,9 +24,47 @@
  */
 
 class TransformState {
+  enum TransformDirection {
+    case ApplyTransformDirection
+    case UnapplyInverseTransformDirection
+  }
+  enum TransformAccumulation {
+    case FlattenTransform
+    case AccumulateTransform
+  }
   enum TransformMatrixTracking {
     case DoNotTrackTransformMatrix
     case TrackSVGCTMMatrix
     case TrackSVGScreenCTMMatrix
+  }
+
+  init(_ mappingDirection: TransformDirection, _ p: FloatPoint, _ quad: FloatQuad) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func move(
+    _ x: LayoutUnit, _ y: LayoutUnit, _ accumulate: TransformAccumulation = .FlattenTransform
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func applyTransform(
+    _ transformFromContainer: TransformationMatrix,
+    _ accumulate: TransformAccumulation = .FlattenTransform
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func flatten() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lastPlanarQuad() -> FloatQuad {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }

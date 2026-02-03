@@ -705,6 +705,14 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return adjustedRects
   }
 
+  override func mapLocalToContainer(
+    _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
+    _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -54,4 +54,9 @@ struct FloatQuad {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func move(_ offset: LayoutSizeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

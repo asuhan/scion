@@ -86,6 +86,14 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
     fatalError("Not implemented")
   }
 
+  override final func mapLocalToContainer(
+    _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
+    _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     if document().settings().layerBasedSVGEngineEnabled() {
       super.styleDidChange(diff: diff, oldStyle: oldStyle)

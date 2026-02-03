@@ -163,6 +163,14 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func mapLocalToContainer(
+    _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
+    _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func outlineBoundsForRepaint(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap? = nil
   )

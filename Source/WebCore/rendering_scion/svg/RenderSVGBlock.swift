@@ -131,4 +131,12 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
 
     return nil
   }
+
+  override final func mapLocalToContainer(
+    _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
+    _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
