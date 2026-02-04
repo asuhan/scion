@@ -505,8 +505,27 @@ class RenderTextWrapper: RenderObjectWrapper {
   func contentRangesBetweenOffsetsForType(
     type: DocumentMarker.`Type`, startOffset: UInt32, endOffset: UInt32
   ) -> [(UInt32, UInt32)] {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if textNode() == nil {
+      return []
+    }
+
+    guard let markerController = document().markersIfExists() else { return [] }
+    let markers = markerController.markersFor(node: textNode()!, type)
+    if markers.isEmpty {
+      return []
+    }
+
+    var contentRanges: [(UInt32, UInt32)] = []
+    for marker in markers {
+      let markerStart = max(marker.startOffset(), startOffset)
+      let markerEnd = min(marker.endOffset(), endOffset)
+      if markerStart >= markerEnd || markerStart > endOffset || markerEnd < startOffset {
+        continue
+      }
+
+      contentRanges.append((markerStart, markerEnd))
+    }
+    return contentRanges
   }
 
   func inlineWrapperForDisplayContents() -> RenderInlineWrapper? {
