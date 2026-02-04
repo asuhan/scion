@@ -498,6 +498,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  static func constructTextRun(
+    _ characters: CharSpanWrapper<UChar>, _ style: RenderStyleWrapper,
+    _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior()
+  ) -> TextRunWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paginationStrut() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
