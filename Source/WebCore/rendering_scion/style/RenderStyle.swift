@@ -1264,6 +1264,11 @@ class RenderStyleWrapper: Equatable {
     return TextAlignMode(rawValue: wk_interop.RenderStyle_textAlign(p))!
   }
 
+  func textTransform() -> TextTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textDecorationSkipInk() -> TextDecorationSkipInk {
     if p == nil {
       // TODO(asuhan): implement this
@@ -2170,6 +2175,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollbarWidth() -> ScrollbarWidth {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func textSecurity() -> TextSecurity {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

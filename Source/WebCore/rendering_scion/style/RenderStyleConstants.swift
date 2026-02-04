@@ -386,6 +386,13 @@ enum ContentDistribution: UInt8 {
   case Stretch
 }
 
+enum TextSecurity {
+  case None
+  case Disc
+  case Circle
+  case Square
+}
+
 // CSS3 User Select Values
 
 enum UserSelect: UInt8 {
@@ -488,6 +495,15 @@ enum TextAlignMode: UInt8 {
   case WebKitCenter
   case Start
   case End
+}
+
+struct TextTransform: OptionSet {
+  let rawValue: UInt8
+  static let Capitalize = TextTransform(rawValue: 1 << 0)
+  static let Uppercase = TextTransform(rawValue: 1 << 1)
+  static let Lowercase = TextTransform(rawValue: 1 << 2)
+  static let FullSizeKana = TextTransform(rawValue: 1 << 3)
+  static let FullWidth = TextTransform(rawValue: 1 << 4)
 }
 
 struct TextDecorationLine: OptionSet {

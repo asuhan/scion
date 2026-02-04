@@ -453,8 +453,53 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // There is no need to ever schedule repaints from a style change of a text run, since
+    // we already did this for the parent of the text run.
+    // We do have to schedule layouts, though, since a style change can force us to
+    // need to relayout.
+    if diff == .Layout {
+      setNeedsLayoutAndPrefWidthsRecalc()
+      knownToHaveNoOverflowAndNoFallbackFonts = false
+    }
+
+    let newStyle = style()
+    if oldStyle == nil {
+      initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifiedTextMeasuring(m_text!)
+    }
+    if oldStyle != nil
+      && CPtrToInt(oldStyle!.fontCascade().p) != CPtrToInt(newStyle.fontCascade().p)
+    {
+      m_canUseSimplifiedTextMeasuring = nil
+    }
+
+    var needsResetText = false
+    if oldStyle == nil {
+      useBackslashAsYenSymbol = computeUseBackslashAsYenSymbol()
+      needsResetText = useBackslashAsYenSymbol
+    } else if oldStyle!.fontCascade().useBackslashAsYenSymbol()
+      != newStyle.fontCascade().useBackslashAsYenSymbol()
+    {
+      useBackslashAsYenSymbol = computeUseBackslashAsYenSymbol()
+      needsResetText = true
+    }
+
+    let oldTransform: TextTransform = oldStyle?.textTransform() ?? []
+    let oldSecurity: TextSecurity = oldStyle?.textSecurity() ?? .None
+    if needsResetText || oldTransform != newStyle.textTransform()
+      || oldSecurity != newStyle.textSecurity()
+    {
+      setText(newContent: originalText(), force: true)
+    }
+
+    // FIXME: First line change on the block comes in as equal on text with inline box parent.
+    let needsLayoutBoxStyleUpdate =
+      (diff >= .Repaint
+        || ((parent() is RenderInlineWrapper)
+          && CPtrToInt(style().p) != CPtrToInt(firstLineStyle().p)))
+      && layoutBox() != nil
+    if needsLayoutBoxStyleUpdate {
+      LayoutIntegration.LineLayout.updateStyle(self)
+    }
   }
 
   func contentRangesBetweenOffsetsForType(
@@ -565,12 +610,26 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func computeUseBackslashAsYenSymbol() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifiedTextMeasuring(
+    _ textContent: StringWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let legacyLineBoxes: RenderTextLineBoxes? = nil
 
   private let minWidth: Float32? = nil
   private let maxWidth: Float32? = nil
   private let beginMinWidth: Float32 = 0
   private let endMinWidth: Float32 = 0
+
+  private let m_text: StringWrapper? = nil
 
   var m_canUseSimplifiedTextMeasuring: Bool? = nil
   private let hasBreakableChar = false  // Whether or not we can be broken into multiple lines.
@@ -584,6 +643,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   // or removed).
   private var linesDirty = false
   private var knownToHaveNoOverflowAndNoFallbackFonts = false
+  private var useBackslashAsYenSymbol = false
 }
 
 func applyTextTransform(

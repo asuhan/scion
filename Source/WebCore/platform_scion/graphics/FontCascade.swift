@@ -273,6 +273,11 @@ class FontCascadeWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func useBackslashAsYenSymbol() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLoadingCustomFonts() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
