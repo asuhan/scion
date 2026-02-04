@@ -23,6 +23,12 @@
 
 import wk_interop
 
+private func isHangablePunctuationAtLineStart(_ c: UChar) -> Bool {
+  return
+    (UCharMasks.U_GET_GC_MASK(c: Int32(c))
+    & (UCharMasks.U_GC_PS_MASK | UCharMasks.U_GC_PI_MASK | UCharMasks.U_GC_PF_MASK)) != 0
+}
+
 class RenderTextWrapper: RenderObjectWrapper {
   convenience init(type: `Type`, textNode: TextWrapper, text: StringWrapper) {
     // TODO(asuhan): implement this
@@ -217,8 +223,18 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func hangablePunctuationStartWidth(index: UInt32) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let length = text().length()
+    if index >= length {
+      return 0
+    }
+
+    if !isHangablePunctuationAtLineStart(text()[index]) {
+      return 0
+    }
+
+    let style = style()
+    return widthFromCache(
+      fontCascade: style.fontCascade(), start: index, length: 1, 0, nil, nil, style)
   }
 
   func hangablePunctuationEndWidth(index: UInt32) -> Float32 {
