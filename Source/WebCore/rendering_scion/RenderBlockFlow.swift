@@ -2088,7 +2088,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     super.setChildrenInline(b: b)
   }
 
-  private func hasLines() -> Bool {
+  func hasLines() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

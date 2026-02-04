@@ -541,8 +541,44 @@ class RenderTextWrapper: RenderObjectWrapper {
   static func emphasisMarkExistsAndIsAbove(renderer: RenderTextWrapper, style: RenderStyleWrapper)
     -> Bool?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This function returns true if there are text emphasis marks and they are suppressed by ruby text.
+    if style.textEmphasisMark() == .None {
+      return nil
+    }
+
+    let emphasisPosition = style.textEmphasisPosition()
+    var isAbove = !emphasisPosition.contains(.Under)
+    if style.isVerticalWritingMode() {
+      isAbove = !emphasisPosition.contains(.Left)
+    }
+
+    let findRubyAnnotation = { () -> RenderBlockFlowWrapper? in
+      var baseCandidate = renderer.parent()
+      while baseCandidate != nil {
+        if !baseCandidate!.isInline() {
+          return nil
+        }
+        if baseCandidate!.style().display() == .RubyBase {
+          if let annotationCandidate = baseCandidate!.nextSibling(),
+            annotationCandidate.style().display() == .RubyAnnotation
+          {
+            return annotationCandidate as? RenderBlockFlowWrapper
+          }
+          return nil
+        }
+        baseCandidate = baseCandidate!.parent()
+      }
+      return nil
+    }
+
+    if let annotation = findRubyAnnotation() {
+      // The emphasis marks are suppressed only if there is a ruby annotation box on the same side and it is not empty.
+      if annotation.hasLines() && isAbove == (annotation.style().rubyPosition() == .Over) {
+        return nil
+      }
+    }
+
+    return isAbove
   }
 
   func resetMinMaxWidth() {
