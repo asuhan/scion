@@ -324,8 +324,16 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setTextWithOffset(newText: StringWrapper, offset: UInt32, force: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !force && text() == newText {
+      return
+    }
+
+    let delta = Int32(newText.length() - text().length())
+
+    linesDirty = legacyLineBoxes!.dirtyForTextChange(self)
+
+    setTextInternal(newText, force || linesDirty)
+    invalidateLineLayoutPathOnContentChangeIfNeeded(self, offset: UInt64(offset), delta: delta)
   }
 
   override func canBeSelectionLeaf() -> Bool {
@@ -466,6 +474,8 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private let legacyLineBoxes: RenderTextLineBoxes? = nil
+
   private let minWidth: Float32? = nil
   private let maxWidth: Float32? = nil
   private let beginMinWidth: Float32 = 0
@@ -477,6 +487,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   private let hasTab = false  // Whether or not we have a variable width tab character (e.g., <pre> with '\t').
   private let hasBeginWS = false  // Whether or not we begin with WS (only true if we aren't pre)
   private let hasEndWS = false  // Whether or not we end with WS (only true if we aren't pre)
+  // This bit indicates that the text run has already dirtied specific
+  // line boxes, and this hint will enable layoutInlineChildren to avoid
+  // just dirtying everything when character data is modified (e.g., appended/inserted
+  // or removed).
+  private var linesDirty = false
 }
 
 func applyTextTransform(

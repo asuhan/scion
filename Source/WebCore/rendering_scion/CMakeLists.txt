@@ -121,6 +121,7 @@ target_sources(layout_scion PRIVATE
     RenderTableRow.swift
     RenderTableSection.swift
     RenderText.swift
+    RenderTextLineBoxes.swift
     RenderTheme.swift
     RenderTreeMutationDisallowedScope.swift
     RenderVideo.swift
