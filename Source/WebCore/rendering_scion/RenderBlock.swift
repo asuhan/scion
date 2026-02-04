@@ -499,6 +499,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   static func constructTextRun(
+    text: RenderTextWrapper, offset: UInt32, length: UInt32, _ style: RenderStyleWrapper,
+    _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior()
+  ) -> TextRunWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func constructTextRun(
     _ characters: CharSpanWrapper<UChar>, _ style: RenderStyleWrapper,
     _ expansion: ExpansionBehaviorWrapper = ExpansionBehaviorWrapper.defaultBehavior()
   ) -> TextRunWrapper {

@@ -87,8 +87,11 @@ class FontCascadeWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func width(run: TextRunWrapper) -> Float32 {
-    if p != nil && run.p != nil {
+  func width(
+    run: TextRunWrapper, _ fallbackFonts: WeakHashSet<FontWrapper>? = nil,
+    _ glyphOverflow: GlyphOverflow? = nil
+  ) -> Float32 {
+    if p != nil && run.p != nil && fallbackFonts == nil && glyphOverflow == nil {
       return font_cascade_width(fontCascadePtr: p!, textRunPtr: run.p!)
     }
     // TODO(asuhan): implement this
@@ -285,4 +288,5 @@ struct GlyphOverflow {
   var right = LayoutUnit()
   var top = LayoutUnit()
   var bottom = LayoutUnit()
+  let computeBounds = false
 }

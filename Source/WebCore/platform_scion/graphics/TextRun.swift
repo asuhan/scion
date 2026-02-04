@@ -90,6 +90,11 @@ class TextRunWrapper {
     self.m_size = size
   }
 
+  func setXPos(_ xPos: Float32) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func direction() -> TextDirection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -101,6 +106,11 @@ class TextRunWrapper {
   }
 
   func ltr() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setCharacterScanForCodePath(_ scan: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

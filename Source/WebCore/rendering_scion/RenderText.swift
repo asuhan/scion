@@ -23,6 +23,13 @@
 
 import wk_interop
 
+private func combineTextWidth(
+  _ renderer: RenderTextWrapper, _ fontCascade: FontCascadeWrapper, _ style: RenderStyleWrapper
+) -> Float32? {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func isHangablePunctuationAtLineStart(_ c: UChar) -> Bool {
   return
     (UCharMasks.U_GET_GC_MASK(c: Int32(c))
@@ -132,7 +139,17 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func characterAt(_ i: UInt32) -> UChar {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private final func length() -> UInt32 { return text().length() }
+
+  private func maxLogicalWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   struct Widths {
     var min: Float32 = 0
@@ -341,13 +358,74 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func width(
+    _ from: UInt32, _ length: UInt32, _ fontCascade: FontCascadeWrapper, _ xPos: Float32,
+    _ fallbackFonts: WeakHashSet<FontWrapper>? = nil, _ glyphOverflow: GlyphOverflow? = nil
+  ) -> Float32 {
+    assert(from + length <= text().length())
+    if text().length() == 0 || length == 0 {
+      return 0
+    }
+
+    let style = style()
+    if let width = combineTextWidth(self, fontCascade, style) {
+      return width
+    }
+
+    if length == 1 && (characterAt(from) == CharacterNames.Unicode.space) {
+      return fontCascade.widthOfSpaceString()
+    }
+
+    var width: Float32 = 0
+    if CPtrToInt(fontCascade.p) == CPtrToInt(style.fontCascade().p) {
+      if !style.preserveNewline() && from == 0 && length == text().length()
+        && !(glyphOverflow?.computeBounds ?? false)
+      {
+        if fallbackFonts != nil {
+          assert(glyphOverflow != nil)
+          if preferredLogicalWidthsDirty() || !knownToHaveNoOverflowAndNoFallbackFonts {
+            computePreferredLogicalWidths(0, fallbackFonts!, glyphOverflow!)
+            if fallbackFonts!.isEmptyIgnoringNullReferences() && glyphOverflow!.left == 0
+              && glyphOverflow!.right == 0 && glyphOverflow!.top == 0 && glyphOverflow!.bottom == 0
+            {
+              knownToHaveNoOverflowAndNoFallbackFonts = true
+            }
+          }
+          // The rare case of when we switch between IFC and legacy preferred width computation.
+          width = maxWidth ?? maxLogicalWidth()
+        } else {
+          width = maxLogicalWidth()
+        }
+      } else {
+        width = widthFromCache(
+          fontCascade: fontCascade, start: from, length: length, xPos, fallbackFonts, glyphOverflow,
+          style)
+      }
+    } else {
+      let run = RenderBlockWrapper.constructTextRun(text: self, offset: from, length: length, style)
+      run.setCharacterScanForCodePath(!canUseSimpleFontCodePath())
+      run.setTabSize(allow: !style.collapseWhiteSpace(), size: style.tabSize())
+      run.setXPos(xPos)
+
+      width = fontCascade.width(run: run, fallbackFonts, glyphOverflow)
+    }
+
+    return clampTo(value: width, min: 0)
+  }
+
   func width(
     from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool = false,
-    fallbackFonts: Set<UInt>? = nil,
+    fallbackFonts: WeakHashSet<FontWrapper>? = nil,
     glyphOverflow: GlyphOverflow? = nil
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if from >= text().length() {
+      return 0
+    }
+
+    let lineStyle = firstLine ? firstLineStyle() : style()
+    return width(
+      from, from + len > text().length() ? text().length() - from : len, lineStyle.fontCascade(),
+      xPos, fallbackFonts, glyphOverflow)
   }
 
   func hasRenderedText() -> Bool {
@@ -360,6 +438,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func containsOnlyCollapsibleWhitespace() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func canUseSimpleFontCodePath() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -465,6 +548,14 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func computePreferredLogicalWidths(
+    _ leadWidth: Float32, _ fallbackFonts: WeakHashSet<FontWrapper>, _ glyphOverflow: GlyphOverflow,
+    _ forcedMinMaxWidthComputation: Bool = false
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func widthFromCache(
     fontCascade: FontCascadeWrapper, start: UInt32, length: UInt32, _ xPos: Float32,
     _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: GlyphOverflow?,
@@ -492,6 +583,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   // just dirtying everything when character data is modified (e.g., appended/inserted
   // or removed).
   private var linesDirty = false
+  private var knownToHaveNoOverflowAndNoFallbackFonts = false
 }
 
 func applyTextTransform(
