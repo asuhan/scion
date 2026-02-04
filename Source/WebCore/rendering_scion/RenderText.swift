@@ -259,8 +259,22 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func firstCharacterIndexStrippingSpaces() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().collapseWhiteSpace() {
+      return 0
+    }
+
+    var i: UInt32 = 0
+    let length = text().length()
+    while i < length {
+      if text()[i] != Character(" ").asciiValue!
+        && (text()[i] != Character("\n").asciiValue! || style().preserveNewline())
+        && text()[i] != Character("\t").asciiValue!
+      {
+        break
+      }
+      i += 1
+    }
+    return i
   }
 
   func lastCharacterIndexStrippingSpaces() -> UInt32 {
