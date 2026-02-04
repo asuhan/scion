@@ -523,7 +523,7 @@ class LayoutIntegration {
       return boxIsInvalidated
     }
 
-    func updateTextContent(textRenderer: RenderTextWrapper, offset: UInt64, delta: Int) -> Bool {
+    func updateTextContent(textRenderer: RenderTextWrapper, offset: UInt64, delta: Int32) -> Bool {
       if inlineContent == nil {
         // This is supposed to be only called on partial layout, but
         // RenderText::setText may be (force) called after min/max size computation and before layout.

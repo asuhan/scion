@@ -35,6 +35,25 @@ private func isHangablePunctuationAtLineEnd(_ c: UChar) -> Bool {
     & (UCharMasks.U_GC_PE_MASK | UCharMasks.U_GC_PI_MASK | UCharMasks.U_GC_PF_MASK)) != 0
 }
 
+private func invalidateLineLayoutPathOnContentChangeIfNeeded(
+  _ renderer: RenderTextWrapper, offset: UInt64, delta: Int32
+) {
+  guard let container = LayoutIntegration.LineLayout.blockContainer(renderer: renderer) else {
+    return
+  }
+  guard let inlineLayout = container.inlineLayout() else { return }
+
+  if LayoutIntegration.LineLayout.shouldInvalidateLineLayoutPathAfterContentChange(
+    parent: container, rendererWithNewContent: renderer, lineLayout: inlineLayout)
+  {
+    container.invalidateLineLayoutPath(invalidationReason: .ContentChange)
+    return
+  }
+  if !inlineLayout.updateTextContent(textRenderer: renderer, offset: offset, delta: delta) {
+    container.invalidateLineLayoutPath(invalidationReason: .ContentChange)
+  }
+}
+
 class RenderTextWrapper: RenderObjectWrapper {
   convenience init(type: `Type`, textNode: TextWrapper, text: StringWrapper) {
     // TODO(asuhan): implement this
@@ -296,8 +315,12 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setText(newContent: StringWrapper, force: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isDifferent = newContent != text()
+    setTextInternal(newContent, force)
+    if isDifferent || force {
+      invalidateLineLayoutPathOnContentChangeIfNeeded(
+        self, offset: 0, delta: Int32(text().length()))
+    }
   }
 
   func setTextWithOffset(newText: StringWrapper, offset: UInt32, force: Bool = false) {
@@ -395,6 +418,11 @@ class RenderTextWrapper: RenderObjectWrapper {
   func computePreferredLogicalWidths(
     _ leadWidth: Float32, _ forcedMinMaxWidthComputation: Bool = false
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTextInternal(_ text: StringWrapper, _ force: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

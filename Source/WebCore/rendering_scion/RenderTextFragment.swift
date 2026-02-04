@@ -59,4 +59,9 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func setTextInternal(_ text: StringWrapper, _ force: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
