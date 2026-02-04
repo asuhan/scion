@@ -42,6 +42,42 @@ private func isHangablePunctuationAtLineEnd(_ c: UChar) -> Bool {
     & (UCharMasks.U_GC_PE_MASK | UCharMasks.U_GC_PI_MASK | UCharMasks.U_GC_PF_MASK)) != 0
 }
 
+private func isSpaceAccordingToStyle(_ c: UChar, _ style: RenderStyleWrapper) -> Bool {
+  return c == Character(" ").asciiValue!
+    || (c == CharacterNames.Unicode.noBreakSpace && style.nbspMode() == .Space)
+}
+
+private func mapLineBreakToIteratorMode(_ lineBreak: LineBreak)
+  -> WTF.TextBreakIteratorWrapper.LineMode.Behavior
+{
+  switch lineBreak {
+  case .Auto, .AfterWhiteSpace, .Anywhere:
+    return .Default
+  case .Loose:
+    return .Loose
+  case .Normal:
+    return .Normal
+  case .Strict:
+    return .Strict
+  }
+}
+
+private func mapWordBreakToContentAnalysis(_ wordBreak: WordBreak)
+  -> WTF.TextBreakIteratorWrapper.ContentAnalysis
+{
+  switch wordBreak {
+  case .Normal, .BreakAll, .KeepAll, .BreakWord:
+    return .Mechanical
+  case .AutoPhrase:
+    return .Linguistic
+  }
+}
+
+private func hyphenWidth(_ renderer: RenderTextWrapper, _ font: FontCascadeWrapper) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func invalidateLineLayoutPathOnContentChangeIfNeeded(
   _ renderer: RenderTextWrapper, offset: UInt64, delta: Int32
 ) {
@@ -360,7 +396,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   private func width(
     _ from: UInt32, _ length: UInt32, _ fontCascade: FontCascadeWrapper, _ xPos: Float32,
-    _ fallbackFonts: WeakHashSet<FontWrapper>? = nil, _ glyphOverflow: GlyphOverflow? = nil
+    _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: inout GlyphOverflow?
   ) -> Float32 {
     assert(from + length <= text().length())
     if text().length() == 0 || length == 0 {
@@ -384,7 +420,7 @@ class RenderTextWrapper: RenderObjectWrapper {
         if fallbackFonts != nil {
           assert(glyphOverflow != nil)
           if preferredLogicalWidthsDirty() || !knownToHaveNoOverflowAndNoFallbackFonts {
-            computePreferredLogicalWidths(0, fallbackFonts!, glyphOverflow!)
+            computePreferredLogicalWidths(0, fallbackFonts!, &glyphOverflow!)
             if fallbackFonts!.isEmptyIgnoringNullReferences() && glyphOverflow!.left == 0
               && glyphOverflow!.right == 0 && glyphOverflow!.top == 0 && glyphOverflow!.bottom == 0
             {
@@ -414,9 +450,8 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func width(
-    from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool = false,
-    fallbackFonts: WeakHashSet<FontWrapper>? = nil,
-    glyphOverflow: GlyphOverflow? = nil
+    from: UInt32, len: UInt32, xPos: Float32, firstLine: Bool,
+    fallbackFonts: WeakHashSet<FontWrapper>?, glyphOverflow: inout GlyphOverflow?
   ) -> Float32 {
     if from >= text().length() {
       return 0
@@ -425,7 +460,7 @@ class RenderTextWrapper: RenderObjectWrapper {
     let lineStyle = firstLine ? firstLineStyle() : style()
     return width(
       from, from + len > text().length() ? text().length() - from : len, lineStyle.fontCascade(),
-      xPos, fallbackFonts, glyphOverflow)
+      xPos, fallbackFonts, &glyphOverflow)
   }
 
   func hasRenderedText() -> Bool {
@@ -500,6 +535,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     if needsLayoutBoxStyleUpdate {
       LayoutIntegration.LineLayout.updateStyle(self)
     }
+  }
+
+  private func containsOnlyCSSWhitespace(from: UInt32, length: UInt32) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func contentRangesBetweenOffsetsForType(
@@ -649,11 +689,292 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   private func computePreferredLogicalWidths(
-    _ leadWidth: Float32, _ fallbackFonts: WeakHashSet<FontWrapper>, _ glyphOverflow: GlyphOverflow,
+    _ leadWidth: Float32, _ fallbackFonts: WeakHashSet<FontWrapper>,
+    _ glyphOverflow: inout GlyphOverflow,
     _ forcedMinMaxWidthComputation: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(
+      hasTab || preferredLogicalWidthsDirty() || forcedMinMaxWidthComputation
+        || !knownToHaveNoOverflowAndNoFallbackFonts)
+
+    minWidth = 0
+    beginMinWidth = 0
+    endMinWidth = 0
+    maxWidth = 0
+
+    var currMaxWidth: Float32 = 0
+    hasBreakableChar = false
+    hasBreak = false
+    hasTab = false
+    hasBeginWS = false
+    hasEndWS = false
+
+    let style = style()
+    let font = style.fontCascade()  // FIXME: This ignores first-line.
+    let wordSpacing = font.wordSpacing()
+    let string = text()
+    let length = string.length()
+    let iteratorMode = mapLineBreakToIteratorMode(style.lineBreak())
+    let contentAnalysis = mapWordBreakToContentAnalysis(style.wordBreak())
+    let lineBreakIteratorFactory = CachedLineBreakIteratorFactoryWrapper(
+      stringView: StringWrapperView(s: string), locale: style.computedLocale(), mode: iteratorMode,
+      contentAnalysis: contentAnalysis)
+    var needsWordSpacing = false
+    var ignoringSpaces = false
+    var isSpace = false
+    var firstWord = true
+    var firstLine = true
+    var lastWordBoundary: UInt32 = 0
+
+    var wordTrailingSpace = WordTrailingSpace(style)
+    // If automatic hyphenation is allowed, we keep track of the width of the widest word (or word
+    // fragment) encountered so far, and only try hyphenating words that are wider.
+    var maxWordWidth = Float32.greatestFiniteMagnitude
+    var minimumPrefixLength: UInt32 = 0
+    var minimumSuffixLength: UInt32 = 0
+    if style.hyphens() == .Auto && canHyphenate(localeIdentifier: style.computedLocale()) {
+      maxWordWidth = 0
+
+      // Map 'hyphenate-limit-{before,after}: auto;' to 2.
+      let before = style.hyphenationLimitBefore()
+      minimumPrefixLength = UInt32(before < 0 ? 2 : before)
+
+      let after = style.hyphenationLimitAfter()
+      minimumSuffixLength = UInt32(after < 0 ? 2 : after)
+    }
+
+    let breakNBSP = style.autoWrap() && style.nbspMode() == .Space
+
+    let breakAnywhere = style.lineBreak() == .Anywhere && style.autoWrap()
+    // Note the deliberate omission of word-wrap/overflow-wrap's break-word value from this breakAll check.
+    // Those do not affect minimum preferred sizes. Note that break-word is a non-standard value for
+    // word-break, but we support it as though it means break-all.
+    let breakAll =
+      (style.wordBreak() == .BreakAll || style.wordBreak() == .BreakWord
+        || style.overflowWrap() == .Anywhere) && style.autoWrap()
+    let keepAllWords = style.wordBreak() == .KeepAll
+    let canUseLineBreakShortcut = iteratorMode == .Default && contentAnalysis == .Mechanical
+
+    var firstGlyphLeftOverflow: LayoutUnit? = nil
+    var leadWidth = leadWidth
+    var i: UInt32 = 0
+    while i < length {
+      var c = string[i]
+
+      let previousCharacterIsSpace = isSpace
+
+      var isNewline = false
+      if c == Character("\n").asciiValue! {
+        if style.preserveNewline() {
+          hasBreak = true
+          isNewline = true
+          isSpace = false
+        } else {
+          isSpace = true
+        }
+      } else if c == Character("\t").asciiValue! {
+        if !style.collapseWhiteSpace() {
+          hasTab = true
+          isSpace = false
+        } else {
+          isSpace = true
+        }
+      } else {
+        isSpace = c == Character(" ").asciiValue!
+      }
+
+      if (isSpace || isNewline) && i == 0 {
+        hasBeginWS = true
+      }
+      if (isSpace || isNewline) && i == length - 1 {
+        hasEndWS = true
+      }
+
+      ignoringSpaces =
+        (style.collapseWhiteSpace() && previousCharacterIsSpace && isSpace) || ignoringSpaces
+      ignoringSpaces = isSpace && ignoringSpaces
+
+      // Ignore spaces and soft hyphens
+      if ignoringSpaces {
+        assert(lastWordBoundary == i)
+        lastWordBoundary += 1
+        i += 1
+        continue
+      } else if c == CharacterNames.Unicode.softHyphen && style.hyphens() != .None {
+        assert(i >= lastWordBoundary)
+        currMaxWidth += widthFromCache(
+          fontCascade: font, start: lastWordBoundary, length: i - lastWordBoundary,
+          leadWidth + currMaxWidth, fallbackFonts, glyphOverflow, style)
+        if firstGlyphLeftOverflow == nil {
+          firstGlyphLeftOverflow = glyphOverflow.left
+        }
+        lastWordBoundary = i + 1
+        i += 1
+        continue
+      }
+
+      let hasBreak =
+        breakAll
+        || BreakLines.isBreakable(
+          lineBreakIteratorFactory, i, nil, breakNBSP: breakNBSP,
+          canUseShortcut: canUseLineBreakShortcut,
+          keepAllWords: keepAllWords, breakAnywhere: breakAnywhere)
+      var betweenWords = true
+      var j = i
+      while c != Character("\n").asciiValue! && !isSpaceAccordingToStyle(c, style)
+        && c != Character("\t").asciiValue! && c != CharacterNames.Unicode.zeroWidthSpace
+        && (c != CharacterNames.Unicode.softHyphen || style.hyphens() == .None)
+      {
+        let previousCharacter = c
+        j += 1
+        if j == length {
+          break
+        }
+        c = string[j]
+        if UTF16.isLeadSurrogate(previousCharacter) && UTF16.isTrailSurrogate(c) {
+          continue
+        }
+        if BreakLines.isBreakable(
+          lineBreakIteratorFactory, j, nil, breakNBSP: breakNBSP,
+          canUseShortcut: canUseLineBreakShortcut,
+          keepAllWords: keepAllWords, breakAnywhere: breakAnywhere)
+          && characterAt(j - 1) != CharacterNames.Unicode.softHyphen
+        {
+          break
+        }
+        if breakAll {
+          // FIXME: This code is ultra wrong.
+          // The spec says "word-break: break-all: Any typographic letter units are treated as ID(“ideographic characters”) for the purpose of line-breaking."
+          // The spec describes how a "typographic letter unit" is a cluster, not a code point: https://drafts.csswg.org/css-text-3/#typographic-character-unit
+          betweenWords = false
+          break
+        }
+      }
+
+      let wordLen = j - i
+      if wordLen != 0 {
+        var currMinWidth: Float32 = 0
+        let isSpace = (j < length) && isSpaceAccordingToStyle(c, style)
+        let w = widthFromCacheConsideringPossibleTrailingSpace(
+          style: style, font: font, startIndex: i, wordLen: wordLen, leadWidth + currMaxWidth,
+          isSpace, &wordTrailingSpace,
+          fallbackFonts, &glyphOverflow)
+        if c == CharacterNames.Unicode.softHyphen && style.hyphens() != .None {
+          currMinWidth = hyphenWidth(self, font)
+        }
+
+        if w > maxWordWidth {
+          let maxFragmentWidth = maxWordFragmentWidth(
+            style, font, StringWrapperView(s: string).substring(start: i, length: wordLen),
+            minimumPrefixLength: minimumPrefixLength,
+            minimumSuffixLength: minimumSuffixLength, currentCharacterIsSpace: isSpace,
+            characterIndex: i, xPos: leadWidth + currMaxWidth, entireWordWidth: w,
+            wordTrailingSpace: wordTrailingSpace,
+            fallbackFonts: fallbackFonts, glyphOverflow: glyphOverflow)
+          currMinWidth += maxFragmentWidth - w  // This, when combined with "currMinWidth += w" below, has the effect of executing "currMinWidth += maxFragmentWidth" instead.
+          maxWordWidth = max(maxWordWidth, maxFragmentWidth)
+        }
+
+        if firstGlyphLeftOverflow == nil {
+          firstGlyphLeftOverflow = glyphOverflow.left
+        }
+        currMinWidth += w
+        if betweenWords {
+          if lastWordBoundary == i {
+            currMaxWidth += w
+          } else {
+            assert(j >= lastWordBoundary)
+            currMaxWidth += widthFromCache(
+              fontCascade: font, start: lastWordBoundary, length: j - lastWordBoundary,
+              leadWidth + currMaxWidth,
+              fallbackFonts, glyphOverflow, style)
+          }
+          lastWordBoundary = j
+        }
+
+        let isCollapsibleWhiteSpace = (j < length) && style.isCollapsibleWhiteSpace(c)
+        if j < length && style.autoWrap() {
+          hasBreakableChar = true
+        }
+
+        // Add in wordSpacing to our currMaxWidth, but not if this is the last word on a line or the
+        // last word in the run.
+        if (isSpace || isCollapsibleWhiteSpace)
+          && !containsOnlyCSSWhitespace(from: j, length: length - j)
+        {
+          currMaxWidth += wordSpacing
+        }
+
+        if firstWord {
+          firstWord = false
+          // If the first character in the run is breakable, then we consider ourselves to have a beginning
+          // minimum width of 0, since a break could occur right before our run starts, preventing us from ever
+          // being appended to a previous text run when considering the total minimum width of the containing block.
+          if hasBreak {
+            hasBreakableChar = true
+          }
+          beginMinWidth = hasBreak ? 0 : currMinWidth
+        }
+        endMinWidth = currMinWidth
+
+        minWidth = max(currMinWidth, minWidth!)
+
+        i += wordLen - 1
+      } else {
+        // Nowrap can never be broken, so don't bother setting the
+        // breakable character boolean. Pre can only be broken if we encounter a newline.
+        if style.autoWrap() || isNewline {
+          hasBreakableChar = true
+        }
+
+        if isNewline {  // Only set if preserveNewline was true and we saw a newline.
+          if firstLine {
+            firstLine = false
+            leadWidth = 0
+            if !style.autoWrap() {
+              beginMinWidth = currMaxWidth
+            }
+          }
+
+          if currMaxWidth > maxWidth! {
+            maxWidth = currMaxWidth
+          }
+          currMaxWidth = 0
+        } else {
+          let run = RenderBlockWrapper.constructTextRun(text: self, offset: i, length: 1, style)
+          run.setTabSize(allow: !style.collapseWhiteSpace(), size: style.tabSize())
+          run.setXPos(leadWidth + currMaxWidth)
+
+          currMaxWidth += font.width(run: run, fallbackFonts)
+          glyphOverflow.right = LayoutUnit(value: 0)
+          needsWordSpacing = isSpace && !previousCharacterIsSpace && i == length - 1
+        }
+        assert(lastWordBoundary == i)
+        lastWordBoundary += 1
+      }
+      i += 1
+    }
+
+    glyphOverflow.left = firstGlyphLeftOverflow ?? glyphOverflow.left
+
+    if (needsWordSpacing && length > 1) || (ignoringSpaces && !firstWord) {
+      currMaxWidth += wordSpacing
+    }
+
+    maxWidth = max(currMaxWidth, maxWidth!)
+
+    if !style.autoWrap() {
+      minWidth = maxWidth
+    }
+
+    if style.whiteSpaceCollapse() == .Preserve && style.textWrapMode() == .NoWrap {
+      if firstLine {
+        beginMinWidth = maxWidth!
+      }
+      endMinWidth = currMaxWidth
+    }
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   private func widthFromCache(
@@ -670,6 +991,26 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  private func maxWordFragmentWidth(
+    _ style: RenderStyleWrapper, _ font: FontCascadeWrapper, _ word: StringWrapperView,
+    minimumPrefixLength: UInt32, minimumSuffixLength: UInt32, currentCharacterIsSpace: Bool,
+    characterIndex: UInt32, xPos: Float32, entireWordWidth: Float32,
+    wordTrailingSpace: WordTrailingSpace, fallbackFonts: WeakHashSet<FontWrapper>,
+    glyphOverflow: GlyphOverflow
+  ) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func widthFromCacheConsideringPossibleTrailingSpace(
+    style: RenderStyleWrapper, font: FontCascadeWrapper, startIndex: UInt32, wordLen: UInt32,
+    _ xPos: Float32, _ currentCharacterIsSpace: Bool, _ wordTrailingSpace: inout WordTrailingSpace,
+    _ fallbackFonts: WeakHashSet<FontWrapper>, _ glyphOverflow: inout GlyphOverflow
+  ) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func initiateFontLoadingByAccessingGlyphDataAndComputeCanUseSimplifiedTextMeasuring(
     _ textContent: StringWrapper
   ) {
@@ -679,19 +1020,19 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   private let legacyLineBoxes: RenderTextLineBoxes? = nil
 
-  private let minWidth: Float32? = nil
-  private let maxWidth: Float32? = nil
-  private let beginMinWidth: Float32 = 0
-  private let endMinWidth: Float32 = 0
+  private var minWidth: Float32? = nil
+  private var maxWidth: Float32? = nil
+  private var beginMinWidth: Float32 = 0
+  private var endMinWidth: Float32 = 0
 
   private let m_text: StringWrapper? = nil
 
   var m_canUseSimplifiedTextMeasuring: Bool? = nil
-  private let hasBreakableChar = false  // Whether or not we can be broken into multiple lines.
-  private let hasBreak = false  // Whether or not we have a hard break (e.g., <pre> with '\n').
-  private let hasTab = false  // Whether or not we have a variable width tab character (e.g., <pre> with '\t').
-  private let hasBeginWS = false  // Whether or not we begin with WS (only true if we aren't pre)
-  private let hasEndWS = false  // Whether or not we end with WS (only true if we aren't pre)
+  private var hasBreakableChar = false  // Whether or not we can be broken into multiple lines.
+  private var hasBreak = false  // Whether or not we have a hard break (e.g., <pre> with '\n').
+  private var hasTab = false  // Whether or not we have a variable width tab character (e.g., <pre> with '\t').
+  private var hasBeginWS = false  // Whether or not we begin with WS (only true if we aren't pre)
+  private var hasEndWS = false  // Whether or not we end with WS (only true if we aren't pre)
   // This bit indicates that the text run has already dirtied specific
   // line boxes, and this hint will enable layoutInlineChildren to avoid
   // just dirtying everything when character data is modified (e.g., appended/inserted

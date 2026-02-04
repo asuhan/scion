@@ -246,6 +246,15 @@ struct BreakLines {
     return string.size()
   }
 
+  static func isBreakable(
+    _ lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper, _ startPosition: UInt32,
+    _ nextBreakable: UInt32?, breakNBSP: Bool, canUseShortcut: Bool, keepAllWords: Bool,
+    breakAnywhere: Bool
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func nextBreakableSpace<CharacterType>(
     nonBreakingSpaceBehavior: NoBreakSpaceBehavior, string: CharSpanWrapper<CharacterType>,
     startPosition: UInt64

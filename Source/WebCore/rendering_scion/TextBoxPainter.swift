@@ -1024,9 +1024,10 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     if paintStart <= underline.startOffset {
       paintStart = underline.startOffset
       useWholeWidth = false
+      var unused: GlyphOverflow? = nil
       start = renderer.width(
         from: textBox.start(), len: paintStart - textBox.start(), xPos: textPosition(),
-        firstLine: isFirstLine)
+        firstLine: isFirstLine, fallbackFonts: nil, glyphOverflow: &unused)
     }
     if paintEnd != underline.endOffset {
       paintEnd = min(paintEnd, underline.endOffset)
@@ -1037,9 +1038,10 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       useWholeWidth = false
     }
     if !useWholeWidth {
+      var unused: GlyphOverflow? = nil
       width = renderer.width(
         from: paintStart, len: paintEnd - paintStart, xPos: textPosition() + start,
-        firstLine: isFirstLine)
+        firstLine: isFirstLine, fallbackFonts: nil, glyphOverflow: &unused)
       mirrorRTLSegment(
         logicalWidth: logicalRect.width(), direction: textBox.direction(), start: &start,
         width: width)

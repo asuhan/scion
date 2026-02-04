@@ -780,6 +780,11 @@ class RenderStyleWrapper: Equatable {
     return collapseWhiteSpace(mode: whiteSpace())
   }
 
+  func isCollapsibleWhiteSpace(_ character: UChar) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func marginStart() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
