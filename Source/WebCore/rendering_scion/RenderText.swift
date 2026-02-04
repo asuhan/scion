@@ -162,11 +162,11 @@ class RenderTextWrapper: RenderObjectWrapper {
 
     widths.hasBreakableChar = hasBreakableChar
     widths.hasBreak = hasBreak
-    widths.endsWithBreak = hasBreak && text()[length - 1] == UChar(Character("\n").asciiValue!)
+    widths.endsWithBreak = hasBreak && text()[length - 1] == Character("\n").asciiValue!
 
-    if text()[0] == UChar(Character(" ").asciiValue!)
-      || (text()[0] == UChar(Character("\n").asciiValue!) && !style.preserveNewline())
-      || text()[0] == UChar(Character("\t").asciiValue!)
+    if text()[0] == Character(" ").asciiValue!
+      || (text()[0] == Character("\n").asciiValue! && !style.preserveNewline())
+      || text()[0] == Character("\t").asciiValue!
     {
       let font = style.fontCascade()  // FIXME: This ignores first-line.
       if stripFrontSpaces {
@@ -194,9 +194,7 @@ class RenderTextWrapper: RenderObjectWrapper {
       var i: UInt32 = 0
       while i < length {
         var lineLength: UInt32 = 0
-        while i + lineLength < length
-          && text()[i + lineLength] != UChar(Character("\n").asciiValue!)
-        {
+        while i + lineLength < length && text()[i + lineLength] != Character("\n").asciiValue! {
           lineLength += 1
         }
 
