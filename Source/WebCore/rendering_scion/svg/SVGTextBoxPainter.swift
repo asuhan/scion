@@ -299,8 +299,118 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     _ style: RenderStyleWrapper, _ textRun: TextRunWrapper, _ fragment: SVGTextFragment,
     startPosition: UInt32, endPosition: UInt32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = paintInfo.context()
+
+    let scalingFactor = renderer().scalingFactor()
+    assert(scalingFactor != 0)
+
+    let scaledFont = renderer().scaledFont()
+    var shadow = style.textShadow()
+
+    var textOrigin = FloatPoint(x: fragment.x, y: fragment.y)
+    var textSize = FloatSize(width: fragment.width, height: fragment.height)
+
+    if scalingFactor != 1 {
+      textOrigin.scale(scalingFactor)
+      textSize.scale(scalingFactor)
+    }
+
+    let shadowRect = FloatRectWrapper(
+      location: FloatPoint(
+        x: textOrigin.x, y: textOrigin.y - scaledFont.metricsOfPrimaryFont().ascent()),
+      size: textSize
+    )
+
+    var usedContext = context
+    var paintServerHandling = SVGPaintServerHandling(context)
+
+    let prepareGraphicsContext = { [self] () -> Bool in
+      if renderer().document().settings().layerBasedSVGEngineEnabled() {
+        return acquirePaintingResource(&paintServerHandling, scalingFactor, parentRenderer(), style)
+      }
+      return acquireLegacyPaintingResource(&usedContext, scalingFactor, parentRenderer(), style)
+    }
+
+    let restoreGraphicsContext = { [self] () in
+      if renderer().document().settings().layerBasedSVGEngineEnabled() {
+        releasePaintingResource(&paintServerHandling)
+        return
+      }
+      releaseLegacyPaintingResource(&usedContext, nil)
+    }
+
+    repeat {
+      if !prepareGraphicsContext() {
+        break
+      }
+
+      do {
+        // Optimized code path to support gradient/pattern fill/stroke on text without using temporary ImageBuffers / masking.
+        var gradient: GradientWrapper? = nil
+        var pattern: PatternWrapper? = nil
+        if renderer().document().settings().layerBasedSVGEngineEnabled() {
+          let textRootBlock = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: renderer())!
+
+          var gradientSpaceTransform = AffineTransform()
+          if paintingResourceMode.contains(.ApplyToFill) {
+            gradient = usedContext.fillGradient()
+            gradientSpaceTransform = usedContext.fillGradientSpaceTransform()
+            pattern = usedContext.fillPattern()
+          } else {
+            gradient = usedContext.strokeGradient()
+            gradientSpaceTransform = usedContext.strokeGradientSpaceTransform()
+            pattern = usedContext.strokePattern()
+          }
+
+          assert(gradient == nil || pattern == nil)
+          if gradient != nil || pattern != nil {
+            if gradient != nil {
+              usedContext.fillRect(
+                textRootBlock.repaintRectInLocalCoordinates(), gradient!, gradientSpaceTransform)
+            } else {
+              // FIXME: should be fillRect(const FloatRect&, Pattern&) on GraphicsContext.
+              let _ = GraphicsContextStateSaver(context: usedContext)
+              if usedContext.strokePattern() != nil {
+                usedContext.setFillPattern(pattern: usedContext.strokePattern()!)
+              }
+              usedContext.fillRect(textRootBlock.repaintRectInLocalCoordinates())
+            }
+            usedContext.setCompositeOperation(operation: .DestinationIn)
+            usedContext.beginTransparencyLayer(opacity: 1)
+          }
+        }
+
+        let shadowApplier = ShadowApplier(
+          style: style, context: usedContext, shadow: shadow, colorFilter: nil, textRect: shadowRect
+        )
+
+        if !shadowApplier.didSaveContext {
+          usedContext.save()
+        }
+
+        usedContext.scale(1 / scalingFactor)
+        scaledFont.drawText(
+          usedContext, textRun, textOrigin + shadowApplier.extraOffset, from: startPosition,
+          to: endPosition
+        )
+
+        if !shadowApplier.didSaveContext {
+          usedContext.restore()
+        }
+
+        if gradient != nil || pattern != nil {
+          usedContext.endTransparencyLayer()
+        }
+      }
+
+      restoreGraphicsContext()
+
+      if shadow == nil {
+        break
+      }
+
+      shadow = shadow!.next
+    } while shadow != nil
   }
 
   private func paintText(
@@ -364,7 +474,7 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   }
 
   private func releaseLegacyPaintingResource(
-    _ context: inout GraphicsContextWrapper, _ path: PathWrapper
+    _ context: inout GraphicsContextWrapper, _ path: PathWrapper?
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -72,6 +72,16 @@ class FontCascadeWrapper: Equatable {
     case UseFallbackIfFontNotReady
   }
 
+  @discardableResult
+  func drawText(
+    _ context: GraphicsContextWrapper, _ run: TextRunWrapper, _ point: FloatPoint, from: UInt32 = 0,
+    to: UInt32? = nil,
+    customFontNotReadyAction: CustomFontNotReadyAction = .DoNotPaintIfFontNotReady
+  ) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func dashesForIntersectionsWithRect(
     run: TextRunWrapper, textOrigin: FloatPoint, lineExtents: FloatRectWrapper
   ) -> DashArray {

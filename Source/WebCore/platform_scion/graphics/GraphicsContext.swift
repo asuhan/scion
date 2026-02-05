@@ -54,7 +54,27 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func fillGradient() -> GradientWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillGradientSpaceTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillPattern() -> PatternWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setFillColor(color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setFillPattern(pattern: PatternWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -65,6 +85,21 @@ class GraphicsContextWrapper {
   }
 
   func strokeColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokeGradient() -> GradientWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokeGradientSpaceTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokePattern() -> PatternWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -218,7 +253,25 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  enum RequiresClipToRect {
+    case No
+    case Yes
+  }
+
+  func fillRect(_ rect: FloatRectWrapper, _ requiresClipToRect: RequiresClipToRect = .Yes) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func fillRect(rect: FloatRectWrapper, color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillRect(
+    _ rect: FloatRectWrapper, _ gradient: GradientWrapper,
+    _ gradientSpaceTransform: AffineTransform, _ requiresClipToRect: RequiresClipToRect = .Yes
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

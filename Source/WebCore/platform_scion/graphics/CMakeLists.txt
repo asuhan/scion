@@ -26,6 +26,7 @@ target_sources(layout_scion PRIVATE
     Glyph.swift
     GlyphBuffer.swift
     GlyphPage.swift
+    Gradient.swift
     GraphicsContext.swift
     GraphicsContextState.swift
     GraphicsContextStateSaver.swift
@@ -54,6 +55,7 @@ target_sources(layout_scion PRIVATE
     PathSegmentData.swift
     PathTraversalState.swift
     PathUtilities.swift
+    Pattern.swift
     PlatformLayer.swift
     Region.swift
     RenderingMode.swift
