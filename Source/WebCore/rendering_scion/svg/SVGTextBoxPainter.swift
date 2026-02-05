@@ -456,8 +456,57 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     _ paintServerHandling: inout SVGPaintServerHandling, _ scalingFactor: Float32,
     _ renderer: RenderBoxModelObjectWrapper, _ style: RenderStyleWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(scalingFactor != 0)
+    assert(!paintingResourceMode.isEmpty)
+    assert(renderer.document().settings().layerBasedSVGEngineEnabled())
+
+    let context = paintServerHandling.context
+    if paintingResourceMode.contains(.ApplyToFill) {
+      if !paintServerHandling.preparePaintOperation(.Fill, parentRenderer(), style) {
+        return false
+      }
+      context.save()
+      context.setTextDrawingMode(textDrawingMode: .Fill)
+    } else if paintingResourceMode.contains(.ApplyToStroke) {
+      if !paintServerHandling.preparePaintOperation(.Stroke, parentRenderer(), style) {
+        return false
+      }
+      context.save()
+      context.setTextDrawingMode(textDrawingMode: .Stroke)
+
+      if style.svgStyle().vectorEffect() == .NonScalingStroke {
+        var scalingFactor = scalingFactor
+        if style.fontDescription().textRenderingMode() == .GeometricPrecision {
+          scalingFactor = 1 / RenderSVGInlineTextWrapper.computeScalingFactorForRenderer(renderer)
+        } else {
+          scalingFactor = 1
+        }
+
+        let zoomFactor = renderer.style().usedZoom()
+        if zoomFactor != 1 {
+          scalingFactor *= zoomFactor
+        }
+
+        let deviceScaleFactor = renderer.document().deviceScaleFactor()
+        if deviceScaleFactor != 1 {
+          scalingFactor *= deviceScaleFactor
+        }
+      }
+
+      if scalingFactor != 1.0 {
+        context.setStrokeThickness(thickness: context.strokeThickness() * scalingFactor)
+      }
+    }
+
+    if context.fillGradient() != nil || context.strokeGradient() != nil
+      || context.fillPattern() != nil
+      || context.strokePattern() != nil
+    {
+      context.beginTransparencyLayer(opacity: 1)
+      context.setCompositeOperation(operation: .SourceOver)
+    }
+
+    return true
   }
 
   private func releasePaintingResource(_ paintServerHandling: inout SVGPaintServerHandling) {

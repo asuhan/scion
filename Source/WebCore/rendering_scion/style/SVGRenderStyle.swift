@@ -84,6 +84,11 @@ enum DominantBaseline {
   case TextBeforeEdge
 }
 
+enum VectorEffect {
+  case None
+  case NonScalingStroke
+}
+
 enum BufferedRendering {
   case Auto
   case Dynamic
@@ -103,6 +108,11 @@ class SVGRenderStyle {
   }
 
   func baselineShift() -> BaselineShift {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func vectorEffect() -> VectorEffect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

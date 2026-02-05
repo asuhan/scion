@@ -34,5 +34,5 @@ struct SVGPaintServerHandling: ~Copyable {
     fatalError("Not implemented")
   }
 
-  private let context: GraphicsContextWrapper
+  let context: GraphicsContextWrapper
 }

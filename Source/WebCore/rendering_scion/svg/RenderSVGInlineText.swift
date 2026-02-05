@@ -43,7 +43,7 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
   // computeScalingFactor() returns the font-size scaling factor, ignoring the text-rendering mode.
   // scalingFactor() takes it into account, and thus returns 1 whenever text-rendering is set to 'geometricPrecision'.
   // Therefore if you need access to the vanilla scaling factor, use this method directly (e.g. for non-scaling-stroke).
-  private static func computeScalingFactorForRenderer(_ renderer: RenderObjectWrapper) -> Float32 {
+  static func computeScalingFactorForRenderer(_ renderer: RenderObjectWrapper) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
