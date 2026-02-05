@@ -33,5 +33,13 @@ final class SVGInlineFlowBox: LegacyInlineFlowBox {
 
   func setLogicalHeight(_ h: Float32) { logicalHeight = h }
 
+  override func paint(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var logicalHeight: Float32
 }

@@ -33,6 +33,14 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     fatalError("Not implemented")
   }
 
+  override func paint(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setLogicalHeight(_ height: Float32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

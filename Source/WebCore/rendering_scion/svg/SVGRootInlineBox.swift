@@ -54,6 +54,14 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
     layoutRootBox(childRect)
   }
 
+  override func paint(
+    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
+    lineBottom: LayoutUnit
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func renderSVGText() -> RenderSVGTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
