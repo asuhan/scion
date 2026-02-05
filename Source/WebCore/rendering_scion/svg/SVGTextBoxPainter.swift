@@ -295,12 +295,51 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     }
   }
 
+  private func paintTextWithShadows(
+    _ style: RenderStyleWrapper, _ textRun: TextRunWrapper, _ fragment: SVGTextFragment,
+    startPosition: UInt32, endPosition: UInt32
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func paintText(
     _ style: RenderStyleWrapper, _ selectionStyle: RenderStyleWrapper, _ fragment: SVGTextFragment,
     _ hasSelection: Bool, _ paintSelectedTextOnly: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var hasSelection = hasSelection
+    var startPosition: UInt32 = 0
+    var endPosition: UInt32 = 0
+    if hasSelection {
+      (startPosition, endPosition) = selectionStartEnd()
+      hasSelection = mapStartEndPositionsIntoFragmentCoordinates(
+        fragment, startPosition: &startPosition, endPosition: &endPosition)
+    }
+
+    // Fast path if there is no selection, just draw the whole chunk part using the regular style
+    let textRun = constructTextRun(style, fragment)
+    if !hasSelection || startPosition >= endPosition {
+      paintTextWithShadows(style, textRun, fragment, startPosition: 0, endPosition: fragment.length)
+      return
+    }
+
+    // Eventually draw text using regular style until the start position of the selection
+    if startPosition > 0 && !paintSelectedTextOnly {
+      paintTextWithShadows(style, textRun, fragment, startPosition: 0, endPosition: startPosition)
+    }
+
+    // Draw text using selection style from the start to the end position of the selection
+    do {
+      let _ = SVGResourcesCache.SetStyleForScope(parentRenderer(), style, newStyle: selectionStyle)
+      paintTextWithShadows(
+        selectionStyle, textRun, fragment, startPosition: startPosition, endPosition: endPosition)
+    }
+
+    // Eventually draw text using regular style from the end position of the selection to the end of the current chunk part
+    if endPosition < fragment.length && !paintSelectedTextOnly {
+      paintTextWithShadows(
+        style, textRun, fragment, startPosition: endPosition, endPosition: fragment.length)
+    }
   }
 
   private func acquirePaintingResource(
@@ -327,6 +366,20 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   private func releaseLegacyPaintingResource(
     _ context: inout GraphicsContextWrapper, _ path: PathWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func mapStartEndPositionsIntoFragmentCoordinates(
+    _ fragment: SVGTextFragment, startPosition: inout UInt32, endPosition: inout UInt32
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func constructTextRun(_ style: RenderStyleWrapper, _ fragment: SVGTextFragment)
+    -> TextRunWrapper
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

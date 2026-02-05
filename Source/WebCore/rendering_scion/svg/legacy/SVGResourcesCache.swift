@@ -17,6 +17,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func resourcesCacheFromRenderer(_ renderer: RenderElementWrapper) -> SVGResourcesCache {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func rendererCanHaveResources(_ renderer: RenderObjectWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class SVGResourcesCache {
   // Called from all SVG renderers addChild() methods.
   static func clientWasAddedToTree(renderer: RenderObjectWrapper) {
@@ -41,6 +51,53 @@ class SVGResourcesCache {
     _ renderer: RenderElementWrapper, _ diff: StyleDifference, oldStyle: RenderStyleWrapper?,
     newStyle: RenderStyleWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  struct SetStyleForScope: ~Copyable {
+    init(
+      _ renderer: RenderElementWrapper, _ scopedStyle: RenderStyleWrapper,
+      newStyle: RenderStyleWrapper
+    ) {
+      self.renderer = renderer
+      self.scopedStyle = scopedStyle
+      self.needsNewStyle = scopedStyle != newStyle && rendererCanHaveResources(renderer)
+      setStyle(newStyle)
+    }
+
+    deinit {
+      setStyle(scopedStyle)
+    }
+
+    private func setStyle(_ style: RenderStyleWrapper) {
+      if !needsNewStyle {
+        return
+      }
+
+      // FIXME: Check if a similar mechanism is needed for LBSE + text rendering.
+      if renderer.document().settings().layerBasedSVGEngineEnabled() {
+        return
+      }
+
+      let cache = resourcesCacheFromRenderer(renderer)
+      cache.removeResourcesFromRenderer(renderer)
+      cache.addResourcesFromRenderer(renderer, style)
+    }
+
+    private let renderer: RenderElementWrapper
+    private let scopedStyle: RenderStyleWrapper
+    private let needsNewStyle: Bool
+  }
+
+  private func addResourcesFromRenderer(
+    _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func removeResourcesFromRenderer(_ renderer: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

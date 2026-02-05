@@ -1158,7 +1158,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
       renderer: renderer, textBoxRange: selectableRange) != .None
   }
 
-  private func selectionStartEnd() -> (UInt32, UInt32) {
+  func selectionStartEnd() -> (UInt32, UInt32) {
     return renderer.view().selection().rangeForTextBox(
       renderer: renderer, textBoxRange: selectableRange)
   }
