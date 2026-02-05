@@ -80,4 +80,9 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
       textBox: self, paintInfo: paintInfo, paintOffset: paintOffset)
     textBoxPainter.paint()
   }
+
+  override final func selectionState() -> RenderObjectWrapper.HighlightState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

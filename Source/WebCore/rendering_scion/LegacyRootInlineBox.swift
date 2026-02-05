@@ -72,6 +72,11 @@ class LegacyRootInlineBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
+  override final func selectionState() -> RenderObjectWrapper.HighlightState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalTopVisualOverflow() -> LayoutUnit {
     return super.logicalTopVisualOverflow(lineTop: lineTop)
   }

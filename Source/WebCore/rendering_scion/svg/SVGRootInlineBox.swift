@@ -58,8 +58,64 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
     lineBottom: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(paintInfo.phase == .Foreground || paintInfo.phase == .Selection)
+    assert(!paintInfo.context().paintingDisabled())
+
+    if renderer().document().settings().layerBasedSVGEngineEnabled() {
+      var overflowRect = visualOverflowRect(lineTop: lineTop, lineBottom: lineBottom)
+      flipForWritingMode(rect: &overflowRect)
+      overflowRect.moveBy(offset: paintOffset)
+
+      if !paintInfo.rect.intersects(other: overflowRect) {
+        return
+      }
+    }
+
+    let isPrinting = renderSVGText().document().printing()
+    let hasSelection = !isPrinting && selectionState() != .None
+    let shouldPaintSelectionHighlight = !(paintInfo.paintBehavior.contains(.SkipSelectionHighlight))
+
+    let childPaintInfo = paintInfo.deepCopy()
+    childPaintInfo.updateSubtreePaintRootForChildren(renderer: renderer())
+
+    if hasSelection && shouldPaintSelectionHighlight {
+      var child = firstChild()
+      while child != nil {
+        if let textBox = child as? SVGInlineTextBox {
+          textBox.paintSelectionBackground(childPaintInfo)
+        } else if let flowBox = child as? SVGInlineFlowBox {
+          flowBox.paintSelectionBackground(childPaintInfo)
+        }
+        child = child!.nextOnLine()
+      }
+    }
+
+    if renderer().document().settings().layerBasedSVGEngineEnabled() {
+      var child = firstChild()
+      while child != nil {
+        if child!.renderer.isRenderText() || !child!.boxModelObject()!.hasSelfPaintingLayer() {
+          child!.paint(
+            paintInfo: childPaintInfo, paintOffset: paintOffset, lineTop: lineTop,
+            lineBottom: lineBottom)
+        }
+        child = child!.nextOnLine()
+      }
+
+      return
+    }
+
+    let renderingContext = SVGRenderingContext(renderSVGText(), paintInfo, .SaveGraphicsContext)
+    if renderingContext.isRenderingPrepared() {
+      var child = firstChild()
+      while child != nil {
+        if child!.renderer.isRenderText() || !child!.boxModelObject()!.hasSelfPaintingLayer() {
+          child!.paint(
+            paintInfo: childPaintInfo, paintOffset: paintOffset, lineTop: LayoutUnit(value: 0),
+            lineBottom: LayoutUnit(value: 0))
+        }
+        child = child!.nextOnLine()
+      }
+    }
   }
 
   private func renderSVGText() -> RenderSVGTextWrapper {

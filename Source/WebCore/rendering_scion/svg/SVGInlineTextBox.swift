@@ -33,6 +33,11 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     fatalError("Not implemented")
   }
 
+  func paintSelectionBackground(_ paintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
     lineBottom: LayoutUnit

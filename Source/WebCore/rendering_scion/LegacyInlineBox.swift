@@ -132,6 +132,11 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  func selectionState() -> RenderObjectWrapper.HighlightState {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Use with caution! The type is not checked!
   func boxModelObject() -> RenderBoxModelObjectWrapper? {
     // TODO(asuhan): implement this
@@ -143,5 +148,5 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
-  private let renderer: RenderObjectWrapper
+  let renderer: RenderObjectWrapper
 }

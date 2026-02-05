@@ -1,8 +1,12 @@
 /*
- * Copyright (C) 2006 Oliver Hunt <ojh16@student.canterbury.ac.nz>
- * Copyright (C) 2006 Apple Inc.
+ * Copyright (C) 2007, 2008 Rob Buis <buis@kde.org>
  * Copyright (C) 2007 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) Research In Motion Limited 2010. All rights reserved.
+ * Copyright (C) 2007 Eric Seidel <eric@webkit.org>
+ * Copyright (C) 2009 Google, Inc.  All rights reserved.
+ * Copyright (C) 2009 Dirk Schulze <krit@webkit.org>
+ * Copyright (C) Research In Motion Limited 2009-2010. All rights reserved.
+ * Copyright (C) 2018 Adobe Systems Incorporated. All rights reserved.
+ * Copyright (C) 2022 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,31 +24,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class SVGInlineFlowBox: LegacyInlineFlowBox {
-  init(_ renderer: RenderSVGInlineWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+struct SVGRenderingContext: ~Copyable {
+  enum NeedsGraphicsContextSave {
+    case SaveGraphicsContext
+    case DontSaveGraphicsContext
   }
 
-  func calculateBoundaries() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func setLogicalHeight(_ h: Float32) { logicalHeight = h }
-
-  func paintSelectionBackground(_ paintInfo: PaintInfoWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func paint(
-    paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
-    lineBottom: LayoutUnit
+  init(
+    _ object: RenderElementWrapper, _ paintinfo: PaintInfoWrapper,
+    _ needsGraphicsContextSave: NeedsGraphicsContextSave = .DontSaveGraphicsContext
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private var logicalHeight: Float32
+  func isRenderingPrepared() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
