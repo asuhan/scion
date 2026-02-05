@@ -869,8 +869,8 @@ class RenderTextWrapper: RenderObjectWrapper {
             minimumPrefixLength: minimumPrefixLength,
             minimumSuffixLength: minimumSuffixLength, currentCharacterIsSpace: isSpace,
             characterIndex: i, xPos: leadWidth + currMaxWidth, entireWordWidth: w,
-            wordTrailingSpace: wordTrailingSpace,
-            fallbackFonts: fallbackFonts, glyphOverflow: glyphOverflow)
+            wordTrailingSpace: &wordTrailingSpace,
+            fallbackFonts: fallbackFonts, glyphOverflow: &glyphOverflow)
           currMinWidth += maxFragmentWidth - w  // This, when combined with "currMinWidth += w" below, has the effect of executing "currMinWidth += maxFragmentWidth" instead.
           maxWordWidth = max(maxWordWidth, maxFragmentWidth)
         }
@@ -995,11 +995,73 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ style: RenderStyleWrapper, _ font: FontCascadeWrapper, _ word: StringWrapperView,
     minimumPrefixLength: UInt32, minimumSuffixLength: UInt32, currentCharacterIsSpace: Bool,
     characterIndex: UInt32, xPos: Float32, entireWordWidth: Float32,
-    wordTrailingSpace: WordTrailingSpace, fallbackFonts: WeakHashSet<FontWrapper>,
-    glyphOverflow: GlyphOverflow
+    wordTrailingSpace: inout WordTrailingSpace, fallbackFonts: WeakHashSet<FontWrapper>,
+    glyphOverflow: inout GlyphOverflow
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var suffixStart: UInt32 = 0
+    if word.length() <= minimumSuffixLength {
+      return entireWordWidth
+    }
+
+    var hyphenLocations: [Int32] = []  // TODO(asuhan): use array with inline storage
+    assert(word.length() >= minimumSuffixLength)
+    var hyphenLocation = word.length() - minimumSuffixLength
+    while true {
+      hyphenLocation = UInt32(
+        lastHyphenLocation(
+          string: word, beforeIndex: UInt64(hyphenLocation),
+          localeIdentifier: style.computedLocale()))
+      if hyphenLocation >= max(minimumPrefixLength, 1) {
+        break
+      }
+      hyphenLocations.append(Int32(hyphenLocation))
+    }
+
+    if hyphenLocations.isEmpty {
+      return entireWordWidth
+    }
+
+    hyphenLocations.reverse()
+
+    // Consider the word "ABC-DEF-GHI" (where the '-' characters are hyphenation opportunities). We want to measure the width
+    // of "ABC-" and "DEF-", but not "GHI-". Instead, we should measure "GHI" the same way we measure regular unhyphenated
+    // words (by using wordTrailingSpace). Therefore, this function is split up into two parts - one that measures each prefix,
+    // and one that measures the single last suffix.
+
+    // FIXME: Breaking the string at these places in the middle of words doesn't work with complex text.
+    let minimumFragmentWidthToConsider = font.size() * 5 / 4 + hyphenWidth(self, font)
+    var maxFragmentWidth: Float32 = 0
+    for hyphenLocation in hyphenLocations {
+      let fragmentLength = hyphenLocation - Int32(suffixStart)
+      let fragmentWithHyphen = StringBuilderWrapper()
+      fragmentWithHyphen.append(
+        string: word.substring(start: suffixStart, length: UInt32(fragmentLength)))
+      fragmentWithHyphen.append(string: style.hyphenString())
+
+      let run = RenderBlockWrapper.constructTextRun(fragmentWithHyphen.toString(), style)
+      run.setCharacterScanForCodePath(!canUseSimpleFontCodePath())
+      let fragmentWidth = font.width(run: run, fallbackFonts, glyphOverflow)
+
+      // Narrow prefixes are ignored. See tryHyphenating in RenderBlockLineLayout.cpp.
+      if fragmentWidth <= minimumFragmentWidthToConsider {
+        continue
+      }
+
+      suffixStart += UInt32(fragmentLength)
+      maxFragmentWidth = max(maxFragmentWidth, fragmentWidth)
+    }
+
+    if suffixStart == 0 {
+      // We didn't find any hyphenation opportunities that we're willing to actually use.
+      // Therefore, the width of the maximum fragment is just ... the width of the entire word.
+      return entireWordWidth
+    }
+
+    let suffixWidth = widthFromCacheConsideringPossibleTrailingSpace(
+      style: style, font: font, startIndex: characterIndex + suffixStart,
+      wordLen: word.length() - suffixStart, xPos,
+      currentCharacterIsSpace, &wordTrailingSpace, fallbackFonts, &glyphOverflow)
+    return max(maxFragmentWidth, suffixWidth)
   }
 
   private func widthFromCacheConsideringPossibleTrailingSpace(

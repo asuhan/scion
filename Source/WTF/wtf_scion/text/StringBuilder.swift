@@ -35,6 +35,11 @@ class StringBuilderWrapper {
     wk_interop.StringBuilder_append_UChar(self.p, character)
   }
 
+  func append(string: AtomStringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func append(string: StringWrapper) {
     if string.p == nil {
       // TODO(asuhan): implement this
@@ -45,6 +50,12 @@ class StringBuilderWrapper {
 
   func append(string: StringWrapperView) {
     wk_interop.StringBuilder_append_StringView(self.p, string.p)
+  }
+
+  // FIXME: Unclear why toString returns String and toStringPreserveCapacity returns const String&. Make them consistent.
+  func toString() -> StringWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isEmpty() -> Bool {
