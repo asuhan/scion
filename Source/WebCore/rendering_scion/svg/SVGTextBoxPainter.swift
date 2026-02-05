@@ -483,8 +483,21 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   private func mapStartEndPositionsIntoFragmentCoordinates(
     _ fragment: SVGTextFragment, startPosition: inout UInt32, endPosition: inout UInt32
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let startFragment = fragment.characterOffset - textBox.start()
+    let endFragment = startFragment + fragment.length
+
+    // Find intersection between the intervals: [startFragment..endFragment) and [startPosition..endPosition)
+    startPosition = max(startFragment, startPosition)
+    endPosition = min(endFragment, endPosition)
+
+    if startPosition >= endPosition {
+      return false
+    }
+
+    startPosition -= startFragment
+    endPosition -= startFragment
+
+    return true
   }
 
   private func constructTextRun(_ style: RenderStyleWrapper, _ fragment: SVGTextFragment)

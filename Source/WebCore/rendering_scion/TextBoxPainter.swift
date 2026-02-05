@@ -1316,7 +1316,7 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     fatalError("Not implemented")
   }
 
-  private let textBox: TextBoxPath
+  let textBox: TextBoxPath
   private let renderer: RenderTextWrapper
   private let document: Document
   private let style: RenderStyleWrapper
