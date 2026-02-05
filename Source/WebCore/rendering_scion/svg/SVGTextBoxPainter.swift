@@ -152,6 +152,62 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   }
 
   private func paintDecoration(_ decoration: TextDecorationLine, _ fragment: SVGTextFragment) {
+    if renderer().style().textDecorationsInEffect().isEmpty {
+      return
+    }
+
+    // Find out which render style defined the text-decoration, as its fill/stroke properties have to be used for drawing instead of ours.
+
+    let decorationRenderer = { () in
+      var parentBox = textBoxIterator().get().parentInlineBox()
+
+      // Lookup first render object in parent hierarchy which has text-decoration set.
+      var renderer: RenderBoxModelObjectWrapper? = nil
+      while parentBox.bool() {
+        renderer = parentBox.get().renderer()
+
+        if !renderer!.style().textDecorationLine().isEmpty {
+          break
+        }
+
+        parentBox = parentBox.get().parentInlineBox()
+      }
+
+      return renderer
+    }()
+
+    assert(decorationRenderer != nil)
+
+    let decorationStyle = decorationRenderer!.style()
+
+    if decorationStyle.usedVisibility() == .Hidden {
+      return
+    }
+
+    let svgDecorationStyle = decorationStyle.svgStyle()
+
+    for type in RenderStyleWrapper.paintTypesForPaintOrder(order: renderer().style().paintOrder()) {
+      switch type {
+      case .Fill:
+        if svgDecorationStyle.hasFill() {
+          paintingResourceMode = [.ApplyToFill]
+          paintDecorationWithStyle(decoration, fragment, decorationRenderer!)
+        }
+      case .Stroke:
+        if decorationStyle.hasVisibleStroke() {
+          paintingResourceMode = [.ApplyToStroke]
+          paintDecorationWithStyle(decoration, fragment, decorationRenderer!)
+        }
+      case .Markers:
+        break
+      }
+    }
+  }
+
+  private func paintDecorationWithStyle(
+    _ decoration: TextDecorationLine, _ fragment: SVGTextFragment,
+    _ decorationRenderer: RenderBoxModelObjectWrapper
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
