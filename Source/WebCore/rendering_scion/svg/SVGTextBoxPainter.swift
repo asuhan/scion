@@ -27,6 +27,31 @@ private func textShouldBePainted(_ textRenderer: RenderSVGInlineTextWrapper) -> 
   return textRenderer.scaledFont().size() >= 0.5
 }
 
+private func positionOffsetForDecoration(
+  _ decoration: TextDecorationLine, _ fontMetrics: FontMetricsWrapper, _ thickness: Float32
+) -> Float32 {
+  // FIXME: For SVG Fonts we need to use the attributes defined in the <font-face> if specified.
+  // Compatible with Batik/Opera.
+  let ascent = fontMetrics.ascent()
+  if decoration == .Underline {
+    return ascent + thickness * 1.5
+  }
+  if decoration == .Overline {
+    return thickness
+  }
+  if decoration == .LineThrough {
+    return ascent * 5 / 8
+  }
+
+  fatalError("Not reached")
+}
+
+private func thicknessForDecoration(_ font: FontCascadeWrapper) -> Float32 {
+  // FIXME: For SVG Fonts we need to use the attributes defined in the <font-face> if specified.
+  // Compatible with Batik/Opera
+  return font.size() / 20
+}
+
 class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   override func paint() {
     assert(paintInfo.shouldPaintWithinRoot(renderer: renderer()))
@@ -208,13 +233,99 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     _ decoration: TextDecorationLine, _ fragment: SVGTextFragment,
     _ decorationRenderer: RenderBoxModelObjectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(legacyPaintingResource == nil)
+    assert(!paintingResourceMode.isEmpty)
+
+    let context = paintInfo.context()
+    let decorationStyle = decorationRenderer.style()
+
+    let (_, scalingFactor, scaledFont) = RenderSVGInlineTextWrapper.computeNewScaledFontForStyle(
+      decorationRenderer, decorationStyle)
+    assert(scalingFactor != 0)
+
+    // The initial y value refers to overline position.
+    let thickness = thicknessForDecoration(scaledFont)
+
+    if fragment.width <= 0 && thickness <= 0 {
+      return
+    }
+
+    var decorationOrigin = FloatPoint(x: fragment.x, y: fragment.y)
+    var width = fragment.width
+    let scaledFontMetrics = scaledFont.metricsOfPrimaryFont()
+
+    let _ = GraphicsContextStateSaver(context: context)
+    if scalingFactor != 1 {
+      width *= scalingFactor
+      decorationOrigin.scale(scalingFactor)
+      context.scale(1 / scalingFactor)
+    }
+
+    decorationOrigin.move(
+      dx: 0,
+      dy: -scaledFontMetrics.ascent()
+        + positionOffsetForDecoration(decoration, scaledFontMetrics, thickness))
+
+    let path = PathWrapper()
+    path.addRect(
+      rect: FloatRectWrapper(
+        location: decorationOrigin, size: FloatSize(width: width, height: thickness)))
+
+    if decorationRenderer.document().settings().layerBasedSVGEngineEnabled() {
+      var paintServerHandling = SVGPaintServerHandling(context)
+      if acquirePaintingResource(
+        &paintServerHandling, scalingFactor, decorationRenderer, decorationStyle)
+      {
+        if paintingResourceMode.contains(.ApplyToFill) {
+          context.fillPath(path: path)
+        } else if paintingResourceMode.contains(.ApplyToStroke) {
+          context.strokePath(path: path)
+        }
+
+        releasePaintingResource(&paintServerHandling)
+      }
+      return
+    }
+
+    var usedContext = context
+    if acquireLegacyPaintingResource(
+      &usedContext, scalingFactor, decorationRenderer, decorationStyle)
+    {
+      releaseLegacyPaintingResource(&usedContext, path)
+    }
   }
 
   private func paintText(
     _ style: RenderStyleWrapper, _ selectionStyle: RenderStyleWrapper, _ fragment: SVGTextFragment,
     _ hasSelection: Bool, _ paintSelectedTextOnly: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func acquirePaintingResource(
+    _ paintServerHandling: inout SVGPaintServerHandling, _ scalingFactor: Float32,
+    _ renderer: RenderBoxModelObjectWrapper, _ style: RenderStyleWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func releasePaintingResource(_ paintServerHandling: inout SVGPaintServerHandling) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func acquireLegacyPaintingResource(
+    _ context: inout GraphicsContextWrapper, _ scalingFactor: Float32,
+    _ renderer: RenderBoxModelObjectWrapper, _ style: RenderStyleWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func releaseLegacyPaintingResource(
+    _ context: inout GraphicsContextWrapper, _ path: PathWrapper
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

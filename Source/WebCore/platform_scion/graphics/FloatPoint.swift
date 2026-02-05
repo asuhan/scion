@@ -70,6 +70,11 @@ struct FloatPoint {
     y += a.y
   }
 
+  mutating func scale(_ scale: Float32) {
+    x *= scale
+    y *= scale
+  }
+
   mutating func scale(scaleX: Float32, scaleY: Float32) {
     x *= scaleX
     y *= scaleY

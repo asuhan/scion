@@ -67,7 +67,7 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     }
   }
 
-  private static func computeNewScaledFontForStyle(
+  static func computeNewScaledFontForStyle(
     _ renderer: RenderObjectWrapper, _ style: RenderStyleWrapper
   ) -> (Bool, Float32, FontCascadeWrapper) {
     // Alter font-size to the right on-screen value to avoid scaling the glyphs themselves, except when GeometricPrecision is specified
