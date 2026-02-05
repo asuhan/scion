@@ -42,8 +42,8 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
     lineBottom: LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let painter = LegacySVGTextBoxPainter(self, paintInfo, paintOffset)
+    painter.paint()
   }
 
   func setLogicalHeight(_ height: Float32) {
