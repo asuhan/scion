@@ -172,4 +172,9 @@ class SVGRenderStyle {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func hasFill() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

@@ -30,6 +30,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func textFragments() -> ArraySlice<SVGTextFragment> {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     override func renderer() -> RenderSVGInlineTextWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

@@ -21,6 +21,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// If this enum changes change the unsigned bitfields using it.
+struct RenderSVGResourceMode: OptionSet {
+  let rawValue: UInt8
+  static let ApplyToFill = RenderSVGResourceMode(rawValue: 1 << 0)
+  static let ApplyToStroke = RenderSVGResourceMode(rawValue: 1 << 1)
+  static let ApplyToText = RenderSVGResourceMode(rawValue: 1 << 2)  // used in combination with ApplyTo{Fill|Stroke}Mode
+}
+
 class LegacyRenderSVGResource {
   struct ApplyResult: OptionSet {
     let rawValue: UInt8

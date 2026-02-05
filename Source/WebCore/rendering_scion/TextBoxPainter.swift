@@ -1322,14 +1322,14 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
   private let style: RenderStyleWrapper
   private let logicalRect: FloatRectWrapper
   private let paintTextRun: TextRunWrapper
-  private let paintInfo: PaintInfoWrapper
+  let paintInfo: PaintInfoWrapper
   private let selectableRange: TextBoxSelectableRange
-  private let paintOffset: LayoutPointWrapper
+  let paintOffset: LayoutPointWrapper
   private var paintRect: FloatRectWrapper = FloatRectWrapper()
   private var isFirstLine: Bool = false
   private var isCombinedText: Bool = false
   private var isPrinting: Bool = false
-  private var haveSelection: Bool = false
+  var haveSelection: Bool = false
   private var containsComposition: Bool = false
   private var useCustomUnderlines: Bool = false
   private var emphasisMarkExistsAndIsAbove: Bool? = nil
