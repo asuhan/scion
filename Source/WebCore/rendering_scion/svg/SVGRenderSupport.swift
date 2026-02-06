@@ -36,8 +36,17 @@ private func invalidateResourcesOfChildren(_ renderer: RenderElementWrapper) {
 }
 
 private func layoutSizeOfNearestViewportChanged(_ renderer: RenderElementWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var start: RenderElementWrapper? = renderer
+  while start != nil {
+    if let svgRoot = start as? LegacyRenderSVGRootWrapper {
+      return svgRoot.isLayoutSizeChanged
+    }
+    if let container = start as? LegacyRenderSVGViewportContainer {
+      return container.isLayoutSizeChanged
+    }
+    start = start!.parent()
+  }
+  fatalError("Not reached")
 }
 
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.

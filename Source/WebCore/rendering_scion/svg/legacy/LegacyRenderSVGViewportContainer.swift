@@ -36,5 +36,6 @@ final class LegacyRenderSVGViewportContainer: LegacyRenderSVGContainer {
     fatalError("Not implemented")
   }
 
+  let isLayoutSizeChanged = false
   private var needsTransformUpdate = false
 }
