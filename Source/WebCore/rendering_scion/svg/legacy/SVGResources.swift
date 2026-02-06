@@ -39,4 +39,10 @@ class SVGResources {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Methods operating on all cached resources
+  func removeClientFromCache(_ renderer: RenderElementWrapper, _ markForInvalidation: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

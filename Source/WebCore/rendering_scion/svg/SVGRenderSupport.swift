@@ -25,8 +25,14 @@
  */
 
 private func invalidateResourcesOfChildren(_ renderer: RenderElementWrapper) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(!renderer.needsLayout())
+  if let resources = SVGResourcesCache.cachedResourcesForRenderer(renderer) {
+    resources.removeClientFromCache(renderer, false)
+  }
+
+  for child: RenderElementWrapper in childrenOfType(parent: renderer) {
+    invalidateResourcesOfChildren(child)
+  }
 }
 
 private func layoutSizeOfNearestViewportChanged(_ renderer: RenderElementWrapper) -> Bool {
