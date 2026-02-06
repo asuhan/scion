@@ -267,8 +267,18 @@ class SVGRenderSupport {
 
   // Determines if any ancestor's transform has changed.
   private static func transformToRootChanged(_ ancestor: RenderElementWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var ancestor = ancestor
+    while ancestor != nil && !ancestor!.isRenderOrLegacyRenderSVGRoot() {
+      if let container = ancestor as? LegacyRenderSVGTransformableContainer {
+        return container.didTransformToRootUpdate()
+      }
+      if let container = ancestor as? LegacyRenderSVGViewportContainer {
+        return container.didTransformToRootUpdate()
+      }
+      ancestor = ancestor!.parent()
+    }
+
+    return false
   }
 
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
