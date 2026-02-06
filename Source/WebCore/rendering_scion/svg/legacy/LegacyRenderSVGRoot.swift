@@ -98,8 +98,17 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When we're embedded through SVGImage (border-image/background-image/<html:img>/...) we're forced to resize to a specific size.
+    if !m_containerSize.isEmpty() {
+      return LayoutUnit(value: m_containerSize.height)
+    }
+
+    if isEmbeddedThroughFrameContainingSVGDocument() {
+      return containingBlock()!.availableLogicalHeight(heightType: .IncludeMarginBorderPadding)
+    }
+
+    // SVG embedded via SVGImage (background-image/border-image/etc) / Inline SVG.
+    return super.computeReplacedLogicalHeight(estimatedUsedWidth: estimatedUsedWidth)
   }
 
   override func layout() {
