@@ -23,9 +23,42 @@
  */
 
 final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
-  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+  private func svgSVGElement() -> SVGSVGElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    assert(!shouldApplySizeContainment())
+
+    // https://www.w3.org/TR/SVG/coords.html#IntrinsicSizing
+    let intrinsicSize = calculateIntrinsicSize()
+
+    if style().aspectRatioType() == .Ratio {
+      let intrinsicRatio = FloatSize.narrowPrecision(
+        width: style().aspectRatioLogicalWidth(), height: style().aspectRatioLogicalHeight())
+      return (intrinsicSize, intrinsicRatio)
+    }
+
+    var intrinsicRatioValue: FloatSize? = nil
+    var intrinsicRatio = FloatSize()
+    if !intrinsicSize.isEmpty() {
+      intrinsicRatio = FloatSize(width: intrinsicSize.width, height: intrinsicSize.height)
+    } else {
+      let viewBoxSize = svgSVGElement().viewBox().size()
+      if !viewBoxSize.isEmpty() {
+        // The viewBox can only yield an intrinsic ratio, not an intrinsic size.
+        intrinsicRatioValue = FloatSize(width: viewBoxSize.width, height: viewBoxSize.height)
+      }
+    }
+
+    if intrinsicRatioValue != nil {
+      intrinsicRatio = intrinsicRatioValue!
+    } else if style().aspectRatioType() == .AutoAndRatio {
+      intrinsicRatio = FloatSize.narrowPrecision(
+        width: style().aspectRatioLogicalWidth(), height: style().aspectRatioLogicalHeight())
+    }
+    return (intrinsicSize, intrinsicRatio)
   }
 
   override final func hasIntrinsicAspectRatio() -> Bool {
@@ -108,6 +141,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func canBeSelectionLeaf() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func calculateIntrinsicSize() -> FloatSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
