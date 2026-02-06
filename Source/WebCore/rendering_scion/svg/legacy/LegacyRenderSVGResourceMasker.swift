@@ -1,5 +1,6 @@
 /*
- * Copyright (C) Research In Motion Limited 2010. All rights reserved.
+ * Copyright (C) Research In Motion Limited 2009-2010. All rights reserved.
+ * Copyright (C) 2022-2023 Apple Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,26 +18,4 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Holds a set of resources associated with a RenderObject
-class SVGResources {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  // Ordinary resources
-  func clipper() -> LegacyRenderSVGResourceClipper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func masker() -> LegacyRenderSVGResourceMasker? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func filter() -> LegacyRenderSVGResourceFilter? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-}
+final class LegacyRenderSVGResourceMasker: LegacyRenderSVGResourceContainer {}

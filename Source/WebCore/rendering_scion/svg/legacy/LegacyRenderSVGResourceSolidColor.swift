@@ -39,5 +39,12 @@ final class LegacyRenderSVGResourceSolidColor: LegacyRenderSVGResource {
     fatalError("Not implemented")
   }
 
+  override func resourceBoundingBox(
+    _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var color: ColorWrapper
 }

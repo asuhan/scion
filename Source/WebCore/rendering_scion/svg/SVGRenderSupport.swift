@@ -120,8 +120,19 @@ class SVGRenderSupport {
     _ renderer: RenderElementWrapper, _ repaintRect: inout FloatRectWrapper,
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let resources = SVGResourcesCache.cachedResourcesForRenderer(renderer) else { return }
+
+    if let filter = resources.filter() {
+      repaintRect = filter.resourceBoundingBox(renderer, repaintRectCalculation)
+    }
+
+    if let clipper = resources.clipper() {
+      repaintRect.intersect(other: clipper.resourceBoundingBox(renderer, repaintRectCalculation))
+    }
+
+    if let masker = resources.masker() {
+      repaintRect.intersect(other: masker.resourceBoundingBox(renderer, repaintRectCalculation))
+    }
   }
 
   // Determines whether a container needs to be laid out because it's filtered and a child is being laid out.

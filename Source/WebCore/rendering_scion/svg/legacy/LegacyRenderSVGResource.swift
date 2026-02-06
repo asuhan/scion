@@ -57,6 +57,13 @@ class LegacyRenderSVGResource {
     fatalError("Not implemented")
   }
 
+  func resourceBoundingBox(
+    _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
+  ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Helper utilities used in the render tree to access resources used for painting shapes/text (gradients & patterns & solid colors only)
   static func fillPaintingResource(_ renderer: RenderElementWrapper, _ style: RenderStyleWrapper)
     -> (LegacyRenderSVGResource?, ColorWrapper)
