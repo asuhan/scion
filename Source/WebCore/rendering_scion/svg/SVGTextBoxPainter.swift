@@ -593,8 +593,11 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   private func releaseLegacyPaintingResource(
     _ context: inout GraphicsContextWrapper, _ path: PathWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(legacyPaintingResource != nil)
+
+    legacyPaintingResource!.postApplyResource(
+      parentRenderer(), context, paintingResourceMode, path, nil)
+    legacyPaintingResource = nil
   }
 
   private func mapStartEndPositionsIntoFragmentCoordinates(

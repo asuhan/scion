@@ -30,4 +30,12 @@ final class LegacyRenderSVGResourceFilter: LegacyRenderSVGResourceContainer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func postApplyResource(
+    _ renderer: RenderElementWrapper, _ context: GraphicsContextWrapper,
+    _ resourceMode: RenderSVGResourceMode, _ path: PathWrapper?, _ shape: RenderElementWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

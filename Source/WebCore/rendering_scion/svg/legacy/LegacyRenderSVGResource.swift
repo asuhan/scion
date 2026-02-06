@@ -44,6 +44,14 @@ class LegacyRenderSVGResource {
     fatalError("Not reached")
   }
 
+  func postApplyResource(
+    _ renderer: RenderElementWrapper, _ context: GraphicsContextWrapper,
+    _ resourceMode: RenderSVGResourceMode, _ path: PathWrapper?, _ shape: RenderElementWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Helper utilities used in the render tree to access resources used for painting shapes/text (gradients & patterns & solid colors only)
   static func fillPaintingResource(_ renderer: RenderElementWrapper, _ style: RenderStyleWrapper)
     -> (LegacyRenderSVGResource?, ColorWrapper)

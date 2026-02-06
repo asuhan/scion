@@ -37,6 +37,15 @@ class LegacyRenderSVGResourceContainer: LegacyRenderSVGHiddenContainer {
     fatalError("Not reached")
   }
 
+  // TODO(asuhan): move to LegacyRenderSVGResource
+  func postApplyResource(
+    _ renderer: RenderElementWrapper, _ context: GraphicsContextWrapper,
+    _ resourceMode: RenderSVGResourceMode, _ path: PathWrapper?, _ shape: RenderElementWrapper?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addClientRenderLayer(client: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
