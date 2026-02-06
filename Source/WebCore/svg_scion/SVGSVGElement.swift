@@ -57,4 +57,9 @@ final class SVGSVGElementWrapper: SVGGraphicsElementWrapper, SVGFitToViewBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func viewBoxToViewTransform(_ viewWidth: Float32, _ viewHeight: Float32) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

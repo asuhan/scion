@@ -44,6 +44,8 @@ struct FloatPoint {
     y = size.height
   }
 
+  static func zero() -> FloatPoint { return FloatPoint() }
+
   func isZero() -> Bool { return x == 0 && y == 0 }
 
   mutating func setX(x: Float32) { self.x = x }

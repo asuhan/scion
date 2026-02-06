@@ -395,9 +395,23 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     m_repaintBoundingBox = repaintBoundingBox
   }
 
+  // RenderBox methods will expect coordinates w/o any transforms in coordinates
+  // relative to our borderBox origin. This method gives us exactly that.
   private func buildLocalToBorderBoxTransform() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let scale = style().usedZoom()
+    let translate = svgSVGElement().currentTranslateValue()
+    let borderAndPadding = LayoutSizeWrapper(
+      width: borderLeft() + paddingLeft(), height: borderTop() + paddingTop())
+    localToBorderBoxTransform = svgSVGElement().viewBoxToViewTransform(
+      contentWidth() / scale, contentHeight() / scale)
+    if borderAndPadding.isZero() && scale == 1 && translate == FloatPoint.zero() {
+      return
+    }
+    localToBorderBoxTransform =
+      AffineTransform(
+        a: Float64(scale), b: 0, c: 0, d: Float64(scale),
+        e: Float64(borderAndPadding.width() + translate.x),
+        f: Float64(borderAndPadding.height() + translate.y)) * localToBorderBoxTransform
   }
 
   private func calculateIntrinsicSize() -> FloatSize {
@@ -412,7 +426,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   private var strokeBoundingBox: FloatRectWrapper? = nil
   private var m_repaintBoundingBox = FloatRectWrapper()
   private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
-  private let localToBorderBoxTransform = AffineTransform()
+  private var localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
   var isLayoutSizeChanged = false
   private var needsBoundariesOrTransformUpdate = false
