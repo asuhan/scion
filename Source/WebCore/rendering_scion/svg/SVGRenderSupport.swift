@@ -52,8 +52,9 @@ private func layoutSizeOfNearestViewportChanged(_ renderer: RenderElementWrapper
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
   private static func layoutDifferentRootIfNeeded(_ renderer: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let resources = SVGResourcesCache.cachedResourcesForRenderer(renderer) {
+      resources.layoutDifferentRootIfNeeded(renderer)
+    }
   }
 
   // Shares child layouting code between LegacyRenderSVGRoot/RenderSVG(Hidden)Container

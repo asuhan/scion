@@ -24,6 +24,11 @@ class SVGResources {
     fatalError("Not implemented")
   }
 
+  func layoutDifferentRootIfNeeded(_ resourcesClient: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Ordinary resources
   func clipper() -> LegacyRenderSVGResourceClipper? {
     // TODO(asuhan): implement this
