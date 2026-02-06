@@ -140,6 +140,11 @@ class AffineTransform: Equatable {
     return a.transform == b.transform
   }
 
+  static func makeTranslation(_ delta: FloatSize) -> AffineTransform {
+    return AffineTransform(
+      a: 1, b: 0, c: 0, d: 1, e: Float64(delta.width), f: Float64(delta.height))
+  }
+
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
   private let transform: [Float64]
 }

@@ -145,8 +145,105 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override final func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // An empty viewport disables rendering.
+    let clipViewport = shouldApplyViewportClip()
+    if clipViewport && contentSize().isEmpty() {
+      return
+    }
+
+    // Don't paint, if the context explicitly disabled it.
+    if paintInfo.phase != .EventRegion && paintInfo.context().paintingDisabled()
+      && !paintInfo.context().detectingContentfulPaint()
+    {
+      return
+    }
+
+    // SVG outlines are painted during foreground phase.
+    if paintInfo.phase == .Outline || paintInfo.phase == .SelfOutline {
+      return
+    }
+
+    // An empty viewBox also disables rendering.
+    // (http://www.w3.org/TR/SVG/coords.html#ViewBoxAttribute)
+    if svgSVGElement().hasEmptyViewBox() {
+      return
+    }
+
+    let context = paintInfo.context()
+    if context.detectingContentfulPaint() {
+      for current: RenderObjectWrapper in childrenOfType(parent: self) {
+        if !current.isLegacyRenderSVGHiddenContainer() {
+          context.setContentfulPaintDetected()
+          return
+        }
+      }
+      return
+    }
+
+    // Don't paint if we don't have kids, except if we have filters we should paint those.
+    if firstChild() == nil {
+      let resources = SVGResourcesCache.cachedResourcesForRenderer(self)
+      if resources?.filter() == nil {
+        if paintInfo.phase == .Foreground {
+          page().addRelevantUnpaintedObject(object: self, objectPaintRect: visualOverflowRect())
+        }
+        return
+      }
+    }
+
+    if paintInfo.phase == .Foreground {
+      page().addRelevantRepaintedObject(object: self, objectPaintRect: visualOverflowRect())
+    }
+
+    // Make a copy of the PaintInfo because applyTransform will modify the damage rect.
+    var childPaintInfo = paintInfo.deepCopy()
+    childPaintInfo.context().save()
+
+    // Apply initial viewport clip
+    if clipViewport {
+      let clipRect = snappedIntRect(rect: overflowClipRect(location: paintOffset))
+      childPaintInfo.context().clip(rect: FloatRectWrapper(r: clipRect))
+      if paintInfo.phase == .EventRegion && childPaintInfo.eventRegionContext() != nil {
+        childPaintInfo.eventRegionContext()!.pushClip(clipRect: clipRect)
+      }
+    }
+
+    // Convert from container offsets (html renderers) to a relative transform (svg renderers).
+    // Transform from our paint container's coordinate system to our local coords.
+    let adjustedPaintOffset = roundedIntPoint(point: paintOffset)
+    let transform =
+      AffineTransform.makeTranslation(toFloatSize(a: FloatPoint(p: adjustedPaintOffset)))
+      * localToBorderBoxTransform
+    childPaintInfo.applyTransform(transform)
+    if paintInfo.phase == .EventRegion && childPaintInfo.eventRegionContext() != nil {
+      childPaintInfo.eventRegionContext()!.pushTransform(transform: transform)
+    }
+
+    // SVGRenderingContext must be destroyed before we restore the childPaintInfo.context(), because a filter may have
+    // changed the context and it is only reverted when the SVGRenderingContext destructor finishes applying the filter.
+    do {
+      let renderingContext = SVGRenderingContext()
+      var continueRendering = true
+      if childPaintInfo.phase == .Foreground {
+        renderingContext.prepareToRenderSVGContent(self, childPaintInfo)
+        continueRendering = renderingContext.isRenderingPrepared()
+      }
+
+      if continueRendering {
+        childPaintInfo.updateSubtreePaintRootForChildren(renderer: self)
+        for child: RenderElementWrapper in childrenOfType(parent: self) {
+          child.paint(paintInfo: &childPaintInfo, paintOffset: location())
+        }
+      }
+    }
+
+    if paintInfo.phase == .EventRegion && childPaintInfo.eventRegionContext() != nil {
+      childPaintInfo.eventRegionContext()!.popTransform()
+      if clipViewport {
+        childPaintInfo.eventRegionContext()!.popClip()
+      }
+    }
+    childPaintInfo.context().restore()
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {

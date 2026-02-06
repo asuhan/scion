@@ -30,8 +30,23 @@ struct SVGRenderingContext: ~Copyable {
     case DontSaveGraphicsContext
   }
 
+  // Does not start rendering.
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(
     _ object: RenderElementWrapper, _ paintinfo: PaintInfoWrapper,
+    _ needsGraphicsContextSave: NeedsGraphicsContextSave = .DontSaveGraphicsContext
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Used by all SVG renderers who apply clip/filter/etc. resources to the renderer content.
+  func prepareToRenderSVGContent(
+    _ renderer: RenderElementWrapper, _ paintInfo: PaintInfoWrapper,
     _ needsGraphicsContextSave: NeedsGraphicsContextSave = .DontSaveGraphicsContext
   ) {
     // TODO(asuhan): implement this

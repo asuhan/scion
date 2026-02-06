@@ -28,6 +28,11 @@ private func rendererCanHaveResources(_ renderer: RenderObjectWrapper) -> Bool {
 }
 
 class SVGResourcesCache {
+  static func cachedResourcesForRenderer(_ renderer: RenderElementWrapper) -> SVGResources? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Called from all SVG renderers addChild() methods.
   static func clientWasAddedToTree(renderer: RenderObjectWrapper) {
     // TODO(asuhan): implement this
