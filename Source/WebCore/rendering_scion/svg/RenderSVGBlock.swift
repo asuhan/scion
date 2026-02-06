@@ -115,7 +115,7 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
   }
 
   override final func computeVisibleRectsInContainer(
-    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     if document().settings().layerBasedSVGEngineEnabled() {

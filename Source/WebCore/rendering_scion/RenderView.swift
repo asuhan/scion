@@ -190,7 +190,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func computeVisibleRectsInContainer(
-    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // If a container was specified, and was not nullptr or the RenderView,

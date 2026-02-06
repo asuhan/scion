@@ -860,7 +860,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func computeVisibleRectsInContainer(
-    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     if CPtrToInt(container?.p) == CPtrToInt(p) {
@@ -874,7 +874,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
       adjustedRects.moveBy(-parentBox()!.location())  // Rows are in the same coordinate space, so don't add their offset in.
     }
 
-    return super.computeVisibleRectsInContainer(&adjustedRects, container, context)
+    return super.computeVisibleRectsInContainer(adjustedRects, container, context)
   }
 
   private func borderHalfLeft(outer: Bool) -> LayoutUnit {

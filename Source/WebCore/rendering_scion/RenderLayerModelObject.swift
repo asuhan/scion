@@ -252,7 +252,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
       }
     }
 
-    return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
+    return localContainer!.computeVisibleRectsInContainer(adjustedRects, container, context)
   }
 
   func updateHasSVGTransformFlags() {

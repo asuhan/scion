@@ -603,7 +603,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
       containingBlock!.applyCachedClipAndScrollPosition(&rects, repaintContainer, context)
     }
 
-    rects = containingBlock!.computeRects(&rects, repaintContainer, context)
+    rects = containingBlock!.computeRects(rects, repaintContainer, context)
     repaintRect = rects.clippedOverflowRect
 
     if outlineSize.bool() {
@@ -637,7 +637,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func computeVisibleRectsInContainer(
-    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // Repaint offset cache is only valid for root-relative repainting
@@ -689,7 +689,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
       return adjustedRects
     }
 
-    return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
+    return localContainer!.computeVisibleRectsInContainer(adjustedRects, container, context)
   }
 
   private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects? {

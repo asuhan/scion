@@ -1903,7 +1903,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func computeVisibleRectsInContainer(
-    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // The rect we compute at each step is shifted by our x/y offset in the parent container's coordinate space.
@@ -1972,7 +1972,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       {
         adjustedRects.clippedOverflowRect.setLocation(
           location: fragment.flipForWritingMode(position: physicalPoint))
-        return fragment.computeVisibleRectsInContainer(&adjustedRects, container, context)
+        return fragment.computeVisibleRectsInContainer(adjustedRects, container, context)
       }
     }
 
@@ -2020,7 +2020,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       adjustedRects.move(-containerOffset)
       return adjustedRects
     }
-    return localContainer!.computeVisibleRectsInContainer(&adjustedRects, container, context)
+    return localContainer!.computeVisibleRectsInContainer(adjustedRects, container, context)
   }
 
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {

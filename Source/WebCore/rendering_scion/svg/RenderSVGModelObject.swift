@@ -156,7 +156,7 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func computeVisibleRectsInContainer(
-    _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
+    _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
     // TODO(asuhan): implement this
