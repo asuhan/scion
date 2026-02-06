@@ -298,7 +298,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
     if repaintRectCalculation == .Fast {
-      return repaintBoundingBox
+      return m_repaintBoundingBox
     }
 
     if accurateRepaintBoundingBox == nil {
@@ -384,8 +384,15 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func updateCachedBoundaries() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    strokeBoundingBox = nil
+    m_repaintBoundingBox = FloatRectWrapper()
+    accurateRepaintBoundingBox = nil
+    let bbs = SVGRenderSupport.computeContainerBoundingBoxes(self)
+    var repaintBoundingBox = bbs.repaint
+    objectBoundingBoxValid = bbs.objectIsValid
+    SVGRenderSupport.intersectRepaintRectWithResources(self, &repaintBoundingBox)
+    repaintBoundingBox.inflate(d: horizontalBorderAndPaddingExtent().float())
+    m_repaintBoundingBox = repaintBoundingBox
   }
 
   private func buildLocalToBorderBoxTransform() {
@@ -399,8 +406,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private let m_containerSize = IntSize()
+  private var m_objectBoundingBox = FloatRectWrapper()
+  private var objectBoundingBoxValid = false
   private var inLayout = false
-  private var repaintBoundingBox = FloatRectWrapper()
+  private var strokeBoundingBox: FloatRectWrapper? = nil
+  private var m_repaintBoundingBox = FloatRectWrapper()
   private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
   private let localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
