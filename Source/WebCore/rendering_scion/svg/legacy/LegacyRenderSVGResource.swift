@@ -30,6 +30,11 @@ struct RenderSVGResourceMode: OptionSet {
 }
 
 class LegacyRenderSVGResource {
+  func removeAllClientsFromCache(markForInvalidation: Bool = true) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   struct ApplyResult: OptionSet {
     let rawValue: UInt8
 

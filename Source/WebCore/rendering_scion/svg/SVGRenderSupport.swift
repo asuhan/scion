@@ -26,6 +26,12 @@
 
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
+  // Shares child layouting code between LegacyRenderSVGRoot/RenderSVG(Hidden)Container
+  static func layoutChildren(_ start: RenderElementWrapper, _ selfNeedsLayout: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Helper function determining wheter overflow is hidden
   static func isOverflowHidden(_ renderer: RenderElementWrapper) -> Bool {
     // LegacyRenderSVGRoot should never query for overflow state - it should always clip itself to the initial viewport size.
@@ -39,6 +45,12 @@ class SVGRenderSupport {
     _ renderer: RenderElementWrapper, _ repaintRect: inout FloatRectWrapper,
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Determines whether a container needs to be laid out because it's filtered and a child is being laid out.
+  static func filtersForceContainerLayout(_ renderer: RenderElementWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

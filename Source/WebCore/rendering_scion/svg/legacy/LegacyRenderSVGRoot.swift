@@ -83,8 +83,63 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let _ = SetForScope(scopedVariable: &inLayout, newValue: true)
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    resourcesNeedingToInvalidateClients.clear()
+
+    // Arbitrary affine transforms are incompatible with RenderLayoutState.
+    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+
+    let needsLayout = selfNeedsLayout()
+    let checkForRepaintOverride: LayoutRepainter.CheckForRepaint? = !needsLayout ? .No : nil
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: checkForRepaintOverride)
+
+    let oldSize = size()
+    updateLogicalWidth()
+    updateLogicalHeight()
+    buildLocalToBorderBoxTransform()
+
+    isLayoutSizeChanged = needsLayout || (svgSVGElement().hasRelativeLengths() && oldSize != size())
+    SVGRenderSupport.layoutChildren(
+      self, needsLayout || SVGRenderSupport.filtersForceContainerLayout(self))
+
+    if !resourcesNeedingToInvalidateClients.isEmptyIgnoringNullReferences() {
+      // Invalidate resource clients, which may mark some nodes for layout.
+      for resource in resourcesNeedingToInvalidateClients {
+        resource.removeAllClientsFromCache()
+        SVGResourcesCache.clientStyleChanged(
+          resource, .Layout, oldStyle: nil, newStyle: resource.style())
+      }
+
+      isLayoutSizeChanged = false
+      SVGRenderSupport.layoutChildren(self, false)
+    }
+
+    // At this point LayoutRepainter already grabbed the old bounds,
+    // recalculate them now so repaintAfterLayout() uses the new bounds.
+    if needsBoundariesOrTransformUpdate {
+      updateCachedBoundaries()
+      needsBoundariesOrTransformUpdate = false
+    }
+
+    clearOverflow()
+    if !shouldApplyViewportClip() {
+      var contentRepaintRect = repaintRectInLocalCoordinates()
+      contentRepaintRect = localToBorderBoxTransform.mapRect(rect: contentRepaintRect)
+      addVisualOverflow(rect: enclosingLayoutRect(rect: contentRepaintRect))
+    }
+
+    updateLayerTransform()
+    hasBoxDecorations =
+      isDocumentElementRenderer() ? hasVisibleBoxDecorationStyle() : hasVisibleBoxDecorations()
+    invalidateBackgroundObscurationStatus()
+
+    repainter.repaintAfterLayout()
+
+    clearNeedsLayout()
   }
 
   override final func paintReplaced(
@@ -145,11 +200,30 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  private func shouldApplyViewportClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateCachedBoundaries() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func buildLocalToBorderBoxTransform() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func calculateIntrinsicSize() -> FloatSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  let isLayoutSizeChanged = false
+  private var inLayout = false
+  private let localToBorderBoxTransform = AffineTransform()
+  private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
+  var isLayoutSizeChanged = false
   private var needsBoundariesOrTransformUpdate = false
+  private var hasBoxDecorations = false
 }
