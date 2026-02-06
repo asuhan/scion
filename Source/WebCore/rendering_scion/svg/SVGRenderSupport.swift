@@ -137,8 +137,18 @@ class SVGRenderSupport {
 
   // Determines whether a container needs to be laid out because it's filtered and a child is being laid out.
   static func filtersForceContainerLayout(_ renderer: RenderElementWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If any of this container's children need to be laid out, and a filter is applied
+    // to the container, we need to repaint the entire container.
+    if !renderer.normalChildNeedsLayout() {
+      return false
+    }
+
+    let resources = SVGResourcesCache.cachedResourcesForRenderer(renderer)
+    if resources?.filter() == nil {
+      return false
+    }
+
+    return true
   }
 
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
