@@ -10,6 +10,7 @@ target_sources(layout_scion PRIVATE
     LegacyRenderSVGResourceContainer.swift
     LegacyRenderSVGResourceFilter.swift
     LegacyRenderSVGResourceMarker.swift
+    LegacyRenderSVGResourceSolidColor.swift
     LegacyRenderSVGRoot.swift
     LegacyRenderSVGShape.swift
     LegacyRenderSVGTransformableContainer.swift

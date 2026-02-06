@@ -21,8 +21,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// TODO(asuhan): inherit from LegacyRenderSVGResourceContainer
-class LegacyRenderSVGResourceClipper {
+class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
+  override func applyResource(
+    _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
+    _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
+  ) -> LegacyRenderSVGResource.ApplyResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // clipPath can be clipped too, but don't have a boundingBox or repaintRect. So we can't call
   // applyResource directly and use the rects from the object, since they are empty for RenderSVGResources
   // FIXME: We made applyClippingToContext public because we cannot call applyResource on HTML elements (it asserts on RenderObject::objectBoundingBox)

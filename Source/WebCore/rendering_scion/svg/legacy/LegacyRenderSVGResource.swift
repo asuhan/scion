@@ -37,10 +37,41 @@ class LegacyRenderSVGResource {
     static let ClipContainsRendererContent = ApplyResult(rawValue: 1 << 1)
   }
 
+  func applyResource(
+    _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
+    _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
+  ) -> ApplyResult {
+    fatalError("Not reached")
+  }
+
+  // Helper utilities used in the render tree to access resources used for painting shapes/text (gradients & patterns & solid colors only)
+  static func fillPaintingResource(_ renderer: RenderElementWrapper, _ style: RenderStyleWrapper)
+    -> (LegacyRenderSVGResource?, ColorWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func strokePaintingResource(_ renderer: RenderElementWrapper, _ style: RenderStyleWrapper)
+    -> (LegacyRenderSVGResource?, ColorWrapper)
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func sharedSolidPaintingResource() -> LegacyRenderSVGResourceSolidColor {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func markForLayoutAndParentResourceInvalidation(
     object: RenderObjectWrapper, needsLayout: Bool = true
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+}
+
+func resourceWasApplied(_ result: LegacyRenderSVGResource.ApplyResult) -> Bool {
+  return result.contains(.ResourceApplied)
 }

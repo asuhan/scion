@@ -1,9 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2007, 2008 Nikolas Zimmermann <zimmermann@kde.org>
- * Copyright (C) 2004, 2005, 2006, 2007, 2008 Rob Buis <buis@kde.org>
- * Copyright (C) Research In Motion Limited 2009-2010. All rights reserved.
- * Copyright (C) 2023 Apple Inc. All rights reserved.
- * Copyright (C) 2016 Google Inc. All rights reserved.
+ * Copyright (C) Research In Motion Limited 2010. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,13 +17,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class LegacyRenderSVGResourceMarkerWrapper: LegacyRenderSVGResourceContainer {
-  override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  override func localToParentTransform() -> AffineTransform {
+final class LegacyRenderSVGResourceSolidColor: LegacyRenderSVGResource {
+  override init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -39,4 +30,6 @@ final class LegacyRenderSVGResourceMarkerWrapper: LegacyRenderSVGResourceContain
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var color: ColorWrapper
 }

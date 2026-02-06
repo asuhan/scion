@@ -22,4 +22,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-final class LegacyRenderSVGResourceFilter: LegacyRenderSVGResourceContainer {}
+final class LegacyRenderSVGResourceFilter: LegacyRenderSVGResourceContainer {
+  override func applyResource(
+    _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
+    _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
+  ) -> LegacyRenderSVGResource.ApplyResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -525,8 +525,69 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     _ context: inout GraphicsContextWrapper, _ scalingFactor: Float32,
     _ renderer: RenderBoxModelObjectWrapper, _ style: RenderStyleWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(scalingFactor != 0)
+    assert(
+      paintingResourceMode.contains(.ApplyToFill) || paintingResourceMode.contains(.ApplyToStroke))
+
+    var fallbackColor = ColorWrapper()
+    if paintingResourceMode.contains(.ApplyToFill) {
+      (legacyPaintingResource, fallbackColor) = LegacyRenderSVGResource.fillPaintingResource(
+        renderer, style)
+    } else if paintingResourceMode.contains(.ApplyToStroke) {
+      (legacyPaintingResource, fallbackColor) = LegacyRenderSVGResource.strokePaintingResource(
+        renderer, style)
+    }
+
+    if legacyPaintingResource == nil {
+      return false
+    }
+
+    if !resourceWasApplied(
+      legacyPaintingResource!.applyResource(renderer, style, context, paintingResourceMode))
+    {
+      if !fallbackColor.isValid() {
+        legacyPaintingResource = nil
+        return false
+      }
+
+      let fallbackResource = LegacyRenderSVGResource.sharedSolidPaintingResource()
+      fallbackResource.color = fallbackColor
+
+      legacyPaintingResource = fallbackResource
+      if !resourceWasApplied(
+        legacyPaintingResource!.applyResource(renderer, style, context, paintingResourceMode))
+      {
+        legacyPaintingResource = nil
+        return false
+      }
+    }
+
+    var scalingFactor = scalingFactor
+    if paintingResourceMode.contains(.ApplyToStroke) {
+      if style.svgStyle().vectorEffect() == .NonScalingStroke {
+        if style.fontDescription().textRenderingMode() == .GeometricPrecision {
+          scalingFactor = 1 / RenderSVGInlineTextWrapper.computeScalingFactorForRenderer(renderer)
+        } else {
+          scalingFactor = 1
+        }
+
+        let zoomFactor = renderer.style().usedZoom()
+        if zoomFactor != 1 {
+          scalingFactor *= zoomFactor
+        }
+
+        let deviceScaleFactor = renderer.document().deviceScaleFactor()
+        if deviceScaleFactor != 1 {
+          scalingFactor *= deviceScaleFactor
+        }
+      }
+
+      if scalingFactor != 1.0 {
+        context.setStrokeThickness(thickness: context.strokeThickness() * scalingFactor)
+      }
+    }
+
+    return true
   }
 
   private func releaseLegacyPaintingResource(
@@ -564,7 +625,7 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   }
 
   private var paintingResourceMode: RenderSVGResourceMode = []
-  private let legacyPaintingResource: LegacyRenderSVGResource? = nil
+  private var legacyPaintingResource: LegacyRenderSVGResource? = nil
 }
 
 class LegacySVGTextBoxPainter: SVGTextBoxPainter<InlineIterator.BoxLegacyPath> {
