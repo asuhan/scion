@@ -21,6 +21,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func shouldSuspendRepaintForChildren(_ container: LegacyRenderSVGContainer) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if paintInfo.phase != .EventRegion && paintInfo.context().paintingDisabled() {
@@ -93,8 +98,55 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    // LegacyRenderSVGRoot disables paint offset cache for the SVG rendering tree.
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
+    let _ = SetForScope(
+      scopedVariable: &repaintIsSuspendedForChildrenDuringLayout,
+      newValue: shouldSuspendRepaintForChildren(self))
+
+    let checkForRepaintOverride =
+      repaintIsSuspendedForChildrenDuringLayout || selfWillPaint()
+      ? .Yes : SVGRenderSupport.checkForSVGRepaintDuringLayout(self)
+    let shouldIssueFullRepaint: LayoutRepainter.ShouldAlwaysIssueFullRepaint =
+      repaintIsSuspendedForChildrenDuringLayout ? .Yes : .No
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: checkForRepaintOverride,
+      shouldAlwaysIssueFullRepaint: shouldIssueFullRepaint, repaintOutlineBounds: .No)
+
+    // Allow LegacyRenderSVGViewportContainer to update its viewport.
+    calcViewport()
+
+    // Allow LegacyRenderSVGTransformableContainer to update its transform.
+    let updatedTransform = calculateLocalTransform()
+
+    // LegacyRenderSVGViewportContainer needs to set the 'layout size changed' flag.
+    determineIfLayoutSizeChanged()
+
+    SVGRenderSupport.layoutChildren(
+      self, selfNeedsLayout() || SVGRenderSupport.filtersForceContainerLayout(self))
+
+    // Invalidate all resources of this client if our layout changed.
+    if everHadLayout() && needsLayout() {
+      SVGResourcesCache.clientLayoutChanged(self)
+    }
+
+    // At this point LayoutRepainter already grabbed the old bounds,
+    // recalculate them now so repaintAfterLayout() uses the new bounds.
+    if needsBoundariesUpdate || updatedTransform {
+      updateCachedBoundaries()
+      needsBoundariesUpdate = false
+
+      // New bounds can affect transforms, so recompute them here if needed.
+      calculateLocalTransform()
+
+      parent()?.invalidateCachedBoundaries()
+    }
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
   }
 
   override func addFocusRingRects(
@@ -112,10 +164,27 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  // Allow LegacyRenderSVGTransformableContainer to hook in at the right time in layout()
+  @discardableResult
+  func calculateLocalTransform() -> Bool { return false }
+
+  // Allow RenderSVGViewportContainer to hook in at the right times in layout(), paint() and nodeAtFloatPoint()
+  func calcViewport() {}
+
   func applyViewportClip(_ paintInfo: PaintInfoWrapper) {}
+
+  func determineIfLayoutSizeChanged() {}
 
   private func selfWillPaint() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func updateCachedBoundaries() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var needsBoundariesUpdate = true
+  private var repaintIsSuspendedForChildrenDuringLayout = false
 }

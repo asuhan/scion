@@ -32,6 +32,11 @@ final class LegacyRenderSVGResourceMarkerWrapper: LegacyRenderSVGResourceContain
     fatalError("Not implemented")
   }
 
+  override func calcViewport() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func localToParentTransform() -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

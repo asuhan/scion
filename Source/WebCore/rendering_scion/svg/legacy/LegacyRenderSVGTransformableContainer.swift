@@ -33,5 +33,11 @@ final class LegacyRenderSVGTransformableContainer: LegacyRenderSVGContainer {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  override func calculateLocalTransform() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var needsTransformUpdate = false
 }

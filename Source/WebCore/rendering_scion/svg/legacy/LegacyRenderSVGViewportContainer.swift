@@ -29,9 +29,25 @@ final class LegacyRenderSVGViewportContainer: LegacyRenderSVGContainer {
     fatalError("Not implemented")
   }
 
+  override func determineIfLayoutSizeChanged() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   override func localToParentTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func calcViewport() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  override func calculateLocalTransform() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
