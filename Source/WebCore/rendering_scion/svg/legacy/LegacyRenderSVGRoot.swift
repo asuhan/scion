@@ -376,8 +376,11 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   private func shouldApplyViewportClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // the outermost svg is clipped if auto, and svg document roots are always clipped
+    // When the svg is stand-alone (isDocumentElement() == true) the viewport clipping should always
+    // be applied, noting that the window scrollbars should be hidden if overflow=hidden.
+    return isNonVisibleOverflow(effectiveOverflowX()) || style().overflowX() == .Auto
+      || isDocumentElementRenderer()
   }
 
   private func updateCachedBoundaries() {
