@@ -180,6 +180,14 @@ class SVGRenderSupport {
     fatalError("Not implemented")
   }
 
+  static func paintInfoIntersectsRepaintRect(
+    _ localRepaintRect: FloatRectWrapper, _ localTransform: AffineTransform,
+    _ paintInfo: PaintInfoWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
   static func clippedOverflowRectForRepaint(
     _ renderer: RenderElementWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,

@@ -23,8 +23,66 @@
 
 class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.phase != .EventRegion && paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    // Spec: groups w/o children still may render filter content.
+    if firstChild() == nil && !selfWillPaint() {
+      return
+    }
+
+    let repaintRect = repaintRectInLocalCoordinates()
+    if !SVGRenderSupport.paintInfoIntersectsRepaintRect(
+      repaintRect, localToParentTransform(), paintInfo)
+    {
+      return
+    }
+
+    var childPaintInfo = paintInfo.deepCopy()
+    do {
+      let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+
+      // Let the LegacyRenderSVGViewportContainer subclass clip if necessary
+      applyViewportClip(childPaintInfo)
+
+      let transform = localToParentTransform()
+      childPaintInfo.applyTransform(transform)
+      if paintInfo.phase == .EventRegion && childPaintInfo.eventRegionContext() != nil {
+        childPaintInfo.eventRegionContext()!.pushTransform(transform: transform)
+      }
+
+      let renderingContext = SVGRenderingContext()
+      var continueRendering = true
+      if childPaintInfo.phase == .Foreground {
+        renderingContext.prepareToRenderSVGContent(self, childPaintInfo)
+        continueRendering = renderingContext.isRenderingPrepared()
+      }
+
+      if continueRendering {
+        childPaintInfo.updateSubtreePaintRootForChildren(renderer: self)
+        for child: RenderElementWrapper in childrenOfType(parent: self) {
+          child.paint(paintInfo: &childPaintInfo, paintOffset: LayoutPointWrapper())
+        }
+      }
+
+      if paintInfo.phase == .EventRegion && childPaintInfo.eventRegionContext() != nil {
+        childPaintInfo.eventRegionContext()!.popTransform()
+      }
+    }
+
+    // FIXME: This really should be drawn from local coordinates, but currently we hack it
+    // to avoid our clip killing our outline rect. Thus we translate our
+    // outline rect into parent coords before drawing.
+    // FIXME: This means our focus ring won't share our rotation like it should.
+    // We should instead disable our clip during PaintPhase::Outline
+    if paintInfo.phase == .SelfOutline && style().outlineWidth() != 0
+      && style().usedVisibility() == .Visible
+    {
+      let paintRectInParent = enclosingIntRect(
+        rect: localToParentTransform().mapRect(rect: repaintRect))
+      paintOutline(paintInfo: paintInfo, paintRect: LayoutRectWrapper(rect: paintRectInParent))
+    }
   }
 
   func didTransformToRootUpdate() -> Bool { return false }
@@ -50,6 +108,13 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   override final func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func applyViewportClip(_ paintInfo: PaintInfoWrapper) {}
+
+  private func selfWillPaint() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

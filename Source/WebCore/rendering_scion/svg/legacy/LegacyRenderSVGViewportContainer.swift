@@ -36,6 +36,11 @@ final class LegacyRenderSVGViewportContainer: LegacyRenderSVGContainer {
     fatalError("Not implemented")
   }
 
+  override func applyViewportClip(_ paintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let isLayoutSizeChanged = false
   private var needsTransformUpdate = false
 }

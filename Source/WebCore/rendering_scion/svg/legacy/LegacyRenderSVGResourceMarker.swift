@@ -22,6 +22,11 @@
  */
 
 final class LegacyRenderSVGResourceMarkerWrapper: LegacyRenderSVGResourceContainer {
+  override func applyViewportClip(_ paintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
