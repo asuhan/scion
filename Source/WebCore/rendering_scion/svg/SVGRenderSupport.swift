@@ -24,12 +24,87 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private func invalidateResourcesOfChildren(_ renderer: RenderElementWrapper) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func layoutSizeOfNearestViewportChanged(_ renderer: RenderElementWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
-  // Shares child layouting code between LegacyRenderSVGRoot/RenderSVG(Hidden)Container
-  static func layoutChildren(_ start: RenderElementWrapper, _ selfNeedsLayout: Bool) {
+  private static func layoutDifferentRootIfNeeded(_ renderer: RenderElementWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Shares child layouting code between LegacyRenderSVGRoot/RenderSVG(Hidden)Container
+  static func layoutChildren(_ start: RenderElementWrapper, _ selfNeedsLayout: Bool) {
+    let layoutSizeChanged = layoutSizeOfNearestViewportChanged(start)
+    let transformChanged = transformToRootChanged(start)
+    let elementsThatDidNotReceiveLayout = WeakHashSet<RenderElementWrapper>()
+
+    for child: RenderObjectWrapper in childrenOfType(parent: start) {
+      var needsLayout = selfNeedsLayout
+      let childEverHadLayout = child.everHadLayout()
+
+      if transformChanged {
+        // If the transform changed we need to update the text metrics (note: this also happens for layoutSizeChanged=true).
+        if let text = child as? RenderSVGTextWrapper {
+          text.setNeedsTextMetricsUpdate()
+        }
+        needsLayout = true
+      }
+
+      if layoutSizeChanged {
+        // When selfNeedsLayout is false and the layout size changed, we have to check whether this child uses relative lengths
+        if let element = child.node() as? SVGElementWrapper, element.hasRelativeLengths() {
+          // When the layout size changed and when using relative values tell the LegacyRenderSVGShape to update its shape object
+          if let shape = child as? LegacyRenderSVGShapeWrapper {
+            shape.needsShapeUpdate = true
+          } else if let svgText = child as? RenderSVGTextWrapper {
+            svgText.setNeedsTextMetricsUpdate()
+            svgText.setNeedsPositioningValuesUpdate()
+          }
+          child.setNeedsTransformUpdate()
+          needsLayout = true
+        }
+      }
+
+      if needsLayout {
+        child.setNeedsLayout(markParents: .MarkOnlyThis)
+      }
+
+      if child.needsLayout() {
+        let childElement = child as! RenderElementWrapper
+        layoutDifferentRootIfNeeded(childElement)
+        childElement.layout()
+        // Renderers are responsible for repainting themselves when changing, except
+        // for the initial paint to avoid potential double-painting caused by non-sensical "old" bounds.
+        // We could handle this in the individual objects, but for now it's easier to have
+        // parent containers call repaint().  (RenderBlock::layout* has similar logic.)
+        if !childEverHadLayout {
+          child.repaint()
+        }
+      } else if layoutSizeChanged, let childElement = child as? RenderElementWrapper {
+        elementsThatDidNotReceiveLayout.add(value: childElement)
+      }
+
+      assert(!child.needsLayout())
+    }
+
+    if !layoutSizeChanged {
+      assert(elementsThatDidNotReceiveLayout.isEmptyIgnoringNullReferences())
+      return
+    }
+
+    // If the layout size changed, invalidate all resources of all children that didn't go through the layout() code path.
+    for element in elementsThatDidNotReceiveLayout {
+      invalidateResourcesOfChildren(element)
+    }
   }
 
   // Helper function determining wheter overflow is hidden
@@ -167,6 +242,12 @@ class SVGRenderSupport {
 
     let shape = renderer as! RenderSVGShapeWrapper
     return shape.adjustStrokeBoundingBoxForZeroLengthLinecaps(calculate(shape))
+  }
+
+  // Determines if any ancestor's transform has changed.
+  private static func transformToRootChanged(_ ancestor: RenderElementWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {

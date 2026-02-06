@@ -104,6 +104,7 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
+  var needsShapeUpdate = false
   private var needsTransformUpdate = false
   let shapeType: ShapeType = .Empty
 }
