@@ -510,8 +510,15 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
   }
 
   private func releasePaintingResource(_ paintServerHandling: inout SVGPaintServerHandling) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = paintServerHandling.context
+
+    if context.fillGradient() != nil || context.strokeGradient() != nil
+      || context.fillPattern() != nil || context.strokePattern() != nil
+    {
+      context.endTransparencyLayer()
+    }
+
+    context.restore()
   }
 
   private func acquireLegacyPaintingResource(
