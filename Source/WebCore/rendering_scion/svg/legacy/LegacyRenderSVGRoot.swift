@@ -276,8 +276,17 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if diff == .Layout {
+      invalidateCachedBoundaries()
+    }
+
+    // Box decorations may have appeared/disappeared - recompute status.
+    if diff == .Repaint {
+      hasBoxDecorations = hasVisibleBoxDecorationStyle()
+    }
+
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    SVGResourcesCache.clientStyleChanged(self, diff, oldStyle: oldStyle, newStyle: style())
   }
 
   override func localToParentTransform() -> AffineTransform {
