@@ -28,6 +28,17 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  private func isEmbeddedThroughFrameContainingSVGDocument() -> Bool {
+    // If our frame has an owner renderer, we're embedded through eg. object/embed/iframe,
+    // but we only negotiate if we're in an SVG document inside object/embed, not iframe.
+    if frame().ownerRenderer() == nil || frame().ownerRenderer()!.isRenderEmbeddedObject()
+      || !isDocumentElementRenderer()
+    {
+      return false
+    }
+    return frame().document()!.isSVGDocument()
+  }
+
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
     assert(!shouldApplySizeContainment())
 
@@ -73,8 +84,17 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // When we're embedded through SVGImage (border-image/background-image/<html:img>/...) we're forced to resize to a specific size.
+    if !m_containerSize.isEmpty() {
+      return LayoutUnit(value: m_containerSize.width)
+    }
+
+    if isEmbeddedThroughFrameContainingSVGDocument() {
+      return containingBlock()!.availableLogicalWidth()
+    }
+
+    // SVG embedded via SVGImage (background-image/border-image/etc) / Inline SVG.
+    return super.computeReplacedLogicalWidth(shouldComputePreferred: shouldComputePreferred)
   }
 
   override func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
@@ -317,6 +337,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  private let m_containerSize = IntSize()
   private var inLayout = false
   private let localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
