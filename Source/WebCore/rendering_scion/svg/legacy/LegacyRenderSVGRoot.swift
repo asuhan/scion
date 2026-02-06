@@ -327,8 +327,17 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isInsideEntirelyHiddenLayer() {
+      return RepaintRects()
+    }
+
+    var rects = RepaintRects(rect: localClippedOverflowRect(.Fast))
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = localOutlineBoundsRepaintRect()
+    }
+
+    return super.computeRects(
+      rects, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
   }
 
   private func localClippedOverflowRect(_ repaintRectCalculation: RepaintRectCalculation)
