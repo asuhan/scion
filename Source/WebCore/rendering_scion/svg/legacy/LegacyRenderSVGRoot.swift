@@ -297,8 +297,20 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   override func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if repaintRectCalculation == .Fast {
+      return repaintBoundingBox
+    }
+
+    if accurateRepaintBoundingBox == nil {
+      // Initialize m_accurateRepaintBoundingBox before calling computeContainerBoundingBoxes, since recursively referenced markers can cause us to re-enter here.
+      accurateRepaintBoundingBox = FloatRectWrapper()
+      let bbs = SVGRenderSupport.computeContainerBoundingBoxes(self, .Accurate)
+      var repaintBoundingBox = bbs.repaint
+      SVGRenderSupport.intersectRepaintRectWithResources(self, &repaintBoundingBox, .Accurate)
+      repaintBoundingBox.inflate(d: horizontalBorderAndPaddingExtent().float())
+      accurateRepaintBoundingBox = repaintBoundingBox
+    }
+    return accurateRepaintBoundingBox!
   }
 
   override func clippedOverflowRect(
@@ -357,6 +369,8 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
 
   private let m_containerSize = IntSize()
   private var inLayout = false
+  private var repaintBoundingBox = FloatRectWrapper()
+  private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
   private let localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
   var isLayoutSizeChanged = false

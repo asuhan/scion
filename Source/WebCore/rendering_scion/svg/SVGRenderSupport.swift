@@ -167,6 +167,19 @@ class SVGRenderSupport {
     return true
   }
 
+  struct ContainerBoundingBoxes {
+    let object: FloatRectWrapper
+    let objectIsValid: Bool
+    let repaint: FloatRectWrapper
+  }
+
+  static func computeContainerBoundingBoxes(
+    _ container: RenderElementWrapper, _ repaintRectCalculation: RepaintRectCalculation = .Fast
+  ) -> ContainerBoundingBoxes {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
   static func clippedOverflowRectForRepaint(
     _ renderer: RenderElementWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?,
