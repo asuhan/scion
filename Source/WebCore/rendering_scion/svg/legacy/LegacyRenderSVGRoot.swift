@@ -343,8 +343,16 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   private func localClippedOverflowRect(_ repaintRectCalculation: RepaintRectCalculation)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var contentRepaintRect = localToBorderBoxTransform.mapRect(
+      rect: repaintRectInLocalCoordinates(repaintRectCalculation))
+    contentRepaintRect.intersect(other: FloatRectWrapper(r: snappedIntRect(rect: borderBoxRect())))
+
+    var repaintRect = enclosingLayoutRect(rect: contentRepaintRect)
+    if hasBoxDecorations || hasRenderOverflow() {
+      repaintRect.unite(other: unionRect(a: localSelectionRect(false), b: visualOverflowRect()))
+    }
+
+    return LayoutRectWrapper(rect: enclosingIntRect(rect: repaintRect))
   }
 
   override func mapLocalToContainer(
