@@ -26,8 +26,17 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
     _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
   ) -> LegacyRenderSVGResource.ApplyResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(resourceMode.isEmpty)
+
+    let repaintRect = renderer.repaintRectInLocalCoordinates()
+    if repaintRect.isEmpty() {
+      return [.ResourceApplied]
+    }
+
+    let boundingBox = renderer.objectBoundingBox()
+    return applyClippingToContext(
+      context: context, renderer: renderer, objectBoundingBox: boundingBox,
+      clippedContentBounds: boundingBox)
   }
 
   // clipPath can be clipped too, but don't have a boundingBox or repaintRect. So we can't call
