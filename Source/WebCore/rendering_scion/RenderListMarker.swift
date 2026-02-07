@@ -172,8 +172,9 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   override final func canBeSelectionLeaf() -> Bool { return true }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleWillChange(
+      diff: adjustedStyleDifference(diff, oldStyle: style(), newStyle: newStyle), newStyle: newStyle
+    )
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
