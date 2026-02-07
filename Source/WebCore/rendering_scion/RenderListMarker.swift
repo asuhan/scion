@@ -155,10 +155,7 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  override final func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override final func canBeSelectionLeaf() -> Bool { return true }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
     // TODO(asuhan): implement this
