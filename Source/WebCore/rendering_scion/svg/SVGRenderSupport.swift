@@ -232,8 +232,12 @@ class SVGRenderSupport {
     _ localRepaintRect: FloatRectWrapper, _ localTransform: AffineTransform,
     _ paintInfo: PaintInfoWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if localTransform.isIdentity() {
+      return localRepaintRect.intersects(other: paintInfo.rect.FloatRect())
+    }
+
+    return localTransform.mapRect(rect: localRepaintRect).intersects(
+      other: paintInfo.rect.FloatRect())
   }
 
   // Important functions used by nearly all SVG renderers centralizing coordinate transformations / repaint rect calculations
