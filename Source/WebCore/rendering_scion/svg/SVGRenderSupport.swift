@@ -24,6 +24,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// Update a bounding box taking into account the validity of the other bounding box.
+private func updateObjectBoundingBox(
+  _ objectBoundingBox: inout FloatRectWrapper, _ objectBoundingBoxValid: inout Bool,
+  _ other: RenderObjectWrapper, _ otherBoundingBox: FloatRectWrapper
+) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func invalidateResourcesOfChildren(_ renderer: RenderElementWrapper) {
   assert(!renderer.needsLayout())
   if let resources = SVGResourcesCache.cachedResourcesForRenderer(renderer) {
@@ -176,8 +185,36 @@ class SVGRenderSupport {
   static func computeContainerBoundingBoxes(
     _ container: RenderElementWrapper, _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> ContainerBoundingBoxes {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var objectBoundingBox = FloatRectWrapper()
+    var objectBoundingBoxValid = false
+    var repaintBoundingBox = FloatRectWrapper()
+    for current: RenderObjectWrapper in childrenOfType(parent: container) {
+      if current.isLegacyRenderSVGHiddenContainer() {
+        continue
+      }
+
+      // Don't include elements in the union that do not render.
+      if let shape = current as? LegacyRenderSVGShapeWrapper, shape.isRenderingDisabled() {
+        continue
+      }
+
+      let transform = current.localToParentTransform()
+      if transform.isIdentity() {
+        updateObjectBoundingBox(
+          &objectBoundingBox, &objectBoundingBoxValid, current, current.objectBoundingBox())
+        repaintBoundingBox.unite(
+          other: current.repaintRectInLocalCoordinates(repaintRectCalculation))
+      } else {
+        updateObjectBoundingBox(
+          &objectBoundingBox, &objectBoundingBoxValid, current,
+          transform.mapRect(rect: current.objectBoundingBox()))
+        repaintBoundingBox.unite(
+          other: transform.mapRect(
+            rect: current.repaintRectInLocalCoordinates(repaintRectCalculation)))
+      }
+    }
+    return ContainerBoundingBoxes(
+      object: objectBoundingBox, objectIsValid: objectBoundingBoxValid, repaint: repaintBoundingBox)
   }
 
   static func paintInfoIntersectsRepaintRect(

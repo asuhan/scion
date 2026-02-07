@@ -35,6 +35,8 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
 
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
+  func isRenderingDisabled() -> Bool { fatalError("Not reached") }
+
   func hasPath() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
