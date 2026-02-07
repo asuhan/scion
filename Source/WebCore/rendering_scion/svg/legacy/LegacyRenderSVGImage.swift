@@ -57,5 +57,10 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  override func localTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var needsTransformUpdate = true
 }

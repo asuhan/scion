@@ -364,7 +364,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     // We update the transform now because updateScaledFont() needs it, but we do it a second time at the end of the layout,
     // since the transform reference box may change because of the font change.
     if !isLayerBasedSVGEngineEnabled() && needsTransformUpdate {
-      localTransform = textElement().animatedLocalTransform()
+      m_localTransform = textElement().animatedLocalTransform()
       updateCachedBoundariesInParents = true
     }
 
@@ -459,7 +459,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     } else {
       if needsTransformUpdate {
         if previousReferenceBoxRect != transformReferenceBoxRect() {
-          localTransform = textElement().animatedLocalTransform()
+          m_localTransform = textElement().animatedLocalTransform()
         }
         needsTransformUpdate = false
       }
@@ -517,6 +517,11 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func localTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func shouldHandleSubtreeMutations() -> Bool {
     if beingDestroyed() || !everHadLayout() {
       assert(layoutAttributes.a.isEmpty)
@@ -534,7 +539,7 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   private var needsPositioningValuesUpdate = false
   private var needsTransformUpdate = true  // FIXME: [LBSE] Only needed for legacy SVG engine.
   private var needsTextMetricsUpdate = false
-  private var localTransform = AffineTransform()  // FIXME: [LBSE] Only needed for legacy SVG engine.
+  private var m_localTransform = AffineTransform()  // FIXME: [LBSE] Only needed for legacy SVG engine.
   private var layoutAttributesBuilder = SVGTextLayoutAttributesBuilder()
   var layoutAttributes = LayoutAttributesRef()
   private var m_objectBoundingBox = FloatRectWrapper()

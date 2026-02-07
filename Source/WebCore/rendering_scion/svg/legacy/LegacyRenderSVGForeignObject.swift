@@ -21,8 +21,48 @@
 
 final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    if paintInfo.phase != .Foreground && paintInfo.phase != .Selection {
+      return
+    }
+
+    var childPaintInfo = paintInfo.deepCopy()
+    let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+    childPaintInfo.applyTransform(localTransform())
+
+    if SVGRenderSupport.isOverflowHidden(self) {
+      childPaintInfo.context().clip(rect: viewport)
+    }
+
+    let renderingContext = SVGRenderingContext()
+    if paintInfo.phase == .Foreground {
+      renderingContext.prepareToRenderSVGContent(self, childPaintInfo)
+      if !renderingContext.isRenderingPrepared() {
+        return
+      }
+    }
+
+    let childPoint = LayoutPointWrapper(point: IntPoint())
+    if paintInfo.phase == .Selection {
+      super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
+      return
+    }
+
+    // Paint all phases of FO elements atomically, as though the FO element established its
+    // own stacking context.
+    childPaintInfo.phase = .BlockBackground
+    super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
+    childPaintInfo.phase = .ChildBlockBackgrounds
+    super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
+    childPaintInfo.phase = .Float
+    super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
+    childPaintInfo.phase = .Foreground
+    super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
+    childPaintInfo.phase = .Outline
+    super.paint(paintInfo: &childPaintInfo, paintOffset: childPoint)
   }
 
   override func requiresLayer() -> Bool {
@@ -61,5 +101,11 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func localTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let viewport = FloatRectWrapper()
   private var needsTransformUpdate = true
 }
