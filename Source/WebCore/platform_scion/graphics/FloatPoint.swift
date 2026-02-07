@@ -134,6 +134,11 @@ struct FloatPoint {
   var y: Float32 = 0
 }
 
+func roundedIntPoint(_ p: FloatPoint) -> IntPoint {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func flooredIntPoint(_ p: FloatPoint) -> IntPoint {
   // TODO(asuhan): implement this
   fatalError("Not implemented")

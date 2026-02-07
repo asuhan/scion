@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     SVGElement.swift
     SVGFilterElement.swift
     SVGFitToViewBox.swift
+    SVGForeignObjectElement.swift
     SVGGeometryElement.swift
     SVGGraphicsElement.swift
     SVGImageElement.swift

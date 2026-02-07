@@ -20,6 +20,11 @@
  */
 
 final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
+  private func foreignObjectElement() -> SVGForeignObjectElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if paintInfo.context().paintingDisabled() {
       return
@@ -71,8 +76,60 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())  // LegacyRenderSVGRoot disables paint offset cache for the SVG rendering tree.
+
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: SVGRenderSupport.checkForSVGRepaintDuringLayout(self)
+    )
+
+    var updateCachedBoundariesInParents = false
+    if needsTransformUpdate {
+      m_localTransform = foreignObjectElement().animatedLocalTransform()
+      needsTransformUpdate = false
+      updateCachedBoundariesInParents = true
+    }
+
+    let oldViewport = viewport
+
+    // Cache viewport boundaries
+    let foreignObjectElement = foreignObjectElement()
+    let lengthContext = SVGLengthContext(context: foreignObjectElement)
+    let viewportLocation = FloatPoint(
+      x: foreignObjectElement.x().value(lengthContext),
+      y: foreignObjectElement.y().value(lengthContext))
+    viewport = FloatRectWrapper(
+      location: viewportLocation,
+      size: FloatSize(
+        width: foreignObjectElement.width().value(lengthContext),
+        height: foreignObjectElement.height().value(lengthContext)))
+    if !updateCachedBoundariesInParents {
+      updateCachedBoundariesInParents = oldViewport != viewport
+    }
+
+    // Set box origin to the foreignObject x/y translation, so positioned objects in XHTML content get correct
+    // positions. A regular RenderBoxModelObject would pull this information from RenderStyle - in SVG those
+    // properties are ignored for non <svg> elements, so we mimic what happens when specifying them through CSS.
+
+    // FIXME: Investigate in location rounding issues - only affects LegacyRenderSVGForeignObject & RenderSVGText
+    setLocation(p: LayoutPointWrapper(point: roundedIntPoint(viewportLocation)))
+
+    let layoutChanged = everHadLayout() && selfNeedsLayout()
+    super.layout()
+    assert(!needsLayout())
+
+    // If our bounds changed, notify the parents.
+    if updateCachedBoundariesInParents, let parent = parent() {
+      parent.invalidateCachedBoundaries()
+    }
+
+    // Invalidate all resources of this client if our layout changed.
+    if layoutChanged {
+      SVGResourcesCache.clientLayoutChanged(self)
+    }
+
+    repainter.repaintAfterLayout()
   }
 
   override func repaintRectInLocalCoordinates(
@@ -106,6 +163,7 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private let viewport = FloatRectWrapper()
+  private var m_localTransform = AffineTransform()
+  private var viewport = FloatRectWrapper()
   private var needsTransformUpdate = true
 }
