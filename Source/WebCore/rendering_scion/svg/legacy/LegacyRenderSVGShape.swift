@@ -47,6 +47,11 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
 
   func updateShapeFromElement() { fatalError("Not reached") }
 
+  func isEmpty() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func strokeWidth() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -132,8 +137,49 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().usedVisibility() == .Hidden || isEmpty() {
+      return
+    }
+
+    if paintInfo.phase == .EventRegion {
+      paintInfo.eventRegionContext()!.unite(
+        roundedRect: FloatRoundedRect(rect: fillBoundingBox), renderer: self, style: style(),
+        overrideUserModifyIsEditable: false)
+      return
+    }
+
+    if paintInfo.context().paintingDisabled() || paintInfo.phase != .Foreground {
+      return
+    }
+
+    let boundingBox = repaintRectInLocalCoordinates()
+    if !SVGRenderSupport.paintInfoIntersectsRepaintRect(boundingBox, m_localTransform, paintInfo) {
+      return
+    }
+
+    let childPaintInfo = paintInfo.deepCopy()
+    let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+    childPaintInfo.applyTransform(m_localTransform)
+
+    if childPaintInfo.phase == .Foreground {
+      let renderingContext = SVGRenderingContext(self, childPaintInfo)
+
+      if renderingContext.isRenderingPrepared() {
+        let svgStyle = style().svgStyle()
+        if svgStyle.shapeRendering() == .CrispEdges {
+          childPaintInfo.context().setShouldAntialias(shouldAntialias: false)
+        }
+
+        m_fillRequiresClip = !renderingContext.pathClippingIsEntirelyWithinRendererContents()
+        fillStrokeMarkers(childPaintInfo)
+        m_fillRequiresClip = true
+      }
+    }
+
+    if style().outlineWidth() != 0 {
+      paintOutline(
+        paintInfo: childPaintInfo, paintRect: LayoutRectWrapper(rect: IntRect(boundingBox)))
+    }
   }
 
   override func addFocusRingRects(
@@ -154,9 +200,16 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
+  private func fillStrokeMarkers(_ childPaintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let fillBoundingBox = FloatRectWrapper()
   var needsBoundariesUpdate = false
   var needsShapeUpdate = false
   private var needsTransformUpdate = false
+  private var m_fillRequiresClip = true
   let shapeType: ShapeType = .Empty
   private var m_localTransform = AffineTransform()
 }

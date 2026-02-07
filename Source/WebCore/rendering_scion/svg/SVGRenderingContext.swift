@@ -58,6 +58,11 @@ struct SVGRenderingContext: ~Copyable {
     fatalError("Not implemented")
   }
 
+  func pathClippingIsEntirelyWithinRendererContents() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Support for the buffered-rendering hint.
   func bufferForeground(_ imageBuffer: ImageBufferWrapper?) -> Bool {
     // TODO(asuhan): implement this
