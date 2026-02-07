@@ -38,6 +38,12 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
 
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
+  // Note: Assumes the PaintInfo context has had all local transforms applied.
+  private func paintForeground(_ paintInfo: PaintInfoWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func localToParentTransform() -> AffineTransform {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -96,8 +102,39 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.context().paintingDisabled() || paintInfo.phase != .Foreground
+      || style().usedVisibility() == .Hidden || imageResource.cachedImage() == nil
+    {
+      return
+    }
+
+    let boundingBox = repaintRectInLocalCoordinates()
+    if !SVGRenderSupport.paintInfoIntersectsRepaintRect(boundingBox, m_localTransform, paintInfo) {
+      return
+    }
+
+    let childPaintInfo = paintInfo.deepCopy()
+    let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+    childPaintInfo.applyTransform(m_localTransform)
+
+    if childPaintInfo.phase == .Foreground {
+      let renderingContext = SVGRenderingContext(self, childPaintInfo)
+
+      if renderingContext.isRenderingPrepared() {
+        if style().svgStyle().bufferedRendering() == .Static
+          && renderingContext.bufferForeground(bufferedForeground)
+        {
+          return
+        }
+
+        paintForeground(childPaintInfo)
+      }
+    }
+
+    if style().outlineWidth() != 0 {
+      paintOutline(
+        paintInfo: childPaintInfo, paintRect: LayoutRectWrapper(rect: IntRect(boundingBox)))
+    }
   }
 
   override func localTransform() -> AffineTransform {
@@ -110,4 +147,6 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
   private var m_localTransform = AffineTransform()
   private let m_objectBoundingBox = FloatRectWrapper()
   private var repaintBoundingBox = FloatRectWrapper()
+  private let imageResource = RenderImageResource()
+  private let bufferedForeground: ImageBufferWrapper? = nil
 }

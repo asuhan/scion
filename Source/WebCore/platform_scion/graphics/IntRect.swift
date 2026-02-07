@@ -34,6 +34,11 @@ struct IntRect: Equatable {
     self.size = size
   }
 
+  init(_ r: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func x() -> Int32 { return location.x }
   func y() -> Int32 { return location.y }
   func maxX() -> Int32 { return x() + width() }
