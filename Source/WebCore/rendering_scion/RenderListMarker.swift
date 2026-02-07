@@ -22,6 +22,13 @@
 
 import wk_interop
 
+private func adjustedStyleDifference(
+  _ diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
+) -> StyleDifference {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderListMarkerWrapper: RenderBoxWrapper {
   convenience init(listItem: RenderListItemWrapper, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
@@ -163,8 +170,17 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var diff = diff
+    if oldStyle != nil {
+      diff = adjustedStyleDifference(diff, oldStyle: oldStyle!, newStyle: style())
+    }
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if !optEq(image, style().listStyleImage()) {
+      image?.removeClient(self)
+      image = style().listStyleImage()
+      image?.addClient(self)
+    }
   }
 
   private func relativeMarkerRect() -> FloatRectWrapper {
@@ -188,6 +204,6 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private let m_textWithSuffix = StringWrapper()
-  private let image: StyleImage? = nil
+  private var image: StyleImage? = nil
   private let m_listItem: RenderListItemWrapper? = nil
 }
