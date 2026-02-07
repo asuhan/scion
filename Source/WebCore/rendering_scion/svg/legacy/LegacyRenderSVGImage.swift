@@ -25,6 +25,17 @@
  */
 
 final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
+  private func imageElement() -> SVGImageElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  private func updateImageViewport() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   override func localToParentTransform() -> AffineTransform {
@@ -48,8 +59,40 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    let checkForRepaintOverride =
+      !selfNeedsLayout() ? .No : SVGRenderSupport.checkForSVGRepaintDuringLayout(self)
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: checkForRepaintOverride,
+      shouldAlwaysIssueFullRepaint: nil, repaintOutlineBounds: .No)
+    updateImageViewport()
+
+    let transformOrBoundariesUpdate = needsTransformUpdate || needsBoundariesUpdate
+    if needsTransformUpdate {
+      m_localTransform = imageElement().animatedLocalTransform()
+      needsTransformUpdate = false
+    }
+
+    if needsBoundariesUpdate {
+      repaintBoundingBox = m_objectBoundingBox
+      SVGRenderSupport.intersectRepaintRectWithResources(self, &repaintBoundingBox)
+      needsBoundariesUpdate = false
+    }
+
+    // Invalidate all resources of this client if our layout changed.
+    if everHadLayout() && selfNeedsLayout() {
+      SVGResourcesCache.clientLayoutChanged(self)
+    }
+
+    // If our bounds changed, notify the parents.
+    if transformOrBoundariesUpdate, let parent = parent() {
+      parent.invalidateCachedBoundaries()
+    }
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -62,5 +105,9 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     fatalError("Not implemented")
   }
 
+  private var needsBoundariesUpdate = false
   private var needsTransformUpdate = true
+  private var m_localTransform = AffineTransform()
+  private let m_objectBoundingBox = FloatRectWrapper()
+  private var repaintBoundingBox = FloatRectWrapper()
 }
