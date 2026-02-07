@@ -1654,8 +1654,16 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func issueRepaintForOutlineAuto(_ outlineSize: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var repaintRect = LayoutRectWrapper()
+    var focusRingRects: [LayoutRectWrapper] = []
+    addFocusRingRects(
+      rects: &focusRingRects, additionalOffset: LayoutPointWrapper(),
+      paintContainer: containerForRepaint().renderer)
+    for var rect in focusRingRects {
+      rect.inflate(d: outlineSize)
+      repaintRect.unite(other: rect)
+    }
+    repaintRectangle(repaintRect: repaintRect)
   }
 
   private func updateReferencedSVGResources() {
