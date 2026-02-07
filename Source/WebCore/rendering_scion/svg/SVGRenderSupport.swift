@@ -29,8 +29,19 @@ private func updateObjectBoundingBox(
   _ objectBoundingBox: inout FloatRectWrapper, _ objectBoundingBoxValid: inout Bool,
   _ other: RenderObjectWrapper, _ otherBoundingBox: FloatRectWrapper
 ) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let otherContainer = other as? LegacyRenderSVGContainer
+  let otherValid = otherContainer == nil || otherContainer!.isObjectBoundingBoxValid()
+  if !otherValid {
+    return
+  }
+
+  if !objectBoundingBoxValid {
+    objectBoundingBox = otherBoundingBox
+    objectBoundingBoxValid = true
+    return
+  }
+
+  objectBoundingBox.uniteEvenIfEmpty(other: otherBoundingBox)
 }
 
 private func invalidateResourcesOfChildren(_ renderer: RenderElementWrapper) {

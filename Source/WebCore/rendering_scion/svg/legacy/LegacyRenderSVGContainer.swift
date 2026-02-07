@@ -92,6 +92,8 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
 
   func didTransformToRootUpdate() -> Bool { return false }
 
+  func isObjectBoundingBoxValid() -> Bool { return objectBoundingBoxValid }
+
   func isRepaintSuspendedForChildren() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -199,6 +201,7 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   private let repaintBoundingBox = FloatRectWrapper()
   private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
 
+  private let objectBoundingBoxValid = false
   private var needsBoundariesUpdate = true
   private var repaintIsSuspendedForChildrenDuringLayout = false
 }
