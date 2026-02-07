@@ -189,8 +189,7 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func localSelectionRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
   }
 
   private struct TextRunWithUnderlyingString {
