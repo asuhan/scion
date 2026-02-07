@@ -25,8 +25,15 @@ import wk_interop
 private func adjustedStyleDifference(
   _ diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
 ) -> StyleDifference {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if diff >= .Layout {
+    return diff
+  }
+  // FIXME: Preferably we do this at RenderStyle::changeRequiresLayout but checking against pseudo(::marker) is not sufficient.
+  let needsLayout =
+    oldStyle.listStylePosition() != newStyle.listStylePosition()
+    || oldStyle.listStyleType() != newStyle.listStyleType()
+    || oldStyle.isDisplayInlineType() != newStyle.isDisplayInlineType()
+  return needsLayout ? .Layout : diff
 }
 
 final class RenderListMarkerWrapper: RenderBoxWrapper {

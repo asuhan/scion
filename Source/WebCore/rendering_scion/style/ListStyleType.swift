@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct ListStyleType {
+struct ListStyleType: Equatable {
   enum `Type`: UInt8 {
     case CounterStyle
     case String
@@ -46,4 +46,6 @@ struct ListStyleType {
   }
 
   let type: `Type`
+  // The identifier is the string when the type is String and is the @counter-style name when the type is CounterStyle.
+  let identifier: AtomStringWrapper
 }

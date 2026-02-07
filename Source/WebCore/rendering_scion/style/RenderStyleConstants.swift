@@ -601,6 +601,11 @@ enum CaptionSide: UInt8 {
   case Bottom
 }
 
+enum ListStylePosition {
+  case Outside
+  case Inside
+}
+
 enum Visibility: UInt8 {
   case Visible
   case Hidden
