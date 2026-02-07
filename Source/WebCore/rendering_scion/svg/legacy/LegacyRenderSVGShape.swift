@@ -28,6 +28,11 @@
  */
 
 class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapeProto {
+  private func graphicsElement() -> SVGGraphicsElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   func hasPath() -> Bool {
@@ -39,6 +44,8 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func updateShapeFromElement() { fatalError("Not reached") }
 
   func strokeWidth() -> Float32 {
     // TODO(asuhan): implement this
@@ -87,8 +94,41 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    let checkForRepaintOverride: LayoutRepainter.CheckForRepaint =
+      !selfNeedsLayout() ? .No : SVGRenderSupport.checkForSVGRepaintDuringLayout(self)
+    let repainter = LayoutRepainter(
+      renderer: self, checkForRepaintOverride: checkForRepaintOverride,
+      shouldAlwaysIssueFullRepaint: nil, repaintOutlineBounds: .No)
+
+    var updateCachedBoundariesInParents = false
+
+    if needsShapeUpdate || needsBoundariesUpdate {
+      updateShapeFromElement()
+      needsShapeUpdate = false
+      updateRepaintBoundingBox()
+      needsBoundariesUpdate = false
+      updateCachedBoundariesInParents = true
+    }
+
+    if needsTransformUpdate {
+      m_localTransform = graphicsElement().animatedLocalTransform()
+      needsTransformUpdate = false
+      updateCachedBoundariesInParents = true
+    }
+
+    // Invalidate all resources of this client if our layout changed.
+    if everHadLayout() && selfNeedsLayout() {
+      SVGResourcesCache.clientLayoutChanged(self)
+    }
+
+    // If our bounds changed, notify the parents.
+    if updateCachedBoundariesInParents, let parent = parent() {
+      parent.invalidateCachedBoundaries()
+    }
+
+    repainter.repaintAfterLayout()
+    clearNeedsLayout()
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -109,7 +149,14 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
+  private func updateRepaintBoundingBox() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var needsBoundariesUpdate = false
   var needsShapeUpdate = false
   private var needsTransformUpdate = false
   let shapeType: ShapeType = .Empty
+  private var m_localTransform = AffineTransform()
 }
