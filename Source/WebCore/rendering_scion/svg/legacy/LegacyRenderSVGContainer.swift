@@ -160,8 +160,19 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   override final func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if repaintRectCalculation == .Fast {
+      return repaintBoundingBox
+    }
+
+    if accurateRepaintBoundingBox == nil {
+      // Initialize accurateRepaintBoundingBox before calling computeContainerBoundingBoxes, since recursively referenced markers can cause us to re-enter here.
+      accurateRepaintBoundingBox = FloatRectWrapper()
+      let bbs = SVGRenderSupport.computeContainerBoundingBoxes(self, .Accurate)
+      var objectBoundingBoxValid = bbs.repaint
+      SVGRenderSupport.intersectRepaintRectWithResources(self, &objectBoundingBoxValid, .Accurate)
+      accurateRepaintBoundingBox = repaintBoundingBox
+    }
+    return accurateRepaintBoundingBox!
   }
 
   // Allow LegacyRenderSVGTransformableContainer to hook in at the right time in layout()
@@ -184,6 +195,9 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let repaintBoundingBox = FloatRectWrapper()
+  private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
 
   private var needsBoundariesUpdate = true
   private var repaintIsSuspendedForChildrenDuringLayout = false
