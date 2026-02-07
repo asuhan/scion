@@ -30,6 +30,11 @@ final class AccessibilityRegionContext: RegionContext {
     fatalError("Not implemented")
   }
 
+  func takeBounds(_ renderBox: RenderBoxWrapper, _ paintRect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func takeBounds(renderInline: RenderInlineWrapper?, paintRect: LayoutRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

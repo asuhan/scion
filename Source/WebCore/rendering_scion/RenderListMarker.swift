@@ -43,8 +43,101 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.phase != .Foreground && paintInfo.phase != .Accessibility {
+      return
+    }
+
+    if style().usedVisibility() != .Visible {
+      return
+    }
+
+    let boxOrigin = paintOffset + location()
+    var overflowRect = visualOverflowRect()
+    overflowRect.moveBy(offset: boxOrigin)
+    if !paintInfo.rect.intersects(other: overflowRect) {
+      return
+    }
+
+    let box = LayoutRectWrapper(location: boxOrigin, size: size())
+
+    var markerRect = relativeMarkerRect()
+    markerRect.moveBy(delta: boxOrigin.FloatPoint())
+
+    if paintInfo.phase == .Accessibility {
+      paintInfo.accessibilityRegionContext()!.takeBounds(self, markerRect)
+      return
+    }
+
+    if markerRect.isEmpty() {
+      return
+    }
+
+    let context = paintInfo.context()
+
+    if isImage() {
+      if let markerImage = image!.image(renderer: self, size: markerRect.size()) {
+        context.drawImage(markerImage, markerRect)
+      }
+      if selectionState() != .None {
+        var selRect: LayoutRectWrapper = localSelectionRect()
+        selRect.moveBy(offset: boxOrigin)
+        context.fillRect(
+          rect: FloatRectWrapper(r: snappedIntRect(rect: selRect)),
+          color: m_listItem!.selectionBackgroundColor())
+      }
+      return
+    }
+
+    if selectionState() != .None {
+      var selRect: LayoutRectWrapper = localSelectionRect()
+      selRect.moveBy(offset: boxOrigin)
+      context.fillRect(
+        rect: FloatRectWrapper(r: snappedIntRect(rect: selRect)),
+        color: m_listItem!.selectionBackgroundColor())
+    }
+
+    let color = style().visitedDependentColorWithColorFilter(colorProperty: .CSSPropertyColor)
+    context.setStrokeColor(color: color)
+    context.setStrokeStyle(style: .SolidStroke)
+    context.setStrokeThickness(thickness: 1)
+    context.setFillColor(color: color)
+
+    let listStyleType = style().listStyleType()
+    if listStyleType.isDisc() {
+      context.fillEllipse(markerRect)
+      return
+    }
+    if listStyleType.isCircle() {
+      context.strokeEllipse(markerRect)
+      return
+    }
+    if listStyleType.isSquare() {
+      context.fillRect(markerRect)
+      return
+    }
+    if m_textWithSuffix.isEmpty() {
+      return
+    }
+
+    let stateSaver = GraphicsContextStateSaver(context: context, saveAndRestore: false)
+    if !style().isHorizontalWritingMode() {
+      markerRect.moveBy(delta: (-boxOrigin).FloatPoint())
+      markerRect = markerRect.transposedRect()
+      markerRect.moveBy(
+        delta: FloatPoint(x: box.x().float(), y: (box.y() - logicalHeight()).float()))
+      stateSaver.save()
+      context.translate(x: markerRect.x(), y: markerRect.maxY())
+      context.rotate(Float32(deg2rad(90)))
+      context.translate(x: -markerRect.x(), y: -markerRect.maxY())
+    }
+
+    var textOrigin = FloatPoint(
+      x: markerRect.x(), y: markerRect.y() + Float32(style().metricsOfPrimaryFont().intAscent()))
+    textOrigin = roundPointToDevicePixels(
+      point: LayoutPointWrapper(size: textOrigin),
+      pixelSnappingFactor: document().deviceScaleFactor(),
+      directionalRoundingToRight: style().isLeftToRightDirection())
+    context.drawText(font: style().fontCascade(), run: textRun().textRun, point: textOrigin)
   }
 
   override func layout() {
@@ -76,4 +169,28 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func relativeMarkerRect() -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func localSelectionRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private struct TextRunWithUnderlyingString {
+    let textRun: TextRunWrapper
+    let underlyingString: StringWrapper
+  }
+
+  private func textRun() -> TextRunWithUnderlyingString {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let m_textWithSuffix = StringWrapper()
+  private let image: StyleImage? = nil
+  private let m_listItem: RenderListItemWrapper? = nil
 }

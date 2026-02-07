@@ -27,6 +27,10 @@ import wk_interop
 
 let sqrtOfTwoDouble: Float64 = 2.squareRoot()
 
+private let radiansPerDegreeDouble = Float64.pi / 180
+
+func deg2rad(_ d: Float64) -> Float64 { return d * radiansPerDegreeDouble }
+
 private let degreesPerRadianFloat = 180 / Float32.pi
 
 func rad2deg(_ r: Float32) -> Float32 { return r * degreesPerRadianFloat }

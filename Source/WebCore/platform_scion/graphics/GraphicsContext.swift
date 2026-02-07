@@ -253,6 +253,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func strokeEllipse(_ ellipse: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum RequiresClipToRect {
     case No
     case Yes
@@ -338,7 +343,8 @@ class GraphicsContextWrapper {
   @discardableResult
   func drawImage(
     _ image: ImageWrapper, _ destination: FloatRectWrapper,
-    _ imagePaintingOptions: ImagePaintingOptionsWrapper
+    _ imagePaintingOptions: ImagePaintingOptionsWrapper = ImagePaintingOptionsWrapper(
+      ImageOrientation(orientation: .FromImage))
   ) -> ImageDrawResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
