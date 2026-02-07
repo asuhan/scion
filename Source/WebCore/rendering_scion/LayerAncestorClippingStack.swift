@@ -64,8 +64,9 @@ class LayerAncestorClippingStack {
       let clipDataEntry = clipDataStack[i]
 
       if i >= stackEntryCount {
-        // TODO(asuhan): implement this
-        fatalError("Not implemented")
+        stack.append(ClippingStackEntry(clipData: clipDataEntry))
+        stackChanged = true
+        continue
       }
 
       if stack[i].clipData != clipDataEntry {
