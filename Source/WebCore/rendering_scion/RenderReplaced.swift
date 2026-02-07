@@ -436,6 +436,10 @@ class RenderReplacedWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    renderReplacedPaint(paintInfo: &paintInfo, paintOffset: paintOffset)
+  }
+
+  func renderReplacedPaint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if !shouldPaint(&paintInfo, paintOffset) {
       return
     }

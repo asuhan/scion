@@ -42,6 +42,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func isPluginDocument() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasSVGRootNode() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

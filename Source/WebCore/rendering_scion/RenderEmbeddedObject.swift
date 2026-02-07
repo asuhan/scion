@@ -170,8 +170,23 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The relevant repainted object heuristic is not tuned for plugin documents.
+    let countsTowardsRelevantObjects =
+      !document().isPluginDocument() && paintInfo.phase == .Foreground
+
+    if isPluginUnavailable {
+      if countsTowardsRelevantObjects {
+        page().addRelevantUnpaintedObject(object: self, objectPaintRect: visualOverflowRect())
+      }
+      renderReplacedPaint(paintInfo: &paintInfo, paintOffset: paintOffset)
+      return
+    }
+
+    if countsTowardsRelevantObjects {
+      page().addRelevantRepaintedObject(object: self, objectPaintRect: visualOverflowRect())
+    }
+
+    super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
   }
 
   override final func layout() {
@@ -257,6 +272,7 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
       textWidth: textWidth)
   }
 
+  private let isPluginUnavailable = false
   private let pluginUnavailabilityReason: PluginUnavailabilityReason = .PluginMissing
   private let unavailablePluginReplacementText = StringWrapper()
   private let unavailablePluginIndicatorIsPressed = false
