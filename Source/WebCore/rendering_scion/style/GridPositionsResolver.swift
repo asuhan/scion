@@ -110,7 +110,7 @@ class NamedLineCollectionBase {
         } else {
           startSide = true
         }
-        areaName = name.left(length: suffix!)
+        areaName = name.left(length: UInt32(suffix!))
       }
       if let implicitLine = clampedImplicitLineForArea(
         style: gridContainerStyle, name: areaName, min: 0, max: Int32(self.lastLine),
