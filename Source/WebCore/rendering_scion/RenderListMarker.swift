@@ -356,8 +356,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func parentBox(_ box: RenderBoxWrapper) -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard
+      let multiColumnFlow = m_listItem!.enclosingFragmentedFlow() as? RenderMultiColumnFlowWrapper
+    else { return box.parentBox() }
+    let placeholder = multiColumnFlow.findColumnSpannerPlaceholder(spanner: box)
+    return placeholder?.parentBox() ?? box.parentBox()
   }
 
   private func relativeMarkerRect() -> FloatRectWrapper {
