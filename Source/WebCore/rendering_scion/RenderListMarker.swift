@@ -38,6 +38,11 @@ private func adjustedStyleDifference(
   return needsLayout ? .Layout : diff
 }
 
+private func reversed(_ string: StringWrapperView) -> StringWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderListMarkerWrapper: RenderBoxWrapper {
   convenience init(listItem: RenderListItemWrapper, style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
@@ -407,8 +412,33 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func textRun() -> TextRunWithUnderlyingString {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!m_textWithSuffix.isEmpty())
+
+    // Since the bidi algorithm doesn't run on this text, we instead reorder the characters here.
+    // We use u_charDirection to figure out if the marker text is RTL and assume the suffix matches the surrounding direction.
+    var textForRun = StringWrapper()
+    if textIsLeftToRightDirection {
+      if style().isLeftToRightDirection() {
+        textForRun = m_textWithSuffix
+      } else {
+        textForRun = makeString(
+          reversed(
+            StringWrapperView(s: m_textWithSuffix).substring(start: UInt32(textWithoutSuffixLength))
+          ),
+          m_textWithSuffix.left(length: UInt32(textWithoutSuffixLength)))
+      }
+    } else {
+      if !style().isLeftToRightDirection() {
+        textForRun = reversed(StringWrapperView(s: m_textWithSuffix))
+      } else {
+        textForRun = makeString(
+          reversed(
+            StringWrapperView(s: m_textWithSuffix).left(length: UInt32(textWithoutSuffixLength))),
+          m_textWithSuffix.substring(position: UInt32(textWithoutSuffixLength)))
+      }
+    }
+    let textRun = RenderBlockWrapper.constructTextRun(textForRun, style())
+    return TextRunWithUnderlyingString(textRun: textRun, underlyingString: textForRun)
   }
 
   private func counterStyle() -> CSSCounterStyleWrapper? {

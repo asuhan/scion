@@ -90,7 +90,7 @@ class StringWrapper: Hashable {
     fatalError("Not implemented")
   }
 
-  func left(length: UInt64) -> StringWrapper {
+  func left(length: UInt32) -> StringWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

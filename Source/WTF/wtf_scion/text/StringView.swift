@@ -105,6 +105,11 @@ class StringWrapperView {
     return StringWrapperView(s: StringWrapper())
   }
 
+  func left(length: UInt32) -> StringWrapperView {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func right(length: UInt32) -> StringWrapperView {
     return substring(start: self.length() - length, length: length)
   }
