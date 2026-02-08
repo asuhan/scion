@@ -44,6 +44,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
 
   func isInside() -> Bool { return wk_interop.RenderListMarker_isInside(p) }
 
+  private func updateMarginsAndContent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func listItem() -> RenderListItemWrapper? {
     if let unwrapped = wk_interop.RenderListMarker_listItem(p) {
       return RenderListItemWrapper(p: unwrapped)
@@ -182,8 +187,46 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    var blockOffset = LayoutUnit()
+    var ancestor = parentBox(self)
+    while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(m_listItem?.p) {
+      blockOffset += ancestor!.logicalTop()
+      ancestor = parentBox(ancestor!)
+    }
+
+    let zero = LayoutUnit(value: UInt64(0))
+    lineLogicalOffsetForListItem = m_listItem!.logicalLeftOffsetForLine(
+      position: blockOffset, logicalHeight: zero)
+    lineOffsetForListItem =
+      style().isLeftToRightDirection()
+      ? lineLogicalOffsetForListItem
+      : m_listItem!.logicalRightOffsetForLine(position: blockOffset, logicalHeight: zero)
+
+    if isImage() {
+      updateMarginsAndContent()
+      setWidth(width: image!.imageSize(self, style().usedZoom()).width)
+      setHeight(height: image!.imageSize(self, style().usedZoom()).height)
+    } else {
+      setLogicalWidth(size: minPreferredLogicalWidth())
+      setLogicalHeight(size: LayoutUnit(value: style().metricsOfPrimaryFont().intHeight()))
+    }
+
+    setMarginStart(value: LayoutUnit(value: 0))
+    setMarginEnd(value: LayoutUnit(value: 0))
+
+    let startMargin = style().marginStart()
+    let endMargin = style().marginEnd()
+    if startMargin.isFixed() {
+      setMarginStart(value: LayoutUnit(value: startMargin.value()))
+    }
+    if endMargin.isFixed() {
+      setMarginEnd(value: LayoutUnit(value: endMargin.value()))
+    }
+
+    clearNeedsLayout()
   }
 
   override func lineHeight(
@@ -228,6 +271,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func parentBox(_ box: RenderBoxWrapper) -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func relativeMarkerRect() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -255,4 +303,6 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   private let m_textWithSuffix = StringWrapper()
   private var image: StyleImage? = nil
   private let m_listItem: RenderListItemWrapper? = nil
+  private var lineOffsetForListItem = LayoutUnit()
+  private var lineLogicalOffsetForListItem = LayoutUnit()
 }
