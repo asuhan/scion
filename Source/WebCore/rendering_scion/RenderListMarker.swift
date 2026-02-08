@@ -361,8 +361,37 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func relativeMarkerRect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isImage() {
+      return FloatRectWrapper(
+        x: 0, y: 0, width: image!.imageSize(self, style().usedZoom()).width,
+        height: image!.imageSize(self, style().usedZoom()).height)
+    }
+
+    var relativeRect = FloatRectWrapper()
+    if widthUsesMetricsOfPrimaryFont() {
+      // FIXME: Are these particular rounding rules necessary?
+      let fontMetrics = style().metricsOfPrimaryFont()
+      let ascent = Int32(fontMetrics.intAscent())
+      let bulletWidth = Float32((ascent * 2 / 3 + 1) / 2)
+      relativeRect = FloatRectWrapper(
+        x: 1, y: Float32(3 * (ascent - ascent * 2 / 3) / 2), width: bulletWidth, height: bulletWidth
+      )
+    } else {
+      if m_textWithSuffix.isEmpty() {
+        return FloatRectWrapper()
+      }
+      let font = style().fontCascade()
+      relativeRect = FloatRectWrapper(
+        x: 0, y: 0, width: font.width(run: textRun().textRun),
+        height: Float32(font.metricsOfPrimaryFont().intHeight()))
+    }
+
+    if !style().isHorizontalWritingMode() {
+      relativeRect = relativeRect.transposedRect()
+      relativeRect.setX(x: width() - relativeRect.x() - relativeRect.width())
+    }
+
+    return relativeRect
   }
 
   private func localSelectionRect() -> LayoutRectWrapper {
