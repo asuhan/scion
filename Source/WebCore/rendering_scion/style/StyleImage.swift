@@ -54,6 +54,11 @@ class StyleImage: Equatable {
   func hasClient(_ renderer: RenderElementWrapper) -> Bool { fatalError("Not reached") }
 
   // Size / scale.
+  func imageSize(_ renderer: RenderElementWrapper?, _ multiplier: Float32) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeIntrinsicDimensions(
     renderer: RenderElementWrapper?, intrinsicWidth: inout LengthWrapper,
     intrinsicHeight: inout LengthWrapper, intrinsicRatio: inout FloatSize

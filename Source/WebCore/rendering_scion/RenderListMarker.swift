@@ -52,8 +52,35 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   override final func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(preferredLogicalWidthsDirty())
+    updateContent()
+
+    if isImage() {
+      let imageSize = LayoutSizeWrapper(size: image!.imageSize(self, style().usedZoom()))
+      maxPreferredLogicalWidth =
+        style().isHorizontalWritingMode() ? imageSize.width() : imageSize.height()
+      minPreferredLogicalWidth = maxPreferredLogicalWidth
+      setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+      updateMargins()
+      return
+    }
+
+    let font = style().fontCascade()
+
+    var logicalWidth = LayoutUnit()
+    if widthUsesMetricsOfPrimaryFont() {
+      logicalWidth = LayoutUnit(
+        value: (font.metricsOfPrimaryFont().intAscent() * 2 / 3 + 1) / 2 + 2)
+    } else if !m_textWithSuffix.isEmpty() {
+      logicalWidth = LayoutUnit(value: font.width(run: textRun().textRun))
+    }
+
+    minPreferredLogicalWidth = logicalWidth
+    maxPreferredLogicalWidth = logicalWidth
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+
+    updateMargins()
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
@@ -191,6 +218,16 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     }
   }
 
+  private func updateMargins() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func updateContent() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func relativeMarkerRect() -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -206,6 +243,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func textRun() -> TextRunWithUnderlyingString {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func widthUsesMetricsOfPrimaryFont() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

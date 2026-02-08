@@ -22,6 +22,13 @@
  */
 
 final class StyleCachedImage: StyleImage {
+  override final func imageSize(_ renderer: RenderElementWrapper?, _ multiplier: Float32)
+    -> FloatSize
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func computeIntrinsicDimensions(
     renderer: RenderElementWrapper?, intrinsicWidth: inout LengthWrapper,
     intrinsicHeight: inout LengthWrapper, intrinsicRatio: inout FloatSize
