@@ -34,6 +34,12 @@ class StringWrapper: Hashable {
     self.p = wk_interop.String_new_span(characters.p)
   }
 
+  // Construct a string from a constant string literal.
+  init(_ characters: ASCIILiteral) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isNull() -> Bool {
     if self.p != nil {
       return wk_interop.String_isNull(self.p)

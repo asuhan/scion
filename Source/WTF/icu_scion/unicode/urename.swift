@@ -22,6 +22,11 @@
 
 import wk_interop
 
+func u_charDirection(_ c: UChar) -> UCharDirection {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func u_charType(c: Int32) -> Int8 {
   return wk_interop.u_charType_scion(c)
 }

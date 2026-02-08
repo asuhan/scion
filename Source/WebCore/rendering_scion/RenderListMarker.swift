@@ -308,8 +308,51 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func updateContent() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isImage() {
+      // FIXME: This is a somewhat arbitrary width.  Generated images for markers really won't become particularly useful
+      // until we support the CSS3 marker pseudoclass to allow control over the width and height of the marker box.
+      let bulletWidth = LayoutUnit(value: Int32(style().metricsOfPrimaryFont().intAscent()) / 2)
+      let defaultBulletSize = LayoutSizeWrapper(width: bulletWidth, height: bulletWidth)
+      let imageSize = calculateImageIntrinsicDimensions(
+        image: image!, positioningAreaSize: defaultBulletSize, scaleByUsedZoom: .No)
+      image!.setContainerContextForRenderer(
+        renderer: self, containerSize: imageSize.FloatSize(), containerZoom: style().usedZoom())
+      m_textWithSuffix = emptyString()
+      textWithoutSuffixLength = 0
+      textIsLeftToRightDirection = true
+      return
+    }
+
+    let isLeftToRightDirectionContent = {
+      (content: StringWrapper) in
+      // FIXME: Depending on the string value, we may need the real bidi algorithm. (rdar://106139180)
+      // Also we may need to start checking for the entire content for directionality (and whether we need to check for additional
+      // directionality characters like U_RIGHT_TO_LEFT_EMBEDDING).
+      let bidiCategory = u_charDirection(content[0])
+      return bidiCategory != .U_RIGHT_TO_LEFT && bidiCategory != .U_RIGHT_TO_LEFT_ARABIC
+    }
+
+    let styleType = style().listStyleType()
+    switch styleType.type {
+    case .String:
+      m_textWithSuffix = styleType.identifier.string()
+      textWithoutSuffixLength = UInt8(m_textWithSuffix.length())
+      textIsLeftToRightDirection = isLeftToRightDirectionContent(m_textWithSuffix)
+    case .CounterStyle:
+      let counter = counterStyle()!
+      let text = makeString(
+        counter.prefix().text,
+        counter.text(
+          m_listItem!.value(),
+          makeTextFlow(writingMode: style().writingMode(), direction: style().direction())))
+      m_textWithSuffix = makeString(text, counter.suffix().text)
+      textWithoutSuffixLength = UInt8(text.length())
+      textIsLeftToRightDirection = isLeftToRightDirectionContent(text)
+    case .None:
+      m_textWithSuffix = StringWrapper(ASCIILiteral(" "))
+      textWithoutSuffixLength = 0
+      textIsLeftToRightDirection = true
+    }
   }
 
   private func parentBox(_ box: RenderBoxWrapper) -> RenderBoxWrapper? {
@@ -336,12 +379,19 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func counterStyle() -> CSSCounterStyleWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func widthUsesMetricsOfPrimaryFont() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private let m_textWithSuffix = StringWrapper()
+  private var m_textWithSuffix = StringWrapper()
+  private var textWithoutSuffixLength: UInt8 = 0
+  private var textIsLeftToRightDirection = true
   private var image: StyleImage? = nil
   private let m_listItem: RenderListItemWrapper? = nil
   private var lineOffsetForListItem = LayoutUnit()
