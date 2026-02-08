@@ -417,8 +417,8 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func widthUsesMetricsOfPrimaryFont() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let listType = style().listStyleType()
+    return listType.isCircle() || listType.isDisc() || listType.isSquare()
   }
 
   private var m_textWithSuffix = StringWrapper()
