@@ -238,8 +238,12 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isImage() {
+      return m_listItem!.lineHeight(
+        firstLine: firstLine, direction: direction, linePositionMode: .PositionOfInteriorLineBoxes)
+    }
+    return super.lineHeight(
+      firstLine: firstLine, direction: direction, linePositionMode: linePositionMode)
   }
 
   override final func canBeSelectionLeaf() -> Bool { return true }
