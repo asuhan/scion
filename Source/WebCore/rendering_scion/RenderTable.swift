@@ -1276,36 +1276,37 @@ class RenderTableWrapper: RenderBlockWrapper {
     assert(preferredLogicalWidthsDirty())
 
     computeIntrinsicLogicalWidths(
-      minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+      minLogicalWidth: &m_minPreferredLogicalWidth, maxLogicalWidth: &m_maxPreferredLogicalWidth)
 
     let bordersPaddingAndSpacing = bordersPaddingAndSpacingInRowDirection()
-    minPreferredLogicalWidth += bordersPaddingAndSpacing
-    maxPreferredLogicalWidth += bordersPaddingAndSpacing
+    m_minPreferredLogicalWidth += bordersPaddingAndSpacing
+    m_maxPreferredLogicalWidth += bordersPaddingAndSpacing
 
     tableLayout!.applyPreferredLogicalWidthQuirks(
-      minWidth: &minPreferredLogicalWidth, maxWidth: &maxPreferredLogicalWidth)
+      minWidth: &m_minPreferredLogicalWidth, maxWidth: &m_maxPreferredLogicalWidth)
 
     for caption in captions {
-      minPreferredLogicalWidth = max(minPreferredLogicalWidth, caption!.minPreferredLogicalWidth())
+      m_minPreferredLogicalWidth = max(
+        m_minPreferredLogicalWidth, caption!.minPreferredLogicalWidth())
     }
 
     let styleToUse = style()
     // FIXME: This should probably be checking for isSpecified since you should be able to use percentage or calc values for min-width.
     if styleToUse.logicalMinWidth().isFixed() && styleToUse.logicalMinWidth().value() > 0 {
-      maxPreferredLogicalWidth = max(
-        maxPreferredLogicalWidth,
+      m_maxPreferredLogicalWidth = max(
+        m_maxPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
-      minPreferredLogicalWidth = max(
-        minPreferredLogicalWidth,
+      m_minPreferredLogicalWidth = max(
+        m_minPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
     }
 
     // FIXME: This should probably be checking for isSpecified since you should be able to use percentage or calc values for maxWidth.
     if styleToUse.logicalMaxWidth().isFixed() {
-      maxPreferredLogicalWidth = min(
-        maxPreferredLogicalWidth,
+      m_maxPreferredLogicalWidth = min(
+        m_maxPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMaxWidth()))
-      maxPreferredLogicalWidth = max(maxPreferredLogicalWidth, minPreferredLogicalWidth)
+      m_maxPreferredLogicalWidth = max(m_maxPreferredLogicalWidth, m_minPreferredLogicalWidth)
     }
 
     // FIXME: We should be adding borderAndPaddingLogicalWidth here, but m_tableLayout->computePreferredLogicalWidths already does,

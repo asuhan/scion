@@ -64,8 +64,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
         pageLogicalSize = LayoutSizeWrapper(
           width: logicalWidth(), height: LayoutUnit(value: UInt64(0)))
       }
-      minPreferredLogicalWidth = pageLogicalSize!.width()
-      maxPreferredLogicalWidth = minPreferredLogicalWidth
+      m_minPreferredLogicalWidth = pageLogicalSize!.width()
+      m_maxPreferredLogicalWidth = m_minPreferredLogicalWidth
     }
 
     // Use calcWidth/Height to get the new width/height, since this will take the full page zoom factor into account.

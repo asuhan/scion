@@ -22,6 +22,8 @@
 
 import wk_interop
 
+private let cMarkerPadding: Int32 = 7
+
 private func adjustedStyleDifference(
   _ diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
 ) -> StyleDifference {
@@ -65,9 +67,9 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
 
     if isImage() {
       let imageSize = LayoutSizeWrapper(size: image!.imageSize(self, style().usedZoom()))
-      maxPreferredLogicalWidth =
+      m_maxPreferredLogicalWidth =
         style().isHorizontalWritingMode() ? imageSize.width() : imageSize.height()
-      minPreferredLogicalWidth = maxPreferredLogicalWidth
+      m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
       setPreferredLogicalWidthsDirty(shouldBeDirty: false)
       updateMargins()
       return
@@ -83,8 +85,8 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
       logicalWidth = LayoutUnit(value: font.width(run: textRun().textRun))
     }
 
-    minPreferredLogicalWidth = logicalWidth
-    maxPreferredLogicalWidth = logicalWidth
+    m_minPreferredLogicalWidth = logicalWidth
+    m_maxPreferredLogicalWidth = logicalWidth
 
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
 
@@ -269,8 +271,40 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   }
 
   private func updateMargins() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fontMetrics = style().metricsOfPrimaryFont()
+
+    var marginStart = LayoutUnit()
+    var marginEnd = LayoutUnit()
+
+    if isInside() {
+      if isImage() {
+        marginEnd = LayoutUnit(value: cMarkerPadding)
+      } else if widthUsesMetricsOfPrimaryFont() {
+        marginStart = LayoutUnit(value: -1)
+        marginEnd = Int32(fontMetrics.intAscent()) - minPreferredLogicalWidth() + 1
+      }
+    } else if isImage() {
+      marginStart = -minPreferredLogicalWidth() - cMarkerPadding
+      marginEnd = LayoutUnit(value: cMarkerPadding)
+    } else {
+      let offset = Int32(fontMetrics.intAscent()) * 2 / 3
+      if widthUsesMetricsOfPrimaryFont() {
+        marginStart = LayoutUnit(value: -offset - cMarkerPadding - 1)
+        marginEnd = offset + cMarkerPadding + 1 - minPreferredLogicalWidth()
+      } else if style().listStyleType().type == .String {
+        if !m_textWithSuffix.isEmpty() {
+          marginStart = -minPreferredLogicalWidth()
+        }
+      } else {
+        if !m_textWithSuffix.isEmpty() {
+          marginStart = -minPreferredLogicalWidth() - offset / 2
+          marginEnd = LayoutUnit(value: offset / 2)
+        }
+      }
+    }
+
+    mutableStyle().setMarginStart(LengthWrapper(value: marginStart, type: .Fixed))
+    mutableStyle().setMarginEnd(LengthWrapper(value: marginEnd, type: .Fixed))
   }
 
   private func updateContent() {

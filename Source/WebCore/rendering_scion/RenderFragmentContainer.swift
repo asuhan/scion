@@ -101,17 +101,17 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
     // FIXME: Currently, the code handles only the <length> case for min-width/max-width.
     // It should also support other values, like percentage, calc or viewport relative.
-    maxPreferredLogicalWidth = LayoutUnit(value: 0)
-    minPreferredLogicalWidth = maxPreferredLogicalWidth
+    m_maxPreferredLogicalWidth = LayoutUnit(value: 0)
+    m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
 
     let styleToUse = style()
     if styleToUse.logicalWidth().isFixed() && styleToUse.logicalWidth().value() > 0 {
-      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+      m_maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: styleToUse.logicalWidth())
-      minPreferredLogicalWidth = maxPreferredLogicalWidth
+      m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
     } else {
       computeIntrinsicLogicalWidths(
-        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+        minLogicalWidth: &m_minPreferredLogicalWidth, maxLogicalWidth: &m_maxPreferredLogicalWidth)
     }
 
     computePreferredLogicalWidths(

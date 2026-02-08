@@ -2387,6 +2387,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setMarginStart(_ margin: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setMarginEnd(_ margin: LengthWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setMarginBefore(_ margin: LengthWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

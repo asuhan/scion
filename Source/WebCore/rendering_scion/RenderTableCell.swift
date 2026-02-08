@@ -793,7 +793,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
       // to make the minwidth of the cell into the fixed width. They do this
       // even in strict mode, so do not make this a quirk. Affected the top
       // of hiptop.com.
-      minPreferredLogicalWidth = max(LayoutUnit(value: w.value()), minPreferredLogicalWidth)
+      m_minPreferredLogicalWidth = max(LayoutUnit(value: w.value()), m_minPreferredLogicalWidth)
     }
   }
 

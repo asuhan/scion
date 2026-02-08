@@ -248,16 +248,16 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     // Nested style recal do not fire post recal callbacks. see webkit.org/b/153767
     assert(!optionsChanged || Style.postResolutionCallbacksAreSuspended())
 
-    minPreferredLogicalWidth = LayoutUnit(value: 0)
-    maxPreferredLogicalWidth = LayoutUnit(value: 0)
+    m_minPreferredLogicalWidth = LayoutUnit(value: 0)
+    m_maxPreferredLogicalWidth = LayoutUnit(value: 0)
 
     if style().logicalWidth().isFixed() && style().logicalWidth().value() > 0 {
-      maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+      m_maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: style().logicalWidth())
-      minPreferredLogicalWidth = maxPreferredLogicalWidth
+      m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
     } else {
       computeIntrinsicLogicalWidths(
-        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+        minLogicalWidth: &m_minPreferredLogicalWidth, maxLogicalWidth: &m_maxPreferredLogicalWidth)
     }
 
     computePreferredLogicalWidths(

@@ -659,11 +659,11 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     // width may not be set on our containing block.
     if style().logicalWidth().isPercentOrCalculated() {
       computeIntrinsicLogicalWidths(
-        minLogicalWidth: &minPreferredLogicalWidth, maxLogicalWidth: &maxPreferredLogicalWidth)
+        minLogicalWidth: &m_minPreferredLogicalWidth, maxLogicalWidth: &m_maxPreferredLogicalWidth)
     } else {
-      maxPreferredLogicalWidth = computeReplacedLogicalWidth(
+      m_maxPreferredLogicalWidth = computeReplacedLogicalWidth(
         shouldComputePreferred: .ComputePreferred)
-      minPreferredLogicalWidth = maxPreferredLogicalWidth
+      m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
     }
 
     let ignoreMinMaxSizes = shouldIgnoreLogicalMinMaxWidthSizes()
@@ -671,32 +671,32 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     if styleToUse.logicalWidth().isPercentOrCalculated()
       || styleToUse.logicalMaxWidth().isPercentOrCalculated()
     {
-      minPreferredLogicalWidth = LayoutUnit(value: 0)
+      m_minPreferredLogicalWidth = LayoutUnit(value: 0)
     }
 
     if !ignoreMinMaxSizes && styleToUse.logicalMinWidth().isFixed()
       && styleToUse.logicalMinWidth().value() > 0
     {
-      maxPreferredLogicalWidth = max(
-        maxPreferredLogicalWidth,
+      m_maxPreferredLogicalWidth = max(
+        m_maxPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
-      minPreferredLogicalWidth = max(
-        minPreferredLogicalWidth,
+      m_minPreferredLogicalWidth = max(
+        m_minPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMinWidth()))
     }
 
     if !ignoreMinMaxSizes && styleToUse.logicalMaxWidth().isFixed() {
-      maxPreferredLogicalWidth = min(
-        maxPreferredLogicalWidth,
+      m_maxPreferredLogicalWidth = min(
+        m_maxPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMaxWidth()))
-      minPreferredLogicalWidth = min(
-        minPreferredLogicalWidth,
+      m_minPreferredLogicalWidth = min(
+        m_minPreferredLogicalWidth,
         adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: styleToUse.logicalMaxWidth()))
     }
 
     let borderAndPadding = borderAndPaddingLogicalWidth()
-    minPreferredLogicalWidth += borderAndPadding
-    maxPreferredLogicalWidth += borderAndPadding
+    m_minPreferredLogicalWidth += borderAndPadding
+    m_maxPreferredLogicalWidth += borderAndPadding
 
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }

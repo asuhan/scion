@@ -1442,6 +1442,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     clearNeedsLayout()
   }
 
+  override func minPreferredLogicalWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func maxPreferredLogicalWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
@@ -5554,28 +5564,28 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       var (logicalMinWidth, logicalMaxWidth) = computeMinMaxLogicalWidthFromAspectRatio()
       logicalMinWidth = max(logicalMinWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
       logicalMaxWidth = max(logicalMaxWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
-      minPreferredLogicalWidth = clamp(
-        val: minPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
-      maxPreferredLogicalWidth = clamp(
-        val: maxPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
+      m_minPreferredLogicalWidth = clamp(
+        val: m_minPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
+      m_maxPreferredLogicalWidth = clamp(
+        val: m_maxPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
     }
 
     if maxWidth.isFixed() {
       let adjustContentBoxLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: maxWidth)
-      maxPreferredLogicalWidth = min(maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
-      minPreferredLogicalWidth = min(minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_maxPreferredLogicalWidth = min(m_maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_minPreferredLogicalWidth = min(m_minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
     }
 
     if minWidth.isFixed() && minWidth.value() > 0 {
       let adjustContentBoxLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: minWidth)
-      maxPreferredLogicalWidth = max(maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
-      minPreferredLogicalWidth = max(minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_maxPreferredLogicalWidth = max(m_maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_minPreferredLogicalWidth = max(m_minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
     }
 
-    minPreferredLogicalWidth += borderAndPadding
-    maxPreferredLogicalWidth += borderAndPadding
+    m_minPreferredLogicalWidth += borderAndPadding
+    m_maxPreferredLogicalWidth += borderAndPadding
   }
 
   private func replacedMinMaxLogicalHeightComputesAsNone(sizeType: SizeType) -> Bool {
@@ -6755,28 +6765,28 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       var (logicalMinWidth, logicalMaxWidth) = computeMinMaxLogicalWidthFromAspectRatio()
       logicalMinWidth = max(logicalMinWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
       logicalMaxWidth = max(logicalMaxWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
-      minPreferredLogicalWidth = clamp(
-        val: minPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
-      maxPreferredLogicalWidth = clamp(
-        val: maxPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
+      m_minPreferredLogicalWidth = clamp(
+        val: m_minPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
+      m_maxPreferredLogicalWidth = clamp(
+        val: m_maxPreferredLogicalWidth, lo: logicalMinWidth, hi: logicalMaxWidth)
     }
 
     if maxWidth.isFixed() {
       let adjustContentBoxLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: maxWidth)
-      maxPreferredLogicalWidth = min(maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
-      minPreferredLogicalWidth = min(minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_maxPreferredLogicalWidth = min(m_maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_minPreferredLogicalWidth = min(m_minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
     }
 
     if minWidth.isFixed() && minWidth.value() > 0 {
       let adjustContentBoxLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: minWidth)
-      maxPreferredLogicalWidth = max(maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
-      minPreferredLogicalWidth = max(minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_maxPreferredLogicalWidth = max(m_maxPreferredLogicalWidth, adjustContentBoxLogicalWidth)
+      m_minPreferredLogicalWidth = max(m_minPreferredLogicalWidth, adjustContentBoxLogicalWidth)
     }
 
-    minPreferredLogicalWidth += borderAndPadding
-    maxPreferredLogicalWidth += borderAndPadding
+    m_minPreferredLogicalWidth += borderAndPadding
+    m_maxPreferredLogicalWidth += borderAndPadding
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
@@ -6852,10 +6862,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private let marginBox: LayoutBoxExtent? = nil
 
   // The preferred logical width of the element if it were to break its lines at every possible opportunity.
-  var minPreferredLogicalWidth = LayoutUnit()
+  var m_minPreferredLogicalWidth = LayoutUnit()
 
   // The preferred logical width of the element if it never breaks any lines at all.
-  var maxPreferredLogicalWidth = LayoutUnit()
+  var m_maxPreferredLogicalWidth = LayoutUnit()
 
   // Our overflow information.
   var overflow: RenderOverflow? = nil
