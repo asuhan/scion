@@ -45,8 +45,11 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
   func isInside() -> Bool { return wk_interop.RenderListMarker_isInside(p) }
 
   private func updateMarginsAndContent() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: It's messy to use the preferredLogicalWidths dirty bit for this optimization, also unclear if this is premature optimization.
+    if preferredLogicalWidthsDirty() {
+      updateContent()
+    }
+    updateMargins()
   }
 
   func listItem() -> RenderListItemWrapper? {
