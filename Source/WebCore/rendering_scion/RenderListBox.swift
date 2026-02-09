@@ -471,11 +471,31 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func rectForScrollbar(_ scrollbar: Scrollbar) -> LayoutRectWrapper {
+    if scrollbar.orientation() == .Vertical {
+      let left =
+        shouldPlaceVerticalScrollbarOnLeft()
+        ? borderLeft() : width() - borderRight() - scrollbar.width()
+      let top = borderTop()
+      let width = LayoutUnit(value: scrollbar.width())
+      let height = height() - verticalBorderExtent()
+      return LayoutRectWrapper(x: left, y: top, width: width, height: height)
+    }
+
+    let left: LayoutUnit = borderLeft()
+    let top: LayoutUnit = height() - borderBottom() - scrollbar.height()
+    let width: LayoutUnit = width() - horizontalBorderExtent()
+    let height: LayoutUnit = LayoutUnit(value: scrollbar.height())
+    return LayoutRectWrapper(x: left, y: top, width: width, height: height)
+  }
+
   private func paintScrollbar(
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ scrollbar: Scrollbar
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var scrollRect = rectForScrollbar(scrollbar)
+    scrollRect.moveBy(offset: paintOffset)
+    scrollbar.setFrameRect(snappedIntRect(rect: scrollRect))
+    scrollbar.paint(paintInfo.context(), snappedIntRect(rect: paintInfo.rect))
   }
 
   private func paintItemForeground(
