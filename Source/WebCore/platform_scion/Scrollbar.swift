@@ -78,6 +78,11 @@ class Scrollbar: Widget {
     fatalError("Not implemented")
   }
 
+  func scrollableArea() -> ScrollableAreaWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func orientation() -> ScrollbarOrientation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -89,6 +94,16 @@ class Scrollbar: Widget {
   }
 
   func occupiedHeight() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pressedPart() -> ScrollbarPart {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hoveredPart() -> ScrollbarPart {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

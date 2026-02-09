@@ -23,4 +23,12 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct StyleScrollbarState {}
+struct StyleScrollbarState {
+  let scrollbarPart: ScrollbarPart
+  let hoveredPart: ScrollbarPart
+  let pressedPart: ScrollbarPart
+  let orientation: ScrollbarOrientation
+  let buttonsPlacement: ScrollbarButtonsPlacement
+  let enabled: Bool
+  let scrollCornerIsVisible: Bool
+}

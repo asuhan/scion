@@ -2362,6 +2362,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func setBackgroundColor(_ value: StyleColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTextIndent(_ length: LengthWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

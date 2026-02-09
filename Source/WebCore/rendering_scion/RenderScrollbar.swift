@@ -56,8 +56,29 @@ final class RenderScrollbar: Scrollbar {
   private func getScrollbarPseudoStyle(_ partType: ScrollbarPart, _ pseudoId: PseudoId)
     -> RenderStyleWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if owningRenderer() == nil {
+      return nil
+    }
+
+    let scrollbarState = StyleScrollbarState(
+      scrollbarPart: partType, hoveredPart: hoveredPart(), pressedPart: pressedPart(),
+      orientation: orientation(), buttonsPlacement: theme().buttonsPlacement(), enabled: enabled(),
+      scrollCornerIsVisible: scrollableArea().isScrollCornerVisible())
+
+    let result = owningRenderer()!.getUncachedPseudoStyle(
+      pseudoElementRequest: Style.PseudoElementRequest(
+        pseudoId: pseudoId, scrollbarState: scrollbarState), parentStyle: owningRenderer()!.style())
+    // Scrollbars for root frames should always have background color
+    // unless explicitly specified as transparent. So we force it.
+    // This is because WebKit assumes scrollbar to be always painted and missing background
+    // causes visual artifact like non-repainted dirty region.
+    if result != nil && owningFrame != nil && owningFrame!.view() != nil
+      && !owningFrame!.view()!.isTransparent() && !result!.hasBackground()
+    {
+      result!.setBackgroundColor(StyleColorWrapper(ColorWrapper.white))
+    }
+
+    return result
   }
 
   override func styleChanged() {

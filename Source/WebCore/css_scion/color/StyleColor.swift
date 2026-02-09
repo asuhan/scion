@@ -39,6 +39,19 @@ struct StyleColorOptions: OptionSet {
 }
 
 class StyleColorWrapper {
+  // The default constructor initializes to StyleCurrentColor to preserve old behavior,
+  // we might want to change it to invalid color at some point.
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Convenience constructors that create StyleAbsoluteColor.
+  init(_ color: ColorWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (a: StyleColorWrapper, b: StyleColorWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
