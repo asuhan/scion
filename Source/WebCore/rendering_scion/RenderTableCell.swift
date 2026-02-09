@@ -1124,29 +1124,53 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private func cachedCollapsedLeftBorder(styleForCellFlow: RenderStyleWrapper)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection()
+        ? section()!.cachedCollapsedBorder(cell: self, side: .CBSStart)
+        : section()!.cachedCollapsedBorder(cell: self, side: .CBSEnd)
+    }
+    return styleForCellFlow.isFlippedBlocksWritingMode()
+      ? section()!.cachedCollapsedBorder(cell: self, side: .CBSAfter)
+      : section()!.cachedCollapsedBorder(cell: self, side: .CBSBefore)
   }
 
   private func cachedCollapsedRightBorder(styleForCellFlow: RenderStyleWrapper)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isLeftToRightDirection()
+        ? section()!.cachedCollapsedBorder(cell: self, side: .CBSEnd)
+        : section()!.cachedCollapsedBorder(cell: self, side: .CBSStart)
+    }
+    return styleForCellFlow.isFlippedBlocksWritingMode()
+      ? section()!.cachedCollapsedBorder(cell: self, side: .CBSBefore)
+      : section()!.cachedCollapsedBorder(cell: self, side: .CBSAfter)
   }
 
   private func cachedCollapsedTopBorder(styleForCellFlow: RenderStyleWrapper)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isFlippedBlocksWritingMode()
+        ? section()!.cachedCollapsedBorder(cell: self, side: .CBSAfter)
+        : section()!.cachedCollapsedBorder(cell: self, side: .CBSBefore)
+    }
+    return styleForCellFlow.isLeftToRightDirection()
+      ? section()!.cachedCollapsedBorder(cell: self, side: .CBSStart)
+      : section()!.cachedCollapsedBorder(cell: self, side: .CBSEnd)
   }
 
   private func cachedCollapsedBottomBorder(styleForCellFlow: RenderStyleWrapper)
     -> CollapsedBorderValue
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForCellFlow.isHorizontalWritingMode() {
+      return styleForCellFlow.isFlippedBlocksWritingMode()
+        ? section()!.cachedCollapsedBorder(cell: self, side: .CBSBefore)
+        : section()!.cachedCollapsedBorder(cell: self, side: .CBSAfter)
+    }
+    return styleForCellFlow.isLeftToRightDirection()
+      ? section()!.cachedCollapsedBorder(cell: self, side: .CBSEnd)
+      : section()!.cachedCollapsedBorder(cell: self, side: .CBSStart)
   }
 
   private func computeCollapsedStartBorder(
