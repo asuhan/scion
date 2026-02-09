@@ -267,8 +267,14 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func styleOrColLogicalWidth() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let styleWidth = style().logicalWidth()
+    if !styleWidth.isAuto() {
+      return styleWidth
+    }
+    if let firstColumn = table()!.colElement(col: col()) {
+      return logicalWidthFromColumns(firstColumn, styleWidth)
+    }
+    return styleWidth
   }
 
   func logicalHeightForRowSizing() -> LayoutUnit {
@@ -1804,6 +1810,44 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
         color: includeColor == .IncludeBorderColor
           ? table!.style().visitedDependentColorWithColorFilter(colorProperty: afterColorProperty)
           : ColorWrapper(), precedence: .Table))
+  }
+
+  private func logicalWidthFromColumns(
+    _ firstColForThisCell: RenderTableColWrapper, _ widthFromStyle: LengthWrapper
+  ) -> LengthWrapper {
+    assert(CPtrToInt(firstColForThisCell.p) == CPtrToInt(table()!.colElement(col: col())?.p))
+    var tableCol: RenderTableColWrapper? = firstColForThisCell
+
+    let colSpanCount = colSpan()
+    var colWidthSum = LayoutUnit()
+    for _ in 1...colSpanCount {
+      let colWidth = tableCol!.style().logicalWidth()
+
+      // Percentage value should be returned only for colSpan == 1.
+      // Otherwise we return original width for the cell.
+      if !colWidth.isFixed() {
+        if colSpanCount > 1 {
+          return widthFromStyle
+        }
+        return colWidth
+      }
+
+      colWidthSum += colWidth.value()
+      tableCol = tableCol!.nextColumn()
+      // If no next <col> tag found for the span we just return what we have for now.
+      if tableCol == nil {
+        break
+      }
+    }
+
+    // Column widths specified on <col> apply to the border box of the cell, see bug 8126.
+    // FIXME: Why is border/padding ignored in the negative width case?
+    if colWidthSum > 0 {
+      return LengthWrapper(
+        value: max(LayoutUnit(value: 0), colWidthSum - borderAndPaddingLogicalWidth()), type: .Fixed
+      )
+    }
+    return LengthWrapper(value: colWidthSum, type: .Fixed)
   }
 
   override func hasLineIfEmpty() -> Bool {
