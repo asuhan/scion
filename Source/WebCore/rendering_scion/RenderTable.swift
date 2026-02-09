@@ -843,8 +843,30 @@ class RenderTableWrapper: RenderBlockWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    propagateStyleToAnonymousChildren(propagationType: .AllChildren)
+
+    let oldFixedTableLayout = oldStyle?.isFixedTableLayout() ?? false
+
+    // In the collapsed border model, there is no cell spacing.
+    hSpacing = LayoutUnit(value: collapseBorders() ? 0 : style().horizontalBorderSpacing())
+    vSpacing = LayoutUnit(value: collapseBorders() ? 0 : style().verticalBorderSpacing())
+    columnPos[0] = hSpacing
+
+    if tableLayout == nil || style().isFixedTableLayout() != oldFixedTableLayout {
+      // According to the CSS2 spec, you only use fixed table layout if an
+      // explicit width is specified on the table.  Auto width implies auto table layout.
+      if style().isFixedTableLayout() {
+        tableLayout = FixedTableLayout(table: self)
+      } else {
+        tableLayout = AutoTableLayout(table: self)
+      }
+    }
+
+    // If border was changed, invalidate collapsed borders cache.
+    if oldStyle != nil && !oldStyle!.borderIsEquivalentForPainting(style()) {
+      invalidateCollapsedBorders()
+    }
   }
 
   override func simplifiedNormalFlowLayout() {
@@ -1767,7 +1789,7 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var foot: RenderTableSectionWrapper? = nil
   private var firstBody: RenderTableSectionWrapper? = nil
 
-  private let tableLayout: TableLayout? = nil
+  private var tableLayout: TableLayout? = nil
 
   private var collapsedBorders = CollapsedBorderValues()
   private var currentBorder: CollapsedBorderValue? = nil
@@ -1780,8 +1802,8 @@ class RenderTableWrapper: RenderBlockWrapper {
   private var columnLogicalWidthChanged = false
   private var hasCellColspanThatDeterminesTableWidth = false
 
-  private let hSpacing = LayoutUnit()
-  private let vSpacing = LayoutUnit()
+  private var hSpacing = LayoutUnit()
+  private var vSpacing = LayoutUnit()
   private var m_borderStart = LayoutUnit()
   private var m_borderEnd = LayoutUnit()
   private var columnOffsetTop = LayoutUnit()

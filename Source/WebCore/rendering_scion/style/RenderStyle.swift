@@ -1346,6 +1346,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func horizontalBorderSpacing() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func verticalBorderSpacing() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func emptyCells() -> EmptyCell {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1367,6 +1377,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func listStylePosition() -> ListStylePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isFixedTableLayout() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
