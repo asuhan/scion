@@ -23,6 +23,11 @@
 
 import wk_interop
 
+private func capitalize(_ string: StringWrapper, _ previousCharacter: UChar) -> StringWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func combineTextWidth(
   _ renderer: RenderTextWrapper, _ fontCascade: FontCascadeWrapper, _ style: RenderStyleWrapper
 ) -> Float32? {
@@ -74,6 +79,11 @@ private func mapWordBreakToContentAnalysis(_ wordBreak: WordBreak)
 }
 
 private func hyphenWidth(_ renderer: RenderTextWrapper, _ font: FontCascadeWrapper) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func convertToFullSizeKana(_ string: StringWrapper) -> StringWrapper {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
@@ -1114,6 +1124,29 @@ class RenderTextWrapper: RenderObjectWrapper {
 func applyTextTransform(
   _ style: RenderStyleWrapper, _ text: StringWrapper, _ previousCharacter: UChar
 ) -> StringWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let transform = style.textTransform()
+
+  if transform.isEmpty {
+    return text
+  }
+
+  // https://w3c.github.io/csswg-drafts/css-text/#text-transform-order
+  var modified = text
+  if transform.contains(.Capitalize) {
+    modified = capitalize(modified, previousCharacter)  // FIXME: Need to take locale into account.
+  } else if transform.contains(.Uppercase) {
+    modified = modified.convertToUppercaseWithLocale(style.computedLocale())
+  } else if transform.contains(.Lowercase) {
+    modified = modified.convertToLowercaseWithLocale(style.computedLocale())
+  }
+
+  if transform.contains(.FullWidth) {
+    modified = transformToFullWidth(modified)
+  }
+
+  if transform.contains(.FullSizeKana) {
+    modified = convertToFullSizeKana(modified)
+  }
+
+  return modified
 }
