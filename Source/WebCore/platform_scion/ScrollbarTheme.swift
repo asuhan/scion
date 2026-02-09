@@ -33,6 +33,11 @@ class ScrollbarTheme {
     fatalError("Not implemented")
   }
 
+  func buttonsPlacement() -> ScrollbarButtonsPlacement {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usesOverlayScrollbars() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

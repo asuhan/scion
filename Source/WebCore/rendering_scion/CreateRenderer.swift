@@ -116,4 +116,12 @@ class CreateRenderer {
   ) -> RenderFlexibleBoxWrapper {
     return RenderFlexibleBoxWrapper(type: type, document: document, style: style)
   }
+
+  static func RenderScrollbarPart(
+    _ document: Document, _ style: RenderStyleWrapper, _ scrollbar: RenderScrollbar?,
+    _ part: ScrollbarPart
+  ) -> RenderScrollbarPartWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

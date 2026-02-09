@@ -23,8 +23,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func pseudoForScrollbarPart(_ part: ScrollbarPart) -> PseudoId {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderScrollbar: Scrollbar {
   private func owningRenderer() -> RenderBoxWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func getScrollbarPseudoStyle(_ partType: ScrollbarPart, _ pseudoId: PseudoId)
+    -> RenderStyleWrapper?
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -67,9 +79,54 @@ final class RenderScrollbar: Scrollbar {
   }
 
   private func updateScrollbarPart(_ partType: ScrollbarPart) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if partType == .NoPart {
+      return
+    }
+
+    let partStyle = getScrollbarPseudoStyle(partType, pseudoForScrollbarPart(partType))
+    var needRenderer = partStyle != nil && partStyle!.display() != .None
+
+    if needRenderer && partStyle!.display() != .Block {
+      // See if we are a button that should not be visible according to OS settings.
+      let buttonsPlacement = theme().buttonsPlacement()
+      switch partType {
+      case .BackButtonStartPart:
+        needRenderer =
+          (buttonsPlacement == .ScrollbarButtonsSingle
+            || buttonsPlacement == .ScrollbarButtonsDoubleStart
+            || buttonsPlacement == .ScrollbarButtonsDoubleBoth)
+      case .ForwardButtonStartPart:
+        needRenderer =
+          (buttonsPlacement == .ScrollbarButtonsDoubleStart
+            || buttonsPlacement == .ScrollbarButtonsDoubleBoth)
+      case .BackButtonEndPart:
+        needRenderer =
+          (buttonsPlacement == .ScrollbarButtonsDoubleEnd
+            || buttonsPlacement == .ScrollbarButtonsDoubleBoth)
+      case .ForwardButtonEndPart:
+        needRenderer =
+          (buttonsPlacement == .ScrollbarButtonsSingle
+            || buttonsPlacement == .ScrollbarButtonsDoubleEnd
+            || buttonsPlacement == .ScrollbarButtonsDoubleBoth)
+      default:
+        break
+      }
+    }
+
+    if !needRenderer {
+      parts.removeValue(forKey: UInt32(partType.rawValue))
+      return
+    }
+
+    if let partRendererSlot = parts[UInt32(partType.rawValue)] {
+      partRendererSlot.setStyle(style: partStyle!)
+    } else {
+      let partRendererSlot = CreateRenderer.RenderScrollbarPart(
+        owningRenderer()!.document(), partStyle!, self, partType)
+      partRendererSlot.initializeStyle()
+      parts[UInt32(partType.rawValue)] = partRendererSlot
+    }
   }
 
-  private let parts: [UInt32: RenderScrollbarPartWrapper] = [:]
+  private var parts: [UInt32: RenderScrollbarPartWrapper] = [:]
 }

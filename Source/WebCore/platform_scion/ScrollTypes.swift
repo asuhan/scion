@@ -85,6 +85,14 @@ struct ScrollbarPart: OptionSet {
   ]
 }
 
+enum ScrollbarButtonsPlacement {
+  case ScrollbarButtonsNone
+  case ScrollbarButtonsSingle
+  case ScrollbarButtonsDoubleStart
+  case ScrollbarButtonsDoubleEnd
+  case ScrollbarButtonsDoubleBoth
+}
+
 enum ScrollPositioningBehavior {
   case None
   case Moves

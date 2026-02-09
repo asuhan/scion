@@ -123,6 +123,11 @@ class Scrollbar: Widget {
     fatalError("Not implemented")
   }
 
+  func theme() -> ScrollbarTheme {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func styleChanged() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
