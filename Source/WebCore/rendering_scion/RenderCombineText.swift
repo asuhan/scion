@@ -47,7 +47,32 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    // FIXME: This is pretty hackish.
+    // Only cache a new font style if our old one actually changed. We do this to avoid
+    // clobbering width variants and shrink-to-fit changes, since we won't recombine when
+    // the font doesn't change.
+    if oldStyle == nil || oldStyle!.fontCascade() != style().fontCascade() {
+      combineFontStyle = RenderStyleWrapper.clone(style: style())
+    }
+
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if m_isCombined && selfNeedsLayout() {
+      // Layouts cause the text to be recombined; therefore, only only un-combine when the style diff causes a layout.
+      super.setRenderedText(originalText())  // This RenderCombineText has been combined once. Restore the original text for the next combineText().
+      m_isCombined = false
+    }
+
+    needsFontUpdate = true
+    combineTextIfNeeded()
+  }
+
+  override func setRenderedText(_ text: StringWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var combineFontStyle: RenderStyleWrapper? = nil
+  private var m_isCombined = false
+  private var needsFontUpdate = false
 }

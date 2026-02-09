@@ -666,6 +666,11 @@ class RenderTextWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func setRenderedText(_ newText: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setTextInternal(_ text: StringWrapper, _ force: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

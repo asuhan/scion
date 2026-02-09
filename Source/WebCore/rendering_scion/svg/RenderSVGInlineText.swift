@@ -99,6 +99,11 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     return (true, scalingFactor, scaledFont)
   }
 
+  override func setRenderedText(_ text: StringWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     updateScaledFont()
