@@ -886,8 +886,43 @@ class RenderTableWrapper: RenderBlockWrapper {
   override final func avoidsFloats() -> Bool { return true }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isSkippedContent = { [self] () in
+      if style().usedContentVisibility() == .Visible {
+        return false
+      }
+      // FIXME: Tables can never be skipped content roots. If a table is _inside_ a skipped subtree, we should have bailed out at the skipped root ancestor.
+      // However with continuation (see webkit.org/b/275459) used visibility values does not always get propagated properly and
+      // we may end up here with a dirty (skipped) table.
+      if let containingBlock = containingBlock(),
+        containingBlock.isAnonymousBlock() && !containingBlock.style().hasSkippedContent()
+      {
+        return true
+      }
+      return false
+    }
+    if isSkippedContent() {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    let paintPhase = paintInfo.phase
+
+    if !isDocumentElementRenderer() {
+      var overflowBox = visualOverflowRect()
+      flipForWritingMode(rect: &overflowBox)
+      overflowBox.moveBy(offset: adjustedPaintOffset)
+      if !overflowBox.intersects(other: paintInfo.rect) {
+        return
+      }
+    }
+
+    let pushedClip = pushContentsClip(paintInfo: &paintInfo, accumulatedOffset: adjustedPaintOffset)
+    paintObject(paintInfo: &paintInfo, paintOffset: adjustedPaintOffset)
+    if pushedClip {
+      popContentsClip(
+        paintInfo: &paintInfo, originalPhase: paintPhase, accumulatedOffset: adjustedPaintOffset)
+    }
   }
 
   override final func paintObject(
