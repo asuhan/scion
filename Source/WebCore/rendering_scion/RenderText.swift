@@ -31,8 +31,11 @@ private func capitalize(_ string: StringWrapper, _ previousCharacter: UChar) -> 
 private func combineTextWidth(
   _ renderer: RenderTextWrapper, _ fontCascade: FontCascadeWrapper, _ style: RenderStyleWrapper
 ) -> Float32? {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !style.hasTextCombine() {
+    return nil
+  }
+  guard let combineTextRenderer = renderer as? RenderCombineTextWrapper else { return nil }
+  return combineTextRenderer.isCombined() ? combineTextRenderer.combinedTextWidth(fontCascade) : nil
 }
 
 private func isHangablePunctuationAtLineStart(_ c: UChar) -> Bool {
