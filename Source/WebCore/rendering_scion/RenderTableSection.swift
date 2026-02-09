@@ -1103,7 +1103,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
         }
         let tableLayoutLogicalWidth =
           columnPos[endCol] - columnPos[startColumn] - table()!.hBorderSpacing()
-        cell!.setCellLogicalWidth(constrainedLogicalWidth: tableLayoutLogicalWidth)
+        cell!.setCellLogicalWidth(tableLayoutLogicalWidth)
       }
 
       if let rowRenderer = grid[r].rowRenderer {

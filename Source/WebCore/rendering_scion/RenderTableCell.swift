@@ -282,9 +282,16 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
-  func setCellLogicalWidth(constrainedLogicalWidth: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func setCellLogicalWidth(_ tableLayoutLogicalWidth: LayoutUnit) {
+    if tableLayoutLogicalWidth == logicalWidth() {
+      return
+    }
+
+    setNeedsLayout(markParents: .MarkOnlyThis)
+    row()!.setChildNeedsLayout(markParents: .MarkOnlyThis)
+
+    setLogicalWidth(size: tableLayoutLogicalWidth)
+    setCellWidthChanged(b: true)
   }
 
   override func borderLeft() -> LayoutUnit {
