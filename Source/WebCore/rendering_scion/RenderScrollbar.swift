@@ -24,8 +24,20 @@
  */
 
 private func pseudoForScrollbarPart(_ part: ScrollbarPart) -> PseudoId {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch part {
+  case .BackButtonStartPart, .ForwardButtonStartPart, .BackButtonEndPart, .ForwardButtonEndPart:
+    return .WebKitScrollbarButton
+  case .BackTrackPart, .ForwardTrackPart:
+    return .WebKitScrollbarTrackPiece
+  case .ThumbPart:
+    return .WebKitScrollbarThumb
+  case .TrackBGPart:
+    return .WebKitScrollbarTrack
+  case .ScrollbarBGPart:
+    return .WebKitScrollbar
+  default:
+    fatalError("Not reached")
+  }
 }
 
 final class RenderScrollbar: Scrollbar {
