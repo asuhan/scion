@@ -727,8 +727,62 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the table grid is dirty, we cannot get reliable information about adjoining cells,
+    // so we ignore outside borders. This should not be a problem because it means that
+    // the table is going to recalculate the grid, relayout and repaint its current rect, which
+    // includes any outside borders of this cell.
+    if !table()!.collapseBorders() || table()!.needsSectionRecalc {
+      return super.localRectsForRepaint(repaintOutlineBounds)
+    }
+
+    let rtl = !styleForCellFlow().isLeftToRightDirection()
+    let outlineSize = LayoutUnit(value: style().outlineSize())
+    var left = max(borderHalfLeft(outer: true), outlineSize)
+    var right = max(borderHalfRight(outer: true), outlineSize)
+    var top = max(borderHalfTop(outer: true), outlineSize)
+    var bottom = max(borderHalfBottom(outer: true), outlineSize)
+    if (left.bool() && !rtl) || (right.bool() && rtl) {
+      if let before = table()!.cellBefore(cell: self) {
+        top = max(top, before.borderHalfTop(outer: true))
+        bottom = max(bottom, before.borderHalfBottom(outer: true))
+      }
+    }
+    if (left.bool() && rtl) || (right.bool() && !rtl) {
+      if let after = table()!.cellAfter(cell: self) {
+        top = max(top, after.borderHalfTop(outer: true))
+        bottom = max(bottom, after.borderHalfBottom(outer: true))
+      }
+    }
+    if top.bool() {
+      if let above = table()!.cellAbove(cell: self) {
+        left = max(left, above.borderHalfLeft(outer: true))
+        right = max(right, above.borderHalfRight(outer: true))
+      }
+    }
+    if bottom.bool() {
+      if let below = table()!.cellBelow(cell: self) {
+        left = max(left, below.borderHalfLeft(outer: true))
+        right = max(right, below.borderHalfRight(outer: true))
+      }
+    }
+
+    let location = LayoutPointWrapper(
+      x: max(left, -visualOverflowRect().x()), y: max(top, -visualOverflowRect().y()))
+    var overflowRect = LayoutRectWrapper(
+      x: -location.x, y: -location.y,
+      width: location.x + max(width() + right, visualOverflowRect().maxX()),
+      height: location.y + max(height() + bottom, visualOverflowRect().maxY()))
+
+    // FIXME: layoutDelta needs to be applied in parts before/after transforms and
+    // repaint containers. https://bugs.webkit.org/show_bug.cgi?id=23308
+    overflowRect.move(size: view().frameView().layoutContext().layoutDelta())
+
+    var rects = RepaintRects(rect: overflowRect)
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = localOutlineBoundsRepaintRect()
+    }
+
+    return rects
   }
 
   func invalidateHasEmptyCollapsedBorders() {
