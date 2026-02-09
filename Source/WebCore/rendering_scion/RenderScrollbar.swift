@@ -42,8 +42,15 @@ private func pseudoForScrollbarPart(_ part: ScrollbarPart) -> PseudoId {
 
 final class RenderScrollbar: Scrollbar {
   private func owningRenderer() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if owningFrame != nil {
+      let currentRenderer = owningFrame!.ownerRenderer()
+      return currentRenderer
+    }
+    assert(ownerElement != nil)
+    if ownerElement!.renderer() != nil {
+      return ownerElement!.renderer()!.enclosingBox()
+    }
+    return nil
   }
 
   private func getScrollbarPseudoStyle(_ partType: ScrollbarPart, _ pseudoId: PseudoId)
@@ -140,5 +147,12 @@ final class RenderScrollbar: Scrollbar {
     }
   }
 
+  // This Scrollbar(Widget) may outlive the DOM which created it (during tear down),
+  // so we keep a reference to the Element which caused this custom scrollbar creation.
+  // This will not create a reference cycle as the Widget tree is owned by our containing
+  // FrameView which this Element pointer can in no way keep alive. See webkit bug 80610.
+  private let ownerElement: ElementWrapper? = nil
+
+  private let owningFrame: LocalFrameWrapper? = nil
   private var parts: [UInt32: RenderScrollbarPartWrapper] = [:]
 }
