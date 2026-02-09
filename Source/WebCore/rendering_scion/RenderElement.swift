@@ -578,6 +578,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func hasHiddenBackface() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasViewTransitionName() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

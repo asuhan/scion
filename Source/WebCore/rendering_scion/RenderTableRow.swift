@@ -223,8 +223,9 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   override final func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasNonVisibleOverflow() || hasTransformRelatedProperty() || hasHiddenBackface()
+      || hasClipPath() || createsGroup() || isStickilyPositioned()
+      || requiresRenderingConsolidationForViewTransition()
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
