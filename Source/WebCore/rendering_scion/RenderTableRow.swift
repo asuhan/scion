@@ -213,8 +213,13 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var rects = RepaintRects(
+      rect: clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint))
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = outlineBoundsForRepaint(repaintContainer)
+    }
+
+    return rects
   }
 
   override final func requiresLayer() -> Bool {
