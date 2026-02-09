@@ -982,8 +982,15 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: GlyphOverflow?,
     _ style: RenderStyleWrapper
   ) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let width = combineTextWidth(self, fontCascade, style) {
+      return width
+    }
+
+    let run = RenderBlockWrapper.constructTextRun(text: self, offset: start, length: length, style)
+    run.setCharacterScanForCodePath(!canUseSimpleFontCodePath())
+    run.setTabSize(allow: !style.collapseWhiteSpace(), size: style.tabSize())
+    run.setXPos(xPos)
+    return fontCascade.width(run: run, fallbackFonts, glyphOverflow)
   }
 
   private func computeUseBackslashAsYenSymbol() -> Bool {
