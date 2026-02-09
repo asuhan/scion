@@ -223,8 +223,22 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasSelfPaintingLayer())
+
+    paintOutlineForRowIfNeeded(paintInfo: paintInfo, paintOffset: paintOffset)
+    var cell = firstCell()
+    while cell != nil {
+      // Paint the row background behind the cell.
+      if paintInfo.phase == .BlockBackground || paintInfo.phase == .ChildBlockBackground {
+        cell!.paintBackgroundsBehindCell(
+          paintInfo: paintInfo, paintOffset: paintOffset, backgroundObject: self,
+          backgroundPaintOffset: paintOffset)
+      }
+      if !cell!.hasSelfPaintingLayer() {
+        cell!.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+      }
+      cell = cell!.nextCell()
+    }
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
