@@ -62,6 +62,11 @@ class PluginViewBase: Widget {
     fatalError("Not implemented")
   }
 
+  func location() -> IntPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paint(
     _ context: GraphicsContextWrapper, _ rect: IntRect,
     _ securityOriginPaintPolicy: SecurityOriginPaintPolicy = .AnyOrigin,

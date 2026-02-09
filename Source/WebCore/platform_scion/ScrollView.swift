@@ -162,6 +162,11 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
+  func location() -> IntPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setFrameRect(_ rect: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

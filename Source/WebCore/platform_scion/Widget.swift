@@ -56,6 +56,8 @@ protocol Widget {
 
   func size() -> IntSize
 
+  func location() -> IntPoint
+
   func setFrameRect(_ rect: IntRect)
 
   func frameRect() -> IntRect

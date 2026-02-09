@@ -66,6 +66,25 @@ enum ScrollbarWidth: UInt8 {
   case None
 }
 
+struct ScrollbarPart: OptionSet {
+  let rawValue: UInt16
+
+  static let NoPart: ScrollbarPart = []
+  static let BackButtonStartPart = ScrollbarPart(rawValue: 1 << 0)
+  static let ForwardButtonStartPart = ScrollbarPart(rawValue: 1 << 1)
+  static let BackTrackPart = ScrollbarPart(rawValue: 1 << 2)
+  static let ThumbPart = ScrollbarPart(rawValue: 1 << 3)
+  static let ForwardTrackPart = ScrollbarPart(rawValue: 1 << 4)
+  static let BackButtonEndPart = ScrollbarPart(rawValue: 1 << 5)
+  static let ForwardButtonEndPart = ScrollbarPart(rawValue: 1 << 6)
+  static let ScrollbarBGPart = ScrollbarPart(rawValue: 1 << 7)
+  static let TrackBGPart = ScrollbarPart(rawValue: 1 << 8)
+  static let AllParts: ScrollbarPart = [
+    .BackButtonStartPart, .ForwardButtonStartPart, .BackTrackPart, .ThumbPart, .ForwardTrackPart,
+    .BackButtonEndPart, .ForwardButtonEndPart, .ScrollbarBGPart, .TrackBGPart,
+  ]
+}
+
 enum ScrollPositioningBehavior {
   case None
   case Moves

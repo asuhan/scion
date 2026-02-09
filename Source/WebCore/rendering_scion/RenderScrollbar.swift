@@ -24,8 +24,52 @@
  */
 
 final class RenderScrollbar: Scrollbar {
-  override func styleChanged() {
+  private func owningRenderer() -> RenderBoxWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func styleChanged() {
+    updateScrollbarParts()
+  }
+
+  private func updateScrollbarParts() {
+    updateScrollbarPart(.ScrollbarBGPart)
+    updateScrollbarPart(.BackButtonStartPart)
+    updateScrollbarPart(.ForwardButtonStartPart)
+    updateScrollbarPart(.BackTrackPart)
+    updateScrollbarPart(.ThumbPart)
+    updateScrollbarPart(.ForwardTrackPart)
+    updateScrollbarPart(.BackButtonEndPart)
+    updateScrollbarPart(.ForwardButtonEndPart)
+    updateScrollbarPart(.TrackBGPart)
+
+    // See if the scrollbar's thickness changed.  If so, we need to mark our owning object as needing a layout.
+    let isHorizontal = orientation() == .Horizontal
+    let oldThickness = isHorizontal ? height() : width()
+    var newThickness: Int32 = 0
+    if let part = parts[UInt32(ScrollbarPart.ScrollbarBGPart.rawValue)] {
+      part.layout()
+      newThickness = (isHorizontal ? part.height() : part.width()).int()
+    }
+
+    if newThickness != oldThickness {
+      setFrameRect(
+        IntRect(
+          location: location(),
+          size: IntSize(
+            width: isHorizontal ? width() : newThickness,
+            height: isHorizontal ? newThickness : height())))
+      if let box = owningRenderer() {
+        box.setChildNeedsLayout()
+      }
+    }
+  }
+
+  private func updateScrollbarPart(_ partType: ScrollbarPart) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let parts: [UInt32: RenderScrollbarPartWrapper] = [:]
 }
