@@ -22,8 +22,25 @@
 
 final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !shouldPaintSVGRenderer(paintInfo) {
+      return
+    }
+
+    if paintInfo.phase == .ClippingMask {
+      paintSVGClippingMask(paintInfo: paintInfo, objectBoundingBox: objectBoundingBox())
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+    if paintInfo.phase == .Mask {
+      paintSVGMask(paintInfo, adjustedPaintOffset)
+      return
+    }
+
+    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+    paintInfo.context().translate(
+      x: adjustedPaintOffset.x.float(), y: adjustedPaintOffset.y.float())
+    super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)
   }
 
   override func layout() {

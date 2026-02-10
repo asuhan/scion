@@ -181,7 +181,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
   // Single source of truth deciding if a SVG renderer should be painted. All SVG renderers
   // use this method to test if they should continue processing in the paint() function or stop.
-  func shouldPaintSVGRenderer(_ paintInfo: PaintInfoWrapper, _ relevantPaintPhases: PaintPhase)
+  func shouldPaintSVGRenderer(_ paintInfo: PaintInfoWrapper, _ relevantPaintPhases: PaintPhase = [])
     -> Bool
   {
     if paintInfo.context().paintingDisabled() {
