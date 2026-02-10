@@ -175,6 +175,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func mapFromFlowToFragment(_ transformState: TransformState) -> RenderFragmentContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalWidthChangedInFragmentsForBlock(
     block: RenderBlockWrapper, relayoutChildren: inout Bool
   ) {
@@ -335,6 +340,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func currentFragment() -> RenderFragmentContainerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // FIXME: Eventually as column and fragment flow threads start nesting, this may end up changing.
   func shouldCheckColumnBreaks() -> Bool {
     // TODO(asuhan): implement this
@@ -350,8 +360,27 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(p) == CPtrToInt(ancestorContainer?.p) {
+      return
+    }
+
+    guard let fragment = mapFromFlowToFragment(transformState) else { return }
+
+    let fragmentObject: RenderObjectWrapper = fragment
+
+    // If the repaint container is nullptr, we have to climb up to the RenderView, otherwise swap
+    // it with the fragment's repaint container.
+    let ancestorContainer = ancestorContainer != nil ? fragment.containerForRepaint().renderer : nil
+
+    if let fragmentFragmentedFlow = fragment.enclosingFragmentedFlow(),
+      let (startFragment, _) = fragmentFragmentedFlow.getFragmentRangeForBox(box: fragment)
+    {
+      let _ = CurrentRenderFragmentContainerMaintainer(startFragment)
+      fragmentObject.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
+      return
+    }
+
+    fragmentObject.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
   private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
@@ -377,6 +406,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private let fragmentList = RenderFragmentContainerList()
 
   private let fragmentIntervalTree = FragmentIntervalTree()
+
+  var currentFragmentMaintainer: CurrentRenderFragmentContainerMaintainer? = nil
 
   private let fragmentsInvalidated = false
   let pageLogicalSizeChanged = false

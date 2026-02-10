@@ -132,6 +132,23 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     minLogicalWidth = LayoutUnit()
   }
 
-  private let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
+  let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
   private let isValid = false
+}
+
+class CurrentRenderFragmentContainerMaintainer {
+  init(_ fragment: RenderFragmentContainerWrapper) {
+    self.fragment = fragment
+    let fragmentedFlow = fragment.fragmentedFlow!
+    // A flow thread can have only one current fragment.
+    assert(fragmentedFlow.currentFragment() == nil)
+    fragmentedFlow.currentFragmentMaintainer = self
+  }
+
+  deinit {
+    let fragmentedFlow = fragment.fragmentedFlow!
+    fragmentedFlow.currentFragmentMaintainer = nil
+  }
+
+  private let fragment: RenderFragmentContainerWrapper
 }
