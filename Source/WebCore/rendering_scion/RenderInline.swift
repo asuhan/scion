@@ -733,8 +733,45 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(ancestorContainer?.p) == CPtrToInt(p) {
+      return
+    }
+
+    if view().frameView().layoutContext().isPaintOffsetCacheEnabled() && ancestorContainer == nil {
+      let layoutState = view().frameView().layoutContext().layoutState()!
+      var offset = layoutState.paintOffset()
+      if style().hasInFlowPosition() && layer() != nil {
+        offset += layer()!.offsetForInFlowPosition()
+      }
+      transformState.move(offset)
+      return
+    }
+
+    let (container, containerSkipped) = container(ancestorContainer)
+    if container == nil {
+      return
+    }
+
+    var mode = mode
+    if mode.contains(.ApplyContainerFlip), let box = container as? RenderBoxWrapper {
+      if container!.style().isFlippedBlocksWritingMode() {
+        let centerPoint = LayoutPointWrapper(size: transformState.mappedPoint())
+        transformState.move(box.flipForWritingMode(position: centerPoint) - centerPoint)
+      }
+      mode.remove(.ApplyContainerFlip)
+    }
+
+    var unused: Bool? = nil
+    let containerOffset = offsetFromContainer(
+      container!, LayoutPointWrapper(size: transformState.mappedPoint()), &unused)
+
+    pushOntoTransformState(
+      transformState, mode, ancestorContainer, container, containerOffset, containerSkipped)
+    if containerSkipped {
+      return
+    }
+
+    container!.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
   override func pushMappingToContainer(
