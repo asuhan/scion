@@ -91,6 +91,13 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
+  func setBoxNeedsTransformUpdateAfterContainerLayout(
+    _ box: RenderBoxWrapper, _ container: RenderBlockWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These functions may only be accessed by LayoutStateMaintainer.
   // Subtree push/pop
   func pushLayoutState(

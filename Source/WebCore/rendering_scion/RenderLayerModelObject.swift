@@ -420,8 +420,19 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func updateLayerTransform() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = self as? RenderBoxWrapper,
+      style().offsetPath() != nil
+        && MotionPath.needsUpdateAfterContainingBlockLayout(style().offsetPath()!),
+      let containingBlock = containingBlock()
+    {
+      view().frameView().layoutContext().setBoxNeedsTransformUpdateAfterContainerLayout(
+        box, containingBlock)
+      return
+    }
+    // Transform-origin depends on box size, so we need to update the layer transform after layout.
+    if hasLayer() {
+      layer()!.updateTransform()
+    }
   }
 
   func applyTransform(

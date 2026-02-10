@@ -29,6 +29,7 @@ target_sources(layout_scion PRIVATE
     LegacyRootInlineBox.swift
     LineClampUpdater.swift
     MarkedText.swift
+    MotionPath.swift
     OrderIterator.swift
     OverlapTestRequestClient.swift
     Pagination.swift
