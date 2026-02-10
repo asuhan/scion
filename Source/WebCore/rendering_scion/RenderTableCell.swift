@@ -926,6 +926,14 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     paintMaskImages(paintInfo: paintInfo, paintRect: paintRect)
   }
 
+  override func offsetFromContainer(
+    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ offsetDependsOnPoint: inout Bool?
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func computeVisibleRectsInContainer(
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext

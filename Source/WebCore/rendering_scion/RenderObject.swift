@@ -1162,6 +1162,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  // Return the offset from the container() renderer (excluding transforms). In multi-column layout,
+  // different offsets apply at different points, so return the offset that applies to the given point.
+  func offsetFromContainer(
+    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ offsetDependsOnPoint: inout Bool?
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Return the offset from an object up the container() chain. Asserts that none of the intermediate objects have transforms.
   func offsetFromAncestorContainer(_ container: RenderElementWrapper) -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
@@ -1873,6 +1883,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func pushOntoTransformState(
+    _ transformState: TransformState, _ mode: MapCoordinatesMode,
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ container: RenderElementWrapper?,
+    _ offsetInContainer: LayoutSizeWrapper, _ containerSkipped: Bool
+  ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

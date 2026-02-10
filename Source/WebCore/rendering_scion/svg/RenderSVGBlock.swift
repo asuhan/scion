@@ -136,13 +136,25 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      mapLocalToSVGContainer(ancestorContainer!, transformState, mode, &wasFixed)
+      return
+    }
+
+    SVGRenderSupport.mapLocalToContainer(self, ancestorContainer, transformState, &wasFixed)
   }
 
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func offsetFromContainer(
+    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ offsetDependsOnPoint: inout Bool?
+  ) -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

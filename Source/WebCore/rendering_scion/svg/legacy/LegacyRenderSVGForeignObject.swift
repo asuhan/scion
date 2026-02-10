@@ -163,6 +163,14 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override func offsetFromContainer(
+    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ offsetDependsOnPoint: inout Bool?
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var m_localTransform = AffineTransform()
   private var viewport = FloatRectWrapper()
   private var needsTransformUpdate = true

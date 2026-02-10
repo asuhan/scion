@@ -1594,6 +1594,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override func offsetFromContainer(
+    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ offsetDependsOnPoint: inout Bool?
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func adjustBorderBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
     let width = LayoutUnit(value: logicalWidth.value())
     let bordersPlusPadding = borderAndPaddingLogicalWidth()

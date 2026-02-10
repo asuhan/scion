@@ -255,6 +255,46 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     return localContainer!.computeVisibleRectsInContainer(adjustedRects, container, context)
   }
 
+  // Provides the SVG implementation for mapLocalToContainer().
+  // This lives in RenderLayerModelObject, which is the common base-class for all SVG renderers.
+  func mapLocalToSVGContainer(
+    _ ancestorContainer: RenderLayerModelObjectWrapper, _ transformState: TransformState,
+    _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
+  ) {
+    assert(self is RenderSVGModelObjectWrapper || self is RenderSVGBlockWrapper)
+    assert(style().position() == .Static)
+
+    if CPtrToInt(ancestorContainer.p) == CPtrToInt(p) {
+      return
+    }
+
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
+
+    let (container, ancestorSkipped) = container(ancestorContainer)
+    if container == nil {
+      return
+    }
+
+    assert(!ancestorSkipped)
+
+    // If this box has a transform, it acts as a fixed position container for fixed descendants,
+    // and may itself also be fixed position. So propagate 'fixed' up only if this box is fixed position.
+    var mode = mode
+    if isTransformed() {
+      mode.remove(.IsFixed)
+    }
+
+    var unused: Bool? = nil
+    let containerOffset = offsetFromContainer(
+      container!, LayoutPointWrapper(size: transformState.mappedPoint()), &unused)
+
+    pushOntoTransformState(transformState, mode, nil, container, containerOffset, false)
+
+    mode.remove(.ApplyContainerFlip)
+
+    container!.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
+  }
+
   func updateHasSVGTransformFlags() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

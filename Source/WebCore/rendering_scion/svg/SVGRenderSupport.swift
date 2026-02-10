@@ -257,6 +257,14 @@ class SVGRenderSupport {
         renderer.repaintRectInLocalCoordinates(context.repaintRectCalculation()), repaintContainer))
   }
 
+  static func mapLocalToContainer(
+    _ renderer: RenderElementWrapper, _ ancestorContainer: RenderLayerModelObjectWrapper?,
+    _ transformState: TransformState, _ wasFixed: inout Bool?
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)
     -> LayoutRepainter.CheckForRepaint
   {

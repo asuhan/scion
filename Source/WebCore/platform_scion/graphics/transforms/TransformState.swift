@@ -67,4 +67,10 @@ class TransformState {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Return the point or quad mapped through the current transform
+  func mappedPoint() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

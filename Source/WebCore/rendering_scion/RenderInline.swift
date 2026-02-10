@@ -136,6 +136,14 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return computeMargin(self, style().marginAfterUsing(otherStyle: otherStyle ?? style()))
   }
 
+  override final func offsetFromContainer(
+    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ offsetDependsOnPoint: inout Bool?
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func innerPaddingBoxWidth() -> LayoutUnit {
     var firstInlineBoxPaddingBoxLeft = LayoutUnit()
     var lastInlineBoxPaddingBoxRight = LayoutUnit()
