@@ -5315,8 +5315,58 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(ancestorContainer?.p) == CPtrToInt(p) {
+      return
+    }
+
+    if ancestorContainer == nil && view().frameView().layoutContext().isPaintOffsetCacheEnabled() {
+      let layoutState = view().frameView().layoutContext().layoutState()!
+      var offset = layoutState.paintOffset() + locationOffset()
+      if style().hasInFlowPosition() && layer() != nil {
+        offset += layer()!.offsetForInFlowPosition()
+      }
+      transformState.move(offset)
+      return
+    }
+
+    let (container, containerSkipped) = container(ancestorContainer)
+    if container == nil {
+      return
+    }
+
+    let isFixedPos = isFixedPositioned()
+    var mode = mode
+    // If this box has a transform, it acts as a fixed position container for fixed descendants,
+    // and may itself also be fixed position. So propagate 'fixed' up only if this box is fixed position.
+    if isFixedPos {
+      mode.update(with: .IsFixed)
+    } else if mode.contains(.IsFixed) && canContainFixedPositionObjects() {
+      mode.remove(.IsFixed)
+    }
+
+    if wasFixed != nil {
+      wasFixed = mode.contains(.IsFixed)
+    }
+
+    var unused: Bool? = nil
+    var containerOffset = offsetFromContainer(
+      container!, LayoutPointWrapper(size: transformState.mappedPoint()), &unused)
+
+    // Remove sticky positioning from the offset if it should be ignored. This is done here in
+    // order to avoid piping this flag down the method chain.
+    if mode.contains(.IgnoreStickyOffsets) && isStickilyPositioned() {
+      containerOffset -= stickyPositionOffset()
+    }
+
+    pushOntoTransformState(
+      transformState, mode, ancestorContainer, container, containerOffset, containerSkipped)
+    if containerSkipped {
+      return
+    }
+
+    mode.remove(.ApplyContainerFlip)
+
+    container!.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
   override func pushMappingToContainer(
