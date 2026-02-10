@@ -25,7 +25,7 @@
 
 struct MotionPath {
   static func needsUpdateAfterContainingBlockLayout(_ pathOperation: PathOperation) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return pathOperation is RayPathOperation || pathOperation is BoxPathOperation
+      || pathOperation is ShapePathOperation
   }
 }

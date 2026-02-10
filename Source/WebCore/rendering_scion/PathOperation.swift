@@ -72,3 +72,5 @@ final class BoxPathOperation: PathOperation {
     fatalError("Not implemented")
   }
 }
+
+final class RayPathOperation: PathOperation {}
