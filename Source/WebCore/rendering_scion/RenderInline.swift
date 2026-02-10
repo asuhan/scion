@@ -137,11 +137,27 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func offsetFromContainer(
-    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+
+    var offset = LayoutSizeWrapper()
+    if isInFlowPositioned() {
+      offset += offsetForInFlowPosition()
+    }
+
+    if let box = container as? RenderBoxWrapper {
+      offset -= toLayoutSize(point: LayoutPointWrapper(point: box.scrollPosition()))
+    }
+
+    if offsetDependsOnPoint != nil {
+      offsetDependsOnPoint =
+        (container is RenderBoxWrapper && container.style().isFlippedBlocksWritingMode())
+        || container is RenderFragmentedFlowWrapper
+    }
+
+    return offset
   }
 
   func innerPaddingBoxWidth() -> LayoutUnit {
