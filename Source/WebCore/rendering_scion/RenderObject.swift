@@ -1889,8 +1889,30 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(ancestorContainer?.p) == CPtrToInt(p) {
+      return
+    }
+
+    guard let parent = parent() else { return }
+
+    // FIXME: this should call offsetFromContainer to share code, but I'm not sure it's ever called.
+    let centerPoint = LayoutPointWrapper(size: transformState.mappedPoint())
+    var mode = mode
+    if let parentAsBox = parent as? RenderBoxWrapper {
+      if mode.contains(.ApplyContainerFlip) {
+        if parentAsBox.style().isFlippedBlocksWritingMode() {
+          transformState.move(
+            parentAsBox.flipForWritingMode(
+              position: LayoutPointWrapper(size: transformState.mappedPoint()))
+              - centerPoint)
+        }
+        mode.remove(.ApplyContainerFlip)
+      }
+      transformState.move(
+        -toLayoutSize(point: LayoutPointWrapper(point: parentAsBox.scrollPosition())))
+    }
+
+    parent.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
   // Pushes state onto RenderGeometryMap about how to map coordinates from this renderer to its container, or ancestorToStopAt (whichever is encountered first).
