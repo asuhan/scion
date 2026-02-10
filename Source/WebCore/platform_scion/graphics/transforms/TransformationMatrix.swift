@@ -50,9 +50,34 @@ class TransformationMatrix {
     fatalError("Not implemented")
   }
 
+  func e() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setE(_ e: Float64) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func f() -> Float64 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setF(_ f: Float64) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // this = mat * this.
   @discardableResult
   func multiply(mat: TransformationMatrix) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func scale(_ s: Float64) -> TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -98,6 +123,11 @@ class TransformationMatrix {
   }
 
   func toAffineTransform() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func * (_ this: TransformationMatrix, _ t: TransformationMatrix) -> TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -43,6 +43,21 @@ class TransformState {
     fatalError("Not implemented")
   }
 
+  init(_ mappingDirection: TransformDirection, _ p: FloatPoint) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setTransformMatrixTracking(_ tracking: TransformMatrixTracking) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func transformMatrixTracking() -> TransformMatrixTracking {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func move(
     _ x: LayoutUnit, _ y: LayoutUnit, _ accumulate: TransformAccumulation = .FlattenTransform
   ) {
@@ -83,6 +98,16 @@ class TransformState {
 
   // Return the point or quad mapped through the current transform
   func mappedPoint() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func releaseTrackedTransform() -> TransformationMatrix? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func direction() -> TransformDirection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

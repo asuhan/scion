@@ -408,11 +408,115 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override final func mapLocalToContainer(
-    _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
+
+    if CPtrToInt(repaintContainer?.p) == CPtrToInt(p) {
+      return
+    }
+
+    let (container, containerSkipped) = container(repaintContainer)
+    if container == nil {
+      return
+    }
+
+    let isFixedPos = isFixedPositioned()
+    var mode = mode
+    // If this box has a transform, it acts as a fixed position container for fixed descendants,
+    // and may itself also be fixed position. So propagate 'fixed' up only if this box is fixed position.
+    if isFixedPos {
+      mode.update(with: .IsFixed)
+    } else if mode.contains(.IsFixed) && canContainFixedPositionObjects() {
+      mode.remove(.IsFixed)
+    }
+
+    if wasFixed == nil {
+      wasFixed = mode.contains(.IsFixed)
+    }
+
+    var unused: Bool? = nil
+    var containerOffset = offsetFromContainer(
+      container!, LayoutPointWrapper(size: transformState.mappedPoint()), &unused)
+
+    let preserve3D = mode.contains(.UseTransforms) && participatesInPreserve3D()
+    if mode.contains(.UseTransforms) && shouldUseTransformFromContainer(container) {
+      let t = getTransformFromContainer(containerOffset)
+
+      // For getCTM() computations we have to stay within the SVG subtree. However when the outermost <svg>
+      // is transformed itself, we need to call mapLocalToContainer() at least up to the parent of the
+      // outermost <svg>. That will also include the offset within the container, due to CSS positioning,
+      // which shall not be included in getCTM() (unlike getScreenCTM()) -- fix that.
+      if transformState.transformMatrixTracking() == .TrackSVGCTMMatrix {
+        let offset = toLayoutSize(point: contentBoxLocation() + containerOffset)
+        t.translateRight(tx: (-offset.width()).double(), ty: (-offset.height()).double())
+      }
+
+      transformState.applyTransform(t, preserve3D ? .AccumulateTransform : .FlattenTransform)
+    } else {
+      if transformState.transformMatrixTracking() == .TrackSVGCTMMatrix {
+        containerOffset -= toLayoutSize(point: contentBoxLocation())
+      }
+
+      transformState.move(
+        containerOffset.width(), containerOffset.height(),
+        preserve3D ? .AccumulateTransform : .FlattenTransform)
+    }
+
+    if containerSkipped {
+      // There can't be a transform between repaintContainer and container, because transforms create containers, so it should be safe
+      // to just subtract the delta between the repaintContainer and container.
+      let containerOffset = repaintContainer!.offsetFromAncestorContainer(container!)
+      transformState.move(
+        -containerOffset.width(), -containerOffset.height(),
+        preserve3D ? .AccumulateTransform : .FlattenTransform)
+      return
+    }
+
+    mode.remove(.ApplyContainerFlip)
+    if transformState.transformMatrixTracking() == .DoNotTrackTransformMatrix {
+      container!.mapLocalToContainer(repaintContainer, transformState, mode, &wasFixed)
+      return
+    }
+
+    if transformState.transformMatrixTracking() == .TrackSVGCTMMatrix {
+      return
+    }
+
+    // The CSS lengths/numbers above the SVG fragment (e.g. in HTML) do not adhere to SVG zoom rules.
+    // All length information (e.g. top/width/...) include the scaling factor. In SVG no lengths are
+    // scaled but a global scaling operation is included in the transform state.
+    // For getCTM/getScreenCTM computations the result must be independent of the page zoom factor.
+    // To compute these matrices within a non-SVG context (e.g. SVG embedded in HTML -- inline SVG)
+    // the scaling needs to be removed from the CSS transform state.
+    let transformStateAboveSVGFragment = TransformState(
+      transformState.direction(), transformState.mappedPoint())
+    transformStateAboveSVGFragment.setTransformMatrixTracking(
+      transformState.transformMatrixTracking())
+    container!.mapLocalToContainer(
+      repaintContainer, transformStateAboveSVGFragment, mode, &wasFixed)
+
+    let scale = 1 / style().usedZoom()
+    if let transformAboveSVGFragment = transformStateAboveSVGFragment.releaseTrackedTransform() {
+      var location = FloatPoint(
+        x: Float32(transformAboveSVGFragment.e()), y: Float32(transformAboveSVGFragment.f()))
+      location.scale(scale)
+
+      let unscaledTransform =
+        TransformationMatrix().scale(Float64(scale)) * transformAboveSVGFragment
+      unscaledTransform.setE(Float64(location.x))
+      unscaledTransform.setF(Float64(location.y))
+      transformState.applyTransform(
+        unscaledTransform, preserve3D ? .AccumulateTransform : .FlattenTransform)
+    }
+
+    // Respect scroll offset, after mapping to container coordinates.
+    if let view = document().view() {
+      var scrollPosition = LayoutPointWrapper(point: view.scrollPosition())
+      scrollPosition.scale(scale)
+      transformState.move(-toLayoutSize(point: scrollPosition))
+    }
   }
 
   override final func canBeSelectionLeaf() -> Bool {

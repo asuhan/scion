@@ -90,6 +90,11 @@ struct LayoutPointWrapper: Equatable {
     y += dy
   }
 
+  mutating func scale(_ s: Float32) {
+    x *= s
+    y *= s
+  }
+
   mutating func scale(sx: Float32, sy: Float32) {
     x *= sx
     y *= sy
