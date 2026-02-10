@@ -121,8 +121,24 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(enclosingContainer.p) == CPtrToInt(self.container()?.p))
+
+    if offsetDependsOnPoint != nil {
+      offsetDependsOnPoint = true
+    }
+
+    var translatedPhysicalPoint = physicalPoint
+    if let fragment = physicalTranslationFromFlowToFragment(physicalPoint: translatedPhysicalPoint)
+    {
+      translatedPhysicalPoint.moveBy(offset: fragment.topLeftLocation())
+    }
+
+    var offset = LayoutSizeWrapper(
+      width: translatedPhysicalPoint.x, height: translatedPhysicalPoint.y)
+    if let enclosingBox = enclosingContainer as? RenderBoxWrapper {
+      offset -= toLayoutSize(point: LayoutPointWrapper(point: enclosingBox.scrollPosition()))
+    }
+    return offset
   }
 
   // FIXME: Eventually as column and fragment flow threads start nesting, this will end up changing.
