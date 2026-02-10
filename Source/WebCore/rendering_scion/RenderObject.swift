@@ -1924,6 +1924,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldUseTransformFromContainer(_ container: RenderObjectWrapper?) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func getTransformFromContainer(_ offsetInContainer: LayoutSizeWrapper) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func pushOntoTransformState(
     _ transformState: TransformState, _ mode: MapCoordinatesMode,
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ container: RenderElementWrapper?,

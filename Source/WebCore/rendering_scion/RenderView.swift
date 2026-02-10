@@ -627,8 +627,22 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If a container was specified, and was not nullptr or the RenderView,
+    // then we should have found it by now.
+    assert(ancestorContainer == nil || CPtrToInt(ancestorContainer!.p) == CPtrToInt(p))
+    assert(wasFixed == nil || wasFixed! == mode.contains(.IsFixed))
+
+    if mode.contains(.IsFixed) {
+      transformState.move(
+        toLayoutSize(point: protectedFrameView().scrollPositionRespectingCustomFixedPosition()))
+    }
+
+    if ancestorContainer == nil && mode.contains(.UseTransforms)
+      && shouldUseTransformFromContainer(nil)
+    {
+      let t = getTransformFromContainer(LayoutSizeWrapper())
+      transformState.applyTransform(t)
+    }
   }
 
   override func pushMappingToContainer(
