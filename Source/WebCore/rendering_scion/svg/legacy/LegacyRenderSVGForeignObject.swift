@@ -164,11 +164,14 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   }
 
   override func offsetFromContainer(
-    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+    assert(!isInFlowPositioned())
+    assert(!isAbsolutelyPositioned())
+    assert(!isInline())
+    return locationOffset()
   }
 
   private var m_localTransform = AffineTransform()
