@@ -51,6 +51,11 @@ class LayoutSizeWrapper: Equatable {
     height_ = LayoutUnit(value: height)
   }
 
+  init(width: Float64, height: Float64) {
+    width_ = LayoutUnit(value: width)
+    height_ = LayoutUnit(value: height)
+  }
+
   init(width: Int32, height: Int32) {
     width_ = LayoutUnit(value: width)
     height_ = LayoutUnit(value: height)

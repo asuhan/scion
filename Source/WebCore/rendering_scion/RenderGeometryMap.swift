@@ -38,7 +38,7 @@ struct RenderGeometryMapStep {
 
   let renderer: RenderObjectWrapper?
   var offset = LayoutSizeWrapper()
-  let transform: TransformationMatrix? = nil  // Includes offset if non-null.
+  var transform: TransformationMatrix? = nil  // Includes offset if non-null.
   let accumulatingTransform: Bool
   let isNonUniform: Bool  // Mapping depends on the input point, e.g. because of CSS columns.
   let isFixedPosition: Bool
@@ -203,6 +203,27 @@ class RenderGeometryMap {
         isFixedPosition: isFixedPosition, hasTransform: hasTransform), at: insertionPosition)
 
     mapping[insertionPosition].offset = offsetFromContainer
+
+    stepInserted(mapping[insertionPosition])
+  }
+
+  func push(
+    _ renderer: RenderObjectWrapper, _ t: TransformationMatrix, accumulatingTransform: Bool = false,
+    isNonUniform: Bool = false, isFixedPosition: Bool = false, hasTransform: Bool = false
+  ) {
+    assert(insertionPosition != RenderGeometryMap.notFound)
+
+    mapping.insert(
+      RenderGeometryMapStep(
+        renderer: renderer, accumulatingTransform: accumulatingTransform,
+        isNonUniform: isNonUniform,
+        isFixedPosition: isFixedPosition, hasTransform: hasTransform), at: insertionPosition)
+
+    if !t.isIntegerTranslation() {
+      mapping[insertionPosition].transform = t.deepCopy()
+    } else {
+      mapping[insertionPosition].offset = LayoutSizeWrapper(width: t.e(), height: t.f())
+    }
 
     stepInserted(mapping[insertionPosition])
   }

@@ -286,6 +286,19 @@ class SVGRenderSupport {
     parent.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
+  static func pushMappingToContainer(
+    _ renderer: RenderElementWrapper, _ ancestorToStopAt: RenderLayerModelObjectWrapper?,
+    _ geometryMap: RenderGeometryMap
+  ) -> RenderElementWrapper? {
+    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(renderer.p))
+
+    var transform = AffineTransform()
+    let parent = localToParentTransform(renderer, &transform)
+
+    geometryMap.push(renderer, TransformationMatrix(transform))
+    return parent
+  }
+
   static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)
     -> LayoutRepainter.CheckForRepaint
   {

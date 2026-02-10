@@ -147,8 +147,10 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return super.pushMappingToContainer(ancestorToStopAt, geometryMap)
+    }
+    return SVGRenderSupport.pushMappingToContainer(self, ancestorToStopAt, geometryMap)
   }
 
   override func offsetFromContainer(

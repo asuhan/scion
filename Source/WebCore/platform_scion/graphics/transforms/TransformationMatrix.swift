@@ -25,6 +25,16 @@
  */
 
 class TransformationMatrix {
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  init(_ t: AffineTransform) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func makeIdentity() -> TransformationMatrix {
     // TODO(asuhan): implement this
@@ -128,6 +138,11 @@ class TransformationMatrix {
   }
 
   static func * (_ this: TransformationMatrix, _ t: TransformationMatrix) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isIntegerTranslation() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
