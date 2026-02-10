@@ -110,8 +110,8 @@ class RenderSVGBlockWrapper: RenderBlockFlowWrapper {
     _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> FloatRectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!document().settings().layerBasedSVGEngineEnabled())
+    return SVGRenderSupport.computeFloatVisibleRectInContainer(self, rect, container, context)
   }
 
   override final func computeVisibleRectsInContainer(

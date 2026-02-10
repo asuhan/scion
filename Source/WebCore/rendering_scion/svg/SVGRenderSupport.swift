@@ -257,6 +257,25 @@ class SVGRenderSupport {
         renderer.repaintRectInLocalCoordinates(context.repaintRectCalculation()), repaintContainer))
   }
 
+  static func computeFloatVisibleRectInContainer(
+    _ renderer: RenderElementWrapper, _ rect: FloatRectWrapper,
+    _ container: RenderLayerModelObjectWrapper?, _ context: RenderObjectWrapper.VisibleRectContext
+  ) -> FloatRectWrapper? {
+    // Ensure our parent is an SVG object.
+    let parent = renderer.parent()!
+    if !(parent.element() is SVGElementWrapper) {
+      return FloatRectWrapper()
+    }
+
+    var adjustedRect = rect
+    adjustedRect.inflate(d: renderer.style().outlineWidth())
+
+    // Translate to coords in our parent renderer, and then call computeFloatVisibleRectInContainer() on our parent.
+    adjustedRect = renderer.localToParentTransform().mapRect(rect: adjustedRect)
+
+    return parent.computeFloatVisibleRectInContainer(adjustedRect, container, context)
+  }
+
   private static func localToParentTransform(
     _ renderer: RenderElementWrapper, _ transform: inout AffineTransform
   ) -> RenderElementWrapper {
