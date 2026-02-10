@@ -927,11 +927,18 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func offsetFromContainer(
-    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ container: RenderElementWrapper, _ point: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+
+    var offset = super.offsetFromContainer(container, point, &offsetDependsOnPoint)
+    if let containerOfRow = container.container(), parent() != nil {
+      var unused: Bool? = nil
+      offset -= parentBox()!.offsetFromContainer(containerOfRow, point, &unused)
+    }
+
+    return offset
   }
 
   override func computeVisibleRectsInContainer(
