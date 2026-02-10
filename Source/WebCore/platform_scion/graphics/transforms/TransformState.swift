@@ -51,6 +51,14 @@ class TransformState {
   }
 
   func applyTransform(
+    _ transformFromContainer: AffineTransform,
+    _ accumulate: TransformAccumulation = .FlattenTransform
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func applyTransform(
     _ transformFromContainer: TransformationMatrix,
     _ accumulate: TransformAccumulation = .FlattenTransform
   ) {

@@ -257,12 +257,33 @@ class SVGRenderSupport {
         renderer.repaintRectInLocalCoordinates(context.repaintRectCalculation()), repaintContainer))
   }
 
+  private static func localToParentTransform(
+    _ renderer: RenderElementWrapper, _ transform: inout AffineTransform
+  ) -> RenderElementWrapper {
+    let parent = renderer.parent()!
+
+    // At the SVG/HTML boundary (aka LegacyRenderSVGRoot), we apply the localToBorderBoxTransform
+    // to map an element from SVG viewport coordinates to CSS box coordinates.
+    if let svgRoot = parent as? LegacyRenderSVGRootWrapper {
+      transform = svgRoot.localToBorderBoxTransform * renderer.localToParentTransform()
+    } else {
+      transform = renderer.localToParentTransform()
+    }
+
+    return parent
+  }
+
   static func mapLocalToContainer(
     _ renderer: RenderElementWrapper, _ ancestorContainer: RenderLayerModelObjectWrapper?,
     _ transformState: TransformState, _ wasFixed: inout Bool?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var transform = AffineTransform()
+    let parent = localToParentTransform(renderer, &transform)
+
+    transformState.applyTransform(transform)
+
+    let mode: MapCoordinatesMode = [.UseTransforms]
+    parent.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
   static func checkForSVGRepaintDuringLayout(_ renderer: RenderElementWrapper)

@@ -426,7 +426,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   private var strokeBoundingBox: FloatRectWrapper? = nil
   private var m_repaintBoundingBox = FloatRectWrapper()
   private var accurateRepaintBoundingBox: FloatRectWrapper? = nil
-  private var localToBorderBoxTransform = AffineTransform()
+  var localToBorderBoxTransform = AffineTransform()
   private let resourcesNeedingToInvalidateClients = WeakHashSet<LegacyRenderSVGResourceContainer>()
   var isLayoutSizeChanged = false
   private var needsBoundariesOrTransformUpdate = false
