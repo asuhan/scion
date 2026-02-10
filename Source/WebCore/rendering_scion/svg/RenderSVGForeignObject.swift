@@ -21,6 +21,11 @@
  */
 
 final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
+  private func foreignObjectElement() -> SVGForeignObjectElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     if !shouldPaintSVGRenderer(paintInfo) {
       return
@@ -44,8 +49,28 @@ final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    let repainter = LayoutRepainter(renderer: self)
+
+    let useForeignObjectElement = foreignObjectElement()
+    let lengthContext = SVGLengthContext(context: useForeignObjectElement)
+
+    // Cache viewport boundaries
+    let x = useForeignObjectElement.x().value(lengthContext)
+    let y = useForeignObjectElement.y().value(lengthContext)
+    let width = useForeignObjectElement.width().value(lengthContext)
+    let height = useForeignObjectElement.height().value(lengthContext)
+    viewport = FloatRectWrapper(x: x, y: y, width: width, height: height)
+
+    super.layout()
+    assert(!needsLayout())
+
+    setLocation(p: enclosingLayoutRect(rect: viewport).location())
+    updateLayerTransform()
+
+    repainter.repaintAfterLayout()
   }
 
   override final func objectBoundingBox() -> FloatRectWrapper {
@@ -79,4 +104,6 @@ final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
       setHasNonVisibleOverflow()
     }
   }
+
+  private var viewport = FloatRectWrapper()
 }
