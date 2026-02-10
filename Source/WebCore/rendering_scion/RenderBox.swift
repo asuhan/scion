@@ -1595,11 +1595,38 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func offsetFromContainer(
-    _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
+    _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // A fragment "has" boxes inside it without being their container.
+    assert(
+      CPtrToInt(container.p) == CPtrToInt(self.container()?.p)
+        || container is RenderFragmentContainerWrapper)
+
+    var offset = LayoutSizeWrapper()
+    if isInFlowPositioned() {
+      offset += offsetForInFlowPosition()
+    }
+
+    if !isInline() || isReplacedOrInlineBlock() {
+      offset += topLeftLocationOffset()
+    }
+
+    if let boxContainer = container as? RenderBoxWrapper {
+      offset -= toLayoutSize(point: LayoutPointWrapper(point: boxContainer.scrollPosition()))
+    }
+
+    if isAbsolutelyPositioned() && container.isInFlowPositioned(),
+      let inlineContainer = container as? RenderInlineWrapper
+    {
+      offset += inlineContainer.offsetForInFlowPositionedInline(self)
+    }
+
+    if offsetDependsOnPoint != nil {
+      offsetDependsOnPoint = container is RenderFragmentedFlowWrapper || offsetDependsOnPoint!
+    }
+
+    return offset
   }
 
   func adjustBorderBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
@@ -4196,6 +4223,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return location()
     }
     return topLeftLocationWithFlipping()
+  }
+
+  func topLeftLocationOffset() -> LayoutSizeWrapper {
+    // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
+    if document().view() == nil || !document().view()!.hasFlippedBlockRenderers() {
+      return locationOffset()
+    }
+    return toLayoutSize(point: topLeftLocationWithFlipping())
   }
 
   func logicalVisualOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
