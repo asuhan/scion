@@ -777,8 +777,16 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(ancestorToStopAt?.p) == CPtrToInt(p))
+
+    let (container, ancestorSkipped) = container(ancestorToStopAt)
+    if container == nil {
+      return nil
+    }
+
+    pushOntoGeometryMap(geometryMap, ancestorToStopAt, container, ancestorSkipped)
+
+    return ancestorSkipped ? ancestorToStopAt : container
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
