@@ -99,8 +99,9 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
 
   // Inset of the scaled capture from the visualOverflowRect()
   func captureContentInset() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var location = localOverflowRect.location()
+    location.moveBy(offset: -visualOverflowRect().location())
+    return location
   }
 
   // Rect covered by the captured contents, in RenderLayer coordinates of the captured renderer
