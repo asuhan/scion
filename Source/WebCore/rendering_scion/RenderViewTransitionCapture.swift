@@ -57,8 +57,18 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.layout()
+    // Move the overflow rect of the captured renderer into layout coords, and then scale/position so that the intrinsic size subset covers
+    // our replaced content rect.
+    localOverflowRect = overflowRect
+    localOverflowRect.moveBy(offset: -m_layerToLayoutOffset)
+    scale = FloatSize(
+      width: replacedContentRect().width().toFloat() / intrinsicSize().width().toFloat(),
+      height: replacedContentRect().height().toFloat() / intrinsicSize().height().toFloat())
+    localOverflowRect.scale(xScale: scale.width, yScale: scale.height)
+    localOverflowRect.moveBy(offset: replacedContentRect().location())
+
+    addVisualOverflow(rect: localOverflowRect)
   }
 
   // Inset of the scaled capture from the visualOverflowRect()
@@ -87,6 +97,12 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   // of the captured renderer (see layerToLayoutOffset in ViewTransition.cpp).
   // The intrisic size subset of the image is stored as the intrinsic size of the RenderReplaced.
   let overflowRect = LayoutRectWrapper()
+  // The offset between coordinates used by RenderLayer, and RenderObject
+  // for the captured renderer
+  let m_layerToLayoutOffset = LayoutPointWrapper()
+  // The overflow rect of the snapshot (replaced content), scaled and positioned
+  // so that the intrinsic size of the image fits the replaced content rect.
+  var localOverflowRect = LayoutRectWrapper()
   // Scale factor between the intrinsic size and the replaced content rect size.
-  let scale = FloatSize()
+  var scale = FloatSize()
 }

@@ -296,7 +296,7 @@ struct LayoutRectWrapper: Equatable {
     scale(xScale: scaleValue, yScale: scaleValue)
   }
 
-  private mutating func scale(xScale: Float32, yScale: Float32) {
+  mutating func scale(xScale: Float32, yScale: Float32) {
     if isInfinite() {
       return
     }
