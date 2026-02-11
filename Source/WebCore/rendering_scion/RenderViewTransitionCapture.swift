@@ -74,8 +74,12 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   }
 
   override func intrinsicSizeChanged() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if intrinsicSize() == imageIntrinsicSize {
+      return
+    }
+    setIntrinsicSize(imageIntrinsicSize)
+    setPreferredLogicalWidthsDirty(shouldBeDirty: true)
+    setNeedsLayout()
   }
 
   override func layout() {
