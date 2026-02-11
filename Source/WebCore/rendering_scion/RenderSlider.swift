@@ -19,11 +19,27 @@
  */
 
 final class RenderSliderWrapper: RenderFlexibleBoxWrapper {
+  private static let defaultTrackLength: Int32 = 129
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if shouldApplySizeOrInlineSizeContainment() {
+      if let width = explicitIntrinsicInnerLogicalWidth() {
+        minLogicalWidth = width
+        maxLogicalWidth = width
+      }
+      return
+    }
+    maxLogicalWidth = LayoutUnit(
+      value: Float32(RenderSliderWrapper.defaultTrackLength) * style().usedZoom())
+    let logicalWidth = style().logicalWidth()
+    if logicalWidth.isCalculated() {
+      let zero = LayoutUnit(value: UInt64(0))
+      minLogicalWidth = max(zero, valueForLength(length: logicalWidth, maximumValue: zero))
+    } else if !logicalWidth.isPercent() {
+      minLogicalWidth = maxLogicalWidth
+    }
   }
 
   override func computePreferredLogicalWidths() {
