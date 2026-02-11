@@ -251,7 +251,7 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     // SVGRenderingContext must be destroyed before we restore the childPaintInfo.context(), because a filter may have
     // changed the context and it is only reverted when the SVGRenderingContext destructor finishes applying the filter.
     do {
-      var renderingContext = SVGRenderingContext()
+      let renderingContext = SVGRenderingContext()
       var continueRendering = true
       if childPaintInfo.phase == .Foreground {
         renderingContext.prepareToRenderSVGContent(self, childPaintInfo)

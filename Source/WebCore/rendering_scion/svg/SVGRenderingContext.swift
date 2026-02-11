@@ -28,7 +28,7 @@ private func isRenderingMaskImage(_ object: RenderObjectWrapper) -> Bool {
   return object.view().frameView().paintBehavior().contains(.RenderingSVGClipOrMask)
 }
 
-struct SVGRenderingContext: ~Copyable {
+class SVGRenderingContext {
   enum NeedsGraphicsContextSave {
     case SaveGraphicsContext
     case DontSaveGraphicsContext
@@ -48,8 +48,34 @@ struct SVGRenderingContext: ~Copyable {
     fatalError("Not implemented")
   }
 
+  // Automatically finishes context rendering.
+  deinit {
+    // Fast path if we don't need to restore anything.
+    if !m_renderingFlags.contains(SVGRenderingContext.ActionsNeeded) {
+      return
+    }
+
+    assert(m_renderer != nil && m_paintInfo != nil)
+
+    if m_renderingFlags.contains(.EndFilterLayer) {
+      assert(m_filter != nil)
+      let context = m_paintInfo!.context()
+      m_filter!.postApplyResource(m_renderer!, context, [], nil, nil)
+      m_paintInfo!.setContext(m_savedContext!)
+      m_paintInfo!.rect = m_savedPaintRect
+    }
+
+    if m_renderingFlags.contains(.EndOpacityLayer) {
+      m_paintInfo!.context().endTransparencyLayer()
+    }
+
+    if m_renderingFlags.contains(.RestoreGraphicsContext) {
+      m_paintInfo!.context().restore()
+    }
+  }
+
   // Used by all SVG renderers who apply clip/filter/etc. resources to the renderer content.
-  mutating func prepareToRenderSVGContent(
+  func prepareToRenderSVGContent(
     _ renderer: RenderElementWrapper, _ paintInfo: PaintInfoWrapper,
     _ needsGraphicsContextSave: NeedsGraphicsContextSave = .DontSaveGraphicsContext
   ) {
@@ -199,6 +225,11 @@ struct SVGRenderingContext: ~Copyable {
     static let EndFilterLayer = RenderingFlags(rawValue: 1 << 3)
     static let PrepareToRenderSVGContentWasCalled = RenderingFlags(rawValue: 1 << 4)
   }
+
+  // List of those flags which require actions during the destructor.
+  private static let ActionsNeeded: RenderingFlags = [
+    .RestoreGraphicsContext, .EndOpacityLayer, .EndFilterLayer,
+  ]
 
   private var m_renderer: RenderElementWrapper? = nil
   private var m_paintInfo: PaintInfoWrapper? = nil

@@ -57,7 +57,7 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
         childPaintInfo.eventRegionContext()!.pushTransform(transform: transform)
       }
 
-      var renderingContext = SVGRenderingContext()
+      let renderingContext = SVGRenderingContext()
       var continueRendering = true
       if childPaintInfo.phase == .Foreground {
         renderingContext.prepareToRenderSVGContent(self, childPaintInfo)
