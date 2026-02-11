@@ -6901,8 +6901,24 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var adjustedRects = rects
+    let layoutState = view().frameView().layoutContext().layoutState()!
+
+    if hasLayer() && layer()!.transform != nil {
+      adjustedRects.transform(layer()!.transform!, document().deviceScaleFactor())
+    }
+
+    // We can't trust the bits on RenderObject, because this might be called while re-resolving style.
+    if style().hasInFlowPosition() && layer() != nil {
+      adjustedRects.move(layer()!.offsetForInFlowPosition())
+    }
+
+    adjustedRects.moveBy(location())
+    adjustedRects.move(layoutState.paintOffset())
+    if layoutState.isClipped() {
+      adjustedRects.clippedOverflowRect.intersect(other: layoutState.clipRect())
+    }
+    return adjustedRects
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {
