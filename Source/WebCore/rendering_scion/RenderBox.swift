@@ -2938,8 +2938,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func isStretchingColumnFlexItem() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if parent()!.isRenderDeprecatedFlexibleBox() && parent()!.style().boxOrient() == .Vertical
+      && parent()!.style().boxAlign() == .Stretch
+    {
+      return true
+    }
+
+    // We don't stretch multiline flexboxes because they need to apply line spacing (align-content) first.
+    return (parent() is RenderFlexibleBoxWrapper) && parent()!.style().flexWrap() == .NoWrap
+      && parent()!.style().isColumnFlexDirection() && columnFlexItemHasStretchAlignment()
   }
 
   private func columnFlexItemHasStretchAlignment() -> Bool {
