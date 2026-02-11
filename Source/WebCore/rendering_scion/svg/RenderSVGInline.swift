@@ -73,8 +73,10 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
   override final func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return super.clippedOverflowRect(repaintContainer, context)
+    }
+    return SVGRenderSupport.clippedOverflowRectForRepaint(self, repaintContainer, context)
   }
 
   override func rectsForRepaintingAfterLayout(
