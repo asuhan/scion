@@ -95,8 +95,14 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    setInline(false)
+    clearPositionedState()
+    setFloating(false)
+    setHasNonVisibleOverflow(false)
+    if oldStyle != nil && scrollbar != nil && part != .NoPart && diff >= .Repaint {
+      scrollbar!.theme().invalidatePart(scrollbar!, part)
+    }
   }
 
   private func layoutHorizontalPart() {

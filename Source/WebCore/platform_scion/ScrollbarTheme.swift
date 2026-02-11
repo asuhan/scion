@@ -43,6 +43,11 @@ class ScrollbarTheme {
     fatalError("Not implemented")
   }
 
+  func invalidatePart(_ scrollbar: Scrollbar, _ part: ScrollbarPart) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintScrollCorner(
     _ area: ScrollableAreaWrapper, _ context: GraphicsContextWrapper, _ cornerRect: IntRect
   ) {
