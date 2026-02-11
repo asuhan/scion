@@ -228,6 +228,14 @@ class RenderGeometryMap {
     stepInserted(mapping[insertionPosition])
   }
 
+  // RenderView gets special treatment, because it applies the scroll offset only for elements inside in fixed position.
+  func pushView(
+    _ view: RenderViewWrapper?, _ scrollOffset: LayoutSizeWrapper, _ t: TransformationMatrix? = nil
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func mapToContainer(
     _ transformState: TransformState, _ container: RenderLayerModelObjectWrapper?
   ) {

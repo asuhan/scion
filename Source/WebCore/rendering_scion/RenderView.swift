@@ -674,8 +674,20 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If a container was specified, and was not nullptr or the RenderView,
+    // then we should have found it by now.
+    assert(ancestorToStopAt == nil || CPtrToInt(ancestorToStopAt!.p) == CPtrToInt(p))
+
+    let scrollPosition = protectedFrameView().scrollPositionRespectingCustomFixedPosition()
+
+    if ancestorToStopAt == nil && shouldUseTransformFromContainer(nil) {
+      let t = getTransformFromContainer(LayoutSizeWrapper())
+      geometryMap.pushView(self, toLayoutSize(point: scrollPosition), t)
+    } else {
+      geometryMap.pushView(self, toLayoutSize(point: scrollPosition))
+    }
+
+    return nil
   }
 
   override func requiresColumns(desiredColumnCount: Int32) -> Bool {
