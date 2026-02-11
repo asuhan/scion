@@ -43,8 +43,11 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
   // It is also necessary to take the stroke and repaint rect of
   // this element, since we need it for filters.
   override final func objectBoundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let textAncestor = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: self) {
+      return textAncestor.objectBoundingBox()
+    }
+
+    return FloatRectWrapper()
   }
 
   override final func repaintRectInLocalCoordinates(
