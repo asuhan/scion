@@ -199,8 +199,18 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
+    assert(style().position() == .Static)
+
+    let (container, ancestorSkipped) = container(ancestorToStopAt)
+    if container == nil {
+      return nil
+    }
+
+    assert(!ancestorSkipped)
+
+    pushOntoGeometryMap(geometryMap, ancestorToStopAt, container, ancestorSkipped)
+    return container
   }
 
   override func offsetFromContainer(
