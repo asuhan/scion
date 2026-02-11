@@ -110,6 +110,12 @@ class AffineTransform: Equatable {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func translate(_ t: FloatSize) -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These functions get the length of an axis-aligned unit vector
   // once it has been mapped through the transform
   func xScale() -> Float64 {
