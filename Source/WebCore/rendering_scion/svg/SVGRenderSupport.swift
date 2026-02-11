@@ -69,6 +69,29 @@ private func layoutSizeOfNearestViewportChanged(_ renderer: RenderElementWrapper
   fatalError("Not reached")
 }
 
+private func clipPathReferenceBox(_ renderer: RenderElementWrapper, _ boxType: CSSBoxType)
+  -> FloatRectWrapper
+{
+  var referenceBox = FloatRectWrapper()
+  switch boxType {
+  case .BorderBox, .MarginBox, .StrokeBox, .BoxMissing:
+    // FIXME: strokeBoundingBox() takes dasharray into account but shouldn't.
+    referenceBox = renderer.strokeBoundingBox()
+  case .ViewBox:
+    if renderer.element() != nil {
+      if let viewportSize = SVGLengthContext(context: (renderer.element() as! SVGElementWrapper))
+        .viewportSize()
+      {
+        referenceBox.setSize(viewportSize)
+      }
+    }
+    fallthrough
+  case .ContentBox, .FillBox, .PaddingBox:
+    referenceBox = renderer.objectBoundingBox()
+  }
+  return referenceBox
+}
+
 // SVGRendererSupport is a helper class sharing code between all SVG renderers.
 class SVGRenderSupport {
   private static func layoutDifferentRootIfNeeded(_ renderer: RenderElementWrapper) {
@@ -434,8 +457,25 @@ class SVGRenderSupport {
   static func clipContextToCSSClippingArea(
     _ context: GraphicsContextWrapper, _ renderer: RenderElementWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let clipPathOperation = renderer.style().clipPath()
+    if let clipPath = clipPathOperation as? ShapePathOperation {
+      let localToParentTransform = renderer.localToParentTransform()
+
+      var referenceBox = clipPathReferenceBox(renderer, clipPath.referenceBox)
+      referenceBox = localToParentTransform.mapRect(rect: referenceBox)
+
+      let path = clipPath.pathForReferenceRect(boundingRect: referenceBox)
+      path.transform(localToParentTransform.inverse() ?? AffineTransform())
+
+      context.clipPath(path: path, clipRule: clipPath.windRule())
+      return
+    }
+
+    if let clipPath = clipPathOperation as? BoxPathOperation {
+      let referenceBox = clipPathReferenceBox(renderer, clipPath.referenceBox)
+      context.clipPath(
+        path: clipPath.pathForReferenceRect(boundingRect: FloatRoundedRect(rect: referenceBox)))
+    }
   }
 
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
