@@ -56,6 +56,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  func computedColumnHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // (Re-)calculate the column height. This is first and foremost needed by sets that are to
   // balance the column height, but even when it isn't to be balanced, this is necessary if the
   // multicol container's height is constrained. If |initial| is set, and we are to balance, guess

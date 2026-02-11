@@ -120,8 +120,19 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Make sure block progression pagination for percentages uses the column extent and
+    // not the view's extent. See https://bugs.webkit.org/show_bug.cgi?id=135204.
+    if multiColumnFlowForBlockFlow() != nil
+      && multiColumnFlowForBlockFlow()!.firstMultiColumnSet() != nil
+    {
+      return multiColumnFlowForBlockFlow()!.firstMultiColumnSet()!.computedColumnHeight()
+    }
+
+    let frameView = frameView()
+    // TODO(asuhan): add iOS support
+    return LayoutUnit(
+      value: isHorizontalWritingMode()
+        ? frameView.layoutSize().height : frameView.layoutSize().width)
   }
 
   // The same as the FrameView's layoutHeight/layoutWidth but with null check guards.
