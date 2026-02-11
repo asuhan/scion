@@ -45,8 +45,43 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     graphicsContext: GraphicsContextWrapper, paintOffset: LayoutPointWrapper,
     rect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Make sure our dimensions match the rect.
+    setLocation(p: rect.location() - toLayoutSize(point: paintOffset))
+    setWidth(width: rect.width())
+    setHeight(height: rect.height())
+
+    if graphicsContext.paintingDisabled() || style().opacity() == 0 {
+      return
+    }
+
+    // We don't use RenderLayers for scrollbar parts, so we need to handle opacity here.
+    // Opacity for ScrollbarBGPart is handled by RenderScrollbarTheme::willPaintScrollbar().
+    let needsTransparencyLayer = part != .ScrollbarBGPart && style().opacity() < 1
+    if needsTransparencyLayer {
+      graphicsContext.save()
+      graphicsContext.clip(rect: rect.FloatRect())
+      graphicsContext.beginTransparencyLayer(opacity: style().opacity())
+    }
+
+    // Now do the paint.
+    var paintInfo = PaintInfoWrapper(
+      newContext: graphicsContext, newRect: LayoutRectWrapper(rect: snappedIntRect(rect: rect)),
+      newPhase: .BlockBackground,
+      newPaintBehavior: .Normal)
+    paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+    paintInfo.phase = .ChildBlockBackgrounds
+    paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+    paintInfo.phase = .Float
+    paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+    paintInfo.phase = .Foreground
+    paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+    paintInfo.phase = .Outline
+    paint(paintInfo: &paintInfo, paintOffset: paintOffset)
+
+    if needsTransparencyLayer {
+      graphicsContext.endTransparencyLayer()
+      graphicsContext.restore()
+    }
   }
 
   override func marginBottom() -> LayoutUnit {
@@ -75,4 +110,5 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   }
 
   private var scrollbar: RenderScrollbar? = nil
+  private let part: ScrollbarPart = .NoPart
 }
