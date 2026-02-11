@@ -151,8 +151,21 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   }
 
   private func computeScrollbarHeight() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if scrollbar!.owningRenderer() == nil {
+      return
+    }
+    let height = calcScrollbarThicknessUsing(.MainOrPreferredSize, style().height())
+    let minHeight = calcScrollbarThicknessUsing(.MinSize, style().minHeight())
+    let maxHeight =
+      style().maxHeight().isUndefined()
+      ? height : calcScrollbarThicknessUsing(.MaxSize, style().maxHeight())
+    setHeight(height: max(minHeight, min(maxHeight, height)))
+
+    // Buttons and track pieces can all have margins along the axis of the scrollbar.
+    marginBox!.setTop(
+      minimumValueForLength(length: style().marginTop(), maximumValue: LayoutUnit()))
+    marginBox!.setBottom(
+      minimumValueForLength(length: style().marginBottom(), maximumValue: LayoutUnit()))
   }
 
   private var scrollbar: RenderScrollbar? = nil

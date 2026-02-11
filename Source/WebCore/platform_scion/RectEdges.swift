@@ -60,7 +60,17 @@ struct RectEdges<T> {
     }
   }
 
+  func setTop(_ top: T) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setRight(_ right: T) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setBottom(_ bottom: T) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
