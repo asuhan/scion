@@ -1948,6 +1948,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func pushOntoGeometryMap(
+    _ geometryMap: RenderGeometryMap, _ repaintContainer: RenderLayerModelObjectWrapper?,
+    _ container: RenderElementWrapper?, _ containerSkipped: Bool
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func participatesInPreserve3D() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
