@@ -26,6 +26,11 @@ class SVGGraphicsElementWrapper: SVGElementWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldIsolateBlending() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setShouldIsolateBlending(_ isolate: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -23,6 +23,11 @@
  */
 
 final class LegacyRenderSVGResourceFilter: LegacyRenderSVGResourceContainer {
+  func isIdentity() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func applyResource(
     _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
     _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
@@ -42,6 +47,11 @@ final class LegacyRenderSVGResourceFilter: LegacyRenderSVGResourceContainer {
   override func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func drawingRegion(_ object: RenderObjectWrapper) -> FloatRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

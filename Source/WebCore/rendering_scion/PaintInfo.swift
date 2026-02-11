@@ -187,15 +187,25 @@ struct PaintInfoWrapper {
   }
 
   var rect: LayoutRectWrapper {
-    if let p = p {
-      let raw = PaintInfo_rect(p)
-      return LayoutRectWrapper(
-        x: LayoutUnit.fromRawValue(value: raw.x),
-        y: LayoutUnit.fromRawValue(value: raw.y),
-        width: LayoutUnit.fromRawValue(value: raw.width),
-        height: LayoutUnit.fromRawValue(value: raw.height))
+    get {
+      if let p = p {
+        let raw = PaintInfo_rect(p)
+        return LayoutRectWrapper(
+          x: LayoutUnit.fromRawValue(value: raw.x),
+          y: LayoutUnit.fromRawValue(value: raw.y),
+          width: LayoutUnit.fromRawValue(value: raw.width),
+          height: LayoutUnit.fromRawValue(value: raw.height))
+      }
+      return n!.rect
     }
-    return n!.rect
+    set {
+      if n != nil {
+        n!.rect = newValue
+        return
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   var phase: PaintPhase {
@@ -303,7 +313,7 @@ struct PaintInfoWrapper {
   }
 
   private struct native {
-    let rect: LayoutRectWrapper
+    var rect: LayoutRectWrapper
     var phase: PaintPhase
     let paintBehavior: PaintBehavior
     let subtreePaintRoot: RenderObjectWrapper?  // used to draw just one element and its visual children

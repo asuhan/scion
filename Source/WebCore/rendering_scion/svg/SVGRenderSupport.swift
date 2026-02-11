@@ -431,6 +431,13 @@ class SVGRenderSupport {
     return false
   }
 
+  static func clipContextToCSSClippingArea(
+    _ context: GraphicsContextWrapper, _ renderer: RenderElementWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func styleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
     if renderer.element() != nil && renderer.element()!.isSVGElement()
       && (oldStyle == nil || renderer.style().hasBlendMode() != oldStyle!.hasBlendMode())

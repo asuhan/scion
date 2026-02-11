@@ -2277,6 +2277,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasReferenceFilterOnly() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func appleColorFilter() -> FilterOperations {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

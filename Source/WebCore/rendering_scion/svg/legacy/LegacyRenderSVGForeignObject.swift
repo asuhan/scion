@@ -42,7 +42,7 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
       childPaintInfo.context().clip(rect: viewport)
     }
 
-    let renderingContext = SVGRenderingContext()
+    var renderingContext = SVGRenderingContext()
     if paintInfo.phase == .Foreground {
       renderingContext.prepareToRenderSVGContent(self, childPaintInfo)
       if !renderingContext.isRenderingPrepared() {
