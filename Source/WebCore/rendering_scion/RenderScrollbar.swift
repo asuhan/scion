@@ -41,7 +41,7 @@ private func pseudoForScrollbarPart(_ part: ScrollbarPart) -> PseudoId {
 }
 
 final class RenderScrollbar: Scrollbar {
-  private func owningRenderer() -> RenderBoxWrapper? {
+  func owningRenderer() -> RenderBoxWrapper? {
     if owningFrame != nil {
       let currentRenderer = owningFrame!.ownerRenderer()
       return currentRenderer

@@ -6952,7 +6952,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private let marginBox: LayoutBoxExtent? = nil
+  let marginBox: LayoutBoxExtent? = nil
 
   // The preferred logical width of the element if it were to break its lines at every possible opportunity.
   var m_minPreferredLogicalWidth = LayoutUnit()

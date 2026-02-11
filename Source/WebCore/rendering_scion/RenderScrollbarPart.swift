@@ -23,6 +23,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func calcScrollbarThicknessUsing(
+  _ sizeType: RenderBoxWrapper.SizeType, _ length: LengthWrapper
+) -> Int32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
@@ -126,8 +133,21 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   }
 
   private func computeScrollbarWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if scrollbar!.owningRenderer() == nil {
+      return
+    }
+    let width = calcScrollbarThicknessUsing(.MainOrPreferredSize, style().width())
+    let minWidth = calcScrollbarThicknessUsing(.MinSize, style().minWidth())
+    let maxWidth =
+      style().maxWidth().isUndefined()
+      ? width : calcScrollbarThicknessUsing(.MaxSize, style().maxWidth())
+    setWidth(width: max(minWidth, min(maxWidth, width)))
+
+    // Buttons and track pieces can all have margins along the axis of the scrollbar.
+    marginBox!.setLeft(
+      minimumValueForLength(length: style().marginLeft(), maximumValue: LayoutUnit()))
+    marginBox!.setRight(
+      minimumValueForLength(length: style().marginRight(), maximumValue: LayoutUnit()))
   }
 
   private func computeScrollbarHeight() {

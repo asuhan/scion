@@ -60,6 +60,16 @@ struct RectEdges<T> {
     }
   }
 
+  func setRight(_ right: T) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setLeft(_ left: T) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func xFlippedCopy() -> RectEdges<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
