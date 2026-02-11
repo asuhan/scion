@@ -39,7 +39,7 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
   override func setNeedsTransformUpdate() { needsTransformUpdate = true }
 
   // Note: Assumes the PaintInfo context has had all local transforms applied.
-  private func paintForeground(_ paintInfo: PaintInfoWrapper) {
+  func paintForeground(_ paintInfo: PaintInfoWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

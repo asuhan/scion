@@ -24,6 +24,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import Foundation
+
 private func isRenderingMaskImage(_ object: RenderObjectWrapper) -> Bool {
   return object.view().frameView().paintBehavior().contains(.RenderingSVGClipOrMask)
 }
@@ -213,8 +215,40 @@ class SVGRenderingContext {
 
   // Support for the buffered-rendering hint.
   func bufferForeground(_ imageBuffer: ImageBufferWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_paintInfo != nil)
+    assert(m_renderer is LegacyRenderSVGImageWrapper)
+    let boundingBox = m_renderer!.objectBoundingBox()
+
+    var imageBuffer = imageBuffer
+    // Invalidate an existing buffer if the scale is not correct.
+    if imageBuffer != nil {
+      let transform = m_paintInfo!.context().getCTM(includeScale: .DefinitelyIncludeDeviceScale)
+      let expandedBoundingBox = expandedIntSize(boundingBox.size())
+      let bufferSize = IntSize(
+        width: Int32(ceil(Float64(expandedBoundingBox.width) * transform.xScale())),
+        height: Int32(ceil(Float64(expandedBoundingBox.height) * transform.yScale())))
+      if bufferSize != imageBuffer!.backendSize() {
+        imageBuffer = nil
+      }
+    }
+
+    // Create a new buffer and paint the foreground into it.
+    if imageBuffer == nil {
+      imageBuffer = m_paintInfo!.context().createAlignedImageBuffer(
+        FloatSize(size: expandedIntSize(boundingBox.size())))
+      if imageBuffer == nil {
+        return false
+      }
+    }
+
+    let bufferedRenderingContext = imageBuffer!.context()
+    bufferedRenderingContext.translate(p: -boundingBox.location())
+    let bufferedInfo = m_paintInfo!.deepCopy()
+    bufferedInfo.setContext(bufferedRenderingContext)
+    (m_renderer as! LegacyRenderSVGImageWrapper).paintForeground(bufferedInfo)
+
+    m_paintInfo!.context().drawImageBuffer(imageBuffer!, boundingBox)
+    return true
   }
 
   private struct RenderingFlags: OptionSet {
