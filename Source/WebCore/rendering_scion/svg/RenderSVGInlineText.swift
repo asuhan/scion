@@ -55,8 +55,20 @@ private func applySVGWhitespaceRules(_ string: StringWrapper, _ preserveWhiteSpa
 
 final class RenderSVGInlineTextWrapper: RenderTextWrapper {
   func characterStartsNewTextChunk(_ position: UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(position >= 0)
+    assert(position < text().length())
+
+    // Each <textPath> element starts a new text chunk, regardless of any x/y values.
+    if position == 0 && parent()!.isRenderSVGTextPath() && previousSibling() == nil {
+      return true
+    }
+
+    guard let charData = m_layoutAttributes!.characterDataMap().m[position + 1] else {
+      return false
+    }
+
+    return !SVGTextLayoutAttributes.isEmptyValue(charData.x)
+      || !SVGTextLayoutAttributes.isEmptyValue(charData.y)
   }
 
   func layoutAttributes() -> SVGTextLayoutAttributes {
@@ -161,4 +173,5 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
 
   private var m_scaledFont = FontCascadeWrapper()
   private var m_scalingFactor: Float32 = 0
+  private let m_layoutAttributes: SVGTextLayoutAttributes? = nil
 }

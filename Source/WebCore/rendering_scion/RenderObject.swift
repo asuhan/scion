@@ -675,6 +675,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderSVGTextPath() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderSVGInline() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
