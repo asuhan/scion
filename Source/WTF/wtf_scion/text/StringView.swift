@@ -138,3 +138,17 @@ class StringWrapperView {
 
   var p: UnsafeRawPointer?
 }
+
+func makeStringByReplacingAll(_ string: StringWrapper, target: UChar, replacement: UChar)
+  -> StringWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+func makeStringByReplacingAll(_ string: StringWrapper, target: UChar, literal: ASCIILiteral)
+  -> StringWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}

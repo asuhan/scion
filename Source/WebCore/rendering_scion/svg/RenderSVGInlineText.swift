@@ -22,11 +22,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private let space = UChar(Character(" ").asciiValue!)
+private let tab = UChar(Character("\t").asciiValue!)
+private let lf = UChar(Character("\n").asciiValue!)
+private let cr = UChar(Character("\r").asciiValue!)
+
 private func applySVGWhitespaceRules(_ string: StringWrapper, _ preserveWhiteSpace: Bool)
   -> StringWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var newString = string
+  if preserveWhiteSpace {
+    // Spec: When xml:space="preserve", the SVG user agent will do the following using a
+    // copy of the original character data content. It will convert all newline and tab
+    // characters into space characters. Then, it will draw all space characters, including
+    // leading, trailing and multiple contiguous space characters.
+    newString = makeStringByReplacingAll(newString, target: tab, replacement: space)
+    newString = makeStringByReplacingAll(newString, target: lf, replacement: space)
+    newString = makeStringByReplacingAll(newString, target: cr, replacement: space)
+    return newString
+  }
+
+  // Spec: When xml:space="default", the SVG user agent will do the following using a
+  // copy of the original character data content. First, it will remove all newline
+  // characters. Then it will convert all tab characters into space characters.
+  // Then, it will strip off all leading and trailing space characters.
+  // Then, all contiguous space characters will be consolidated.
+  newString = makeStringByReplacingAll(newString, target: lf, literal: ASCIILiteral(""))
+  newString = makeStringByReplacingAll(newString, target: cr, literal: ASCIILiteral(""))
+  newString = makeStringByReplacingAll(newString, target: tab, literal: ASCIILiteral(" "))
+  return newString
 }
 
 final class RenderSVGInlineTextWrapper: RenderTextWrapper {
