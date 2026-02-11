@@ -106,11 +106,31 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   }
 
   private func layoutHorizontalPart() {
+    if part == .ScrollbarBGPart {
+      setWidth(width: scrollbar!.width())
+      computeScrollbarHeight()
+    } else {
+      computeScrollbarWidth()
+      setHeight(height: scrollbar!.height())
+    }
+  }
+
+  private func layoutVerticalPart() {
+    if part == .ScrollbarBGPart {
+      computeScrollbarWidth()
+      setHeight(height: scrollbar!.height())
+    } else {
+      setWidth(width: scrollbar!.width())
+      computeScrollbarHeight()
+    }
+  }
+
+  private func computeScrollbarWidth() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  private func layoutVerticalPart() {
+  private func computeScrollbarHeight() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
