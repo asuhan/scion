@@ -100,8 +100,10 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
     _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> FloatRectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      fatalError("Not reached")
+    }
+    return SVGRenderSupport.computeFloatVisibleRectInContainer(self, rect, container, context)
   }
 
   override final func mapLocalToContainer(
