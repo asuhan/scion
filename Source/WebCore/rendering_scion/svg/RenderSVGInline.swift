@@ -53,8 +53,11 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
   override final func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let textAncestor = RenderSVGTextWrapper.locateRenderSVGTextAncestor(start: self) {
+      return textAncestor.repaintRectInLocalCoordinates(repaintRectCalculation)
+    }
+
+    return FloatRectWrapper()
   }
 
   override final func currentSVGLayoutLocation() -> LayoutPointWrapper {
