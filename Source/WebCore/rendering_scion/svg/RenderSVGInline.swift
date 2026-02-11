@@ -82,8 +82,18 @@ class RenderSVGInlineWrapper: RenderInlineWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if document().settings().layerBasedSVGEngineEnabled() {
+      return super.rectsForRepaintingAfterLayout(repaintContainer, repaintOutlineBounds)
+    }
+
+    var rects = RepaintRects(
+      rect: SVGRenderSupport.clippedOverflowRectForRepaint(
+        self, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint))
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = outlineBoundsForRepaint(repaintContainer)
+    }
+
+    return rects
   }
 
   override final func computeFloatVisibleRectInContainer(
