@@ -189,7 +189,7 @@ class RenderGeometryMap {
 
   // Push geometry info between this renderer and some ancestor. The ancestor must be its container() or some
   // stacking context between the renderer and its container.
-  private func push(
+  func push(
     _ renderer: RenderObjectWrapper, _ offsetFromContainer: LayoutSizeWrapper,
     accumulatingTransform: Bool = false, isNonUniform: Bool = false, isFixedPosition: Bool = false,
     hasTransform: Bool = false

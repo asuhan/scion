@@ -1925,8 +1925,22 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
+
+    let container = parent()
+    if container == nil {
+      return nil
+    }
+
+    // FIXME: this should call offsetFromContainer to share code, but I'm not sure it's ever called.
+    var offset = LayoutSizeWrapper()
+    if let box = container as? RenderBoxWrapper {
+      offset = -toLayoutSize(point: LayoutPointWrapper(point: box.scrollPosition()))
+    }
+
+    geometryMap.push(self, offset, accumulatingTransform: false)
+
+    return container
   }
 
   func shouldUseTransformFromContainer(_ container: RenderObjectWrapper?) -> Bool {
