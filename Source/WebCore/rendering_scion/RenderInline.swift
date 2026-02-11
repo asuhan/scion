@@ -777,7 +777,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    assert(CPtrToInt(ancestorToStopAt?.p) == CPtrToInt(p))
+    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
 
     let (container, ancestorSkipped) = container(ancestorToStopAt)
     if container == nil {
