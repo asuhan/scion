@@ -38,6 +38,15 @@ class ImagePaintingOptionsWrapper {
     fatalError("Not implemented")
   }
 
+  init(
+    compositeOperator: CompositeOperator, decodingMode: DecodingMode,
+    orientation: ImageOrientation, interpolationQuality: InterpolationQuality,
+    allowImageSubsampling: AllowImageSubsampling, showDebugBackground: ShowDebugBackground
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(_ orientation: ImageOrientation) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

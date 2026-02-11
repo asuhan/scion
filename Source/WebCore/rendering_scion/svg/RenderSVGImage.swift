@@ -161,8 +161,30 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
   private func paintIntoRect(
     _ paintInfo: PaintInfoWrapper, _ rect: FloatRectWrapper, sourceRect: FloatRectWrapper
   ) -> ImageDrawResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if imageResource!.cachedImage() == nil || rect.width() <= 0 || rect.height() <= 0 {
+      return .DidNothing
+    }
+
+    let image = imageResource!.image()
+    if image == nil || image!.isNull() {
+      return .DidNothing
+    }
+
+    let options = ImagePaintingOptionsWrapper(
+      compositeOperator: .SourceOver,
+      decodingMode: .Synchronous,
+      orientation: imageOrientation(),
+      interpolationQuality: .Default,
+      allowImageSubsampling: settings().imageSubsamplingEnabled() ? .Yes : .No,
+      showDebugBackground: settings().showDebugBorders() ? .Yes : .No
+    )
+
+    let drawResult = paintInfo.context().drawImage(image!, rect, sourceRect, options)
+    if drawResult == .DidRequestDecoding {
+      imageResource!.cachedImage()!.addClientWaitingForAsyncDecoding(client: self)
+    }
+
+    return drawResult
   }
 
   private func bufferForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
