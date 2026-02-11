@@ -28,5 +28,10 @@ struct SVGLayerTransformComputation {
     fatalError("Not implemented")
   }
 
+  func calculateScreenFontSizeScalingFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let renderer: RenderLayerModelObjectWrapper
 }
