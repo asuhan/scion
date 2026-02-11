@@ -43,8 +43,22 @@ final class RenderSliderWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func computePreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_minPreferredLogicalWidth = LayoutUnit(value: 0)
+    m_maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    if style().width().isFixed() && style().width().value() > 0 {
+      m_maxPreferredLogicalWidth = adjustContentBoxLogicalWidthForBoxSizing(
+        logicalWidth: style().width())
+      m_minPreferredLogicalWidth = m_maxPreferredLogicalWidth
+    } else {
+      computeIntrinsicLogicalWidths(
+        minLogicalWidth: &m_minPreferredLogicalWidth, maxLogicalWidth: &m_maxPreferredLogicalWidth)
+    }
+
+    renderBoxComputePreferredLogicalWidths(
+      style().minWidth(), style().maxWidth(), horizontalBorderAndPaddingExtent())
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
   override func isFlexibleBoxImpl() -> Bool {

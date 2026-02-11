@@ -5653,6 +5653,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computePreferredLogicalWidths(
     _ minWidth: LengthWrapper, _ maxWidth: LengthWrapper, _ borderAndPadding: LayoutUnit
   ) {
+    renderBoxComputePreferredLogicalWidths(minWidth, maxWidth, borderAndPadding)
+  }
+
+  func renderBoxComputePreferredLogicalWidths(
+    _ minWidth: LengthWrapper, _ maxWidth: LengthWrapper, _ borderAndPadding: LayoutUnit
+  ) {
     if !style().logicalWidth().isFixed() && shouldComputeLogicalHeightFromAspectRatio() {
       var (logicalMinWidth, logicalMaxWidth) = computeMinMaxLogicalWidthFromAspectRatio()
       logicalMinWidth = max(logicalMinWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
