@@ -299,8 +299,23 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we ever require layout but receive a paint anyway, something has gone horribly wrong.
+    assert(!needsLayout())
+    // RenderViews should never be called to paint with an offset not on device pixels.
+    assert(
+      LayoutPointWrapper(point: IntPoint(x: paintOffset.x.int(), y: paintOffset.y.int()))
+        == paintOffset)
+
+    // This avoids painting garbage between columns if there is a column gap.
+    let frameView = frameView()
+    if frameView.pagination().mode != .Unpaginated
+      && paintInfo.shouldPaintWithinRoot(renderer: self)
+    {
+      paintInfo.context().fillRect(
+        rect: paintInfo.rect.FloatRect(), color: frameView.baseBackgroundColor())
+    }
+
+    paintObject(paintInfo: &paintInfo, paintOffset: paintOffset)
   }
 
   override final func paintBoxDecorations(
