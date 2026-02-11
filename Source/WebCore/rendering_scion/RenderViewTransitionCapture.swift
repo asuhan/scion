@@ -55,8 +55,22 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
   override final func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let context = paintInfo.context()
+    if context.detectingContentfulPaint() {
+      return
+    }
+
+    var replacedContentRect = replacedContentRect()
+    replacedContentRect.moveBy(offset: paintOffset)
+
+    let paintRect = localOverflowRect.FloatRect()
+
+    let _ = InterpolationQualityMaintainer(
+      context, ImageQualityController.interpolationQualityFromStyle(style()))
+    if m_oldImage != nil {
+      context.drawImageBuffer(
+        m_oldImage!, paintRect, ImagePaintingOptionsWrapper(context.compositeOperation()))
+    }
   }
 
   override func intrinsicSizeChanged() {
@@ -101,6 +115,7 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
     }
   }
 
+  private let m_oldImage: ImageBufferWrapper? = nil
   // The overflow rect that the captured image represents, in RenderLayer coordinates
   // of the captured renderer (see layerToLayoutOffset in ViewTransition.cpp).
   // The intrisic size subset of the image is stored as the intrinsic size of the RenderReplaced.

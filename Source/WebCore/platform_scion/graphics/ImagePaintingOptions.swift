@@ -52,6 +52,11 @@ class ImagePaintingOptionsWrapper {
     fatalError("Not implemented")
   }
 
+  init(_ compositeOperator: CompositeOperator) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   var blendMode: BlendMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
