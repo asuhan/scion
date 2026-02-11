@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     SVGFitToViewBox.swift
     SVGForeignObjectElement.swift
     SVGGeometryElement.swift
+    SVGGradientElement.swift
     SVGGraphicsElement.swift
     SVGImageElement.swift
     SVGLengthContext.swift

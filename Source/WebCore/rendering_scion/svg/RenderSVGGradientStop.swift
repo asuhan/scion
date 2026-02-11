@@ -22,8 +22,23 @@
 // This class exists mostly so we can hear about gradient stop style changes
 final class RenderSVGGradientStopWrapper: RenderElementWrapper {
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    if diff == .Equal {
+      return
+    }
+
+    // <stop> elements should only be allowed to make renderers under gradient elements
+    // but I can imagine a few cases we might not be catching, so let's not crash if our parent isn't a gradient.
+    guard let gradient = gradientElement() else { return }
+
+    guard let renderer = gradient.renderer() else { return }
+
+    if let gradientRenderer = renderer as? RenderSVGResourceGradient {
+      gradientRenderer.invalidateGradient()
+      return
+    }
+
+    (renderer as! LegacyRenderSVGResourceContainer).removeAllClientsFromCache()
   }
 
   override func layout() {
@@ -49,4 +64,9 @@ final class RenderSVGGradientStopWrapper: RenderElementWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
+
+  private func gradientElement() -> SVGGradientElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
