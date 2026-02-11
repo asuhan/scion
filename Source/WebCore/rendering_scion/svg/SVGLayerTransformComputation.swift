@@ -17,6 +17,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import Foundation
+
 struct SVGLayerTransformComputation {
   init(_ renderer: RenderLayerModelObjectWrapper) { self.renderer = renderer }
 
@@ -99,8 +101,26 @@ struct SVGLayerTransformComputation {
   }
 
   func calculateScreenFontSizeScalingFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Walk up the render tree, accumulating transforms
+    var layer = renderer.enclosingLayer()
+
+    var stopAtLayer: RenderLayerWrapper? = nil
+    while layer != nil {
+      // We can stop at compositing layers, to match the backing resolution.
+      if layer!.isComposited() {
+        stopAtLayer = layer
+        break
+      }
+
+      layer = layer!.parent()
+    }
+
+    let ctm = computeAccumulatedTransform(stopAtLayer?.renderer(), .TrackSVGScreenCTMMatrix)
+    ctm.scale(Float64(renderer.document().deviceScaleFactor()))
+    if !renderer.document().isSVGDocument() {
+      ctm.scale(Float64(renderer.style().usedZoom()))
+    }
+    return narrowPrecisionToFloat(hypot(ctm.xScale(), ctm.yScale()) / sqrtOfTwoDouble)
   }
 
   private let renderer: RenderLayerModelObjectWrapper
