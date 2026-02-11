@@ -30,8 +30,15 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    setLocation(p: LayoutPointWrapper())  // We don't worry about positioning ourselves. We're just determining our minimum width/height.
+    if scrollbar!.orientation() == .Horizontal {
+      layoutHorizontalPart()
+    } else {
+      layoutVerticalPart()
+    }
+
+    clearNeedsLayout()
   }
 
   func paintIntoRect(
@@ -56,4 +63,16 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func layoutHorizontalPart() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func layoutVerticalPart() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var scrollbar: RenderScrollbar? = nil
 }
