@@ -66,8 +66,15 @@ private func computeLogicalBoxSize(_ renderer: RenderBoxWrapper, _ isHorizontalW
 private func getShapeImageMarginRect(
   _ renderBox: RenderBoxWrapper, _ referenceBoxLogicalSize: LayoutSizeWrapper
 ) -> LayoutRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let marginBoxOrigin = LayoutPointWrapper(
+    x: -renderBox.marginLogicalLeft() - renderBox.borderAndPaddingLogicalLeft(),
+    y: -renderBox.marginBefore() - renderBox.borderBefore() - renderBox.paddingBefore())
+  let marginBoxSizeDelta = LayoutSizeWrapper(
+    width: renderBox.marginLogicalWidth() + renderBox.borderAndPaddingLogicalWidth(),
+    height: renderBox.marginLogicalHeight() + renderBox.borderAndPaddingLogicalHeight())
+  let marginRectSize = referenceBoxLogicalSize + marginBoxSizeDelta
+  marginRectSize.clampNegativeToZero()
+  return LayoutRectWrapper(location: marginBoxOrigin, size: marginRectSize)
 }
 
 private func makeShapeForShapeOutside(_ renderer: RenderBoxWrapper) -> ShapeWrapper {
