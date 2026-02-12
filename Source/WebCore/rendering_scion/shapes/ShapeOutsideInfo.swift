@@ -117,14 +117,98 @@ private func makeShapeForShapeOutside(_ renderer: RenderBoxWrapper) -> ShapeWrap
   }
 }
 
+private func borderBeforeInWritingMode(_ renderer: RenderBoxWrapper, _ writingMode: WritingMode)
+  -> LayoutUnit
+{
+  let blockFlowDirection = writingModeToBlockFlowDirection(writingMode: writingMode)
+  switch blockFlowDirection {
+  case .TopToBottom: return renderer.borderTop()
+  case .BottomToTop: return renderer.borderBottom()
+  case .LeftToRight: return renderer.borderLeft()
+  case .RightToLeft: return renderer.borderRight()
+  }
+}
+
+private func borderAndPaddingBeforeInWritingMode(
+  _ renderer: RenderBoxWrapper, _ writingMode: WritingMode
+) -> LayoutUnit {
+  let blockFlowDirection = writingModeToBlockFlowDirection(writingMode: writingMode)
+  switch blockFlowDirection {
+  case .TopToBottom: return renderer.borderTop() + renderer.paddingTop()
+  case .BottomToTop: return renderer.borderBottom() + renderer.paddingBottom()
+  case .LeftToRight: return renderer.borderLeft() + renderer.paddingLeft()
+  case .RightToLeft: return renderer.borderRight() + renderer.paddingRight()
+  }
+}
+
 private func logicalTopOffset(_ renderer: RenderBoxWrapper) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  switch renderer.style().shapeOutside()!.effectiveCSSBox() {
+  case .MarginBox:
+    return -renderer.marginBefore(otherStyle: renderer.containingBlock()!.style())
+  case .BorderBox:
+    return LayoutUnit(value: UInt64(0))
+  case .PaddingBox:
+    return borderBeforeInWritingMode(renderer, renderer.containingBlock()!.style().writingMode())
+  case .ContentBox:
+    return borderAndPaddingBeforeInWritingMode(
+      renderer, renderer.containingBlock()!.style().writingMode())
+  case .FillBox, .StrokeBox, .ViewBox, .BoxMissing:
+    fatalError("Not reached")
+  }
+}
+
+private func borderStartWithStyleForWritingMode(
+  _ renderer: RenderBoxWrapper, _ style: RenderStyleWrapper
+) -> LayoutUnit {
+  if style.isHorizontalWritingMode() {
+    if style.isLeftToRightDirection() {
+      return renderer.borderLeft()
+    }
+
+    return renderer.borderRight()
+  }
+  if style.isLeftToRightDirection() {
+    return renderer.borderTop()
+  }
+
+  return renderer.borderBottom()
+}
+
+private func borderAndPaddingStartWithStyleForWritingMode(
+  _ renderer: RenderBoxWrapper, _ style: RenderStyleWrapper
+) -> LayoutUnit {
+  if style.isHorizontalWritingMode() {
+    if style.isLeftToRightDirection() {
+      return renderer.borderLeft() + renderer.paddingLeft()
+    }
+
+    return renderer.borderRight() + renderer.paddingRight()
+  }
+  if style.isLeftToRightDirection() {
+    return renderer.borderTop() + renderer.paddingTop()
+  }
+
+  return renderer.borderBottom() + renderer.paddingBottom()
 }
 
 private func logicalLeftOffset(_ renderer: RenderBoxWrapper) -> LayoutUnit {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if renderer.isRenderFragmentContainer() {
+    return LayoutUnit(value: UInt64(0))
+  }
+
+  switch renderer.style().shapeOutside()!.effectiveCSSBox() {
+  case .MarginBox:
+    return -renderer.marginStart(otherStyle: renderer.containingBlock()!.style())
+  case .BorderBox:
+    return LayoutUnit(value: UInt64(0))
+  case .PaddingBox:
+    return borderStartWithStyleForWritingMode(renderer, renderer.containingBlock()!.style())
+  case .ContentBox:
+    return borderAndPaddingStartWithStyleForWritingMode(
+      renderer, renderer.containingBlock()!.style())
+  case .FillBox, .StrokeBox, .ViewBox, .BoxMissing:
+    fatalError("Not reached")
+  }
 }
 
 class ShapeOutsideInfoWrapper {
