@@ -51,6 +51,11 @@ func sizeForLengthSize(length: LengthSize, maximumValue: LayoutSizeWrapper)
     height: valueForLength(length: length.height, maximumValue: maximumValue.height()))
 }
 
+func floatSizeForLengthSize(_ lengthSize: LengthSize, _ boxSize: FloatSize) -> FloatSize {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func valueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> LayoutUnit {
   switch length.type() {
   case .Fixed, .Percent, .Calculated:

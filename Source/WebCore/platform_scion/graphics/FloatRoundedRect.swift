@@ -31,6 +31,11 @@ struct FloatRoundedRect {
   struct Radii {
     init() {}
 
+    init(topLeft: FloatSize, topRight: FloatSize, bottomLeft: FloatSize, bottomRight: FloatSize) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     init(intRadii: RoundedRect.Radii) {
       topLeft = intRadii.topLeft.FloatSize()
       topRight = intRadii.topRight.FloatSize()
@@ -47,6 +52,10 @@ struct FloatRoundedRect {
 
     func isZero() -> Bool {
       return topLeft.isZero() && topRight.isZero() && bottomLeft.isZero() && bottomRight.isZero()
+    }
+
+    mutating func scale(_ factor: Float32) {
+      scale(horizontalFactor: factor, verticalFactor: factor)
     }
 
     mutating func scale(horizontalFactor: Float32, verticalFactor: Float32) {

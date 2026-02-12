@@ -27,4 +27,108 @@
  * SUCH DAMAGE.
  */
 
-class BasicShape {}
+class BasicShape {
+  enum `Type` {
+    case Polygon
+    case Path
+    case Circle
+    case Ellipse
+    case Inset
+    case Rect
+    case Xywh
+    case Shape
+  }
+
+  func type() -> `Type` {
+    fatalError("Not reached")
+  }
+}
+
+struct BasicShapeCenterCoordinate {}
+
+class BasicShapeCircleOrEllipse: BasicShape {}
+
+class BasicShapeCircle: BasicShapeCircleOrEllipse {
+  func centerX() -> BasicShapeCenterCoordinate {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func centerY() -> BasicShapeCenterCoordinate {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func floatValueForRadiusInBox(_ boxSize: FloatSize, _ center: FloatPoint) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
+  func centerX() -> BasicShapeCenterCoordinate {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func centerY() -> BasicShapeCenterCoordinate {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func floatSizeForRadiusInBox(_ boxSize: FloatSize, _ center: FloatPoint) -> FloatSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+final class BasicShapePolygon: BasicShape {
+  func values() -> ArraySlice<LengthWrapper> { return m_values[...] }
+
+  func windRule() -> WindRule { return m_windRule }
+
+  private let m_windRule: WindRule = .NonZero
+  private let m_values: [LengthWrapper] = []
+}
+
+final class BasicShapeInset: BasicShape {
+  func top() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func right() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func bottom() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func left() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func topLeftRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func topRightRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func bottomRightRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func bottomLeftRadius() -> LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

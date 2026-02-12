@@ -46,6 +46,47 @@ struct LineSegment {
   var isValid = false
 }
 
+private func createInsetShape(_ bounds: FloatRoundedRect) -> ShapeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createCircleShape(_ center: FloatPoint, _ radius: Float32) -> ShapeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createEllipseShape(_ center: FloatPoint, _ radii: FloatSize) -> ShapeWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createPolygonShape(_ vertices: [FloatPoint], _ fillRule: WindRule)
+  -> ShapeWrapper
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func physicalRectToLogical(
+  _ rect: FloatRectWrapper, _ logicalBoxHeight: Float32, _ writingMode: WritingMode
+) -> FloatRectWrapper {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func physicalPointToLogical(
+  _ point: FloatPoint, _ logicalBoxHeight: Float32, _ writingMode: WritingMode
+) -> FloatPoint {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func physicalSizeToLogical(_ size: FloatSize, _ writingMode: WritingMode) -> FloatSize {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // A representation of a BasicShape that enables layout code to determine how to break a line up into segments
 // that will fit within or around a shape. The line is defined by a pair of logical Y coordinates and the
 // computed segments are returned as pairs of logical X coordinates. The BasicShape itself is defined in
@@ -60,8 +101,93 @@ class ShapeWrapper {
     _ basicShape: BasicShape, _ borderBoxOffset: LayoutPointWrapper,
     _ logicalBoxSize: LayoutSizeWrapper, _ writingMode: WritingMode, _ margin: Float32
   ) -> ShapeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let horizontalWritingMode = isHorizontalWritingMode(writingMode: writingMode)
+    let boxWidth = horizontalWritingMode ? logicalBoxSize.width() : logicalBoxSize.height()
+    let boxHeight = horizontalWritingMode ? logicalBoxSize.height() : logicalBoxSize.width()
+    var shape: ShapeWrapper? = nil
+
+    switch basicShape.type() {
+    case .Circle:
+      let circle = basicShape as! BasicShapeCircle
+      let centerX = floatValueForCenterCoordinate(circle.centerX(), boxWidth.float())
+      let centerY = floatValueForCenterCoordinate(circle.centerY(), boxHeight.float())
+      let radius = circle.floatValueForRadiusInBox(
+        FloatSize(width: boxWidth.float(), height: boxHeight.float()),
+        FloatPoint(x: centerX, y: centerY))
+      var logicalCenter = physicalPointToLogical(
+        FloatPoint(x: centerX, y: centerY), logicalBoxSize.height().float(), writingMode)
+      logicalCenter.moveBy(a: borderBoxOffset.FloatPoint())
+
+      shape = createCircleShape(logicalCenter, radius)
+
+    case .Ellipse:
+      let ellipse = basicShape as! BasicShapeEllipse
+      let centerX = floatValueForCenterCoordinate(ellipse.centerX(), boxWidth.float())
+      let centerY = floatValueForCenterCoordinate(ellipse.centerY(), boxHeight.float())
+      let center = FloatPoint(x: centerX, y: centerY)
+      let radius = ellipse.floatSizeForRadiusInBox(
+        FloatSize(width: boxWidth.float(), height: boxHeight.float()), center)
+      var logicalCenter = physicalPointToLogical(
+        center, logicalBoxSize.height().float(), writingMode)
+      logicalCenter.moveBy(a: borderBoxOffset.FloatPoint())
+      shape = createEllipseShape(logicalCenter, radius)
+
+    case .Polygon:
+      let polygon = basicShape as! BasicShapePolygon
+      let values = polygon.values()
+      let valuesSize = values.count
+      assert(valuesSize % 2 == 0)
+      var vertices: [FloatPoint] = []
+      vertices.reserveCapacity(valuesSize / 2)
+      for i in stride(from: 0, to: valuesSize, by: 2) {
+        var vertex = FloatPoint(
+          x: floatValueForLength(length: values[i], maximumValue: boxWidth),
+          y: floatValueForLength(length: values[i + 1], maximumValue: boxHeight))
+        vertex.moveBy(a: borderBoxOffset.FloatPoint())
+        vertices.append(
+          physicalPointToLogical(vertex, logicalBoxSize.height().float(), writingMode))
+      }
+      shape = createPolygonShape(vertices, polygon.windRule())
+
+    case .Inset:
+      let inset = basicShape as! BasicShapeInset
+      let left = floatValueForLength(length: inset.left(), maximumValue: boxWidth)
+      let top = floatValueForLength(length: inset.top(), maximumValue: boxHeight)
+      let rect = FloatRectWrapper(
+        x: left, y: top,
+        width: max(
+          boxWidth - left - floatValueForLength(length: inset.right(), maximumValue: boxWidth), 0),
+        height: max(
+          boxHeight - top - floatValueForLength(length: inset.bottom(), maximumValue: boxHeight), 0)
+      )
+      var logicalRect = physicalRectToLogical(rect, logicalBoxSize.height().float(), writingMode)
+      logicalRect.moveBy(delta: borderBoxOffset.FloatPoint())
+
+      let boxSize = FloatSize(width: boxWidth.float(), height: boxHeight.float())
+      let topLeftRadius = physicalSizeToLogical(
+        floatSizeForLengthSize(inset.topLeftRadius(), boxSize), writingMode)
+      let topRightRadius = physicalSizeToLogical(
+        floatSizeForLengthSize(inset.topRightRadius(), boxSize), writingMode)
+      let bottomLeftRadius = physicalSizeToLogical(
+        floatSizeForLengthSize(inset.bottomLeftRadius(), boxSize), writingMode)
+      let bottomRightRadius = physicalSizeToLogical(
+        floatSizeForLengthSize(inset.bottomRightRadius(), boxSize), writingMode)
+      var cornerRadii = FloatRoundedRect.Radii(
+        topLeft: topLeftRadius, topRight: topRightRadius, bottomLeft: bottomLeftRadius,
+        bottomRight: bottomRightRadius)
+
+      cornerRadii.scale(calcBorderRadiiConstraintScaleFor(rect: logicalRect, radii: cornerRadii))
+
+      shape = createInsetShape(FloatRoundedRect(rect: logicalRect, radii: cornerRadii))
+
+    default:
+      fatalError("Not reached")
+    }
+
+    shape!.m_writingMode = writingMode
+    shape!.m_margin = margin
+
+    return shape!
   }
 
   static func createRasterShape(
