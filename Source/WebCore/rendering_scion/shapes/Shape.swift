@@ -84,8 +84,13 @@ private func physicalRectToLogical(
 private func physicalPointToLogical(
   _ point: FloatPoint, _ logicalBoxHeight: Float32, _ writingMode: WritingMode
 ) -> FloatPoint {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if isHorizontalWritingMode(writingMode: writingMode) {
+    return point
+  }
+  if isFlippedWritingMode(writingMode: writingMode) {
+    return FloatPoint(x: point.y, y: logicalBoxHeight - point.x)
+  }
+  return point.transposedPoint()
 }
 
 private func physicalSizeToLogical(_ size: FloatSize, _ writingMode: WritingMode) -> FloatSize {
