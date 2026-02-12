@@ -27,6 +27,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
 import wk_interop
 
 struct LineSegment {
@@ -67,8 +68,72 @@ class ShapeWrapper {
     _ image: ImageWrapper?, _ threshold: Float32, _ imageR: LayoutRectWrapper,
     _ marginR: LayoutRectWrapper, _ writingMode: WritingMode, _ margin: Float32
   ) -> ShapeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(marginR.height() >= Int32(0))
+
+    let imageRect = snappedIntRect(rect: imageR)
+    let marginRect = snappedIntRect(rect: marginR)
+    let intervals = RasterShapeIntervals(size: marginRect.height(), offset: -marginRect.y())
+    // FIXME (149420): This buffer should not be unconditionally unaccelerated.
+    let imageBuffer = ImageBufferWrapper.create(
+      FloatSize(size: imageRect.size), .Unspecified, 1, DestinationColorSpace.SRGB(), .BGRA8)
+
+    let createShape = { () in
+      let rasterShape = RasterShape(intervals, marginRect.size)
+      rasterShape.m_writingMode = writingMode
+      rasterShape.m_margin = margin
+      return rasterShape
+    }
+
+    if imageBuffer == nil {
+      return createShape()
+    }
+
+    let graphicsContext = imageBuffer!.context()
+    if image == nil {
+      graphicsContext.drawImage(
+        image!, FloatRectWrapper(r: IntRect(location: IntPoint(), size: imageRect.size)))
+    }
+
+    let format = PixelBufferFormat(
+      alphaFormat: .Unpremultiplied, pixelFormat: .RGBA8, colorSpace: DestinationColorSpace.SRGB())
+    let pixelBuffer = imageBuffer!.getPixelBuffer(
+      format, IntRect(location: IntPoint(), size: imageRect.size))
+
+    // We could get to a value where PixelBuffer could be nullptr because ImageRect.size()
+    // is huge and the data size overflows. Refer rdar://problem/61793884.
+    if pixelBuffer == nil {
+      return createShape()
+    }
+
+    if imageRect.area() * 4 == pixelBuffer!.bytes().count {
+      var pixelArrayOffset: UInt64 = 3  // Each pixel is four bytes: RGBA.
+      let alphaPixelThreshold = UInt8(lroundf(clampTo(value: threshold, min: 0, max: 1) * 255.0))
+
+      let minBufferY = max(0, marginRect.y() - imageRect.y())
+      let maxBufferY = min(imageRect.height(), marginRect.maxY() - imageRect.y())
+
+      for y in minBufferY..<maxBufferY {
+        var startX: Int32 = -1
+        for x in 0..<imageRect.width() {
+          let alpha = pixelBuffer!.item(pixelArrayOffset)
+          let alphaAboveThreshold = alpha > alphaPixelThreshold
+          if startX == -1 && alphaAboveThreshold {
+            startX = x
+          } else if startX != -1 && (!alphaAboveThreshold || x == imageRect.width() - 1) {
+            // We're creating "end-point exclusive" intervals here. The value of an interval's x1 is
+            // the first index of an above-threshold pixel for y, and the value of x2 is 1+ the index
+            // of the last above-threshold pixel.
+            let endX = alphaAboveThreshold ? x + 1 : x
+            intervals.intervalAt(y + imageRect.y()).unite(
+              IntShapeInterval(startX + imageRect.x(), endX + imageRect.x()))
+            startX = -1
+          }
+          pixelArrayOffset += 4
+        }
+      }
+    }
+
+    return createShape()
   }
 
   static func createBoxShape(
@@ -94,4 +159,7 @@ class ShapeWrapper {
   }
 
   var p: UnsafeRawPointer
+
+  var m_writingMode: WritingMode = .HorizontalTb
+  var m_margin: Float32 = 0
 }

@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    AlphaPremultiplication.swift
     BitmapImage.swift
     Color.swift
     ColorBlending.swift
@@ -38,6 +39,7 @@ target_sources(layout_scion PRIVATE
     GraphicsTypes.swift
     Image.swift
     ImageBuffer.swift
+    ImageBufferPixelFormat.swift
     ImageObserver.swift
     ImageOrientation.swift
     ImagePaintingOptions.swift
@@ -56,6 +58,9 @@ target_sources(layout_scion PRIVATE
     PathTraversalState.swift
     PathUtilities.swift
     Pattern.swift
+    PixelBuffer.swift
+    PixelBufferFormat.swift
+    PixelFormat.swift
     PlatformLayer.swift
     Region.swift
     RenderingMode.swift

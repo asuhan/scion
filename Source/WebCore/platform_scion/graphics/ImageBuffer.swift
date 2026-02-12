@@ -27,8 +27,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+struct ImageBufferOptions: OptionSet {
+  let rawValue: UInt8
+  static let Accelerated = ImageBufferOptions(rawValue: 1 << 0)
+  static let AvoidBackendSizeCheckForTesting = ImageBufferOptions(rawValue: 1 << 1)
+}
+
 class ImageBufferWrapper {
   init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func create(
+    _ size: FloatSize, _ purpose: RenderingPurpose, _ resolutionScale: Float32,
+    _ colorSpace: DestinationColorSpace, _ pixelFormat: ImageBufferPixelFormat,
+    _ options: ImageBufferOptions = [], _ graphicsClient: GraphicsClientWrapper? = nil
+  ) -> ImageBufferWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -39,6 +54,13 @@ class ImageBufferWrapper {
   }
 
   func backendSize() -> IntSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func getPixelBuffer(_ destinationFormat: PixelBufferFormat, _ sourceRect: IntRect)
+    -> PixelBufferWrapper?
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2023 Apple Inc. All rights reserved.
+ * Copyright (C) 2022 Apple Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,18 +23,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum RenderingPurpose {
-  case Unspecified
-  case Canvas
-  case DOM
-  case LayerBacking
-  case BitmapOnlyLayerBacking
-  case Snapshot
-  case ShareableSnapshot
-  case ShareableLocalSnapshot
-  case MediaPainting
-}
-
-enum RenderingMethod {
-  case Local
-}
+class GraphicsClientWrapper {}

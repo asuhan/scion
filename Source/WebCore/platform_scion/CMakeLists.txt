@@ -1,6 +1,7 @@
 target_sources(layout_scion PRIVATE
     CaretAnimator.swift
     FloatConversion.swift
+    GraphicsClient.swift
     IntervalTree.swift
     LayoutUnit.swift
     Length.swift

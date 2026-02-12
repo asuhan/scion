@@ -46,6 +46,11 @@ struct IntRect: Equatable {
   func width() -> Int32 { return size.width }
   func height() -> Int32 { return size.height }
 
+  func area() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private mutating func setX(x: Int32) { location.x = x }
   private mutating func setY(y: Int32) { location.y = y }
   mutating func setWidth(width: Int32) { size.width = width }
