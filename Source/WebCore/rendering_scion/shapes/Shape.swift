@@ -94,8 +94,10 @@ private func physicalPointToLogical(
 }
 
 private func physicalSizeToLogical(_ size: FloatSize, _ writingMode: WritingMode) -> FloatSize {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if isHorizontalWritingMode(writingMode: writingMode) {
+    return size
+  }
+  return size.transposedSize()
 }
 
 // A representation of a BasicShape that enables layout code to determine how to break a line up into segments
