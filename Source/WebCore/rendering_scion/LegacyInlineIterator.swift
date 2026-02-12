@@ -37,12 +37,22 @@ class LegacyInlineIterator {
     fatalError("Not implemented")
   }
 
+  func renderer() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func increment(resolver: InlineBidiResolver? = nil) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func atEnd() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func current() -> UChar {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

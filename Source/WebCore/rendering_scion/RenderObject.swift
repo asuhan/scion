@@ -1062,6 +1062,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return capturedInViewTransition()
   }
 
+  func preservesNewline() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func view() -> RenderViewWrapper {
     return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }

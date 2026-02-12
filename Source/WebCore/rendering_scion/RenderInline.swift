@@ -812,3 +812,22 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   // All of the line boxes created for this svg inline.
   private let legacyLineBoxes: RenderLineBoxList? = nil
 }
+
+func isEmptyInline(_ renderer: RenderInlineWrapper) -> Bool {
+  for current: RenderObjectWrapper in childrenOfType(parent: renderer) {
+    if current.isFloatingOrOutOfFlowPositioned() {
+      continue
+    }
+    if let text = current as? RenderTextWrapper {
+      if !text.containsOnlyCollapsibleWhitespace() {
+        return false
+      }
+      continue
+    }
+    let renderInline = current as? RenderInlineWrapper
+    if renderInline == nil || !isEmptyInline(renderInline!) {
+      return false
+    }
+  }
+  return true
+}
