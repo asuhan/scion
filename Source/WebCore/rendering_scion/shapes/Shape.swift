@@ -71,8 +71,14 @@ private func createPolygonShape(_ vertices: [FloatPoint], _ fillRule: WindRule)
 private func physicalRectToLogical(
   _ rect: FloatRectWrapper, _ logicalBoxHeight: Float32, _ writingMode: WritingMode
 ) -> FloatRectWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if isHorizontalWritingMode(writingMode: writingMode) {
+    return rect
+  }
+  if isFlippedWritingMode(writingMode: writingMode) {
+    return FloatRectWrapper(
+      x: rect.y(), y: logicalBoxHeight - rect.maxX(), width: rect.height(), height: rect.width())
+  }
+  return rect.transposedRect()
 }
 
 private func physicalPointToLogical(
