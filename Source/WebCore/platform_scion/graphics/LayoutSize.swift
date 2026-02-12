@@ -94,6 +94,11 @@ class LayoutSizeWrapper: Equatable {
     height_ += height
   }
 
+  func shrink(_ width: LayoutUnit, _ height: LayoutUnit) {
+    width_ -= width
+    height_ -= height
+  }
+
   func scale(scale: Float32) {
     width_ *= scale
     height_ *= scale

@@ -33,4 +33,9 @@ class ShapeValue {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func effectiveCSSBox() -> CSSBoxType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

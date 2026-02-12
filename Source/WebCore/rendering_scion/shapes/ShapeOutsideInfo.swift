@@ -29,14 +29,54 @@
 
 import wk_interop
 
+private func computeLogicalBoxSize(_ renderer: RenderBoxWrapper, _ isHorizontalWritingMode: Bool)
+  -> LayoutSizeWrapper
+{
+  let shapeValue = renderer.style().shapeOutside()!
+  let size = isHorizontalWritingMode ? renderer.size() : renderer.size().transposedSize()
+  switch shapeValue.effectiveCSSBox() {
+  case .MarginBox:
+    if isHorizontalWritingMode {
+      size.expand(width: renderer.horizontalMarginExtent(), height: renderer.verticalMarginExtent())
+    } else {
+      size.expand(width: renderer.verticalMarginExtent(), height: renderer.horizontalMarginExtent())
+    }
+  case .BorderBox:
+    break
+  case .PaddingBox:
+    if isHorizontalWritingMode {
+      size.shrink(renderer.horizontalBorderExtent(), renderer.verticalBorderExtent())
+    } else {
+      size.shrink(renderer.verticalBorderExtent(), renderer.horizontalBorderExtent())
+    }
+  case .ContentBox:
+    if isHorizontalWritingMode {
+      size.shrink(
+        renderer.horizontalBorderAndPaddingExtent(), renderer.verticalBorderAndPaddingExtent())
+    } else {
+      size.shrink(
+        renderer.verticalBorderAndPaddingExtent(), renderer.horizontalBorderAndPaddingExtent())
+    }
+  case .FillBox, .StrokeBox, .ViewBox, .BoxMissing:
+    fatalError("Not reached")
+  }
+  return size
+}
+
 class ShapeOutsideInfoWrapper {
   init(p: UnsafeRawPointer) {
     self.p = p
   }
 
   func invalidateForSizeChangeIfNeeded() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let newSize = computeLogicalBoxSize(
+      renderer!, renderer!.containingBlock()!.isHorizontalWritingMode())
+    if cachedShapeLogicalSize == newSize {
+      return
+    }
+
+    markShapeAsDirty()
+    cachedShapeLogicalSize = newSize
   }
 
   func markShapeAsDirty() {
@@ -49,4 +89,8 @@ class ShapeOutsideInfoWrapper {
   }
 
   private var p: UnsafeRawPointer
+
+  private let renderer: RenderBoxWrapper? = nil
+
+  private var cachedShapeLogicalSize = LayoutSizeWrapper()
 }
