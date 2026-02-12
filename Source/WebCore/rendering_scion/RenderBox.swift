@@ -815,6 +815,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func marginBoxRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func borderBoxRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
