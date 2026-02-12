@@ -52,8 +52,11 @@ private func createInsetShape(_ bounds: FloatRoundedRect) -> ShapeWrapper {
 }
 
 private func createCircleShape(_ center: FloatPoint, _ radius: Float32) -> ShapeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(radius >= 0)
+  return RectangleShape(
+    FloatRectWrapper(
+      x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2),
+    FloatSize(width: radius, height: radius))
 }
 
 private func createEllipseShape(_ center: FloatPoint, _ radii: FloatSize) -> ShapeWrapper {
