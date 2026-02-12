@@ -234,10 +234,7 @@ class ShapeOutsideInfoWrapper {
     cachedShapeLogicalSize = newSize
   }
 
-  func markShapeAsDirty() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func markShapeAsDirty() { shape = nil }
 
   func computedShape() -> ShapeWrapper {
     if renderer == nil {
