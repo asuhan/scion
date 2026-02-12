@@ -99,3 +99,10 @@ func computeRoundedRectForBoxShape(box: CSSBoxType, renderer: RenderBoxWrapper) 
       .deprecatedRoundedRect()
   }
 }
+
+final class BoxShape: ShapeWrapper {
+  init(_ bounds: FloatRoundedRect) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -278,8 +278,14 @@ class ShapeWrapper {
   static func createBoxShape(
     _ roundedRect: RoundedRect, _ writingMode: WritingMode, _ margin: Float32
   ) -> ShapeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(roundedRect.rect.width() >= Int32(0) && roundedRect.rect.height() >= Int32(0))
+
+    let bounds = FloatRoundedRect(rect: roundedRect)
+    let shape = BoxShape(bounds)
+    shape.m_writingMode = writingMode
+    shape.m_margin = margin
+
+    return shape
   }
 
   func getExcludedInterval(logicalTop: LayoutUnit, logicalHeight: LayoutUnit) -> LineSegment {
