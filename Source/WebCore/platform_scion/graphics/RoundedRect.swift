@@ -114,6 +114,12 @@ struct RoundedRectRadii {
     )
   }
 
+  func transposedRadii() -> RoundedRectRadii {
+    return RoundedRectRadii(
+      topLeft: topLeft.transposedSize(), topRight: topRight.transposedSize(),
+      bottomLeft: bottomLeft.transposedSize(), bottomRight: bottomRight.transposedSize())
+  }
+
   var topLeft = LayoutSizeWrapper()
   var topRight = LayoutSizeWrapper()
   var bottomLeft = LayoutSizeWrapper()
@@ -253,6 +259,10 @@ struct RoundedRect {
     }
     assert(snappedRoundedRect.isRenderable())
     return snappedRoundedRect
+  }
+
+  func transposedRect() -> RoundedRect {
+    return RoundedRect(rect: rect.transposedRect(), radii: radii.transposedRadii())
   }
 
   var rect = LayoutRectWrapper()

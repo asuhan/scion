@@ -1,4 +1,5 @@
 target_sources(layout_scion PRIVATE
+    BasicShapes.swift
     BlockEllipsis.swift
     BorderData.swift
     BorderValue.swift

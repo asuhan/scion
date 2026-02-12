@@ -27,6 +27,11 @@ class StyleImage: Equatable {
     fatalError("Not implemented")
   }
 
+  // Loading.
+  func isPending() -> Bool {
+    fatalError("Not reached")
+  }
+
   func isLoaded(renderer: RenderElementWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

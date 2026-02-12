@@ -23,6 +23,10 @@
 */
 
 class StyleMultiImage: StyleImage {
+  override final func isPending() -> Bool {
+    fatalError("Not reached")
+  }
+
   override final func imageSize(_ renderer: RenderElementWrapper?, _ multiplier: Float32)
     -> FloatSize
   {

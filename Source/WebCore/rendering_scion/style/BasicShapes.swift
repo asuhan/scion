@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2012 Adobe Systems Incorporated. All rights reserved.
- * Copyright (C) 2014-2017 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,33 +27,4 @@
  * SUCH DAMAGE.
  */
 
-class ShapeValue {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  enum `Type` {
-    case Shape
-    case Box
-    case Image
-  }
-
-  func effectiveCSSBox() -> CSSBoxType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func image() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func isImageValid() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  let type: `Type`
-  let shape: BasicShape?
-}
+class BasicShape {}
