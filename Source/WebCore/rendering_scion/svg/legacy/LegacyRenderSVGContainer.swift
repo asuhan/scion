@@ -100,6 +100,10 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
   }
 
   override func layout() {
+    legacyRenderSVGContainerLayout()
+  }
+
+  func legacyRenderSVGContainerLayout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())
 

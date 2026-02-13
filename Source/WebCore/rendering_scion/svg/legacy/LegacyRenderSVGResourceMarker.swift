@@ -28,8 +28,16 @@ final class LegacyRenderSVGResourceMarkerWrapper: LegacyRenderSVGResourceContain
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    // Invalidate all resources if our layout changed.
+    if everHadLayout() && selfNeedsLayout() {
+      LegacyRenderSVGRootWrapper.addResourceForClientInvalidation(self)
+    }
+
+    // RenderSVGHiddenContainer overwrites layout(). We need the
+    // layouting of LegacyRenderSVGContainer for calculating local
+    // transformations and repaint.
+    legacyRenderSVGContainerLayout()
   }
 
   override func calcViewport() {

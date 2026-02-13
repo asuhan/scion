@@ -79,6 +79,13 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
 
   override func setNeedsTransformUpdate() { needsBoundariesOrTransformUpdate = true }
 
+  // The flag is cleared at the beginning of each layout() pass. Elements then call this
+  // method during layout when they are invalidated by a filter.
+  static func addResourceForClientInvalidation(_ resource: LegacyRenderSVGResourceContainer?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func computeReplacedLogicalWidth(
     shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   )
