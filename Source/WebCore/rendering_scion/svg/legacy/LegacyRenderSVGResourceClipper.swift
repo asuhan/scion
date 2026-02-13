@@ -377,10 +377,34 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
   }
 
   private func calculateClipContentRepaintRect(_ repaintRectCalculation: RepaintRectCalculation) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This is a rough heuristic to appraise the clip size and doesn't consider clip on clip.
+    var childNode = clipPathElement().firstChild()
+    while childNode != nil {
+      let renderer = childNode!.renderer()
+      if !childNode!.isSVGElement() || renderer == nil {
+        childNode = childNode!.nextSibling()
+        continue
+      }
+      if !renderer!.isRenderOrLegacyRenderSVGShape() && !renderer!.isRenderSVGText()
+        && !childNode!.hasUseTagName()  // TODO(asuhan): use hasTagName
+      {
+        childNode = childNode!.nextSibling()
+        continue
+      }
+      let style = renderer!.style()
+      if style.display() == .None || style.usedVisibility() != .Visible {
+        childNode = childNode!.nextSibling()
+        continue
+      }
+      clipBoundaries[Int(repaintRectCalculation.rawValue)].unite(
+        other: renderer!.localToParentTransform().mapRect(
+          rect: renderer!.repaintRectInLocalCoordinates(repaintRectCalculation)))
+      childNode = childNode!.nextSibling()
+    }
+    clipBoundaries[Int(repaintRectCalculation.rawValue)] = clipPathElement()
+      .animatedLocalTransform().mapRect(rect: clipBoundaries[Int(repaintRectCalculation.rawValue)])
   }
 
-  private let clipBoundaries = [FloatRectWrapper](repeating: FloatRectWrapper(), count: 2)  // TODO(asuhan): use an enumerated array
+  private var clipBoundaries = [FloatRectWrapper](repeating: FloatRectWrapper(), count: 2)  // TODO(asuhan): use an enumerated array
   private let clipperMap: HashMap<RenderObjectWrapper, ClipperData>? = nil
 }

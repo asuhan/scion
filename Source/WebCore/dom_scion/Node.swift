@@ -157,5 +157,10 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func hasUseTagName() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let p: UnsafeRawPointer
 }
