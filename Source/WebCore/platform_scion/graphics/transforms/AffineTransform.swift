@@ -161,6 +161,11 @@ class AffineTransform: Equatable {
       a: 1, b: 0, c: 0, d: 1, e: Float64(delta.width), f: Float64(delta.height))
   }
 
+  func deepCopy() -> AffineTransform {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
   private var transform: [Float64]
 }

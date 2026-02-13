@@ -252,8 +252,36 @@ class SVGRenderingContext {
   static func calculateTransformationToOutermostCoordinateSystem(_ renderer: RenderObjectWrapper)
     -> AffineTransform
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var absoluteTransform = currentContentTransformation.deepCopy()
+
+    let deviceScaleFactor = renderer.document().deviceScaleFactor()
+    // Walk up the render tree, accumulating SVG transforms.
+    var ancestor: RenderObjectWrapper? = renderer
+    while ancestor != nil {
+      absoluteTransform = ancestor!.localToParentTransform() * absoluteTransform
+      if ancestor!.isRenderOrLegacyRenderSVGRoot() {
+        break
+      }
+      ancestor = ancestor!.parent()
+    }
+
+    // Continue walking up the layer tree, accumulating CSS transforms.
+    var layer = ancestor?.enclosingLayer()
+    while layer != nil {
+      if let layerTransform = layer!.transform {
+        absoluteTransform = layerTransform.toAffineTransform() * absoluteTransform
+      }
+
+      // We can stop at compositing layers, to match the backing resolution.
+      if layer!.isComposited() {
+        break
+      }
+
+      layer = layer!.parent()
+    }
+
+    absoluteTransform.scale(Float64(deviceScaleFactor))
+    return absoluteTransform
   }
 
   private static func calculateImageBufferRect(
