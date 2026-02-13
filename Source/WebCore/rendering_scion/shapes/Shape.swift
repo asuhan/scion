@@ -47,8 +47,8 @@ struct LineSegment {
 }
 
 private func createInsetShape(_ bounds: FloatRoundedRect) -> ShapeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(bounds.rect.width() >= 0 && bounds.rect.height() >= 0)
+  return BoxShape(bounds)
 }
 
 private func createCircleShape(_ center: FloatPoint, _ radius: Float32) -> ShapeWrapper {
@@ -60,8 +60,11 @@ private func createCircleShape(_ center: FloatPoint, _ radius: Float32) -> Shape
 }
 
 private func createEllipseShape(_ center: FloatPoint, _ radii: FloatSize) -> ShapeWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  assert(radii.width >= 0 && radii.height >= 0)
+  return RectangleShape(
+    FloatRectWrapper(
+      x: center.x - radii.width, y: center.y - radii.height, width: radii.width * 2,
+      height: radii.height * 2), radii)
 }
 
 private func createPolygonShape(_ vertices: [FloatPoint], _ fillRule: WindRule)
