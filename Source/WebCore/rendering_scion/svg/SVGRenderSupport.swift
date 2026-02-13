@@ -438,6 +438,14 @@ class SVGRenderSupport {
     return shape.adjustStrokeBoundingBoxForZeroLengthLinecaps(calculate(shape))
   }
 
+  // Shared between SVG renderers and resources.
+  static func applyStrokeStyleToContext(
+    _ context: GraphicsContextWrapper, _ style: RenderStyleWrapper, _ renderer: RenderElementWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Determines if any ancestor's transform has changed.
   private static func transformToRootChanged(_ ancestor: RenderElementWrapper?) -> Bool {
     var ancestor = ancestor

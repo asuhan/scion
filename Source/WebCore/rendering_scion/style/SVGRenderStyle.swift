@@ -127,6 +127,11 @@ class SVGRenderStyle {
     fatalError("Not implemented")
   }
 
+  func fillRule() -> WindRule {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shapeRendering() -> ShapeRendering {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -143,6 +148,16 @@ class SVGRenderStyle {
   }
 
   func glyphOrientationVertical() -> GlyphOrientation {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func fillOpacity() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func strokeOpacity() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

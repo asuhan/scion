@@ -27,8 +27,43 @@ final class LegacyRenderSVGResourceSolidColor: LegacyRenderSVGResource {
     _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
     _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
   ) -> LegacyRenderSVGResource.ApplyResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!resourceMode.isEmpty)
+
+    let svgStyle = style.svgStyle()
+
+    let isRenderingMask = renderer.view().frameView().paintBehavior().contains(
+      .RenderingSVGClipOrMask)
+
+    if resourceMode.contains(.ApplyToFill) {
+      if !isRenderingMask {
+        context.setAlpha(alpha: svgStyle.fillOpacity())
+      } else {
+        context.setAlpha(alpha: 1)
+      }
+      context.setFillColor(color: style.colorByApplyingColorFilter(color: color))
+      if isRenderingMask {
+        context.setFillRule(fillRule: svgStyle.clipRule())
+      } else {
+        context.setFillRule(fillRule: svgStyle.fillRule())
+      }
+
+      if resourceMode.contains(.ApplyToText) {
+        context.setTextDrawingMode(textDrawingMode: .Fill)
+      }
+    } else if resourceMode.contains(.ApplyToStroke) {
+      // When rendering the mask for a LegacyRenderSVGResourceClipper, the stroke code path is never hit.
+      assert(!isRenderingMask)
+      context.setAlpha(alpha: svgStyle.strokeOpacity())
+      context.setStrokeColor(color: style.colorByApplyingColorFilter(color: color))
+
+      SVGRenderSupport.applyStrokeStyleToContext(context, style, renderer)
+
+      if resourceMode.contains(.ApplyToText) {
+        context.setTextDrawingMode(textDrawingMode: .Stroke)
+      }
+    }
+
+    return [.ResourceApplied]
   }
 
   override func postApplyResource(
