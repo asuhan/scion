@@ -115,6 +115,11 @@ class ShapeWrapper {
     self.p = p
   }
 
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func createShape(
     _ basicShape: BasicShape, _ borderBoxOffset: LayoutPointWrapper,
     _ logicalBoxSize: LayoutSizeWrapper, _ writingMode: WritingMode, _ margin: Float32

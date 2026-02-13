@@ -33,15 +33,38 @@ struct RasterShapeIntervals {
     fatalError("Not implemented")
   }
 
+  mutating func initializeBounds() {
+    m_bounds = IntRect()
+    for y in minY()..<maxY() {
+      let intervalAtY = intervalAt(y)
+      if intervalAtY.isEmpty() {
+        continue
+      }
+      m_bounds.unite(IntRect(x: intervalAtY.x1(), y: y, width: intervalAtY.width(), height: 1))
+    }
+  }
+
   func intervalAt(_ y: Int32) -> IntShapeInterval {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func minY() -> Int32 { return -m_offset }
+  private func maxY() -> Int32 { return -m_offset + Int32(m_intervals.count) }
+
+  private var m_bounds: IntRect
+  private let m_intervals: [IntShapeInterval]
+  private let m_offset: Int32
 }
 
 final class RasterShape: ShapeWrapper {
   init(_ intervals: RasterShapeIntervals, _ marginRectSize: IntSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init()
+    m_intervals = intervals
+    m_marginRectSize = marginRectSize
+    m_intervals!.initializeBounds()
   }
+
+  private var m_intervals: RasterShapeIntervals? = nil
+  private var m_marginRectSize = IntSize()
 }

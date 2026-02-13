@@ -34,6 +34,11 @@ struct IntRect: Equatable {
     self.size = size
   }
 
+  init(x: Int32, y: Int32, width: Int32, height: Int32) {
+    self.location = IntPoint(x: x, y: y)
+    self.size = IntSize(width: width, height: height)
+  }
+
   init(_ r: FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -89,6 +94,11 @@ struct IntRect: Equatable {
   }  // typically bottomRight
 
   func intersects(other: IntRect) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func unite(_ other: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

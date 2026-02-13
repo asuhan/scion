@@ -27,7 +27,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class ShapeInterval<T: Comparable> {
+class ShapeInterval<T: Numeric & Comparable> {
   init(_ x1: T, _ x2: T) {
     m_x1 = x1
     m_x2 = x2
@@ -35,8 +35,10 @@ class ShapeInterval<T: Comparable> {
   }
 
   private func isUndefined() -> Bool { return m_x2 < m_x1 }
-  private func x1() -> T { return isUndefined() ? (0 as! T) : m_x1 }
-  private func x2() -> T { return isUndefined() ? (0 as! T) : m_x2 }
+  func x1() -> T { return isUndefined() ? (0 as! T) : m_x1 }
+  func x2() -> T { return isUndefined() ? (0 as! T) : m_x2 }
+  func width() -> T { return isUndefined() ? (0 as! T) : m_x2 - m_x1 }
+  func isEmpty() -> Bool { return isUndefined() ? true : m_x1 == m_x2 }
 
   private func set_(_ x1: T, _ x2: T) {
     assert(x2 >= x1)
