@@ -20,8 +20,14 @@
 // A SVGTextFragment describes a text fragment of a RenderSVGInlineText which can be rendered at once.
 class SVGTextFragment {
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    characterOffset = 0
+    metricsListOffset = 0
+    length = 0
+    isTextOnPath = false
+    x = 0
+    y = 0
+    width = 0
+    height = 0
   }
 
   enum TransformType {
@@ -88,8 +94,8 @@ class SVGTextFragment {
 
   // Includes rotation/glyph-orientation-(horizontal|vertical) transforms, as well as orientation related shifts
   // (see SVGTextLayoutEngine, which builds this transformation).
-  let transform: AffineTransform
+  let transform = AffineTransform()
 
   // Contains lengthAdjust related transformations, which are not allowd to influence the SVGTextQuery code.
-  var lengthAdjustTransform: AffineTransform
+  var lengthAdjustTransform = AffineTransform()
 }
