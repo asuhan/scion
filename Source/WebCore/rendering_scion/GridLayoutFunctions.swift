@@ -192,8 +192,15 @@ class GridLayoutFunctions {
     _ renderGrid: RenderGridWrapper, _ gridItem: RenderBoxWrapper, _ logicalSize: LayoutUnit,
     _ direction: GridTrackSizingDirection
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isOrthogonalGridItem(grid: renderGrid, gridItem: gridItem) {
+      direction == .ForColumns
+        ? gridItem.setOverridingLogicalWidth(width: logicalSize)
+        : gridItem.setOverridingLogicalHeight(height: logicalSize)
+    } else {
+      direction == .ForColumns
+        ? gridItem.setOverridingLogicalHeight(height: logicalSize)
+        : gridItem.setOverridingLogicalWidth(width: logicalSize)
+    }
   }
 
   static func clearOverridingContentSizeForGridItem(
