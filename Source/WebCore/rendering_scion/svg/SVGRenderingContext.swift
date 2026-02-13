@@ -30,6 +30,8 @@ private func isRenderingMaskImage(_ object: RenderObjectWrapper) -> Bool {
   return object.view().frameView().paintBehavior().contains(.RenderingSVGClipOrMask)
 }
 
+private let currentContentTransformation = AffineTransform()
+
 class SVGRenderingContext {
   enum NeedsGraphicsContextSave {
     case SaveGraphicsContext
@@ -218,10 +220,28 @@ class SVGRenderingContext {
 
   static func clipToImageBuffer(
     _ context: GraphicsContextWrapper, _ targetRect: FloatRectWrapper, _ scale: FloatSize,
-    _ imageBuffer: ImageBufferWrapper?, _ safeToClear: Bool
+    _ imageBuffer: inout ImageBufferWrapper?, _ safeToClear: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if imageBuffer == nil {
+      return
+    }
+
+    let absoluteTransform = AffineTransform()
+    absoluteTransform.scale(Float64(scale.width), Float64(scale.height))
+
+    let absoluteTargetRect = calculateImageBufferRect(targetRect, absoluteTransform)
+
+    // The mask image has been created in the absolute coordinate space, as the image should not be scaled.
+    // So the actual masking process has to be done in the absolute coordinate space as well.
+    context.concatCTM(transform: absoluteTransform.inverse() ?? AffineTransform())
+    context.clipToImageBuffer(imageBuffer!, FloatRectWrapper(r: absoluteTargetRect))
+    context.concatCTM(transform: absoluteTransform)
+
+    // When nesting resources, with objectBoundingBox as content unit types, there's no use in caching the
+    // resulting image buffer as the parent resource already caches the result.
+    if safeToClear && !currentContentTransformation.isIdentity() {
+      imageBuffer = nil
+    }
   }
 
   static func calculateScreenFontSizeScalingFactor(_ renderer: RenderObjectWrapper) -> Float32 {
@@ -232,6 +252,13 @@ class SVGRenderingContext {
   static func calculateTransformationToOutermostCoordinateSystem(_ renderer: RenderObjectWrapper)
     -> AffineTransform
   {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private static func calculateImageBufferRect(
+    _ targetRect: FloatRectWrapper, _ absoluteTransform: AffineTransform
+  ) -> IntRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

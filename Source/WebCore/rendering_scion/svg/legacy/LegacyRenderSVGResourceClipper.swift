@@ -160,7 +160,7 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     }
 
     SVGRenderingContext.clipToImageBuffer(
-      context, clippedContentBounds, clipperData!.inputs.scale, clipperData!.imageBuffer, true)
+      context, clippedContentBounds, clipperData!.inputs.scale, &clipperData!.imageBuffer, true)
     return [.ResourceApplied]
   }
 

@@ -417,6 +417,11 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func clipToImageBuffer(_ imageBuffer: ImageBufferWrapper, _ destRect: FloatRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func drawText(
     font: FontCascadeWrapper, run: TextRunWrapper, point: FloatPoint,
