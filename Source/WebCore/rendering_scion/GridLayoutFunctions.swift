@@ -207,8 +207,13 @@ class GridLayoutFunctions {
     _ renderGrid: RenderGridWrapper, _ gridItem: RenderBoxWrapper,
     _ direction: GridTrackSizingDirection
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !isOrthogonalGridItem(grid: renderGrid, gridItem: gridItem) {
+      direction == .ForColumns
+        ? gridItem.clearOverridingLogicalWidth() : gridItem.clearOverridingLogicalHeight()
+    } else {
+      direction == .ForColumns
+        ? gridItem.clearOverridingLogicalHeight() : gridItem.clearOverridingLogicalWidth()
+    }
   }
 
   static func isOrthogonalGridItem(grid: RenderGridWrapper, gridItem: RenderBoxWrapper) -> Bool {
