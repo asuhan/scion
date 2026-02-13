@@ -41,7 +41,7 @@ class SVGTextFragment {
     if isTextOnPath {
       buildTransformForTextOnPath(&result)
     } else {
-      buildTransformForTextOnLine(result)
+      buildTransformForTextOnLine(&result)
     }
   }
 
@@ -60,9 +60,19 @@ class SVGTextFragment {
     }
   }
 
-  func buildTransformForTextOnLine(_ result: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func buildTransformForTextOnLine(_ result: inout AffineTransform) {
+    // For text-on-line layout, orient the transform first, then multiply the lengthAdjustTransform with the oriented transform.
+    if transform.isIdentity() {
+      result = lengthAdjustTransform
+      return
+    }
+
+    result = transform
+    transformAroundOrigin(result)
+
+    if !lengthAdjustTransform.isIdentity() {
+      result = lengthAdjustTransform * result
+    }
   }
 
   // The first rendered character starts at RenderSVGInlineText::characters() + characterOffset.
