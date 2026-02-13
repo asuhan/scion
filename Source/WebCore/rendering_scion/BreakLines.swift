@@ -251,8 +251,53 @@ struct BreakLines {
     _ nextBreakable: UInt32?, breakNBSP: Bool, canUseShortcut: Bool, keepAllWords: Bool,
     breakAnywhere: Bool
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if nextBreakable != nil && nextBreakable! >= startPosition {
+      return startPosition == nextBreakable!
+    }
+
+    if breakAnywhere {
+      return startPosition == BreakLines.nextCharacter(lineBreakIteratorFactory, startPosition)
+    }
+
+    if keepAllWords {
+      if breakNBSP {
+        return startPosition
+          == nextBreakablePosition(
+            rules: .Special, words: .KeepAll, spaces: .Break,
+            lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition)
+          )
+      }
+      return startPosition
+        == nextBreakablePosition(
+          rules: .Special, words: .KeepAll, spaces: .Normal,
+          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+    }
+
+    if canUseShortcut {
+      if breakNBSP {
+        return startPosition
+          == nextBreakablePosition(
+            rules: .Normal, words: .Normal, spaces: .Break,
+            lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition)
+          )
+      }
+      return startPosition
+        == nextBreakablePosition(
+          rules: .Normal, words: .Normal, spaces: .Normal,
+          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+    }
+
+    if breakNBSP {
+      return startPosition
+        == nextBreakablePosition(
+          rules: .Special, words: .Normal, spaces: .Break,
+          lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
+    }
+
+    return startPosition
+      == nextBreakablePosition(
+        rules: .Special, words: .Normal, spaces: .Normal,
+        lineBreakIteratorFactory: lineBreakIteratorFactory, startPosition: UInt64(startPosition))
   }
 
   static func nextBreakableSpace<CharacterType>(
@@ -274,6 +319,13 @@ struct BreakLines {
       }
     }
     return string.size()
+  }
+
+  private static func nextCharacter(
+    _ lineBreakIteratorFactory: CachedLineBreakIteratorFactoryWrapper, _ startPosition: UInt32
+  ) -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   static func classify(nonBreakingSpaceBehavior: NoBreakSpaceBehavior, character: UChar)
