@@ -101,6 +101,11 @@ class BasicShapeCircle: BasicShapeCircleOrEllipse {
 }
 
 final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
+  override init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func centerX() -> BasicShapeCenterCoordinate {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -112,9 +117,33 @@ final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
   }
 
   func floatSizeForRadiusInBox(_ boxSize: FloatSize, _ center: FloatPoint) -> FloatSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let sizeForAxis = {
+      (_ radius: BasicShapeRadius, _ centerValue: Float32, _ dimensionSize: Float32) in
+      switch radius.type {
+      case .Value:
+        return floatValueForLength(radius.value, abs(dimensionSize))
+
+      case .ClosestSide:
+        return min(abs(centerValue), abs(dimensionSize - centerValue))
+
+      case .FarthestSide:
+        return max(abs(centerValue), abs(dimensionSize - centerValue))
+
+      case .ClosestCorner:
+        return distanceToClosestCorner(center, boxSize)
+
+      case .FarthestCorner:
+        return distanceToFarthestCorner(center, boxSize)
+      }
+    }
+
+    return FloatSize(
+      width: sizeForAxis(m_radiusX, center.x, boxSize.width),
+      height: sizeForAxis(m_radiusY, center.y, boxSize.height))
   }
+
+  private let m_radiusX: BasicShapeRadius
+  private let m_radiusY: BasicShapeRadius
 }
 
 final class BasicShapePolygon: BasicShape {
