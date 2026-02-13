@@ -332,6 +332,15 @@ class GraphicsContextWrapper {
     fatalError("Not implemented")
   }
 
+  func createScaledImageBuffer(
+    _ rect: FloatRectWrapper, _ scale: FloatSize = FloatSize(width: 1, height: 1),
+    _ colorSpace: DestinationColorSpace = DestinationColorSpace.SRGB(),
+    _ renderingMode: RenderingMode? = nil, _ renderingMethod: RenderingMethod? = nil
+  ) -> ImageBufferWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func createAlignedImageBuffer(
     _ size: FloatSize, _ colorSpace: DestinationColorSpace = DestinationColorSpace.SRGB(),
     _ renderingMethod: RenderingMethod? = nil

@@ -21,7 +21,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
+private class ClipperData {
+  struct Inputs: Equatable {
+    let scale = FloatSize()
+  }
+
+  func invalidate(_ inputs: Inputs) -> Bool {
+    if self.inputs != inputs {
+      imageBuffer = nil
+      self.inputs = inputs
+    }
+    return imageBuffer == nil
+  }
+
+  var imageBuffer: ImageBufferWrapper? = nil
+  var inputs = Inputs()
+}
+
 class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
+  private func clipPathElement() -> SVGClipPathElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func applyResource(
     _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
     _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
@@ -50,8 +72,70 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     objectBoundingBox: FloatRectWrapper, clippedContentBounds: FloatRectWrapper,
     usedZoom: Float32 = 1
   ) -> LegacyRenderSVGResource.ApplyResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add logging
+
+    let animatedLocalTransform = clipPathElement().animatedLocalTransform()
+
+    let clipResult = pathOnlyClipping(
+      context, renderer, animatedLocalTransform, objectBoundingBox, usedZoom)
+    if resourceWasApplied(clipResult) {
+      if clipperMap!.contains(renderer) {
+        clipperMap!.get(renderer).imageBuffer = nil
+      }
+
+      return clipResult
+    }
+
+    var clipperData = clipperMap!.ensure(renderer, { () in return ClipperData() }).value
+
+    if clipperData!.invalidate(
+      computeInputs(
+        context, renderer, objectBoundingBox: objectBoundingBox,
+        clippedContentBounds: clippedContentBounds, usedZoom: usedZoom))
+    {
+      // FIXME (149469): This image buffer should not be unconditionally unaccelerated. Making it match the context breaks nested clipping, though.
+      clipperData!.imageBuffer = context.createScaledImageBuffer(
+        clippedContentBounds, clipperData!.inputs.scale, DestinationColorSpace.SRGB(),
+        .Unaccelerated)  // FIXME
+      if clipperData!.imageBuffer == nil {
+        return []
+      }
+
+      let maskContext = clipperData!.imageBuffer!.context()
+      maskContext.concatCTM(transform: animatedLocalTransform)
+
+      // clipPath can also be clipped by another clipPath.
+      var succeeded = false
+      if let resources = SVGResourcesCache.cachedResourcesForRenderer(self),
+        let clipper = resources.clipper()
+      {
+        let _ = GraphicsContextStateSaver(context: maskContext)
+
+        if clipper.applyClippingToContext(
+          context: maskContext, renderer: self, objectBoundingBox: objectBoundingBox,
+          clippedContentBounds: clippedContentBounds
+        ).isEmpty {
+          return []
+        }
+
+        succeeded = drawContentIntoMaskImage(clipperData!.imageBuffer!, objectBoundingBox, usedZoom)
+        // The context restore applies the clipping on non-CG platforms.
+      } else {
+        succeeded = drawContentIntoMaskImage(clipperData!.imageBuffer!, objectBoundingBox, usedZoom)
+      }
+
+      if !succeeded {
+        clipperData = ClipperData()
+      }
+    }
+
+    if clipperData!.imageBuffer == nil {
+      return []
+    }
+
+    SVGRenderingContext.clipToImageBuffer(
+      context, clippedContentBounds, clipperData!.inputs.scale, clipperData!.imageBuffer, true)
+    return [.ResourceApplied]
   }
 
   override func resourceBoundingBox(
@@ -60,4 +144,31 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func computeInputs(
+    _ context: GraphicsContextWrapper, _ renderer: RenderElementWrapper,
+    objectBoundingBox: FloatRectWrapper, clippedContentBounds: FloatRectWrapper, usedZoom: Float32
+  ) -> ClipperData.Inputs {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func pathOnlyClipping(
+    _ context: GraphicsContextWrapper, _ renderer: RenderElementWrapper,
+    _ animatedLocalTransform: AffineTransform, _ objectBoundingBox: FloatRectWrapper,
+    _ usedZoom: Float32
+  ) -> LegacyRenderSVGResource.ApplyResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func drawContentIntoMaskImage(
+    _ maskImageBuffer: ImageBufferWrapper, _ objectBoundingBox: FloatRectWrapper,
+    _ usedZoom: Float32
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let clipperMap: HashMap<RenderObjectWrapper, ClipperData>? = nil
 }

@@ -35,6 +35,11 @@ enum RenderingPurpose {
   case MediaPainting
 }
 
+enum RenderingMode {
+  case Unaccelerated
+  case Accelerated
+}
+
 enum RenderingMethod {
   case Local
 }
