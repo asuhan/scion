@@ -48,6 +48,13 @@ class ImageBufferWrapper {
     fatalError("Not implemented")
   }
 
+  // These functions are used when clamping the ImageBuffer which is created for filter, masker or clipper.
+  @discardableResult
+  static func sizeNeedsClamping(_ size: FloatSize, _ scale: FloatSize) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func context() -> GraphicsContextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

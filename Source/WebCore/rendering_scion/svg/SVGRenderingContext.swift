@@ -221,6 +221,13 @@ class SVGRenderingContext {
     fatalError("Not implemented")
   }
 
+  static func calculateTransformationToOutermostCoordinateSystem(_ renderer: RenderObjectWrapper)
+    -> AffineTransform
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Support for the buffered-rendering hint.
   func bufferForeground(_ imageBuffer: ImageBufferWrapper?) -> Bool {
     assert(m_paintInfo != nil)

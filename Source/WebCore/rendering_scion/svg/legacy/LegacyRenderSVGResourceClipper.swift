@@ -23,7 +23,28 @@
 
 private class ClipperData {
   struct Inputs: Equatable {
-    let scale = FloatSize()
+    init() {
+      self.init(
+        objectBoundingBox: FloatRectWrapper(), clippedContentBounds: FloatRectWrapper(),
+        FloatSize(), 1, false)
+    }
+
+    init(
+      objectBoundingBox: FloatRectWrapper, clippedContentBounds: FloatRectWrapper,
+      _ scale: FloatSize, _ usedZoom: Float32, _ paintingDisabled: Bool
+    ) {
+      self.objectBoundingBox = objectBoundingBox
+      self.clippedContentBounds = clippedContentBounds
+      self.scale = scale
+      self.usedZoom = usedZoom
+      self.paintingDisabled = paintingDisabled
+    }
+
+    let objectBoundingBox: FloatRectWrapper
+    let clippedContentBounds: FloatRectWrapper
+    let scale: FloatSize
+    let usedZoom: Float32
+    let paintingDisabled: Bool
   }
 
   func invalidate(_ inputs: Inputs) -> Bool {
@@ -170,8 +191,19 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     _ context: GraphicsContextWrapper, _ renderer: RenderElementWrapper,
     objectBoundingBox: FloatRectWrapper, clippedContentBounds: FloatRectWrapper, usedZoom: Float32
   ) -> ClipperData.Inputs {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let absoluteTransform = SVGRenderingContext.calculateTransformationToOutermostCoordinateSystem(
+      renderer)
+
+    // Ignore 2D rotation, as it doesn't affect the size of the mask.
+    let scale = FloatSize(
+      width: Float32(absoluteTransform.xScale()), height: Float32(absoluteTransform.yScale()))
+
+    // Determine scale factor for the clipper. The size of intermediate ImageBuffers shouldn't be bigger than kMaxFilterSize.
+    ImageBufferWrapper.sizeNeedsClamping(objectBoundingBox.size(), scale)
+
+    return ClipperData.Inputs(
+      objectBoundingBox: objectBoundingBox, clippedContentBounds: clippedContentBounds, scale,
+      usedZoom, context.paintingDisabled())
   }
 
   private func pathOnlyClipping(

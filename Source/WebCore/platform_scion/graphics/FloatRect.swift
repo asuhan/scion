@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct FloatRectWrapper {
+struct FloatRectWrapper: Equatable {
   init() {}
 
   init(x: Float32, y: Float32, width: Float32, height: Float32) {
