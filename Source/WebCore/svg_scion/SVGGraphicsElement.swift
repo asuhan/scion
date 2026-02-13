@@ -35,4 +35,10 @@ class SVGGraphicsElementWrapper: SVGElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // "base class" methods for all the elements which render as paths
+  func toClipPath() -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

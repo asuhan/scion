@@ -152,6 +152,11 @@ struct FloatRectWrapper: Equatable {
       && y() < other.maxY() && other.y() < maxY()
   }
 
+  func contains(_ other: FloatRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   mutating func intersect(other: FloatRectWrapper) {
     var l = max(x(), other.x())
     var t = max(y(), other.y())

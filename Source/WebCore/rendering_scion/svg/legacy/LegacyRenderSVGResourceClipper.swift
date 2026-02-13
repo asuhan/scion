@@ -211,8 +211,99 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     _ animatedLocalTransform: AffineTransform, _ objectBoundingBox: FloatRectWrapper,
     _ usedZoom: Float32
   ) -> LegacyRenderSVGResource.ApplyResult {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If the current clip-path gets clipped itself, we have to fall back to masking.
+    if style().clipPath() != nil {
+      return []
+    }
+
+    var clipRule: WindRule = .NonZero
+    var clipPath = PathWrapper()
+
+    let rendererRequiresMaskClipping = { (renderer: RenderObjectWrapper) in
+      // Only shapes or paths are supported for direct clipping. We need to fall back to masking for texts.
+      if renderer is RenderSVGTextWrapper {
+        return true
+      }
+      let style = renderer.style()
+      if style.display() == .None || style.usedVisibility() != .Visible {
+        return false
+      }
+      // Current shape in clip-path gets clipped too. Fall back to masking.
+      if style.clipPath() != nil {
+        return true
+      }
+      // Fall back to masking if there is more than one clipping path.
+      if !clipPath.isEmpty() {
+        return true
+      }
+      return false
+    }
+
+    // If clip-path only contains one visible shape or path, we can use path-based clipping. Invisible
+    // shapes don't affect the clipping and can be ignored. If clip-path contains more than one
+    // visible shape, the additive clipping may not work, caused by the clipRule. EvenOdd
+    // as well as NonZero can cause self-clipping of the elements.
+    // See also http://www.w3.org/TR/SVG/painting.html#FillRuleProperty
+    var childNode = clipPathElement().firstChild()
+    while childNode != nil {
+      guard let graphicsElement = childNode as? SVGGraphicsElementWrapper else {
+        childNode = childNode!.nextSibling()
+        continue
+      }
+      guard let renderer = graphicsElement.renderer() else {
+        childNode = childNode!.nextSibling()
+        continue
+      }
+      if rendererRequiresMaskClipping(renderer) {
+        return []
+      }
+
+      // For <use> elements, delegate the decision whether to use mask clipping or not to the referenced element.
+      if let useElement = graphicsElement as? SVGUseElementWrapper,
+        let clipChildRenderer = useElement.rendererClipChild(),
+        rendererRequiresMaskClipping(clipChildRenderer)
+      {
+        return []
+      }
+
+      clipPath = graphicsElement.toClipPath()
+      clipRule = renderer.style().svgStyle().clipRule()
+      childNode = childNode!.nextSibling()
+    }
+
+    // Only one visible shape/path was found. Directly continue clipping and transform the content to userspace if necessary.
+    if clipPathElement().clipPathUnits() == .SVG_UNIT_TYPE_OBJECTBOUNDINGBOX {
+      let transform = AffineTransform()
+      transform.translate(objectBoundingBox.location())
+      transform.scale(objectBoundingBox.size())
+      clipPath.transform(transform)
+    } else if usedZoom != 1 {
+      let transform = AffineTransform()
+      transform.scale(Float64(usedZoom))
+      clipPath.transform(transform)
+    }
+
+    // Transform path by animatedLocalTransform.
+    clipPath.transform(animatedLocalTransform)
+
+    // The SVG specification wants us to clip everything, if clip-path doesn't have a child.
+    if clipPath.isEmpty() {
+      clipPath.addRect(rect: FloatRectWrapper())
+    }
+
+    var result: LegacyRenderSVGResource.ApplyResult = [.ResourceApplied]
+    if let shapeRenderer = renderer as? LegacyRenderSVGShapeWrapper,
+      shapeRenderer.shapeType == .Rectangle
+    {
+      // When clipping a rect with a path, if we know the path is entirely inside the rect, we can skip a clip when filling the rect.
+      let clipBounds = clipPath.fastBoundingRect()
+      if objectBoundingBox.contains(clipBounds) {
+        result.update(with: .ClipContainsRendererContent)
+      }
+    }
+
+    context.clipPath(path: clipPath, clipRule: clipRule)
+    return result
   }
 
   private func drawContentIntoMaskImage(
