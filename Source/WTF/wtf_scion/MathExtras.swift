@@ -25,7 +25,8 @@
 
 import wk_interop
 
-let sqrtOfTwoDouble: Float64 = 2.squareRoot()
+let sqrtOfTwoDouble = Float64(2).squareRoot()
+let sqrtOfTwoFloat = Float32(2).squareRoot()
 
 private let radiansPerDegreeDouble = Float64.pi / 180
 

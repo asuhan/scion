@@ -46,9 +46,27 @@ class BasicShape {
 
 struct BasicShapeCenterCoordinate {}
 
+struct BasicShapeRadius {
+  enum `Type` {
+    case Value
+    case ClosestSide
+    case FarthestSide
+    case ClosestCorner
+    case FarthestCorner
+  }
+
+  let value = LengthWrapper(type: .Undefined)
+  let type: `Type` = .ClosestSide
+}
+
 class BasicShapeCircleOrEllipse: BasicShape {}
 
 class BasicShapeCircle: BasicShapeCircleOrEllipse {
+  override init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func centerX() -> BasicShapeCenterCoordinate {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -60,9 +78,26 @@ class BasicShapeCircle: BasicShapeCircleOrEllipse {
   }
 
   func floatValueForRadiusInBox(_ boxSize: FloatSize, _ center: FloatPoint) -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch m_radius.type {
+    case .Value:
+      return floatValueForLength(m_radius.value, boxSize.diagonalLength() / sqrtOfTwoFloat)
+
+    case .ClosestSide:
+      return distanceToClosestSide(center, boxSize)
+
+    case .FarthestSide:
+      return distanceToFarthestSide(center, boxSize)
+
+    case .ClosestCorner:
+      return distanceToClosestCorner(center, boxSize)
+
+    case .FarthestCorner:
+      return distanceToFarthestCorner(center, boxSize)
+
+    }
   }
+
+  private let m_radius: BasicShapeRadius
 }
 
 final class BasicShapeEllipse: BasicShapeCircleOrEllipse {

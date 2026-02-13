@@ -81,6 +81,10 @@ struct FloatSize: Equatable {
       height: height > other.height ? height : other.height)
   }
 
+  func diagonalLength() -> Float32 {
+    return hypot(width, height)
+  }
+
   func transposedSize() -> FloatSize {
     return FloatSize(width: height, height: width)
   }

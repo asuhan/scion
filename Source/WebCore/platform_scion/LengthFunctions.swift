@@ -43,6 +43,11 @@ func floatValueForLength(length: LengthWrapper, maximumValue: LayoutUnit) -> Flo
   }
 }
 
+func floatValueForLength(_ length: LengthWrapper, _ maximumValue: Float32) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 func sizeForLengthSize(length: LengthSize, maximumValue: LayoutSizeWrapper)
   -> LayoutSizeWrapper
 {

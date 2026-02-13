@@ -81,3 +81,23 @@ func ellipseContainsPoint(center: FloatPoint, radii: FloatSize, point: FloatPoin
   return abs(transformedPoint.x) + abs(transformedPoint.y) <= transformedRadius
     || transformedPoint.lengthSquared() <= transformedRadius * transformedRadius
 }
+
+func distanceToClosestSide(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+func distanceToFarthestSide(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+func distanceToClosestCorner(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+func distanceToFarthestCorner(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
