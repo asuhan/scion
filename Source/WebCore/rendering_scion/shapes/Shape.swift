@@ -67,8 +67,7 @@ private func createEllipseShape(_ center: FloatPoint, _ radii: FloatSize) -> Sha
 private func createPolygonShape(_ vertices: [FloatPoint], _ fillRule: WindRule)
   -> ShapeWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return PolygonShape(vertices, fillRule)
 }
 
 private func physicalRectToLogical(
