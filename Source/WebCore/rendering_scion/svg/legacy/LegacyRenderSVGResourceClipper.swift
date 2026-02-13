@@ -141,8 +141,29 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
   override func resourceBoundingBox(
     _ object: RenderObjectWrapper, _ repaintRectCalculation: RepaintRectCalculation
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Resource was not layouted yet. Give back the boundingBox of the object.
+    if selfNeedsLayout() {
+      clipperMap!.ensure(
+        object,
+        { () in  // For selfNeedsClientInvalidation().
+          return ClipperData()
+        })
+      return object.objectBoundingBox()
+    }
+
+    if clipBoundaries[Int(repaintRectCalculation.rawValue)].isEmpty() {
+      calculateClipContentRepaintRect(repaintRectCalculation)
+    }
+
+    if clipPathElement().clipPathUnits() == .SVG_UNIT_TYPE_OBJECTBOUNDINGBOX {
+      let objectBoundingBox = object.objectBoundingBox()
+      let transform = AffineTransform()
+      transform.translate(objectBoundingBox.location())
+      transform.scale(objectBoundingBox.size())
+      return transform.mapRect(rect: clipBoundaries[Int(repaintRectCalculation.rawValue)])
+    }
+
+    return clipBoundaries[Int(repaintRectCalculation.rawValue)]
   }
 
   private func computeInputs(
@@ -170,5 +191,11 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     fatalError("Not implemented")
   }
 
+  private func calculateClipContentRepaintRect(_ repaintRectCalculation: RepaintRectCalculation) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private let clipBoundaries = [FloatRectWrapper](repeating: FloatRectWrapper(), count: 2)  // TODO(asuhan): use an enumerated array
   private let clipperMap: HashMap<RenderObjectWrapper, ClipperData>? = nil
 }

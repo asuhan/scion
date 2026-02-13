@@ -25,7 +25,7 @@
 
 import wk_interop
 
-enum RepaintRectCalculation {
+enum RepaintRectCalculation: UInt8 {
   case Fast
   case Accurate
 }

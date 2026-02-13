@@ -54,6 +54,7 @@ final class HashMap<KeyType, MappedType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  @discardableResult
   func ensure(_ key: KeyType, _ default: () -> MappedType) -> AddResult {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

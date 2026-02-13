@@ -21,6 +21,11 @@
  */
 
 final class SVGClipPathElementWrapper: SVGGraphicsElementWrapper {
+  func clipPathUnits() -> SVGUnitTypes.SVGUnitType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func calculateClipContentRepaintRect(_ repaintRectCalculation: RepaintRectCalculation)
     -> FloatRectWrapper
   {
