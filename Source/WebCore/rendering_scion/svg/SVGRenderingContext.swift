@@ -208,6 +208,14 @@ class SVGRenderingContext {
     fatalError("Not implemented")
   }
 
+  static func renderSubtreeToContext(
+    _ context: GraphicsContextWrapper, _ item: RenderElementWrapper,
+    _ subtreeContentTransformation: AffineTransform
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func clipToImageBuffer(
     _ context: GraphicsContextWrapper, _ targetRect: FloatRectWrapper, _ scale: FloatSize,
     _ imageBuffer: ImageBufferWrapper?, _ safeToClear: Bool

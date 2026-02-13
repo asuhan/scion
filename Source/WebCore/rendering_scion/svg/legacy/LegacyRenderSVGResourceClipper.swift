@@ -65,6 +65,11 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     fatalError("Not implemented")
   }
 
+  private func protectedClipPathElement() -> SVGClipPathElementWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func applyResource(
     _ renderer: RenderElementWrapper, _ style: RenderStyleWrapper,
     _ context: GraphicsContextWrapper, _ resourceMode: RenderSVGResourceMode
@@ -250,7 +255,7 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
         childNode = childNode!.nextSibling()
         continue
       }
-      guard let renderer = graphicsElement.renderer() else {
+      guard let renderer = graphicsElement.containerRenderer() else {
         childNode = childNode!.nextSibling()
         continue
       }
@@ -310,8 +315,65 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
     _ maskImageBuffer: ImageBufferWrapper, _ objectBoundingBox: FloatRectWrapper,
     _ usedZoom: Float32
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let maskContext = maskImageBuffer.context()
+
+    let maskContentTransformation = AffineTransform()
+    if clipPathElement().clipPathUnits() == .SVG_UNIT_TYPE_OBJECTBOUNDINGBOX {
+      maskContentTransformation.translate(objectBoundingBox.location())
+      maskContentTransformation.scale(objectBoundingBox.size())
+      maskContext.concatCTM(transform: maskContentTransformation)
+    } else if usedZoom != 1 {
+      maskContentTransformation.scale(Float64(usedZoom))
+      maskContext.concatCTM(transform: maskContentTransformation)
+    }
+
+    // Switch to a paint behavior where all children of this <clipPath> will be rendered using special constraints:
+    // - fill-opacity/stroke-opacity/opacity set to 1
+    // - masker/filter not applied when rendering the children
+    // - fill is set to the initial fill paint server (solid, black)
+    // - stroke is set to the initial stroke paint server (none)
+    let oldBehavior = view().frameView().paintBehavior()
+    view().frameView().setPaintBehavior(oldBehavior.union(.RenderingSVGClipOrMask))
+
+    // Draw all clipPath children into a global mask.
+    for child: SVGElementWrapper in childrenOfType(parent: protectedClipPathElement()) {
+      guard let renderer = child.containerRenderer() else { continue }
+      if renderer.needsLayout() {
+        view().frameView().setPaintBehavior(oldBehavior)
+        return false
+      }
+      let style = renderer.style()
+      if style.display() == .None || style.usedVisibility() != .Visible {
+        continue
+      }
+
+      var newClipRule = style.svgStyle().clipRule()
+      let useElement = child as? SVGUseElementWrapper
+      if useElement != nil {
+        guard let renderer = useElement!.rendererClipChild() else { continue }
+        // TODO(asuhan): use hasAttributeWithoutSynchronization instead
+        if !useElement!.hasSvgClipRuleAttrWithoutSynchronization() {
+          newClipRule = renderer.style().svgStyle().clipRule()
+        }
+      }
+
+      // Only shapes, paths and texts are allowed for clipping.
+      if !renderer.isRenderOrLegacyRenderSVGShape() && !renderer.isRenderSVGText() {
+        continue
+      }
+
+      maskContext.setFillRule(fillRule: newClipRule)
+
+      // In the case of a <use> element, we obtained its renderere above, to retrieve its clipRule.
+      // We have to pass the <use> renderer itself to renderSubtreeToContext() to apply it's x/y/transform/etc. values when rendering.
+      // So if useElement is non-null, refetch the childNode->renderer(), as renderer got overridden above.
+      SVGRenderingContext.renderSubtreeToContext(
+        maskContext, useElement != nil ? child.containerRenderer()! : renderer,
+        maskContentTransformation)
+    }
+
+    view().frameView().setPaintBehavior(oldBehavior)
+    return true
   }
 
   private func calculateClipContentRepaintRect(_ repaintRectCalculation: RepaintRectCalculation) {

@@ -43,6 +43,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func hasSvgClipRuleAttrWithoutSynchronization() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func createElementRenderer(style: RenderStyleWrapper, insertionPosition: RenderTreePosition)
     -> RenderElementWrapper?
   {

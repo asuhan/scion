@@ -8,6 +8,7 @@ target_sources(layout_scion PRIVATE
     DocumentMarker.swift
     DocumentMarkerController.swift
     ElementAncestorIterator.swift
+    ElementChildIterator.swift
     Element.swift
     Node.swift
     Position.swift
