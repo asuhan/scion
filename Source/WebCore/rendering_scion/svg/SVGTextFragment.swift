@@ -46,8 +46,10 @@ class SVGTextFragment {
   }
 
   func transformAroundOrigin(_ result: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Returns (translate(x, y) * result) * translate(-x, -y).
+    result.setE(result.e() + Float64(x))
+    result.setF(result.f() + Float64(y))
+    result.translate(Float64(-x), Float64(-y))
   }
 
   func buildTransformForTextOnPath(_ result: AffineTransform) {

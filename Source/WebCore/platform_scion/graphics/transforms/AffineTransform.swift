@@ -62,6 +62,10 @@ class AffineTransform: Equatable {
   func b() -> Float64 { return transform[1] }
   func c() -> Float64 { return transform[2] }
   func d() -> Float64 { return transform[3] }
+  func e() -> Float64 { return transform[4] }
+  func setE(_ e: Float64) { transform[4] = e }
+  func f() -> Float64 { return transform[5] }
+  func setF(_ f: Float64) { transform[5] = f }
 
   func makeIdentity() {
     // TODO(asuhan): implement this
@@ -152,5 +156,5 @@ class AffineTransform: Equatable {
   }
 
   // TODO(asuhan): replace with InlineArray after upgrade to Swift 6.2
-  private let transform: [Float64]
+  private var transform: [Float64]
 }
