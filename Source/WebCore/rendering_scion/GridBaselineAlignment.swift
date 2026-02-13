@@ -41,8 +41,26 @@ struct GridBaselineAlignment {
     _ preference: ItemPosition, _ sharedContext: UInt32, _ gridItem: RenderBoxWrapper,
     _ alignmentAxis: GridAxis
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isBaselinePosition(position: preference))
+    assert(!gridItem.needsLayout())
+
+    // Determine Ascent and Descent values of this grid item with respect to
+    // its grid container.
+    let ascent = logicalAscentForGridItem(
+      gridItem: gridItem, alignmentAxis: alignmentAxis, position: preference)
+    // Looking up for a shared alignment context perpendicular to the
+    // alignment axis.
+    let isRowAxisContext = alignmentAxis == .GridColumnAxis
+    let baselineAlignmentStateMap =
+      isRowAxisContext ? rowAxisBaselineAlignmentStates : colAxisBaselineAlignmentStates
+    // Looking for a compatible baseline-sharing group.
+    if let baselineAlignmentStateSearch = baselineAlignmentStateMap.m[sharedContext] {
+      baselineAlignmentStateSearch.updateSharedGroup(
+        child: gridItem, preference: preference, ascent: ascent)
+    } else {
+      baselineAlignmentStateMap.m[sharedContext] = BaselineAlignmentState(
+        child: gridItem, preference: preference, ascent: ascent)
+    }
   }
 
   // Returns the baseline offset of a particular item, based on the max-ascent for its associated
@@ -70,9 +88,9 @@ struct GridBaselineAlignment {
   // Clearing the Baseline Alignment context and their internal classes and data structures.
   mutating func clear(alignmentAxis: GridAxis) {
     if alignmentAxis == .GridColumnAxis {
-      rowAxisBaselineAlignmentStates.removeAll()
+      rowAxisBaselineAlignmentStates.m.removeAll()
     } else {
-      colAxisBaselineAlignmentStates.removeAll()
+      colAxisBaselineAlignmentStates.m.removeAll()
     }
   }
 
@@ -84,8 +102,8 @@ struct GridBaselineAlignment {
     let isRowAxisContext = alignmentAxis == .GridColumnAxis
     let baselineAlignmentState =
       isRowAxisContext
-      ? rowAxisBaselineAlignmentStates[sharedContext]!
-      : colAxisBaselineAlignmentStates[sharedContext]!
+      ? rowAxisBaselineAlignmentStates.m[sharedContext]!
+      : colAxisBaselineAlignmentStates.m[sharedContext]!
     return baselineAlignmentState.sharedGroup(child: gridItem, preference: preference)
   }
 
@@ -217,9 +235,12 @@ struct GridBaselineAlignment {
 
   // TODO(asuhan): disallow 0 and UInt32.max
   private typealias BaselineAlignmentStateMap = [UInt32: BaselineAlignmentState]
+  private class BaselineAlignmentStateMapRef {
+    var m: BaselineAlignmentStateMap = [:]
+  }
 
   // Grid Container's WritingMode, used to determine grid item's orthogonality.
   private var writingMode: WritingMode = .HorizontalTb
-  private var rowAxisBaselineAlignmentStates = BaselineAlignmentStateMap()
-  private var colAxisBaselineAlignmentStates = BaselineAlignmentStateMap()
+  private var rowAxisBaselineAlignmentStates = BaselineAlignmentStateMapRef()
+  private var colAxisBaselineAlignmentStates = BaselineAlignmentStateMapRef()
 }
