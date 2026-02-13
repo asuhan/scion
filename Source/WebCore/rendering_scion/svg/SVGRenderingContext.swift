@@ -214,8 +214,20 @@ class SVGRenderingContext {
     _ context: GraphicsContextWrapper, _ item: RenderElementWrapper,
     _ subtreeContentTransformation: AffineTransform
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Rendering into a buffer implies we're being used for masking, clipping, patterns or filters. In each of these
+    // cases we don't want to paint the selection.
+    var info = PaintInfoWrapper(
+      newContext: context, newRect: LayoutRectWrapper.infiniteRect(), newPhase: .Foreground,
+      newPaintBehavior: .SkipSelectionHighlight)
+
+    var contentTransformation = currentContentTransformation
+    let savedContentTransformation = contentTransformation.deepCopy()
+    contentTransformation = subtreeContentTransformation * contentTransformation
+
+    assert(!item.needsLayout())
+    item.paint(paintInfo: &info, paintOffset: LayoutPointWrapper())
+
+    contentTransformation = savedContentTransformation
   }
 
   static func clipToImageBuffer(
