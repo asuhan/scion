@@ -39,7 +39,7 @@ class SVGTextFragment {
     }
 
     if isTextOnPath {
-      buildTransformForTextOnPath(result)
+      buildTransformForTextOnPath(&result)
     } else {
       buildTransformForTextOnLine(result)
     }
@@ -52,9 +52,12 @@ class SVGTextFragment {
     result.translate(Float64(-x), Float64(-y))
   }
 
-  func buildTransformForTextOnPath(_ result: AffineTransform) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func buildTransformForTextOnPath(_ result: inout AffineTransform) {
+    // For text-on-path layout, multiply the transform with the lengthAdjustTransform before orienting the resulting transform.
+    result = lengthAdjustTransform.isIdentity() ? transform : transform * lengthAdjustTransform
+    if !result.isIdentity() {
+      transformAroundOrigin(result)
+    }
   }
 
   func buildTransformForTextOnLine(_ result: AffineTransform) {
