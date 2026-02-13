@@ -34,13 +34,29 @@ class ShapeInterval<T: Comparable> {
     assert(x2 >= x1)
   }
 
-  func unite(_ interval: ShapeInterval<T>) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func isUndefined() -> Bool { return m_x2 < m_x1 }
+  private func x1() -> T { return isUndefined() ? (0 as! T) : m_x1 }
+  private func x2() -> T { return isUndefined() ? (0 as! T) : m_x2 }
+
+  private func set_(_ x1: T, _ x2: T) {
+    assert(x2 >= x1)
+    m_x1 = x1
+    m_x2 = x2
   }
 
-  private let m_x1: T
-  private let m_x2: T
+  func unite(_ interval: ShapeInterval<T>) {
+    if interval.isUndefined() {
+      return
+    }
+    if isUndefined() {
+      set_(interval.x1(), interval.x2())
+    } else {
+      set_(min(x1(), interval.x1()), max(x2(), interval.x2()))
+    }
+  }
+
+  private var m_x1: T
+  private var m_x2: T
 }
 
 typealias IntShapeInterval = ShapeInterval<Int32>
