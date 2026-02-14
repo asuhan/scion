@@ -27,6 +27,15 @@ class HTMLTextFormControlElementWrapper: HTMLFormControlElementWrapper {
     fatalError("Not reached")
   }
 
+  func updatePlaceholderVisibility() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func createInnerTextStyle(_ style: RenderStyleWrapper) -> RenderStyleWrapper {
+    fatalError("Not reached")
+  }
+
   func isInnerTextElementEditable() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

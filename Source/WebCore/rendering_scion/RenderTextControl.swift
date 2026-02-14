@@ -37,8 +37,22 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    guard let innerText = innerTextElement() else { return }
+    if let innerTextRenderer = innerText.renderer(), oldStyle != nil {
+      // FIXME: The height property of the inner text block style may be mutated by RenderTextControlSingleLine::layout.
+      // See if the original has changed before setting it and triggering a layout.
+      let newInnerTextStyle = textFormControlElement().createInnerTextStyle(style())
+      let oldInnerTextStyle = textFormControlElement().createInnerTextStyle(oldStyle!)
+      if newInnerTextStyle != oldInnerTextStyle {
+        innerTextRenderer.setStyle(style: newInnerTextStyle)
+      } else if diff == .RepaintIfText || diff == .Repaint {
+        // Repaint is expected to be propagated down to the shadow tree when non-inherited style property changes
+        // (e.g. text-decoration-color) since that's where the value actually takes effect.
+        innerTextRenderer.repaint()
+      }
+    }
+    textFormControlElement().updatePlaceholderVisibility()
   }
 
   func getAverageCharWidth() -> Float32 {
