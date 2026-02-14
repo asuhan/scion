@@ -33,7 +33,9 @@ enum CSSPropertyID {
   case CSSPropertyDisplay
   case CSSPropertyBackdropFilter
   case CSSPropertyBackgroundColor
+  case CSSPropertyClipPath
   case CSSPropertyFilter
+  case CSSPropertyMixBlendMode
   case CSSPropertyOffsetAnchor
   case CSSPropertyOffsetDistance
   case CSSPropertyOffsetPath
@@ -57,6 +59,7 @@ enum CSSPropertyID {
   case CSSPropertyBorderLeftColor
   case CSSPropertyBorderRightColor
   case CSSPropertyBorderTopColor
+  case CSSPropertyMask
 }
 
 struct PseudoStyleCache {

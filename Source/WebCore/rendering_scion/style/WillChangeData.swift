@@ -24,14 +24,24 @@
  */
 
 class WillChangeData {
+  private func containsProperty(_ property: CSSPropertyID) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canCreateStackingContext() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func canBeBackdropRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return containsProperty(.CSSPropertyOpacity)
+      || containsProperty(.CSSPropertyBackdropFilter)
+      || containsProperty(.CSSPropertyWebkitBackdropFilter)
+      || containsProperty(.CSSPropertyClipPath)
+      || containsProperty(.CSSPropertyFilter)
+      || containsProperty(.CSSPropertyMixBlendMode)
+      || containsProperty(.CSSPropertyMask)
   }
 
   func canTriggerCompositing() -> Bool {
