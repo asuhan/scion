@@ -107,8 +107,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    if oldStyle != nil && oldStyle!.writingMode() != style().writingMode() {
+      invalidateFragments()
+    }
   }
 
   func repaintRectangleInFragments(_ repaintRect: LayoutRectWrapper) {
