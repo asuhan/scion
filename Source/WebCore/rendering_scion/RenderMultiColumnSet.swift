@@ -86,6 +86,21 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  private func columnRectAt(_ index: UInt32) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func columnCount() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func columnGap() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func addOverflowFromChildren() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -132,14 +147,78 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func repaintFragmentedFlowContent(_ repaintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Figure out the start and end columns and only check within that range so that we don't walk the
+    // entire column set. Put the repaint rect into flow thread coordinates by flipping it first.
+    var fragmentedFlowRepaintRect = repaintRect
+    fragmentedFlow!.flipForWritingMode(rect: &fragmentedFlowRepaintRect)
+
+    // Now we can compare this rect with the flow thread portions owned by each column. First let's
+    // just see if the repaint rect intersects our flow thread portion at all.
+    var clippedRect = fragmentedFlowRepaintRect
+    clippedRect.intersect(other: fragmentedFlowPortionOverflowRect())
+    if clippedRect.isEmpty() {
+      return
+    }
+
+    // Now we know we intersect at least one column. Let's figure out the logical top and logical
+    // bottom of the area we're repainting.
+    let repaintLogicalTop =
+      isHorizontalWritingMode() ? fragmentedFlowRepaintRect.y() : fragmentedFlowRepaintRect.x()
+    let repaintLogicalBottom =
+      (isHorizontalWritingMode()
+        ? fragmentedFlowRepaintRect.maxY() : fragmentedFlowRepaintRect.maxX()) - 1
+
+    // FIXME: this should use firstAndLastColumnsFromOffsets.
+    let startColumn = columnIndexAtOffset(repaintLogicalTop)
+    let endColumn = columnIndexAtOffset(repaintLogicalBottom)
+
+    let colGap = columnGap()
+    let colCount = columnCount()
+    for i in startColumn...endColumn {
+      var colRect = columnRectAt(i)
+
+      // Get the portion of the flow thread that corresponds to this column.
+      let fragmentedFlowPortion = fragmentedFlowPortionRectAt(i)
+
+      // Now get the overflow rect that corresponds to the column.
+      let fragmentedFlowOverflowPortion = fragmentedFlowPortionOverflowRect(
+        fragmentedFlowPortion, i, colCount, colGap)
+
+      // Do a repaint for this specific column.
+      flipForWritingMode(rect: &colRect)
+      repaintFragmentedFlowContentRectangle(
+        repaintRect, fragmentedFlowPortion, colRect.location(), fragmentedFlowOverflowPortion)
+    }
   }
 
   override func collectLayerFragments(
     layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func fragmentedFlowPortionRectAt(_ index: UInt32) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func fragmentedFlowPortionOverflowRect(
+    _ portionRect: LayoutRectWrapper, _ index: UInt32, _ colCount: UInt32, _ colGap: LayoutUnit
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  enum ColumnIndexCalculationMode {
+    case ClampToExistingColumns  // Stay within the range of already existing columns.
+    case AssumeNewColumns  // Allow column indices outside the range of already existing columns.
+  }
+
+  private func columnIndexAtOffset(
+    _ offset: LayoutUnit, _ mode: ColumnIndexCalculationMode = .ClampToExistingColumns
+  ) -> UInt32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

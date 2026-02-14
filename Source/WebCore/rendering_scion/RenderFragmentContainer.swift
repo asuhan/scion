@@ -45,6 +45,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return m_fragmentedFlowPortionRect
   }
 
+  func fragmentedFlowPortionOverflowRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -158,7 +163,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     minLogicalWidth = LayoutUnit()
   }
 
-  private func repaintFragmentedFlowContentRectangle(
+  func repaintFragmentedFlowContentRectangle(
     _ repaintRect: LayoutRectWrapper, _ fragmentedFlowPortionRect: LayoutRectWrapper,
     _ fragmentLocation: LayoutPointWrapper,
     _ fragmentedFlowPortionClipRect: LayoutRectWrapper? = nil
