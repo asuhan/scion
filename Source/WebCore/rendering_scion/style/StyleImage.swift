@@ -64,6 +64,8 @@ class StyleImage: Equatable {
     fatalError("Not implemented")
   }
 
+  func usesImageContainerSize() -> Bool { fatalError("Not reached") }
+
   func computeIntrinsicDimensions(
     renderer: RenderElementWrapper?, intrinsicWidth: inout LengthWrapper,
     intrinsicHeight: inout LengthWrapper, intrinsicRatio: inout FloatSize
@@ -104,6 +106,11 @@ class StyleImage: Equatable {
   func setContainerContextForRenderer(
     renderer: RenderElementWrapper, containerSize: FloatSize, containerZoom: Float32
   ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isGeneratedImage() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

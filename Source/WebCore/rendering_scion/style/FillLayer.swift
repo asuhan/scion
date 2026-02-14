@@ -83,6 +83,16 @@ class FillLayerWrapper {
     fatalError("Not implemented")
   }
 
+  var sizeLength: LengthSize {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  var sizeType: FillSizeType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func size() -> FillSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

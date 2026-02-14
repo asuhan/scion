@@ -42,8 +42,42 @@ private func paintPhase(
 private func mustRepaintFillLayers(_ renderer: RenderElementWrapper, _ layer: FillLayerWrapper)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  // Nobody will use multiple layers without wanting fancy positioning.
+  if layer.next() != nil {
+    return true
+  }
+
+  // Make sure we have a valid image.
+  let image = layer.image()
+  if image == nil || !image!.canRender(renderer: renderer, multiplier: renderer.style().usedZoom())
+  {
+    return false
+  }
+
+  if !layer.xPosition.isZero() || !layer.yPosition.isZero() {
+    return true
+  }
+
+  let sizeType = layer.sizeType
+
+  if sizeType == .Contain || sizeType == .Cover {
+    return true
+  }
+
+  if sizeType == .Size {
+    let size = layer.sizeLength
+    if size.width.isPercentOrCalculated() || size.height.isPercentOrCalculated() {
+      return true
+    }
+    // If the image has neither an intrinsic width nor an intrinsic height, its size is determined as for 'contain'.
+    if (size.width.isAuto() || size.height.isAuto()) && image!.isGeneratedImage() {
+      return true
+    }
+  } else if image!.usesImageContainerSize() {
+    return true
+  }
+
+  return false
 }
 
 private func usePlatformFocusRingColorForOutlineStyleAuto() -> Bool {
