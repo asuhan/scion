@@ -43,8 +43,28 @@ final class RenderReplicaWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if paintInfo.phase != .Foreground && paintInfo.phase != .Mask {
+      return
+    }
+
+    let adjustedPaintOffset = paintOffset + location()
+
+    if paintInfo.phase == .Foreground {
+      // Turn around and paint the parent layer. Use temporary clipRects, so that the layer doesn't end up caching clip rects
+      // computing using the wrong rootLayer
+      let rootPaintingLayer =
+        layer()!.transform != nil ? layer()!.parent() : layer()!.enclosingTransformedAncestor()
+      let paintingInfo = RenderLayerWrapper.LayerPaintingInfo(
+        inRootLayer: rootPaintingLayer, inDirtyRect: paintInfo.rect, inPaintBehavior: .Normal,
+        inSubpixelOffset: LayoutSizeWrapper(), inSubtreePaintRoot: nil)
+      let flags: RenderLayerWrapper.PaintLayerFlag = [
+        .HaveTransparency, .AppliedTransform, .TemporaryClipRects, .PaintingReflection,
+      ]
+      layer()!.parent()!.paintLayer(
+        context: paintInfo.context(), paintingInfo: paintingInfo, paintFlags: flags)
+    } else if paintInfo.phase == .Mask {
+      paintMask(paintInfo: paintInfo, paintOffset: adjustedPaintOffset)
+    }
   }
 
   override func computePreferredLogicalWidths() {

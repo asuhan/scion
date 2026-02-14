@@ -3356,7 +3356,7 @@ class RenderLayerWrapper {
     normalFlowListDirty = false
   }
 
-  private struct LayerPaintingInfo {
+  struct LayerPaintingInfo {
     init(
       inRootLayer: RenderLayerWrapper?, inDirtyRect: LayoutRectWrapper,
       inPaintBehavior: PaintBehavior, inSubpixelOffset: LayoutSizeWrapper,
@@ -4126,7 +4126,7 @@ class RenderLayerWrapper {
       && paintFlags.contains(.PaintingRootBackgroundOnly)
   }
 
-  private func paintLayer(
+  func paintLayer(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
     var paintFlags = paintFlags
@@ -5759,6 +5759,15 @@ class RenderLayerWrapper {
     }
 
     return backgroundClipRect
+  }
+
+  func enclosingTransformedAncestor() -> RenderLayerWrapper? {
+    var curr = parent()
+    while curr != nil && !curr!.isRenderViewLayer && curr!.transform == nil {
+      curr = curr!.parent()
+    }
+
+    return curr
   }
 
   private func hasNonOpacityTransparency() -> Bool {
