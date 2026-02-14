@@ -28,6 +28,34 @@ final class RenderSearchFieldWrapper: RenderTextControlSingleLineWrapper {
   )
     -> LayoutUnit
   {
+    var lineHeight = lineHeight
+    var nonContentHeight = nonContentHeight
+    let resultsButton = resultsButtonElement()
+    if let resultsRenderer = resultsButton?.renderBox() {
+      resultsRenderer.updateLogicalHeight()
+      nonContentHeight = max(
+        nonContentHeight,
+        resultsRenderer.borderAndPaddingLogicalHeight() + resultsRenderer.marginLogicalHeight())
+      lineHeight = max(lineHeight, resultsRenderer.logicalHeight())
+    }
+    let cancelButton = cancelButtonElement()
+    if let cancelRenderer = cancelButton?.renderBox() {
+      cancelRenderer.updateLogicalHeight()
+      nonContentHeight = max(
+        nonContentHeight,
+        cancelRenderer.borderAndPaddingLogicalHeight() + cancelRenderer.marginLogicalHeight())
+      lineHeight = max(lineHeight, cancelRenderer.logicalHeight())
+    }
+
+    return lineHeight + nonContentHeight
+  }
+
+  private func resultsButtonElement() -> HTMLElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func cancelButtonElement() -> HTMLElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
