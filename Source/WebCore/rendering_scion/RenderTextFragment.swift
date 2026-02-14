@@ -51,8 +51,18 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
   }
 
   func blockForAccompanyingFirstLetter() -> RenderBlockWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if firstLetter == nil {
+      return nil
+    }
+    for block: RenderBlockWrapper in ancestorsOfType(descendant: firstLetter!) {
+      if block is RenderMultiColumnFlowWrapper {
+        break
+      }
+      if block.style().hasPseudoStyle(pseudo: .FirstLetter) && block.canHaveChildren() {
+        return block
+      }
+    }
+    return nil
   }
 
   func setContentString(text: StringWrapper) {
@@ -64,4 +74,6 @@ final class RenderTextFragmentWrapper: RenderTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let firstLetter: RenderBoxModelObjectWrapper? = nil
 }
