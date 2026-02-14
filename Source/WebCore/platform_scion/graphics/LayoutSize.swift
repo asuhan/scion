@@ -196,6 +196,13 @@ func roundedIntSize(s: LayoutSizeWrapper) -> IntSize {
   fatalError("Not implemented")
 }
 
+func floorSizeToDevicePixels(_ size: LayoutSizeWrapper, _ pixelSnappingFactor: Float32) -> FloatSize
+{
+  return FloatSize(
+    width: floorToDevicePixel(value: size.width(), pixelSnappingFactor: pixelSnappingFactor),
+    height: floorToDevicePixel(value: size.height(), pixelSnappingFactor: pixelSnappingFactor))
+}
+
 func roundSizeToDevicePixels(size: LayoutSizeWrapper, pixelSnappingFactor: Float32) -> FloatSize {
   return FloatSize(
     width: roundToDevicePixel(value: size.width(), pixelSnappingFactor: pixelSnappingFactor),

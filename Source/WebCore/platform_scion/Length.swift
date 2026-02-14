@@ -53,6 +53,11 @@ struct LengthWrapper: Equatable {
     self.p = wk_interop.Length_new(value.rawValue(), type.rawValue, hasQuirk)
   }
 
+  init(value: Float32, type: LengthType, hasQuirk: Bool = false) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(value: Float64, type: LengthType, hasQuirk: Bool = false) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

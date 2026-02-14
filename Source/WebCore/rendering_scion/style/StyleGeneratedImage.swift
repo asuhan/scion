@@ -57,8 +57,13 @@ class StyleGeneratedImage: StyleImage {
     renderer: RenderElementWrapper?, intrinsicWidth: inout LengthWrapper,
     intrinsicHeight: inout LengthWrapper, intrinsicRatio: inout FloatSize
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // At a zoom level of 1 the image is guaranteed to have a device pixel size.
+    let size = floorSizeToDevicePixels(
+      LayoutSizeWrapper(size: imageSize(renderer, 1)), renderer?.document().deviceScaleFactor() ?? 1
+    )
+    intrinsicWidth = LengthWrapper(value: size.width, type: .Fixed)
+    intrinsicHeight = LengthWrapper(value: size.height, type: .Fixed)
+    intrinsicRatio = size
   }
 
   // All generated images must be able to compute their fixed size.
