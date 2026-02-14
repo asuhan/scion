@@ -1772,6 +1772,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func boxShadowInsetExtent() -> LayoutBoxExtent {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxDecorationBreak() -> BoxDecorationBreak {
     if p == nil {
       // TODO(asuhan): implement this

@@ -1650,7 +1650,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     var options: VisibleRectContextOption
   }
 
-  struct RepaintRects {
+  struct RepaintRects: Equatable {
     var clippedOverflowRect: LayoutRectWrapper  // Some rect (normally the visual overflow rect) mapped up to the repaint container, respecting clipping.
     var outlineBoundsRect: LayoutRectWrapper?  // A rect repsenting the extent of outlines and shadows, mapped to the repaint container, but not clipped.
 

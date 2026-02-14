@@ -39,6 +39,13 @@ private func paintPhase(
   fatalError("Not implemented")
 }
 
+private func mustRepaintFillLayers(_ renderer: RenderElementWrapper, _ layer: FillLayerWrapper)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func usePlatformFocusRingColorForOutlineStyleAuto() -> Bool {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
@@ -483,8 +490,289 @@ class RenderElementWrapper: RenderObjectWrapper {
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ requiresFullRepaint: RequiresFullRepaint,
     oldRects: RenderObjectWrapper.RepaintRects, newRects: RenderObjectWrapper.RepaintRects
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if view().printing() {
+      return false  // Don't repaint if we're printing.
+    }
+
+    let oldClippedOverflowRect = oldRects.clippedOverflowRect
+    let newClippedOverflowRect = newRects.clippedOverflowRect
+    let haveOutlinesBoundsRects =
+      oldRects.outlineBoundsRect != nil && newRects.outlineBoundsRect != nil
+
+    if oldClippedOverflowRect.isEmpty() && newClippedOverflowRect.isEmpty() {
+      return true
+    }
+
+    let mustRepaintBackgroundOrBorderOnSizeChange = {
+      [self] (oldOutlineBounds: LayoutRectWrapper, newOutlineBounds: LayoutRectWrapper) in
+      if hasMask() && mustRepaintFillLayers(self, style!.maskLayers()) {
+        return true
+      }
+
+      if style!.hasBorderRadius() {
+        // If the border radius changed, repaints at style change time will take care of that.
+        // This code is attempting to detect whether border-radius constraining based on box size
+        // affects the radii, using the outlineBoundsRect as a proxy for the border box.
+        let oldShapeApproximation = BorderShape.shapeForBorderRect(
+          style: style!, borderRect: oldOutlineBounds)
+        let newShapeApproximation = BorderShape.shapeForBorderRect(
+          style: style!, borderRect: newOutlineBounds)
+        if oldShapeApproximation.radii() != newShapeApproximation.radii() {
+          return true
+        }
+      }
+
+      // If we don't have a background/border/mask, then nothing to do.
+      if !hasVisibleBoxDecorations() {
+        return false
+      }
+
+      if mustRepaintFillLayers(self, style!.backgroundLayers()) {
+        return true
+      }
+
+      // Our fill layers are ok. Let's check border.
+      if style!.hasBorder() && borderImageIsLoadedAndCanBeRendered() {
+        return true
+      }
+
+      return false
+    }
+
+    let fullRepaint = { () in
+      if requiresFullRepaint == .Yes {
+        return true
+      }
+
+      if oldClippedOverflowRect.isEmpty() || newClippedOverflowRect.isEmpty() {
+        return true
+      }
+
+      if !oldClippedOverflowRect.intersects(other: newClippedOverflowRect) {
+        return true
+      }
+
+      if !haveOutlinesBoundsRects {
+        return false
+      }
+
+      // If our outline bounds rect moved, we have to repaint everything.
+      if oldRects.outlineBoundsRect!.location() != newRects.outlineBoundsRect!.location() {
+        return true
+      }
+
+      // If our outline bounds rect resized (as a proxy for a border box resize),
+      // we have to repaint if we paint content that scales with the size.
+      if oldRects.outlineBoundsRect!.size() != newRects.outlineBoundsRect!.size()
+        && mustRepaintBackgroundOrBorderOnSizeChange(
+          oldRects.outlineBoundsRect!, newRects.outlineBoundsRect!)
+      {
+        return true
+      }
+
+      return false
+    }()
+
+    var repaintContainer = repaintContainer
+    if repaintContainer == nil {
+      repaintContainer = view()
+    }
+
+    if fullRepaint {
+      if newClippedOverflowRect.contains(other: oldClippedOverflowRect) {
+        repaintUsingContainer(repaintContainer, newClippedOverflowRect)
+      } else if oldClippedOverflowRect.contains(other: newClippedOverflowRect) {
+        repaintUsingContainer(repaintContainer, oldClippedOverflowRect)
+      } else {
+        repaintUsingContainer(repaintContainer, oldClippedOverflowRect)
+        repaintUsingContainer(repaintContainer, newClippedOverflowRect)
+      }
+      return true
+    }
+
+    if oldRects == newRects {
+      return false
+    }
+
+    let deltaLeft = newClippedOverflowRect.x() - oldClippedOverflowRect.x()
+    if deltaLeft > 0 {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: oldClippedOverflowRect.x(), y: oldClippedOverflowRect.y(), width: deltaLeft,
+          height: oldClippedOverflowRect.height()))
+    } else if deltaLeft < Int32(0) {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: newClippedOverflowRect.x(), y: newClippedOverflowRect.y(), width: -deltaLeft,
+          height: newClippedOverflowRect.height()))
+    }
+
+    let deltaRight = newClippedOverflowRect.maxX() - oldClippedOverflowRect.maxX()
+    if deltaRight > 0 {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: oldClippedOverflowRect.maxX(), y: newClippedOverflowRect.y(), width: deltaRight,
+          height: newClippedOverflowRect.height()))
+    } else if deltaRight < Int32(0) {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: newClippedOverflowRect.maxX(), y: oldClippedOverflowRect.y(), width: -deltaRight,
+          height: oldClippedOverflowRect.height()))
+    }
+
+    let deltaTop = newClippedOverflowRect.y() - oldClippedOverflowRect.y()
+    if deltaTop > 0 {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: oldClippedOverflowRect.x(), y: oldClippedOverflowRect.y(),
+          width: oldClippedOverflowRect.width(), height: deltaTop))
+    } else if deltaTop < Int32(0) {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: newClippedOverflowRect.x(), y: newClippedOverflowRect.y(),
+          width: newClippedOverflowRect.width(), height: -deltaTop))
+    }
+
+    let deltaBottom = newClippedOverflowRect.maxY() - oldClippedOverflowRect.maxY()
+    if deltaBottom > 0 {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: newClippedOverflowRect.x(), y: oldClippedOverflowRect.maxY(),
+          width: newClippedOverflowRect.width(), height: deltaBottom))
+    } else if deltaBottom < Int32(0) {
+      repaintUsingContainer(
+        repaintContainer,
+        LayoutRectWrapper(
+          x: oldClippedOverflowRect.x(), y: newClippedOverflowRect.maxY(),
+          width: oldClippedOverflowRect.width(), height: -deltaBottom))
+    }
+
+    if !haveOutlinesBoundsRects || oldRects.outlineBoundsRect! == newRects.outlineBoundsRect! {
+      return false
+    }
+
+    let oldOutlineBoundsRect = oldRects.outlineBoundsRect!
+    let newOutlineBoundsRect = newRects.outlineBoundsRect!
+
+    // Repainting the delta of the old and new clipped overflow rects is not sufficient when the box has outlines border and shadows,
+    // because a size change has to repaint those areas affected by such decorations.
+    // It's not really correct to do math here with oldOutlineBoundsRect/newOutlineBoundsRect and local shadow/radius values, since
+    // oldOutlineBoundsRect/newOutlineBoundsRect are in the coordinate space of the repaint container, and have been mapped through ancestor transforms.
+
+    let outlineStyle = outlineStyleForRepaint()
+    let outlineWidth = LayoutUnit(value: outlineStyle.outlineSize())
+    let insetShadowExtent = style!.boxShadowInsetExtent()
+    let sizeDelta = LayoutSizeWrapper(
+      width: (newOutlineBoundsRect.width() - oldOutlineBoundsRect.width()).abs(),
+      height: (newOutlineBoundsRect.height() - oldOutlineBoundsRect.height()).abs())
+    if sizeDelta.width() != 0 {
+      var shadowLeft = LayoutUnit()
+      var shadowRight = LayoutUnit()
+      style!.getBoxShadowHorizontalExtent(left: &shadowLeft, right: &shadowRight)
+
+      let insetExtent = { [self] () in
+        // Inset "content" is inside the border box (e.g. border, negative outline and box shadow).
+        let borderRightExtent = { [self] () in
+          guard let renderBox = self as? RenderBoxWrapper else { return LayoutUnit() }
+          let borderBoxWidth = renderBox.width()
+          return max(
+            renderBox.borderRight(),
+            valueForLength(
+              length: style!.borderTopRightRadius().width, maximumValue: borderBoxWidth),
+            valueForLength(
+              length: style!.borderBottomRightRadius().width, maximumValue: borderBoxWidth))
+        }
+        let outlineRightInsetExtent = { () in
+          let offset = LayoutUnit(value: outlineStyle.outlineOffset())
+          return offset < Int32(0) ? -offset : LayoutUnit(value: UInt64(0))
+        }
+        let boxShadowRightInsetExtent = { () in
+          // Turn negative box shadow offset into inset.
+          let inset = min(insetShadowExtent.right, shadowLeft)
+          // Clip inset shadow at the clipped overflow rect. We would never paint outside.
+          return inset < Int32(0)
+            ? min(-inset, newClippedOverflowRect.width(), oldClippedOverflowRect.width())
+            : LayoutUnit(value: UInt64(0))
+        }
+        // Outline starts at the border box while box shadow starts at the padding box.
+        return max(outlineRightInsetExtent(), borderRightExtent() + boxShadowRightInsetExtent())
+      }
+      // Outset "content" is outside of the border box (e.g. regular outline and box shadow).
+      let outsetExtent = max(outlineWidth, shadowRight)
+      let decorationRightExtent = insetExtent() + outsetExtent
+      // Both inset and outset "decorations" are within the "outline and box shadow" box.
+      let decorationLeft =
+        newOutlineBoundsRect.x() + min(newOutlineBoundsRect.width(), oldOutlineBoundsRect.width())
+        - decorationRightExtent
+      let clippedBoundsRight = min(newClippedOverflowRect.maxX(), oldClippedOverflowRect.maxX())
+      var damageExtentWithinClippedOverflow = clippedBoundsRight - decorationLeft
+      if damageExtentWithinClippedOverflow > 0 {
+        damageExtentWithinClippedOverflow = min(
+          sizeDelta.width() + decorationRightExtent, damageExtentWithinClippedOverflow)
+        let damagedRect = LayoutRectWrapper(
+          x: decorationLeft, y: newOutlineBoundsRect.y(), width: damageExtentWithinClippedOverflow,
+          height: max(newOutlineBoundsRect.height(), oldOutlineBoundsRect.height()))
+        repaintUsingContainer(repaintContainer, damagedRect)
+      }
+    }
+    if sizeDelta.height() != 0 {
+      var shadowTop = LayoutUnit()
+      var shadowBottom = LayoutUnit()
+      style!.getBoxShadowVerticalExtent(top: &shadowTop, bottom: &shadowBottom)
+
+      let insetExtent = { () in
+        // Inset "content" is inside the border box (e.g. border, negative outline and box shadow).
+        let borderBottomExtent = { [self] () in
+          guard let renderBox = self as? RenderBoxWrapper else { return LayoutUnit() }
+          let borderBoxHeight = renderBox.height()
+          return max(
+            renderBox.borderBottom(),
+            valueForLength(
+              length: style!.borderBottomLeftRadius().height, maximumValue: borderBoxHeight),
+            valueForLength(
+              length: style!.borderBottomRightRadius().height, maximumValue: borderBoxHeight))
+        }
+        let outlineBottomInsetExtent = { () in
+          let offset = LayoutUnit(value: outlineStyle.outlineOffset())
+          return offset < Int32(0) ? -offset : LayoutUnit(value: 0)
+        }
+        let boxShadowBottomInsetExtent = { () in
+          // Turn negative box shadow offset into inset.
+          let inset = min(insetShadowExtent.bottom, shadowTop)
+          // Clip inset shadow at the clipped overflow rect. We would never paint outside.
+          return inset < Int32(0)
+            ? min(-inset, newClippedOverflowRect.height(), oldClippedOverflowRect.height())
+            : LayoutUnit(value: UInt64(0))
+        }
+        // Outline starts at the border box while box shadow starts at the padding box.
+        return max(outlineBottomInsetExtent(), borderBottomExtent() + boxShadowBottomInsetExtent())
+      }
+      // Outset "content" is outside of the border box (e.g. regular outline and box shadow).
+      let outsetExtent = max(outlineWidth, shadowBottom)
+      let decorationBottomExtent = insetExtent() + outsetExtent
+      // Both inset and outset "decorations" are within the "outline and box shadow" box.
+      let decorationTop =
+        min(newOutlineBoundsRect.maxY(), oldOutlineBoundsRect.maxY()) - decorationBottomExtent
+      let clippedBoundsBottom = min(newClippedOverflowRect.maxY(), oldClippedOverflowRect.maxY())
+      var damageExtentWithinClippedOverflow = clippedBoundsBottom - decorationTop
+      if damageExtentWithinClippedOverflow > 0 {
+        damageExtentWithinClippedOverflow = min(
+          sizeDelta.height() + decorationBottomExtent, damageExtentWithinClippedOverflow)
+        let damagedRect = LayoutRectWrapper(
+          x: newOutlineBoundsRect.x(), y: decorationTop,
+          width: max(newOutlineBoundsRect.width(), oldOutlineBoundsRect.width()),
+          height: damageExtentWithinClippedOverflow)
+        repaintUsingContainer(repaintContainer, damagedRect)
+      }
+    }
+    return false
   }
 
   private func repaintClientsOfReferencedSVGResources() {

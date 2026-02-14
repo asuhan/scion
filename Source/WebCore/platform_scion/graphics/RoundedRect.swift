@@ -25,7 +25,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct RoundedRectRadii {
+struct RoundedRectRadii: Equatable {
   func isZero() -> Bool {
     return topLeft.isZero() && topRight.isZero() && bottomLeft.isZero() && bottomRight.isZero()
   }
