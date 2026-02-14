@@ -115,8 +115,15 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func repaintRectangleInFragments(_ repaintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !shouldRepaint(repaintRect) || !hasValidFragmentInfo() {
+      return
+    }
+
+    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())  // We can't use layout state to repaint, since the fragments are somewhere else.
+
+    for fragment in fragmentList {
+      fragment.repaintFragmentedFlowContent(repaintRect)
+    }
   }
 
   func pageLogicalHeightForOffsetFromFragmentedFlow(offset: LayoutUnit) -> LayoutUnit {
@@ -401,6 +408,14 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     }
 
     fragmentObject.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
+  }
+
+  private func shouldRepaint(_ r: LayoutRectWrapper) -> Bool {
+    if view().printing() || r.isEmpty() {
+      return false
+    }
+
+    return true
   }
 
   private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
