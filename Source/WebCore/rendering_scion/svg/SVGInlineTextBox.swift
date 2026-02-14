@@ -79,5 +79,10 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     fatalError("Not implemented")
   }
 
+  override func dirtyLineBoxes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let textFragments: [SVGTextFragment]
 }

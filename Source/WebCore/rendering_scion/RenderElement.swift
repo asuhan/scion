@@ -371,6 +371,8 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
   }
 
+  func dirtyLineFromChangedChild() {}
+
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }

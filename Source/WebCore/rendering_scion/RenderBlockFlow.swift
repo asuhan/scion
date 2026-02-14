@@ -819,6 +819,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override final func dirtyLineFromChangedChild() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
     super.paintColumnRules(paintInfo: paintInfo, point: point)
 

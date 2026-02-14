@@ -794,6 +794,11 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func dirtyLineFromChangedChild() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func lineHeight(
     firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine

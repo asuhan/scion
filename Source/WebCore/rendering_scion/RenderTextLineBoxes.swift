@@ -24,13 +24,24 @@
  */
 
 struct RenderTextLineBoxes {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func dirtyAll() {
+    var box = m_first
+    while box != nil {
+      box!.dirtyLineBoxes()
+      box = box!.nextTextBox()
+    }
   }
 
   func dirtyForTextChange(_ renderer: RenderTextWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    dirtyAll()
+
+    if m_first == nil && renderer.parent() != nil {
+      renderer.parent()!.dirtyLineFromChangedChild()
+      return true
+    }
+    return m_first != nil
   }
+
+  private let m_first: LegacyInlineTextBox? = nil
+  private let m_last: LegacyInlineTextBox? = nil
 }

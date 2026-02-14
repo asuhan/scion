@@ -132,6 +132,11 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  func dirtyLineBoxes() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func selectionState() -> RenderObjectWrapper.HighlightState {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

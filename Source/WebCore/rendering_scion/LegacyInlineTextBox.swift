@@ -26,6 +26,11 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     fatalError("Not implemented")
   }
 
+  func nextTextBox() -> LegacyInlineTextBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasTextContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
