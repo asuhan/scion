@@ -39,8 +39,22 @@ class LayoutRepainter {
     shouldAlwaysIssueFullRepaint: ShouldAlwaysIssueFullRepaint? = nil,
     repaintOutlineBounds: RepaintOutlineBounds = .Yes
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.renderer = renderer
+    self.checkForRepaint =
+      checkForRepaintOverride != nil
+      ? checkForRepaintOverride! == .Yes : renderer.checkForRepaintDuringLayout()
+    self.forceFullRepaint =
+      shouldAlwaysIssueFullRepaint != nil && shouldAlwaysIssueFullRepaint! == .Yes
+    self.repaintOutlineBounds = repaintOutlineBounds
+    if !self.checkForRepaint {
+      self.repaintContainer = nil
+      self.oldRects = RenderObjectWrapper.RepaintRects()
+      return
+    }
+
+    self.repaintContainer = self.renderer.containerForRepaint().renderer
+    self.oldRects = self.renderer.rectsForRepaintingAfterLayout(
+      repaintContainer, repaintOutlineBounds)
   }
 
   // Return true if it repainted.
@@ -49,4 +63,12 @@ class LayoutRepainter {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let renderer: RenderElementWrapper
+  private let repaintContainer: RenderLayerModelObjectWrapper?
+  // We store these values as LayoutRects, but the final invalidations will be pixel snapped
+  private let oldRects: RenderObjectWrapper.RepaintRects
+  private let checkForRepaint: Bool
+  private let forceFullRepaint: Bool
+  private let repaintOutlineBounds: RepaintOutlineBounds
 }

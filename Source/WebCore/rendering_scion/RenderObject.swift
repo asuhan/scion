@@ -35,6 +35,11 @@ enum RepaintOutlineBounds {
   case Yes
 }
 
+enum RequiresFullRepaint {
+  case No
+  case Yes
+}
+
 private func objectIsRelayoutBoundary(object: RenderElementWrapper) -> Bool {
   // FIXME: In future it may be possible to broaden these conditions in order to improve performance.
   if object.isRenderView() {
