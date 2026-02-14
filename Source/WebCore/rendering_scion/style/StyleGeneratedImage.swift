@@ -25,8 +25,32 @@ class StyleGeneratedImage: StyleImage {
   override final func imageSize(_ renderer: RenderElementWrapper?, _ multiplier: Float32)
     -> FloatSize
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_fixedSize {
+      return m_containerSize
+    }
+
+    if renderer == nil {
+      return FloatSize()
+    }
+
+    let fixedSize = fixedSize(renderer!)
+    if multiplier == 1 {
+      return fixedSize
+    }
+
+    var width = fixedSize.width * multiplier
+    var height = fixedSize.height * multiplier
+
+    // Don't let images that have a width/height >= 1 shrink below 1 device pixel when zoomed.
+    let deviceScaleFactor = renderer!.document().deviceScaleFactor()
+    if fixedSize.width > 0 {
+      width = max(1 / deviceScaleFactor, width)
+    }
+    if fixedSize.height > 0 {
+      height = max(1 / deviceScaleFactor, height)
+    }
+
+    return FloatSize(width: width, height: height)
   }
 
   override final func computeIntrinsicDimensions(
@@ -36,4 +60,10 @@ class StyleGeneratedImage: StyleImage {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // All generated images must be able to compute their fixed size.
+  func fixedSize(_ renderer: RenderElementWrapper) -> FloatSize { fatalError("Not reached") }
+
+  private let m_containerSize = FloatSize()
+  private let m_fixedSize = false
 }
