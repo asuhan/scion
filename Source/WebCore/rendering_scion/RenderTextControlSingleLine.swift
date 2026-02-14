@@ -279,8 +279,29 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+
+    // We may have set the width and the height in the old style in layout().
+    // Reset them now to avoid getting a spurious layout hint.
+    let innerBlock = innerBlockElement()
+    if let innerBlockRenderer = innerBlock?.containerRenderer() {
+      innerBlockRenderer.mutableStyle().setHeight(length: LengthWrapper())
+      innerBlockRenderer.mutableStyle().setWidth(length: LengthWrapper())
+    }
+    let container = containerElement()
+    if let containerRenderer = container?.containerRenderer() {
+      containerRenderer.mutableStyle().setHeight(length: LengthWrapper())
+      containerRenderer.mutableStyle().setWidth(length: LengthWrapper())
+    }
+    if diff == .Layout {
+      if let innerTextRenderer = innerTextElement()!.renderer() {
+        innerTextRenderer.setNeedsLayout(markParents: .MarkContainingBlockChain)
+      }
+      if let placeholder = inputElement().placeholderElement(), placeholder.renderer() != nil {
+        placeholder.renderer()!.setNeedsLayout(markParents: .MarkContainingBlockChain)
+      }
+    }
+    setHasNonVisibleOverflow(false)
   }
 }
 
