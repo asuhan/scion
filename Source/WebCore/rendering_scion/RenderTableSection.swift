@@ -1055,8 +1055,13 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.styleDidChange(diff: diff, oldStyle: oldStyle)
+    propagateStyleToAnonymousChildren(propagationType: .AllChildren)
+
+    // If border was changed, notify table.
+    if let table = table(), oldStyle != nil && !oldStyle!.borderIsEquivalentForPainting(style()) {
+      table.invalidateCollapsedBorders()
+    }
   }
 
   private enum ShouldIncludeAllIntersectingCells {
