@@ -41,6 +41,10 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  private func fragmentedFlowPortionRect() -> LayoutRectWrapper {
+    return m_fragmentedFlowPortionRect
+  }
+
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -101,8 +105,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func repaintFragmentedFlowContent(_ repaintRect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    repaintFragmentedFlowContentRectangle(
+      repaintRect, fragmentedFlowPortionRect(), contentBoxRect().location())
   }
 
   func collectLayerFragments(
@@ -154,7 +158,45 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     minLogicalWidth = LayoutUnit()
   }
 
+  private func repaintFragmentedFlowContentRectangle(
+    _ repaintRect: LayoutRectWrapper, _ fragmentedFlowPortionRect: LayoutRectWrapper,
+    _ fragmentLocation: LayoutPointWrapper,
+    _ fragmentedFlowPortionClipRect: LayoutRectWrapper? = nil
+  ) {
+    assert(isValid)
+
+    // We only have to issue a repaint in this fragment if the fragment rect intersects the repaint rect.
+    var clippedRect = repaintRect
+
+    if fragmentedFlowPortionClipRect != nil {
+      var flippedFragmentedFlowPortionClipRect = fragmentedFlowPortionClipRect!
+      fragmentedFlow!.flipForWritingMode(rect: &flippedFragmentedFlowPortionClipRect)
+      clippedRect.intersect(other: flippedFragmentedFlowPortionClipRect)
+    }
+
+    if clippedRect.isEmpty() {
+      return
+    }
+
+    var flippedFragmentedFlowPortionRect = fragmentedFlowPortionRect
+    fragmentedFlow!.flipForWritingMode(rect: &flippedFragmentedFlowPortionRect)  // Put the fragment rects into physical coordinates.
+
+    // Put the fragment rect into the fragment's physical coordinate space.
+    clippedRect.setLocation(
+      location: fragmentLocation
+        + (clippedRect.location() - flippedFragmentedFlowPortionRect.location()))
+
+    // Now switch to the fragment's writing mode coordinate space and let it repaint itself.
+    flipForWritingMode(rect: &clippedRect)
+
+    // Issue the repaint.
+    repaintRectangle(repaintRect: clippedRect)
+  }
+
   let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
+
+  private let m_fragmentedFlowPortionRect = LayoutRectWrapper()
+
   private let isValid = false
 }
 
