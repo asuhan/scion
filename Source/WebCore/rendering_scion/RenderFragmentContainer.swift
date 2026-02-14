@@ -46,7 +46,24 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func setRenderBoxFragmentInfo(
+    _ box: RenderBoxWrapper, _ logicalLeftInset: LayoutUnit, _ logicalRightInset: LayoutUnit,
+    _ containingBlockChainIsInset: Bool
+  ) -> RenderBoxFragmentInfo? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLastFragment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // These methods represent the width and height of a "page" and for a RenderFragmentContainer they are just the
+  // content width and content height of a fragment. For RenderFragmentContainerSets, however, they will be the width and
+  // height of a single column or page in the set.
+  func pageLogicalWidth() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

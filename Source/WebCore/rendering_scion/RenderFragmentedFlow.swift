@@ -44,8 +44,21 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   override func updateLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var logicalWidth = initialLogicalWidth()
+    for fragment in fragmentList {
+      assert(!fragment.needsLayout() || fragment.isRenderFragmentContainerSet())
+      logicalWidth = max(fragment.pageLogicalWidth(), logicalWidth)
+    }
+    setLogicalWidth(size: logicalWidth)
+
+    // If the fragments have non-uniform logical widths, then insert inset information for the RenderFragmentedFlow.
+    for fragment in fragmentList {
+      let fragmentLogicalWidth = fragment.pageLogicalWidth()
+      let logicalLeft =
+        style().direction() == .LTR
+        ? LayoutUnit(value: UInt64(0)) : logicalWidth - fragmentLogicalWidth
+      fragment.setRenderBoxFragmentInfo(self, logicalLeft, fragmentLogicalWidth, false)
+    }
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
@@ -355,6 +368,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Overridden by columns/pages to set up an initial logical width of the page width even when
+  // no fragments have been generated yet.
+  func initialLogicalWidth() -> LayoutUnit { return LayoutUnit(value: 0) }
 
   override func mapLocalToContainer(
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,

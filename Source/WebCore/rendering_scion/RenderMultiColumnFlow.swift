@@ -166,6 +166,11 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func initialLogicalWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateSpaceShortageForSizeContainment(
     block: RenderBlockWrapper, offset: LayoutUnit, shortage: LayoutUnit
   ) {
