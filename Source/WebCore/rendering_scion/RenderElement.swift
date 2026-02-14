@@ -478,6 +478,15 @@ class RenderElementWrapper: RenderObjectWrapper {
     wk_interop.RenderElement_layoutIfNeeded(p)
   }
 
+  // Repaint only if our old bounds and new bounds are different. The caller may pass in newBounds and newOutlineBox if they are known.
+  func repaintAfterLayoutIfNeeded(
+    _ repaintContainer: RenderLayerModelObjectWrapper?, _ requiresFullRepaint: RequiresFullRepaint,
+    oldRects: RenderObjectWrapper.RepaintRects, newRects: RenderObjectWrapper.RepaintRects
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func repaintClientsOfReferencedSVGResources() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

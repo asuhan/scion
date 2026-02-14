@@ -60,8 +60,17 @@ class LayoutRepainter {
   // Return true if it repainted.
   @discardableResult
   func repaintAfterLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !checkForRepaint {
+      return false
+    }
+
+    let requiresFullRepaint: RequiresFullRepaint =
+      forceFullRepaint || renderer.selfNeedsLayout() ? .Yes : .No
+    // Outline bounds are not used if we're doing a full repaint.
+    let newRects = renderer.rectsForRepaintingAfterLayout(
+      repaintContainer, (requiresFullRepaint == .Yes) ? .No : repaintOutlineBounds)
+    return renderer.repaintAfterLayoutIfNeeded(
+      repaintContainer, requiresFullRepaint, oldRects: oldRects, newRects: newRects)
   }
 
   private let renderer: RenderElementWrapper
