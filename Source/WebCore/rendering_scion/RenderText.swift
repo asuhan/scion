@@ -550,9 +550,30 @@ class RenderTextWrapper: RenderObjectWrapper {
     }
   }
 
+  // FIXME: merge this with isCSSSpace somehow
+  func containsOnlyPossiblyCollapsibleWhitespace<CharacterType>(
+    _ characters: CharSpanWrapper<CharacterType>
+  ) -> Bool {
+    for i in 0..<characters.size() {
+      let character = characters[i]
+      if !(character == UChar(Character("\n").asciiValue!)
+        || character == UChar(Character(" ").asciiValue!)
+        || character == UChar(Character("\t").asciiValue!))
+      {
+        return false
+      }
+    }
+    return true
+  }
+
   private func containsOnlyCSSWhitespace(from: UInt32, length: UInt32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(from <= text().length())
+    assert(length <= text().length())
+    assert(from + length <= text().length())
+    if text().is8Bit() {
+      return containsOnlyPossiblyCollapsibleWhitespace(text().span8().subspan(from, length))
+    }
+    return containsOnlyPossiblyCollapsibleWhitespace(text().span16().subspan(from, length))
   }
 
   func contentRangesBetweenOffsetsForType(
