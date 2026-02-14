@@ -30,8 +30,11 @@ final class RenderTableColWrapper: RenderBoxWrapper {
   }
 
   func clearPreferredLogicalWidthsDirtyBits() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+
+    for child: RenderObjectWrapper in childrenOfType(parent: self) {
+      child.setPreferredLogicalWidthsDirty(shouldBeDirty: false)
+    }
   }
 
   func isTableColumnGroupWithColumnChildren() -> Bool {
