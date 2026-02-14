@@ -38,8 +38,10 @@ final class RenderReplicaWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    setFrameRect(rect: parentBox()!.borderBoxRect())
+    updateLayerTransform()
+    clearNeedsLayout()
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
