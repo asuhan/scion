@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     LegacyRenderSVGImage.swift
     LegacyRenderSVGModelObject.swift
     LegacyRenderSVGPath.swift
+    LegacyRenderSVGRect.swift
     LegacyRenderSVGResource.swift
     LegacyRenderSVGResourceClipper.swift
     LegacyRenderSVGResourceContainer.swift
