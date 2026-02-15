@@ -47,6 +47,16 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
+  func clearPath() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ensurePath() -> PathWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateShapeFromElement() { fatalError("Not reached") }
 
   func isEmpty() -> Bool {
@@ -207,11 +217,13 @@ class LegacyRenderSVGShapeWrapper: LegacyRenderSVGModelObject, RenderSVGShapePro
     fatalError("Not implemented")
   }
 
-  private let fillBoundingBox = FloatRectWrapper()
+  var fillBoundingBox = FloatRectWrapper()
+  var m_strokeBoundingBox: FloatRectWrapper? = nil
+  var m_approximateStrokeBoundingBox: FloatRectWrapper? = nil
   var needsBoundariesUpdate = false
   var needsShapeUpdate = false
   private var needsTransformUpdate = false
   private var m_fillRequiresClip = true
-  let shapeType: ShapeType = .Empty
+  var shapeType: ShapeType = .Empty
   private var m_localTransform = AffineTransform()
 }

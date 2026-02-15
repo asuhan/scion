@@ -26,9 +26,58 @@
  */
 
 final class LegacyRenderSVGRect: LegacyRenderSVGShapeWrapper {
-  override func updateShapeFromElement() {
+  private func rectElement() -> SVGRectElementWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func updateShapeFromElement() {
+    // Before creating a new object we need to clear the cached bounding box
+    // to avoid using garbage.
+    clearPath()
+    shapeType = .Empty
+    fillBoundingBox = FloatRectWrapper()
+    m_strokeBoundingBox = nil
+    m_approximateStrokeBoundingBox = nil
+
+    let rectElement = rectElement()
+    let lengthContext = SVGLengthContext(context: rectElement)
+    let boundingBoxSize = FloatSize(
+      width: lengthContext.valueForLength(style().width(), .Width),
+      height: lengthContext.valueForLength(style().height(), .Height))
+
+    // Spec: "A negative value is illegal. A value of zero disables rendering of the element."
+    if boundingBoxSize.isEmpty() {
+      return
+    }
+
+    let svgStyle = style().svgStyle()
+    if lengthContext.valueForLength(svgStyle.rx(), .Width) > 0
+      || lengthContext.valueForLength(svgStyle.ry(), .Height) > 0
+    {
+      shapeType = .RoundedRectangle
+    } else {
+      shapeType = .Rectangle
+    }
+
+    if shapeType != .Rectangle || hasNonScalingStroke() {
+      // Fallback to path-based approach.
+      fillBoundingBox = ensurePath().boundingRect()
+      return
+    }
+
+    fillBoundingBox = FloatRectWrapper(
+      location: FloatPoint(
+        x: lengthContext.valueForLength(svgStyle.x(), .Width),
+        y: lengthContext.valueForLength(svgStyle.y(), .Height)),
+      size: boundingBoxSize)
+
+    var strokeBoundingBox = fillBoundingBox
+    if svgStyle.hasStroke() {
+      strokeBoundingBox.inflate(d: strokeWidth() / 2)
+    }
+
+    m_strokeBoundingBox = strokeBoundingBox
   }
 
   override func isEmpty() -> Bool {
