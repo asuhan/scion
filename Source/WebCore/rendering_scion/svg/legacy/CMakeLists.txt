@@ -1,5 +1,6 @@
 target_sources(layout_scion PRIVATE
     LegacyRenderSVGContainer.swift
+    LegacyRenderSVGEllipse.swift
     LegacyRenderSVGForeignObject.swift
     LegacyRenderSVGHiddenContainer.swift
     LegacyRenderSVGImage.swift
