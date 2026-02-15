@@ -26,8 +26,42 @@
 
 final class LegacyRenderSVGEllipse: LegacyRenderSVGShapeWrapper {
   override func updateShapeFromElement() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Before creating a new object we need to clear the cached bounding box
+    // to avoid using garbage.
+    clearPath()
+    shapeType = .Empty
+    fillBoundingBox = FloatRectWrapper()
+    m_strokeBoundingBox = nil
+    m_approximateStrokeBoundingBox = nil
+    m_center = FloatPoint()
+    m_radii = FloatSize()
+
+    calculateRadiiAndCenter()
+
+    // Spec: "A negative value is illegal. A value of zero disables rendering of the element."
+    if m_radii.isEmpty() {
+      return
+    }
+
+    if m_radii.width == m_radii.height {
+      shapeType = .Circle
+    } else {
+      shapeType = .Ellipse
+    }
+
+    if hasNonScalingStroke() {
+      // Fallback to path-based approach if shape has a non-scaling stroke.
+      fillBoundingBox = ensurePath().boundingRect()
+      return
+    }
+
+    fillBoundingBox = FloatRectWrapper(
+      x: m_center.x - m_radii.width, y: m_center.y - m_radii.height,
+      width: 2 * m_radii.width, height: 2 * m_radii.height)
+    m_strokeBoundingBox = fillBoundingBox
+    if style().svgStyle().hasStroke() {
+      m_strokeBoundingBox!.inflate(d: strokeWidth() / 2)
+    }
   }
 
   override func isEmpty() -> Bool {
@@ -39,4 +73,12 @@ final class LegacyRenderSVGEllipse: LegacyRenderSVGShapeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func calculateRadiiAndCenter() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private var m_center = FloatPoint()
+  private var m_radii = FloatSize()
 }
