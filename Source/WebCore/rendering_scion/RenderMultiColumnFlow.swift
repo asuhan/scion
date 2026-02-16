@@ -124,11 +124,49 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // This method is the inverse of the previous method and goes from fragment to flow.
+  private func physicalTranslationFromFragmentToFlow(
+    _ columnSet: RenderMultiColumnSetWrapper?, _ physicalPoint: LayoutPointWrapper
+  ) -> LayoutSizeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // First get the transform state's point into the block flow thread's physical coordinate space.
+    parent()!.mapAbsoluteToLocalPoint(mode, &transformState)
+    let transformPoint = LayoutPointWrapper(size: transformState.mappedPoint())
+
+    // Now walk through each fragment.
+    var candidateColumnSet: RenderMultiColumnSetWrapper? = nil
+    var candidatePoint = LayoutPointWrapper()
+    var candidateContainerOffset = LayoutSizeWrapper()
+
+    for columnSet: RenderMultiColumnSetWrapper in childrenOfType(parent: parent()!) {
+      var unused: Bool? = nil
+      candidateContainerOffset = columnSet.offsetFromContainer(
+        parent()!, LayoutPointWrapper(), &unused)
+
+      candidatePoint = transformPoint - candidateContainerOffset
+      candidateColumnSet = columnSet
+
+      // We really have no clue what to do with overflow. We'll just use the closest fragment to the point in that case.
+      let pointOffset = isHorizontalWritingMode() ? candidatePoint.y : candidatePoint.x
+      let fragmentOffset =
+        isHorizontalWritingMode() ? columnSet.topLeftLocation().y : columnSet.topLeftLocation().x
+      if pointOffset < fragmentOffset + columnSet.logicalHeight() {
+        break
+      }
+    }
+
+    // Once we have a good guess as to which fragment we hit tested through (and yes, this was just a heuristic, but it's
+    // the best we could do), then we can map from the fragment into the flow thread.
+    let translationOffset =
+      physicalTranslationFromFragmentToFlow(candidateColumnSet, candidatePoint)
+      + candidateContainerOffset
+    pushOntoTransformState(transformState, mode, nil, parent(), translationOffset, false)
   }
 
   override func offsetFromContainer(
