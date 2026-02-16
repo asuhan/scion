@@ -199,6 +199,14 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func fragmentedFlowPortionRectAt(_ index: UInt32) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

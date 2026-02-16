@@ -1394,6 +1394,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func createVisiblePosition(_ offset: Int32, _ affinity: Affinity) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func containingBlock() -> RenderBlockWrapper? {
     if let unwrapped = wk_interop.RenderObject_containingBlock(p) {
       // TODO(asuhan): decide the type correctly
@@ -1904,6 +1917,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFlexibleBoxIncludingDeprecated() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func caretMinOffset() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func caretMaxOffset() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

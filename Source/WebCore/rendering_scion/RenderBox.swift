@@ -4089,6 +4089,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return result
   }
 
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removeFloatingAndInvalidateForLayout() {
     assert(isFloating())
 

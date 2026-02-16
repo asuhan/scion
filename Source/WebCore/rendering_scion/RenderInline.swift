@@ -789,6 +789,14 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return ancestorSkipped ? ancestorToStopAt : container
   }
 
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -14,6 +14,7 @@ target_sources(layout_scion PRIVATE
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift
+    HitTestSource.swift
     ImageQualityController.swift
     InlineBoxPainter.swift
     InlineWalker.swift

@@ -176,6 +176,14 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var m_scaledFont = FontCascadeWrapper()
   private var m_scalingFactor: Float32 = 0
   private let m_layoutAttributes: SVGTextLayoutAttributes? = nil

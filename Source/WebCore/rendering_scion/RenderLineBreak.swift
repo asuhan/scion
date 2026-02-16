@@ -25,6 +25,24 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  override final func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func caretMinOffset() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func caretMaxOffset() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func canBeSelectionLeaf() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

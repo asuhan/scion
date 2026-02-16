@@ -69,6 +69,26 @@ private func borderOrPaddingLogicalWidthChanged(
     || oldStyle.paddingBottom() != newStyle.paddingBottom()
 }
 
+// FIXME: This function should go on RenderObject as an instance method. Then
+// all cases in which positionForPoint recurs could call this instead to
+// prevent crossing editable boundaries. This would require many tests.
+func positionForPointRespectingEditingBoundaries(
+  _ parent: RenderBlockWrapper, _ child: RenderBoxWrapper,
+  _ pointInParentCoordinates: LayoutPointWrapper, _ source: HitTestSource
+) -> VisiblePosition {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+// Valid candidates in a FragmentedFlow must be rendered by the fragment.
+private func isChildHitTestCandidate(
+  _ box: RenderBoxWrapper, _ fragment: RenderFragmentContainerWrapper?, _ point: LayoutPointWrapper,
+  _ source: HitTestSource
+) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func isRenderBlockFlowOrRenderButton(renderElement: RenderElementWrapper) -> Bool {
   // We include isRenderButton in this check because buttons are implemented
   // using flex box but should still support first-line|first-letter.
@@ -472,6 +492,96 @@ class RenderBlockWrapper: RenderBoxWrapper {
   ) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    if isRenderTable() {
+      return super.positionForPoint(point, source, fragment)
+    }
+
+    if isReplacedOrInlineBlock() {
+      // FIXME: This seems wrong when the object's writing-mode doesn't match the line's writing-mode.
+      let pointLogicalLeft = isHorizontalWritingMode() ? point.x : point.y
+      let pointLogicalTop = isHorizontalWritingMode() ? point.y : point.x
+
+      if pointLogicalTop < Int32(0) {
+        return createVisiblePosition(caretMinOffset(), .Downstream)
+      }
+      if pointLogicalLeft >= logicalWidth() {
+        return createVisiblePosition(caretMaxOffset(), .Downstream)
+      }
+      if pointLogicalTop < Int32(0) {
+        return createVisiblePosition(caretMinOffset(), .Downstream)
+      }
+      if pointLogicalTop >= logicalHeight() {
+        return createVisiblePosition(caretMaxOffset(), .Downstream)
+      }
+    }
+    if isFlexibleBoxIncludingDeprecated() || isRenderGrid() {
+      return super.positionForPoint(point, source, fragment)
+    }
+
+    var pointInContents = point
+    offsetForContents(&pointInContents)
+    var pointInLogicalContents = pointInContents
+    if !isHorizontalWritingMode() {
+      pointInLogicalContents = pointInLogicalContents.transposedPoint()
+    }
+
+    if childrenInline() {
+      return positionForPointWithInlineChildren(pointInLogicalContents, source, fragment)
+    }
+
+    var lastCandidateBox = lastChildBox()
+
+    var fragment = fragment
+    if fragment == nil {
+      fragment = fragmentAtBlockOffset(blockOffset: pointInLogicalContents.y)
+    }
+
+    while lastCandidateBox != nil
+      && !isChildHitTestCandidate(lastCandidateBox!, fragment, pointInLogicalContents, source)
+    {
+      lastCandidateBox = lastCandidateBox!.previousSiblingBox()
+    }
+
+    let blocksAreFlipped = style().isFlippedBlocksWritingMode()
+    if lastCandidateBox != nil {
+      if pointInLogicalContents.y > logicalTopForChild(child: lastCandidateBox!)
+        || (!blocksAreFlipped
+          && pointInLogicalContents.y == logicalTopForChild(child: lastCandidateBox!))
+      {
+        return positionForPointRespectingEditingBoundaries(
+          self, lastCandidateBox!, pointInContents, source)
+      }
+
+      var childBox = firstChildBox()
+      while childBox != nil {
+        if !isChildHitTestCandidate(childBox!, fragment, pointInLogicalContents, source) {
+          childBox = childBox!.nextSiblingBox()
+          continue
+        }
+        var childLogicalBottom =
+          logicalTopForChild(child: childBox!) + logicalHeightForChild(child: childBox!)
+        if let blockFlow = childBox as? RenderBlockFlowWrapper {
+          childLogicalBottom = max(childLogicalBottom, blockFlow.lowestFloatLogicalBottom())
+        }
+        // We hit child if our click is above the bottom of its padding box (like IE6/7 and FF3).
+        if pointInLogicalContents.y < childLogicalBottom
+          || (blocksAreFlipped && pointInLogicalContents.y == childLogicalBottom)
+        {
+          return positionForPointRespectingEditingBoundaries(
+            self, childBox!, pointInContents, source)
+        }
+        childBox = childBox!.nextSiblingBox()
+      }
+    }
+
+    // We only get here if there are no hit test candidate children below the click.
+    return super.positionForPoint(point, source, fragment)
   }
 
   func addContinuationWithOutline(flow: RenderInlineWrapper) {
@@ -1771,6 +1881,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
     overflow!.layoutOverflow = borderBoxRect()
   }
 
+  // Adjust from painting offsets to the local coords of this renderer
+  private func offsetForContents(_ offset: inout LayoutPointWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func renderBlockComputeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool) {
     clearOverflow()
     addOverflowFromChildren()
@@ -2693,6 +2809,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow
+  func positionForPointWithInlineChildren(
+    _ pointInLogicalContents: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    fatalError("Not reached")
   }
 
   private func removePositionedObjectsIfNeeded(

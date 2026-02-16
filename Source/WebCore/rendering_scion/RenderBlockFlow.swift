@@ -1900,7 +1900,15 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
-  private func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
     -> LayoutUnit
   {
     if floatingObjects == nil {
@@ -3139,6 +3147,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         ? newPosition
         : totalAvailableLogicalWidth - newPosition - logicalWidthForChild(child: child),
       applyDelta: applyDelta)
+  }
+
+  override func positionForPointWithInlineChildren(
+    _ pointInLogicalContents: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   struct LinePaginationAdjustment {

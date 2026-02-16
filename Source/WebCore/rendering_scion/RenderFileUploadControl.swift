@@ -39,4 +39,12 @@ final class RenderFileUploadControlWrapper: RenderBlockFlowWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

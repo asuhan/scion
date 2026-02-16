@@ -476,6 +476,16 @@ class RenderTextWrapper: RenderObjectWrapper {
       xPos, fallbackFonts, &glyphOverflow)
   }
 
+  override final func caretMinOffset() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override final func caretMaxOffset() -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasRenderedText() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -693,6 +703,14 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setTextInternal(_ text: StringWrapper, _ force: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override func positionForPoint(
+    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ fragment: RenderFragmentContainerWrapper?
+  ) -> VisiblePosition {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
