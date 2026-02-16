@@ -693,8 +693,15 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if mode.contains(.UseTransforms) && shouldUseTransformFromContainer(nil) {
+      let t = getTransformFromContainer(LayoutSizeWrapper())
+      transformState.applyTransform(t)
+    }
+
+    if mode.contains(.IsFixed) {
+      transformState.move(
+        toLayoutSize(point: protectedFrameView().scrollPositionRespectingCustomFixedPosition()))
+    }
   }
 
   override func requiresColumns(desiredColumnCount: Int32) -> Bool {
