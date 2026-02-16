@@ -5501,6 +5501,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return ancestorSkipped ? ancestorToStopAt : container
   }
 
+  override func mapAbsoluteToLocalPoint(
+    _ mode: MapCoordinatesMode, _ transformState: inout TransformState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func skipContainingBlockForPercentHeightCalculation(
     containingBlock: RenderBoxWrapper, isPerpendicularWritingMode: Bool
   ) -> Bool {

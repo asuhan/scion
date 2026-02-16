@@ -1968,6 +1968,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     parent.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
+  func mapAbsoluteToLocalPoint(_ mode: MapCoordinatesMode, _ transformState: inout TransformState) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Pushes state onto RenderGeometryMap about how to map coordinates from this renderer to its container, or ancestorToStopAt (whichever is encountered first).
   // Returns the renderer which was mapped to (container or ancestorToStopAt).
   func pushMappingToContainer(

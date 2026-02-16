@@ -124,6 +124,13 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  override func mapAbsoluteToLocalPoint(
+    _ mode: MapCoordinatesMode, _ transformState: inout TransformState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func offsetFromContainer(
     _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?

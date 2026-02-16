@@ -804,6 +804,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
         p, baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
+  override func mapAbsoluteToLocalPoint(
+    _ mode: MapCoordinatesMode, _ transformState: inout TransformState
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func canHaveBoxInfoInFragment() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
