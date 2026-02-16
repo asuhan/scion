@@ -86,6 +86,19 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  enum ColumnHitTestTranslationMode {
+    case ClampHitTestTranslationToColumns
+    case DoNotClampHitTestTranslationToColumns
+  }
+
+  func translateFragmentPointToFragmentedFlow(
+    _ logicalPoint: LayoutPointWrapper,
+    _ clampMode: ColumnHitTestTranslationMode = .DoNotClampHitTestTranslationToColumns
+  ) -> LayoutPointWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func columnRectAt(_ index: UInt32) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

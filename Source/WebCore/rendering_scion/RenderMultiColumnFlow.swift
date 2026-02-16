@@ -128,8 +128,12 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   private func physicalTranslationFromFragmentToFlow(
     _ columnSet: RenderMultiColumnSetWrapper?, _ physicalPoint: LayoutPointWrapper
   ) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let logicalPoint: LayoutPointWrapper = columnSet!.flipForWritingMode(position: physicalPoint)
+    let translatedPoint: LayoutPointWrapper = columnSet!.translateFragmentPointToFragmentedFlow(
+      logicalPoint)
+    let physicalTranslatedPoint: LayoutPointWrapper = columnSet!.flipForWritingMode(
+      position: translatedPoint)
+    return physicalPoint - physicalTranslatedPoint
   }
 
   override func mapAbsoluteToLocalPoint(
