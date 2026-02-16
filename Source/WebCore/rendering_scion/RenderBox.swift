@@ -5504,8 +5504,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var mode = mode
+    let isFixedPos = isFixedPositioned()
+    if isFixedPos {
+      mode.update(with: .IsFixed)
+    } else if mode.contains(.IsFixed) && canContainFixedPositionObjects() {
+      // If this box has a transform, it acts as a fixed position container for fixed descendants,
+      // and may itself also be fixed position. So propagate 'fixed' up only if this box is fixed position.
+      mode.remove(.IsFixed)
+    }
+
+    super.mapAbsoluteToLocalPoint(mode, &transformState)
   }
 
   func skipContainingBlockForPercentHeightCalculation(
