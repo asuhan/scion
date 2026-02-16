@@ -118,6 +118,11 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
     }
   }
 
+  func closestLeafChildForPosition(_ point: LayoutPointWrapper) -> LegacyInlineBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func renderSVGText() -> RenderSVGTextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

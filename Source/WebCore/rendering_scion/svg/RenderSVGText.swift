@@ -337,11 +337,19 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
   }
 
   override func positionForPoint(
-    _ point: LayoutPointWrapper, _ source: HitTestSource,
+    _ pointInContents: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let rootBox = legacyRootBox() else { return createVisiblePosition(0, .Downstream) }
+
+    assert(childrenInline())
+    guard
+      let closestBox = (rootBox as! SVGRootInlineBox).closestLeafChildForPosition(pointInContents)
+    else { return createVisiblePosition(0, .Downstream) }
+
+    return closestBox.renderer.positionForPoint(
+      LayoutPointWrapper(x: pointInContents.x, y: LayoutUnit(value: closestBox.y())), source,
+      fragment)
   }
 
   override func requiresLayer() -> Bool {

@@ -2092,6 +2092,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         * child.locationOffsetOfBorderBox().width(), y: point.y)
   }
 
+  func legacyRootBox() -> LegacyRootInlineBox? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func setChildrenInline(b: Bool) {
     if childrenInline() && !b {
       setLineLayoutPath(path: .UndeterminedPath)
