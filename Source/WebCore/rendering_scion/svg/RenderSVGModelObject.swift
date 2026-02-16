@@ -166,8 +166,21 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(style().position() == .Static)
+
+    var mode = mode
+    if isTransformed() {
+      mode.remove(.IsFixed)
+    }
+
+    guard let container = parent() else { return }
+
+    container.mapAbsoluteToLocalPoint(mode, &transformState)
+
+    var unused: Bool? = nil
+    let containerOffset = offsetFromContainer(container, LayoutPointWrapper(), &unused)
+
+    pushOntoTransformState(transformState, mode, nil, container, containerOffset, false)
   }
 
   override final func mapLocalToContainer(
