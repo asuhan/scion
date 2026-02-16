@@ -666,6 +666,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func visibility() -> Visibility {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usedVisibility() -> Visibility {
     if p == nil {
       // TODO(asuhan): implement this

@@ -251,6 +251,14 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // Check if the object should be painted in this fragment and if the fragment is part of this flow thread.
+  func objectShouldFragmentInFlowFragment(
+    _ object: RenderObjectWrapper, _ fragment: RenderFragmentContainerWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addForcedFragmentBreak(
     block: RenderBlockWrapper?, offset: LayoutUnit, breakChild: RenderBoxWrapper?, isBefore: Bool,
     offsetBreakAdjustment: inout LayoutUnit?

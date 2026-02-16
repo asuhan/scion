@@ -4093,8 +4093,106 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // no children...return this render object's element, if there is one, and offset 0
+    if firstChild() == nil {
+      return createVisiblePosition(
+        nonPseudoElement() != nil ? firstPositionInOrBeforeNode(nonPseudoElement()) : Position())
+    }
+
+    if isRenderTable() && nonPseudoElement() != nil {
+      let right = contentWidth() + horizontalBorderAndPaddingExtent()
+      let bottom = contentHeight() + verticalBorderAndPaddingExtent()
+
+      if point.x < Int32(0) || point.x > right || point.y < Int32(0) || point.y > bottom {
+        if point.x <= right / 2 {
+          return createVisiblePosition(firstPositionInOrBeforeNode(nonPseudoElement()))
+        }
+        return createVisiblePosition(lastPositionInOrAfterNode(nonPseudoElement()))
+      }
+    }
+
+    // Pass off to the closest child.
+    var minDist = LayoutUnit.max()
+    var closestRenderer: RenderBoxWrapper? = nil
+    var adjustedPoint = point
+    if isRenderTableRow() {
+      adjustedPoint.moveBy(offset: location())
+    }
+
+    for renderer: RenderBoxWrapper in childrenOfType(parent: self) {
+      if let fragmentedFlow = self as? RenderFragmentedFlowWrapper,
+        !fragmentedFlow.objectShouldFragmentInFlowFragment(renderer, fragment!)
+      {
+        continue
+      }
+
+      if (renderer.firstChild() == nil && !renderer.isInline()
+        && !(renderer is RenderBlockFlowWrapper))
+        || (source == .Script ? renderer.style().visibility() : renderer.style().usedVisibility())
+          != .Visible
+      {
+        continue
+      }
+
+      let top =
+        renderer.borderTop() + renderer.paddingTop()
+        + (self is RenderTableRowWrapper ? LayoutUnit(value: UInt64(0)) : renderer.y())
+      let bottom = top + renderer.contentHeight()
+      let left =
+        renderer.borderLeft() + renderer.paddingLeft()
+        + (self is RenderTableRowWrapper ? LayoutUnit(value: UInt64(0)) : renderer.x())
+      let right = left + renderer.contentWidth()
+
+      if point.x <= right && point.x >= left && point.y <= top && point.y >= bottom {
+        if renderer is RenderTableRowWrapper {
+          return renderer.positionForPoint(
+            point + adjustedPoint - renderer.locationOffset(), source, fragment)
+        }
+        return renderer.positionForPoint(point - renderer.locationOffset(), source, fragment)
+      }
+
+      // Find the distance from (x, y) to the box.  Split the space around the box into 8 pieces
+      // and use a different compare depending on which piece (x, y) is in.
+      var cmp = LayoutPointWrapper()
+      if point.x > right {
+        if point.y < top {
+          cmp = LayoutPointWrapper(x: right, y: top)
+        } else if point.y > bottom {
+          cmp = LayoutPointWrapper(x: right, y: bottom)
+        } else {
+          cmp = LayoutPointWrapper(x: right, y: point.y)
+        }
+      } else if point.x < left {
+        if point.y < top {
+          cmp = LayoutPointWrapper(x: left, y: top)
+        } else if point.y > bottom {
+          cmp = LayoutPointWrapper(x: left, y: bottom)
+        } else {
+          cmp = LayoutPointWrapper(x: left, y: point.y)
+        }
+      } else {
+        if point.y < top {
+          cmp = LayoutPointWrapper(x: point.x, y: top)
+        } else {
+          cmp = LayoutPointWrapper(x: point.x, y: bottom)
+        }
+      }
+
+      let difference = cmp - point
+
+      let dist = difference.width() * difference.width() + difference.height() * difference.height()
+      if dist < minDist {
+        closestRenderer = renderer
+        minDist = dist
+      }
+    }
+
+    if closestRenderer != nil {
+      return closestRenderer!.positionForPoint(
+        adjustedPoint - closestRenderer!.locationOffset(), source, fragment)
+    }
+
+    return createVisiblePosition(firstPositionInOrBeforeNode(nonPseudoElement()))
   }
 
   func removeFloatingAndInvalidateForLayout() {

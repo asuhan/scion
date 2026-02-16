@@ -232,6 +232,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return element()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
+  func nonPseudoElement() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func firstChild() -> RenderObjectWrapper? {
     if let childRaw = wk_interop.RenderElement_firstChild(p) {
       return RenderObjectWrapper(p: childRaw)
