@@ -139,4 +139,9 @@ extension InlineIterator {
     }
   }
 
+  static func boxFor(_ renderer: RenderBoxWrapper) -> LeafBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
 }

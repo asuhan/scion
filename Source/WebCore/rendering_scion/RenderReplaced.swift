@@ -728,8 +728,37 @@ class RenderReplacedWrapper: RenderBoxWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let (top, bottom) = { () in
+      let run = InlineIterator.boxFor(self)
+      if run.bool() {
+        let lineBox = run.get().lineBox()
+        let lineContentTop = min(
+          InlineIterator.previousLineBoxContentBottomOrBorderAndPadding(lineBox.get()),
+          lineBox.get().contentLogicalTop())
+        return (lineContentTop, LineSelection.logicalBottom(lineBox: lineBox.get()))
+      }
+      return (logicalTop().float(), logicalBottom().float())
+    }()
+
+    let blockDirectionPosition = isHorizontalWritingMode() ? point.y + y() : point.x + x()
+    let lineDirectionPosition = isHorizontalWritingMode() ? point.x + x() : point.y + y()
+
+    if blockDirectionPosition < top {
+      return createVisiblePosition(caretMinOffset(), .Downstream)  // coordinates are above
+    }
+
+    if blockDirectionPosition >= bottom {
+      return createVisiblePosition(caretMaxOffset(), .Downstream)  // coordinates are below
+    }
+
+    if (element()) != nil {
+      if lineDirectionPosition <= logicalLeft() + (logicalWidth() / 2) {
+        return createVisiblePosition(0, .Downstream)
+      }
+      return createVisiblePosition(1, .Downstream)
+    }
+
+    return super.positionForPoint(point, source, fragment)
   }
 
   override func canBeSelectionLeaf() -> Bool {
