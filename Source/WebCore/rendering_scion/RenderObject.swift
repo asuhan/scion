@@ -1969,8 +1969,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func mapAbsoluteToLocalPoint(_ mode: MapCoordinatesMode, _ transformState: inout TransformState) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let parent = parent() {
+      parent.mapAbsoluteToLocalPoint(mode, &transformState)
+      if let box = parent as? RenderBoxWrapper {
+        transformState.move(toLayoutSize(point: LayoutPointWrapper(point: box.scrollPosition())))
+      }
+    }
   }
 
   // Pushes state onto RenderGeometryMap about how to map coordinates from this renderer to its container, or ancestorToStopAt (whichever is encountered first).
