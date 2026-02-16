@@ -793,8 +793,26 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let containingBlock = containingBlock()!
+
+    if let continuation = continuation() {
+      // Translate the coords from the pre-anonymous block to the post-anonymous block.
+      let parentBlockPoint = containingBlock.location() + point
+      var continuation: RenderBoxModelObjectWrapper? = continuation
+      while continuation != nil {
+        let currentBlock =
+          continuation!.isInline()
+          ? continuation!.containingBlock() : continuation! as! RenderBlockWrapper?
+        if continuation!.isInline() || continuation!.firstChild() != nil {
+          return continuation!.positionForPoint(
+            parentBlockPoint - currentBlock!.locationOffset(), source, fragment)
+        }
+        continuation = continuation!.inlineContinuation()
+      }
+      return super.positionForPoint(point, source, fragment)
+    }
+
+    return containingBlock.positionForPoint(point, source, fragment)
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
