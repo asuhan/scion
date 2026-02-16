@@ -36,6 +36,11 @@ class LegacyInlineTextBox: LegacyInlineBox, DisplayTextBox {
     fatalError("Not implemented")
   }
 
+  func start() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func logicalLeftVisualOverflow() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

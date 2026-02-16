@@ -22,6 +22,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import Foundation
+
 private let space = UChar(Character(" ").asciiValue!)
 private let tab = UChar(Character("\t").asciiValue!)
 private let lf = UChar(Character("\n").asciiValue!)
@@ -180,8 +182,56 @@ final class RenderSVGInlineTextWrapper: RenderTextWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !InlineIterator.firstTextBoxFor(self).bool() || text().isEmpty() {
+      return createVisiblePosition(0, .Downstream)
+    }
+
+    let baseline = m_scaledFont.metricsOfPrimaryFont().ascent()
+
+    let containingBlock = containingBlock()!
+
+    // Map local point to absolute point, as the character origins stored in the text fragments use absolute coordinates.
+    var absolutePoint = point.FloatPoint()
+    absolutePoint.moveBy(a: containingBlock.location().FloatPoint())
+
+    var closestDistance = Float32.greatestFiniteMagnitude
+    var closestDistancePosition: Float32 = 0
+    var closestDistanceFragment: SVGTextFragment? = nil
+    var closestDistanceBox: SVGInlineTextBox? = nil
+
+    var fragmentTransform = AffineTransform()
+    for box in InlineIterator.svgTextBoxesFor(self) {
+      let fragments = box.textFragments()
+
+      for fragment in fragments {
+        var fragmentRect = FloatRectWrapper(
+          x: fragment.x, y: fragment.y - baseline, width: fragment.width, height: fragment.height)
+        fragment.buildFragmentTransform(&fragmentTransform)
+        if !fragmentTransform.isIdentity() {
+          fragmentRect = fragmentTransform.mapRect(rect: fragmentRect)
+        }
+
+        let distance =
+          powf(fragmentRect.x() - absolutePoint.x, 2)
+          + powf(fragmentRect.y() + fragmentRect.height() / 2 - absolutePoint.y, 2)
+
+        if distance < closestDistance {
+          closestDistance = distance
+          closestDistanceBox = (box.legacyInlineBox() as! SVGInlineTextBox)
+          closestDistanceFragment = fragment
+          closestDistancePosition = fragmentRect.x()
+        }
+      }
+    }
+
+    if closestDistanceFragment == nil {
+      return createVisiblePosition(0, .Downstream)
+    }
+
+    let offset = closestDistanceBox!.offsetForPositionInFragment(
+      closestDistanceFragment!, absolutePoint.x - closestDistancePosition)
+    return createVisiblePosition(
+      offset + Int32(closestDistanceBox!.start()), offset > 0 ? .Upstream : .Downstream)
   }
 
   private var m_scaledFont = FontCascadeWrapper()

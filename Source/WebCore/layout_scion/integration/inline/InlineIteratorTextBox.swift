@@ -74,4 +74,9 @@ extension InlineIterator {
     }
   }
 
+  static func firstTextBoxFor(_ text: RenderTextWrapper) -> TextBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
 }

@@ -81,7 +81,7 @@ extension InlineIterator {
       pathVariant: InlineIterator.BoxModernPath(inlineContent: content, startIndex: boxIndex))
   }
 
-  class InlineBoxIterator: BoxIterator {
+  class InlineBoxIterator: BoxIterator<InlineBox> {
     override init() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -95,10 +95,6 @@ extension InlineIterator {
     init(box: InlineIterator.Box) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
-    }
-
-    override func get() -> InlineBox {
-      return super.get() as! InlineBox
     }
 
     @discardableResult

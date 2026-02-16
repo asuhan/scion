@@ -114,7 +114,7 @@ extension InlineIterator {
     }
   }
 
-  class BoxIterator: Equatable {
+  class BoxIterator<Box>: Equatable, IteratorProtocol {
     func bool() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -125,18 +125,36 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func next() -> Box? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func get() -> Box {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
   }
 
-  class LeafBoxIterator: BoxIterator {
+  class LeafBoxIterator: BoxIterator<Box> {
     @discardableResult
     func traverseNextOnLine() -> LeafBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+  }
+
+  class BoxRange<BoxType: Box>: Sequence {
+    init(_ begin: BoxIterator<BoxType>) {
+      self.begin = begin
+    }
+
+    func makeIterator() -> BoxIterator<BoxType> {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    private let begin: BoxIterator<BoxType>
   }
 
   static func boxFor(_ renderer: RenderBoxWrapper) -> LeafBoxIterator {

@@ -84,5 +84,10 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     fatalError("Not implemented")
   }
 
+  func offsetForPositionInFragment(_ fragment: SVGTextFragment, _ position: Float32) -> Int32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let textFragments: [SVGTextFragment]
 }
