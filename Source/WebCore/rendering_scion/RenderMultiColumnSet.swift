@@ -976,8 +976,19 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   // Return the index of the content run with the currently tallest columns, taking all implicit
   // breaks assumed so far into account.
   func findRunWithTallestColumns() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var indexWithLargestHeight: UInt32 = 0
+    var largestHeight = LayoutUnit()
+    var previousOffset = LayoutUnit()
+    assert(!contentRuns.isEmpty)
+    for (i, run) in contentRuns.enumerated() {
+      let height = run.columnLogicalHeight(previousOffset)
+      if largestHeight < height {
+        largestHeight = height
+        indexWithLargestHeight = UInt32(i)
+      }
+      previousOffset = run.breakOffset
+    }
+    return indexWithLargestHeight
   }
 
   // Given the current list of content runs, make assumptions about where we need to insert
