@@ -142,8 +142,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func heightAdjustedForSetOffset(_ height: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let multicolBlock = parent()! as! RenderBlockFlowWrapper
+    let contentLogicalTop = logicalTop() - multicolBlock.borderAndPaddingBefore()
+
+    let height = height - contentLogicalTop
+    return max(height, LayoutUnit(value: UInt64(1)))  // Let's avoid zero height, as that would probably cause an infinite amount of columns to be created.
   }
 
   private func clearForcedBreaks() {
