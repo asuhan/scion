@@ -169,8 +169,17 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   private func forcedBreaksCount() -> UInt32 { return UInt32(contentRuns.count) }
 
   private func addForcedBreak(_ offsetFromFirstPage: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !requiresBalancing() {
+      return
+    }
+    if !contentRuns.isEmpty && offsetFromFirstPage <= contentRuns.last!.breakOffset {
+      return
+    }
+    // Append another item as long as we haven't exceeded used column count. What ends up in the
+    // overflow area shouldn't affect column balancing.
+    if contentRuns.count < computedColumnCount {
+      contentRuns.append(ContentRun(breakOffset: offsetFromFirstPage))
+    }
   }
 
   // (Re-)calculate the column height. This is first and foremost needed by sets that are to
