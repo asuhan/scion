@@ -900,8 +900,30 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   private func columnIndexAtOffset(
     _ offset: LayoutUnit, _ mode: ColumnIndexCalculationMode = .ClampToExistingColumns
   ) -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let portionRect = fragmentedFlowPortionRect()
+
+    // Handle the offset being out of range.
+    let fragmentedFlowLogicalTop = isHorizontalWritingMode() ? portionRect.y() : portionRect.x()
+    if offset < fragmentedFlowLogicalTop {
+      return 0
+    }
+    // If we're laying out right now, we cannot constrain against some logical bottom, since it
+    // isn't known yet. Otherwise, just return the last column if we're past the logical bottom.
+    if mode == .ClampToExistingColumns {
+      let fragmentedFlowLogicalBottom =
+        isHorizontalWritingMode() ? portionRect.maxY() : portionRect.maxX()
+      if offset >= fragmentedFlowLogicalBottom {
+        return columnCount() - 1
+      }
+    }
+
+    // Sometimes computedColumnHeight() is 0 here: see https://bugs.webkit.org/show_bug.cgi?id=132884
+    if !computedColumnHeight.bool() {
+      return 0
+    }
+
+    // Just divide by the column height to determine the correct column.
+    return UInt32((offset - fragmentedFlowLogicalTop).float() / computedColumnHeight)
   }
 
   private func setAndConstrainColumnHeight(_ newHeight: LayoutUnit) {
