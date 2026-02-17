@@ -125,7 +125,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     if multiColumnFlowForBlockFlow() != nil
       && multiColumnFlowForBlockFlow()!.firstMultiColumnSet() != nil
     {
-      return multiColumnFlowForBlockFlow()!.firstMultiColumnSet()!.computedColumnHeight()
+      return multiColumnFlowForBlockFlow()!.firstMultiColumnSet()!.computedColumnHeight
     }
 
     let frameView = frameView()

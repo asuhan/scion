@@ -56,11 +56,6 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
-  func computedColumnHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   // (Re-)calculate the column height. This is first and foremost needed by sets that are to
   // balance the column height, but even when it isn't to be balanced, this is necessary if the
   // multicol container's height is constrained. If |initial| is set, and we are to balance, guess
@@ -178,8 +173,14 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func columnRectAt(_ index: UInt32) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      return LayoutRectWrapper(
+        x: columnLogicalLeft(index), y: columnLogicalTop(index), width: computedColumnWidth,
+        height: computedColumnHeight)
+    }
+    return LayoutRectWrapper(
+      x: columnLogicalTop(index), y: columnLogicalLeft(index), width: computedColumnHeight,
+      height: computedColumnWidth)
   }
 
   private func columnCount() -> UInt32 {
@@ -298,6 +299,16 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  private func columnLogicalLeft(_ index: UInt32) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func columnLogicalTop(_ index: UInt32) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func fragmentedFlowPortionRectAt(_ index: UInt32) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -321,4 +332,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let computedColumnWidth = LayoutUnit()  // Used column width (the resulting 'W' from the pseudo-algorithm in the multicol spec)
+  let computedColumnHeight = LayoutUnit()
 }
