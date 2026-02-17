@@ -64,8 +64,14 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func previousSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var sibling = previousSibling()
+    while sibling != nil {
+      if let multiColumnSet = sibling as? RenderMultiColumnSetWrapper {
+        return multiColumnSet
+      }
+      sibling = sibling!.previousSibling()
+    }
+    return nil
   }
 
   // Return the first object in the flow thread that's rendered inside this set.
