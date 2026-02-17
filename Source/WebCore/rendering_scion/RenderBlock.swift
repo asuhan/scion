@@ -1413,7 +1413,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     if (paintPhase == .BlockBackground || paintPhase == .ChildBlockBackground)
       && style().usedVisibility() == .Visible
     {
-      paintColumnRules(paintInfo: paintInfo, point: scrolledOffset)
+      paintColumnRules(paintInfo, scrolledOffset)
     }
 
     // Done with backgrounds, borders and column rules.
@@ -2629,7 +2629,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
   }
 
-  func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {}
+  func paintColumnRules(_ paintInfo: PaintInfoWrapper, _ point: LayoutPointWrapper) {}
 
   private func paintSelection(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // TODO(asuhan): implement this

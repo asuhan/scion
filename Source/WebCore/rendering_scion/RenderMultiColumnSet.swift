@@ -255,9 +255,118 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return !multiColumnFlowForMultiColumnSet()!.columnHeightAvailable.bool()
   }
 
-  override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override func paintColumnRules(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper) {
+    if paintInfo.context().paintingDisabled() {
+      return
+    }
+
+    let fragmentedFlow = multiColumnFlowForMultiColumnSet()
+    let blockStyle = parent()!.style()
+    let ruleColor = blockStyle.visitedDependentColorWithColorFilter(
+      colorProperty: .CSSPropertyColumnRuleColor)
+    let ruleTransparent = blockStyle.columnRuleIsTransparent()
+    let ruleStyle = collapsedBorderStyle(style: blockStyle.columnRuleStyle())
+    let ruleThickness = LayoutUnit(value: blockStyle.columnRuleWidth())
+    let colGap = columnGap()
+    let renderRule = ruleStyle != .None && ruleStyle != .Hidden && !ruleTransparent
+    if !renderRule {
+      return
+    }
+
+    let colCount = columnCount()
+    if colCount <= 1 {
+      return
+    }
+
+    let antialias = BorderPainter.shouldAntialiasLines(context: paintInfo.context())
+
+    if fragmentedFlow!.progressionIsInline() {
+      let leftToRight = style().isLeftToRightDirection() != fragmentedFlow!.progressionIsReversed()
+      var currLogicalLeftOffset = leftToRight ? LayoutUnit(value: UInt64(0)) : contentLogicalWidth()
+      let ruleAdd = logicalLeftOffsetForContent()
+      var ruleLogicalLeft = leftToRight ? LayoutUnit(value: UInt64(0)) : contentLogicalWidth()
+      let inlineDirectionSize = computedColumnWidth
+      let boxSide: BoxSide =
+        isHorizontalWritingMode() ? leftToRight ? .Left : .Right : leftToRight ? .Top : .Bottom
+
+      for i in 0..<colCount {
+        // Move to the next position.
+        if leftToRight {
+          ruleLogicalLeft += inlineDirectionSize + colGap / 2
+          currLogicalLeftOffset += inlineDirectionSize + colGap
+        } else {
+          ruleLogicalLeft -= (inlineDirectionSize + colGap / 2)
+          currLogicalLeftOffset -= (inlineDirectionSize + colGap)
+        }
+
+        // Now paint the column rule.
+        if i < colCount - 1 {
+          let ruleLeft =
+            isHorizontalWritingMode()
+            ? paintOffset.x + ruleLogicalLeft - ruleThickness / 2 + ruleAdd
+            : paintOffset.x + borderLeft() + paddingLeft()
+          let ruleRight =
+            isHorizontalWritingMode() ? ruleLeft + ruleThickness : ruleLeft + contentWidth()
+          let ruleTop =
+            isHorizontalWritingMode()
+            ? paintOffset.y + borderTop() + paddingTop()
+            : paintOffset.y + ruleLogicalLeft - ruleThickness / 2 + ruleAdd
+          let ruleBottom =
+            isHorizontalWritingMode() ? ruleTop + contentHeight() : ruleTop + ruleThickness
+          let pixelSnappedRuleRect = snappedIntRect(
+            left: ruleLeft, top: ruleTop, width: ruleRight - ruleLeft, height: ruleBottom - ruleTop)
+          BorderPainter.drawLineForBoxSide(
+            graphicsContext: paintInfo.context(), document: document(),
+            rect: FloatRectWrapper(r: pixelSnappedRuleRect),
+            side: boxSide, color: ruleColor, borderStyle: ruleStyle, adjacentWidth1: 0,
+            adjacentWidth2: 0, antialias: antialias)
+        }
+
+        ruleLogicalLeft = currLogicalLeftOffset
+      }
+    } else {
+      let topToBottom =
+        !style().isFlippedBlocksWritingMode() != fragmentedFlow!.progressionIsReversed()
+      let ruleLeft =
+        isHorizontalWritingMode()
+        ? LayoutUnit(value: UInt64(0)) : colGap / 2 - colGap - ruleThickness / 2
+      let ruleWidth = isHorizontalWritingMode() ? contentWidth() : ruleThickness
+      let ruleTop =
+        isHorizontalWritingMode()
+        ? colGap / 2 - colGap - ruleThickness / 2 : LayoutUnit(value: UInt64(0))
+      let ruleHeight = isHorizontalWritingMode() ? ruleThickness : contentHeight()
+      var ruleRect = LayoutRectWrapper(
+        x: ruleLeft, y: ruleTop, width: ruleWidth, height: ruleHeight)
+
+      if !topToBottom {
+        if isHorizontalWritingMode() {
+          ruleRect.setY(y: height() - ruleRect.maxY())
+        } else {
+          ruleRect.setX(x: width() - ruleRect.maxX())
+        }
+      }
+
+      ruleRect.moveBy(offset: paintOffset)
+
+      let boxSide: BoxSide =
+        isHorizontalWritingMode() ? topToBottom ? .Top : .Bottom : topToBottom ? .Left : .Right
+
+      var step = LayoutSizeWrapper(
+        width: LayoutUnit(value: UInt64(0)),
+        height: topToBottom ? computedColumnHeight + colGap : -(computedColumnHeight + colGap))
+      if !isHorizontalWritingMode() {
+        step = step.transposedSize()
+      }
+
+      for _ in 1..<colCount {
+        ruleRect.move(size: step)
+        let pixelSnappedRuleRect = snappedIntRect(rect: ruleRect)
+        BorderPainter.drawLineForBoxSide(
+          graphicsContext: paintInfo.context(), document: document(),
+          rect: FloatRectWrapper(r: pixelSnappedRuleRect), side: boxSide, color: ruleColor,
+          borderStyle: ruleStyle, adjacentWidth1: 0, adjacentWidth2: 0, antialias: antialias)
+      }
+    }
   }
 
   enum ColumnHitTestTranslationMode {

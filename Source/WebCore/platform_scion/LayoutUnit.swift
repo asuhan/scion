@@ -316,6 +316,11 @@ struct LayoutUnit: Comparable {
     self.value = value
   }
 
+  init(value: UInt16) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(value: UInt32) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

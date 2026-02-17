@@ -34,6 +34,7 @@ enum CSSPropertyID {
   case CSSPropertyBackdropFilter
   case CSSPropertyBackgroundColor
   case CSSPropertyClipPath
+  case CSSPropertyColumnRuleColor
   case CSSPropertyFilter
   case CSSPropertyMixBlendMode
   case CSSPropertyOffsetAnchor
@@ -987,6 +988,21 @@ class RenderStyleWrapper: Equatable {
   }
 
   func columnCount() -> UInt16 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func columnRuleStyle() -> BorderStyle {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func columnRuleWidth() -> UInt16 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func columnRuleIsTransparent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
