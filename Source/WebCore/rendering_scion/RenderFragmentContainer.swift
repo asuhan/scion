@@ -68,6 +68,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func isFirstFragment() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isLastFragment() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -173,6 +178,13 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     }
     maxLogicalWidth = LayoutUnit()
     minLogicalWidth = LayoutUnit()
+  }
+
+  func overflowRectForFragmentedFlowPortion(
+    _ fragmentedFlowPortionRect: LayoutRectWrapper, isFirstPortion: Bool, isLastPortion: Bool
+  ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func repaintFragmentedFlowContentRectangle(

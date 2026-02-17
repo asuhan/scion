@@ -833,8 +833,51 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   private func fragmentedFlowPortionOverflowRect(
     _ portionRect: LayoutRectWrapper, _ index: UInt32, _ colCount: UInt32, _ colGap: LayoutUnit
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // This function determines the portion of the flow thread that paints for the column. Along the inline axis, columns are
+    // unclipped at outside edges (i.e., the first and last column in the set), and they clip to half the column
+    // gap along interior edges.
+    //
+    // In the block direction, we will not clip overflow out of the top of the first column, or out of the bottom of
+    // the last column. This applies only to the true first column and last column across all column sets.
+    //
+    // FIXME: Eventually we will know overflow on a per-column basis, but we can't do this until we have a painting
+    // mode that understands not to paint contents from a previous column in the overflow area of a following column.
+    // This problem applies to fragments and pages as well and is not unique to columns.
+
+    let progressionReversed = multiColumnFlowForMultiColumnSet()!.progressionIsReversed()
+
+    let isFirstColumn = index == 0
+    let isLastColumn = index == colCount - 1
+    let isLeftmostColumn =
+      style().isLeftToRightDirection() != progressionReversed ? isFirstColumn : isLastColumn
+    let isRightmostColumn =
+      style().isLeftToRightDirection() != progressionReversed ? isLastColumn : isFirstColumn
+
+    // Calculate the overflow rectangle, based on the flow thread's, clipped at column logical
+    // top/bottom unless it's the first/last column.
+    var overflowRect = overflowRectForFragmentedFlowPortion(
+      portionRect, isFirstPortion: isFirstColumn && isFirstFragment(),
+      isLastPortion: isLastColumn && isLastFragment())
+
+    // For RenderViews only (i.e., iBooks), avoid overflowing into neighboring columns, by clipping in the middle of adjacent column gaps. Also make sure that we avoid rounding errors.
+    if CPtrToInt(view().p) == CPtrToInt(parent()?.p) {
+      if isHorizontalWritingMode() {
+        if !isLeftmostColumn {
+          overflowRect.shiftXEdgeTo(edge: portionRect.x() - colGap / 2)
+        }
+        if !isRightmostColumn {
+          overflowRect.shiftMaxXEdgeTo(edge: portionRect.maxX() + colGap - colGap / 2)
+        }
+      } else {
+        if !isLeftmostColumn {
+          overflowRect.shiftYEdgeTo(edge: portionRect.y() - colGap / 2)
+        }
+        if !isRightmostColumn {
+          overflowRect.shiftMaxYEdgeTo(edge: portionRect.maxY() + colGap - colGap / 2)
+        }
+      }
+    }
+    return overflowRect
   }
 
   private func initialBlockOffsetForPainting() -> LayoutUnit {
