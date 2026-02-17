@@ -927,8 +927,31 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func setAndConstrainColumnHeight(_ newHeight: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    computedColumnHeight = newHeight
+    if computedColumnHeight > maxColumnHeight {
+      computedColumnHeight = maxColumnHeight
+    }
+
+    // FIXME: The available column height is not the same as the constrained height specified
+    // by the pagination API. The column set in this case is allowed to be bigger than the
+    // height of a single column. We cache available column height in order to use it
+    // in computeLogicalHeight later. This is pretty gross, and maybe there's a better way
+    // to formalize the idea of clamped column heights without having a view dependency
+    // here.
+    availableColumnHeight = computedColumnHeight
+    if multiColumnFlowForMultiColumnSet() != nil
+      && !multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+      && parent()!.isRenderView()
+    {
+      let pageLength = UInt32(view().frameView().pagination().pageLength)
+      if pageLength != 0 {
+        computedColumnHeight = LayoutUnit(value: pageLength)
+      }
+    }
+
+    columnHeightComputed = true
+
+    // FIXME: the height may also be affected by the enclosing pagination context, if any.
   }
 
   // Given the current list of content runs, make assumptions about where we need to insert
