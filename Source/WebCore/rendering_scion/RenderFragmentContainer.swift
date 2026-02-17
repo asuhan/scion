@@ -45,6 +45,10 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return m_fragmentedFlowPortionRect
   }
 
+  func setFragmentedFlowPortionRect(_ rect: LayoutRectWrapper) {
+    m_fragmentedFlowPortionRect = rect
+  }
+
   func fragmentedFlowPortionOverflowRect() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -208,7 +212,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
   let fragmentedFlow: RenderFragmentedFlowWrapper? = nil
 
-  private let m_fragmentedFlowPortionRect = LayoutRectWrapper()
+  private var m_fragmentedFlowPortionRect = LayoutRectWrapper()
 
   private let isValid = false
 }

@@ -127,8 +127,13 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func setLogicalBottomInFragmentedFlow(_ logicalBottom: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var rect = fragmentedFlowPortionRect()
+    if isHorizontalWritingMode() {
+      rect.shiftMaxYEdgeTo(edge: logicalBottom)
+    } else {
+      rect.shiftMaxXEdgeTo(edge: logicalBottom)
+    }
+    setFragmentedFlowPortionRect(rect)
   }
 
   private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
