@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Foundation
+
 private func precedesRenderer(renderer: RenderObjectWrapper?, boundary: RenderObjectWrapper?)
   -> Bool
 {
@@ -124,6 +126,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // This is SLOW! But luckily very uncommon.
     return precedesRenderer(renderer: firstRenderer, boundary: renderer)
       && precedesRenderer(renderer: renderer, boundary: lastRenderer)
+  }
+
+  private func logicalTopInFragmentedFlow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func setLogicalBottomInFragmentedFlow(_ logicalBottom: LayoutUnit) {
@@ -1003,8 +1010,44 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func calculateBalancedHeight(_ initial: Bool) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if initial {
+      // Start with the lowest imaginable column height.
+      let index = Int(findRunWithTallestColumns())
+      let startOffset =
+        index > 0 ? contentRuns[index - 1].breakOffset : logicalTopInFragmentedFlow()
+      return max(contentRuns[index].columnLogicalHeight(startOffset), minimumColumnHeight)
+    }
+
+    let sizeContainmentShortage = max(LayoutUnit(), spaceShortageForSizeContainment)
+    if columnCount() <= computedColumnCount {
+      // With the current column height, the content fits without creating overflowing columns. We're done.
+      return computedColumnHeight + sizeContainmentShortage
+    }
+
+    if forcedBreaksCount() >= computedColumnCount {
+      // Too many forced breaks to allow any implicit breaks. Initial balancing should already
+      // have set a good height. There's nothing more we should do.
+      return computedColumnHeight + sizeContainmentShortage
+    }
+
+    if computedColumnHeight >= maxColumnHeight {
+      // We cannot stretch any further. We'll just have to live with the overflowing columns. This
+      // typically happens if the max column height is less than the height of the tallest piece
+      // of unbreakable content (e.g. lines).
+      return computedColumnHeight
+    }
+
+    // If the initial guessed column height wasn't enough, stretch it now. Stretch by the lowest
+    // amount of space shortage found during layout.
+
+    assert(minSpaceShortage > 0)  // We should never _shrink_ the height!
+    // assert(minSpaceShortage != RenderFragmentedFlowWrapper.maxLogicalHeight())  // If this happens, we probably have a bug.
+    if minSpaceShortage == RenderFragmentedFlowWrapper.maxLogicalHeight() {
+      return computedColumnHeight + sizeContainmentShortage  // So bail out rather than looping infinitely.
+    }
+
+    let toAdd = max(sizeContainmentShortage, minSpaceShortage)
+    return computedColumnHeight + toAdd
   }
 
   private var computedColumnCount: UInt32 = 1  // Used column count (the resulting 'N' from the pseudo-algorithm in the multicol spec)
@@ -1028,6 +1071,13 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   // additional column for each implicit break "inserted" there.
   struct ContentRun {
     mutating func assumeAnotherImplicitBreak() { assumedImplicitBreaks += 1 }
+
+    // Return the column height that this content run would require, considering the implicit
+    // breaks assumed so far.
+    func columnLogicalHeight(_ startOffset: LayoutUnit) -> LayoutUnit {
+      return LayoutUnit(
+        value: ceilf((breakOffset - startOffset).float() / Float32(assumedImplicitBreaks + 1)))
+    }
 
     let breakOffset: LayoutUnit  // Flow thread offset where this run ends.
     var assumedImplicitBreaks: UInt32 = 0  // Number of implicit breaks in this run assumed so far.
