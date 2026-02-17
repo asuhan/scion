@@ -606,12 +606,147 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     }
   }
 
+  private static let maximumNumberOfFragments = 2_500_000
+
   override func collectLayerFragments(
-    layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
+    _ fragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Let's start by introducing the different coordinate systems involved here. They are different
+    // in how they deal with writing modes and columns. RenderLayer rectangles tend to be more
+    // physical than the rectangles used in RenderObject & co.
+    //
+    // The two rectangles passed to this method are physical, except that we pretend that there's
+    // only one long column (that's the flow thread). They are relative to the top left corner of
+    // the flow thread. All rectangles being compared to the dirty rect also need to be in this
+    // coordinate system.
+    //
+    // Then there's the output from this method - the stuff we put into the list of fragments. The
+    // translationOffset point is the actual physical translation required to get from a location in
+    // the flow thread to a location in some column. The paginationClip rectangle is in the same
+    // coordinate system as the two rectangles passed to this method (i.e. physical, in flow thread
+    // coordinates, pretending that there's only one long column).
+    //
+    // All other rectangles in this method are slightly less physical, when it comes to how they are
+    // used with different writing modes, but they aren't really logical either. They are just like
+    // RenderBox::frameRect(). More precisely, the sizes are physical, and the inline direction
+    // coordinate is too, but the block direction coordinate is always "logical top". These
+    // rectangles also pretend that there's only one long column, i.e. they are for the flow thread.
+    //
+    // To sum up: input and output from this method are "physical" RenderLayer-style rectangles and
+    // points, while inside this method we mostly use the RenderObject-style rectangles (with the
+    // block direction coordinate always being logical top).
+
+    // Put the layer bounds into flow thread-local coordinates by flipping it first. Since we're in
+    // a renderer, most rectangles are represented this way.
+    var layerBoundsInFragmentedFlow = layerBoundingBox
+    fragmentedFlow!.flipForWritingMode(rect: &layerBoundsInFragmentedFlow)
+
+    // Now we can compare with the flow thread portions owned by each column. First let's
+    // see if the rect intersects our flow thread portion at all.
+    var clippedRect = layerBoundsInFragmentedFlow
+    clippedRect.intersect(other: super.fragmentedFlowPortionOverflowRect())
+    if clippedRect.isEmpty() {
+      return
+    }
+
+    // Now we know we intersect at least one column. Let's figure out the logical top and logical
+    // bottom of the area we're checking.
+    let layerLogicalTop =
+      isHorizontalWritingMode() ? layerBoundsInFragmentedFlow.y() : layerBoundsInFragmentedFlow.x()
+    let layerLogicalBottom =
+      (isHorizontalWritingMode()
+        ? layerBoundsInFragmentedFlow.maxY() : layerBoundsInFragmentedFlow.maxX()) - 1
+
+    // Figure out the start and end columns and only check within that range so that we don't walk the
+    // entire column set.
+    // FIXME: this should use firstAndLastColumnsFromOffsets.
+    let startColumn = columnIndexAtOffset(layerLogicalTop)
+    let endColumn = columnIndexAtOffset(layerLogicalBottom)
+
+    let colLogicalWidth = computedColumnWidth
+    let colGap = columnGap()
+    let colCount = columnCount()
+
+    let progressionReversed = multiColumnFlowForMultiColumnSet()!.progressionIsReversed()
+    let progressionIsInline = multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+
+    let initialBlockOffset = initialBlockOffsetForPainting()
+
+    for i in startColumn...endColumn {
+      // Get the portion of the flow thread that corresponds to this column.
+      let fragmentedFlowPortion = fragmentedFlowPortionRectAt(i)
+
+      // Now get the overflow rect that corresponds to the column.
+      let fragmentedFlowOverflowPortion = fragmentedFlowPortionOverflowRect(
+        fragmentedFlowPortion, i, colCount, colGap)
+
+      // In order to create a fragment we must intersect the portion painted by this column.
+      var clippedRect = layerBoundsInFragmentedFlow
+      clippedRect.intersect(other: fragmentedFlowOverflowPortion)
+      if clippedRect.isEmpty() {
+        continue
+      }
+
+      // We also need to intersect the dirty rect. We have to apply a translation and shift based off
+      // our column index.
+      var translationOffset = LayoutSizeWrapper()
+      var inlineOffset =
+        progressionIsInline ? i * (colLogicalWidth + colGap) : LayoutUnit(value: UInt64(0))
+
+      let leftToRight = style().isLeftToRightDirection() != progressionReversed
+      if !leftToRight {
+        inlineOffset = -inlineOffset
+        if progressionReversed {
+          inlineOffset += contentLogicalWidth() - colLogicalWidth
+        }
+      }
+      translationOffset.setWidth(width: inlineOffset)
+
+      var blockOffset =
+        initialBlockOffset + logicalTop() - fragmentedFlow!.logicalTop()
+        + (isHorizontalWritingMode() ? -fragmentedFlowPortion.y() : -fragmentedFlowPortion.x())
+      if !progressionIsInline {
+        if !progressionReversed {
+          blockOffset = i * colGap
+        } else {
+          blockOffset -= i * (computedColumnHeight + colGap)
+        }
+      }
+      if isFlippedWritingMode(writingMode: style().writingMode()) {
+        blockOffset = -blockOffset
+      }
+      translationOffset.setHeight(height: blockOffset)
+      if !isHorizontalWritingMode() {
+        translationOffset = translationOffset.transposedSize()
+      }
+
+      // Shift the dirty rect to be in flow thread coordinates with this translation applied.
+      var translatedDirtyRect = dirtyRect
+      translatedDirtyRect.move(size: -translationOffset)
+
+      // See if we intersect the dirty rect.
+      clippedRect = layerBoundingBox
+      clippedRect.intersect(other: translatedDirtyRect)
+      if clippedRect.isEmpty() {
+        continue
+      }
+
+      // Something does need to paint in this column. Make a fragment now and supply the physical translation
+      // offset and the clip rect for the column with that offset applied.
+      let fragment = LayerFragment()
+      fragment.paginationOffset = translationOffset
+
+      var flippedFragmentedFlowOverflowPortion = fragmentedFlowOverflowPortion
+      // Flip it into more a physical (RenderLayer-style) rectangle.
+      fragmentedFlow!.flipForWritingMode(rect: &flippedFragmentedFlowOverflowPortion)
+      fragment.paginationClip = flippedFragmentedFlowOverflowPortion
+      if fragments.count < RenderMultiColumnSetWrapper.maximumNumberOfFragments {
+        fragments.append(fragment)
+      } else {
+        break
+      }
+    }
   }
 
   override func positionForPoint(
@@ -645,6 +780,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   private func fragmentedFlowPortionOverflowRect(
     _ portionRect: LayoutRectWrapper, _ index: UInt32, _ colCount: UInt32, _ colGap: LayoutUnit
   ) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func initialBlockOffsetForPainting() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

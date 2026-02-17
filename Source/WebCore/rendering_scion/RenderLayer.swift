@@ -2076,7 +2076,7 @@ class RenderLayerWrapper {
         // Tell the flow thread to collect the fragments. We pass enough information to create a minimal number of fragments based off the pages/columns
         // that intersect the actual dirtyRect as well as the pages/columns that intersect our layer's bounding box.
         enclosingFragmentedFlow.collectLayerFragments(
-          layerFragments: &fragments, layerBoundingBox: layerBoundingBoxInFragmentedFlow,
+          &fragments, layerBoundingBox: layerBoundingBoxInFragmentedFlow,
           dirtyRect: dirtyRectInFragmentedFlow)
 
         let newSize = fragments.count
@@ -2125,7 +2125,7 @@ class RenderLayerWrapper {
     // Tell the flow thread to collect the fragments. We pass enough information to create a minimal number of fragments based off the pages/columns
     // that intersect the actual dirtyRect as well as the pages/columns that intersect our layer's bounding box.
     enclosingFragmentedFlow.collectLayerFragments(
-      layerFragments: &fragments, layerBoundingBox: layerBoundingBoxInFragmentedFlow,
+      &fragments, layerBoundingBox: layerBoundingBoxInFragmentedFlow,
       dirtyRect: dirtyRectInFragmentedFlow)
 
     if fragments.isEmpty {

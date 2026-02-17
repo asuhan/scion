@@ -275,7 +275,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func isPageLogicalHeightKnown() -> Bool { return true }
 
   func collectLayerFragments(
-    layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
+    _ layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
   ) {
     // TODO(asuhan): implement this
@@ -289,7 +289,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     for fragment in fragmentList {
       var fragments = LayerFragments()
       fragment.collectLayerFragments(
-        layerFragments: &fragments, layerBoundingBox: layerBoundingBox,
+        &fragments, layerBoundingBox: layerBoundingBox,
         dirtyRect: LayoutRectWrapper.infiniteRect())
       for fragment in fragments {
         var fragmentRect = layerBoundingBox

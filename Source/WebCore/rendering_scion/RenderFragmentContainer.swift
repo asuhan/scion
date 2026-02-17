@@ -119,7 +119,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func collectLayerFragments(
-    layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
+    _ layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
   ) {
     // TODO(asuhan): implement this
