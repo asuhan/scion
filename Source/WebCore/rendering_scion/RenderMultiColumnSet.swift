@@ -496,8 +496,15 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func columnGap() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Eventually we will cache the column gap when the widths of columns start varying, but for now we just
+    // go to the parent block to get the gap.
+    let parentBlock = parent()! as! RenderBlockFlowWrapper
+    if parentBlock.style().columnGap().isNormal {
+      return LayoutUnit(value: parentBlock.style().fontDescription().computedSize())  // "1em" is recommended as the normal gap setting. Matches <p> margins.
+    }
+    return valueForLength(
+      length: parentBlock.style().columnGap().length,
+      maximumValue: parentBlock.availableLogicalWidth())
   }
 
   override func addOverflowFromChildren() {
