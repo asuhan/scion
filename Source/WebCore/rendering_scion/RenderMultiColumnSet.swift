@@ -815,8 +815,19 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func fragmentedFlowPortionRectAt(_ index: UInt32) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var portionRect = fragmentedFlowPortionRect()
+    if isHorizontalWritingMode() {
+      portionRect = LayoutRectWrapper(
+        x: portionRect.x(), y: portionRect.y() + index * computedColumnHeight,
+        width: portionRect.width(),
+        height: computedColumnHeight)
+    } else {
+      portionRect = LayoutRectWrapper(
+        x: portionRect.x() + index * computedColumnHeight, y: portionRect.y(),
+        width: computedColumnHeight,
+        height: portionRect.height())
+    }
+    return portionRect
   }
 
   private func fragmentedFlowPortionOverflowRect(
