@@ -76,8 +76,18 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
 
   // Return the first object in the flow thread that's rendered inside this set.
   func firstRendererInFragmentedFlow() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let sibling = RenderMultiColumnFlowWrapper.previousColumnSetOrSpannerSiblingOf(child: self) {
+      // Adjacent sets should not occur. Currently we would have no way of figuring out what each
+      // of them contains then.
+      assert(!sibling.isRenderMultiColumnSet())
+      if let placeholder = multiColumnFlowForMultiColumnSet()!.findColumnSpannerPlaceholder(
+        spanner: sibling)
+      {
+        return placeholder.nextInPreOrderAfterChildren()
+      }
+      fatalError("Not reached")
+    }
+    return fragmentedFlow!.firstChild()
   }
 
   // Return the last object in the flow thread that's rendered inside this set.
