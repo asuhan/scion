@@ -136,6 +136,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     setFragmentedFlowPortionRect(rect)
   }
 
+  private func logicalBottomInFragmentedFlow() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
     computedColumnWidth = width
     computedColumnCount = count
@@ -150,6 +155,13 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func clearForcedBreaks() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func forcedBreaksCount() -> UInt32 { return UInt32(contentRuns.count) }
+
+  private func addForcedBreak(_ offsetFromFirstPage: LayoutUnit) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -954,12 +966,40 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     // FIXME: the height may also be affected by the enclosing pagination context, if any.
   }
 
+  // Return the index of the content run with the currently tallest columns, taking all implicit
+  // breaks assumed so far into account.
+  func findRunWithTallestColumns() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Given the current list of content runs, make assumptions about where we need to insert
   // implicit breaks (if there's room for any at all; depending on the number of explicit breaks),
   // and store the results. This is needed in order to balance the columns.
   private func distributeImplicitBreaks() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if !NDEBUG
+      // There should be no implicit breaks assumed at this point.
+      for contentRun in contentRuns {
+        assert(contentRun.assumedImplicitBreaks == 0)
+      }
+    #endif
+
+    // Insert a final content run to encompass all content. This will include overflow if this is
+    // the last set.
+    addForcedBreak(logicalBottomInFragmentedFlow())
+    var breakCount = forcedBreaksCount()
+
+    // If there is room for more breaks (to reach the used value of column-count), imagine that we
+    // insert implicit breaks at suitable locations. At any given time, the content run with the
+    // currently tallest columns will get another implicit break "inserted", which will increase its
+    // column count by one and shrink its columns' height. Repeat until we have the desired total
+    // number of breaks. The largest column height among the runs will then be the initial column
+    // height for the balancer to use.
+    while breakCount < computedColumnCount {
+      let index = findRunWithTallestColumns()
+      contentRuns[Int(index)].assumeAnotherImplicitBreak()
+      breakCount += 1
+    }
   }
 
   private func calculateBalancedHeight(_ initial: Bool) -> LayoutUnit {
@@ -978,4 +1018,20 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   private var minSpaceShortage = LayoutUnit()  // The smallest amout of space shortage that caused a column break.
   private var minimumColumnHeight = LayoutUnit()
   private var spaceShortageForSizeContainment = LayoutUnit()  // The shortage space that keeps size containment monolithic.
+
+  // A run of content without explicit (forced) breaks; i.e. a flow thread portion between two
+  // explicit breaks, between flow thread start and an explicit break, between an explicit break
+  // and flow thread end, or, in cases when there are no explicit breaks at all: between flow flow
+  // thread start and flow thread end. We need to know where the explicit breaks are, in order to
+  // figure out where the implicit breaks will end up, so that we get the columns properly
+  // balanced. A content run starts out as representing one single column, and will represent one
+  // additional column for each implicit break "inserted" there.
+  struct ContentRun {
+    mutating func assumeAnotherImplicitBreak() { assumedImplicitBreaks += 1 }
+
+    let breakOffset: LayoutUnit  // Flow thread offset where this run ends.
+    var assumedImplicitBreaks: UInt32 = 0  // Number of implicit breaks in this run assumed so far.
+  }
+
+  private var contentRuns: [ContentRun] = []  // TODO(asuhan): use inline storage
 }
