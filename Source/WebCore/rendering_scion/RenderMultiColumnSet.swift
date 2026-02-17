@@ -126,9 +126,24 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       && precedesRenderer(renderer: renderer, boundary: lastRenderer)
   }
 
+  private func setLogicalBottomInFragmentedFlow(_ logicalBottom: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
     computedColumnWidth = width
     computedColumnCount = count
+  }
+
+  private func heightAdjustedForSetOffset(_ height: LayoutUnit) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func clearForcedBreaks() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // (Re-)calculate the column height. This is first and foremost needed by sets that are to
@@ -173,8 +188,43 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   func prepareForLayout(initial: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Guess box logical top. This might eliminate the need for another layout pass.
+    if let previous = RenderMultiColumnFlowWrapper.previousColumnSetOrSpannerSiblingOf(child: self)
+    {
+      setLogicalTop(top: previous.logicalBottom() + previous.marginAfter())
+    } else {
+      setLogicalTop(top: multiColumnBlockFlow()!.borderAndPaddingBefore())
+    }
+
+    if initial {
+      maxColumnHeight = calculateMaxColumnHeight()
+    }
+    if requiresBalancing() {
+      if initial {
+        computedColumnHeight = LayoutUnit(value: 0)
+        availableColumnHeight = LayoutUnit(value: 0)
+        columnHeightComputed = false
+      }
+    } else {
+      setAndConstrainColumnHeight(
+        heightAdjustedForSetOffset(multiColumnFlowForMultiColumnSet()!.columnHeightAvailable))
+    }
+
+    // Set box width.
+    updateLogicalWidth()
+
+    // Any breaks will be re-inserted during layout, so get rid of what we already have.
+    clearForcedBreaks()
+
+    // Nuke previously stored minimum column height. Contents may have changed for all we know.
+    minimumColumnHeight = LayoutUnit(value: 0)
+
+    spaceShortageForSizeContainment = LayoutUnit(value: 0)
+
+    // Start with "infinite" flow thread portion height until height is known.
+    setLogicalBottomInFragmentedFlow(RenderFragmentedFlowWrapper.maxLogicalHeight())
+
+    setNeedsLayout(markParents: .MarkOnlyThis)
   }
 
   func requiresBalancing() -> Bool {
@@ -424,6 +474,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  private func calculateMaxColumnHeight() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func columnLogicalLeft(_ index: UInt32) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -478,7 +533,13 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
 
   private var computedColumnCount: UInt32 = 1  // Used column count (the resulting 'N' from the pseudo-algorithm in the multicol spec)
   private var computedColumnWidth = LayoutUnit()  // Used column width (the resulting 'W' from the pseudo-algorithm in the multicol spec)
-  let computedColumnHeight = LayoutUnit()
+  var computedColumnHeight = LayoutUnit()
+  private var availableColumnHeight = LayoutUnit()
+  private var columnHeightComputed = false
 
+  // The following variables are used when balancing the column set.
+  private var maxColumnHeight = LayoutUnit()  // Maximum column height allowed.
   private var minSpaceShortage = LayoutUnit()  // The smallest amout of space shortage that caused a column break.
+  private var minimumColumnHeight = LayoutUnit()
+  private var spaceShortageForSizeContainment = LayoutUnit()  // The shortage space that keeps size containment monolithic.
 }
