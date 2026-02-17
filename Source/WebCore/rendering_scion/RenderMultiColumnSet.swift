@@ -162,8 +162,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func clearForcedBreaks() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    contentRuns.removeAll()
   }
 
   private func forcedBreaksCount() -> UInt32 { return UInt32(contentRuns.count) }
