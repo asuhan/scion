@@ -95,8 +95,86 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     _ logicalPoint: LayoutPointWrapper,
     _ clampMode: ColumnHitTestTranslationMode = .DoNotClampHitTestTranslationToColumns
   ) -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Determine which columns we intersect.
+    let colGap = columnGap()
+    let halfColGap = colGap / 2
+
+    let progressionIsInline = multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+
+    var point = logicalPoint
+
+    for i in 0..<columnCount() {
+      // Add in half the column gap to the left and right of the rect.
+      let colRect = columnRectAt(i)
+      if isHorizontalWritingMode() == progressionIsInline {
+        let gapAndColumnRect = LayoutRectWrapper(
+          x: colRect.x() - halfColGap, y: colRect.y(), width: colRect.width() + colGap,
+          height: colRect.height())
+        if point.x >= gapAndColumnRect.x() && point.x < gapAndColumnRect.maxX() {
+          if clampMode == .ClampHitTestTranslationToColumns {
+            if progressionIsInline {
+              // FIXME: The clamping that follows is not completely right for right-to-left
+              // content.
+              // Clamp everything above the column to its top left.
+              if point.y < gapAndColumnRect.y() {
+                point = gapAndColumnRect.location()
+              }
+              // Clamp everything below the column to the next column's top left. If there is
+              // no next column, this still maps to just after this column.
+              else if point.y >= gapAndColumnRect.maxY() {
+                point = gapAndColumnRect.location()
+                point.move(dx: LayoutUnit(value: UInt64(0)), dy: gapAndColumnRect.height())
+              }
+            } else {
+              if point.x < colRect.x() {
+                point.setX(x: colRect.x())
+              } else if point.x >= colRect.maxX() {
+                point.setX(x: colRect.maxX() - 1)
+              }
+            }
+          }
+
+          let offsetInColumn = point - colRect.location()
+          let fragmentedFlowPortion = fragmentedFlowPortionRectAt(i)
+
+          return fragmentedFlowPortion.location() + offsetInColumn
+        }
+      } else {
+        let gapAndColumnRect = LayoutRectWrapper(
+          x: colRect.x(), y: colRect.y() - halfColGap, width: colRect.width(),
+          height: colRect.height() + colGap)
+        if point.y >= gapAndColumnRect.y() && point.y < gapAndColumnRect.maxY() {
+          if clampMode == .ClampHitTestTranslationToColumns {
+            if progressionIsInline {
+              // FIXME: The clamping that follows is not completely right for right-to-left
+              // content.
+              // Clamp everything above the column to its top left.
+              if point.x < gapAndColumnRect.x() {
+                point = gapAndColumnRect.location()
+              }
+              // Clamp everything below the column to the next column's top left. If there is
+              // no next column, this still maps to just after this column.
+              else if point.x >= gapAndColumnRect.maxX() {
+                point = gapAndColumnRect.location()
+                point.move(dx: gapAndColumnRect.width(), dy: LayoutUnit(value: UInt64(0)))
+              }
+            } else {
+              if point.y < colRect.y() {
+                point.setY(y: colRect.y())
+              } else if point.y >= colRect.maxY() {
+                point.setY(y: colRect.maxY() - 1)
+              }
+            }
+          }
+
+          let offsetInColumn = point - colRect.location()
+          let fragmentedFlowPortion = fragmentedFlowPortionRectAt(i)
+          return fragmentedFlowPortion.location() + offsetInColumn
+        }
+      }
+    }
+
+    return logicalPoint
   }
 
   private func columnRectAt(_ index: UInt32) -> LayoutRectWrapper {
