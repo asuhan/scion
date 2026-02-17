@@ -127,8 +127,29 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   // an initial column height; otherwise, stretch the column height a tad. Return true if column
   // height changed and another layout pass is required.
   func recalculateColumnHeight(initial: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let oldColumnHeight = computedColumnHeight
+    if requiresBalancing() {
+      if initial {
+        distributeImplicitBreaks()
+      }
+      let newColumnHeight = calculateBalancedHeight(initial)
+      setAndConstrainColumnHeight(newColumnHeight)
+      // After having calculated an initial column height, the multicol container typically needs at
+      // least one more layout pass with a new column height, but if a height was specified, we only
+      // need to do this if we think that we need less space than specified. Conversely, if we
+      // determined that the columns need to be as tall as the specified height of the container, we
+      // have already laid it out correctly, and there's no need for another pass.
+    } else {
+      // The position of the column set may have changed, in which case height available for
+      // columns may have changed as well.
+      setAndConstrainColumnHeight(computedColumnHeight)
+    }
+    if computedColumnHeight == oldColumnHeight {
+      return false  // No change. We're done.
+    }
+
+    minSpaceShortage = RenderFragmentedFlowWrapper.maxLogicalHeight()
+    return true  // Need another pass.
   }
 
   override func updateLogicalWidth() {
@@ -137,6 +158,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   func prepareForLayout(initial: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func requiresBalancing() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -417,6 +443,26 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  private func setAndConstrainColumnHeight(_ newHeight: LayoutUnit) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Given the current list of content runs, make assumptions about where we need to insert
+  // implicit breaks (if there's room for any at all; depending on the number of explicit breaks),
+  // and store the results. This is needed in order to balance the columns.
+  private func distributeImplicitBreaks() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func calculateBalancedHeight(_ initial: Bool) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private let computedColumnWidth = LayoutUnit()  // Used column width (the resulting 'W' from the pseudo-algorithm in the multicol spec)
   let computedColumnHeight = LayoutUnit()
+
+  private var minSpaceShortage = LayoutUnit()  // The smallest amout of space shortage that caused a column break.
 }
