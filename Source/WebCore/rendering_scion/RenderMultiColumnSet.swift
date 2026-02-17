@@ -549,8 +549,16 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.layout()
+
+    // At this point the logical top and bottom of the column set are known. Update maximum column
+    // height (multicol height may be constrained).
+    maxColumnHeight = calculateMaxColumnHeight()
+
+    if nextSiblingMultiColumnSet() == nil {
+      // This is the last set, i.e. the last fragment. Seize the opportunity to validate them.
+      multiColumnFlowForMultiColumnSet()!.validateFragments()
+    }
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)

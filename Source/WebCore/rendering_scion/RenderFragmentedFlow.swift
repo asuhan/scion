@@ -90,6 +90,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
   func fragmentChangedWritingMode(_ fragment: RenderFragmentContainerWrapper?) {}
 
+  func validateFragments() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
