@@ -508,8 +508,17 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func addOverflowFromChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Need to do much better here.
+    let colCount = columnCount()
+    if colCount == 0 {
+      return
+    }
+
+    let lastRect = columnRectAt(colCount - 1)
+    addLayoutOverflow(rect: lastRect)
+    if !hasNonVisibleOverflow() {
+      addVisualOverflow(rect: lastRect)
+    }
   }
 
   override func layout() {
