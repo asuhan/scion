@@ -758,8 +758,20 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func calculateMaxColumnHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let multicolBlock = multiColumnBlockFlow()!
+    let multicolStyle = multicolBlock.style()
+    let availableHeight = multiColumnFlowForMultiColumnSet()!.columnHeightAvailable
+    var maxColumnHeight =
+      availableHeight.bool() ? availableHeight : RenderFragmentedFlowWrapper.maxLogicalHeight()
+    if !multicolStyle.logicalMaxHeight().isUndefined() {
+      maxColumnHeight = min(
+        maxColumnHeight,
+        multicolBlock.computeContentLogicalHeight(
+          heightType: .MaxSize, height: multicolStyle.logicalMaxHeight(),
+          intrinsicContentHeight: nil)
+          ?? maxColumnHeight)
+    }
+    return heightAdjustedForSetOffset(maxColumnHeight)
   }
 
   private func columnLogicalLeft(_ index: UInt32) -> LayoutUnit {
