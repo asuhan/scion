@@ -115,6 +115,11 @@ func parentPseudoElement(pseudoId: PseudoId) -> PseudoId? {
   fatalError("Not implemented")
 }
 
+enum ColumnFill: UInt8 {
+  case Balance
+  case Auto
+}
+
 enum ColumnSpan: UInt8 {
   case None
   case All

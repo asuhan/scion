@@ -236,8 +236,23 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   func requiresBalancing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !multiColumnFlowForMultiColumnSet()!.progressionIsInline() {
+      return false
+    }
+
+    if let next = RenderMultiColumnFlowWrapper.nextColumnSetOrSpannerSiblingOf(child: self) {
+      if !next.isRenderMultiColumnSet() && !next.isLegend() {
+        // If we're followed by a spanner, we need to balance.
+        assert(
+          multiColumnFlowForMultiColumnSet()!.findColumnSpannerPlaceholder(spanner: next) != nil)
+        return true
+      }
+    }
+    let container = multiColumnBlockFlow()!
+    if container.style().columnFill() == .Balance {
+      return true
+    }
+    return !multiColumnFlowForMultiColumnSet()!.columnHeightAvailable.bool()
   }
 
   override func paintColumnRules(paintInfo: PaintInfoWrapper, point: LayoutPointWrapper) {
