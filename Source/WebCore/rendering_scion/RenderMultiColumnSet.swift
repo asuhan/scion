@@ -47,6 +47,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
+  private func multiColumnBlockFlow() -> RenderBlockFlowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func multiColumnFlowForMultiColumnSet() -> RenderMultiColumnFlowWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -121,6 +126,11 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       && precedesRenderer(renderer: renderer, boundary: lastRenderer)
   }
 
+  private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
+    computedColumnWidth = width
+    computedColumnCount = count
+  }
+
   // (Re-)calculate the column height. This is first and foremost needed by sets that are to
   // balance the column height, but even when it isn't to be balanced, this is necessary if the
   // multicol container's height is constrained. If |initial| is set, and we are to balance, guess
@@ -153,8 +163,13 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func updateLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setComputedColumnWidthAndCount(
+      multiColumnFlowForMultiColumnSet()!.columnWidth(),
+      multiColumnFlowForMultiColumnSet()!.columnCount())  // FIXME: This will eventually vary if we are contained inside fragments.
+
+    // FIXME: When we add fragments support, we'll start it off at the width of the multi-column
+    // block in that particular fragment.
+    setLogicalWidth(size: multiColumnBlockFlow()!.contentLogicalWidth())
   }
 
   func prepareForLayout(initial: Bool) {
@@ -461,7 +476,8 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     fatalError("Not implemented")
   }
 
-  private let computedColumnWidth = LayoutUnit()  // Used column width (the resulting 'W' from the pseudo-algorithm in the multicol spec)
+  private var computedColumnCount: UInt32 = 1  // Used column count (the resulting 'N' from the pseudo-algorithm in the multicol spec)
+  private var computedColumnWidth = LayoutUnit()  // Used column width (the resulting 'W' from the pseudo-algorithm in the multicol spec)
   let computedColumnHeight = LayoutUnit()
 
   private var minSpaceShortage = LayoutUnit()  // The smallest amout of space shortage that caused a column break.

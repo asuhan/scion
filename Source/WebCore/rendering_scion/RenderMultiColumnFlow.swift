@@ -67,6 +67,16 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func columnCount() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func columnWidth() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setColumnHeightAvailable(available: LayoutUnit) { columnHeightAvailable = available }
 
   func setInBalancingPass(balancing: Bool) {
