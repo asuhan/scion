@@ -881,8 +881,15 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func initialBlockOffsetForPainting() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let progressionReversed = multiColumnFlowForMultiColumnSet()!.progressionIsReversed()
+    let progressionIsInline = multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+
+    var result = LayoutUnit()
+    if !progressionIsInline && progressionReversed {
+      let colRect = columnRectAt(0)
+      result = isHorizontalWritingMode() ? colRect.y() : colRect.x()
+    }
+    return result
   }
 
   enum ColumnIndexCalculationMode {
