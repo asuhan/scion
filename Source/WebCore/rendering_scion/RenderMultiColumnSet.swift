@@ -775,8 +775,23 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func columnLogicalLeft(_ index: UInt32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let colLogicalWidth = computedColumnWidth
+    var colLogicalLeft = borderAndPaddingLogicalLeft()
+    let colGap = columnGap()
+
+    let progressionReversed = multiColumnFlowForMultiColumnSet()!.progressionIsReversed()
+    let progressionInline = multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+
+    if progressionInline {
+      if style().isLeftToRightDirection() != progressionReversed {
+        colLogicalLeft += index * (colLogicalWidth + colGap)
+      } else {
+        colLogicalLeft +=
+          contentLogicalWidth() - colLogicalWidth - index * (colLogicalWidth + colGap)
+      }
+    }
+
+    return colLogicalLeft
   }
 
   private func columnLogicalTop(_ index: UInt32) -> LayoutUnit {
