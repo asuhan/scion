@@ -795,8 +795,23 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func columnLogicalTop(_ index: UInt32) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let colLogicalHeight = computedColumnHeight
+    var colLogicalTop = borderAndPaddingBefore()
+    let colGap = columnGap()
+
+    let progressionReversed = multiColumnFlowForMultiColumnSet()!.progressionIsReversed()
+    let progressionInline = multiColumnFlowForMultiColumnSet()!.progressionIsInline()
+
+    if !progressionInline {
+      if !progressionReversed {
+        colLogicalTop += index * (colLogicalHeight + colGap)
+      } else {
+        colLogicalTop +=
+          contentLogicalHeight() - colLogicalHeight - index * (colLogicalHeight + colGap)
+      }
+    }
+
+    return colLogicalTop
   }
 
   private func fragmentedFlowPortionRectAt(_ index: UInt32) -> LayoutRectWrapper {
