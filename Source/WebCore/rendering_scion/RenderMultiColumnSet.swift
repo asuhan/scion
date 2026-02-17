@@ -24,6 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func precedesRenderer(renderer: RenderObjectWrapper?, boundary: RenderObjectWrapper?)
+  -> Bool
+{
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 // RenderMultiColumnSet represents a set of columns that all have the same width and height. By combining runs of same-size columns into a single
 // object, we significantly reduce the number of unique RenderObjects required to represent columns.
 //
@@ -56,10 +63,36 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
     return nil
   }
 
-  // Return true if the specified renderer (descendant of the flow thread) is inside this column set.
-  func containsRendererInFragmentedFlow(renderer: RenderObjectWrapper) -> Bool {
+  private func previousSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  // Return the first object in the flow thread that's rendered inside this set.
+  func firstRendererInFragmentedFlow() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Return the last object in the flow thread that's rendered inside this set.
+  func lastRendererInFragmentedFlow() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Return true if the specified renderer (descendant of the flow thread) is inside this column set.
+  func containsRendererInFragmentedFlow(renderer: RenderObjectWrapper) -> Bool {
+    if previousSiblingMultiColumnSet() == nil && nextSiblingMultiColumnSet() == nil {
+      // There is only one set. This is easy, then.
+      return renderer.isDescendantOf(ancestor: fragmentedFlow)
+    }
+
+    let firstRenderer = firstRendererInFragmentedFlow()!
+    let lastRenderer = lastRendererInFragmentedFlow()!
+
+    // This is SLOW! But luckily very uncommon.
+    return precedesRenderer(renderer: firstRenderer, boundary: renderer)
+      && precedesRenderer(renderer: renderer, boundary: lastRenderer)
   }
 
   // (Re-)calculate the column height. This is first and foremost needed by sets that are to
