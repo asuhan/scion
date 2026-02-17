@@ -41,7 +41,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     }
   }
 
-  private func fragmentedFlowPortionRect() -> LayoutRectWrapper {
+  func fragmentedFlowPortionRect() -> LayoutRectWrapper {
     return m_fragmentedFlowPortionRect
   }
 

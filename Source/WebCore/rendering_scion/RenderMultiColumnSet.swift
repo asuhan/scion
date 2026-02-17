@@ -184,8 +184,27 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func columnCount() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We must always return a value of 1 or greater. Column count = 0 is a meaningless situation,
+    // and will confuse and cause problems in other parts of the code.
+    if computedColumnHeight <= Int32(0) {
+      return 1
+    }
+
+    // Our portion rect determines our column count. We have as many columns as needed to fit all the content.
+    let logicalHeightInColumns =
+      fragmentedFlow!.isHorizontalWritingMode()
+      ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width()
+    if logicalHeightInColumns <= Int32(0) {
+      return 1
+    }
+
+    var count = UInt32((logicalHeightInColumns / computedColumnHeight).floor())
+    // logicalHeightInColumns may be saturated, so detect the remainder manually.
+    if count * computedColumnHeight < logicalHeightInColumns {
+      count += 1
+    }
+    assert(count >= 1)
+    return count
   }
 
   private func columnGap() -> LayoutUnit {
