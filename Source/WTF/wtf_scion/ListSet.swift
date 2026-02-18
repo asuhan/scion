@@ -88,6 +88,16 @@ final class ListSet<T, KeyType>: Sequence {
     fatalError("Not implemented")
   }
 
+  func appendOrMoveToLast(value: T) -> AddResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func insertBefore(_ it: ListSetIterator<T, KeyType>, _ value: T) -> AddResult {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   @discardableResult
   func remove(value: T) -> Bool {
     // TODO(asuhan): implement this

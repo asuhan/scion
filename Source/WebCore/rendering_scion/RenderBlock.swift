@@ -41,14 +41,65 @@ enum ContainingBlockState {
 
 private class PositionedDescendantsMap {
   func addDescendant(containingBlock: RenderBlockWrapper, positionedDescendant: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Protect against double insert where a descendant would end up with multiple containing blocks.
+    let previousContainingBlock =
+      containerMap.contains(positionedDescendant) ? containerMap.get(positionedDescendant) : nil
+    if previousContainingBlock != nil
+      && CPtrToInt(previousContainingBlock!.p) != CPtrToInt(containingBlock.p),
+      let descendants = descendantsMap.contains(previousContainingBlock!)
+        ? descendantsMap.get(previousContainingBlock!) : nil
+    {
+      descendants.remove(value: positionedDescendant)
+    }
+
+    let descendants = descendantsMap.ensure(
+      containingBlock, { () in return TrackedRendererListHashSet() }
+    ).value!
+
+    var isNewEntry = false
+    if !(containingBlock is RenderViewWrapper) || descendants.isEmptyIgnoringNullReferences() {
+      isNewEntry = descendants.add(value: positionedDescendant).isNewEntry
+    } else if positionedDescendant.isFixedPositioned()
+      || isInTopLayerOrBackdrop(
+        style: positionedDescendant.style(), element: positionedDescendant.element())
+    {
+      isNewEntry = descendants.appendOrMoveToLast(value: positionedDescendant).isNewEntry
+    } else {
+      let ensureLayoutDependBoxPosition = { () in
+        // RenderView is a special containing block as it may hold both absolute and fixed positioned containing blocks.
+        // When a fixed positioned box is also a descendant of an absolute positioned box anchored to the RenderView,
+        // we have to make sure that the absolute positioned box is inserted before the fixed box to follow
+        // block layout dependency.
+        let it = descendants.begin()
+        while it != descendants.end() {
+          if (*it).isFixedPositioned() {
+            isNewEntry = descendants.insertBefore(it, positionedDescendant).isNewEntry
+            return
+          }
+          ++it
+        }
+        isNewEntry = descendants.appendOrMoveToLast(value: positionedDescendant).isNewEntry
+      }
+      ensureLayoutDependBoxPosition()
+    }
+
+    if !isNewEntry {
+      assert(containerMap.contains(positionedDescendant))
+      return
+    }
+    containerMap.set(positionedDescendant, containingBlock)
   }
 
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private typealias DescendantsMap = HashMap<RenderBlockWrapper, TrackedRendererListHashSet>
+  private typealias ContainerMap = HashMap<RenderBoxWrapper, RenderBlockWrapper>
+
+  private let descendantsMap = DescendantsMap()
+  private let containerMap = ContainerMap()
 }
 
 private let positionedDescendantsMap = PositionedDescendantsMap()
