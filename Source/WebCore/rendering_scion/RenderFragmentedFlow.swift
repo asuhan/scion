@@ -539,8 +539,29 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     newEndFragment: RenderFragmentContainerWrapper,
     oldStartFragment: RenderFragmentContainerWrapper, oldEndFragment: RenderFragmentContainerWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var insideOldFragmentRange = false
+    var insideNewFragmentRange = false
+    for fragment in fragmentList {
+      if CPtrToInt(oldStartFragment.p) == CPtrToInt(fragment.p) {
+        insideOldFragmentRange = true
+      }
+      if CPtrToInt(newStartFragment.p) == CPtrToInt(fragment.p) {
+        insideNewFragmentRange = true
+      }
+
+      if !(insideOldFragmentRange && insideNewFragmentRange) {
+        if fragment.renderBoxFragmentInfo(box: box) != nil {
+          fragment.removeRenderBoxFragmentInfo(box)
+        }
+      }
+
+      if CPtrToInt(oldEndFragment.p) == CPtrToInt(fragment.p) {
+        insideOldFragmentRange = false
+      }
+      if CPtrToInt(newEndFragment.p) == CPtrToInt(fragment.p) {
+        insideNewFragmentRange = false
+      }
+    }
   }
 
   func addFragmentsVisualEffectOverflow(box: RenderBoxWrapper) {

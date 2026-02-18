@@ -73,6 +73,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func removeRenderBoxFragmentInfo(_ box: RenderBoxWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func deleteAllRenderBoxFragmentInfo() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
