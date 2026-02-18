@@ -29,8 +29,14 @@ import Foundation
 private func precedesRenderer(renderer: RenderObjectWrapper?, boundary: RenderObjectWrapper?)
   -> Bool
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var renderer = renderer
+  while renderer != nil {
+    if CPtrToInt(renderer!.p) == CPtrToInt(boundary?.p) {
+      return true
+    }
+    renderer = renderer!.nextInPreOrder()
+  }
+  return false
 }
 
 // RenderMultiColumnSet represents a set of columns that all have the same width and height. By combining runs of same-size columns into a single
