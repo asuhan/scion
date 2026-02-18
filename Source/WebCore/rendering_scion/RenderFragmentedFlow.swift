@@ -362,8 +362,25 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper,
     endFragment: RenderFragmentContainerWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasFragments())
+    assert(
+      CPtrToInt(startFragment.fragmentedFlow?.p) == CPtrToInt(p)
+        && CPtrToInt(endFragment.fragmentedFlow?.p) == CPtrToInt(p))
+    let result = fragmentRangeMap.set(box, RenderFragmentContainerRange(startFragment, endFragment))
+    if result.isNewEntry {
+      return
+    }
+
+    // If nothing changed, just bail.
+    let range = result.value!
+    if CPtrToInt(range.startFragment?.p) == CPtrToInt(startFragment.p)
+      && CPtrToInt(range.endFragment?.p) == CPtrToInt(endFragment.p)
+    {
+      return
+    }
+    clearRenderBoxFragmentInfoAndCustomStyle(
+      box: box, newStartFragment: startFragment, newEndFragment: endFragment,
+      oldStartFragment: range.startFragment!, oldEndFragment: range.endFragment!)
   }
 
   func getFragmentRangeForBox(box: RenderBoxWrapper) -> (
@@ -474,6 +491,15 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return currentBlock!.isHorizontalWritingMode() ? blockRect.y() : blockRect.x()
   }
 
+  private func clearRenderBoxFragmentInfoAndCustomStyle(
+    box: RenderBoxWrapper, newStartFragment: RenderFragmentContainerWrapper,
+    newEndFragment: RenderFragmentContainerWrapper,
+    oldStartFragment: RenderFragmentContainerWrapper, oldEndFragment: RenderFragmentContainerWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addFragmentsVisualEffectOverflow(box: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -582,9 +608,16 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       fatalError("Not implemented")
     }
 
+    init(_ start: RenderFragmentContainerWrapper, _ end: RenderFragmentContainerWrapper) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func rangeInvalidated() -> Bool { return m_rangeInvalidated }
     func clearRangeInvalidated() { m_rangeInvalidated = false }
 
+    let startFragment: RenderFragmentContainerWrapper?
+    let endFragment: RenderFragmentContainerWrapper?
     private var m_rangeInvalidated: Bool
   }
 
