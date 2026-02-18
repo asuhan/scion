@@ -805,8 +805,18 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
     RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
   )? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasValidFragmentInfo())
+
+    if fragmentRangeMap.contains(box) {
+      let range = fragmentRangeMap.get(box)
+      let startFragment = range.startFragment!
+      let endFragment = range.endFragment!
+      assert(
+        fragmentList.contains(value: startFragment) && fragmentList.contains(value: endFragment))
+      return (startFragment, endFragment)
+    }
+
+    return nil
   }
 
   private func computedFragmentRangeForBox(box: RenderBoxWrapper) -> (
