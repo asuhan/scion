@@ -102,6 +102,11 @@ class TransformState {
     fatalError("Not implemented")
   }
 
+  func mappedQuad() -> FloatQuad {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func releaseTrackedTransform() -> TransformationMatrix? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

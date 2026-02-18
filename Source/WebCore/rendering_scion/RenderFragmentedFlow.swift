@@ -256,8 +256,31 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func mapFromFlowToFragment(_ transformState: TransformState) -> RenderFragmentContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasValidFragmentInfo() {
+      return nil
+    }
+
+    var RenderFragmentContainer = currentFragment()
+    if RenderFragmentContainer == nil {
+      var boxRect = LayoutRectWrapper(rect: transformState.mappedQuad().enclosingBoundingBox())
+      flipForWritingMode(rect: &boxRect)
+
+      let center = boxRect.center()
+      RenderFragmentContainer = fragmentAtBlockOffset(
+        clampBox: self, offset: isHorizontalWritingMode() ? center.y : center.x,
+        extendLastFragment: true)
+      if RenderFragmentContainer == nil {
+        return nil
+      }
+    }
+
+    var flippedFragmentRect = RenderFragmentContainer!.fragmentedFlowPortionRect()
+    flipForWritingMode(rect: &flippedFragmentRect)
+
+    transformState.move(
+      RenderFragmentContainer!.contentBoxRect().location() - flippedFragmentRect.location())
+
+    return RenderFragmentContainer
   }
 
   func logicalWidthChangedInFragmentsForBlock(

@@ -99,6 +99,12 @@ struct LayoutRectWrapper: Equatable {
 
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
+  // NOTE: The result is rounded to integer values, and thus may be not the exact
+  // center point.
+  func center() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: x() + width() / 2, y: y() + height() / 2)
+  }
+
   mutating func move(size: LayoutSizeWrapper) { m_location += size }
 
   mutating func moveBy(offset: LayoutPointWrapper) { m_location.move(dx: offset.x, dy: offset.y) }
