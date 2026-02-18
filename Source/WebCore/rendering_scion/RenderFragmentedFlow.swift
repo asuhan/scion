@@ -286,8 +286,57 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func logicalWidthChangedInFragmentsForBlock(
     block: RenderBlockWrapper, relayoutChildren: inout Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasValidFragmentInfo() {
+      return
+    }
+
+    if !fragmentRangeMap.contains(block) {
+      return
+    }
+
+    let range = fragmentRangeMap.get(block)
+    let rangeInvalidated = range.rangeInvalidated()
+    range.clearRangeInvalidated()
+
+    // If there will be a relayout anyway skip the next steps because they only verify
+    // the state of the ranges.
+    if relayoutChildren {
+      return
+    }
+
+    // Not necessary for the flow thread, since we already computed the correct info for it.
+    // If the fragments have changed invalidate the children.
+    if CPtrToInt(block.p) == CPtrToInt(p) {
+      relayoutChildren = pageLogicalSizeChanged
+      return
+    }
+
+    guard let (startFragment, endFragment) = getFragmentRangeForBox(box: block) else { return }
+
+    let it = fragmentList.find(value: startFragment)
+    let end = fragmentList.end()
+    while it != end {
+      let fragment = *it
+      assert(!fragment.needsLayout() || fragment.isRenderFragmentContainerSet())
+
+      // We have no information computed for this fragment so we need to do it.
+      guard let oldInfo = fragment.takeRenderBoxFragmentInfo(block) else {
+        relayoutChildren = rangeInvalidated
+        return
+      }
+
+      let oldLogicalWidth = oldInfo.logicalWidth
+      let newInfo = block.renderBoxFragmentInfo(fragment: fragment)
+      if newInfo == nil || newInfo!.logicalWidth != oldLogicalWidth {
+        relayoutChildren = true
+        return
+      }
+
+      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        break
+      }
+      ++it
+    }
   }
 
   func contentLogicalWidthOfFirstFragment() -> LayoutUnit {
@@ -523,6 +572,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func rangeInvalidated() -> Bool { return m_rangeInvalidated }
+    func clearRangeInvalidated() { m_rangeInvalidated = false }
+
+    private var m_rangeInvalidated: Bool
   }
 
   private class FragmentSearchAdapter: AdapterType {
