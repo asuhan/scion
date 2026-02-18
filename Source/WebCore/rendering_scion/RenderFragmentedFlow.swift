@@ -432,12 +432,37 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return object.isRenderBox() || object.isRenderInline()
   }
 
+  // Even if we require the break to occur at offset, because fragments may have min/max-height values,
+  // it is possible that the break will occur at a different offset than the original one required.
+  // offsetBreakAdjustment measures the different between the requested break offset and the current break offset.
   func addForcedFragmentBreak(
     block: RenderBlockWrapper?, offset: LayoutUnit, breakChild: RenderBoxWrapper?, isBefore: Bool,
     offsetBreakAdjustment: inout LayoutUnit?
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // We need to update the fragments flow thread portion rect because we are going to process
+    // a break on these fragments.
+    updateFragmentsFragmentedFlowPortionRect()
+
+    // Simulate a fragment break at offset. If it points inside an auto logical height fragment,
+    // then it determines the fragment computed auto height.
+    guard let fragment = fragmentAtBlockOffset(clampBox: block, offset: offset) else {
+      return false
+    }
+
+    var currentFragmentOffsetInFragmentedFlow =
+      isHorizontalWritingMode()
+      ? fragment.fragmentedFlowPortionRect().y() : fragment.fragmentedFlowPortionRect().x()
+
+    currentFragmentOffsetInFragmentedFlow +=
+      isHorizontalWritingMode()
+      ? fragment.fragmentedFlowPortionRect().height() : fragment.fragmentedFlowPortionRect().width()
+
+    if offsetBreakAdjustment != nil {
+      offsetBreakAdjustment = max(
+        LayoutUnit(value: 0), currentFragmentOffsetInFragmentedFlow - offset)
+    }
+
+    return false
   }
 
   func applyBreakAfterContent(offsetBreak: LayoutUnit) {
