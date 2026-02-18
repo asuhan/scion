@@ -770,8 +770,28 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func updateFragmentsFragmentedFlowPortionRect() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var logicalHeight = LayoutUnit()
+    // FIXME: Optimize not to clear the interval tree all the time. This would involve manually managing the tree nodes' lifecycle.
+    fragmentIntervalTree.clear()
+    for fragment in fragmentList {
+      let fragmentLogicalWidth = fragment.pageLogicalWidth()
+      let fragmentLogicalHeight = min(
+        RenderFragmentedFlowWrapper.maxLogicalHeight() - logicalHeight,
+        fragment.logicalHeightOfAllFragmentedFlowContent())
+
+      let fragmentRect = LayoutRectWrapper(
+        x: style().direction() == .LTR
+          ? LayoutUnit(value: UInt64(0)) : logicalWidth() - fragmentLogicalWidth, y: logicalHeight,
+        width: fragmentLogicalWidth, height: fragmentLogicalHeight)
+
+      fragment.setFragmentedFlowPortionRect(
+        isHorizontalWritingMode() ? fragmentRect : fragmentRect.transposedRect())
+
+      fragmentIntervalTree.add(
+        low: logicalHeight, high: logicalHeight + fragmentLogicalHeight, fragment)
+
+      logicalHeight += fragmentLogicalHeight
+    }
   }
 
   private func shouldRepaint(_ r: LayoutRectWrapper) -> Bool {

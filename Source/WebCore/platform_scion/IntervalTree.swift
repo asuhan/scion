@@ -20,7 +20,17 @@
 
 protocol AdapterType {}
 
-class IntervalTree<Value, Key> {
+class IntervalTree<Key, Value> {
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func add(low: Key, high: Key, _ data: Value) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func allOverlapsWithAdapter(adapter: AdapterType) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
