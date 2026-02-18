@@ -694,8 +694,20 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     targetFragment: RenderFragmentContainerWrapper, startFragment: RenderFragmentContainerWrapper,
     endFragment: RenderFragmentContainerWrapper?
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let it = fragmentList.find(value: startFragment)
+    let end = fragmentList.end()
+    while it != end {
+      let currFragment = *it
+      if CPtrToInt(targetFragment.p) == CPtrToInt(currFragment.p) {
+        return true
+      }
+      if CPtrToInt(currFragment.p) == CPtrToInt(endFragment?.p) {
+        break
+      }
+      ++it
+    }
+
+    return false
   }
 
   override func layout() {
