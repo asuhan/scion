@@ -1081,7 +1081,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  private func applyVisualEffectOverflow(borderBox: LayoutRectWrapper) -> LayoutRectWrapper {
+  func applyVisualEffectOverflow(borderBox: LayoutRectWrapper) -> LayoutRectWrapper {
     var overflowMinX = borderBox.x()
     var overflowMaxX = borderBox.maxX()
     var overflowMinY = borderBox.y()
