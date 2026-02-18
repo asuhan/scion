@@ -352,8 +352,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func firstFragment() -> RenderFragmentContainerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasFragments() {
+      return nil
+    }
+    return fragmentList.first()
   }
 
   func setFragmentRangeForBox(
