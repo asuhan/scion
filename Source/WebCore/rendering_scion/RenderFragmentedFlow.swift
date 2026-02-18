@@ -346,8 +346,9 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func contentLogicalHeightOfFirstFragment() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let firstValidFragmentInFlow = firstFragment() else { return LayoutUnit(value: 0) }
+    return isHorizontalWritingMode()
+      ? firstValidFragmentInFlow.contentHeight() : firstValidFragmentInFlow.contentWidth()
   }
 
   func firstFragment() -> RenderFragmentContainerWrapper? {
