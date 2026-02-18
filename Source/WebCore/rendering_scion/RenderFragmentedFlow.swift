@@ -822,8 +822,33 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private func computedFragmentRangeForBox(box: RenderBoxWrapper) -> (
     RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
   )? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasValidFragmentInfo() {  // We clear the ranges when we invalidate the fragments.
+      return nil
+    }
+
+    if let range = getFragmentRangeForBox(box: box) {
+      return range
+    }
+
+    // Search the fragment range using the information provided by the containing block chain.
+    var containingBlock = box
+    while !containingBlock.isRenderFragmentedFlow() {
+      // FIXME: Use the containingBlock() value once we patch all the layout systems to be fragment range aware
+      // (e.g. if we use containingBlock() the shadow controls of a video element won't get the range from the
+      // video box because it's not a block; they need to be patched separately).
+      assert(containingBlock.parent() != nil)
+      containingBlock = containingBlock.parent()!.enclosingBox()
+
+      // If a box doesn't have a cached fragment range it usually means the box belongs to a line so startFragment should be equal with endFragment.
+      // FIXME: Find the cases when this startFragment should not be equal with endFragment and make sure these boxes have cached fragment ranges.
+      if hasCachedFragmentRangeForBox(box: containingBlock) {
+        let startFragment = fragmentAtBlockOffset(
+          clampBox: containingBlock, offset: containingBlock.offsetFromLogicalTopOfFirstPage(),
+          extendLastFragment: true)!
+        return (startFragment, startFragment)
+      }
+    }
+    fatalError("Not reached")
   }
 
   private class RenderFragmentContainerRange {
