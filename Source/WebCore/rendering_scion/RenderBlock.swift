@@ -43,7 +43,7 @@ private class PositionedDescendantsMap {
   func addDescendant(containingBlock: RenderBlockWrapper, positionedDescendant: RenderBoxWrapper) {
     // Protect against double insert where a descendant would end up with multiple containing blocks.
     let previousContainingBlock =
-      containerMap.contains(positionedDescendant) ? containerMap.get(positionedDescendant) : nil
+      containerMap.contains(positionedDescendant) ? *(containerMap.get(positionedDescendant)) : nil
     if previousContainingBlock != nil
       && CPtrToInt(previousContainingBlock!.p) != CPtrToInt(containingBlock.p),
       let descendants = descendantsMap.contains(previousContainingBlock!)
@@ -87,16 +87,27 @@ private class PositionedDescendantsMap {
       assert(containerMap.contains(positionedDescendant))
       return
     }
-    containerMap.set(positionedDescendant, containingBlock)
+    containerMap.set(positionedDescendant, WeakNullableRef(containingBlock))
   }
 
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let containingBlock = containerMap.take(positionedDescendant)
+    if !containingBlock.bool() {
+      return
+    }
+
+    assert(descendantsMap.contains(*containingBlock))
+    let descendants = descendantsMap.get(*containingBlock)
+    assert(descendants.contains(value: positionedDescendant))
+
+    descendants.remove(value: positionedDescendant)
+    if descendants.isEmptyIgnoringNullReferences() {
+      descendantsMap.remove(*containingBlock)
+    }
   }
 
   private typealias DescendantsMap = HashMap<RenderBlockWrapper, TrackedRendererListHashSet>
-  private typealias ContainerMap = HashMap<RenderBoxWrapper, RenderBlockWrapper>
+  private typealias ContainerMap = HashMap<RenderBoxWrapper, WeakNullableRef<RenderBlockWrapper>>
 
   private let descendantsMap = DescendantsMap()
   private let containerMap = ContainerMap()

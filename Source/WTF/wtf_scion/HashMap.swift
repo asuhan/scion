@@ -49,6 +49,11 @@ final class HashMap<KeyType, MappedType>: Sequence, IteratorProtocol {
     fatalError("Not implemented")
   }
 
+  func take(_ key: KeyType) -> MappedType {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func get(_ key: KeyType) -> MappedType {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
