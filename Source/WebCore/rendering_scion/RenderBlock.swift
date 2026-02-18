@@ -120,13 +120,30 @@ func positionForPointRespectingEditingBoundaries(
   return ancestor!.createVisiblePosition(Int32(childElement.computeNodeIndex() + 1), .Upstream)
 }
 
+private func isChildHitTestCandidate(_ box: RenderBoxWrapper, _ source: HitTestSource) -> Bool {
+  let visibility = source == .Script ? box.style().visibility() : box.style().usedVisibility()
+  return box.height().bool() && visibility == .Visible && !box.isOutOfFlowPositioned()
+    && !box.isRenderFragmentedFlow()
+}
+
 // Valid candidates in a FragmentedFlow must be rendered by the fragment.
 private func isChildHitTestCandidate(
   _ box: RenderBoxWrapper, _ fragment: RenderFragmentContainerWrapper?, _ point: LayoutPointWrapper,
   _ source: HitTestSource
 ) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !isChildHitTestCandidate(box, source) {
+    return false
+  }
+  if fragment == nil {
+    return true
+  }
+  let block = { () in
+    if let block = box as? RenderBlockWrapper {
+      return block
+    }
+    return box.containingBlock()!
+  }()
+  return CPtrToInt(block.fragmentAtBlockOffset(blockOffset: point.y)?.p) == CPtrToInt(fragment?.p)
 }
 
 private func isRenderBlockFlowOrRenderButton(renderElement: RenderElementWrapper) -> Bool {
