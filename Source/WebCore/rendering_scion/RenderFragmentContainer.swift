@@ -146,7 +146,23 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func addLayoutOverflowForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addVisualOverflowForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: This doesn't work for writing modes.
+  func layoutOverflowRectForBoxForPropagation(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func visualOverflowRectForBoxForPropagation(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

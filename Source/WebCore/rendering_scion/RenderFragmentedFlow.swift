@@ -610,8 +610,46 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func addFragmentsOverflowFromChild(
     box: RenderBoxWrapper, child: RenderBoxWrapper, delta: LayoutSizeWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let (startFragment, endFragment) = getFragmentRangeForBox(box: child) else { return }
+    guard let (containerStartFragment, containerEndFragment) = getFragmentRangeForBox(box: box)
+    else { return }
+
+    let iter = fragmentList.find(value: startFragment)
+    let end = fragmentList.end()
+    while iter != end {
+      let fragment = *iter
+      if !fragmentInRange(
+        targetFragment: fragment, startFragment: containerStartFragment,
+        endFragment: containerEndFragment)
+      {
+        if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+          break
+        }
+        ++iter
+        continue
+      }
+
+      var childLayoutOverflowRect = fragment.layoutOverflowRectForBoxForPropagation(child)
+      childLayoutOverflowRect.move(size: delta)
+
+      fragment.addLayoutOverflowForBox(box, childLayoutOverflowRect)
+
+      if child.hasSelfPaintingLayer() || box.hasNonVisibleOverflow() {
+        if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+          break
+        }
+        ++iter
+        continue
+      }
+      var childVisualOverflowRect = fragment.visualOverflowRectForBoxForPropagation(child)
+      childVisualOverflowRect.move(size: delta)
+      fragment.addVisualOverflowForBox(box, childVisualOverflowRect)
+
+      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        break
+      }
+      ++iter
+    }
   }
 
   func addFragmentsVisualOverflow(box: RenderBoxWrapper, visualOverflow: LayoutRectWrapper) {
