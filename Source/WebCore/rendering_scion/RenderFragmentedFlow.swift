@@ -670,8 +670,21 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func clearFragmentsOverflow(_ box: RenderBoxWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let (startFragment, endFragment) = getFragmentRangeForBox(box: box) else { return }
+
+    let iter = fragmentList.find(value: startFragment)
+    let end = fragmentList.end()
+    while iter != end {
+      let fragment = *iter
+      if let boxInfo = fragment.renderBoxFragmentInfo(box: box), boxInfo.overflow != nil {
+        boxInfo.overflow = nil
+      }
+
+      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        break
+      }
+      ++iter
+    }
   }
 
   // Used to estimate the maximum height of the flow thread.

@@ -23,7 +23,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct RenderBoxFragmentInfo {
+class RenderBoxFragmentInfo {
+  init(_ logicalLeft: LayoutUnit, _ logicalWidth: LayoutUnit, _ isShifted: Bool) {
+    self.logicalLeft = logicalLeft
+    self.logicalWidth = logicalWidth
+    self.isShifted = isShifted
+    self.overflow = nil
+  }
+
   let logicalLeft: LayoutUnit
   let logicalWidth: LayoutUnit
+  private let isShifted: Bool
+  var overflow: RenderOverflow?
 }
