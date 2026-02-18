@@ -369,6 +369,13 @@ struct RenderTheme {
 
   func popupOptionSupportsTextIndent() -> Bool { return false }
 
+  func progressBarRectForBounds(_ renderProgress: RenderProgressWrapper, _ bounds: IntRect)
+    -> IntRect
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func extractControlStyleStatesForRenderer(renderObject: RenderObjectWrapper)
     -> ControlStyle.State
   {

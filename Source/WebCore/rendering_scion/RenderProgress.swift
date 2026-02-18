@@ -22,7 +22,17 @@ final class RenderProgressWrapper: RenderBlockFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var computedValues = boxComputeLogicalHeight(
+      logicalHeight: logicalHeight, logicalTop: logicalTop)
+    let frame = frameRect()
+    if isHorizontalWritingMode() {
+      frame.setHeight(height: computedValues.extent)
+    } else {
+      frame.setWidth(width: computedValues.extent)
+    }
+    let frameSize = theme().progressBarRectForBounds(self, snappedIntRect(rect: frame)).size
+    computedValues.extent = LayoutUnit(
+      value: isHorizontalWritingMode() ? frameSize.height : frameSize.width)
+    return computedValues
   }
 }
