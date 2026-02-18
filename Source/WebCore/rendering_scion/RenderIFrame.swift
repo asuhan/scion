@@ -25,8 +25,18 @@
 
 final class RenderIFrameWrapper: RenderFrameBaseWrapper {
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+    assert(needsLayout())
+
+    updateLogicalWidth()
+    // No kids to layout as a replaced element.
+    updateLogicalHeight()
+
+    clearOverflow()
+    addVisualEffectOverflow()
+    updateLayerTransform()
+
+    clearNeedsLayout()
   }
 
   override func requiresLayer() -> Bool {
