@@ -119,6 +119,21 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  enum UserSelectAllTreatment {
+    case NotEditable
+    case Editable
+  }
+
+  func hasEditableStyle(_ treatment: UserSelectAllTreatment = .NotEditable) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func computeNodeIndex() -> UInt32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns the document associated with this node. A document node returns itself.
   func document() -> Document {
     // TODO(asuhan): implement this

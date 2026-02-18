@@ -69,6 +69,15 @@ private func borderOrPaddingLogicalWidthChanged(
     || oldStyle.paddingBottom() != newStyle.paddingBottom()
 }
 
+private func isEditingBoundary(ancestor: RenderElementWrapper?, child: RenderObjectWrapper) -> Bool
+{
+  assert(ancestor == nil || ancestor!.nonPseudoElement() != nil)
+  assert(child.nonPseudoNode() != nil)
+  return ancestor == nil || ancestor!.parent() == nil
+    || (ancestor!.hasLayer() && ancestor!.parent()!.isRenderView())
+    || ancestor!.nonPseudoElement()!.hasEditableStyle() == child.nonPseudoNode()!.hasEditableStyle()
+}
+
 // FIXME: This function should go on RenderObject as an instance method. Then
 // all cases in which positionForPoint recurs could call this instead to
 // prevent crossing editable boundaries. This would require many tests.
@@ -76,8 +85,39 @@ func positionForPointRespectingEditingBoundaries(
   _ parent: RenderBlockWrapper, _ child: RenderBoxWrapper,
   _ pointInParentCoordinates: LayoutPointWrapper, _ source: HitTestSource
 ) -> VisiblePosition {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var childLocation = child.location()
+  if child.isInFlowPositioned() {
+    childLocation += child.offsetForInFlowPosition()
+  }
+
+  // FIXME: This is wrong if the child's writing-mode is different from the parent's.
+  let pointInChildCoordinates = toLayoutPoint(size: pointInParentCoordinates - childLocation)
+
+  // If this is an anonymous renderer, we just recur normally
+  guard let childElement = child.nonPseudoElement() else {
+    return child.positionForPoint(pointInChildCoordinates, source, nil)
+  }
+
+  // Otherwise, first make sure that the editability of the parent and child agree.
+  // If they don't agree, then we return a visible position just before or after the child
+  var ancestor: RenderElementWrapper? = parent
+  while ancestor != nil && ancestor!.nonPseudoElement() == nil {
+    ancestor = ancestor!.parent()
+  }
+
+  // If we can't find an ancestor to check editability on, or editability is unchanged, we recur like normal
+  if isEditingBoundary(ancestor: ancestor, child: child) {
+    return child.positionForPoint(pointInChildCoordinates, source, nil)
+  }
+
+  // Otherwise return before or after the child, depending on if the click was to the logical left or logical right of the child
+  let childMiddle = parent.logicalWidthForChild(child: child) / 2
+  let logicalLeft =
+    parent.isHorizontalWritingMode() ? pointInChildCoordinates.x : pointInChildCoordinates.y
+  if logicalLeft < childMiddle {
+    return ancestor!.createVisiblePosition(Int32(childElement.computeNodeIndex()), .Downstream)
+  }
+  return ancestor!.createVisiblePosition(Int32(childElement.computeNodeIndex() + 1), .Upstream)
 }
 
 // Valid candidates in a FragmentedFlow must be rendered by the fragment.
