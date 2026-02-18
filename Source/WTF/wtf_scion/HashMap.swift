@@ -70,4 +70,9 @@ final class HashMap<KeyType, MappedType>: Sequence, IteratorProtocol {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func clear() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

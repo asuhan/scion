@@ -28,6 +28,7 @@
  */
 
 typealias RenderFragmentContainerList = ListSet<RenderFragmentContainerWrapper, UInt>
+typealias ContainingFragmentMap = HashMap<LegacyRootInlineBox?, RenderFragmentContainerWrapper>
 typealias FragmentIntervalTree = IntervalTree<LayoutUnit, RenderFragmentContainerWrapper>
 
 private func clamp(fragment: RenderFragmentContainerWrapper?, clampBox: RenderBoxWrapper?)
@@ -137,8 +138,18 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fragmentsInvalidated {
+      assert(selfNeedsLayout())
+      return
+    }
+
+    fragmentRangeMap.clear()
+    breakBeforeToFragmentMap.clear()
+    breakAfterToFragmentMap.clear()
+    lineToFragmentMap?.clear()
+    setNeedsLayout(markParents: markingParents)
+
+    fragmentsInvalidated = true
   }
 
   func hasValidFragmentInfo() -> Bool {
@@ -479,6 +490,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private class RenderFragmentContainerRange {
+    init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   private class FragmentSearchAdapter: AdapterType {
     init(offset: LayoutUnit) {
       self.offset = offset
@@ -493,6 +511,22 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   private let fragmentList = RenderFragmentContainerList()
+
+  // Map a line to its containing fragment.
+  private let lineToFragmentMap: ContainingFragmentMap? = nil
+
+  // Map a box to the list of fragments in which the box is rendered.
+  private typealias RenderFragmentContainerRangeMap = HashMap<
+    RenderBoxWrapper, RenderFragmentContainerRange
+  >
+  private let fragmentRangeMap = RenderFragmentContainerRangeMap()
+
+  // Map a box with a fragment break to the auto height fragment affected by that break.
+  private typealias RenderBoxToFragmentMap = HashMap<
+    RenderBoxWrapper, RenderFragmentContainerWrapper
+  >
+  private let breakBeforeToFragmentMap = RenderBoxToFragmentMap()
+  private let breakAfterToFragmentMap = RenderBoxToFragmentMap()
 
   private let fragmentIntervalTree = FragmentIntervalTree()
 
