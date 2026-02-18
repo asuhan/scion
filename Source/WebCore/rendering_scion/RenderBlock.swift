@@ -2186,8 +2186,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return
     }
 
-    let inflatedRect = borderBoxRect().FloatRect()
-    theme().adjustRepaintRect(renderer: self, rect: inflatedRect)
+    var inflatedRect = borderBoxRect().FloatRect()
+    theme().adjustRepaintRect(renderer: self, rect: &inflatedRect)
     addVisualOverflow(
       rect: LayoutRectWrapper(rect: snappedIntRect(rect: LayoutRectWrapper(r: inflatedRect))))
 

@@ -254,7 +254,7 @@ struct RenderTheme {
     fatalError("Not implemented")
   }
 
-  func adjustRepaintRect(renderer: RenderBoxWrapper, rect: FloatRectWrapper) {
+  func adjustRepaintRect(renderer: RenderBoxWrapper, rect: inout FloatRectWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

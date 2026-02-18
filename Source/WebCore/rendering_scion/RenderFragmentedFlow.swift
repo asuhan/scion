@@ -585,8 +585,26 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func addFragmentsVisualOverflowFromTheme(block: RenderBlockWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let (startFragment, endFragment) = getFragmentRangeForBox(box: block) else { return }
+
+    let iter = fragmentList.find(value: startFragment)
+    let end = fragmentList.end()
+    while iter != end {
+      let fragment = *iter
+
+      var borderBox = block.borderBoxRectInFragment(fragment: fragment)
+      borderBox = fragment.rectFlowPortionForBox(block, borderBox)
+
+      var inflatedRect = borderBox.FloatRect()
+      block.theme().adjustRepaintRect(renderer: block, rect: &inflatedRect)
+
+      fragment.addVisualOverflowForBox(
+        block, LayoutRectWrapper(rect: snappedIntRect(rect: LayoutRectWrapper(r: inflatedRect))))
+      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        break
+      }
+      ++iter
+    }
   }
 
   func addFragmentsOverflowFromChild(
