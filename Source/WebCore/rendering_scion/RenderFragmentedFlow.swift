@@ -711,8 +711,15 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): add stack stats
+
+    pageLogicalSizeChanged = fragmentsInvalidated && everHadLayout()
+
+    validateFragments()
+
+    super.layout()
+
+    pageLogicalSizeChanged = false
   }
 
   func currentFragment() -> RenderFragmentContainerWrapper? {
@@ -846,5 +853,5 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   private var fragmentsInvalidated = false
   private var fragmentsHaveUniformLogicalWidth = false
   var fragmentsHaveUniformLogicalHeight = false
-  let pageLogicalSizeChanged = false
+  var pageLogicalSizeChanged = false
 }
