@@ -1153,8 +1153,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hasLineIfEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if element() == nil {
+      return false
+    }
+
+    if element()!.isRootEditableElement() {
+      return true
+    }
+
+    return false
   }
 
   func updateDescendantTransformsAfterLayout() {
