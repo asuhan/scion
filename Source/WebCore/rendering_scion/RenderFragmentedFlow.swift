@@ -410,8 +410,26 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func objectShouldFragmentInFlowFragment(
     _ object: RenderObjectWrapper, _ fragment: RenderFragmentContainerWrapper
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let fragmentedFlow = object.enclosingFragmentedFlow()
+    if CPtrToInt(fragmentedFlow?.p) != CPtrToInt(p) {
+      return false
+    }
+
+    if !fragmentList.contains(value: fragment) {
+      return false
+    }
+
+    // If the box has no range, do not check fragmentInRange. Boxes inside inlines do not get ranges.
+    // Instead, the containing RootInlineBox will abort when trying to paint inside the wrong fragment.
+    if let (enclosingBoxStartFragment, enclosingBoxEndFragment) = computedFragmentRangeForBox(
+      box: object.enclosingBox()),
+      !fragmentInRange(
+        targetFragment: fragment, startFragment: enclosingBoxStartFragment,
+        endFragment: enclosingBoxEndFragment)
+    {
+      return false
+    }
+    return object.isRenderBox() || object.isRenderInline()
   }
 
   func addForcedFragmentBreak(
@@ -530,6 +548,14 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   // Used to estimate the maximum height of the flow thread.
   static func maxLogicalHeight() -> LayoutUnit { return LayoutUnit.max() / 2 }
 
+  private func fragmentInRange(
+    targetFragment: RenderFragmentContainerWrapper, startFragment: RenderFragmentContainerWrapper,
+    endFragment: RenderFragmentContainerWrapper?
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func layout() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -596,6 +622,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   private func getFragmentRangeForBoxFromCachedInfo(box: RenderBoxWrapper) -> (
+    RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
+  )? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func computedFragmentRangeForBox(box: RenderBoxWrapper) -> (
     RenderFragmentContainerWrapper, RenderFragmentContainerWrapper
   )? {
     // TODO(asuhan): implement this
