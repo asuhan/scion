@@ -2292,7 +2292,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     fragmentedFlow!.setFragmentRangeForBox(
-      box: box, startFragment: startFragment, endFragment: endFragment)
+      box: box, startFragment: startFragment!, endFragment: endFragment!)
   }
 
   func estimateFragmentRangeForBoxChild(box: RenderBoxWrapper) {
@@ -2319,7 +2319,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       extendLastFragment: true)
 
     fragmentedFlow!.setFragmentRangeForBox(
-      box: box, startFragment: startFragment, endFragment: endFragment)
+      box: box, startFragment: startFragment!, endFragment: endFragment!)
   }
 
   func updateFragmentRangeForBoxChild(box: RenderBoxWrapper) -> Bool {

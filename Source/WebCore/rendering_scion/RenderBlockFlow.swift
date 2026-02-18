@@ -2546,7 +2546,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       logicalHeightForChild(child: child) + childBeforeMargin + childAfterMargin
     let pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset)
     let hasUniformPageLogicalHeight =
-      fragmentedFlow == nil || fragmentedFlow!.fragmentsHaveUniformLogicalHeight()
+      fragmentedFlow == nil || fragmentedFlow!.fragmentsHaveUniformLogicalHeight
     if isUnsplittable {
       updateMinimumPageHeight(offset: logicalOffset, minHeight: childLogicalHeight)
     }
@@ -4690,7 +4690,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     let fragmentedFlow = enclosingFragmentedFlow()
     let hasUniformPageLogicalHeight =
-      fragmentedFlow == nil || fragmentedFlow!.fragmentsHaveUniformLogicalHeight()
+      fragmentedFlow == nil || fragmentedFlow!.fragmentsHaveUniformLogicalHeight
     // If lineHeight is greater than pageLogicalHeight, but logicalVisualOverflow.height() still fits, we are
     // still going to add a strut, so that the visible overflow fits on a single page.
     if !pageLogicalHeight.bool() || !hasNextPage(logicalOffset: logicalOffset) {

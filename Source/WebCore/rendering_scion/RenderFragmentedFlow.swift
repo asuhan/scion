@@ -91,8 +91,49 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func fragmentChangedWritingMode(_ fragment: RenderFragmentContainerWrapper?) {}
 
   func validateFragments() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fragmentsInvalidated {
+      fragmentsInvalidated = false
+      fragmentsHaveUniformLogicalWidth = true
+      fragmentsHaveUniformLogicalHeight = true
+
+      if hasFragments() {
+        var previousFragmentLogicalWidth = LayoutUnit()
+        let previousFragmentLogicalHeight = LayoutUnit()
+        var firstFragmentVisited = false
+
+        for fragment in fragmentList {
+          assert(!fragment.needsLayout() || fragment.isRenderFragmentContainerSet())
+
+          fragment.deleteAllRenderBoxFragmentInfo()
+
+          let fragmentLogicalWidth = fragment.pageLogicalWidth()
+          let fragmentLogicalHeight = fragment.pageLogicalHeight()
+
+          if !firstFragmentVisited {
+            firstFragmentVisited = true
+          } else {
+            if fragmentsHaveUniformLogicalWidth
+              && previousFragmentLogicalWidth != fragmentLogicalWidth
+            {
+              fragmentsHaveUniformLogicalWidth = false
+            }
+            if fragmentsHaveUniformLogicalHeight
+              && previousFragmentLogicalHeight != fragmentLogicalHeight
+            {
+              fragmentsHaveUniformLogicalHeight = false
+            }
+          }
+
+          previousFragmentLogicalWidth = fragmentLogicalWidth
+        }
+
+        setFragmentRangeForBox(
+          box: self, startFragment: fragmentList.first(), endFragment: fragmentList.last())
+      }
+    }
+
+    updateLogicalWidth()  // Called to get the maximum logical width for the fragment.
+    updateFragmentsFragmentedFlowPortionRect()
   }
 
   func invalidateFragments(markingParents: MarkingBehavior = .MarkContainingBlockChain) {
@@ -198,11 +239,6 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return nil
   }
 
-  func fragmentsHaveUniformLogicalHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func mapFromFlowToFragment(_ transformState: TransformState) -> RenderFragmentContainerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -226,8 +262,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func setFragmentRangeForBox(
-    box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper?,
-    endFragment: RenderFragmentContainerWrapper?
+    box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper,
+    endFragment: RenderFragmentContainerWrapper
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -423,6 +459,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fragmentObject.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
   }
 
+  func updateFragmentsFragmentedFlowPortionRect() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func shouldRepaint(_ r: LayoutRectWrapper) -> Bool {
     if view().printing() || r.isEmpty() {
       return false
@@ -457,6 +498,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
   var currentFragmentMaintainer: CurrentRenderFragmentContainerMaintainer? = nil
 
-  private let fragmentsInvalidated = false
+  private var fragmentsInvalidated = false
+  private var fragmentsHaveUniformLogicalWidth = false
+  var fragmentsHaveUniformLogicalHeight = false
   let pageLogicalSizeChanged = false
 }

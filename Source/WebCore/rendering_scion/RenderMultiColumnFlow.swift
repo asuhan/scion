@@ -245,8 +245,8 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   }
 
   override func setFragmentRangeForBox(
-    box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper?,
-    endFragment: RenderFragmentContainerWrapper?
+    box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper,
+    endFragment: RenderFragmentContainerWrapper
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
