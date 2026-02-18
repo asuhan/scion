@@ -1950,8 +1950,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   // Adjust from painting offsets to the local coords of this renderer
   private func offsetForContents(_ offset: inout LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    offset = flipForWritingMode(position: offset)
+    offset += toLayoutSize(point: LayoutPointWrapper(point: scrollPosition()))
+    offset = flipForWritingMode(position: offset)
   }
 
   func renderBlockComputeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool) {
