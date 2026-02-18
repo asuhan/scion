@@ -653,8 +653,20 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func addFragmentsVisualOverflow(box: RenderBoxWrapper, visualOverflow: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let (startFragment, endFragment) = getFragmentRangeForBox(box: box) else { return }
+
+    let iter = fragmentList.find(value: startFragment)
+    while iter != fragmentList.end() {
+      let fragment = *iter
+      let visualOverflowInFragment = fragment.rectFlowPortionForBox(box, visualOverflow)
+
+      fragment.addVisualOverflowForBox(box, visualOverflowInFragment)
+
+      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        break
+      }
+      ++iter
+    }
   }
 
   func clearFragmentsOverflow(_ box: RenderBoxWrapper) {
