@@ -456,8 +456,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func markPositionedObjectsForLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let positionedDescendants = positionedObjects() else { return }
+
+    for descendant in positionedDescendants {
+      descendant.setChildNeedsLayout()
+    }
   }
 
   override func markForPaginationRelayoutIfNeeded() {
