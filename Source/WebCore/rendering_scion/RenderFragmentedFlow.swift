@@ -184,8 +184,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func pageLogicalHeightForOffsetFromFragmentedFlow(offset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let fragment = fragmentAtBlockOffset(
+      clampBox: nil, offset: offset, extendLastFragment: false)
+    {
+      return fragment.pageLogicalHeight()
+    }
+
+    return LayoutUnit(value: 0)
   }
 
   func pageRemainingLogicalHeightForOffsetFromFragmentedFlow(
