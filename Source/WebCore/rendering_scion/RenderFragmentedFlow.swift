@@ -701,8 +701,22 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func mapFromFragmentedFlowToLocal(_ box: RenderBoxWrapper?, _ rect: LayoutRectWrapper)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var localRect = rect
+    if CPtrToInt(box?.p) == CPtrToInt(p) {
+      return localRect
+    }
+
+    let containerBlock = box!.containingBlock()!
+    localRect = mapFromFragmentedFlowToLocal(containerBlock, localRect)
+
+    let currentBoxLocation = box!.location()
+    localRect.moveBy(offset: -currentBoxLocation)
+
+    if containerBlock.style().writingMode() != box!.style().writingMode() {
+      box!.flipForWritingMode(rect: &localRect)
+    }
+
+    return localRect
   }
 
   // FIXME: Make this function faster. Walking the render tree is slow, better use a caching mechanism (e.g. |cachedOffsetFromLogicalTopOfFirstFragment|).
