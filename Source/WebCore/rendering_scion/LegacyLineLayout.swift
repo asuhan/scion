@@ -33,5 +33,10 @@ class LegacyLineLayout {
     fatalError("Not implemented")
   }
 
+  func addOverflowFromInlineChildren() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let lineBoxes: RenderLineBoxList
 }

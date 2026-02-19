@@ -3914,8 +3914,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func addOverflowFromInlineChildren() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if inlineLayout() != nil {
+      inlineLayout()!.collectOverflow()
+      return
+    }
+
+    if svgTextLayout() != nil {
+      svgTextLayout()!.addOverflowFromInlineChildren()
+    }
   }
 
   override func addFocusRingRectsForInlineChildren(
