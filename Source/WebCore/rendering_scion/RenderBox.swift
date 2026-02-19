@@ -1924,6 +1924,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clientBoxRectInFragment(_ fragment: RenderFragmentContainerWrapper?) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func clampToStartAndEndFragments(fragment: RenderFragmentContainerWrapper?)
     -> RenderFragmentContainerWrapper?
   {

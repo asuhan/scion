@@ -49,6 +49,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func renderFragmentContainerList() -> RenderFragmentContainerList {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateLogicalWidth() {
     var logicalWidth = initialLogicalWidth()
     for fragment in fragmentList {

@@ -31,6 +31,11 @@ class RenderBoxFragmentInfo {
     self.overflow = nil
   }
 
+  func createOverflow(layoutOverflow: LayoutRectWrapper, visualOverflow: LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let logicalLeft: LayoutUnit
   let logicalWidth: LayoutUnit
   private let isShifted: Bool

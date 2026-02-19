@@ -215,8 +215,38 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   private func ensureOverflowForBox(_ box: RenderBoxWrapper, _ forceCreation: Bool)
     -> RenderOverflow?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(fragmentedFlow!.renderFragmentContainerList().contains(value: self))
+    assert(isValid)
+
+    let boxInfo = renderBoxFragmentInfo(box: box)
+    if boxInfo == nil && !forceCreation {
+      return nil
+    }
+
+    if boxInfo != nil && boxInfo!.overflow != nil {
+      return boxInfo!.overflow
+    }
+
+    var borderBox = box.borderBoxRectInFragment(fragment: self)
+    var clientBox = LayoutRectWrapper()
+    assert(fragmentedFlow!.objectShouldFragmentInFlowFragment(box, self))
+
+    if !borderBox.isEmpty() {
+      borderBox = rectFlowPortionForBox(box, borderBox)
+
+      clientBox = box.clientBoxRectInFragment(self)
+      clientBox = rectFlowPortionForBox(box, clientBox)
+
+      fragmentedFlow!.flipForWritingModeLocalCoordinates(&borderBox)
+      fragmentedFlow!.flipForWritingModeLocalCoordinates(&clientBox)
+    }
+
+    if boxInfo != nil {
+      boxInfo!.createOverflow(layoutOverflow: clientBox, visualOverflow: borderBox)
+      return boxInfo!.overflow
+    } else {
+      return RenderOverflow(layoutRect: clientBox, visualRect: borderBox)
+    }
   }
 
   override func computePreferredLogicalWidths() {
