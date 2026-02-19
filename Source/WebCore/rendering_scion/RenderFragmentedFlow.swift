@@ -709,8 +709,22 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   func mapFromLocalToFragmentedFlow(_ box: RenderBoxWrapper?, _ localRect: LayoutRectWrapper)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var boxRect = localRect
+
+    var box = box
+    while box != nil && CPtrToInt(box!.p) != CPtrToInt(p) {
+      let containerBlock = box!.containingBlock()!
+      let currentBoxLocation = box!.location()
+
+      if containerBlock.style().writingMode() != box!.style().writingMode() {
+        box!.flipForWritingMode(rect: &boxRect)
+      }
+
+      boxRect.moveBy(offset: currentBoxLocation)
+      box = containerBlock
+    }
+
+    return boxRect
   }
 
   func flipForWritingModeLocalCoordinates(_ rect: inout LayoutRectWrapper) {
