@@ -692,6 +692,11 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  func flipForWritingModeLocalCoordinates(_ rect: inout LayoutRectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Used to estimate the maximum height of the flow thread.
   static func maxLogicalHeight() -> LayoutUnit { return LayoutUnit.max() / 2 }
 

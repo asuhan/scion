@@ -157,8 +157,15 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func addVisualOverflowForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if rect.isEmpty() {
+      return
+    }
+
+    guard let fragmentOverflow = ensureOverflowForBox(box, false) else { return }
+
+    var flippedRect = rect
+    fragmentedFlow!.flipForWritingModeLocalCoordinates(&flippedRect)
+    fragmentOverflow.addVisualOverflow(rect: flippedRect)
   }
 
   // FIXME: This doesn't work for writing modes.
