@@ -106,8 +106,10 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override func needsPreferredWidthsRecalculation() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if super.needsPreferredWidthsRecalculation() {
+      return true
+    }
+    return embeddedContentBox() != nil
   }
 
   override final func embeddedContentBox() -> RenderBoxWrapper? {
