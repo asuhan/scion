@@ -1299,15 +1299,18 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?, wasFixed: inout Bool?,
     mode: MapCoordinatesMode = .UseTransforms
   ) -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let transformState = TransformState(.ApplyTransformDirection, localPoint)
+    mapLocalToContainer(container, transformState, mode.union(.ApplyContainerFlip), &wasFixed)
+    transformState.flatten()
+
+    return transformState.lastPlanarPoint()
   }
 
   func localToContainerPoint(localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?)
     -> FloatPoint
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var wasFixed: Bool? = nil
+    return localToContainerPoint(localPoint: localPoint, container: container, wasFixed: &wasFixed)
   }
 
   // Return the offset from the container() renderer (excluding transforms). In multi-column layout,

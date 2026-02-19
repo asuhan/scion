@@ -91,6 +91,12 @@ class TransformState {
     fatalError("Not implemented")
   }
 
+  // Return the coords of the point or quad in the last flattened layer
+  func lastPlanarPoint() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func lastPlanarQuad() -> FloatQuad {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
