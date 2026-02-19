@@ -1948,8 +1948,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isInsideEntirelyHiddenLayer() {
+      return RepaintRects()
+    }
+
+    var overflowRect = visualOverflowRect()
+    // FIXME: layoutDelta needs to be applied in parts before/after transforms and
+    // repaint containers. https://bugs.webkit.org/show_bug.cgi?id=23308
+    overflowRect.move(size: view().frameView().layoutContext().layoutDelta())
+
+    var rects = RepaintRects(rect: overflowRect)
+    if repaintOutlineBounds == .Yes {
+      rects.outlineBoundsRect = localOutlineBoundsRepaintRect()
+    }
+
+    return rects
   }
 
   override func computeVisibleRectsInContainer(
