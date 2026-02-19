@@ -93,6 +93,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func shouldClipFragmentedFlowContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // These methods represent the width and height of a "page" and for a RenderFragmentContainer they are just the
   // content width and content height of a fragment. For RenderFragmentContainerSets, however, they will be the width and
   // height of a single column or page in the set.
@@ -166,6 +171,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     var flippedRect = rect
     fragmentedFlow!.flipForWritingModeLocalCoordinates(&flippedRect)
     fragmentOverflow.addVisualOverflow(rect: flippedRect)
+  }
+
+  func visualOverflowRectForBox(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   // FIXME: This doesn't work for writing modes.
@@ -293,8 +303,47 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   func overflowRectForFragmentedFlowPortion(
     _ fragmentedFlowPortionRect: LayoutRectWrapper, isFirstPortion: Bool, isLastPortion: Bool
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isValid)
+    if shouldClipFragmentedFlowContent() {
+      return fragmentedFlowPortionRect
+    }
+
+    let fragmentedFlowOverflow = visualOverflowRectForBox(fragmentedFlow!)
+    var clipRect = LayoutRectWrapper()
+    if fragmentedFlow!.isHorizontalWritingMode() {
+      let minY = isFirstPortion ? fragmentedFlowOverflow.y() : fragmentedFlowPortionRect.y()
+      let maxY =
+        isLastPortion
+        ? max(fragmentedFlowPortionRect.maxY(), fragmentedFlowOverflow.maxY())
+        : fragmentedFlowPortionRect.maxY()
+      let clipX = effectiveOverflowX() != .Visible
+      let minX =
+        clipX
+        ? fragmentedFlowPortionRect.x()
+        : min(fragmentedFlowPortionRect.x(), fragmentedFlowOverflow.x())
+      let maxX =
+        clipX
+        ? fragmentedFlowPortionRect.maxX()
+        : max(fragmentedFlowPortionRect.maxX(), fragmentedFlowOverflow.maxX())
+      clipRect = LayoutRectWrapper(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+    } else {
+      let minX = isFirstPortion ? fragmentedFlowOverflow.x() : fragmentedFlowPortionRect.x()
+      let maxX =
+        isLastPortion
+        ? max(fragmentedFlowPortionRect.maxX(), fragmentedFlowOverflow.maxX())
+        : fragmentedFlowPortionRect.maxX()
+      let clipY = effectiveOverflowY() != .Visible
+      let minY =
+        clipY
+        ? fragmentedFlowPortionRect.y()
+        : min(fragmentedFlowPortionRect.y(), fragmentedFlowOverflow.y())
+      let maxY =
+        clipY
+        ? fragmentedFlowPortionRect.maxY()
+        : max(fragmentedFlowPortionRect.y(), fragmentedFlowOverflow.maxY())
+      clipRect = LayoutRectWrapper(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+    }
+    return clipRect
   }
 
   func repaintFragmentedFlowContentRectangle(
