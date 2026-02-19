@@ -323,13 +323,34 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrderAfterChildren() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let o = nextSibling() {
+      return o
+    }
+    var o = parent()
+    while o != nil && o!.nextSibling() == nil {
+      o = o!.parent()
+    }
+    return o?.nextSibling()
   }
 
   func nextInPreOrderAfterChildren(_ stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if CPtrToInt(p) == CPtrToInt(stayWithin?.p) {
+      return nil
+    }
+
+    var current: RenderObjectWrapper? = self
+    var next: RenderObjectWrapper? = nil
+    while true {
+      next = current!.nextSibling()
+      if next != nil {
+        break
+      }
+      current = current!.parent()
+      if current == nil || CPtrToInt(current!.p) == CPtrToInt(stayWithin?.p) {
+        return nil
+      }
+    }
+    return next
   }
 
   func previousInPreOrder() -> RenderObjectWrapper? {
