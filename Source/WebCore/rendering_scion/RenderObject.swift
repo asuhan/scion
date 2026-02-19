@@ -1918,8 +1918,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func rectWithOutlineForRepaint(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var r = clippedOverflowRectForRepaint(repaintContainer)
+    r.inflate(d: outlineWidth)
+    return r
   }
 
   func outlineBoundsForRepaint(
