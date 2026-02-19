@@ -911,8 +911,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !size().isEmpty() {
+      rects.append(LayoutRectWrapper(location: additionalOffset, size: size()))
+    }
   }
 
   override func repaintRectInLocalCoordinates(
