@@ -1335,8 +1335,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Return the offset from an object up the container() chain. Asserts that none of the intermediate objects have transforms.
   func offsetFromAncestorContainer(_ container: RenderElementWrapper) -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var offset = LayoutSizeWrapper()
+    var referencePoint = LayoutPointWrapper()
+    var currentContainer = self
+    repeat {
+      let nextContainer = currentContainer.container()!
+      assert(!currentContainer.isTransformed())
+      var unused: Bool? = nil
+      let currentOffset = currentContainer.offsetFromContainer(
+        nextContainer, referencePoint, &unused)
+      offset += currentOffset
+      referencePoint.move(s: currentOffset)
+      currentContainer = nextContainer
+    } while CPtrToInt(currentContainer.p) != CPtrToInt(container.p)
+
+    return offset
   }
 
   func minPreferredLogicalWidth() -> LayoutUnit {
