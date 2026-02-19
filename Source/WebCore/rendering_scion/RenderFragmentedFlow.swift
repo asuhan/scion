@@ -693,8 +693,15 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   }
 
   func flipForWritingModeLocalCoordinates(_ rect: inout LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !style().isFlippedBlocksWritingMode() {
+      return
+    }
+
+    if isHorizontalWritingMode() {
+      rect.setY(y: -rect.maxY())
+    } else {
+      rect.setX(x: -rect.maxX())
+    }
   }
 
   // Used to estimate the maximum height of the flow thread.
