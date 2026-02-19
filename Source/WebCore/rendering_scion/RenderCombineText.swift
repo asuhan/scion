@@ -143,8 +143,17 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
     character: CharacterNames.Unicode.objectReplacementCharacter)
 
   func computeTextOrigin(boxRect: FloatRectWrapper) -> FloatPoint? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !m_isCombined {
+      return nil
+    }
+
+    // Visually center m_combinedTextWidth/Ascent/Descent within boxRect
+    var result = boxRect.minXMaxYCorner()
+    let combinedTextSize = FloatSize(
+      width: m_combinedTextWidth, height: combinedTextAscent + combinedTextDescent)
+    result.move((boxRect.size().transposedSize() - combinedTextSize) / 2)
+    result.move(dx: 0, dy: combinedTextAscent)
+    return result
   }
 
   func isCombined() -> Bool {
