@@ -1286,6 +1286,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func clientBoxRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func marginBottom() -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1925,8 +1930,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clientBoxRectInFragment(_ fragment: RenderFragmentContainerWrapper?) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fragment == nil {
+      return clientBoxRect()
+    }
+
+    var clientBox = borderBoxRectInFragment(fragment: fragment)
+    let borderWidths = borderWidths()
+
+    clientBox.setLocation(
+      location: clientBox.location()
+        + LayoutSizeWrapper(width: borderWidths.left, height: borderWidths.top))
+    clientBox.setSize(
+      size: clientBox.size()
+        - LayoutSizeWrapper(
+          width: borderWidths.left + borderWidths.right + verticalScrollbarWidth(),
+          height: borderWidths.top + borderWidths.bottom + horizontalScrollbarHeight()))
+
+    return clientBox
   }
 
   func clampToStartAndEndFragments(fragment: RenderFragmentContainerWrapper?)
