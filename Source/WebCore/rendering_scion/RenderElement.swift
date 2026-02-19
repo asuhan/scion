@@ -1861,6 +1861,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     return isVisibleInDocumentRect(documentRect: visibleRect)
   }
 
+  override func lastChildSlow() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
     guard let root = element()!.containingShadowRoot() else { return nil }
     if root.mode() != .UserAgent {

@@ -312,6 +312,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func lastChildSlow() -> RenderObjectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func nextInPreOrder() -> RenderObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -354,8 +359,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func previousInPreOrder() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if var o = previousSibling() {
+      while let last = o.lastChildSlow() {
+        o = last
+      }
+      return o
+    }
+
+    return parent()
   }
 
   func childAt(_ index: UInt32) -> RenderObjectWrapper? {
