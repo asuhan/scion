@@ -428,8 +428,25 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingScrollableContainer() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Walk up the container chain to find the scrollable container that contains
+    // this RenderObject. The important thing here is that `container()` respects
+    // the containing block chain for positioned elements. This is important because
+    // scrollable overflow does not establish a new containing block for children.
+    var candidate = container()
+    while candidate != nil {
+      // Currently the RenderView can look like it has scrollable overflow, but we never
+      // want to return this as our container. Instead we should use the root element.
+      if candidate!.isRenderView() {
+        break
+      }
+      if candidate!.hasPotentiallyScrollableOverflow() {
+        return (candidate as! RenderBoxWrapper)
+      }
+      candidate = candidate!.container()
+    }
+
+    // If we reach the root, then the root element is the scrolling container.
+    return document().documentElement()?.renderBox()
   }
 
   func styleColorOptions() -> StyleColorOptions {
