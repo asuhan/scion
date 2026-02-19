@@ -387,8 +387,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func lastLeafChild() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var r = lastChildSlow()
+    while r != nil {
+      if let n = r!.lastChildSlow() {
+        r = n
+      } else {
+        break
+      }
+    }
+    return r
   }
 
   func firstNonAnonymousAncestor() -> RenderElementWrapper? {
