@@ -2813,8 +2813,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func intrinsicSize() -> LayoutSizeWrapper { return LayoutSizeWrapper() }
 
   func intrinsicLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return style().isHorizontalWritingMode() ? intrinsicSize().width() : intrinsicSize().height()
   }
 
   func intrinsicLogicalHeight() -> LayoutUnit {
