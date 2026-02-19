@@ -974,8 +974,12 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func removeFromRenderFragmentedFlow() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(fragmentedFlowState() != .NotInsideFlow)
+    // Sometimes we remove the element from the flow, but it's not destroyed at that time.
+    // It's only until later when we actually destroy it and remove all the children from it.
+    // Currently, that happens for firstLetter elements and list markers.
+    // Pass in the flow thread so that we don't have to look it up for all the children.
+    removeFromRenderFragmentedFlowIncludingDescendants(true)
   }
 
   // Called before anonymousChild.setStyle(). Override to set custom styles for
@@ -1772,6 +1776,44 @@ class RenderElementWrapper: RenderObjectWrapper {
       let continuation = modelObject.continuation()
     {
       continuation.updateOutlineAutoAncestor(hasOutlineAuto)
+    }
+  }
+
+  private func removeFromRenderFragmentedFlowIncludingDescendants(_ shouldUpdateState: Bool) {
+    var shouldUpdateState = shouldUpdateState
+    // Once we reach another flow thread we don't need to update the flow thread state
+    // but we have to continue cleanup the flow thread info.
+    if isRenderFragmentedFlow() {
+      shouldUpdateState = false
+    }
+
+    for child: RenderObjectWrapper in childrenOfType(parent: self) {
+      if let element = child as? RenderElementWrapper {
+        element.removeFromRenderFragmentedFlowIncludingDescendants(shouldUpdateState)
+        continue
+      }
+      if shouldUpdateState {
+        child.setFragmentedFlowState(.NotInsideFlow)
+      }
+    }
+
+    // We have to ask for our containing flow thread as it may be above the removed sub-tree.
+    var enclosingFragmentedFlow = enclosingFragmentedFlow()
+    while enclosingFragmentedFlow != nil {
+      enclosingFragmentedFlow!.removeFlowChildInfo(self)
+
+      if enclosingFragmentedFlow!.fragmentedFlowState() == .NotInsideFlow {
+        break
+      }
+      guard let parent = enclosingFragmentedFlow!.parent() else { break }
+      enclosingFragmentedFlow = parent.enclosingFragmentedFlow()
+    }
+    if let block = self as? RenderBlockWrapper {
+      block.setCachedEnclosingFragmentedFlowNeedsUpdate()
+    }
+
+    if shouldUpdateState {
+      setFragmentedFlowState(.NotInsideFlow)
     }
   }
 

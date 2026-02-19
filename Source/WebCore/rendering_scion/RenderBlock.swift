@@ -1114,6 +1114,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  func setCachedEnclosingFragmentedFlowNeedsUpdate() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   final func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
     fragmentedFlow: RenderFragmentedFlowWrapper? = nil
   ) {

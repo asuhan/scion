@@ -39,6 +39,11 @@ private func clamp(fragment: RenderFragmentContainerWrapper?, clampBox: RenderBo
 }
 
 class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
+  func removeFlowChildInfo(_ child: RenderElementWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func deleteLines() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
