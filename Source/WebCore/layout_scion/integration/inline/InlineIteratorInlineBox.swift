@@ -67,6 +67,11 @@ extension InlineIterator {
     fatalError("Not implemented")
   }
 
+  static func firstRootInlineBoxFor(_ block: RenderBlockFlowWrapper) -> InlineBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func inlineBoxFor(content: LayoutIntegration.InlineContent, box: InlineDisplay.Box)
     -> InlineBoxIterator
   {

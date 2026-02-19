@@ -3928,8 +3928,24 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     rects: inout ArraySlice<LayoutRectWrapper>, additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper?
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(childrenInline())
+    let box = InlineIterator.firstRootInlineBoxFor(self)
+    while box.bool() {
+      let lineBox = box.get().lineBox()
+      // FIXME: This is mixing physical and logical coordinates.
+      let unflippedVisualRect = box.get().visualRectIgnoringBlockDirection()
+      let top = max(lineBox.get().contentLogicalTop(), unflippedVisualRect.y())
+      let bottom = min(lineBox.get().contentLogicalBottom(), unflippedVisualRect.maxY())
+      let rect = LayoutRectWrapper(
+        x: LayoutUnit(value: additionalOffset.x + unflippedVisualRect.x()),
+        y: LayoutUnit(value: additionalOffset.y + top),
+        width: LayoutUnit(value: unflippedVisualRect.width()),
+        height: LayoutUnit(value: bottom - top))
+      if !rect.isEmpty() {
+        rects.append(rect)
+      }
+      box.traverseNextInlineBox()
+    }
   }
 
   private func hasInlineLayout() -> Bool {
