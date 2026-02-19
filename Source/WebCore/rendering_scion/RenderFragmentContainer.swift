@@ -147,8 +147,13 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func addLayoutOverflowForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if rect.isEmpty() {
+      return
+    }
+
+    let fragmentOverflow = ensureOverflowForBox(box, false)
+
+    fragmentOverflow?.addLayoutOverflow(rect: rect)
   }
 
   func addVisualOverflowForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper) {
