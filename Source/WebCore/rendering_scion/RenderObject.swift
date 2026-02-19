@@ -286,8 +286,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isDescendantOf(ancestor: RenderObjectWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var renderer: RenderObjectWrapper? = self
+    while renderer != nil {
+      if CPtrToInt(renderer!.p) == CPtrToInt(ancestor?.p) {
+        return true
+      }
+      renderer = renderer!.m_parent
+    }
+    return false
   }
 
   func previousSibling() -> RenderObjectWrapper? {
@@ -2352,4 +2358,6 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   var p: UnsafeMutableRawPointer
+
+  private let m_parent: RenderElementWrapper? = nil
 }
