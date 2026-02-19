@@ -2012,7 +2012,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return
     }
 
-    overflow!.layoutOverflow = borderBoxRect()
+    overflow!.setLayoutOverflow(borderBoxRect())
   }
 
   // Adjust from painting offsets to the local coords of this renderer

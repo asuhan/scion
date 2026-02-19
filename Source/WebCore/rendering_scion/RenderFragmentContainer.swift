@@ -158,8 +158,26 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
   // FIXME: This doesn't work for writing modes.
   func layoutOverflowRectForBoxForPropagation(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Only propagate interior layout overflow if we don't clip it.
+    var rect = box.borderBoxRectInFragment(fragment: self)
+    rect = rectFlowPortionForBox(box, rect)
+    if !box.hasNonVisibleOverflow() {
+      let overflow = ensureOverflowForBox(box, true)!
+      rect.unite(other: overflow.layoutOverflowRect())
+    }
+
+    let hasTransform = box.isTransformed()
+    if box.isInFlowPositioned() || hasTransform {
+      if hasTransform {
+        rect = box.layer()!.currentTransform().mapRect(rect)
+      }
+
+      if box.isInFlowPositioned() {
+        rect.move(size: box.offsetForInFlowPosition())
+      }
+    }
+
+    return rect
   }
 
   func visualOverflowRectForBoxForPropagation(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
@@ -178,6 +196,13 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func ensureOverflowForBox(_ box: RenderBoxWrapper, _ forceCreation: Bool)
+    -> RenderOverflow?
+  {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
