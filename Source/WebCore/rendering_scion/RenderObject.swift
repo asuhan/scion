@@ -1276,8 +1276,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,
     mode: MapCoordinatesMode = [.UseTransforms]
   ) -> FloatQuad {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var wasFixed: Bool? = nil
+    return localToContainerQuad(
+      localQuad: localQuad, container: container, mode: mode, wasFixed: &wasFixed)
+  }
+
+  private func localToContainerQuad(
+    localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?, mode: MapCoordinatesMode,
+    wasFixed: inout Bool?
+  ) -> FloatQuad {
+    // Track the point at the center of the quad's bounding box. As mapLocalToContainer() calls offsetFromContainer(),
+    // it will use that point as the reference point to decide which column's transform to apply in multiple-column blocks.
+    let transformState = TransformState(
+      .ApplyTransformDirection, localQuad.boundingBox().center(), localQuad)
+    mapLocalToContainer(container, transformState, mode.union(.ApplyContainerFlip), &wasFixed)
+    transformState.flatten()
+
+    return transformState.lastPlanarQuad()
   }
 
   func localToContainerPoint(
