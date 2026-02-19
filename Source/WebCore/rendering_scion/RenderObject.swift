@@ -318,13 +318,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrder() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let o = firstChildSlow() {
+      return o
+    }
+
+    return nextInPreOrderAfterChildren()
   }
 
   func nextInPreOrder(stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let o = firstChildSlow() {
+      return o
+    }
+
+    return nextInPreOrderAfterChildren(stayWithin)
   }
 
   func nextInPreOrderAfterChildren() -> RenderObjectWrapper? {
