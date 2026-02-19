@@ -477,6 +477,14 @@ class RenderTextWrapper: RenderObjectWrapper {
       xPos, fallbackFonts, &glyphOverflow)
   }
 
+  func width(
+    from: UInt32, length: UInt32, fontCascade: FontCascadeWrapper, xPos: Float32,
+    fallbackFonts: WeakHashSet<FontWrapper>?, glyphOverflow: inout GlyphOverflow?
+  ) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func caretMinOffset() -> Int32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

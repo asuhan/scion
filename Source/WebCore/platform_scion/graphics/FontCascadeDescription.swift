@@ -56,4 +56,9 @@ class FontCascadeDescriptionWrapper: FontDescriptionWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func deepCopy() -> FontCascadeDescriptionWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

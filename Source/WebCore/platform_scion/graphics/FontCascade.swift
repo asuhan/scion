@@ -303,5 +303,5 @@ struct GlyphOverflow {
   var right = LayoutUnit()
   var top = LayoutUnit()
   var bottom = LayoutUnit()
-  let computeBounds = false
+  var computeBounds = false
 }

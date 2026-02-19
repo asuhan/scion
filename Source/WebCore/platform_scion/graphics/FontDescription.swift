@@ -63,4 +63,9 @@ class FontDescriptionWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func setWidthVariant(_ widthVariant: FontWidthVariant) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

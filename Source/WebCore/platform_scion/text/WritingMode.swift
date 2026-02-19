@@ -29,6 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+enum TypographicMode: UInt8 {
+  case Horizontal
+  case Vertical
+}
+
 enum FlowDirection: UInt8 {
   case TopToBottom
   case BottomToTop

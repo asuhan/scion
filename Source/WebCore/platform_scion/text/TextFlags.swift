@@ -67,6 +67,13 @@ struct ExpansionBehaviorWrapper: Equatable {
   var right: Behavior
 }
 
+enum FontWidthVariant: UInt8 {
+  case RegularWidth
+  case HalfWidth
+  case ThirdWidth
+  case QuarterWidth
+}
+
 enum AllowUserInstalledFonts {
   case No
   case Yes

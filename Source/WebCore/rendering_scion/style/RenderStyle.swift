@@ -2291,6 +2291,11 @@ class RenderStyleWrapper: Equatable {
     return FlowDirection(rawValue: wk_interop.RenderStyle_blockFlowDirection(p))!
   }
 
+  func typographicMode() -> TypographicMode {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageOrientation() -> ImageOrientation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
