@@ -885,8 +885,26 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var box = localOutlineBoundsRepaintRect()
+
+    if CPtrToInt(repaintContainer?.p) != CPtrToInt(p) {
+      var containerRelativeQuad = FloatQuad()
+      if geometryMap != nil {
+        containerRelativeQuad = geometryMap!.mapToContainer(box.FloatRect(), repaintContainer)
+      } else {
+        containerRelativeQuad = localToContainerQuad(
+          localQuad: FloatQuad(inRect: box.FloatRect()), container: repaintContainer)
+      }
+
+      box = LayoutRectWrapper(r: containerRelativeQuad.boundingBox())
+    }
+
+    // FIXME: layoutDelta needs to be applied in parts before/after transforms and
+    // repaint containers. https://bugs.webkit.org/show_bug.cgi?id=23308
+    box.move(size: view().frameView().layoutContext().layoutDelta())
+
+    return LayoutRectWrapper(
+      r: snapRectToDevicePixels(rect: box, pixelSnappingFactor: document().deviceScaleFactor()))
   }
 
   override func addFocusRingRects(
