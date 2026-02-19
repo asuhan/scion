@@ -116,6 +116,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func logicalBottomForFragmentedFlowContent() -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // This method represents the logical height of the entire flow thread portion used by the fragment or set.
   // For RenderFragmentContainers it matches logicalPaginationHeight(), but for sets it is the height of all the pages
   // or columns added together.
@@ -210,8 +215,34 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   func rectFlowPortionForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper)
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var mappedRect = fragmentedFlow!.mapFromLocalToFragmentedFlow(box, rect)
+
+    if let (startFragment, endFragment) = fragmentedFlow!.getFragmentRangeForBox(box: box) {
+      if fragmentedFlow!.isHorizontalWritingMode() {
+        if CPtrToInt(p) != CPtrToInt(startFragment.p) {
+          mappedRect.shiftYEdgeTo(edge: max(logicalTopForFragmentedFlowContent(), mappedRect.y()))
+        }
+        if CPtrToInt(p) != CPtrToInt(endFragment.p) {
+          mappedRect.setHeight(
+            height: max(
+              LayoutUnit(value: 0),
+              min(logicalBottomForFragmentedFlowContent() - mappedRect.y(), mappedRect.height()))
+          )
+        }
+      } else {
+        if CPtrToInt(p) != CPtrToInt(startFragment.p) {
+          mappedRect.shiftXEdgeTo(edge: max(logicalTopForFragmentedFlowContent(), mappedRect.x()))
+        }
+        if CPtrToInt(p) != CPtrToInt(endFragment.p) {
+          mappedRect.setWidth(
+            width: max(
+              LayoutUnit(value: 0),
+              min(logicalBottomForFragmentedFlowContent() - mappedRect.x(), mappedRect.width())))
+        }
+      }
+    }
+
+    return fragmentedFlow!.mapFromFragmentedFlowToLocal(box, mappedRect)
   }
 
   override func positionForPoint(

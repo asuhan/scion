@@ -697,6 +697,22 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  // FIXME: Make this function faster. Walking the render tree is slow, better use a caching mechanism (e.g. |cachedOffsetFromLogicalTopOfFirstFragment|).
+  func mapFromFragmentedFlowToLocal(_ box: RenderBoxWrapper?, _ rect: LayoutRectWrapper)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // FIXME: Make this function faster. Walking the render tree is slow, better use a caching mechanism (e.g. |cachedOffsetFromLogicalTopOfFirstFragment|).
+  func mapFromLocalToFragmentedFlow(_ box: RenderBoxWrapper?, _ localRect: LayoutRectWrapper)
+    -> LayoutRectWrapper
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func flipForWritingModeLocalCoordinates(_ rect: inout LayoutRectWrapper) {
     if !style().isFlippedBlocksWritingMode() {
       return
