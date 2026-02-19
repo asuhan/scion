@@ -163,6 +163,10 @@ struct LayoutUnit: Comparable {
     return a == LayoutUnit(value: b)
   }
 
+  static func == (a: LayoutUnit, b: Float32) -> Bool {
+    return a.toFloat() == b
+  }
+
   static func != (a: LayoutUnit, b: Int32) -> Bool {
     return !(a == b)
   }
@@ -220,6 +224,10 @@ struct LayoutUnit: Comparable {
 
   static func >= (lhs: LayoutUnit, rhs: Float32) -> Bool {
     return lhs.toFloat() >= rhs
+  }
+
+  static func > (a: LayoutUnit, b: Float32) -> Bool {
+    return a.toFloat() > b
   }
 
   static func > (lhs: LayoutUnit, rhs: Int) -> Bool {

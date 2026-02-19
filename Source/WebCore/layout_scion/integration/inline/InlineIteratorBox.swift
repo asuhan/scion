@@ -36,6 +36,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func isLineBreak() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func visualRect() -> FloatRectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -94,6 +99,11 @@ extension InlineIterator {
     }
 
     func previousOnLine() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func nextOnLineIgnoringLineBreak() -> LeafBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

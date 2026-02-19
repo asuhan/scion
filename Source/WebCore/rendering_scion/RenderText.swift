@@ -434,8 +434,9 @@ class RenderTextWrapper: RenderObjectWrapper {
           assert(glyphOverflow != nil)
           if preferredLogicalWidthsDirty() || !knownToHaveNoOverflowAndNoFallbackFonts {
             computePreferredLogicalWidths(0, fallbackFonts!, &glyphOverflow!)
-            if fallbackFonts!.isEmptyIgnoringNullReferences() && glyphOverflow!.left == 0
-              && glyphOverflow!.right == 0 && glyphOverflow!.top == 0 && glyphOverflow!.bottom == 0
+            if fallbackFonts!.isEmptyIgnoringNullReferences() && !glyphOverflow!.left.bool()
+              && !glyphOverflow!.right.bool() && !glyphOverflow!.top.bool()
+              && !glyphOverflow!.bottom.bool()
             {
               knownToHaveNoOverflowAndNoFallbackFonts = true
             }

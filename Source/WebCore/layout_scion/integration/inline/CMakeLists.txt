@@ -5,6 +5,7 @@ target_sources(layout_scion PRIVATE
     InlineIteratorInlineBox.swift
     InlineIteratorLineBox.swift
     InlineIteratorLineBoxModernPath.swift
+    InlineIteratorLogicalOrderTraversal.swift
     InlineIteratorSVGTextBox.swift
     InlineIteratorTextBox.swift
     LayoutIntegrationInlineContent.swift

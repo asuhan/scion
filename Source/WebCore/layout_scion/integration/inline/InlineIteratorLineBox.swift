@@ -102,12 +102,27 @@ class InlineIterator {
       fatalError("Not implemented")
     }
 
+    func containingFragment() -> RenderFragmentContainerWrapper? {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isFirst() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
+    func isFirstAfterPageBreak() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func firstLeafBox() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func next() -> LineBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -163,7 +178,19 @@ class InlineIterator {
     fatalError("Not implemented")
   }
 
+  static func closestBoxForHorizontalPosition(
+    _ lineBox: LineBox, _ horizontalPosition: Float32, _ editableOnly: Bool = false
+  ) -> LeafBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func previousLineBoxContentBottomOrBorderAndPadding(_ lineBox: LineBox) -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func contentStartInBlockDirection(_ lineBox: LineBox) -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

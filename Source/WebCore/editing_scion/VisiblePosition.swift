@@ -25,4 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class VisiblePosition {}
+class VisiblePosition {
+  // VisiblePosition default affinity is downstream for callers that do not really care because it is more efficient than upstream.
+  static let defaultAffinity: Affinity = .Downstream
+
+  init(_ position: Position, _ affinity: Affinity = VisiblePosition.defaultAffinity) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

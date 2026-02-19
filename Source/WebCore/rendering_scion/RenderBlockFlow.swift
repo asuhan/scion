@@ -94,6 +94,14 @@ class RenderBlockFlowRareData {
   var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
 }
 
+private func positionForRun(
+  _ flow: RenderBlockFlowWrapper, _ box: InlineIterator.BoxIterator<InlineIterator.Box>,
+  _ start: Bool
+) -> Position {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func hasSimpleStaticPositionForInlineLevelOutOfFlowChildrenByStyle(
   rootStyle: RenderStyleWrapper
 ) -> Bool {
@@ -3158,8 +3166,139 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     _ pointInLogicalContents: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(childrenInline())
+
+    let firstLineBox = InlineIterator.firstLineBoxFor(flow: self)
+
+    if !firstLineBox.bool() {
+      return createVisiblePosition(0, .Downstream)
+    }
+
+    let linesAreFlipped = style().isFlippedLinesWritingMode()
+    let blocksAreFlipped = style().isFlippedBlocksWritingMode()
+
+    // look for the closest line box in the root box which is at the passed-in y coordinate
+    var closestBox = InlineIterator.LeafBoxIterator()
+    var firstLineBoxWithChildren = InlineIterator.LineBoxIterator()
+    var lastLineBoxWithChildren = InlineIterator.LineBoxIterator()
+    let lineBox = firstLineBox
+    while lineBox.bool() {
+      if fragment != nil
+        && CPtrToInt(lineBox.get().containingFragment()?.p) != CPtrToInt(fragment?.p)
+      {
+        lineBox.traverseNext()
+        continue
+      }
+
+      if !lineBox.get().firstLeafBox().bool() {
+        lineBox.traverseNext()
+        continue
+      }
+      if !firstLineBoxWithChildren.bool() {
+        firstLineBoxWithChildren = lineBox
+      }
+
+      if !linesAreFlipped && lineBox.get().isFirstAfterPageBreak()
+        && (pointInLogicalContents.y < lineBox.get().logicalTop()
+          || (blocksAreFlipped && pointInLogicalContents.y == lineBox.get().logicalTop()))
+      {
+        break
+      }
+
+      lastLineBoxWithChildren = lineBox
+
+      // check if this root line box is located at this y coordinate
+      let selectionBottom = LineSelection.logicalBottom(lineBox: lineBox.get())
+      if pointInLogicalContents.y < selectionBottom
+        || (blocksAreFlipped && pointInLogicalContents.y == selectionBottom)
+      {
+        if linesAreFlipped {
+          let nextLineBoxWithChildren = lineBox.get().next()
+          while nextLineBoxWithChildren.bool()
+            && !nextLineBoxWithChildren.get().firstLeafBox().bool()
+          {
+            nextLineBoxWithChildren.traverseNext()
+          }
+
+          if nextLineBoxWithChildren.bool() && nextLineBoxWithChildren.get().isFirstAfterPageBreak()
+            && (pointInLogicalContents.y > nextLineBoxWithChildren.get().logicalTop()
+              || (!blocksAreFlipped
+                && pointInLogicalContents.y == nextLineBoxWithChildren.get().logicalTop()))
+          {
+            lineBox.traverseNext()
+            continue
+          }
+        }
+        closestBox = InlineIterator.closestBoxForHorizontalPosition(
+          lineBox.get(), pointInLogicalContents.x.float())
+        if closestBox.bool() {
+          break
+        }
+      }
+      lineBox.traverseNext()
+    }
+
+    let moveCaretToBoundary = frame().editor().behavior()
+      .shouldMoveCaretToHorizontalBoundaryWhenPastTopOrBottom()
+
+    if !moveCaretToBoundary && !closestBox.bool() && lastLineBoxWithChildren.bool() {
+      // y coordinate is below last root line box, pretend we hit it
+      closestBox = InlineIterator.closestBoxForHorizontalPosition(
+        lastLineBoxWithChildren.get(), pointInLogicalContents.x.float())
+    }
+
+    if closestBox.bool() {
+      if moveCaretToBoundary {
+        let firstLineWithChildrenTop = LayoutUnit(
+          value: min(
+            InlineIterator.previousLineBoxContentBottomOrBorderAndPadding(
+              firstLineBoxWithChildren.get()),
+            firstLineBoxWithChildren.get().contentLogicalTop()))
+        if pointInLogicalContents.y < firstLineWithChildrenTop
+          || (blocksAreFlipped && pointInLogicalContents.y == firstLineWithChildrenTop)
+        {
+          var box = firstLineBoxWithChildren.get().firstLeafBox()
+          if box.get().isLineBreak() {
+            let next = box.get().nextOnLineIgnoringLineBreak()
+            if next.bool() {
+              box = next
+            }
+          }
+          // y coordinate is above first root line box, so return the start of the first
+          return VisiblePosition(positionForRun(self, box, true))
+        }
+      }
+
+      // pass the box a top position that is inside it
+      var point = LayoutPointWrapper(
+        x: pointInLogicalContents.x,
+        y: LayoutUnit(
+          value: InlineIterator.contentStartInBlockDirection(closestBox.get().lineBox().get())))
+      if !isHorizontalWritingMode() {
+        point = point.transposedPoint()
+      }
+      if closestBox.get().renderer().isReplacedOrInlineBlock() {
+        return positionForPointRespectingEditingBoundaries(
+          self, closestBox.get().renderer() as! RenderBoxWrapper, point, source)
+      }
+      return closestBox.get().renderer().positionForPoint(point, source, nil)
+    }
+
+    if lastLineBoxWithChildren.bool() {
+      // We hit this case for Mac behavior when the Y coordinate is below the last box.
+      assert(moveCaretToBoundary)
+      let orderCache = InlineIterator.LineLogicalOrderCache()
+      let logicallyLastBox = InlineIterator.lastLeafOnLineInLogicalOrderWithNode(
+        lastLineBoxWithChildren, orderCache)
+      if logicallyLastBox.bool() {
+        return VisiblePosition(positionForRun(self, logicallyLastBox, false))
+      }
+    }
+
+    // Can't reach this. We have a root line box, but it has no kids.
+    // FIXME: This should throw "Not reached", but clicking on placeholder text
+    // seems to hit this code path.
+    return createVisiblePosition(0, .Downstream)
   }
 
   struct LinePaginationAdjustment {
