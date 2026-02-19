@@ -113,8 +113,10 @@ class RenderImageWrapper: RenderReplacedWrapper {
   }
 
   override final func embeddedContentBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let cachedImage = cachedImage(), let image = cachedImage.image() as? SVGImageWrapper {
+      return image.embeddedContentBox()
+    }
+    return nil
   }
 
   override func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
