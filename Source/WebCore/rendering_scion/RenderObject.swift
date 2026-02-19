@@ -2155,8 +2155,24 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ container: RenderElementWrapper?,
     _ offsetInContainer: LayoutSizeWrapper, _ containerSkipped: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let preserve3D = mode.contains(.UseTransforms) && participatesInPreserve3D()
+    if mode.contains(.UseTransforms) && shouldUseTransformFromContainer(container) {
+      let matrix = getTransformFromContainer(offsetInContainer)
+      transformState.applyTransform(matrix, preserve3D ? .AccumulateTransform : .FlattenTransform)
+    } else {
+      transformState.move(
+        offsetInContainer.width(), offsetInContainer.height(),
+        preserve3D ? .AccumulateTransform : .FlattenTransform)
+    }
+
+    if containerSkipped {
+      // There can't be a transform between repaintContainer and container, because transforms create containers, so it should be safe
+      // to just subtract the delta between the repaintContainer and container.
+      let containerOffset = repaintContainer!.offsetFromAncestorContainer(container!)
+      transformState.move(
+        -containerOffset.width(), -containerOffset.height(),
+        preserve3D ? .AccumulateTransform : .FlattenTransform)
+    }
   }
 
   func pushOntoGeometryMap(
