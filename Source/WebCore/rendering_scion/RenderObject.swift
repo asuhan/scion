@@ -407,8 +407,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingLayer() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for renderer in RenderAncestorIteratorAdapter<RenderLayerModelObjectWrapper>.lineageOfType(
+      first: self)
+    {
+      if renderer.hasLayer() {
+        return renderer.layer()
+      }
+    }
+    return nil
   }
 
   func enclosingBox() -> RenderBoxWrapper {
