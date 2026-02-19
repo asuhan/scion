@@ -2134,9 +2134,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return container
   }
 
-  func shouldUseTransformFromContainer(_ container: RenderObjectWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func shouldUseTransformFromContainer(_ containerObject: RenderObjectWrapper?) -> Bool {
+    if isTransformed() {
+      return true
+    }
+    if containerObject?.style().hasPerspective() ?? false {
+      return CPtrToInt(containerObject!.p) == CPtrToInt(parent()?.p)
+    }
+    return false
   }
 
   func getTransformFromContainer(_ offsetInContainer: LayoutSizeWrapper) -> TransformationMatrix {
