@@ -54,8 +54,17 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if firstLine {
+      let firstLineStyle = firstLineStyle()
+      if CPtrToInt(firstLineStyle.p) != CPtrToInt(style().p) {
+        return LayoutUnit.fromFloatCeil(value: firstLineStyle.computedLineHeight())
+      }
+    }
+
+    if cachedLineHeight == nil {
+      cachedLineHeight = LayoutUnit.fromFloatCeil(value: style().computedLineHeight())
+    }
+    return cachedLineHeight!
   }
 
   override func marginBottom() -> LayoutUnit {
@@ -97,4 +106,6 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var cachedLineHeight: LayoutUnit? = nil
 }
