@@ -399,8 +399,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func firstNonAnonymousAncestor() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var ancestor = parent()
+    while ancestor != nil && ancestor!.isAnonymous() {
+      ancestor = ancestor!.parent()
+    }
+    return ancestor
   }
 
   func enclosingLayer() -> RenderLayerWrapper? {
