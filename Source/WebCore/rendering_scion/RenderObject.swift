@@ -370,8 +370,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func childAt(_ index: UInt32) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var child = firstChildSlow()
+    for _ in 0..<index {
+      if child == nil {
+        break
+      }
+      child = child!.nextSibling()
+    }
+    return child
   }
 
   func lastLeafChild() -> RenderObjectWrapper? {
