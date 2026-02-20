@@ -1249,8 +1249,23 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func usedClear(renderer: RenderObjectWrapper) -> UsedClear {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let computedValue = renderer.style().clear()
+    switch computedValue {
+    case .None:
+      return .None
+    case .Left:
+      return .Left
+    case .Right:
+      return .Right
+    case .Both:
+      return .Both
+    case .InlineStart, .InlineEnd:
+      let containingBlockDirection = renderer.containingBlock()!.style().direction()
+      if containingBlockDirection == .RTL {
+        return computedValue == .InlineStart ? .Right : .Left
+      }
+      return computedValue == .InlineStart ? .Left : .Right
+    }
   }
 
   func fieldSizing() -> FieldSizing {
