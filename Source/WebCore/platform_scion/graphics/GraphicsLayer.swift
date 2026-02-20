@@ -291,6 +291,11 @@ class GraphicsLayer {
     fatalError("Not implemented")
   }
 
+  func setContentsNeedsDisplay() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func markDamageRectsUnreliable() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

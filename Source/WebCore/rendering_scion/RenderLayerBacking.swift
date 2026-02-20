@@ -1530,6 +1530,48 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
   }
 
+  // Notification from the renderer that its content changed.
+  func contentChanged(_ changeType: ContentChangeType) {
+    var contentsInfo = PaintedContentsInfo(inBacking: self)
+    if changeType == .ImageChanged || changeType == .CanvasChanged {
+      if contentsInfo.isDirectlyCompositedImage() {
+        updateImageContents(&contentsInfo)
+        return
+      }
+      if contentsInfo.isUnscaledBitmapOnly() != m_graphicsLayer!.appliesDeviceScale() {
+        compositor().scheduleCompositingLayerUpdate()
+        return
+      }
+    }
+
+    if changeType == .VideoChanged {
+      compositor().scheduleCompositingLayerUpdate()
+      return
+    }
+
+    if (changeType == .BackgroundImageChanged)
+      && canDirectlyCompositeBackgroundBackgroundImage(renderer: renderer())
+    {
+      owningLayer!.setNeedsCompositingConfigurationUpdate()
+    }
+
+    if (changeType == .MaskImageChanged) && maskLayer != nil {
+      owningLayer!.setNeedsCompositingConfigurationUpdate()
+    }
+
+    if (changeType == .CanvasChanged || changeType == .CanvasPixelsChanged)
+      && renderer().isRenderHTMLCanvas()
+      && canvasCompositingStrategy(renderer: renderer()) == .CanvasAsLayerContents
+    {
+      if changeType == .CanvasChanged {
+        compositor().scheduleCompositingLayerUpdate()
+      }
+
+      m_graphicsLayer!.setContentsNeedsDisplay()
+      return
+    }
+  }
+
   func compositedBounds() -> LayoutRectWrapper {
     return m_compositedBounds
   }

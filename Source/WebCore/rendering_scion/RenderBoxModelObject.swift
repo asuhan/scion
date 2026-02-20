@@ -824,8 +824,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func contentChanged(_ changeType: ContentChangeType) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasLayer() {
+      return
+    }
+
+    layer()!.contentChanged(changeType)
   }
 
   func continuation() -> RenderBoxModelObjectWrapper? {

@@ -1115,6 +1115,20 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
+  // Notification from the renderer that its content changed (e.g. current frame of image changed).
+  // Allows updates of layer content without repainting.
+  func contentChanged(_ changeType: ContentChangeType) {
+    if changeType == .CanvasChanged || changeType == .VideoChanged
+      || changeType == .FullScreenChanged || changeType == .ModelChanged
+      || (isComposited() && changeType == .ImageChanged)
+    {
+      setNeedsPostLayoutCompositingUpdate()
+      setNeedsCompositingConfigurationUpdate()
+    }
+
+    backing?.contentChanged(changeType)
+  }
+
   func canRender3DTransforms() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
