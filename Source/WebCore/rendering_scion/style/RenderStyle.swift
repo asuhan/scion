@@ -2484,23 +2484,67 @@ class RenderStyleWrapper: Equatable {
   }
 
   func setMarginStart(_ margin: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      if isLeftToRightDirection() {
+        setMarginLeft(margin)
+      } else {
+        setMarginRight(margin)
+      }
+    } else {
+      if isLeftToRightDirection() {
+        setMarginTop(margin)
+      } else {
+        setMarginBottom(margin)
+      }
+    }
   }
 
   func setMarginEnd(_ margin: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      if isLeftToRightDirection() {
+        setMarginRight(margin)
+      } else {
+        setMarginLeft(margin)
+      }
+    } else {
+      if isLeftToRightDirection() {
+        setMarginBottom(margin)
+      } else {
+        setMarginTop(margin)
+      }
+    }
   }
 
   func setMarginBefore(_ margin: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      if isFlippedBlocksWritingMode() {
+        setMarginBottom(margin)
+      } else {
+        setMarginTop(margin)
+      }
+    } else {
+      if isFlippedBlocksWritingMode() {
+        setMarginRight(margin)
+      } else {
+        setMarginLeft(margin)
+      }
+    }
   }
 
   func setMarginAfter(_ margin: LengthWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isHorizontalWritingMode() {
+      if isFlippedBlocksWritingMode() {
+        setMarginTop(margin)
+      } else {
+        setMarginBottom(margin)
+      }
+    } else {
+      if isFlippedBlocksWritingMode() {
+        setMarginLeft(margin)
+      } else {
+        setMarginRight(margin)
+      }
+    }
   }
 
   func setPaddingBox(_ box: LengthBox) {
