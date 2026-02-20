@@ -234,6 +234,12 @@ class RenderElementWrapper: RenderObjectWrapper {
   )
     -> RenderStyleWrapper?
   {
+    if pseudoElementRequest.pseudoId() < PseudoId.FirstInternalPseudoId && ownStyle == nil
+      && !style().hasPseudoStyle(pseudo: pseudoElementRequest.pseudoId())
+    {
+      return nil
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

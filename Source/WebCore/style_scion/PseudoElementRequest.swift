@@ -40,6 +40,11 @@ extension Style {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    func pseudoId() -> PseudoId {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
 }
