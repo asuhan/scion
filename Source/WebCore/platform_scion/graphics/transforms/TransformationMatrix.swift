@@ -111,6 +111,18 @@ class TransformationMatrix {
     fatalError("Not implemented")
   }
 
+  @discardableResult
+  func translateRight3d(tx: Float64, ty: Float64, tz: Float64) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  @discardableResult
+  func applyPerspective(_ p: Float64) -> TransformationMatrix {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isInvertible() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -2674,6 +2674,11 @@ class RenderLayerWrapper {
     return transform
   }
 
+  func perspectiveOrigin() -> FloatPoint {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func transformOriginPixelSnappedIfNeeded() -> FloatPoint3D {
     if !renderer().hasTransformRelatedProperty() {
       return FloatPoint3D()

@@ -2139,6 +2139,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func usedPerspective() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasPerspective() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

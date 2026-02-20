@@ -2145,9 +2145,38 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return false
   }
 
+  // FIXME: Now that it's no longer passed a container maybe this should be renamed?
   func getTransformFromContainer(_ offsetInContainer: LayoutSizeWrapper) -> TransformationMatrix {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var transform = TransformationMatrix()
+    transform.makeIdentity()
+    transform.translate(
+      tx: offsetInContainer.width().double(), ty: offsetInContainer.height().double())
+    var layer: RenderLayerWrapper? = nil
+    if hasLayer() {
+      layer = (self as! RenderLayerModelObjectWrapper).layer()
+      if layer?.transform != nil {
+        transform.multiply(mat: layer!.currentTransform())
+      }
+    }
+
+    if let perspectiveObject = parent(),
+      perspectiveObject.hasLayer() && perspectiveObject.style().hasPerspective()
+    {
+      // Perpsective on the container affects us, so we have to factor it in here.
+      assert(perspectiveObject.hasLayer())
+      let perspectiveOrigin = (perspectiveObject as! RenderLayerModelObjectWrapper).layer()!
+        .perspectiveOrigin()
+
+      let perspectiveMatrix = TransformationMatrix()
+      perspectiveMatrix.applyPerspective(Float64(perspectiveObject.style().usedPerspective()))
+
+      transform.translateRight3d(
+        tx: Float64(-perspectiveOrigin.x), ty: Float64(-perspectiveOrigin.y), tz: 0)
+      transform = perspectiveMatrix * transform
+      transform.translateRight3d(
+        tx: Float64(perspectiveOrigin.x), ty: Float64(perspectiveOrigin.y), tz: 0)
+    }
+    return transform
   }
 
   func pushOntoTransformState(
