@@ -2694,9 +2694,29 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func paintTypesForPaintOrder(order: PaintOrder) -> ArraySlice<PaintType> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch order {
+    case .Normal, .Fill:
+      return RenderStyleWrapper.fill[...]
+    case .FillMarkers:
+      return RenderStyleWrapper.fillMarkers[...]
+    case .Stroke:
+      return RenderStyleWrapper.stroke[...]
+    case .StrokeMarkers:
+      return RenderStyleWrapper.strokeMarkers[...]
+    case .Markers:
+      return RenderStyleWrapper.markers[...]
+    case .MarkersStroke:
+      return RenderStyleWrapper.markersStroke[...]
+    }
   }
+
+  // TODO(asuhan): use fixed size arrays
+  private static let fill: [PaintType] = [.Fill, .Stroke, .Markers]
+  private static let fillMarkers: [PaintType] = [.Fill, .Markers, .Stroke]
+  private static let stroke: [PaintType] = [.Stroke, .Fill, .Markers]
+  private static let strokeMarkers: [PaintType] = [.Stroke, .Markers, .Fill]
+  private static let markers: [PaintType] = [.Markers, .Fill, .Stroke]
+  private static let markersStroke: [PaintType] = [.Markers, .Stroke, .Fill]
 
   func computedStrokeWidth(viewportSize: IntSize) -> Float32 {
     if p == nil {
