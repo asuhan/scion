@@ -52,6 +52,11 @@ class StyleColorWrapper {
     fatalError("Not implemented")
   }
 
+  func isCurrentColor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (a: StyleColorWrapper, b: StyleColorWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

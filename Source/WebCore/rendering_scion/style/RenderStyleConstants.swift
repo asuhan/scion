@@ -647,6 +647,12 @@ enum DisplayType: UInt8 {
   case None
 }
 
+enum InsideLink: UInt8 {
+  case NotInside
+  case InsideUnvisited
+  case InsideVisited
+}
+
 enum PointerEvents: UInt8 {
   case None
   case Auto

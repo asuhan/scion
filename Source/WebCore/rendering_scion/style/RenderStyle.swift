@@ -1486,6 +1486,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func insideLink() -> InsideLink {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func insideDefaultButton() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2341,6 +2346,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func isInSubtreeWithBlendMode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func blendMode() -> BlendMode {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2584,6 +2594,16 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
   }
 
+  func hasPositiveStrokeWidth() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func usedStrokeColorProperty() -> CSSPropertyID {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func shapeOutside() -> ShapeValue? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2675,8 +2695,33 @@ class RenderStyleWrapper: Equatable {
   func visitedDependentColor(colorProperty: CSSPropertyID, paintBehavior: PaintBehavior = [])
     -> ColorWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let unvisitedColor = colorResolvingCurrentColor(colorProperty, false)
+    if insideLink() != .InsideVisited {
+      return unvisitedColor
+    }
+
+    if paintBehavior.contains(.DontShowVisitedLinks) {
+      return unvisitedColor
+    }
+
+    if isInSubtreeWithBlendMode() {
+      return unvisitedColor
+    }
+
+    let visitedColor = colorResolvingCurrentColor(colorProperty, true)
+
+    // FIXME: Technically someone could explicitly specify the color transparent, but for now we'll just
+    // assume that if the background color is transparent that it wasn't set. Note that it's weird that
+    // we're returning unvisited info for a visited link, but given our restriction that the alpha values
+    // have to match, it makes more sense to return the unvisited background color if specified than it
+    // does to return black. This behavior matches what Firefox 4 does as well.
+    if colorProperty == .CSSPropertyBackgroundColor && visitedColor == ColorWrapper.transparentBlack
+    {
+      return unvisitedColor
+    }
+
+    // Take the alpha from the unvisited color, but get the RGB values from the visited color.
+    return visitedColor.colorWithAlpha(unvisitedColor.alphaAsFloat())
   }
 
   func visitedDependentColorWithColorFilter(
@@ -2907,6 +2952,37 @@ class RenderStyleWrapper: Equatable {
     return false
   }
 
+  private func unresolvedColorForProperty(
+    _ colorProperty: CSSPropertyID, _ visitedLink: Bool = false
+  ) -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func colorResolvingCurrentColor(_ colorProperty: CSSPropertyID, _ visitedLink: Bool)
+    -> ColorWrapper
+  {
+    let result = unresolvedColorForProperty(colorProperty, visitedLink)
+
+    if result.isCurrentColor() {
+      if colorProperty == .CSSPropertyTextDecorationColor {
+        if hasPositiveStrokeWidth() {
+          // Prefer stroke color if possible but not if it's fully transparent.
+          let strokeColor = colorResolvingCurrentColor(usedStrokeColorProperty(), visitedLink)
+          if strokeColor.isVisible() {
+            return strokeColor
+          }
+        }
+
+        return colorResolvingCurrentColor(.CSSPropertyWebkitTextFillColor, visitedLink)
+      }
+
+      return visitedLink ? visitedLinkColor() : color()
+    }
+
+    return colorResolvingCurrentColor(color: result, visitedLink: visitedLink)
+  }
+
   // Resolves the currentColor keyword, but must not be used for the "color" property which has a different semantic.
   func colorResolvingCurrentColor(color: StyleColorWrapper, visitedLink: Bool = false)
     -> ColorWrapper
@@ -2926,6 +3002,16 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func initialMaxSize() -> LengthWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func color() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func visitedLinkColor() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
