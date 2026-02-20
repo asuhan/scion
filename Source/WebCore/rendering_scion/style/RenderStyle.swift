@@ -373,15 +373,9 @@ class RenderStyleWrapper: Equatable {
 
   func borderAfter() -> BorderValue { return borderAfter(styleForFlow: self) }
 
-  func borderStart() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func borderStart() -> BorderValue { return borderStart(styleForFlow: self) }
 
-  func borderEnd() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func borderEnd() -> BorderValue { return borderEnd(styleForFlow: self) }
 
   func borderBefore(styleForFlow: RenderStyleWrapper) -> BorderValue {
     switch styleForFlow.blockFlowDirection() {
@@ -410,13 +404,17 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderStart(styleForFlow: RenderStyleWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForFlow.isHorizontalWritingMode() {
+      return styleForFlow.isLeftToRightDirection() ? borderLeft() : borderRight()
+    }
+    return styleForFlow.isLeftToRightDirection() ? borderTop() : borderBottom()
   }
 
   func borderEnd(styleForFlow: RenderStyleWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if styleForFlow.isHorizontalWritingMode() {
+      return styleForFlow.isLeftToRightDirection() ? borderRight() : borderLeft()
+    }
+    return styleForFlow.isLeftToRightDirection() ? borderBottom() : borderTop()
   }
 
   func fontCascade() -> FontCascadeWrapper {
