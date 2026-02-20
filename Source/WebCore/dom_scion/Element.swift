@@ -154,6 +154,11 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func styleResolver() -> Style.Resolver {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasDisplayContents() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -240,8 +240,27 @@ class RenderElementWrapper: RenderObjectWrapper {
       return nil
     }
 
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var parentStyle = parentStyle
+    if parentStyle == nil {
+      assert(ownStyle == nil)
+      parentStyle = style()
+    }
+
+    if isAnonymous() {
+      return nil
+    }
+
+    let element = element()!
+    let styleResolver = element.styleResolver()
+
+    guard
+      let resolvedStyle = styleResolver.styleForPseudoElement(
+        element, pseudoElementRequest, Style.ResolutionContext(parentStyle: parentStyle))
+    else { return nil }
+
+    Style.loadPendingResources(resolvedStyle.style!, protectedDocument(), element)
+
+    return resolvedStyle.style
   }
 
   // This is null for anonymous renderers.
