@@ -3068,8 +3068,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func columnGap() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().columnGap().isNormal {
+      return LayoutUnit(value: style().fontDescription().computedSize())  // "1em" is recommended as the normal gap setting. Matches <p> margins.
+    }
+    return valueForLength(length: style().columnGap().length, maximumValue: availableLogicalWidth())
   }
 
   private func previousSiblingWithOverhangingFloats() -> (RenderBlockFlowWrapper?, Bool) {
