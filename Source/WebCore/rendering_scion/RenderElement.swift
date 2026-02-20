@@ -1971,8 +1971,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateImage(oldImage: StyleImage?, newImage: StyleImage?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if oldImage === newImage {
+      return
+    }
+    oldImage?.removeClient(self)
+    newImage?.addClient(self)
   }
 
   private func updateShapeImage(oldShapeValue: ShapeValue?, newShapeValue: ShapeValue?) {
