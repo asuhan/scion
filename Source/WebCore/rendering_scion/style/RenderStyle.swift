@@ -2856,8 +2856,41 @@ class RenderStyleWrapper: Equatable {
   func diff(_ other: RenderStyleWrapper) -> (
     StyleDifference, StyleDifferenceContextSensitiveProperty
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty()
+
+    if changeRequiresLayout(other, &changedContextSensitiveProperties) {
+      return (.Layout, changedContextSensitiveProperties)
+    }
+
+    if changeRequiresPositionedLayoutOnly(other, &changedContextSensitiveProperties) {
+      return (.LayoutPositionedMovementOnly, changedContextSensitiveProperties)
+    }
+
+    if changeRequiresLayerRepaint(other, &changedContextSensitiveProperties) {
+      return (.RepaintLayer, changedContextSensitiveProperties)
+    }
+
+    if changeRequiresRepaint(other, &changedContextSensitiveProperties) {
+      return (.Repaint, changedContextSensitiveProperties)
+    }
+
+    if changeRequiresRepaintIfText(other, &changedContextSensitiveProperties) {
+      return (.RepaintIfText, changedContextSensitiveProperties)
+    }
+
+    // FIXME: RecompositeLayer should also behave as a priority bit (e.g when the style change requires layout, we know that
+    // the content also needs repaint and it will eventually get repainted,
+    // but a repaint type of change (e.g. color change) does not necessarily trigger recomposition).
+    if changeRequiresRecompositeLayer(other, &changedContextSensitiveProperties) {
+      return (.RecompositeLayer, changedContextSensitiveProperties)
+    }
+
+    // Cursors are not checked, since they will be set appropriately in response to mouse events,
+    // so they don't need to cause any repaint or layout.
+
+    // Animations don't need to be checked either.  We always set the new style on the RenderObject, so we will get a chance to fire off
+    // the resulting transition properly.
+    return (.Equal, changedContextSensitiveProperties)
   }
 
   func diffRequiresLayerRepaint(_ style: RenderStyleWrapper, isComposited: Bool) -> Bool {
@@ -2944,6 +2977,54 @@ class RenderStyleWrapper: Equatable {
     var textAlign: TextAlignMode = .Left
     var textWrapStyle: TextWrapStyle = .Auto
     var rtlOrdering: Order = .Logical
+  }
+
+  func changeRequiresLayout(
+    _ other: RenderStyleWrapper,
+    _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func changeRequiresPositionedLayoutOnly(
+    _ other: RenderStyleWrapper,
+    _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func changeRequiresLayerRepaint(
+    _ other: RenderStyleWrapper,
+    _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func changeRequiresRepaint(
+    _ other: RenderStyleWrapper,
+    _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func changeRequiresRepaintIfText(
+    _ other: RenderStyleWrapper,
+    _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func changeRequiresRecompositeLayer(
+    _ other: RenderStyleWrapper,
+    _ changedContextSensitiveProperties: inout StyleDifferenceContextSensitiveProperty
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   var nonInheritedFlags = NonInheritedFlags()
