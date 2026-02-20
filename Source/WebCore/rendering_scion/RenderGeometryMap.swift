@@ -364,7 +364,7 @@ class RenderGeometryMap {
   private var fixedStepsCount: Int32
   private var mapping: RenderGeometryMapSteps
   private var accumulatedOffset: LayoutSizeWrapper
-  private var mapCoordinatesFlags: MapCoordinatesMode
+  var mapCoordinatesFlags: MapCoordinatesMode
   #if ASSERT_ENABLED
     private var accumulatedOffsetMightBeSaturated: Bool
   #endif

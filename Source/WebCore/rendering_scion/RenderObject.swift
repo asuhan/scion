@@ -2271,8 +2271,37 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ geometryMap: RenderGeometryMap, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ container: RenderElementWrapper?, _ containerSkipped: Bool
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let isFixedPos = isFixedPositioned()
+    var adjustmentForSkippedAncestor = LayoutSizeWrapper()
+    if containerSkipped {
+      // There can't be a transform between repaintContainer and container, because transforms create containers, so it should be safe
+      // to just subtract the delta between the ancestor and container.
+      adjustmentForSkippedAncestor = -repaintContainer!.offsetFromAncestorContainer(container!)
+    }
+
+    var offsetDependsOnPoint: Bool? = false
+    var containerOffset = offsetFromContainer(
+      container!, LayoutPointWrapper(), &offsetDependsOnPoint)
+
+    let preserve3D = participatesInPreserve3D()
+    if shouldUseTransformFromContainer(container)
+      && geometryMap.mapCoordinatesFlags.contains(.UseTransforms)
+    {
+      let t = getTransformFromContainer(containerOffset)
+      t.translateRight(
+        tx: adjustmentForSkippedAncestor.width().double(),
+        ty: adjustmentForSkippedAncestor.height().double())
+
+      geometryMap.push(
+        self, t, accumulatingTransform: preserve3D, isNonUniform: offsetDependsOnPoint!,
+        isFixedPosition: isFixedPos, hasTransform: isTransformed())
+    } else {
+      containerOffset += adjustmentForSkippedAncestor
+      geometryMap.push(
+        self, containerOffset, accumulatingTransform: preserve3D,
+        isNonUniform: offsetDependsOnPoint!, isFixedPosition: isFixedPos,
+        hasTransform: isTransformed())
+    }
   }
 
   func participatesInPreserve3D() -> Bool {
