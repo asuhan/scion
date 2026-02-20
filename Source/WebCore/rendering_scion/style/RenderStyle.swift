@@ -2894,8 +2894,17 @@ class RenderStyleWrapper: Equatable {
   }
 
   func diffRequiresLayerRepaint(_ style: RenderStyleWrapper, isComposited: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var changedContextSensitiveProperties = StyleDifferenceContextSensitiveProperty()
+
+    if changeRequiresRepaint(style, &changedContextSensitiveProperties) {
+      return true
+    }
+
+    if isComposited && changeRequiresLayerRepaint(style, &changedContextSensitiveProperties) {
+      return changedContextSensitiveProperties.contains(.ClipRect)
+    }
+
+    return false
   }
 
   // Resolves the currentColor keyword, but must not be used for the "color" property which has a different semantic.
