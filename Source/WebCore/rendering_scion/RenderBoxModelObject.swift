@@ -495,8 +495,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isDocumentElementRenderer() || isPositioned() || createsGroup()
+      || hasTransformRelatedProperty() || hasHiddenBackface() || hasReflection()
+      || requiresRenderingConsolidationForViewTransition() || isRenderViewTransitionCapture()
   }
 
   // These return the CSS computed padding values.
