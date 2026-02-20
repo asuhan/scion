@@ -28,6 +28,11 @@ class RenderSVGResourceContainerWrapper: RenderSVGHiddenContainerWrapper {
     }
   }
 
+  func repaintAllClients() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func registerResource() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

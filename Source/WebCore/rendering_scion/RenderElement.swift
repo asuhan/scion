@@ -858,8 +858,15 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func repaintClientsOfReferencedSVGResources() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !document().settings().layerBasedSVGEngineEnabled() {
+      return
+    }
+
+    if let enclosingResourceContainer = RenderAncestorIteratorAdapter<
+      RenderSVGResourceContainerWrapper
+    >.lineageOfType(first: self).first() {
+      enclosingResourceContainer.repaintAllClients()
+    }
   }
 
   func borderImageIsLoadedAndCanBeRendered() -> Bool {
