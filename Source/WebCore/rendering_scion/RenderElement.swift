@@ -916,8 +916,12 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isInsideEntirelyHiddenLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isSVGLayerAwareRenderer() && document().settings().layerBasedSVGEngineEnabled()
+      && enclosingLayer()!.enclosingSVGHiddenOrResourceContainer != nil
+    {
+      return true
+    }
+    return style().usedVisibility() != .Visible && !enclosingLayer()!.hasVisibleContent
   }
 
   // Returns true if this renderer requires a new stacking context.

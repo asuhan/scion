@@ -5991,7 +5991,7 @@ class RenderLayerWrapper {
   private let m_enclosingPaginationLayer: RenderLayerWrapper? = nil
 
   // Pointer to the enclosing RenderSVGHiddenContainer or RenderSVGResourceContainer, if present.
-  private let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
+  let enclosingSVGHiddenOrResourceContainer: RenderSVGHiddenContainerWrapper? = nil
 
   private var filters: RenderLayerFilters? = nil
   var backing: RenderLayerBacking? = nil
