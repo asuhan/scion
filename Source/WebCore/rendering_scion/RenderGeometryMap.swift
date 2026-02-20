@@ -232,8 +232,19 @@ class RenderGeometryMap {
   func pushView(
     _ view: RenderViewWrapper?, _ scrollOffset: LayoutSizeWrapper, _ t: TransformationMatrix? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(insertionPosition == 0)  // The view should always be the first step.
+
+    mapping.insert(
+      RenderGeometryMapStep(
+        renderer: view, accumulatingTransform: false, isNonUniform: false, isFixedPosition: false,
+        hasTransform: t != nil), at: insertionPosition)
+
+    mapping[insertionPosition].offset = scrollOffset
+    if t != nil {
+      mapping[insertionPosition].transform = t!.deepCopy()
+    }
+
+    stepInserted(mapping[insertionPosition])
   }
 
   private func mapToContainer(
