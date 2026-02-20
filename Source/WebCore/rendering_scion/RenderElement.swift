@@ -206,8 +206,26 @@ class RenderElementWrapper: RenderObjectWrapper {
   func getCachedPseudoStyle(
     pseudoElementIdentifier: Style.PseudoElementIdentifier, parentStyle: RenderStyleWrapper? = nil
   ) -> RenderStyleWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if pseudoElementIdentifier.pseudoId < PseudoId.FirstInternalPseudoId
+      && !style().hasPseudoStyle(pseudo: pseudoElementIdentifier.pseudoId)
+    {
+      return nil
+    }
+
+    if let cachedStyle = style().getCachedPseudoStyle(
+      pseudoElementIdentifier: pseudoElementIdentifier)
+    {
+      return cachedStyle
+    }
+
+    if let result = getUncachedPseudoStyle(
+      pseudoElementRequest: Style.PseudoElementRequest(
+        pseudoElementIdentifier: pseudoElementIdentifier),
+      parentStyle: parentStyle)
+    {
+      return style!.addCachedPseudoStyle(pseudo: result)
+    }
+    return nil
   }
 
   func getUncachedPseudoStyle(

@@ -108,6 +108,12 @@ enum PseudoId: UInt32 {
   case InternalWritingSuggestions
 
   case AfterLastInternalPseudoId
+
+  static let FirstInternalPseudoId = PseudoId.WebKitScrollbarThumb
+}
+
+func < (_ a: PseudoId, _ b: PseudoId) -> Bool {
+  return a.rawValue < b.rawValue
 }
 
 func parentPseudoElement(pseudoId: PseudoId) -> PseudoId? {
