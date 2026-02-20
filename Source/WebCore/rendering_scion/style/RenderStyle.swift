@@ -1876,7 +1876,30 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func userModify() -> UserModify {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func userDrag() -> UserDrag {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usedUserSelect() -> UserSelect {
+    if effectiveInert() {
+      return .None
+    }
+
+    let value = userSelect()
+    if userModify() != .ReadOnly && userDrag() != .Element {
+      return value == .None ? .Text : value
+    }
+
+    return value
+  }
+
+  func userSelect() -> UserSelect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

@@ -398,6 +398,22 @@ enum TextSecurity {
   case Square
 }
 
+// CSS3 User Modify Properties
+
+enum UserModify: UInt8 {
+  case ReadOnly
+  case ReadWrite
+  case ReadWritePlaintextOnly
+}
+
+// CSS3 User Drag Values
+
+enum UserDrag: UInt8 {
+  case Auto
+  case None
+  case Element
+}
+
 // CSS3 User Select Values
 
 enum UserSelect: UInt8 {
