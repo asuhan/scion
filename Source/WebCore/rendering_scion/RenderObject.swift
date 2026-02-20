@@ -1537,8 +1537,71 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func createVisiblePosition(_ offset: Int32, _ affinity: Affinity) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If this is a non-anonymous renderer in an editable area, then it's simple.
+    if let node = nonPseudoNode() {
+      if !node.hasEditableStyle() {
+        // If it can be found, we prefer a visually equivalent position that is editable.
+        let position = makeDeprecatedLegacyPosition(node, UInt32(offset))
+        var candidate = position.downstream(.CanCrossEditingBoundary)
+        if candidate.deprecatedNode()!.hasEditableStyle() {
+          return VisiblePosition(candidate, affinity)
+        }
+        candidate = position.upstream(.CanCrossEditingBoundary)
+        if candidate.deprecatedNode()!.hasEditableStyle() {
+          return VisiblePosition(candidate, affinity)
+        }
+      }
+      // FIXME: Eliminate legacy editing positions
+      return VisiblePosition(makeDeprecatedLegacyPosition(node, UInt32(offset)), affinity)
+    }
+
+    // We don't want to cross the boundary between editable and non-editable
+    // regions of the document, but that is either impossible or at least
+    // extremely unlikely in any normal case because we stop as soon as we
+    // find a single non-anonymous renderer.
+
+    // Find a nearby non-anonymous renderer.
+    var child: RenderObjectWrapper? = self
+    while true {
+      let parent = child!.parent()
+      if parent == nil {
+        break
+      }
+      // Find non-anonymous content after.
+      var renderer = child
+      while true {
+        renderer = renderer!.nextInPreOrder(stayWithin: parent)
+        if renderer == nil {
+          break
+        }
+        if let node = renderer!.nonPseudoNode() {
+          return VisiblePosition(firstPositionInOrBeforeNode(node))
+        }
+      }
+
+      // Find non-anonymous content before.
+      renderer = child
+      while true {
+        renderer = renderer!.previousInPreOrder()
+        if renderer == nil || CPtrToInt(renderer!.p) == CPtrToInt(parent!.p) {
+          break
+        }
+        if let node = renderer!.nonPseudoNode() {
+          return VisiblePosition(lastPositionInOrAfterNode(node))
+        }
+      }
+
+      // Use the parent itself unless it too is anonymous.
+      if let element = parent!.nonPseudoElement() {
+        return VisiblePosition(firstPositionInOrBeforeNode(element))
+      }
+
+      // Repeat at the next level up.
+      child = parent
+    }
+
+    // Everything was anonymous. Give up.
+    return VisiblePosition()
   }
 
   func createVisiblePosition(_ position: Position) -> VisiblePosition {

@@ -3,6 +3,7 @@ target_sources(layout_scion PRIVATE
     CompositionUnderline.swift
     Editing.swift
     EditingBehavior.swift
+    EditingBoundary.swift
     Editor.swift
     FrameSelection.swift
     TextAffinity.swift

@@ -42,8 +42,31 @@ struct Position {
     fatalError("Not implemented")
   }
 
+  // FIXME: Callers should be moved off of node(), node() is not always the container for this position.
+  // For nodes which editingIgnoresContent(node()) returns true, positions like [ignoredNode, 0]
+  // will be treated as before ignoredNode (thus node() is really after the position, not containing it).
+  func deprecatedNode() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isNull() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func upstream(_ rule: EditingBoundaryCrossingRule = .CannotCrossEditingBoundary) -> Position {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func downstream(_ rule: EditingBoundaryCrossingRule = .CannotCrossEditingBoundary) -> Position {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}
+
+func makeDeprecatedLegacyPosition(_ node: NodeWrapper, _ offset: UInt32) -> Position {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }
