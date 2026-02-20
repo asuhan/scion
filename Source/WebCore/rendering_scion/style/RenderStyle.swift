@@ -608,8 +608,21 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func usedFloat(renderer: RenderObjectWrapper) -> UsedFloat {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let computedValue = renderer.style().floating()
+    switch computedValue {
+    case .None:
+      return .None
+    case .Left:
+      return .Left
+    case .Right:
+      return .Right
+    case .InlineStart, .InlineEnd:
+      let containingBlockDirection = renderer.containingBlock()!.style().direction()
+      if containingBlockDirection == .RTL {
+        return computedValue == .InlineStart ? .Right : .Left
+      }
+      return computedValue == .InlineStart ? .Left : .Right
+    }
   }
 
   func borderImage() -> NinePieceImage {
