@@ -783,23 +783,31 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func borderTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().blockFlowDirection() != .TopToBottom || !intrinsicBorderForFieldset().bool() {
+      return super.borderTop()
+    }
+    return super.borderTop() + intrinsicBorderForFieldset()
   }
 
   override func borderBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().blockFlowDirection() != .BottomToTop || !intrinsicBorderForFieldset().bool() {
+      return super.borderBottom()
+    }
+    return super.borderBottom() + intrinsicBorderForFieldset()
   }
 
   override func borderLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().blockFlowDirection() != .LeftToRight || !intrinsicBorderForFieldset().bool() {
+      return super.borderLeft()
+    }
+    return super.borderLeft() + intrinsicBorderForFieldset()
   }
 
   override func borderRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style().blockFlowDirection() != .RightToLeft || !intrinsicBorderForFieldset().bool() {
+      return super.borderRight()
+    }
+    return super.borderRight() + intrinsicBorderForFieldset()
   }
 
   override func borderBefore() -> LayoutUnit {
