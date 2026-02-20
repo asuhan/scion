@@ -98,8 +98,25 @@ private func positionForRun(
   _ flow: RenderBlockFlowWrapper, _ box: InlineIterator.BoxIterator<InlineIterator.Box>,
   _ start: Bool
 ) -> Position {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if !box.bool() {
+    return Position()
+  }
+
+  if box.get().renderer().nonPseudoNode() == nil {
+    return makeDeprecatedLegacyPosition(
+      flow.nonPseudoElement(), UInt32(start ? flow.caretMinOffset() : flow.caretMaxOffset()))
+  }
+
+  let textBox = box as? InlineIterator.TextBoxIterator
+  if textBox == nil {
+    return makeDeprecatedLegacyPosition(
+      box.get().renderer().nonPseudoNode(),
+      UInt32(start ? box.get().renderer().caretMinOffset() : box.get().renderer().caretMaxOffset()))
+  }
+
+  return makeDeprecatedLegacyPosition(
+    textBox!.get().renderer().nonPseudoNode(), start ? textBox!.get().start() : textBox!.get().end()
+  )
 }
 
 private func hasSimpleStaticPositionForInlineLevelOutOfFlowChildrenByStyle(

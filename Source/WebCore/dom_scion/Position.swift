@@ -66,7 +66,7 @@ struct Position {
   }
 }
 
-func makeDeprecatedLegacyPosition(_ node: NodeWrapper, _ offset: UInt32) -> Position {
+func makeDeprecatedLegacyPosition(_ node: NodeWrapper?, _ offset: UInt32) -> Position {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
 }
