@@ -1155,10 +1155,7 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
     child.setLocation(p: location)
   }
 
-  private func hasMultipleLines() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  private func hasMultipleLines() -> Bool { return style().boxLines() == .Multiple }
 
   private func isVertical() -> Bool {
     // TODO(asuhan): implement this

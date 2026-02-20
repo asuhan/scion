@@ -932,6 +932,11 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func boxLines() -> BoxLines {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func boxOrient() -> BoxOrient {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

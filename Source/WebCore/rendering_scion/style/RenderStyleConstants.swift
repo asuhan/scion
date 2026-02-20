@@ -326,6 +326,11 @@ enum BoxOrient: UInt8 {
   case Vertical
 }
 
+enum BoxLines: UInt8 {
+  case Single
+  case Multiple
+}
+
 // CSS3 Flexbox Properties
 
 enum FlexDirection: UInt8 {
