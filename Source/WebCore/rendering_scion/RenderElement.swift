@@ -982,6 +982,17 @@ class RenderElementWrapper: RenderObjectWrapper {
     removeFromRenderFragmentedFlowIncludingDescendants(true)
   }
 
+  func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
+    fragmentedFlow: RenderFragmentedFlowWrapper? = nil
+  ) {
+    fragmentedFlow?.removeFlowChildInfo(self)
+
+    for child: RenderElementWrapper in childrenOfType(parent: self) {
+      child.resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
+        fragmentedFlow: fragmentedFlow)
+    }
+  }
+
   // Called before anonymousChild.setStyle(). Override to set custom styles for
   // the child.
   func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {}

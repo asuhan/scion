@@ -1122,16 +1122,30 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  private func cachedEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setCachedEnclosingFragmentedFlowNeedsUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
-  final func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
+  override final func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
     fragmentedFlow: RenderFragmentedFlowWrapper? = nil
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if fragmentedFlowState() == .NotInsideFlow {
+      return
+    }
+
+    var fragmentedFlow = fragmentedFlow
+    if let cachedFragmentedFlow = cachedEnclosingFragmentedFlow() {
+      fragmentedFlow = cachedFragmentedFlow
+    }
+    setCachedEnclosingFragmentedFlowNeedsUpdate()
+    super.resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
+      fragmentedFlow: fragmentedFlow)
   }
 
   func availableLogicalHeightForPercentageComputation() -> LayoutUnit? {
