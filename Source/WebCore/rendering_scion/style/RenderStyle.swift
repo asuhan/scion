@@ -369,15 +369,9 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func borderBefore() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func borderBefore() -> BorderValue { return borderBefore(styleForFlow: self) }
 
-  func borderAfter() -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func borderAfter() -> BorderValue { return borderAfter(styleForFlow: self) }
 
   func borderStart() -> BorderValue {
     // TODO(asuhan): implement this
@@ -390,13 +384,29 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderBefore(styleForFlow: RenderStyleWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch styleForFlow.blockFlowDirection() {
+    case .TopToBottom:
+      return borderTop()
+    case .BottomToTop:
+      return borderBottom()
+    case .LeftToRight:
+      return borderLeft()
+    case .RightToLeft:
+      return borderRight()
+    }
   }
 
   func borderAfter(styleForFlow: RenderStyleWrapper) -> BorderValue {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch styleForFlow.blockFlowDirection() {
+    case .TopToBottom:
+      return borderBottom()
+    case .BottomToTop:
+      return borderTop()
+    case .LeftToRight:
+      return borderRight()
+    case .RightToLeft:
+      return borderLeft()
+    }
   }
 
   func borderStart(styleForFlow: RenderStyleWrapper) -> BorderValue {
