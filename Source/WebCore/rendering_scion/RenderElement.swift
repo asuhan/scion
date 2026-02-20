@@ -870,8 +870,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func borderImageIsLoadedAndCanBeRendered() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(style().hasBorder())
+
+    if let borderImage = style().borderImage().image() {
+      return borderImage.canRender(renderer: self, multiplier: style().usedZoom())
+        && borderImage.isLoaded(renderer: self)
+    }
+    return false
   }
 
   func isVisibleIgnoringGeometry() -> Bool {
