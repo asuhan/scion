@@ -859,8 +859,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func hasVisibleBoxDecorationStyle() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasBackground() || style().hasVisibleBorderDecoration() || style().hasUsedAppearance()
+      || style().boxShadow() != nil
   }
 
   func borderObscuresBackgroundEdge(contextScale: FloatSize) -> Bool {
