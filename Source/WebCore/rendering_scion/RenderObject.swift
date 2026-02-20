@@ -1188,6 +1188,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return view()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
+  // Returns true if this renderer is rooted.
+  func isRooted() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func node() -> NodeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2404,8 +2410,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func scheduleLayout(layoutRoot: RenderElementWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let renderView = layoutRoot as? RenderViewWrapper {
+      return renderView.protectedFrameView().checkedLayoutContext().scheduleLayout()
+    }
+
+    if layoutRoot?.isRooted() ?? false {
+      layoutRoot!.view().protectedFrameView().checkedLayoutContext().scheduleSubtreeLayout(
+        layoutRoot!)
+    }
   }
 
   func setNeedsPositionedMovementLayoutBit(b: Bool) {
