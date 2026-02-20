@@ -795,6 +795,11 @@ class RenderStyleWrapper: Equatable {
     return LayoutBoxExtent(top: top, right: right, bottom: bottom, left: left)
   }
 
+  func textStrokeWidth() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func opacity() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2726,9 +2731,17 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
   }
 
-  func hasPositiveStrokeWidth() -> Bool {
+  private func hasExplicitlySetStrokeWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func hasPositiveStrokeWidth() -> Bool {
+    if !hasExplicitlySetStrokeWidth() {
+      return textStrokeWidth() > 0
+    }
+
+    return strokeWidth().isPositive()
   }
 
   private func strokeColor() -> StyleColorWrapper {
@@ -3001,6 +3014,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func joinStyle() -> LineJoin {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func strokeWidth() -> LengthWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
