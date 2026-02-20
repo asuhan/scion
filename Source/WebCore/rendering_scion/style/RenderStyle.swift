@@ -31,11 +31,16 @@ enum CSSPropertyID {
   case CSSPropertyInvalid
   case CSSPropertyColor
   case CSSPropertyDisplay
+  case CSSPropertyAccentColor
   case CSSPropertyBackdropFilter
   case CSSPropertyBackgroundColor
+  case CSSPropertyCaretColor
   case CSSPropertyClipPath
   case CSSPropertyColumnRuleColor
+  case CSSPropertyFill
   case CSSPropertyFilter
+  case CSSPropertyFloodColor
+  case CSSPropertyLightingColor
   case CSSPropertyMixBlendMode
   case CSSPropertyOffsetAnchor
   case CSSPropertyOffsetDistance
@@ -46,12 +51,16 @@ enum CSSPropertyID {
   case CSSPropertyOutlineColor
   case CSSPropertyRotate
   case CSSPropertyScale
+  case CSSPropertyStopColor
+  case CSSPropertyStroke
+  case CSSPropertyStrokeColor
   case CSSPropertyTextDecorationColor
   case CSSPropertyTextEmphasisColor
   case CSSPropertyTransform
   case CSSPropertyTranslate
   case CSSPropertyWebkitBackdropFilter
   case CSSPropertyWebkitTextFillColor
+  case CSSPropertyWebkitTextStrokeColor
   case CSSPropertyBorderBlockEndColor
   case CSSPropertyBorderBlockStartColor
   case CSSPropertyBorderBottomColor
@@ -2599,6 +2608,16 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  private func strokeColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkStrokeColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usedStrokeColorProperty() -> CSSPropertyID {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2883,7 +2902,17 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  private func fillPaintColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasExplicitlySetColor() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func strokePaintColor() -> StyleColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -2955,8 +2984,55 @@ class RenderStyleWrapper: Equatable {
   private func unresolvedColorForProperty(
     _ colorProperty: CSSPropertyID, _ visitedLink: Bool = false
   ) -> StyleColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch colorProperty {
+    case .CSSPropertyAccentColor:
+      return accentColor()
+    case .CSSPropertyColor:
+      return StyleColorWrapper(visitedLink ? visitedLinkColor() : color())
+    case .CSSPropertyBackgroundColor:
+      return visitedLink ? visitedLinkBackgroundColor() : backgroundColor()
+    case .CSSPropertyBorderBottomColor:
+      return visitedLink ? visitedLinkBorderBottomColor() : borderBottomColor()
+    case .CSSPropertyBorderLeftColor:
+      return visitedLink ? visitedLinkBorderLeftColor() : borderLeftColor()
+    case .CSSPropertyBorderRightColor:
+      return visitedLink ? visitedLinkBorderRightColor() : borderRightColor()
+    case .CSSPropertyBorderTopColor:
+      return visitedLink ? visitedLinkBorderTopColor() : borderTopColor()
+    case .CSSPropertyFill:
+      return fillPaintColor()
+    case .CSSPropertyFloodColor:
+      return floodColor()
+    case .CSSPropertyLightingColor:
+      return lightingColor()
+    case .CSSPropertyOutlineColor:
+      return visitedLink ? visitedLinkOutlineColor() : outlineColor()
+    case .CSSPropertyStopColor:
+      return stopColor()
+    case .CSSPropertyStroke:
+      return strokePaintColor()
+    case .CSSPropertyStrokeColor:
+      return visitedLink ? visitedLinkStrokeColor() : strokeColor()
+    case .CSSPropertyBorderBlockEndColor, .CSSPropertyBorderBlockStartColor,
+      .CSSPropertyBorderInlineEndColor, .CSSPropertyBorderInlineStartColor:
+      return unresolvedColorForProperty(
+        CSSProperty.resolveDirectionAwareProperty(
+          id: colorProperty, direction: direction(), writingMode: writingMode()))
+    case .CSSPropertyColumnRuleColor:
+      return visitedLink ? visitedLinkColumnRuleColor() : columnRuleColor()
+    case .CSSPropertyTextEmphasisColor:
+      return visitedLink ? visitedLinkTextEmphasisColor() : textEmphasisColor()
+    case .CSSPropertyWebkitTextFillColor:
+      return visitedLink ? visitedLinkTextFillColor() : textFillColor()
+    case .CSSPropertyWebkitTextStrokeColor:
+      return visitedLink ? visitedLinkTextStrokeColor() : textStrokeColor()
+    case .CSSPropertyTextDecorationColor:
+      return visitedLink ? visitedLinkTextDecorationColor() : textDecorationColor()
+    case .CSSPropertyCaretColor:
+      return visitedLink ? visitedLinkCaretColor() : caretColor()
+    default:
+      fatalError("Not reached")
+    }
   }
 
   private func colorResolvingCurrentColor(_ colorProperty: CSSPropertyID, _ visitedLink: Bool)
@@ -3006,12 +3082,152 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  private func borderLeftColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderRightColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderTopColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func borderBottomColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func backgroundColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func color() -> ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
+  private func columnRuleColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func outlineColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func textEmphasisColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func textFillColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func textStrokeColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func caretColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func visitedLinkColor() -> ColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkBackgroundColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkBorderLeftColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkBorderRightColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkBorderBottomColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkBorderTopColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkOutlineColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkColumnRuleColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func textDecorationColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkTextDecorationColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkTextEmphasisColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkTextFillColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkTextStrokeColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func visitedLinkCaretColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func stopColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func floodColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func lightingColor() -> StyleColorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func accentColor() -> StyleColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
