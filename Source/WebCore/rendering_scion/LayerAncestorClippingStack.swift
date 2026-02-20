@@ -48,8 +48,13 @@ class LayerAncestorClippingStack {
   }
 
   func hasAnyScrollingLayers() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for entry in stack {
+      if entry.clipData.isOverflowScroll {
+        return true
+      }
+    }
+
+    return false
   }
 
   @discardableResult
