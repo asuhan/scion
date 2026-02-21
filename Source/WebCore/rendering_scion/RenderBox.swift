@@ -1476,8 +1476,52 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustedLocation = accumulatedOffset + location()
+
+    // Check kids first.
+    var child = lastChild()
+    while child != nil {
+      if !child!.hasLayer()
+        && child!.nodeAtPoint(request, &result, locationInContainer, adjustedLocation, action)
+      {
+        updateHitTestResult(
+          result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation)
+        )
+        return true
+      }
+      child = child!.previousSibling()
+    }
+
+    // Check our bounds next. For this purpose always assume that we can only be hit in the
+    // foreground phase (which is true for replaced elements like images).
+    var boundsRect = borderBoxRectInFragment(fragment: nil)
+    boundsRect.moveBy(offset: adjustedLocation)
+    if visibleToHitTesting(request: request) && action == .HitTestForeground
+      && locationInContainer.intersects(rect: boundsRect)
+    {
+      if !hitTestVisualOverflow(locationInContainer, accumulatedOffset) {
+        return false
+      }
+
+      if !hitTestClipPath(locationInContainer, accumulatedOffset) {
+        return false
+      }
+
+      if !hitTestBorderRadius(locationInContainer, accumulatedOffset) {
+        return false
+      }
+
+      updateHitTestResult(
+        result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
+      if result.addNodeToListBasedTestResult(
+        node: protectedNodeForHitTest(), request: request, locationInContainer: locationInContainer,
+        rect: boundsRect) == .Stop
+      {
+        return true
+      }
+    }
+
+    return super.nodeAtPoint(request, &result, locationInContainer, accumulatedOffset, action)
   }
 
   // Hit Testing
