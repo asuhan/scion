@@ -26,6 +26,21 @@ enum HitTestProgress {
 }
 
 struct HitTestResultWrapper {
+  func innerNode() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setURLElement(_ n: ElementWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func URLElement() -> ElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addNodeToListBasedTestResult(
     node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
     rect: LayoutRectWrapper
@@ -33,4 +48,6 @@ struct HitTestResultWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let hitTestLocation: HitTestLocationWrapper
 }

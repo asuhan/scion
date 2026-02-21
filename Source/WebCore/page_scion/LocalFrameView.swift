@@ -90,6 +90,17 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
+  func visualViewportOverrideRect() -> LayoutRectWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // These are in document coordinates, unaffected by page scale (but affected by zooming).
+  func layoutViewportRect() -> LayoutRectWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func rectForFixedPositionLayout() -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

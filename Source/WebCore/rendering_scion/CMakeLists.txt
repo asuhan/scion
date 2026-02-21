@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     GridLayoutState.swift
     GridMasonryLayout.swift
     GridTrackSizingAlgorithm.swift
+    HitTestingTransformState.swift
     HitTestLocation.swift
     HitTestRequest.swift
     HitTestResult.swift

@@ -64,6 +64,11 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func clientCoordinatesRelativeToLayoutViewport() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func css3DTransformBackfaceVisibilityInteroperabilityEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -150,6 +155,11 @@ class SettingsWrapper {
   }
 
   func showRepaintCounter() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func visualViewportEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

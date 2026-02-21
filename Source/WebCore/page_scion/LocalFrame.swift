@@ -60,4 +60,10 @@ final class LocalFrameWrapper: FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // Scale factor of this frame with respect to the container.
+  func frameScaleFactor() -> Float32 {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

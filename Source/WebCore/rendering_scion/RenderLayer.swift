@@ -1893,6 +1893,63 @@ class RenderLayerWrapper {
     }
   }
 
+  func hitTest(_ request: HitTestRequestWrapper, _ result: HitTestResultWrapper) -> Bool {
+    return hitTest(request, result.hitTestLocation, result)
+  }
+
+  private func hitTest(
+    _ request: HitTestRequestWrapper, _ hitTestLocation: HitTestLocationWrapper,
+    _ result: HitTestResultWrapper
+  ) -> Bool {
+    assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
+    assert(!renderer().view().needsLayout())
+
+    assert(!isRenderFragmentedFlow())
+    var hitTestArea = LayoutRectWrapper(rect: renderer().view().documentRect())
+    if !request.ignoreClipping() {
+      let settings = renderer().settings()
+      if settings.visualViewportEnabled() && settings.clientCoordinatesRelativeToLayoutViewport() {
+        let frameView = renderer().view().frameView()
+        var absoluteLayoutViewportRect = frameView.layoutViewportRect()
+        let scaleFactor = frameView.frame().frameScaleFactor()
+        if scaleFactor > 1 {
+          absoluteLayoutViewportRect.scale(scaleFactor)
+        }
+        hitTestArea.intersect(other: absoluteLayoutViewportRect)
+      } else {
+        hitTestArea.intersect(
+          other: LayoutRectWrapper(
+            rect: renderer().view().frameView().visibleContentRect(.LegacyIOSDocumentVisibleRect)))
+      }
+    }
+
+    var insideLayer = hitTestLayer(
+      rootLayer: self, containerLayer: nil, request, result, hitTestArea, hitTestLocation, false)
+    if insideLayer.layer == nil {
+      // We didn't hit any layer. If we are the root layer and the mouse is -- or just was -- down,
+      // return ourselves. We do this so mouse events continue getting delivered after a drag has
+      // exited the WebView, and so hit testing over a scrollbar hits the content document.
+      if !request.isChildFrameHitTest() && (request.active() || request.release())
+        && isRenderViewLayer
+      {
+        renderer().updateHitTestResult(
+          result: result,
+          point: (renderer() as! RenderViewWrapper).flipForWritingMode(
+            position: hitTestLocation.point()))
+        insideLayer = HitLayer(layer: self)
+      }
+    }
+
+    // Now determine if the result is inside an anchor - if the urlElement isn't already set.
+    if let node = result.innerNode(), result.URLElement() == nil {
+      result.setURLElement(node.enclosingLinkEventParentOrSelf())
+    }
+
+    // Now return whether we were inside this layer (this will always be true for the root
+    // layer).
+    return insideLayer.layer != nil
+  }
+
   struct ClipRectsOption: OptionSet {
     let rawValue: UInt8
 
@@ -5417,6 +5474,21 @@ class RenderLayerWrapper {
         context.setCompositeOperation(operation: context.compositeOperation(), blendMode: .Normal)
       }
     }
+  }
+
+  private struct HitLayer {
+    let layer: RenderLayerWrapper?
+    let zOffset: Float64 = 0
+  }
+  private func hitTestLayer(
+    rootLayer: RenderLayerWrapper?, containerLayer: RenderLayerWrapper?,
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ hitTestRect: LayoutRectWrapper, _ hitTestLocation: HitTestLocationWrapper,
+    _ appliedTransform: Bool, _ transformState: HitTestingTransformState? = nil,
+    _ zOffset: Float64? = nil
+  ) -> HitLayer {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func listBackgroundIsKnownToBeOpaqueInRect(

@@ -55,6 +55,26 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
+  func active() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func release() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func ignoreClipping() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func isChildFrameHitTest() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func userTriggered() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
