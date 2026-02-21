@@ -149,10 +149,19 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // You cannot be inside an in-flow RenderFragmentedFlow without a corresponding DOM node. It's better to
+    // just let the ancestor figure out where we are instead.
+    if hitTestAction == .HitTestBlockBackground {
+      return false
+    }
+    let inside = super.nodeAtPoint(
+      request, &result, locationInContainer, accumulatedOffset, hitTestAction)
+    if inside && result.innerNode() == nil {
+      return false
+    }
+    return inside
   }
 
   override func mapAbsoluteToLocalPoint(
