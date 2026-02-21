@@ -209,6 +209,14 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     return clipRect
   }
 
+  override func isPointInOverflowControl(
+    _ result: inout HitTestResultWrapper, locationInContainer: LayoutPointWrapper,
+    accumulatedOffset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
 
@@ -361,7 +369,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func nodeAtPoint(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {

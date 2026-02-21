@@ -1738,12 +1738,81 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func nodeAtPoint(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustedLocation = accumulatedOffset + location()
+    let localOffset = toLayoutSize(point: adjustedLocation)
+
+    // Check if we need to do anything at all.
+    if !hitTestVisualOverflow(locationInContainer, accumulatedOffset) {
+      return false
+    }
+
+    if (hitTestAction == .HitTestBlockBackground || hitTestAction == .HitTestChildBlockBackground)
+      && visibleToHitTesting(request: request)
+      && isPointInOverflowControl(
+        &result, locationInContainer: locationInContainer.point(),
+        accumulatedOffset: adjustedLocation)
+    {
+      updateHitTestResult(result: result, point: locationInContainer.point() - localOffset)
+      // FIXME: isPointInOverflowControl() doesn't handle rect-based tests yet.
+      if result.addNodeToListBasedTestResult(
+        node: protectedNodeForHitTest(), request: request,
+        locationInContainer: locationInContainer) == .Stop
+      {
+        return true
+      }
+    }
+
+    if !hitTestClipPath(locationInContainer, accumulatedOffset) {
+      return false
+    }
+
+    // If we have clipping, then we can't have any spillout.
+    let useClip = (hasControlClip() || hasNonVisibleOverflow())
+    let checkChildren =
+      !useClip
+      || (hasControlClip()
+        ? locationInContainer.intersects(rect: controlClipRect(additionalOffset: adjustedLocation))
+        : locationInContainer.intersects(
+          rect: overflowClipRect(
+            location: adjustedLocation, fragment: nil, relevancy: .IncludeOverlayScrollbarSize)))
+    if checkChildren
+      && hitTestChildren(request, result, locationInContainer, adjustedLocation, hitTestAction)
+    {
+      return true
+    }
+
+    if !checkChildren
+      && hitTestExcludedChildrenInBorder(
+        request, result, locationInContainer, adjustedLocation, hitTestAction)
+    {
+      return true
+    }
+
+    if !hitTestBorderRadius(locationInContainer, accumulatedOffset) {
+      return false
+    }
+
+    // Now hit test our background
+    if hitTestAction == .HitTestBlockBackground || hitTestAction == .HitTestChildBlockBackground {
+      let boundsRect = LayoutRectWrapper(location: adjustedLocation, size: size())
+      if visibleToHitTesting(request: request) && locationInContainer.intersects(rect: boundsRect) {
+        updateHitTestResult(
+          result: result,
+          point: flipForWritingMode(position: locationInContainer.point() - localOffset))
+        if result.addNodeToListBasedTestResult(
+          node: protectedNodeForHitTest(), request: request,
+          locationInContainer: locationInContainer, rect: boundsRect) == .Stop
+        {
+          return true
+        }
+      }
+    }
+
+    return false
   }
 
   override func computeIntrinsicLogicalWidths(
@@ -2303,6 +2372,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return isInline() && isReplacedOrInlineBlock()
   }
 
+  func isPointInOverflowControl(
+    _ result: inout HitTestResultWrapper, locationInContainer: LayoutPointWrapper,
+    accumulatedOffset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addOverflowFromChildren() {
     if childrenInline() {
       addOverflowFromInlineChildren()
@@ -2840,6 +2917,24 @@ class RenderBlockWrapper: RenderBoxWrapper {
       paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .CursorCaret)
       paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .DragCaret)
     }
+  }
+
+  func hitTestChildren(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ adjustedLocation: LayoutPointWrapper,
+    _ hitTestAction: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func hitTestExcludedChildrenInBorder(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ hitTestAction: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func computeBlockPreferredLogicalWidths(

@@ -65,7 +65,7 @@ class LegacyRenderSVGModelObject: RenderElementWrapper {
 
   // This method should never be called, SVG uses a different nodeAtPoint method
   override func nodeAtPoint(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {

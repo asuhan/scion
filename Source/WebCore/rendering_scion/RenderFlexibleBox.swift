@@ -535,6 +535,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     }
   }
 
+  override func hitTestChildren(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ adjustedLocation: LayoutPointWrapper,
+    _ hitTestAction: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isHorizontalFlow() -> Bool {
     if isHorizontalWritingMode() {
       return !isColumnFlow()

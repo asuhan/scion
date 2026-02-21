@@ -43,7 +43,7 @@ struct HitTestResultWrapper {
 
   func addNodeToListBasedTestResult(
     node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
-    rect: LayoutRectWrapper
+    rect: LayoutRectWrapper = LayoutRectWrapper()
   ) -> HitTestProgress {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

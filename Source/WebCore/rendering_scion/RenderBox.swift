@@ -1472,9 +1472,31 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func nodeAtPoint(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Hit Testing
+  func hitTestVisualOverflow(
+    _ hitTestLocation: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hitTestClipPath(
+    _ hitTestLocation: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func hitTestBorderRadius(
+    _ hitTestLocation: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper
   ) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -1278,7 +1278,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hitTest(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ hitTestFilter: HitTestFilter = .HitTestAll
   ) -> Bool {
@@ -1286,31 +1286,32 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     if hitTestFilter != .HitTestSelf {
       // First test the foreground layer (lines and inlines).
       inside = nodeAtPoint(
-        request, result, locationInContainer, accumulatedOffset, .HitTestForeground)
+        request, &result, locationInContainer, accumulatedOffset, .HitTestForeground)
 
       // Test floats next.
       if !inside {
-        inside = nodeAtPoint(request, result, locationInContainer, accumulatedOffset, .HitTestFloat)
+        inside = nodeAtPoint(
+          request, &result, locationInContainer, accumulatedOffset, .HitTestFloat)
       }
 
       // Finally test to see if the mouse is in the background (within a child block's background).
       if !inside {
         inside = nodeAtPoint(
-          request, result, locationInContainer, accumulatedOffset, .HitTestChildBlockBackgrounds)
+          request, &result, locationInContainer, accumulatedOffset, .HitTestChildBlockBackgrounds)
       }
     }
 
     // See if the mouse is inside us but not any of our descendants
     if hitTestFilter != .HitTestDescendants && !inside {
       inside = nodeAtPoint(
-        request, result, locationInContainer, accumulatedOffset, .HitTestBlockBackground)
+        request, &result, locationInContainer, accumulatedOffset, .HitTestBlockBackground)
     }
 
     return inside
   }
 
   func nodeAtPoint(
-    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
