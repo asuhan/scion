@@ -75,6 +75,11 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
+  func resultIsElementList() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func userTriggered() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

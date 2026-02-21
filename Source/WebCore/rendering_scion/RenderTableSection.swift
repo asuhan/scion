@@ -1487,13 +1487,86 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
         : row == 0 ? outerBorderRight(styleForCellFlow: style()) : zero)
   }
 
+  // Hit Testing
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // If we have no children then we have nothing to do.
+    if firstRow() == nil {
+      return false
+    }
+
+    // Table sections cannot ever be hit tested.  Effectively they do not exist.
+    // Just forward to our children always.
+    let adjustedLocation = accumulatedOffset + location()
+
+    if hasNonVisibleOverflow()
+      && !locationInContainer.intersects(
+        rect: overflowClipRect(location: adjustedLocation, fragment: nil))
+    {
+      return false
+    }
+
+    if hasOverflowingCell() {
+      var row = lastRow()
+      while row != nil {
+        // FIXME: We have to skip over inline flows, since they can show up inside table rows
+        // at the moment (a demoted inline <form> for example). If we ever implement a
+        // table-specific hit-test method (which we should do for performance reasons anyway),
+        // then we can remove this check.
+        if !row!.hasSelfPaintingLayer() {
+          if row!.nodeAtPoint(request, &result, locationInContainer, adjustedLocation, action) {
+            return true
+          }
+        }
+        row = row!.previousRow()
+      }
+      return false
+    }
+
+    recalcCellsIfNeeded()
+
+    var hitTestRect = locationInContainer.boundingBox()
+    hitTestRect.moveBy(offset: -adjustedLocation)
+
+    let tableAlignedRect = logicalRectForWritingModeAndDirection(rect: hitTestRect)
+    let rowSpan = spannedRows(
+      flippedRect: tableAlignedRect,
+      shouldIncludeAllIntersectionCells: .DoNotIncludeAllIntersectingCells)
+    let columnSpan = spannedColumns(
+      flippedRect: tableAlignedRect,
+      shouldIncludeAllIntersectionCells: .DoNotIncludeAllIntersectingCells)
+
+    // Now iterate over the spanned rows and columns.
+    for hitRow in rowSpan.start..<rowSpan.end {
+      for hitColumn in columnSpan.start..<columnSpan.end {
+        let current = cellAt(row: hitRow, col: hitColumn)
+
+        // If the cell is empty, there's nothing to do
+        if !current.hasCells() {
+          continue
+        }
+
+        for cell in current.cells.reversed() {
+          let cellPoint = flipForWritingModeForChild(child: cell, point: adjustedLocation)
+          if cell.nodeAtPoint(request, &result, locationInContainer, cellPoint, action) {
+            updateHitTestResult(
+              result: result, point: locationInContainer.point() - toLayoutSize(point: cellPoint))
+            return true
+          }
+        }
+        if !request.resultIsElementList() {
+          break
+        }
+      }
+      if !request.resultIsElementList() {
+        break
+      }
+    }
+
+    return false
   }
 
   private func ensureRows(numRows: UInt32) {
