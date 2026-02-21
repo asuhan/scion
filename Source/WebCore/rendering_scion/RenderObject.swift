@@ -1277,6 +1277,47 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func hitTest(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ hitTestFilter: HitTestFilter = .HitTestAll
+  ) -> Bool {
+    var inside = false
+    if hitTestFilter != .HitTestSelf {
+      // First test the foreground layer (lines and inlines).
+      inside = nodeAtPoint(
+        request, result, locationInContainer, accumulatedOffset, .HitTestForeground)
+
+      // Test floats next.
+      if !inside {
+        inside = nodeAtPoint(request, result, locationInContainer, accumulatedOffset, .HitTestFloat)
+      }
+
+      // Finally test to see if the mouse is in the background (within a child block's background).
+      if !inside {
+        inside = nodeAtPoint(
+          request, result, locationInContainer, accumulatedOffset, .HitTestChildBlockBackgrounds)
+      }
+    }
+
+    // See if the mouse is inside us but not any of our descendants
+    if hitTestFilter != .HitTestDescendants && !inside {
+      inside = nodeAtPoint(
+        request, result, locationInContainer, accumulatedOffset, .HitTestBlockBackground)
+    }
+
+    return inside
+  }
+
+  func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Convert a local quad into the coordinate system of container, taking transforms into account.
   func localToContainerQuad(
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,
