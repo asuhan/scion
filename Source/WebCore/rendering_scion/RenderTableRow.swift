@@ -130,8 +130,28 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Table rows cannot ever be hit tested.  Effectively they do not exist.
+    // Just forward to our children always.
+    guard let section = section() else { return false }
+
+    var cell = lastCell()
+    while cell != nil {
+      // FIXME: We have to skip over inline flows, since they can show up inside table rows
+      // at the moment (a demoted inline <form> for example). If we ever implement a
+      // table-specific hit-test method (which we should do for performance reasons anyway),
+      // then we can remove this check.
+      if !cell!.hasSelfPaintingLayer() {
+        let cellPoint = section.flipForWritingModeForChild(child: cell!, point: accumulatedOffset)
+        if cell!.nodeAtPoint(request, &result, locationInContainer, cellPoint, action) {
+          updateHitTestResult(
+            result: result, point: locationInContainer.point() - toLayoutSize(point: cellPoint))
+          return true
+        }
+      }
+      cell = cell!.previousCell()
+    }
+
+    return false
   }
 
   func section() -> RenderTableSectionWrapper? {
