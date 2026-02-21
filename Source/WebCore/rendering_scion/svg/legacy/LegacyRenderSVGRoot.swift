@@ -320,6 +320,15 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     return accurateRepaintBoundingBox!
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {

@@ -215,6 +215,15 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
     fatalError("Not implemented")
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private struct ReplacementTextGeometry {
     let accumulatedOffset: LayoutPointWrapper
     let contentRect: FloatRectWrapper

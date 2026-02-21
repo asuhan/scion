@@ -136,6 +136,15 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
 
   func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? { return nil }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private var objectBoundingBoxValid = false
   var isLayoutSizeChanged = false
   var didTransformToRootUpdate = false

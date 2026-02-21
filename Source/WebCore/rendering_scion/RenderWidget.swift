@@ -152,6 +152,15 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
     }
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

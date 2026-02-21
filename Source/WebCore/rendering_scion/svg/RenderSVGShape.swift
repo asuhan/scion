@@ -211,6 +211,15 @@ class RenderSVGShapeWrapper: RenderSVGModelObjectWrapper, RenderSVGShapeProto {
     fillStrokeMarkers(paintInfo)
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func setupNonScalingStrokeContext(
     _ strokeTransform: AffineTransform, _ stateSaver: GraphicsContextStateSaver
   ) -> Bool {

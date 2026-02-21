@@ -551,6 +551,15 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     legacyLineBoxes!.paint(renderer: self, paintInfo: paintInfo, paintOffset: paintOffset)
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {

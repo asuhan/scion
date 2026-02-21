@@ -27,6 +27,15 @@ final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
     fatalError("Not implemented")
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func getAverageCharWidth() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

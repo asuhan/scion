@@ -507,6 +507,15 @@ class RenderImageWrapper: RenderReplacedWrapper {
     fatalError("Not implemented")
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func imageSizeForError(_ newImage: CachedImageWrapper?) -> IntSize {
     assert(newImage!.imageForRenderer(renderer: self) != nil)
 

@@ -1043,6 +1043,15 @@ class RenderTextWrapper: RenderObjectWrapper {
     setPreferredLogicalWidthsDirty(shouldBeDirty: false)
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func widthFromCache(
     fontCascade: FontCascadeWrapper, start: UInt32, length: UInt32, _ xPos: Float32,
     _ fallbackFonts: WeakHashSet<FontWrapper>?, _ glyphOverflow: GlyphOverflow?,

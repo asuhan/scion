@@ -407,6 +407,15 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
         length: svgSVGElement().intrinsicHeight(), maximumValue: LayoutUnit(value: 0)))
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func mapLocalToContainer(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?

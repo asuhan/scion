@@ -187,6 +187,15 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
     return drawResult
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func bufferForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
     -> Bool
   {

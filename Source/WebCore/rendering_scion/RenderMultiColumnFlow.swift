@@ -146,6 +146,15 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     return physicalPoint - physicalTranslatedPoint
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {

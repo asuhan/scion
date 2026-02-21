@@ -360,6 +360,15 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     return horizontalScrollbar()?.occupiedHeight() ?? 0
   }
 
+  override func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func verticalScrollbar() -> Scrollbar? {
     if scrollbar != nil && scrollbar!.orientation() == .Vertical {
       return scrollbar

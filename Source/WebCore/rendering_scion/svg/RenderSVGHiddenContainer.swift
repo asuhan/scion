@@ -52,6 +52,15 @@ class RenderSVGHiddenContainerWrapper: RenderSVGContainerWrapper {
     fatalError("Not implemented")
   }
 
+  override final func nodeAtPoint(
+    _ request: HitTestRequestWrapper, _ result: HitTestResultWrapper,
+    _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
+    _ action: HitTestAction
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func updateFromStyle() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
