@@ -55,6 +55,14 @@ class RenderTextControlWrapper: RenderBlockFlowWrapper {
     textFormControlElement().updatePlaceholderVisibility()
   }
 
+  func hitInnerTextElement(
+    _ result: HitTestResultWrapper, _ pointInContainer: LayoutPointWrapper,
+    _ accumulatedOffset: LayoutPointWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func getAverageCharWidth() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

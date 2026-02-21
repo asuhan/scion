@@ -30,10 +30,25 @@ final class RenderTextControlMultiLineWrapper: RenderTextControlWrapper {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !super.nodeAtPoint(request, &result, locationInContainer, accumulatedOffset, hitTestAction) {
+      return false
+    }
+
+    let adjustedPoint = accumulatedOffset + location()
+    if isPointInOverflowControl(
+      &result, locationInContainer: locationInContainer.point(), accumulatedOffset: adjustedPoint)
+    {
+      return true
+    }
+
+    if optEq(result.innerNode(), textAreaElement()) || optEq(result.innerNode(), innerTextElement())
+    {
+      hitInnerTextElement(result, locationInContainer.point(), accumulatedOffset)
+    }
+
+    return true
   }
 
   override final func getAverageCharWidth() -> Float32 {
