@@ -157,8 +157,46 @@ class RenderWidgetWrapper: RenderReplacedWrapper, OverlapTestRequestClient {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let shouldHitTestChildFrameContent =
+      request.allowsChildFrameContent()
+      || (request.allowsVisibleChildFrameContent() && visibleToHitTesting(request: request))
+    if let childFrameView = widget() as? LocalFrameViewWrapper,
+      shouldHitTestChildFrameContent && childFrameView.renderView() != nil
+    {
+      let adjustedLocation = accumulatedOffset + location()
+      let contentOffset =
+        LayoutPointWrapper(x: borderLeft() + paddingLeft(), y: borderTop() + paddingTop())
+        - LayoutSizeWrapper(size: toIntSize(childFrameView.scrollPosition()))
+      let newHitTestLocation = HitTestLocationWrapper(
+        locationInContainer, -adjustedLocation - contentOffset)
+      let newHitTestRequest = HitTestRequestWrapper(type: request.type.union(.ChildFrameHitTest))
+      var childFrameResult = HitTestResultWrapper(newHitTestLocation)
+
+      guard let document = childFrameView.frame().document() else { return false }
+      let isInsideChildFrame = document.hitTest(
+        newHitTestRequest, newHitTestLocation, &childFrameResult)
+
+      if request.resultIsElementList() {
+        result.append(childFrameResult, request)
+      } else if isInsideChildFrame {
+        result = childFrameResult
+      }
+
+      if isInsideChildFrame {
+        return true
+      }
+    }
+
+    let hadResult = result.innerNode()
+    let inside = super.nodeAtPoint(request, &result, locationInContainer, accumulatedOffset, action)
+
+    // Check to see if we are really over the widget itself (and not just in the border/padding area).
+    if (inside || result.isRectBasedTest()) && hadResult == nil
+      && optEq(result.innerNode(), frameOwnerElement())
+    {
+      result.setIsOverWidget(contentBoxRect().contains(point: result.localPoint))
+    }
+    return inside
   }
 
   override func requiresLayer() -> Bool {

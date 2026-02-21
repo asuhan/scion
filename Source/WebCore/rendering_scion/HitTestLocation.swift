@@ -20,6 +20,12 @@
 */
 
 struct HitTestLocationWrapper {
+  // Make a copy the HitTestLocation in a new region by applying given offset to internal point and area.
+  init(_ other: HitTestLocationWrapper, _ offset: LayoutSizeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func point() -> LayoutPointWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -70,6 +70,16 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
+  func allowsChildFrameContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func allowsVisibleChildFrameContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isChildFrameHitTest() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -84,4 +94,6 @@ struct HitTestRequestWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  let type: `Type`
 }

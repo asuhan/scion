@@ -26,6 +26,11 @@ enum HitTestProgress {
 }
 
 struct HitTestResultWrapper {
+  init(_ other: HitTestLocationWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func innerNode() -> NodeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -41,6 +46,17 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  func setIsOverWidget(_ isOverWidget: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  // Forwarded from HitTestLocation
+  func isRectBasedTest() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addNodeToListBasedTestResult(
     node: NodeWrapper?, request: HitTestRequestWrapper, locationInContainer: HitTestLocationWrapper,
     rect: LayoutRectWrapper = LayoutRectWrapper()
@@ -49,5 +65,14 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  func append(_ other: HitTestResultWrapper, _ request: HitTestRequestWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   let hitTestLocation: HitTestLocationWrapper
+
+  // A point in the local coordinate space of m_innerNonSharedNode's renderer. Allows us to efficiently
+  // determine where inside the renderer we hit on subsequent operations.
+  let localPoint: LayoutPointWrapper
 }

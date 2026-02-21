@@ -231,6 +231,14 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func hitTest(
+    _ request: HitTestRequestWrapper, _ location: HitTestLocationWrapper,
+    _ result: inout HitTestResultWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func textManipulationControllerIfExists() -> TextManipulationControllerWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
