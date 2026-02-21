@@ -271,10 +271,33 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !super.nodeAtPoint(request, &result, locationInContainer, accumulatedOffset, hitTestAction) {
+      return false
+    }
+
+    // Say that we hit the inner text element if
+    //  - we hit a node inside the inner text element,
+    //  - we hit the <input> element (e.g. we're over the border or padding), or
+    //  - we hit regions not in any decoration buttons.
+    let container = containerElement()
+    if result.innerNode()!.isDescendantOf(innerTextElement())
+      || optEq(result.innerNode(), inputElement())
+      || (container != nil && optEq(container, result.innerNode()))
+    {
+      var pointInParent = locationInContainer.point()
+      if container != nil && innerBlockElement() != nil {
+        if innerBlockElement()!.renderBox() != nil {
+          pointInParent -= toLayoutSize(point: innerBlockElement()!.renderBox()!.location())
+        }
+        if container!.renderBox() != nil {
+          pointInParent -= toLayoutSize(point: container!.renderBox()!.location())
+        }
+      }
+      hitInnerTextElement(result, pointInParent, accumulatedOffset)
+    }
+    return true
   }
 
   override final func getAverageCharWidth() -> Float32 {
