@@ -1376,8 +1376,48 @@ class RenderTableWrapper: RenderBlockWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustedLocation = accumulatedOffset + location()
+
+    // Check kids first.
+    if !hasNonVisibleOverflow()
+      || locationInContainer.intersects(
+        rect: overflowClipRect(location: adjustedLocation, fragment: nil))
+    {
+      var child = lastChild()
+      while child != nil {
+        if let box = child as? RenderBoxWrapper,
+          !box.hasSelfPaintingLayer() && (box.isRenderTableSection() || box.isRenderTableCaption())
+        {
+          let childPoint = flipForWritingModeForChild(child: box, point: adjustedLocation)
+          if box.nodeAtPoint(request, &result, locationInContainer, childPoint, action) {
+            updateHitTestResult(
+              result: result, point: toLayoutPoint(size: locationInContainer.point() - childPoint))
+            return true
+          }
+        }
+        child = child!.previousSibling()
+      }
+    }
+
+    // Check our bounds next.
+    let boundsRect = LayoutRectWrapper(location: adjustedLocation, size: size())
+    if visibleToHitTesting(request: request)
+      && (action == .HitTestBlockBackground || action == .HitTestChildBlockBackground)
+      && locationInContainer.intersects(rect: boundsRect)
+    {
+      updateHitTestResult(
+        result: result,
+        point: flipForWritingMode(
+          position: locationInContainer.point() - toLayoutSize(point: adjustedLocation)))
+      if result.addNodeToListBasedTestResult(
+        node: protectedNodeForHitTest(), request: request, locationInContainer: locationInContainer,
+        rect: boundsRect) == .Stop
+      {
+        return true
+      }
+    }
+
+    return false
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
