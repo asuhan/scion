@@ -350,7 +350,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     // No selected items, find the first non-disabled item.
     var indexOfFirstEnabledOption: Int32 = 0
     for item in selectElement().listItems() {
-      if item is HTMLOptionElementWrapper && !item.isDisabledFormControl() {
+      if item is HTMLOptionElementWrapper && !item!.isDisabledFormControl() {
         selectElement().setActiveSelectionEndIndex(indexOfFirstEnabledOption)
         rects.append(
           itemBoundingBoxRect(additionalOffset: additionalOffset, index: indexOfFirstEnabledOption))
@@ -371,10 +371,32 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !super.nodeAtPoint(request, &result, locationInContainer, accumulatedOffset, hitTestAction) {
+      return false
+    }
+    let listItems = selectElement().listItems()
+    let size = numItems()
+    let adjustedLocation = accumulatedOffset + location()
+
+    for i in 0..<size {
+      if !itemBoundingBoxRect(additionalOffset: adjustedLocation, index: i).contains(
+        point: locationInContainer.point())
+      {
+        continue
+      }
+      if let node = listItems[Int(i)] {
+        result.setInnerNode(node)
+        if result.innerNonSharedNode() == nil {
+          result.setInnerNonSharedNode(node)
+        }
+        result.localPoint = locationInContainer.point() - toLayoutSize(point: adjustedLocation)
+        break
+      }
+    }
+
+    return true
   }
 
   private func verticalScrollbar() -> Scrollbar? {
@@ -519,7 +541,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ listIndex: Int32
   ) {
     let listItems = selectElement().listItems()
-    let listItemElement = listItems[Int(listIndex)]
+    let listItemElement = listItems[Int(listIndex)]!
 
     guard let itemStyle = listItemElement.computedStyleForEditability() else { return }
 
@@ -592,7 +614,7 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     _ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper, _ listIndex: Int32
   ) {
     let listItems = selectElement().listItems()
-    let listItemElement = listItems[Int(listIndex)]
+    let listItemElement = listItems[Int(listIndex)]!
     guard let itemStyle = listItemElement.computedStyleForEditability() else { return }
 
     var backColor = ColorWrapper()

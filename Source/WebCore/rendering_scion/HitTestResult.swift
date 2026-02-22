@@ -31,6 +31,16 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  func setInnerNode(_ node: NodeWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func innerNonSharedNode() -> NodeWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func innerNode() -> NodeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -84,5 +94,5 @@ struct HitTestResultWrapper {
 
   // A point in the local coordinate space of m_innerNonSharedNode's renderer. Allows us to efficiently
   // determine where inside the renderer we hit on subsequent operations.
-  let localPoint: LayoutPointWrapper
+  var localPoint: LayoutPointWrapper
 }

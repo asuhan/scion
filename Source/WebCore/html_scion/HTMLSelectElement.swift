@@ -32,7 +32,7 @@ class HTMLSelectElementWrapper: HTMLFormControlElementWrapper {
     fatalError("Not implemented")
   }
 
-  func listItems() -> ArraySlice<HTMLElementWrapper> {
+  func listItems() -> ArraySlice<HTMLElementWrapper?> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
