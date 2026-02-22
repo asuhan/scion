@@ -25,6 +25,11 @@
  */
 
 struct FloatRectWrapper: Equatable {
+  enum ContainsMode {
+    case InsideOrOnStroke
+    case InsideButNotOnStroke
+  }
+
   init() {}
 
   init(x: Float32, y: Float32, width: Float32, height: Float32) {
@@ -153,6 +158,11 @@ struct FloatRectWrapper: Equatable {
   }
 
   func contains(_ other: FloatRectWrapper) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func contains(_ point: FloatPoint, _ containsMode: ContainsMode = .InsideOrOnStroke) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

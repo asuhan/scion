@@ -132,6 +132,11 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     containerLayout.positionChildrenRelativeToContainer()
   }
 
+  func pointIsInsideViewportClip(_ pointInParent: FloatPoint) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func updateLayoutSizeIfNeeded() -> Bool { return false }
 
   func overridenObjectBoundingBoxWithoutTransformations() -> FloatRectWrapper? { return nil }
@@ -139,11 +144,75 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let adjustedLocation = accumulatedOffset + currentSVGLayoutLocation()
+
+    var visualOverflowRect = visualOverflowRectEquivalent()
+    visualOverflowRect.moveBy(offset: adjustedLocation)
+    if !locationInContainer.intersects(rect: visualOverflowRect) {
+      return false
+    }
+
+    let recursionTracking = SVGVisitedRendererTracking(RenderSVGContainerWrapper.s_visitedSet)
+    if recursionTracking.isVisiting(self) {
+      return false
+    }
+
+    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+
+    var localPoint = locationInContainer.point()
+    let coordinateSystemOriginTranslation = nominalSVGLayoutLocation() - adjustedLocation
+    localPoint.move(s: coordinateSystemOriginTranslation)
+
+    if !pointInSVGClippingArea(localPoint.FloatPoint()) {
+      return false
+    }
+
+    // Give RenderSVGViewportContainer a chance to apply its viewport clip.
+    if !pointIsInsideViewportClip(localPoint.FloatPoint()) {
+      return false
+    }
+
+    var child = lastChild()
+    while child != nil {
+      if !child!.hasLayer()
+        && child!.nodeAtPoint(
+          request, &result, locationInContainer, adjustedLocation, hitTestAction)
+      {
+        updateHitTestResult(
+          result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation)
+        )
+        if result.addNodeToListBasedTestResult(
+          node: child!.protectedNode(), request: request, locationInContainer: locationInContainer,
+          rect: visualOverflowRect) == .Stop
+        {
+          return true
+        }
+      }
+      child = child!.previousSibling()
+    }
+
+    // Accessibility wants to return SVG containers, if appropriate.
+    if request.type.contains(.AccessibilityHitTest)
+      && m_objectBoundingBox.contains(localPoint.FloatPoint())
+    {
+      updateHitTestResult(
+        result: result, point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
+      if result.addNodeToListBasedTestResult(
+        node: protectedNodeForHitTest(), request: request, locationInContainer: locationInContainer,
+        rect: visualOverflowRect) == .Stop
+      {
+        return true
+      }
+    }
+
+    // Spec: Only graphical elements can be targeted by the mouse, period.
+    // 16.4: "If there are no graphics elements whose relevant graphics content is under the pointer (i.e., there is no target element), the event is not dispatched."
+    return false
   }
+
+  private static let s_visitedSet = SVGVisitedRendererTracking.VisitedSet()
 
   private var objectBoundingBoxValid = false
   var isLayoutSizeChanged = false

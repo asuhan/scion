@@ -386,6 +386,11 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
+  func pointInSVGClippingArea(_ point: FloatPoint) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func paintSVGClippingMask(paintInfo: PaintInfoWrapper, objectBoundingBox: FloatRectWrapper) {
     assert(paintInfo.phase == .ClippingMask)
     let context = paintInfo.context()

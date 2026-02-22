@@ -1199,6 +1199,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func protectedNode() -> NodeWrapper? { return node() }
+
   func nonPseudoNode() -> NodeWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
