@@ -98,6 +98,11 @@ struct IntRect: Equatable {
     fatalError("Not implemented")
   }
 
+  func contains(_ point: IntPoint) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unite(_ other: IntRect) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

@@ -42,6 +42,16 @@ class PluginViewBase: Widget {
     fatalError("Not implemented")
   }
 
+  func horizontalScrollbar() -> Scrollbar? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func verticalScrollbar() -> Scrollbar? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func platformWidget() -> PlatformWidget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

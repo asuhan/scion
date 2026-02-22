@@ -218,10 +218,32 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
   override final func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !super.nodeAtPoint(request, &result, locationInContainer, accumulatedOffset, hitTestAction) {
+      return false
+    }
+
+    guard let view = widget() as? PluginViewBase else { return true }
+    let roundedPoint = locationInContainer.roundedPoint()
+
+    if let horizontalScrollbar = view.horizontalScrollbar(),
+      horizontalScrollbar.shouldParticipateInHitTesting()
+        && horizontalScrollbar.frameRect().contains(roundedPoint)
+    {
+      result.setScrollbar(horizontalScrollbar)
+      return true
+    }
+
+    if let verticalScrollbar = view.verticalScrollbar(),
+      verticalScrollbar.shouldParticipateInHitTesting()
+        && verticalScrollbar.frameRect().contains(roundedPoint)
+    {
+      result.setScrollbar(verticalScrollbar)
+      return true
+    }
+
+    return true
   }
 
   private struct ReplacementTextGeometry {

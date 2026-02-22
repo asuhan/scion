@@ -46,6 +46,11 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  func setScrollbar(_ scrollbar: Scrollbar) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setIsOverWidget(_ isOverWidget: Bool) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
