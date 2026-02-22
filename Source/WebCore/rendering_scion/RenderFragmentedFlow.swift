@@ -97,10 +97,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   override func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hitTestAction == .HitTestBlockBackground {
+      return false
+    }
+    return super.nodeAtPoint(
+      request, &result, locationInContainer, accumulatedOffset, hitTestAction)
   }
 
   func hasFragments() -> Bool {
