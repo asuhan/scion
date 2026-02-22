@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     HTMLImageElement.swift
     HTMLInputElement.swift
     HTMLLegendElement.swift
+    HTMLMapElement.swift
     HTMLOptionElement.swift
     HTMLOptGroupElement.swift
     HTMLSelectElement.swift

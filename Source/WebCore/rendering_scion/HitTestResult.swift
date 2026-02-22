@@ -36,6 +36,11 @@ struct HitTestResultWrapper {
     fatalError("Not implemented")
   }
 
+  func setInnerNonSharedNode(_ node: NodeWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setURLElement(_ n: ElementWrapper?) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

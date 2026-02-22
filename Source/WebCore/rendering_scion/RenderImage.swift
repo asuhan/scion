@@ -90,6 +90,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
     return .ImageSizeChangeForAltText
   }
 
+  private func imageMap() -> HTMLMapElementWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageDevicePixelRatio() -> Float32 {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -510,10 +515,32 @@ class RenderImageWrapper: RenderReplacedWrapper {
   override final func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var tempResult = HitTestResultWrapper(result.hitTestLocation)
+    let inside = super.nodeAtPoint(
+      request, &tempResult, locationInContainer, accumulatedOffset, hitTestAction)
+
+    if tempResult.innerNode() != nil && element() != nil, let map = imageMap() {
+      let contentBox: LayoutRectWrapper = contentBoxRect()
+      let scaleFactor: Float32 = 1 / style().usedZoom()
+      var mapLocation: LayoutPointWrapper =
+        locationInContainer.point() - toLayoutSize(point: accumulatedOffset) - locationOffset()
+        - toLayoutSize(point: contentBox.location())
+      mapLocation.scale(scaleFactor)
+
+      if map.mapMouseEvent(mapLocation, contentBox.size(), &tempResult) {
+        tempResult.setInnerNonSharedNode(element())
+      }
+    }
+
+    if !inside && request.resultIsElementList() {
+      result.append(tempResult, request)
+    }
+    if inside {
+      result = tempResult
+    }
+    return inside
   }
 
   private func imageSizeForError(_ newImage: CachedImageWrapper?) -> IntSize {
