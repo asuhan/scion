@@ -190,11 +190,57 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
   override final func nodeAtPoint(
     _ request: HitTestRequestWrapper, _ result: inout HitTestResultWrapper,
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
-    _ action: HitTestAction
+    _ hitTestAction: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hitTestAction != .HitTestForeground {
+      return false
+    }
+
+    let adjustedLocation = accumulatedOffset + currentSVGLayoutLocation()
+
+    var visualOverflowRect = visualOverflowRectEquivalent()
+    visualOverflowRect.moveBy(offset: adjustedLocation)
+    if !locationInContainer.intersects(rect: visualOverflowRect) {
+      return false
+    }
+
+    let recursionTracking = SVGVisitedRendererTracking(RenderSVGImageWrapper.s_visitedSet)
+    if recursionTracking.isVisiting(self) {
+      return false
+    }
+
+    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+
+    var localPoint = locationInContainer.point()
+    let boundingBoxTopLeftCorner = flooredLayoutPoint(p: objectBoundingBox().minXMinYCorner())
+    let coordinateSystemOriginTranslation = boundingBoxTopLeftCorner - adjustedLocation
+    localPoint.move(s: coordinateSystemOriginTranslation)
+
+    if !pointInSVGClippingArea(localPoint.FloatPoint()) {
+      return false
+    }
+
+    let hitRules = PointerEventsHitRules(.SVGImage, request, style().pointerEvents())
+    if isVisibleToHitTesting(style(), request) || !hitRules.requireVisible {
+      if hitRules.canHitFill {
+        if m_objectBoundingBox.contains(localPoint.FloatPoint()) {
+          updateHitTestResult(
+            result: result,
+            point: locationInContainer.point() - toLayoutSize(point: adjustedLocation))
+          if result.addNodeToListBasedTestResult(
+            node: protectedNodeForHitTest(), request: request,
+            locationInContainer: locationInContainer, rect: visualOverflowRect) == .Stop
+          {
+            return true
+          }
+        }
+      }
+    }
+
+    return false
   }
+
+  private static let s_visitedSet = SVGVisitedRendererTracking.VisitedSet()
 
   private func bufferForeground(_ paintInfo: PaintInfoWrapper, _ paintOffset: LayoutPointWrapper)
     -> Bool

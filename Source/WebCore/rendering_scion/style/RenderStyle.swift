@@ -2977,6 +2977,11 @@ class RenderStyleWrapper: Equatable {
     return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p))!
   }
 
+  func pointerEvents() -> PointerEvents {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func usedPointerEvents() -> PointerEvents {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3507,4 +3512,9 @@ func pseudoElementRendererIsNeeded(style: RenderStyleWrapper?) -> Bool {
 
 func isNonVisibleOverflow(_ overflow: Overflow) -> Bool {
   return overflow == .Hidden || overflow == .Scroll || overflow == .Clip
+}
+
+func isVisibleToHitTesting(_ style: RenderStyleWrapper, _ request: HitTestRequestWrapper) -> Bool {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
 }

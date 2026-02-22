@@ -39,6 +39,7 @@ target_sources(layout_scion PRIVATE
     PaintInfo.swift
     PaintPhase.swift
     PathOperation.swift
+    PointerEventsHitRules.swift
     ReferencedSVGResources.swift
     AccessibilityRegionContext.swift
     AncestorSubgridIterator.swift
