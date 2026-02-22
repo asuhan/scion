@@ -70,6 +70,11 @@ struct HitTestRequestWrapper {
     fatalError("Not implemented")
   }
 
+  func svgClipContent() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func allowsChildFrameContent() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

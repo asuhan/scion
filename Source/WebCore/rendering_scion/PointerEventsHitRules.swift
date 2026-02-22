@@ -28,10 +28,81 @@ struct PointerEventsHitRules {
     _ hitTestingTargetType: HitTestingTargetType, _ request: HitTestRequestWrapper,
     _ pointerEvents: PointerEvents
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var pointerEvents = pointerEvents
+    if request.svgClipContent() {
+      pointerEvents = .Fill
+    }
+
+    if hitTestingTargetType == .SVGPath {
+      switch pointerEvents
+      {
+      case .VisiblePainted, .Auto:  // "auto" is like "visiblePainted" when in SVG content
+        requireFill = true
+        requireStroke = true
+        fallthrough
+      case .Visible:
+        requireVisible = true
+        canHitFill = true
+        canHitStroke = true
+      case .VisibleFill:
+        requireVisible = true
+        canHitFill = true
+      case .VisibleStroke:
+        requireVisible = true
+        canHitStroke = true
+      case .Painted:
+        requireFill = true
+        requireStroke = true
+        fallthrough
+      case .All:
+        canHitFill = true
+        canHitStroke = true
+      case .Fill:
+        canHitFill = true
+      case .Stroke:
+        canHitStroke = true
+      case .BoundingBox:
+        canHitFill = true
+        canHitBoundingBox = true
+      case .None:
+        // nothing to do here, defaults are all false.
+        break
+      }
+    } else {
+      switch pointerEvents
+      {
+      case .VisiblePainted, .Auto:  // "auto" is like "visiblePainted" when in SVG content
+        requireVisible = true
+        requireFill = true
+        requireStroke = true
+        canHitFill = true
+        canHitStroke = true
+      case .VisibleFill, .VisibleStroke, .Visible:
+        requireVisible = true
+        canHitFill = true
+        canHitStroke = true
+      case .Painted:
+        requireFill = true
+        requireStroke = true
+        canHitFill = true
+        canHitStroke = true
+      case .Fill, .Stroke, .All:
+        canHitFill = true
+        canHitStroke = true
+      case .BoundingBox:
+        canHitFill = true
+        canHitBoundingBox = true
+      case .None:
+        // nothing to do here, defaults are all false.
+        break
+      }
+    }
   }
 
-  let requireVisible: Bool
-  let canHitFill: Bool
+  var requireVisible: Bool = false
+  var requireFill: Bool = false
+  var requireStroke: Bool = false
+  var canHitStroke: Bool = false
+  var canHitFill: Bool = false
+  var canHitBoundingBox: Bool = false
 }
