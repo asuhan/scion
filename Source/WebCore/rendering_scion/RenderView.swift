@@ -601,6 +601,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func didCreateRenderer() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func registerBoxWithScrollSnapPositions(_ box: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

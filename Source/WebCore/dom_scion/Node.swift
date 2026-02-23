@@ -64,6 +64,11 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
+  func isDocumentNode() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasCustomStyleResolveCallbacks() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

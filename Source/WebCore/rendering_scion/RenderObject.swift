@@ -225,6 +225,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     case LegacySVGViewportContainer
   }
 
+  struct TypeFlag: OptionSet {
+    let rawValue: UInt8
+
+    static let IsAnonymous = TypeFlag(rawValue: 1 << 0)
+    static let IsText = TypeFlag(rawValue: 1 << 1)
+    static let IsBox = TypeFlag(rawValue: 1 << 2)
+    static let IsBoxModelObject = TypeFlag(rawValue: 1 << 3)
+    static let IsLayerModelObject = TypeFlag(rawValue: 1 << 4)
+    static let IsRenderInline = TypeFlag(rawValue: 1 << 5)
+    static let IsRenderBlock = TypeFlag(rawValue: 1 << 6)
+    static let IsFlexibleBox = TypeFlag(rawValue: 1 << 7)
+  }
+
   // Type Specific Flags
 
   struct BlockFlowFlag: OptionSet {
@@ -237,8 +250,31 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     static let IsViewTransitionContainer = BlockFlowFlag(rawValue: 1 << 4)
   }
 
+  struct TypeSpecificFlags {}
+
   init(p: UnsafeMutableRawPointer) {
     self.p = p
+    m_node = nil
+    m_typeFlags = []
+    m_type = .BlockFlow
+    m_typeSpecificFlags = TypeSpecificFlags()
+  }
+
+  init(
+    _ type: `Type`, _ node: NodeWrapper, _ typeFlags: TypeFlag,
+    _ typeSpecificFlags: TypeSpecificFlags
+  ) {
+    self.p = UnsafeMutableRawPointer(bitPattern: 0xdead_beef)!
+    // TODO(asuhan): add fields for assertions
+    m_node = node
+    m_typeFlags = node.isDocumentNode() ? typeFlags.union(.IsAnonymous) : typeFlags
+    m_type = type
+    m_typeSpecificFlags = typeSpecificFlags
+    assert(!typeFlags.contains(.IsAnonymous))
+    if let renderView = node.document().renderView() {
+      renderView.didCreateRenderer()
+    }
+    // TODO(asuhan): add leak counter
   }
 
   func layoutBox() -> BoxWrapper? {
@@ -2666,5 +2702,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   var p: UnsafeMutableRawPointer
 
+  private let m_node: NodeWrapper?
+
   private let m_parent: RenderElementWrapper? = nil
+  private let m_typeFlags: TypeFlag
+  private let m_type: `Type`
+  private let m_typeSpecificFlags: TypeSpecificFlags
 }
