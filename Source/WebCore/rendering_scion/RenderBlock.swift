@@ -268,6 +268,18 @@ struct TextRunFlags: OptionSet {
 }
 
 class RenderBlockWrapper: RenderBoxWrapper {
+  override init(
+    _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
+    _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags =
+      RenderObjectWrapper.TypeSpecificFlags()
+  ) {
+    super.init(type, document, style, baseTypeFlags.union(.IsRenderBlock), typeSpecificFlags)
+    assert(isRenderBlock())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   // These two functions are overridden for inline-block.
   override func lineHeight(
     firstLine: Bool, direction: LineDirectionMode,
