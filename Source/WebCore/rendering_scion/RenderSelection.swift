@@ -27,4 +27,9 @@
  * SUCH DAMAGE.
  */
 
-class RenderSelection: RenderHighlight {}
+class RenderSelection: RenderHighlight {
+  init(_ view: RenderViewWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+}

@@ -29,8 +29,8 @@ class BoxWrapper: Hashable {
   var p: UnsafeRawPointer?
   var style: RenderStyleWrapper
 
-  init(style: RenderStyleWrapper = RenderStyleWrapper()) {
-    self.style = style
+  init(wrapperStyle: RenderStyleWrapper = RenderStyleWrapper()) {
+    self.style = wrapperStyle
   }
 
   func establishesFormattingContext() -> Bool {

@@ -48,6 +48,34 @@ private func rendererObscuresBackground(_ rootElement: RenderElementWrapper) -> 
 }
 
 class RenderViewWrapper: RenderBlockFlowWrapper {
+  init(_ document: Document, _ style: RenderStyleWrapper) {
+    super.init(type: .View, document: document, style: style)
+    m_frameView = document.view()
+    m_initialContainingBlock = InitialContainingBlock(style: RenderStyleWrapper.clone(style: style))
+    m_layoutState = LayoutStateWrapper(
+      document, m_initialContainingBlock!, .Primary,
+      LayoutIntegration.layoutWithFormattingContextForBox,
+      LayoutIntegration.formattingContextRootLogicalWidthForType)
+    m_selection = RenderSelection(self)
+
+    // FIXME: We should find a way to enforce this at compile time.
+    assert(document.view() != nil)
+
+    // init RenderObject attributes
+    setInline(false)
+
+    m_minPreferredLogicalWidth = LayoutUnit(value: 0)
+    m_maxPreferredLogicalWidth = LayoutUnit(value: 0)
+
+    setPreferredLogicalWidthsDirty(shouldBeDirty: true, markParents: .MarkOnlyThis)
+
+    setPositionState(.Absolute)  // to 0,0 :)
+
+    assert(isRenderView())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -740,7 +768,15 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private var m_frameView: LocalFrameViewWrapper? = nil
+
+  // Note that currently RenderView::layoutBox(), if it exists, is a child of m_initialContainingBlock.
+  private var m_initialContainingBlock: InitialContainingBlock? = nil
+  private var m_layoutState: LayoutStateWrapper? = nil
+
   private var accumulatedRepaintRegion: Region? = nil
+  private var m_selection: RenderSelection? = nil
+
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
 }

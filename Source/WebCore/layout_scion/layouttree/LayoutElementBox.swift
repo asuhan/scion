@@ -77,7 +77,7 @@ class ElementBoxWrapper: BoxWrapper {
     let style = convert_render_style(p: styleUnwrapped)
     let child =
       wk_interop.Box_isInlineTextBox(unwrapped)
-      ? convert_inline_text_box(p: unwrapped!) : ElementBoxWrapper(style: style)
+      ? convert_inline_text_box(p: unwrapped!) : ElementBoxWrapper(wrapperStyle: style)
     child.p = unwrapped
     return child
   }

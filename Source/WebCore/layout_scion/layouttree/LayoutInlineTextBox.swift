@@ -44,7 +44,7 @@ class InlineTextBoxWrapper: BoxWrapper {
     if hasStrongDirectionalityContent {
       contentCharacteristicSet.insert(.HasStrongDirectionalityContent)
     }
-    super.init(style: style)
+    super.init(wrapperStyle: style)
   }
 
   init() {}

@@ -58,4 +58,18 @@ extension LayoutIntegration {
       layoutBox: box,
       availableWidth: widthConstraint ?? renderer.containingBlock()!.availableLogicalWidth())
   }
+
+  enum LogicalWidthType {
+    case PreferredMaximum
+    case PreferredMinimum
+    case MaxContent
+    case MinContent
+  }
+
+  static func formattingContextRootLogicalWidthForType(
+    _ box: ElementBoxWrapper, _ logicalWidthType: LogicalWidthType
+  ) -> LayoutUnit {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }

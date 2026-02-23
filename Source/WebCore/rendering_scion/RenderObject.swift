@@ -311,12 +311,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       return box
     }
     if wk_interop.Box_isInitialContainingBlock(unwrapped) {
-      let box = InitialContainingBlock(style: style)
+      let box = InitialContainingBlock(wrapperStyle: style)
       box.p = UnsafeRawPointer(unwrapped!)
       return box
     }
     if wk_interop.Box_isElementBox(unwrapped) {
-      let box = ElementBoxWrapper(style: style)
+      let box = ElementBoxWrapper(wrapperStyle: style)
       box.p = UnsafeRawPointer(unwrapped!)
       return box
     }

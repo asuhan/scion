@@ -41,7 +41,7 @@ class FormattingContextBoxIterator: LayoutDescendantIterator<BoxWrapper> {
     let style = convert_render_style(p: styleRaw!)
     current = wk_interop.FormattingContextBoxIterator_preinc(current)!
     // TODO(asuhan): decide the type correctly
-    let box = BoxWrapper(style: style)
+    let box = BoxWrapper(wrapperStyle: style)
     box.p = boxRaw
     return box
   }

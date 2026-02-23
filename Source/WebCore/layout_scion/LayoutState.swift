@@ -30,6 +30,27 @@ func CPtrToInt(_ p: UnsafeRawPointer?) -> UInt {
 }
 
 class LayoutStateWrapper {
+  // Primary layout state has a direct geometry cache in layout boxes.
+  enum `Type` {
+    case Primary
+    case Secondary
+  }
+
+  typealias FormattingContextLayoutFunction = (ElementBoxWrapper, LayoutUnit?, LayoutStateWrapper)
+    -> Void
+  typealias FormattingContextLogicalWidthFunction = (
+    ElementBoxWrapper, LayoutIntegration.LogicalWidthType
+  ) -> LayoutUnit
+
+  init(
+    _ document: Document, _ rootContainer: ElementBoxWrapper, _ type: `Type`,
+    _ formattingContextLayoutFunction: FormattingContextLayoutFunction,
+    _ formattingContextLogicalWidthFunction: FormattingContextLogicalWidthFunction
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(p: UnsafeMutableRawPointer?) {
     self.p = p
   }

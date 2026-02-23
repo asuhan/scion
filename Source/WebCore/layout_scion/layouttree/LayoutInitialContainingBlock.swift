@@ -24,5 +24,12 @@
  */
 
 class InitialContainingBlock: ElementBoxWrapper {
-  // TODO(asuhan): implement this
+  init(style: RenderStyleWrapper, firstLineStyle: RenderStyleWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  override init(wrapperStyle: RenderStyleWrapper = RenderStyleWrapper()) {
+    super.init(wrapperStyle: wrapperStyle)
+  }
 }
