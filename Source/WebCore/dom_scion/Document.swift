@@ -269,4 +269,9 @@ class Document: TreeScopeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func ContainerNode() -> ContainerNodeWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
