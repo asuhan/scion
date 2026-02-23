@@ -477,6 +477,18 @@ enum StretchingMode {
 }
 
 class RenderBoxWrapper: RenderBoxModelObjectWrapper {
+  override init(
+    _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
+    _ flags: RenderObjectWrapper.TypeFlag = [],
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags =
+      RenderObjectWrapper.TypeSpecificFlags()
+  ) {
+    super.init(type, document, style, flags.union(.IsBox), typeSpecificFlags)
+    assert(isRenderBox())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
