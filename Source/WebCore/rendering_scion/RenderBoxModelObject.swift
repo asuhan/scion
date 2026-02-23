@@ -144,6 +144,17 @@ private func resolveAgainstIntrinsicRatio(
 }
 
 class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
+  override init(
+    _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
+    _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
+  ) {
+    super.init(type, document, style, baseTypeFlags.union(.IsBoxModelObject), typeSpecificFlags)
+    assert(isRenderBoxModelObject())
+  }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
+
   func relativePositionOffset() -> LayoutSizeWrapper {
     // This function has been optimized to avoid calls to containingBlock() in the common case
     // where all values are either auto or fixed.

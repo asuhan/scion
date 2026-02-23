@@ -34,9 +34,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     assert(isRenderLayerModelObject())
   }
 
-  override init(p: UnsafeMutableRawPointer) {
-    super.init(p: p)
-  }
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   func hasSelfPaintingLayerModelObject() -> Bool {
     // TODO(asuhan): implement this
