@@ -106,19 +106,9 @@ private func drawFocusRing(
 }
 
 class RenderElementWrapper: RenderObjectWrapper {
-  convenience init(
+  init(
     type: RenderObjectWrapper.`Type`, document: Document, _ style: RenderStyleWrapper,
     _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
-    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
-  ) {
-    self.init(
-      type: type, elementOrDocument: document.ContainerNode(), style, baseTypeFlags,
-      typeSpecificFlags)
-  }
-
-  init(
-    type: RenderObjectWrapper.`Type`, elementOrDocument: ContainerNodeWrapper,
-    _ style: RenderStyleWrapper, _ flags: RenderObjectWrapper.TypeFlag,
     _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
   ) {
     m_firstChild = nil
@@ -137,7 +127,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     m_visibleInViewportState = .Unknown
     m_didContributeToVisuallyNonEmptyPixelCount = false
     self.style = style
-    super.init(type, elementOrDocument, flags, typeSpecificFlags)
+    super.init(type, document.ContainerNode(), baseTypeFlags, typeSpecificFlags)
     assert(super.isRenderElement())
   }
 

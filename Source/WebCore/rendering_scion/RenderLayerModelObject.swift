@@ -23,6 +23,21 @@
 import wk_interop
 
 class RenderLayerModelObjectWrapper: RenderElementWrapper {
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
+    _ baseTypeFlags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
+  ) {
+    super.init(
+      type: type, document: document, style, baseTypeFlags.union(.IsLayerModelObject),
+      typeSpecificFlags)
+    assert(isRenderLayerModelObject())
+  }
+
+  override init(p: UnsafeMutableRawPointer) {
+    super.init(p: p)
+  }
+
   func hasSelfPaintingLayerModelObject() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
