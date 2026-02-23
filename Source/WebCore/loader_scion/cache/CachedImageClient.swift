@@ -20,4 +20,10 @@
     Boston, MA 02110-1301, USA.
 */
 
+enum VisibleInViewportState {
+  case Unknown
+  case Yes
+  case No
+}
+
 class CachedImageClientWrapper: CachedResourceClientWrapper {}

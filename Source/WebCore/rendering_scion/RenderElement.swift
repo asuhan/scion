@@ -106,6 +106,51 @@ private func drawFocusRing(
 }
 
 class RenderElementWrapper: RenderObjectWrapper {
+  init(
+    _ type: RenderObjectWrapper.`Type`, _ elementOrDocument: ContainerNodeWrapper,
+    _ style: RenderStyleWrapper, _ flags: RenderObjectWrapper.TypeFlag,
+    _ typeSpecificFlags: RenderObjectWrapper.TypeSpecificFlags
+  ) {
+    m_firstChild = nil
+    hasInitializedStyle = false
+    m_hasPausedImageAnimations = false
+    m_hasCounterNodeMap = false
+    m_hasContinuationChainNode = false
+    m_isContinuation = false
+    m_isFirstLetter = false
+    renderBlockHasMarginBeforeQuirk = false
+    renderBlockHasMarginAfterQuirk = false
+    renderBlockShouldForceRelayoutChildren = false
+    m_renderBlockFlowLineLayoutPath = .UndeterminedPath
+    m_lastChild = nil
+    m_isRegisteredForVisibleInViewportCallback = false
+    m_visibleInViewportState = .Unknown
+    m_didContributeToVisuallyNonEmptyPixelCount = false
+    self.style = style
+    super.init(type, elementOrDocument, flags, typeSpecificFlags)
+    assert(super.isRenderElement())
+  }
+
+  override init(p: UnsafeMutableRawPointer) {
+    m_firstChild = nil
+    hasInitializedStyle = false
+    m_hasPausedImageAnimations = false
+    m_hasCounterNodeMap = false
+    m_hasContinuationChainNode = false
+    m_isContinuation = false
+    m_isFirstLetter = false
+    renderBlockHasMarginBeforeQuirk = false
+    renderBlockHasMarginAfterQuirk = false
+    renderBlockShouldForceRelayoutChildren = false
+    m_renderBlockFlowLineLayoutPath = .UndeterminedPath
+    m_lastChild = nil
+    m_isRegisteredForVisibleInViewportCallback = false
+    m_visibleInViewportState = .Unknown
+    m_didContributeToVisuallyNonEmptyPixelCount = false
+    self.style = nil
+    super.init(p: p)
+  }
+
   // FIXME: Style shouldn't be mutated.
   func mutableStyle() -> RenderStyleWrapper {
     // TODO(asuhan): implement this
@@ -2134,14 +2179,25 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private var m_firstChild: RenderObjectWrapper? = nil
-  var hasInitializedStyle = false
+  private var m_firstChild: RenderObjectWrapper?
+  var hasInitializedStyle: Bool
 
-  let renderBlockHasMarginBeforeQuirk = false
-  let renderBlockHasMarginAfterQuirk = false
-  var renderBlockShouldForceRelayoutChildren = false
+  private let m_hasPausedImageAnimations: Bool
+  private let m_hasCounterNodeMap: Bool
+  private let m_hasContinuationChainNode: Bool
 
-  private var m_lastChild: RenderObjectWrapper? = nil
+  private let m_isContinuation: Bool
+  private let m_isFirstLetter: Bool
+  let renderBlockHasMarginBeforeQuirk: Bool
+  let renderBlockHasMarginAfterQuirk: Bool
+  var renderBlockShouldForceRelayoutChildren: Bool
+  private let m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
 
-  private let style: RenderStyleWrapper? = nil  // TODO(asuhan): not nil once we have initializers
+  private var m_lastChild: RenderObjectWrapper?
+
+  private let m_isRegisteredForVisibleInViewportCallback: Bool
+  private let m_visibleInViewportState: VisibleInViewportState
+  private let m_didContributeToVisuallyNonEmptyPixelCount: Bool
+
+  private let style: RenderStyleWrapper?  // TODO(asuhan): not nil once we have initializers
 }
