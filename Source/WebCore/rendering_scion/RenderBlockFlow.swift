@@ -215,12 +215,15 @@ private func preferredWidth(preferredWidth: LayoutUnit, result: Float32) -> Layo
 }
 
 class RenderBlockFlowWrapper: RenderBlockWrapper {
-  convenience init(
+  init(
     type: `Type`, document: Document, style: RenderStyleWrapper, flags: BlockFlowFlag = []
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(type, document, style, [], RenderObjectWrapper.TypeSpecificFlags(flags))
+    assert(isRenderBlockFlow())
+    setChildrenInline(b: true)
   }
+
+  override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))

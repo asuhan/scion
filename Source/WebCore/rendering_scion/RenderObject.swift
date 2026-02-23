@@ -250,7 +250,28 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     static let IsViewTransitionContainer = BlockFlowFlag(rawValue: 1 << 4)
   }
 
-  struct TypeSpecificFlags {}
+  struct TypeSpecificFlags {
+    enum Kind: UInt8 {
+      case Invalid = 0
+      case BlockFlow
+      case LineBreak
+      case Replaced
+      case SVGModelObject
+    }
+
+    init() {
+      self.kind = .Invalid
+      self.flags = 0
+    }
+
+    init(_ flags: RenderObjectWrapper.BlockFlowFlag) {
+      self.kind = .BlockFlow
+      self.flags = flags.rawValue
+    }
+
+    let kind: Kind
+    let flags: UInt8
+  }
 
   init(p: UnsafeMutableRawPointer) {
     self.p = p
