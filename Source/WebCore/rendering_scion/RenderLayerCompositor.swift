@@ -1116,8 +1116,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Repaint all composited layers.
   func repaintCompositedLayers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    recursiveRepaintLayer(rootRenderLayer())
   }
 
   // Returns true if the given layer needs it own backing store.
@@ -2169,6 +2168,32 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       backingSharingState!.addLayerNeedingRepaint(layer: layer)
     } else {
       repaintOnCompositingChange(layer: layer)
+    }
+  }
+
+  // Repaint this and its child layers.
+  private func recursiveRepaintLayer(_ layer: RenderLayerWrapper) {
+    layer.updateLayerListsIfNeeded()
+
+    // FIXME: This method does not work correctly with transforms.
+    if layer.isComposited() && !layer.backing!.paintsIntoCompositedAncestor() {
+      layer.setBackingNeedsRepaint()
+    }
+
+    // TODO(asuhan): mutation checker
+
+    if layer.hasCompositingDescendant {
+      for renderLayer in layer.negativeZOrderLayers() {
+        recursiveRepaintLayer(renderLayer)
+      }
+
+      for renderLayer in layer.positiveZOrderLayers() {
+        recursiveRepaintLayer(renderLayer)
+      }
+    }
+
+    for renderLayer in layer.normalFlowLayers() {
+      recursiveRepaintLayer(renderLayer)
     }
   }
 
