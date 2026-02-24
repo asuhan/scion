@@ -555,8 +555,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func documentRect() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var overflowRect = FloatRectWrapper(r: unscaledDocumentRect())
+    if isTransformed() {
+      overflowRect = layer()!.currentTransform().mapRect(overflowRect)
+    }
+    return IntRect(overflowRect)
   }
 
   func rootElementShouldPaintBaseBackground() -> Bool {
