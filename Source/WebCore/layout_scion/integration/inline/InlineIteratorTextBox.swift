@@ -63,12 +63,24 @@ extension InlineIterator {
   }
 
   class TextBoxIterator: LeafBoxIterator {
+    override init() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     init(pathVariant: BoxPath) {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
 
     override func get() -> TextBox {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    // This traverses to the next text box generated for the same RenderText/Layout::InlineTextBox.
+    @discardableResult
+    func traverseNextTextBox() -> TextBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

@@ -28,6 +28,32 @@ private func capitalize(_ string: StringWrapper, _ previousCharacter: UChar) -> 
   fatalError("Not implemented")
 }
 
+private func offsetForPositionInRun(_ textBox: InlineIterator.TextBox, _ x: Float32) -> UInt32 {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private enum ShouldAffinityBeDownstream {
+  case AlwaysDownstream
+  case AlwaysUpstream
+  case UpstreamIfPositionIsNotAtStart
+}
+
+private func lineDirectionPointFitsInBox(
+  _ pointLineDirection: Int32, _ textRun: InlineIterator.TextBoxIterator
+) -> (Bool, ShouldAffinityBeDownstream) {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
+private func createVisiblePositionAfterAdjustingOffsetForBiDi(
+  _ run: InlineIterator.TextBoxIterator, _ offset: UInt32,
+  _ shouldAffinityBeDownstream: ShouldAffinityBeDownstream
+) -> VisiblePosition {
+  // TODO(asuhan): implement this
+  fatalError("Not implemented")
+}
+
 private func combineTextWidth(
   _ renderer: RenderTextWrapper, _ fontCascade: FontCascadeWrapper, _ style: RenderStyleWrapper
 ) -> Float32? {
@@ -720,8 +746,63 @@ class RenderTextWrapper: RenderObjectWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let firstRun = InlineIterator.firstTextBoxFor(self)
+
+    if !firstRun.bool() || text().length() == 0 {
+      return createVisiblePosition(0, .Downstream)
+    }
+
+    let pointLineDirection = firstRun.get().isHorizontal() ? point.x : point.y
+    let pointBlockDirection = firstRun.get().isHorizontal() ? point.y : point.x
+    let blocksAreFlipped = style().isFlippedBlocksWritingMode()
+
+    var lastRun = InlineIterator.TextBoxIterator()
+    let run = firstRun
+    while run.bool() {
+      if run.get().isLineBreak() && !run.get().previousOnLine().bool()
+        && run.get().nextOnLine().bool()
+        && !run.get().nextOnLine().get().isLineBreak()
+      {
+        run.traverseNextTextBox()
+      }
+
+      let lineBox = run.get().lineBox()
+      let top = LayoutUnit(
+        value: min(
+          InlineIterator.previousLineBoxContentBottomOrBorderAndPadding(lineBox.get()),
+          lineBox.get().contentLogicalTop()))
+      if pointBlockDirection > top || (!blocksAreFlipped && pointBlockDirection == top) {
+        var bottom = LayoutUnit(value: LineSelection.logicalBottom(lineBox: lineBox.get()))
+        let nextLineBox = lineBox.get().next()
+        if nextLineBox.bool() {
+          bottom = min(bottom, LayoutUnit(value: nextLineBox.get().contentLogicalTop()))
+        }
+
+        if pointBlockDirection < bottom || (blocksAreFlipped && pointBlockDirection == bottom) {
+          let (fitsInBox, shouldAffinityBeDownstream) = lineDirectionPointFitsInBox(
+            pointLineDirection.int(), run)
+          if fitsInBox {
+            // TODO(asuhan): add iOS support
+            return createVisiblePositionAfterAdjustingOffsetForBiDi(
+              run, offsetForPositionInRun(run.get(), pointLineDirection.float()),
+              shouldAffinityBeDownstream
+            )
+          }
+        }
+      }
+      lastRun = run
+      run.traverseNextTextBox()
+    }
+
+    if lastRun.bool() {
+      let (_, shouldAffinityBeDownstream) = lineDirectionPointFitsInBox(
+        pointLineDirection.int(), lastRun)
+      return createVisiblePositionAfterAdjustingOffsetForBiDi(
+        lastRun,
+        offsetForPositionInRun(lastRun.get(), pointLineDirection.float()) + lastRun.get().start(),
+        shouldAffinityBeDownstream)
+    }
+    return createVisiblePosition(0, .Downstream)
   }
 
   override final func clippedOverflowRect(
