@@ -26,6 +26,7 @@
 #pragma once
 
 #include <wtf/CheckedRef.h>
+#include <wtf/FastMalloc.h>
 
 #include "FloatSize.h"
 #include "LayoutPoint.h"
@@ -39,8 +40,15 @@ class RenderLayer;
 class RenderLayerCompositor;
 class RenderFragmentContainer;
 
+DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(WebCore_RenderViewScion);
+
 class RenderViewScion final : public CanMakeCheckedPtr<RenderViewScion> {
+    WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(WebCore_RenderViewScion);
+    WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderViewScion);
+
 public:
+    ~RenderViewScion();
+
     const RenderStyle& style() const;
 
     RenderStyle& mutableStyle();

@@ -33,6 +33,11 @@
 
 namespace WebCore {
 
+RenderViewScion::~RenderViewScion()
+{
+    ASSERT_NOT_REACHED();
+}
+
 const RenderStyle& RenderViewScion::style() const
 {
     ASSERT_NOT_REACHED();
