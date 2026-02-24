@@ -80,6 +80,13 @@ Document& RenderViewScion::document() const
     return *unused;
 }
 
+LocalFrame& RenderViewScion::frame() const
+{
+    static LocalFrame* unused = nullptr;
+    ASSERT_NOT_REACHED();
+    return *unused;
+}
+
 RenderLayer* RenderViewScion::layer() const
 {
     ASSERT_NOT_REACHED();
@@ -90,6 +97,22 @@ VisiblePosition RenderViewScion::positionForPoint(const LayoutPoint&, HitTestSou
 {
     ASSERT_NOT_REACHED();
     return {};
+}
+
+void RenderViewScion::repaint(RenderObject::ForceRepaint) const
+{
+    ASSERT_NOT_REACHED();
+}
+
+RenderMultiColumnFlow* RenderViewScion::multiColumnFlow() const
+{
+    ASSERT_NOT_REACHED();
+    return nullptr;
+}
+
+void RenderViewScion::updateColumnProgressionFromStyle(const RenderStyle&)
+{
+    ASSERT_NOT_REACHED();
 }
 
 RenderSelection& RenderViewScion::selection()
@@ -107,6 +130,11 @@ LocalFrameView& RenderViewScion::frameView() const
 }
 
 void RenderViewScion::updateQuirksMode()
+{
+    ASSERT_NOT_REACHED();
+}
+
+void RenderViewScion::repaintRootContents()
 {
     ASSERT_NOT_REACHED();
 }
@@ -150,6 +178,18 @@ uint64_t RenderViewScion::rendererCount() const
 {
     ASSERT_NOT_REACHED();
     return 0;
+}
+
+void RenderViewScion::didCreateRenderer()
+{
+    ASSERT_NOT_REACHED();
+}
+
+const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryBoxes() const
+{
+    static SingleThreadWeakHashSet<const RenderBox> unused;
+    ASSERT_NOT_REACHED();
+    return unused;
 }
 
 }

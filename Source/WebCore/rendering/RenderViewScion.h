@@ -63,15 +63,25 @@ public:
 
     Document& document() const;
 
+    LocalFrame& frame() const;
+
     RenderLayer* layer() const;
 
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*);
+
+    void repaint(RenderObject::ForceRepaint = RenderObject::ForceRepaint::No) const;
+
+    RenderMultiColumnFlow* multiColumnFlow() const;
+
+    void updateColumnProgressionFromStyle(const RenderStyle&);
 
     RenderSelection& selection();
 
     LocalFrameView& frameView() const;
 
     void updateQuirksMode();
+
+    void repaintRootContents();
 
     void repaintViewAndCompositedLayers();
 
@@ -86,6 +96,10 @@ public:
     FloatSize sizeForCSSLargeViewportUnits() const;
 
     uint64_t rendererCount() const;
+
+    void didCreateRenderer();
+
+    const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 };
 
 }
