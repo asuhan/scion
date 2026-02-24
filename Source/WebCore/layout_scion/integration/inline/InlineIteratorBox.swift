@@ -118,6 +118,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func previousOnLineIgnoringLineBreak() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func parentInlineBox() -> InlineBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

@@ -52,8 +52,43 @@ private enum ShouldAffinityBeDownstream {
 private func lineDirectionPointFitsInBox(
   _ pointLineDirection: Int32, _ textRun: InlineIterator.TextBoxIterator
 ) -> (Bool, ShouldAffinityBeDownstream) {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var shouldAffinityBeDownstream: ShouldAffinityBeDownstream = .AlwaysDownstream
+
+  // the x coordinate is equal to the left edge of this box
+  // the affinity must be downstream so the position doesn't jump back to the previous line
+  // except when box is the first box in the line
+  if Float32(pointLineDirection) <= textRun.get().logicalLeftIgnoringInlineDirection() {
+    shouldAffinityBeDownstream =
+      !textRun.get().previousOnLine().bool() ? .UpstreamIfPositionIsNotAtStart : .AlwaysDownstream
+    return (true, shouldAffinityBeDownstream)
+  }
+
+  #if WTF_PLATFORM_IOS_FAMILY
+    // and the x coordinate is to the left of the right edge of this box
+    // check to see if position goes in this box
+    if Float32(pointLineDirection) < textRun.get().logicalRightIgnoringInlineDirection() {
+      shouldAffinityBeDownstream = .UpstreamIfPositionIsNotAtStart
+      return (true, shouldAffinityBeDownstream)
+    }
+  #endif
+
+  // box is first on line
+  // and the x coordinate is to the left of the first text box left edge
+  if !textRun.get().previousOnLineIgnoringLineBreak().bool()
+    && Float32(pointLineDirection) < textRun.get().logicalLeftIgnoringInlineDirection()
+  {
+    return (true, shouldAffinityBeDownstream)
+  }
+
+  if !textRun.get().nextOnLineIgnoringLineBreak().bool() {
+    // box is last on line
+    // and the x coordinate is to the right of the last text box right edge
+    // generate VisiblePosition, use Affinity::Upstream affinity if possible
+    shouldAffinityBeDownstream = .UpstreamIfPositionIsNotAtStart
+    return (true, shouldAffinityBeDownstream)
+  }
+
+  return (false, shouldAffinityBeDownstream)
 }
 
 private func createVisiblePositionAfterAdjustingOffsetForBiDi(
