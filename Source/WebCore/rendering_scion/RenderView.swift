@@ -326,6 +326,15 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     }
   }
 
+  func repaintViewAndCompositedLayers() {
+    repaintRootContents()
+
+    let compositor = compositor()
+    if compositor.usesCompositing() {
+      compositor.repaintCompositedLayers()
+    }
+  }
+
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     // If we ever require layout but receive a paint anyway, something has gone horribly wrong.
     assert(!needsLayout())

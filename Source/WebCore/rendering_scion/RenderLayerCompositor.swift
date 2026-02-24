@@ -1114,6 +1114,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return oldStyle!.hasViewportConstrainedPosition() != newStyle.hasViewportConstrainedPosition()
   }
 
+  // Repaint all composited layers.
+  func repaintCompositedLayers() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Returns true if the given layer needs it own backing store.
   func requiresOwnBackingStore(
     _ layer: RenderLayerWrapper, _ compositingAncestorLayer: RenderLayerWrapper?,
