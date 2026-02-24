@@ -641,9 +641,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func rendererCount() -> UInt64 { return m_rendererCount }
+
   func didCreateRenderer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_rendererCount += 1
   }
 
   func registerBoxWithScrollSnapPositions(_ box: RenderBoxWrapper) {
@@ -781,6 +782,9 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private var m_frameView: LocalFrameViewWrapper? = nil
+
+  // Include this RenderView.
+  private var m_rendererCount: UInt64 = 1
 
   // Note that currently RenderView::layoutBox(), if it exists, is a child of m_initialContainingBlock.
   private var m_initialContainingBlock: InitialContainingBlock? = nil
