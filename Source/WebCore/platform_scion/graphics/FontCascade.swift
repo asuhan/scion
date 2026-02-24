@@ -178,6 +178,12 @@ class FontCascadeWrapper: Equatable {
     return font_cascade_widthOfSpaceString(p: p!)
   }
 
+  func offsetForPosition(_ run: TextRunWrapper, _ x: Float32, _ includePartialGlyphs: Bool) -> Int32
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func adjustSelectionRectForText(
     canUseSimplifiedTextMeasuring: Bool, run: TextRunWrapper, selectionRect: LayoutRectWrapper,
     from: UInt32 = 0, to: UInt32? = nil

@@ -82,6 +82,11 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func isLeftToRightDirection() -> Bool {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func renderer() -> RenderObjectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")

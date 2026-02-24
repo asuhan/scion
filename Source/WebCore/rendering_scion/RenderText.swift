@@ -29,8 +29,18 @@ private func capitalize(_ string: StringWrapper, _ previousCharacter: UChar) -> 
 }
 
 private func offsetForPositionInRun(_ textBox: InlineIterator.TextBox, _ x: Float32) -> UInt32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if textBox.isLineBreak() {
+    return 0
+  }
+  if x - textBox.logicalLeftIgnoringInlineDirection() > textBox.logicalWidth() {
+    return textBox.isLeftToRightDirection() ? textBox.length() : 0
+  }
+  if x - textBox.logicalLeftIgnoringInlineDirection() < 0 {
+    return textBox.isLeftToRightDirection() ? 0 : textBox.length()
+  }
+  return UInt32(
+    textBox.fontCascade().offsetForPosition(
+      textBox.textRun(mode: .Editing), x - textBox.logicalLeftIgnoringInlineDirection(), true))
 }
 
 private enum ShouldAffinityBeDownstream {
