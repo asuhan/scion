@@ -29,7 +29,9 @@
 
 class RenderSelection: RenderHighlight {
   init(_ view: RenderViewWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_renderView = view
+    super.init(.IsSelection)
   }
+
+  private let m_renderView: RenderViewWrapper
 }

@@ -68,6 +68,14 @@ struct RenderRangeIterator {
 }
 
 class RenderHighlight {
+  enum IsSelectionTag {
+    case IsSelection
+  }
+
+  init() { isSelection = false }
+
+  init(_: IsSelectionTag) { isSelection = true }
+
   func setRenderRange(_ renderRange: RenderRange) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -223,5 +231,5 @@ class RenderHighlight {
   }
 
   private let renderRange = RenderRange()
-  private let isSelection = false
+  private let isSelection: Bool
 }
