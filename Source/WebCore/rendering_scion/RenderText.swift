@@ -95,8 +95,16 @@ private func createVisiblePositionForBox(
   _ run: InlineIterator.BoxIterator<InlineIterator.Box>, _ offset: UInt32,
   _ shouldAffinityBeDownstream: ShouldAffinityBeDownstream
 ) -> VisiblePosition {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  var affinity = VisiblePosition.defaultAffinity
+  switch shouldAffinityBeDownstream {
+  case .AlwaysDownstream:
+    affinity = .Downstream
+  case .AlwaysUpstream:
+    affinity = .Upstream
+  case .UpstreamIfPositionIsNotAtStart:
+    affinity = offset > run.get().minimumCaretOffset() ? .Upstream : .Downstream
+  }
+  return run.get().renderer().createVisiblePosition(Int32(offset), affinity)
 }
 
 private func createVisiblePositionAfterAdjustingOffsetForBiDi(
