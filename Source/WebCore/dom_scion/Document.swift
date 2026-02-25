@@ -27,6 +27,8 @@
 
 // TODO(asuhan): inherit from all bases
 class Document: TreeScopeWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   func documentElement() -> ElementWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -274,4 +276,6 @@ class Document: TreeScopeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }

@@ -34,6 +34,8 @@
 #include "RenderStyle.h"
 #include "VisiblePosition.h"
 
+extern "C" void* RenderView_create(const void*, const void*);
+
 namespace WebCore {
 
 class RenderLayer;

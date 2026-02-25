@@ -487,3 +487,15 @@ func LineLayoutScion_paint(
   globalLineLayout!.paint(
     paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: layerRenderer)
 }
+
+@_cdecl("RenderView_create")
+func RenderView_create(_ documentRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer
+{
+  let document = Document(documentRaw)
+  let style = RenderStyleWrapper()
+  style.p = styleRaw
+  let renderView = RenderViewWrapper(document, style)
+  let unmanaged = Unmanaged.passRetained(renderView)
+  return unmanaged.toOpaque()
+}
