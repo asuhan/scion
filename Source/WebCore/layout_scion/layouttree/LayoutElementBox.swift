@@ -26,6 +26,18 @@
 import wk_interop
 
 class ElementBoxWrapper: BoxWrapper {
+  override init(
+    _ attributes: BoxWrapper.ElementAttributes, _ style: RenderStyleWrapper,
+    firstLineStyle: RenderStyleWrapper? = nil, _ baseTypeFlags: BaseTypeFlag = [.ElementBoxFlag]
+  ) {
+    super.init(
+      attributes, style, firstLineStyle: firstLineStyle, baseTypeFlags.union(.ElementBoxFlag))
+  }
+
+  override init(wrapperStyle: RenderStyleWrapper = RenderStyleWrapper()) {
+    super.init(wrapperStyle: wrapperStyle)
+  }
+
   // FIXME: This is currently needed for style updates.
   func firstChild() -> BoxWrapper? {
     if p == nil {

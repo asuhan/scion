@@ -27,9 +27,59 @@ import wk_interop
 
 class BoxWrapper: Hashable {
   var p: UnsafeRawPointer?
-  var style: RenderStyleWrapper
+
+  enum NodeType {
+    case Text
+    case GenericElement
+    case ReplacedElement
+    case DocumentElement
+    case Body
+    case TableWrapperBox  // The table generates a principal block container box called the table wrapper box that contains the table box and any caption boxes.
+    case TableBox  // The table box is a block-level box that contains the table's internal table boxes.
+    case Image
+    case IFrame
+    case LineBreak
+    case WordBreakOpportunity
+    case ListMarker
+    case InputButton  // Buttons are implicit flex boxes with no flex display type.
+  }
+
+  enum IsAnonymous {
+    case No
+    case Yes
+  }
+
+  struct ElementAttributes {
+    let nodeType: NodeType = .Text
+    let isAnonymous: IsAnonymous = .No
+  }
+
+  struct BaseTypeFlag: OptionSet {
+    let rawValue: UInt8
+
+    static let InlineTextBoxFlag = BaseTypeFlag(rawValue: 1 << 0)
+    static let ElementBoxFlag = BaseTypeFlag(rawValue: 1 << 1)
+    static let InitialContainingBlockFlag = BaseTypeFlag(rawValue: 1 << 2)
+  }
+
+  init(
+    _ elementAttributes: ElementAttributes, _ style: RenderStyleWrapper,
+    firstLineStyle: RenderStyleWrapper?, _ baseTypeFlags: BaseTypeFlag
+  ) {
+    self.m_nodeType = elementAttributes.nodeType
+    self.m_isAnonymous = elementAttributes.isAnonymous == .Yes
+    self.m_baseTypeFlags = baseTypeFlags
+    self.style = style
+    if firstLineStyle != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
 
   init(wrapperStyle: RenderStyleWrapper = RenderStyleWrapper()) {
+    self.m_nodeType = .Text
+    self.m_isAnonymous = false
+    self.m_baseTypeFlags = []
     self.style = wrapperStyle
   }
 
@@ -499,4 +549,11 @@ class BoxWrapper: Hashable {
   func hash(into hasher: inout Hasher) {
     hasher.combine(p)
   }
+
+  private let m_nodeType: NodeType
+  private let m_isAnonymous: Bool
+
+  private let m_baseTypeFlags: BaseTypeFlag
+
+  var style: RenderStyleWrapper
 }

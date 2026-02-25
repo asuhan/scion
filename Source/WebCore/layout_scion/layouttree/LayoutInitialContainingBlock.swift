@@ -25,8 +25,9 @@
 
 class InitialContainingBlock: ElementBoxWrapper {
   init(style: RenderStyleWrapper, firstLineStyle: RenderStyleWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.init(
+      BoxWrapper.ElementAttributes(), style, firstLineStyle: firstLineStyle,
+      .InitialContainingBlockFlag)
   }
 
   override init(wrapperStyle: RenderStyleWrapper = RenderStyleWrapper()) {

@@ -47,8 +47,6 @@ class InlineTextBoxWrapper: BoxWrapper {
     super.init(wrapperStyle: style)
   }
 
-  init() {}
-
   struct ContentCharacteristicSet: OptionSet {
     let rawValue: UInt32
     static let CanUseSimplifiedContentMeasuring = ContentCharacteristicSet(rawValue: 1 << 0)
