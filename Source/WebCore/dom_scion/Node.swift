@@ -146,8 +146,7 @@ class NodeWrapper {
 
   // Returns the document associated with this node. A document node returns itself.
   func document() -> Document {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return Document(wk_interop.Node_document(p))
   }
 
   func countChildNodes() -> UInt32 { return 0 }

@@ -682,6 +682,7 @@ void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
 bool Node_isDocumentNode(const void*);
 bool Node_isRootEditableElement(const void*);
+void* Node_document(const void*);
 const void* BoxTree_handleNullRootBox(void*);
 void BoxTree_buildTreeForInlineContent(void*);
 void* InlineWalker_new(const void*);
