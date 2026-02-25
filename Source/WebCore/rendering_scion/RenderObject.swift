@@ -540,10 +540,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
   //////////////////////////////////////////
 
-  func isRenderElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRenderElement() -> Bool { return !isRenderText() }
 
   func isRenderReplaced() -> Bool {
     // TODO(asuhan): implement this
