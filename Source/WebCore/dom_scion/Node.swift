@@ -65,8 +65,7 @@ class NodeWrapper {
   }
 
   func isDocumentNode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Node_isDocumentNode(p)
   }
 
   func hasCustomStyleResolveCallbacks() -> Bool {
