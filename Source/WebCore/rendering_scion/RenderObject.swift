@@ -1045,10 +1045,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func isRenderText() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRenderText() -> Bool { return m_typeFlags.contains(.IsText) }
 
   func isBR() -> Bool {
     // TODO(asuhan): implement this
