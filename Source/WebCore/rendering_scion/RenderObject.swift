@@ -298,6 +298,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): add leak counter
   }
 
+  func type() -> `Type` { return m_type }
+
   func layoutBox() -> BoxWrapper? {
     let unwrapped = wk_interop.RenderObject_layoutBox(p)
     if unwrapped == nil {
@@ -1049,10 +1051,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func isRenderView() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRenderView() -> Bool { return type() == .View }
 
   func isInline() -> Bool {
     // TODO(asuhan): implement this
