@@ -272,10 +272,7 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
-  func ContainerNode() -> ContainerNodeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func ContainerNode() -> ContainerNodeWrapper { return ContainerNodeWrapper(p: p) }
 
   private let p: UnsafeRawPointer
 }
