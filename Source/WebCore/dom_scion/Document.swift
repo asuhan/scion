@@ -25,6 +25,8 @@
  *
  */
 
+import wk_interop
+
 // TODO(asuhan): inherit from all bases
 class Document: TreeScopeWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
@@ -65,8 +67,7 @@ class Document: TreeScopeWrapper {
   }
 
   func view() -> LocalFrameViewWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LocalFrameViewWrapper(p: wk_interop.Document_view(p))
   }
 
   func page() -> PageWrapper? {
