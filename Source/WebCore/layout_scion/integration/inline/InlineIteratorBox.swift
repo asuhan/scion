@@ -82,6 +82,36 @@ extension InlineIterator {
       fatalError("Not implemented")
     }
 
+    func minimumCaretOffset() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func maximumCaretOffset() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func leftmostCaretOffset() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func rightmostCaretOffset() -> UInt32 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func bidiLevel() -> UInt8 {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    func direction() -> TextDirection {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
     func isLeftToRightDirection() -> Bool {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -164,6 +194,18 @@ extension InlineIterator {
   class LeafBoxIterator: BoxIterator<Box> {
     @discardableResult
     func traverseNextOnLine() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    @discardableResult
+    func traverseNextOnLineIgnoringLineBreak() -> LeafBoxIterator {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    @discardableResult
+    func traversePreviousOnLineIgnoringLineBreak() -> LeafBoxIterator {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

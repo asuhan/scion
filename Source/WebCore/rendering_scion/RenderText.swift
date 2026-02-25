@@ -91,12 +91,115 @@ private func lineDirectionPointFitsInBox(
   return (false, shouldAffinityBeDownstream)
 }
 
-private func createVisiblePositionAfterAdjustingOffsetForBiDi(
-  _ run: InlineIterator.TextBoxIterator, _ offset: UInt32,
+private func createVisiblePositionForBox(
+  _ run: InlineIterator.BoxIterator<InlineIterator.Box>, _ offset: UInt32,
   _ shouldAffinityBeDownstream: ShouldAffinityBeDownstream
 ) -> VisiblePosition {
   // TODO(asuhan): implement this
   fatalError("Not implemented")
+}
+
+private func createVisiblePositionAfterAdjustingOffsetForBiDi(
+  _ run: InlineIterator.TextBoxIterator, _ offset: UInt32,
+  _ shouldAffinityBeDownstream: ShouldAffinityBeDownstream
+) -> VisiblePosition {
+  if offset != 0 && offset < run.get().length() {
+    return createVisiblePositionForBox(run, run.get().start() + offset, shouldAffinityBeDownstream)
+  }
+
+  let positionIsAtStartOfBox = offset == 0
+  if positionIsAtStartOfBox == run.get().isLeftToRightDirection() {
+    // offset is on the left edge
+
+    let previousRun = run.get().previousOnLineIgnoringLineBreak()
+    if (previousRun.bool() && previousRun.get().bidiLevel() == run.get().bidiLevel())
+      || run.get().renderer().containingBlock()!.style().direction() == run.get().direction()
+    {  // FIXME: left on 12CBA
+      return createVisiblePositionForBox(
+        run, run.get().leftmostCaretOffset(), shouldAffinityBeDownstream)
+    }
+
+    if previousRun.bool() && previousRun.get().bidiLevel() > run.get().bidiLevel() {
+      // e.g. left of B in aDC12BAb
+      var leftmostRun = previousRun
+      while previousRun.bool() {
+        if previousRun.get().bidiLevel() <= run.get().bidiLevel() {
+          break
+        }
+        leftmostRun = previousRun
+        previousRun.traversePreviousOnLineIgnoringLineBreak()
+      }
+      return createVisiblePositionForBox(
+        leftmostRun, leftmostRun.get().rightmostCaretOffset(), shouldAffinityBeDownstream)
+    }
+
+    if !previousRun.bool() || previousRun.get().bidiLevel() < run.get().bidiLevel() {
+      // e.g. left of D in aDC12BAb
+      var rightmostRun: InlineIterator.BoxIterator<InlineIterator.Box> = run
+      let nextRun = run.get().nextOnLineIgnoringLineBreak()
+      while nextRun.bool() {
+        if nextRun.get().bidiLevel() < run.get().bidiLevel() {
+          break
+        }
+        rightmostRun = nextRun
+        nextRun.traverseNextOnLineIgnoringLineBreak()
+      }
+      return createVisiblePositionForBox(
+        rightmostRun,
+        run.get().isLeftToRightDirection()
+          ? rightmostRun.get().maximumCaretOffset() : rightmostRun.get().minimumCaretOffset(),
+        shouldAffinityBeDownstream)
+    }
+
+    return createVisiblePositionForBox(
+      run, run.get().rightmostCaretOffset(), shouldAffinityBeDownstream)
+  }
+
+  let nextRun = run.get().nextOnLineIgnoringLineBreak()
+  if (nextRun.bool() && nextRun.get().bidiLevel() == run.get().bidiLevel())
+    || run.get().renderer().containingBlock()!.style().direction() == run.get().direction()
+  {
+    return createVisiblePositionForBox(
+      run, run.get().rightmostCaretOffset(), shouldAffinityBeDownstream)
+  }
+
+  // offset is on the right edge
+  if nextRun.bool() && nextRun.get().bidiLevel() > run.get().bidiLevel() {
+    // e.g. right of C in aDC12BAb
+    var rightmostRun = nextRun
+    while nextRun.bool() {
+      if nextRun.get().bidiLevel() <= run.get().bidiLevel() {
+        break
+      }
+      rightmostRun = nextRun
+      nextRun.traverseNextOnLineIgnoringLineBreak()
+    }
+
+    return createVisiblePositionForBox(
+      rightmostRun, rightmostRun.get().leftmostCaretOffset(), shouldAffinityBeDownstream)
+  }
+
+  if !nextRun.bool() || nextRun.get().bidiLevel() < run.get().bidiLevel() {
+    // e.g. right of A in aDC12BAb
+    var leftmostRun: InlineIterator.BoxIterator<InlineIterator.Box> = run
+    let previousRun = run.get().previousOnLineIgnoringLineBreak()
+    while previousRun.bool() {
+      if previousRun.get().bidiLevel() < run.get().bidiLevel() {
+        break
+      }
+      leftmostRun = previousRun
+      previousRun.traversePreviousOnLineIgnoringLineBreak()
+    }
+
+    return createVisiblePositionForBox(
+      leftmostRun,
+      run.get().isLeftToRightDirection()
+        ? leftmostRun.get().minimumCaretOffset() : leftmostRun.get().maximumCaretOffset(),
+      shouldAffinityBeDownstream)
+  }
+
+  return createVisiblePositionForBox(
+    run, run.get().leftmostCaretOffset(), shouldAffinityBeDownstream)
 }
 
 private func combineTextWidth(
