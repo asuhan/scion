@@ -408,6 +408,21 @@ extern "C" WEBCORE_EXPORT void* Document_view(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->view();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_inQuirksMode(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->inQuirksMode();
+}
+
+extern "C" WEBCORE_EXPORT bool Document_inLimitedQuirksMode(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->inLimitedQuirksMode();
+}
+
+extern "C" WEBCORE_EXPORT void* Document_securityOrigin(const void* raw)
+{
+    return &static_cast<const WebCore::Document*>(raw)->securityOrigin();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Document);

@@ -44,15 +44,40 @@ class LayoutStateWrapper {
 
   init(
     _ document: Document, _ rootContainer: ElementBoxWrapper, _ type: `Type`,
-    _ formattingContextLayoutFunction: FormattingContextLayoutFunction,
-    _ formattingContextLogicalWidthFunction: FormattingContextLogicalWidthFunction
+    _ formattingContextLayoutFunction: @escaping FormattingContextLayoutFunction,
+    _ formattingContextLogicalWidthFunction: @escaping FormattingContextLogicalWidthFunction
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_type = type
+    m_rootContainer = rootContainer
+    m_securityOrigin = document.securityOrigin()
+    m_formattingContextLayoutFunction = formattingContextLayoutFunction
+    m_formattingContextLogicalWidthFunction = formattingContextLogicalWidthFunction
+    // It makes absolutely no sense to construct a dedicated layout state for a non-formatting context root (layout would be a no-op).
+    assert(root().establishesFormattingContext())
+
+    updateQuirksMode(document)
   }
 
   init(p: UnsafeMutableRawPointer?) {
     self.p = p
+    m_type = .Primary
+    m_rootContainer = nil
+    m_securityOrigin = nil
+    m_formattingContextLayoutFunction = nil
+    m_formattingContextLogicalWidthFunction = nil
+  }
+
+  private func updateQuirksMode(_ document: Document) {
+    let quirksMode = { () -> QuirksMode in
+      if document.inLimitedQuirksMode() {
+        return .Limited
+      }
+      if document.inQuirksMode() {
+        return .Yes
+      }
+      return .No
+    }
+    setQuirksMode(quirksMode())
   }
 
   func inlineContentCache(formattingContextRoot: ElementBoxWrapper) -> InlineContentCache {
@@ -123,6 +148,12 @@ class LayoutStateWrapper {
     fatalError("Not implemented")
   }
 
+  private enum QuirksMode {
+    case No
+    case Limited
+    case Yes
+  }
+
   func inQuirksMode() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -144,13 +175,32 @@ class LayoutStateWrapper {
     return SecurityOriginWrapper(p: wk_interop.LayoutState_securityOrigin(self.p))
   }
 
+  func root() -> ElementBoxWrapper {
+    assert(self.p == nil)
+    return m_rootContainer!
+  }
+
   func layoutWithFormattingContextForBox(box: ElementBoxWrapper, widthConstraint: LayoutUnit?) {
     // TODO(asuhan): call by pointer
     LayoutIntegration.layoutWithFormattingContextForBox(
       box: box, widthConstraint: widthConstraint, layoutState: self)
   }
 
+  private func setQuirksMode(_ quirksMode: QuirksMode) { m_quirksMode = quirksMode }
+
+  private let m_type: `Type`
+
   private var inlineContentCaches: [UInt: InlineContentCache] = [:]
+
   private var blockFormattingStates: [UInt: BlockFormattingState] = [:]
   var p: UnsafeMutableRawPointer?
+
+  private var m_quirksMode: QuirksMode = .No
+
+  // TODO(asuhan): make these fields non-optional
+  private let m_rootContainer: ElementBoxWrapper?
+  private let m_securityOrigin: SecurityOriginWrapper?
+
+  private let m_formattingContextLayoutFunction: FormattingContextLayoutFunction?
+  private let m_formattingContextLogicalWidthFunction: FormattingContextLogicalWidthFunction?
 }

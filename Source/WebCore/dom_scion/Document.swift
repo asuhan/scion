@@ -118,8 +118,11 @@ class Document: TreeScopeWrapper {
   }
 
   func inQuirksMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Document_inQuirksMode(p)
+  }
+
+  func inLimitedQuirksMode() -> Bool {
+    return wk_interop.Document_inLimitedQuirksMode(p)
   }
 
   func inNoQuirksMode() -> Bool {
@@ -190,8 +193,7 @@ class Document: TreeScopeWrapper {
   }
 
   func securityOrigin() -> SecurityOriginWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return SecurityOriginWrapper(p: wk_interop.Document_securityOrigin(p))
   }
 
   func protectedSecurityOrigin() -> SecurityOriginWrapper {
