@@ -1051,8 +1051,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isRenderView() -> Bool { return type() == .View }
 
   func isInline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !m_stateBitfields.hasFlag(.IsBlock)
   }
 
   func isReplacedOrInlineBlock() -> Bool {
