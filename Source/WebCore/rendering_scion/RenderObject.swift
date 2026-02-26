@@ -269,6 +269,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       self.flags = flags.rawValue
     }
 
+    func blockFlowFlags() -> BlockFlowFlag {
+      return BlockFlowFlag(rawValue: valueForKind(.BlockFlow))
+    }
+
+    private func valueForKind(_ kind: Kind) -> UInt8 {
+      return self.kind == kind ? flags : 0
+    }
+
     let kind: Kind
     let flags: UInt8
   }
@@ -1067,8 +1075,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderFragmentedFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(.IsFragmentedFlow)
   }
 
   func hasOutlineAutoAncestor() -> Bool {
