@@ -49,6 +49,11 @@ class RenderViewScion final : public CanMakeCheckedPtr<RenderViewScion> {
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderViewScion);
 
 public:
+    RenderViewScion(void* handle)
+        : m_handle(handle)
+    {
+    }
+
     ~RenderViewScion();
 
     const RenderStyle& style() const;
@@ -102,6 +107,9 @@ public:
     void didCreateRenderer();
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
+
+private:
+    void* m_handle;
 };
 
 }

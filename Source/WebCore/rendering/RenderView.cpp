@@ -58,6 +58,7 @@
 #include "RenderMultiColumnSet.h"
 #include "RenderMultiColumnSpannerPlaceholder.h"
 #include "RenderQuote.h"
+#include "RenderViewScion.h"
 #include "RenderSVGRoot.h"
 #include "RenderStyleInlines.h"
 #include "RenderTreeBuilder.h"
@@ -114,6 +115,10 @@ RenderView::~RenderView()
     ASSERT_WITH_MESSAGE(m_rendererCount == 1, "All other renderers in this render tree should have been destroyed");
 
     deleteLines();
+}
+
+void RenderView::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderViewScion>(handle);
 }
 
 void RenderView::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)

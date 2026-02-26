@@ -35,7 +35,7 @@ namespace WebCore {
 
 RenderViewScion::~RenderViewScion()
 {
-    ASSERT_NOT_REACHED();
+    // TODO(asuhan): implement this
 }
 
 const RenderStyle& RenderViewScion::style() const

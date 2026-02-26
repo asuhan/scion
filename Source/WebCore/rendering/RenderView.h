@@ -38,6 +38,7 @@ class RenderLayerCompositor;
 class RenderLayoutState;
 class RenderCounter;
 class RenderQuote;
+class RenderViewScion;
 
 namespace Layout {
 class InitialContainingBlock;
@@ -50,6 +51,8 @@ class RenderView final : public RenderBlockFlow {
 public:
     RenderView(Document&, RenderStyle&&);
     virtual ~RenderView();
+
+    void setScionHandle(void* handle);
 
     ASCIILiteral renderName() const override { return "RenderView"_s; }
 
@@ -285,6 +288,8 @@ private:
     SingleThreadWeakHashSet<const RenderBox> m_containerQueryBoxes;
 
     SingleThreadWeakPtr<RenderElement> m_viewTransitionRoot;
+
+    std::unique_ptr<RenderViewScion> m_scion;
 };
 
 } // namespace WebCore
