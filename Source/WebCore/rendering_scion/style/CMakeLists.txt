@@ -29,6 +29,7 @@ target_sources(layout_scion PRIVATE
     StyleImage.swift
     StyleInheritedData.swift
     StyleMultiImage.swift
+    StyleNonInheritedData.swift
     StyleRareInheritedData.swift
     StyleReflection.swift
     StyleScrollSnapPoints.swift

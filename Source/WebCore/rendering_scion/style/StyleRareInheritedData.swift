@@ -23,6 +23,28 @@
  */
 
 class StyleRareInheritedData {
+  func copy() -> StyleRareInheritedData {
+    var c = StyleRareInheritedData()
+    c.indent = indent
+    c.nbspMode = nbspMode
+    c.lineBreak = lineBreak
+    c.lineSnap = lineSnap
+    c.lineAlign = lineAlign
+    c.hyphens = hyphens
+    c.textEmphasisPosition = textEmphasisPosition
+    c.textIndentLine = textIndentLine
+    c.textIndentType = textIndentType
+    c.textAlignLast = textAlignLast
+    c.rubyPosition = rubyPosition
+    c.rubyAlign = rubyAlign
+    c.rubyOverhang = rubyOverhang
+    c.tabSize = tabSize
+    c.wordBreak = wordBreak
+    c.overflowWrap = overflowWrap
+    c.hyphenationLimitLines = hyphenationLimitLines
+    return c
+  }
+
   var indent = LengthWrapper()
   var nbspMode = false
   var lineBreak: LineBreak = .Auto

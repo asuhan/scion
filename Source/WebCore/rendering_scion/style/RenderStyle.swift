@@ -97,6 +97,8 @@ func isSkippedContentRoot(style: RenderStyleWrapper, element: ElementWrapper?) -
 class RenderStyleWrapper: Equatable {
   var p: UnsafeRawPointer?
 
+  private enum CloneTag { case Clone }
+
   init(
     unicodeBidi: UnicodeBidi = .Normal,
     tabSize: TabSizeWrapper = TabSizeWrapper(numOrLength: 0, isSpaces: .LengthValueType),
@@ -113,6 +115,15 @@ class RenderStyleWrapper: Equatable {
     inheritedFlags.textWrapMode = textWrapMode
   }
 
+  private init(_ other: RenderStyleWrapper, _: CloneTag) {
+    nonInheritedData = other.nonInheritedData.copy()
+    nonInheritedFlags = other.nonInheritedFlags
+    rareInheritedData = other.rareInheritedData.copy()
+    inheritedData = other.inheritedData.copy()
+    inheritedFlags = other.inheritedFlags
+    m_svgStyle = other.m_svgStyle.copy()
+  }
+
   func replace(_ newStyle: RenderStyleWrapper) -> RenderStyleWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -124,8 +135,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   static func clone(style: RenderStyleWrapper) -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if style.p != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return RenderStyleWrapper(style, .Clone)
   }
 
   static func cloneIncludingPseudoElements(style: RenderStyleWrapper) -> RenderStyleWrapper {
@@ -3488,11 +3502,14 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  var nonInheritedData = StyleNonInheritedData()
   var nonInheritedFlags = NonInheritedFlags()
 
   var rareInheritedData = StyleRareInheritedData()
   var inheritedData = StyleInheritedData()
   var inheritedFlags = InheritedFlags()
+
+  var m_svgStyle = SVGRenderStyle()
 }
 
 func collapsedBorderStyle(style: BorderStyle) -> BorderStyle {

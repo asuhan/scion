@@ -96,6 +96,8 @@ enum BufferedRendering {
 }
 
 class SVGRenderStyle {
+  func copy() -> SVGRenderStyle { return SVGRenderStyle() }
+
   // Read accessors for all the properties
   func alignmentBaseline() -> AlignmentBaseline {
     // TODO(asuhan): implement this

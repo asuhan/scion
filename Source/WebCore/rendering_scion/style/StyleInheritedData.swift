@@ -23,5 +23,11 @@
  */
 
 class StyleInheritedData {
+  func copy() -> StyleInheritedData {
+    let c = StyleInheritedData()
+    c.fontCascade = fontCascade  // TODO(asuhan): should this be deep copied?
+    return c
+  }
+
   var fontCascade: FontCascadeWrapper = FontCascadeWrapper()
 }
