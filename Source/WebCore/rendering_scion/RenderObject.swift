@@ -549,10 +549,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isRenderBlockFlow() -> Bool { return m_typeSpecificFlags.kind == .BlockFlow }
 
-  func isRenderInline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRenderInline() -> Bool { return m_typeFlags.contains(.IsRenderInline) }
 
   func isRenderLayerModelObject() -> Bool { return m_typeFlags.contains(.IsLayerModelObject) }
 
