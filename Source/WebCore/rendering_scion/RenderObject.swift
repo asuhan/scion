@@ -1106,9 +1106,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_stateBitfields.hasFlag(.HasLayer)
   }
 
+  enum BoxDecorationState {
+    case None
+    case InvalidObscurationStatus
+    case IsKnownToBeObscured
+    case MayBeVisible
+  }
+
   func hasVisibleBoxDecorations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.boxDecorationState != .None
   }
 
   func backgroundIsKnownToBeObscured(paintOffset: LayoutPointWrapper) -> Bool {
@@ -2747,8 +2754,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       m_positionedState = PositionedState(rawValue: positionState.rawValue & 0x3)!
     }
 
-    private var m_positionedState: PositionedState = .IsStaticallyPositioned
     private var flags: StateFlag = []
+    private var m_positionedState: PositionedState = .IsStaticallyPositioned
+    let boxDecorationState: BoxDecorationState = .None
   }
 
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
