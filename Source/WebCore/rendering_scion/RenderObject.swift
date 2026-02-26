@@ -758,8 +758,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func childrenInline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.ChildrenInline)
   }
 
   func setChildrenInline(b: Bool) {
@@ -2685,6 +2685,40 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  private struct StateFlag: OptionSet {
+    let rawValue: UInt32
+
+    static let IsBlock = StateFlag(rawValue: 1 << 0)
+    static let IsReplacedOrInlineBlock = StateFlag(rawValue: 1 << 1)
+    static let BeingDestroyed = StateFlag(rawValue: 1 << 2)
+    static let NeedsLayout = StateFlag(rawValue: 1 << 3)
+    static let NeedsPositionedMovementLayout = StateFlag(rawValue: 1 << 4)
+    static let NormalChildNeedsLayout = StateFlag(rawValue: 1 << 5)
+    static let PosChildNeedsLayout = StateFlag(rawValue: 1 << 6)
+    static let NeedsSimplifiedNormalFlowLayout = StateFlag(rawValue: 1 << 7)
+    static let OutOfFlowChildNeedsStaticPositionLayout = StateFlag(rawValue: 1 << 8)
+    static let EverHadLayout = StateFlag(rawValue: 1 << 9)
+    static let IsExcludedFromNormalLayout = StateFlag(rawValue: 1 << 10)
+    static let Floating = StateFlag(rawValue: 1 << 11)
+    static let VerticalWritingMode = StateFlag(rawValue: 1 << 12)
+    static let PreferredLogicalWidthsDirty = StateFlag(rawValue: 1 << 13)
+    static let HasRareData = StateFlag(rawValue: 1 << 14)
+    static let HasLayer = StateFlag(rawValue: 1 << 15)
+    static let HasNonVisibleOverflow = StateFlag(rawValue: 1 << 16)
+    static let HasTransformRelatedProperty = StateFlag(rawValue: 1 << 17)
+    static let ChildrenInline = StateFlag(rawValue: 1 << 18)
+    static let PaintContainmentApplies = StateFlag(rawValue: 1 << 19)
+    static let HasSVGTransform = StateFlag(rawValue: 1 << 20)
+    static let WasSkippedDuringLastLayoutDueToContentVisibility = StateFlag(rawValue: 1 << 21)
+    static let CapturedInViewTransition = StateFlag(rawValue: 1 << 22)
+  }
+
+  private struct StateBitfields {
+    func hasFlag(_ flag: StateFlag) -> Bool { return flags.contains(flag) }
+
+    private let flags: StateFlag = []
+  }
+
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
     if wk_interop.RenderObject_isRenderListBox(p) {
       return RenderListBoxWrapper(p: p)
@@ -2714,7 +2748,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isNativeImpl() -> Bool { return CPtrToInt(p) == 0xdead_beef }
+
   var p: UnsafeMutableRawPointer
+
+  private let m_stateBitfields = StateBitfields()
 
   private let m_node: NodeWrapper?
 
