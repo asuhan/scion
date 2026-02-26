@@ -1099,10 +1099,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFlag(.IsExcludedFromNormalLayout, excluded)
   }
 
-  func isExcludedAndPlacedInBorder() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isExcludedAndPlacedInBorder() -> Bool { return isExcludedFromNormalLayout() && isLegend() }
 
   func hasLayer() -> Bool {
     // TODO(asuhan): implement this
