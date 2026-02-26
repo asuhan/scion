@@ -541,7 +541,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isRenderElement() -> Bool { return !isRenderText() }
 
-  func isRenderReplaced() -> Bool { return m_typeSpecificFlags.kind == .Replaced }
+  func isRenderReplaced() -> Bool {
+    assert(isNativeImpl())
+    return m_typeSpecificFlags.kind == .Replaced
+  }
 
   func isRenderBoxModelObject() -> Bool { return m_typeFlags.contains(.IsBoxModelObject) }
 
@@ -549,7 +552,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isRenderBlockFlow() -> Bool { return m_typeSpecificFlags.kind == .BlockFlow }
 
-  func isRenderInline() -> Bool { return m_typeFlags.contains(.IsRenderInline) }
+  func isRenderInline() -> Bool {
+    assert(isNativeImpl())
+    return m_typeFlags.contains(.IsRenderInline)
+  }
 
   func isRenderLayerModelObject() -> Bool { return m_typeFlags.contains(.IsLayerModelObject) }
 
