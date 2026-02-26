@@ -1566,8 +1566,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setInline(_ b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.IsBlock, !b)
   }
 
   func setHasVisibleBoxDecorations(_ b: Bool = true) {
