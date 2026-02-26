@@ -1102,8 +1102,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isExcludedAndPlacedInBorder() -> Bool { return isExcludedFromNormalLayout() && isLegend() }
 
   func hasLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.HasLayer)
   }
 
   func hasVisibleBoxDecorations() -> Bool {
