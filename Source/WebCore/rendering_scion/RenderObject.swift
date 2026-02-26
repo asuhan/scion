@@ -1085,8 +1085,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func paintContainmentApplies() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.PaintContainmentApplies)
   }
 
   func isExcludedFromNormalLayout() -> Bool {
