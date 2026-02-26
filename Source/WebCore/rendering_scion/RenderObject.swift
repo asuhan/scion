@@ -1154,8 +1154,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func posChildNeedsLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.PosChildNeedsLayout)
   }
 
   func needsSimplifiedNormalFlowLayout() -> Bool {
