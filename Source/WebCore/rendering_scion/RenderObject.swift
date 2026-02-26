@@ -1159,13 +1159,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsSimplifiedNormalFlowLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.NeedsSimplifiedNormalFlowLayout)
   }
 
   func needsSimplifiedNormalFlowLayoutOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return needsSimplifiedNormalFlowLayout() && !selfNeedsLayout() && !normalChildNeedsLayout()
+      && !posChildNeedsLayout() && !needsPositionedMovementLayout()
   }
 
   func normalChildNeedsLayout() -> Bool {
