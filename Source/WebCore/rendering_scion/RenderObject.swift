@@ -1197,8 +1197,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasPotentiallyScrollableOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // We only need to test one overflow dimension since 'visible' and 'clip' always get accompanied
+    // with 'clip' or 'visible' in the other dimension (see Style::Adjuster::adjust).
+    return hasNonVisibleOverflow() && style().overflowX() != .Clip
+      && style().overflowX() != .Visible
   }
 
   func hasTransformRelatedProperty() -> Bool {
