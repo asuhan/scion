@@ -536,10 +536,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return canHaveChildren()
   }
 
-  func createsAnonymousWrapper() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func createsAnonymousWrapper() -> Bool { return false }
   //////////////////////////////////////////
 
   func isRenderElement() -> Bool { return !isRenderText() }
