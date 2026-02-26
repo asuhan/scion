@@ -1136,8 +1136,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func selfNeedsLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.NeedsLayout)
   }
 
   func needsPositionedMovementLayout() -> Bool {
