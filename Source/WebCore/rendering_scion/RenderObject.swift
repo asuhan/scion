@@ -559,8 +559,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderEmbeddedObject() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .EmbeddedObject
   }
 
   func isFieldset() -> Bool {
