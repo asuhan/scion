@@ -1562,8 +1562,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setPositionState(_ position: PositionType) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert((position != .Absolute && position != .Fixed) || isRenderBox())
+    m_stateBitfields.setPositionedState(position)
   }
 
   func clearPositionedState() {
@@ -2725,6 +2726,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   private struct StateBitfields {
+    enum PositionedState: UInt8 {
+      case IsStaticallyPositioned = 0
+      case IsRelativelyPositioned = 1
+      case IsOutOfFlowPositioned = 2
+      case IsStickilyPositioned = 3
+    }
+
     func hasFlag(_ flag: StateFlag) -> Bool { return flags.contains(flag) }
 
     mutating func setFlag(_ flag: StateFlag, _ value: Bool = true) {
@@ -2735,6 +2743,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       }
     }
 
+    mutating func setPositionedState(_ positionState: PositionType) {
+      // This mask maps .Fixed and .Absolute to IsOutOfFlowPositioned, saving one bit.
+      m_positionedState = PositionedState(rawValue: positionState.rawValue & 0x3)!
+    }
+
+    private var m_positionedState: PositionedState = .IsStaticallyPositioned
     private var flags: StateFlag = []
   }
 
