@@ -541,10 +541,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isRenderElement() -> Bool { return !isRenderText() }
 
-  func isRenderReplaced() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRenderReplaced() -> Bool { return m_typeSpecificFlags.kind == .Replaced }
 
   func isRenderBoxModelObject() -> Bool { return m_typeFlags.contains(.IsBoxModelObject) }
 
