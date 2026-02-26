@@ -587,10 +587,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isImage(p)
   }
 
-  func isInlineBlockOrInlineTable() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInlineBlockOrInlineTable() -> Bool { return false }
 
   func isRenderListBox() -> Bool {
     // TODO(asuhan): implement this

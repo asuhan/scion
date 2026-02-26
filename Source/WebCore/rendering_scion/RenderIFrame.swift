@@ -24,6 +24,11 @@
  */
 
 final class RenderIFrameWrapper: RenderFrameBaseWrapper {
+  override func isInlineBlockOrInlineTable() -> Bool {
+    assert(isNativeImpl())
+    return isInline()
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     assert(needsLayout())
