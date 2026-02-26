@@ -573,8 +573,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderFrameSet() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .FrameSet
   }
 
   func isImage() -> Bool {
