@@ -590,28 +590,28 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isInlineBlockOrInlineTable() -> Bool { return false }
 
   func isRenderListBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .ListBox
   }
 
   func isRenderListMarker() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .ListMarker
   }
 
   func isRenderMenuList() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .MenuList
   }
 
   func isRenderButton() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .Button
   }
 
   func isRenderIFrame() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .IFrame
   }
 
   func isRenderFragmentContainer() -> Bool {
