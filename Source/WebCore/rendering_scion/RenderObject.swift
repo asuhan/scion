@@ -554,8 +554,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isRenderLayerModelObject() -> Bool { return m_typeFlags.contains(.IsLayerModelObject) }
 
   func isRenderQuote() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .Quote
   }
 
   func isRenderEmbeddedObject() -> Bool {
