@@ -526,14 +526,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // RenderObject tree manipulation
   //////////////////////////////////////////
-  func canHaveChildren() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func canHaveChildren() -> Bool { fatalError("Not reached") }
 
+  // We only create "generated" child renderers like one for first-letter if:
+  // - the firstLetterBlock can have children in the DOM and
+  // - the block doesn't have any special assumption on its text children.
+  // This correctly prevents form controls from having such renderers.
   func canHaveGeneratedChildren() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return canHaveChildren()
   }
 
   func createsAnonymousWrapper() -> Bool {
