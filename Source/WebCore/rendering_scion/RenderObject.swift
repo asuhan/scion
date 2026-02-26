@@ -1166,8 +1166,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func preferredLogicalWidthsDirty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.PreferredLogicalWidthsDirty)
   }
 
   func isSelectionBorder() -> Bool {
@@ -1305,6 +1305,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func setPreferredLogicalWidthsDirty(
     shouldBeDirty: Bool, markParents: MarkingBehavior = .MarkContainingBlockChain
   ) {
+    assert(isNativeImpl())
+    let alreadyDirty = preferredLogicalWidthsDirty()
+    m_stateBitfields.setFlag(.PreferredLogicalWidthsDirty, shouldBeDirty)
+    if shouldBeDirty && !alreadyDirty && markParents == .MarkContainingBlockChain
+      && (isRenderText() || !style().hasOutOfFlowPosition())
+    {
+      invalidateContainerPreferredLogicalWidths()
+    }
+  }
+
+  func invalidateContainerPreferredLogicalWidths() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
