@@ -2,6 +2,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(layout_scion
     FormattingState.swift
     LayoutContext.swift
+    LayoutPhase.swift
     LayoutState.swift
     LayoutUnits.swift
     MarginTypes.swift

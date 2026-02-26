@@ -535,8 +535,7 @@ class RenderStyleWrapper: Equatable {
 
   func display() -> DisplayType {
     if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return nonInheritedFlags.effectiveDisplay
     }
     return DisplayType(rawValue: wk_interop.RenderStyle_display(p))!
   }

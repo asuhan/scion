@@ -84,27 +84,85 @@ class BoxWrapper: Hashable {
   }
 
   func establishesFormattingContext() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_establishesFormattingContext(p)
     }
-    return wk_interop.Box_establishesFormattingContext(p)
+    // We need the final tree structure to tell whether a box establishes a certain formatting context.
+    assert(!Phase.isInTreeBuilding())
+    return establishesInlineFormattingContext()
+      || establishesBlockFormattingContext()
+      || establishesTableFormattingContext()
+      || establishesFlexFormattingContext()
+      || establishesGridFormattingContext()
+      || establishesIndependentFormattingContext()
   }
 
   func establishesBlockFormattingContext() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_establishesBlockFormattingContext(p)
     }
-    return wk_interop.Box_establishesBlockFormattingContext(p)
+    if isInlineIntegrationRoot() {
+      return true
+    }
+
+    // ICB always creates a new (inital) block formatting context.
+    if self is InitialContainingBlock {
+      return true
+    }
+
+    if isTableWrapperBox() {
+      return true
+    }
+
+    // A block box that establishes an independent formatting context establishes a new block formatting context for its contents.
+    if isBlockBox() && establishesIndependentFormattingContext() {
+      return true
+    }
+
+    // 9.4.1 Block formatting contexts
+    // Floats, absolutely positioned elements, block containers (such as inline-blocks, table-cells, and table-captions)
+    // that are not block boxes, and block boxes with 'overflow' other than 'visible' (except when that value has been propagated to the viewport)
+    // establish new block formatting contexts for their contents.
+    if isFloatingPositioned() {
+      // Not all floating or out-of-positioned block level boxes establish BFC.
+      // See [9.7 Relationships between 'display', 'position', and 'float'] for details.
+      return isBlockContainer()
+    }
+
+    if isBlockContainer() && !isBlockBox() {
+      return true
+    }
+
+    if isBlockBox() && !isOverflowVisible() {
+      return true
+    }
+
+    return false
   }
 
   func establishesInlineFormattingContext() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_establishesInlineFormattingContext(p)
     }
-    return wk_interop.Box_establishesInlineFormattingContext(p)
+    if isInlineIntegrationRoot() {
+      return true
+    }
+
+    // 9.4.2 Inline formatting contexts
+    // An inline formatting context is established by a block container box that contains no block-level boxes.
+    if !isBlockContainer() {
+      return false
+    }
+
+    guard let elementBox = self as? ElementBoxWrapper else { return false }
+
+    // FIXME ???
+    if elementBox.firstInFlowChild() == nil {
+      return false
+    }
+
+    // It's enough to check the first in-flow child since we can't have both block and inline level sibling boxes.
+    return elementBox.firstInFlowChild()!.isInlineLevelBox()
   }
 
   func establishesTableFormattingContext() -> Bool {
@@ -114,6 +172,16 @@ class BoxWrapper: Hashable {
 
   func establishesFlexFormattingContext() -> Bool {
     return isFlexBox()
+  }
+
+  private func establishesGridFormattingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func establishesIndependentFormattingContext() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isInFlow() -> Bool { return !isFloatingOrOutOfFlowPositioned() }
@@ -205,13 +273,25 @@ class BoxWrapper: Hashable {
     return wk_interop.Box_isBlockLevelBox(p)
   }
 
+  // A block-level box that is also a block container.
+  func isBlockBox() -> Bool {
+    // A block-level box that is also a block container.
+    return isBlockLevelBox() && isBlockContainer()
+  }
+
   // A block-level box is also a block container box unless it is a table box or the principal box of a replaced element.
   func isBlockContainer() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isBlockContainer(p)
     }
-    return wk_interop.Box_isBlockContainer(p)
+    let display = style.display()
+    return display == .Block
+      || display == .FlowRoot
+      || display == .ListItem
+      || display == .RubyBlock
+      || isInlineBlockBox()
+      || isTableCell()
+      || isTableCaption()  // TODO && !replaced element
   }
 
   func isInlineLevelBox() -> Bool {
@@ -239,11 +319,10 @@ class BoxWrapper: Hashable {
   }
 
   func isInlineBlockBox() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInlineBlockBox(p)
     }
-    return wk_interop.Box_isInlineBlockBox(p)
+    return style.display() == .InlineBlock
   }
 
   func isInlineTableBox() -> Bool {
@@ -319,10 +398,9 @@ class BoxWrapper: Hashable {
     fatalError("Not implemented")
   }
 
-  func isTableCell() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isTableCaption() -> Bool { return style.display() == .TableCaption }
+
+  func isTableCell() -> Bool { return style.display() == .TableCell }
 
   func isFlexBox() -> Bool {
     // TODO(asuhan): implement this
@@ -367,11 +445,10 @@ class BoxWrapper: Hashable {
   }
 
   func isInlineIntegrationRoot() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if p != nil {
+      return wk_interop.Box_isInlineIntegrationRoot(p)
     }
-    return wk_interop.Box_isInlineIntegrationRoot(p)
+    return m_isInlineIntegrationRoot
   }
 
   func isFirstChildForIntegration() -> Bool {
@@ -554,6 +631,7 @@ class BoxWrapper: Hashable {
   private let m_isAnonymous: Bool
 
   private let m_baseTypeFlags: BaseTypeFlag
+  private let m_isInlineIntegrationRoot = false
 
   var style: RenderStyleWrapper
 }
