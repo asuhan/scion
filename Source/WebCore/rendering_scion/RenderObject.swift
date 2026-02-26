@@ -1174,8 +1174,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func outOfFlowChildNeedsStaticPositionLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.OutOfFlowChildNeedsStaticPositionLayout)
   }
 
   func preferredLogicalWidthsDirty() -> Bool {
