@@ -93,8 +93,8 @@ class Document: TreeScopeWrapper {
   }
 
   func renderView() -> RenderViewWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.Document_renderView(p)
+    return raw != nil ? RenderViewWrapper(p: raw!) : nil
   }
 
   func existingAXObjectCache() -> AXObjectCacheWrapper? {
