@@ -763,8 +763,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setChildrenInline(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.ChildrenInline, b)
   }
 
   enum FragmentedFlowState {
@@ -2716,7 +2716,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private struct StateBitfields {
     func hasFlag(_ flag: StateFlag) -> Bool { return flags.contains(flag) }
 
-    private let flags: StateFlag = []
+    mutating func setFlag(_ flag: StateFlag, _ value: Bool = true) {
+      if value {
+        flags.formUnion(flag)
+      } else {
+        flags.subtract(flag)
+      }
+    }
+
+    private var flags: StateFlag = []
   }
 
   static func createFromRawPointer(p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
@@ -2752,7 +2760,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   var p: UnsafeMutableRawPointer
 
-  private let m_stateBitfields = StateBitfields()
+  private var m_stateBitfields = StateBitfields()
 
   private let m_node: NodeWrapper?
 
