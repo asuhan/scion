@@ -2561,13 +2561,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSkippedContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return parent()?.style().hasSkippedContent() ?? false
   }
 
   func isSkippedContentForLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout()
   }
 
   //////////////////////////////////////////
