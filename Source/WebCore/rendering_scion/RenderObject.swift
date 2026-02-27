@@ -1716,8 +1716,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return createVisiblePosition(caretMinOffset(), .Downstream)
   }
 
   func createVisiblePosition(_ offset: Int32, _ affinity: Affinity) -> VisiblePosition {
