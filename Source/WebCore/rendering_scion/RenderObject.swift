@@ -1669,8 +1669,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setReplacedOrInlineBlock(_ b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.IsReplacedOrInlineBlock, b)
   }
 
   func setHorizontalWritingMode(_ b: Bool = true) {
