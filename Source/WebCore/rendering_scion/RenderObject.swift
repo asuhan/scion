@@ -2275,10 +2275,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isFloating() || isOutOfFlowPositioned()
   }
 
-  func isInFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInFlow() -> Bool { return !isFloatingOrOutOfFlowPositioned() }
 
   enum HighlightState: UInt8 {
     case None  // The object is not selected.
