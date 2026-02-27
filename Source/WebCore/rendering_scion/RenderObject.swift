@@ -1658,8 +1658,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func invalidateBackgroundObscurationStatus() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !hasVisibleBoxDecorations() {
+      return
+    }
+    m_stateBitfields.setBoxDecorationState(.InvalidObscurationStatus)
   }
 
   func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper) -> Bool {
