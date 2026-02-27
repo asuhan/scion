@@ -2770,8 +2770,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setEverHadLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.EverHadLayout)
   }
 
   func setHadSkippedLayout(_ b: Bool) {
