@@ -1258,8 +1258,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func preservesNewline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !isRenderSVGInlineText() && style().preserveNewline()
   }
 
   func view() -> RenderViewWrapper {
