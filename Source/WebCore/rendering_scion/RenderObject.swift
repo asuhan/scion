@@ -1034,7 +1034,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func isRenderText() -> Bool { return m_typeFlags.contains(.IsText) }
+  func isRenderText() -> Bool {
+    assert(isNativeImpl())
+    return m_typeFlags.contains(.IsText)
+  }
 
   func isBR() -> Bool {
     // TODO(asuhan): implement this
@@ -1872,8 +1875,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func firstLineStyle() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isRenderText() {
+      return m_parent!.firstLineStyle()
+    }
+    return (self as! RenderElementWrapper).firstLineStyle()
   }
 
   // Anonymous blocks that are part of of a continuation chain will return their inline continuation's outline style instead.
