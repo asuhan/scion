@@ -1884,8 +1884,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Anonymous blocks that are part of of a continuation chain will return their inline continuation's outline style instead.
   // This is typically only relevant when repainting.
   func outlineStyleForRepaint() -> RenderStyleWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style()
   }
 
   // Return the RenderLayerModelObject in the container chain which is responsible for painting this object, or nullptr
