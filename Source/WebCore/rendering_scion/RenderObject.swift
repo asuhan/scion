@@ -1347,8 +1347,26 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func invalidateContainerPreferredLogicalWidths() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // In order to avoid pathological behavior when inlines are deeply nested, we do include them
+    // in the chain that we mark dirty (even though they're kind of irrelevant).
+    var ancestor = isRenderTableCell() ? containingBlock() : container()
+    while ancestor != nil && !ancestor!.preferredLogicalWidthsDirty() {
+      // Don't invalidate the outermost object of an unrooted subtree. That object will be
+      // invalidated when the subtree is added to the document.
+      let container =
+        ancestor!.isRenderTableCell() ? ancestor!.containingBlock() : ancestor!.container()
+      if container == nil && !ancestor!.isRenderView() {
+        break
+      }
+
+      ancestor!.m_stateBitfields.setFlag(.PreferredLogicalWidthsDirty, true)
+      if ancestor!.style().hasOutOfFlowPosition() {
+        // A positioned object has no effect on the min/max width of its containing block ever.
+        // We can optimize this case and not go up any further.
+        break
+      }
+      ancestor = container
+    }
   }
 
   func setHasOutlineAutoAncestor(hasOutlineAutoAncestor: Bool = true) {
