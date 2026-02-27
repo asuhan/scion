@@ -1684,8 +1684,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHasTransformRelatedProperty(_ b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.HasTransformRelatedProperty, b)
   }
 
   func setHasReflection(_ hasReflection: Bool = true) {
