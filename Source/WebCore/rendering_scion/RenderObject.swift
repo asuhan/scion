@@ -1219,8 +1219,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasTransformOrPerspective() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasTransformRelatedProperty() && (isTransformed() || style().hasPerspective())
   }
 
   func capturedInViewTransition() -> Bool {
