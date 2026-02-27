@@ -2494,8 +2494,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func participatesInPreserve3D() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasLayer()
+      && (self as! RenderLayerModelObjectWrapper).layer()!.participatesInPreserve3D()
   }
 
   func addFocusRingRects(
