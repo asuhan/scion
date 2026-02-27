@@ -1375,8 +1375,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setPaintContainmentApplies(_ value: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.PaintContainmentApplies, value)
   }
 
   func setHasSVGTransform(_ value: Bool = true) {
