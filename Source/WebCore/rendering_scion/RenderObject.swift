@@ -2702,13 +2702,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setLayerNeedsFullRepaint() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasLayer())
+    (self as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus = .NeedsFullRepaint
   }
 
   func setLayerNeedsFullRepaintForPositionedMovementLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(hasLayer())
+    (self as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus =
+      .NeedsFullRepaintForPositionedMovementLayout
   }
 
   private func propagateRepaintToParentWithOutlineAutoIfNeeded(
