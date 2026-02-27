@@ -2268,8 +2268,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> FloatRectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {
