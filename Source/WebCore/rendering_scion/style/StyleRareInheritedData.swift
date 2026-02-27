@@ -24,7 +24,7 @@
 
 class StyleRareInheritedData {
   func copy() -> StyleRareInheritedData {
-    var c = StyleRareInheritedData()
+    let c = StyleRareInheritedData()
     c.indent = indent
     c.nbspMode = nbspMode
     c.lineBreak = lineBreak
