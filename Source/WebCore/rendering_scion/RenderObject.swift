@@ -1427,8 +1427,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return false
   }
 
   // Convert a local quad into the coordinate system of container, taking transforms into account.
