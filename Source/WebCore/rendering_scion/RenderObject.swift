@@ -485,13 +485,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingBox() -> RenderBoxWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RenderAncestorIteratorAdapter<RenderBoxWrapper>.lineageOfType(first: self).first()!
   }
 
   func enclosingBoxModelObject() -> RenderBoxModelObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RenderAncestorIteratorAdapter<RenderBoxModelObjectWrapper>.lineageOfType(first: self)
+      .first()!
   }
 
   func enclosingScrollableContainer() -> RenderBoxWrapper? {
