@@ -57,6 +57,11 @@ extern "C" WEBCORE_EXPORT const void* LocalFrameViewLayoutContext_layoutState(co
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutState();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutIdentifier();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(LocalFrameViewLayoutContext);

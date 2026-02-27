@@ -1600,8 +1600,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func clearNeedsLayout(hadSkippedLayout: HadSkippedLayout = .No) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // FIXME: Consider not setting the "ever had layout" bit to true when "hadSkippedLayout"
+    setEverHadLayout()
+    setHadSkippedLayout(hadSkippedLayout == .Yes)
+
+    if let renderElement = self as? RenderElementWrapper {
+      renderElement.setLayoutIdentifier(
+        renderElement.view().frameView().layoutContext().layoutIdentifier())
+    }
+    m_stateBitfields.clearFlag(.NeedsLayout)
+    setPosChildNeedsLayoutBit(b: false)
+    setNeedsSimplifiedNormalFlowLayoutBit(b: false)
+    setNormalChildNeedsLayoutBit(b: false)
+    setOutOfFlowChildNeedsStaticPositionLayoutBit(b: false)
+    setNeedsPositionedMovementLayoutBit(b: false)
+    #if ASSERT_ENABLED
+      checkBlockPositionedObjectsNeedLayout()
+    #endif
   }
 
   func setNeedsLayoutAndPrefWidthsRecalc() {
@@ -2745,6 +2760,19 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func setHadSkippedLayout(_ b: Bool) {
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.WasSkippedDuringLastLayoutDueToContentVisibility, b)
+  }
+
+  #if ASSERT_ENABLED
+    private func checkBlockPositionedObjectsNeedLayout() {
+      assert(!needsLayout())
+
+      (self as? RenderBlockWrapper)?.checkPositionedObjectsNeedLayout()
+    }
+  #endif
+
   private struct StateFlag: OptionSet {
     let rawValue: UInt32
 
@@ -2790,6 +2818,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
         flags.subtract(flag)
       }
     }
+
+    mutating func clearFlag(_ flag: StateFlag) { setFlag(flag, false) }
 
     mutating func setPositionedState(_ positionState: PositionType) {
       // This mask maps .Fixed and .Absolute to IsOutOfFlowPositioned, saving one bit.

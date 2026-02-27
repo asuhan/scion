@@ -1129,6 +1129,16 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  #if ASSERT_ENABLED
+    func checkPositionedObjectsNeedLayout() {
+      guard let positionedDescendants = positionedObjects() else { return }
+
+      for renderer in positionedDescendants {
+        assert(!renderer.needsLayout())
+      }
+    }
+  #endif
+
   func canDropAnonymousBlockChild() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

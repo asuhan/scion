@@ -1378,6 +1378,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  typealias LayoutIdentifier = UInt32
+  func setLayoutIdentifier(_ layoutIdentifier: LayoutIdentifier) {
+    assert(isNativeImpl())
+    m_layoutIdentifier = layoutIdentifier
+  }
+
   func layerCreationAllowedForSubtree() -> Bool {
     // In LBSE layers are always created regardless of there position in the render tree.
     // Consider the SVG document fragment: "<defs><mask><rect transform="scale(2)".../>"
@@ -2198,6 +2204,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   private let m_isRegisteredForVisibleInViewportCallback: Bool
   private let m_visibleInViewportState: VisibleInViewportState
   private let m_didContributeToVisuallyNonEmptyPixelCount: Bool
+  private var m_layoutIdentifier: LayoutIdentifier = 0
 
   private let style: RenderStyleWrapper?  // TODO(asuhan): not nil once we have initializers
 }

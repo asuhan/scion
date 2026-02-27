@@ -108,6 +108,10 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
+  func layoutIdentifier() -> RenderElementWrapper.LayoutIdentifier {
+    return wk_interop.LocalFrameViewLayoutContext_layoutIdentifier(p)
+  }
+
   // These functions may only be accessed by LayoutStateMaintainer.
   // Subtree push/pop
   func pushLayoutState(
