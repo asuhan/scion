@@ -2313,8 +2313,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFlexibleBoxIncludingDeprecated() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isRenderFlexibleBox() || isRenderDeprecatedFlexibleBox()
   }
 
   func caretMinOffset() -> Int32 { return 0 }
