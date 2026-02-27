@@ -2604,28 +2604,28 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNeedsPositionedMovementLayoutBit(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.NeedsPositionedMovementLayout, b)
   }
 
   func setNormalChildNeedsLayoutBit(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.NormalChildNeedsLayout, b)
   }
 
   func setPosChildNeedsLayoutBit(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.PosChildNeedsLayout, b)
   }
 
   func setNeedsSimplifiedNormalFlowLayoutBit(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.NeedsSimplifiedNormalFlowLayout, b)
   }
 
   func setOutOfFlowChildNeedsStaticPositionLayoutBit(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.OutOfFlowChildNeedsStaticPositionLayout, b)
   }
 
   static func computedFragmentedFlowState(_ renderer: RenderObjectWrapper)
