@@ -2156,8 +2156,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // Returns the rect that should be repainted whenever this object changes. The rect is in the view's
   // coordinate space. This method deals with outlines and overflow.
   func absoluteClippedOverflowRectForRepaint() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return clippedOverflowRect(nil, RenderObjectWrapper.visibleRectContextForRepaint)
   }
 
   func clippedOverflowRect(
