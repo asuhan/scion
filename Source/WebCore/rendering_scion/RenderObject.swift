@@ -1646,8 +1646,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHasVisibleBoxDecorations(_ b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !b {
+      m_stateBitfields.setBoxDecorationState(.None)
+      return
+    }
+    if hasVisibleBoxDecorations() {
+      return
+    }
+    m_stateBitfields.setBoxDecorationState(.InvalidObscurationStatus)
   }
 
   func invalidateBackgroundObscurationStatus() {
@@ -2828,6 +2835,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     mutating func clearPositionedState() {
       m_positionedState = PositionedState(rawValue: PositionType.Static.rawValue)!
+    }
+
+    mutating func setBoxDecorationState(_ boxDecorationState: BoxDecorationState) {
+      self.boxDecorationState = boxDecorationState
     }
 
     private var flags: StateFlag = []
