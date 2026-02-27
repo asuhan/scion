@@ -1089,6 +1089,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_stateBitfields.hasFlag(.PaintContainmentApplies)
   }
 
+  func hasSVGTransform() -> Bool {
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.HasSVGTransform)
+  }
+
   func isExcludedFromNormalLayout() -> Bool {
     assert(isNativeImpl())
     return m_stateBitfields.hasFlag(.IsExcludedFromNormalLayout)
@@ -1210,8 +1215,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isTransformed() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasTransformRelatedProperty() && (style().affectsTransform() || hasSVGTransform())
   }
 
   func hasTransformOrPerspective() -> Bool {
