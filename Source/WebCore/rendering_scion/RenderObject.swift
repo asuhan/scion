@@ -1631,8 +1631,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func clearPositionedState() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.clearPositionedState()
   }
 
   func setFloating(_ b: Bool = true) {
@@ -2824,6 +2824,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     mutating func setPositionedState(_ positionState: PositionType) {
       // This mask maps .Fixed and .Absolute to IsOutOfFlowPositioned, saving one bit.
       m_positionedState = PositionedState(rawValue: positionState.rawValue & 0x3)!
+    }
+
+    mutating func clearPositionedState() {
+      m_positionedState = PositionedState(rawValue: PositionType.Static.rawValue)!
     }
 
     private var flags: StateFlag = []
