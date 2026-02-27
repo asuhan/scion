@@ -1674,13 +1674,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHorizontalWritingMode(_ b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.VerticalWritingMode, !b)
   }
 
   func setHasNonVisibleOverflow(_ b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.HasNonVisibleOverflow, b)
   }
 
   func setHasTransformRelatedProperty(_ b: Bool = true) {
