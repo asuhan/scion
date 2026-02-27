@@ -1228,8 +1228,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setCapturedInViewTransition(_ captured: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if capturedInViewTransition() == captured {
+      return
+    }
+
+    var layerToInvalidate: RenderLayerWrapper? = nil
+    if isDocumentElementRenderer() {
+      layerToInvalidate = view().layer()
+    } else if hasLayer() {
+      layerToInvalidate = (self as! RenderLayerModelObjectWrapper).layer()
+    }
+
+    layerToInvalidate?.setNeedsPostLayoutCompositingUpdate()
+
+    // Invalidate transform applied by `RenderLayerBacking::updateTransform`.
+    layerToInvalidate?.setNeedsCompositingGeometryUpdate()
   }
 
   // When the document element is captured, the captured contents uses the RenderView
