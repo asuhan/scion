@@ -1205,8 +1205,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasTransformRelatedProperty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.HasTransformRelatedProperty)  // Transform, perspective or transform-style: preserve-3d.
   }
 
   func isTransformed() -> Bool {
