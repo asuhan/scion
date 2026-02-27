@@ -2698,8 +2698,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func setLayerNeedsFullRepaint() {
