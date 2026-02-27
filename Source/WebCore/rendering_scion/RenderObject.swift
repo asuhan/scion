@@ -2190,8 +2190,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   )
     -> LayoutRectWrapper
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutRectWrapper()
   }
 
   // Given a rect in the object's coordinate space, compute a rect  in the coordinate space
