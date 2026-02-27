@@ -2214,8 +2214,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func computeFloatRectForRepaint(
     _ rect: FloatRectWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?
   ) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return computeFloatVisibleRectInContainer(
+      rect, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)!
   }
 
   func rectsForRepaintingAfterLayout(
