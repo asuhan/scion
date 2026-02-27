@@ -2288,8 +2288,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // The current selection state for an object.  For blocks, the state refers to the state of the leaf
   // descendants (as described above in the HighlightState enum declaration).
   func selectionState() -> HighlightState {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.selectionState()
   }
 
   func canBeSelectionLeaf() -> Bool { return false }
@@ -2847,12 +2847,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       m_positionedState = PositionedState(rawValue: PositionType.Static.rawValue)!
     }
 
+    func selectionState() -> HighlightState { return m_selectionState }
+
     mutating func setBoxDecorationState(_ boxDecorationState: BoxDecorationState) {
       self.boxDecorationState = boxDecorationState
     }
 
     private var flags: StateFlag = []
     private var m_positionedState: PositionedState = .IsStaticallyPositioned
+    private let m_selectionState: HighlightState = .None
     var boxDecorationState: BoxDecorationState = .None
   }
 
