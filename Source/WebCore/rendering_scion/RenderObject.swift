@@ -1620,8 +1620,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNeedsLayoutAndPrefWidthsRecalc() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setNeedsLayout()
+    setPreferredLogicalWidthsDirty(shouldBeDirty: true)
   }
 
   func setPositionState(_ position: PositionType) {
