@@ -1385,8 +1385,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isComposited() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasLayer() && (self as! RenderLayerModelObjectWrapper).layer()!.isComposited()
   }
 
   func hitTest(
