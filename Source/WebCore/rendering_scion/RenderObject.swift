@@ -2308,10 +2308,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func caretMinOffset() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func caretMinOffset() -> Int32 { return 0 }
 
   func caretMaxOffset() -> Int32 {
     // TODO(asuhan): implement this
