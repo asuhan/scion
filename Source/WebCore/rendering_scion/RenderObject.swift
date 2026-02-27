@@ -1223,8 +1223,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func capturedInViewTransition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.CapturedInViewTransition)
   }
 
   func setCapturedInViewTransition(_ captured: Bool) {
