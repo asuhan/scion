@@ -2272,8 +2272,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isFloating() || isOutOfFlowPositioned()
   }
 
   func isInFlow() -> Bool {
