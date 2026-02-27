@@ -1636,8 +1636,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setFloating(_ b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.Floating, b)
   }
 
   func setInline(_ b: Bool) {
