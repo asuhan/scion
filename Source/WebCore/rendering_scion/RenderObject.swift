@@ -1850,11 +1850,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Convert the given local point to absolute coordinates. If OptionSet<MapCoordinatesMode> includes UseTransforms, take transforms into account.
   func localToAbsolute(
-    localPoint: FloatPoint = FloatPoint(), mode: MapCoordinatesMode = MapCoordinatesMode(),
-    wasFixed: Bool? = nil
+    localPoint: FloatPoint = FloatPoint(), mode: MapCoordinatesMode = MapCoordinatesMode()
   ) -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var unused: Bool? = nil
+    return localToAbsolute(localPoint, mode, &unused)
+  }
+
+  private func localToAbsolute(
+    _ localPoint: FloatPoint, _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
+  ) -> FloatPoint {
+    assert(isNativeImpl())
+    let transformState = TransformState(.ApplyTransformDirection, localPoint)
+    mapLocalToContainer(nil, transformState, mode.union(.ApplyContainerFlip), &wasFixed)
+    transformState.flatten()
+
+    return transformState.lastPlanarPoint()
   }
 
   func style() -> RenderStyleWrapper {
