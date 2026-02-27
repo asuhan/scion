@@ -990,8 +990,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFloating() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.Floating)
   }
 
   func isPositioned() -> Bool {
