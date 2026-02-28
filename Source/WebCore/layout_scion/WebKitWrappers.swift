@@ -500,6 +500,12 @@ func RenderView_create(_ documentRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPoi
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderViewScion_requiresLayer")
+func RenderViewScion_requiresLayer(_ viewRaw: UnsafeMutableRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.requiresLayer()
+}
+
 @_cdecl("RenderViewScion_frameView")
 func RenderViewScion_frameView(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

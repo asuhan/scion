@@ -76,10 +76,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
-  override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func requiresLayer() -> Bool { return true }
 
   override func layout() {
     // TODO(asuhan): add stack stats

@@ -31,6 +31,8 @@
 #include "RenderViewScion.h"
 #include <wtf/Assertions.h>
 
+extern "C" bool RenderViewScion_requiresLayer(void*);
+
 extern "C" void* RenderViewScion_frameView(void*);
 
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
@@ -128,6 +130,10 @@ RenderSelection& RenderViewScion::selection()
     static RenderSelection* unused = nullptr;
     ASSERT_NOT_REACHED();
     return *unused;
+}
+
+bool RenderViewScion::requiresLayer() const {
+    return RenderViewScion_requiresLayer(m_handle);
 }
 
 LocalFrameView& RenderViewScion::frameView() const

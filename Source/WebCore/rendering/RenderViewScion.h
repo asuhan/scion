@@ -84,6 +84,8 @@ public:
 
     RenderSelection& selection();
 
+    bool requiresLayer() const;
+
     LocalFrameView& frameView() const;
 
     void updateQuirksMode();
