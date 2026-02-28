@@ -643,10 +643,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
-  func hasSoftwareFilters() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasSoftwareFilters() -> Bool { return m_hasSoftwareFilters }
 
   func rendererCount() -> UInt64 { return m_rendererCount }
 
@@ -797,6 +794,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   // Include this RenderView.
   private var m_rendererCount: UInt64 = 1
+
+  private let m_hasSoftwareFilters = false
 
   // Note that currently RenderView::layoutBox(), if it exists, is a child of m_initialContainingBlock.
   private var m_initialContainingBlock: InitialContainingBlock? = nil
