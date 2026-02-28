@@ -537,8 +537,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func usesCompositing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_compositor?.usesCompositing() ?? false
   }
 
   func unscaledDocumentRect() -> IntRect {
