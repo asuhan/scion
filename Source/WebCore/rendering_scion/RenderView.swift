@@ -476,8 +476,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func printing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return document().printing()
   }
 
   private func viewRect() -> LayoutRectWrapper {
