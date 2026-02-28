@@ -214,13 +214,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly
   }
 
   func setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(_ value: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = value
   }
 
   func needsEventRegionUpdateForNonCompositedFrame() -> Bool {
@@ -796,6 +794,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   private var m_rendererCount: UInt64 = 1
 
   private let m_hasSoftwareFilters = false
+  private var m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = false
 
   // Note that currently RenderView::layoutBox(), if it exists, is a child of m_initialContainingBlock.
   private var m_initialContainingBlock: InitialContainingBlock? = nil
