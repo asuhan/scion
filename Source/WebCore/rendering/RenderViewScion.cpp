@@ -31,6 +31,8 @@
 #include "RenderViewScion.h"
 #include <wtf/Assertions.h>
 
+extern "C" void* RenderViewScion_frameView(void*);
+
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 namespace WebCore {
@@ -126,9 +128,7 @@ RenderSelection& RenderViewScion::selection()
 
 LocalFrameView& RenderViewScion::frameView() const
 {
-    static LocalFrameView* unused = nullptr;
-    ASSERT_NOT_REACHED();
-    return *unused;
+    return *static_cast<LocalFrameView*>(RenderViewScion_frameView(m_handle));
 }
 
 void RenderViewScion::updateQuirksMode()

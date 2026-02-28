@@ -73,7 +73,7 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
-extern "C" WEBCORE_EXPORT const void* RenderView_frameView(const void* p)
+extern "C" WEBCORE_EXPORT void* RenderView_frameView(const void* p)
 {
     return &static_cast<const WebCore::RenderView*>(p)->frameView();
 }
@@ -768,6 +768,13 @@ void RenderView::setPageLogicalSize(LayoutSize size)
 float RenderView::zoomFactor() const
 {
     return protectedFrameView()->frame().pageZoomFactor();
+}
+
+LocalFrameView& RenderView::frameView() const {
+    if (m_scion) {
+        return m_scion->frameView();
+    }
+    return m_frameView.get();
 }
 
 FloatSize RenderView::sizeForCSSSmallViewportUnits() const
