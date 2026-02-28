@@ -184,8 +184,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func viewLogicalHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let height = style().isHorizontalWritingMode() ? viewHeight() : viewWidth()
+    return height
   }
 
   func clientLogicalWidthForFixedPosition() -> LayoutUnit {
