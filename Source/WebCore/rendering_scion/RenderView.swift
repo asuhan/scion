@@ -523,6 +523,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func setIsInWindow(_ isInWindow: Bool) {
+    m_compositor?.setIsInWindow(isInWindow)
+  }
+
   func compositor() -> RenderLayerCompositorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -782,6 +786,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private var m_frameView: LocalFrameViewWrapper? = nil
+
+  private let m_compositor: RenderLayerCompositorWrapper? = nil
 
   // Include this RenderView.
   private var m_rendererCount: UInt64 = 1

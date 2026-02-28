@@ -855,6 +855,10 @@ RenderLayerCompositor& RenderView::compositor()
 
 void RenderView::setIsInWindow(bool isInWindow)
 {
+    if (m_scion) {
+        m_scion->setIsInWindow(isInWindow);
+        return;
+    }
     if (m_compositor)
         m_compositor->setIsInWindow(isInWindow);
 }

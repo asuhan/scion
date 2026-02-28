@@ -31,6 +31,8 @@
 #include "RenderViewScion.h"
 #include <wtf/Assertions.h>
 
+extern "C" void RenderView_setIsInWindow(bool, void*);
+
 namespace WebCore {
 
 RenderViewScion::~RenderViewScion()
@@ -144,9 +146,9 @@ void RenderViewScion::repaintViewAndCompositedLayers()
     ASSERT_NOT_REACHED();
 }
 
-void RenderViewScion::setIsInWindow(bool)
+void RenderViewScion::setIsInWindow(bool isInWindow)
 {
-    ASSERT_NOT_REACHED();
+    RenderView_setIsInWindow(isInWindow, m_handle);
 }
 
 RenderLayerCompositor& RenderViewScion::compositor()

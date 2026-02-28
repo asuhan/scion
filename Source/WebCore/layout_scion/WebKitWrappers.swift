@@ -499,3 +499,9 @@ func RenderView_create(_ documentRaw: UnsafeRawPointer, _ styleRaw: UnsafeRawPoi
   let unmanaged = Unmanaged.passRetained(renderView)
   return unmanaged.toOpaque()
 }
+
+@_cdecl("RenderView_setIsInWindow")
+func RenderView_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeRetainedValue()
+  view.setIsInWindow(isInWindow)
+}

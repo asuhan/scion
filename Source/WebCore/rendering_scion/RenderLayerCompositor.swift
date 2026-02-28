@@ -1169,6 +1169,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     updateScrollLayerClipping()
   }
 
+  func setIsInWindow(_ isInWindow: Bool) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   private func invalidateEventRegionForAllFrames() {
     var frame: FrameWrapper? = page().mainFrame()
     while frame != nil {
