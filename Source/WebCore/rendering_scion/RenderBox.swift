@@ -1825,14 +1825,18 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   struct LogicalExtentComputedValues {
-    init(extent: LayoutUnit = LayoutUnit(), position: LayoutUnit = LayoutUnit()) {
+    init(
+      extent: LayoutUnit = LayoutUnit(), position: LayoutUnit = LayoutUnit(),
+      margins: ComputedMarginValues = ComputedMarginValues()
+    ) {
       self.extent = extent
       self.position = position
+      self.margins = margins
     }
 
     var extent: LayoutUnit
     var position: LayoutUnit
-    var margins = ComputedMarginValues()
+    var margins: ComputedMarginValues
   }
 
   // Resolve auto margins in the inline direction of the containing block so that objects can be pushed to the start, middle or end

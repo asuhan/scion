@@ -140,8 +140,9 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LogicalExtentComputedValues(
+      extent: !shouldUsePrintingLayout() ? LayoutUnit(value: viewLogicalHeight()) : logicalHeight,
+      position: LayoutUnit(value: UInt64(0)), margins: ComputedMarginValues())
   }
 
   override func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
