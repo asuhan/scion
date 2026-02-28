@@ -110,6 +110,16 @@
 #define USE_COMPOSITING_FOR_SMALL_CANVASES 1
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderLayerCompositor_create(void* p)
+{
+    return new WebCore::RenderLayerCompositor(*static_cast<WebCore::RenderView*>(p));
+}
+
+extern "C" WEBCORE_EXPORT void RenderLayerCompositor_destroy(void* p)
+{
+    delete static_cast<WebCore::RenderLayerCompositor*>(p);
+}
+
 namespace WebCore {
 
 #if PLATFORM(IOS_FAMILY)

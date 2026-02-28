@@ -108,6 +108,8 @@ public:
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 
+    void setWk(void*);
+
 private:
     void* m_handle;
 };

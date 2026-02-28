@@ -531,8 +531,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func compositor() -> RenderLayerCompositorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_compositor == nil {
+      print("TODO: switch to Scion compositor")
+      m_compositor = RenderLayerCompositorWrapper(RenderLayerCompositor_create(wk))
+    }
+
+    return m_compositor!
   }
 
   func usesCompositing() -> Bool {
@@ -788,9 +792,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // TODO(asuhan): remove
+  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+
   private var m_frameView: LocalFrameViewWrapper? = nil
 
-  private let m_compositor: RenderLayerCompositorWrapper? = nil
+  private var m_compositor: RenderLayerCompositorWrapper? = nil
 
   // Include this RenderView.
   private var m_rendererCount: UInt64 = 1
@@ -804,4 +811,6 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
+
+  private var wk: UnsafeMutableRawPointer? = nil
 }

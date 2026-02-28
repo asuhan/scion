@@ -35,6 +35,10 @@ extern "C" void* RenderViewScion_frameView(void*);
 
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
+extern "C" void* RenderViewScion_compositor(void*);
+
+extern "C" void RenderViewScion_setWk(void*, void*);
+
 namespace WebCore {
 
 RenderViewScion::~RenderViewScion()
@@ -153,9 +157,7 @@ void RenderViewScion::setIsInWindow(bool isInWindow)
 
 RenderLayerCompositor& RenderViewScion::compositor()
 {
-    static RenderLayerCompositor* unused = nullptr;
-    ASSERT_NOT_REACHED();
-    return *unused;
+    return *static_cast<RenderLayerCompositor*>(RenderViewScion_compositor(m_handle));
 }
 
 bool RenderViewScion::usesCompositing() const
@@ -192,6 +194,11 @@ const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryB
     static SingleThreadWeakHashSet<const RenderBox> unused;
     ASSERT_NOT_REACHED();
     return unused;
+}
+
+void RenderViewScion::setWk(void* wk)
+{
+    RenderViewScion_setWk(wk, m_handle);
 }
 
 }

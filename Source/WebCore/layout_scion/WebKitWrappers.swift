@@ -511,3 +511,15 @@ func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableR
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   view.setIsInWindow(isInWindow)
 }
+
+@_cdecl("RenderViewScion_compositor")
+func RenderViewScion_compositor(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.compositor().p!
+}
+
+@_cdecl("RenderViewScion_setWk")
+func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.setWk(wk)
+}

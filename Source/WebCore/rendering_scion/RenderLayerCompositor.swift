@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 enum CompositingUpdateType {
   case AfterStyleChange
   case AfterLayout
@@ -486,6 +488,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  // TODO(asuhan): remove
+  init(_ p: UnsafeMutableRawPointer) {
+    self.p = p
+    self.m_renderView = RenderViewWrapper(p: UnsafeMutableRawPointer(bitPattern: 0xdead_beef)!)
+    self.m_updateCompositingLayersTimer = Timer()
+    self.scrollingNodeToLayerMap = [:]
+  }
+
+  deinit { wk_interop.RenderLayerCompositor_destroy(p) }
 
   // Return true if this RenderView is in "compositing mode" (i.e. has one or more
   // composited RenderLayers)
@@ -4898,4 +4910,6 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private var scrollingNodeToLayerMap: [ScrollingNodeIDWrapper: RenderLayerWrapper?]
   private let layersWithUnresolvedRelations = WeakHashSet<RenderLayerWrapper>()
+
+  let p: UnsafeMutableRawPointer?
 }

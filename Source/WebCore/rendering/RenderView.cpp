@@ -119,6 +119,7 @@ RenderView::~RenderView()
 
 void RenderView::setScionHandle(void* handle) {
     m_scion = std::make_unique<RenderViewScion>(handle);
+    m_scion->setWk(this);
 }
 
 void RenderView::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
