@@ -1303,8 +1303,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func document() -> Document {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_node!.document()
   }
 
   func protectedDocument() -> Document {
