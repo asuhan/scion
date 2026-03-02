@@ -42,6 +42,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func layer() -> RenderLayerWrapper? {
+    assert(!isNativeImpl())
     if let rawLayer = wk_interop.RenderLayerModelObject_layer(p) {
       return RenderLayerWrapper(p: rawLayer)
     }
@@ -189,6 +190,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   ) -> Bool { return false }
 
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
   }
 

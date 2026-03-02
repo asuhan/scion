@@ -683,6 +683,7 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setNeedsVisualReordering() {
+    assert(!isNativeImpl())
     wk_interop.RenderText_setNeedsVisualReordering(p)
   }
 

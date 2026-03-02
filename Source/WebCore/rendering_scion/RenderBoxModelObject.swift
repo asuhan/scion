@@ -580,10 +580,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func paddingStart() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(p))
   }
 
   func paddingEnd() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(p))
   }
 
@@ -633,6 +635,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderStart() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(p))
   }
 
@@ -747,6 +750,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderBoxModelObject_marginStart(p, otherStyle?.p))
   }
@@ -811,6 +815,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   ) -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderBoxModelObject_baselinePosition(
         p, baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
@@ -848,6 +853,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func inlineContinuation() -> RenderInlineWrapper? {
+    assert(!isNativeImpl())
     if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(p) {
       return RenderInlineWrapper(p: raw)
     }

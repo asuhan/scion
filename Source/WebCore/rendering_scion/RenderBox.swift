@@ -603,6 +603,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func logicalLeft() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(p))
   }
 
@@ -784,6 +785,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func location() -> LayoutPointWrapper {
+    assert(!isNativeImpl())
     let rawLocation = wk_interop.RenderBox_location(p)
     return LayoutPointWrapper(
       x: LayoutUnit.fromRawValue(value: rawLocation.x),
@@ -801,6 +803,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setLocation(p: LayoutPointWrapper) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_setLocation(self.p, p.x.rawValue(), p.y.rawValue())
   }
 
@@ -810,10 +813,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func move(dx: LayoutUnit, dy: LayoutUnit) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_move(p, dx.rawValue(), dy.rawValue())
   }
 
   func frameRect() -> LayoutRectWrapper {
+    assert(!isNativeImpl())
     let raw = wk_interop.RenderBox_frameRect(p)
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: raw.x),
@@ -1071,6 +1076,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func allowedLayoutOverflow() -> LayoutOptionalOutsets { return allowedLayoutOverflowForBox() }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_addLayoutOverflow(
       p,
       LayoutRectRaw(
@@ -1081,6 +1087,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addVisualOverflow(rect: LayoutRectWrapper) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_addVisualOverflow(
       p,
       LayoutRectRaw(
@@ -1222,14 +1229,17 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentWidth() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentWidth(p))
   }
 
   func contentHeight() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentHeight(p))
   }
 
   func contentLogicalSize() -> LayoutSizeWrapper {
+    assert(!isNativeImpl())
     let width = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_width(p))
     let height = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_height(p))
     return LayoutSizeWrapper(width: width, height: height)
@@ -1246,10 +1256,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paddingBoxWidth() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxWidth(p))
   }
 
   func paddingBoxHeight() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxHeight(p))
   }
 
@@ -1273,6 +1285,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paddingBoxRectIncludingScrollbar() -> LayoutRectWrapper {
+    assert(!isNativeImpl())
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_x(p)),
       y: LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_y(p)),
@@ -1683,6 +1696,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
   }
 
@@ -1692,6 +1706,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverridingLogicalWidthLength() {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
   }
 
@@ -2222,6 +2237,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
       p,
       LayoutRectRaw(
@@ -3599,6 +3615,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func availableLogicalWidth() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(p))
   }
 
@@ -4456,6 +4473,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
+    assert(!isNativeImpl())
     wk_interop.RenderBox_flipForWritingMode(
       p, LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
   }
@@ -4499,6 +4517,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func logicalVisualOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
+    assert(!isNativeImpl())
     if style.p == nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -4537,6 +4556,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func layoutOverflowRectForPropagation(style: RenderStyleWrapper) -> LayoutRectWrapper {
+    assert(!isNativeImpl())
     if style.p == nil {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
@@ -4678,7 +4698,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func isFlexItem() -> Bool { return wk_interop.RenderBox_isFlexItem(p) }
+  func isFlexItem() -> Bool {
+    assert(!isNativeImpl())
+    return wk_interop.RenderBox_isFlexItem(p)
+  }
 
   func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
     // TODO(asuhan): implement this
@@ -4859,6 +4882,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shapeOutsideInfo() -> ShapeOutsideInfoWrapper? {
+    assert(!isNativeImpl())
     if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(p) {
       return ShapeOutsideInfoWrapper(p: unwrapped)
     }

@@ -1293,6 +1293,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func setStaticInlinePositionForChild(
     child: RenderBoxWrapper, blockOffset: LayoutUnit, inlinePosition: LayoutUnit
   ) {
+    assert(!isNativeImpl())
     wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
       p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
   }
@@ -2037,6 +2038,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func insertFloatingObjectForIFC(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper {
+    assert(!isNativeImpl())
     return FloatingObjectWrapper(
       p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
   }
@@ -2459,10 +2461,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func endPaddingWidthForCaret() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(p))
   }
 
   func lowestInitialLetterLogicalBottom() -> LayoutUnit? {
+    assert(!isNativeImpl())
     let raw = wk_interop.RenderBlockFlow_lowestInitialLetterLogicalBottom(p)
     if !raw.is_valid {
       return nil

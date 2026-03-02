@@ -554,6 +554,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
   func containsFloats() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderBlock_containsFloats(p)
   }
 
@@ -786,6 +787,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // in order to ensure that content gets properly pushed down across all layout systems
   // (flexbox, block, etc.)
   func intrinsicBorderForFieldset() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(p))
   }
 

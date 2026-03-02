@@ -211,6 +211,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func layoutState() -> LayoutStateWrapper {
+    assert(!isNativeImpl())
     return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
   }
 

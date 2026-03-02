@@ -310,6 +310,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // This is null for anonymous renderers.
   func element() -> ElementWrapper? {
+    assert(!isNativeImpl())
     if let elementRaw = wk_interop.RenderElement_element(p) {
       return ElementWrapper(p: elementRaw)
     }
@@ -326,6 +327,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func firstChild() -> RenderObjectWrapper? {
+    assert(!isNativeImpl())
     if let childRaw = wk_interop.RenderElement_firstChild(p) {
       return RenderObjectWrapper(p: childRaw)
     }
@@ -508,6 +510,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func dirtyLineFromChangedChild() {}
 
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
+    assert(!isNativeImpl())
     wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
   }
 
@@ -609,6 +612,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   /* This function performs a layout only if one is needed. */
   func layoutIfNeeded() {
+    assert(!isNativeImpl())
     wk_interop.RenderElement_layoutIfNeeded(p)
   }
 
@@ -1050,10 +1054,12 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasSelfPaintingLayer() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderElement_hasSelfPaintingLayer(p)
   }
 
   func checkForRepaintDuringLayout() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
   }
 
@@ -1107,6 +1113,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isContinuation() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderElement_isContinuation(p)
   }
 
@@ -1284,6 +1291,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isWritingModeRoot() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderElement_isWritingModeRoot(p)
   }
 

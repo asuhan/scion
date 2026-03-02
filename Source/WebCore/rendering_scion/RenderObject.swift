@@ -309,6 +309,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func type() -> `Type` { return m_type }
 
   func layoutBox() -> BoxWrapper? {
+    assert(!isNativeImpl())
     let unwrapped = wk_interop.RenderObject_layoutBox(p)
     if unwrapped == nil {
       return nil
@@ -340,6 +341,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func parent() -> RenderElementWrapper? {
+    assert(!isNativeImpl())
     let unwrapped = wk_interop.RenderObject_parent(p)
     if unwrapped == nil {
       // TODO(asuhan): implement this
@@ -579,6 +581,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFieldset() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderObject_isFieldset(p)
   }
 
@@ -593,6 +596,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isImage() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderObject_isImage(p)
   }
 
@@ -1203,6 +1207,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasNonVisibleOverflow() -> Bool {
+    assert(!isNativeImpl())
     return wk_interop.RenderObject_hasNonVisibleOverflow(p)
   }
 
@@ -1267,6 +1272,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func view() -> RenderViewWrapper {
+    assert(!isNativeImpl())
     return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
   }
 
@@ -1517,10 +1523,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func minPreferredLogicalWidth() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_minPreferredLogicalWidth(p))
   }
 
   func maxPreferredLogicalWidth() -> LayoutUnit {
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_maxPreferredLogicalWidth(p))
   }
 
@@ -1596,6 +1604,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
+    assert(!isNativeImpl())
     wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
   }
 
@@ -1799,6 +1808,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func containingBlock() -> RenderBlockWrapper? {
+    assert(!isNativeImpl())
     if let unwrapped = wk_interop.RenderObject_containingBlock(p) {
       // TODO(asuhan): decide the type correctly
       if wk_interop.RenderObject_isRenderListItem(unwrapped) {
@@ -1873,6 +1883,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func style() -> RenderStyleWrapper {
+    assert(!isNativeImpl())
     return convert_render_style(p: wk_interop.RenderObject_style(p))
   }
 
