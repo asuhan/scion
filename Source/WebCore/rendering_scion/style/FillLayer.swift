@@ -22,6 +22,8 @@
  *
  */
 
+import wk_interop
+
 struct FillSize {
   let type: FillSizeType
   let size: LengthSize
@@ -36,8 +38,12 @@ class FillLayerWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
   func image() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    let raw = wk_interop.FillLayer_image(self.p)
+    if raw == nil {
+      return nil
+    }
+    return StyleImage(raw!)
   }
 
   var xPosition: LengthWrapper {
@@ -146,6 +152,8 @@ class FillLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func isNativeImpl() -> Bool { return false }
 
   private let p: UnsafeRawPointer
 }

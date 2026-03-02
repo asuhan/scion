@@ -22,6 +22,8 @@
  */
 
 class StyleImage: Equatable {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   static func == (_ a: StyleImage, _ b: StyleImage) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -119,4 +121,6 @@ class StyleImage: Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
