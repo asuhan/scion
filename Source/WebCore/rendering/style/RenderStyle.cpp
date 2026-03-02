@@ -261,6 +261,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBorderImage(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBorderImage();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasUsedAppearance(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasUsedAppearance();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasBackground(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasBackground();

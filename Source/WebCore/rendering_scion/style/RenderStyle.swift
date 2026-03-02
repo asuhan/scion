@@ -497,8 +497,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasUsedAppearance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasUsedAppearance(p)
   }
 
   func hasBackground() -> Bool { return wk_interop.RenderStyle_hasBackground(p) }
