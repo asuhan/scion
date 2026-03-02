@@ -33,6 +33,11 @@
 #include <wtf/PointerComparison.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void* NinePieceImage_image(const void* p)
+{
+    return static_cast<const WebCore::NinePieceImage*>(p)->image();
+}
+
 namespace WebCore {
 
 inline DataRef<NinePieceImage::Data>& NinePieceImage::defaultData()

@@ -21,12 +21,18 @@
  *
  */
 
+import wk_interop
+
 struct NinePieceImage {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
   func image() -> StyleImage? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    let raw = wk_interop.NinePieceImage_image(self.p)
+    if raw == nil {
+      return nil
+    }
+    return StyleImage(raw!)
   }
 
   func protectedImage() -> StyleImage? { return image() }  // TODO(asuhan): just remove this wrapper, not needed in Swift
@@ -39,6 +45,8 @@ struct NinePieceImage {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func isNativeImpl() -> Bool { return false }
 
   private let p: UnsafeRawPointer
 }

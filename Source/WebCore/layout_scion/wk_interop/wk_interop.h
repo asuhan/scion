@@ -702,3 +702,4 @@ bool InlineWalker_atEnd(void*);
 void InlineWalker_advance(void*);
 void* FillLayer_image(const void*);
 const void* FillLayer_next(const void*);
+void* NinePieceImage_image(const void*);
