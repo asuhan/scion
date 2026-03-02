@@ -1005,8 +1005,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasBackground() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().hasBackground()
   }
 
   func hasMask() -> Bool {
