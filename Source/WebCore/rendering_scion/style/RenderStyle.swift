@@ -2174,8 +2174,7 @@ class RenderStyleWrapper: Equatable {
   // indicates that we are transforming. The usedTransformStyle3D is not used here because in many cases (such as for deciding
   // whether or not to establish a containing block), the computed value is what matters.
   func hasTransformRelatedProperty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasTransformRelatedProperty(p)
   }
 
   struct TransformOperationOption: OptionSet {

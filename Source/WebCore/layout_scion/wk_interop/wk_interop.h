@@ -554,6 +554,7 @@ uint16_t RenderStyle_lineFitEdge(const void*);
 uint8_t RenderStyle_textIndentType(const void*);
 uint8_t RenderStyle_textDecorationSkipInk(const void*);
 uint8_t RenderStyle_textWrapStyle(const void*);
+bool RenderStyle_hasTransformRelatedProperty(const void*);
 uint8_t RenderStyle_lineBoxContain(const void*);
 uint8_t RenderStyle_textDecorationsInEffect(const void*);
 float RenderStyle_borderLeftWidth(const void*);
