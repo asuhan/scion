@@ -541,6 +541,7 @@ bool RenderStyle_hasStaticInlinePosition(const void*, bool);
 bool RenderStyle_hasVisibleBorder(const void*);
 uint8_t RenderStyle_floating(const void*);
 uint8_t RenderStyle_overflowX(const void*);
+uint8_t RenderStyle_overflowY(const void*);
 uint8_t RenderStyle_usedVisibility(const void*);
 uint8_t RenderStyle_verticalAlign(const void*);
 const void* RenderStyle_verticalAlignLength(const void*);

@@ -306,6 +306,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_overflowX(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->overflowX());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_overflowY(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->overflowY());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_usedVisibility(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->usedVisibility());

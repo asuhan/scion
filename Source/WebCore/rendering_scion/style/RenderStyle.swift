@@ -686,8 +686,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func overflowY() -> Overflow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      fatalError("Not implemented")
+    }
+    return Overflow(rawValue: wk_interop.RenderStyle_overflowY(p))!
   }
 
   func isOverflowVisible() -> Bool {
