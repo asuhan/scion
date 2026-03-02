@@ -30,6 +30,11 @@
 #include "CachedImage.h"
 #include <wtf/PointerComparison.h>
 
+extern "C" WEBCORE_EXPORT void* ShapeValue_image(const void* p)
+{
+    return static_cast<const WebCore::ShapeValue*>(p)->image();
+}
+
 namespace WebCore {
 
 bool ShapeValue::isImageValid() const

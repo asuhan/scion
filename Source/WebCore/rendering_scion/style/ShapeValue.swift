@@ -58,10 +58,21 @@ class ShapeValue {
     fatalError("Not implemented")
   }
 
+  func protectedImage() -> StyleImage? {
+    assert(!isNativeImpl())
+    let raw = wk_interop.ShapeValue_image(self.p)
+    if raw == nil {
+      return nil
+    }
+    return StyleImage(raw!)
+  }
+
   func isImageValid() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func isNativeImpl() -> Bool { return false }
 
   let type: `Type`
   let shape: BasicShape?

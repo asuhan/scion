@@ -2102,8 +2102,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateShapeImage(oldShapeValue: ShapeValue?, newShapeValue: ShapeValue?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if oldShapeValue != nil || newShapeValue != nil {
+      updateImage(oldImage: oldShapeValue?.image(), newImage: newShapeValue?.protectedImage())
+    }
   }
 
   private func adjustStyleDifference(
