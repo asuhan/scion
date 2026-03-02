@@ -1070,6 +1070,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isHorizontalWritingMode() -> Bool {
+    if isNativeImpl() { return !m_stateBitfields.hasFlag(.VerticalWritingMode) }
     return wk_interop.RenderObject_isHorizontalWritingMode(p)
   }
 
