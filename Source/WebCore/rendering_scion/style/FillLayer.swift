@@ -33,6 +33,8 @@ struct FillRepeatXY {
 }
 
 class FillLayerWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   func image() -> StyleImage? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -144,4 +146,6 @@ class FillLayerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }

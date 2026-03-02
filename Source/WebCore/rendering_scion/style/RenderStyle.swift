@@ -1411,8 +1411,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func backgroundLayers() -> FillLayerWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return FillLayerWrapper(wk_interop.RenderStyle_backgroundLayers(p!))
   }
 
   func protectedBackgroundLayers() -> FillLayerWrapper {

@@ -501,6 +501,7 @@ const void* RenderStyle_fontDescription(const void*);
 float RenderStyle_computedFontSize(const void*);
 uint8_t RenderStyle_rtlOrdering(const void*);
 uint8_t RenderStyle_display(const void*);
+const void* RenderStyle_backgroundLayers(const void*);
 uint8_t RenderStyle_boxDecorationBreak(const void*);
 uint8_t RenderStyle_textOverflow(const void*);
 uint8_t RenderStyle_wordBreak(const void*);
