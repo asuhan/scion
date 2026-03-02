@@ -464,9 +464,12 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func hasBorderImage() -> Bool {
+    return wk_interop.RenderStyle_hasBorderImage(p)
+  }
+
   func hasVisibleBorderDecoration() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasVisibleBorder() || hasBorderImage()
   }
 
   func hasVisibleBorder() -> Bool {
