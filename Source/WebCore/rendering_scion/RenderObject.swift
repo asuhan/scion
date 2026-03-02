@@ -1883,8 +1883,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func style() -> RenderStyleWrapper {
-    assert(!isNativeImpl())
-    return convert_render_style(p: wk_interop.RenderObject_style(p))
+    if !isNativeImpl() {
+      return convert_render_style(p: wk_interop.RenderObject_style(p))
+    }
+    if isRenderText() {
+      return m_parent!.style()
+    }
+    return (self as! RenderElementWrapper).elementStyle()
   }
 
   func firstLineStyle() -> RenderStyleWrapper {

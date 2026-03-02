@@ -151,6 +151,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     super.init(p: p)
   }
 
+  func elementStyle() -> RenderStyleWrapper {
+    assert(isNativeImpl())
+    return self.style!
+  }
+
   // FIXME: Style shouldn't be mutated.
   func mutableStyle() -> RenderStyleWrapper {
     // TODO(asuhan): implement this
