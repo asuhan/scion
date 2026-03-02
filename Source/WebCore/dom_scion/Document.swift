@@ -32,8 +32,8 @@ class Document: TreeScopeWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
   func documentElement() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.Document_documentElement(p)
+    return raw != nil ? ElementWrapper(p: raw!) : nil
   }
 
   func isImageDocument() -> Bool {

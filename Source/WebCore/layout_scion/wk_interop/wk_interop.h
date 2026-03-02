@@ -695,6 +695,7 @@ int32_t RenderLayer_staticBlockPosition(const void*);
 void RenderLayer_setStaticInlinePosition(void* p, int32_t position);
 void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
+void* Document_documentElement(const void*);
 void* Document_view(const void* raw);
 void* Document_renderView(const void* raw);
 bool Document_inQuirksMode(const void* raw);
