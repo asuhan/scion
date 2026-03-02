@@ -567,6 +567,7 @@ const void* RenderStyle_paddingBottom(const void*);
 uint8_t RenderStyle_hangingPunctuation(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
+void* RenderStyle_shapeOutside(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 bool RenderStyle_autoWrap(const void*);
 int32_t RenderStyle_textShadowExtent_top(const void*);

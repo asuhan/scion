@@ -28,10 +28,18 @@
  * SUCH DAMAGE.
  */
 
+import wk_interop
+
 class ShapeValue {
   init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  init(_ p: UnsafeRawPointer) {
+    self.type = .Shape
+    self.shape = nil
+    self.p = p
   }
 
   enum `Type` {
@@ -57,4 +65,6 @@ class ShapeValue {
 
   let type: `Type`
   let shape: BasicShape?
+
+  private let p: UnsafeRawPointer
 }

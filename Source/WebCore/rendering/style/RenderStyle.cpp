@@ -500,6 +500,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineSnap(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->lineSnap());
 }
 
+extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();
+}
+
 struct BlockEllipsisRaw {
     uint8_t type;
     const void* string;

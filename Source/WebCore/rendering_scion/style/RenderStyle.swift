@@ -2783,8 +2783,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func shapeOutside() -> ShapeValue? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_shapeOutside(p)
+    return raw != nil ? ShapeValue(raw!) : nil
   }
 
   func protectedShapeOutside() -> ShapeValue? {
