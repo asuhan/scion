@@ -209,6 +209,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_hyphenString(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->hyphenString();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_isDisplayInlineType(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isDisplayInlineType();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayInlineType(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayInlineType();

@@ -2828,8 +2828,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isDisplayInlineType() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return wk_interop.RenderStyle_isDisplayInlineType(p)
   }
 
   func isOriginalDisplayInlineType() -> Bool {
