@@ -1423,8 +1423,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func maskLayers() -> FillLayerWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if p == nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+    return FillLayerWrapper(wk_interop.RenderStyle_maskLayers(p!))
   }
 
   func protectedMaskLayers() -> FillLayerWrapper {
