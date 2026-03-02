@@ -31,6 +31,11 @@ extern "C" WEBCORE_EXPORT void* FillLayer_image(const void* p)
     return static_cast<const WebCore::FillLayer*>(p)->image();
 }
 
+extern "C" WEBCORE_EXPORT const void* FillLayer_next(const void* p)
+{
+    return static_cast<const WebCore::FillLayer*>(p)->next();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(FillLayer);

@@ -699,3 +699,4 @@ void* InlineWalker_current(void*);
 bool InlineWalker_atEnd(void*);
 void InlineWalker_advance(void*);
 void* FillLayer_image(const void*);
+const void* FillLayer_next(const void*);
