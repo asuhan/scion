@@ -1639,8 +1639,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func contentVisibility() -> ContentVisibility {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ContentVisibility(rawValue: wk_interop.RenderStyle_contentVisibility(p))!
   }
 
   // usedContentVisibility will return ContentVisibility::Hidden in a content-visibility: hidden subtree (overriding
