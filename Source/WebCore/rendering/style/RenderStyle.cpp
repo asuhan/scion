@@ -69,6 +69,11 @@ extern "C" WEBCORE_EXPORT uint32_t RenderStyle_pseudoElementType(const void* p)
     return static_cast<uint32_t>(static_cast<const WebCore::RenderStyle*>(p)->pseudoElementType());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_isFloating(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isFloating();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_position(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->position());

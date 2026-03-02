@@ -279,8 +279,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isFloating() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_isFloating(p)
   }
 
   func position() -> PositionType {
