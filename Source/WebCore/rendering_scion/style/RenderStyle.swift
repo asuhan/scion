@@ -473,8 +473,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasVisibleBorder() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasVisibleBorder(p)
   }
 
   func hasPadding() -> Bool {

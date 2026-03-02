@@ -534,6 +534,7 @@ int32_t RenderStyle_getBoxShadowVerticalExtentBottom(const void*);
 bool RenderStyle_hasBorderImage(const void*);
 bool RenderStyle_hasBackground(const void*);
 bool RenderStyle_hasStaticInlinePosition(const void*, bool);
+bool RenderStyle_hasVisibleBorder(const void*);
 uint8_t RenderStyle_floating(const void*);
 uint8_t RenderStyle_overflowX(const void*);
 uint8_t RenderStyle_usedVisibility(const void*);
