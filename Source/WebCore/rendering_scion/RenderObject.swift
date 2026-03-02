@@ -698,8 +698,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isDocumentElementRenderer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CPtrToInt(document().documentElement()?.p) == CPtrToInt(m_node?.p)
   }
 
   func isBody() -> Bool {
