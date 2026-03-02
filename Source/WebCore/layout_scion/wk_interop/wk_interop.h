@@ -571,6 +571,7 @@ const void* RenderStyle_paddingRight(const void*);
 const void* RenderStyle_paddingTop(const void*);
 const void* RenderStyle_paddingBottom(const void*);
 uint8_t RenderStyle_hangingPunctuation(const void*);
+bool RenderStyle_containsPaint(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
 void* RenderStyle_shapeOutside(const void*);

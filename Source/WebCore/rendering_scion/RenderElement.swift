@@ -385,8 +385,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplyPaintContainment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return shouldApplyLayoutOrPaintContainment(style().containsPaint())
+      || shouldApplySizeOrStyleContainment(style().contentVisibility() != .Visible)
   }
 
   func shouldApplyLayoutOrPaintContainment() -> Bool {
@@ -1993,6 +1993,18 @@ class RenderElementWrapper: RenderObjectWrapper {
     let frameView = view().frameView()
     let visibleRect = frameView.windowToContents(windowRect: frameView.windowClipRect())
     return isVisibleInDocumentRect(documentRect: visibleRect)
+  }
+
+  private func shouldApplyLayoutOrPaintContainment(_ containsAccordingToStyle: Bool) -> Bool {
+    return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox())
+      && style().display() != .RubyAnnotation && (!isTablePart() || isRenderBlockFlow())
+  }
+
+  // FIXME: try to avoid duplication with isSkippedContentRoot.
+  private func shouldApplySizeOrStyleContainment(_ containsAccordingToStyle: Bool) -> Bool {
+    return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox())
+      && style().display() != .RubyAnnotation && (!isTablePart() || isRenderTableCaption())
+      && !isRenderTable()
   }
 
   override func lastChildSlow() -> RenderObjectWrapper? {

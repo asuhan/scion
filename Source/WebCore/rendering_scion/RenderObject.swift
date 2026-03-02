@@ -570,6 +570,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isRenderLayerModelObject() -> Bool { return m_typeFlags.contains(.IsLayerModelObject) }
 
+  func isAtomicInlineLevelBox() -> Bool {
+    return style().isDisplayInlineType()
+      && !(style().display() == .Inline && !isReplacedOrInlineBlock())
+  }
+
   func isRenderQuote() -> Bool {
     assert(isNativeImpl())
     return type() == .Quote
