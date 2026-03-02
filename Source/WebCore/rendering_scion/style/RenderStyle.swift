@@ -499,10 +499,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasBackground() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasBackground() -> Bool { return wk_interop.RenderStyle_hasBackground(p) }
 
   func imageOutsets(image: NinePieceImage) -> LayoutBoxExtent {
     // TODO(asuhan): implement this

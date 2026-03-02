@@ -256,6 +256,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_getBoxShadowVerticalExtentBottom(c
     return bottom.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasBackground(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasBackground();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasStaticInlinePosition(const void* p, bool horizontal)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasStaticInlinePosition(horizontal);
