@@ -284,8 +284,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func position() -> PositionType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return PositionType(rawValue: wk_interop.RenderStyle_position(p))!
   }
 
   func hasOutOfFlowPosition() -> Bool {

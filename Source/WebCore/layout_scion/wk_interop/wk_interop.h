@@ -496,6 +496,7 @@ void Box_setIsFirstChildForIntegration(const void*, bool);
 void Box_setShape(const void* box_raw, const void* shape);
 void* Box_rendererForIntegration(const void*);
 uint32_t RenderStyle_pseudoElementType(const void*);
+uint8_t RenderStyle_position(const void*);
 const void* RenderStyle_borderImage(const void*);
 const void* RenderStyle_metricsOfPrimaryFont(const void*);
 const void* RenderStyle_fontDescription(const void*);
