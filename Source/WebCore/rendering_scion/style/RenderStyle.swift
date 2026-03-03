@@ -2193,10 +2193,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasBlendMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasBlendMode() -> Bool { return wk_interop.RenderStyle_hasBlendMode(p!) }
 
   func isolation() -> Isolation {
     // TODO(asuhan): implement this

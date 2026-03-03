@@ -219,6 +219,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBackdropFilter(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBackdropFilter();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasBlendMode(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasBlendMode();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, int32_t width, int32_t height)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));
