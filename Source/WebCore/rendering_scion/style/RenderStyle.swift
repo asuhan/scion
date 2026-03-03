@@ -2167,10 +2167,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasFilter() -> Bool { return wk_interop.RenderStyle_hasFilter(p!) }
 
   func hasReferenceFilterOnly() -> Bool {
     // TODO(asuhan): implement this
