@@ -446,8 +446,8 @@ class RenderLayerWrapper {
   }
 
   func renderer() -> RenderLayerModelObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return m_renderer!
   }
 
   func renderBox() -> RenderBoxWrapper? {
