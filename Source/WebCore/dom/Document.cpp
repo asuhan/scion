@@ -438,6 +438,11 @@ extern "C" WEBCORE_EXPORT void* Document_securityOrigin(const void* raw)
     return &static_cast<const WebCore::Document*>(raw)->securityOrigin();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->css3DTransformBackfaceVisibilityInteroperabilityEnabled();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Document);

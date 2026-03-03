@@ -705,6 +705,7 @@ void* Document_renderView(const void* raw);
 bool Document_inQuirksMode(const void* raw);
 bool Document_inLimitedQuirksMode(const void* raw);
 void* Document_securityOrigin(const void* raw);
+bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void*);
 bool Node_isDocumentNode(const void*);
 bool Node_isRootEditableElement(const void*);
 void* Node_document(const void*);

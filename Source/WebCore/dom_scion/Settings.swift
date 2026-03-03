@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class SettingsWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
@@ -72,8 +74,7 @@ class SettingsWrapper {
   }
 
   func css3DTransformBackfaceVisibilityInteroperabilityEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(p)
   }
 
   func cssScrollAnchoringEnabled() -> Bool {
