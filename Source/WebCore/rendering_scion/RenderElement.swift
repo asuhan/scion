@@ -390,8 +390,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplyLayoutOrPaintContainment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return shouldApplyLayoutOrPaintContainment(style().containsLayoutOrPaint())
+      || shouldApplySizeOrStyleContainment(style().contentVisibility() != .Visible)
   }
 
   func shouldApplyAnyContainment() -> Bool {
