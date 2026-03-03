@@ -878,8 +878,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .SVGRoot
   }
 
   func isRenderSVGViewportContainer() -> Bool {
@@ -888,8 +888,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGText() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .SVGText
   }
 
   func isRenderSVGTextPath() -> Bool {
@@ -898,8 +898,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGInline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .SVGInline || type() == .SVGTSpan || type() == .SVGTextPath
   }
 
   func isRenderSVGInlineText() -> Bool {
@@ -908,8 +908,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderSVGForeignObject() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .SVGForeignObject
   }
 
   func isLegacyRenderSVGHiddenContainer() -> Bool {
