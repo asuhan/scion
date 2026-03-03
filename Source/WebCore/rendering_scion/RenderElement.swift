@@ -990,8 +990,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isTransparent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().hasOpacity()
   }
 
   func opacity() -> Float32 {
