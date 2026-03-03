@@ -381,6 +381,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_left(const void* 
     return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().left().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasOpacity(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasOpacity();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_nbspMode(const void* p)
 {
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->nbspMode());
