@@ -1073,10 +1073,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     return style().hasFilter()
   }
 
-  func hasBackdropFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasBackdropFilter() -> Bool { return style().hasBackdropFilter() }
 
   func hasBlendMode() -> Bool {
     // TODO(asuhan): implement this
