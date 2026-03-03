@@ -1073,11 +1073,14 @@ class RenderElementWrapper: RenderObjectWrapper {
     return style().hasFilter()
   }
 
-  func hasBackdropFilter() -> Bool { return style().hasBackdropFilter() }
+  func hasBackdropFilter() -> Bool {
+    assert(isNativeImpl())
+    return style().hasBackdropFilter()
+  }
 
   func hasBlendMode() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().hasBlendMode()
   }
 
   func imageOrientation() -> ImageOrientation {
