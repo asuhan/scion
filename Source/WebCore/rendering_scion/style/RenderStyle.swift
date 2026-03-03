@@ -605,8 +605,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasViewportConstrainedPosition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasViewportConstrainedPosition(p!)
   }
 
   func floating() -> Float {
