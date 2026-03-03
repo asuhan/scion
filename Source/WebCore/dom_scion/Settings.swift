@@ -83,8 +83,7 @@ class SettingsWrapper {
   }
 
   func cssUnprefixedBackdropFilterEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_cssUnprefixedBackdropFilterEnabled(p)
   }
 
   func fixedBackgroundsPaintRelativeToDocument() -> Bool {
