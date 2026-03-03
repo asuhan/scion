@@ -1316,10 +1316,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func frame() -> LocalFrameWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func frame() -> LocalFrameWrapper { return document().frame()! }
 
   func protectedFrame() -> LocalFrameWrapper { return frame() }  // TODO(asuhan): just remove this wrapper, not needed in Swift
 

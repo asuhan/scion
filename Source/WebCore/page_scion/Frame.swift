@@ -24,6 +24,8 @@
  */
 
 class FrameWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   func tree() -> FrameTreeWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -63,4 +65,6 @@ class FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }

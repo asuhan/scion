@@ -31,6 +31,11 @@ import wk_interop
 class Document: TreeScopeWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
+  func frame() -> LocalFrameWrapper? {
+    let raw = wk_interop.Document_frame(p)
+    return raw != nil ? LocalFrameWrapper(raw!) : nil
+  }
+
   func documentElement() -> ElementWrapper? {
     let raw = wk_interop.Document_documentElement(p)
     return raw != nil ? ElementWrapper(p: raw!) : nil
