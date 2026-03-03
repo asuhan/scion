@@ -1229,8 +1229,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasNonVisibleOverflow() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderObject_hasNonVisibleOverflow(p)
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_hasNonVisibleOverflow(p)
+    }
+    return m_stateBitfields.hasFlag(.HasNonVisibleOverflow)
   }
 
   func hasPotentiallyScrollableOverflow() -> Bool {
