@@ -144,6 +144,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_computedLocale(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->computedLocale();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_specifiesColumns(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->specifiesColumns();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_textEmphasisMarkString(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->textEmphasisMarkString();

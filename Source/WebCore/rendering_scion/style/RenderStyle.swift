@@ -1852,10 +1852,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func specifiesColumns() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func specifiesColumns() -> Bool { return wk_interop.RenderStyle_specifiesColumns(p!) }
 
   func columnFill() -> ColumnFill {
     // TODO(asuhan): implement this
