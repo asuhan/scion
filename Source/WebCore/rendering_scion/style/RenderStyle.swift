@@ -2181,10 +2181,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasBackdropFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasBackdropFilter() -> Bool { return wk_interop.RenderStyle_hasBackdropFilter(p!) }
 
   func isInSubtreeWithBlendMode() -> Bool {
     // TODO(asuhan): implement this

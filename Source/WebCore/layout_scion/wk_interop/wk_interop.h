@@ -531,6 +531,7 @@ bool RenderStyle_isFlippedLinesWritingMode(const void*);
 bool RenderStyle_isFlippedBlocksWritingMode(const void*);
 uint8_t RenderStyle_blockFlowDirection(const void*);
 bool RenderStyle_hasFilter(const void*);
+bool RenderStyle_hasBackdropFilter(const void*);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 const void* RenderStyle_hyphenString(const void*);
 bool RenderStyle_isDisplayInlineType(const void*);
