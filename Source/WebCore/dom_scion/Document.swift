@@ -81,8 +81,7 @@ class Document: TreeScopeWrapper {
   }
 
   func settings() -> SettingsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return SettingsWrapper(wk_interop.Document_settings(p))
   }
 
   func deviceScaleFactor() -> Float32 {

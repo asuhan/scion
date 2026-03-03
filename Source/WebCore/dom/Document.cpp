@@ -418,6 +418,11 @@ extern "C" WEBCORE_EXPORT void* Document_view(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->view();
 }
 
+extern "C" WEBCORE_EXPORT const void* Document_settings(const void* raw)
+{
+    return &static_cast<const WebCore::Document*>(raw)->settings();
+}
+
 extern "C" WEBCORE_EXPORT void* Document_renderView(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->renderView();
