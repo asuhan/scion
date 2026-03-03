@@ -250,6 +250,16 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     static let IsViewTransitionContainer = BlockFlowFlag(rawValue: 1 << 4)
   }
 
+  struct ReplacedFlag: OptionSet {
+    let rawValue: UInt8
+
+    static let IsImage = ReplacedFlag(rawValue: 1 << 0)
+    static let IsMedia = ReplacedFlag(rawValue: 1 << 1)
+    static let IsWidget = ReplacedFlag(rawValue: 1 << 2)
+    static let IsViewTransitionCapture = ReplacedFlag(rawValue: 1 << 3)
+    static let UsesBoundaryCaching = ReplacedFlag(rawValue: 1 << 5)
+  }
+
   struct TypeSpecificFlags {
     enum Kind: UInt8 {
       case Invalid = 0
@@ -271,6 +281,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     func blockFlowFlags() -> BlockFlowFlag {
       return BlockFlowFlag(rawValue: valueForKind(.BlockFlow))
+    }
+
+    func replacedFlags() -> ReplacedFlag {
+      return ReplacedFlag(rawValue: valueForKind(.Replaced))
     }
 
     private func valueForKind(_ kind: Kind) -> UInt8 {
@@ -618,8 +632,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMedia() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsMedia)
   }
 
   func isRenderMenuList() -> Bool {
