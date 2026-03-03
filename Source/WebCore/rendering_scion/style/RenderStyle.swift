@@ -243,11 +243,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func pseudoElementType() -> PseudoId {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return PseudoId(rawValue: wk_interop.RenderStyle_pseudoElementType(p))!
+    return PseudoId(rawValue: wk_interop.RenderStyle_pseudoElementType(p!))!
   }
 
   func setPseudoElementType(pseudoElementType: PseudoId) {
@@ -279,11 +275,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isFloating() -> Bool {
-    return wk_interop.RenderStyle_isFloating(p)
+    return wk_interop.RenderStyle_isFloating(p!)
   }
 
   func position() -> PositionType {
-    return PositionType(rawValue: wk_interop.RenderStyle_position(p))!
+    return PositionType(rawValue: wk_interop.RenderStyle_position(p!))!
   }
 
   func hasOutOfFlowPosition() -> Bool {
@@ -434,27 +430,15 @@ class RenderStyleWrapper: Equatable {
   }
 
   func metricsOfPrimaryFont() -> FontMetricsWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return FontMetricsWrapper(p: wk_interop.RenderStyle_metricsOfPrimaryFont(p))
+    return FontMetricsWrapper(p: wk_interop.RenderStyle_metricsOfPrimaryFont(p!))
   }
 
   func fontDescription() -> FontCascadeDescriptionWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return FontCascadeDescriptionWrapper(p: wk_interop.RenderStyle_fontDescription(p))
+    return FontCascadeDescriptionWrapper(p: wk_interop.RenderStyle_fontDescription(p!))
   }
 
   func computedFontSize() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_computedFontSize(p)
+    return wk_interop.RenderStyle_computedFontSize(p!)
   }
 
   func hasBorder() -> Bool {
@@ -463,7 +447,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasBorderImage() -> Bool {
-    return wk_interop.RenderStyle_hasBorderImage(p)
+    return wk_interop.RenderStyle_hasBorderImage(p!)
   }
 
   func hasVisibleBorderDecoration() -> Bool {
@@ -471,7 +455,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasVisibleBorder() -> Bool {
-    return wk_interop.RenderStyle_hasVisibleBorder(p)
+    return wk_interop.RenderStyle_hasVisibleBorder(p!)
   }
 
   func hasPadding() -> Bool {
@@ -495,10 +479,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasUsedAppearance() -> Bool {
-    return wk_interop.RenderStyle_hasUsedAppearance(p)
+    return wk_interop.RenderStyle_hasUsedAppearance(p!)
   }
 
-  func hasBackground() -> Bool { return wk_interop.RenderStyle_hasBackground(p) }
+  func hasBackground() -> Bool { return wk_interop.RenderStyle_hasBackground(p!) }
 
   func imageOutsets(image: NinePieceImage) -> LayoutBoxExtent {
     // TODO(asuhan): implement this
@@ -526,11 +510,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func rtlOrdering() -> Order {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Order(rawValue: wk_interop.RenderStyle_rtlOrdering(p))!
+    return Order(rawValue: wk_interop.RenderStyle_rtlOrdering(p!))!
   }
 
   func hasPseudoStyle(pseudo: PseudoId) -> Bool {
@@ -547,7 +527,7 @@ class RenderStyleWrapper: Equatable {
     if p == nil {
       return nonInheritedFlags.effectiveDisplay
     }
-    return DisplayType(rawValue: wk_interop.RenderStyle_display(p))!
+    return DisplayType(rawValue: wk_interop.RenderStyle_display(p!))!
   }
 
   func left() -> LengthWrapper {
@@ -592,11 +572,7 @@ class RenderStyleWrapper: Equatable {
 
   // Whether or not a positioned element requires normal flow x/y to be computed to determine its position.
   func hasStaticInlinePosition(horizontal: Bool) -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_hasStaticInlinePosition(p, horizontal)
+    return wk_interop.RenderStyle_hasStaticInlinePosition(p!, horizontal)
   }
 
   func hasStaticBlockPosition(horizontal: Bool) -> Bool {
@@ -609,10 +585,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func floating() -> Float {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return Float(rawValue: wk_interop.RenderStyle_floating(p))!
+    return Float(rawValue: wk_interop.RenderStyle_floating(p!))!
   }
 
   static func usedFloat(renderer: RenderObjectWrapper) -> UsedFloat {
@@ -634,7 +607,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderImage() -> NinePieceImage {
-    return NinePieceImage(wk_interop.RenderStyle_borderImage(p)!)
+    return NinePieceImage(wk_interop.RenderStyle_borderImage(p!)!)
   }
 
   func borderTopLeftRadius() -> LengthSize {
@@ -678,17 +651,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func overflowX() -> Overflow {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return Overflow(rawValue: wk_interop.RenderStyle_overflowX(p))!
+    return Overflow(rawValue: wk_interop.RenderStyle_overflowX(p!))!
   }
 
   func overflowY() -> Overflow {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return Overflow(rawValue: wk_interop.RenderStyle_overflowY(p))!
+    return Overflow(rawValue: wk_interop.RenderStyle_overflowY(p!))!
   }
 
   func isOverflowVisible() -> Bool {
@@ -712,40 +679,23 @@ class RenderStyleWrapper: Equatable {
   }
 
   func usedVisibility() -> Visibility {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Visibility(rawValue: wk_interop.RenderStyle_usedVisibility(p))!
+    return Visibility(rawValue: wk_interop.RenderStyle_usedVisibility(p!))!
   }
 
   func verticalAlign() -> VerticalAlign {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return VerticalAlign(rawValue: wk_interop.RenderStyle_verticalAlign(p))!
+    return VerticalAlign(rawValue: wk_interop.RenderStyle_verticalAlign(p!))!
   }
 
   func verticalAlignLength() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_verticalAlignLength(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_verticalAlignLength(p!))
   }
 
   func lineHeight() -> LengthWrapper {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_lineHeight(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_lineHeight(p!))
   }
 
   func computedLineHeight() -> Float32 {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_computedLineHeight(p)
+    return wk_interop.RenderStyle_computedLineHeight(p!)
   }
 
   func whiteSpace() -> WhiteSpace {
@@ -777,10 +727,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func autoWrap() -> Bool {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_autoWrap(p)
+    return wk_interop.RenderStyle_autoWrap(p!)
   }
 
   func preserveNewline() -> Bool {
@@ -794,13 +741,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textShadowExtent() -> LayoutBoxExtent {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    let top = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_top(p))
-    let right = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_right(p))
-    let bottom = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_bottom(p))
-    let left = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_left(p))
+    let top = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_top(p!))
+    let right = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_right(p!))
+    let bottom = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_bottom(p!))
+    let left = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_textShadowExtent_left(p!))
     return LayoutBoxExtent(top: top, right: right, bottom: bottom, left: left)
   }
 
@@ -1062,27 +1006,15 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textEmphasisMark() -> TextEmphasisMark {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextEmphasisMark(rawValue: wk_interop.RenderStyle_textEmphasisMark(p))!
+    return TextEmphasisMark(rawValue: wk_interop.RenderStyle_textEmphasisMark(p!))!
   }
 
   func textEmphasisPosition() -> TextEmphasisPosition {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextEmphasisPosition(rawValue: wk_interop.RenderStyle_textEmphasisPosition(p))
+    return TextEmphasisPosition(rawValue: wk_interop.RenderStyle_textEmphasisPosition(p!))
   }
 
   func hasTextCombine() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_hasTextCombine(p)
+    return wk_interop.RenderStyle_hasTextCombine(p!)
   }
 
   func setFloating(v: Float) {
@@ -1114,11 +1046,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textAlignLast() -> TextAlignLast {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextAlignLast(rawValue: wk_interop.RenderStyle_textAlignLast(p))!
+    return TextAlignLast(rawValue: wk_interop.RenderStyle_textAlignLast(p!))!
   }
 
   func clip() -> LengthBox {
@@ -1136,10 +1064,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textDecorationsInEffect() -> TextDecorationLine {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return TextDecorationLine(rawValue: wk_interop.RenderStyle_textDecorationsInEffect(p))
+    return TextDecorationLine(rawValue: wk_interop.RenderStyle_textDecorationsInEffect(p!))
   }
 
   func textDecorationLine() -> TextDecorationLine {
@@ -1153,11 +1078,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderLeftWidth() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_borderLeftWidth(p)
+    return wk_interop.RenderStyle_borderLeftWidth(p!)
   }
 
   func borderLeftStyle() -> BorderStyle {
@@ -1171,11 +1092,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderRightWidth() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_borderRightWidth(p)
+    return wk_interop.RenderStyle_borderRightWidth(p!)
   }
 
   func borderRightStyle() -> BorderStyle {
@@ -1189,11 +1106,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderTopWidth() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_borderTopWidth(p)
+    return wk_interop.RenderStyle_borderTopWidth(p!)
   }
 
   func borderTopStyle() -> BorderStyle {
@@ -1207,11 +1120,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderBottomWidth() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_borderBottomWidth(p)
+    return wk_interop.RenderStyle_borderBottomWidth(p!)
   }
 
   func borderBottomStyle() -> BorderStyle {
@@ -1230,10 +1139,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func outlineSize() -> Float32 {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_outlineSize(p)
+    return wk_interop.RenderStyle_outlineSize(p!)
   }
 
   func outlineWidth() -> Float32 {
@@ -1247,10 +1153,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasOutlineInVisualOverflow() -> Bool {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_hasOutlineInVisualOverflow(p)
+    return wk_interop.RenderStyle_hasOutlineInVisualOverflow(p!)
   }
 
   func clipLeft() -> LengthWrapper {
@@ -1274,10 +1177,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func clear() -> Clear {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return Clear(rawValue: wk_interop.RenderStyle_clear(p))!
+    return Clear(rawValue: wk_interop.RenderStyle_clear(p!))!
   }
 
   static func usedClear(renderer: RenderObjectWrapper) -> UsedClear {
@@ -1306,10 +1206,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textIndent() -> LengthWrapper {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_textIndent(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_textIndent(p!))
   }
 
   func textDecorationThickness() -> TextDecorationThickness {
@@ -1327,10 +1224,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func lineFitEdge() -> TextEdge {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    let packed = wk_interop.RenderStyle_lineFitEdge(p)
+    let packed = wk_interop.RenderStyle_lineFitEdge(p!)
     let over = TextEdgeType(rawValue: UInt8(packed / 256))!
     let under = TextEdgeType(rawValue: UInt8(packed % 256))!
     return TextEdge(over: over, under: under)
@@ -1342,19 +1236,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textIndentType() -> TextIndentType {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextIndentType(rawValue: wk_interop.RenderStyle_textIndentType(p))!
+    return TextIndentType(rawValue: wk_interop.RenderStyle_textIndentType(p!))!
   }
 
   func textAlign() -> TextAlignMode {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextAlignMode(rawValue: wk_interop.RenderStyle_textAlign(p))!
+    return TextAlignMode(rawValue: wk_interop.RenderStyle_textAlign(p!))!
   }
 
   func textTransform() -> TextTransform {
@@ -1363,11 +1249,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textDecorationSkipInk() -> TextDecorationSkipInk {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextDecorationSkipInk(rawValue: wk_interop.RenderStyle_textDecorationSkipInk(p))!
+    return TextDecorationSkipInk(rawValue: wk_interop.RenderStyle_textDecorationSkipInk(p!))!
   }
 
   func usedZoom() -> Float32 {
@@ -1384,11 +1266,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textWrapStyle() -> TextWrapStyle {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextWrapStyle(rawValue: wk_interop.RenderStyle_textWrapStyle(p))!
+    return TextWrapStyle(rawValue: wk_interop.RenderStyle_textWrapStyle(p!))!
   }
 
   func backgroundClip() -> FillBox {
@@ -1407,10 +1285,6 @@ class RenderStyleWrapper: Equatable {
   }
 
   func backgroundLayers() -> FillLayerWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return FillLayerWrapper(wk_interop.RenderStyle_backgroundLayers(p!))
   }
 
@@ -1419,10 +1293,6 @@ class RenderStyleWrapper: Equatable {
   }
 
   func maskLayers() -> FillLayerWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
     return FillLayerWrapper(wk_interop.RenderStyle_maskLayers(p!))
   }
 
@@ -1481,59 +1351,35 @@ class RenderStyleWrapper: Equatable {
   }
 
   func marginTop() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_marginTop(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_marginTop(p!))
   }
 
   func marginBottom() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_marginBottom(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_marginBottom(p!))
   }
 
   func marginLeft() -> LengthWrapper {
-    return LengthWrapper(p: wk_interop.RenderStyle_marginLeft(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_marginLeft(p!))
   }
 
   func marginRight() -> LengthWrapper {
-    return LengthWrapper(p: wk_interop.RenderStyle_marginRight(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_marginRight(p!))
   }
 
   func paddingTop() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_paddingTop(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingTop(p!))
   }
 
   func paddingBottom() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_paddingBottom(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingBottom(p!))
   }
 
   func paddingLeft() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_paddingLeft(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingLeft(p!))
   }
 
   func paddingRight() -> LengthWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LengthWrapper(p: wk_interop.RenderStyle_paddingRight(p))
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingRight(p!))
   }
 
   func paddingBefore() -> LengthWrapper {
@@ -1602,11 +1448,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hangingPunctuation() -> HangingPunctuation {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p))
+    return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p!))
   }
 
   func outlineOffset() -> Float32 {
@@ -1630,7 +1472,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func containsPaint() -> Bool {
-    return wk_interop.RenderStyle_containsPaint(p)
+    return wk_interop.RenderStyle_containsPaint(p!)
   }
 
   func containerType() -> ContainerType {
@@ -1639,7 +1481,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func contentVisibility() -> ContentVisibility {
-    return ContentVisibility(rawValue: wk_interop.RenderStyle_contentVisibility(p))!
+    return ContentVisibility(rawValue: wk_interop.RenderStyle_contentVisibility(p!))!
   }
 
   // usedContentVisibility will return ContentVisibility::Hidden in a content-visibility: hidden subtree (overriding
@@ -1877,11 +1719,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxDecorationBreak() -> BoxDecorationBreak {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return BoxDecorationBreak(rawValue: wk_interop.RenderStyle_boxDecorationBreak(p))!
+    return BoxDecorationBreak(rawValue: wk_interop.RenderStyle_boxDecorationBreak(p!))!
   }
 
   func boxReflect() -> StyleReflection? {
@@ -1933,27 +1771,15 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textOverflow() -> TextOverflow {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return TextOverflow(rawValue: wk_interop.RenderStyle_textOverflow(p))!
+    return TextOverflow(rawValue: wk_interop.RenderStyle_textOverflow(p!))!
   }
 
   func wordBreak() -> WordBreak {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return WordBreak(rawValue: wk_interop.RenderStyle_wordBreak(p))!
+    return WordBreak(rawValue: wk_interop.RenderStyle_wordBreak(p!))!
   }
 
   func overflowWrap() -> OverflowWrap {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return OverflowWrap(rawValue: wk_interop.RenderStyle_overflowWrap(p))!
+    return OverflowWrap(rawValue: wk_interop.RenderStyle_overflowWrap(p!))!
   }
 
   func wordSpacing() -> Float32 {
@@ -1964,7 +1790,7 @@ class RenderStyleWrapper: Equatable {
     if p == nil {
       return rareInheritedData.nbspMode ? .Space : .Normal
     }
-    let nbspModeRaw = UInt8(wk_interop.RenderStyle_nbspMode(p) ? 1 : 0)
+    let nbspModeRaw = UInt8(wk_interop.RenderStyle_nbspMode(p!) ? 1 : 0)
     return NBSPMode(rawValue: nbspModeRaw)!
   }
 
@@ -1973,45 +1799,30 @@ class RenderStyleWrapper: Equatable {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    return LineBreak(rawValue: wk_interop.RenderStyle_lineBreak(p))!
+    return LineBreak(rawValue: wk_interop.RenderStyle_lineBreak(p!))!
   }
 
   func hyphenationLimitLines() -> Int16 {
     if p == nil {
       return rareInheritedData.hyphenationLimitLines
     }
-    return RenderStyle_hyphenationLimitLines(p)
+    return RenderStyle_hyphenationLimitLines(p!)
   }
 
   func hyphens() -> Hyphens {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return Hyphens(rawValue: wk_interop.RenderStyle_hyphens(p))!
+    return Hyphens(rawValue: wk_interop.RenderStyle_hyphens(p!))!
   }
 
   func hyphenationLimitBefore() -> Int16 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return RenderStyle_hyphenationLimitBefore(p)
+    return RenderStyle_hyphenationLimitBefore(p!)
   }
 
   func hyphenationLimitAfter() -> Int16 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return RenderStyle_hyphenationLimitAfter(p)
+    return RenderStyle_hyphenationLimitAfter(p!)
   }
 
   func computedLocale() -> AtomStringWrapper {
-    if p == nil {
-      fatalError("Not implemented")
-    }
-    return AtomStringWrapper(p: wk_interop.RenderStyle_computedLocale(p))
+    return AtomStringWrapper(p: wk_interop.RenderStyle_computedLocale(p!))
   }
 
   func resize() -> Resize {
@@ -2115,43 +1926,23 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textEmphasisMarkString() -> AtomStringWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return AtomStringWrapper(p: wk_interop.RenderStyle_textEmphasisMarkString(p))
+    return AtomStringWrapper(p: wk_interop.RenderStyle_textEmphasisMarkString(p!))
   }
 
   func rubyPosition() -> RubyPosition {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return RubyPosition(rawValue: wk_interop.RenderStyle_rubyPosition(p))!
+    return RubyPosition(rawValue: wk_interop.RenderStyle_rubyPosition(p!))!
   }
 
   func isInterCharacterRubyPosition() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isInterCharacterRubyPosition(p)
+    return wk_interop.RenderStyle_isInterCharacterRubyPosition(p!)
   }
 
   func rubyAlign() -> RubyAlign {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return RubyAlign(rawValue: wk_interop.RenderStyle_rubyAlign(p))!
+    return RubyAlign(rawValue: wk_interop.RenderStyle_rubyAlign(p!))!
   }
 
   func rubyOverhang() -> RubyOverhang {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return RubyOverhang(rawValue: wk_interop.RenderStyle_rubyOverhang(p))!
+    return RubyOverhang(rawValue: wk_interop.RenderStyle_rubyOverhang(p!))!
   }
 
   func textOrientation() -> TextOrientation {
@@ -2173,7 +1964,7 @@ class RenderStyleWrapper: Equatable {
   // indicates that we are transforming. The usedTransformStyle3D is not used here because in many cases (such as for deciding
   // whether or not to establish a containing block), the computed value is what matters.
   func hasTransformRelatedProperty() -> Bool {
-    return wk_interop.RenderStyle_hasTransformRelatedProperty(p)
+    return wk_interop.RenderStyle_hasTransformRelatedProperty(p!)
   }
 
   struct TransformOperationOption: OptionSet {
@@ -2260,11 +2051,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func lineBoxContain() -> LineBoxContain {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LineBoxContain(rawValue: wk_interop.RenderStyle_lineBoxContain(p))
+    return LineBoxContain(rawValue: wk_interop.RenderStyle_lineBoxContain(p!))
   }
 
   func lineClamp() -> LineClampValue {
@@ -2273,29 +2060,17 @@ class RenderStyleWrapper: Equatable {
   }
 
   func blockEllipsis() -> BlockEllipsis {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    let blockEllipsisRaw = wk_interop.RenderStyle_blockEllipsis(p)
+    let blockEllipsisRaw = wk_interop.RenderStyle_blockEllipsis(p!)
     let type = BlockEllipsis.Type_(rawValue: blockEllipsisRaw.type)!
     return BlockEllipsis(type: type, string: AtomStringWrapper(p: blockEllipsisRaw.string))
   }
 
   func initialLetterDrop() -> Int32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_initialLetterDrop(p)
+    return wk_interop.RenderStyle_initialLetterDrop(p!)
   }
 
   func initialLetterHeight() -> Int32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_initialLetterHeight(p)
+    return wk_interop.RenderStyle_initialLetterHeight(p!)
   }
 
   func eventListenerRegionTypes() -> EventListenerRegionType {
@@ -2349,51 +2124,27 @@ class RenderStyleWrapper: Equatable {
   }
 
   func writingMode() -> WritingMode {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return WritingMode(rawValue: wk_interop.RenderStyle_writingMode(p))!
+    return WritingMode(rawValue: wk_interop.RenderStyle_writingMode(p!))!
   }
 
   func isHorizontalWritingMode() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isHorizontalWritingMode(p)
+    return wk_interop.RenderStyle_isHorizontalWritingMode(p!)
   }
 
   func isVerticalWritingMode() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isVerticalWritingMode(p)
+    return wk_interop.RenderStyle_isVerticalWritingMode(p!)
   }
 
   func isFlippedLinesWritingMode() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isFlippedLinesWritingMode(p)
+    return wk_interop.RenderStyle_isFlippedLinesWritingMode(p!)
   }
 
   func isFlippedBlocksWritingMode() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isFlippedBlocksWritingMode(p)
+    return wk_interop.RenderStyle_isFlippedBlocksWritingMode(p!)
   }
 
   func blockFlowDirection() -> FlowDirection {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return FlowDirection(rawValue: wk_interop.RenderStyle_blockFlowDirection(p))!
+    return FlowDirection(rawValue: wk_interop.RenderStyle_blockFlowDirection(p!))!
   }
 
   func typographicMode() -> TypographicMode {
@@ -2746,11 +2497,7 @@ class RenderStyleWrapper: Equatable {
   private static let markersStroke: [PaintType] = [.Markers, .Stroke, .Fill]
 
   func computedStrokeWidth(viewportSize: IntSize) -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_computedStrokeWidth(p, viewportSize.width, viewportSize.height)
+    return wk_interop.RenderStyle_computedStrokeWidth(p!, viewportSize.width, viewportSize.height)
   }
 
   private func hasExplicitlySetStrokeWidth() -> Bool {
@@ -2782,7 +2529,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func shapeOutside() -> ShapeValue? {
-    let raw = wk_interop.RenderStyle_shapeOutside(p)
+    let raw = wk_interop.RenderStyle_shapeOutside(p!)
     return raw != nil ? ShapeValue(raw!) : nil
   }
 
@@ -2821,27 +2568,15 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hyphenString() -> AtomStringWrapper {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return AtomStringWrapper(p: wk_interop.RenderStyle_hyphenString(p))
+    return AtomStringWrapper(p: wk_interop.RenderStyle_hyphenString(p!))
   }
 
   func isDisplayInlineType() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isDisplayInlineType(p)
+    return wk_interop.RenderStyle_isDisplayInlineType(p!)
   }
 
   func isOriginalDisplayInlineType() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isOriginalDisplayInlineType(p)
+    return wk_interop.RenderStyle_isOriginalDisplayInlineType(p!)
   }
 
   func isDisplayFlexibleBoxIncludingDeprecatedOrGridBox() -> Bool {
@@ -2865,11 +2600,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isOriginalDisplayListItemType() -> Bool {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_isOriginalDisplayListItemType(p)
+    return wk_interop.RenderStyle_isOriginalDisplayListItemType(p!)
   }
 
   func visitedDependentColor(colorProperty: CSSPropertyID, paintBehavior: PaintBehavior = [])
@@ -2961,40 +2692,28 @@ class RenderStyleWrapper: Equatable {
   }
 
   func letterSpacing() -> Float32 {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return wk_interop.RenderStyle_letterSpacing(p)
+    return wk_interop.RenderStyle_letterSpacing(p!)
   }
 
   func getBoxShadowHorizontalExtent(left: inout LayoutUnit, right: inout LayoutUnit) {
     left = LayoutUnit.fromRawValue(
-      value: wk_interop.RenderStyle_getBoxShadowHorizontalExtentLeft(p))
+      value: wk_interop.RenderStyle_getBoxShadowHorizontalExtentLeft(p!))
     right = LayoutUnit.fromRawValue(
-      value: wk_interop.RenderStyle_getBoxShadowHorizontalExtentRight(p))
+      value: wk_interop.RenderStyle_getBoxShadowHorizontalExtentRight(p!))
   }
 
   func getBoxShadowVerticalExtent(top: inout LayoutUnit, bottom: inout LayoutUnit) {
-    top = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_getBoxShadowVerticalExtentTop(p))
+    top = LayoutUnit.fromRawValue(value: wk_interop.RenderStyle_getBoxShadowVerticalExtentTop(p!))
     bottom = LayoutUnit.fromRawValue(
-      value: wk_interop.RenderStyle_getBoxShadowVerticalExtentBottom(p))
+      value: wk_interop.RenderStyle_getBoxShadowVerticalExtentBottom(p!))
   }
 
   func lineAlign() -> LineAlign {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LineAlign(rawValue: wk_interop.RenderStyle_lineAlign(p))!
+    return LineAlign(rawValue: wk_interop.RenderStyle_lineAlign(p!))!
   }
 
   func lineSnap() -> LineSnap {
-    if p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
-    }
-    return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p))!
+    return LineSnap(rawValue: wk_interop.RenderStyle_lineSnap(p!))!
   }
 
   func pointerEvents() -> PointerEvents {
