@@ -229,6 +229,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBlendMode(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBlendMode();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoUsedZIndex(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasAutoUsedZIndex();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, int32_t width, int32_t height)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));
