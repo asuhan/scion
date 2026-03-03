@@ -42,11 +42,13 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func layer() -> RenderLayerWrapper? {
-    assert(!isNativeImpl())
-    if let rawLayer = wk_interop.RenderLayerModelObject_layer(p) {
-      return RenderLayerWrapper(p: rawLayer)
+    if !isNativeImpl() {
+      if let rawLayer = wk_interop.RenderLayerModelObject_layer(p) {
+        return RenderLayerWrapper(p: rawLayer)
+      }
+      return nil
     }
-    return nil
+    return m_layer
   }
 
   func checkedLayer() -> RenderLayerWrapper? {
@@ -469,6 +471,8 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func updateFromStyle() {}
+
+  private let m_layer: RenderLayerWrapper? = nil
 
   // Used to store state between styleWillChange and styleDidChange
   private static var s_wasFloating = false
