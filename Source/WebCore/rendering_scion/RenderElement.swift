@@ -1010,8 +1010,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasMask() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().hasMask()
   }
 
   func hasClip() -> Bool {
