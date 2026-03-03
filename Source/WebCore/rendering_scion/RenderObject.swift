@@ -1022,8 +1022,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isPositioned() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.isPositioned()
   }
 
   func isInFlowPositioned() -> Bool {
@@ -2876,6 +2876,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     mutating func clearFlag(_ flag: StateFlag) { setFlag(flag, false) }
 
     func isOutOfFlowPositioned() -> Bool { return m_positionedState == .IsOutOfFlowPositioned }
+
+    func isPositioned() -> Bool { return m_positionedState != .IsStaticallyPositioned }
 
     mutating func setPositionedState(_ positionState: PositionType) {
       // This mask maps .Fixed and .Absolute to IsOutOfFlowPositioned, saving one bit.
