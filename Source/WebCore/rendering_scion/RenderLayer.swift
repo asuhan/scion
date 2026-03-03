@@ -617,8 +617,8 @@ class RenderLayerWrapper {
   }
 
   func dirtyStackingContextZOrderLists() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let sc = stackingContext()
+    sc?.dirtyZOrderLists()
   }
 
   func dirtyHiddenStackingContextAncestorZOrderLists() {
