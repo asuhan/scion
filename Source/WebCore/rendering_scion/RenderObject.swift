@@ -260,6 +260,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     static let UsesBoundaryCaching = ReplacedFlag(rawValue: 1 << 5)
   }
 
+  struct SVGModelObjectFlag: OptionSet {
+    let rawValue: UInt8
+
+    static let IsLegacy = SVGModelObjectFlag(rawValue: 1 << 0)
+    static let IsContainer = SVGModelObjectFlag(rawValue: 1 << 1)
+    static let IsHiddenContainer = SVGModelObjectFlag(rawValue: 1 << 2)
+    static let IsResourceContainer = SVGModelObjectFlag(rawValue: 1 << 3)
+    static let IsShape = SVGModelObjectFlag(rawValue: 1 << 4)
+    static let UsesBoundaryCaching = SVGModelObjectFlag(rawValue: 1 << 5)
+  }
+
   struct TypeSpecificFlags {
     enum Kind: UInt8 {
       case Invalid = 0
@@ -285,6 +296,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     func replacedFlags() -> ReplacedFlag {
       return ReplacedFlag(rawValue: valueForKind(.Replaced))
+    }
+
+    func svgFlags() -> SVGModelObjectFlag {
+      return SVGModelObjectFlag(rawValue: valueForKind(.SVGModelObject))
     }
 
     private func valueForKind(_ kind: Kind) -> UInt8 {
@@ -846,6 +861,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderSVGModelObject() -> Bool {
+    assert(isNativeImpl())
+    return m_typeSpecificFlags.kind == .SVGModelObject
+      && !m_typeSpecificFlags.svgFlags().contains(.IsLegacy)
+  }
+
   func isRenderSVGBlock() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -917,8 +938,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSVGLayerAwareRenderer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isRenderSVGRoot() || isRenderSVGModelObject() || isRenderSVGText() || isRenderSVGInline()
+      || isRenderSVGForeignObject()
   }
 
   // FIXME: Those belong into a SVG specific base-class for all renderers (see above)
