@@ -686,8 +686,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderVideo() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .Video
   }
 
   func isRenderViewTransitionCapture() -> Bool {
