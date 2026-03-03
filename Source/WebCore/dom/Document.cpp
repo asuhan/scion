@@ -448,6 +448,11 @@ extern "C" WEBCORE_EXPORT bool Settings_css3DTransformBackfaceVisibilityInterope
     return static_cast<const WebCore::Settings*>(raw)->css3DTransformBackfaceVisibilityInteroperabilityEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_layerBasedSVGEngineEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->layerBasedSVGEngineEnabled();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Document);

@@ -123,8 +123,7 @@ class SettingsWrapper {
   }
 
   func layerBasedSVGEngineEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_layerBasedSVGEngineEnabled(p)
   }
 
   func overlappingBackingStoreProvidersEnabled() -> Bool {
