@@ -2015,10 +2015,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasMask() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasMask() -> Bool { return wk_interop.RenderStyle_hasMask(p!) }
 
   func backfaceVisibility() -> BackfaceVisibility {
     // TODO(asuhan): implement this
