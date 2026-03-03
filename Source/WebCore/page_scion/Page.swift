@@ -18,6 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 enum CompositingPolicy {
   case Normal
   case Conservative  // Used in low memory situations.
@@ -50,6 +52,8 @@ class PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func settings() -> SettingsWrapper { return SettingsWrapper(wk_interop.Page_settings(p)) }
 
   func pageScaleFactor() -> Float32 {
     // TODO(asuhan): implement this

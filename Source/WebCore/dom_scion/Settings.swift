@@ -24,6 +24,8 @@
  */
 
 class SettingsWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   func acceleratedCompositingEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -163,4 +165,6 @@ class SettingsWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }

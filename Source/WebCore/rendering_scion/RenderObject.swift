@@ -1326,10 +1326,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return frame().page()!
   }
 
-  func settings() -> SettingsWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func settings() -> SettingsWrapper { return page().settings() }
 
   // Returns the object containing this one. Can be different from parent for positioned elements.
   // If repaintContainer and repaintContainerSkipped are not null, on return *repaintContainerSkipped

@@ -233,6 +233,11 @@
 #include "GamepadManager.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* Page_settings(const void* raw)
+{
+    return &static_cast<const WebCore::Page*>(raw)->settings();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(Page);
