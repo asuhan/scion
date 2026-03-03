@@ -1321,8 +1321,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func protectedFrame() -> LocalFrameWrapper { return frame() }  // TODO(asuhan): just remove this wrapper, not needed in Swift
 
   func page() -> PageWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // The render tree will always be torn down before Frame is disconnected from Page,
+    // so it's safe to assume Frame::page() is non-null as long as there are live RenderObjects.
+    return frame().page()!
   }
 
   func settings() -> SettingsWrapper {
