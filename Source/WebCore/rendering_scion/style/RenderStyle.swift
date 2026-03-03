@@ -1494,10 +1494,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   // Returns true for skipped content roots and skipped content itself.
-  func hasSkippedContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasSkippedContent() -> Bool { return wk_interop.RenderStyle_hasSkippedContent(p!) }
 
   func containIntrinsicWidthType() -> ContainIntrinsicSizeType {
     // TODO(asuhan): implement this

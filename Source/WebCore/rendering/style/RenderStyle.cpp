@@ -590,6 +590,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_contentVisibility(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->contentVisibility());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasSkippedContent(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasSkippedContent();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineAlign(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->lineAlign());
