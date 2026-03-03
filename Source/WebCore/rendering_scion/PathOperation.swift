@@ -29,15 +29,20 @@
  */
 
 class PathOperation: Equatable {
-  enum `Type`: UInt8 {
+  enum Type_: UInt8 {
     case Reference
     case Shape
     case Box
     case Ray
   }
 
-  let type: `Type` = .Reference
-  let referenceBox: CSSBoxType = .BoxMissing
+  init(_ type: Type_, _ referenceBox: CSSBoxType) {
+    self.type = type
+    self.referenceBox = referenceBox
+  }
+
+  let type: Type_
+  let referenceBox: CSSBoxType
 
   static func == (lhs: PathOperation, rhs: PathOperation) -> Bool {
     // TODO(asuhan): implement this
@@ -46,7 +51,7 @@ class PathOperation: Equatable {
 }
 
 final class ReferencePathOperation: PathOperation {
-  override init() {
+  init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

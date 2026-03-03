@@ -120,6 +120,12 @@ struct LineSegmentRaw {
     bool isValid;
 };
 
+struct PathOperationRaw {
+    uint8_t type;
+    uint8_t referenceBox;
+    bool is_valid;
+};
+
 struct BlockEllipsisRaw {
     uint8_t type;
     const void* string;
@@ -580,6 +586,7 @@ uint8_t RenderStyle_contentVisibility(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
 void* RenderStyle_shapeOutside(const void*);
+struct PathOperationRaw RenderStyle_clipPath(const void*);
 struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 bool RenderStyle_autoWrap(const void*);
 int32_t RenderStyle_textShadowExtent_top(const void*);

@@ -565,6 +565,24 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();
 }
 
+struct PathOperationRaw {
+    uint8_t type;
+    uint8_t referenceBox;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT PathOperationRaw RenderStyle_clipPath(const void* p) {
+    const auto clipPath = static_cast<const WebCore::RenderStyle*>(p)->clipPath();
+    if (!clipPath) {
+        return { 0, 0, false };
+    }
+    return {
+        static_cast<uint8_t>(clipPath->type()),
+        static_cast<uint8_t>(clipPath->referenceBox()),
+        true
+    };
+}
+
 struct BlockEllipsisRaw {
     uint8_t type;
     const void* string;

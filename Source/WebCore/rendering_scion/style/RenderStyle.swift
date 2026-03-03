@@ -2558,8 +2558,13 @@ class RenderStyleWrapper: Equatable {
   }
 
   func clipPath() -> PathOperation? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let clipPathRaw = wk_interop.RenderStyle_clipPath(p!)
+    if !clipPathRaw.is_valid {
+      return nil
+    }
+    let type = PathOperation.Type_(rawValue: clipPathRaw.type)!
+    let referenceBox = CSSBoxType(rawValue: clipPathRaw.referenceBox)!
+    return PathOperation(type, referenceBox)
   }
 
   func contentData() -> ContentData? {
