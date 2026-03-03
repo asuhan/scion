@@ -40,6 +40,11 @@
 #include "WindowProxy.h"
 #include <wtf/NeverDestroyed.h>
 
+extern "C" WEBCORE_EXPORT void* Frame_page(const void* raw)
+{
+    return static_cast<const WebCore::Frame*>(raw)->page();
+}
+
 namespace WebCore {
 
 #if ASSERT_ENABLED

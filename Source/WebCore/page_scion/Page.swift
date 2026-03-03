@@ -24,6 +24,8 @@ enum CompositingPolicy {
 }
 
 class PageWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   func mainFrame() -> FrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -113,4 +115,6 @@ class PageWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }

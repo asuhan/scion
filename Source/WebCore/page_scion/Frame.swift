@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class FrameWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
@@ -36,10 +38,7 @@ class FrameWrapper {
     fatalError("Not implemented")
   }
 
-  func page() -> PageWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func page() -> PageWrapper? { return PageWrapper(wk_interop.Frame_page(p)) }
 
   func settings() -> SettingsWrapper {
     // TODO(asuhan): implement this
