@@ -110,6 +110,13 @@ private func makeMatrixRenderable(matrix: TransformationMatrix, has3DRendering: 
   }
 }
 
+private var currentScope: ScrollingScope = 0
+
+private func nextScrollingScope() -> ScrollingScope {
+  currentScope += 1
+  return currentScope
+}
+
 private func canCreateStackingContext(layer: RenderLayerWrapper) -> Bool {
   let renderer = layer.renderer()
   return renderer.hasTransformRelatedProperty()
@@ -320,12 +327,88 @@ typealias ScrollingScope = UInt64
 
 class RenderLayerWrapper {
   init(_ renderer: RenderLayerModelObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    isRenderViewLayer = renderer.isRenderView()
+    forcedStackingContext = renderer.isRenderMedia()
+    isNormalFlowOnly = false
+    m_isCSSStackingContext = false
+    canBeBackdropRoot = false
+    hasBackdropFilterDescendantsWithoutRoot = false
+    isOpportunisticStackingContext = false
+    zOrderListsDirty = false
+    normalFlowListDirty = true
+    hadNegativeZOrderList = false
+    m_inResizeMode = false
+    hasSelfPaintingLayerDescendant = false
+    hasSelfPaintingLayerDescendantDirty = false
+    usedTransparency = false
+    paintingInsideReflection = false
+    visibleContentStatusDirty = true
+    hasVisibleContent = false
+    visibleDescendantStatusDirty = false
+    hasVisibleDescendant = false
+    m_isFixedIntersectingViewport = false
+    behavesAsFixed = false
+    m_3DTransformedDescendantStatusDirty = true
+    m_has3DTransformedDescendant = false
+    hasCompositingDescendant = false
+    hasCompositedNonContainedDescendants = false
+    hasCompositedScrollingAncestor = false
+    m_hasFixedContainingBlockAncestor = false
+    m_hasTransformedAncestor = false
+    has3DTransformedAncestor = false
+    m_insideSVGForeignObject = false
+    indirectCompositingReason = .None
+    viewportConstrainedNotCompositedReason = .NoNotCompositedReason
+    blendMode = .Normal
+    hasNotIsolatedCompositedBlendingDescendants = false
+    hasNotIsolatedBlendingDescendants = false
+    hasNotIsolatedBlendingDescendantsStatusDirty = false
+    repaintRectsValid = false
+    m_renderer = renderer
+    p = UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
+    isNative = true
+
+    setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
+    setIsCSSStackingContext(isCSSStackingContext: shouldBeCSSStackingContext())
+    setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
+
+    isSelfPaintingLayer = shouldBeSelfPaintingLayer()
+
+    if isRenderViewLayer {
+      contentsScrollingScope = nextScrollingScope()
+      boxScrollingScope = contentsScrollingScope
+    }
+
+    let needsVisibleContentStatusUpdate = { () in
+      if renderer.firstChild() != nil {
+        return false
+      }
+
+      // Leave m_visibleContentStatusDirty = true in any case. The associated renderer needs to be inserted into the
+      // render tree, before we can determine the visible content status. The visible content status of a SVG renderer
+      // depends on its ancestors (all children of RenderSVGHiddenContainer are recursively invisible, no matter what).
+      if renderer.isSVGLayerAwareRenderer()
+        && renderer.document().settings().layerBasedSVGEngineEnabled()
+      {
+        return false
+      }
+
+      //  We need the parent to know if we have skipped content or content-visibility root.
+      if renderer.style().hasSkippedContent() && renderer.parent() == nil {
+        return false
+      }
+      return true
+    }()
+
+    if needsVisibleContentStatusUpdate {
+      visibleContentStatusDirty = false
+      hasVisibleContent = renderer.style().usedVisibility() == .Visible
+    }
   }
 
   init(p: UnsafeMutableRawPointer) {
     self.p = p
+    m_renderer = nil
   }
 
   func scrollableArea() -> RenderLayerScrollableArea? {
@@ -2656,18 +2739,22 @@ class RenderLayerWrapper {
   func setIsSimplifiedLayoutRoot() { isSimplifiedLayoutRoot = true }
 
   func staticInlinePosition() -> LayoutUnit {
+    assert(!isNative)
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
   }
 
   func staticBlockPosition() -> LayoutUnit {
+    assert(!isNative)
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticBlockPosition(p))
   }
 
   func setStaticInlinePosition(position: LayoutUnit) {
+    assert(!isNative)
     wk_interop.RenderLayer_setStaticInlinePosition(p, position.rawValue())
   }
 
   func setStaticBlockPosition(position: LayoutUnit) {
+    assert(!isNative)
     wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
   }
 
@@ -3229,6 +3316,7 @@ class RenderLayerWrapper {
     return true
   }
 
+  @discardableResult
   private func setIsCSSStackingContext(isCSSStackingContext: Bool) -> Bool {
     let wasStacking = isStackingContext()
     m_isCSSStackingContext = isCSSStackingContext
@@ -5960,7 +6048,8 @@ class RenderLayerWrapper {
     }
   }
 
-  let p: UnsafeMutableRawPointer
+  var p = UnsafeMutableRawPointer(bitPattern: 0)
+  private var isNative = false
   // Native fields below.
 
   private var compositingDirtyBits = Compositing()
@@ -5980,6 +6069,9 @@ class RenderLayerWrapper {
   var normalFlowListDirty = false
   private var hadNegativeZOrderList = false
 
+  // Keeps track of whether the layer is currently resizing, so events can cause resizing to start and stop.
+  private var m_inResizeMode = false
+
   var isSelfPaintingLayer = false
 
   // If have no self-painting descendants, we don't have to walk our children during painting. This can lead to
@@ -5998,21 +6090,28 @@ class RenderLayerWrapper {
   var hasVisibleContent = false
   private var visibleDescendantStatusDirty = false
   var hasVisibleDescendant = false
-  let behavesAsFixed = false
+  private var m_isFixedIntersectingViewport = false
+  var behavesAsFixed = false
 
   private var m_3DTransformedDescendantStatusDirty = false
+  // Set on a stacking context layer that has 3D descendants anywhere
+  // in a preserves3D hierarchy. Hint to do 3D-aware hit testing.
+  private var m_has3DTransformedDescendant = false
   var hasCompositingDescendant = false  // In the z-order tree.
-  let hasCompositedNonContainedDescendants = false  // Set when a layer has a composited descendant in z-order which is not a descendant in containing block order (e.g. opacity layer with an abspos descendant).
+  var hasCompositedNonContainedDescendants = false  // Set when a layer has a composited descendant in z-order which is not a descendant in containing block order (e.g. opacity layer with an abspos descendant).
 
-  let hasCompositedScrollingAncestor = false
+  var hasCompositedScrollingAncestor = false
 
-  private let m_hasTransformedAncestor = false
-  let has3DTransformedAncestor = false
+  private var m_hasFixedContainingBlockAncestor = false
 
+  private var m_hasTransformedAncestor = false
+  var has3DTransformedAncestor = false
+
+  private var m_insideSVGForeignObject = false
   private let isHiddenByOverflowTruncation = false
   private let isPaintingSVGResourceLayer = false
 
-  private let indirectCompositingReason: IndirectCompositingReason = .None
+  private var indirectCompositingReason: IndirectCompositingReason = .None
   var viewportConstrainedNotCompositedReason: ViewportConstrainedNotCompositedReason =
     .NoNotCompositedReason
 
@@ -6029,6 +6128,8 @@ class RenderLayerWrapper {
   private var wasOmittedFromZOrderTree = false
 
   private var isSimplifiedLayoutRoot = false
+
+  private let m_renderer: RenderLayerModelObjectWrapper?  // TODO(asuhan): make it non-optional.
 
   private var m_parent: RenderLayerWrapper? = nil
   private var m_previous: RenderLayerWrapper? = nil
@@ -6060,8 +6161,8 @@ class RenderLayerWrapper {
   private var clipRectsCache: ClipRectsCache? = nil
 
   // Layers with the same ScrollingScope are scrolled by some common ancestor scroller. Used for async scrolling.
-  let boxScrollingScope: ScrollingScope? = nil
-  let contentsScrollingScope: ScrollingScope? = nil
+  var boxScrollingScope: ScrollingScope? = nil
+  var contentsScrollingScope: ScrollingScope? = nil
 
   // Note that this transform has the transform-origin baked in.
   var transform: TransformationMatrix? = nil

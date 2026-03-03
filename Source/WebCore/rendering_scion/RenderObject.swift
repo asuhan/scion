@@ -617,6 +617,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .ListMarker
   }
 
+  func isRenderMedia() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isRenderMenuList() -> Bool {
     assert(isNativeImpl())
     return type() == .MenuList
