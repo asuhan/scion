@@ -1069,8 +1069,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().hasFilter()
   }
 
   func hasBackdropFilter() -> Bool {
