@@ -319,6 +319,11 @@ private func backgroundClipRectForPosition(parentRects: ClipRects, position: Pos
 typealias ScrollingScope = UInt64
 
 class RenderLayerWrapper {
+  init(_ renderer: RenderLayerModelObjectWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
@@ -452,6 +457,11 @@ class RenderLayerWrapper {
   enum LayerChangeTiming {
     case StyleChange
     case RenderTreeConstruction
+  }
+
+  func insertOnlyThisLayer(_ timing: LayerChangeTiming) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func removeOnlyThisLayer(timing: LayerChangeTiming) {

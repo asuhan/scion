@@ -1696,6 +1696,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFlag(.HasNonVisibleOverflow, b)
   }
 
+  func setHasLayer(_ b: Bool = true) {
+    assert(isNativeImpl())
+    m_stateBitfields.setFlag(.HasLayer, b)
+  }
+
   func setHasTransformRelatedProperty(_ b: Bool = true) {
     assert(isNativeImpl())
     m_stateBitfields.setFlag(.HasTransformRelatedProperty, b)

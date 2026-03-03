@@ -466,13 +466,15 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func createLayer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(m_layer == nil)
+    m_layer = RenderLayerWrapper(self)
+    setHasLayer(true)
+    m_layer!.insertOnlyThisLayer(.StyleChange)
   }
 
   func updateFromStyle() {}
 
-  private let m_layer: RenderLayerWrapper? = nil
+  private var m_layer: RenderLayerWrapper? = nil
 
   // Used to store state between styleWillChange and styleDidChange
   private static var s_wasFloating = false
