@@ -696,8 +696,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderHTMLCanvas() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .HTMLCanvas
   }
 
   func isRenderGrid() -> Bool {
