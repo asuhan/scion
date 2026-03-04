@@ -45,6 +45,11 @@ extern "C" WEBCORE_EXPORT void FilterOperations_destroy(const void* p)
     delete static_cast<const WebCore::FilterOperations*>(p);
 }
 
+extern "C" WEBCORE_EXPORT bool FilterOperations_eq(const void* lhs, const void* rhs)
+{
+    return *static_cast<const WebCore::FilterOperations*>(lhs) == *static_cast<const WebCore::FilterOperations*>(rhs);
+}
+
 extern "C" WEBCORE_EXPORT bool FilterOperations_isEmpty(const void* p)
 {
     return static_cast<const WebCore::FilterOperations*>(p)->isEmpty();

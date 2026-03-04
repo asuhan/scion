@@ -43,8 +43,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
   }
 
   static func == (lhs: FilterOperations, rhs: FilterOperations) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.FilterOperations_eq(lhs.p, rhs.p)
   }
 
   func next() -> FilterOperationWrapper? {
