@@ -24,6 +24,13 @@
  */
 
 class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConvertible {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
+  init() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func == (lhs: FilterOperations, rhs: FilterOperations) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -83,4 +90,6 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }
