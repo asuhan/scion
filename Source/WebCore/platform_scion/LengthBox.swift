@@ -25,6 +25,10 @@ class LengthBox: Equatable {
     fatalError("Not implemented")
   }
 
+  init(top: LengthWrapper, right: LengthWrapper, bottom: LengthWrapper, left: LengthWrapper) {
+    base = RectEdges(top: top, right: right, bottom: bottom, left: left)
+  }
+
   func top() -> LengthWrapper { return base.top }
   func right() -> LengthWrapper { return base.right }
   func bottom() -> LengthWrapper { return base.bottom }
@@ -35,7 +39,7 @@ class LengthBox: Equatable {
     fatalError("Not implemented")
   }
 
-  private let base = RectEdges<LengthWrapper>()
+  private let base: RectEdges<LengthWrapper>
 }
 
 typealias IntBoxExtent = RectEdges<Int32>

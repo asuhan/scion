@@ -2076,8 +2076,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollPadding() -> LengthBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_scrollPadding(p!)
+    return LengthBox(
+      top: LengthWrapper(p: raw.top), right: LengthWrapper(p: raw.right),
+      bottom: LengthWrapper(p: raw.bottom), left: LengthWrapper(p: raw.left))
   }
 
   func hasSnapPosition() -> Bool {

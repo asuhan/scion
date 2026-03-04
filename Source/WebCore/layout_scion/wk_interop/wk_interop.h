@@ -191,6 +191,13 @@ struct PaintInfoRaw {
     void* region_context;
 };
 
+struct LengthBoxRaw {
+    const void* top;
+    const void* right;
+    const void* bottom;
+    const void* left;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -525,6 +532,7 @@ uint8_t RenderStyle_rubyAlign(const void*);
 uint8_t RenderStyle_rubyOverhang(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 int32_t RenderStyle_initialLetterHeight(const void*);
+struct LengthBoxRaw RenderStyle_scrollPadding(const void*);
 uint8_t RenderStyle_writingMode(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
 bool RenderStyle_isVerticalWritingMode(const void*);

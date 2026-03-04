@@ -184,6 +184,19 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterHeight(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterHeight();
 }
 
+struct LengthBoxRaw {
+    const void* top;
+    const void* right;
+    const void* bottom;
+    const void* left;
+};
+
+extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollPadding(const void* p)
+{
+    auto scrollPadding = static_cast<const WebCore::RenderStyle*>(p)->scrollPadding();
+    return { &scrollPadding.top(), &scrollPadding.right(), &scrollPadding.bottom(), &scrollPadding.left() };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_writingMode(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->writingMode());
