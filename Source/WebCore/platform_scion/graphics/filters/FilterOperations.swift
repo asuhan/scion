@@ -52,10 +52,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
     fatalError("Not implemented")
   }
 
-  func isEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isEmpty() -> Bool { return wk_interop.FilterOperations_isEmpty(p) }
 
   func size() -> UInt64 {
     // TODO(asuhan): implement this

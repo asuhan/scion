@@ -751,4 +751,5 @@ void* Frame_page(const void*);
 void* Page_settings(const void*);
 const void* FilterOperations_create();
 void FilterOperations_destroy(const void*);
+bool FilterOperations_isEmpty(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
