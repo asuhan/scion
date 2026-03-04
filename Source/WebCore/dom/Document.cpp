@@ -448,6 +448,11 @@ extern "C" WEBCORE_EXPORT bool Settings_css3DTransformBackfaceVisibilityInterope
     return static_cast<const WebCore::Settings*>(raw)->css3DTransformBackfaceVisibilityInteroperabilityEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_cssScrollAnchoringEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->cssScrollAnchoringEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_cssUnprefixedBackdropFilterEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->cssUnprefixedBackdropFilterEnabled();

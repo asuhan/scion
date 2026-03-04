@@ -46,8 +46,16 @@
 
 final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   init(layer: RenderLayerWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.m_layer = layer
+
+    let renderer = m_layer.renderer()
+    if renderer.document().settings().cssScrollAnchoringEnabled()
+      && !(renderer.element() is HTMLHtmlElement)
+      && !(renderer.element() is HTMLBodyElement)
+    {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
   }
 
   func clear() {
