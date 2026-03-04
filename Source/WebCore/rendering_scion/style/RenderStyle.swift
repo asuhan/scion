@@ -2369,10 +2369,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func usedZIndex() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func usedZIndex() -> Int32 { return wk_interop.RenderStyle_usedZIndex(p!) }
 
   func hasAutoUsedZIndex() -> Bool { return wk_interop.RenderStyle_hasAutoUsedZIndex(p!) }
 
