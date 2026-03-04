@@ -54,8 +54,7 @@ class SettingsWrapper {
   }
 
   func asyncOverflowScrollingEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_asyncOverflowScrollingEnabled(p)
   }
 
   func backgroundShouldExtendBeyondPage() -> Bool {

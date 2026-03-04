@@ -723,6 +723,7 @@ void* Document_renderView(const void* raw);
 bool Document_inQuirksMode(const void* raw);
 bool Document_inLimitedQuirksMode(const void* raw);
 void* Document_securityOrigin(const void* raw);
+bool Settings_asyncOverflowScrollingEnabled(const void*);
 bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void*);
 bool Settings_cssScrollAnchoringEnabled(const void*);
 bool Settings_cssUnprefixedBackdropFilterEnabled(const void*);
