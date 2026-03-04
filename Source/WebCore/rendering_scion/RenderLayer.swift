@@ -412,8 +412,8 @@ class RenderLayerWrapper {
   }
 
   func scrollableArea() -> RenderLayerScrollableArea? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return m_scrollableArea
   }
 
   @discardableResult
