@@ -677,8 +677,7 @@ class RenderLayerWrapper {
   }
 
   func setNeedsCompositingConfigurationUpdate() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setBackingAndHierarchyTraversalDirtyBit(v: .NeedsConfigurationUpdate)
   }
 
   func setNeedsScrollingTreeUpdate() {
