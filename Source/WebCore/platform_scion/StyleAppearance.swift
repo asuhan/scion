@@ -24,7 +24,7 @@
  */
 
 // Must follow CSSValueKeywords.in order
-enum StyleAppearance {
+enum StyleAppearance: UInt8 {
   case None
   case Auto
   case Base

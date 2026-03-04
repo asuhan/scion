@@ -758,8 +758,7 @@ class RenderStyleWrapper: Equatable {
   func hasOpacity() -> Bool { return wk_interop.RenderStyle_hasOpacity(p!) }
 
   func usedAppearance() -> StyleAppearance {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return StyleAppearance(rawValue: wk_interop.RenderStyle_usedAppearance(p!))!
   }
 
   func collapseWhiteSpace(mode: WhiteSpace) -> Bool {

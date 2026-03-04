@@ -406,6 +406,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasOpacity(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasOpacity();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_usedAppearance(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->usedAppearance());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_nbspMode(const void* p)
 {
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->nbspMode());
