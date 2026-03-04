@@ -884,7 +884,7 @@ enum ScrollSnapAxisAlignType: UInt8 {
   case End
 }
 
-enum ScrollSnapStop {
+enum ScrollSnapStop: UInt8 {
   case Normal
   case Always
 }

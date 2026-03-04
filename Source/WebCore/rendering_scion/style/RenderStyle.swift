@@ -2097,8 +2097,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollSnapStop() -> ScrollSnapStop {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ScrollSnapStop(rawValue: wk_interop.RenderStyle_scrollSnapStop(p!))!
   }
 
   func scrollbarGutter() -> ScrollbarGutter {

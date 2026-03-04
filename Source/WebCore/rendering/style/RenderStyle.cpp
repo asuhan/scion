@@ -214,6 +214,11 @@ extern "C" WEBCORE_EXPORT ScrollSnapAlignRaw RenderStyle_scrollSnapAlign(const v
     return { static_cast<uint8_t>(scrollSnapAlign.blockAlign), static_cast<uint8_t>(scrollSnapAlign.inlineAlign) };
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_scrollSnapStop(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->scrollSnapStop());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_writingMode(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->writingMode());

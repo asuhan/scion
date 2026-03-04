@@ -540,6 +540,7 @@ int32_t RenderStyle_initialLetterHeight(const void*);
 struct LengthBoxRaw RenderStyle_scrollMargin(const void*);
 struct LengthBoxRaw RenderStyle_scrollPadding(const void*);
 struct ScrollSnapAlignRaw RenderStyle_scrollSnapAlign(const void*);
+uint8_t RenderStyle_scrollSnapStop(const void*);
 uint8_t RenderStyle_writingMode(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
 bool RenderStyle_isVerticalWritingMode(const void*);
