@@ -2090,8 +2090,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollSnapAlign() -> ScrollSnapAlign {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_scrollSnapAlign(p!)
+    return ScrollSnapAlign(
+      blockAlign: ScrollSnapAxisAlignType(rawValue: raw.blockAlign)!,
+      inlineAlign: ScrollSnapAxisAlignType(rawValue: raw.inlineAlign)!)
   }
 
   func scrollSnapStop() -> ScrollSnapStop {

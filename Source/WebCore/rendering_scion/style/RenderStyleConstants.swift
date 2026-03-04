@@ -877,7 +877,7 @@ enum CSSBoxType: UInt8 {
   case ViewBox
 }
 
-enum ScrollSnapAxisAlignType {
+enum ScrollSnapAxisAlignType: UInt8 {
   case None
   case Start
   case Center

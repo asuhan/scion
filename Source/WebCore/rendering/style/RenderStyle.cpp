@@ -203,6 +203,17 @@ extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollPadding(const void* p)
     return { &scrollPadding.top(), &scrollPadding.right(), &scrollPadding.bottom(), &scrollPadding.left() };
 }
 
+struct ScrollSnapAlignRaw {
+    uint8_t blockAlign;
+    uint8_t inlineAlign;
+};
+
+extern "C" WEBCORE_EXPORT ScrollSnapAlignRaw RenderStyle_scrollSnapAlign(const void* p)
+{
+    auto& scrollSnapAlign = static_cast<const WebCore::RenderStyle*>(p)->scrollSnapAlign();
+    return { static_cast<uint8_t>(scrollSnapAlign.blockAlign), static_cast<uint8_t>(scrollSnapAlign.inlineAlign) };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_writingMode(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->writingMode());
