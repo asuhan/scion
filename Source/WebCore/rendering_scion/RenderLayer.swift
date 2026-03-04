@@ -4173,8 +4173,7 @@ class RenderLayerWrapper {
   }
 
   private func clearLayerFilters() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    filters = nil
   }
 
   private func updateLayerScrollableArea() {
