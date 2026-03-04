@@ -23,12 +23,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConvertible {
-  init(_ p: UnsafeRawPointer) { self.p = p }
+  init(_ p: UnsafeRawPointer) {
+    self.p = p
+    self.owner = false
+  }
 
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.p = wk_interop.FilterOperations_create()
+    self.owner = true
+  }
+
+  deinit {
+    if owner {
+      wk_interop.FilterOperations_destroy(p)
+    }
   }
 
   static func == (lhs: FilterOperations, rhs: FilterOperations) -> Bool {
@@ -71,10 +82,7 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
     fatalError("Not implemented")
   }
 
-  func hasReferenceFilter() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasReferenceFilter() -> Bool { return wk_interop.FilterOperations_hasReferenceFilter(p) }
 
   func isReferenceFilter() -> Bool {
     // TODO(asuhan): implement this
@@ -92,4 +100,5 @@ class FilterOperations: Sequence, IteratorProtocol, Equatable, CustomStringConve
   }
 
   private let p: UnsafeRawPointer
+  private let owner: Bool
 }
