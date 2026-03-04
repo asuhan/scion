@@ -2179,8 +2179,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func blendMode() -> BlendMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BlendMode(rawValue: wk_interop.RenderStyle_blendMode(p!))!
   }
 
   func hasBlendMode() -> Bool { return wk_interop.RenderStyle_hasBlendMode(p!) }

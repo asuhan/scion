@@ -533,6 +533,7 @@ bool RenderStyle_isFlippedBlocksWritingMode(const void*);
 uint8_t RenderStyle_blockFlowDirection(const void*);
 bool RenderStyle_hasFilter(const void*);
 bool RenderStyle_hasBackdropFilter(const void*);
+uint8_t RenderStyle_blendMode(const void*);
 bool RenderStyle_hasBlendMode(const void*);
 int32_t RenderStyle_usedZIndex(const void*);
 bool RenderStyle_hasAutoUsedZIndex(const void*);

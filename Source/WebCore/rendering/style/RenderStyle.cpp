@@ -224,6 +224,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBackdropFilter(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBackdropFilter();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_blendMode(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->blendMode());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasBlendMode(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasBlendMode();
