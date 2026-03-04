@@ -108,14 +108,24 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func hasHorizontalScrollbar() -> Bool { return horizontalScrollbar() != nil }
+
   func hasVerticalScrollbar() -> Bool { return verticalScrollbar() != nil }
 
   private func setHasHorizontalScrollbar(_ hasScrollbar: Bool) {
+    if hasScrollbar == hasHorizontalScrollbar() {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   private func setHasVerticalScrollbar(_ hasScrollbar: Bool) {
+    if hasScrollbar == hasVerticalScrollbar() {
+      return
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -351,6 +361,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
       context.drawRect(rect: FloatRectWrapper(r: snappedIntRect(rect: largerCorner)))
     }
   }
+
+  override final func horizontalScrollbar() -> Scrollbar? { return hBar }
 
   override final func verticalScrollbar() -> Scrollbar? { return vBar }
 
