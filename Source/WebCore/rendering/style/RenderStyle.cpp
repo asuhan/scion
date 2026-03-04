@@ -191,6 +191,12 @@ struct LengthBoxRaw {
     const void* left;
 };
 
+extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollMargin(const void* p)
+{
+    auto scrollMargin = static_cast<const WebCore::RenderStyle*>(p)->scrollMargin();
+    return { &scrollMargin.top(), &scrollMargin.right(), &scrollMargin.bottom(), &scrollMargin.left() };
+}
+
 extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollPadding(const void* p)
 {
     auto scrollPadding = static_cast<const WebCore::RenderStyle*>(p)->scrollPadding();
