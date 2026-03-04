@@ -1195,10 +1195,7 @@ class RenderLayerWrapper {
       && renderer().style().resize() != .None
   }
 
-  func compositor() -> RenderLayerCompositorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func compositor() -> RenderLayerCompositorWrapper { return renderer().view().compositor() }
 
   // Notification from the renderer that its content changed (e.g. current frame of image changed).
   // Allows updates of layer content without repainting.
