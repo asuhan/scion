@@ -450,10 +450,7 @@ class RenderLayerWrapper {
     return m_renderer!
   }
 
-  func renderBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func renderBox() -> RenderBoxWrapper? { return renderer() as? RenderBoxWrapper }
 
   func parent() -> RenderLayerWrapper? {
     return m_parent
