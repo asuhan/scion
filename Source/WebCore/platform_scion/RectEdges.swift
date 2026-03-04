@@ -34,7 +34,7 @@ struct BoxSideFlag: OptionSet {
 
 typealias BoxSideSet = BoxSideFlag
 
-struct RectEdges<T> {
+struct RectEdges<T: Equatable>: Equatable {
   init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

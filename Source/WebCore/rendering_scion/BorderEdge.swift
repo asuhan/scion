@@ -25,7 +25,7 @@
 
 import Foundation
 
-struct BorderEdge {
+struct BorderEdge: Equatable {
   init(
     edgeWidth: Float32, edgeColor: ColorWrapper, edgeStyle: BorderStyle, edgeIsTransparent: Bool,
     edgeIsPresent: Bool, devicePixelRatio: Float32
