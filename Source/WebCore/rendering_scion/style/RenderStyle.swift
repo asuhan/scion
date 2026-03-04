@@ -1489,8 +1489,7 @@ class RenderStyleWrapper: Equatable {
   // content-visibility: auto at all times), ContentVisibility::Auto in a content-visibility: auto subtree (when the
   // content is not user relevant and thus skipped), and ContentVisibility::Visible otherwise.
   func usedContentVisibility() -> ContentVisibility {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ContentVisibility(rawValue: wk_interop.RenderStyle_usedContentVisibility(p!))!
   }
 
   // Returns true for skipped content roots and skipped content itself.

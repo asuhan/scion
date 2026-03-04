@@ -591,6 +591,7 @@ uint8_t RenderStyle_hangingPunctuation(const void*);
 bool RenderStyle_containsPaint(const void*);
 bool RenderStyle_containsLayoutOrPaint(const void*);
 uint8_t RenderStyle_contentVisibility(const void*);
+uint8_t RenderStyle_usedContentVisibility(const void*);
 bool RenderStyle_hasSkippedContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
