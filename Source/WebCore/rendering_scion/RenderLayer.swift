@@ -460,10 +460,7 @@ class RenderLayerWrapper {
 
   func nextSibling() -> RenderLayerWrapper? { return m_next }
 
-  func firstChild() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func firstChild() -> RenderLayerWrapper? { return m_first }
 
   func lastChild() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
