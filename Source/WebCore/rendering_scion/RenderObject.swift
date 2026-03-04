@@ -1317,8 +1317,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func view() -> RenderViewWrapper {
-    assert(!isNativeImpl())
-    return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
+    if !isNativeImpl() {
+      return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
+    }
+    return document().renderView()!
   }
 
   func checkedView() -> RenderViewWrapper {
