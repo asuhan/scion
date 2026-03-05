@@ -1807,6 +1807,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func multiColumnFlowForBlockFlow() -> RenderMultiColumnFlowWrapper? {
+    return hasRareBlockFlowData() ? multiColumnFlowSlowCase() : nil
+  }
+
+  private func multiColumnFlowSlowCase() -> RenderMultiColumnFlowWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
