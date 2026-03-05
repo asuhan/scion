@@ -501,6 +501,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_columnSpan(const void* p)
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->columnSpan());
 }
 
+extern "C" WEBCORE_EXPORT uint16_t RenderStyle_columnCount(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->columnCount();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textEmphasisMark(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textEmphasisMark());

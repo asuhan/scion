@@ -531,6 +531,7 @@ uint8_t RenderStyle_overflowWrap(const void*);
 const void* RenderStyle_computedLocale(const void*);
 bool RenderStyle_specifiesColumns(const void*);
 bool RenderStyle_columnSpan(const void*);
+uint16_t RenderStyle_columnCount(const void*);
 const void* RenderStyle_textEmphasisMarkString(const void*);
 uint8_t RenderStyle_rubyPosition(const void*);
 bool RenderStyle_isInterCharacterRubyPosition(const void*);
