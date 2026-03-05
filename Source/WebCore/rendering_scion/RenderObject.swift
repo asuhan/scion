@@ -998,8 +998,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymous() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_typeFlags.contains(.IsAnonymous)
   }
 
   func isAnonymousBlock() -> Bool {
