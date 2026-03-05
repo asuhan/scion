@@ -1310,8 +1310,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isFlexItemIncludingDeprecated() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !isInline() && !isFloatingOrOutOfFlowPositioned()
+      && (parent()?.isFlexibleBoxIncludingDeprecated() ?? false)
   }
 
   func paintRectToClipOutFromBorder(paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
