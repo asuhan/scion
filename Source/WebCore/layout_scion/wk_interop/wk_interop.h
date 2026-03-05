@@ -560,6 +560,7 @@ float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
 const void* RenderStyle_hyphenString(const void*);
 bool RenderStyle_isDisplayInlineType(const void*);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);
+bool RenderStyle_isDisplayBlockLevel(const void*);
 bool RenderStyle_isOriginalDisplayListItemType(const void*);
 float RenderStyle_letterSpacing(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void*);

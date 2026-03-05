@@ -2558,8 +2558,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isDisplayBlockLevel() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_isDisplayBlockLevel(p!)
   }
 
   func isOriginalDisplayBlockType() -> Bool {

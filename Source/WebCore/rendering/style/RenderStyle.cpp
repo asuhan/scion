@@ -309,6 +309,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayInlineType(const voi
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayInlineType();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_isDisplayBlockLevel(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isDisplayBlockLevel();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayListItemType(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayListItemType();
