@@ -1334,8 +1334,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func node() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if isAnonymous() {
+      return nil
+    }
+    return m_node
   }
 
   func protectedNode() -> NodeWrapper? { return node() }
