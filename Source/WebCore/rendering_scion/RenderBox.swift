@@ -4694,8 +4694,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isGridItem() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return (parent()?.isRenderGrid() ?? false) && !isExcludedFromNormalLayout()
   }
 
   func isFlexItem() -> Bool {
