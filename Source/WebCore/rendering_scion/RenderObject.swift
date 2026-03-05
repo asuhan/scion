@@ -615,8 +615,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFieldset() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderObject_isFieldset(p)
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isFieldset(p)
+    }
+    if node() == nil {
+      return false
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func isRenderFileUploadControl() -> Bool {
