@@ -4995,8 +4995,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func hasRareBlockFlowData() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_rareBlockFlowData != nil
   }
 
   func rareBlockFlowData() -> RenderBlockFlowRareData {
@@ -5013,6 +5013,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private var previousInlineLayoutContentBoxLogicalHeight: LayoutUnit?
 
   private let floatingObjects: FloatingObjects? = nil
+  private let m_rareBlockFlowData: RenderBlockFlowRareData? = nil
 
   enum LineLayout {
     case None
