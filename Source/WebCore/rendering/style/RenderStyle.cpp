@@ -386,6 +386,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasStaticInlinePosition(const void* p
     return static_cast<const WebCore::RenderStyle*>(p)->hasStaticInlinePosition(horizontal);
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasStaticBlockPosition(const void* p, bool horizontal)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasStaticBlockPosition(horizontal);
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasViewportConstrainedPosition(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasViewportConstrainedPosition();

@@ -570,8 +570,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasStaticBlockPosition(horizontal: Bool) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasStaticBlockPosition(p!, horizontal)
   }
 
   func hasViewportConstrainedPosition() -> Bool {
