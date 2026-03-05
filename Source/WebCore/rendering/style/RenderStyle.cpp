@@ -284,6 +284,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasBlendMode(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasBlendMode();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasIsolation(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasIsolation();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_usedZIndex(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->usedZIndex();

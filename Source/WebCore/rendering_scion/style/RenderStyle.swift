@@ -2176,10 +2176,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasIsolation() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasIsolation() -> Bool { return wk_interop.RenderStyle_hasIsolation(p!) }
 
   func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
     return (!isLeftToRightDirection() && isHorizontalWritingMode())
