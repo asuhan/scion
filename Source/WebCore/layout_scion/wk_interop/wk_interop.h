@@ -529,6 +529,7 @@ uint8_t RenderStyle_textOverflow(const void*);
 uint8_t RenderStyle_wordBreak(const void*);
 uint8_t RenderStyle_overflowWrap(const void*);
 const void* RenderStyle_computedLocale(const void*);
+float RenderStyle_columnWidth(const void*);
 bool RenderStyle_specifiesColumns(const void*);
 bool RenderStyle_columnSpan(const void*);
 uint16_t RenderStyle_columnCount(const void*);
