@@ -370,13 +370,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func parent() -> RenderElementWrapper? {
-    assert(!isNativeImpl())
-    let unwrapped = wk_interop.RenderObject_parent(p)
-    if unwrapped == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      let unwrapped = wk_interop.RenderObject_parent(p)
+      if unwrapped == nil {
+        // TODO(asuhan): implement this
+        fatalError("Not implemented")
+      }
+      return RenderElementWrapper(p: unwrapped!)
     }
-    return RenderElementWrapper(p: unwrapped!)
+    return m_parent
   }
 
   func checkedParent() -> RenderElementWrapper? {
