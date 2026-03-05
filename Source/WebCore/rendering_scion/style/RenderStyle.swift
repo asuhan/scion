@@ -284,10 +284,7 @@ class RenderStyleWrapper: Equatable {
 
   func hasOutOfFlowPosition() -> Bool { return position() == .Absolute || position() == .Fixed }
 
-  func hasInFlowPosition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasInFlowPosition() -> Bool { return position() == .Relative || position() == .Sticky }
 
   func width() -> LengthWrapper {
     // TODO(asuhan): implement this
