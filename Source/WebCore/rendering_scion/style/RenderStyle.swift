@@ -991,8 +991,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func columnSpan() -> ColumnSpan {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_columnSpan(p!) ? .All : .None
   }
 
   func textEmphasisMark() -> TextEmphasisMark {
