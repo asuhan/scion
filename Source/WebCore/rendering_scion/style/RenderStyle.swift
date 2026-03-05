@@ -2106,8 +2106,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollbarWidth() -> ScrollbarWidth {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ScrollbarWidth(rawValue: wk_interop.RenderStyle_scrollbarWidth(p!))!
   }
 
   func textSecurity() -> TextSecurity {
