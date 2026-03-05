@@ -650,6 +650,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_hangingPunctuation(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hangingPunctuation().toRaw();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_usedContain(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->usedContain().toRaw();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_containsPaint(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->containsPaint();
