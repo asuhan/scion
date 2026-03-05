@@ -1038,6 +1038,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isBlockLevelBox() -> Bool {
+    assert(isNativeImpl())
+    return style().isDisplayBlockLevel()
+  }
+
   func isBlockContainer() -> Bool {
     let display = style().display()
     return
