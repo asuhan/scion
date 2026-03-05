@@ -4805,8 +4805,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func establishesIndependentFormattingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isGridItem() || super.establishesIndependentFormattingContext()
   }
 
   func updateFloatPainterAfterSelfPaintingLayerChange() {
