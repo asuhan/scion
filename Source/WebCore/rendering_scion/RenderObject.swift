@@ -1769,8 +1769,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHasReflection(_ hasReflection: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if hasReflection || hasRareData() {
+      ensureRareData().hasReflection = hasReflection
+    }
   }
 
   func hitTest(
@@ -2996,7 +2997,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // FIXME: This should be RenderElementRareData.
   private class RenderObjectRareData {
-    let hasReflection = false
+    var hasReflection = false
     let hasOutlineAutoAncestor = false
     let trimmedMargins: MarginTrimType = []
 
@@ -3009,6 +3010,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   private func rareData() -> RenderObjectRareData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func ensureRareData() -> RenderObjectRareData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
