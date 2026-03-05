@@ -1298,8 +1298,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isWritingModeRoot() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderElement_isWritingModeRoot(p)
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_isWritingModeRoot(p)
+    }
+    return parent() == nil || parent()!.style().writingMode() != style().writingMode()
   }
 
   func isDeprecatedFlexItem() -> Bool {
