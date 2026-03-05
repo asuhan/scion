@@ -1138,10 +1138,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isHorizontalWritingMode(p)
   }
 
-  func hasReflection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasReflection() -> Bool { return hasRareData() && rareData().hasReflection }
 
   func isRenderFragmentedFlow() -> Bool {
     assert(isNativeImpl())
@@ -2864,6 +2861,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFlag(.WasSkippedDuringLastLayoutDueToContentVisibility, b)
   }
 
+  private func hasRareData() -> Bool {
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.HasRareData)
+  }
+
   #if ASSERT_ENABLED
     private func checkBlockPositionedObjectsNeedLayout() {
       assert(!needsLayout())
@@ -2989,4 +2991,23 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private let m_typeFlags: TypeFlag
   private let m_type: `Type`
   private let m_typeSpecificFlags: TypeSpecificFlags
+
+  // FIXME: This should be RenderElementRareData.
+  private class RenderObjectRareData {
+    let hasReflection = false
+    let hasOutlineAutoAncestor = false
+    let trimmedMargins: MarginTrimType = []
+
+    // From RenderElement
+    let referencedSVGResources: ReferencedSVGResources? = nil
+    let backdropRenderer = WeakNullableRef<RenderBlockFlowWrapper>(nil)
+
+    // From RenderBox
+    let controlPart: ControlPartWrapper? = nil
+  }
+
+  private func rareData() -> RenderObjectRareData {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
