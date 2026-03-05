@@ -735,6 +735,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBody() -> Bool {
+    if node() == nil {
+      return false
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
