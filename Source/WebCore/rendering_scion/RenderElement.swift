@@ -315,11 +315,13 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // This is null for anonymous renderers.
   func element() -> ElementWrapper? {
-    assert(!isNativeImpl())
-    if let elementRaw = wk_interop.RenderElement_element(p) {
-      return ElementWrapper(p: elementRaw)
+    if !isNativeImpl() {
+      if let elementRaw = wk_interop.RenderElement_element(p) {
+        return ElementWrapper(p: elementRaw)
+      }
+      return nil
     }
-    return nil
+    return super.node() != nil ? (super.node()! as! ElementWrapper) : nil
   }
 
   func protectedElement() -> ElementWrapper? {
