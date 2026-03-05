@@ -949,8 +949,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstChildBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if let box = firstChild() as? RenderBoxWrapper {
+      return box
+    }
+
+    assert(firstChild() == nil)
+    return nil
   }
 
   func firstInFlowChildBox() -> RenderBoxWrapper? {
