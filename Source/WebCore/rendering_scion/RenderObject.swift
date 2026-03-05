@@ -712,8 +712,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderViewTransitionCapture() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isRenderReplaced()
+      && m_typeSpecificFlags.replacedFlags().contains(.IsViewTransitionCapture)
   }
 
   func isRenderHTMLCanvas() -> Bool {
