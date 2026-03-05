@@ -2197,8 +2197,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return (!isLeftToRightDirection() && isHorizontalWritingMode())
+      || blockFlowDirection() == .RightToLeft
   }
 
   func setDisplay(value: DisplayType) {
