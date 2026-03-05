@@ -1034,8 +1034,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBlockBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // A block-level box that is also a block container.
+    return isBlockLevelBox() && isBlockContainer()
   }
 
   func isBlockLevelBox() -> Bool {
