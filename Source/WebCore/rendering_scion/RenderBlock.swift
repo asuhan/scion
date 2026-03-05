@@ -26,8 +26,10 @@ import wk_interop
 typealias TrackedRendererListHashSet = ListSet<RenderBoxWrapper, UInt>
 
 private typealias TrackedDescendantsMap = [UInt: TrackedRendererListHashSet]
+private typealias TrackedContainerMap = HashMap<RenderBoxWrapper, WeakHashSet<RenderBlockWrapper>>?
 
 private var percentHeightDescendantsMap: TrackedDescendantsMap? = nil
+private let percentHeightContainerMap: TrackedContainerMap? = nil
 
 enum CaretType {
   case CursorCaret
@@ -420,10 +422,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
-  static func hasPercentHeightContainerMap() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func hasPercentHeightContainerMap() -> Bool { return percentHeightContainerMap != nil }
 
   static func hasPercentHeightDescendant(descendant: RenderBoxWrapper) -> Bool {
     // TODO(asuhan): implement this
