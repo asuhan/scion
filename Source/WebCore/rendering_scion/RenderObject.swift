@@ -743,6 +743,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isLegend() -> Bool {
+    if node() == nil {
+      return false
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -1337,6 +1340,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func node() -> NodeWrapper? {
+    assert(isNativeImpl())
     if isAnonymous() {
       return nil
     }
