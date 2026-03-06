@@ -40,8 +40,8 @@ class RenderIterator<T: RenderObjectWrapper>: IteratorProtocol, Equatable {
   func bool() -> Bool { return m_current != nil }
 
   static func == (this: RenderIterator, other: RenderIterator) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(CPtrToInt(this.m_root?.p) == CPtrToInt(other.m_root?.p))
+    return CPtrToInt(this.m_current?.p) == CPtrToInt(other.m_current?.p)
   }
 
   func traverseNext() -> RenderIterator<T> {
