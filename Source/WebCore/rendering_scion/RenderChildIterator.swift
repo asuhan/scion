@@ -39,8 +39,8 @@ class RenderChildIteratorAdapter<T>: Sequence {
   }
 
   func first() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let firstChild: T? = RenderTraversal.firstChild(m_parent)
+    return firstChild
   }
 
   private let m_parent: RenderElementWrapper

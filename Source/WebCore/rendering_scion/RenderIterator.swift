@@ -56,9 +56,35 @@ class RenderIterator<T>: IteratorProtocol, Equatable {
   }
 }
 
+private class IsRendererOfType<T> {
+  static func f<U>(_ renderer: U) -> Bool { return renderer is T }
+}
+
 class RenderObjectTraversal {
   static func next<U>(_ current: U, _ stayWithin: RenderObjectWrapper) -> RenderObjectWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  static func firstChild(_ object: RenderElementWrapper) -> RenderObjectWrapper? {
+    return object.firstChild()
+  }
+
+  static func firstChild(_ object: RenderObjectWrapper) -> RenderObjectWrapper? {
+    return object.firstChildSlow()
+  }
+
+  static func firstChild(_ object: RenderTextWrapper) -> RenderObjectWrapper? {
+    return nil
+  }
+}
+
+class RenderTraversal {
+  static func firstChild<T>(_ current: RenderElementWrapper) -> T? {
+    var object: RenderObjectWrapper? = RenderObjectTraversal.firstChild(current)
+    while object != nil && !IsRendererOfType<T>.f(object!) {
+      object = object!.nextSibling()
+    }
+    return object as! T?
   }
 }
