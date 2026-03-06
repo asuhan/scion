@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderChildIterator<T>: RenderIterator<T> {
+class RenderChildIterator<T: RenderObjectWrapper>: RenderIterator<T> {
   init(_ parent: RenderElementWrapper, _ current: T?) { super.init(root: parent, current: current) }
 
   override func next() -> T? {
@@ -32,7 +32,7 @@ class RenderChildIterator<T>: RenderIterator<T> {
   }
 }
 
-class RenderChildIteratorAdapter<T>: Sequence {
+class RenderChildIteratorAdapter<T: RenderObjectWrapper>: Sequence {
   init(_ parent: RenderElementWrapper) { m_parent = parent }
 
   func makeIterator() -> RenderChildIterator<T> {
