@@ -56,12 +56,13 @@ class RenderIterator<T>: IteratorProtocol, Equatable {
   }
 
   func traverseNextSibling() -> RenderIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): fix this to work with generic type T instead of element.
+    m_current = RenderTraversal.nextSibling(m_current! as! RenderElementWrapper)
+    return self
   }
 
   private let m_root: RenderElementWrapper?
-  private let m_current: T?
+  private var m_current: T?
 }
 
 private class IsRendererOfType<T> {
@@ -90,6 +91,14 @@ class RenderObjectTraversal {
 class RenderTraversal {
   static func firstChild<T>(_ current: RenderElementWrapper) -> T? {
     var object: RenderObjectWrapper? = RenderObjectTraversal.firstChild(current)
+    while object != nil && !IsRendererOfType<T>.f(object!) {
+      object = object!.nextSibling()
+    }
+    return object as! T?
+  }
+
+  static func nextSibling<T>(_ current: RenderElementWrapper) -> T? {
+    var object: RenderObjectWrapper? = current.nextSibling()
     while object != nil && !IsRendererOfType<T>.f(object!) {
       object = object!.nextSibling()
     }
