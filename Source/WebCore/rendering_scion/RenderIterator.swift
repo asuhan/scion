@@ -35,15 +35,9 @@ class RenderIterator<T: RenderObjectWrapper>: IteratorProtocol, Equatable {
     fatalError("Not implemented")
   }
 
-  static prefix func * (this: RenderIterator<T>) -> T {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static prefix func * (this: RenderIterator<T>) -> T { return this.m_current! }
 
-  func bool() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func bool() -> Bool { return m_current != nil }
 
   static func == (this: RenderIterator, other: RenderIterator) -> Bool {
     // TODO(asuhan): implement this
