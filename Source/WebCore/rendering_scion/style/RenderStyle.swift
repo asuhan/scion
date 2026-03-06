@@ -1701,8 +1701,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxReflect() -> StyleReflection? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_boxReflect(p!)
+    return raw != nil ? StyleReflection(raw!) : nil
   }
 
   func boxSizing() -> BoxSizing {

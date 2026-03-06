@@ -23,6 +23,8 @@
  */
 
 class StyleReflection {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   func direction() -> ReflectionDirection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -37,4 +39,6 @@ class StyleReflection {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
