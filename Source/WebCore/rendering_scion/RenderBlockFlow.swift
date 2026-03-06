@@ -3857,8 +3857,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func hasOverhangingFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return parent() != nil && containsFloats() && lowestFloatLogicalBottom() > logicalHeight()
   }
 
   private func getClearDelta(child: RenderBoxWrapper, logicalTop: LayoutUnit) -> LayoutUnit {
