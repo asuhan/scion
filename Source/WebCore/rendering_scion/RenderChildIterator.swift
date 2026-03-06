@@ -27,8 +27,8 @@ class RenderChildIterator<T>: RenderIterator<T> {
   init(_ parent: RenderElementWrapper, _ current: T?) { super.init(root: parent, current: current) }
 
   override func next() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let it = super.traverseNextSibling()
+    return it.bool() ? *it : nil
   }
 }
 

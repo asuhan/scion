@@ -54,6 +54,11 @@ class RenderIterator<T>: IteratorProtocol, Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func traverseNextSibling() -> RenderIterator<T> {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 }
 
 private class IsRendererOfType<T> {
