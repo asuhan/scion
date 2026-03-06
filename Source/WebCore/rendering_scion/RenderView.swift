@@ -750,8 +750,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func requiresColumns(desiredColumnCount: Int32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return protectedFrameView().pagination().mode != .Unpaginated
   }
 
   override func computeColumnCountAndWidth() {
