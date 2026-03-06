@@ -730,6 +730,11 @@ extern "C" bool AtomString_isNull(const void* p)
     return static_cast<const AtomString*>(p)->isNull();
 }
 
+extern "C" void AtomString_destroy(const void* p)
+{
+    delete static_cast<const AtomString*>(p);
+}
+
 extern "C" float TextUtil_width_box(const void*, const void*, unsigned, unsigned, float, bool, const void*);
 
 extern "C" uint8_t ubidi_getBaseDirection_scion(const uint16_t* text, int32_t length)

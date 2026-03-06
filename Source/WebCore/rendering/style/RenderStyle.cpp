@@ -537,6 +537,27 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasTextCombine(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasTextCombine();
 }
 
+struct ScopedNameRaw {
+    const void* name;
+    int8_t scopeOrdinal;
+    bool isIdentifier;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT ScopedNameRaw RenderStyle_viewTransitionName(const void* p)
+{
+    auto transitionName = static_cast<const WebCore::RenderStyle*>(p)->viewTransitionName();
+    if (!transitionName) {
+        return { nullptr, 0, false, false };
+    }
+    return {
+        new AtomString(transitionName->name),
+        static_cast<int8_t>(transitionName->scopeOrdinal),
+        transitionName->isIdentifier,
+        true
+    };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textAlignLast(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textAlignLast());

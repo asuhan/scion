@@ -203,6 +203,13 @@ struct ScrollSnapAlignRaw {
     uint8_t inlineAlign;
 };
 
+struct ScopedNameRaw {
+    const void* name;
+    int8_t scopeOrdinal;
+    bool isIdentifier;
+    bool is_valid;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -374,6 +381,7 @@ struct EnclosingAscentDescentRaw TextUtil_enclosingGlyphBoundsForText(
     const void* text_content_raw, const void* style_raw);
 float TextUtil_hyphenWidth(const void*);
 bool AtomString_isNull(const void*);
+void AtomString_destroy(const void*);
 const void* AtomString_string(const void*);
 uint8_t Length_type(const void*);
 float Length_value(const void*);
@@ -642,6 +650,7 @@ const void* RenderStyle_marginStart(const void*);
 uint8_t RenderStyle_textEmphasisMark(const void*);
 uint8_t RenderStyle_textEmphasisPosition(const void*);
 bool RenderStyle_hasTextCombine(const void*);
+struct ScopedNameRaw RenderStyle_viewTransitionName(const void*);
 uint8_t RenderStyle_textAlignLast(const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
 uint16_t BreakLines_classify(uint16_t, uint8_t);

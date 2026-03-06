@@ -21,11 +21,18 @@
 import wk_interop
 
 class AtomStringWrapper: Hashable, CustomStringConvertible {
-  init(p: UnsafeRawPointer) {
+  init(p: UnsafeRawPointer, _ owner: Bool = false) {
     self.p = p
+    self.owner = owner
   }
 
-  init() {}
+  init() { self.owner = false }
+
+  deinit {
+    if self.owner {
+      wk_interop.AtomString_destroy(p)
+    }
+  }
 
   func string() -> StringWrapper {
     if p == nil {
@@ -64,6 +71,7 @@ class AtomStringWrapper: Hashable, CustomStringConvertible {
   }
 
   var p: UnsafeRawPointer? = nil
+  private let owner: Bool
 }
 
 func nullAtom() -> AtomStringWrapper {

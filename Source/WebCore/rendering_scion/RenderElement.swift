@@ -1039,8 +1039,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasViewTransitionName() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().viewTransitionName() != nil
   }
 
   func isViewTransitionRoot() -> Bool {

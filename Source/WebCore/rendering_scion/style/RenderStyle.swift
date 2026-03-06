@@ -2179,6 +2179,16 @@ class RenderStyleWrapper: Equatable {
       || blockFlowDirection() == .RightToLeft
   }
 
+  func viewTransitionName() -> Style.ScopedName? {
+    let raw = wk_interop.RenderStyle_viewTransitionName(p!)
+    if !raw.is_valid {
+      return nil
+    }
+    return Style.ScopedName(
+      name: AtomStringWrapper(p: raw.name, true),
+      scopeOrdinal: Style.ScopeOrdinal(rawValue: raw.scopeOrdinal)!, isIdentifier: raw.isIdentifier)
+  }
+
   func setDisplay(value: DisplayType) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
