@@ -577,6 +577,7 @@ bool RenderStyle_isDisplayInlineType(const void*);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);
 bool RenderStyle_isDisplayFlexibleBoxIncludingDeprecatedOrGridBox(const void*);
 bool RenderStyle_isDisplayBlockLevel(const void*);
+bool RenderStyle_isOriginalDisplayBlockType(const void*);
 bool RenderStyle_isOriginalDisplayListItemType(const void*);
 float RenderStyle_letterSpacing(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void*);

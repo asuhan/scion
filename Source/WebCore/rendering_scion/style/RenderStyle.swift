@@ -2552,8 +2552,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isOriginalDisplayBlockType() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_isOriginalDisplayBlockType(p!)
   }
 
   func isDisplayTableOrTablePart() -> Bool {
