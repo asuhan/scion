@@ -408,13 +408,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Use RenderElement versions instead.
   func firstChildSlow() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nil
   }
 
   func lastChildSlow() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nil
   }
 
   func nextInPreOrder() -> RenderObjectWrapper? {
