@@ -26,8 +26,8 @@
 
 class RenderIterator<T>: IteratorProtocol, Equatable {
   init(root: RenderElementWrapper?, current: T?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_root = root
+    m_current = current
   }
 
   func next() -> T? {
@@ -59,6 +59,9 @@ class RenderIterator<T>: IteratorProtocol, Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_root: RenderElementWrapper?
+  private let m_current: T?
 }
 
 private class IsRendererOfType<T> {
