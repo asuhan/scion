@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class WillChangeData {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -32,8 +34,7 @@ class WillChangeData {
   }
 
   func canCreateStackingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.WillChangeData_canCreateStackingContext(p)
   }
 
   func canBeBackdropRoot() -> Bool {
