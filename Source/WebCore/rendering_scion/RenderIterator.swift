@@ -45,8 +45,8 @@ class RenderIterator<T: RenderObjectWrapper>: IteratorProtocol, Equatable {
   }
 
   func traverseNext() -> RenderIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_current = RenderTraversal.next(m_current, m_root!)
+    return self
   }
 
   func traverseNextSibling() -> RenderIterator<T> {
@@ -96,5 +96,10 @@ class RenderTraversal {
       object = object!.nextSibling()
     }
     return object as! T?
+  }
+
+  static func next<T, U>(_ current: U, _ stayWithin: RenderObjectWrapper) -> T? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 }
