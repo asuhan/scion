@@ -532,6 +532,7 @@ uint8_t RenderStyle_rtlOrdering(const void*);
 uint8_t RenderStyle_display(const void*);
 const void* RenderStyle_backgroundLayers(const void*);
 const void* RenderStyle_maskLayers(const void*);
+const void* RenderStyle_boxShadow(const void*);
 void* RenderStyle_boxReflect(const void*);
 uint8_t RenderStyle_boxDecorationBreak(const void*);
 uint8_t RenderStyle_textOverflow(const void*);

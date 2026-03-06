@@ -1682,6 +1682,10 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxShadow() -> ShadowData? {
+    let raw = wk_interop.RenderStyle_boxShadow(p!)
+    if raw == nil {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
