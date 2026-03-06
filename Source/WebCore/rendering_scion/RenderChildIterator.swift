@@ -23,8 +23,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderChildIterator<T>: IteratorProtocol {
-  func next() -> T? {
+class RenderChildIterator<T>: RenderIterator<T> {
+  init(_ parent: RenderElementWrapper, _ current: T?) { super.init(root: parent, current: current) }
+
+  override func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -34,8 +36,8 @@ class RenderChildIteratorAdapter<T>: Sequence {
   init(_ parent: RenderElementWrapper) { m_parent = parent }
 
   func makeIterator() -> RenderChildIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let firstChild: T? = RenderTraversal.firstChild(m_parent)
+    return RenderChildIterator<T>(m_parent, firstChild)
   }
 
   func first() -> T? {
