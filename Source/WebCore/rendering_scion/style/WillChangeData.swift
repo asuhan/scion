@@ -25,7 +25,7 @@
 
 import wk_interop
 
-class WillChangeData {
+class WillChangeData: Equatable {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   private func containsProperty(_ property: CSSPropertyID) -> Bool {
@@ -57,10 +57,10 @@ class WillChangeData {
     fatalError("Not implemented")
   }
 
-  private let p: UnsafeMutableRawPointer
-}
+  static func == (lhs: WillChangeData, rhs: WillChangeData) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
-func != (_ a: WillChangeData?, _ b: WillChangeData?) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  private let p: UnsafeMutableRawPointer
 }
