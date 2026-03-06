@@ -279,6 +279,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasFilter(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasFilter();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasReferenceFilterOnly(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasReferenceFilterOnly();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasBackdropFilter(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasBackdropFilter();
