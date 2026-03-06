@@ -31,6 +31,8 @@ class RenderChildIterator<T>: IteratorProtocol {
 }
 
 class RenderChildIteratorAdapter<T>: Sequence {
+  init(_ parent: RenderElementWrapper) { m_parent = parent }
+
   func makeIterator() -> RenderChildIterator<T> {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -40,9 +42,10 @@ class RenderChildIteratorAdapter<T>: Sequence {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let m_parent: RenderElementWrapper
 }
 
 func childrenOfType<T>(parent: RenderElementWrapper) -> RenderChildIteratorAdapter<T> {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return RenderChildIteratorAdapter<T>(parent)
 }
