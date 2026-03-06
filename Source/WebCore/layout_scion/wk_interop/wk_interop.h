@@ -575,6 +575,7 @@ void* RenderStyle_willChange(const void*);
 const void* RenderStyle_hyphenString(const void*);
 bool RenderStyle_isDisplayInlineType(const void*);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);
+bool RenderStyle_isDisplayFlexibleBoxIncludingDeprecatedOrGridBox(const void*);
 bool RenderStyle_isDisplayBlockLevel(const void*);
 bool RenderStyle_isOriginalDisplayListItemType(const void*);
 float RenderStyle_letterSpacing(const void*);

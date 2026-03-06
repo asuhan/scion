@@ -2544,8 +2544,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func isDisplayFlexibleBoxIncludingDeprecatedOrGridBox() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_isDisplayFlexibleBoxIncludingDeprecatedOrGridBox(p!)
   }
 
   func isDisplayBlockLevel() -> Bool {

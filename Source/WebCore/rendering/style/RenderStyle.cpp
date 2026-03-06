@@ -339,6 +339,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayInlineType(const voi
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayInlineType();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_isDisplayFlexibleBoxIncludingDeprecatedOrGridBox(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isDisplayFlexibleBoxIncludingDeprecatedOrGridBox();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isDisplayBlockLevel(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isDisplayBlockLevel();
