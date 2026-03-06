@@ -1122,8 +1122,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isContinuation() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderElement_isContinuation(p)
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_isContinuation(p)
+    }
+    return m_isContinuation
   }
 
   func setIsContinuation() {
