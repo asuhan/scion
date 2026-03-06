@@ -65,7 +65,7 @@ private func resetFrameRendererAndDescendants(
     descendant!.setWidth(width: 0)
     descendant!.setHeight(height: 0)
     descendant!.clearNeedsLayout()
-    descendant = RenderObjectTraversal.next(descendant, parentFrameSet) as! RenderBoxWrapper?
+    descendant = RenderObjectTraversal.next(descendant!, parentFrameSet) as! RenderBoxWrapper?
   }
 }
 

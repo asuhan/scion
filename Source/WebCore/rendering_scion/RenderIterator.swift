@@ -45,7 +45,7 @@ class RenderIterator<T: RenderObjectWrapper>: IteratorProtocol, Equatable {
   }
 
   func traverseNext() -> RenderIterator<T> {
-    m_current = RenderTraversal.next(m_current, m_root!)
+    m_current = RenderTraversal.next(m_current!, m_root)
     return self
   }
 
@@ -63,9 +63,38 @@ private class IsRendererOfType<T> {
 }
 
 class RenderObjectTraversal {
-  static func next<U>(_ current: U, _ stayWithin: RenderObjectWrapper) -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private static func nextAncestorSibling(
+    current: RenderObjectWrapper, stayWithin: RenderObjectWrapper?
+  ) -> RenderObjectWrapper? {
+    var ancestor = current.parent()
+    while ancestor != nil {
+      if CPtrToInt(ancestor!.p) == CPtrToInt(stayWithin?.p) {
+        return nil
+      }
+      if let sibling = ancestor!.nextSibling() {
+        return sibling
+      }
+      ancestor = ancestor!.parent()
+    }
+    return nil
+  }
+
+  static func next<U: RenderObjectWrapper>(_ current: U, _ stayWithin: RenderObjectWrapper?)
+    -> RenderObjectWrapper?
+  {
+    if let child = firstChild(current) {
+      return child
+    }
+
+    if CPtrToInt(current.p) == CPtrToInt(stayWithin?.p) {
+      return nil
+    }
+
+    if let sibling = current.nextSibling() {
+      return sibling
+    }
+
+    return nextAncestorSibling(current: current, stayWithin: stayWithin)
   }
 
   static func firstChild<U: RenderElementWrapper>(_ object: U) -> RenderObjectWrapper? {
@@ -98,7 +127,9 @@ class RenderTraversal {
     return object as! T?
   }
 
-  static func next<T, U>(_ current: U, _ stayWithin: RenderObjectWrapper) -> T? {
+  static func next<T, U: RenderObjectWrapper>(_ current: U, _ stayWithin: RenderObjectWrapper?)
+    -> T?
+  {
     var descendant = RenderObjectTraversal.next(current, stayWithin)
     while descendant != nil && !IsRendererOfType<T>.f(descendant!) {
       descendant = RenderObjectTraversal.next(descendant!, stayWithin)
