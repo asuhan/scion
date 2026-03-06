@@ -567,7 +567,7 @@ bool RenderStyle_hasReferenceFilterOnly(const void*);
 bool RenderStyle_hasBackdropFilter(const void*);
 uint8_t RenderStyle_blendMode(const void*);
 bool RenderStyle_hasBlendMode(const void*);
-bool RenderStyle_hasIsolation(const void*);
+bool RenderStyle_isolation(const void*);
 int32_t RenderStyle_usedZIndex(const void*);
 bool RenderStyle_hasAutoUsedZIndex(const void*);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);

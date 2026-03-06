@@ -2168,12 +2168,9 @@ class RenderStyleWrapper: Equatable {
 
   func hasBlendMode() -> Bool { return wk_interop.RenderStyle_hasBlendMode(p!) }
 
-  func isolation() -> Isolation {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isolation() -> Isolation { return wk_interop.RenderStyle_isolation(p!) ? .Isolate : .Auto }
 
-  func hasIsolation() -> Bool { return wk_interop.RenderStyle_hasIsolation(p!) }
+  func hasIsolation() -> Bool { return isolation() != .Auto }
 
   func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
     return (!isLeftToRightDirection() && isHorizontalWritingMode())
