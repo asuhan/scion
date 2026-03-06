@@ -25,6 +25,31 @@
  */
 
 class ReferencedSVGResources {
+  typealias SVGQualifiedNames = [SVGQualifiedName]
+  typealias SVGElementIdentifierAndTagPairs = [(AtomStringWrapper, SVGQualifiedNames)]
+
+  static func referencedSVGResourceIDs(_ style: RenderStyleWrapper, _ document: Document)
+    -> SVGElementIdentifierAndTagPairs
+  {
+    let referencedResources: SVGElementIdentifierAndTagPairs = []
+    if style.clipPath() != nil {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if style.hasFilter() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if !document.settings().layerBasedSVGEngineEnabled() {
+      return referencedResources
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   // Legacy: Clipping needs a renderer, filters use an element.
   static func referencedClipperRenderer(
     treeScope: TreeScopeWrapper, clipPath: ReferencePathOperation

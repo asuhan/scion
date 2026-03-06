@@ -2864,7 +2864,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFlag(.WasSkippedDuringLastLayoutDueToContentVisibility, b)
   }
 
-  private func hasRareData() -> Bool {
+  func hasRareData() -> Bool {
     assert(isNativeImpl())
     return m_stateBitfields.hasFlag(.HasRareData)
   }
@@ -2996,13 +2996,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private let m_typeSpecificFlags: TypeSpecificFlags
 
   // FIXME: This should be RenderElementRareData.
-  private class RenderObjectRareData {
+  class RenderObjectRareData {
     var hasReflection = false
     let hasOutlineAutoAncestor = false
     let trimmedMargins: MarginTrimType = []
 
     // From RenderElement
-    let referencedSVGResources: ReferencedSVGResources? = nil
+    var referencedSVGResources: ReferencedSVGResources? = nil
     let backdropRenderer = WeakNullableRef<RenderBlockFlowWrapper>(nil)
 
     // From RenderBox
@@ -3014,7 +3014,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  private func ensureRareData() -> RenderObjectRareData {
+  func ensureRareData() -> RenderObjectRareData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

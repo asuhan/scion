@@ -13,6 +13,7 @@ target_sources(layout_scion PRIVATE
     Node.swift
     Position.swift
     PseudoElement.swift
+    QualifiedName.swift
     RenderedDocumentMarker.swift
     Settings.swift
     ShadowRoot.swift
@@ -20,6 +21,7 @@ target_sources(layout_scion PRIVATE
     SimpleRange.swift
     StaticRange.swift
     StyledElement.swift
+    SVGNames.swift
     Text.swift
     TreeScope.swift
     ViewTransition.swift

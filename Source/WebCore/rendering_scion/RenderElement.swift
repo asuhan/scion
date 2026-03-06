@@ -2213,9 +2213,23 @@ class RenderElementWrapper: RenderObjectWrapper {
     repaintRectangle(repaintRect: repaintRect)
   }
 
+  // This needs to run when the entire render tree has been constructed, so can't be called from styleDidChange.
   private func updateReferencedSVGResources() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let referencedElementIDs = ReferencedSVGResources.referencedSVGResourceIDs(style(), document())
+    if !referencedElementIDs.isEmpty {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    } else {
+      clearReferencedSVGResources()
+    }
+  }
+
+  private func clearReferencedSVGResources() {
+    if !hasRareData() {
+      return
+    }
+
+    ensureRareData().referencedSVGResources = nil
   }
 
   private var m_firstChild: RenderObjectWrapper?
