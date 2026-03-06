@@ -99,7 +99,10 @@ class RenderTraversal {
   }
 
   static func next<T, U>(_ current: U, _ stayWithin: RenderObjectWrapper) -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var descendant = RenderObjectTraversal.next(current, stayWithin)
+    while descendant != nil && !IsRendererOfType<T>.f(descendant!) {
+      descendant = RenderObjectTraversal.next(descendant!, stayWithin)
+    }
+    return descendant as! T?
   }
 }
