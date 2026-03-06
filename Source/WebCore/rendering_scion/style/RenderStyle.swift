@@ -2778,8 +2778,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func willChange() -> WillChangeData? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_willChange(p!)
+    return raw != nil ? WillChangeData(raw!) : nil
   }
 
   func diff(_ other: RenderStyleWrapper) -> (

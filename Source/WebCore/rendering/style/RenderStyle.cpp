@@ -304,6 +304,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_computedStrokeWidth(const void* p, i
     return static_cast<const WebCore::RenderStyle*>(p)->computedStrokeWidth(WebCore::IntSize(width, height));
 }
 
+extern "C" WEBCORE_EXPORT void* RenderStyle_willChange(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->willChange();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_hyphenString(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->hyphenString();

@@ -568,6 +568,7 @@ bool RenderStyle_hasIsolation(const void*);
 int32_t RenderStyle_usedZIndex(const void*);
 bool RenderStyle_hasAutoUsedZIndex(const void*);
 float RenderStyle_computedStrokeWidth(const void*, int32_t, int32_t);
+void* RenderStyle_willChange(const void*);
 const void* RenderStyle_hyphenString(const void*);
 bool RenderStyle_isDisplayInlineType(const void*);
 bool RenderStyle_isOriginalDisplayInlineType(const void*);

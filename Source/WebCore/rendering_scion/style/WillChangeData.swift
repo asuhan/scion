@@ -24,6 +24,8 @@
  */
 
 class WillChangeData {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   private func containsProperty(_ property: CSSPropertyID) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -53,6 +55,8 @@ class WillChangeData {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }
 
 func != (_ a: WillChangeData?, _ b: WillChangeData?) -> Bool {
