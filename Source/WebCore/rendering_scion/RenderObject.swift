@@ -402,8 +402,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextSibling() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_next
   }
 
   // Use RenderElement versions instead.
@@ -2994,6 +2994,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private let m_parent: RenderElementWrapper? = nil
   private let m_typeFlags: TypeFlag
   private let m_type: `Type`
+  private let m_next: RenderObjectWrapper? = nil  // TODO(asuhan): use weak reference
   private let m_typeSpecificFlags: TypeSpecificFlags
 
   // FIXME: This should be RenderElementRareData.
