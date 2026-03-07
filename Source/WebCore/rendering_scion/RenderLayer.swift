@@ -468,8 +468,15 @@ class RenderLayerWrapper {
   }
 
   func isDescendantOf(_ layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    var ancestor: RenderLayerWrapper? = self
+    while ancestor != nil {
+      if CPtrToInt(layer.p) == CPtrToInt(ancestor!.p) {
+        return true
+      }
+      ancestor = ancestor!.parent()
+    }
+    return false
   }
 
   // This does an ancestor tree walk. Avoid it!
