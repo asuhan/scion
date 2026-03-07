@@ -463,8 +463,8 @@ class RenderLayerWrapper {
   func firstChild() -> RenderLayerWrapper? { return m_first }
 
   func lastChild() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return m_last
   }
 
   func isDescendantOf(_ layer: RenderLayerWrapper) -> Bool {
