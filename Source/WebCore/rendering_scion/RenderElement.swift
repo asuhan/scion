@@ -529,6 +529,16 @@ class RenderElementWrapper: RenderObjectWrapper {
     return parent()!.enclosingLayer()
   }
 
+  func layerNextSibling(_ parentLayer: RenderLayerWrapper) -> RenderLayerWrapper? {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func moveLayers(_ newParent: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func dirtyLineFromChangedChild() {}
 
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {

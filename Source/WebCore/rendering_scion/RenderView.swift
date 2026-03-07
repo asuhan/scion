@@ -646,6 +646,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     m_rendererCount += 1
   }
 
+  func layerChildrenChangedDuringStyleChange(_ layer: RenderLayerWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func registerBoxWithScrollSnapPositions(_ box: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

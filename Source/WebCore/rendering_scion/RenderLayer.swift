@@ -481,6 +481,11 @@ class RenderLayerWrapper {
     return curr
   }
 
+  private func addChild(_ newChild: RenderLayerWrapper, beforeChild: RenderLayerWrapper? = nil) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func removeChild(oldChild: RenderLayerWrapper) {
     if !renderer().renderTreeBeingDestroyed() {
       compositor().layerWillBeRemoved(parent: self, child: oldChild)
@@ -536,8 +541,28 @@ class RenderLayerWrapper {
   }
 
   func insertOnlyThisLayer(_ timing: LayerChangeTiming) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_parent == nil && renderer().parent() != nil {
+      // We need to connect ourselves when our renderer() has a parent.
+      // Find our enclosingLayer and add ourselves.
+      guard let parentLayer = renderer().layerParent() else { return }
+
+      let beforeChild =
+        CPtrToInt(parentLayer.reflectionLayer()?.p) != CPtrToInt(p)
+        ? renderer().layerNextSibling(parentLayer) : nil
+      parentLayer.addChild(self, beforeChild: beforeChild)
+    }
+
+    // Remove all descendant layers from the hierarchy and add them to the new position.
+    for child: RenderElementWrapper in childrenOfType(parent: renderer()) {
+      child.moveLayers(self)
+    }
+
+    if parent() != nil, timing == .StyleChange {
+      renderer().view().layerChildrenChangedDuringStyleChange(parent()!)
+    }
+
+    // Clear out all the clip rects.
+    clearClipRectsIncludingDescendants()
   }
 
   func removeOnlyThisLayer(timing: LayerChangeTiming) {
