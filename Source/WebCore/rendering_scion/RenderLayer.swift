@@ -566,8 +566,41 @@ class RenderLayerWrapper {
   }
 
   func removeOnlyThisLayer(timing: LayerChangeTiming) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    if m_parent == nil {
+      return
+    }
+
+    if timing == .StyleChange {
+      renderer().view().layerChildrenChangedDuringStyleChange(parent()!)
+    }
+
+    compositor().layerWillBeRemoved(parent: m_parent!, child: self)
+
+    // Dirty the clip rects.
+    clearClipRectsIncludingDescendants()
+
+    let nextSib = nextSibling()
+
+    // Remove the child reflection layer before moving other child layers.
+    // The reflection layer should not be moved to the parent.
+    if let reflectionLayer = reflectionLayer() {
+      removeChild(oldChild: reflectionLayer)
+    }
+
+    // Now walk our kids and reattach them to our parent.
+    var current = m_first
+    while current != nil {
+      let next = current!.nextSibling()
+      removeChild(oldChild: current!)
+      m_parent!.addChild(current!, beforeChild: nextSib)
+      current!.repaintStatus = .NeedsFullRepaint
+      current = next
+    }
+
+    // Remove us from the parent.
+    m_parent!.removeChild(oldChild: self)
+    renderer().destroyLayer()
   }
 
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.

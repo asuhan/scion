@@ -36,6 +36,12 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
+  func destroyLayer() {
+    assert(isNativeImpl())
+    setHasLayer(false)
+    m_layer = nil
+  }
+
   func hasSelfPaintingLayerModelObject() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
