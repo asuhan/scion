@@ -908,8 +908,8 @@ class RenderLayerWrapper {
   }
 
   func needsCompositingConfigurationUpdate() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return compositingDirtyBits.contains(.NeedsConfigurationUpdate)
   }
 
   private func setRequirementsTraversalDirtyBit(v: Compositing) {
