@@ -810,8 +810,8 @@ class RenderLayerWrapper {
   }
 
   func needsAnyCompositingTraversal() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return !compositingDirtyBits.isEmpty
   }
 
   struct LayerList: Sequence, IteratorProtocol {
