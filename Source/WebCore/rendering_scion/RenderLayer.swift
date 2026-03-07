@@ -804,8 +804,9 @@ class RenderLayerWrapper {
   }
 
   func clearCompositingRequirementsTraversalState() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    compositingDirtyBits.remove(.HasDescendantNeedingRequirementsTraversal)
+    compositingDirtyBits.remove(RenderLayerWrapper.computeCompositingRequirementsFlags)
   }
 
   func needsAnyCompositingTraversal() -> Bool {
