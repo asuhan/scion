@@ -888,8 +888,8 @@ class RenderLayerWrapper {
   }
 
   func descendantsNeedCompositingRequirementsTraversal() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return compositingDirtyBits.contains(.DescendantsNeedRequirementsTraversal)
   }
 
   func subsequentLayersNeedCompositingRequirementsTraversal() -> Bool {
