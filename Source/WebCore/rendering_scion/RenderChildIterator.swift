@@ -47,7 +47,10 @@ class RenderChildIteratorAdapter<T: RenderObjectWrapper>: Sequence, IteratorProt
   }
 
   func next() -> T? {
-    let result = current != end ? *current : nil
+    if current == end {
+      return nil
+    }
+    let result = *current
     current = current.traverseNextSibling() as! RenderChildIterator<T>
     return result
   }
