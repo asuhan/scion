@@ -481,9 +481,58 @@ class RenderLayerWrapper {
     return curr
   }
 
-  private func addChild(_ newChild: RenderLayerWrapper, beforeChild: RenderLayerWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  private func addChild(_ child: RenderLayerWrapper, beforeChild: RenderLayerWrapper? = nil) {
+    assert(isNative)
+    if let prevSibling = beforeChild?.previousSibling() ?? lastChild() {
+      child.setPreviousSibling(prev: prevSibling)
+      prevSibling.setNextSibling(next: child)
+      assert(CPtrToInt(prevSibling.p) != CPtrToInt(child.p))
+    } else {
+      setFirstChild(child)
+    }
+
+    if beforeChild != nil {
+      beforeChild!.setPreviousSibling(prev: child)
+      child.setNextSibling(next: beforeChild)
+      assert(CPtrToInt(beforeChild!.p) != CPtrToInt(child.p))
+    } else {
+      setLastChild(child)
+    }
+
+    child.m_parent = self
+
+    dirtyPaintOrderListsOnChildChange(child: child)
+
+    child.updateAncestorDependentState()
+    dirtyAncestorChainVisibleDescendantStatus()
+    child.updateDescendantDependentFlags()
+
+    if child.isSelfPaintingLayer || child.hasSelfPaintingLayerDescendant {
+      setAncestorChainHasSelfPaintingLayerDescendant()
+    }
+
+    if compositor().hasContentCompositingLayers() {
+      setDescendantsNeedCompositingRequirementsTraversal()
+    }
+
+    if child.hasDescendantNeedingCompositingRequirementsTraversal()
+      || child.needsCompositingRequirementsTraversal()
+    {
+      child.setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingRequirementsTraversal)
+    }
+
+    if child.hasDescendantNeedingUpdateBackingOrHierarchyTraversal()
+      || child.needsUpdateBackingOrHierarchyTraversal()
+    {
+      child.setAncestorsHaveCompositingDirtyFlag(
+        flag: .HasDescendantNeedingBackingOrHierarchyTraversal)
+    }
+
+    if child.hasBlendMode()
+      || (child.hasNotIsolatedBlendingDescendants && !child.isolatesBlending())
+    {
+      updateAncestorChainHasBlendingDescendants()  // Why not just dirty?
+    }
   }
 
   func removeChild(oldChild: RenderLayerWrapper) {
@@ -3289,8 +3338,14 @@ class RenderLayerWrapper {
   }
 
   private func setNextSibling(next: RenderLayerWrapper?) { m_next = next }
-
   private func setPreviousSibling(prev: RenderLayerWrapper?) { m_previous = prev }
+  private func setFirstChild(_ first: RenderLayerWrapper) { m_first = first }
+  private func setLastChild(_ last: RenderLayerWrapper) { m_last = last }
+
+  private func updateAncestorDependentState() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
 
   private func dirtyPaintOrderListsOnChildChange(child: RenderLayerWrapper) {
     if child.isNormalFlowOnly {
