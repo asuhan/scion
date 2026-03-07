@@ -24,20 +24,32 @@
  */
 
 class RenderChildIterator<T: RenderObjectWrapper>: RenderIterator<T> {
+  init(_ parent: RenderElementWrapper) { super.init(root: parent) }
   init(_ parent: RenderElementWrapper, _ current: T?) { super.init(root: parent, current: current) }
 
-  override func next() -> T? {
-    let it = super.traverseNextSibling()
-    return it.bool() ? *it : nil
+  func next() -> T? {
+    let result = bool() ? *self : nil
+    super.traverseNextSibling()
+    return result
   }
 }
 
-class RenderChildIteratorAdapter<T: RenderObjectWrapper>: Sequence {
-  init(_ parent: RenderElementWrapper) { m_parent = parent }
+class RenderChildIteratorAdapter<T: RenderObjectWrapper>: Sequence, IteratorProtocol {
+  init(_ parent: RenderElementWrapper) {
+    m_parent = parent
+    begin = RenderChildIterator(parent, RenderTraversal.firstChild(parent))
+    end = RenderChildIterator(parent)
+    current = begin
+  }
 
-  func makeIterator() -> RenderChildIterator<T> {
-    let firstChild: T? = RenderTraversal.firstChild(m_parent)
-    return RenderChildIterator<T>(m_parent, firstChild)
+  func makeIterator() -> RenderChildIteratorAdapter<T> {
+    return RenderChildIteratorAdapter<T>(m_parent)
+  }
+
+  func next() -> T? {
+    let result = current != end ? *current : nil
+    current = current.traverseNextSibling() as! RenderChildIterator<T>
+    return result
   }
 
   func first() -> T? {
@@ -46,6 +58,9 @@ class RenderChildIteratorAdapter<T: RenderObjectWrapper>: Sequence {
   }
 
   private let m_parent: RenderElementWrapper
+  private let begin: RenderChildIterator<T>
+  private let end: RenderChildIterator<T>
+  private var current: RenderChildIterator<T>
 }
 
 func childrenOfType<T>(parent: RenderElementWrapper) -> RenderChildIteratorAdapter<T> {

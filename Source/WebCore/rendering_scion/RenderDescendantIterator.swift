@@ -24,8 +24,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T> {
-  override func next() -> T? {
+class RenderDescendantIterator<T: RenderObjectWrapper>: RenderIterator<T>, IteratorProtocol {
+  func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

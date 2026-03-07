@@ -24,15 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderIterator<T: RenderObjectWrapper>: IteratorProtocol, Equatable {
+class RenderIterator<T: RenderObjectWrapper>: Equatable {
+  init(root: RenderElementWrapper?) {
+    m_root = root
+    m_current = nil
+  }
+
   init(root: RenderElementWrapper?, current: T?) {
     m_root = root
     m_current = current
-  }
-
-  func next() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
   }
 
   static prefix func * (this: RenderIterator<T>) -> T { return this.m_current! }
@@ -49,6 +49,7 @@ class RenderIterator<T: RenderObjectWrapper>: IteratorProtocol, Equatable {
     return self
   }
 
+  @discardableResult
   func traverseNextSibling() -> RenderIterator<T> {
     m_current = RenderTraversal.nextSibling(m_current!)
     return self
