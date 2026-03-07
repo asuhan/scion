@@ -781,8 +781,8 @@ class RenderLayerWrapper {
   }
 
   func needsScrollingTreeUpdate() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return compositingDirtyBits.contains(.NeedsScrollingTreeUpdate)
   }
 
   func childrenNeedCompositingGeometryUpdate() -> Bool {
