@@ -771,8 +771,8 @@ class RenderLayerWrapper {
   }
 
   func hasDescendantNeedingUpdateBackingOrHierarchyTraversal() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return compositingDirtyBits.contains(.HasDescendantNeedingBackingOrHierarchyTraversal)
   }
 
   func needsCompositingPaintOrderChildrenUpdate() -> Bool {
