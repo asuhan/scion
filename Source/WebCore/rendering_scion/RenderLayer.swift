@@ -453,14 +453,24 @@ class RenderLayerWrapper {
   func renderBox() -> RenderBoxWrapper? { return renderer() as? RenderBoxWrapper }
 
   func parent() -> RenderLayerWrapper? {
+    assert(isNative)
     return m_parent
   }
 
-  func previousSibling() -> RenderLayerWrapper? { return m_previous }
+  func previousSibling() -> RenderLayerWrapper? {
+    assert(isNative)
+    return m_previous
+  }
 
-  func nextSibling() -> RenderLayerWrapper? { return m_next }
+  func nextSibling() -> RenderLayerWrapper? {
+    assert(isNative)
+    return m_next
+  }
 
-  func firstChild() -> RenderLayerWrapper? { return m_first }
+  func firstChild() -> RenderLayerWrapper? {
+    assert(isNative)
+    return m_first
+  }
 
   func lastChild() -> RenderLayerWrapper? {
     assert(isNative)
