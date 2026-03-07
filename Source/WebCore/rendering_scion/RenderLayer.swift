@@ -898,8 +898,8 @@ class RenderLayerWrapper {
   }
 
   func needsCompositingLayerConnection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return compositingDirtyBits.contains(.NeedsLayerConnection)
   }
 
   func needsCompositingGeometryUpdate() -> Bool {
