@@ -800,8 +800,7 @@ class RenderLayerWrapper {
   }
 
   func setNeedsScrollingTreeUpdate() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    setBackingAndHierarchyTraversalDirtyBit(v: .NeedsScrollingTreeUpdate)
   }
 
   func clearCompositingRequirementsTraversalState() {
@@ -938,6 +937,7 @@ class RenderLayerWrapper {
   }
 
   private func setBackingAndHierarchyTraversalDirtyBit(v: Compositing) {
+    assert(isNative)
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingBackingOrHierarchyTraversal)
   }
