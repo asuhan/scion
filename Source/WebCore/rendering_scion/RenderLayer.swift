@@ -541,6 +541,7 @@ class RenderLayerWrapper {
   }
 
   func insertOnlyThisLayer(_ timing: LayerChangeTiming) {
+    assert(isNative)
     if m_parent == nil && renderer().parent() != nil {
       // We need to connect ourselves when our renderer() has a parent.
       // Find our enclosingLayer and add ourselves.

@@ -520,6 +520,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   // properly added and removed. Since containership can be implemented by any subclass, and since a hierarchy
   // can contain a mixture of boxes and other object types, these functions need to be in the base class.
   func layerParent() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     assert(!isInTopLayerOrBackdrop(style: style(), element: protectedElement()) || hasLayer())
 
     if hasLayer() && isInTopLayerOrBackdrop(style: style(), element: protectedElement()) {
