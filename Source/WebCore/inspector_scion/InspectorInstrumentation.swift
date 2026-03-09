@@ -31,7 +31,6 @@
 
 class InspectorInstrumentationWrapper {
   static func didAddOrRemoveScrollbars(renderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    print("TODO: implement didAddOrRemoveScrollbars in InspectorInstrumentation")
   }
 }
