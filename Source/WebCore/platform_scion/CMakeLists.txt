@@ -11,6 +11,7 @@ target_sources(layout_scion PRIVATE
     LengthSize.swift
     RectEdges.swift
     ScrollableArea.swift
+    ScrollAnimator.swift
     Scrollbar.swift
     ScrollbarsController.swift
     ScrollbarTheme.swift

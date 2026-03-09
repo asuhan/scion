@@ -66,6 +66,11 @@ class ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  func scrollAnimator() -> ScrollAnimatorWrapper {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func scrollbarsController() -> ScrollbarsControllerWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

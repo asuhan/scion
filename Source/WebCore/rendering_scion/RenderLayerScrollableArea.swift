@@ -86,8 +86,17 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func restoreScrollPosition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let element = m_layer.renderer().element() else { return }
+
+    if m_layer.renderBox() != nil {
+      // We save and restore only the scrollOffset as the other scroll values are recalculated.
+      m_scrollPosition = element.savedLayerScrollPosition()
+      if !m_scrollPosition.isZero() {
+        scrollAnimator().setCurrentPosition(FloatPoint(p: m_scrollPosition))
+      }
+    }
+
+    element.setSavedLayerScrollPosition(ScrollPosition())
   }
 
   func setPostLayoutScrollPosition(_ position: ScrollPosition?) {
@@ -803,6 +812,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private var containsDirtyOverlayScrollbars = false
 
   private let m_layer: RenderLayerWrapper
+  private var m_scrollPosition = ScrollPosition()
 
   // For layers with overflow, we have a pair of scrollbars.
   private let hBar: Scrollbar? = nil

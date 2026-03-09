@@ -114,6 +114,16 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
+  func savedLayerScrollPosition() -> ScrollPosition {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func setSavedLayerScrollPosition(_ position: ScrollPosition) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func willAttachRenderers() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
