@@ -218,6 +218,10 @@ extern "C" bool Element_hasDisplayContents(void* p) {
     return static_cast<WebCore::Element*>(p)->hasDisplayContents();
 }
 
+extern "C" void Element_clearDisplayContentsOrNoneStyle(void* p) {
+    return static_cast<WebCore::Element*>(p)->clearDisplayContentsOrNoneStyle();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;

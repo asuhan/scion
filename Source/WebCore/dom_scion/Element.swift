@@ -148,10 +148,7 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
-  func clearDisplayContentsOrNoneStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clearDisplayContentsOrNoneStyle() { wk_interop.Element_clearDisplayContentsOrNoneStyle(p) }
 
   func lastRememberedLogicalWidth() -> LayoutUnit? {
     // TODO(asuhan): implement this
