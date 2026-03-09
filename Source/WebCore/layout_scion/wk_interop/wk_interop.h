@@ -809,5 +809,7 @@ bool Element_childShouldCreateRenderer(const void* p, const void* child);
 bool Element_isInTopLayer(const void*);
 void Element_willAttachRenderers(void*);
 void Element_didAttachRenderers(void*);
+void Element_willDetachRenderers(void*);
+void Element_didDetachRenderers(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);

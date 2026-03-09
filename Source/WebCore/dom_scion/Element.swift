@@ -119,15 +119,9 @@ class ElementWrapper: ContainerNodeWrapper {
 
   func didAttachRenderers() { wk_interop.Element_didAttachRenderers(p) }
 
-  func willDetachRenderers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func willDetachRenderers() { wk_interop.Element_willDetachRenderers(p) }
 
-  func didDetachRenderers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func didDetachRenderers() { wk_interop.Element_didDetachRenderers(p) }
 
   func renderOrDisplayContentsStyle() -> RenderStyleWrapper? {
     // TODO(asuhan): implement this
