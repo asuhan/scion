@@ -160,15 +160,9 @@ class ElementWrapper: ContainerNodeWrapper {
     return raw.is_valid ? LayoutUnit.fromRawValue(value: raw.value) : nil
   }
 
-  func clearLastRememberedLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clearLastRememberedLogicalWidth() { wk_interop.Element_clearLastRememberedLogicalWidth(p) }
 
-  func clearLastRememberedLogicalHeight() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clearLastRememberedLogicalHeight() { wk_interop.Element_clearLastRememberedLogicalHeight(p) }
 
   func isRelevantToUser() -> Bool {
     // TODO(asuhan): implement this

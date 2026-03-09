@@ -245,6 +245,16 @@ extern "C" OptionalLayoutUnitRaw Element_lastRememberedLogicalHeight(void* p)
     return {height->rawValue(), true};
 }
 
+extern "C" void Element_clearLastRememberedLogicalWidth(void* p)
+{
+    static_cast<WebCore::Element*>(p)->clearLastRememberedLogicalWidth();
+}
+
+extern "C" void Element_clearLastRememberedLogicalHeight(void* p)
+{
+    static_cast<WebCore::Element*>(p)->clearLastRememberedLogicalHeight();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;

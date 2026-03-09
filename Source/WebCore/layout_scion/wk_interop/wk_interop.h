@@ -818,5 +818,7 @@ bool Element_hasDisplayContents(void*);
 void Element_clearDisplayContentsOrNoneStyle(void*);
 struct OptionalLayoutUnitRaw Element_lastRememberedLogicalWidth(void*);
 struct OptionalLayoutUnitRaw Element_lastRememberedLogicalHeight(void*);
+void Element_clearLastRememberedLogicalWidth(void*);
+void Element_clearLastRememberedLogicalHeight(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);
