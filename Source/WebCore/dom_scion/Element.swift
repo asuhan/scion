@@ -164,10 +164,7 @@ class ElementWrapper: ContainerNodeWrapper {
 
   func clearLastRememberedLogicalHeight() { wk_interop.Element_clearLastRememberedLogicalHeight(p) }
 
-  func isRelevantToUser() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRelevantToUser() -> Bool { return wk_interop.Element_isRelevantToUser(p) }
 }
 
 func isInTopLayerOrBackdrop(style: RenderStyleWrapper, element: ElementWrapper?) -> Bool {

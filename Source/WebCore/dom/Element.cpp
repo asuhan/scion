@@ -255,6 +255,11 @@ extern "C" void Element_clearLastRememberedLogicalHeight(void* p)
     static_cast<WebCore::Element*>(p)->clearLastRememberedLogicalHeight();
 }
 
+extern "C" bool Element_isRelevantToUser(void* p)
+{
+    return static_cast<WebCore::Element*>(p)->isRelevantToUser();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;
