@@ -1195,8 +1195,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func rootContentsLayer() -> GraphicsLayer? { return m_rootContentsLayer }
 
   func layerForClipping() -> GraphicsLayer? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_clipLayer ?? m_scrollContainerLayer
   }
 
   enum RootLayerAttachment {
