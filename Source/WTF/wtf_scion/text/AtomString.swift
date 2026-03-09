@@ -75,6 +75,5 @@ class AtomStringWrapper: Hashable, CustomStringConvertible {
 }
 
 func nullAtom() -> AtomStringWrapper {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return AtomStringWrapper(p: wk_interop.AtomString_nullAtom())
 }
