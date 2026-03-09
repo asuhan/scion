@@ -22,6 +22,8 @@
  *
  */
 
+import wk_interop
+
 class ElementWrapper: ContainerNodeWrapper {
   func hasNowrapAttr() -> Bool {
     // TODO(asuhan): implement this
@@ -115,8 +117,8 @@ class ElementWrapper: ContainerNodeWrapper {
   }
 
   func savedLayerScrollPosition() -> ScrollPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.Element_savedLayerScrollPosition(p)
+    return ScrollPosition(x: raw.x, y: raw.y)
   }
 
   func setSavedLayerScrollPosition(_ position: ScrollPosition) {

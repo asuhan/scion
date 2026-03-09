@@ -210,6 +210,11 @@ struct ScopedNameRaw {
     bool is_valid;
 };
 
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -797,3 +802,4 @@ bool FilterOperations_eq(const void*, const void*);
 bool FilterOperations_isEmpty(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
 bool WillChangeData_canCreateStackingContext(const void*);
+struct IntPointRaw Element_savedLayerScrollPosition(const void*);

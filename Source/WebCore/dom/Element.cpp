@@ -166,6 +166,17 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
 
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+extern "C" WEBCORE_EXPORT IntPointRaw Element_savedLayerScrollPosition(const void* p)
+{
+    const auto raw = static_cast<const WebCore::Element*>(p)->savedLayerScrollPosition();
+    return {raw.x(), raw.y()};
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Element);
