@@ -104,10 +104,7 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
-  func isInTopLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInTopLayer() -> Bool { return wk_interop.Element_isInTopLayer(p) }
 
   func savedLayerScrollPosition() -> ScrollPosition {
     let raw = wk_interop.Element_savedLayerScrollPosition(p)
