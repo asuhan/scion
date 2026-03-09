@@ -64,6 +64,13 @@
 #include <wtf/PointerComparison.h>
 #include <wtf/StdLibExtras.h>
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_clone(const void* p)
+{
+    // TODO(asuhan): Fix leaks
+    auto cloned = WebCore::RenderStyle::clonePtr(*static_cast<const WebCore::RenderStyle*>(p));
+    return cloned.release();
+}
+
 extern "C" WEBCORE_EXPORT uint32_t RenderStyle_pseudoElementType(const void* p)
 {
     return static_cast<uint32_t>(static_cast<const WebCore::RenderStyle*>(p)->pseudoElementType());
