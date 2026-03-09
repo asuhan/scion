@@ -803,5 +803,6 @@ bool FilterOperations_eq(const void*, const void*);
 bool FilterOperations_isEmpty(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
 bool WillChangeData_canCreateStackingContext(const void*);
+bool Element_isFormControlElement(const void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);

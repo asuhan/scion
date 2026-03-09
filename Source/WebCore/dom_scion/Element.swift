@@ -87,10 +87,7 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
-  func isFormControlElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isFormControlElement() -> Bool { return wk_interop.Element_isFormControlElement(p) }
 
   // Used for disabled form elements; if true, prevents mouse events from being dispatched
   // to event listeners, and prevents DOMActivate events from being sent at all.

@@ -166,6 +166,11 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT bool Element_isFormControlElement(const void* p)
+{
+    return static_cast<const WebCore::Element*>(p)->isFormControlElement();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;
