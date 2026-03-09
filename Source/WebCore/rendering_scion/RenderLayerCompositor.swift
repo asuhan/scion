@@ -4895,13 +4895,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isRootFrameCompositor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_renderView.frameView().frame().isRootFrame()
   }
 
   private func isMainFrameCompositor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return m_renderView.frameView().frame().isMainFrame()
   }
 
   private let m_renderView: RenderViewWrapper
