@@ -94,8 +94,7 @@ class ElementWrapper: ContainerNodeWrapper {
   func isDisabledFormControl() -> Bool { return wk_interop.Element_isDisabledFormControl(p) }
 
   func childShouldCreateRenderer(child: NodeWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Element_childShouldCreateRenderer(p, child.p)
   }
 
   func keyframeEffectStack(pseudoElementIdentifier: Style.PseudoElementIdentifier?)
