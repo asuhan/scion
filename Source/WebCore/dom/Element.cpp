@@ -186,6 +186,14 @@ extern "C" WEBCORE_EXPORT bool Element_isInTopLayer(const void* p)
     return static_cast<const WebCore::Element*>(p)->isInTopLayer();
 }
 
+extern "C" void Element_willAttachRenderers(void* p) {
+    return static_cast<WebCore::Element*>(p)->willAttachRenderers();
+}
+
+extern "C" void Element_didAttachRenderers(void* p) {
+    return static_cast<WebCore::Element*>(p)->didAttachRenderers();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;

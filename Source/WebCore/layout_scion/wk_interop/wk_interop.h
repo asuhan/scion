@@ -807,5 +807,7 @@ bool Element_isFormControlElement(const void*);
 bool Element_isDisabledFormControl(const void*);
 bool Element_childShouldCreateRenderer(const void* p, const void* child);
 bool Element_isInTopLayer(const void*);
+void Element_willAttachRenderers(void*);
+void Element_didAttachRenderers(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);

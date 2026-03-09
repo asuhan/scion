@@ -115,15 +115,9 @@ class ElementWrapper: ContainerNodeWrapper {
     wk_interop.Element_setSavedLayerScrollPosition(p, IntPointRaw(x: position.x, y: position.y))
   }
 
-  func willAttachRenderers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func willAttachRenderers() { wk_interop.Element_willAttachRenderers(p) }
 
-  func didAttachRenderers() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func didAttachRenderers() { wk_interop.Element_didAttachRenderers(p) }
 
   func willDetachRenderers() {
     // TODO(asuhan): implement this
