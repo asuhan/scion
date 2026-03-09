@@ -171,6 +171,11 @@ extern "C" WEBCORE_EXPORT bool Element_isFormControlElement(const void* p)
     return static_cast<const WebCore::Element*>(p)->isFormControlElement();
 }
 
+extern "C" WEBCORE_EXPORT bool Element_isDisabledFormControl(const void* p)
+{
+    return static_cast<const WebCore::Element*>(p)->isDisabledFormControl();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;
