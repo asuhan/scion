@@ -222,6 +222,29 @@ extern "C" void Element_clearDisplayContentsOrNoneStyle(void* p) {
     return static_cast<WebCore::Element*>(p)->clearDisplayContentsOrNoneStyle();
 }
 
+struct OptionalLayoutUnitRaw {
+    int32_t value;
+    bool is_valid;
+};
+
+extern "C" OptionalLayoutUnitRaw Element_lastRememberedLogicalWidth(void* p)
+{
+    const auto width = static_cast<WebCore::Element*>(p)->lastRememberedLogicalWidth();
+    if (!width) {
+        return {0, false};
+    }
+    return {width->rawValue(), true};
+}
+
+extern "C" OptionalLayoutUnitRaw Element_lastRememberedLogicalHeight(void* p)
+{
+    const auto height = static_cast<WebCore::Element*>(p)->lastRememberedLogicalHeight();
+    if (!height) {
+        return {0, false};
+    }
+    return {height->rawValue(), true};
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;

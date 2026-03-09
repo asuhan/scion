@@ -816,5 +816,7 @@ void Element_clearAfterPseudoElement(void*);
 void Element_clearHoverAndActiveStatusBeforeDetachingRenderer(void*);
 bool Element_hasDisplayContents(void*);
 void Element_clearDisplayContentsOrNoneStyle(void*);
+struct OptionalLayoutUnitRaw Element_lastRememberedLogicalWidth(void*);
+struct OptionalLayoutUnitRaw Element_lastRememberedLogicalHeight(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);

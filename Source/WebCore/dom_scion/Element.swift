@@ -151,13 +151,13 @@ class ElementWrapper: ContainerNodeWrapper {
   func clearDisplayContentsOrNoneStyle() { wk_interop.Element_clearDisplayContentsOrNoneStyle(p) }
 
   func lastRememberedLogicalWidth() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.Element_lastRememberedLogicalWidth(p)
+    return raw.is_valid ? LayoutUnit.fromRawValue(value: raw.value) : nil
   }
 
   func lastRememberedLogicalHeight() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.Element_lastRememberedLogicalHeight(p)
+    return raw.is_valid ? LayoutUnit.fromRawValue(value: raw.value) : nil
   }
 
   func clearLastRememberedLogicalWidth() {
