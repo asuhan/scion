@@ -44,7 +44,17 @@
 
 // This class handles the auto-scrolling for <marquee>
 final class RenderMarqueeWrapper {
+  init(_ layer: RenderLayerWrapper?) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func isHorizontal() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  func updateMarqueeStyle() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

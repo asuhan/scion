@@ -81,8 +81,17 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func createOrDestroyMarquee() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = m_layer.renderer()
+    if renderer.isHTMLMarquee() && renderer.style().marqueeBehavior() != .None
+      && renderer.isRenderBox()
+    {
+      if m_marquee == nil {
+        m_marquee = RenderMarqueeWrapper(m_layer)
+      }
+      m_marquee!.updateMarqueeStyle()
+    } else if m_marquee != nil {
+      m_marquee = nil
+    }
   }
 
   func restoreScrollPosition() {
@@ -823,4 +832,6 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   // Renderers to hold our custom scroll corner and resizer.
   private var scrollCorner: RenderScrollbarPartWrapper? = nil
   private var resizer: RenderScrollbarPartWrapper? = nil
+
+  private var m_marquee: RenderMarqueeWrapper? = nil  // Used for <marquee>.
 }
