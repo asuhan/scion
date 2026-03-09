@@ -122,8 +122,7 @@ class ElementWrapper: ContainerNodeWrapper {
   }
 
   func setSavedLayerScrollPosition(_ position: ScrollPosition) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Element_setSavedLayerScrollPosition(p, IntPointRaw(x: position.x, y: position.y))
   }
 
   func willAttachRenderers() {

@@ -177,6 +177,11 @@ extern "C" WEBCORE_EXPORT IntPointRaw Element_savedLayerScrollPosition(const voi
     return {raw.x(), raw.y()};
 }
 
+extern "C" WEBCORE_EXPORT void Element_setSavedLayerScrollPosition(void* p, IntPointRaw raw)
+{
+    static_cast<WebCore::Element*>(p)->setSavedLayerScrollPosition({raw.x, raw.y});
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(Element);

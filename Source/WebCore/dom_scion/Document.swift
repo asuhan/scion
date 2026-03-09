@@ -29,7 +29,7 @@ import wk_interop
 
 // TODO(asuhan): inherit from all bases
 class Document: TreeScopeWrapper {
-  init(_ p: UnsafeRawPointer) { self.p = p }
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func frame() -> LocalFrameWrapper? {
     let raw = wk_interop.Document_frame(p)
@@ -281,5 +281,5 @@ class Document: TreeScopeWrapper {
 
   func ContainerNode() -> ContainerNodeWrapper { return ContainerNodeWrapper(p: p) }
 
-  private let p: UnsafeRawPointer
+  private let p: UnsafeMutableRawPointer
 }

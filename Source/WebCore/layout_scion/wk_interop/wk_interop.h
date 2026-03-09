@@ -444,7 +444,7 @@ bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_ra
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 const void* LocalFrameView_layoutContext(const void*);
-const void* RenderElement_element(const void*);
+void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);
 bool RenderElement_hasSelfPaintingLayer(const void*);
@@ -803,3 +803,4 @@ bool FilterOperations_isEmpty(const void*);
 bool FilterOperations_hasReferenceFilter(const void*);
 bool WillChangeData_canCreateStackingContext(const void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
+void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);

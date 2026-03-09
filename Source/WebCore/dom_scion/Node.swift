@@ -25,7 +25,7 @@
 import wk_interop
 
 class NodeWrapper {
-  init(p: UnsafeRawPointer) {
+  init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
 
@@ -191,5 +191,5 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
-  let p: UnsafeRawPointer
+  let p: UnsafeMutableRawPointer
 }

@@ -106,7 +106,7 @@
 #include "ContentChangeObserver.h"
 #endif
 
-extern "C" WEBCORE_EXPORT const void* RenderElement_element(const void* p)
+extern "C" WEBCORE_EXPORT void* RenderElement_element(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->element();
 }
