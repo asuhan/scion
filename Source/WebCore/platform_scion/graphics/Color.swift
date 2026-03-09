@@ -31,10 +31,7 @@ struct ColorWrapper: Equatable {
     static let UseColorFunctionSerialization = Flags(rawValue: 1 << 1)
   }
 
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init() {}
 
   init(_ color: SRGBA<UInt8>, _ flags: Flags = []) {
     // TODO(asuhan): implement this
@@ -120,6 +117,9 @@ struct ColorWrapper: Equatable {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private static let invalidColorAndFlags: UInt64 = 0
+  private let m_colorAndFlags = ColorWrapper.invalidColorAndFlags
 }
 
 func equalIgnoringSemanticColor(a: ColorWrapper, b: ColorWrapper) -> Bool {
