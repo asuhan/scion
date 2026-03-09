@@ -1448,8 +1448,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Update the geometry of the layers used for clipping and scrolling in frames.
   func frameViewDidChangeLocation(_ contentsOffset: IntPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    m_overflowControlsHostLayer?.setPosition(p: FloatPoint(p: contentsOffset))
   }
 
   func frameViewDidChangeSize() {
