@@ -214,6 +214,10 @@ extern "C" void Element_clearHoverAndActiveStatusBeforeDetachingRenderer(void* p
     return static_cast<WebCore::Element*>(p)->clearHoverAndActiveStatusBeforeDetachingRenderer();
 }
 
+extern "C" bool Element_hasDisplayContents(void* p) {
+    return static_cast<WebCore::Element*>(p)->hasDisplayContents();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;

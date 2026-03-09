@@ -141,10 +141,7 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
-  func hasDisplayContents() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasDisplayContents() -> Bool { return wk_interop.Element_hasDisplayContents(p) }
 
   func storeDisplayContentsOrNoneStyle(style: RenderStyleWrapper) {
     // TODO(asuhan): implement this
