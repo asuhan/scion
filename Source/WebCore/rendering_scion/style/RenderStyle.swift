@@ -259,8 +259,15 @@ class RenderStyleWrapper: Equatable {
   func getCachedPseudoStyle(pseudoElementIdentifier: Style.PseudoElementIdentifier)
     -> RenderStyleWrapper?
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_getCachedPseudoStyle(
+      p, pseudoElementIdentifier.pseudoId.rawValue, pseudoElementIdentifier.nameArgument.p)
+    if raw == nil {
+      return nil
+    }
+    // TODO(asuhan): convert native fields
+    let cachedStyle = RenderStyleWrapper()
+    cachedStyle.p = raw
+    return cachedStyle
   }
 
   @discardableResult
