@@ -807,8 +807,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // If an element has composited negative z-index children, those children render in front of the
   // layer background, so we need an extra 'contents' layer for the foreground of the layer object.
   func needsContentsCompositingLayer(_ layer: RenderLayerWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    for layer in layer.negativeZOrderLayers() {
+      if layer.isComposited() || layer.hasCompositingDescendant {
+        return true
+      }
+    }
+
+    return false
   }
 
   func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
