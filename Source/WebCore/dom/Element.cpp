@@ -210,6 +210,10 @@ extern "C" void Element_clearAfterPseudoElement(void* p) {
     return static_cast<WebCore::Element*>(p)->clearAfterPseudoElement();
 }
 
+extern "C" void Element_clearHoverAndActiveStatusBeforeDetachingRenderer(void* p) {
+    return static_cast<WebCore::Element*>(p)->clearHoverAndActiveStatusBeforeDetachingRenderer();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;

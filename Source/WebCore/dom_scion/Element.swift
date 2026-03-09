@@ -133,8 +133,7 @@ class ElementWrapper: ContainerNodeWrapper {
   func clearAfterPseudoElement() { wk_interop.Element_clearAfterPseudoElement(p) }
 
   func clearHoverAndActiveStatusBeforeDetachingRenderer() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.Element_clearHoverAndActiveStatusBeforeDetachingRenderer(p)
   }
 
   func styleResolver() -> Style.Resolver {

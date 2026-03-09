@@ -813,5 +813,6 @@ void Element_willDetachRenderers(void*);
 void Element_didDetachRenderers(void*);
 void Element_clearBeforePseudoElement(void*);
 void Element_clearAfterPseudoElement(void*);
+void Element_clearHoverAndActiveStatusBeforeDetachingRenderer(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);
