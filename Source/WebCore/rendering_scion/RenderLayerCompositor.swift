@@ -1264,8 +1264,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   static func hasCompositedWidgetContents(_ renderer: RenderObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let renderWidget = renderer as? RenderWidgetWrapper else { return false }
+    return renderWidget.requiresAcceleratedCompositing()
   }
 
   static func isCompositedPlugin(renderer: RenderObjectWrapper) -> Bool {
