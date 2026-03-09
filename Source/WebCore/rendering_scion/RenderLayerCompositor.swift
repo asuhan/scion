@@ -1788,8 +1788,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     // Add a layer that would repaint into a layer in m_backingSharingLayers.
     // That repaint has to wait until we've set the provider's backing-sharing layers.
     func addLayerNeedingRepaint(layer: RenderLayerWrapper) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      layersPendingRepaint.add(value: layer)
     }
 
     func addBackingSharingCandidate(
