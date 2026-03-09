@@ -697,8 +697,43 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func clippedByAncestor(_ layer: RenderLayerWrapper, _ compositingAncestor: RenderLayerWrapper?)
     -> Bool
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    assert(layer.isComposited())
+    if compositingAncestor == nil {
+      return false
+    }
+
+    if layer.renderer().capturedInViewTransition() {
+      return false
+    }
+
+    // If the compositingAncestor clips, that will be taken care of by clipsCompositingDescendants(),
+    // so we only care about clipping between its first child that is our ancestor (the computeClipRoot),
+    // and layer. The exception is when the compositingAncestor isolates composited blending children,
+    // in this case it is not allowed to clipsCompositingDescendants() and each of its children
+    // will be clippedByAncestor()s, including the compositingAncestor.
+    var computeClipRoot = compositingAncestor
+    if canUseDescendantClippingLayer(compositingAncestor!) {
+      computeClipRoot = nil
+      var parent: RenderLayerWrapper? = layer
+      while parent != nil {
+        let next = parent!.parent()
+        if CPtrToInt(next?.p) == CPtrToInt(compositingAncestor?.p) {
+          computeClipRoot = parent
+          break
+        }
+        parent = next
+      }
+
+      if computeClipRoot == nil || CPtrToInt(computeClipRoot!.p) == CPtrToInt(layer.p) {
+        return false
+      }
+    }
+
+    let backgroundClipRect = layer.backgroundClipRect(
+      clipRectsContext: RenderLayerWrapper.ClipRectsContext(
+        inRootLayer: computeClipRoot, inClipRectsType: .TemporaryClipRects))
+    return !backgroundClipRect.isInfinite()  // FIXME: Incorrect for CSS regions.
   }
 
   func updateAncestorClippingStack(
