@@ -128,15 +128,9 @@ class ElementWrapper: ContainerNodeWrapper {
     fatalError("Not implemented")
   }
 
-  func clearBeforePseudoElement() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clearBeforePseudoElement() { wk_interop.Element_clearBeforePseudoElement(p) }
 
-  func clearAfterPseudoElement() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clearAfterPseudoElement() { wk_interop.Element_clearAfterPseudoElement(p) }
 
   func clearHoverAndActiveStatusBeforeDetachingRenderer() {
     // TODO(asuhan): implement this

@@ -202,6 +202,14 @@ extern "C" void Element_didDetachRenderers(void* p) {
     return static_cast<WebCore::Element*>(p)->didDetachRenderers();
 }
 
+extern "C" void Element_clearBeforePseudoElement(void* p) {
+    return static_cast<WebCore::Element*>(p)->clearBeforePseudoElement();
+}
+
+extern "C" void Element_clearAfterPseudoElement(void* p) {
+    return static_cast<WebCore::Element*>(p)->clearAfterPseudoElement();
+}
+
 struct IntPointRaw {
     int32_t x;
     int32_t y;
