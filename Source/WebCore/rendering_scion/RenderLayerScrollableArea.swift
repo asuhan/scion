@@ -44,6 +44,18 @@
  * version of this file under any of the LGPL, the MPL or the GPL.
  */
 
+private func rendererForScrollbar(_ renderer: RenderLayerModelObjectWrapper)
+  -> RenderElementWrapper?
+{
+  if let element = renderer.element(), let shadowRoot = element.containingShadowRoot(),
+    shadowRoot.mode() == .UserAgent
+  {
+    return shadowRoot.host()!.containerRenderer()
+  }
+
+  return renderer
+}
+
 final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   init(layer: RenderLayerWrapper) {
     self.m_layer = layer
@@ -663,13 +675,56 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func updateScrollCornerStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = m_layer.renderer()
+    let actualRenderer = rendererForScrollbar(renderer)
+    let corner =
+      renderer.hasNonVisibleOverflow() && !renderer.style().usesStandardScrollbarStyle()
+      ? actualRenderer!.getUncachedPseudoStyle(
+        pseudoElementRequest: Style.PseudoElementRequest(pseudoId: .WebKitScrollbarCorner),
+        parentStyle: actualRenderer!.style())
+      : nil
+
+    if corner == nil {
+      clearScrollCorner()
+      return
+    }
+
+    if scrollCorner == nil {
+      scrollCorner = CreateRenderer.RenderScrollbarPart(renderer.document(), corner!)
+      // FIXME: A renderer should be a child of its parent!
+      scrollCorner!.setParent(parent: renderer)
+      scrollCorner!.initializeStyle()
+    } else {
+      scrollCorner!.setStyle(style: corner!)
+    }
   }
 
   private func updateResizerStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if resizer == nil && !m_layer.canResize() {
+      return
+    }
+
+    let renderer = m_layer.renderer()
+    let actualRenderer = rendererForScrollbar(renderer)
+    let resizerStyle =
+      renderer.hasNonVisibleOverflow()
+      ? actualRenderer!.getUncachedPseudoStyle(
+        pseudoElementRequest: Style.PseudoElementRequest(pseudoId: .WebKitResizer),
+        parentStyle: actualRenderer!.style()) : nil
+
+    if resizerStyle == nil {
+      clearResizer()
+      return
+    }
+
+    if resizer == nil {
+      resizer = CreateRenderer.RenderScrollbarPart(renderer.document(), resizerStyle!)
+      // FIXME: A renderer should be a child of its parent!
+      resizer!.setParent(parent: renderer)
+      resizer!.initializeStyle()
+    } else {
+      resizer!.setStyle(style: resizerStyle!)
+    }
   }
 
   private func drawPlatformResizerImage(
@@ -677,6 +732,16 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   ) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func clearScrollCorner() {
+    scrollCorner?.setParent(parent: nil)
+    scrollCorner = nil
+  }
+
+  private func clearResizer() {
+    resizer?.setParent(parent: nil)
+    resizer = nil
   }
 
   private enum ScrollbarState {
@@ -746,6 +811,6 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private var cachedOverlayScrollbarOffset = IntPoint()
 
   // Renderers to hold our custom scroll corner and resizer.
-  private let scrollCorner: RenderScrollbarPartWrapper? = nil
-  private let resizer: RenderScrollbarPartWrapper? = nil
+  private var scrollCorner: RenderScrollbarPartWrapper? = nil
+  private var resizer: RenderScrollbarPartWrapper? = nil
 }

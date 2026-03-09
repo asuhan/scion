@@ -304,6 +304,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_isolation(const void* p)
     return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->isolation());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_usesStandardScrollbarStyle(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->usesStandardScrollbarStyle();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_usedZIndex(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->usedZIndex();

@@ -2177,6 +2177,10 @@ class RenderStyleWrapper: Equatable {
       || blockFlowDirection() == .RightToLeft
   }
 
+  func usesStandardScrollbarStyle() -> Bool {
+    return wk_interop.RenderStyle_usesStandardScrollbarStyle(p!)
+  }
+
   func viewTransitionName() -> Style.ScopedName? {
     let raw = wk_interop.RenderStyle_viewTransitionName(p!)
     if !raw.is_valid {

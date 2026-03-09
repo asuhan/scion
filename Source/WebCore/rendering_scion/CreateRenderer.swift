@@ -118,8 +118,8 @@ class CreateRenderer {
   }
 
   static func RenderScrollbarPart(
-    _ document: Document, _ style: RenderStyleWrapper, _ scrollbar: RenderScrollbar?,
-    _ part: ScrollbarPart
+    _ document: Document, _ style: RenderStyleWrapper, _ scrollbar: RenderScrollbar? = nil,
+    _ part: ScrollbarPart = .NoPart
   ) -> RenderScrollbarPartWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
