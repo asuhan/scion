@@ -522,8 +522,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // True when some content element other than the root is composited.
   func hasContentCompositingLayers() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(p == nil)
+    return contentLayersCount != 0
   }
 
   // Rebuild the tree of compositing layers
