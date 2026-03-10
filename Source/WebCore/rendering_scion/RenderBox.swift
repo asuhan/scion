@@ -792,10 +792,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       y: LayoutUnit.fromRawValue(value: rawLocation.y))
   }
 
-  func locationOffset() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func locationOffset() -> LayoutSizeWrapper { return LayoutSizeWrapper(width: x(), height: y()) }
 
   func size() -> LayoutSizeWrapper {
     // TODO(asuhan): implement this
