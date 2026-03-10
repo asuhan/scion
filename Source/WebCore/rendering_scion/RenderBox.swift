@@ -991,8 +991,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func previousInFlowSiblingBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var curr = previousSiblingBox()
+    while curr != nil {
+      if !curr!.isFloatingOrOutOfFlowPositioned() {
+        return curr
+      }
+      curr = curr!.previousSiblingBox()
+    }
+    return nil
   }
 
   func nextSiblingBox() -> RenderBoxWrapper? {
