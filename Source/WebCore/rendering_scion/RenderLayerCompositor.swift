@@ -3833,8 +3833,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForModel(renderer: RenderLayerModelObjectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): support model element
+    return false
   }
 
   // Layout-dependent
