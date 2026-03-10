@@ -815,8 +815,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func move(dx: LayoutUnit, dy: LayoutUnit) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_move(p, dx.rawValue(), dy.rawValue())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_move(p, dx.rawValue(), dy.rawValue())
+      return
+    }
+    m_frameRect.move(dx: dx, dy: dy)
   }
 
   func frameRect() -> LayoutRectWrapper {
