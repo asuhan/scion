@@ -58,8 +58,8 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func checkedLayer() -> RenderLayerWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_layer
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
