@@ -827,8 +827,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setFrameRect(rect: LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_frameRect = rect
   }
 
   func marginBoxRect() -> LayoutRectWrapper {
