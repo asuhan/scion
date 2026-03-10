@@ -110,6 +110,8 @@ public:
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 
+    void styleDidChange(StyleDifference, const RenderStyle*);
+
     void setWk(void*);
 
 private:

@@ -524,6 +524,16 @@ func RenderViewScion_compositor(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMut
   return view.compositor().p!
 }
 
+@_cdecl("RenderViewScion_styleDidChange")
+func RenderViewScion_styleDidChange(
+  _ viewRaw: UnsafeMutableRawPointer, _ diffRaw: UInt8, _ oldStyleRaw: UnsafeRawPointer
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let oldStyle = RenderStyleWrapper()
+  oldStyle.p = oldStyleRaw
+  view.styleDidChange(diff: StyleDifference(rawValue: diffRaw)!, oldStyle: oldStyle)
+}
+
 @_cdecl("RenderViewScion_setWk")
 func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

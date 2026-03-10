@@ -124,6 +124,10 @@ void RenderView::setScionHandle(void* handle) {
 
 void RenderView::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
+    if (m_scion) {
+        m_scion->styleDidChange(diff, oldStyle);
+        return;
+    }
     RenderBlockFlow::styleDidChange(diff, oldStyle);
 
     bool writingModeChanged = oldStyle && style().writingMode() != oldStyle->writingMode();

@@ -39,6 +39,8 @@ extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(void*);
 
+extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
+
 extern "C" void RenderViewScion_setWk(void*, void*);
 
 namespace WebCore {
@@ -200,6 +202,11 @@ const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryB
     static SingleThreadWeakHashSet<const RenderBox> unused;
     ASSERT_NOT_REACHED();
     return unused;
+}
+
+void RenderViewScion::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
+{
+    RenderViewScion_styleDidChange(m_handle, static_cast<uint8_t>(diff), oldStyle);
 }
 
 void RenderViewScion::setWk(void* wk)
