@@ -1232,10 +1232,7 @@ class RenderLayerWrapper {
 
   func hasReflection() -> Bool { return renderer().hasReflection() }
 
-  func isReflection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isReflection() -> Bool { return renderer().isRenderReplica() }
 
   func reflectionLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this

@@ -678,6 +678,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isRenderReplica() -> Bool {
+    assert(isNativeImpl())
+    return type() == .Replica
+  }
+
   func isRenderTable() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
