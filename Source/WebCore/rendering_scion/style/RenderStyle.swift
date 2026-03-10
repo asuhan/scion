@@ -1045,10 +1045,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasClip() -> Bool { return wk_interop.RenderStyle_hasClip(p!) }
 
   func unicodeBidi() -> UnicodeBidi {
     return nonInheritedFlags.unicodeBidi
