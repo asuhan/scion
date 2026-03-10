@@ -55,6 +55,8 @@ struct Position {
     fatalError("Not implemented")
   }
 
+  func isNotNull() -> Bool { return !isNull() }
+
   func upstream(_ rule: EditingBoundaryCrossingRule = .CannotCrossEditingBoundary) -> Position {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

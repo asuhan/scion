@@ -1893,8 +1893,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func createVisiblePosition(_ position: Position) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if position.isNotNull() {
+      return VisiblePosition(position)
+    }
+
+    assert(node() == nil)
+    return createVisiblePosition(0, .Downstream)
   }
 
   func containingBlock() -> RenderBlockWrapper? {
