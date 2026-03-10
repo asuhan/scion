@@ -5817,6 +5817,11 @@ class RenderLayerWrapper {
     }
   }
 
+  func isInsideSVGForeignObject() -> Bool {
+    assert(isNative)
+    return m_insideSVGForeignObject
+  }
+
   private func createReflection() {
     assert(reflection == nil)
     reflection = RenderReplicaWrapper(

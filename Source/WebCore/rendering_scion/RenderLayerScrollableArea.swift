@@ -123,6 +123,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
+  private func scrollsOverflow() -> Bool {
+    let renderer = m_layer.renderer() as? RenderBoxWrapper
+    return renderer?.scrollsOverflow() ?? false
+  }
+
   func hasScrollableHorizontalOverflow() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -177,8 +182,14 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
 
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
   func canUseCompositedScrolling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let renderer = m_layer.renderer()
+    let isVisible = renderer.style().usedVisibility() == .Visible
+    if renderer.settings().asyncOverflowScrollingEnabled() {
+      return isVisible && scrollsOverflow() && !m_layer.isInsideSVGForeignObject()
+    }
+
+    // TODO(asuhan): add iOS support
+    return false
   }
 
   func verticalScrollbarWidth(
