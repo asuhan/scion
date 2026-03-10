@@ -1131,9 +1131,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderLineBreak() && !hasWBRLineBreakFlag()
   }
 
+  private func isWBR() -> Bool {
+    return isRenderLineBreak() && hasWBRLineBreakFlag()
+  }
+
   func isLineBreakOpportunity() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isRenderLineBreak() && isWBR()
   }
 
   func isRenderBox() -> Bool { return m_typeFlags.contains(.IsBox) }
