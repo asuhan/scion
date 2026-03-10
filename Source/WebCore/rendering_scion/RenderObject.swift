@@ -250,6 +250,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     static let IsViewTransitionContainer = BlockFlowFlag(rawValue: 1 << 4)
   }
 
+  struct LineBreakFlag: OptionSet {
+    let rawValue: UInt8
+
+    static let IsWBR = LineBreakFlag(rawValue: 1 << 0)
+  }
+
   struct ReplacedFlag: OptionSet {
     let rawValue: UInt8
 
@@ -292,6 +298,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     func blockFlowFlags() -> BlockFlowFlag {
       return BlockFlowFlag(rawValue: valueForKind(.BlockFlow))
+    }
+
+    func lineBreakFlags() -> LineBreakFlag {
+      return LineBreakFlag(rawValue: valueForKind(.LineBreak))
     }
 
     func replacedFlags() -> ReplacedFlag {
@@ -1112,9 +1122,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_typeFlags.contains(.IsText)
   }
 
+  private func isRenderLineBreak() -> Bool {
+    assert(isNativeImpl())
+    return type() == .LineBreak
+  }
+
   func isBR() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isRenderLineBreak() && !hasWBRLineBreakFlag()
   }
 
   func isLineBreakOpportunity() -> Bool {
@@ -2786,6 +2800,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     }
 
     repaintUsingContainer(repaintContainer.renderer, repaintRect, clipRepaintToLayer == .Yes)
+  }
+
+  private func hasWBRLineBreakFlag() -> Bool {
+    assert(isNativeImpl())
+    return m_typeSpecificFlags.lineBreakFlags().contains(.IsWBR)
   }
 
   func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
