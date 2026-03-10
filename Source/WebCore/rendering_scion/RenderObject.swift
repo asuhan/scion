@@ -1093,8 +1093,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRelativelyPositioned() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.isRelativelyPositioned()
   }
 
   func isStickilyPositioned() -> Bool {
