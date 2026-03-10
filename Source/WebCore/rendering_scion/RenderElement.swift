@@ -1153,13 +1153,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setIsContinuation() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_isContinuation = true
   }
 
   func setIsFirstLetter() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_isFirstLetter = true
   }
 
   @discardableResult
@@ -2262,8 +2262,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   private let m_hasCounterNodeMap: Bool
   private let m_hasContinuationChainNode: Bool
 
-  private let m_isContinuation: Bool
-  private let m_isFirstLetter: Bool
+  private var m_isContinuation: Bool
+  private var m_isFirstLetter: Bool
   let renderBlockHasMarginBeforeQuirk: Bool
   let renderBlockHasMarginAfterQuirk: Bool
   var renderBlockShouldForceRelayoutChildren: Bool
