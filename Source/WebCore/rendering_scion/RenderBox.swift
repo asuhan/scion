@@ -823,13 +823,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func frameRect() -> LayoutRectWrapper {
-    assert(!isNativeImpl())
-    let raw = wk_interop.RenderBox_frameRect(p)
-    return LayoutRectWrapper(
-      x: LayoutUnit.fromRawValue(value: raw.x),
-      y: LayoutUnit.fromRawValue(value: raw.y),
-      width: LayoutUnit.fromRawValue(value: raw.width),
-      height: LayoutUnit.fromRawValue(value: raw.height))
+    if !isNativeImpl() {
+      let raw = wk_interop.RenderBox_frameRect(p)
+      return LayoutRectWrapper(
+        x: LayoutUnit.fromRawValue(value: raw.x),
+        y: LayoutUnit.fromRawValue(value: raw.y),
+        width: LayoutUnit.fromRawValue(value: raw.width),
+        height: LayoutUnit.fromRawValue(value: raw.height))
+    }
+    return m_frameRect
   }
 
   func setFrameRect(rect: LayoutRectWrapper) {
