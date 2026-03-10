@@ -1280,8 +1280,8 @@ class RenderLayerWrapper {
 
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
   func canUseCompositedScrolling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return m_scrollableArea?.canUseCompositedScrolling() ?? false
   }
 
   // Returns true when there is actually scrollable overflow (requires layout to be up-to-date).
