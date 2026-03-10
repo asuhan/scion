@@ -934,10 +934,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
   ) -> FloatRectWrapper { return borderBoxRect().FloatRect() }
 
-  override func objectBoundingBox() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func objectBoundingBox() -> FloatRectWrapper { return borderBoxRect().FloatRect() }
 
   // Note these functions are not equivalent of childrenOfType<RenderBox>
   func parentBox() -> RenderBoxWrapper? {
