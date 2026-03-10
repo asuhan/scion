@@ -835,8 +835,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func borderBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
   }
 
   // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
