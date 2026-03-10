@@ -981,8 +981,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func previousSiblingBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let box = previousSibling() as? RenderBoxWrapper {
+      return box
+    }
+
+    assert(previousSibling() == nil)
+    return nil
   }
 
   func previousInFlowSiblingBox() -> RenderBoxWrapper? {
