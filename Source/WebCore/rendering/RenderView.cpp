@@ -854,6 +854,7 @@ void RenderView::setBestTruncatedAt(int y, RenderBoxModelObject* forRenderer, bo
 
 bool RenderView::usesCompositing() const
 {
+    if (m_scion) { return m_scion->usesCompositing(); }
     return m_compositor && m_compositor->usesCompositing();
 }
 

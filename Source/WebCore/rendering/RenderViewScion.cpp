@@ -39,6 +39,8 @@ extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(void*);
 
+extern "C" bool RenderViewScion_usesCompositing(void*);
+
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void RenderViewScion_setWk(void*, void*);
@@ -170,8 +172,7 @@ RenderLayerCompositor& RenderViewScion::compositor()
 
 bool RenderViewScion::usesCompositing() const
 {
-    ASSERT_NOT_REACHED();
-    return false;
+    return RenderViewScion_usesCompositing(m_handle);
 }
 
 IntRect RenderViewScion::documentRect() const

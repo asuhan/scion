@@ -524,6 +524,12 @@ func RenderViewScion_compositor(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMut
   return view.compositor().p!
 }
 
+@_cdecl("RenderViewScion_usesCompositing")
+func RenderViewScion_usesCompositing(_ viewRaw: UnsafeMutableRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.usesCompositing()
+}
+
 @_cdecl("RenderViewScion_styleDidChange")
 func RenderViewScion_styleDidChange(
   _ viewRaw: UnsafeMutableRawPointer, _ diffRaw: UInt8, _ oldStyleRaw: UnsafeRawPointer
