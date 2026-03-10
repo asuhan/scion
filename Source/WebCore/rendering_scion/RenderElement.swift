@@ -1344,8 +1344,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func paintRectToClipOutFromBorder(paintRect: LayoutRectWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutRectWrapper()
   }
 
   func paintFocusRing(
