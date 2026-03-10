@@ -344,8 +344,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func lastChild() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_lastChild
   }
 
   func firstInFlowChild() -> RenderObjectWrapper? {
@@ -2040,10 +2040,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       && !isRenderTable()
   }
 
-  override func lastChildSlow() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func lastChildSlow() -> RenderObjectWrapper? { return lastChild() }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
     guard let root = element()!.containingShadowRoot() else { return nil }
