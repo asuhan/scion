@@ -785,11 +785,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func location() -> LayoutPointWrapper {
-    assert(!isNativeImpl())
-    let rawLocation = wk_interop.RenderBox_location(p)
-    return LayoutPointWrapper(
-      x: LayoutUnit.fromRawValue(value: rawLocation.x),
-      y: LayoutUnit.fromRawValue(value: rawLocation.y))
+    if !isNativeImpl() {
+      let rawLocation = wk_interop.RenderBox_location(p)
+      return LayoutPointWrapper(
+        x: LayoutUnit.fromRawValue(value: rawLocation.x),
+        y: LayoutUnit.fromRawValue(value: rawLocation.y))
+    }
+    return m_frameRect.location()
   }
 
   func locationOffset() -> LayoutSizeWrapper { return LayoutSizeWrapper(width: x(), height: y()) }
