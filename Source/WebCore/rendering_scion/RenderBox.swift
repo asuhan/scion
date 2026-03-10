@@ -802,8 +802,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setLocation(p: LayoutPointWrapper) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_setLocation(self.p, p.x.rawValue(), p.y.rawValue())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setLocation(self.p, p.x.rawValue(), p.y.rawValue())
+      return
+    }
+    m_frameRect.setLocation(location: p)
   }
 
   func setSize(_ size: LayoutSizeWrapper) {
