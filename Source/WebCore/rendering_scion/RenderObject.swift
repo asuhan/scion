@@ -1085,8 +1085,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFixedPositioned() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return isOutOfFlowPositioned() && style().position() == .Fixed
   }
 
   func isAbsolutelyPositioned() -> Bool {
