@@ -573,13 +573,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func width() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_frameRect.width()
   }
 
   func height() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_frameRect.height()
   }
 
   func setX<T>(x: T) {
