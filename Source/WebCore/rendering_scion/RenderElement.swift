@@ -1316,13 +1316,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func effectiveOverflowInlineDirection() -> Overflow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? effectiveOverflowX() : effectiveOverflowY()
   }
 
   func effectiveOverflowBlockDirection() -> Overflow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? effectiveOverflowY() : effectiveOverflowX()
   }
 
   func isWritingModeRoot() -> Bool {
