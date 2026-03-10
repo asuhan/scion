@@ -3832,8 +3832,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func scrollsOverflowY() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return hasNonVisibleOverflow()
+      && (style().overflowY() == .Scroll || style().overflowY() == .Auto)
   }
 
   private func hasScrollableOverflowX() -> Bool {
