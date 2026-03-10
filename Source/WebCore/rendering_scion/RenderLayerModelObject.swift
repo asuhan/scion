@@ -43,8 +43,8 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func hasSelfPaintingLayerModelObject() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_layer?.isSelfPaintingLayer ?? false
   }
 
   func layer() -> RenderLayerWrapper? {
