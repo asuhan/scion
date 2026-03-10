@@ -807,8 +807,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setSize(_ size: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_frameRect.setSize(size: size)
   }
 
   func move(dx: LayoutUnit, dy: LayoutUnit) {
@@ -7287,7 +7287,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   // The width/height of the contents + borders + padding.  The x/y location is relative to our container (which is not always our parent).
-  private let m_frameRect = LayoutRectWrapper()
+  private var m_frameRect = LayoutRectWrapper()
 
   let marginBox: LayoutBoxExtent? = nil
 
