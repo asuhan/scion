@@ -668,6 +668,7 @@ uint8_t RenderStyle_textEmphasisPosition(const void*);
 bool RenderStyle_hasTextCombine(const void*);
 struct ScopedNameRaw RenderStyle_viewTransitionName(const void*);
 uint8_t RenderStyle_textAlignLast(const void*);
+struct LengthBoxRaw RenderStyle_clip(const void*);
 bool RenderStyle_hasClip(const void*);
 bool LineBreakTable_unsafeLookup(uint16_t, uint16_t);
 uint16_t BreakLines_classify(uint16_t, uint8_t);

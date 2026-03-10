@@ -612,6 +612,12 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textAlignLast(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textAlignLast());
 }
 
+extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_clip(const void* p)
+{
+    auto clip = static_cast<const WebCore::RenderStyle*>(p)->clip();
+    return { &clip.top(), &clip.right(), &clip.bottom(), &clip.left() };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasClip(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasClip();
