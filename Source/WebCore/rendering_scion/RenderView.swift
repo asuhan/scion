@@ -771,8 +771,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func shouldRepaint(_ rect: LayoutRectWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !printing() && !rect.isEmpty()
   }
 
   private func updateInitialContainingBlockSize() {
