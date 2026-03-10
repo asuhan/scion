@@ -522,7 +522,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // True when some content element other than the root is composited.
   func hasContentCompositingLayers() -> Bool {
-    assert(p == nil)
+    if p != nil {
+      return wk_interop.RenderLayerCompositor_hasContentCompositingLayers(p!)
+    }
     return contentLayersCount != 0
   }
 
