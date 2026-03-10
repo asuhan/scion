@@ -3311,8 +3311,8 @@ class RenderLayerWrapper {
   }
 
   func isInsideFragmentedFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNative)
+    return renderer().fragmentedFlowState() != .NotInsideFlow
   }
 
   enum EventRegionInvalidationReason {
