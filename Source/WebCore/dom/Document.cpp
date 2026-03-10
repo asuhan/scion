@@ -443,6 +443,11 @@ extern "C" WEBCORE_EXPORT void* Document_securityOrigin(const void* raw)
     return &static_cast<const WebCore::Document*>(raw)->securityOrigin();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_activeViewTransitionCapturedDocumentElement(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->activeViewTransitionCapturedDocumentElement();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_asyncOverflowScrollingEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->asyncOverflowScrollingEnabled();

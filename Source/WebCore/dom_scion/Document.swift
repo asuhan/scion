@@ -221,8 +221,7 @@ class Document: TreeScopeWrapper {
   }
 
   func activeViewTransitionCapturedDocumentElement() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Document_activeViewTransitionCapturedDocumentElement(p)
   }
 
   func hasViewTransitionPseudoElementTree() -> Bool {
