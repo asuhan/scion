@@ -635,8 +635,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func hasRenderersWithOutline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_renderersWithOutlineCount != 0
   }
 
   func hasSoftwareFilters() -> Bool { return m_hasSoftwareFilters }
