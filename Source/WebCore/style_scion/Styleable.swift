@@ -35,8 +35,19 @@ struct StyleableWrapper {
   }
 
   static func fromRenderer(_ renderer: RenderElementWrapper) -> StyleableWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    switch renderer.style().pseudoElementType() {
+    case .Backdrop, .Marker, .ViewTransitionGroup, .ViewTransitionImagePair, .ViewTransitionNew,
+      .ViewTransitionOld, .ViewTransition:
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    case .After, .Before, .None:
+      if let element = renderer.element() {
+        return fromElement(element: element)
+      }
+    default:
+      return nil
+    }
+    return nil
   }
 
   func renderer() -> RenderElementWrapper? {
