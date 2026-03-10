@@ -1142,8 +1142,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isRenderBox() -> Bool { return m_typeFlags.contains(.IsBox) }
 
   func isRenderTableRow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .TableRow
   }
 
   func isRenderView() -> Bool { return type() == .View }
