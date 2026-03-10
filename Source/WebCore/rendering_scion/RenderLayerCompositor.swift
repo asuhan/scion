@@ -3771,6 +3771,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForVideo(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    if !m_compositingTriggers.contains(.VideoTrigger) {
+      return false
+    }
+
+    if !(renderer is RenderVideoWrapper) { return false }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
