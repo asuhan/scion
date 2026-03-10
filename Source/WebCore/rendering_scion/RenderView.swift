@@ -624,13 +624,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   func hasQuotesNeedingUpdate() -> Bool { return m_hasQuotesNeedingUpdate }
 
   func incrementRendersWithOutline() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_renderersWithOutlineCount += 1
   }
 
   func decrementRendersWithOutline() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(m_renderersWithOutlineCount > 0)
+    m_renderersWithOutlineCount -= 1
   }
 
   func hasRenderersWithOutline() -> Bool {
@@ -796,6 +797,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   // Include this RenderView.
   private var m_rendererCount: UInt64 = 1
+
+  private var m_renderersWithOutlineCount: UInt32 = 0
 
   private let m_hasSoftwareFilters = false
   private var m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = false
