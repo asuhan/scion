@@ -1069,13 +1069,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func logicalLeftVisualOverflow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? visualOverflowRect().x() : visualOverflowRect().y()
   }
 
   func logicalRightVisualOverflow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? visualOverflowRect().maxX() : visualOverflowRect().maxY()
   }
 
   // RenderBox's basic implementation accounts for the writing mode (only).
