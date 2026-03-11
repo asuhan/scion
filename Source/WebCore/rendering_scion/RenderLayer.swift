@@ -366,7 +366,6 @@ class RenderLayerWrapper {
     repaintRectsValid = false
     m_renderer = renderer
     p = nil
-    isNative = true
 
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setIsCSSStackingContext(isCSSStackingContext: shouldBeCSSStackingContext())
@@ -412,12 +411,13 @@ class RenderLayerWrapper {
   }
 
   func scrollableArea() -> RenderLayerScrollableArea? {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_scrollableArea
   }
 
   @discardableResult
   func ensureLayerScrollableArea() -> RenderLayerScrollableArea? {
+    assert(isNativeImpl())
     let hadScrollableArea = scrollableArea() != nil
 
     if m_scrollableArea == nil {
@@ -446,39 +446,42 @@ class RenderLayerWrapper {
   }
 
   func renderer() -> RenderLayerModelObjectWrapper {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_renderer!
   }
 
-  func renderBox() -> RenderBoxWrapper? { return renderer() as? RenderBoxWrapper }
+  func renderBox() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
+    return renderer() as? RenderBoxWrapper
+  }
 
   func parent() -> RenderLayerWrapper? {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_parent
   }
 
   func previousSibling() -> RenderLayerWrapper? {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_previous
   }
 
   func nextSibling() -> RenderLayerWrapper? {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_next
   }
 
   func firstChild() -> RenderLayerWrapper? {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_first
   }
 
   func lastChild() -> RenderLayerWrapper? {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_last
   }
 
   func isDescendantOf(_ layer: RenderLayerWrapper) -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     var ancestor: RenderLayerWrapper? = self
     while ancestor != nil {
       if CPtrToInt(layer.layerId()) == CPtrToInt(ancestor!.layerId()) {
@@ -491,6 +494,7 @@ class RenderLayerWrapper {
 
   // This does an ancestor tree walk. Avoid it!
   private func root() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     var curr: RenderLayerWrapper? = self
     while curr!.parent() != nil {
       curr = curr!.parent()
@@ -499,7 +503,7 @@ class RenderLayerWrapper {
   }
 
   private func addChild(_ child: RenderLayerWrapper, beforeChild: RenderLayerWrapper? = nil) {
-    assert(isNative)
+    assert(isNativeImpl())
     if let prevSibling = beforeChild?.previousSibling() ?? lastChild() {
       child.setPreviousSibling(prev: prevSibling)
       prevSibling.setNextSibling(next: child)
@@ -553,6 +557,7 @@ class RenderLayerWrapper {
   }
 
   func removeChild(oldChild: RenderLayerWrapper) {
+    assert(isNativeImpl())
     if !renderer().renderTreeBeingDestroyed() {
       compositor().layerWillBeRemoved(parent: self, child: oldChild)
     }
@@ -607,7 +612,7 @@ class RenderLayerWrapper {
   }
 
   func insertOnlyThisLayer(_ timing: LayerChangeTiming) {
-    assert(isNative)
+    assert(isNativeImpl())
     if m_parent == nil && renderer().parent() != nil {
       // We need to connect ourselves when our renderer() has a parent.
       // Find our enclosingLayer and add ourselves.
@@ -633,7 +638,7 @@ class RenderLayerWrapper {
   }
 
   func removeOnlyThisLayer(timing: LayerChangeTiming) {
-    assert(isNative)
+    assert(isNativeImpl())
     if m_parent == nil {
       return
     }
@@ -673,6 +678,7 @@ class RenderLayerWrapper {
   // isStackingContext is true for layers that we've determined should be stacking contexts for painting.
   // Not all stacking contexts are CSS stacking contexts.
   func isStackingContext() -> Bool {
+    assert(isNativeImpl())
     return isCSSStackingContext() || isOpportunisticStackingContext
   }
 
@@ -680,11 +686,13 @@ class RenderLayerWrapper {
   // isCSSStackingContext() => isStackingContext().
   // FIXME: m_forcedStackingContext should affect isStackingContext(), not isCSSStackingContext(), but doing so breaks media control mix-blend-mode.
   func isCSSStackingContext() -> Bool {
+    assert(isNativeImpl())
     return self.m_isCSSStackingContext || self.forcedStackingContext
   }
 
   // Gets the enclosing stacking context for this layer, excluding this layer itself.
   func stackingContext() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     var layer = parent()
     while layer != nil && !layer!.isStackingContext() {
       layer = layer!.parent()
@@ -700,6 +708,7 @@ class RenderLayerWrapper {
   }
 
   func paintOrderParent() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     return isNormalFlowOnly ? m_parent : stackingContext()
   }
 
@@ -709,6 +718,7 @@ class RenderLayerWrapper {
   }
 
   func dirtyNormalFlowList() {
+    assert(isNativeImpl())
     if normalFlowList != nil {
       normalFlowList!.removeAll()
     }
@@ -720,6 +730,7 @@ class RenderLayerWrapper {
   }
 
   func dirtyZOrderLists() {
+    assert(isNativeImpl())
     assert(isStackingContext())
 
     if posZOrderList != nil {
@@ -737,11 +748,13 @@ class RenderLayerWrapper {
   }
 
   func dirtyStackingContextZOrderLists() {
+    assert(isNativeImpl())
     let sc = stackingContext()
     sc?.dirtyZOrderLists()
   }
 
   func dirtyHiddenStackingContextAncestorZOrderLists() {
+    assert(isNativeImpl())
     var sc = stackingContext()
     while sc != nil {
       sc!.dirtyZOrderLists()
@@ -753,6 +766,7 @@ class RenderLayerWrapper {
   }
 
   func willCompositeClipPath() -> Bool {
+    assert(isNativeImpl())
     if !isComposited() {
       return false
     }
@@ -768,51 +782,53 @@ class RenderLayerWrapper {
   }
 
   func hasDescendantNeedingCompositingRequirementsTraversal() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.HasDescendantNeedingRequirementsTraversal)
   }
 
   func hasDescendantNeedingUpdateBackingOrHierarchyTraversal() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.HasDescendantNeedingBackingOrHierarchyTraversal)
   }
 
   func needsCompositingPaintOrderChildrenUpdate() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.NeedsPaintOrderChildrenUpdate)
   }
 
   func needsScrollingTreeUpdate() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.NeedsScrollingTreeUpdate)
   }
 
   func childrenNeedCompositingGeometryUpdate() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.ChildrenNeedGeometryUpdate)
   }
 
   func descendantsNeedUpdateBackingAndHierarchyTraversal() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.DescendantsNeedBackingAndHierarchyTraversal)
   }
 
   func setNeedsCompositingConfigurationUpdate() {
+    assert(isNativeImpl())
     setBackingAndHierarchyTraversalDirtyBit(v: .NeedsConfigurationUpdate)
   }
 
   func setNeedsScrollingTreeUpdate() {
+    assert(isNativeImpl())
     setBackingAndHierarchyTraversalDirtyBit(v: .NeedsScrollingTreeUpdate)
   }
 
   func clearCompositingRequirementsTraversalState() {
-    assert(isNative)
+    assert(isNativeImpl())
     compositingDirtyBits.remove(.HasDescendantNeedingRequirementsTraversal)
     compositingDirtyBits.remove(RenderLayerWrapper.computeCompositingRequirementsFlags)
   }
 
   func needsAnyCompositingTraversal() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return !compositingDirtyBits.isEmpty
   }
 
@@ -874,6 +890,7 @@ class RenderLayerWrapper {
   ]
 
   private func setAncestorsHaveCompositingDirtyFlag(flag: Compositing) {
+    assert(isNativeImpl())
     var layer = paintOrderParent()
     while layer != nil {
       if layer!.compositingDirtyBits.contains(flag) {
@@ -885,32 +902,32 @@ class RenderLayerWrapper {
   }
 
   func needsPostLayoutCompositingUpdate() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.NeedsPostLayoutUpdate)
   }
 
   func descendantsNeedCompositingRequirementsTraversal() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.DescendantsNeedRequirementsTraversal)
   }
 
   func subsequentLayersNeedCompositingRequirementsTraversal() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.SubsequentLayersNeedRequirementsTraversal)
   }
 
   func needsCompositingLayerConnection() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.NeedsLayerConnection)
   }
 
   func needsCompositingGeometryUpdate() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.NeedsGeometryUpdate)
   }
 
   func needsCompositingConfigurationUpdate() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return compositingDirtyBits.contains(.NeedsConfigurationUpdate)
   }
 
@@ -920,44 +937,53 @@ class RenderLayerWrapper {
   }
 
   func setNeedsCompositingPaintOrderChildrenUpdate() {
+    assert(isNativeImpl())
     setRequirementsTraversalDirtyBit(v: .NeedsPaintOrderChildrenUpdate)
   }
 
   func setNeedsPostLayoutCompositingUpdate() {
+    assert(isNativeImpl())
     setRequirementsTraversalDirtyBit(v: .NeedsPostLayoutUpdate)
   }
 
   func setDescendantsNeedCompositingRequirementsTraversal() {
+    assert(isNativeImpl())
     setRequirementsTraversalDirtyBit(v: .DescendantsNeedRequirementsTraversal)
   }
 
   func setSubsequentLayersNeedCompositingRequirementsTraversal() {
+    assert(isNativeImpl())
     setRequirementsTraversalDirtyBit(v: .SubsequentLayersNeedRequirementsTraversal)
   }
 
   func setNeedsPostLayoutCompositingUpdateOnAncestors() {
+    assert(isNativeImpl())
     setAncestorsHaveCompositingDirtyFlag(flag: .NeedsPostLayoutUpdate)
   }
 
   private func setBackingAndHierarchyTraversalDirtyBit(v: Compositing) {
-    assert(isNative)
+    assert(isNativeImpl())
     compositingDirtyBits.update(with: v)
     setAncestorsHaveCompositingDirtyFlag(flag: .HasDescendantNeedingBackingOrHierarchyTraversal)
   }
 
   func setNeedsCompositingLayerConnection() {
+    assert(isNativeImpl())
     setBackingAndHierarchyTraversalDirtyBit(v: .NeedsLayerConnection)
   }
 
   func setNeedsCompositingGeometryUpdate() {
+    assert(isNativeImpl())
     setBackingAndHierarchyTraversalDirtyBit(v: .NeedsGeometryUpdate)
   }
 
   func setChildrenNeedCompositingGeometryUpdate() {
+    assert(isNativeImpl())
     setBackingAndHierarchyTraversalDirtyBit(v: .ChildrenNeedGeometryUpdate)
   }
 
   func setDescendantsNeedUpdateBackingAndHierarchyTraversal() {
+    assert(isNativeImpl())
     setBackingAndHierarchyTraversalDirtyBit(v: .DescendantsNeedBackingAndHierarchyTraversal)
   }
 
@@ -992,6 +1018,7 @@ class RenderLayerWrapper {
   }
 
   func hasNegativeZOrderLayers() -> Bool {
+    assert(isNativeImpl())
     return negZOrderList != nil && !negZOrderList!.isEmpty
   }
 
@@ -1002,6 +1029,7 @@ class RenderLayerWrapper {
 
   // Update our normal and z-index lists.
   func updateLayerListsIfNeeded() {
+    assert(isNativeImpl())
     updateDescendantDependentFlags()
     updateZOrderLists()
     updateNormalFlowList()
@@ -1013,6 +1041,7 @@ class RenderLayerWrapper {
   }
 
   func updateDescendantDependentFlags() {
+    assert(isNativeImpl())
     if visibleDescendantStatusDirty || hasSelfPaintingLayerDescendantDirty
       || hasNotIsolatedBlendingDescendantsStatusDirty
       || hasIntrinsicallyCompositedDescendantsStatusDirty
@@ -1077,6 +1106,7 @@ class RenderLayerWrapper {
   }
 
   func descendantDependentFlagsAreDirty() -> Bool {
+    assert(isNativeImpl())
     return visibleDescendantStatusDirty || visibleContentStatusDirty
       || hasSelfPaintingLayerDescendantDirty
       || hasNotIsolatedBlendingDescendantsStatusDirty
@@ -1084,6 +1114,7 @@ class RenderLayerWrapper {
   }
 
   func repaintIncludingDescendants() {
+    assert(isNativeImpl())
     renderer().repaint()
     var current = firstChild()
     while current != nil {
@@ -1095,6 +1126,7 @@ class RenderLayerWrapper {
   // Indicate that the layer contents need to be repainted. Only has an effect
   // if layer compositing is being used.
   func setBackingNeedsRepaint(shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
+    assert(isNativeImpl())
     assert(isComposited())
     if backing!.paintsIntoWindow() {
       // If we're trying to repaint the placeholder document layer, propagate the
@@ -1109,6 +1141,7 @@ class RenderLayerWrapper {
   func setBackingNeedsRepaintInRect(
     r: LayoutRectWrapper, shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer
   ) {
+    assert(isNativeImpl())
     // https://bugs.webkit.org/show_bug.cgi?id=61159 describes an unreproducible crash here,
     // so assert but check that the layer is composited.
     assert(isComposited())
@@ -1126,6 +1159,7 @@ class RenderLayerWrapper {
 
   // Since we're only painting non-composited layers, we know that they all share the same repaintContainer.
   func repaintIncludingNonCompositingDescendants(repaintContainer: RenderLayerModelObjectWrapper?) {
+    assert(isNativeImpl())
     let clippedOverflowRect =
       repaintRectsValid
       ? m_repaintRects.clippedOverflowRect
@@ -1142,6 +1176,7 @@ class RenderLayerWrapper {
   }
 
   func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
 
@@ -1230,11 +1265,20 @@ class RenderLayerWrapper {
   }
 
   // FIXME: This function is incorrectly named. It's isNotOpaque, sometimes called hasOpacity, not isEntirelyTransparent.
-  func isTransparent() -> Bool { return renderer().isTransparent() || renderer().hasMask() }
+  func isTransparent() -> Bool {
+    assert(isNativeImpl())
+    return renderer().isTransparent() || renderer().hasMask()
+  }
 
-  func hasReflection() -> Bool { return renderer().hasReflection() }
+  func hasReflection() -> Bool {
+    assert(isNativeImpl())
+    return renderer().hasReflection()
+  }
 
-  func isReflection() -> Bool { return renderer().isRenderReplica() }
+  func isReflection() -> Bool {
+    assert(isNativeImpl())
+    return renderer().isRenderReplica()
+  }
 
   func reflectionLayer() -> RenderLayerWrapper? {
     // TODO(asuhan): implement this
@@ -1242,6 +1286,7 @@ class RenderLayerWrapper {
   }
 
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     if let reflection = reflection {
       return CPtrToInt(layer.layerId()) == CPtrToInt(reflection.layer()?.layerId())
     }
@@ -1254,11 +1299,13 @@ class RenderLayerWrapper {
   }
 
   func size() -> IntSize {
+    assert(isNativeImpl())
     assert(!renderer().view().frameView().layerAccessPrevented())
     return layerSize
   }
 
   func scrollWidth() -> Int32 {
+    assert(isNativeImpl())
     if let scrollableArea = m_scrollableArea {
       return scrollableArea.scrollWidth()
     }
@@ -1270,6 +1317,7 @@ class RenderLayerWrapper {
   }
 
   func scrollHeight() -> Int32 {
+    assert(isNativeImpl())
     if let scrollableArea = m_scrollableArea {
       return scrollableArea.scrollHeight()
     }
@@ -1282,7 +1330,7 @@ class RenderLayerWrapper {
 
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
   func canUseCompositedScrolling() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_scrollableArea?.canUseCompositedScrolling() ?? false
   }
 
@@ -1313,6 +1361,7 @@ class RenderLayerWrapper {
   }
 
   func canResize() -> Bool {
+    assert(isNativeImpl())
     // We need a special case for <iframe> because they never have
     // hasNonVisibleOverflow(). However, they do "implicitly" clip their contents, so
     // we want to allow resizing them also.
@@ -1320,11 +1369,15 @@ class RenderLayerWrapper {
       && renderer().style().resize() != .None
   }
 
-  func compositor() -> RenderLayerCompositorWrapper { return renderer().view().compositor() }
+  func compositor() -> RenderLayerCompositorWrapper {
+    assert(isNativeImpl())
+    return renderer().view().compositor()
+  }
 
   // Notification from the renderer that its content changed (e.g. current frame of image changed).
   // Allows updates of layer content without repainting.
   func contentChanged(_ changeType: ContentChangeType) {
+    assert(isNativeImpl())
     if changeType == .CanvasChanged || changeType == .VideoChanged
       || changeType == .FullScreenChanged || changeType == .ModelChanged
       || (isComposited() && changeType == .ImageChanged)
@@ -1344,6 +1397,7 @@ class RenderLayerWrapper {
   // FIXME: This is terrible. Bring back a cached bit for this someday. This crawl is going to slow down all
   // painting of content inside paginated layers.
   func hasCompositedLayerInEnclosingPaginationChain() -> Bool {
+    assert(isNativeImpl())
     // No enclosing layer means no compositing in the chain.
     if m_enclosingPaginationLayer == nil {
       return false
@@ -1390,6 +1444,7 @@ class RenderLayerWrapper {
   }
 
   func enclosingPaginationLayer(mode: PaginationInclusionMode) -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     if mode == .ExcludeCompositedPaginatedLayers && hasCompositedLayerInEnclosingPaginationChain() {
       return nil
     }
@@ -1397,6 +1452,7 @@ class RenderLayerWrapper {
   }
 
   func updateTransform() {
+    assert(isNativeImpl())
     let hasTransform = renderer().isTransformed()
     let had3DTransform = has3DTransform()
 
@@ -1427,6 +1483,7 @@ class RenderLayerWrapper {
   }
 
   func updateBlendMode() {
+    assert(isNativeImpl())
     let hadBlendMode = blendMode != .Normal
     if let parent = parent(), hadBlendMode != hasBlendMode() {
       if hasBlendMode() {
@@ -1444,9 +1501,13 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
-  func offsetForInFlowPosition() -> LayoutSizeWrapper { return offsetForPosition }
+  func offsetForInFlowPosition() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
+    return offsetForPosition
+  }
 
   func clearClipRectsIncludingDescendants(typeToClear: ClipRectsType = .AllClipRectTypes) {
+    assert(isNativeImpl())
     // FIXME: it's not clear how this layer not having clip rects guarantees that no descendants have any.
     if clipRectsCache == nil {
       return
@@ -1462,6 +1523,7 @@ class RenderLayerWrapper {
   }
 
   func clearClipRects(typeToClear: ClipRectsType = .AllClipRectTypes) {
+    assert(isNativeImpl())
     if typeToClear == .AllClipRectTypes {
       clipRectsCache = nil
     } else {
@@ -1474,6 +1536,7 @@ class RenderLayerWrapper {
   }
 
   func setHasVisibleContent() {
+    assert(isNativeImpl())
     if hasVisibleContent && !visibleContentStatusDirty {
       assert(
         parent() == nil || parent()!.visibleDescendantStatusDirty
@@ -1500,10 +1563,12 @@ class RenderLayerWrapper {
   }
 
   func hasVisibleBoxDecorationsOrBackground() -> Bool {
+    assert(isNativeImpl())
     return layout_scion.hasVisibleBoxDecorationsOrBackground(renderer: renderer())
   }
 
   func hasVisibleBoxDecorations() -> Bool {
+    assert(isNativeImpl())
     if !hasVisibleContent {
       return false
     }
@@ -1551,6 +1616,7 @@ class RenderLayerWrapper {
 
   // Returns true if this layer has visible content (ignoring any child layers).
   func isVisuallyNonEmpty(request: inout PaintedContentRequest?) -> Bool {
+    assert(isNativeImpl())
     assert(!visibleDescendantStatusDirty)
 
     if !hasVisibleContent || renderer().style().opacity() == 0 {
@@ -1588,12 +1654,14 @@ class RenderLayerWrapper {
   }
 
   func isVisuallyNonEmpty() -> Bool {
+    assert(isNativeImpl())
     var dummy: PaintedContentRequest? = nil
     return isVisuallyNonEmpty(request: &dummy)
   }
 
   // True if this layer container renderers that paint.
   func hasNonEmptyChildRenderers(_ request: inout PaintedContentRequest) -> Bool {
+    assert(isNativeImpl())
     var renderersTraversed: UInt32 = 0
     determineNonLayerDescendantsPaintedContent(renderer(), &renderersTraversed, &request)
     return request.probablyHasPaintedContent()
@@ -1602,6 +1670,7 @@ class RenderLayerWrapper {
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
+    assert(isNativeImpl())
     if CPtrToInt(ancestor.layerId()) == CPtrToInt(layerId()) {
       return true
     }
@@ -1626,6 +1695,7 @@ class RenderLayerWrapper {
   // Gets the nearest enclosing positioned ancestor layer (also includes
   // the <html> layer and the root layer).
   func enclosingAncestorForPosition(position: PositionType) -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     var curr = parent()
     while curr != nil
       && !RenderLayerWrapper.isContainerForPositioned(
@@ -1644,6 +1714,7 @@ class RenderLayerWrapper {
 
   // The layer relative to which clipping rects for this layer are computed.
   func clippingRootForPainting() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     if isComposited() {
       return self
     }
@@ -1680,6 +1751,7 @@ class RenderLayerWrapper {
   }
 
   func enclosingOverflowClipLayer(includeSelf: IncludeSelfOrNot) -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     var layer = (includeSelf == .IncludeSelf) ? self : parent()
     while layer != nil {
       if layer!.renderer().hasPotentiallyScrollableOverflow() {
@@ -1695,6 +1767,7 @@ class RenderLayerWrapper {
   func enclosingCompositingLayer(includeSelf: IncludeSelfOrNot = .IncludeSelf)
     -> RenderLayerWrapper?
   {
+    assert(isNativeImpl())
     if includeSelf == .IncludeSelf && isComposited() {
       return self
     }
@@ -1723,6 +1796,7 @@ class RenderLayerWrapper {
   func enclosingCompositingLayerForRepaint(includeSelf: IncludeSelfOrNot = .IncludeSelf)
     -> EnclosingCompositingLayerStatus
   {
+    assert(isNativeImpl())
     var fullRepaintAlreadyScheduled =
       RenderLayerWrapper.isEligibleForFullRepaintCheck(layer: self) && needsFullRepaint()
     if includeSelf == .IncludeSelf,
@@ -1750,6 +1824,7 @@ class RenderLayerWrapper {
 
   // Ancestor compositing layer, excluding this.
   func ancestorCompositingLayer() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     return enclosingCompositingLayer(includeSelf: .ExcludeSelf)
   }
 
@@ -1765,6 +1840,7 @@ class RenderLayerWrapper {
 
   // FIXME: This needs a better name.
   func setFilterBackendNeedsRepaintingInRect(_ rect: LayoutRectWrapper) {
+    assert(isNativeImpl())
     assert(requiresFullLayerImageForFilters())
     assert(filters != nil)
 
@@ -1829,11 +1905,13 @@ class RenderLayerWrapper {
   }
 
   func canUseOffsetFromAncestor() -> Bool {
+    assert(isNativeImpl())
     // FIXME: This really needs to know if there are transforms on this layer and any of the layers between it and the ancestor in question.
     return !isTransformed() && !renderer().isRenderOrLegacyRenderSVGRoot()
   }
 
   func canUseOffsetFromAncestor(ancestor: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil && CPtrToInt(layer?.layerId()) != CPtrToInt(ancestor.layerId()) {
       if !layer!.canUseOffsetFromAncestor() {
@@ -2006,6 +2084,7 @@ class RenderLayerWrapper {
   )
     -> LayoutPointWrapper
   {
+    assert(isNativeImpl())
     if CPtrToInt(ancestorLayer?.layerId()) == CPtrToInt(layerId()) {
       return location
     }
@@ -2034,13 +2113,17 @@ class RenderLayerWrapper {
     ancestorLayer: RenderLayerWrapper?,
     adjustForColumns: ColumnOffsetAdjustment = .DontAdjustForColumns
   ) -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     return toLayoutSize(
       point: convertToLayerCoords(
         ancestorLayer: ancestorLayer, location: LayoutPointWrapper(),
         adjustForColumns: adjustForColumns))
   }
 
-  func zIndex() -> Int32 { return renderer().style().usedZIndex() }
+  func zIndex() -> Int32 {
+    assert(isNativeImpl())
+    return renderer().style().usedZIndex()
+  }
 
   struct PaintLayerFlag: OptionSet {
     let rawValue: UInt32
@@ -2083,6 +2166,7 @@ class RenderLayerWrapper {
     subtreePaintRoot: RenderObjectWrapper? = nil, paintFlags: PaintLayerFlag = [],
     paintPolicy: SecurityOriginPaintPolicy = .AnyOrigin, regionContext: RegionContext? = nil
   ) {
+    assert(isNativeImpl())
     let overlapTestRequests = OverlapTestRequestMap()
 
     var paintingInfo = LayerPaintingInfo(
@@ -2106,6 +2190,7 @@ class RenderLayerWrapper {
   }
 
   func hitTest(_ request: HitTestRequestWrapper, _ result: HitTestResultWrapper) -> Bool {
+    assert(isNativeImpl())
     return hitTest(request, result.hitTestLocation, result)
   }
 
@@ -2113,6 +2198,7 @@ class RenderLayerWrapper {
     _ request: HitTestRequestWrapper, _ hitTestLocation: HitTestLocationWrapper,
     _ result: HitTestResultWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
     assert(!renderer().view().needsLayout())
 
@@ -2204,6 +2290,7 @@ class RenderLayerWrapper {
     foregroundRect: inout ClipRect,
     offsetFromRoot: LayoutSizeWrapper
   ) {
+    assert(isNativeImpl())
     if CPtrToInt(clipRectsContext.rootLayer?.layerId()) != CPtrToInt(layerId()) && parent() != nil {
       backgroundRect = backgroundClipRect(clipRectsContext: clipRectsContext)
       backgroundRect.intersect(other: paintDirtyRect)
@@ -2280,6 +2367,7 @@ class RenderLayerWrapper {
     layerBoundingBox: LayoutRectWrapper? = nil,
     applyRootOffsetToFragments: ShouldApplyRootOffsetToFragments = .IgnoreRootOffsetForFragments
   ) {
+    assert(isNativeImpl())
     let paginationLayer = enclosingPaginationLayerInSubtree(
       rootLayer: rootLayer, mode: inclusionMode)
     if paginationLayer == nil || isTransformed() {
@@ -2457,6 +2545,7 @@ class RenderLayerWrapper {
   func localClipRect(
     clipExceedsBounds: inout Bool, mode: LocalClipRectMode = .IncludeCompositingState
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     clipExceedsBounds = false
     // FIXME: border-radius not accounted for.
     // FIXME: Regions not accounted for.
@@ -2484,6 +2573,7 @@ class RenderLayerWrapper {
   }
 
   func clipCrossesPaintingBoundary() -> Bool {
+    assert(isNativeImpl())
     return CPtrToInt(
       parent()!.enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.layerId())
       != CPtrToInt(enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.layerId())
@@ -2496,6 +2586,7 @@ class RenderLayerWrapper {
     layerBounds: LayoutRectWrapper, damageRect: LayoutRectWrapper, rootLayer: RenderLayerWrapper?,
     offsetFromRoot: LayoutSizeWrapper, cachedBoundingBox: LayoutRectWrapper? = nil
   ) -> Bool {
+    assert(isNativeImpl())
     // Always examine the canvas and the root.
     // FIXME: Could eliminate the isDocumentElementRenderer() check if we fix background painting so that the RenderView
     // paints the root's background.
@@ -2555,6 +2646,7 @@ class RenderLayerWrapper {
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper = LayoutSizeWrapper(),
     flags: CalculateLayerBoundsFlag = []
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var result = localBoundingBox(flags: flags)
     if renderer().view().frameView().hasFlippedBlockRenderers() {
       if renderer().isRenderBox() {
@@ -2603,6 +2695,7 @@ class RenderLayerWrapper {
 
   // Bounding box in the coordinates of this layer.
   func localBoundingBox(flags: CalculateLayerBoundsFlag = []) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     // There are three special cases we need to consider.
     // (1) Inline Flows.  For inline flows we will create a bounding box that fully encompasses all of the lines occupied by the
     // inline.  In other words, if some <span> wraps to three lines, we'll create a bounding box that fully encloses the
@@ -2668,6 +2761,7 @@ class RenderLayerWrapper {
   func referenceBoxRectForClipPath(
     boxType: CSSBoxType, offsetFromRoot: LayoutSizeWrapper, rootRelativeBounds: LayoutRectWrapper
   ) -> FloatRectWrapper {
+    assert(isNativeImpl())
     var isReferenceBox = false
 
     if renderer().document().settings().layerBasedSVGEngineEnabled()
@@ -2691,6 +2785,7 @@ class RenderLayerWrapper {
 
   // Bounds used for layer overlap testing in RenderLayerCompositor.
   func overlapBounds() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if overlapBoundsIncludeChildren() {
       return calculateLayerBounds(
         ancestorLayer: self, offsetFromRoot: LayoutSizeWrapper(),
@@ -2708,6 +2803,7 @@ class RenderLayerWrapper {
   func getOverlapBoundsIncludingChildrenAccountingForTransformAnimations(
     _ bounds: inout LayoutRectWrapper, additionalFlags: CalculateLayerBoundsFlag = []
   ) -> Bool {
+    assert(isNativeImpl())
     // The animation will override the display transform, so don't include it.
     let boundsFlags = additionalFlags.union(
       RenderLayerWrapper.defaultCalculateLayerBoundsFlags.subtracting([.IncludeSelfTransform]))
@@ -2729,6 +2825,7 @@ class RenderLayerWrapper {
   // If true, this layer's children are included in its bounds for overlap testing.
   // We can't rely on the children's positions if this layer has a filter that could have moved the children's pixels around.
   private func overlapBoundsIncludeChildren() -> Bool {
+    assert(isNativeImpl())
     return hasFilter() && renderer().style().filter().hasFilterThatMovesPixels()
   }
 
@@ -2737,6 +2834,7 @@ class RenderLayerWrapper {
     ancestorLayer: RenderLayerWrapper?, offsetFromRoot: LayoutSizeWrapper,
     flags: CalculateLayerBoundsFlag = RenderLayerWrapper.defaultCalculateLayerBoundsFlags
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if !isSelfPaintingLayer {
       return LayoutRectWrapper()
     }
@@ -2839,6 +2937,7 @@ class RenderLayerWrapper {
     childLayer: RenderLayerWrapper, unionBounds: inout LayoutRectWrapper,
     flags: CalculateLayerBoundsFlag, descendantFlags: CalculateLayerBoundsFlag
   ) {
+    assert(isNativeImpl())
     if !flags.contains(.IncludeCompositedDescendants)
       && (childLayer.isComposited() || childLayer.paintsIntoProvidedBacking())
     {
@@ -2853,39 +2952,47 @@ class RenderLayerWrapper {
   }
 
   func needsFullRepaint() -> Bool {
+    assert(isNativeImpl())
     return repaintStatus == .NeedsFullRepaint
       || repaintStatus == .NeedsFullRepaintForPositionedMovementLayout
   }
 
-  func setIsSimplifiedLayoutRoot() { isSimplifiedLayoutRoot = true }
+  func setIsSimplifiedLayoutRoot() {
+    assert(isNativeImpl())
+    isSimplifiedLayoutRoot = true
+  }
 
   func staticInlinePosition() -> LayoutUnit {
-    assert(!isNative)
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(layerId()))
   }
 
   func staticBlockPosition() -> LayoutUnit {
-    assert(!isNative)
+    assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticBlockPosition(layerId()))
   }
 
   func setStaticInlinePosition(position: LayoutUnit) {
-    assert(!isNative)
+    assert(!isNativeImpl())
     wk_interop.RenderLayer_setStaticInlinePosition(layerId(), position.rawValue())
   }
 
   func setStaticBlockPosition(position: LayoutUnit) {
-    assert(!isNative)
+    assert(!isNativeImpl())
     wk_interop.RenderLayer_setStaticBlockPosition(layerId(), position.rawValue())
   }
 
-  func isTransformed() -> Bool { return renderer().isTransformed() }
+  func isTransformed() -> Bool {
+    assert(isNativeImpl())
+    return renderer().isTransformed()
+  }
 
   // updateTransformFromStyle computes a transform according to the passed options (e.g. transform-origin baked in or excluded) and the given style.
   func updateTransformFromStyle(
     transform: inout TransformationMatrix, style: RenderStyleWrapper,
     options: RenderStyleWrapper.TransformOperationOption
   ) {
+    assert(isNativeImpl())
     let referenceBoxRect = snapRectToDevicePixelsIfNeeded(
       rect: renderer().transformReferenceBoxRect(style: style), renderer: renderer())
     renderer().applyTransform(
@@ -2909,6 +3016,7 @@ class RenderLayerWrapper {
   }
 
   func renderableTransform(paintBehavior: PaintBehavior) -> TransformationMatrix {
+    assert(isNativeImpl())
     if let matrix = transform {
       if paintBehavior.contains(.FlattenCompositingLayers) {
         makeMatrixRenderable(matrix: matrix, has3DRendering: false)
@@ -2925,6 +3033,7 @@ class RenderLayerWrapper {
   // Returns true if the layer has a perspective.
   // Note that this transform has the perspective-origin baked in.
   func perspectiveTransform() -> TransformationMatrix {
+    assert(isNativeImpl())
     if !renderer().hasTransformRelatedProperty() {
       return TransformationMatrix()
     }
@@ -2969,6 +3078,7 @@ class RenderLayerWrapper {
   }
 
   func transformOriginPixelSnappedIfNeeded() -> FloatPoint3D {
+    assert(isNativeImpl())
     if !renderer().hasTransformRelatedProperty() {
       return FloatPoint3D()
     }
@@ -2987,6 +3097,7 @@ class RenderLayerWrapper {
   }
 
   func preserves3D() -> Bool {
+    assert(isNativeImpl())
     return renderer().style().preserves3D()
   }
 
@@ -2996,22 +3107,31 @@ class RenderLayerWrapper {
   }
 
   func has3DTransform() -> Bool {
+    assert(isNativeImpl())
     if let transform = transform {
       return !transform.isAffine()
     }
     return false
   }
 
-  func hasTransformedAncestor() -> Bool { return m_hasTransformedAncestor }
+  func hasTransformedAncestor() -> Bool {
+    assert(isNativeImpl())
+    return m_hasTransformedAncestor
+  }
 
   func participatesInPreserve3D() -> Bool {
+    assert(isNativeImpl())
     return ancestorLayerIsDOMParent(ancestor: parent()) && parent()!.preserves3D()
       && (transform != nil || renderer().style().backfaceVisibility() == .Hidden || preserves3D())
   }
 
-  func hasFilter() -> Bool { return renderer().hasFilter() }
+  func hasFilter() -> Bool {
+    assert(isNativeImpl())
+    return renderer().hasFilter()
+  }
 
   func filterOutsets() -> IntOutsets {
+    assert(isNativeImpl())
     if filters != nil {
       return RenderLayerFilters.calculateOutsets(
         renderer: renderer(), targetBoundingBox: localBoundingBox().FloatRect())
@@ -3030,20 +3150,27 @@ class RenderLayerWrapper {
   }
 
   func hasBlendMode() -> Bool {
+    assert(isNativeImpl())
     return renderer().hasBlendMode()  // FIXME: Why ask the renderer this given we have blendMode?
   }
 
   func isolatesCompositedBlending() -> Bool {
+    assert(isNativeImpl())
     return hasNotIsolatedCompositedBlendingDescendants && isCSSStackingContext()
   }
 
   func isolatesBlending() -> Bool {
+    assert(isNativeImpl())
     return hasNotIsolatedBlendingDescendants && isCSSStackingContext()
   }
 
-  func isComposited() -> Bool { return backing != nil }
+  func isComposited() -> Bool {
+    assert(isNativeImpl())
+    return backing != nil
+  }
 
   func hasCompositedMask() -> Bool {
+    assert(isNativeImpl())
     if let backing = backing {
       return backing.hasMaskLayer()
     }
@@ -3051,6 +3178,7 @@ class RenderLayerWrapper {
   }
 
   func setBackingProviderLayer(backingProvider: RenderLayerWrapper?) {
+    assert(isNativeImpl())
     if optEq(backingProvider, backingProviderLayer) {
       return
     }
@@ -3063,6 +3191,7 @@ class RenderLayerWrapper {
   }
 
   func disconnectFromBackingProviderLayer() {
+    assert(isNativeImpl())
     if backingProviderLayer == nil {
       return
     }
@@ -3073,10 +3202,14 @@ class RenderLayerWrapper {
     }
   }
 
-  func paintsIntoProvidedBacking() -> Bool { return backingProviderLayer != nil }
+  func paintsIntoProvidedBacking() -> Bool {
+    assert(isNativeImpl())
+    return backingProviderLayer != nil
+  }
 
   @discardableResult
   func ensureBacking() -> RenderLayerBacking? {
+    assert(isNativeImpl())
     if backing == nil {
       backing = RenderLayerBacking(layer: self)
       compositor().layerBecameComposited(self)
@@ -3087,6 +3220,7 @@ class RenderLayerWrapper {
   }
 
   func clearBacking(layerBeingDestroyed: Bool = false) {
+    assert(isNativeImpl())
     if backing == nil {
       return
     }
@@ -3104,10 +3238,12 @@ class RenderLayerWrapper {
   }
 
   func usesCompositedScrolling() -> Bool {
+    assert(isNativeImpl())
     return m_scrollableArea?.usesCompositedScrolling() ?? false
   }
 
   func paintsWithTransparency(paintBehavior: PaintBehavior) -> Bool {
+    assert(isNativeImpl())
     if !renderer().isTransparent() && !hasNonOpacityTransparency() {
       return false
     }
@@ -3119,16 +3255,19 @@ class RenderLayerWrapper {
   // layer. This currently only detects a single bitmap image, but could
   // be extended to handle other cases.
   func canPaintTransparencyWithSetOpacity() -> Bool {
+    assert(isNativeImpl())
     return isBitmapOnly() && !hasNonOpacityTransparency()
   }
 
   func paintsWithTransform(paintBehavior: PaintBehavior) -> Bool {
+    assert(isNativeImpl())
     let paintsToWindow = !isComposited() || backing!.paintsIntoWindow()
     return transform != nil
       && (paintBehavior.contains(.FlattenCompositingLayers) || paintsToWindow)
   }
 
   func shouldPaintMask(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
+    assert(isNativeImpl())
     if !renderer().hasMask() {
       return false
     }
@@ -3142,6 +3281,7 @@ class RenderLayerWrapper {
   }
 
   func shouldApplyClipPath(paintBehavior: PaintBehavior, paintFlags: PaintLayerFlag) -> Bool {
+    assert(isNativeImpl())
     if !renderer().hasClipPath() {
       return false
     }
@@ -3158,6 +3298,7 @@ class RenderLayerWrapper {
   // Returns true if background phase is painted opaque in the given rect.
   // The query rect is given in local coordinates.
   func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !isSelfPaintingLayer && !hasSelfPaintingLayerDescendant {
       return false
     }
@@ -3222,6 +3363,7 @@ class RenderLayerWrapper {
   }
 
   func paintsWithFilters() -> Bool {
+    assert(isNativeImpl())
     let filter = renderer().style().filter()
     if filter.isEmpty() {
       return false
@@ -3243,6 +3385,7 @@ class RenderLayerWrapper {
   }
 
   func requiresFullLayerImageForFilters() -> Bool {
+    assert(isNativeImpl())
     if !paintsWithFilters() {
       return false
     }
@@ -3275,10 +3418,12 @@ class RenderLayerWrapper {
   }
 
   func establishesTopLayer() -> Bool {
+    assert(isNativeImpl())
     return isInTopLayerOrBackdrop(style: renderer().style(), element: renderer().element())
   }
 
   func isBitmapOnly() -> Bool {
+    assert(isNativeImpl())
     if hasVisibleBoxDecorationsOrBackground() {
       return false
     }
@@ -3308,6 +3453,7 @@ class RenderLayerWrapper {
   }
 
   func setViewportConstrainedNotCompositedReason(reason: ViewportConstrainedNotCompositedReason) {
+    assert(isNativeImpl())
     viewportConstrainedNotCompositedReason = reason
   }
 
@@ -3317,7 +3463,7 @@ class RenderLayerWrapper {
   }
 
   func isInsideFragmentedFlow() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return renderer().fragmentedFlowState() != .NotInsideFlow
   }
 
@@ -3335,6 +3481,7 @@ class RenderLayerWrapper {
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
+    assert(!isNativeImpl())
     wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(layerId(), isHidden)
   }
 
@@ -3346,6 +3493,7 @@ class RenderLayerWrapper {
   }
 
   func ancestorLayerIsDOMParent(ancestor: RenderLayerWrapper?) -> Bool {
+    assert(isNativeImpl())
     if ancestor == nil {
       return false
     }
@@ -3361,10 +3509,22 @@ class RenderLayerWrapper {
     return false
   }
 
-  private func setNextSibling(next: RenderLayerWrapper?) { m_next = next }
-  private func setPreviousSibling(prev: RenderLayerWrapper?) { m_previous = prev }
-  private func setFirstChild(_ first: RenderLayerWrapper) { m_first = first }
-  private func setLastChild(_ last: RenderLayerWrapper) { m_last = last }
+  private func setNextSibling(next: RenderLayerWrapper?) {
+    assert(isNativeImpl())
+    m_next = next
+  }
+  private func setPreviousSibling(prev: RenderLayerWrapper?) {
+    assert(isNativeImpl())
+    m_previous = prev
+  }
+  private func setFirstChild(_ first: RenderLayerWrapper) {
+    assert(isNativeImpl())
+    m_first = first
+  }
+  private func setLastChild(_ last: RenderLayerWrapper) {
+    assert(isNativeImpl())
+    m_last = last
+  }
 
   private func updateAncestorDependentState() {
     // TODO(asuhan): implement this
@@ -3372,6 +3532,7 @@ class RenderLayerWrapper {
   }
 
   private func dirtyPaintOrderListsOnChildChange(child: RenderLayerWrapper) {
+    assert(isNativeImpl())
     if child.isNormalFlowOnly {
       dirtyNormalFlowList()
     }
@@ -3385,6 +3546,7 @@ class RenderLayerWrapper {
   }
 
   private func shouldBeNormalFlowOnly() -> Bool {
+    assert(isNativeImpl())
     if canCreateStackingContext(layer: self) {
       return false
     }
@@ -3399,6 +3561,7 @@ class RenderLayerWrapper {
   }
 
   private func shouldBeCSSStackingContext() -> Bool {
+    assert(isNativeImpl())
     return !renderer().style().hasAutoUsedZIndex()
       || renderer().shouldApplyLayoutOrPaintContainment()
       || renderer().requiresRenderingConsolidationForViewTransition()
@@ -3406,6 +3569,7 @@ class RenderLayerWrapper {
   }
 
   private func computeCanBeBackdropRoot() -> Bool {
+    assert(isNativeImpl())
     if !renderer().settings().cssUnprefixedBackdropFilterEnabled() {
       return false
     }
@@ -3430,6 +3594,7 @@ class RenderLayerWrapper {
   // Return true if changed.
   @discardableResult
   private func setIsNormalFlowOnly(isNormalFlowOnly: Bool) -> Bool {
+    assert(isNativeImpl())
     if isNormalFlowOnly == self.isNormalFlowOnly {
       return false
     }
@@ -3445,6 +3610,7 @@ class RenderLayerWrapper {
 
   @discardableResult
   private func setIsCSSStackingContext(isCSSStackingContext: Bool) -> Bool {
+    assert(isNativeImpl())
     let wasStacking = isStackingContext()
     m_isCSSStackingContext = isCSSStackingContext
     if wasStacking == isStackingContext() {
@@ -3457,6 +3623,7 @@ class RenderLayerWrapper {
 
   @discardableResult
   private func setCanBeBackdropRoot(canBeBackdropRoot: Bool) -> Bool {
+    assert(isNativeImpl())
     if self.canBeBackdropRoot == canBeBackdropRoot {
       return false
     }
@@ -3465,6 +3632,7 @@ class RenderLayerWrapper {
   }
 
   private func isStackingContextChanged() {
+    assert(isNativeImpl())
     dirtyStackingContextZOrderLists()
     if isStackingContext() {
       dirtyZOrderLists()
@@ -3473,9 +3641,13 @@ class RenderLayerWrapper {
     }
   }
 
-  private func isDirtyStackingContext() -> Bool { return zOrderListsDirty && isStackingContext() }
+  private func isDirtyStackingContext() -> Bool {
+    assert(isNativeImpl())
+    return zOrderListsDirty && isStackingContext()
+  }
 
   private func updateZOrderLists() {
+    assert(isNativeImpl())
     if !zOrderListsDirty {
       return
     }
@@ -3493,6 +3665,7 @@ class RenderLayerWrapper {
     posZOrderList: inout [RenderLayerWrapper]?, negZOrderList: inout [RenderLayerWrapper]?,
     accumulatedDirtyFlags: inout Compositing
   ) {
+    assert(isNativeImpl())
     var child = firstChild()
     while child != nil {
       if !isReflectionLayer(layer: child!) {
@@ -3539,6 +3712,7 @@ class RenderLayerWrapper {
   }
 
   private func rebuildZOrderLists() {
+    assert(isNativeImpl())
     // TODO(asuhan): check layerListMutationAllowed() as well
     assert(isDirtyStackingContext())
 
@@ -3579,6 +3753,7 @@ class RenderLayerWrapper {
     positiveZOrderList: inout [RenderLayerWrapper]?,
     negativeZOrderList: inout [RenderLayerWrapper]?, accumulatedDirtyFlags: inout Compositing
   ) {
+    assert(isNativeImpl())
     assert(!descendantDependentFlagsAreDirty())
     if establishesTopLayer() {
       return
@@ -3628,6 +3803,7 @@ class RenderLayerWrapper {
   }
 
   private func clearZOrderLists() {
+    assert(isNativeImpl())
     assert(!isStackingContext())
 
     posZOrderList = nil
@@ -3635,6 +3811,7 @@ class RenderLayerWrapper {
   }
 
   private func updateNormalFlowList() {
+    assert(isNativeImpl())
     if !normalFlowListDirty {
       return
     }
@@ -3688,12 +3865,14 @@ class RenderLayerWrapper {
   private func paintOffsetForRenderer(
     fragment: LayerFragment, paintingInfo: LayerPaintingInfo
   ) -> LayoutPointWrapper {
+    assert(isNativeImpl())
     return toLayoutPoint(
       size: fragment.layerBounds.location() - rendererLocation() + paintingInfo.subpixelOffset)
   }
 
   // Compute, cache and return clip rects computed with the given layer as the root.
   private func updateClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
+    assert(isNativeImpl())
     let clipRectsType = clipRectsContext.clipRectsType
     if let clipRectsCache = clipRectsCache,
       let clipRects = clipRectsCache.getClipRects(
@@ -3730,6 +3909,7 @@ class RenderLayerWrapper {
   // Compute and return the clip rects. If useCached is true, will used previously computed clip rects on ancestors
   // (rather than computing them all from scratch up the parent chain).
   private func calculateClipRects(clipRectsContext: ClipRectsContext, clipRects: inout ClipRects) {
+    assert(isNativeImpl())
     if parent() == nil {
       // The root layer's clip rect is always infinite.
       clipRects.reset()
@@ -3853,6 +4033,7 @@ class RenderLayerWrapper {
   }
 
   private func clipRects(context: ClipRectsContext) -> ClipRects? {
+    assert(isNativeImpl())
     if let clipRectsCache = clipRectsCache {
       return clipRectsCache.getClipRects(
         clipRectsType: context.clipRectsType, respectOverflowClip: context.respectOverflowClip())
@@ -3861,6 +4042,7 @@ class RenderLayerWrapper {
   }
 
   private func setAncestorChainHasSelfPaintingLayerDescendant() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if renderer().shouldApplyPaintContainment() {
@@ -3879,6 +4061,7 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainHasSelfPaintingLayerDescendantStatus() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if layer!.hasSelfPaintingLayerDescendantDirty {
@@ -3891,6 +4074,7 @@ class RenderLayerWrapper {
   }
 
   func computeRepaintRects(_ repaintContainer: RenderLayerModelObjectWrapper?) {
+    assert(isNativeImpl())
     assert(!visibleContentStatusDirty)
 
     if !isSelfPaintingLayer {
@@ -3901,6 +4085,7 @@ class RenderLayerWrapper {
   }
 
   func computeRepaintRectsIncludingDescendants() {
+    assert(isNativeImpl())
     // FIXME: computeRepaintRects() has to walk up the parent chain for every layer to compute the rects.
     // We should make this more efficient.
     // FIXME: it's wrong to call this when layout is not up-to-date, which we do.
@@ -3914,11 +4099,13 @@ class RenderLayerWrapper {
   }
 
   private func setRepaintRects(_ rects: RenderObjectWrapper.RepaintRects) {
+    assert(isNativeImpl())
     m_repaintRects = rects
     repaintRectsValid = true
   }
 
   private func clearRepaintRects() {
+    assert(isNativeImpl())
     repaintRectsValid = false
   }
 
@@ -3926,6 +4113,7 @@ class RenderLayerWrapper {
     ancestor: RenderLayerWrapper?, offsetFromAncestor: LayoutSizeWrapper,
     constrainingRect: LayoutRectWrapper, temporaryClipRects: Bool = false
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var layerBounds = LayoutRectWrapper()
     var backgroundRect = ClipRect()
     var foregroundRect = ClipRect()
@@ -3949,6 +4137,7 @@ class RenderLayerWrapper {
     paintBehavior: PaintBehavior, clipRect: ClipRect,
     rule: BorderRadiusClippingRule = .IncludeSelfForBorderRadius
   ) {
+    assert(isNativeImpl())
     let deviceScaleFactor = renderer().document().deviceScaleFactor()
     let needsClipping = !clipRect.isInfinite() && clipRect.rect != paintingInfo.paintDirtyRect
     if needsClipping || clipRect.affectedByRadius {
@@ -4007,6 +4196,7 @@ class RenderLayerWrapper {
   }
 
   private func updateSelfPaintingLayer() {
+    assert(isNativeImpl())
     let isSelfPaintingLayer = shouldBeSelfPaintingLayer()
     if self.isSelfPaintingLayer == isSelfPaintingLayer {
       return
@@ -4031,6 +4221,7 @@ class RenderLayerWrapper {
   private func enclosingPaginationLayerInSubtree(
     rootLayer: RenderLayerWrapper?, mode: PaginationInclusionMode
   ) -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     // If we don't have an enclosing layer, or if the root layer is the same as the enclosing layer,
     // then just return the enclosing pagination layer (it will be 0 in the former case and the rootLayer in the latter case).
     let paginationLayer = enclosingPaginationLayer(mode: mode)
@@ -4060,6 +4251,7 @@ class RenderLayerWrapper {
   }
 
   private func rendererLocation() -> LayoutPointWrapper {
+    assert(isNativeImpl())
     if let box = renderer() as? RenderBoxWrapper {
       return box.location()
     }
@@ -4078,6 +4270,7 @@ class RenderLayerWrapper {
     fragment: RenderFragmentContainerWrapper?,
     flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if let box = renderer() as? RenderBoxWrapper {
       return box.borderBoxRectInFragment(fragment: fragment, flags: flags)
     }
@@ -4088,6 +4281,7 @@ class RenderLayerWrapper {
   }
 
   private func rendererVisualOverflowRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if let box = renderer() as? RenderBoxWrapper {
       return box.visualOverflowRect()
     }
@@ -4101,6 +4295,7 @@ class RenderLayerWrapper {
     location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?,
     relevancy: OverlayScrollbarSizeRelevancy
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if let box = renderer() as? RenderBoxWrapper {
       return box.overflowClipRect(location: location, fragment: fragment, relevancy: relevancy)
     }
@@ -4117,6 +4312,7 @@ class RenderLayerWrapper {
   )
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     if let box = renderer() as? RenderBoxWrapper {
       return box.overflowClipRectForChildLayers(
         location: location, fragment: fragment, relevancy: relevancy)
@@ -4129,6 +4325,7 @@ class RenderLayerWrapper {
   }
 
   private func rendererHasVisualOverflow() -> Bool {
+    assert(isNativeImpl())
     if let box = renderer() as? RenderBoxWrapper {
       return box.hasVisualOverflow()
     }
@@ -4139,6 +4336,7 @@ class RenderLayerWrapper {
   }
 
   private func setupFontSubpixelQuantization(context: GraphicsContextWrapper) -> (Bool, Bool) {
+    assert(isNativeImpl())
     if context.paintingDisabled() {
       return (false, true)
     }
@@ -4153,6 +4351,7 @@ class RenderLayerWrapper {
   func computeClipPath(
     offsetFromRoot: LayoutSizeWrapper, rootRelativeBoundsForNonBoxes: LayoutRectWrapper
   ) -> (PathWrapper, WindRule) {
+    assert(isNativeImpl())
     let style = renderer().style()
 
     if let clipPath = style.clipPath()! as? ShapePathOperation {
@@ -4187,6 +4386,7 @@ class RenderLayerWrapper {
     regionContextStateSaver: RegionContextStateSaver, paintingInfo: LayerPaintingInfo,
     paintFlags: inout PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper
   ) {
+    assert(isNativeImpl())
     let isCollectingRegions =
       paintFlags.contains(.CollectingEventRegion)
       || (paintingInfo.regionContext is AccessibilityRegionContext)
@@ -4305,6 +4505,7 @@ class RenderLayerWrapper {
   }
 
   private func ensureLayerFilters() {
+    assert(isNativeImpl())
     if filters != nil {
       return
     }
@@ -4313,10 +4514,12 @@ class RenderLayerWrapper {
   }
 
   private func clearLayerFilters() {
+    assert(isNativeImpl())
     filters = nil
   }
 
   private func updateLayerScrollableArea() {
+    assert(isNativeImpl())
     let hasScrollableArea = scrollableArea() != nil
     var needsScrollableArea = false
     if let box = renderer() as? RenderBoxWrapper {
@@ -4340,6 +4543,7 @@ class RenderLayerWrapper {
   }
 
   private func clearLayerScrollableArea() {
+    assert(isNativeImpl())
     if let scrollableArea = m_scrollableArea {
       scrollableArea.clear()
       m_scrollableArea = nil
@@ -4349,6 +4553,7 @@ class RenderLayerWrapper {
   private func filtersForPainting(context: GraphicsContextWrapper, paintFlags: PaintLayerFlag)
     -> RenderLayerFilters?
   {
+    assert(isNativeImpl())
     if context.paintingDisabled() {
       return nil
     }
@@ -4368,6 +4573,7 @@ class RenderLayerWrapper {
     destinationContext: GraphicsContextWrapper, paintingInfo: inout LayerPaintingInfo,
     paintFlags: PaintLayerFlag, offsetFromRoot: LayoutSizeWrapper, backgroundRect: ClipRect
   ) -> GraphicsContextWrapper? {
+    assert(isNativeImpl())
     if let paintingFilters = filtersForPainting(context: destinationContext, paintFlags: paintFlags)
     {
       var filterRepaintRect = paintingFilters.dirtySourceRect
@@ -4406,6 +4612,7 @@ class RenderLayerWrapper {
     originalContext: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
     behavior: PaintBehavior, backgroundRect: ClipRect
   ) {
+    assert(isNativeImpl())
     let stateSaver = GraphicsContextStateSaver(context: originalContext, saveAndRestore: false)
     let needsClipping = filters!.hasSourceImage()
 
@@ -4434,6 +4641,7 @@ class RenderLayerWrapper {
   func paintLayer(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    assert(isNativeImpl())
     var paintFlags = paintFlags
     if paintsIntoDifferentCompositedDestination(paintFlags: paintFlags) {
       if !context.performingPaintInvalidation()
@@ -4458,6 +4666,7 @@ class RenderLayerWrapper {
   }
 
   private func shouldContinuePaint(paintFlags: PaintLayerFlag) -> Bool {
+    assert(isNativeImpl())
     return backing!.paintsIntoWindow()
       || backing!.paintsIntoCompositedAncestor()
       || shouldDoSoftwarePaint(
@@ -4466,6 +4675,7 @@ class RenderLayerWrapper {
   }
 
   private func paintsIntoDifferentCompositedDestination(paintFlags: PaintLayerFlag) -> Bool {
+    assert(isNativeImpl())
     if paintsIntoProvidedBacking() {
       return true
     }
@@ -4480,6 +4690,7 @@ class RenderLayerWrapper {
   private func paintLayerWithEffects(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    assert(isNativeImpl())
     // Non self-painting leaf layers don't need to be painted as their renderer() should properly paint itself.
     if !isSelfPaintingLayer && !hasSelfPaintingLayerDescendant {
       return
@@ -4590,6 +4801,7 @@ class RenderLayerWrapper {
   private func paintLayerContentsAndReflection(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    assert(isNativeImpl())
     assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
 
     let localPaintFlags = paintFlags.subtracting(.AppliedTransform)
@@ -4614,6 +4826,7 @@ class RenderLayerWrapper {
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag,
     translationOffset: LayoutSizeWrapper = LayoutSizeWrapper()
   ) {
+    assert(isNativeImpl())
     // This involves subtracting out the position of the layer in our current coordinate space, but preserving
     // the accumulated error for sub-pixel layout.
     // Note: The pixel-snapping logic is disabled for the whole SVG render tree, except the outermost <svg>.
@@ -4675,6 +4888,7 @@ class RenderLayerWrapper {
   private func paintLayerContents(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    assert(isNativeImpl())
     assert(isSelfPaintingLayer || hasSelfPaintingLayerDescendant)
 
     if context.detectingContentfulPaint() && context.contentfulPaintDetected() {
@@ -5000,6 +5214,7 @@ class RenderLayerWrapper {
   }
 
   private func paintLayerHasVisibleContent() -> Bool {
+    assert(isNativeImpl())
     if !hasVisibleContent {
       return false
     }
@@ -5023,6 +5238,7 @@ class RenderLayerWrapper {
     isPaintingOverflowContents: Bool, isCollectingEventRegion: Bool,
     isPaintingCompositedForeground: Bool, isPaintingCompositedBackground: Bool
   ) -> PaintBehavior {
+    assert(isNativeImpl())
     let flagsToCopy: PaintBehavior = [
       .FlattenCompositingLayers, .Snapshotting, .ExcludeSelection, .ExcludeReplacedContent,
     ]
@@ -5060,6 +5276,7 @@ class RenderLayerWrapper {
     layerIterator: LayerList, context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo,
     paintFlags: PaintLayerFlag
   ) {
+    assert(isNativeImpl())
     if layerIterator.size() == 0 {
       return
     }
@@ -5087,6 +5304,7 @@ class RenderLayerWrapper {
     fragments: inout LayerFragments, localPaintingInfo: LayerPaintingInfo,
     localPaintFlags: PaintLayerFlag, shouldPaintContent: Bool, offsetFromRoot: LayoutSizeWrapper
   ) {
+    assert(isNativeImpl())
     for fragment in fragments {
       fragment.shouldPaintContent = shouldPaintContent
       if CPtrToInt(layerId()) != CPtrToInt(localPaintingInfo.rootLayer?.layerId())
@@ -5110,6 +5328,7 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
+    assert(isNativeImpl())
     for fragment in layerFragments {
       if !fragment.shouldPaintContent {
         continue
@@ -5157,6 +5376,7 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
+    assert(isNativeImpl())
     // Begin transparency if we have something to paint.
     if haveTransparency {
       for fragment in layerFragments {
@@ -5257,6 +5477,7 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
+    assert(isNativeImpl())
     let shouldClip = localPaintingInfo.clipToDirtyRect && layerFragments.count > 1
 
     for fragment in layerFragments {
@@ -5297,6 +5518,7 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
+    assert(isNativeImpl())
     for fragment in layerFragments {
       if fragment.backgroundRect.isEmpty() {
         continue
@@ -5329,6 +5551,7 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo
   ) {
+    assert(isNativeImpl())
     assert(m_scrollableArea != nil)
 
     for fragment in layerFragments {
@@ -5357,6 +5580,7 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
+    assert(isNativeImpl())
     for fragment in layerFragments {
       if !fragment.shouldPaintContent {
         continue
@@ -5393,6 +5617,7 @@ class RenderLayerWrapper {
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior,
     subtreePaintRootForRenderer: RenderObjectWrapper?
   ) {
+    assert(isNativeImpl())
     for fragment in layerFragments {
       if !fragment.shouldPaintContent {
         continue
@@ -5426,6 +5651,7 @@ class RenderLayerWrapper {
   private func paintTransformedLayerIntoFragments(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, paintFlags: PaintLayerFlag
   ) {
+    assert(isNativeImpl())
     let paginatedLayer = enclosingPaginationLayer(mode: .ExcludeCompositedPaginatedLayers)!
     let transformedExtent = RenderLayerWrapper.transparencyClipBox(
       layer: self, rootLayer: paginatedLayer, transparencyBehavior: .PaintingTransparencyClipBox,
@@ -5490,6 +5716,7 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior
   ) {
+    assert(isNativeImpl())
     assert(localPaintingInfo.regionContext is EventRegionContext)
     for fragment in layerFragments {
       var paintInfo = PaintInfoWrapper(
@@ -5514,6 +5741,7 @@ class RenderLayerWrapper {
     layerFragments: LayerFragments, context: GraphicsContextWrapper,
     localPaintingInfo: LayerPaintingInfo, paintBehavior: PaintBehavior
   ) {
+    assert(isNativeImpl())
     assert(localPaintingInfo.regionContext is AccessibilityRegionContext)
     for fragment in layerFragments {
       var paintInfo = PaintInfoWrapper(
@@ -5527,6 +5755,7 @@ class RenderLayerWrapper {
   }
 
   private func transparentPaintingAncestor(info: LayerPaintingInfo) -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     if CPtrToInt(layerId()) == CPtrToInt(info.rootLayer?.layerId()) || isComposited()
       || paintsIntoProvidedBacking()
     {
@@ -5663,6 +5892,7 @@ class RenderLayerWrapper {
   private func beginTransparencyLayers(
     context: GraphicsContextWrapper, paintingInfo: LayerPaintingInfo, dirtyRect: LayoutRectWrapper
   ) {
+    assert(isNativeImpl())
     if context.paintingDisabled()
       || (paintsWithTransparency(paintBehavior: paintingInfo.paintBehavior) && usedTransparency)
     {
@@ -5726,6 +5956,7 @@ class RenderLayerWrapper {
   private func listBackgroundIsKnownToBeOpaqueInRect(
     _ list: LayerList, _ localRect: LayoutRectWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     if list.size() == 0 {
       return false
     }
@@ -5750,6 +5981,7 @@ class RenderLayerWrapper {
   }
 
   private func shouldBeSelfPaintingLayer() -> Bool {
+    assert(isNativeImpl())
     if !isNormalFlowOnly {
       return true
     }
@@ -5765,6 +5997,7 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainVisibleDescendantStatus() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if layer!.visibleDescendantStatusDirty {
@@ -5777,6 +6010,7 @@ class RenderLayerWrapper {
   }
 
   private func computeHasVisibleContent() -> Bool {
+    assert(isNativeImpl())
     if renderer().isAnonymous() && renderer() is RenderSVGViewportContainerWrapper {
       return false
     }
@@ -5821,6 +6055,7 @@ class RenderLayerWrapper {
   }
 
   func dirty3DTransformedDescendantStatus() {
+    assert(isNativeImpl())
     var curr: RenderLayerWrapper? = stackingContext()
     if curr != nil {
       curr!.m_3DTransformedDescendantStatusDirty = true
@@ -5835,11 +6070,12 @@ class RenderLayerWrapper {
   }
 
   func isInsideSVGForeignObject() -> Bool {
-    assert(isNative)
+    assert(isNativeImpl())
     return m_insideSVGForeignObject
   }
 
   private func createReflection() {
+    assert(isNativeImpl())
     assert(reflection == nil)
     reflection = RenderReplicaWrapper(
       document: renderer().document(), style: createReflectionStyle())
@@ -5849,6 +6085,7 @@ class RenderLayerWrapper {
   }
 
   private func removeReflection() {
+    assert(isNativeImpl())
     if !reflection!.renderTreeBeingDestroyed(), let layer = reflection!.layer() {
       removeChild(oldChild: layer)
     }
@@ -5858,6 +6095,7 @@ class RenderLayerWrapper {
   }
 
   private func createReflectionStyle() -> RenderStyleWrapper {
+    assert(isNativeImpl())
     let newStyle = RenderStyleWrapper.create()
     newStyle.inheritFrom(inheritParent: renderer().style())
 
@@ -5924,6 +6162,7 @@ class RenderLayerWrapper {
   }
 
   private func updateFiltersAfterStyleChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     if renderer().style().filter().hasReferenceFilter() {
       ensureLayerFilters()
       filters!.updateReferenceFilterClients(operations: renderer().style().filter())
@@ -5941,6 +6180,7 @@ class RenderLayerWrapper {
   }
 
   private func updateFilterPaintingStrategy() {
+    assert(isNativeImpl())
     // RenderLayerFilters is only used to render the filters in software mode,
     // so we always need to run updateFilterPaintingStrategy() after the composited
     // mode might have changed for this layer.
@@ -5966,6 +6206,7 @@ class RenderLayerWrapper {
   }
 
   private func updateAncestorChainHasBlendingDescendants() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if !layer!.hasNotIsolatedBlendingDescendantsStatusDirty
@@ -5987,6 +6228,7 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainHasBlendingDescendants() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if layer!.hasNotIsolatedBlendingDescendantsStatusDirty {
@@ -6000,6 +6242,7 @@ class RenderLayerWrapper {
   }
 
   private func updateAncestorChainHasIntrinsicallyCompositedDescendants() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if !layer!.hasIntrinsicallyCompositedDescendantsStatusDirty
@@ -6014,6 +6257,7 @@ class RenderLayerWrapper {
   }
 
   private func dirtyAncestorChainHasIntrinsicallyCompositedDescendants() {
+    assert(isNativeImpl())
     var layer: RenderLayerWrapper? = self
     while layer != nil {
       if layer!.hasIntrinsicallyCompositedDescendantsStatusDirty {
@@ -6031,6 +6275,7 @@ class RenderLayerWrapper {
   }
 
   func setIntrinsicallyComposited(composited: Bool) {
+    assert(isNativeImpl())
     if intrinsicallyComposited != composited {
       intrinsicallyComposited = composited
       if composited {
@@ -6045,6 +6290,7 @@ class RenderLayerWrapper {
   }
 
   private func parentClipRects(clipRectsContext: ClipRectsContext) -> ClipRects {
+    assert(isNativeImpl())
     assert(parent() != nil)
 
     let containerLayer = parent()!
@@ -6073,6 +6319,7 @@ class RenderLayerWrapper {
   }
 
   func backgroundClipRect(clipRectsContext: ClipRectsContext) -> ClipRect {
+    assert(isNativeImpl())
     assert(parent() != nil)
     let parentRects = parentClipRects(clipRectsContext: clipRectsContext)
     var backgroundClipRect = backgroundClipRectForPosition(
@@ -6090,6 +6337,7 @@ class RenderLayerWrapper {
   }
 
   func enclosingTransformedAncestor() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     var curr = parent()
     while curr != nil && !curr!.isRenderViewLayer && curr!.transform == nil {
       curr = curr!.parent()
@@ -6099,6 +6347,7 @@ class RenderLayerWrapper {
   }
 
   private func hasNonOpacityTransparency() -> Bool {
+    assert(isNativeImpl())
     if renderer().hasMask() {
       return true
     }
@@ -6122,6 +6371,7 @@ class RenderLayerWrapper {
   }
 
   private func setWasOmittedFromZOrderTree() {
+    assert(isNativeImpl())
     if wasOmittedFromZOrderTree {
       return
     }
@@ -6142,9 +6392,13 @@ class RenderLayerWrapper {
     wasOmittedFromZOrderTree = true
   }
 
-  private func setWasIncludedInZOrderTree() { wasOmittedFromZOrderTree = false }
+  private func setWasIncludedInZOrderTree() {
+    assert(isNativeImpl())
+    wasOmittedFromZOrderTree = false
+  }
 
   private func removeSelfFromCompositor() {
+    assert(isNativeImpl())
     if let parent = parent() {
       compositor().layerWillBeRemoved(parent: parent, child: self)
     }
@@ -6152,6 +6406,7 @@ class RenderLayerWrapper {
   }
 
   private func removeDescendantsFromCompositor() {
+    assert(isNativeImpl())
     var child = firstChild()
     while child != nil {
       child!.removeSelfFromCompositor()
@@ -6175,7 +6430,10 @@ class RenderLayerWrapper {
     fatalError("Not implemented")
   }
 
-  func mustCompositeForIndirectReasons() -> Bool { return indirectCompositingReason != .None }
+  func mustCompositeForIndirectReasons() -> Bool {
+    assert(isNativeImpl())
+    return indirectCompositingReason != .None
+  }
 
   struct OverflowControlRects {
     var horizontalScrollbar = IntRect()
@@ -6191,8 +6449,9 @@ class RenderLayerWrapper {
     return p ?? UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
   }
 
+  private func isNativeImpl() -> Bool { return p == nil }
+
   private let p: UnsafeMutableRawPointer?
-  private var isNative = false
   // Native fields below.
 
   private var compositingDirtyBits = Compositing()
