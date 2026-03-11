@@ -492,13 +492,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // TODO(asuhan): remove
   init(_ p: UnsafeMutableRawPointer) {
-    self.p = p
+    pInterop = p
     self.m_renderView = nil
     self.m_updateCompositingLayersTimer = Timer()
     self.scrollingNodeToLayerMap = [:]
   }
 
-  deinit { wk_interop.RenderLayerCompositor_destroy(p) }
+  deinit { wk_interop.RenderLayerCompositor_destroy(interop()) }
 
   // Return true if this RenderView is in "compositing mode" (i.e. has one or more
   // composited RenderLayers)
@@ -527,8 +527,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // True when some content element other than the root is composited.
   func hasContentCompositingLayers() -> Bool {
-    if p != nil {
-      return wk_interop.RenderLayerCompositor_hasContentCompositingLayers(p!)
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerCompositor_hasContentCompositingLayers(interop())
     }
     return contentLayersCount != 0
   }
@@ -5060,7 +5060,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     return m_renderView!.frameView().frame().isMainFrame()
   }
 
-  private func isNativeImpl() -> Bool { return p == nil }
+  func interop() -> UnsafeMutableRawPointer {
+    assert(!isNativeImpl())
+    return pInterop!
+  }
+
+  private func isNativeImpl() -> Bool { return pInterop == nil }
 
   private let m_renderView: RenderViewWrapper?  // TODO(asuhan): make it non-optional
   private let m_updateCompositingLayersTimer: Timer
@@ -5108,5 +5113,5 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private var scrollingNodeToLayerMap: [ScrollingNodeIDWrapper: RenderLayerWrapper?]
   private let layersWithUnresolvedRelations = WeakHashSet<RenderLayerWrapper>()
 
-  let p: UnsafeMutableRawPointer?
+  private let pInterop: UnsafeMutableRawPointer?
 }

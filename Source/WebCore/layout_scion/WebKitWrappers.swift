@@ -521,7 +521,7 @@ func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableR
 @_cdecl("RenderViewScion_compositor")
 func RenderViewScion_compositor(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  return view.compositor().p!
+  return view.compositor().interop()
 }
 
 @_cdecl("RenderViewScion_usesCompositing")
