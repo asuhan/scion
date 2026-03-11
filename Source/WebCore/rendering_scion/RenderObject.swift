@@ -3022,7 +3022,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // TODO(asuhan): return unsigned integer once interop isn't needed anymore.
   func id() -> UnsafeMutableRawPointer {
-    return pInterop ?? UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
+    return pInterop ?? UnsafeMutableRawPointer(
+      bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
   }
 
   private let pInterop: UnsafeMutableRawPointer?
