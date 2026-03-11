@@ -1279,13 +1279,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? contentWidth() : contentHeight()
   }
 
   func contentLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? contentHeight() : contentWidth()
   }
 
   func paddingBoxWidth() -> LayoutUnit {
