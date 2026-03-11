@@ -1456,8 +1456,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isSelfCollapsingBlock() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   func collapsedMarginBefore() -> LayoutUnit {
