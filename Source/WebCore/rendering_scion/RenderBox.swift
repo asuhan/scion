@@ -1048,8 +1048,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func layoutOverflowRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return overflow?.layoutOverflowRect() ?? flippedClientBoxRect()
   }
 
   func logicalLeftLayoutOverflow() -> LayoutUnit {
