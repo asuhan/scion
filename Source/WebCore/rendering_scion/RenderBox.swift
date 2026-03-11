@@ -1008,8 +1008,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func nextInFlowSiblingBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var curr = nextSiblingBox()
+    while curr != nil {
+      if !curr!.isFloatingOrOutOfFlowPositioned() {
+        return curr
+      }
+      curr = curr!.nextSiblingBox()
+    }
+    return nil
   }
 
   // Visual and layout overflow are in the coordinate space of the box.  This means that they aren't purely physical directions.
