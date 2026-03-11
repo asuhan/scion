@@ -1355,8 +1355,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clientLogicalBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderBefore() + clientLogicalHeight()
   }
 
   func clientBoxRect() -> LayoutRectWrapper {
