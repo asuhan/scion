@@ -1334,6 +1334,16 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // More IE extensions.  clientWidth and clientHeight represent the interior of an object
   // excluding border and scrollbar.
+  private func clientLeft() -> LayoutUnit {
+    assert(isNativeImpl())
+    return borderLeft()
+  }
+
+  private func clientTop() -> LayoutUnit {
+    assert(isNativeImpl())
+    return borderTop()
+  }
+
   private func clientWidth() -> LayoutUnit {
     assert(isNativeImpl())
     return paddingBoxWidth()
@@ -1360,8 +1370,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clientBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutRectWrapper(
+      x: clientLeft(), y: clientTop(), width: clientWidth(), height: clientHeight())
   }
 
   override func marginBottom() -> LayoutUnit {
