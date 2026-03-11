@@ -492,7 +492,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // TODO(asuhan): remove
   init(_ p: UnsafeMutableRawPointer) {
     self.p = p
-    self.m_renderView = RenderViewWrapper(p: UnsafeMutableRawPointer(bitPattern: 0xdead_beef)!)
+    self.m_renderView = nil
     self.m_updateCompositingLayersTimer = Timer()
     self.scrollingNodeToLayerMap = [:]
   }
@@ -516,7 +516,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         destroyRootLayer()
       }
 
-      m_renderView.layer()!.setNeedsPostLayoutCompositingUpdate()
+      m_renderView!.layer()!.setNeedsPostLayoutCompositingUpdate()
     }
   }
 
@@ -542,17 +542,17 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     m_updateCompositingLayersTimer.stop()
 
     assert(
-      m_renderView.document().backForwardCacheState() == .NotInBackForwardCache
-        || m_renderView.document().backForwardCacheState() == .AboutToEnterBackForwardCache)
+      m_renderView!.document().backForwardCacheState() == .NotInBackForwardCache
+        || m_renderView!.document().backForwardCacheState() == .AboutToEnterBackForwardCache)
 
     // Compositing layers will be updated in Document::setVisualUpdatesAllowed(bool) if suppressed here.
-    if !m_renderView.document().visualUpdatesAllowed() {
+    if !m_renderView!.document().visualUpdatesAllowed() {
       return false
     }
 
     // Avoid updating the layers with old values. Compositing layers will be updated after the layout is finished.
     // This happens when m_updateCompositingLayersTimer fires before layout is updated.
-    if m_renderView.needsLayout() {
+    if m_renderView!.needsLayout() {
       return false
     }
 
@@ -569,8 +569,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if updateType == .OnScroll || updateType == .OnCompositedScroll {
       // We only get here if we didn't scroll on the scrolling thread, so this update needs to re-position viewport-constrained layers.
-      if m_renderView.settings().acceleratedCompositingForFixedPositionEnabled() && isPageScroll,
-        let viewportConstrainedObjects = m_renderView.frameView().viewportConstrainedObjects()
+      if m_renderView!.settings().acceleratedCompositingForFixedPositionEnabled() && isPageScroll,
+        let viewportConstrainedObjects = m_renderView!.frameView().viewportConstrainedObjects()
       {
         for renderer in viewportConstrainedObjects {
           if let layer = renderer.layer() {
@@ -605,7 +605,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       let rootLayer = rootRenderLayer()
       var compositingState = CompositingState(compAncestor: updateRoot)
       let backingSharingState = BackingSharingState(
-        allowOverlappingProviders: m_renderView.settings().overlappingBackingStoreProvidersEnabled()
+        allowOverlappingProviders: m_renderView!.settings()
+          .overlappingBackingStoreProvidersEnabled()
       )
       let overlapMap = LayerOverlapMap(rootLayer: rootLayer)
 
@@ -624,14 +625,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         ScrollingTreeState(
           parentNodeID: ScrollingNodeIDWrapper(), nextChildIndex: 0))
 
-      if !m_renderView.frame().isMainFrame() {
-        scrollingTreeState.v.parentNodeID = frameHostingNodeForFrame(m_renderView.frame())
+      if !m_renderView!.frame().isMainFrame() {
+        scrollingTreeState.v.parentNodeID = frameHostingNodeForFrame(m_renderView!.frame())
       }
 
       let scrollingCoordinator = scrollingCoordinator()
       let hadSubscrollers =
         scrollingCoordinator != nil
-        ? scrollingCoordinator!.hasSubscrollers(m_renderView.frame().rootFrame().frameID()) : false
+        ? scrollingCoordinator!.hasSubscrollers(m_renderView!.frame().rootFrame().frameID()) : false
 
       var traversalState = UpdateBackingTraversalState()
       var childList: [GraphicsLayer] = []
@@ -652,7 +653,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       }
 
       if scrollingCoordinator != nil
-        && scrollingCoordinator!.hasSubscrollers(m_renderView.frame().rootFrame().frameID())
+        && scrollingCoordinator!.hasSubscrollers(m_renderView!.frame().rootFrame().frameID())
           != hadSubscrollers
       {
         invalidateEventRegionForAllFrames()
@@ -666,9 +667,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // TODO(asuhan): call into InspectorInstrumentation
 
-    if m_renderView.needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() {
-      m_renderView.repaintRootContents()
-      m_renderView.setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(false)
+    if m_renderView!.needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() {
+      m_renderView!.repaintRootContents()
+      m_renderView!.setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(false)
     }
 
     return true
@@ -824,10 +825,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     // Fixed position elements that are invisible in the current view don't get their own layer.
     // FIXME: We shouldn't have to check useFixedLayout() here; one of the viewport rects needs to give the correct answer.
     var viewBounds = LayoutRectWrapper()
-    if m_renderView.frameView().useFixedLayout() {
-      viewBounds = LayoutRectWrapper(rect: m_renderView.unscaledDocumentRect())
+    if m_renderView!.frameView().useFixedLayout() {
+      viewBounds = LayoutRectWrapper(rect: m_renderView!.unscaledDocumentRect())
     } else {
-      viewBounds = m_renderView.frameView().rectForFixedPositionLayout()
+      viewBounds = m_renderView!.frameView().rectForFixedPositionLayout()
     }
 
     let layerBounds = layer.calculateLayerBounds(
@@ -846,7 +847,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func supportsFixedRootBackgroundCompositing() -> Bool {
-    if let renderViewBacking = m_renderView.layer()!.backing {
+    if let renderViewBacking = m_renderView!.layer()!.backing {
       return renderViewBacking.isFrameLayerWithTiledBacking
     }
     return false
@@ -859,7 +860,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   func fixedRootBackgroundLayer() -> GraphicsLayer? {
     // Get the fixed root background from the RenderView layer's backing.
-    let viewLayer = m_renderView.layer()
+    let viewLayer = m_renderView!.layer()
     if viewLayer == nil {
       return nil
     }
@@ -899,7 +900,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     if oldStyle != nil
       && (oldStyle!.overscrollBehaviorX() != renderer.style().overscrollBehaviorX()
         || oldStyle!.overscrollBehaviorY() != renderer.style().overscrollBehaviorY()),
-      let layer = m_renderView.layer()
+      let layer = m_renderView!.layer()
     {
       layer.setNeedsCompositingGeometryUpdate()
     }
@@ -915,7 +916,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     let isTransparent = viewHasTransparentBackground(&backgroundColor)
 
     let extendedBackgroundColor =
-      m_renderView.settings().backgroundShouldExtendBeyondPage() ? backgroundColor! : ColorWrapper()
+      m_renderView!.settings().backgroundShouldExtendBeyondPage()
+      ? backgroundColor! : ColorWrapper()
 
     let transparencyChanged = m_viewBackgroundIsTransparent != isTransparent
     let backgroundColorChanged = m_viewBackgroundColor != backgroundColor!
@@ -939,7 +941,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
   func repaintOnCompositingChange(layer: RenderLayerWrapper) {
     // If the renderer is not attached yet, no need to repaint.
-    if CPtrToInt(layer.renderer().id()) != CPtrToInt(m_renderView.id())
+    if CPtrToInt(layer.renderer().id()) != CPtrToInt(m_renderView!.id())
       && layer.renderer().parent() == nil
     {
       return
@@ -951,11 +953,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     layer.repaintIncludingNonCompositingDescendants(repaintContainer: repaintContainer)
-    if CPtrToInt(repaintContainer?.id()) == CPtrToInt(m_renderView.id()) {
+    if CPtrToInt(repaintContainer?.id()) == CPtrToInt(m_renderView!.id()) {
       // The contents of this layer may be moving between the window
       // and a GraphicsLayer, so we need to make sure the window system
       // synchronizes those changes on the screen.
-      m_renderView.frameView().setNeedsOneShotDrawingSynchronization()
+      m_renderView!.frameView().setNeedsOneShotDrawingSynchronization()
     }
   }
 
@@ -975,7 +977,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     // The contents of this layer may be moving from a GraphicsLayer to the window,
     // so we need to make sure the window system synchronizes those changes on the screen.
     if compositedAncestor!.isRenderViewLayer {
-      m_renderView.frameView().setNeedsOneShotDrawingSynchronization()
+      m_renderView!.frameView().setNeedsOneShotDrawingSynchronization()
     }
   }
 
@@ -1184,7 +1186,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func rootRenderLayer() -> RenderLayerWrapper {
-    return m_renderView.layer()!
+    return m_renderView!.layer()!
   }
 
   func rootGraphicsLayer() -> GraphicsLayer? {
@@ -1215,8 +1217,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private func updateRootLayerPosition() {
     if m_rootContentsLayer != nil {
-      m_rootContentsLayer!.setSize(size: FloatSize(size: m_renderView.frameView().contentsSize()))
-      m_rootContentsLayer!.setPosition(p: m_renderView.frameView().positionForRootContentLayer())
+      m_rootContentsLayer!.setSize(size: FloatSize(size: m_renderView!.frameView().contentsSize()))
+      m_rootContentsLayer!.setPosition(p: m_renderView!.frameView().positionForRootContentLayer())
       m_rootContentsLayer!.setAnchorPoint(p: FloatPoint3D())
     }
 
@@ -1244,14 +1246,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private func invalidateEventRegionForAllLayers() {
     applyToCompositedLayerIncludingDescendants(
-      m_renderView.layer()!,
+      m_renderView!.layer()!,
       { (layer: RenderLayerWrapper) in
         layer.invalidateEventRegion(reason: .SettingDidChange)
       })
   }
 
   func layerBecameComposited(_ layer: RenderLayerWrapper) {
-    if CPtrToInt(layer.p) != CPtrToInt(m_renderView.layer()?.p) {
+    if CPtrToInt(layer.p) != CPtrToInt(m_renderView!.layer()?.p) {
       contentLayersCount += 1
     }
   }
@@ -1259,7 +1261,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
     // TODO(asuhan): Inform the inspector that the given RenderLayer was destroyed.
 
-    if CPtrToInt(layer.p) != CPtrToInt(m_renderView.layer()?.p) {
+    if CPtrToInt(layer.p) != CPtrToInt(m_renderView!.layer()?.p) {
       assert(contentLayersCount > 0)
       contentLayersCount -= 1
     }
@@ -1357,7 +1359,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       if pluginScrollingNodeID.bool() {
         if isVisible {
           scrollingCoordinator!.insertNode(
-            m_renderView.frameView().frame().rootFrame().frameID(), .PluginScrolling,
+            m_renderView!.frameView().frame().rootFrame().frameID(), .PluginScrolling,
             pluginScrollingNodeID, parentID: pluginHostingNodeID, childIndex: 0)
           renderEmbeddedObject.didAttachScrollingNode()
         } else {
@@ -1391,7 +1393,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         if frameRootScrollingNodeID.bool() {
           if isVisible {
             scrollingCoordinator!.insertNode(
-              m_renderView.frameView().frame().rootFrame().frameID(), .Subframe,
+              m_renderView!.frameView().frame().rootFrame().frameID(), .Subframe,
               frameRootScrollingNodeID, parentID: frameHostingNodeID, childIndex: 0)
           } else {
             scrollingCoordinator!.unparentNode(nodeID: frameRootScrollingNodeID)
@@ -1460,10 +1462,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func rootLayerConfigurationChanged() {
-    if let renderViewBacking = m_renderView.layer()!.backing,
+    if let renderViewBacking = m_renderView!.layer()!.backing,
       renderViewBacking.isFrameLayerWithTiledBacking
     {
-      m_renderView.layer()!.setNeedsCompositingConfigurationUpdate()
+      m_renderView!.layer()!.setNeedsCompositingConfigurationUpdate()
       scheduleCompositingLayerUpdate()
     }
   }
@@ -1599,16 +1601,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func viewHasTransparentBackgroundHelper(_ backgroundColor: inout ColorWrapper?) -> Bool {
-    if m_renderView.frameView().isTransparent() {
+    if m_renderView!.frameView().isTransparent() {
       if backgroundColor != nil {
         backgroundColor = ColorWrapper()  // Return an invalid color.
       }
       return true
     }
 
-    var documentBackgroundColor = m_renderView.frameView().documentBackgroundColor()
+    var documentBackgroundColor = m_renderView!.frameView().documentBackgroundColor()
     if !documentBackgroundColor.isValid() {
-      documentBackgroundColor = m_renderView.frameView().baseBackgroundColor()
+      documentBackgroundColor = m_renderView!.frameView().baseBackgroundColor()
     }
 
     assert(documentBackgroundColor.isValid())
@@ -1922,7 +1924,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Copy the accelerated compositing related flags from Settings
   private func cacheAcceleratedCompositingFlags() {
-    let settings = m_renderView.settings()
+    let settings = m_renderView!.settings()
     var hasAcceleratedCompositing = settings.acceleratedCompositingEnabled()
 
     // We allow the chrome to override the settings, in case the page is rendered
@@ -1940,12 +1942,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var forceCompositingMode = m_forceCompositingMode
     if isRootFrameCompositor() {
       forceCompositingMode =
-        m_renderView.settings().forceCompositingMode() && hasAcceleratedCompositing
+        m_renderView!.settings().forceCompositingMode() && hasAcceleratedCompositing
     }
 
     if hasAcceleratedCompositing != m_hasAcceleratedCompositing
       || showDebugBorders != m_showDebugBorders || showRepaintCounter != m_showRepaintCounter
-      || forceCompositingMode != m_forceCompositingMode, let rootLayer = m_renderView.layer()
+      || forceCompositingMode != m_forceCompositingMode, let rootLayer = m_renderView!.layer()
     {
       rootLayer.setNeedsCompositingConfigurationUpdate()
       rootLayer.setDescendantsNeedUpdateBackingAndHierarchyTraversal()
@@ -1978,7 +1980,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     var queryData = RequiresCompositingData()
     let forceCompositingMode =
-      m_hasAcceleratedCompositing && m_renderView.settings().forceCompositingMode()
+      m_hasAcceleratedCompositing && m_renderView!.settings().forceCompositingMode()
       && requiresCompositingForScrollableFrame(&queryData)
     if forceCompositingMode != m_forceCompositingMode {
       m_forceCompositingMode = forceCompositingMode
@@ -2095,7 +2097,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         layer.ensureBacking()
 
         if layer.isRenderViewLayer && useCoordinatedScrollingForLayer(layer) {
-          let frameView = m_renderView.frameView()
+          let frameView = m_renderView!.frameView()
           if let scrollingCoordinator = scrollingCoordinator() {
             scrollingCoordinator.frameViewRootLayerDidChange(frameView: frameView)
           }
@@ -2169,7 +2171,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         layerChanged = true
       }
       if layerChanged, let scrollingCoordinator = scrollingCoordinator() {
-        scrollingCoordinator.frameViewFixedObjectsDidChange(frameView: m_renderView.frameView())
+        scrollingCoordinator.frameViewFixedObjectsDidChange(frameView: m_renderView!.frameView())
       }
     } else {
       layer.setViewportConstrainedNotCompositedReason(reason: .NoNotCompositedReason)
@@ -2309,12 +2311,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     let renderer = layer.renderer()
     if renderer.isFixedPositioned()
-      && CPtrToInt(renderer.container()?.id()) == CPtrToInt(m_renderView.id())
+      && CPtrToInt(renderer.container()?.id()) == CPtrToInt(m_renderView!.id())
     {
       // Because fixed elements get moved around without re-computing overlap, we have to compute an overlap
       // rect that covers all the locations that the fixed element could move to.
       // FIXME: need to handle sticky too.
-      extent.bounds = m_renderView.frameView().fixedScrollableAreaBoundsInflatedForScrolling(
+      extent.bounds = m_renderView!.frameView().fixedScrollableAreaBoundsInflatedForScrolling(
         uninflatedBounds: extent.bounds)
     }
 
@@ -3356,7 +3358,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if m_rootContentsLayer == nil {
       m_rootContentsLayer = GraphicsLayer.create(factory: graphicsLayerFactory(), client: self)
-      let overflowRect = snappedIntRect(rect: m_renderView.layoutOverflowRect())
+      let overflowRect = snappedIntRect(rect: m_renderView!.layoutOverflowRect())
       m_rootContentsLayer!.setName(name: "content root")  // TODO(asuhan): use a static string
       m_rootContentsLayer!.setSize(
         size: FloatSize(width: Float32(overflowRect.maxX()), height: Float32(overflowRect.maxY())))
@@ -3432,10 +3434,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       GraphicsLayer.unparentAndClear(layer: m_layerForHorizontalScrollbar)
       if let scrollingCoordinator = scrollingCoordinator() {
         scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
-          scrollableArea: m_renderView.frameView(), orientation: .Horizontal)
+          scrollableArea: m_renderView!.frameView(), orientation: .Horizontal)
       }
-      if let horizontalScrollbar = m_renderView.frameView().horizontalScrollbar() {
-        m_renderView.frameView().invalidateScrollbar(
+      if let horizontalScrollbar = m_renderView!.frameView().horizontalScrollbar() {
+        m_renderView!.frameView().invalidateScrollbar(
           scrollbar: horizontalScrollbar,
           rect: IntRect(
             location: IntPoint(x: 0, y: 0), size: horizontalScrollbar.frameRect().size))
@@ -3446,10 +3448,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       GraphicsLayer.unparentAndClear(layer: m_layerForVerticalScrollbar)
       if let scrollingCoordinator = scrollingCoordinator() {
         scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
-          scrollableArea: m_renderView.frameView(), orientation: .Vertical)
+          scrollableArea: m_renderView!.frameView(), orientation: .Vertical)
       }
-      if let verticalScrollbar = m_renderView.frameView().verticalScrollbar() {
-        m_renderView.frameView().invalidateScrollbar(
+      if let verticalScrollbar = m_renderView!.frameView().verticalScrollbar() {
+        m_renderView!.frameView().invalidateScrollbar(
           scrollbar: verticalScrollbar,
           rect: IntRect(
             location: IntPoint(x: 0, y: 0), size: verticalScrollbar.frameRect().size))
@@ -3458,8 +3460,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if m_layerForScrollCorner != nil {
       GraphicsLayer.unparentAndClear(layer: m_layerForScrollCorner)
-      m_renderView.frameView().invalidateScrollCorner(
-        rect: m_renderView.frameView().scrollCornerRect())
+      m_renderView!.frameView().invalidateScrollCorner(
+        rect: m_renderView!.frameView().scrollCornerRect())
     }
 
     if m_overflowControlsHostLayer != nil {
@@ -3484,11 +3486,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       fatalError("Not reached")
     case .RootLayerAttachedViaChromeClient:
       page().chrome().client().attachRootGraphicsLayer(
-        frame: m_renderView.frameView().frame(), layer: rootGraphicsLayer())
+        frame: m_renderView!.frameView().frame(), layer: rootGraphicsLayer())
     case .RootLayerAttachedViaEnclosingFrame:
       // The layer will get hooked up via RenderLayerBacking::updateConfiguration()
       // for the frame's renderer in the parent document.
-      if let ownerElement = m_renderView.document().ownerElement() {
+      if let ownerElement = m_renderView!.document().ownerElement() {
         ownerElement.scheduleInvalidateStyleAndLayerComposition()
       }
     }
@@ -3508,7 +3510,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if let scrollingCoordinator = scrollingCoordinator() {
-      scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView.frameView())
+      scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView!.frameView())
     }
 
     switch m_rootLayerAttachment {
@@ -3521,23 +3523,23 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         m_rootContentsLayer!.removeFromParent()
       }
 
-      if let ownerElement = m_renderView.document().ownerElement() {
+      if let ownerElement = m_renderView!.document().ownerElement() {
         ownerElement.scheduleInvalidateStyleAndLayerComposition()
       }
 
-      let frameRootScrollingNodeID = m_renderView.frameView().scrollingNodeID()
+      let frameRootScrollingNodeID = m_renderView!.frameView().scrollingNodeID()
       if frameRootScrollingNodeID.bool() {
         if let scrollingCoordinator = scrollingCoordinator() {
-          scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView.frameView())
+          scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView!.frameView())
           scrollingCoordinator.unparentNode(nodeID: frameRootScrollingNodeID)
         }
       }
     case .RootLayerAttachedViaChromeClient:
       if let scrollingCoordinator = scrollingCoordinator() {
-        scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView.frameView())
+        scrollingCoordinator.frameViewWillBeDetached(frameView: m_renderView!.frameView())
       }
       page().chrome().client().attachRootGraphicsLayer(
-        frame: m_renderView.frameView().frame(), layer: nil)
+        frame: m_renderView!.frameView().frame(), layer: nil)
     case .RootLayerUnattached:
       break
     }
@@ -3556,11 +3558,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // The attachment can affect whether the RenderView layer's paintsIntoWindow() behavior,
     // so call updateDrawsContent() to update that.
-    if let backing = m_renderView.layer()?.backing {
+    if let backing = m_renderView!.layer()?.backing {
       backing.updateDrawsContent()
     }
 
-    if !m_renderView.frameView().frame().isMainFrame() {
+    if !m_renderView!.frameView().frame().isMainFrame() {
       return
     }
 
@@ -3581,7 +3583,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
         if let scrollingCoordinator = scrollingCoordinator() {
           scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
-            scrollableArea: m_renderView.frameView(), orientation: .Horizontal)
+            scrollableArea: m_renderView!.frameView(), orientation: .Horizontal)
         }
       }
     } else if m_layerForHorizontalScrollbar != nil {
@@ -3589,7 +3591,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       if let scrollingCoordinator = scrollingCoordinator() {
         scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
-          scrollableArea: m_renderView.frameView(), orientation: .Horizontal)
+          scrollableArea: m_renderView!.frameView(), orientation: .Horizontal)
       }
     }
 
@@ -3605,7 +3607,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
         if let scrollingCoordinator = scrollingCoordinator() {
           scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
-            scrollableArea: m_renderView.frameView(), orientation: .Vertical)
+            scrollableArea: m_renderView!.frameView(), orientation: .Vertical)
         }
       }
     } else if m_layerForVerticalScrollbar != nil {
@@ -3613,7 +3615,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
       if let scrollingCoordinator = scrollingCoordinator() {
         scrollingCoordinator.scrollableAreaScrollbarLayerDidChange(
-          scrollableArea: m_renderView.frameView(), orientation: .Vertical)
+          scrollableArea: m_renderView!.frameView(), orientation: .Vertical)
       }
     }
 
@@ -3629,14 +3631,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       GraphicsLayer.unparentAndClear(layer: m_layerForScrollCorner)
     }
 
-    m_renderView.frameView().positionScrollbarLayers()
+    m_renderView!.frameView().positionScrollbarLayers()
   }
 
   private func updateScrollLayerPosition() {
     assert(!hasCoordinatedScrolling())
     assert(m_scrolledContentsLayer != nil)
 
-    let frameView = m_renderView.frameView()
+    let frameView = m_renderView!.frameView()
     let scrollPosition = frameView.scrollPosition()
 
     // We use scroll position here because the root content layer is offset to account for scrollOrigin (see LocalFrameView::positionForRootContentLayer).
@@ -3654,7 +3656,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return
     }
 
-    let layerSize = m_renderView.frameView().sizeForVisibleContent()
+    let layerSize = m_renderView!.frameView().sizeForVisibleContent()
     layerForClipping!.setSize(size: FloatSize(size: layerSize))
     layerForClipping!.setPosition(p: positionForClipLayer())
   }
@@ -3667,7 +3669,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func notifyIFramesOfCompositingChange() {
     // Compositing affects the answer to RenderIFrame::requiresAcceleratedCompositing(), so
     // we need to schedule a style recalc in our parent document.
-    if let ownerElement = m_renderView.document().ownerElement() {
+    if let ownerElement = m_renderView!.document().ownerElement() {
       ownerElement.scheduleInvalidateStyleAndLayerComposition()
     }
   }
@@ -3905,10 +3907,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if queryData.layoutUpToDate == .No {
       queryData.reevaluateAfterLayout = true
-      return m_renderView.isComposited()
+      return m_renderView!.isComposited()
     }
 
-    return m_renderView.frameView().isScrollable()
+    return m_renderView!.frameView().isScrollable()
   }
 
   private func requiresCompositingForOverflowScrolling(
@@ -3951,7 +3953,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     // FIXME: acceleratedCompositingForFixedPositionEnabled should probably be renamed acceleratedCompositingForViewportConstrainedPositionEnabled().
-    if !m_renderView.settings().acceleratedCompositingForFixedPositionEnabled() {
+    if !m_renderView!.settings().acceleratedCompositingForFixedPositionEnabled() {
       return false
     }
 
@@ -3969,7 +3971,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // Don't promote fixed position elements that are descendants of a non-view container, e.g. transformed elements.
     // They will stay fixed wrt the container rather than the enclosing frame.
-    if CPtrToInt(container!.id()) != CPtrToInt(m_renderView.id()) {
+    if CPtrToInt(container!.id()) != CPtrToInt(m_renderView!.id()) {
       queryData.nonCompositedForPositionReason = .NotCompositedForNonViewContainer
       return false
     }
@@ -4154,10 +4156,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     if nodeType == .Subframe && treeState.v.parentNodeID == nil {
       nodeID = scrollingCoordinator.createNode(
-        m_renderView.frameView().frame().rootFrame().frameID(), nodeType, nodeID)
+        m_renderView!.frameView().frame().rootFrame().frameID(), nodeType, nodeID)
     } else {
       let newNodeID = scrollingCoordinator.insertNode(
-        m_renderView.frameView().frame().rootFrame().frameID(), nodeType, nodeID,
+        m_renderView!.frameView().frame().rootFrame().frameID(), nodeType, nodeID,
         parentID: treeState.v.parentNodeID ?? ScrollingNodeIDWrapper(),
         childIndex: treeState.v.nextChildIndex)
       if newNodeID != nodeID {
@@ -4328,11 +4330,11 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var newNodeID = ScrollingNodeIDWrapper()
 
     if layer.isRenderViewLayer {
-      let frameView = m_renderView.frameView()
+      let frameView = m_renderView!.frameView()
       assert(scrollingCoordinator!.coordinatesScrollingForFrameView(frameView: frameView))
 
       newNodeID = attachScrollingNode(
-        m_renderView.layer()!, m_renderView.frame().isMainFrame() ? .MainFrame : .Subframe,
+        m_renderView!.layer()!, m_renderView!.frame().isMainFrame() ? .MainFrame : .Subframe,
         treeState)
 
       if !newNodeID.bool() {
@@ -4502,7 +4504,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     if layer.isRenderViewLayer {
-      let frameView = m_renderView.frameView()
+      let frameView = m_renderView!.frameView()
       scrollingCoordinator.setNodeLayers(
         nodeID,
         ScrollingCoordinatorWrapper.NodeLayers(
@@ -4663,13 +4665,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       return
     }
 
-    if m_renderView.settings().fixedBackgroundsPaintRelativeToDocument() {
+    if m_renderView!.settings().fixedBackgroundsPaintRelativeToDocument() {
       return
     }
 
     let scrollingCoordinator = scrollingCoordinator()!
 
-    let rootScrollingNodeID = m_renderView.frameView().scrollingNodeID()
+    let rootScrollingNodeID = m_renderView!.frameView().scrollingNodeID()
     var nodesToClear: Set<ScrollingNodeIDWrapper> = []
     nodesToClear.reserveCapacity(scrollingNodeToLayerMap.count)
     for key in scrollingNodeToLayerMap.keys {
@@ -4699,7 +4701,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       scrollingCoordinator.setSynchronousScrollingReasons(rootScrollingNodeID, reasons)
     }
 
-    let slowRepaintObjects = m_renderView.frameView().slowRepaintObjects()
+    let slowRepaintObjects = m_renderView!.frameView().slowRepaintObjects()
     if slowRepaintObjects == nil {
       setHasSlowRepaintObjectsSynchronousScrollingReasonOnRootNode(false)
       clearSynchronousReasonsOnNonRootNodes()
@@ -4758,7 +4760,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     let constraints = FixedPositionViewportConstraints()
     constraints.setLayerPositionAtLastLayout(anchorLayer.position())
     constraints.setViewportRectAtLastLayout(
-      m_renderView.frameView().rectForFixedPositionLayout().FloatRect())
+      m_renderView!.frameView().rectForFixedPositionLayout().FloatRect())
     constraints.setAlignmentOffset(anchorLayer.pixelAlignmentOffset())
 
     let style = layer.renderer().style()
@@ -4813,7 +4815,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {
-    let frameView = m_renderView.frameView()
+    let frameView = m_renderView!.frameView()
 
     // This applies when the application UI handles scrolling, in which case RenderLayerCompositor doesn't need to manage it.
     if frameView.delegatedScrollingMode() == .DelegatedToNativeScrollView && isMainFrameCompositor()
@@ -4822,28 +4824,28 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     // We need to handle our own scrolling if we're:
-    return m_renderView.frameView().platformWidget() == nil  // viewless (i.e. non-Mac, or Mac in WebKit2)
+    return m_renderView!.frameView().platformWidget() == nil  // viewless (i.e. non-Mac, or Mac in WebKit2)
       || attachment == .RootLayerAttachedViaEnclosingFrame  // a composited frame on Mac
   }
 
   private func requiresHorizontalScrollbarLayer() -> Bool {
     return shouldCompositeOverflowControls()
-      && m_renderView.frameView().horizontalScrollbar() != nil
+      && m_renderView!.frameView().horizontalScrollbar() != nil
   }
 
   private func requiresVerticalScrollbarLayer() -> Bool {
-    return shouldCompositeOverflowControls() && m_renderView.frameView().verticalScrollbar() != nil
+    return shouldCompositeOverflowControls() && m_renderView!.frameView().verticalScrollbar() != nil
   }
 
   private func requiresScrollCornerLayer() -> Bool {
-    return shouldCompositeOverflowControls() && m_renderView.frameView().isScrollCornerVisible()
+    return shouldCompositeOverflowControls() && m_renderView!.frameView().isScrollCornerVisible()
   }
 
   // True if the FrameView uses a ScrollingCoordinator.
   private func hasCoordinatedScrolling() -> Bool {
     if let scrollingCoordinator = scrollingCoordinator() {
       return scrollingCoordinator.coordinatesScrollingForFrameView(
-        frameView: m_renderView.frameView())
+        frameView: m_renderView!.frameView())
     }
     return false
   }
@@ -4872,7 +4874,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func shouldCompositeOverflowControls() -> Bool {
-    let frameView = m_renderView.frameView()
+    let frameView = m_renderView!.frameView()
 
     if !frameView.managesScrollbars() {
       return false
@@ -4890,7 +4892,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func documentUsesTiledBacking() -> Bool {
-    let layer = m_renderView.layer()
+    let layer = m_renderView!.layer()
     if layer == nil {
       return false
     }
@@ -4904,15 +4906,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private func isRootFrameCompositor() -> Bool {
     assert(p == nil)
-    return m_renderView.frameView().frame().isRootFrame()
+    return m_renderView!.frameView().frame().isRootFrame()
   }
 
   private func isMainFrameCompositor() -> Bool {
     assert(p == nil)
-    return m_renderView.frameView().frame().isMainFrame()
+    return m_renderView!.frameView().frame().isMainFrame()
   }
 
-  private let m_renderView: RenderViewWrapper
+  private let m_renderView: RenderViewWrapper?  // TODO(asuhan): make it non-optional
   private let m_updateCompositingLayersTimer: Timer
 
   private var m_compositingTriggers: ChromeClient.CompositingTriggerFlags = .AllTriggers
