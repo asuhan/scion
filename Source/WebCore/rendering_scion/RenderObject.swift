@@ -3017,7 +3017,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isNativeImpl() -> Bool { return CPtrToInt(p) == 0xdead_beef }
 
-  var p: UnsafeMutableRawPointer
+  let p: UnsafeMutableRawPointer
 
   private var m_stateBitfields = StateBitfields()
 
