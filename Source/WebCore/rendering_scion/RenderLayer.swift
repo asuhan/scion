@@ -365,7 +365,7 @@ class RenderLayerWrapper {
     hasNotIsolatedBlendingDescendantsStatusDirty = false
     repaintRectsValid = false
     m_renderer = renderer
-    p = nil
+    pInterop = nil
 
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setIsCSSStackingContext(isCSSStackingContext: shouldBeCSSStackingContext())
@@ -406,7 +406,7 @@ class RenderLayerWrapper {
   }
 
   init(p: UnsafeMutableRawPointer) {
-    self.p = p
+    pInterop = p
     m_renderer = nil
   }
 
@@ -6446,12 +6446,13 @@ class RenderLayerWrapper {
   }
 
   func layerId() -> UnsafeMutableRawPointer {
-    return p ?? UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
+    return pInterop ?? UnsafeMutableRawPointer(
+      bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
   }
 
-  private func isNativeImpl() -> Bool { return p == nil }
+  private func isNativeImpl() -> Bool { return pInterop == nil }
 
-  private let p: UnsafeMutableRawPointer?
+  private let pInterop: UnsafeMutableRawPointer?
   // Native fields below.
 
   private var compositingDirtyBits = Compositing()
