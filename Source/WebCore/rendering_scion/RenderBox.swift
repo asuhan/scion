@@ -1332,14 +1332,26 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     )
   }
 
+  // More IE extensions.  clientWidth and clientHeight represent the interior of an object
+  // excluding border and scrollbar.
+  private func clientWidth() -> LayoutUnit {
+    assert(isNativeImpl())
+    return paddingBoxWidth()
+  }
+
+  private func clientHeight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return paddingBoxHeight()
+  }
+
   func clientLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? clientWidth() : clientHeight()
   }
 
   func clientLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? clientHeight() : clientWidth()
   }
 
   func clientLogicalBottom() -> LayoutUnit {
