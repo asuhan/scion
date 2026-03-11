@@ -623,7 +623,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     if let renderReplaced = flexItem as? RenderReplacedWrapper {
       return renderReplaced.intrinsicLogicalHeight()
     }
-    if let cachedContentLogicalHeight = intrinsicContentLogicalHeights[CPtrToInt(flexItem.p)] {
+    if let cachedContentLogicalHeight = intrinsicContentLogicalHeights[CPtrToInt(flexItem.id())] {
       return cachedContentLogicalHeight
     }
 
@@ -641,7 +641,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     if flexItem.isRenderReplaced() {
       return  // Replaced elements know their intrinsic height already, so nothing to do.
     }
-    intrinsicContentLogicalHeights.removeValue(forKey: CPtrToInt(flexItem.p))
+    intrinsicContentLogicalHeights.removeValue(forKey: CPtrToInt(flexItem.id()))
   }
 
   private func staticMainAxisPositionForPositionedFlexItem(_ flexItem: RenderBoxWrapper)
@@ -1501,7 +1501,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     var mainAxisExtent = LayoutUnit()
     if !mainAxisIsFlexItemInlineAxis(flexItem: flexItem) {
       assert(!flexItem.needsLayout())
-      let maybeMainAxisExtent = intrinsicSizeAlongMainAxis[CPtrToInt(flexItem.p)]
+      let maybeMainAxisExtent = intrinsicSizeAlongMainAxis[CPtrToInt(flexItem.id())]
       assert(maybeMainAxisExtent != nil)
       mainAxisExtent = maybeMainAxisExtent!
     } else {
@@ -1527,7 +1527,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     // Don't resolve percentages in children. This is especially important for the min-height calculation,
     // where we want percentages to be treated as auto. For flex-basis itself, this is not a problem because
     // by definition we have an indefinite flex basis here and thus percentages should not resolve.
-    if flexItem.needsLayout() || !intrinsicSizeAlongMainAxis.keys.contains(CPtrToInt(flexItem.p)) {
+    if flexItem.needsLayout() || !intrinsicSizeAlongMainAxis.keys.contains(CPtrToInt(flexItem.id()))
+    {
       if isHorizontalWritingMode() == flexItem.isHorizontalWritingMode() {
         flexItem.setOverridingContainingBlockContentLogicalHeight(logicalHeight: nil)
       } else {
@@ -1744,7 +1745,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       }
     }
 
-    intrinsicSizeAlongMainAxis.updateValue(mainSize, forKey: CPtrToInt(flexItem.p))
+    intrinsicSizeAlongMainAxis.updateValue(mainSize, forKey: CPtrToInt(flexItem.id()))
     relaidOutFlexItems.add(value: flexItem)
   }
 
@@ -1847,7 +1848,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       let shouldTrimCrossAxisStart = shouldTrimCrossAxisMarginStart() && lineStates.isEmpty
       let shouldTrimCrossAxisEnd =
         shouldTrimCrossAxisMarginEnd()
-        && CPtrToInt(allItems.last!.renderer.p) == CPtrToInt(lineItems.last!.renderer.p)
+        && CPtrToInt(allItems.last!.renderer.id()) == CPtrToInt(lineItems.last!.renderer.id())
       if shouldTrimCrossAxisStart || shouldTrimCrossAxisEnd {
         for flexLayoutItem in lineItems {
           if shouldTrimCrossAxisStart {
@@ -2654,7 +2655,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       // We may have already forced relayout for orthogonal flowing children in
       // computeInnerFlexBaseSizeForFlexItem.
       var forceFlexItemRelayout =
-        relayoutChildren && !relaidOutFlexItems.contains(value: CPtrToInt(flexItem.p))
+        relayoutChildren && !relaidOutFlexItems.contains(value: CPtrToInt(flexItem.id()))
       if !forceFlexItemRelayout && flexItemHasPercentHeightDescendants(renderer: flexItem) {
         // Have to force another relayout even though the child is sized
         // correctly, because its descendants are not sized correctly yet. Our
@@ -3170,7 +3171,7 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     for descendant in percentHeightDescendants! {
       var hasOutOfFlowAncestor = false
       var ancestor = descendant.containingBlock()
-      while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(renderBlock!.p) {
+      while ancestor != nil && CPtrToInt(ancestor!.id()) != CPtrToInt(renderBlock!.id()) {
         if ancestor!.isOutOfFlowPositioned() {
           hasOutOfFlowAncestor = true
           break

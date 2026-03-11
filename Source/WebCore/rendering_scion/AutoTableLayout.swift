@@ -442,7 +442,7 @@ final class AutoTableLayout: TableLayout {
                   // Nav/IE weirdness
                   if (logicalWidth > layoutStruct[ec].logicalWidth.value())
                     || ((layoutStruct[ec].logicalWidth.value() == logicalWidth)
-                      && (CPtrToInt(maxContributor?.p) == CPtrToInt(cell!.p)))
+                      && (CPtrToInt(maxContributor?.id()) == CPtrToInt(cell!.id())))
                   {
                     layoutStruct[ec].logicalWidth.setValue(type: .Fixed, value: logicalWidth)
                     fixedContributor = cell
@@ -466,7 +466,8 @@ final class AutoTableLayout: TableLayout {
               break
             }
           } else if effCol == 0
-            || CPtrToInt(section.primaryCellAt(row: i, col: effCol - 1)?.p) != CPtrToInt(cell!.p)
+            || CPtrToInt(section.primaryCellAt(row: i, col: effCol - 1)?.id())
+              != CPtrToInt(cell!.id())
           {
             // This spanning cell originates in this column. Insert the cell into spanning cells list.
             insertSpanCell(cell: cell!)
@@ -479,7 +480,7 @@ final class AutoTableLayout: TableLayout {
     if layoutStruct[ec].logicalWidth.isFixed() {
       if table.document().inQuirksMode()
         && layoutStruct[ec].maxLogicalWidth > layoutStruct[ec].logicalWidth.value()
-        && CPtrToInt(fixedContributor?.p) != CPtrToInt(maxContributor?.p)
+        && CPtrToInt(fixedContributor?.id()) != CPtrToInt(maxContributor?.id())
       {
         layoutStruct[ec].logicalWidth = LengthWrapper()
         fixedContributor = nil

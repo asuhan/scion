@@ -316,7 +316,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   // This is null for anonymous renderers.
   func element() -> ElementWrapper? {
     if !isNativeImpl() {
-      if let elementRaw = wk_interop.RenderElement_element(p) {
+      if let elementRaw = wk_interop.RenderElement_element(id()) {
         return ElementWrapper(p: elementRaw)
       }
       return nil
@@ -335,7 +335,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func firstChild() -> RenderObjectWrapper? {
     if !isNativeImpl() {
-      if let childRaw = wk_interop.RenderElement_firstChild(p) {
+      if let childRaw = wk_interop.RenderElement_firstChild(id()) {
         return RenderObjectWrapper(p: childRaw)
       }
       return nil
@@ -544,7 +544,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     assert(!isNativeImpl())
-    wk_interop.RenderElement_setChildNeedsLayout(p, markParents.rawValue)
+    wk_interop.RenderElement_setChildNeedsLayout(id(), markParents.rawValue)
   }
 
   func setOutOfFlowChildNeedsStaticPositionLayout() {
@@ -646,7 +646,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   /* This function performs a layout only if one is needed. */
   func layoutIfNeeded() {
     assert(!isNativeImpl())
-    wk_interop.RenderElement_layoutIfNeeded(p)
+    wk_interop.RenderElement_layoutIfNeeded(id())
   }
 
   // Repaint only if our old bounds and new bounds are different. The caller may pass in newBounds and newOutlineBox if they are known.
@@ -1088,12 +1088,12 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func hasSelfPaintingLayer() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderElement_hasSelfPaintingLayer(p)
+    return wk_interop.RenderElement_hasSelfPaintingLayer(id())
   }
 
   func checkForRepaintDuringLayout() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderElement_checkForRepaintDuringLayout(p)
+    return wk_interop.RenderElement_checkForRepaintDuringLayout(id())
   }
 
   func hasFilter() -> Bool {
@@ -1147,7 +1147,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func isContinuation() -> Bool {
     if !isNativeImpl() {
-      return wk_interop.RenderElement_isContinuation(p)
+      return wk_interop.RenderElement_isContinuation(id())
     }
     return m_isContinuation
   }
@@ -1168,7 +1168,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   {
     child!.setParent(parent: self)
 
-    if CPtrToInt(m_firstChild?.p) == CPtrToInt(beforeChild?.p) {
+    if CPtrToInt(m_firstChild?.id()) == CPtrToInt(beforeChild?.id()) {
       m_firstChild = child
     }
 
@@ -1201,10 +1201,10 @@ class RenderElementWrapper: RenderObjectWrapper {
       nextSibling!.setPreviousSibling(previous: renderer.previousSibling())
     }
 
-    if CPtrToInt(parent.firstChild()?.p) == CPtrToInt(renderer.p) {
+    if CPtrToInt(parent.firstChild()?.id()) == CPtrToInt(renderer.id()) {
       parent.m_firstChild = nextSibling
     }
-    if CPtrToInt(parent.lastChild()?.p) == CPtrToInt(renderer.p) {
+    if CPtrToInt(parent.lastChild()?.id()) == CPtrToInt(renderer.id()) {
       parent.m_lastChild = renderer
     }
 
@@ -1327,7 +1327,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   func isWritingModeRoot() -> Bool {
     if !isNativeImpl() {
-      return wk_interop.RenderElement_isWritingModeRoot(p)
+      return wk_interop.RenderElement_isWritingModeRoot(id())
     }
     return parent() == nil || parent()!.style().writingMode() != style().writingMode()
   }
@@ -1584,7 +1584,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       {
         let rendererWillBeHidden = newStyle.usedVisibility() != .Visible
         if rendererWillBeHidden && enclosingLayer.hasVisibleContent
-          && (CPtrToInt(p) == CPtrToInt(enclosingLayer.renderer().p)
+          && (CPtrToInt(id()) == CPtrToInt(enclosingLayer.renderer().id())
             || enclosingLayer.renderer().style().usedVisibility() != .Visible)
         {
           return .RendererOnly
@@ -1597,7 +1597,7 @@ class RenderElementWrapper: RenderObjectWrapper {
       {
         let rendererWillBeHidden = isSkippedContent()
         if rendererWillBeHidden && enclosingLayer.hasVisibleContent
-          && (CPtrToInt(p) == CPtrToInt(enclosingLayer.renderer().p)
+          && (CPtrToInt(id()) == CPtrToInt(enclosingLayer.renderer().id())
             || enclosingLayer.renderer().style().usedVisibility() != .Visible)
         {
           return .RendererOnly
@@ -1710,7 +1710,7 @@ class RenderElementWrapper: RenderObjectWrapper {
             layer.setHasVisibleContent()
           }
         } else if layer.hasVisibleContent
-          && (CPtrToInt(p) == CPtrToInt(layer.renderer().p)
+          && (CPtrToInt(id()) == CPtrToInt(layer.renderer().id())
             || layer.renderer().style().usedVisibility() != .Visible)
         {
           layer.dirtyVisibleContentStatus()

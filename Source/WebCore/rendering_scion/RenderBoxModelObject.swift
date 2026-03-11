@@ -347,7 +347,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
     var containerContentRect = LayoutRectWrapper()
     if enclosingClippingLayer == nil
-      || (CPtrToInt(containingBlock?.p) != CPtrToInt(enclosingClippingBox.p))
+      || (CPtrToInt(containingBlock?.id()) != CPtrToInt(enclosingClippingBox.id()))
     {
       // In this case either the scrolling element is the view or there is another containing block in
       // the hierarchy between this stickily positioned item and its scrolling ancestor. In both cases,
@@ -391,7 +391,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
         - FloatSize(
           width: (enclosingClippingBox.borderLeft() + enclosingClippingBox.paddingLeft()).float(),
           height: (enclosingClippingBox.borderTop() + enclosingClippingBox.paddingTop()).float())
-      if CPtrToInt(enclosingClippingBox.p) != CPtrToInt(containingBlock!.p),
+      if CPtrToInt(enclosingClippingBox.id()) != CPtrToInt(containingBlock!.id()),
         let scrollableArea = enclosingClippingLayer!.scrollableArea()
       {
         containerLocationRelativeToScrollingAncestor += FloatPoint(p: scrollableArea.scrollOffset())
@@ -428,7 +428,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
           width: (enclosingClippingBox.borderLeft() + enclosingClippingBox.paddingLeft()).float(),
           height: (enclosingClippingBox.borderTop() + enclosingClippingBox.paddingTop()).float()))
 
-      if CPtrToInt(enclosingClippingBox.p) != CPtrToInt(parent()?.p),
+      if CPtrToInt(enclosingClippingBox.id()) != CPtrToInt(parent()?.id()),
         let scrollableArea = enclosingClippingLayer!.scrollableArea()
       {
         stickyBoxRelativeToScrollingAncestor.moveBy(
@@ -581,12 +581,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func paddingStart() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(id()))
   }
 
   func paddingEnd() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(id()))
   }
 
   func borderWidths() -> RectEdges<LayoutUnit> {
@@ -636,7 +636,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func borderStart() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(id()))
   }
 
   func borderEnd() -> LayoutUnit {
@@ -752,7 +752,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func marginStart(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(
-      value: wk_interop.RenderBoxModelObject_marginStart(p, otherStyle?.p))
+      value: wk_interop.RenderBoxModelObject_marginStart(id(), otherStyle?.p))
   }
 
   func marginEnd(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
@@ -818,7 +818,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     assert(!isNativeImpl())
     return LayoutUnit.fromRawValue(
       value: wk_interop.RenderBoxModelObject_baselinePosition(
-        p, baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
+        id(), baselineType.rawValue, firstLine, direction.rawValue, linePositionMode.rawValue))
   }
 
   override func mapAbsoluteToLocalPoint(
@@ -854,7 +854,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   func inlineContinuation() -> RenderInlineWrapper? {
     assert(!isNativeImpl())
-    if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(p) {
+    if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(id()) {
       return RenderInlineWrapper(p: raw)
     }
     return nil

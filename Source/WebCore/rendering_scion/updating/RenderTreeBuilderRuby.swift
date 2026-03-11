@@ -124,7 +124,7 @@ extension RenderTreeBuilder {
 
       var beforeChild = beforeChild
       while beforeChild != nil && beforeChild!.parent() != nil
-        && CPtrToInt(beforeChild!.parent()!.p) != CPtrToInt(parent.p)
+        && CPtrToInt(beforeChild!.parent()!.id()) != CPtrToInt(parent.id())
       {
         beforeChild = beforeChild!.parent()
       }

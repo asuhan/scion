@@ -24,7 +24,7 @@ import wk_interop
 
 private func inNormalFlow(child: RenderBoxWrapper) -> Bool {
   var curr = child.containingBlock()
-  while curr != nil && CPtrToInt(curr?.p) != CPtrToInt(child.view().p) {
+  while curr != nil && CPtrToInt(curr?.id()) != CPtrToInt(child.view().id()) {
     if curr!.isRenderFragmentedFlow() {
       return true
     }
@@ -473,7 +473,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       let floatingObjectSet = floatingObjects!.set()
       for floatingObject in floatingObjectSet {
         if !floatingObject.isDescendant() {
-          oldIntrudingFloatSet.update(with: CPtrToInt(floatingObject.renderer?.p))
+          oldIntrudingFloatSet.update(with: CPtrToInt(floatingObject.renderer?.id()))
         }
       }
     }
@@ -540,7 +540,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
           if oldIntrudingFloatSet.isEmpty {
             break
           }
-          oldIntrudingFloatSet.remove(CPtrToInt(floatingObject.renderer?.p))
+          oldIntrudingFloatSet.remove(CPtrToInt(floatingObject.renderer?.id()))
           if !oldIntrudingFloatSet.isEmpty {
             markAllDescendantsWithFloatsForLayout()
           }
@@ -594,10 +594,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       if let rootForLastFormattedLine = TextBoxTrimmer.lastInlineFormattingContextRootForTrimEnd(
         blockContainer: self)
       {
-        assert(CPtrToInt(rootForLastFormattedLine.p) != CPtrToInt(p))
+        assert(CPtrToInt(rootForLastFormattedLine.id()) != CPtrToInt(id()))
         // FIXME: We should be able to damage the last line only.
         var ancestor: RenderBlockWrapper? = rootForLastFormattedLine
-        while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(p) {
+        while ancestor != nil && CPtrToInt(ancestor!.id()) != CPtrToInt(id()) {
           ancestor!.setNeedsLayout(markParents: .MarkOnlyThis)
           ancestor = ancestor!.containingBlock()
         }
@@ -1295,7 +1295,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   ) {
     assert(!isNativeImpl())
     wk_interop.RenderBlockFlow_setStaticInlinePositionForChild(
-      p, child.p, blockOffset.rawValue(), inlinePosition.rawValue())
+      id(), child.id(), blockOffset.rawValue(), inlinePosition.rawValue())
   }
 
   private func updateStaticInlinePositionForChild(child: RenderBoxWrapper, logicalTop: LayoutUnit) {
@@ -2024,7 +2024,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
       for floatingObject in floatingObjectSet {
         let floatingBox = floatingObject.renderer!
-        if floatToRemove == nil && CPtrToInt(floatingBox.p) != CPtrToInt(floatToRemove!.p) {
+        if floatToRemove == nil && CPtrToInt(floatingBox.id()) != CPtrToInt(floatToRemove!.id()) {
           continue
         }
         if nextBlock!.containsFloat(renderer: floatingBox) {
@@ -2044,7 +2044,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func insertFloatingObjectForIFC(floatBox: RenderBoxWrapper) -> FloatingObjectWrapper {
     assert(!isNativeImpl())
     return FloatingObjectWrapper(
-      p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(p, floatBox.p))
+      p: wk_interop.RenderBlockFlow_insertFloatingObjectForIFC(id(), floatBox.id()))
   }
 
   private func logicalTopForFloat(floatingObject: FloatingObjectWrapper) -> LayoutUnit {
@@ -2333,7 +2333,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     if let (_, endFragment) = fragmentedFlow!.getFragmentRangeForBox(box: self) {
-      return CPtrToInt(fragment!.p) != CPtrToInt(endFragment.p)
+      return CPtrToInt(fragment!.id()) != CPtrToInt(endFragment.id())
     }
     return false
   }
@@ -2466,12 +2466,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   func endPaddingWidthForCaret() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlockFlow_endPaddingWidthForCaret(id()))
   }
 
   func lowestInitialLetterLogicalBottom() -> LayoutUnit? {
     assert(!isNativeImpl())
-    let raw = wk_interop.RenderBlockFlow_lowestInitialLetterLogicalBottom(p)
+    let raw = wk_interop.RenderBlockFlow_lowestInitialLetterLogicalBottom(id())
     if !raw.is_valid {
       return nil
     }
@@ -2546,7 +2546,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         // While in layout and the columnsets are not balanced yet, we keep finding the same (infinite tall) column over and over again.
         let nextFragmentContainer = fragmentedFlow!.fragmentAtBlockOffset(
           clampBox: self, offset: adjustedOffset, extendLastFragment: true)!
-        if CPtrToInt(nextFragmentContainer.p) == CPtrToInt(currentFragmentContainer?.p) {
+        if CPtrToInt(nextFragmentContainer.id()) == CPtrToInt(currentFragmentContainer?.id()) {
           return false
         }
         currentFragmentContainer = nextFragmentContainer
@@ -3214,7 +3214,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     let lineBox = firstLineBox
     while lineBox.bool() {
       if fragment != nil
-        && CPtrToInt(lineBox.get().containingFragment()?.p) != CPtrToInt(fragment?.p)
+        && CPtrToInt(lineBox.get().containingFragment()?.id()) != CPtrToInt(fragment?.id())
       {
         lineBox.traverseNext()
         continue
@@ -3616,7 +3616,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       // The containing block is responsible for positioning floats, so if we have floats in our
       // list that come from somewhere else, do not attempt to position them.
       let childBox = floatingObject.renderer!
-      if CPtrToInt(childBox.containingBlock()!.p) != CPtrToInt(p) {
+      if CPtrToInt(childBox.containingBlock()!.id()) != CPtrToInt(id()) {
         ++it
         continue
       }
@@ -3844,12 +3844,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
           isHorizontalWritingMode()
           ? LayoutSizeWrapper(
             width: logicalLeftOffset
-              - (CPtrToInt(prev?.p) != CPtrToInt(container?.p) ? prev!.marginLeft() : zero),
+              - (CPtrToInt(prev?.id()) != CPtrToInt(container?.id()) ? prev!.marginLeft() : zero),
             height: logicalTopOffset)
           : LayoutSizeWrapper(
             width: logicalTopOffset,
             height: logicalLeftOffset
-              - (CPtrToInt(prev?.p) != CPtrToInt(container?.p) ? prev!.marginTop() : zero))
+              - (CPtrToInt(prev?.id()) != CPtrToInt(container?.id()) ? prev!.marginTop() : zero))
 
         floatingObjects!.add(floatingObject: floatingObject.copyToNewContainer(offset: offset))
       }
@@ -4756,7 +4756,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     if canHangPunctuationAtEnd && lastText != nil && lastText!.text().length() > 0 {
       let endIndex =
-        CPtrToInt(trailingSpaceChild?.p) == CPtrToInt(lastText?.p)
+        CPtrToInt(trailingSpaceChild?.id()) == CPtrToInt(lastText?.id())
         ? lastText!.lastCharacterIndexStrippingSpaces() : lastText!.text().length() - 1
       let endHangWidth = lastText!.hangablePunctuationEndWidth(index: endIndex)
       inlineMin -= endHangWidth

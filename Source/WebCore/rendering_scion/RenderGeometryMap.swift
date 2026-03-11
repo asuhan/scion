@@ -67,7 +67,7 @@ private func canMapBetweenRenderersViaLayers(
       return false
     }
 
-    if CPtrToInt(current.p) == CPtrToInt(ancestor.p) {
+    if CPtrToInt(current.id()) == CPtrToInt(ancestor.id()) {
       break
     }
     current = current.parent()!
@@ -95,7 +95,7 @@ class RenderGeometryMap {
 
     if !hasFixedPositionStep() && !hasTransformStep() && !hasNonUniformStep()
       && (container == nil
-        || (!mapping.isEmpty && CPtrToInt(container!.p) == CPtrToInt(mapping[0].renderer?.p)))
+        || (!mapping.isEmpty && CPtrToInt(container!.id()) == CPtrToInt(mapping[0].renderer?.id())))
     {
       result = FloatQuad(inRect: rect)
       result.move(accumulatedOffset)
@@ -170,7 +170,7 @@ class RenderGeometryMap {
     var renderer = renderer
     repeat {
       renderer = renderer!.pushMappingToContainer(ancestorRenderer, self)
-    } while renderer != nil && CPtrToInt(renderer!.p) != CPtrToInt(ancestorRenderer?.p)
+    } while renderer != nil && CPtrToInt(renderer!.id()) != CPtrToInt(ancestorRenderer?.id())
 
     assert(mapping.isEmpty || mapping[0].renderer!.isRenderView())
   }
@@ -178,7 +178,8 @@ class RenderGeometryMap {
   private func popMappingsToAncestor(_ ancestorRenderer: RenderLayerModelObjectWrapper?) {
     assert(!mapping.isEmpty)
 
-    while !mapping.isEmpty && CPtrToInt(mapping.last!.renderer?.p) != CPtrToInt(ancestorRenderer?.p)
+    while !mapping.isEmpty
+      && CPtrToInt(mapping.last!.renderer?.id()) != CPtrToInt(ancestorRenderer?.id())
     {
       stepRemoved(mapping.last!)
       mapping.removeLast()
@@ -263,12 +264,12 @@ class RenderGeometryMap {
     #if ASSERT_ENABLED
       var foundContainer =
         container == nil
-        || (!mapping.isEmpty && CPtrToInt(mapping[0].renderer?.p) == CPtrToInt(container!.p))
+        || (!mapping.isEmpty && CPtrToInt(mapping[0].renderer?.id()) == CPtrToInt(container!.id()))
     #endif
 
     for (i, currentStep) in mapping.enumerated().reversed() {
       // If container is the RenderView (step 0) we want to apply its scroll offset.
-      if i > 0 && CPtrToInt(currentStep.renderer?.p) == CPtrToInt(container?.p) {
+      if i > 0 && CPtrToInt(currentStep.renderer?.id()) == CPtrToInt(container?.id()) {
         #if ASSERT_ENABLED
           foundContainer = true
         #endif

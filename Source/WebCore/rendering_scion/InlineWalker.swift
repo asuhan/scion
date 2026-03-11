@@ -25,7 +25,7 @@
 import wk_interop
 
 struct InlineWalker {
-  init(root: RenderBlockFlowWrapper) { p = InlineWalker_new(root.p) }
+  init(root: RenderBlockFlowWrapper) { p = InlineWalker_new(root.id()) }
 
   func current() -> RenderObjectWrapper? {
     if let raw = InlineWalker_current(p) {

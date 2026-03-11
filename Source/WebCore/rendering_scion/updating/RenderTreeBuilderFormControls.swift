@@ -49,10 +49,10 @@ extension RenderTreeBuilder {
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
       let innerRenderer = parent.innerRenderer()
-      if innerRenderer == nil || CPtrToInt(child.p) == CPtrToInt(innerRenderer!.p)
-        || CPtrToInt(child.parent()?.p) == CPtrToInt(parent.p)
+      if innerRenderer == nil || CPtrToInt(child.id()) == CPtrToInt(innerRenderer!.id())
+        || CPtrToInt(child.parent()?.id()) == CPtrToInt(parent.id())
       {
-        assert(CPtrToInt(child.p) == CPtrToInt(innerRenderer!.p) || innerRenderer == nil)
+        assert(CPtrToInt(child.id()) == CPtrToInt(innerRenderer!.id()) || innerRenderer == nil)
         return builder.blockBuilder!.detach(
           parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed)
       }
@@ -64,7 +64,7 @@ extension RenderTreeBuilder {
       willBeDestroyed: RenderTreeBuilder.WillBeDestroyed
     ) -> RenderObjectWrapper? {
       let innerRenderer = parent.innerRenderer()
-      if innerRenderer == nil || CPtrToInt(child.p) == CPtrToInt(innerRenderer!.p) {
+      if innerRenderer == nil || CPtrToInt(child.id()) == CPtrToInt(innerRenderer!.id()) {
         return builder.blockBuilder!.detach(
           parent: parent, oldChild: child, willBeDestroyed: willBeDestroyed)
       }

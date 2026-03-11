@@ -266,7 +266,8 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
 
     // We ignore the border-spacing on any non-top section as it is already included in the previous section's last row position.
     var spacing =
-      CPtrToInt(table()!.topSection()?.p) == CPtrToInt(p) ? LayoutUnit() : table()!.vBorderSpacing()
+      CPtrToInt(table()!.topSection()?.id()) == CPtrToInt(id())
+      ? LayoutUnit() : table()!.vBorderSpacing()
 
     let _ = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
@@ -1211,9 +1212,9 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
               continue
             }
             if (row > dirtiedRows.start
-              && CPtrToInt(primaryCellAt(row: row - 1, col: col)?.p) == CPtrToInt(cell?.p))
+              && CPtrToInt(primaryCellAt(row: row - 1, col: col)?.id()) == CPtrToInt(cell?.id()))
               || (col > dirtiedColumns.start
-                && CPtrToInt(primaryCellAt(row: row, col: col - 1)?.p) == CPtrToInt(cell?.p))
+                && CPtrToInt(primaryCellAt(row: row, col: col - 1)?.id()) == CPtrToInt(cell?.id()))
             {
               continue
             }
@@ -1250,9 +1251,9 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
             let cell = current.primaryCell()
             if cell == nil
               || (r > dirtiedRows.start
-                && CPtrToInt(primaryCellAt(row: r - 1, col: c)?.p) == CPtrToInt(cell?.p))
+                && CPtrToInt(primaryCellAt(row: r - 1, col: c)?.id()) == CPtrToInt(cell?.id()))
               || (c > dirtiedColumns.start
-                && CPtrToInt(primaryCellAt(row: r, col: c - 1)?.p) == CPtrToInt(cell?.p))
+                && CPtrToInt(primaryCellAt(row: r, col: c - 1)?.id()) == CPtrToInt(cell?.id()))
             {
               continue
             }
@@ -1292,7 +1293,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
             }
 
             if currentCell.rowSpan() > 1 || currentCell.colSpan() > 1 {
-              if !spanningCells.insert(CPtrToInt(currentCell.p)).inserted {
+              if !spanningCells.insert(CPtrToInt(currentCell.id())).inserted {
                 continue
               }
             }
@@ -1753,7 +1754,7 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
           continue
         }
         if r < totalRows - 1
-          && CPtrToInt(cell!.p) == CPtrToInt(primaryCellAt(row: r + 1, col: c)?.p)
+          && CPtrToInt(cell!.id()) == CPtrToInt(primaryCellAt(row: r + 1, col: c)?.id())
         {
           continue
         }

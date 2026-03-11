@@ -136,9 +136,9 @@ class RenderHighlight {
       return renderer.selectionState()
     }
 
-    if CPtrToInt(renderer.p) == CPtrToInt(renderRange.start?.p) {
+    if CPtrToInt(renderer.id()) == CPtrToInt(renderRange.start?.id()) {
       if renderRange.start != nil && renderRange.end != nil
-        && CPtrToInt(renderRange.start!.p) == CPtrToInt(renderRange.end!.p)
+        && CPtrToInt(renderRange.start!.id()) == CPtrToInt(renderRange.end!.id())
       {
         return .Both
       }
@@ -146,7 +146,7 @@ class RenderHighlight {
         return .Start
       }
     }
-    if CPtrToInt(renderer.p) == CPtrToInt(renderRange.end?.p) {
+    if CPtrToInt(renderer.id()) == CPtrToInt(renderRange.end?.id()) {
       return .End
     }
 
@@ -154,8 +154,10 @@ class RenderHighlight {
 
     let highlightIterator = RenderRangeIterator(renderRange.start)
     var currentRenderer = renderRange.start
-    while currentRenderer != nil && CPtrToInt(currentRenderer!.p) != CPtrToInt(highlightEnd?.p) {
-      if CPtrToInt(currentRenderer!.p) == CPtrToInt(renderRange.start?.p) {
+    while currentRenderer != nil
+      && CPtrToInt(currentRenderer!.id()) != CPtrToInt(highlightEnd?.id())
+    {
+      if CPtrToInt(currentRenderer!.id()) == CPtrToInt(renderRange.start?.id()) {
         currentRenderer = highlightIterator.next()
         continue
       }
@@ -163,7 +165,7 @@ class RenderHighlight {
         currentRenderer = highlightIterator.next()
         continue
       }
-      if CPtrToInt(renderer.p) == CPtrToInt(currentRenderer?.p) {
+      if CPtrToInt(renderer.id()) == CPtrToInt(currentRenderer?.id()) {
         return .Inside
       }
       currentRenderer = highlightIterator.next()

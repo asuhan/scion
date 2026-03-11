@@ -105,9 +105,9 @@ class InlineBoxPainter {
           containingBlockPaintsContinuationOutline = false
         } else {
           containingBlock = enclosingAnonymousBlock.containingBlock()
-          let containingBlockPtr = CPtrToInt(containingBlock?.p)
+          let containingBlockPtr = CPtrToInt(containingBlock?.id())
           var box = renderer
-          while CPtrToInt(box.p) != containingBlockPtr {
+          while CPtrToInt(box.id()) != containingBlockPtr {
             if box.hasSelfPaintingLayer() {
               containingBlockPaintsContinuationOutline = false
               break

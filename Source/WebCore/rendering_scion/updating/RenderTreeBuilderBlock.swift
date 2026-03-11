@@ -70,14 +70,14 @@ private func canMergeContiguousAnonymousBlocks(
 
   // Let's merge pre and post anonymous block containers when the continuation triggering box (rendererToBeRemoved) is going away.
   return previous != nil && next != nil
-    && CPtrToInt(previous?.p) != CPtrToInt(anonymousDestroyRoot?.p)
-    && CPtrToInt(next?.p) != CPtrToInt(anonymousDestroyRoot?.p)
+    && CPtrToInt(previous?.id()) != CPtrToInt(anonymousDestroyRoot?.id())
+    && CPtrToInt(next?.id()) != CPtrToInt(anonymousDestroyRoot?.id())
 }
 
 private func continuationBefore(parent: RenderBlockWrapper, beforeChild: RenderObjectWrapper?)
   -> RenderBlockWrapper?
 {
-  if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p) {
+  if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id()) {
     return parent
   }
 
@@ -85,8 +85,8 @@ private func continuationBefore(parent: RenderBlockWrapper, beforeChild: RenderO
   var last: RenderBlockWrapper? = parent
   var current = parent.continuation() as! RenderBlockWrapper?
   while current != nil {
-    if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(current!.p) {
-      if CPtrToInt(current!.firstChild()?.p) == CPtrToInt(beforeChild?.p) {
+    if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(current!.id()) {
+      if CPtrToInt(current!.firstChild()?.id()) == CPtrToInt(beforeChild?.id()) {
         return last
       }
       return current
@@ -112,7 +112,7 @@ private func findParentAndBeforeChildForNonSibling(
   parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper
 ) -> ParentAndBeforeChild? {
   var beforeChildContainer = beforeChild.parent()
-  while CPtrToInt(beforeChildContainer!.parent()?.p) != CPtrToInt(parent.p) {
+  while CPtrToInt(beforeChildContainer!.parent()?.id()) != CPtrToInt(parent.id()) {
     beforeChildContainer = beforeChildContainer!.parent()
   }
 
@@ -166,7 +166,7 @@ private func mayUseBeforeChildContainerAsParent(
     return false
   }
   return child.isInline()
-    || CPtrToInt(beforeChildAnonymousContainer.firstChild()?.p) != CPtrToInt(beforeChild.p)
+    || CPtrToInt(beforeChildAnonymousContainer.firstChild()?.id()) != CPtrToInt(beforeChild.id())
 }
 
 private func isFlexOrGridItemContainer(beforeChildAnonymousContainer: RenderElementWrapper) -> Bool
@@ -197,7 +197,7 @@ extension RenderTreeBuilder {
       parent: RenderBlockWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
     ) {
       let parentAndBeforeChildMayNeedAdjustment =
-        beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p)
+        beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) != CPtrToInt(parent.id())
       var beforeChild = beforeChild
       if parentAndBeforeChildMayNeedAdjustment {
         if let parentAndBeforeChild = findParentAndBeforeChildForNonSibling(
@@ -211,7 +211,7 @@ extension RenderTreeBuilder {
           }
           beforeChild = builder.splitAnonymousBoxesAroundChild(
             parent: parent, originalBeforeChild: beforeChild!)
-          assert(CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p))
+          assert(CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id()))
         }
       }
 
@@ -246,10 +246,10 @@ extension RenderTreeBuilder {
         // inline children into anonymous block boxes.
         // This is a block with inline content. Wrap the inline content in anonymous blocks.
         builder.createAnonymousWrappersForInlineContent(parent: parent, insertionPoint: beforeChild)
-        if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p) {
+        if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) != CPtrToInt(parent.id()) {
           beforeChild = beforeChild!.parent()
           assert(beforeChild!.isAnonymousBlock())
-          assert(CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p))
+          assert(CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id()))
         }
         builder.attachToRenderElement(parent: parent, child: child, beforeChild: beforeChild)
 
@@ -323,7 +323,7 @@ extension RenderTreeBuilder {
 
           // Now just put the inlineChildrenBlock inside the blockChildrenBlock.
           let beforeChild =
-            CPtrToInt(prev?.p) == CPtrToInt(inlineChildrenBlock.p)
+            CPtrToInt(prev?.id()) == CPtrToInt(inlineChildrenBlock.id())
             ? blockChildrenBlock.firstChild() : nil
           builder.attachToRenderElementInternal(
             parent: blockChildrenBlock, child: blockToMove, beforeChild: beforeChild)
@@ -331,7 +331,7 @@ extension RenderTreeBuilder {
 
           // inlineChildrenBlock got reparented to blockChildrenBlock, so it is no longer a child
           // of "this". we null out prev or next so that is not used later in the function.
-          if CPtrToInt(inlineChildrenBlock.p) == CPtrToInt(prevBlock.p) {
+          if CPtrToInt(inlineChildrenBlock.id()) == CPtrToInt(prevBlock.id()) {
             prev = nil
           } else {
             next = nil
@@ -366,7 +366,7 @@ extension RenderTreeBuilder {
             let children: RenderChildIteratorAdapter<RenderObjectWrapper> = childrenOfType(
               parent: parent)
             for sibling in children {
-              if CPtrToInt(sibling.p) == CPtrToInt(anonBlock.p) {
+              if CPtrToInt(sibling.id()) == CPtrToInt(anonBlock.id()) {
                 continue
               }
               if !sibling.isFloating() {
@@ -397,7 +397,7 @@ extension RenderTreeBuilder {
     ) -> RenderObjectWrapper? {
       if !parent.renderTreeBeingDestroyed() {
         if let fragmentedFlow = parent.multiColumnFlowForBlockFlow(),
-          CPtrToInt(fragmentedFlow.p) != CPtrToInt(child.p)
+          CPtrToInt(fragmentedFlow.id()) != CPtrToInt(child.id())
         {
           builder.multiColumnBuilder!.multiColumnRelativeWillBeRemoved(
             flow: fragmentedFlow, relative: child,
@@ -457,7 +457,7 @@ extension RenderTreeBuilder {
         beforeChildParent!.isInline() || beforeChildParent!.style().columnSpan() == .None
       let flowIsNormal = flow!.isInline() || flow!.style().columnSpan() == .None
 
-      if CPtrToInt(flow?.p) == CPtrToInt(beforeChildParent?.p) {
+      if CPtrToInt(flow?.id()) == CPtrToInt(beforeChildParent?.id()) {
         builder.attachIgnoringContinuation(parent: flow!, child: child, beforeChild: beforeChild)
         return
       }

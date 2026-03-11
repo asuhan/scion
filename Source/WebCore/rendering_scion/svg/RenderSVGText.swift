@@ -40,7 +40,7 @@ private func findPreviousAndNextAttributes(
   // FIXME: Make this iterative.
   for child: RenderObjectWrapper in childrenOfType(parent: start) {
     if let text = child as? RenderSVGInlineTextWrapper {
-      if CPtrToInt(locateElement.p) != CPtrToInt(text.p) {
+      if CPtrToInt(locateElement.id()) != CPtrToInt(text.id()) {
         if stopAfterNext {
           next = text.layoutAttributes()
           return true

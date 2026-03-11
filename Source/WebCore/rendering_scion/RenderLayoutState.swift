@@ -158,7 +158,7 @@ class RenderLayoutStateWrapper {
   }
 
   func hasTextBoxTrimEnd(candidate: RenderBlockFlowWrapper) -> Bool {
-    return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, candidate.p)
+    return wk_interop.RenderLayoutState_hasTextBoxTrimEnd(p, candidate.id())
   }
 
   func pushBlockStartTrimming(blockStartTrimming: Bool) {

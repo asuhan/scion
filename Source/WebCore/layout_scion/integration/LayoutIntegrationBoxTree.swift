@@ -32,7 +32,7 @@ extension LayoutIntegration {
       var rootBox = self.rootRenderer.layoutBox()
       if rootBox == nil {
         rootBox = ElementBoxWrapper()
-        rootBox!.p = wk_interop.BoxTree_handleNullRootBox(rootRenderer.p)
+        rootBox!.p = wk_interop.BoxTree_handleNullRootBox(rootRenderer.id())
       }
 
       if rootRenderer is RenderBlockFlowWrapper {
@@ -40,7 +40,7 @@ extension LayoutIntegration {
       }
       rootBox!.setIsFirstChildForIntegration(
         value: rootRenderer.parent() == nil
-          || CPtrToInt(rootRenderer.parent()!.firstChild()?.p) == CPtrToInt(rootRenderer.p))
+          || CPtrToInt(rootRenderer.parent()!.firstChild()?.id()) == CPtrToInt(rootRenderer.id()))
 
       if rootRenderer is RenderBlockFlowWrapper {
         buildTreeForInlineContent()
@@ -78,7 +78,7 @@ extension LayoutIntegration {
     }
 
     private func buildTreeForInlineContent() {
-      wk_interop.BoxTree_buildTreeForInlineContent(rootRenderer.p)
+      wk_interop.BoxTree_buildTreeForInlineContent(rootRenderer.id())
     }
 
     private func buildTreeForFlexContent() {

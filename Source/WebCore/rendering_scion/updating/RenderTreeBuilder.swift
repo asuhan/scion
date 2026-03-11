@@ -93,7 +93,7 @@ private func getInlineRun(start: RenderObjectWrapper?, boundary: RenderObjectWra
 
     curr = curr!.nextSibling()
     while curr != nil && (curr!.isInline() || curr!.isFloatingOrOutOfFlowPositioned())
-      && (CPtrToInt(curr!.p) != CPtrToInt(boundary?.p))
+      && (CPtrToInt(curr!.id()) != CPtrToInt(boundary?.id()))
     {
       inlineRunEnd = curr
       if curr!.isInline() {
@@ -155,7 +155,7 @@ class RenderTreeBuilder {
     continuationBuilder = Continuation(builder: self)
     assert(
       RenderTreeBuilder.s_current == nil
-        || CPtrToInt(view.p) != CPtrToInt(RenderTreeBuilder.s_current!.view.p))
+        || CPtrToInt(view.id()) != CPtrToInt(RenderTreeBuilder.s_current!.view.id()))
     previous = RenderTreeBuilder.s_current
     RenderTreeBuilder.s_current = self
   }
@@ -336,7 +336,7 @@ class RenderTreeBuilder {
     let _ = SetForScope(
       scopedVariable: &tearDownType,
       newValue: subtreeDestroyRoot == nil
-        || CPtrToInt(rendererToDestroy.p) == CPtrToInt(subtreeDestroyRoot!.p)
+        || CPtrToInt(rendererToDestroy.id()) == CPtrToInt(subtreeDestroyRoot!.id())
         ? TearDownType.Root : TearDownType.SubtreeWithRootStillAttached)
     let _ = SetForScope(
       scopedVariable: &self.subtreeDestroyRoot,
@@ -379,7 +379,7 @@ class RenderTreeBuilder {
 
     // FIXME: Do not try to collapse/cleanup the anonymous wrappers inside destroy (see webkit.org/b/186746).
     let destroyRootParent: RenderElementWrapper? = destroyRoot!.parent()
-    if CPtrToInt(rendererToDestroy.p) != CPtrToInt(destroyRoot?.p) {
+    if CPtrToInt(rendererToDestroy.id()) != CPtrToInt(destroyRoot?.id()) {
       // Destroy the child renderer first, before we start tearing down the anonymous wrapper ancestor chain.
       let _ = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRoot)
       destroy(renderer: rendererToDestroy)
@@ -388,7 +388,8 @@ class RenderTreeBuilder {
     if destroyRoot != nil {
       let _ = SetForScope(
         scopedVariable: &anonymousDestroyRoot,
-        newValue: CPtrToInt(destroyRoot?.p) != CPtrToInt(rendererToDestroy.p) ? destroyRoot : nil)
+        newValue: CPtrToInt(destroyRoot?.id()) != CPtrToInt(rendererToDestroy.id())
+          ? destroyRoot : nil)
       destroy(renderer: destroyRoot!)
     }
 
@@ -424,8 +425,8 @@ class RenderTreeBuilder {
         break
       }
       let destroyingOnlyChild =
-        CPtrToInt(destroyRootParent.firstChild()?.p) == CPtrToInt(destroyRoot!.p)
-        && CPtrToInt(destroyRootParent.lastChild()?.p) == CPtrToInt(destroyRoot!.p)
+        CPtrToInt(destroyRootParent.firstChild()?.id()) == CPtrToInt(destroyRoot!.id())
+        && CPtrToInt(destroyRootParent.lastChild()?.id()) == CPtrToInt(destroyRoot!.id())
       if !destroyingOnlyChild {
         break
       }
@@ -535,8 +536,8 @@ class RenderTreeBuilder {
         root: renderer)
       {
         if let containingBlock = descendant.containingBlock(),
-          CPtrToInt(containingBlock.enclosingFragmentedFlow()?.p)
-            != CPtrToInt(enclosingFragmentedFlow.p)
+          CPtrToInt(containingBlock.enclosingFragmentedFlow()?.id())
+            != CPtrToInt(enclosingFragmentedFlow.id())
         {
           spannerContainingBlockSet.add(value: containingBlock)
         }
@@ -584,7 +585,7 @@ class RenderTreeBuilder {
   private func attachInternal(
     parent: RenderElementWrapper, child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
   ) {
-    assert(CPtrToInt(parent.view().p) == CPtrToInt(view.p))
+    assert(CPtrToInt(parent.view().id()) == CPtrToInt(view.id()))
 
     var beforeChild = beforeChild
     if let beforeChildText = beforeChild as? RenderTextWrapper {
@@ -609,7 +610,7 @@ class RenderTreeBuilder {
     if parent.style().display() == .Ruby || parent.style().display() == .RubyBlock {
       let parentCandidate = rubyBuilder!.findOrCreateParentForStyleBasedRubyChild(
         parent: parent, child: child, beforeChild: &beforeChild)
-      if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
+      if CPtrToInt(parentCandidate.id()) == CPtrToInt(parent.id()) {
         rubyBuilder!.attachForStyleBasedRuby(
           parent: parentCandidate, child: child, beforeChild: beforeChild)
         return
@@ -627,7 +628,7 @@ class RenderTreeBuilder {
     if let row = parent as? RenderTableRowWrapper {
       let parentCandidate = tableBuilder!.findOrCreateParentForChild(
         parent: row, child: child, beforeChild: &beforeChild)
-      if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
+      if CPtrToInt(parentCandidate.id()) == CPtrToInt(parent.id()) {
         tableBuilder!.attach(parent: row, child: child, beforeChild: beforeChild)
         return
       }
@@ -639,7 +640,7 @@ class RenderTreeBuilder {
     if let tableSection = parent as? RenderTableSectionWrapper {
       let parentCandidate = tableBuilder!.findOrCreateParentForChild(
         parent: tableSection, child: child, beforeChild: &beforeChild)
-      if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
+      if CPtrToInt(parent.id()) == CPtrToInt(parentCandidate.id()) {
         tableBuilder!.attach(parent: tableSection, child: child, beforeChild: beforeChild)
         return
       }
@@ -651,7 +652,7 @@ class RenderTreeBuilder {
     if let table = parent as? RenderTableWrapper {
       let parentCandidate = tableBuilder!.findOrCreateParentForChild(
         parent: table, child: child, beforeChild: &beforeChild)
-      if CPtrToInt(parentCandidate.p) == CPtrToInt(parent.p) {
+      if CPtrToInt(parentCandidate.id()) == CPtrToInt(parent.id()) {
         tableBuilder!.attach(parent: table, child: child, beforeChild: beforeChild)
         return
       }
@@ -712,7 +713,7 @@ class RenderTreeBuilder {
     parent: RenderElementWrapper, parentCandidate: RenderElementWrapper,
     child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?
   ) {
-    if CPtrToInt(parent.p) == CPtrToInt(parentCandidate.p) {
+    if CPtrToInt(parent.id()) == CPtrToInt(parentCandidate.id()) {
       // Parents inside multicols can't call internal attach directly.
       if let blockFlow = parent as? RenderBlockFlowWrapper,
         blockFlow.multiColumnFlowForBlockFlow() != nil
@@ -751,7 +752,7 @@ class RenderTreeBuilder {
         inlineBuilder!.childBecameNonInline(parent: parentInlineRenderer, child: child)
       }
       // WARNING: original parent might be deleted at this point.
-      if let newParent = child.parent(), CPtrToInt(newParent.p) != CPtrToInt(parent.p) {
+      if let newParent = child.parent(), CPtrToInt(newParent.id()) != CPtrToInt(parent.id()) {
         if let gridRenderer = newParent as? RenderGridWrapper {
           // We need to re-run the grid items placement if it had gained a new item.
           gridRenderer.dirtyGrid()
@@ -842,7 +843,7 @@ class RenderTreeBuilder {
 
     var beforeChild = beforeChild
     while beforeChild != nil && beforeChild!.parent() != nil
-      && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p)
+      && CPtrToInt(beforeChild!.parent()?.id()) != CPtrToInt(parent.id())
     {
       beforeChild = beforeChild!.parent()
     }
@@ -851,7 +852,7 @@ class RenderTreeBuilder {
       fatalError("Not reached")
     }
 
-    assert(beforeChild == nil || CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p))
+    assert(beforeChild == nil || CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id()))
     assert(
       !(beforeChild is RenderTextWrapper)
         || (beforeChild as! RenderTextWrapper).inlineWrapperForDisplayContents() == nil)
@@ -916,7 +917,7 @@ class RenderTreeBuilder {
   ) -> Bool {
     // setNeedsLayoutAndPrefWidthsRecalc above already takes care of propagating dirty bits on the ancestor chain, but
     // in order to compute static position for out of flow boxes, the parent has to run normal flow layout as well (as opposed to simplified)
-    if CPtrToInt(newChild.containingBlock()?.p) != CPtrToInt(parent.p) {
+    if CPtrToInt(newChild.containingBlock()?.id()) != CPtrToInt(parent.id()) {
       return false
     }
     // FIXME: RenderVideo's setNeedsLayout pattern does not play well with this optimization: see webkit.org/b/276253
@@ -938,7 +939,7 @@ class RenderTreeBuilder {
       fatalError("Layout must not mutate render tree")
     }
     assert(parent.canHaveChildren() || parent.canHaveGeneratedChildren())
-    assert(CPtrToInt(child.parent()?.p) == CPtrToInt(parent.p))
+    assert(CPtrToInt(child.parent()?.id()) == CPtrToInt(parent.id()))
 
     if parent.renderTreeBeingDestroyed() || tearDownType == .SubtreeWithRootAlreadyDetached {
       return parent.detachRendererInternal(renderer: child)
@@ -1059,9 +1060,9 @@ class RenderTreeBuilder {
       removeFloatingObjects(renderer: blockFlow)
     }
 
-    assert(beforeChild == nil || CPtrToInt(to.p) == CPtrToInt(beforeChild?.parent()?.p))
+    assert(beforeChild == nil || CPtrToInt(to.id()) == CPtrToInt(beforeChild?.parent()?.id()))
     var child = startChild
-    while child != nil && CPtrToInt(child!.p) != CPtrToInt(endChild?.p) {
+    while child != nil && CPtrToInt(child!.id()) != CPtrToInt(endChild?.id()) {
       // Save our next sibling as moveChildTo will clear it.
       var nextSibling = child!.nextSibling()
 
@@ -1077,7 +1078,7 @@ class RenderTreeBuilder {
         }
 
         // This is the first letter, skip it.
-        if CPtrToInt(firstLetterObj?.p) == CPtrToInt(nextSibling?.p) {
+        if CPtrToInt(firstLetterObj?.id()) == CPtrToInt(nextSibling?.id()) {
           nextSibling = nextSibling!.nextSibling()
         }
       }
@@ -1147,9 +1148,9 @@ class RenderTreeBuilder {
       beforeChild: originalBeforeChild)
     var didSplitParentAnonymousBoxes = false
 
-    while CPtrToInt(beforeChild.parent()?.p) != CPtrToInt(parent.p) {
+    while CPtrToInt(beforeChild.parent()?.id()) != CPtrToInt(parent.id()) {
       let boxToSplit = beforeChild.parent() as! RenderBoxWrapper
-      if CPtrToInt(boxToSplit.firstChild()?.p) != CPtrToInt(beforeChild.p)
+      if CPtrToInt(boxToSplit.firstChild()?.id()) != CPtrToInt(beforeChild.id())
         && boxToSplit.isAnonymous()
       {
         didSplitParentAnonymousBoxes = true
@@ -1182,7 +1183,7 @@ class RenderTreeBuilder {
       RenderTreeBuilder.markBoxForRelayoutAfterSplit(box: parent)
     }
 
-    assert(CPtrToInt(beforeChild.parent()?.p) == CPtrToInt(parent.p))
+    assert(CPtrToInt(beforeChild.parent()?.id()) == CPtrToInt(parent.id()))
     return beforeChild
   }
 
@@ -1197,7 +1198,8 @@ class RenderTreeBuilder {
     // |insertionPoint|, because the new child is going to be inserted in between the inlines,
     // splitting them.
     assert(parent.isInlineBlockOrInlineTable() || !parent.isInline())
-    assert(insertionPoint == nil || CPtrToInt(insertionPoint!.parent()?.p) == CPtrToInt(parent.p))
+    assert(
+      insertionPoint == nil || CPtrToInt(insertionPoint!.parent()?.id()) == CPtrToInt(parent.id()))
 
     parent.setChildrenInline(b: false)
 

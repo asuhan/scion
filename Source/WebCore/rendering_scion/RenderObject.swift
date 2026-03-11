@@ -321,7 +321,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   init(p: UnsafeMutableRawPointer) {
-    self.p = p
+    self.pInterop = p
     m_node = nil
     m_typeFlags = []
     m_type = .BlockFlow
@@ -332,7 +332,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ type: `Type`, _ node: NodeWrapper, _ typeFlags: TypeFlag,
     _ typeSpecificFlags: TypeSpecificFlags
   ) {
-    self.p = UnsafeMutableRawPointer(bitPattern: 0xdead_beef)!
+    self.pInterop = nil
     // TODO(asuhan): add fields for assertions
     m_node = node
     m_typeFlags = node.isDocumentNode() ? typeFlags.union(.IsAnonymous) : typeFlags
@@ -349,7 +349,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func layoutBox() -> BoxWrapper? {
     assert(!isNativeImpl())
-    let unwrapped = wk_interop.RenderObject_layoutBox(p)
+    let unwrapped = wk_interop.RenderObject_layoutBox(id())
     if unwrapped == nil {
       return nil
     }
@@ -381,7 +381,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func parent() -> RenderElementWrapper? {
     if !isNativeImpl() {
-      let unwrapped = wk_interop.RenderObject_parent(p)
+      let unwrapped = wk_interop.RenderObject_parent(id())
       if unwrapped == nil {
         // TODO(asuhan): implement this
         fatalError("Not implemented")
@@ -398,7 +398,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isDescendantOf(ancestor: RenderObjectWrapper?) -> Bool {
     var renderer: RenderObjectWrapper? = self
     while renderer != nil {
-      if CPtrToInt(renderer!.p) == CPtrToInt(ancestor?.p) {
+      if CPtrToInt(renderer!.id()) == CPtrToInt(ancestor?.id()) {
         return true
       }
       renderer = renderer!.m_parent
@@ -455,7 +455,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrderAfterChildren(_ stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
-    if CPtrToInt(p) == CPtrToInt(stayWithin?.p) {
+    if CPtrToInt(id()) == CPtrToInt(stayWithin?.id()) {
       return nil
     }
 
@@ -467,7 +467,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
         break
       }
       current = current!.parent()
-      if current == nil || CPtrToInt(current!.p) == CPtrToInt(stayWithin?.p) {
+      if current == nil || CPtrToInt(current!.id()) == CPtrToInt(stayWithin?.id()) {
         return nil
       }
     }
@@ -628,7 +628,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isFieldset() -> Bool {
     if !isNativeImpl() {
-      return wk_interop.RenderObject_isFieldset(p)
+      return wk_interop.RenderObject_isFieldset(id())
     }
     if node() == nil {
       return false
@@ -649,7 +649,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isImage() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderObject_isImage(p)
+    return wk_interop.RenderObject_isImage(id())
   }
 
   func isInlineBlockOrInlineTable() -> Bool { return false }
@@ -1160,7 +1160,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func isHorizontalWritingMode() -> Bool {
     if isNativeImpl() { return !m_stateBitfields.hasFlag(.VerticalWritingMode) }
-    return wk_interop.RenderObject_isHorizontalWritingMode(p)
+    return wk_interop.RenderObject_isHorizontalWritingMode(id())
   }
 
   func hasReflection() -> Bool { return hasRareData() && rareData().hasReflection }
@@ -1284,13 +1284,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return st == .Start
       || st == .End
       || st == .Both
-      || CPtrToInt(view().selection().start()?.p) == CPtrToInt(p)
-      || CPtrToInt(view().selection().end()?.p) == CPtrToInt(p)
+      || CPtrToInt(view().selection().start()?.id()) == CPtrToInt(id())
+      || CPtrToInt(view().selection().end()?.id()) == CPtrToInt(id())
   }
 
   func hasNonVisibleOverflow() -> Bool {
     if !isNativeImpl() {
-      return wk_interop.RenderObject_hasNonVisibleOverflow(p)
+      return wk_interop.RenderObject_hasNonVisibleOverflow(id())
     }
     return m_stateBitfields.hasFlag(.HasNonVisibleOverflow)
   }
@@ -1357,7 +1357,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func view() -> RenderViewWrapper {
     if !isNativeImpl() {
-      return RenderViewWrapper(p: wk_interop.RenderObject_view(p))
+      return RenderViewWrapper(p: wk_interop.RenderObject_view(id()))
     }
     return document().renderView()!
   }
@@ -1573,7 +1573,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+    assert(CPtrToInt(container.id()) == CPtrToInt(self.container()?.id()))
 
     var offset = LayoutSizeWrapper()
     if let box = container as? RenderBoxWrapper {
@@ -1601,19 +1601,21 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       offset += currentOffset
       referencePoint.move(s: currentOffset)
       currentContainer = nextContainer
-    } while CPtrToInt(currentContainer.p) != CPtrToInt(container.p)
+    } while CPtrToInt(currentContainer.id()) != CPtrToInt(container.id())
 
     return offset
   }
 
   func minPreferredLogicalWidth() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_minPreferredLogicalWidth(p))
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderObject_minPreferredLogicalWidth(id()))
   }
 
   func maxPreferredLogicalWidth() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderObject_maxPreferredLogicalWidth(p))
+    return LayoutUnit.fromRawValue(
+      value: wk_interop.RenderObject_maxPreferredLogicalWidth(id()))
   }
 
   func markContainingBlocksForLayout(layoutRoot: RenderElementWrapper? = nil)
@@ -1671,7 +1673,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
       if layoutRoot != nil {
         // Having a valid layout root also mean we should not stop at layout boundaries.
-        if CPtrToInt(ancestor!.p) == CPtrToInt(layoutRoot!.p) {
+        if CPtrToInt(ancestor!.id()) == CPtrToInt(layoutRoot!.id()) {
           return layoutRoot
         }
       } else if objectIsRelayoutBoundary(object: ancestor!) {
@@ -1689,7 +1691,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func setNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
     assert(!isNativeImpl())
-    wk_interop.RenderObject_setNeedsLayout(p, markParents.rawValue)
+    wk_interop.RenderObject_setNeedsLayout(id(), markParents.rawValue)
   }
 
   enum HadSkippedLayout {
@@ -1871,7 +1873,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       renderer = child
       while true {
         renderer = renderer!.previousInPreOrder()
-        if renderer == nil || CPtrToInt(renderer!.p) == CPtrToInt(parent!.p) {
+        if renderer == nil || CPtrToInt(renderer!.id()) == CPtrToInt(parent!.id()) {
           break
         }
         if let node = renderer!.nonPseudoNode() {
@@ -1903,7 +1905,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func containingBlock() -> RenderBlockWrapper? {
     assert(!isNativeImpl())
-    if let unwrapped = wk_interop.RenderObject_containingBlock(p) {
+    if let unwrapped = wk_interop.RenderObject_containingBlock(id()) {
       // TODO(asuhan): decide the type correctly
       if wk_interop.RenderObject_isRenderListItem(unwrapped) {
         return RenderListItemWrapper(p: unwrapped)
@@ -1978,7 +1980,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func style() -> RenderStyleWrapper {
     if !isNativeImpl() {
-      return convert_render_style(p: wk_interop.RenderObject_style(p))
+      return convert_render_style(p: wk_interop.RenderObject_style(id()))
     }
     if isRenderText() {
       return m_parent!.style()
@@ -2038,7 +2040,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       // flow thread. Otherwise we will need to catch the repaint call and send it to the flow thread.
       let repaintContainerFragmentedFlow = repaintContainer?.enclosingFragmentedFlow()
       if repaintContainerFragmentedFlow == nil
-        || CPtrToInt(repaintContainerFragmentedFlow!.p) != CPtrToInt(parentRenderFragmentedFlow.p)
+        || CPtrToInt(repaintContainerFragmentedFlow!.id())
+          != CPtrToInt(parentRenderFragmentedFlow.id())
       {
         repaintContainer = parentRenderFragmentedFlow
       }
@@ -2078,7 +2081,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     if repaintContainer!.isRenderView() {
       let view = view()
-      assert(CPtrToInt(repaintContainer!.p) == CPtrToInt(view.p))
+      assert(CPtrToInt(repaintContainer!.id()) == CPtrToInt(view.id()))
       let viewHasCompositedLayer = view.isComposited()
       if !viewHasCompositedLayer || view.layer()!.backing!.paintsIntoWindow() {
         var rect = r
@@ -2356,7 +2359,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    if CPtrToInt(container?.p) == CPtrToInt(p) {
+    if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       return rects
     }
 
@@ -2441,7 +2444,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    if CPtrToInt(ancestorContainer?.p) == CPtrToInt(p) {
+    if CPtrToInt(ancestorContainer?.id()) == CPtrToInt(id()) {
       return
     }
 
@@ -2481,7 +2484,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
+    assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(id()))
 
     let container = parent()
     if container == nil {
@@ -2504,7 +2507,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       return true
     }
     if containerObject?.style().hasPerspective() ?? false {
-      return CPtrToInt(containerObject!.p) == CPtrToInt(parent()?.p)
+      return CPtrToInt(containerObject!.id()) == CPtrToInt(parent()?.id())
     }
     return false
   }
@@ -2859,7 +2862,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
           || (renderer is RenderBoxModelObjectWrapper
             && (renderer as! RenderBoxModelObjectWrapper).isContinuation())
       )
-      if CPtrToInt(originalRenderer?.p) == CPtrToInt(repaintContainer.p)
+      if CPtrToInt(originalRenderer?.id()) == CPtrToInt(repaintContainer.id())
         && rendererHasOutlineAutoAncestor
       {
         repaintRectNeedsConverting = true
@@ -3015,9 +3018,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func isNativeImpl() -> Bool { return CPtrToInt(p) == 0xdead_beef }
+  func isNativeImpl() -> Bool { return pInterop == nil }
 
-  let p: UnsafeMutableRawPointer
+  // TODO(asuhan): return unsigned integer once interop isn't needed anymore.
+  func id() -> UnsafeMutableRawPointer {
+    return pInterop ?? UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
+  }
+
+  private let pInterop: UnsafeMutableRawPointer?
 
   private var m_stateBitfields = StateBitfields()
 

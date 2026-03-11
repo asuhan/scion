@@ -1545,7 +1545,7 @@ final class GridTrackSizingAlgorithm {
     // synthesize a baseline, since we need a layout to have been completed
     // and performPreLayoutForGridItems on the outer grid doesn't layout subgrid
     // items.
-    if CPtrToInt(gridItem.parent()?.p) != CPtrToInt(renderGrid!.p) {
+    if CPtrToInt(gridItem.parent()?.id()) != CPtrToInt(renderGrid!.id()) {
       return false
     }
 
@@ -2487,13 +2487,13 @@ private class GridTrackSizingAlgorithmStrategy {
       overrideSize = algorithm.gridAreaBreadthForGridItem(gridItem: gridItem, direction: direction)
     }
 
-    if CPtrToInt(renderGrid()?.p) != CPtrToInt(gridItem.parent()?.p) {
+    if CPtrToInt(renderGrid()?.id()) != CPtrToInt(gridItem.parent()?.id()) {
       // If |gridItem| is part of a subgrid, find the nearest ancestor this is directly part of this grid
       // (either by being a child of the grid, or via being subgridded in this dimension.
       var grid = gridItem.parent() as! RenderGridWrapper
       var subgridDirection = GridLayoutFunctions.flowAwareDirectionForGridItem(
         grid: renderGrid()!, gridItem: grid, direction: direction)
-      while CPtrToInt(grid.parent()?.p) != CPtrToInt(renderGrid()?.p)
+      while CPtrToInt(grid.parent()?.id()) != CPtrToInt(renderGrid()?.id())
         && !grid.isSubgridOf(direction: subgridDirection, ancestor: renderGrid()!)
       {
         grid = grid.parent() as! RenderGridWrapper
@@ -2501,7 +2501,7 @@ private class GridTrackSizingAlgorithmStrategy {
           grid: renderGrid()!, gridItem: grid, direction: direction)
       }
 
-      if CPtrToInt(grid.p) == CPtrToInt(gridItem.parent()?.p)
+      if CPtrToInt(grid.id()) == CPtrToInt(gridItem.parent()?.id())
         && grid.isSubgrid(direction: subgridDirection)
       {
         // If the item is subgridded in this direction (and thus the tracks it covers are tracks

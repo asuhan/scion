@@ -57,7 +57,7 @@ private func spannerPlaceholderCandidate(
     }
     // No sibling candidate, jump to the parent and check its siblings.
     current = current!.parent()
-    if current == nil || CPtrToInt(current?.p) == CPtrToInt(stayWithin.p)
+    if current == nil || CPtrToInt(current?.id()) == CPtrToInt(stayWithin.id())
       || current!.isOutOfFlowPositioned()
     {
       return nil
@@ -92,7 +92,7 @@ private func isValidColumnSpanner(
 
   // We need to have the flow thread as the containing block. A spanner cannot break out of the flow thread.
   let enclosingFragmentedFlow = descendantBox!.enclosingFragmentedFlow()
-  if CPtrToInt(enclosingFragmentedFlow?.p) != CPtrToInt(fragmentedFlow.p) {
+  if CPtrToInt(enclosingFragmentedFlow?.id()) != CPtrToInt(fragmentedFlow.id()) {
     return false
   }
 
@@ -112,7 +112,7 @@ private func isValidColumnSpanner(
       // Don't allow any intervening non-multicol fragmentation contexts. The spec doesn't say
       // anything about disallowing this, but it's just going to be too complicated to
       // implement (not to mention specify behavior).
-      return CPtrToInt(ancestor!.p) == CPtrToInt(fragmentedFlow.p)
+      return CPtrToInt(ancestor!.id()) == CPtrToInt(fragmentedFlow.id())
     }
     if let blockFlowAncestor = ancestor as? RenderBlockFlowWrapper {
       if blockFlowAncestor.willCreateColumns() {
@@ -248,8 +248,8 @@ extension RenderTreeBuilder {
           // A spanner's placeholder has been inserted. The actual spanner renderer is moved from
           // where it would otherwise occur (if it weren't a spanner) to becoming a sibling of the
           // column sets.
-          assert(flow.spannerMap[CPtrToInt(placeholder.spanner()?.p)] == nil)
-          flow.spannerMap.updateValue(placeholder, forKey: CPtrToInt(placeholder.spanner()?.p))
+          assert(flow.spannerMap[CPtrToInt(placeholder.spanner()?.id())] == nil)
+          flow.spannerMap.updateValue(placeholder, forKey: CPtrToInt(placeholder.spanner()?.id()))
           assert(placeholder.firstChild() == nil)  // There should be no children here, but if there are, we ought to skip them.
         } else {
           descendant = processPossibleSpannerDescendant(
@@ -271,11 +271,11 @@ extension RenderTreeBuilder {
         // keep the reference to the spanner, since the placeholder may be about to be re-inserted
         // in the tree.
         assert(relative.isDescendantOf(ancestor: flow))
-        flow.spannerMap.removeValue(forKey: CPtrToInt(placeholder.spanner()?.p))
+        flow.spannerMap.removeValue(forKey: CPtrToInt(placeholder.spanner()?.id()))
         return
       }
       if relative.style().columnSpan() == .All {
-        if CPtrToInt(relative.parent()?.p) != CPtrToInt(flow.parent()?.p) {
+        if CPtrToInt(relative.parent()?.id()) != CPtrToInt(flow.parent()?.id()) {
           return  // not a valid spanner.
         }
 
@@ -358,7 +358,7 @@ extension RenderTreeBuilder {
       var parentAndSpannerList: [(RenderElementWrapper, RenderObjectWrapper)] = []
       for placeholder in placeholdersToDelete {
         var spannerOriginalParent = placeholder.parent()
-        if CPtrToInt(spannerOriginalParent?.p) == CPtrToInt(multiColumnFlow.p) {
+        if CPtrToInt(spannerOriginalParent?.id()) == CPtrToInt(multiColumnFlow.id()) {
           spannerOriginalParent = flow
         }
         // Detaching the spanner takes care of removing the placeholder (and merges the RenderMultiColumnSets).
@@ -454,7 +454,7 @@ extension RenderTreeBuilder {
         // examine its children anyway. They are all part of the spanner and shouldn't trigger
         // creation of column sets or anything like that. Continue at its original position in
         // the tree, i.e. where the placeholder was just put.
-        if CPtrToInt(subtreeRoot?.p) == CPtrToInt(descendant.p) {
+        if CPtrToInt(subtreeRoot?.id()) == CPtrToInt(descendant.id()) {
           subtreeRoot = placeholder
         }
         nextDescendant = placeholder
@@ -518,7 +518,7 @@ extension RenderTreeBuilder {
       canCollapseAnonymousBlock: RenderTreeBuilder.CanCollapseAnonymousBlock
     ) {
       // The placeholder may already have been removed, but if it hasn't, do so now.
-      if let placeholderIndex = flow.spannerMap.index(forKey: CPtrToInt(spanner.p)) {
+      if let placeholderIndex = flow.spannerMap.index(forKey: CPtrToInt(spanner.id())) {
         let placeholder = flow.spannerMap[placeholderIndex].value
         flow.spannerMap.remove(at: placeholderIndex)
         builder.destroy(renderer: placeholder, canCollapseAnonymousBlock: canCollapseAnonymousBlock)

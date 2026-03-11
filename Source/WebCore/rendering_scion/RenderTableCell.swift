@@ -191,7 +191,7 @@ private func backgroundRectForSection(
     // vSpacing at the block-start position. All sections' size()s include
     // unwanted hSpacing on both inline ends.
     let beforeBlockSpacing =
-      CPtrToInt(tableSection.p) == CPtrToInt(table.topSection()?.p)
+      CPtrToInt(tableSection.id()) == CPtrToInt(table.topSection()?.id())
       ? vSpacing : LayoutUnit(value: UInt64(0))
     if table.style().isHorizontalWritingMode() {
       rect.contract(
@@ -537,7 +537,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     color = style.colorByApplyingColorFilter(color: color)
 
     var adjustedPaintOffset = paintOffset
-    if CPtrToInt(backgroundObject.p) != CPtrToInt(p) {
+    if CPtrToInt(backgroundObject.id()) != CPtrToInt(id()) {
       adjustedPaintOffset.moveBy(offset: location())
     }
 
@@ -546,15 +546,15 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     // clipped to this cell.
     // FIXME: This should also apply to columns and column groups.
     let paintBackgroundObject =
-      CPtrToInt(backgroundObject.p) != CPtrToInt(p) && bgLayer.hasImage()
+      CPtrToInt(backgroundObject.id()) != CPtrToInt(id()) && bgLayer.hasImage()
       && !(backgroundObject is RenderTableColWrapper)
     // We have to clip here because the background would paint
     // on top of the borders otherwise. This only matters for cells and rows.
     let shouldClip =
       paintBackgroundObject
       || (backgroundObject.hasLayer()
-        && (CPtrToInt(backgroundObject.p) == CPtrToInt(p)
-          || CPtrToInt(backgroundObject.p) == CPtrToInt(parent()?.p))
+        && (CPtrToInt(backgroundObject.id()) == CPtrToInt(id())
+          || CPtrToInt(backgroundObject.id()) == CPtrToInt(parent()?.id()))
         && tableElt!.collapseBorders())
     let _ = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: shouldClip)
     if paintBackgroundObject {
@@ -580,7 +580,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     }
     let compositeOp = document().compositeOperatorForBackgroundColor(color: color, renderer: self)
     let painter = BackgroundPainter(renderer: self, paintInfo: paintInfo)
-    if CPtrToInt(backgroundObject.p) != CPtrToInt(p) {
+    if CPtrToInt(backgroundObject.id()) != CPtrToInt(id()) {
       painter.setOverrideClip(overrideClip: .BorderBox)
       painter.setOverrideOrigin(overrideOrigin: .BorderBox)
     }
@@ -930,7 +930,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     _ container: RenderElementWrapper, _ point: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+    assert(CPtrToInt(container.id()) == CPtrToInt(self.container()?.id()))
 
     var offset = super.offsetFromContainer(container, point, &offsetDependsOnPoint)
     if let containerOfRow = container.container(), parent() != nil {
@@ -945,7 +945,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
-    if CPtrToInt(container?.p) == CPtrToInt(p) {
+    if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       return rects
     }
 
@@ -1616,7 +1616,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     // (4) The previous row's after border.
     if prevCell != nil {
       var prevRow: RenderObjectWrapper? = nil
-      if CPtrToInt(prevCell!.section()?.p) == CPtrToInt(section()?.p) {
+      if CPtrToInt(prevCell!.section()?.id()) == CPtrToInt(section()?.id()) {
         prevRow = parent()!.previousSibling()
       } else {
         prevRow = prevCell!.section()!.lastRow()
@@ -1837,7 +1837,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private func logicalWidthFromColumns(
     _ firstColForThisCell: RenderTableColWrapper, _ widthFromStyle: LengthWrapper
   ) -> LengthWrapper {
-    assert(CPtrToInt(firstColForThisCell.p) == CPtrToInt(table()!.colElement(col: col())?.p))
+    assert(CPtrToInt(firstColForThisCell.id()) == CPtrToInt(table()!.colElement(col: col())?.id()))
     var tableCol: RenderTableColWrapper? = firstColForThisCell
 
     let colSpanCount = colSpan()

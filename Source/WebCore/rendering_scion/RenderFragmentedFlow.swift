@@ -328,7 +328,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
     // Not necessary for the flow thread, since we already computed the correct info for it.
     // If the fragments have changed invalidate the children.
-    if CPtrToInt(block.p) == CPtrToInt(p) {
+    if CPtrToInt(block.id()) == CPtrToInt(id()) {
       relayoutChildren = pageLogicalSizeChanged
       return
     }
@@ -354,7 +354,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
         return
       }
 
-      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+      if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
         break
       }
       ++it
@@ -386,8 +386,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
   ) {
     assert(hasFragments())
     assert(
-      CPtrToInt(startFragment.fragmentedFlow?.p) == CPtrToInt(p)
-        && CPtrToInt(endFragment.fragmentedFlow?.p) == CPtrToInt(p))
+      CPtrToInt(startFragment.fragmentedFlow?.id()) == CPtrToInt(id())
+        && CPtrToInt(endFragment.fragmentedFlow?.id()) == CPtrToInt(id()))
     let result = fragmentRangeMap.set(box, RenderFragmentContainerRange(startFragment, endFragment))
     if result.isNewEntry {
       return
@@ -395,8 +395,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
     // If nothing changed, just bail.
     let range = result.value!
-    if CPtrToInt(range.startFragment?.p) == CPtrToInt(startFragment.p)
-      && CPtrToInt(range.endFragment?.p) == CPtrToInt(endFragment.p)
+    if CPtrToInt(range.startFragment?.id()) == CPtrToInt(startFragment.id())
+      && CPtrToInt(range.endFragment?.id()) == CPtrToInt(endFragment.id())
     {
       return
     }
@@ -433,7 +433,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     _ object: RenderObjectWrapper, _ fragment: RenderFragmentContainerWrapper
   ) -> Bool {
     let fragmentedFlow = object.enclosingFragmentedFlow()
-    if CPtrToInt(fragmentedFlow?.p) != CPtrToInt(p) {
+    if CPtrToInt(fragmentedFlow?.id()) != CPtrToInt(id()) {
       return false
     }
 
@@ -564,10 +564,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     var insideOldFragmentRange = false
     var insideNewFragmentRange = false
     for fragment in fragmentList {
-      if CPtrToInt(oldStartFragment.p) == CPtrToInt(fragment.p) {
+      if CPtrToInt(oldStartFragment.id()) == CPtrToInt(fragment.id()) {
         insideOldFragmentRange = true
       }
-      if CPtrToInt(newStartFragment.p) == CPtrToInt(fragment.p) {
+      if CPtrToInt(newStartFragment.id()) == CPtrToInt(fragment.id()) {
         insideNewFragmentRange = true
       }
 
@@ -577,10 +577,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
         }
       }
 
-      if CPtrToInt(oldEndFragment.p) == CPtrToInt(fragment.p) {
+      if CPtrToInt(oldEndFragment.id()) == CPtrToInt(fragment.id()) {
         insideOldFragmentRange = false
       }
-      if CPtrToInt(newEndFragment.p) == CPtrToInt(fragment.p) {
+      if CPtrToInt(newEndFragment.id()) == CPtrToInt(fragment.id()) {
         insideNewFragmentRange = false
       }
     }
@@ -599,7 +599,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       borderBox = fragment.rectFlowPortionForBox(box, borderBox)
 
       fragment.addVisualOverflowForBox(box, borderBox)
-      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+      if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
         break
       }
       ++iter
@@ -622,7 +622,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
       fragment.addVisualOverflowForBox(
         block, LayoutRectWrapper(rect: snappedIntRect(rect: LayoutRectWrapper(r: inflatedRect))))
-      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+      if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
         break
       }
       ++iter
@@ -644,7 +644,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
         targetFragment: fragment, startFragment: containerStartFragment,
         endFragment: containerEndFragment)
       {
-        if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
           break
         }
         ++iter
@@ -657,7 +657,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       fragment.addLayoutOverflowForBox(box, childLayoutOverflowRect)
 
       if child.hasSelfPaintingLayer() || box.hasNonVisibleOverflow() {
-        if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+        if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
           break
         }
         ++iter
@@ -667,7 +667,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       childVisualOverflowRect.move(size: delta)
       fragment.addVisualOverflowForBox(box, childVisualOverflowRect)
 
-      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+      if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
         break
       }
       ++iter
@@ -684,7 +684,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
 
       fragment.addVisualOverflowForBox(box, visualOverflowInFragment)
 
-      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+      if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
         break
       }
       ++iter
@@ -702,7 +702,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
         boxInfo.overflow = nil
       }
 
-      if CPtrToInt(fragment.p) == CPtrToInt(endFragment.p) {
+      if CPtrToInt(fragment.id()) == CPtrToInt(endFragment.id()) {
         break
       }
       ++iter
@@ -714,7 +714,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     -> LayoutRectWrapper
   {
     var localRect = rect
-    if CPtrToInt(box?.p) == CPtrToInt(p) {
+    if CPtrToInt(box?.id()) == CPtrToInt(id()) {
       return localRect
     }
 
@@ -738,7 +738,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     var boxRect = localRect
 
     var box = box
-    while box != nil && CPtrToInt(box!.p) != CPtrToInt(p) {
+    while box != nil && CPtrToInt(box!.id()) != CPtrToInt(id()) {
       let containerBlock = box!.containingBlock()!
       let currentBoxLocation = box!.location()
 
@@ -776,10 +776,10 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     let end = fragmentList.end()
     while it != end {
       let currFragment = *it
-      if CPtrToInt(targetFragment.p) == CPtrToInt(currFragment.p) {
+      if CPtrToInt(targetFragment.id()) == CPtrToInt(currFragment.id()) {
         return true
       }
-      if CPtrToInt(currFragment.p) == CPtrToInt(endFragment?.p) {
+      if CPtrToInt(currFragment.id()) == CPtrToInt(endFragment?.id()) {
         break
       }
       ++it
@@ -824,7 +824,7 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    if CPtrToInt(p) == CPtrToInt(ancestorContainer?.p) {
+    if CPtrToInt(id()) == CPtrToInt(ancestorContainer?.id()) {
       return
     }
 

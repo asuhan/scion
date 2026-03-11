@@ -922,7 +922,7 @@ class BackgroundPainter {
     let documentElementRenderer = renderer.document().documentElement()!.containerRenderer()
     return documentElementRenderer == nil || documentElementRenderer!.shouldApplyAnyContainment()
       || documentElementRenderer!.hasBackground()
-      || CPtrToInt(documentElementRenderer!.p) != CPtrToInt(renderer.parent()?.p)
+      || CPtrToInt(documentElementRenderer!.id()) != CPtrToInt(renderer.parent()?.id())
   }
 
   static func calculateBackgroundImageGeometry(

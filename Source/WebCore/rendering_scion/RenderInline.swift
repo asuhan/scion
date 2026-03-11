@@ -140,7 +140,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+    assert(CPtrToInt(container.id()) == CPtrToInt(self.container()?.id()))
 
     var offset = LayoutSizeWrapper()
     if isInFlowPositioned() {
@@ -571,7 +571,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
         }
         let containingBlock = self.containingBlock()
         var ancestor = parent()
-        while ancestor != nil && CPtrToInt(ancestor?.p) != CPtrToInt(containingBlock?.p) {
+        while ancestor != nil && CPtrToInt(ancestor?.id()) != CPtrToInt(containingBlock?.id()) {
           if ancestor!.hasSelfPaintingLayer() {
             return true
           }
@@ -610,10 +610,10 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     var inlineFlow: RenderElementWrapper? = self
     while inlineFlow != nil {
       guard let renderInline = inlineFlow as? RenderInlineWrapper else { break }
-      if CPtrToInt(inlineFlow!.p) == CPtrToInt(containingBlock?.p) {
+      if CPtrToInt(inlineFlow!.id()) == CPtrToInt(containingBlock?.id()) {
         break
       }
-      if CPtrToInt(inlineFlow!.p) == CPtrToInt(repaintContainer?.p) {
+      if CPtrToInt(inlineFlow!.id()) == CPtrToInt(repaintContainer?.id()) {
         hitRepaintContainer = true
         break
       }
@@ -680,7 +680,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
       return computeVisibleRectsUsingPaintOffset(rects)
     }
 
-    if CPtrToInt(container?.p) == CPtrToInt(p) {
+    if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       return rects
     }
 
@@ -742,7 +742,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    if CPtrToInt(ancestorContainer?.p) == CPtrToInt(p) {
+    if CPtrToInt(ancestorContainer?.id()) == CPtrToInt(id()) {
       return
     }
 
@@ -786,7 +786,7 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
+    assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(id()))
 
     let (container, ancestorSkipped) = container(ancestorToStopAt)
     if container == nil {

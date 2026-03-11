@@ -132,7 +132,7 @@ func hasNonSyntheticBaseline(renderBox: RenderBoxWrapper) -> Bool {
     return true
   }
   if let blockFlow = renderBox as? RenderBlockFlowWrapper {
-    return wk_interop.RenderBlockFlow_hasNonSyntheticBaseline(blockFlow.p)
+    return wk_interop.RenderBlockFlow_hasNonSyntheticBaseline(blockFlow.id())
   }
   return false
 }
@@ -498,7 +498,7 @@ extension LayoutIntegration {
       offsetFromParentListItem: LayoutUnit
     ) -> LayoutUnit {
       let associatedListItem = listMarker.listItem()
-      if CPtrToInt(ancestor?.p) == CPtrToInt(associatedListItem?.p) || ancestor == nil {
+      if CPtrToInt(ancestor?.id()) == CPtrToInt(associatedListItem?.id()) || ancestor == nil {
         // FIXME: Handle column spanner case when ancestor is null_ptr here.
         return offsetFromParentListItem
       }
@@ -506,7 +506,7 @@ extension LayoutIntegration {
       ancestor = ancestor!.containingBlock()
       while ancestor != nil {
         offset -= (ancestor!.borderStart() + ancestor!.paddingStart())
-        if CPtrToInt(ancestor?.p) == CPtrToInt(associatedListItem?.p) {
+        if CPtrToInt(ancestor?.id()) == CPtrToInt(associatedListItem?.id()) {
           break
         }
         ancestor = ancestor!.containingBlock()

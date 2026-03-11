@@ -332,7 +332,7 @@ class SVGRenderSupport {
     _ renderer: RenderElementWrapper, _ ancestorToStopAt: RenderLayerModelObjectWrapper?,
     _ geometryMap: RenderGeometryMap
   ) -> RenderElementWrapper? {
-    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(renderer.p))
+    assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(renderer.id()))
 
     var transform = AffineTransform()
     let parent = localToParentTransform(renderer, &transform)

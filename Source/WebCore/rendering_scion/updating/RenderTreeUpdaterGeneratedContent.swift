@@ -401,7 +401,7 @@ extension RenderTreeUpdater {
         // Quote character depends on quote depth so we chain the updates.
         quote.updateRenderer(builder: updater.builder!, previousQuote: previousUpdatedQuote)
         previousUpdatedQuote = quote
-        if CPtrToInt(quote.p) == CPtrToInt(lastQuote?.p) {
+        if CPtrToInt(quote.id()) == CPtrToInt(lastQuote?.id()) {
           return
         }
         ++it

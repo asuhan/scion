@@ -47,7 +47,7 @@ private class PositionedDescendantsMap {
     let previousContainingBlock =
       containerMap.contains(positionedDescendant) ? *(containerMap.get(positionedDescendant)) : nil
     if previousContainingBlock != nil
-      && CPtrToInt(previousContainingBlock!.p) != CPtrToInt(containingBlock.p),
+      && CPtrToInt(previousContainingBlock!.id()) != CPtrToInt(containingBlock.id()),
       let descendants = descendantsMap.contains(previousContainingBlock!)
         ? descendantsMap.get(previousContainingBlock!) : nil
     {
@@ -207,7 +207,8 @@ private func isChildHitTestCandidate(
     }
     return box.containingBlock()!
   }()
-  return CPtrToInt(block.fragmentAtBlockOffset(blockOffset: point.y)?.p) == CPtrToInt(fragment?.p)
+  return CPtrToInt(block.fragmentAtBlockOffset(blockOffset: point.y)?.id())
+    == CPtrToInt(fragment?.id())
 }
 
 private func isRenderBlockFlowOrRenderButton(renderElement: RenderElementWrapper) -> Bool {
@@ -233,7 +234,7 @@ private func findFirstLetterBlock(start: RenderBlockWrapper) -> RenderBlockWrapp
 
     let parentBlock = firstLetterBlock!.parent()
     if firstLetterBlock!.isReplacedOrInlineBlock() || parentBlock == nil
-      || CPtrToInt(parentBlock!.firstChild()?.p) != CPtrToInt(firstLetterBlock!.p)
+      || CPtrToInt(parentBlock!.firstChild()?.id()) != CPtrToInt(firstLetterBlock!.id())
       || !isRenderBlockFlowOrRenderButton(renderElement: parentBlock!)
     {
       return nil
@@ -452,7 +453,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func isContainingBlockAncestorFor(renderer: RenderObjectWrapper) -> Bool {
     var ancestor = renderer.containingBlock()
     while ancestor != nil {
-      if CPtrToInt(ancestor!.p) == CPtrToInt(p) {
+      if CPtrToInt(ancestor!.id()) == CPtrToInt(id()) {
         return true
       }
       ancestor = ancestor!.containingBlock()
@@ -554,7 +555,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // FIXME-BLOCKFLOW: Remove virtualizaion when all of the line layout code has been moved out of RenderBlock
   func containsFloats() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderBlock_containsFloats(p)
+    return wk_interop.RenderBlock_containsFloats(id())
   }
 
   // Versions that can compute line offsets with the fragment and page offset passed in. Used for speed to avoid having to
@@ -787,7 +788,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // (flexbox, block, etc.)
   func intrinsicBorderForFieldset() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(id()))
   }
 
   private func setIntrinsicBorderForFieldset(padding: LayoutUnit) {
@@ -1019,7 +1020,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     firstLetter = firstLetterContainer!.firstChild()
     while firstLetter != nil {
       if firstLetter is RenderTextWrapper {
-        if CPtrToInt(firstLetter!.p) == CPtrToInt(skipObject?.p) {
+        if CPtrToInt(firstLetter!.id()) == CPtrToInt(skipObject?.id()) {
           firstLetter = firstLetter!.nextSibling()
           continue
         }
@@ -1338,7 +1339,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     // positioned explicitly) this should not incur a performance penalty.
     if relayoutChildren
       || (r.style().hasStaticBlockPosition(horizontal: isHorizontalWritingMode())
-        && CPtrToInt(r.parent()?.p) != CPtrToInt(p))
+        && CPtrToInt(r.parent()?.id()) != CPtrToInt(id()))
     {
       r.setChildNeedsLayout(markParents: .MarkOnlyThis)
     }
@@ -1646,7 +1647,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
         var inlineEnclosedInSelfPaintingLayer = false
         var box: RenderBoxModelObjectWrapper? = inlineRenderer
-        while CPtrToInt(box?.p) != CPtrToInt(containingBlock?.p) {
+        while CPtrToInt(box?.id()) != CPtrToInt(containingBlock?.id()) {
           if box!.hasSelfPaintingLayer() {
             inlineEnclosedInSelfPaintingLayer = true
             break
@@ -2262,7 +2263,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
     box!.setIsExcludedFromNormalLayout(excluded: true)
     for child: RenderBoxWrapper in childrenOfType(parent: self) {
-      if CPtrToInt(child.p) == CPtrToInt(box!.p) || !child.isLegend() {
+      if CPtrToInt(child.id()) == CPtrToInt(box!.id()) || !child.isLegend() {
         continue
       }
       child.setIsExcludedFromNormalLayout(excluded: false)
@@ -2603,14 +2604,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
       fragmentedFlow!.getFragmentRangeForBox(box: box) ?? (nil, nil)
 
     // Changing the start fragment means we shift everything and a relayout is needed.
-    if CPtrToInt(newStartFragment?.p) != CPtrToInt(startFragment?.p) {
+    if CPtrToInt(newStartFragment?.id()) != CPtrToInt(startFragment?.id()) {
       return true
     }
 
     // The fragment range of the box has changed. Some boxes (e.g floats) may have been positioned assuming
     // a different range.
     if box.needsLayoutAfterFragmentRangeChange()
-      && CPtrToInt(newEndFragment?.p) != CPtrToInt(endFragment?.p)
+      && CPtrToInt(newEndFragment?.id()) != CPtrToInt(endFragment?.id())
     {
       return true
     }
@@ -2907,7 +2908,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   ) {
     let shouldPaintCaret = {
       [self] (_ caretPainter: RenderBlockWrapper, _ isContentEditable: Bool) in
-      if CPtrToInt(caretPainter.p) != CPtrToInt(p) {
+      if CPtrToInt(caretPainter.id()) != CPtrToInt(id()) {
         return false
       }
 
@@ -3166,7 +3167,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return
     }
 
-    let descendants = percentHeightDescendantsMap![CPtrToInt(p)]
+    let descendants = percentHeightDescendantsMap![CPtrToInt(id())]
     if descendants == nil {
       return
     }
@@ -3175,7 +3176,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       // Let's not dirty the height perecentage descendant when it has an absolutely positioned containing block ancestor. We should be able to dirty such boxes through the regular invalidation logic.
       var descendantNeedsLayout = true
       var ancestor = descendant.containingBlock()
-      while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(p) {
+      while ancestor != nil && CPtrToInt(ancestor!.id()) != CPtrToInt(id()) {
         if ancestor!.isOutOfFlowPositioned() {
           descendantNeedsLayout = false
           break
@@ -3187,7 +3188,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
       }
 
       var renderer: RenderElementWrapper = descendant
-      while CPtrToInt(renderer.p) != CPtrToInt(p) {
+      while CPtrToInt(renderer.id()) != CPtrToInt(id()) {
         if renderer.normalChildNeedsLayout() {
           break
         }
@@ -3226,7 +3227,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     }
 
     if layoutState != nil {
-      assert(CPtrToInt(layoutState!.renderer()?.p) == CPtrToInt(p))
+      assert(CPtrToInt(layoutState!.renderer()?.id()) == CPtrToInt(id()))
 
       let offsetDelta = layoutState!.layoutOffset() - layoutState!.pageOffset()
       return isHorizontalWritingMode() ? offsetDelta.height() : offsetDelta.width()

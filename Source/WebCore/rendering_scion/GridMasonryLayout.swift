@@ -68,7 +68,7 @@ class GridMasonryLayout {
   }
 
   func offsetForGridItem(gridItem: RenderBoxWrapper) -> LayoutUnit {
-    if let offsetIter = itemOffsets[CPtrToInt(gridItem.p)] {
+    if let offsetIter = itemOffsets[CPtrToInt(gridItem.id())] {
       return offsetIter
     }
     return LayoutUnit(value: UInt64(0))

@@ -422,7 +422,7 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   ) {
     assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
 
-    if CPtrToInt(repaintContainer?.p) == CPtrToInt(p) {
+    if CPtrToInt(repaintContainer?.id()) == CPtrToInt(id()) {
       return
     }
 

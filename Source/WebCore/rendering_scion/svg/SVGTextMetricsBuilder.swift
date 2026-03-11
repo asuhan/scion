@@ -121,10 +121,11 @@ struct SVGTextMetricsBuilder {
     while child != nil {
       if let text = child as? RenderSVGInlineTextWrapper {
         var data = data
-        data.processRenderer = stopAtLeaf == nil || CPtrToInt(stopAtLeaf!.p) == CPtrToInt(text.p)
+        data.processRenderer =
+          stopAtLeaf == nil || CPtrToInt(stopAtLeaf!.id()) == CPtrToInt(text.id())
         (valueListPosition, lastCharacter) = measureTextRenderer(
           text, data, (valueListPosition, lastCharacter))
-        if stopAtLeaf != nil && CPtrToInt(stopAtLeaf!.p) == CPtrToInt(text.p) {
+        if stopAtLeaf != nil && CPtrToInt(stopAtLeaf!.id()) == CPtrToInt(text.id()) {
           return
         }
       } else if let renderer = child as? RenderSVGInlineWrapper,

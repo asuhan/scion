@@ -167,7 +167,7 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+    assert(CPtrToInt(container.id()) == CPtrToInt(self.container()?.id()))
     assert(!isInFlowPositioned())
     assert(!isAbsolutelyPositioned())
     assert(!isInline())

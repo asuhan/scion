@@ -22,13 +22,13 @@
  */
 
 private func resetOverriddenHeight(_ box: RenderBoxWrapper?, _ ancestor: RenderObjectWrapper?) {
-  assert(CPtrToInt(box?.p) != CPtrToInt(ancestor?.p))
+  assert(CPtrToInt(box?.id()) != CPtrToInt(ancestor?.id()))
   if box == nil || box!.style().logicalHeight().isAuto() {
     return  // Null box or its height was not overridden.
   }
   box!.mutableStyle().setLogicalHeight(LengthWrapper(type: .Auto))
   var renderer: RenderObjectWrapper? = box
-  while CPtrToInt(renderer?.p) != CPtrToInt(ancestor?.p) {
+  while CPtrToInt(renderer?.id()) != CPtrToInt(ancestor?.id()) {
     assert(renderer == nil)
     renderer!.setNeedsLayout(markParents: .MarkOnlyThis)
     renderer = renderer!.parent()

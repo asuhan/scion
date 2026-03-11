@@ -37,7 +37,7 @@ private func getParentOfFirstLineBox(current: RenderBlockWrapper, marker: Render
 {
   let inQuirksMode = current.document().inQuirksMode()
   for child: RenderObjectWrapper in childrenOfType(parent: current) {
-    if CPtrToInt(child.p) == CPtrToInt(marker.p) {
+    if CPtrToInt(child.id()) == CPtrToInt(marker.id()) {
       continue
     }
 
@@ -129,7 +129,7 @@ extension RenderTreeBuilder {
         }
       }
 
-      if CPtrToInt(newParent?.p) == CPtrToInt(currentParent?.p) {
+      if CPtrToInt(newParent?.id()) == CPtrToInt(currentParent?.id()) {
         return
       }
 

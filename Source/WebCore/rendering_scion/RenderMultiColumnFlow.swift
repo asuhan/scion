@@ -205,7 +205,7 @@ class RenderMultiColumnFlowWrapper: RenderFragmentedFlowWrapper {
     _ enclosingContainer: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    assert(CPtrToInt(enclosingContainer.p) == CPtrToInt(self.container()?.p))
+    assert(CPtrToInt(enclosingContainer.id()) == CPtrToInt(self.container()?.id()))
 
     if offsetDependsOnPoint != nil {
       offsetDependsOnPoint = true

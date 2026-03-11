@@ -36,7 +36,7 @@ private func cacheBaselineAlignedGridItems(
   if cachingRowSubgridsForRootGrid {
     assert(
       !algorithm.renderGrid!.isSubgridRows()
-        && (CPtrToInt(algorithm.renderGrid?.p) == CPtrToInt(grid.p)
+        && (CPtrToInt(algorithm.renderGrid?.id()) == CPtrToInt(grid.id())
           || grid.isSubgridOf(
             direction: GridLayoutFunctions.flowAwareDirectionForGridItem(
               grid: algorithm.renderGrid!, gridItem: grid, direction: .ForRows),
@@ -811,7 +811,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
       ? renderGrid.gridSpanForOutOfFlowGridItem(gridItem: gridItem, direction: direction)
       : renderGrid.currentGrid().gridItemSpan(gridItem: gridItem, direction: direction)
 
-    while CPtrToInt(renderGrid.p) != CPtrToInt(p) {
+    while CPtrToInt(renderGrid.id()) != CPtrToInt(id()) {
       let parent = renderGrid.parent() as! RenderGridWrapper
 
       let isSubgrid = renderGrid.isSubgrid(direction: direction)
@@ -877,7 +877,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     if !isSubgrid(direction: direction) {
       return false
     }
-    if CPtrToInt(parent()?.p) == CPtrToInt(ancestor.p) {
+    if CPtrToInt(parent()?.id()) == CPtrToInt(ancestor.id()) {
       return true
     }
 
@@ -2106,7 +2106,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     if gridPositions!.startIsAuto {
       start = borderEdge
     } else {
-      let key = CPtrToInt(gridItem.p)
+      let key = CPtrToInt(gridItem.id())
       if isRowAxis {
         outOfFlowItemColumn.updateValue(UInt64(gridPositions!.startLine), forKey: key)
       } else {
@@ -2172,7 +2172,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
     let isRowAxis = direction == .ForColumns
     let outOfFlowItemLine = isRowAxis ? outOfFlowItemColumn : outOfFlowItemRow
     var start = isRowAxis ? borderStart() : borderBefore()
-    if let line = outOfFlowItemLine[CPtrToInt(gridItem.p)] {
+    if let line = outOfFlowItemLine[CPtrToInt(gridItem.id())] {
       let positions = isRowAxis ? columnPositions[...] : rowPositions[...]
       start = positions[Int(line)]
     }
@@ -2517,7 +2517,7 @@ final class RenderGridWrapper: RenderBlockWrapper {
   private func setLogicalOffsetForGridItem(
     gridItem: RenderBoxWrapper, direction: GridTrackSizingDirection
   ) {
-    if CPtrToInt(gridItem.parent()?.p) != CPtrToInt(p)
+    if CPtrToInt(gridItem.parent()?.id()) != CPtrToInt(id())
       && hasStaticPositionForGridItem(gridItem: gridItem, direction: direction)
     {
       return

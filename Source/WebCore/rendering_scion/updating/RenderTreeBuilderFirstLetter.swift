@@ -144,7 +144,7 @@ extension RenderTreeBuilder {
       }
 
       // Other containers are handled when updating their renderers.
-      if CPtrToInt(block.p) == CPtrToInt(firstLetterContainer?.p) {
+      if CPtrToInt(block.id()) == CPtrToInt(firstLetterContainer?.id()) {
         return
       }
 
@@ -209,7 +209,9 @@ extension RenderTreeBuilder {
         {
           assert(
             remainingText.isAnonymous()
-              || CPtrToInt(remainingText.textNode()!.renderer()?.p) == CPtrToInt(remainingText.p))
+              || CPtrToInt(remainingText.textNode()!.renderer()?.id())
+                == CPtrToInt(remainingText.id())
+          )
           // Replace the old renderer with the new one.
           remainingText.setFirstLetter(firstLetter: newFirstLetter!)
           newFirstLetter!.setFirstLetterRemainingText(remainingText: remainingText)

@@ -51,7 +51,7 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
 
   func isInside() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderListMarker_isInside(p)
+    return wk_interop.RenderListMarker_isInside(id())
   }
 
   private func updateMarginsAndContent() {
@@ -64,7 +64,7 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
 
   func listItem() -> RenderListItemWrapper? {
     assert(!isNativeImpl())
-    if let unwrapped = wk_interop.RenderListMarker_listItem(p) {
+    if let unwrapped = wk_interop.RenderListMarker_listItem(id()) {
       return RenderListItemWrapper(p: unwrapped)
     }
     return nil
@@ -206,7 +206,7 @@ final class RenderListMarkerWrapper: RenderBoxWrapper {
 
     var blockOffset = LayoutUnit()
     var ancestor = parentBox(self)
-    while ancestor != nil && CPtrToInt(ancestor!.p) != CPtrToInt(m_listItem?.p) {
+    while ancestor != nil && CPtrToInt(ancestor!.id()) != CPtrToInt(m_listItem?.id()) {
       blockOffset += ancestor!.logicalTop()
       ancestor = parentBox(ancestor!)
     }

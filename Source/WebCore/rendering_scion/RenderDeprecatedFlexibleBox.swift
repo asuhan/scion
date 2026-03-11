@@ -974,7 +974,7 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
           clampedRenderer.logicalTop() + clampedRenderer.contentBoxLocation().y
         var ancestor = clampedRenderer.containingBlock()
         while ancestor != nil {
-          if CPtrToInt(ancestor!.p) == CPtrToInt(p) {
+          if CPtrToInt(ancestor!.id()) == CPtrToInt(id()) {
             return contentLogicalTop
           }
           contentLogicalTop += ancestor!.logicalTop()

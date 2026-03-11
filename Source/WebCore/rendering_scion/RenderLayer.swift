@@ -3788,7 +3788,8 @@ class RenderLayerWrapper {
       }
 
       if clipRects.fixed
-        && CPtrToInt(clipRectsContext.rootLayer!.renderer().p) == CPtrToInt(renderer().view().p)
+        && CPtrToInt(clipRectsContext.rootLayer!.renderer().id())
+          == CPtrToInt(renderer().view().id())
       {
         offset -= toLayoutSize(
           point: renderer().view().frameView().scrollPositionForFixedPosition())
@@ -5790,7 +5791,7 @@ class RenderLayerWrapper {
       } else {
         repeat {
           r = r!.parent()
-          if CPtrToInt(r?.p) == CPtrToInt(renderer().p) {
+          if CPtrToInt(r?.id()) == CPtrToInt(renderer().id()) {
             r = nil
           }
         } while r != nil && r!.nextSibling() == nil
@@ -6063,7 +6064,7 @@ class RenderLayerWrapper {
     let view = renderer().view()
     // Note: infinite clipRects should not be scrolled here, otherwise they will accidentally no longer be considered infinite.
     if parentRects.fixed
-      && CPtrToInt(clipRectsContext.rootLayer!.renderer().p) == CPtrToInt(view.p)
+      && CPtrToInt(clipRectsContext.rootLayer!.renderer().id()) == CPtrToInt(view.id())
       && !backgroundClipRect.isInfinite()
     {
       backgroundClipRect.moveBy(point: view.frameView().scrollPositionForFixedPosition())

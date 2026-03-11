@@ -40,8 +40,8 @@ class RenderIterator<T: RenderObjectWrapper>: Equatable {
   func bool() -> Bool { return m_current != nil }
 
   static func == (this: RenderIterator, other: RenderIterator) -> Bool {
-    assert(CPtrToInt(this.m_root?.p) == CPtrToInt(other.m_root?.p))
-    return CPtrToInt(this.m_current?.p) == CPtrToInt(other.m_current?.p)
+    assert(CPtrToInt(this.m_root?.id()) == CPtrToInt(other.m_root?.id()))
+    return CPtrToInt(this.m_current?.id()) == CPtrToInt(other.m_current?.id())
   }
 
   func traverseNext() -> RenderIterator<T> {
@@ -69,7 +69,7 @@ class RenderObjectTraversal {
   ) -> RenderObjectWrapper? {
     var ancestor = current.parent()
     while ancestor != nil {
-      if CPtrToInt(ancestor!.p) == CPtrToInt(stayWithin?.p) {
+      if CPtrToInt(ancestor!.id()) == CPtrToInt(stayWithin?.id()) {
         return nil
       }
       if let sibling = ancestor!.nextSibling() {
@@ -87,7 +87,7 @@ class RenderObjectTraversal {
       return child
     }
 
-    if CPtrToInt(current.p) == CPtrToInt(stayWithin?.p) {
+    if CPtrToInt(current.id()) == CPtrToInt(stayWithin?.id()) {
       return nil
     }
 

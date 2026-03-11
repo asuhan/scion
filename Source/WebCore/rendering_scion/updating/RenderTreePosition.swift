@@ -40,7 +40,8 @@ class RenderTreePosition {
       let skipAssert =
         parent.isRenderView() || assertionLimitCounter > RenderTreePosition.oNSquaredAvoidanceLimit
       assert(
-        skipAssert || CPtrToInt(nextSiblingRenderer(node: node)?.p) == CPtrToInt(m_nextSibling?.p))
+        skipAssert
+          || CPtrToInt(nextSiblingRenderer(node: node)?.id()) == CPtrToInt(m_nextSibling?.id()))
       return
     }
     m_nextSibling = nextSiblingRenderer(node: node)
@@ -53,7 +54,7 @@ class RenderTreePosition {
     if !hasValidNextSibling {
       return
     }
-    if CPtrToInt(m_nextSibling?.p) == CPtrToInt(siblingRenderer.p) {
+    if CPtrToInt(m_nextSibling?.id()) == CPtrToInt(siblingRenderer.id()) {
       hasValidNextSibling = false
     }
   }

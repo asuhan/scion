@@ -939,7 +939,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
   func repaintOnCompositingChange(layer: RenderLayerWrapper) {
     // If the renderer is not attached yet, no need to repaint.
-    if CPtrToInt(layer.renderer().p) != CPtrToInt(m_renderView.p)
+    if CPtrToInt(layer.renderer().id()) != CPtrToInt(m_renderView.id())
       && layer.renderer().parent() == nil
     {
       return
@@ -951,7 +951,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     layer.repaintIncludingNonCompositingDescendants(repaintContainer: repaintContainer)
-    if CPtrToInt(repaintContainer?.p) == CPtrToInt(m_renderView.p) {
+    if CPtrToInt(repaintContainer?.id()) == CPtrToInt(m_renderView.id()) {
       // The contents of this layer may be moving between the window
       // and a GraphicsLayer, so we need to make sure the window system
       // synchronizes those changes on the screen.
@@ -2309,7 +2309,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     let renderer = layer.renderer()
     if renderer.isFixedPositioned()
-      && CPtrToInt(renderer.container()?.p) == CPtrToInt(m_renderView.p)
+      && CPtrToInt(renderer.container()?.id()) == CPtrToInt(m_renderView.id())
     {
       // Because fixed elements get moved around without re-computing overlap, we have to compute an overlap
       // rect that covers all the locations that the fixed element could move to.
@@ -3969,7 +3969,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
     // Don't promote fixed position elements that are descendants of a non-view container, e.g. transformed elements.
     // They will stay fixed wrt the container rather than the enclosing frame.
-    if CPtrToInt(container!.p) != CPtrToInt(m_renderView.p) {
+    if CPtrToInt(container!.id()) != CPtrToInt(m_renderView.id()) {
       queryData.nonCompositedForPositionReason = .NotCompositedForNonViewContainer
       return false
     }
@@ -4707,7 +4707,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     let relevantScrollingScope = { (renderer: RenderObjectWrapper, layer: RenderLayerWrapper) in
-      return CPtrToInt(layer.renderer().p) == CPtrToInt(renderer.p)
+      return CPtrToInt(layer.renderer().id()) == CPtrToInt(renderer.id())
         ? layer.boxScrollingScope : layer.contentsScrollingScope
     }
 

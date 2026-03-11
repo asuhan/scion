@@ -51,7 +51,7 @@ extension RenderTreeBuilder {
       }
 
       if beforeChild != nil && !beforeChild!.isAnonymous()
-        && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
+        && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id())
       {
         let previousSibling = beforeChild!.previousSibling()
         if let tableCell = previousSibling as? RenderTableCellWrapper, tableCell.isAnonymous() {
@@ -65,7 +65,7 @@ extension RenderTreeBuilder {
         if let tableCell = lastChild as? RenderTableCellWrapper,
           tableCell.isAnonymous() && !tableCell.isBeforeOrAfterContent()
         {
-          if CPtrToInt(beforeChild?.p) == CPtrToInt(lastChild!.p) {
+          if CPtrToInt(beforeChild?.id()) == CPtrToInt(lastChild!.id()) {
             beforeChild = tableCell.firstChild()
           }
           return tableCell
@@ -113,14 +113,14 @@ extension RenderTreeBuilder {
       if let tableRow = lastChild as? RenderTableRowWrapper,
         tableRow.isAnonymous() && !tableRow.isBeforeOrAfterContent()
       {
-        if CPtrToInt(beforeChild?.p) == CPtrToInt(lastChild?.p) {
+        if CPtrToInt(beforeChild?.id()) == CPtrToInt(lastChild?.id()) {
           beforeChild = tableRow.firstCell()
         }
         return tableRow
       }
 
       if beforeChild != nil && !beforeChild!.isAnonymous()
-        && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
+        && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id())
       {
         if let tableRow = beforeChild!.previousSibling() as? RenderTableRowWrapper,
           tableRow.isAnonymous()
@@ -181,7 +181,7 @@ extension RenderTreeBuilder {
       }
 
       if beforeChild != nil && !beforeChild!.isAnonymous()
-        && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p)
+        && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id())
       {
         if let tableSection = beforeChild!.previousSibling() as? RenderTableSectionWrapper,
           tableSection.isAnonymous()
@@ -202,7 +202,7 @@ extension RenderTreeBuilder {
 
       if parentCandidate != nil {
         if beforeChild != nil && !beforeChild!.isAnonymous()
-          && CPtrToInt(parentCandidate!.parent()?.p) == CPtrToInt(parent.p)
+          && CPtrToInt(parentCandidate!.parent()?.id()) == CPtrToInt(parent.id())
         {
           if let tableSection = parentCandidate!.previousSibling() as? RenderTableSectionWrapper,
             tableSection.isAnonymous()
@@ -215,7 +215,7 @@ extension RenderTreeBuilder {
         if let parentTableSection = parentCandidate as? RenderTableSectionWrapper,
           parentTableSection.isAnonymous() && !parent.isAfterContent(obj: parentTableSection)
         {
-          if CPtrToInt(beforeChild?.p) == CPtrToInt(parentCandidate?.p) {
+          if CPtrToInt(beforeChild?.id()) == CPtrToInt(parentCandidate?.id()) {
             beforeChild = parentTableSection.firstRow()
           }
           return parentTableSection
@@ -239,7 +239,7 @@ extension RenderTreeBuilder {
       parent: RenderTableWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
       var beforeChild = beforeChild
-      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p) {
+      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id()) {
         beforeChild = builder.splitAnonymousBoxesAroundChild(
           parent: parent, originalBeforeChild: beforeChild!)
       }
@@ -259,7 +259,7 @@ extension RenderTreeBuilder {
       beforeChild: RenderObjectWrapper?
     ) {
       var beforeChild = beforeChild
-      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p) {
+      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) != CPtrToInt(parent.id()) {
         beforeChild = builder.splitAnonymousBoxesAroundChild(
           parent: parent, originalBeforeChild: beforeChild!)
       }
@@ -276,7 +276,7 @@ extension RenderTreeBuilder {
       parent: RenderTableRowWrapper, child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?
     ) {
       var beforeChild = beforeChild
-      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) != CPtrToInt(parent.p) {
+      if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) != CPtrToInt(parent.id()) {
         beforeChild = builder.splitAnonymousBoxesAroundChild(
           parent: parent, originalBeforeChild: beforeChild!)
       }

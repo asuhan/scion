@@ -39,7 +39,7 @@ private func resetSectionPointerIfNotBefore(
     return
   }
   var previousSibling = before!.previousSibling()
-  while previousSibling != nil && CPtrToInt(previousSibling!.p) != CPtrToInt(section!.p) {
+  while previousSibling != nil && CPtrToInt(previousSibling!.id()) != CPtrToInt(section!.id()) {
     previousSibling = previousSibling!.previousSibling()
   }
   if previousSibling == nil {
@@ -592,16 +592,16 @@ class RenderTableWrapper: RenderBlockWrapper {
   ) -> RenderTableSectionWrapper? {
     recalcSectionsIfNeeded()
 
-    if CPtrToInt(section?.p) == CPtrToInt(head?.p) {
+    if CPtrToInt(section?.id()) == CPtrToInt(head?.id()) {
       return nil
     }
 
     var prevSection =
-      CPtrToInt(section?.p) == CPtrToInt(foot?.p) ? lastChild() : section!.previousSibling()
+      CPtrToInt(section?.id()) == CPtrToInt(foot?.id()) ? lastChild() : section!.previousSibling()
     while prevSection != nil {
       let tableSection = prevSection as? RenderTableSectionWrapper
-      if tableSection != nil && CPtrToInt(prevSection!.p) != CPtrToInt(head?.p)
-        && CPtrToInt(prevSection!.p) != CPtrToInt(foot?.p)
+      if tableSection != nil && CPtrToInt(prevSection!.id()) != CPtrToInt(head?.id())
+        && CPtrToInt(prevSection!.id()) != CPtrToInt(foot?.id())
         && (skipEmptySections == .DoNotSkipEmptySections
           || (prevSection as! RenderTableSectionWrapper).numRows() != 0)
       {
@@ -623,16 +623,16 @@ class RenderTableWrapper: RenderBlockWrapper {
   ) -> RenderTableSectionWrapper? {
     recalcSectionsIfNeeded()
 
-    if CPtrToInt(section?.p) == CPtrToInt(foot?.p) {
+    if CPtrToInt(section?.id()) == CPtrToInt(foot?.id()) {
       return nil
     }
 
     var nextSection =
-      CPtrToInt(section?.p) == CPtrToInt(head?.p) ? firstChild() : section!.nextSibling()
+      CPtrToInt(section?.id()) == CPtrToInt(head?.id()) ? firstChild() : section!.nextSibling()
     while nextSection != nil {
       let tableSection = nextSection as? RenderTableSectionWrapper
-      if tableSection != nil && CPtrToInt(nextSection!.p) != CPtrToInt(head?.p)
-        && CPtrToInt(nextSection!.p) != CPtrToInt(foot?.p)
+      if tableSection != nil && CPtrToInt(nextSection!.id()) != CPtrToInt(head?.id())
+        && CPtrToInt(nextSection!.id()) != CPtrToInt(foot?.id())
         && (skipEmptySections == .DoNotSkipEmptySections
           || (nextSection as! RenderTableSectionWrapper).numRows() != 0)
       {
@@ -768,7 +768,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       while row != nil {
         var cell = row!.firstCell()
         while cell != nil {
-          assert(CPtrToInt(cell!.table()?.p) == CPtrToInt(p))
+          assert(CPtrToInt(cell!.table()?.id()) == CPtrToInt(id()))
           cell!.invalidateHasEmptyCollapsedBorders()
           cell = cell!.nextCell()
         }
@@ -1704,7 +1704,7 @@ class RenderTableWrapper: RenderBlockWrapper {
       while row != nil {
         var cell = row!.firstCell()
         while cell != nil {
-          assert(CPtrToInt(cell!.table()?.p) == CPtrToInt(p))
+          assert(CPtrToInt(cell!.table()?.id()) == CPtrToInt(id()))
           cell!.collectBorderValues(borderValues: &collapsedBorders)
           cell = cell!.nextCell()
         }

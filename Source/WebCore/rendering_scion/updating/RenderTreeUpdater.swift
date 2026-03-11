@@ -615,7 +615,7 @@ class RenderTreeUpdater {
 
   private func storePreviousRenderer(node: NodeWrapper) {
     if let renderer = node.renderer() {
-      assert(CPtrToInt(renderingParent().previousChildRenderer?.p) != CPtrToInt(renderer.p))
+      assert(CPtrToInt(renderingParent().previousChildRenderer?.id()) != CPtrToInt(renderer.id()))
       renderingParent().previousChildRenderer = renderer
       if renderer.isInFlow() {
         renderingParent().hasPrecedingInFlowChild = true

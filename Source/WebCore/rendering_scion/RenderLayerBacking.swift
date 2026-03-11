@@ -1603,7 +1603,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
 
       var clippingBounds =
         (renderer().isFixedPositioned()
-          && CPtrToInt(renderer().container()?.p) == CPtrToInt(view.p))
+          && CPtrToInt(renderer().container()?.id()) == CPtrToInt(view.id()))
         ? view.frameView().rectForFixedPositionLayout()
         : LayoutRectWrapper(rect: view.unscaledDocumentRect())
 

@@ -200,7 +200,7 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
 
     var outlineBounds = visualOverflowRectEquivalent()
 
-    if CPtrToInt(repaintContainer?.p) != CPtrToInt(p) {
+    if CPtrToInt(repaintContainer?.id()) != CPtrToInt(id()) {
       var containerRelativeQuad = FloatQuad()
       if geometryMap != nil {
         containerRelativeQuad = geometryMap!.mapToContainer(
@@ -219,7 +219,7 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
+    assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(id()))
     assert(style().position() == .Static)
 
     let (container, ancestorSkipped) = container(ancestorToStopAt)
@@ -237,7 +237,7 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
-    assert(CPtrToInt(container.p) == CPtrToInt(self.container()?.p))
+    assert(CPtrToInt(container.id()) == CPtrToInt(self.container()?.id()))
     assert(!isInFlowPositioned())
     assert(!isAbsolutelyPositioned())
     assert(isInline())
@@ -265,7 +265,9 @@ class RenderSVGModelObjectWrapper: RenderLayerModelObjectWrapper {
     _ context: VisibleRectContext
   ) -> Bool {
     // Based on render box' applyCachedClipAndScrollPosition -- unused options removed.
-    if !context.options.contains(.ApplyContainerClip) && CPtrToInt(p) == CPtrToInt(container?.p) {
+    if !context.options.contains(.ApplyContainerClip)
+      && CPtrToInt(id()) == CPtrToInt(container?.id())
+    {
       return true
     }
 

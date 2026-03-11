@@ -61,7 +61,7 @@ private func gridStyleHasNotChanged(style: RenderStyleWrapper, oldStyle: RenderS
 private func isCandidateForOpaquenessTest(_ childBox: RenderBoxWrapper) -> Bool {
   let childStyle = childBox.style()
   if childStyle.position() != .Static
-    && CPtrToInt(childBox.containingBlock()?.p) != CPtrToInt(childBox.parent()?.p)
+    && CPtrToInt(childBox.containingBlock()?.id()) != CPtrToInt(childBox.parent()?.id())
   {
     return false
   }
@@ -168,7 +168,7 @@ private func computeInlineStaticDistance(
   // positioned grid items, as they rely on the grid area. So for grid items if
   // both "left" and "right" properties are "auto", we can consider that one of
   // them (depending on the direction) is simply "0".
-  if parent.isRenderGrid() && CPtrToInt(parent.p) == CPtrToInt(child.containingBlock()?.p) {
+  if parent.isRenderGrid() && CPtrToInt(parent.id()) == CPtrToInt(child.containingBlock()?.id()) {
     if parentDirection == .LTR {
       logicalLeft.setValue(type: .Fixed, value: Int32(0))
     } else {
@@ -185,7 +185,7 @@ private func computeInlineStaticDistance(
       ? child.layer()!.staticBlockPosition() - containerBlock.borderBefore()
       : child.layer()!.staticInlinePosition() - containerBlock.borderLogicalLeft()
     var current: RenderElementWrapper? = parent
-    while current != nil && CPtrToInt(current!.p) != CPtrToInt(containerBlock.p) {
+    while current != nil && CPtrToInt(current!.id()) != CPtrToInt(containerBlock.id()) {
       let renderBox = current as? RenderBoxWrapper
       if renderBox == nil {
         current = current!.container()
@@ -215,7 +215,7 @@ private func computeInlineStaticDistance(
       child.layer()!.staticInlinePosition() + containerLogicalWidth
       + containerBlock.borderLogicalLeft()
     let enclosingBox = parent.enclosingBox()
-    if CPtrToInt(enclosingBox.p) != CPtrToInt(containerBlock.p)
+    if CPtrToInt(enclosingBox.id()) != CPtrToInt(containerBlock.id())
       && containerBlock.isDescendantOf(ancestor: enclosingBox)
     {
       logicalRight.setValue(type: .Fixed, value: staticPosition)
@@ -230,7 +230,7 @@ private func computeInlineStaticDistance(
         continue
       }
 
-      if CPtrToInt(current!.p) != CPtrToInt(containerBlock.p) {
+      if CPtrToInt(current!.id()) != CPtrToInt(containerBlock.id()) {
         staticPosition -= renderBox!.logicalLeft()
         if renderBox!.isInFlowPositioned() {
           staticPosition -=
@@ -242,16 +242,16 @@ private func computeInlineStaticDistance(
       if fragment != nil, let currentBlock = current as? RenderBlockWrapper {
         fragment = currentBlock.clampToStartAndEndFragments(fragment: fragment)
         if let boxInfo = currentBlock.renderBoxFragmentInfo(fragment: fragment) {
-          if CPtrToInt(current!.p) != CPtrToInt(containerBlock.p) {
+          if CPtrToInt(current!.id()) != CPtrToInt(containerBlock.id()) {
             staticPosition -=
               currentBlock.logicalWidth() - (boxInfo.logicalLeft + boxInfo.logicalWidth)
           }
-          if CPtrToInt(current!.p) == CPtrToInt(enclosingBox.p) {
+          if CPtrToInt(current!.id()) == CPtrToInt(enclosingBox.id()) {
             staticPosition += enclosingBox.logicalWidth() - boxInfo.logicalWidth
           }
         }
       }
-      if CPtrToInt(current!.p) == CPtrToInt(containerBlock.p) {
+      if CPtrToInt(current!.id()) == CPtrToInt(containerBlock.id()) {
         break
       }
       current = current!.container()
@@ -322,7 +322,7 @@ private func shouldFlipStaticPositionInParent(
   assert(outOfFlowBox.isOutOfFlowPositioned())
 
   let parent = outOfFlowBox.parent()
-  if parent == nil || CPtrToInt(parent!.p) == CPtrToInt(containerBlock.p)
+  if parent == nil || CPtrToInt(parent!.id()) == CPtrToInt(containerBlock.id())
     || parent is RenderBlockWrapper
   {
     return false
@@ -361,7 +361,7 @@ private func computeBlockStaticDistance(
   staticLogicalTop -=
     haveOrthogonalWritingModes ? containerBlock.borderLogicalLeft() : containerBlock.borderBefore()
   var container = child!.parent()
-  while container != nil && CPtrToInt(container?.p) != CPtrToInt(containerBlock.p) {
+  while container != nil && CPtrToInt(container?.id()) != CPtrToInt(containerBlock.id()) {
     let renderBox = container as? RenderBoxWrapper
     if renderBox == nil {
       container = container!.container()
@@ -604,7 +604,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func logicalLeft() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_logicalLeft(id()))
   }
 
   func logicalTop() -> LayoutUnit {
@@ -786,7 +786,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func location() -> LayoutPointWrapper {
     if !isNativeImpl() {
-      let rawLocation = wk_interop.RenderBox_location(p)
+      let rawLocation = wk_interop.RenderBox_location(id())
       return LayoutPointWrapper(
         x: LayoutUnit.fromRawValue(value: rawLocation.x),
         y: LayoutUnit.fromRawValue(value: rawLocation.y))
@@ -803,7 +803,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func setLocation(p: LayoutPointWrapper) {
     if !isNativeImpl() {
-      wk_interop.RenderBox_setLocation(self.p, p.x.rawValue(), p.y.rawValue())
+      wk_interop.RenderBox_setLocation(self.id(), p.x.rawValue(), p.y.rawValue())
       return
     }
     m_frameRect.setLocation(location: p)
@@ -816,7 +816,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func move(dx: LayoutUnit, dy: LayoutUnit) {
     if !isNativeImpl() {
-      wk_interop.RenderBox_move(p, dx.rawValue(), dy.rawValue())
+      wk_interop.RenderBox_move(id(), dx.rawValue(), dy.rawValue())
       return
     }
     m_frameRect.move(dx: dx, dy: dy)
@@ -824,7 +824,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func frameRect() -> LayoutRectWrapper {
     if !isNativeImpl() {
-      let raw = wk_interop.RenderBox_frameRect(p)
+      let raw = wk_interop.RenderBox_frameRect(id())
       return LayoutRectWrapper(
         x: LayoutUnit.fromRawValue(value: raw.x),
         y: LayoutUnit.fromRawValue(value: raw.y),
@@ -911,7 +911,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   {
     var box = localOutlineBoundsRepaintRect()
 
-    if CPtrToInt(repaintContainer?.p) != CPtrToInt(p) {
+    if CPtrToInt(repaintContainer?.id()) != CPtrToInt(id()) {
       var containerRelativeQuad = FloatQuad()
       if geometryMap != nil {
         containerRelativeQuad = geometryMap!.mapToContainer(box.FloatRect(), repaintContainer)
@@ -1111,7 +1111,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func addLayoutOverflow(rect: LayoutRectWrapper) {
     assert(!isNativeImpl())
     wk_interop.RenderBox_addLayoutOverflow(
-      p,
+      id(),
       LayoutRectRaw(
         x: rect.x().rawValue(),
         y: rect.y().rawValue(),
@@ -1122,7 +1122,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func addVisualOverflow(rect: LayoutRectWrapper) {
     assert(!isNativeImpl())
     wk_interop.RenderBox_addVisualOverflow(
-      p,
+      id(),
       LayoutRectRaw(
         x: rect.x().rawValue(),
         y: rect.y().rawValue(),
@@ -1263,18 +1263,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func contentWidth() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentWidth(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentWidth(id()))
   }
 
   func contentHeight() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentHeight(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentHeight(id()))
   }
 
   func contentLogicalSize() -> LayoutSizeWrapper {
     assert(!isNativeImpl())
-    let width = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_width(p))
-    let height = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_height(p))
+    let width = LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentLogicalSize_width(id()))
+    let height = LayoutUnit.fromRawValue(
+      value: wk_interop.RenderBox_contentLogicalSize_height(id()))
     return LayoutSizeWrapper(width: width, height: height)
   }
 
@@ -1290,12 +1291,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func paddingBoxWidth() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxWidth(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxWidth(id()))
   }
 
   func paddingBoxHeight() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxHeight(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxHeight(id()))
   }
 
   func paddingBoxRect() -> LayoutRectWrapper {
@@ -1320,12 +1321,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func paddingBoxRectIncludingScrollbar() -> LayoutRectWrapper {
     assert(!isNativeImpl())
     return LayoutRectWrapper(
-      x: LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_x(p)),
-      y: LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_y(p)),
+      x: LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_x(id())),
+      y: LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_y(id())),
       width: LayoutUnit.fromRawValue(
-        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_width(p)),
+        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_width(id())),
       height: LayoutUnit.fromRawValue(
-        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_height(p))
+        value: wk_interop.RenderBox_paddingBoxRectIncludingScrollbar_height(id()))
     )
   }
 
@@ -1730,7 +1733,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func setOverridingLogicalWidthLength(height: LengthWrapper) {
     assert(!isNativeImpl())
-    wk_interop.RenderBox_setOverridingLogicalWidthLength(p, height.p)
+    wk_interop.RenderBox_setOverridingLogicalWidthLength(id(), height.p)
   }
 
   func clearOverridingLogicalHeightLength() {
@@ -1740,7 +1743,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func clearOverridingLogicalWidthLength() {
     assert(!isNativeImpl())
-    wk_interop.RenderBox_clearOverridingLogicalWidthLength(p)
+    wk_interop.RenderBox_clearOverridingLogicalWidthLength(id())
   }
 
   func markMarginAsTrimmed(newTrimmedMargin: MarginTrimType) {
@@ -1764,7 +1767,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   ) -> LayoutSizeWrapper {
     // A fragment "has" boxes inside it without being their container.
     assert(
-      CPtrToInt(container.p) == CPtrToInt(self.container()?.p)
+      CPtrToInt(container.id()) == CPtrToInt(self.container()?.id())
         || container is RenderFragmentContainerWrapper)
 
     var offset = LayoutSizeWrapper()
@@ -2174,7 +2177,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       adjustedRects.unite(reflectedRects)
     }
 
-    if CPtrToInt(container?.p) == CPtrToInt(p) {
+    if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       if container!.style().isFlippedBlocksWritingMode() {
         flipForWritingMode(&adjustedRects)
       }
@@ -2272,7 +2275,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func repaintDuringLayoutIfMoved(oldRect: LayoutRectWrapper) {
     assert(!isNativeImpl())
     wk_interop.RenderBox_repaintDuringLayoutIfMoved(
-      p,
+      id(),
       LayoutRectRaw(
         x: oldRect.x().rawValue(),
         y: oldRect.y().rawValue(),
@@ -2758,7 +2761,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return true
     }
     let documentElementRenderer = document().documentElement()!.renderer()
-    return isBody() && CPtrToInt(parent()?.p) == CPtrToInt(documentElementRenderer?.p)
+    return isBody() && CPtrToInt(parent()?.id()) == CPtrToInt(documentElementRenderer?.id())
       && documentElementRenderer!.style().logicalHeight().isPercentOrCalculated()
   }
 
@@ -3649,7 +3652,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func availableLogicalWidth() -> LayoutUnit {
     assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(id()))
   }
 
   func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
@@ -4508,7 +4511,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
     assert(!isNativeImpl())
     wk_interop.RenderBox_flipForWritingMode(
-      p, LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
+      id(), LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
   }
 
   func flipForWritingMode(rect: inout FloatRectWrapper) {
@@ -4555,7 +4558,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    let raw = wk_interop.RenderBox_logicalVisualOverflowRectForPropagation(p, style.p)
+    let raw = wk_interop.RenderBox_logicalVisualOverflowRectForPropagation(id(), style.p)
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: raw.x),
       y: LayoutUnit.fromRawValue(value: raw.y),
@@ -4594,7 +4597,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
-    let raw = wk_interop.RenderBox_layoutOverflowRectForPropagation(p, style.p)
+    let raw = wk_interop.RenderBox_layoutOverflowRectForPropagation(id(), style.p)
     return LayoutRectWrapper(
       x: LayoutUnit.fromRawValue(value: raw.x),
       y: LayoutUnit.fromRawValue(value: raw.y),
@@ -4651,7 +4654,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     flipForWritingMode(&rects)
 
     if context.options.contains(.ApplyCompositedContainerScrolls)
-      || CPtrToInt(p) != CPtrToInt(container?.p)
+      || CPtrToInt(id()) != CPtrToInt(container?.id())
       || !usesCompositedScrolling()
     {
       rects.moveBy(LayoutPointWrapper(point: -scrollPosition()))  // For overflow:auto/scroll/hidden.
@@ -4659,7 +4662,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
     // Do not clip scroll layer contents to reduce the number of repaints while scrolling.
     if (!context.options.contains(.ApplyCompositedClips) && usesCompositedScrolling())
-      || (!context.options.contains(.ApplyContainerClip) && CPtrToInt(p) == CPtrToInt(container?.p))
+      || (!context.options.contains(.ApplyContainerClip)
+        && CPtrToInt(id()) == CPtrToInt(container?.id()))
     {
       flipForWritingMode(&rects)
       return true
@@ -4733,7 +4737,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func isFlexItem() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderBox_isFlexItem(p)
+    return wk_interop.RenderBox_isFlexItem(id())
   }
 
   func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
@@ -4855,7 +4859,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func floatingObjectForFloatPainting() -> FloatingObjectWrapper? {
     let layoutContext = view().frameView().layoutContext()
     if !layoutContext.isInLayout()
-      || CPtrToInt(layoutContext.subtreeLayoutRoot()?.p) != CPtrToInt(p)
+      || CPtrToInt(layoutContext.subtreeLayoutRoot()?.id()) != CPtrToInt(id())
     {
       return nil
     }
@@ -4873,7 +4877,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       }
       var blockFlowContainsThisFloat = false
       for floatingObject in floatingObjects! {
-        blockFlowContainsThisFloat = CPtrToInt(floatingObject.renderer?.p) == CPtrToInt(p)
+        blockFlowContainsThisFloat = CPtrToInt(floatingObject.renderer?.id()) == CPtrToInt(id())
         if blockFlowContainsThisFloat {
           floatPainter = floatingObject
           if blockFlow!.hasLayer() && blockFlow!.layer()!.isSelfPaintingLayer {
@@ -4916,7 +4920,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func shapeOutsideInfo() -> ShapeOutsideInfoWrapper? {
     assert(!isNativeImpl())
-    if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(p) {
+    if let unwrapped = wk_interop.RenderBox_shapeOutsideInfo(id()) {
       return ShapeOutsideInfoWrapper(p: unwrapped)
     }
     return nil
@@ -5637,7 +5641,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
-    if CPtrToInt(ancestorContainer?.p) == CPtrToInt(p) {
+    if CPtrToInt(ancestorContainer?.id()) == CPtrToInt(id()) {
       return
     }
 
@@ -5694,7 +5698,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
-    assert(CPtrToInt(ancestorToStopAt?.p) != CPtrToInt(p))
+    assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(id()))
 
     let (container, ancestorSkipped) = container(ancestorToStopAt)
     if container == nil {
@@ -7263,7 +7267,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     assert(view().frameView().hasFlippedBlockRenderers())
 
     let containerBlock = containingBlock()
-    if containerBlock == nil || CPtrToInt(containerBlock!.p) == CPtrToInt(p) {
+    if containerBlock == nil || CPtrToInt(containerBlock!.id()) == CPtrToInt(id()) {
       return location()
     }
 

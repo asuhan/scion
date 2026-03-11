@@ -31,7 +31,7 @@ private func precedesRenderer(renderer: RenderObjectWrapper?, boundary: RenderOb
 {
   var renderer = renderer
   while renderer != nil {
-    if CPtrToInt(renderer!.p) == CPtrToInt(boundary?.p) {
+    if CPtrToInt(renderer!.id()) == CPtrToInt(boundary?.id()) {
       return true
     }
     renderer = renderer!.nextInPreOrder()
@@ -898,7 +898,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       isLastPortion: isLastColumn && isLastFragment())
 
     // For RenderViews only (i.e., iBooks), avoid overflowing into neighboring columns, by clipping in the middle of adjacent column gaps. Also make sure that we avoid rounding errors.
-    if CPtrToInt(view().p) == CPtrToInt(parent()?.p) {
+    if CPtrToInt(view().id()) == CPtrToInt(parent()?.id()) {
       if isHorizontalWritingMode() {
         if !isLeftmostColumn {
           overflowRect.shiftXEdgeTo(edge: portionRect.x() - colGap / 2)

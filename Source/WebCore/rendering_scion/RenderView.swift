@@ -201,7 +201,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   func frameView() -> LocalFrameViewWrapper {
     if !isNativeImpl() {
-      return LocalFrameViewWrapper(p: wk_interop.RenderView_frameView(p))
+      return LocalFrameViewWrapper(p: wk_interop.RenderView_frameView(id()))
     }
     return m_frameView!
   }
@@ -212,7 +212,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   func layoutState() -> LayoutStateWrapper {
     assert(!isNativeImpl())
-    return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(p))
+    return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(id()))
   }
 
   func needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() -> Bool {
@@ -233,7 +233,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   ) -> RepaintRects? {
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
-    assert(container == nil || CPtrToInt(container!.p) == CPtrToInt(p))
+    assert(container == nil || CPtrToInt(container!.id()) == CPtrToInt(id()))
 
     if printing() {
       return rects
@@ -706,7 +706,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   ) {
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
-    assert(ancestorContainer == nil || CPtrToInt(ancestorContainer!.p) == CPtrToInt(p))
+    assert(ancestorContainer == nil || CPtrToInt(ancestorContainer!.id()) == CPtrToInt(id()))
     assert(wasFixed == nil || wasFixed! == mode.contains(.IsFixed))
 
     if mode.contains(.IsFixed) {
@@ -727,7 +727,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   ) -> RenderObjectWrapper? {
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
-    assert(ancestorToStopAt == nil || CPtrToInt(ancestorToStopAt!.p) == CPtrToInt(p))
+    assert(ancestorToStopAt == nil || CPtrToInt(ancestorToStopAt!.id()) == CPtrToInt(id()))
 
     let scrollPosition = protectedFrameView().scrollPositionRespectingCustomFixedPosition()
 

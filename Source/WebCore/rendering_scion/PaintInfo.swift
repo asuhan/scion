@@ -109,7 +109,7 @@ struct PaintInfoWrapper {
     }
     if let subtreePaintRoot = n!.subtreePaintRoot {
       // TODO(asuhan): use ObjectIdentifier for comparison once gone native
-      return CPtrToInt(subtreePaintRoot.p) == CPtrToInt(renderer.p)
+      return CPtrToInt(subtreePaintRoot.id()) == CPtrToInt(renderer.id())
     }
     return true
   }

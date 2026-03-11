@@ -46,7 +46,7 @@ private func nextContinuation(renderer: RenderObjectWrapper) -> RenderBoxModelOb
 private func continuationBefore(parent: RenderInlineWrapper, beforeChild: RenderObjectWrapper?)
   -> RenderBoxModelObjectWrapper?
 {
-  if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(parent.p) {
+  if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(parent.id()) {
     return parent
   }
 
@@ -54,8 +54,8 @@ private func continuationBefore(parent: RenderInlineWrapper, beforeChild: Render
   var nextToLast: RenderBoxModelObjectWrapper? = parent
   var last: RenderBoxModelObjectWrapper? = parent
   while curr != nil {
-    if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.p) == CPtrToInt(curr!.p) {
-      if CPtrToInt(curr!.firstChild()?.p) == CPtrToInt(beforeChild?.p) {
+    if beforeChild != nil && CPtrToInt(beforeChild!.parent()?.id()) == CPtrToInt(curr!.id()) {
+      if CPtrToInt(curr!.firstChild()?.id()) == CPtrToInt(beforeChild?.id()) {
         return last
       }
       return curr
@@ -215,7 +215,7 @@ extension RenderTreeBuilder {
           parent: beforeChildAncestor!, child: child!, beforeChild: beforeChild)
       }
 
-      if CPtrToInt(flow?.p) == CPtrToInt(beforeChildAncestor?.p) {
+      if CPtrToInt(flow?.id()) == CPtrToInt(beforeChildAncestor?.id()) {
         return builder.attachIgnoringContinuation(
           parent: flow!, child: child!, beforeChild: beforeChild)
       }
@@ -252,10 +252,10 @@ extension RenderTreeBuilder {
       while rendererToMove != nil {
         var nextSibling = rendererToMove!.nextSibling()
         // When anonymous wrapper is present, we might need to move the whole subtree instead.
-        if CPtrToInt(rendererToMove!.parent()?.p) != CPtrToInt(parent.p) {
+        if CPtrToInt(rendererToMove!.parent()?.id()) != CPtrToInt(parent.id()) {
           var anonymousParent = rendererToMove!.parent()
           while anonymousParent != nil
-            && CPtrToInt(anonymousParent!.parent()?.p) != CPtrToInt(parent.p)
+            && CPtrToInt(anonymousParent!.parent()?.id()) != CPtrToInt(parent.id())
           {
             assert(anonymousParent!.isAnonymous())
             anonymousParent = anonymousParent!.parent()
@@ -306,7 +306,7 @@ extension RenderTreeBuilder {
       // greater depth (see bugzilla bug 13430) but for now we have a limit. This *will* result in
       // incorrect rendering, but the alternative is to hang forever.
       var splitDepth: UInt32 = 1
-      while current != nil && CPtrToInt(current!.p) != CPtrToInt(fromBlock?.p) {
+      while current != nil && CPtrToInt(current!.id()) != CPtrToInt(fromBlock?.id()) {
         if splitDepth < Inline.cMaxSplitDepth && !current!.isAnonymous() {
           // Create a new clone.
           let cloneChild = cloneInline

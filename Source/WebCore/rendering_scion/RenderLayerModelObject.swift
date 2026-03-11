@@ -49,7 +49,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
   func layer() -> RenderLayerWrapper? {
     if !isNativeImpl() {
-      if let rawLayer = wk_interop.RenderLayerModelObject_layer(p) {
+      if let rawLayer = wk_interop.RenderLayerModelObject_layer(id()) {
         return RenderLayerWrapper(p: rawLayer)
       }
       return nil
@@ -92,7 +92,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     // account its new inline/block position rather than its old block/inline position.
     // Position changes and other types of display changes are handled elsewhere.
     if (oldStyle != nil && isOutOfFlowPositioned() && parent() != nil
-      && (CPtrToInt(parent()!.p) != CPtrToInt(containingBlock()?.p)))
+      && (CPtrToInt(parent()!.id()) != CPtrToInt(containingBlock()?.id())))
       && (style().position() == oldStyle!.position())
       && (style().isOriginalDisplayInlineType() != oldStyle!.isOriginalDisplayInlineType())
       && ((style().isOriginalDisplayBlockType()) || (style().isOriginalDisplayInlineType()))
@@ -199,7 +199,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
 
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
     assert(!isNativeImpl())
-    return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(p)
+    return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(id())
   }
 
   // Single source of truth deciding if a SVG renderer should be painted. All SVG renderers
@@ -236,7 +236,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     assert(!style().hasInFlowPosition())
     assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
 
-    if CPtrToInt(container?.p) == CPtrToInt(p) {
+    if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       return rects
     }
 
@@ -287,7 +287,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     assert(self is RenderSVGModelObjectWrapper || self is RenderSVGBlockWrapper)
     assert(style().position() == .Static)
 
-    if CPtrToInt(ancestorContainer.p) == CPtrToInt(p) {
+    if CPtrToInt(ancestorContainer.id()) == CPtrToInt(id()) {
       return
     }
 

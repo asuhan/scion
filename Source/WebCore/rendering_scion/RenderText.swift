@@ -684,7 +684,7 @@ class RenderTextWrapper: RenderObjectWrapper {
 
   func setNeedsVisualReordering() {
     assert(!isNativeImpl())
-    wk_interop.RenderText_setNeedsVisualReordering(p)
+    wk_interop.RenderText_setNeedsVisualReordering(id())
   }
 
   func containsOnlyCollapsibleWhitespace() -> Bool {
@@ -969,14 +969,15 @@ class RenderTextWrapper: RenderObjectWrapper {
 
     // Do not cross self-painting layer boundaries.
     let enclosingLayerRenderer = enclosingLayer()!.renderer()
-    if CPtrToInt(enclosingLayerRenderer.p) != CPtrToInt(rendererToRepaint?.p)
+    if CPtrToInt(enclosingLayerRenderer.id()) != CPtrToInt(rendererToRepaint?.id())
       && !rendererToRepaint!.isDescendantOf(ancestor: enclosingLayerRenderer)
     {
       rendererToRepaint = enclosingLayerRenderer
     }
 
     // The renderer we chose to repaint may be an ancestor of repaintContainer, but we need to do a repaintContainer-relative repaint.
-    if repaintContainer != nil && CPtrToInt(repaintContainer!.p) != CPtrToInt(rendererToRepaint?.p)
+    if repaintContainer != nil
+      && CPtrToInt(repaintContainer!.id()) != CPtrToInt(rendererToRepaint?.id())
       && !rendererToRepaint!.isDescendantOf(ancestor: repaintContainer)
     {
       return repaintContainer!.clippedOverflowRect(repaintContainer, context)

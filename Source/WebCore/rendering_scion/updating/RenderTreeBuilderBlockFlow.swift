@@ -49,7 +49,7 @@ extension RenderTreeBuilder {
         // child of the multicol conainter.
         return builder.attach(
           parent: multicolumnFlow, child: child!,
-          beforeChild: CPtrToInt(beforeChild!.p) == CPtrToInt(multicolumnFlow.p)
+          beforeChild: CPtrToInt(beforeChild!.id()) == CPtrToInt(multicolumnFlow.id())
             ? multicolumnFlow.firstChild() : beforeChild)
       }
 

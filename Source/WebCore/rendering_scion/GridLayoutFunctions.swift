@@ -178,7 +178,7 @@ class GridLayoutFunctions {
     var margin = computeMarginLogicalSizeForGridItem(
       grid: grid, direction: direction, gridItem: gridItem)
 
-    if CPtrToInt(grid.p) != CPtrToInt(gridItem.parent()?.p) {
+    if CPtrToInt(grid.id()) != CPtrToInt(gridItem.parent()?.id()) {
       let subgridDirection = flowAwareDirectionForGridItem(
         grid: grid, gridItem: gridItem.parent() as! RenderGridWrapper, direction: direction)
       margin += extraMarginForSubgridAncestors(direction: subgridDirection, gridItem: gridItem)
@@ -227,7 +227,7 @@ class GridLayoutFunctions {
   static func isGridItemInlineSizeDependentOnBlockConstraints(
     gridItem: RenderBoxWrapper, parentGrid: RenderGridWrapper, gridItemAlignSelf: ItemPosition
   ) -> Bool {
-    assert(CPtrToInt(gridItem.parent()?.p) == CPtrToInt(parentGrid.p))
+    assert(CPtrToInt(gridItem.parent()?.id()) == CPtrToInt(parentGrid.id()))
 
     if isOrthogonalGridItem(grid: parentGrid, gridItem: gridItem) {
       return true

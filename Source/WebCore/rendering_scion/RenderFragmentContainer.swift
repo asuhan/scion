@@ -219,10 +219,10 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
     if let (startFragment, endFragment) = fragmentedFlow!.getFragmentRangeForBox(box: box) {
       if fragmentedFlow!.isHorizontalWritingMode() {
-        if CPtrToInt(p) != CPtrToInt(startFragment.p) {
+        if CPtrToInt(id()) != CPtrToInt(startFragment.id()) {
           mappedRect.shiftYEdgeTo(edge: max(logicalTopForFragmentedFlowContent(), mappedRect.y()))
         }
-        if CPtrToInt(p) != CPtrToInt(endFragment.p) {
+        if CPtrToInt(id()) != CPtrToInt(endFragment.id()) {
           mappedRect.setHeight(
             height: max(
               LayoutUnit(value: 0),
@@ -230,10 +230,10 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
           )
         }
       } else {
-        if CPtrToInt(p) != CPtrToInt(startFragment.p) {
+        if CPtrToInt(id()) != CPtrToInt(startFragment.id()) {
           mappedRect.shiftXEdgeTo(edge: max(logicalTopForFragmentedFlowContent(), mappedRect.x()))
         }
-        if CPtrToInt(p) != CPtrToInt(endFragment.p) {
+        if CPtrToInt(id()) != CPtrToInt(endFragment.id()) {
           mappedRect.setWidth(
             width: max(
               LayoutUnit(value: 0),
