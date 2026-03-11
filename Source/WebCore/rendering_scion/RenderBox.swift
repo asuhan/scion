@@ -2997,8 +2997,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func stretchesToViewport() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return document().inQuirksMode() && style().logicalHeight().isAuto()
+      && !isFloatingOrOutOfFlowPositioned() && (isDocumentElementRenderer() || isBody())
+      && !shouldComputeLogicalHeightFromAspectRatio() && !isInline()
   }
 
   func intrinsicSize() -> LayoutSizeWrapper { return LayoutSizeWrapper() }
