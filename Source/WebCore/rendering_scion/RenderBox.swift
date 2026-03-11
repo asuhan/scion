@@ -3010,8 +3010,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func intrinsicLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? intrinsicSize().height() : intrinsicSize().width()
   }
 
   // Whether or not the element shrinks to its intrinsic width (rather than filling the width
