@@ -789,6 +789,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   // TODO(asuhan): remove
   func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
 
+  func getWk() -> UnsafeMutableRawPointer { return wk! }
+
   private var m_frameView: LocalFrameViewWrapper? = nil
 
   private var m_compositor: RenderLayerCompositorWrapper? = nil

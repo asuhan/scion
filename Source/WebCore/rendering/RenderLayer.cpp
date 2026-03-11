@@ -157,6 +157,22 @@
 #include <wtf/text/MakeString.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT void* RenderLayer_create(void* p)
+{
+    return new WebCore::RenderLayer(*static_cast<WebCore::RenderLayerModelObject*>(p));
+}
+
+extern "C" WEBCORE_EXPORT void RenderLayer_destroy(const void* p)
+{
+    delete static_cast<const WebCore::RenderLayerModelObject*>(p);
+}
+
+extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool timing_raw)
+{
+    auto timing = timing_raw ? WebCore::RenderLayer::LayerChangeTiming::RenderTreeConstruction : WebCore::RenderLayer::LayerChangeTiming::StyleChange;
+    static_cast<WebCore::RenderLayer*>(p)->insertOnlyThisLayer(timing);
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticInlinePosition(const void* p)
 {
     const auto position = static_cast<const WebCore::RenderLayer*>(p)->staticInlinePosition();

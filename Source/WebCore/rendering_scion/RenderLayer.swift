@@ -327,6 +327,12 @@ typealias ScrollingScope = UInt64
 
 class RenderLayerWrapper {
   init(_ renderer: RenderLayerModelObjectWrapper) {
+    if renderer.isNativeImpl() {
+      m_renderer = nil
+      pInterop = wk_interop.RenderLayer_create((renderer as! RenderViewWrapper).getWk())
+      owner = true
+      return
+    }
     isRenderViewLayer = renderer.isRenderView()
     forcedStackingContext = renderer.isRenderMedia()
     isNormalFlowOnly = false
@@ -366,6 +372,7 @@ class RenderLayerWrapper {
     repaintRectsValid = false
     m_renderer = renderer
     pInterop = nil
+    owner = false
 
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setIsCSSStackingContext(isCSSStackingContext: shouldBeCSSStackingContext())
@@ -405,9 +412,16 @@ class RenderLayerWrapper {
     }
   }
 
-  init(p: UnsafeMutableRawPointer) {
-    pInterop = p
-    m_renderer = nil
+  init(p: UnsafeMutableRawPointer, owner: Bool = false) {
+    self.pInterop = p
+    self.owner = owner
+    self.m_renderer = nil
+  }
+
+  deinit {
+    if self.owner {
+      wk_interop.RenderLayer_destroy(pInterop!)
+    }
   }
 
   func scrollableArea() -> RenderLayerScrollableArea? {
@@ -612,6 +626,10 @@ class RenderLayerWrapper {
   }
 
   func insertOnlyThisLayer(_ timing: LayerChangeTiming) {
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_insertOnlyThisLayer(pInterop!, timing == .RenderTreeConstruction)
+      return
+    }
     assert(isNativeImpl())
     if m_parent == nil && renderer().parent() != nil {
       // We need to connect ourselves when our renderer() has a parent.
@@ -6453,6 +6471,8 @@ class RenderLayerWrapper {
   private func isNativeImpl() -> Bool { return pInterop == nil }
 
   private let pInterop: UnsafeMutableRawPointer?
+  private let owner: Bool
+
   // Native fields below.
 
   private var compositingDirtyBits = Compositing()
