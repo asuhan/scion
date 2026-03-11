@@ -471,7 +471,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     fatalError("Not implemented")
   }
 
-  func createLayer() {
+  private func createLayer() {
     assert(m_layer == nil)
     m_layer = RenderLayerWrapper(self)
     setHasLayer(true)
