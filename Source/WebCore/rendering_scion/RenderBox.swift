@@ -1386,23 +1386,23 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setMarginTop(margin: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    marginBox!.setTop(margin)
   }
 
   func setMarginBottom(margin: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    marginBox!.setBottom(margin)
   }
 
   func setMarginLeft(margin: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    marginBox!.setLeft(margin)
   }
 
   func setMarginRight(margin: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    marginBox!.setRight(margin)
   }
 
   func marginLogicalLeft(overrideStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
