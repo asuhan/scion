@@ -1257,8 +1257,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentSize() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return LayoutSizeWrapper(width: contentWidth(), height: contentHeight())
   }
 
   func contentWidth() -> LayoutUnit {
