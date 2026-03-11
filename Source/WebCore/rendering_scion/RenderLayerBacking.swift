@@ -108,7 +108,7 @@ private func clearBackingSharingLayerProviders(
   sharingLayers: ListSet<RenderLayerWrapper, ObjectIdentifier>, providerLayer: RenderLayerWrapper
 ) {
   for layer in sharingLayers {
-    if CPtrToInt(layer.backingProviderLayer?.p) == CPtrToInt(providerLayer.p) {
+    if CPtrToInt(layer.backingProviderLayer?.layerId()) == CPtrToInt(providerLayer.layerId()) {
       layer.setBackingProviderLayer(backingProvider: nil)
     }
   }
@@ -735,7 +735,8 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     }
 
     assert(
-      CPtrToInt(compositingAncestor?.p) == CPtrToInt(owningLayer!.ancestorCompositingLayer()?.p))
+      CPtrToInt(compositingAncestor?.layerId())
+        == CPtrToInt(owningLayer!.ancestorCompositingLayer()?.layerId()))
     if updateAncestorClipping(
       compositor.clippedByAncestor(owningLayer!, compositingAncestor), compositingAncestor)
     {
@@ -1607,7 +1608,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
         ? view.frameView().rectForFixedPositionLayout()
         : LayoutRectWrapper(rect: view.unscaledDocumentRect())
 
-      if CPtrToInt(owningLayer!.p) != CPtrToInt(rootLayer?.p) {
+      if CPtrToInt(owningLayer!.layerId()) != CPtrToInt(rootLayer?.layerId()) {
         clippingBounds.intersect(
           other: owningLayer!.backgroundClipRect(
             clipRectsContext: RenderLayerWrapper.ClipRectsContext(

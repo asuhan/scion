@@ -203,7 +203,8 @@ private func traverseAncestorLayers(
       inContainingBlockChain = ancestorLayer!.renderer().canContainFixedPositionObjects()
     }
 
-    let isPaintOrderAncestor = CPtrToInt(ancestorLayer!.p) == CPtrToInt(nextPaintOrderParent?.p)
+    let isPaintOrderAncestor =
+      CPtrToInt(ancestorLayer!.layerId()) == CPtrToInt(nextPaintOrderParent?.layerId())
     if function(ancestorLayer!, inContainingBlockChain, isPaintOrderAncestor) == .Stop {
       return .Stop
     }
@@ -569,7 +570,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     let isPageScroll =
-      updateRoot == nil || CPtrToInt(updateRoot!.p) == CPtrToInt(rootRenderLayer().p)
+      updateRoot == nil
+      || CPtrToInt(updateRoot!.layerId()) == CPtrToInt(rootRenderLayer().layerId())
     let updateRoot = rootRenderLayer()
 
     if updateType == .OnScroll || updateType == .OnCompositedScroll {
@@ -726,14 +728,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       var parent: RenderLayerWrapper? = layer
       while parent != nil {
         let next = parent!.parent()
-        if CPtrToInt(next?.p) == CPtrToInt(compositingAncestor?.p) {
+        if CPtrToInt(next?.layerId()) == CPtrToInt(compositingAncestor?.layerId()) {
           computeClipRoot = parent
           break
         }
         parent = next
       }
 
-      if computeClipRoot == nil || CPtrToInt(computeClipRoot!.p) == CPtrToInt(layer.p) {
+      if computeClipRoot == nil
+        || CPtrToInt(computeClipRoot!.layerId()) == CPtrToInt(layer.layerId())
+      {
         return false
       }
     }
@@ -1292,7 +1296,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   func layerBecameComposited(_ layer: RenderLayerWrapper) {
     assert(isNativeImpl())
-    if CPtrToInt(layer.p) != CPtrToInt(m_renderView!.layer()?.p) {
+    if CPtrToInt(layer.layerId()) != CPtrToInt(m_renderView!.layer()?.layerId()) {
       contentLayersCount += 1
     }
   }
@@ -1301,7 +1305,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     assert(isNativeImpl())
     // TODO(asuhan): Inform the inspector that the given RenderLayer was destroyed.
 
-    if CPtrToInt(layer.p) != CPtrToInt(m_renderView!.layer()?.p) {
+    if CPtrToInt(layer.layerId()) != CPtrToInt(m_renderView!.layer()?.layerId()) {
       assert(contentLayersCount > 0)
       contentLayersCount -= 1
     }
@@ -1769,7 +1773,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       let candidateIndex = backingProviderCandidates.lastIndex(where: { provider in
         let providerLayer = provider.providerLayer!
 
-        if CPtrToInt(layer.p) == CPtrToInt(providerLayer.p) {
+        if CPtrToInt(layer.layerId()) == CPtrToInt(providerLayer.layerId()) {
           return false
         }
 
@@ -1830,7 +1834,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     func existingBackingProviderCandidateForLayer(_ layer: RenderLayerWrapper) -> Provider? {
       assert(layer.paintsIntoProvidedBacking())
       for candidate in backingProviderCandidates {
-        if CPtrToInt(layer.backingProviderLayer?.p) == CPtrToInt(candidate.providerLayer?.p) {
+        if CPtrToInt(layer.backingProviderLayer?.layerId())
+          == CPtrToInt(candidate.providerLayer?.layerId())
+        {
           return candidate
         }
       }
@@ -1857,10 +1863,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
       candidateLayer: RenderLayerWrapper, candidateAbsoluteBounds: LayoutRectWrapper,
       candidateStackingContext: RenderLayerWrapper, backingSharingSnapshot: BackingSharingSnapshot?
     ) {
-      assert(CPtrToInt(backingSharingStackingContext?.p) == CPtrToInt(candidateStackingContext.p))
+      assert(
+        CPtrToInt(backingSharingStackingContext?.layerId())
+          == CPtrToInt(candidateStackingContext.layerId()))
       assert(
         !backingProviderCandidates.contains(where: { candidate in
-          CPtrToInt(candidate.providerLayer?.p) == CPtrToInt(candidateLayer.p)
+          CPtrToInt(candidate.providerLayer?.layerId()) == CPtrToInt(candidateLayer.layerId())
         }))
 
       // Inserts candidateLayer into the provider list in z-order, using the state snapshot that
@@ -1892,7 +1900,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     ) -> Bool {
       assert(!backingProviderCandidates.isEmpty)
       if stackingContextAncestor == nil
-        || CPtrToInt(stackingContextAncestor!.p) != CPtrToInt(backingSharingStackingContext?.p)
+        || CPtrToInt(stackingContextAncestor!.layerId())
+          != CPtrToInt(backingSharingStackingContext?.layerId())
       {
         return false
       }
@@ -2611,10 +2620,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
 
     // Backing sharing is constrained to layers in the same stacking context.
-    if CPtrToInt(layer.p) == CPtrToInt(sharingState.backingSharingStackingContext?.p) {
+    if CPtrToInt(layer.layerId())
+      == CPtrToInt(sharingState.backingSharingStackingContext?.layerId())
+    {
       assert(
         !sharingState.backingProviderCandidates.contains(where: { candidate in
-          return CPtrToInt(candidate.providerLayer?.p) == CPtrToInt(layer.p)
+          return CPtrToInt(candidate.providerLayer?.layerId()) == CPtrToInt(layer.layerId())
         }))
       sharingState.endBackingSharingSequence(layer)
 
@@ -3329,14 +3340,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
         }
 
         if let layer = stackEntry.clipData.clippingLayer {
-          overflowScrollToLastContainedLayerMap[CPtrToInt(layer.p)] = clippedLayer
+          overflowScrollToLastContainedLayerMap[CPtrToInt(layer.layerId())] = clippedLayer
         }
       }
     }
 
     for overflowScrollingLayer in overflowScrollLayers {
       let lastContainedDescendant = overflowScrollToLastContainedLayerMap[
-        CPtrToInt(overflowScrollingLayer.p)]
+        CPtrToInt(overflowScrollingLayer.layerId())]
       if lastContainedDescendant == nil || !lastContainedDescendant!.isComposited() {
         continue
       }
@@ -4163,7 +4174,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
             ancestorLayer: RenderLayerWrapper, isContainingBlockChain: Bool,
             _ /* isPaintOrderAncestor */: Bool
           ) in
-          if CPtrToInt(ancestorLayer.p) == CPtrToInt(compositedAncestor.p) {
+          if CPtrToInt(ancestorLayer.layerId()) == CPtrToInt(compositedAncestor.layerId()) {
             return .Stop
           }
 

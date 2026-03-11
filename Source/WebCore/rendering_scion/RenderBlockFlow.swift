@@ -3757,8 +3757,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
           // far out as we can, to the outermost block that overlaps the float, stopping only
           // if we hit a self-painting layer boundary.
           if !floatingObject.hasAncestorWithOverflowClip()
-            && CPtrToInt(floatingObject.renderer!.enclosingFloatPaintingLayer()?.p)
-              == CPtrToInt(enclosingFloatPaintingLayer()?.p)
+            && CPtrToInt(floatingObject.renderer!.enclosingFloatPaintingLayer()?.layerId())
+              == CPtrToInt(enclosingFloatPaintingLayer()?.layerId())
           {
             floatingObject.setPaintsFloat(paintsFloat: false)
             shouldPaint = true
@@ -3779,8 +3779,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         if makeChildPaintOtherFloats && !floatingObject.paintsFloat()
           && !renderer.hasSelfPaintingLayer()
           && renderer.isDescendantOf(ancestor: child)
-          && CPtrToInt(renderer.enclosingFloatPaintingLayer()?.p)
-            == CPtrToInt(child.enclosingFloatPaintingLayer()?.p)
+          && CPtrToInt(renderer.enclosingFloatPaintingLayer()?.layerId())
+            == CPtrToInt(child.enclosingFloatPaintingLayer()?.layerId())
         {
           // The float is not overhanging from this block, so if it is a descendant of the child, the child should
           // paint it (the other case is that it is intruding into the child), unless it has its own layer or enclosing

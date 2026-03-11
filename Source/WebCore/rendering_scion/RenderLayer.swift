@@ -365,7 +365,7 @@ class RenderLayerWrapper {
     hasNotIsolatedBlendingDescendantsStatusDirty = false
     repaintRectsValid = false
     m_renderer = renderer
-    p = UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
+    p = nil
     isNative = true
 
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
@@ -481,7 +481,7 @@ class RenderLayerWrapper {
     assert(isNative)
     var ancestor: RenderLayerWrapper? = self
     while ancestor != nil {
-      if CPtrToInt(layer.p) == CPtrToInt(ancestor!.p) {
+      if CPtrToInt(layer.layerId()) == CPtrToInt(ancestor!.layerId()) {
         return true
       }
       ancestor = ancestor!.parent()
@@ -503,7 +503,7 @@ class RenderLayerWrapper {
     if let prevSibling = beforeChild?.previousSibling() ?? lastChild() {
       child.setPreviousSibling(prev: prevSibling)
       prevSibling.setNextSibling(next: child)
-      assert(CPtrToInt(prevSibling.p) != CPtrToInt(child.p))
+      assert(CPtrToInt(prevSibling.layerId()) != CPtrToInt(child.layerId()))
     } else {
       setFirstChild(child)
     }
@@ -511,7 +511,7 @@ class RenderLayerWrapper {
     if beforeChild != nil {
       beforeChild!.setPreviousSibling(prev: child)
       child.setNextSibling(next: beforeChild)
-      assert(CPtrToInt(beforeChild!.p) != CPtrToInt(child.p))
+      assert(CPtrToInt(beforeChild!.layerId()) != CPtrToInt(child.layerId()))
     } else {
       setLastChild(child)
     }
@@ -565,10 +565,10 @@ class RenderLayerWrapper {
       nextSibling.setPreviousSibling(prev: oldChild.previousSibling())
     }
 
-    if CPtrToInt(m_first?.p) == CPtrToInt(oldChild.p) {
+    if CPtrToInt(m_first?.layerId()) == CPtrToInt(oldChild.layerId()) {
       m_first = oldChild.nextSibling()
     }
-    if CPtrToInt(m_last?.p) == CPtrToInt(oldChild.p) {
+    if CPtrToInt(m_last?.layerId()) == CPtrToInt(oldChild.layerId()) {
       m_last = oldChild.previousSibling()
     }
 
@@ -614,7 +614,7 @@ class RenderLayerWrapper {
       guard let parentLayer = renderer().layerParent() else { return }
 
       let beforeChild =
-        CPtrToInt(parentLayer.reflectionLayer()?.p) != CPtrToInt(p)
+        CPtrToInt(parentLayer.reflectionLayer()?.layerId()) != CPtrToInt(layerId())
         ? renderer().layerNextSibling(parentLayer) : nil
       parentLayer.addChild(self, beforeChild: beforeChild)
     }
@@ -692,7 +692,9 @@ class RenderLayerWrapper {
 
     assert(layer == nil || layer!.isStackingContext())
     if establishesTopLayer() {
-      assert(layer == nil || CPtrToInt(layer!.p) == CPtrToInt(renderer().view().layer()!.p))
+      assert(
+        layer == nil
+          || CPtrToInt(layer!.layerId()) == CPtrToInt(renderer().view().layer()!.layerId()))
     }
     return layer
   }
@@ -1241,7 +1243,7 @@ class RenderLayerWrapper {
 
   func isReflectionLayer(layer: RenderLayerWrapper) -> Bool {
     if let reflection = reflection {
-      return CPtrToInt(layer.p) == CPtrToInt(reflection.layer()?.p)
+      return CPtrToInt(layer.layerId()) == CPtrToInt(reflection.layer()?.layerId())
     }
     return false
   }
@@ -1355,7 +1357,7 @@ class RenderLayerWrapper {
 
     // If we are the enclosing pagination layer, then we can't be composited or we'd have passed the
     // previous check.
-    if CPtrToInt(m_enclosingPaginationLayer?.p) == CPtrToInt(p) {
+    if CPtrToInt(m_enclosingPaginationLayer?.layerId()) == CPtrToInt(layerId()) {
       return false
     }
 
@@ -1600,18 +1602,18 @@ class RenderLayerWrapper {
   func ancestorLayerIsInContainingBlockChain(
     ancestor: RenderLayerWrapper, checkLimit: RenderLayerWrapper? = nil
   ) -> Bool {
-    if CPtrToInt(ancestor.p) == CPtrToInt(p) {
+    if CPtrToInt(ancestor.layerId()) == CPtrToInt(layerId()) {
       return true
     }
 
     var currentBlock = renderer().containingBlock()
     while currentBlock != nil && !(currentBlock! is RenderViewWrapper) {
       let currLayer = currentBlock!.layer()
-      if CPtrToInt(currLayer?.p) == CPtrToInt(ancestor.p) {
+      if CPtrToInt(currLayer?.layerId()) == CPtrToInt(ancestor.layerId()) {
         return true
       }
 
-      if currLayer != nil && CPtrToInt(currLayer?.p) == CPtrToInt(checkLimit?.p) {
+      if currLayer != nil && CPtrToInt(currLayer?.layerId()) == CPtrToInt(checkLimit?.layerId()) {
         return false
       }
 
@@ -1633,7 +1635,9 @@ class RenderLayerWrapper {
     }
 
     if establishesTopLayer() {
-      assert(curr == nil || CPtrToInt(curr!.p) == CPtrToInt(renderer().view().layer()!.p))
+      assert(
+        curr == nil || CPtrToInt(curr!.layerId()) == CPtrToInt(renderer().view().layer()!.layerId())
+      )
     }
     return curr
   }
@@ -1831,7 +1835,7 @@ class RenderLayerWrapper {
 
   func canUseOffsetFromAncestor(ancestor: RenderLayerWrapper) -> Bool {
     var layer: RenderLayerWrapper? = self
-    while layer != nil && CPtrToInt(layer?.p) != CPtrToInt(ancestor.p) {
+    while layer != nil && CPtrToInt(layer?.layerId()) != CPtrToInt(ancestor.layerId()) {
       if !layer!.canUseOffsetFromAncestor() {
         return false
       }
@@ -1851,7 +1855,7 @@ class RenderLayerWrapper {
     location: inout LayoutPointWrapper,
     adjustForColumns: RenderLayerWrapper.ColumnOffsetAdjustment
   ) -> RenderLayerWrapper? {
-    assert(CPtrToInt(ancestorLayer?.p) != CPtrToInt(layer.p))
+    assert(CPtrToInt(ancestorLayer?.layerId()) != CPtrToInt(layer.layerId()))
 
     let renderer = layer.renderer()
     let position = renderer.style().position()
@@ -1863,7 +1867,7 @@ class RenderLayerWrapper {
     // positioned in a completely different place in the viewport (RenderView).
     if position == .Fixed
       && (ancestorLayer == nil
-        || CPtrToInt(ancestorLayer?.p) == CPtrToInt(renderer.view().layer()?.p))
+        || CPtrToInt(ancestorLayer?.layerId()) == CPtrToInt(renderer.view().layer()?.layerId()))
     {
       // If the fixed layer's container is the root, just add in the offset of the view. We can obtain this by calling
       // localToAbsolute() on the RenderView.
@@ -1885,7 +1889,7 @@ class RenderLayerWrapper {
       var foundAncestor = false
       var currLayer: RenderLayerWrapper? = layer.parent()
       while currLayer != nil {
-        if CPtrToInt(currLayer?.p) == CPtrToInt(ancestorLayer?.p) {
+        if CPtrToInt(currLayer?.layerId()) == CPtrToInt(ancestorLayer?.layerId()) {
           foundAncestor = true
         }
 
@@ -1906,7 +1910,7 @@ class RenderLayerWrapper {
 
       assert(fixedPositionContainerLayer != nil)  // We should have hit the RenderView's layer at least.
 
-      if CPtrToInt(fixedPositionContainerLayer!.p) != CPtrToInt(ancestorLayer?.p) {
+      if CPtrToInt(fixedPositionContainerLayer!.layerId()) != CPtrToInt(ancestorLayer?.layerId()) {
         let fixedContainerCoords = layer.offsetFromAncestor(
           ancestorLayer: fixedPositionContainerLayer)
         let ancestorCoords =
@@ -1918,7 +1922,7 @@ class RenderLayerWrapper {
       }
 
       assert(ancestorLayer != nil)
-      if CPtrToInt(ancestorLayer!.p) == CPtrToInt(renderer.view().layer()?.p) {
+      if CPtrToInt(ancestorLayer!.layerId()) == CPtrToInt(renderer.view().layer()?.layerId()) {
         // Add location in flow thread coordinates.
         location.moveBy(offset: layer.location())
 
@@ -1945,7 +1949,7 @@ class RenderLayerWrapper {
           break
         }
 
-        if CPtrToInt(parentLayer?.p) == CPtrToInt(ancestorLayer?.p) {
+        if CPtrToInt(parentLayer?.layerId()) == CPtrToInt(ancestorLayer?.layerId()) {
           foundAncestorFirst = true
           break
         }
@@ -1956,7 +1960,7 @@ class RenderLayerWrapper {
       // We should not reach RenderView layer past the RenderFragmentedFlow layer for any
       // children of the RenderFragmentedFlow.
       if renderer.enclosingFragmentedFlow() != nil {
-        assert(CPtrToInt(parentLayer?.p) != CPtrToInt(renderer.view().layer()?.p))
+        assert(CPtrToInt(parentLayer?.layerId()) != CPtrToInt(renderer.view().layer()?.layerId()))
       }
 
       if foundAncestorFirst {
@@ -1979,7 +1983,9 @@ class RenderLayerWrapper {
     location.moveBy(offset: layer.location())
 
     if adjustForColumns == .AdjustForColumns {
-      if let parentLayer = layer.parent(), CPtrToInt(parentLayer.p) != CPtrToInt(ancestorLayer?.p) {
+      if let parentLayer = layer.parent(),
+        CPtrToInt(parentLayer.layerId()) != CPtrToInt(ancestorLayer?.layerId())
+      {
         if let multiColumnFlow = parentLayer.renderer() as? RenderMultiColumnFlowWrapper {
           if let fragment = multiColumnFlow.physicalTranslationFromFlowToFragment(
             physicalPoint: location)
@@ -2000,13 +2006,14 @@ class RenderLayerWrapper {
   )
     -> LayoutPointWrapper
   {
-    if CPtrToInt(ancestorLayer?.p) == CPtrToInt(p) {
+    if CPtrToInt(ancestorLayer?.layerId()) == CPtrToInt(layerId()) {
       return location
     }
 
     var currLayer: RenderLayerWrapper? = self
     var locationInLayerCoords = location
-    while currLayer != nil && CPtrToInt(currLayer?.p) != CPtrToInt(ancestorLayer?.p) {
+    while currLayer != nil && CPtrToInt(currLayer?.layerId()) != CPtrToInt(ancestorLayer?.layerId())
+    {
       currLayer = RenderLayerWrapper.accumulateOffsetTowardsAncestor(
         layer: currLayer!, ancestorLayer: ancestorLayer, location: &locationInLayerCoords,
         adjustForColumns: adjustForColumns)
@@ -2197,7 +2204,7 @@ class RenderLayerWrapper {
     foregroundRect: inout ClipRect,
     offsetFromRoot: LayoutSizeWrapper
   ) {
-    if CPtrToInt(clipRectsContext.rootLayer?.p) != CPtrToInt(p) && parent() != nil {
+    if CPtrToInt(clipRectsContext.rootLayer?.layerId()) != CPtrToInt(layerId()) && parent() != nil {
       backgroundRect = backgroundClipRect(clipRectsContext: clipRectsContext)
       backgroundRect.intersect(other: paintDirtyRect)
     } else {
@@ -2215,7 +2222,7 @@ class RenderLayerWrapper {
     if renderer().hasClipOrNonVisibleOverflow() {
       // This layer establishes a clip of some kind.
       if renderer().hasNonVisibleOverflow() {
-        if CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)
+        if CPtrToInt(layerId()) != CPtrToInt(clipRectsContext.rootLayer?.layerId())
           || clipRectsContext.respectOverflowClip()
         {
           let overflowClipRect = rendererOverflowClipRect(
@@ -2246,7 +2253,7 @@ class RenderLayerWrapper {
           renderBox()!.flipForWritingMode(rect: &layerBoundsWithVisualOverflow)  // Layers are in physical coordinates, so the overflow has to be flipped.
         }
         layerBoundsWithVisualOverflow.move(size: offsetFromRootLocal)
-        if CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)
+        if CPtrToInt(layerId()) != CPtrToInt(clipRectsContext.rootLayer?.layerId())
           || clipRectsContext.respectOverflowClip()
         {
           backgroundRect.intersect(other: layerBoundsWithVisualOverflow)
@@ -2256,7 +2263,7 @@ class RenderLayerWrapper {
         var bounds = rendererBorderBoxRectInFragment(fragment: nil)
 
         bounds.move(size: offsetFromRootLocal)
-        if CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)
+        if CPtrToInt(layerId()) != CPtrToInt(clipRectsContext.rootLayer?.layerId())
           || clipRectsContext.respectOverflowClip()
         {
           backgroundRect.intersect(other: bounds)
@@ -2477,10 +2484,11 @@ class RenderLayerWrapper {
   }
 
   func clipCrossesPaintingBoundary() -> Bool {
-    return CPtrToInt(parent()!.enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.p)
-      != CPtrToInt(enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.p)
-      || CPtrToInt(parent()!.enclosingCompositingLayerForRepaint().layer?.p)
-        != CPtrToInt(enclosingCompositingLayerForRepaint().layer?.p)
+    return CPtrToInt(
+      parent()!.enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.layerId())
+      != CPtrToInt(enclosingPaginationLayer(mode: .IncludeCompositedPaginatedLayers)?.layerId())
+      || CPtrToInt(parent()!.enclosingCompositingLayerForRepaint().layer?.layerId())
+        != CPtrToInt(enclosingCompositingLayerForRepaint().layer?.layerId())
   }
 
   // Pass offsetFromRoot if known.
@@ -2734,7 +2742,8 @@ class RenderLayerWrapper {
     }
 
     // FIXME: This could be improved to do a check like hasVisibleNonCompositingDescendantLayers() (bug 92580).
-    if flags.contains(.ExcludeHiddenDescendants) && CPtrToInt(p) != CPtrToInt(ancestorLayer?.p)
+    if flags.contains(.ExcludeHiddenDescendants)
+      && CPtrToInt(layerId()) != CPtrToInt(ancestorLayer?.layerId())
       && !hasVisibleContent && !hasVisibleDescendant
     {
       return LayoutRectWrapper()
@@ -2852,22 +2861,22 @@ class RenderLayerWrapper {
 
   func staticInlinePosition() -> LayoutUnit {
     assert(!isNative)
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticInlinePosition(layerId()))
   }
 
   func staticBlockPosition() -> LayoutUnit {
     assert(!isNative)
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticBlockPosition(p))
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayer_staticBlockPosition(layerId()))
   }
 
   func setStaticInlinePosition(position: LayoutUnit) {
     assert(!isNative)
-    wk_interop.RenderLayer_setStaticInlinePosition(p, position.rawValue())
+    wk_interop.RenderLayer_setStaticInlinePosition(layerId(), position.rawValue())
   }
 
   func setStaticBlockPosition(position: LayoutUnit) {
     assert(!isNative)
-    wk_interop.RenderLayer_setStaticBlockPosition(p, position.rawValue())
+    wk_interop.RenderLayer_setStaticBlockPosition(layerId(), position.rawValue())
   }
 
   func isTransformed() -> Bool { return renderer().isTransformed() }
@@ -3326,7 +3335,7 @@ class RenderLayerWrapper {
   }
 
   func setIsHiddenByOverflowTruncation(isHidden: Bool) {
-    wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(p, isHidden)
+    wk_interop.RenderLayer_setIsHiddenByOverflowTruncation(layerId(), isHidden)
   }
 
   func paintSVGResourceLayer(
@@ -3700,7 +3709,7 @@ class RenderLayerWrapper {
     // For transformed layers, the root layer was shifted to be us, so there is no need to
     // examine the parent. We want to cache clip rects with us as the root.
     let parentClipRects =
-      (CPtrToInt(clipRectsContext.rootLayer?.p) != CPtrToInt(p) && parent() != nil)
+      (CPtrToInt(clipRectsContext.rootLayer?.layerId()) != CPtrToInt(layerId()) && parent() != nil)
       ? self.parentClipRects(clipRectsContext: clipRectsContext) : nil
 
     var clipRects = ClipRects.create()
@@ -3734,7 +3743,9 @@ class RenderLayerWrapper {
     // examine the parent. We want to cache clip rects with us as the root.
 
     // Ensure that our parent's clip has been calculated so that we can examine the values.
-    if let parentLayer = CPtrToInt(clipRectsContext.rootLayer?.p) != CPtrToInt(p) ? parent() : nil {
+    if let parentLayer = CPtrToInt(clipRectsContext.rootLayer?.layerId()) != CPtrToInt(layerId())
+      ? parent() : nil
+    {
       if useCached, let parentClipRects = parentLayer.clipRects(context: clipRectsContext) {
         clipRects = parentClipRects
       } else {
@@ -3766,7 +3777,7 @@ class RenderLayerWrapper {
 
     if (renderer().hasNonVisibleOverflow()
       && (clipRectsContext.respectOverflowClip()
-        || CPtrToInt(p) != CPtrToInt(clipRectsContext.rootLayer?.p)))
+        || CPtrToInt(layerId()) != CPtrToInt(clipRectsContext.rootLayer?.layerId())))
       || renderer().hasClip()
     {
       // This layer establishes a clip of some kind.
@@ -3920,7 +3931,7 @@ class RenderLayerWrapper {
     var foregroundRect = ClipRect()
     let clipRectType: ClipRectsType =
       (m_enclosingPaginationLayer == nil
-        || CPtrToInt(m_enclosingPaginationLayer!.p) == CPtrToInt(ancestor?.p))
+        || CPtrToInt(m_enclosingPaginationLayer!.layerId()) == CPtrToInt(ancestor?.layerId()))
         && !temporaryClipRects
       ? .PaintingClipRects : .TemporaryClipRects
     let clipRectsContext = ClipRectsContext(inRootLayer: ancestor, inClipRectsType: clipRectType)
@@ -3986,7 +3997,7 @@ class RenderLayerWrapper {
           }
         }
 
-        if CPtrToInt(layer!.p) == CPtrToInt(paintingInfo.rootLayer?.p) {
+        if CPtrToInt(layer!.layerId()) == CPtrToInt(paintingInfo.rootLayer?.layerId()) {
           break
         }
 
@@ -4023,7 +4034,9 @@ class RenderLayerWrapper {
     // If we don't have an enclosing layer, or if the root layer is the same as the enclosing layer,
     // then just return the enclosing pagination layer (it will be 0 in the former case and the rootLayer in the latter case).
     let paginationLayer = enclosingPaginationLayer(mode: mode)
-    if paginationLayer == nil || CPtrToInt(rootLayer?.p) == CPtrToInt(paginationLayer!.p) {
+    if paginationLayer == nil
+      || CPtrToInt(rootLayer?.layerId()) == CPtrToInt(paginationLayer!.layerId())
+    {
       return paginationLayer
     }
 
@@ -4032,10 +4045,10 @@ class RenderLayerWrapper {
     // we can return it.
     var layer: RenderLayerWrapper? = self
     while layer != nil {
-      if CPtrToInt(layer!.p) == CPtrToInt(rootLayer?.p) {
+      if CPtrToInt(layer!.layerId()) == CPtrToInt(rootLayer?.layerId()) {
         return nil
       }
-      if CPtrToInt(layer!.p) == CPtrToInt(paginationLayer?.p) {
+      if CPtrToInt(layer!.layerId()) == CPtrToInt(paginationLayer?.layerId()) {
         return paginationLayer
       }
       layer = layer!.parent()
@@ -4499,7 +4512,9 @@ class RenderLayerWrapper {
       // If we have a transparency layer enclosing us and we are the root of a transform, then we need to establish the transparency
       // layer from the parent now, assuming there is a parent
       if paintFlags.contains(.HaveTransparency) {
-        if CPtrToInt(p) != CPtrToInt(paintingInfo.rootLayer?.p), let parent = parent() {
+        if CPtrToInt(layerId()) != CPtrToInt(paintingInfo.rootLayer?.layerId()),
+          let parent = parent()
+        {
           parent.beginTransparencyLayers(
             context: context, paintingInfo: paintingInfo, dirtyRect: paintingInfo.paintDirtyRect)
         } else {
@@ -5074,7 +5089,7 @@ class RenderLayerWrapper {
   ) {
     for fragment in fragments {
       fragment.shouldPaintContent = shouldPaintContent
-      if CPtrToInt(p) != CPtrToInt(localPaintingInfo.rootLayer?.p)
+      if CPtrToInt(layerId()) != CPtrToInt(localPaintingInfo.rootLayer?.layerId())
         || !localPaintFlags.contains(.PaintingOverflowContents)
       {
         let newOffsetFromRoot = offsetFromRoot + fragment.paginationOffset
@@ -5438,7 +5453,7 @@ class RenderLayerWrapper {
       var clipRect = fragment.backgroundRect.rect
 
       // Now compute the clips within a given fragment
-      if CPtrToInt(parent()?.p) != CPtrToInt(paginatedLayer.p) {
+      if CPtrToInt(parent()?.layerId()) != CPtrToInt(paginatedLayer.layerId()) {
         offsetOfPaginationLayerFromRoot = toLayoutSize(
           point: paginatedLayer.convertToLayerCoords(
             ancestorLayer: paintingInfo.rootLayer,
@@ -5512,7 +5527,8 @@ class RenderLayerWrapper {
   }
 
   private func transparentPaintingAncestor(info: LayerPaintingInfo) -> RenderLayerWrapper? {
-    if CPtrToInt(p) == CPtrToInt(info.rootLayer?.p) || isComposited() || paintsIntoProvidedBacking()
+    if CPtrToInt(layerId()) == CPtrToInt(info.rootLayer?.layerId()) || isComposited()
+      || paintsIntoProvidedBacking()
     {
       return nil
     }
@@ -5526,7 +5542,7 @@ class RenderLayerWrapper {
           return ancestor
         }
       }
-      if CPtrToInt(ancestor?.p) == CPtrToInt(info.rootLayer?.p) {
+      if CPtrToInt(ancestor?.layerId()) == CPtrToInt(info.rootLayer?.layerId()) {
         return nil
       }
       ancestor = ancestor!.parent()
@@ -5581,7 +5597,7 @@ class RenderLayerWrapper {
     // paintDirtyRect, and that should cut down on the amount we have to paint.  Still it
     // would be better to respect clips.
 
-    if CPtrToInt(rootLayer?.p) == CPtrToInt(layer.p)
+    if CPtrToInt(rootLayer?.layerId()) == CPtrToInt(layer.layerId())
       && ((transparencyBehavior == .PaintingTransparencyClipBox
         && layer.paintsWithTransform(paintBehavior: paintBehavior))
         || (transparencyBehavior == .HitTestingTransparencyClipBox && layer.isTransformed()))
@@ -6171,7 +6187,11 @@ class RenderLayerWrapper {
     }
   }
 
-  var p = UnsafeMutableRawPointer(bitPattern: 0)
+  func layerId() -> UnsafeMutableRawPointer {
+    return p ?? UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
+  }
+
+  private let p: UnsafeMutableRawPointer?
   private var isNative = false
   // Native fields below.
 
