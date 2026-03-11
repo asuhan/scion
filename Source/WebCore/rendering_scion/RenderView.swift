@@ -528,7 +528,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   func compositor() -> RenderLayerCompositorWrapper {
     if m_compositor == nil {
       print("TODO: switch to Scion compositor")
-      m_compositor = RenderLayerCompositorWrapper(RenderLayerCompositor_create(wk))
+      m_compositor = RenderLayerCompositorWrapper(self)
     }
 
     return m_compositor!

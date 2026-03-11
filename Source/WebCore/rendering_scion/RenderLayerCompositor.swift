@@ -485,14 +485,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     var overflowScrollLayers: ArraySlice<RenderLayerWrapper>
   }
 
-  init(renderView: RenderViewWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  // TODO(asuhan): remove
-  init(_ p: UnsafeMutableRawPointer) {
-    pInterop = p
+  init(_ renderView: RenderViewWrapper) {
+    assert(renderView.isNativeImpl())
+    pInterop = wk_interop.RenderLayerCompositor_create(renderView.getWk())
     self.m_renderView = nil
     self.m_updateCompositingLayersTimer = Timer()
     self.scrollingNodeToLayerMap = [:]
