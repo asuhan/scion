@@ -501,11 +501,15 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Return true if this RenderView is in "compositing mode" (i.e. has one or more
   // composited RenderLayers)
-  func usesCompositing() -> Bool { return m_compositing }
+  func usesCompositing() -> Bool {
+    assert(isNativeImpl())
+    return m_compositing
+  }
 
   // This will make a compositing layer at the root automatically, and hook up to
   // the native view/window system.
   func enableCompositingMode(enable: Bool = true) {
+    assert(isNativeImpl())
     if enable != m_compositing {
       m_compositing = enable
 
@@ -532,6 +536,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func updateCompositingLayers(
     updateType: CompositingUpdateType, updateRoot: RenderLayerWrapper? = nil
   ) -> Bool {
+    assert(isNativeImpl())
     // TODO(asuhan): add logging and tree debugging
     let _ = TraceScope(.CompositingUpdateStart, .CompositingUpdateEnd)
 
@@ -700,7 +705,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func clippedByAncestor(_ layer: RenderLayerWrapper, _ compositingAncestor: RenderLayerWrapper?)
     -> Bool
   {
-    assert(p == nil)
+    assert(isNativeImpl())
     assert(layer.isComposited())
     if compositingAncestor == nil {
       return false
@@ -810,6 +815,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // If an element has composited negative z-index children, those children render in front of the
   // layer background, so we need an extra 'contents' layer for the foreground of the layer object.
   func needsContentsCompositingLayer(_ layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     for layer in layer.negativeZOrderLayers() {
       if layer.isComposited() || layer.hasCompositingDescendant {
         return true
@@ -820,6 +826,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func fixedLayerIntersectsViewport(layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     assert(layer.renderer().isFixedPositioned())
 
     // Fixed position elements that are invisible in the current view don't get their own layer.
@@ -847,6 +854,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func supportsFixedRootBackgroundCompositing() -> Bool {
+    assert(isNativeImpl())
     if let renderViewBacking = m_renderView!.layer()!.backing {
       return renderViewBacking.isFrameLayerWithTiledBacking
     }
@@ -859,6 +867,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func fixedRootBackgroundLayer() -> GraphicsLayer? {
+    assert(isNativeImpl())
     // Get the fixed root background from the RenderView layer's backing.
     let viewLayer = m_renderView!.layer()
     if viewLayer == nil {
@@ -875,6 +884,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // We can't rely on getting layerStyleChanged() for a style change that affects the root background, because the style change may
   // be on the body which has no RenderLayer.
   func rootOrBodyStyleChanged(renderer: RenderElementWrapper, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     if !usesCompositing() {
       return
     }
@@ -908,6 +918,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Called after the view transparency, or the document or base background color change.
   func rootBackgroundColorOrTransparencyChanged() {
+    assert(isNativeImpl())
     if !usesCompositing() {
       return
     }
@@ -940,6 +951,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Repaint the appropriate layers when the given RenderLayer starts or stops being composited.
   func repaintOnCompositingChange(layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     // If the renderer is not attached yet, no need to repaint.
     if CPtrToInt(layer.renderer().id()) != CPtrToInt(m_renderView!.id())
       && layer.renderer().parent() == nil
@@ -963,6 +975,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // This method assumes that layout is up-to-date, unlike repaintOnCompositingChange().
   func repaintInCompositedAncestor(layer: RenderLayerWrapper, rect: LayoutRectWrapper) {
+    assert(isNativeImpl())
     let compositedAncestor = layer.enclosingCompositingLayerForRepaint(includeSelf: .ExcludeSelf)
       .layer
     if compositedAncestor == nil {
@@ -983,6 +996,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Notify us that a layer has been removed
   func layerWillBeRemoved(parent: RenderLayerWrapper, child: RenderLayerWrapper) {
+    assert(isNativeImpl())
     if parent.renderer().renderTreeBeingDestroyed() {
       return
     }
@@ -1004,6 +1018,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func layerStyleChanged(
     diff: StyleDifference, layer: RenderLayerWrapper, oldStyle: RenderStyleWrapper?
   ) {
+    assert(isNativeImpl())
     if diff == .Equal {
       return
     }
@@ -1140,6 +1155,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func layerGainedCompositedScrollableOverflow(layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     var queryData = RequiresCompositingData()
     queryData.layoutUpToDate = .No
 
@@ -1172,6 +1188,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Repaint all composited layers.
   func repaintCompositedLayers() {
+    assert(isNativeImpl())
     recursiveRepaintLayer(rootRenderLayer())
   }
 
@@ -1186,20 +1203,34 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func rootRenderLayer() -> RenderLayerWrapper {
+    assert(isNativeImpl())
     return m_renderView!.layer()!
   }
 
   func rootGraphicsLayer() -> GraphicsLayer? {
+    assert(isNativeImpl())
     return m_overflowControlsHostLayer ?? m_rootContentsLayer
   }
 
-  private func scrollContainerLayer() -> GraphicsLayer? { return m_scrollContainerLayer }
-  private func scrolledContentsLayer() -> GraphicsLayer? { return m_scrolledContentsLayer }
-  private func clipLayer() -> GraphicsLayer? { return m_clipLayer }
-  private func rootContentsLayer() -> GraphicsLayer? { return m_rootContentsLayer }
+  private func scrollContainerLayer() -> GraphicsLayer? {
+    assert(isNativeImpl())
+    return m_scrollContainerLayer
+  }
+  private func scrolledContentsLayer() -> GraphicsLayer? {
+    assert(isNativeImpl())
+    return m_scrolledContentsLayer
+  }
+  private func clipLayer() -> GraphicsLayer? {
+    assert(isNativeImpl())
+    return m_clipLayer
+  }
+  private func rootContentsLayer() -> GraphicsLayer? {
+    assert(isNativeImpl())
+    return m_rootContentsLayer
+  }
 
   func layerForClipping() -> GraphicsLayer? {
-    assert(p == nil)
+    assert(isNativeImpl())
     return m_clipLayer ?? m_scrollContainerLayer
   }
 
@@ -1209,13 +1240,18 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     case RootLayerAttachedViaEnclosingFrame
   }
 
-  func rootLayerAttachment() -> RootLayerAttachment { return m_rootLayerAttachment }
+  func rootLayerAttachment() -> RootLayerAttachment {
+    assert(isNativeImpl())
+    return m_rootLayerAttachment
+  }
 
   func updateRootLayerAttachment() {
+    assert(isNativeImpl())
     ensureRootLayer()
   }
 
   private func updateRootLayerPosition() {
+    assert(isNativeImpl())
     if m_rootContentsLayer != nil {
       m_rootContentsLayer!.setSize(size: FloatSize(size: m_renderView!.frameView().contentsSize()))
       m_rootContentsLayer!.setPosition(p: m_renderView!.frameView().positionForRootContentLayer())
@@ -1231,6 +1267,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func invalidateEventRegionForAllFrames() {
+    assert(isNativeImpl())
     var frame: FrameWrapper? = page().mainFrame()
     while frame != nil {
       guard let localFrame = frame as? LocalFrameWrapper else {
@@ -1245,6 +1282,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func invalidateEventRegionForAllLayers() {
+    assert(isNativeImpl())
     applyToCompositedLayerIncludingDescendants(
       m_renderView!.layer()!,
       { (layer: RenderLayerWrapper) in
@@ -1253,12 +1291,14 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func layerBecameComposited(_ layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     if CPtrToInt(layer.p) != CPtrToInt(m_renderView!.layer()?.p) {
       contentLayersCount += 1
     }
   }
 
   func layerBecameNonComposited(layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     // TODO(asuhan): Inform the inspector that the given RenderLayer was destroyed.
 
     if CPtrToInt(layer.p) != CPtrToInt(m_renderView!.layer()?.p) {
@@ -1303,6 +1343,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   func attachWidgetContentLayersIfNecessary(_ renderer: RenderWidgetWrapper)
     -> WidgetLayerAttachment
   {
+    assert(isNativeImpl())
     let layer = renderer.layer()!
     if !layer.isComposited() {
       return WidgetLayerAttachment(
@@ -1408,6 +1449,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func collectViewTransitionNewContentLayers(
     _ layer: RenderLayerWrapper, _ childList: inout ArraySlice<GraphicsLayer>
   ) {
+    assert(isNativeImpl())
     if layer.renderer().style().pseudoElementType() != .ViewTransitionNew
       || !layer.hasVisibleContent
     {
@@ -1452,7 +1494,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Update the geometry of the layers used for clipping and scrolling in frames.
   func frameViewDidChangeLocation(_ contentsOffset: IntPoint) {
-    assert(p == nil)
+    assert(isNativeImpl())
     m_overflowControlsHostLayer?.setPosition(p: FloatPoint(p: contentsOffset))
   }
 
@@ -1462,6 +1504,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func rootLayerConfigurationChanged() {
+    assert(isNativeImpl())
     if let renderViewBacking = m_renderView!.layer()!.backing,
       renderViewBacking.isFrameLayerWithTiledBacking
     {
@@ -1470,9 +1513,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     }
   }
 
-  override func pageScaleFactor() -> Float32 { return page().pageScaleFactor() }
+  override func pageScaleFactor() -> Float32 {
+    assert(isNativeImpl())
+    return page().pageScaleFactor()
+  }
 
   func layerTiledBackingUsageChanged(graphicsLayer: GraphicsLayer?, usingTiledBacking: Bool) {
+    assert(isNativeImpl())
     if usingTiledBacking {
       m_layersWithTiledBackingCount += 1
       graphicsLayer!.tiledBacking()!.setIsInWindow(isInWindow: page().isInWindow())
@@ -1484,6 +1531,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // FIXME: make the coordinated/async terminology consistent.
   func isViewportConstrainedFixedOrStickyLayer(_ layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     if layer.renderer().isStickilyPositioned() {
       return isAsyncScrollableStickyLayer(layer: layer)
     }
@@ -1509,6 +1557,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func useCoordinatedScrollingForLayer(_ layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     if layer.isRenderViewLayer && hasCoordinatedScrolling() {
       return true
     }
@@ -1523,6 +1572,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeCoordinatedPositioningForLayer(
     _ layer: RenderLayerWrapper, compositedAncestor: RenderLayerWrapper?
   ) -> ScrollPositioningBehavior {
+    assert(isNativeImpl())
     if layer.isRenderViewLayer {
       return .None
     }
@@ -1548,6 +1598,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isLayerForIFrameWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     guard let renderWidget = layer.renderer() as? RenderWidgetWrapper else {
       return false
     }
@@ -1572,10 +1623,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isLayerForPluginWithScrollCoordinatedContents(_ layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     return (layer.renderer() as? RenderEmbeddedObjectWrapper)?.usesAsyncScrolling() ?? false
   }
 
   func removeFromScrollCoordinatedLayers(layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     detachScrollCoordinatedLayer(layer: layer, roles: allScrollCoordinationRoles)
   }
 
@@ -1592,15 +1645,18 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func viewHasTransparentBackground() -> Bool {
+    assert(isNativeImpl())
     var dummy: ColorWrapper? = nil
     return viewHasTransparentBackgroundHelper(&dummy)
   }
 
   func viewHasTransparentBackground(_ backgroundColor: inout ColorWrapper?) -> Bool {
+    assert(isNativeImpl())
     return viewHasTransparentBackgroundHelper(&backgroundColor)
   }
 
   func viewHasTransparentBackgroundHelper(_ backgroundColor: inout ColorWrapper?) -> Bool {
+    assert(isNativeImpl())
     if m_renderView!.frameView().isTransparent() {
       if backgroundColor != nil {
         backgroundColor = ColorWrapper()  // Return an invalid color.
@@ -1629,6 +1685,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Returns true if the policy changed.
   private func updateCompositingPolicy() -> Bool {
+    assert(isNativeImpl())
     if !usesCompositing() {
       return false
     }
@@ -1666,6 +1723,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func canUpdateCompositingPolicy() -> Bool {
+    assert(isNativeImpl())
     return m_compositingPolicyHysteresis.state() == .Stopped
   }
 
@@ -1924,6 +1982,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Copy the accelerated compositing related flags from Settings
   private func cacheAcceleratedCompositingFlags() {
+    assert(isNativeImpl())
     let settings = m_renderView!.settings()
     var hasAcceleratedCompositing = settings.acceleratedCompositingEnabled()
 
@@ -1972,6 +2031,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func cacheAcceleratedCompositingFlagsAfterLayout() {
+    assert(isNativeImpl())
     cacheAcceleratedCompositingFlags()
 
     if isRootFrameCompositor() {
@@ -1994,6 +2054,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   )
     -> Bool
   {
+    assert(isNativeImpl())
     if !canBeComposited(layer) {
       return false
     }
@@ -2012,6 +2073,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   )
     -> Bool
   {
+    assert(isNativeImpl())
     let renderer = rendererForCompositingTests(layer: layer)
 
     if renderer.layer() == nil {
@@ -2042,6 +2104,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Whether the layer could ever be composited.
   private func canBeComposited(_ layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     if m_hasAcceleratedCompositing && layer.isSelfPaintingLayer {
       if layer.renderer().isSkippedContent() {
         return false
@@ -2073,6 +2136,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, queryData: inout RequiresCompositingData,
     backingSharingState: BackingSharingState? = nil, backingRequired: BackingRequired = .Unknown
   ) -> Bool {
+    assert(isNativeImpl())
     var layerChanged = false
     var backingRequired = backingRequired
     if backingRequired == .Unknown {
@@ -2189,6 +2253,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
     _ queryData: inout RequiresCompositingData, _ backingSharingState: BackingSharingState
   ) -> Bool {
+    assert(isNativeImpl())
     var layerChanged = updateBacking(
       layer: layer, queryData: &queryData, backingSharingState: backingSharingState)
 
@@ -2204,6 +2269,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func applyToCompositedLayerIncludingDescendants(
     _ layer: RenderLayerWrapper, _ function: (RenderLayerWrapper) -> Void
   ) {
+    assert(isNativeImpl())
     if layer.isComposited() {
       function(layer)
     }
@@ -2217,11 +2283,13 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func repaintTargetsSharedBacking(
     layer: RenderLayerWrapper, backingSharingState: BackingSharingState?
   ) -> Bool {
+    assert(isNativeImpl())
     return backingSharingState != nil
       && layerRepaintTargetsBackingSharingLayer(layer: layer, sharingState: backingSharingState!)
   }
 
   private func repaintLayer(layer: RenderLayerWrapper, backingSharingState: BackingSharingState?) {
+    assert(isNativeImpl())
     if repaintTargetsSharedBacking(layer: layer, backingSharingState: backingSharingState) {
       print(
         "Layer \(layer)  needs to repaint into potential backing-sharing layer, postponing repaint")
@@ -2233,6 +2301,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Repaint this and its child layers.
   private func recursiveRepaintLayer(_ layer: RenderLayerWrapper) {
+    assert(isNativeImpl())
     layer.updateLayerListsIfNeeded()
 
     // FIXME: This method does not work correctly with transforms.
@@ -2260,6 +2329,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func layerRepaintTargetsBackingSharingLayer(
     layer: RenderLayerWrapper, sharingState: BackingSharingState
   ) -> Bool {
+    assert(isNativeImpl())
     if sharingState.backingProviderCandidates.isEmpty {
       return false
     }
@@ -2287,6 +2357,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeExtent(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) {
+    assert(isNativeImpl())
     if extent.extentComputed {
       return
     }
@@ -2324,6 +2395,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func computeClippingScopes(_ layer: RenderLayerWrapper, _ extent: inout OverlapExtent) {
+    assert(isNativeImpl())
     if extent.clippingScopesComputed {
       return
     }
@@ -2362,6 +2434,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func addToOverlapMap(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) {
+    assert(isNativeImpl())
     if layer.isRenderViewLayer {
       return
     }
@@ -2375,6 +2448,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeClippedOverlapBounds(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     computeExtent(overlapMap, layer, &extent)
     computeClippingScopes(layer, &extent)
 
@@ -2417,6 +2491,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper,
     ancestorLayer: RenderLayerWrapper? = nil
   ) {
+    assert(isNativeImpl())
     if !canBeComposited(layer) {
       return
     }
@@ -2453,6 +2528,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layerExtent: inout OverlapExtent,
     didPushContainer: Bool, addLayerToOverlap: Bool, addDescendantsToOverlap: Bool = false
   ) {
+    assert(isNativeImpl())
     // TODO(asuhan): add logging
     if addLayerToOverlap {
       addToOverlapMap(overlapMap, layer, &layerExtent)
@@ -2471,6 +2547,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func layerOverlaps(
     _ overlapMap: LayerOverlapMap, _ layer: RenderLayerWrapper, _ extent: inout OverlapExtent
   ) -> Bool {
+    assert(isNativeImpl())
     computeExtent(overlapMap, layer, &extent)
     computeClippingScopes(layer, &extent)
 
@@ -2488,6 +2565,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layerExtent: inout OverlapExtent, _ willBeComposited: Bool,
     stackingContextAncestor: RenderLayerWrapper?
   ) -> BackingSharingSnapshot? {
+    assert(isNativeImpl())
     // TODO(asuhan): add logging
 
     layer.setBackingProviderLayer(backingProvider: nil)
@@ -2521,6 +2599,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layerExtent: inout OverlapExtent, stackingContextAncestor: RenderLayerWrapper?,
     _ backingSharingSnapshot: BackingSharingSnapshot?
   ) {
+    assert(isNativeImpl())
     // TODO(asuhan): add logging
 
     if layer.isComposited() {
@@ -2592,6 +2671,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ compositingState: inout CompositingState, _ backingSharingState: BackingSharingState,
     _ descendantHas3DTransform: inout Bool
   ) {
+    assert(isNativeImpl())
     // TODO(asuhan): add logging
 
     layer.updateDescendantDependentFlags()
@@ -2910,6 +2990,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ compositingState: inout CompositingState, _ backingSharingState: BackingSharingState,
     _ descendantHas3DTransform: inout Bool
   ) {
+    assert(isNativeImpl())
     layer.updateDescendantDependentFlags()
     layer.updateLayerListsIfNeeded()
 
@@ -3035,6 +3116,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ scrollingTreeState: ScrollingTreeStateRef,
     _ updateLevel: UpdateLevel = []
   ) {
+    assert(isNativeImpl())
     layer.updateDescendantDependentFlags()
     layer.updateLayerListsIfNeeded()
 
@@ -3231,6 +3313,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     stackingContextLayer: RenderLayerWrapper, overflowScrollLayers: ArraySlice<RenderLayerWrapper>,
     layersClippedByScrollers: ArraySlice<RenderLayerWrapper>, layerChildren: inout [GraphicsLayer]
   ) {
+    assert(isNativeImpl())
     if layersClippedByScrollers.isEmpty {
       return
     }
@@ -3309,6 +3392,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isRunningTransformAnimation(_ renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.AnimationTrigger) {
       return false
     }
@@ -3326,6 +3410,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func appendDocumentOverlayLayers(_ childList: inout ArraySlice<GraphicsLayer>) {
+    assert(isNativeImpl())
     if !isRootFrameCompositor() || !m_compositing {
       return
     }
@@ -3349,6 +3434,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func ensureRootLayer() {
+    assert(isNativeImpl())
     let expectedAttachment: RootLayerAttachment =
       isRootFrameCompositor()
       ? .RootLayerAttachedViaChromeClient : .RootLayerAttachedViaEnclosingFrame
@@ -3424,6 +3510,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func destroyRootLayer() {
+    assert(isNativeImpl())
     if m_rootContentsLayer == nil {
       return
     }
@@ -3475,6 +3562,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func attachRootLayer(attachment: RootLayerAttachment) {
+    assert(isNativeImpl())
     if m_rootContentsLayer == nil {
       return
     }
@@ -3505,6 +3593,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func detachRootLayer() {
+    assert(isNativeImpl())
     if m_rootContentsLayer == nil || m_rootLayerAttachment == .RootLayerUnattached {
       return
     }
@@ -3549,6 +3638,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func rootLayerAttachmentChanged() {
+    assert(isNativeImpl())
     // The document-relative page overlay layer (which is pinned to the main frame's layer tree)
     // is moved between different RenderLayerCompositors' layer trees, and needs to be
     // reattached whenever we swap in a new RenderLayerCompositor.
@@ -3571,6 +3661,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateOverflowControlsLayers() {
+    assert(isNativeImpl())
     if requiresHorizontalScrollbarLayer() {
       if m_layerForHorizontalScrollbar == nil {
         m_layerForHorizontalScrollbar = GraphicsLayer.create(
@@ -3635,6 +3726,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollLayerPosition() {
+    assert(isNativeImpl())
     assert(!hasCoordinatedScrolling())
     assert(m_scrolledContentsLayer != nil)
 
@@ -3651,6 +3743,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateScrollLayerClipping() {
+    assert(isNativeImpl())
     let layerForClipping = layerForClipping()
     if layerForClipping == nil {
       return
@@ -3667,6 +3760,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func notifyIFramesOfCompositingChange() {
+    assert(isNativeImpl())
     // Compositing affects the answer to RenderIFrame::requiresAcceleratedCompositing(), so
     // we need to schedule a style recalc in our parent document.
     if let ownerElement = m_renderView!.document().ownerElement() {
@@ -3691,6 +3785,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Non layout-dependent
   private func requiresCompositingForAnimation(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.AnimationTrigger) {
       return false
     }
@@ -3722,6 +3817,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForTransform(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.ThreeDTransformTrigger) {
       return false
     }
@@ -3747,6 +3843,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForBackfaceVisibility(renderer: RenderLayerModelObjectWrapper)
     -> Bool
   {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.ThreeDTransformTrigger) {
       return false
     }
@@ -3771,10 +3868,12 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   private func requiresCompositingForViewTransition(renderer: RenderLayerModelObjectWrapper) -> Bool
   {
+    assert(isNativeImpl())
     return renderer.effectiveCapturedInViewTransition() || renderer.isRenderViewTransitionCapture()
   }
 
   private func requiresCompositingForVideo(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.VideoTrigger) {
       return false
     }
@@ -3786,6 +3885,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForCanvas(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.CanvasTrigger) {
       return false
     }
@@ -3807,6 +3907,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForFilters(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if renderer.hasBackdropFilter() {
       return true
     }
@@ -3819,6 +3920,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForWillChange(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     if renderer.style().willChange() == nil
       || !renderer.style().willChange()!.canTriggerCompositing()
     {
@@ -3837,6 +3939,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresCompositingForModel(renderer: RenderLayerModelObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     // TODO(asuhan): support model element
     return false
   }
@@ -3845,6 +3948,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForPlugin(
     renderer: RenderLayerModelObjectWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
+    assert(isNativeImpl())
     if !m_compositingTriggers.contains(.PluginTrigger) {
       return false
     }
@@ -3872,6 +3976,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForFrame(
     renderer: RenderLayerModelObjectWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
+    assert(isNativeImpl())
     let frameRenderer = renderer as? RenderWidgetWrapper
     if frameRenderer == nil {
       return false
@@ -3897,6 +4002,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForScrollableFrame(_ queryData: inout RequiresCompositingData)
     -> Bool
   {
+    assert(isNativeImpl())
     if isRootFrameCompositor() {
       return false
     }
@@ -3916,6 +4022,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func requiresCompositingForOverflowScrolling(
     layer: RenderLayerWrapper, queryData: inout RequiresCompositingData
   ) -> Bool {
+    assert(isNativeImpl())
     if !layer.canUseCompositedScrolling() {
       return false
     }
@@ -3934,6 +4041,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     renderer: RenderLayerModelObjectWrapper, layer: RenderLayerWrapper,
     queryData: inout RequiresCompositingData
   ) -> Bool {
+    assert(isNativeImpl())
     // position:fixed elements that create their own stacking context (e.g. have an explicit z-index,
     // opacity, transform) can get their own composited layer. A stacking context is required otherwise
     // z-index and clipping will be broken.
@@ -3996,6 +4104,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, hasCompositedDescendants: Bool, has3DTransformedDescendants: Bool,
     paintsIntoProvidedBacking: Bool
   ) -> IndirectCompositingReason {
+    assert(isNativeImpl())
     // When a layer has composited descendants, some effects, like 2d transforms, filters, masks etc must be implemented
     // via compositing so that they also apply to those composited descendants.
     let renderer = layer.renderer()
@@ -4116,6 +4225,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func attachScrollingNode(
     _ layer: RenderLayerWrapper, _ nodeType: ScrollingNodeType, _ treeState: ScrollingTreeStateRef
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
     if scrollingCoordinator == nil {
       return ScrollingNodeIDWrapper()
@@ -4149,6 +4259,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ scrollingCoordinator: ScrollingCoordinatorWrapper, _ nodeID: ScrollingNodeIDWrapper,
     _ nodeType: ScrollingNodeType, _ treeState: ScrollingTreeStateRef
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     var nodeID = nodeID
     if !nodeID.bool() {
       nodeID = scrollingCoordinator.uniqueScrollingNodeID()
@@ -4179,6 +4290,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func coordinatedScrollingRolesForLayer(
     _ layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?
   ) -> ScrollCoordinationRole {
+    assert(isNativeImpl())
     var coordinationRoles: ScrollCoordinationRole = []
     if isViewportConstrainedFixedOrStickyLayer(layer) {
       coordinationRoles.update(with: .ViewportConstrained)
@@ -4215,6 +4327,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
     _ treeState: ScrollingTreeStateRef, _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let roles = coordinatedScrollingRolesForLayer(layer, compositingAncestor: compositingAncestor)
 
     if !hasCoordinatedScrolling() {
@@ -4282,6 +4395,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
 
     var nodeType: ScrollingNodeType = .Fixed
@@ -4325,6 +4439,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
 
     var newNodeID = ScrollingNodeIDWrapper()
@@ -4377,6 +4492,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
     let clippingStack = layer.backing!.ancestorClippingStack
     if clippingStack == nil {
@@ -4426,6 +4542,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
 
     let newNodeID = attachScrollingNode(layer, .FrameHosting, treeState)
@@ -4452,6 +4569,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ layer: RenderLayerWrapper, _ treeState: ScrollingTreeStateRef,
     _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let newNodeID = attachScrollingNode(layer, .PluginHosting, treeState)
     if !newNodeID.bool() {
       fatalError("Not reached")
@@ -4464,6 +4582,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, compositingAncestor: RenderLayerWrapper?,
     _ treeState: ScrollingTreeStateRef, _ changes: ScrollingNodeChangeFlags
   ) -> ScrollingNodeIDWrapper {
+    assert(isNativeImpl())
     let scrollingCoordinator = scrollingCoordinator()
 
     let newNodeID = attachScrollingNode(layer, .Positioned, treeState)
@@ -4498,6 +4617,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ nodeID: ScrollingNodeIDWrapper, _ layer: RenderLayerWrapper,
     _ scrollingCoordinator: ScrollingCoordinatorWrapper
   ) {
+    assert(isNativeImpl())
     // Plugins handle their own scrolling node layers.
     if isLayerForPluginWithScrollCoordinatedContents(layer) {
       return
@@ -4533,6 +4653,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func detachScrollCoordinatedLayer(
     layer: RenderLayerWrapper, roles: ScrollCoordinationRole
   ) {
+    assert(isNativeImpl())
     let backing = layer.backing
     if backing == nil {
       return
@@ -4580,6 +4701,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     layer: RenderLayerWrapper, scrollingCoordinator: ScrollingCoordinatorWrapper,
     role: ScrollCoordinationRole
   ) {
+    assert(isNativeImpl())
     if role == .ScrollingProxy {
       assert(layer.isComposited())
       let clippingStack = layer.backing!.ancestorClippingStack
@@ -4612,6 +4734,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func resolveScrollingTreeRelationships() {
+    assert(isNativeImpl())
     if layersWithUnresolvedRelations.isEmptyIgnoringNullReferences() {
       return
     }
@@ -4645,6 +4768,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
     _ scrollingCoordinator: ScrollingCoordinatorWrapper,
     _ scrollingProxyNodeID: ScrollingNodeIDWrapper, _ overflowScrollingLayer: RenderLayerWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     let backing = overflowScrollingLayer.backing
     if backing == nil {
       return false
@@ -4661,6 +4785,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func updateSynchronousScrollingNodes() {
+    assert(isNativeImpl())
     if !hasCoordinatedScrolling() {
       return
     }
@@ -4751,6 +4876,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeFixedViewportConstraints(_ layer: RenderLayerWrapper)
     -> FixedPositionViewportConstraints
   {
+    assert(isNativeImpl())
     assert(layer.isComposited())
 
     guard let anchorLayer = layer.backing!.viewportAnchorLayer else {
@@ -4796,6 +4922,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   private func computeStickyViewportConstraints(_ layer: RenderLayerWrapper)
     -> StickyPositionViewportConstraints
   {
+    assert(isNativeImpl())
     assert(layer.isComposited())
 
     let renderer = layer.renderer() as! RenderBoxModelObjectWrapper
@@ -4815,6 +4942,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresScrollLayer(attachment: RootLayerAttachment) -> Bool {
+    assert(isNativeImpl())
     let frameView = m_renderView!.frameView()
 
     // This applies when the application UI handles scrolling, in which case RenderLayerCompositor doesn't need to manage it.
@@ -4829,20 +4957,24 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func requiresHorizontalScrollbarLayer() -> Bool {
+    assert(isNativeImpl())
     return shouldCompositeOverflowControls()
       && m_renderView!.frameView().horizontalScrollbar() != nil
   }
 
   private func requiresVerticalScrollbarLayer() -> Bool {
+    assert(isNativeImpl())
     return shouldCompositeOverflowControls() && m_renderView!.frameView().verticalScrollbar() != nil
   }
 
   private func requiresScrollCornerLayer() -> Bool {
+    assert(isNativeImpl())
     return shouldCompositeOverflowControls() && m_renderView!.frameView().isScrollCornerVisible()
   }
 
   // True if the FrameView uses a ScrollingCoordinator.
   private func hasCoordinatedScrolling() -> Bool {
+    assert(isNativeImpl())
     if let scrollingCoordinator = scrollingCoordinator() {
       return scrollingCoordinator.coordinatesScrollingForFrameView(
         frameView: m_renderView!.frameView())
@@ -4852,6 +4984,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // FIXME: make the coordinated/async terminology consistent.
   private func isAsyncScrollableStickyLayer(layer: RenderLayerWrapper) -> Bool {
+    assert(isNativeImpl())
     assert(layer.renderer().isStickilyPositioned())
 
     let enclosingOverflowLayer = layer.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf)
@@ -4874,6 +5007,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func shouldCompositeOverflowControls() -> Bool {
+    assert(isNativeImpl())
     let frameView = m_renderView!.frameView()
 
     if !frameView.managesScrollbars() {
@@ -4892,6 +5026,7 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func documentUsesTiledBacking() -> Bool {
+    assert(isNativeImpl())
     let layer = m_renderView!.layer()
     if layer == nil {
       return false
@@ -4905,14 +5040,16 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   private func isRootFrameCompositor() -> Bool {
-    assert(p == nil)
+    assert(isNativeImpl())
     return m_renderView!.frameView().frame().isRootFrame()
   }
 
   private func isMainFrameCompositor() -> Bool {
-    assert(p == nil)
+    assert(isNativeImpl())
     return m_renderView!.frameView().frame().isMainFrame()
   }
+
+  private func isNativeImpl() -> Bool { return p == nil }
 
   private let m_renderView: RenderViewWrapper?  // TODO(asuhan): make it non-optional
   private let m_updateCompositingLayersTimer: Timer
