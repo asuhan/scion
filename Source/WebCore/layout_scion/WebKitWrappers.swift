@@ -545,3 +545,15 @@ func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutab
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   view.setWk(wk)
 }
+
+@_cdecl("RenderLayerModelObjectNative_layer")
+func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let layerModelObject = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(layerModelObjectRaw)
+    .takeUnretainedValue()
+  assert(layerModelObject.isNativeImpl())
+  guard let layer = layerModelObject.layer() else { return nil }
+  assert(!layer.isNativeImpl())
+  return layer.layerId()
+}

@@ -26,12 +26,13 @@
 #include "RenderLayerModelObjectScion.h"
 #include "RenderLayer.h"
 
+extern "C" void* RenderLayerModelObjectNative_layer(const void* p);
+
 namespace WebCore {
 
 RenderLayer* RenderLayerModelObjectScion::layer() const
 {
-    ASSERT_NOT_REACHED();
-    return nullptr;
+    return static_cast<RenderLayer*>(RenderLayerModelObjectNative_layer(m_handle));
 }
 
 }

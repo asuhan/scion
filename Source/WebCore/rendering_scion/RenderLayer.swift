@@ -6471,7 +6471,7 @@ class RenderLayerWrapper {
       bitPattern: UInt(bitPattern: ObjectIdentifier(self)))!
   }
 
-  private func isNativeImpl() -> Bool { return pInterop == nil }
+  func isNativeImpl() -> Bool { return pInterop == nil }
 
   private let pInterop: UnsafeMutableRawPointer?
   private let owner: Bool
