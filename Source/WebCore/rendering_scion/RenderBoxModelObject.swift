@@ -599,8 +599,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderWidths() -> RectEdges<LayoutUnit> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RectEdges<LayoutUnit>(
+      top: LayoutUnit(value: style().borderTopWidth()),
+      right: LayoutUnit(value: style().borderRightWidth()),
+      bottom: LayoutUnit(value: style().borderBottomWidth()),
+      left: LayoutUnit(value: style().borderLeftWidth())
+    )
   }
 
   func borderTop() -> LayoutUnit {
