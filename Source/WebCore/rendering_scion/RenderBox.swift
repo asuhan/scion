@@ -849,6 +849,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
   }
 
+  func borderBoundingBox() -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    return borderBoxRect()
+  }
+
   // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
   func contentBoxRect() -> LayoutRectWrapper {
     var verticalScrollbarWidth = LayoutUnit(value: UInt64(0))
@@ -5675,8 +5680,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func localOutlineBoundsRepaintRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let box = borderBoundingBox()
+    return applyVisualEffectOverflow(borderBox: box)
   }
 
   override func mapLocalToContainer(
