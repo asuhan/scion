@@ -3908,13 +3908,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isScrollContainerX() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().overflowX() == .Scroll || style().overflowX() == .Hidden
+      || style().overflowX() == .Auto
   }
 
   func isScrollContainerY() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().overflowY() == .Scroll || style().overflowY() == .Hidden
+      || style().overflowY() == .Auto
   }
 
   private func usesCompositedScrolling() -> Bool {
