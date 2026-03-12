@@ -4741,8 +4741,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasHorizontalLayoutOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if overflow == nil {
+      return false
+    }
+
+    let layoutOverflowRect = overflow!.layoutOverflowRect()
+    let paddingBoxRect = flippedClientBoxRect()
+    return layoutOverflowRect.x() < paddingBoxRect.x()
+      || layoutOverflowRect.maxX() > paddingBoxRect.maxX()
   }
 
   func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
