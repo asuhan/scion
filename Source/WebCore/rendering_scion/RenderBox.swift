@@ -5825,8 +5825,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldIgnoreAspectRatio() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !style().hasAspectRatio() || isTablePart()
   }
 
   private func isRenderReplacedWithIntrinsicRatio() -> Bool {
