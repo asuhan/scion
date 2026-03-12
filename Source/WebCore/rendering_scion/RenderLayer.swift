@@ -1194,7 +1194,10 @@ class RenderLayerWrapper {
   }
 
   func styleChanged(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_styleChanged(pInterop!, diff.rawValue, oldStyle?.p)
+      return
+    }
     setIsNormalFlowOnly(isNormalFlowOnly: shouldBeNormalFlowOnly())
     setCanBeBackdropRoot(canBeBackdropRoot: computeCanBeBackdropRoot())
 

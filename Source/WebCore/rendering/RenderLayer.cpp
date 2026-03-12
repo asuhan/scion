@@ -173,6 +173,13 @@ extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool tim
     static_cast<WebCore::RenderLayer*>(p)->insertOnlyThisLayer(timing);
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_styleChanged(void* p, uint8_t diff_raw, const void* old_style_raw)
+{
+    const auto diff = static_cast<WebCore::StyleDifference>(diff_raw);
+    const auto old_style = static_cast<const WebCore::RenderStyle*>(old_style_raw);
+    static_cast<WebCore::RenderLayer*>(p)->styleChanged(diff, old_style);
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticInlinePosition(const void* p)
 {
     const auto position = static_cast<const WebCore::RenderLayer*>(p)->staticInlinePosition();
