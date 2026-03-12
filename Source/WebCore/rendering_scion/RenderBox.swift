@@ -3835,13 +3835,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func scrollbarLogicalWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? verticalScrollbarWidth() : horizontalScrollbarHeight()
   }
 
   func scrollbarLogicalHeight() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? horizontalScrollbarHeight() : verticalScrollbarWidth()
   }
 
   private func canUseOverlayScrollbars() -> Bool {
