@@ -4110,8 +4110,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutRectWrapper()
   }
 
   func popContentsClip(
