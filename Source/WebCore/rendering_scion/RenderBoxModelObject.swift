@@ -609,23 +609,23 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: style().borderTopWidth())
   }
 
   func borderBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: style().borderBottomWidth())
   }
 
   func borderLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: style().borderLeftWidth())
   }
 
   func borderRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: style().borderRightWidth())
   }
 
   func horizontalBorderExtent() -> LayoutUnit {
