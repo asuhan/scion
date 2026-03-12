@@ -659,13 +659,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderAndPaddingStart() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderStart() + paddingStart()
   }
 
   func borderAndPaddingEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderEnd() + paddingEnd()
   }
 
   func borderAndPaddingBefore() -> LayoutUnit {
