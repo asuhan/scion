@@ -4671,8 +4671,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func cachedSizeForOverflowClip() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasNonVisibleOverflow())
+    assert(hasLayer())
+    return LayoutSizeWrapper(size: layer()!.size())
   }
 
   // Returns false if the rect has no intersection with the applied clip rect. When the context specifies edge-inclusive
