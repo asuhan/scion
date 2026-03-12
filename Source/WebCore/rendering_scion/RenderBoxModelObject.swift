@@ -517,33 +517,33 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
 
   // These return the CSS computed padding values.
   func computedCSSPaddingTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingTop())
   }
 
   func computedCSSPaddingBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingBottom())
   }
 
   func computedCSSPaddingLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingLeft())
   }
 
   func computedCSSPaddingRight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingRight())
   }
 
   func computedCSSPaddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingBefore())
   }
 
   func computedCSSPaddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingAfter())
   }
 
   // These functions are used during layout. Table cells and the MathML
@@ -1269,6 +1269,17 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func continuationChainNode() -> ContinuationChainNode? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  private func resolveLengthPercentageUsingContainerLogicalWidth(_ value: LengthWrapper)
+    -> LayoutUnit
+  {
+    assert(isNativeImpl())
+    var containerWidth = LayoutUnit()
+    if value.isPercentOrCalculated() {
+      containerWidth = containingBlockLogicalWidthForContent()
+    }
+    return minimumValueForLength(length: value, maximumValue: containerWidth)
   }
 
   func frameRectForStickyPositioning() -> LayoutRectWrapper {
