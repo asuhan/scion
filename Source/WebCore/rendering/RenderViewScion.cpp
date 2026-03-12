@@ -26,7 +26,6 @@
 #include "RenderViewScion.h"
 #include "Document.h"
 #include "RenderFragmentContainer.h"
-#include "RenderLayer.h"
 #include "RenderSelection.h"
 #include "RenderViewScion.h"
 #include <wtf/Assertions.h>
@@ -99,12 +98,6 @@ LocalFrame& RenderViewScion::frame() const
     static LocalFrame* unused = nullptr;
     ASSERT_NOT_REACHED();
     return *unused;
-}
-
-RenderLayer* RenderViewScion::layer() const
-{
-    ASSERT_NOT_REACHED();
-    return nullptr;
 }
 
 VisiblePosition RenderViewScion::positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*)

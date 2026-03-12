@@ -2769,6 +2769,7 @@ rendering/RenderLayerBacking.cpp
 rendering/RenderLayerCompositor.cpp
 rendering/RenderLayerFilters.cpp
 rendering/RenderLayerModelObject.cpp
+rendering/RenderLayerModelObjectScion.cpp
 rendering/RenderLayerScrollableArea.cpp
 rendering/RenderLayoutState.cpp
 rendering/RenderLineBoxList.cpp

@@ -38,7 +38,6 @@ extern "C" void* RenderView_create(void*, const void*);
 
 namespace WebCore {
 
-class RenderLayer;
 class RenderLayerCompositor;
 class RenderFragmentContainer;
 
@@ -71,8 +70,6 @@ public:
     Document& document() const;
 
     LocalFrame& frame() const;
-
-    RenderLayer* layer() const;
 
     VisiblePosition positionForPoint(const LayoutPoint&, HitTestSource, const RenderFragmentContainer*);
 

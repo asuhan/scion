@@ -33,6 +33,7 @@
 #include "RenderLayer.h"
 #include "RenderLayerBacking.h"
 #include "RenderLayerCompositor.h"
+#include "RenderLayerModelObjectScion.h"
 #include "RenderLayerScrollableArea.h"
 #include "RenderMultiColumnSet.h"
 #include "RenderObjectInlines.h"
@@ -96,6 +97,10 @@ RenderLayerModelObject::RenderLayerModelObject(Type type, Document& document, Re
 // Do not add any code in below destructor. Add it to willBeDestroyed() instead.
 RenderLayerModelObject::~RenderLayerModelObject() = default;
 
+void RenderLayerModelObject::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderLayerModelObjectScion>(handle);
+}
+
 void RenderLayerModelObject::willBeDestroyed()
 {
     if (isPositioned()) {
@@ -125,6 +130,12 @@ void RenderLayerModelObject::createLayer()
 bool RenderLayerModelObject::hasSelfPaintingLayer() const
 {
     return m_layer && m_layer->isSelfPaintingLayer();
+}
+
+RenderLayer* RenderLayerModelObject::layer() const
+{
+    if (m_scion) { return m_scion->layer(); }
+    return m_layer.get();
 }
 
 void RenderLayerModelObject::styleWillChange(StyleDifference diff, const RenderStyle& newStyle)

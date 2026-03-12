@@ -30,6 +30,7 @@ namespace WebCore {
 
 class BlendingKeyframes;
 class RenderLayer;
+class RenderLayerModelObjectScion;
 class RenderSVGResourceClipper;
 class RenderSVGResourceFilter;
 class RenderSVGResourceMarker;
@@ -43,10 +44,12 @@ class RenderLayerModelObject : public RenderElement {
 public:
     virtual ~RenderLayerModelObject();
 
+    void setScionHandle(void* handle);
+
     void destroyLayer();
 
     bool hasSelfPaintingLayer() const;
-    RenderLayer* layer() const { return m_layer.get(); }
+    WEBCORE_EXPORT RenderLayer* layer() const;
     CheckedPtr<RenderLayer> checkedLayer() const;
 
     void styleWillChange(StyleDifference, const RenderStyle& newStyle) override;
@@ -137,6 +140,8 @@ private:
     static bool s_hadLayer;
     static bool s_wasTransformed;
     static bool s_layerWasSelfPainting;
+
+    std::unique_ptr<RenderLayerModelObjectScion> m_scion;
 };
 
 // Pixel-snapping (== 'device pixel alignment') helpers.
