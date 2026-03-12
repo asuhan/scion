@@ -4781,10 +4781,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return wk_interop.RenderBox_isFlexItem(id())
   }
 
-  func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {}
 
   func shouldComputeLogicalHeightFromAspectRatio() -> Bool {
     if shouldIgnoreAspectRatio() {
