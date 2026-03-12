@@ -5334,8 +5334,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     context: GraphicsContextWrapper, accumulatedOffset: LayoutPointWrapper,
     deviceScaleFactor: Float32
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let borderShape = BorderShape.shapeForBorderRect(
+      style: style(), borderRect: LayoutRectWrapper(location: accumulatedOffset, size: size()))
+    borderShape.clipToInnerShape(context: context, deviceScaleFactor: deviceScaleFactor)
   }
 
   func clipToContentBoxShape(
