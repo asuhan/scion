@@ -4767,8 +4767,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func canHaveOutsideFragmentRange() -> Bool { return !isRenderFragmentedFlow() }
 
   func needsLayoutAfterFragmentRangeChange() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   func isGridItem() -> Bool {
