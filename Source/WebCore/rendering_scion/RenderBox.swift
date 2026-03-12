@@ -4757,8 +4757,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func markShapeOutsideDependentsForLayout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if isFloating() {
+      removeFloatingOrPositionedChildFromBlockLists()
+    }
   }
 
   // True if this box can have a range in an outside fragmentation context.
