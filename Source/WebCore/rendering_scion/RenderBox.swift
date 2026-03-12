@@ -4637,8 +4637,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRenderOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return overflow != nil
   }
 
   func hasVisualOverflow() -> Bool {
