@@ -5197,8 +5197,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func selfAlignmentNormalBehavior(gridItem: RenderBoxWrapper? = nil) -> ItemPosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return .Stretch
   }
 
   // Returns false if it could not cheaply compute the extent (e.g. fixed background), in which case the returned rect may be incorrect.
