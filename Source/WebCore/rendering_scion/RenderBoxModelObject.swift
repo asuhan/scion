@@ -324,8 +324,12 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func enclosingClippingBoxForStickyPosition() -> (RenderBoxWrapper, RenderLayerWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isStickilyPositioned())
+    let clipLayer =
+      hasLayer() ? layer()!.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf) : nil
+    let box = clipLayer != nil ? (clipLayer!.renderer() as! RenderBoxWrapper) : view()
+    return (box, clipLayer)
   }
 
   func computeStickyPositionConstraints(constrainingRect: FloatRectWrapper)
