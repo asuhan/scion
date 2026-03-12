@@ -7286,8 +7286,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return frameRect()
   }
 
   private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects {
