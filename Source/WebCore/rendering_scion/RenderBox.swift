@@ -3920,8 +3920,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func usesCompositedScrolling() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasNonVisibleOverflow() && hasLayer() && layer()!.usesCompositedScrolling()
   }
 
   func percentageLogicalHeightIsResolvable() -> Bool {
