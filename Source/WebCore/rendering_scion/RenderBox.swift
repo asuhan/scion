@@ -4753,8 +4753,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   func markShapeOutsideDependentsForLayout() {
