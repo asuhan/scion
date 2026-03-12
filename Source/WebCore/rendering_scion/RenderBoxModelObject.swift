@@ -549,8 +549,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   // These functions are used during layout. Table cells and the MathML
   // code override them to include some extra intrinsic padding.
   func padding() -> RectEdges<LayoutUnit> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RectEdges<LayoutUnit>(
+      top: computedCSSPaddingTop(),
+      right: computedCSSPaddingRight(),
+      bottom: computedCSSPaddingBottom(),
+      left: computedCSSPaddingLeft()
+    )
   }
 
   func paddingTop() -> LayoutUnit {
