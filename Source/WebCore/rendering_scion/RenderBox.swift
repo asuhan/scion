@@ -3766,13 +3766,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // There are a few cases where we need to refer specifically to the available physical width and available physical height.
   // Relative positioning is one of those cases, since left/top offsets are physical.
   func availableWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? availableLogicalWidth() : availableLogicalHeight(heightType: .IncludeMarginBorderPadding)
   }
 
   func availableHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode()
+      ? availableLogicalHeight(heightType: .IncludeMarginBorderPadding) : availableLogicalWidth()
   }
 
   func verticalScrollbarWidth() -> Int32 {
