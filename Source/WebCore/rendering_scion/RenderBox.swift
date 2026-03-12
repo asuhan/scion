@@ -4642,8 +4642,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasVisualOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return overflow != nil && !borderBoxRect().contains(other: overflow!.visualOverflowRect())
   }
 
   func needsPreferredWidthsRecalculation() -> Bool {
