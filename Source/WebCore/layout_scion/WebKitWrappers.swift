@@ -501,13 +501,13 @@ func RenderView_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: Unsaf
 }
 
 @_cdecl("RenderViewScion_requiresLayer")
-func RenderViewScion_requiresLayer(_ viewRaw: UnsafeMutableRawPointer) -> Bool {
+func RenderViewScion_requiresLayer(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   return view.requiresLayer()
 }
 
 @_cdecl("RenderViewScion_frameView")
-func RenderViewScion_frameView(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   return view.frameView().p
 }
@@ -519,13 +519,13 @@ func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableR
 }
 
 @_cdecl("RenderViewScion_compositor")
-func RenderViewScion_compositor(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+func RenderViewScion_compositor(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   return view.compositor().interop()
 }
 
 @_cdecl("RenderViewScion_usesCompositing")
-func RenderViewScion_usesCompositing(_ viewRaw: UnsafeMutableRawPointer) -> Bool {
+func RenderViewScion_usesCompositing(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   return view.usesCompositing()
 }
