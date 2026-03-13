@@ -40,6 +40,8 @@ extern "C" void* RenderViewScion_compositor(void*);
 
 extern "C" bool RenderViewScion_usesCompositing(void*);
 
+extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
+
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderViewScion_pushMappingToContainer(void*, void*, void*);
@@ -187,6 +189,11 @@ uint64_t RenderViewScion::rendererCount() const
 {
     ASSERT_NOT_REACHED();
     return 0;
+}
+
+bool RenderViewScion::hasSoftwareFilters() const
+{
+    return RenderViewScion_hasSoftwareFilters(m_handle);
 }
 
 void RenderViewScion::didCreateRenderer()

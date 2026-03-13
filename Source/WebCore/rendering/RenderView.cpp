@@ -1153,6 +1153,14 @@ SingleThreadWeakHashSet<RenderCounter> RenderView::takeCountersNeedingUpdate()
     return std::exchange(m_countersNeedingUpdate, { });
 }
 
+bool RenderView::hasSoftwareFilters() const
+{
+    if (m_scion) {
+        return m_scion->hasSoftwareFilters();
+    }
+    return m_hasSoftwareFilters;
+}
+
 SingleThreadWeakPtr<RenderElement> RenderView::viewTransitionRoot() const
 {
     return m_viewTransitionRoot;

@@ -174,7 +174,7 @@ public:
     ImageQualityController& imageQualityController();
 
     void setHasSoftwareFilters(bool hasSoftwareFilters) { m_hasSoftwareFilters = hasSoftwareFilters; }
-    bool hasSoftwareFilters() const { return m_hasSoftwareFilters; }
+    WEBCORE_EXPORT bool hasSoftwareFilters() const;
 
     uint64_t rendererCount() const { return m_rendererCount; }
     void didCreateRenderer() { ++m_rendererCount; }

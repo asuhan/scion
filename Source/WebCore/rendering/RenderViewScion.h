@@ -103,6 +103,8 @@ public:
 
     uint64_t rendererCount() const;
 
+    bool hasSoftwareFilters() const;
+
     void didCreateRenderer();
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
