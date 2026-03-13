@@ -35,8 +35,8 @@ struct FloatPoint {
   }
 
   init(p: IntPoint) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.x = Float32(p.x)
+    self.y = Float32(p.y)
   }
 
   init(_ size: FloatSize) {

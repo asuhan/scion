@@ -40,8 +40,9 @@ struct IntRect: Equatable {
   }
 
   init(_ r: FloatRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    location = IntPoint(x: clampToInteger(value: r.x()), y: clampToInteger(value: r.y()))
+    size = IntSize(
+      width: clampToInteger(value: r.width()), height: clampToInteger(value: r.height()))
   }
 
   func x() -> Int32 { return location.x }

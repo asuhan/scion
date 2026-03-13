@@ -49,8 +49,8 @@ struct FloatRectWrapper: Equatable {
   }
 
   init(r: IntRect) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.m_location = FloatPoint(p: r.location)
+    self.m_size = FloatSize(size: r.size)
   }
 
   func location() -> FloatPoint { return m_location }
