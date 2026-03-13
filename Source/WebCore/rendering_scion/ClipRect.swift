@@ -54,10 +54,7 @@ struct ClipRect: Equatable {
 
   func isEmpty() -> Bool { return rect.isEmpty() }
 
-  func isInfinite() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isInfinite() -> Bool { return rect.isInfinite() }
 
   var rect = LayoutRectWrapper()
   var affectedByRadius = false
