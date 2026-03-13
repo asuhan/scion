@@ -685,8 +685,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func setViewTransitionRoot(renderer: RenderElementWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_viewTransitionRoot = renderer
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
@@ -825,7 +825,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
 
-  private let m_viewTransitionRoot: RenderElementWrapper? = nil
+  private var m_viewTransitionRoot: RenderElementWrapper? = nil
 
   private var wk: UnsafeMutableRawPointer? = nil
 }
