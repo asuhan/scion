@@ -357,8 +357,9 @@ func unionRect(a: LayoutRectWrapper, b: LayoutRectWrapper) -> LayoutRectWrapper 
 
 // Integral snapping functions.
 func snappedIntRect(rect: LayoutRectWrapper) -> IntRect {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return IntRect(
+    location: roundedIntPoint(point: rect.location()),
+    size: snappedIntSize(rect.size(), rect.location()))
 }
 
 func snappedIntRect(left: LayoutUnit, top: LayoutUnit, width: LayoutUnit, height: LayoutUnit)

@@ -104,6 +104,10 @@ struct LayoutPointWrapper: Equatable {
     return LayoutPointWrapper(x: y, y: x)
   }
 
+  func fraction() -> LayoutPointWrapper {
+    return LayoutPointWrapper(x: x.fraction(), y: y.fraction())
+  }
+
   func FloatPoint() -> FloatPoint { return layout_scion.FloatPoint(x: x.float(), y: y.float()) }
 
   @discardableResult
@@ -163,6 +167,14 @@ func flooredLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
 func ceiledLayoutPoint(p: FloatPoint) -> LayoutPointWrapper {
   return LayoutPointWrapper(
     x: LayoutUnit.fromFloatCeil(value: p.x), y: LayoutUnit.fromFloatCeil(value: p.y))
+}
+
+func snappedIntSize(_ size: LayoutSizeWrapper, _ location: LayoutPointWrapper) -> IntSize {
+  let snap = { (_ a: LayoutUnit, _ b: LayoutUnit) -> Int32 in
+    let fraction = b.fraction()
+    return Int32(roundToInt(value: fraction + a)) - Int32(roundToInt(value: fraction))
+  }
+  return IntSize(width: snap(size.width(), location.x), height: snap(size.height(), location.y))
 }
 
 func roundPointToDevicePixels(
