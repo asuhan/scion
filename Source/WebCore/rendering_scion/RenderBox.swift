@@ -4545,9 +4545,20 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
-    assert(!isNativeImpl())
-    wk_interop.RenderBox_flipForWritingMode(
-      id(), LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
+    if !isNativeImpl() {
+      wk_interop.RenderBox_flipForWritingMode(
+        id(), LayoutPointRaw(x: rect.x().rawValue(), y: rect.y().rawValue()))
+      return
+    }
+    if !style().isFlippedBlocksWritingMode() {
+      return
+    }
+
+    if isHorizontalWritingMode() {
+      rect.setY(y: height() - rect.maxY())
+    } else {
+      rect.setX(x: width() - rect.maxX())
+    }
   }
 
   func flipForWritingMode(rect: inout FloatRectWrapper) {
