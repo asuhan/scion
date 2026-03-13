@@ -30,6 +30,21 @@
 #include "RenderViewScion.h"
 #include <wtf/Assertions.h>
 
+struct IntPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+struct IntRectRaw {
+    struct IntPointRaw location;
+    struct IntSizeRaw size;
+};
+
 extern "C" bool RenderViewScion_requiresLayer(void*);
 
 extern "C" void* RenderViewScion_frameView(void*);
@@ -39,6 +54,8 @@ extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 extern "C" void* RenderViewScion_compositor(void*);
 
 extern "C" bool RenderViewScion_usesCompositing(void*);
+
+extern "C" IntRectRaw RenderViewScion_unscaledDocumentRect(const void*);
 
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
@@ -171,6 +188,12 @@ RenderLayerCompositor& RenderViewScion::compositor()
 bool RenderViewScion::usesCompositing() const
 {
     return RenderViewScion_usesCompositing(m_handle);
+}
+
+IntRect RenderViewScion::unscaledDocumentRect() const
+{
+    const auto raw = RenderViewScion_unscaledDocumentRect(m_handle);
+    return IntRect({raw.location.x, raw.location.y}, {raw.size.width, raw.size.height});
 }
 
 IntRect RenderViewScion::documentRect() const

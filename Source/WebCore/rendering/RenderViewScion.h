@@ -97,6 +97,8 @@ public:
 
     bool usesCompositing() const;
 
+    IntRect unscaledDocumentRect() const;
+
     IntRect documentRect() const;
 
     FloatSize sizeForCSSLargeViewportUnits() const;

@@ -647,6 +647,7 @@ LayoutRect RenderView::viewRect() const
 
 IntRect RenderView::unscaledDocumentRect() const
 {
+    if (m_scion) { return m_scion->unscaledDocumentRect(); }
     LayoutRect overflowRect(layoutOverflowRect());
     flipForWritingMode(overflowRect);
     return snappedIntRect(overflowRect);

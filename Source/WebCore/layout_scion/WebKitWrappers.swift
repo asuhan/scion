@@ -530,6 +530,15 @@ func RenderViewScion_usesCompositing(_ viewRaw: UnsafeRawPointer) -> Bool {
   return view.usesCompositing()
 }
 
+@_cdecl("RenderViewScion_unscaledDocumentRect")
+func RenderViewScion_unscaledDocumentRect(_ viewRaw: UnsafeRawPointer) -> IntRectRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let rect = view.unscaledDocumentRect()
+  return IntRectRaw(
+    location: IntPointRaw(x: rect.location.x, y: rect.location.y),
+    size: IntSizeRaw(width: rect.size.width, height: rect.size.height))
+}
+
 @_cdecl("RenderViewScion_hasSoftwareFilters")
 func RenderViewScion_hasSoftwareFilters(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
