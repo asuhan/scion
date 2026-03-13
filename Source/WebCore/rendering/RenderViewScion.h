@@ -85,6 +85,8 @@ public:
 
     LocalFrameView& frameView() const;
 
+    bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;
+
     void updateQuirksMode();
 
     void repaintRootContents();

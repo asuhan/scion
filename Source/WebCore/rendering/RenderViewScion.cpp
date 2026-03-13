@@ -49,6 +49,8 @@ extern "C" bool RenderViewScion_requiresLayer(void*);
 
 extern "C" void* RenderViewScion_frameView(void*);
 
+extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
+
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(void*);
@@ -160,6 +162,11 @@ bool RenderViewScion::requiresLayer() const
 LocalFrameView& RenderViewScion::frameView() const
 {
     return *static_cast<LocalFrameView*>(RenderViewScion_frameView(m_handle));
+}
+
+bool RenderViewScion::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const
+{
+    return RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(m_handle);
 }
 
 void RenderViewScion::updateQuirksMode()

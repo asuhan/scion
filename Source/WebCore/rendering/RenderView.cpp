@@ -231,6 +231,14 @@ void RenderView::updateQuirksMode()
     m_layoutState->updateQuirksMode(document());
 }
 
+bool RenderView::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const
+{
+    if (m_scion) {
+        return m_scion->needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly();
+    }
+    return m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly;
+}
+
 void RenderView::updateInitialContainingBlockSize()
 {
     // Initial containing block has no margin/padding/border.

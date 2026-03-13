@@ -512,6 +512,14 @@ func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawP
   return view.frameView().p
 }
 
+@_cdecl("RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly")
+func RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(
+  _ viewRaw: UnsafeRawPointer
+) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly()
+}
+
 @_cdecl("RenderViewScion_setIsInWindow")
 func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

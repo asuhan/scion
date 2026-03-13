@@ -85,7 +85,7 @@ public:
     Layout::LayoutState& layoutState() { return *m_layoutState; }
     void updateQuirksMode();
 
-    bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const { return m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly; };
+    bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;
     void setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(bool value = true) { m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = value; }
 
     bool needsEventRegionUpdateForNonCompositedFrame() const { return m_needsEventRegionUpdateForNonCompositedFrame; }
