@@ -78,6 +78,19 @@ private func canMapBetweenRenderersViaLayers(
 
 // Can be used while walking the Renderer tree to cache data about offsets and transforms.
 class RenderGeometryMap {
+  init(_ p: UnsafeMutableRawPointer) {
+    pInterop = p
+    nonUniformStepsCount = 0
+    transformedStepsCount = 0
+    fixedStepsCount = 0
+    mapping = []
+    accumulatedOffset = LayoutSizeWrapper()
+    mapCoordinatesFlags = []
+    #if ASSERT_ENABLED
+      accumulatedOffsetMightBeSaturated = false
+    #endif
+  }
+
   init(_ flags: MapCoordinatesMode = .UseTransforms) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -91,6 +104,7 @@ class RenderGeometryMap {
   func mapToContainer(_ rect: FloatRectWrapper, _ container: RenderLayerModelObjectWrapper?)
     -> FloatQuad
   {
+    assert(isNativeImpl())
     var result = FloatQuad()
 
     if !hasFixedPositionStep() && !hasTransformStep() && !hasNonUniformStep()
@@ -113,6 +127,7 @@ class RenderGeometryMap {
   func pushMappingsToAncestor(
     layer: RenderLayerWrapper?, ancestorLayer: RenderLayerWrapper?, respectTransforms: Bool = true
   ) {
+    assert(isNativeImpl())
     var layer = layer
     if ancestorLayer == nil {
       assert(mapping.isEmpty)
@@ -159,12 +174,14 @@ class RenderGeometryMap {
   }
 
   func popMappingsToAncestor(ancestorLayer: RenderLayerWrapper?) {
+    assert(isNativeImpl())
     popMappingsToAncestor(ancestorLayer?.renderer())
   }
 
   private func pushMappingsToAncestor(
     _ renderer: RenderObjectWrapper?, _ ancestorRenderer: RenderLayerModelObjectWrapper?
   ) {
+    assert(isNativeImpl())
     // We need to push mappings in reverse order here, so do insertions rather than appends.
     let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
     var renderer = renderer
@@ -176,6 +193,7 @@ class RenderGeometryMap {
   }
 
   private func popMappingsToAncestor(_ ancestorRenderer: RenderLayerModelObjectWrapper?) {
+    assert(isNativeImpl())
     assert(!mapping.isEmpty)
 
     while !mapping.isEmpty
@@ -195,6 +213,7 @@ class RenderGeometryMap {
     accumulatingTransform: Bool = false, isNonUniform: Bool = false, isFixedPosition: Bool = false,
     hasTransform: Bool = false
   ) {
+    assert(isNativeImpl())
     assert(insertionPosition != RenderGeometryMap.notFound)
 
     mapping.insert(
@@ -212,6 +231,7 @@ class RenderGeometryMap {
     _ renderer: RenderObjectWrapper, _ t: TransformationMatrix, accumulatingTransform: Bool = false,
     isNonUniform: Bool = false, isFixedPosition: Bool = false, hasTransform: Bool = false
   ) {
+    assert(isNativeImpl())
     assert(insertionPosition != RenderGeometryMap.notFound)
 
     mapping.insert(
@@ -233,6 +253,7 @@ class RenderGeometryMap {
   func pushView(
     _ view: RenderViewWrapper?, _ scrollOffset: LayoutSizeWrapper, _ t: TransformationMatrix? = nil
   ) {
+    assert(isNativeImpl())
     assert(insertionPosition == 0)  // The view should always be the first step.
 
     mapping.insert(
@@ -251,6 +272,7 @@ class RenderGeometryMap {
   private func mapToContainer(
     _ transformState: TransformState, _ container: RenderLayerModelObjectWrapper?
   ) {
+    assert(isNativeImpl())
     // If the mapping includes something like columns, we have to go via renderers.
     if hasNonUniformStep() {
       var dummy: Bool? = nil
@@ -313,6 +335,7 @@ class RenderGeometryMap {
   }
 
   private func stepInserted(_ step: RenderGeometryMapStep) {
+    assert(isNativeImpl())
     // RenderView's offset, is only applied when we have fixed-positions.
     if !step.renderer!.isRenderView() {
       accumulatedOffset += step.offset
@@ -336,6 +359,7 @@ class RenderGeometryMap {
   }
 
   private func stepRemoved(_ step: RenderGeometryMapStep) {
+    assert(isNativeImpl())
     // RenderView's offset, is only applied when we have fixed-positions.
     if !step.renderer!.isRenderView() {
       accumulatedOffset -= step.offset
@@ -361,11 +385,22 @@ class RenderGeometryMap {
     }
   }
 
-  private func hasNonUniformStep() -> Bool { return nonUniformStepsCount != 0 }
+  private func hasNonUniformStep() -> Bool {
+    assert(isNativeImpl())
+    return nonUniformStepsCount != 0
+  }
 
-  private func hasTransformStep() -> Bool { return transformedStepsCount != 0 }
+  private func hasTransformStep() -> Bool {
+    assert(isNativeImpl())
+    return transformedStepsCount != 0
+  }
 
-  private func hasFixedPositionStep() -> Bool { return fixedStepsCount != 0 }
+  private func hasFixedPositionStep() -> Bool {
+    assert(isNativeImpl())
+    return fixedStepsCount != 0
+  }
+
+  private func isNativeImpl() -> Bool { return pInterop == nil }
 
   typealias RenderGeometryMapSteps = [RenderGeometryMapStep]  // TODO(asuhan): use inline storage of 32
 
@@ -380,4 +415,6 @@ class RenderGeometryMap {
   #if ASSERT_ENABLED
     private var accumulatedOffsetMightBeSaturated: Bool
   #endif
+
+  private let pInterop: UnsafeMutableRawPointer?
 }
