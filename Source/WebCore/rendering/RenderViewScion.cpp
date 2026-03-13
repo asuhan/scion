@@ -57,6 +57,8 @@ extern "C" bool RenderViewScion_usesCompositing(void*);
 
 extern "C" IntRectRaw RenderViewScion_unscaledDocumentRect(const void*);
 
+extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
+
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
@@ -198,8 +200,8 @@ IntRect RenderViewScion::unscaledDocumentRect() const
 
 IntRect RenderViewScion::documentRect() const
 {
-    ASSERT_NOT_REACHED();
-    return {};
+    const auto raw = RenderViewScion_documentRect(m_handle);
+    return IntRect({raw.location.x, raw.location.y}, {raw.size.width, raw.size.height});
 }
 
 FloatSize RenderViewScion::sizeForCSSLargeViewportUnits() const

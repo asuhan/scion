@@ -733,6 +733,7 @@ LayoutRect RenderView::backgroundRect() const
 
 IntRect RenderView::documentRect() const
 {
+    if (m_scion) { return m_scion->documentRect(); }
     FloatRect overflowRect(unscaledDocumentRect());
     if (isTransformed())
         overflowRect = layer()->currentTransform().mapRect(overflowRect);
