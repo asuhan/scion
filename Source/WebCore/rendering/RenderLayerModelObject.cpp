@@ -761,6 +761,12 @@ void RenderLayerModelObject::paintSVGMask(PaintInfo& paintInfo, const LayoutPoin
         referencedMaskerRenderer->applyMask(paintInfo, *this, adjustedPaintOffset);
 }
 
+void* RenderLayerModelObject::scion() const
+{
+    ASSERT(m_scion);
+    return m_scion->handle();
+}
+
 bool rendererNeedsPixelSnapping(const RenderLayerModelObject& renderer)
 {
     if (renderer.document().settings().layerBasedSVGEngineEnabled() && renderer.isSVGLayerAwareRenderer() && !renderer.isRenderSVGRoot())

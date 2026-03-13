@@ -540,6 +540,23 @@ func RenderViewScion_styleDidChange(
   view.styleDidChange(diff: StyleDifference(rawValue: diffRaw)!, oldStyle: oldStyle)
 }
 
+@_cdecl("RenderViewScion_pushMappingToContainer")
+func RenderViewScion_pushMappingToContainer(
+  _ viewRaw: UnsafeRawPointer, _ ancestorToStopAtRaw: UnsafeRawPointer?,
+  _ geometryMapRaw: UnsafeMutableRawPointer
+) -> UnsafeRawPointer? {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let ancestorToStopAt =
+    ancestorToStopAtRaw != nil
+    ? Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(ancestorToStopAtRaw!)
+      .takeUnretainedValue()
+    : nil
+  let renderObjectRaw = view.pushMappingToContainer(
+    ancestorToStopAt, RenderGeometryMap(geometryMapRaw))
+  assert(renderObjectRaw == nil)
+  return nil
+}
+
 @_cdecl("RenderViewScion_setWk")
 func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

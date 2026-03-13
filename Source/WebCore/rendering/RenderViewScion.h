@@ -109,6 +109,8 @@ public:
 
     void styleDidChange(StyleDifference, const RenderStyle*);
 
+    const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
+
     void setWk(void*);
 
 private:

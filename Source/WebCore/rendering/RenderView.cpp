@@ -305,6 +305,9 @@ void RenderView::mapLocalToContainer(const RenderLayerModelObject* ancestorConta
 
 const RenderObject* RenderView::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
+    if (m_scion) {
+        return m_scion->pushMappingToContainer(ancestorToStopAt, geometryMap);
+    }
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
     ASSERT_ARG(ancestorToStopAt, !ancestorToStopAt || ancestorToStopAt == this);

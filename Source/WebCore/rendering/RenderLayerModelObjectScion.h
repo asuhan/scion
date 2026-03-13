@@ -46,6 +46,8 @@ public:
 
     RenderLayer* layer() const;
 
+    void* handle() const { return m_handle; }
+
 private:
     void* m_handle;
 };

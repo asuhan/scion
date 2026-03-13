@@ -42,6 +42,8 @@ extern "C" bool RenderViewScion_usesCompositing(void*);
 
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
+extern "C" void* RenderViewScion_pushMappingToContainer(void*, void*, void*);
+
 extern "C" void RenderViewScion_setWk(void*, void*);
 
 namespace WebCore {
@@ -129,7 +131,8 @@ RenderSelection& RenderViewScion::selection()
     return *unused;
 }
 
-bool RenderViewScion::requiresLayer() const {
+bool RenderViewScion::requiresLayer() const
+{
     return RenderViewScion_requiresLayer(m_handle);
 }
 
@@ -201,6 +204,11 @@ const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryB
 void RenderViewScion::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
     RenderViewScion_styleDidChange(m_handle, static_cast<uint8_t>(diff), oldStyle);
+}
+
+const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
+{
+    return static_cast<const RenderObject*>(RenderViewScion_pushMappingToContainer(m_handle, ancestorToStopAt ? ancestorToStopAt->scion() : nullptr, &geometryMap));
 }
 
 void RenderViewScion::setWk(void* wk)
