@@ -133,8 +133,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func updateLogicalWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    setLogicalWidth(
+      size: shouldUsePrintingLayout()
+        ? pageLogicalSize!.width() : LayoutUnit(value: viewLogicalWidth()))
   }
 
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
@@ -182,6 +184,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
         frameView.useFixedLayout() ? ceilf(style().usedZoom() * Float32(width)) : Float32(width))
     }
     return width
+  }
+
+  private func viewLogicalWidth() -> Int32 {
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? viewWidth() : viewHeight()
   }
 
   private func viewLogicalHeight() -> Int32 {
