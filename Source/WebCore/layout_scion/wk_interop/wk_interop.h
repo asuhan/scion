@@ -445,6 +445,7 @@ bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_ra
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 const void* LocalFrameView_layoutContext(const void*);
+struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);

@@ -153,6 +153,17 @@ extern "C" WEBCORE_EXPORT const void* LocalFrameView_layoutContext(const void* p
     return &static_cast<const WebCore::LocalFrameView*>(p)->layoutContext();
 }
 
+struct LayoutPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
+extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void* p)
+{
+    auto layoutPoint = static_cast<const WebCore::LocalFrameView*>(p)->scrollPositionRespectingCustomFixedPosition();
+    return { layoutPoint.x().rawValue(), layoutPoint.y().rawValue() };
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

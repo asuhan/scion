@@ -260,8 +260,10 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func scrollPositionRespectingCustomFixedPosition() -> LayoutPointWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let rawLayoutPoint = wk_interop.LocalFrameView_scrollPositionRespectingCustomFixedPosition(p)
+    return LayoutPointWrapper(
+      x: LayoutUnit.fromRawValue(value: rawLayoutPoint.x),
+      y: LayoutUnit.fromRawValue(value: rawLayoutPoint.y))
   }
 
   func topContentDirectionDidChange() {
