@@ -34,6 +34,22 @@
 #include "TransformState.h"
 #include <wtf/SetForScope.h>
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT void RenderGeometryMap_pushView(void* raw, const void* view_raw, LayoutSizeRaw scroll_offset_raw, const void* t_raw)
+{
+    const auto view = static_cast<const WebCore::RenderView*>(view_raw);
+    const auto scrollOffset = WebCore::LayoutSize {
+        WebCore::LayoutUnit::fromRawValue(scroll_offset_raw.width),
+        WebCore::LayoutUnit::fromRawValue(scroll_offset_raw.height)
+    };
+    const auto t = static_cast<const WebCore::TransformationMatrix*>(t_raw);
+    static_cast<WebCore::RenderGeometryMap*>(raw)->pushView(view, scrollOffset, t);
+}
+
 namespace WebCore {
 
 RenderGeometryMap::RenderGeometryMap(OptionSet<MapCoordinatesMode> flags)

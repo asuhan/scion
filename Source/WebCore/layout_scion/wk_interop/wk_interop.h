@@ -143,6 +143,11 @@ struct LayoutPointRaw {
     int32_t y;
 };
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
 struct LayoutRectRaw {
     int32_t x;
     int32_t y;
@@ -834,3 +839,4 @@ void Element_clearLastRememberedLogicalHeight(void*);
 bool Element_isRelevantToUser(void*);
 struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);
+void RenderGeometryMap_pushView(void* raw, const void* view_raw, struct LayoutSizeRaw scroll_offset_raw, const void* t_raw);

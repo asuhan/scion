@@ -25,6 +25,8 @@
  */
 
 class TransformationMatrix {
+  init(_ p: UnsafeMutableRawPointer) { pInterop = p }
+
   init() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -163,4 +165,8 @@ class TransformationMatrix {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  func interop() -> UnsafeMutableRawPointer { return pInterop }
+
+  private let pInterop: UnsafeMutableRawPointer
 }

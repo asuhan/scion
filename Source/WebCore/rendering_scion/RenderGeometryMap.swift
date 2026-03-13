@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 // Stores data about how to map from one renderer to its container.
 struct RenderGeometryMapStep {
   init(
@@ -251,9 +253,16 @@ class RenderGeometryMap {
 
   // RenderView gets special treatment, because it applies the scroll offset only for elements inside in fixed position.
   func pushView(
-    _ view: RenderViewWrapper?, _ scrollOffset: LayoutSizeWrapper, _ t: TransformationMatrix? = nil
+    _ view: RenderViewWrapper, _ scrollOffset: LayoutSizeWrapper, _ t: TransformationMatrix? = nil
   ) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderGeometryMap_pushView(
+        pInterop, view.getWk(),
+        LayoutSizeRaw(
+          width: scrollOffset.width().rawValue(), height: scrollOffset.height().rawValue()),
+        t?.interop())
+      return
+    }
     assert(insertionPosition == 0)  // The view should always be the first step.
 
     mapping.insert(
