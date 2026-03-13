@@ -777,8 +777,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func updateInitialContainingBlockSize() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Initial containing block has no margin/padding/border.
+    m_layoutState!.ensureGeometryForBox(layoutBox: m_initialContainingBlock!).setContentBoxSize(
+      size: LayoutSizeWrapper(size: frameView().size()))
   }
 
   private func shouldUsePrintingLayout() -> Bool {
