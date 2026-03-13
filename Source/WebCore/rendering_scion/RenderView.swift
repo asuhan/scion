@@ -673,8 +673,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func viewTransitionRoot() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_viewTransitionRoot
   }
 
   func setViewTransitionRoot(renderer: RenderElementWrapper) {
@@ -815,6 +815,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
+
+  private let m_viewTransitionRoot: RenderElementWrapper? = nil
 
   private var wk: UnsafeMutableRawPointer? = nil
 }
