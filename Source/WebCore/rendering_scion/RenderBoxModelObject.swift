@@ -810,8 +810,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func containingBlockLogicalWidthForContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return containingBlock()?.availableLogicalWidth() ?? LayoutUnit()
   }
 
   // Overridden by subclasses to determine line height and baseline position.
