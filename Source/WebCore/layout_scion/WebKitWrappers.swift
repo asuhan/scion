@@ -520,6 +520,12 @@ func RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlays
   return view.needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly()
 }
 
+@_cdecl("RenderViewScion_updateQuirksMode")
+func RenderViewScion_updateQuirksMode(_ viewRaw: UnsafeRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.updateQuirksMode()
+}
+
 @_cdecl("RenderViewScion_setIsInWindow")
 func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

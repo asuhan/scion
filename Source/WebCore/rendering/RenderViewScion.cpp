@@ -51,6 +51,8 @@ extern "C" void* RenderViewScion_frameView(void*);
 
 extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
 
+extern "C" void RenderViewScion_updateQuirksMode(const void*);
+
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(void*);
@@ -173,7 +175,7 @@ bool RenderViewScion::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlay
 
 void RenderViewScion::updateQuirksMode()
 {
-    ASSERT_NOT_REACHED();
+    RenderViewScion_updateQuirksMode(m_handle);
 }
 
 void RenderViewScion::repaintRootContents()

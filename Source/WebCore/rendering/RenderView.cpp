@@ -228,6 +228,10 @@ void RenderView::layout()
 
 void RenderView::updateQuirksMode()
 {
+    if (m_scion) {
+        m_scion->updateQuirksMode();
+        return;
+    }
     m_layoutState->updateQuirksMode(document());
 }
 
