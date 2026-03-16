@@ -95,8 +95,9 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func updateFromStyle() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    cachedLineHeight = nil
+    assert(isInline())
   }
 
   override func requiresLayer() -> Bool {
