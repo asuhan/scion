@@ -618,13 +618,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func logicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? width() : height()
   }
 
   func logicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? height() : width()
   }
 
   enum AllowIntrinsic {
