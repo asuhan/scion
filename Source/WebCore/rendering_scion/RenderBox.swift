@@ -980,8 +980,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Note these functions are not equivalent of childrenOfType<RenderBox>
   func parentBox() -> RenderBoxWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if let box = parent() as? RenderBoxWrapper {
+      return box
+    }
+
+    assert(parent() == nil)
+    return nil
   }
 
   func firstChildBox() -> RenderBoxWrapper? {
