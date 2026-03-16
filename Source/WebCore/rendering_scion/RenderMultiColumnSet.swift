@@ -56,8 +56,8 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func multiColumnBlockFlow() -> RenderBlockFlowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return parent() as! RenderBlockFlowWrapper?
   }
 
   func multiColumnFlowForMultiColumnSet() -> RenderMultiColumnFlowWrapper? {
