@@ -598,8 +598,9 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func pageLogicalTopForOffset(offset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let columnIndex = columnIndexAtOffset(offset, .AssumeNewColumns)
+    return logicalTopInFragmentedFlow() + columnIndex * computedColumnHeight
   }
 
   override func logicalHeightOfAllFragmentedFlowContent() -> LayoutUnit {
