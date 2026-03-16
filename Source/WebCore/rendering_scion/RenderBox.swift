@@ -926,8 +926,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // This returns the content area of the box (excluding padding and border). The only difference with contentBoxRect is that computedCSSContentBoxRect
   // does include the intrinsic padding in the content box as this is what some callers expect (like getComputedStyle).
   func computedCSSContentBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutRectWrapper(
+      x: borderLeft() + computedCSSPaddingLeft(), y: borderTop() + computedCSSPaddingTop(),
+      width: paddingBoxWidth() - computedCSSPaddingLeft() - computedCSSPaddingRight()
+        - (style().scrollbarGutter().bothEdges ? verticalScrollbarWidth() : 0),
+      height: paddingBoxHeight() - computedCSSPaddingTop() - computedCSSPaddingBottom()
+        - (style().scrollbarGutter().bothEdges ? horizontalScrollbarHeight() : 0))
   }
 
   // Bounds of the outline box in absolute coords. Respects transforms
