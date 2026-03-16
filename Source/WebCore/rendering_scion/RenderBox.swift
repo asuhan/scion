@@ -778,8 +778,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setLogicalLocation(location: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    setLocation(p: style().isHorizontalWritingMode() ? location : location.transposedPoint())
   }
 
   func setLogicalWidth(size: LayoutUnit) {
