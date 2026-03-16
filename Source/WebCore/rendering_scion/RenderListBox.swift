@@ -472,6 +472,11 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private func maximumNumberOfItemsThatFitInPaddingAfterArea() -> Int32 {
+    assert(isNativeImpl())
+    return (paddingAfter() / itemLogicalHeight()).int()
+  }
+
   private func numberOfVisibleItemsInPaddingBefore() -> Int32 {
     assert(isNativeImpl())
     if indexOfFirstVisibleItemInsidePaddingBeforeArea == nil {
@@ -482,8 +487,14 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func numberOfVisibleItemsInPaddingAfter() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if indexOfFirstVisibleItemInsidePaddingAfterArea == nil {
+      return 0
+    }
+
+    return min(
+      maximumNumberOfItemsThatFitInPaddingAfterArea(),
+      numItems() - indexOffset() - numVisibleItems())
   }
 
   private func itemLogicalHeight() -> LayoutUnit {
