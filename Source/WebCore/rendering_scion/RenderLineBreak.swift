@@ -87,10 +87,7 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     return LayoutUnit(value: 0)
   }
 
-  override func frameRectForStickyPositioning() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override func frameRectForStickyPositioning() -> LayoutRectWrapper { fatalError("Not reached") }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
     // TODO(asuhan): implement this
