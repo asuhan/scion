@@ -521,8 +521,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func numItems() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return Int32(selectElement().listItems().count)
   }
 
   private func rectForScrollbar(_ scrollbar: Scrollbar) -> LayoutRectWrapper {
