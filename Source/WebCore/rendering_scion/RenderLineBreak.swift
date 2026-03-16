@@ -53,6 +53,7 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     if firstLine {
       let firstLineStyle = firstLineStyle()
       if CPtrToInt(firstLineStyle.p) != CPtrToInt(style().p) {
