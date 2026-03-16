@@ -588,13 +588,13 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func pageLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return computedColumnWidth
   }
 
   override func pageLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return computedColumnHeight
   }
 
   override func pageLogicalTopForOffset(offset: LayoutUnit) -> LayoutUnit {
