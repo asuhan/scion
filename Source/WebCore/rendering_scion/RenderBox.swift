@@ -856,8 +856,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func marginBoxRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let left = resolveLengthPercentageUsingContainerLogicalWidth(style().marginLeft())
+    let right = resolveLengthPercentageUsingContainerLogicalWidth(style().marginRight())
+    let top = resolveLengthPercentageUsingContainerLogicalWidth(style().marginTop())
+    let bottom = resolveLengthPercentageUsingContainerLogicalWidth(style().marginBottom())
+    return LayoutRectWrapper(
+      x: -left, y: -top, width: size().width() + left + right,
+      height: size().height() + top + bottom)
   }
 
   func borderBoxRect() -> LayoutRectWrapper {

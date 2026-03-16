@@ -1281,9 +1281,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  private func resolveLengthPercentageUsingContainerLogicalWidth(_ value: LengthWrapper)
-    -> LayoutUnit
-  {
+  func resolveLengthPercentageUsingContainerLogicalWidth(_ value: LengthWrapper) -> LayoutUnit {
     assert(isNativeImpl())
     var containerWidth = LayoutUnit()
     if value.isPercentOrCalculated() {
