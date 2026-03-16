@@ -36,6 +36,8 @@ class RenderMediaWrapper: RenderImageWrapper {
     fatalError("Not implemented")
   }
 
+  override func visibleInViewportStateChanged() {}
+
   override func paintReplaced(
     _ paintInfo: inout PaintInfoWrapper, _ paintOffset: LayoutPointWrapper
   ) {

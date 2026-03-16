@@ -56,6 +56,11 @@ final class RenderVideoWrapper: RenderMediaWrapper {
     fatalError("Not implemented")
   }
 
+  override final func visibleInViewportStateChanged() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override final func computeReplacedLogicalWidth(
     shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   )

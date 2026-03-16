@@ -654,6 +654,60 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     m_rendererCount += 1
   }
 
+  func updateVisibleViewportRect(_ visibleRect: IntRect) {
+    resumePausedImageAnimationsIfNeeded(visibleRect)
+
+    for rendererRaw in m_visibleInViewportRenderers {
+      let renderer = Unmanaged<RenderElementWrapper>.fromOpaque(
+        UnsafeRawPointer(bitPattern: rendererRaw)!
+      ).takeUnretainedValue()
+      let state: VisibleInViewportState =
+        visibleRect.intersects(
+          other: enclosingIntRect(rect: renderer.absoluteClippedOverflowRectForRepaint()))
+        ? .Yes : .No
+      renderer.setVisibleInViewportState(state)
+    }
+  }
+
+  private func resumePausedImageAnimationsIfNeeded(_ visibleRect: IntRect) {
+    // TODO(asuhan): use array with inline storage
+    var toRemove: [(RenderElementWrapper, WeakNullableRef<CachedImageWrapper>)] = []
+    for (rendererRaw, cachedImages) in m_renderersWithPausedImageAnimation {
+      for image in cachedImages {
+        let renderer = Unmanaged<RenderElementWrapper>.fromOpaque(
+          UnsafeRawPointer(bitPattern: rendererRaw)!
+        ).takeUnretainedValue()
+        if renderer.repaintForPausedImageAnimationsIfNeeded(visibleRect, *image) {
+          toRemove.append((renderer, image))
+        }
+      }
+    }
+    for (renderer, image) in toRemove {
+      removeRendererWithPausedImageAnimations(renderer, *image)
+    }
+
+    var svgSvgElementsToRemove: [SVGSVGElementWrapper] = []
+    for svgSvgElementRaw in m_SVGSVGElementsWithPausedImageAnimation {
+      let svgSvgElement = Unmanaged<SVGSVGElementWrapper>.fromOpaque(
+        UnsafeRawPointer(bitPattern: svgSvgElementRaw)!
+      ).takeUnretainedValue()
+      if svgSvgElement.resumePausedAnimationsIfNeeded(visibleRect) {
+        svgSvgElementsToRemove.append(svgSvgElement)
+      }
+    }
+    for svgSvgElement in svgSvgElementsToRemove {
+      m_SVGSVGElementsWithPausedImageAnimation.remove(
+        UInt(bitPattern: ObjectIdentifier(svgSvgElement)))
+    }
+  }
+
+  private func removeRendererWithPausedImageAnimations(
+    _ renderer: RenderElementWrapper, _ image: CachedImageWrapper
+  ) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func layerChildrenChangedDuringStyleChange(_ layer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -824,6 +878,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
+
+  private let m_renderersWithPausedImageAnimation: [UInt: [WeakNullableRef<CachedImageWrapper>]] =
+    [:]
+  private var m_SVGSVGElementsWithPausedImageAnimation: Set<UInt> = []
+  private let m_visibleInViewportRenderers: Set<UInt> = []
 
   private var m_viewTransitionRoot: RenderElementWrapper? = nil
 

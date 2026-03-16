@@ -1111,6 +1111,29 @@ class RenderElementWrapper: RenderObjectWrapper {
     return style().hasBlendMode()
   }
 
+  private func visibleInViewportState() -> VisibleInViewportState {
+    assert(isNativeImpl())
+    return m_visibleInViewportState
+  }
+
+  func setVisibleInViewportState(_ state: VisibleInViewportState) {
+    assert(isNativeImpl())
+    if state == visibleInViewportState() {
+      return
+    }
+    m_visibleInViewportState = state
+    visibleInViewportStateChanged()
+  }
+
+  func visibleInViewportStateChanged() { fatalError("Not reached") }
+
+  func repaintForPausedImageAnimationsIfNeeded(
+    _ visibleRect: IntRect, _ cachedImage: CachedImageWrapper
+  ) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func imageOrientation() -> ImageOrientation {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -2272,7 +2295,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   private var m_lastChild: RenderObjectWrapper?
 
   private let m_isRegisteredForVisibleInViewportCallback: Bool
-  private let m_visibleInViewportState: VisibleInViewportState
+  private var m_visibleInViewportState: VisibleInViewportState
   private let m_didContributeToVisuallyNonEmptyPixelCount: Bool
   private var m_layoutIdentifier: LayoutIdentifier = 0
 

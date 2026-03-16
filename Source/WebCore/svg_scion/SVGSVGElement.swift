@@ -38,6 +38,11 @@ final class SVGSVGElementWrapper: SVGGraphicsElementWrapper, SVGFitToViewBox {
     fatalError("Not implemented")
   }
 
+  func resumePausedAnimationsIfNeeded(_ visibleRect: IntRect) -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func hasIntrinsicWidth() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
