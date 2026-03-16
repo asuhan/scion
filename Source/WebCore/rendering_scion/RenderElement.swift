@@ -2293,7 +2293,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   private var m_isContinuation: Bool
   private var m_isFirstLetter: Bool
   var renderBlockHasMarginBeforeQuirk: Bool
-  let renderBlockHasMarginAfterQuirk: Bool
+  var renderBlockHasMarginAfterQuirk: Bool
   var renderBlockShouldForceRelayoutChildren: Bool
   private let m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
 
