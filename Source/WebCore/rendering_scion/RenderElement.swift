@@ -494,6 +494,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     fatalError("Not implemented")
   }
 
+  func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper) -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   func didAttachChild(child: RenderObjectWrapper) {
     if let textRenderer = child as? RenderTextWrapper {
       textRenderer.styleDidChange(diff: .Equal, oldStyle: nil)

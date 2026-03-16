@@ -78,6 +78,13 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   override func requiresLayer() -> Bool { return true }
 
+  override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
+    -> Bool
+  {
+    assert(isNativeImpl())
+    return child.isRenderBox()
+  }
+
   override func layout() {
     // TODO(asuhan): add stack stats
     if !document().paginated() {

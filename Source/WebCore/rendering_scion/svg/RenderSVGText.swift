@@ -84,6 +84,13 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
+    -> Bool
+  {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func setNeedsPositioningValuesUpdate() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

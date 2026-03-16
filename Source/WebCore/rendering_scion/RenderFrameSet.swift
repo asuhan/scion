@@ -216,6 +216,13 @@ final class RenderFrameSetWrapper: RenderBoxWrapper {
     }
   }
 
+  override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
+    -> Bool
+  {
+    assert(isNativeImpl())
+    return child.isRenderFrame() || child.isRenderFrameSet()
+  }
+
   private func layOutAxis(
     _ axis: inout GridAxis, _ grid: ArraySlice<LengthWrapper>, _ availableLen: Int32
   ) {

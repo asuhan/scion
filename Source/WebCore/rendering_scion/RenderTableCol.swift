@@ -120,6 +120,14 @@ final class RenderTableColWrapper: RenderBoxWrapper {
     fatalError("Not implemented")
   }
 
+  override final func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper)
+    -> Bool
+  {
+    assert(isNativeImpl())
+    // We cannot use isTableColumn here as style() may return 0.
+    return style.display() == .TableColumn && child.isRenderTableCol()
+  }
+
   override func requiresLayer() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

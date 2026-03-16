@@ -642,6 +642,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .FileUploadControl
   }
 
+  func isRenderFrame() -> Bool {
+    assert(isNativeImpl())
+    return type() == .Frame
+  }
+
   func isRenderFrameSet() -> Bool {
     assert(isNativeImpl())
     return type() == .FrameSet
