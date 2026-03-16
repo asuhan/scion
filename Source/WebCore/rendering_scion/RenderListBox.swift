@@ -668,8 +668,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func scrollbarOrientationForWritingMode() -> ScrollbarOrientation {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isHorizontalWritingMode() ? .Vertical : .Horizontal
   }
 
   private func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
