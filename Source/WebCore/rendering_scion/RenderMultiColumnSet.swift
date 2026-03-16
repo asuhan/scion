@@ -156,6 +156,12 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
       ? fragmentedFlowPortionRect().maxY() : fragmentedFlowPortionRect().maxX()
   }
 
+  private func logicalHeightInFragmentedFlow() -> LayoutUnit {
+    assert(isNativeImpl())
+    return isHorizontalWritingMode()
+      ? fragmentedFlowPortionRect().height() : fragmentedFlowPortionRect().width()
+  }
+
   private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
     computedColumnWidth = width
     computedColumnCount = count
@@ -597,8 +603,8 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func logicalHeightOfAllFragmentedFlowContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return logicalHeightInFragmentedFlow()
   }
 
   override func repaintFragmentedFlowContent(_ repaintRect: LayoutRectWrapper) {
