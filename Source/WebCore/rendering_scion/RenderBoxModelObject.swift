@@ -782,13 +782,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func horizontalMarginExtent() -> LayoutUnit { return marginLeft() + marginRight() }
 
   func marginLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginBefore() + marginAfter()
   }
 
   func marginLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return marginStart() + marginEnd()
   }
 
   func borderShapeForContentClipping(
