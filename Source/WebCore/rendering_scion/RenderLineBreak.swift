@@ -90,8 +90,8 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   override func frameRectForStickyPositioning() -> LayoutRectWrapper { fatalError("Not reached") }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RepaintRects()
   }
 
   override func updateFromStyle() {
