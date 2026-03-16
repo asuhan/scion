@@ -135,8 +135,9 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func logicalTopInFragmentedFlow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode()
+      ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x()
   }
 
   private func setLogicalBottomInFragmentedFlow(_ logicalBottom: LayoutUnit) {
@@ -150,8 +151,9 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   private func logicalBottomInFragmentedFlow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode()
+      ? fragmentedFlowPortionRect().maxY() : fragmentedFlowPortionRect().maxX()
   }
 
   private func setComputedColumnWidthAndCount(_ width: LayoutUnit, _ count: UInt32) {
