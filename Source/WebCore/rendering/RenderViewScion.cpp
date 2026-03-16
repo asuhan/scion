@@ -63,6 +63,8 @@ extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
+extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRaw);
+
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderViewScion_pushMappingToContainer(void*, void*, void*);
@@ -202,13 +204,13 @@ bool RenderViewScion::usesCompositing() const
 IntRect RenderViewScion::unscaledDocumentRect() const
 {
     const auto raw = RenderViewScion_unscaledDocumentRect(m_handle);
-    return IntRect({raw.location.x, raw.location.y}, {raw.size.width, raw.size.height});
+    return IntRect({ raw.location.x, raw.location.y }, { raw.size.width, raw.size.height });
 }
 
 IntRect RenderViewScion::documentRect() const
 {
     const auto raw = RenderViewScion_documentRect(m_handle);
-    return IntRect({raw.location.x, raw.location.y}, {raw.size.width, raw.size.height});
+    return IntRect({ raw.location.x, raw.location.y }, { raw.size.width, raw.size.height });
 }
 
 FloatSize RenderViewScion::sizeForCSSLargeViewportUnits() const
@@ -231,6 +233,11 @@ bool RenderViewScion::hasSoftwareFilters() const
 void RenderViewScion::didCreateRenderer()
 {
     ASSERT_NOT_REACHED();
+}
+
+void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)
+{
+    RenderViewScion_updateVisibleViewportRect(m_handle, { visibleRect.location().x(), visibleRect.location().y(), visibleRect.size().width(), visibleRect.size().height( ) });
 }
 
 const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryBoxes() const

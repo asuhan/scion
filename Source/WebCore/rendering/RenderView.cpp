@@ -911,6 +911,10 @@ void RenderView::unregisterForVisibleInViewportCallback(RenderElement& renderer)
 
 void RenderView::updateVisibleViewportRect(const IntRect& visibleRect)
 {
+    if (m_scion) {
+        m_scion->updateVisibleViewportRect(visibleRect);
+        return;
+    }
     resumePausedImageAnimationsIfNeeded(visibleRect);
 
     for (auto& renderer : m_visibleInViewportRenderers) {

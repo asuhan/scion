@@ -111,6 +111,8 @@ public:
 
     void didCreateRenderer();
 
+    void updateVisibleViewportRect(const IntRect&);
+
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 
     void styleDidChange(StyleDifference, const RenderStyle*);
