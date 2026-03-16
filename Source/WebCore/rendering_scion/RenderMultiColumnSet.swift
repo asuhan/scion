@@ -61,8 +61,8 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   func multiColumnFlowForMultiColumnSet() -> RenderMultiColumnFlowWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return fragmentedFlow as! RenderMultiColumnFlowWrapper?
   }
 
   func nextSiblingMultiColumnSet() -> RenderMultiColumnSetWrapper? {
