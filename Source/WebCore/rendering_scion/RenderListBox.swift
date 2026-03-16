@@ -416,8 +416,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   final override func useDarkAppearance() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.useDarkAppearance()
   }
 
   private func scrollToPosition(positionIndex: Int32) {
