@@ -67,7 +67,7 @@ class LayoutStateWrapper {
     m_formattingContextLogicalWidthFunction = nil
   }
 
-  private func updateQuirksMode(_ document: Document) {
+  func updateQuirksMode(_ document: Document) {
     let quirksMode = { () -> QuirksMode in
       if document.inLimitedQuirksMode() {
         return .Limited

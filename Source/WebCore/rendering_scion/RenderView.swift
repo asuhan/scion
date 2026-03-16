@@ -222,6 +222,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(id()))
   }
 
+  func updateQuirksMode() {
+    assert(isNativeImpl())
+    m_layoutState!.updateQuirksMode(document())
+  }
+
   func needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() -> Bool {
     return m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly
   }
