@@ -462,8 +462,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func setHasMarginBeforeQuirk(b: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    renderBlockHasMarginBeforeQuirk = b
   }
 
   func setHasMarginAfterQuirk(b: Bool) {
