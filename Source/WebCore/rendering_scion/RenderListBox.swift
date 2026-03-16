@@ -473,8 +473,12 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func numberOfVisibleItemsInPaddingBefore() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if indexOfFirstVisibleItemInsidePaddingBeforeArea == nil {
+      return 0
+    }
+
+    return indexOffset() - indexOfFirstVisibleItemInsidePaddingBeforeArea!
   }
 
   private func numberOfVisibleItemsInPaddingAfter() -> Int32 {
