@@ -498,8 +498,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func itemLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: Int32(style().metricsOfPrimaryFont().intHeight()) + itemBlockSpacing)
   }
 
   private enum ConsiderPadding {
