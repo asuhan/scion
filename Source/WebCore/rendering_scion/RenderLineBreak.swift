@@ -43,8 +43,8 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   override func lineHeight(
