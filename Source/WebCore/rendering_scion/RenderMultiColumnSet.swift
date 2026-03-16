@@ -584,8 +584,7 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    fatalError("Not reached")
   }
 
   override func pageLogicalWidth() -> LayoutUnit {
