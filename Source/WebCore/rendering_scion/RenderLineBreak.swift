@@ -68,23 +68,23 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func marginBottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: 0)
   }
 
   override func marginLeft() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: 0)
   }
 
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: 0)
   }
 
   override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: 0)
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
