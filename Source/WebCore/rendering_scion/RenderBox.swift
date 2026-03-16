@@ -760,13 +760,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setLogicalLeft(left: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if style().isHorizontalWritingMode() {
+      setX(x: left)
+    } else {
+      setY(y: left)
+    }
   }
 
   func setLogicalTop(top: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if style().isHorizontalWritingMode() {
+      setY(y: top)
+    } else {
+      setX(x: top)
+    }
   }
 
   func setLogicalLocation(location: LayoutPointWrapper) {
