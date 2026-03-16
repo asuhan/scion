@@ -5686,8 +5686,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldComputeSizeAsReplaced() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isReplacedOrInlineBlock() && !isInlineBlockOrInlineTable()
   }
 
   func localOutlineBoundsRepaintRect() -> LayoutRectWrapper {
