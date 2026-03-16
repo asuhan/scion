@@ -2129,8 +2129,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fragment: RenderFragmentContainerWrapper?,
     flags: RenderBoxWrapper.RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderBoxRect()
   }
 
   func clientBoxRectInFragment(_ fragment: RenderFragmentContainerWrapper?) -> LayoutRectWrapper {
