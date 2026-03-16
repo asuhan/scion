@@ -783,13 +783,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setLogicalWidth(size: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if style().isHorizontalWritingMode() {
+      setWidth(width: size)
+    } else {
+      setHeight(height: size)
+    }
   }
 
   func setLogicalHeight(size: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if style().isHorizontalWritingMode() {
+      setHeight(height: size)
+    } else {
+      setWidth(width: size)
+    }
   }
 
   func location() -> LayoutPointWrapper {
