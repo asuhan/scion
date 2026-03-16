@@ -820,10 +820,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     linePositionMode: LinePositionMode = .PositionOnContainingLine
   )
     -> LayoutUnit
-  {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  { fatalError("Not reached") }
 
   func baselinePosition(
     baselineType: FontBaseline, firstLine: Bool, direction: LineDirectionMode,
