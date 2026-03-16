@@ -28,8 +28,8 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return createVisiblePosition(0, .Downstream)
   }
 
   override final func caretMinOffset() -> Int32 {
