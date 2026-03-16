@@ -578,8 +578,9 @@ final class RenderMultiColumnSetWrapper: RenderFragmentContainerSetWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LogicalExtentComputedValues(
+      extent: availableColumnHeight, position: logicalTop, margins: ComputedMarginValues())
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
