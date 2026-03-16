@@ -2345,10 +2345,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
         height: oldRect.height().rawValue()))
   }
 
-  func repaintOverhangingFloats(paintAllDescendants: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func repaintOverhangingFloats(paintAllDescendants: Bool) {}
 
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {
     if let overridingContainingBlockContentLogicalWidth =
