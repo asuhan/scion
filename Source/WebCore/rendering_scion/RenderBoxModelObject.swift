@@ -1288,8 +1288,5 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return minimumValueForLength(length: value, maximumValue: containerWidth)
   }
 
-  func frameRectForStickyPositioning() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func frameRectForStickyPositioning() -> LayoutRectWrapper { fatalError("Not reached") }
 }
