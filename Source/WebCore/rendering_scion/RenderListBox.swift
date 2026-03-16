@@ -673,8 +673,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   private func shouldPlaceVerticalScrollbarOnLeft() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
   }
 
   private func indexOffset() -> Int32 {
