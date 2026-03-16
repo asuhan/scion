@@ -990,6 +990,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstChildBox() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
     if let box = firstChild() as? RenderBoxWrapper {
       return box
     }
@@ -1004,6 +1005,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func lastChildBox() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
     if let box = lastChild() as? RenderBoxWrapper {
       return box
     }
