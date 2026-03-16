@@ -33,13 +33,13 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func caretMinOffset() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return 0
   }
 
   override final func caretMaxOffset() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return 1
   }
 
   override final func canBeSelectionLeaf() -> Bool {
