@@ -846,8 +846,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func canHaveBoxInfoInFragment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !isFloating() && !isReplacedOrInlineBlock() && !isInline() && !isRenderTableCell()
+      && isRenderBlock() && !isRenderSVGBlock()
   }
 
   func contentChanged(_ changeType: ContentChangeType) {
