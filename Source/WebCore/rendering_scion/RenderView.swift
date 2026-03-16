@@ -655,6 +655,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func updateVisibleViewportRect(_ visibleRect: IntRect) {
+    assert(isNativeImpl())
     resumePausedImageAnimationsIfNeeded(visibleRect)
 
     for rendererRaw in m_visibleInViewportRenderers {
@@ -670,6 +671,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func resumePausedImageAnimationsIfNeeded(_ visibleRect: IntRect) {
+    assert(isNativeImpl())
     // TODO(asuhan): use array with inline storage
     var toRemove: [(RenderElementWrapper, WeakNullableRef<CachedImageWrapper>)] = []
     for (rendererRaw, cachedImages) in m_renderersWithPausedImageAnimation {
