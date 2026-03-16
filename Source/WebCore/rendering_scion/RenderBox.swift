@@ -4499,13 +4499,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func firstLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nil
   }
 
   func lastLineBaseline() -> LayoutUnit? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nil
   }
 
   func shrinkToAvoidFloats() -> Bool {
