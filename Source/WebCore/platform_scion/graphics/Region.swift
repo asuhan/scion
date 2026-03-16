@@ -31,6 +31,11 @@ struct Region {
 
   init(_ rect: IntRect) { bounds = rect }
 
+  func rects() -> [IntRect] {  // TODO(asuhan): use vector with inline storage.
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func unite(_ region: Region) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

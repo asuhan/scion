@@ -839,6 +839,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return !printing() && !rect.isEmpty()
   }
 
+  func flushAccumulatedRepaintRegion() {
+    let repaintRects = accumulatedRepaintRegion!.rects()
+    for rect in repaintRects {
+      protectedFrameView().repaintContentRectangle(rect)
+    }
+    accumulatedRepaintRegion = nil
+  }
+
   private func updateInitialContainingBlockSize() {
     assert(isNativeImpl())
     // Initial containing block has no margin/padding/border.
