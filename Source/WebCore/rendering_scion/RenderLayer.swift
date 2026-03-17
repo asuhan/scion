@@ -1144,7 +1144,10 @@ class RenderLayerWrapper {
   // Indicate that the layer contents need to be repainted. Only has an effect
   // if layer compositing is being used.
   func setBackingNeedsRepaint(shouldClip: GraphicsLayer.ShouldClipToLayer = .ClipToLayer) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_setBackingNeedsRepaint(layerId(), shouldClip == .ClipToLayer)
+      return
+    }
     assert(isComposited())
     if backing!.paintsIntoWindow() {
       // If we're trying to repaint the placeholder document layer, propagate the

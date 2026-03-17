@@ -173,6 +173,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool tim
     static_cast<WebCore::RenderLayer*>(p)->insertOnlyThisLayer(timing);
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_setBackingNeedsRepaint(void* p, bool shouldClip)
+{
+    static_cast<WebCore::RenderLayer*>(p)->setBackingNeedsRepaint(shouldClip ? WebCore::GraphicsLayer::ClipToLayer : WebCore::GraphicsLayer::DoNotClipToLayer);
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_styleChanged(void* p, uint8_t diff_raw, const void* old_style_raw)
 {
     const auto diff = static_cast<WebCore::StyleDifference>(diff_raw);

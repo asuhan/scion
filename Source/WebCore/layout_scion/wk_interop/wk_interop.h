@@ -788,6 +788,7 @@ bool RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(const void*);
 void* RenderLayer_create(void*);
 void RenderLayer_destroy(const void*);
 void RenderLayer_insertOnlyThisLayer(void*, bool);
+void RenderLayer_setBackingNeedsRepaint(void*, bool);
 void RenderLayer_styleChanged(void*, uint8_t, const void*);
 int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);
