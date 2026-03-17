@@ -45,11 +45,11 @@ struct IntRectRaw {
     struct IntSizeRaw size;
 };
 
-extern "C" bool RenderViewScion_requiresLayer(void*);
+extern "C" bool RenderViewScion_requiresLayer(const void*);
 
 extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
 
-extern "C" void* RenderViewScion_frameView(void*);
+extern "C" void* RenderViewScion_frameView(const void*);
 
 extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
 
@@ -57,9 +57,9 @@ extern "C" void RenderViewScion_updateQuirksMode(const void*);
 
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
-extern "C" void* RenderViewScion_compositor(void*);
+extern "C" void* RenderViewScion_compositor(const void*);
 
-extern "C" bool RenderViewScion_usesCompositing(void*);
+extern "C" bool RenderViewScion_usesCompositing(const void*);
 
 extern "C" IntRectRaw RenderViewScion_unscaledDocumentRect(const void*);
 
@@ -71,7 +71,7 @@ extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRa
 
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
-extern "C" void* RenderViewScion_pushMappingToContainer(void*, void*, void*);
+extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*, void*);
 
 extern "C" void RenderViewScion_setWk(void*, void*);
 
