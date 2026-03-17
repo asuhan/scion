@@ -88,7 +88,7 @@ public:
     bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;
     void setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(bool value = true) { m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = value; }
 
-    bool needsEventRegionUpdateForNonCompositedFrame() const { return m_needsEventRegionUpdateForNonCompositedFrame; }
+    bool needsEventRegionUpdateForNonCompositedFrame() const;
     void setNeedsEventRegionUpdateForNonCompositedFrame(bool value = true) { m_needsEventRegionUpdateForNonCompositedFrame = value; }
 
     std::optional<RepaintRects> computeVisibleRectsInContainer(const RepaintRects&, const RenderLayerModelObject* container, VisibleRectContext) const override;

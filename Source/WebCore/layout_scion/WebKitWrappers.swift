@@ -553,6 +553,14 @@ func RenderViewScion_updateQuirksMode(_ viewRaw: UnsafeRawPointer) {
   view.updateQuirksMode()
 }
 
+@_cdecl("RenderViewScion_needsEventRegionUpdateForNonCompositedFrame")
+func RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(_ viewRaw: UnsafeRawPointer)
+  -> Bool
+{
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.needsEventRegionUpdateForNonCompositedFrame()
+}
+
 @_cdecl("RenderViewScion_repaintRootContents")
 func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

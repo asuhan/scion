@@ -94,6 +94,8 @@ public:
 
     void updateQuirksMode();
 
+    bool needsEventRegionUpdateForNonCompositedFrame() const;
+
     void repaintRootContents();
 
     void repaintViewAndCompositedLayers();

@@ -55,6 +55,8 @@ extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDe
 
 extern "C" void RenderViewScion_updateQuirksMode(const void*);
 
+extern "C" bool RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(const void*);
+
 extern "C" void RenderViewScion_repaintRootContents(const void*);
 
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
@@ -194,6 +196,11 @@ bool RenderViewScion::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlay
 void RenderViewScion::updateQuirksMode()
 {
     RenderViewScion_updateQuirksMode(m_handle);
+}
+
+bool RenderViewScion::needsEventRegionUpdateForNonCompositedFrame() const
+{
+    return RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(m_handle);
 }
 
 void RenderViewScion::repaintRootContents()

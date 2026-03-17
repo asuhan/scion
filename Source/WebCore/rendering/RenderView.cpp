@@ -598,6 +598,12 @@ void RenderView::repaintViewAndCompositedLayers()
         compositor.repaintCompositedLayers();
 }
 
+bool RenderView::needsEventRegionUpdateForNonCompositedFrame() const
+{
+    if (m_scion) { return m_scion->needsEventRegionUpdateForNonCompositedFrame(); }
+    return m_needsEventRegionUpdateForNonCompositedFrame;
+}
+
 auto RenderView::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
     // If a container was specified, and was not nullptr or the RenderView,
