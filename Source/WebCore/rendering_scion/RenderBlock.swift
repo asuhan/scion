@@ -1271,8 +1271,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func shouldResetChildLogicalHeightBeforeLayout() -> Bool { return false }
 
   func renderBlockHasDefiniteLogicalHeight() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return availableLogicalHeightForPercentageComputation() != nil
   }
 
   func hasLineIfEmpty() -> Bool {
