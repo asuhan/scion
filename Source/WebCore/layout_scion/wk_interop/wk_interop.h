@@ -801,6 +801,7 @@ const void* Document_settings(const void* raw);
 void* Document_renderView(const void* raw);
 bool Document_inQuirksMode(const void* raw);
 bool Document_inLimitedQuirksMode(const void* raw);
+void* Document_topDocument(const void* raw);
 void* Document_securityOrigin(const void* raw);
 bool Document_activeViewTransitionCapturedDocumentElement(const void*);
 bool Settings_asyncOverflowScrollingEnabled(const void*);
