@@ -995,8 +995,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     func canCollapseMarginBeforeWithChildren() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return m_canCollapseMarginBeforeWithChildren
     }
 
     func margin() -> LayoutUnit { return positiveMargin - negativeMargin }
