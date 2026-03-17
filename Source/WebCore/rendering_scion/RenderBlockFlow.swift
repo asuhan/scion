@@ -2165,8 +2165,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func hasLines() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return childrenInline() ? lineCount() != 0 : false
   }
 
   enum InvalidationReason {
