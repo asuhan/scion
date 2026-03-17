@@ -25,11 +25,14 @@
 
 struct Region {
   init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    bounds = IntRect()
+    m_shape = nil
   }
 
-  init(_ rect: IntRect) { bounds = rect }
+  init(_ rect: IntRect) {
+    bounds = rect
+    m_shape = nil
+  }
 
   func rects() -> [IntRect] {  // TODO(asuhan): use vector with inline storage.
     // TODO(asuhan): implement this
@@ -46,5 +49,8 @@ struct Region {
     fatalError("Not implemented")
   }
 
+  private struct Shape {}
+
   let bounds: IntRect
+  private let m_shape: Shape?
 }
