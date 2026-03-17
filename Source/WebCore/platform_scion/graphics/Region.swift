@@ -34,7 +34,16 @@ struct Region {
     m_shape = nil
   }
 
-  func rects() -> [IntRect] {  // TODO(asuhan): use vector with inline storage.
+  func rects() -> [IntRect] {
+    var rects: [IntRect] = []  // TODO(asuhan): use vector with inline storage.
+
+    if m_shape == nil {
+      if !bounds.isEmpty() {
+        rects.append(bounds)
+      }
+      return rects
+    }
+
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
