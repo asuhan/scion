@@ -493,7 +493,7 @@ func RepaintRegionAccumulator_create(_ viewRaw: UnsafeMutableRawPointer) -> Unsa
 {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   let repaintRegionAccumulator = RenderViewWrapper.RepaintRegionAccumulator(view)
-  let unmanaged = Unmanaged.passUnretained(repaintRegionAccumulator)
+  let unmanaged = Unmanaged.passRetained(repaintRegionAccumulator)
   return unmanaged.toOpaque()
 }
 
