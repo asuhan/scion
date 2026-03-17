@@ -987,8 +987,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     func canCollapseWithMarginBefore() -> Bool {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return atBeforeSideOfBlock && m_canCollapseMarginBeforeWithChildren
     }
 
     func canCollapseWithMarginAfter() -> Bool {
