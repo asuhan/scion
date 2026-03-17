@@ -165,6 +165,11 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
+  func topDocument() -> Document {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   enum BackForwardCacheState {
     case NotInBackForwardCache
     case AboutToEnterBackForwardCache

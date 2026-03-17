@@ -722,6 +722,31 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  class RepaintRegionAccumulator {
+    init(_ view: RenderViewWrapper?) {
+      guard let rootRenderView = view?.document().topDocument().renderView() else {
+        m_rootView = nil
+        return
+      }
+
+      m_wasAccumulatingRepaintRegion = rootRenderView.accumulatedRepaintRegion != nil
+      if !m_wasAccumulatingRepaintRegion {
+        rootRenderView.accumulatedRepaintRegion = Region()
+      }
+      m_rootView = rootRenderView
+    }
+
+    deinit {
+      if m_wasAccumulatingRepaintRegion || m_rootView == nil {
+        return
+      }
+      m_rootView!.flushAccumulatedRepaintRegion()
+    }
+
+    private let m_rootView: RenderViewWrapper?
+    private var m_wasAccumulatingRepaintRegion = false
+  }
+
   func layerChildrenChangedDuringStyleChange(_ layer: RenderLayerWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
