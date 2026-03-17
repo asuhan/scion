@@ -2326,8 +2326,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func logicalHeightForChildForFragmentation(child: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return logicalHeightForChild(child: child)
   }
 
   func hasNextPage(
