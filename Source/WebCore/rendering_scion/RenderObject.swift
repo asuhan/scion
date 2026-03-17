@@ -744,8 +744,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderGrid() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .Grid
   }
 
   func isRenderMultiColumnSet() -> Bool {
