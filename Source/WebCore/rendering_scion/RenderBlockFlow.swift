@@ -843,8 +843,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func collapsedMarginAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return maxPositiveMarginAfter() - maxNegativeMarginAfter()
   }
 
   override final func dirtyLineFromChangedChild() {
