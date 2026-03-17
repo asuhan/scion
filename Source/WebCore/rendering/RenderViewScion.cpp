@@ -243,7 +243,7 @@ void RenderViewScion::didCreateRenderer()
 
 void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)
 {
-    RenderViewScion_updateVisibleViewportRect(m_handle, { visibleRect.location().x(), visibleRect.location().y(), visibleRect.size().width(), visibleRect.size().height( ) });
+    RenderViewScion_updateVisibleViewportRect(m_handle, { visibleRect.location().x(), visibleRect.location().y(), visibleRect.size().width(), visibleRect.size().height() });
 }
 
 const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryBoxes() const
