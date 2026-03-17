@@ -179,6 +179,11 @@ LocalFrameView& RenderViewScion::frameView() const
     return *static_cast<LocalFrameView*>(RenderViewScion_frameView(m_handle));
 }
 
+Ref<LocalFrameView> RenderViewScion::protectedFrameView() const
+{
+    return frameView();
+}
+
 bool RenderViewScion::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const
 {
     return RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(m_handle);

@@ -803,6 +803,13 @@ LocalFrameView& RenderView::frameView() const {
     return m_frameView.get();
 }
 
+Ref<LocalFrameView> RenderView::protectedFrameView() const {
+    if (m_scion) {
+        return m_scion->protectedFrameView();
+    }
+    return m_frameView.get();
+}
+
 FloatSize RenderView::sizeForCSSSmallViewportUnits() const
 {
     return protectedFrameView()->sizeForCSSSmallViewportUnits();
