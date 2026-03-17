@@ -1125,14 +1125,20 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
   }
 
+  private func logicalRightOffsetForContent() -> LayoutUnit {
+    assert(isNativeImpl())
+    return logicalLeftOffsetForContent() + availableLogicalWidth()
+  }
+
   func availableLogicalWidthForContent(blockOffset: LayoutUnit) -> LayoutUnit {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 
   func startOffsetForContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isLeftToRightDirection()
+      ? logicalLeftOffsetForContent() : logicalWidth() - logicalRightOffsetForContent()
   }
 
   #if ASSERT_ENABLED
