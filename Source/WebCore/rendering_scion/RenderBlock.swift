@@ -1117,8 +1117,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func startOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return startOffsetForContent(fragment: fragmentAtBlockOffset(blockOffset: blockOffset))
   }
 
   func logicalLeftOffsetForContent() -> LayoutUnit {
