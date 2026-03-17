@@ -490,8 +490,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   override func requiresLayer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return super.requiresLayer() || hasNonVisibleOverflow() || style().specifiesColumns()
+      || style().containsLayout() || !style().hasAutoUsedZIndex()
+      || hasRunningAcceleratedAnimations()
   }
 
   func requiresLayerWithScrollableArea() -> Bool {
