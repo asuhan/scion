@@ -553,6 +553,12 @@ func RenderViewScion_updateQuirksMode(_ viewRaw: UnsafeRawPointer) {
   view.updateQuirksMode()
 }
 
+@_cdecl("RenderViewScion_repaintRootContents")
+func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.repaintRootContents()
+}
+
 @_cdecl("RenderViewScion_setIsInWindow")
 func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

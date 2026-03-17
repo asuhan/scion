@@ -55,6 +55,8 @@ extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDe
 
 extern "C" void RenderViewScion_updateQuirksMode(const void*);
 
+extern "C" void RenderViewScion_repaintRootContents(const void*);
+
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(const void*);
@@ -196,7 +198,7 @@ void RenderViewScion::updateQuirksMode()
 
 void RenderViewScion::repaintRootContents()
 {
-    ASSERT_NOT_REACHED();
+    RenderViewScion_repaintRootContents(m_handle);
 }
 
 void RenderViewScion::repaintViewAndCompositedLayers()

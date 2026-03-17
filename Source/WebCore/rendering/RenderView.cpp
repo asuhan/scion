@@ -513,6 +513,10 @@ bool RenderView::shouldRepaint(const LayoutRect& rect) const
 
 void RenderView::repaintRootContents()
 {
+    if (m_scion) {
+        m_scion->repaintRootContents();
+        return;
+    }
     if (layer()->isComposited()) {
         layer()->setBackingNeedsRepaint(GraphicsLayer::DoNotClipToLayer);
         return;
