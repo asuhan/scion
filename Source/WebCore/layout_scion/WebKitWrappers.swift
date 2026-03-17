@@ -488,8 +488,8 @@ func LineLayoutScion_paint(
     paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: layerRenderer)
 }
 
-@_cdecl("RenderView_create")
-func RenderView_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
+@_cdecl("RenderViewScion_create")
+func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer
 {
   let document = Document(documentRaw)
