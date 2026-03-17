@@ -47,6 +47,8 @@ struct IntRectRaw {
 
 extern "C" bool RenderViewScion_requiresLayer(void*);
 
+extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
+
 extern "C" void* RenderViewScion_frameView(void*);
 
 extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
@@ -165,6 +167,11 @@ RenderSelection& RenderViewScion::selection()
 bool RenderViewScion::requiresLayer() const
 {
     return RenderViewScion_requiresLayer(m_handle);
+}
+
+bool RenderViewScion::isChildAllowed(const RenderObject& child, const RenderStyle& style) const
+{
+    return RenderViewScion_isChildAllowed(m_handle, const_cast<void*>(static_cast<const void*>(&child)), &style);
 }
 
 LocalFrameView& RenderViewScion::frameView() const

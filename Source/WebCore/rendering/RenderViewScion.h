@@ -84,6 +84,8 @@ public:
 
     bool requiresLayer() const;
 
+    bool isChildAllowed(const RenderObject&, const RenderStyle&) const;
+
     LocalFrameView& frameView() const;
 
     bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;

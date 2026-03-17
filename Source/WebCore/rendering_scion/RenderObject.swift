@@ -1144,7 +1144,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderLineBreak() && isWBR()
   }
 
-  func isRenderBox() -> Bool { return m_typeFlags.contains(.IsBox) }
+  func isRenderBox() -> Bool {
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isRenderBox(id())
+    }
+    return m_typeFlags.contains(.IsBox)
+  }
 
   func isRenderTableRow() -> Bool {
     assert(isNativeImpl())

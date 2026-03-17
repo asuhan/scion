@@ -523,6 +523,16 @@ func RenderViewScion_requiresLayer(_ viewRaw: UnsafeRawPointer) -> Bool {
   return view.requiresLayer()
 }
 
+@_cdecl("RenderViewScion_isChildAllowed")
+func RenderViewScion_isChildAllowed(
+  _ viewRaw: UnsafeRawPointer, _ childRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer
+) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let style = RenderStyleWrapper()
+  style.p = styleRaw
+  return view.isChildAllowed(RenderObjectWrapper(p: childRaw), style)
+}
+
 @_cdecl("RenderViewScion_frameView")
 func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
