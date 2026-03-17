@@ -1095,13 +1095,17 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func startOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().isLeftToRightDirection()
+      ? logicalLeftOffsetForContent(fragment)
+      : logicalWidth() - logicalRightOffsetForContent(fragment)
   }
 
   func endOffsetForContent(fragment: RenderFragmentContainerWrapper?) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !style().isLeftToRightDirection()
+      ? logicalLeftOffsetForContent(fragment)
+      : logicalWidth() - logicalRightOffsetForContent(fragment)
   }
 
   func logicalLeftOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
