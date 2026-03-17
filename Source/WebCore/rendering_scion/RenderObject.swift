@@ -709,8 +709,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableCol() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .TableCol
   }
 
   func isRenderTableCaption() -> Bool {
@@ -719,8 +719,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableSection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .TableSection
   }
 
   func isRenderTextControl() -> Bool {
