@@ -736,7 +736,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
       m_rootView = rootRenderView
     }
 
-    deinit {
+    func destroy() {
       if m_wasAccumulatingRepaintRegion || m_rootView == nil {
         return
       }

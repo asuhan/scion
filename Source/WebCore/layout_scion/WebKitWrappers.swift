@@ -488,6 +488,23 @@ func LineLayoutScion_paint(
     paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: layerRenderer)
 }
 
+@_cdecl("RepaintRegionAccumulator_create")
+func RepaintRegionAccumulator_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer
+{
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let repaintRegionAccumulator = RenderViewWrapper.RepaintRegionAccumulator(view)
+  let unmanaged = Unmanaged.passUnretained(repaintRegionAccumulator)
+  return unmanaged.toOpaque()
+}
+
+@_cdecl("RepaintRegionAccumulator_destroy")
+func RepaintRegionAccumulator_destroy(_ repaintRegionAccumulatorRaw: UnsafeMutableRawPointer) {
+  let repaintRegionAccumulator = Unmanaged<RenderViewWrapper.RepaintRegionAccumulator>.fromOpaque(
+    repaintRegionAccumulatorRaw
+  ).takeUnretainedValue()
+  repaintRegionAccumulator.destroy()
+}
+
 @_cdecl("RenderViewScion_create")
 func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: UnsafeRawPointer)
   -> UnsafeMutableRawPointer

@@ -73,6 +73,10 @@ extern "C" void* RenderViewScion_pushMappingToContainer(void*, void*, void*);
 
 extern "C" void RenderViewScion_setWk(void*, void*);
 
+extern "C" void* RepaintRegionAccumulator_create(void*);
+
+extern "C" void RepaintRegionAccumulator_destroy(void*);
+
 namespace WebCore {
 
 RenderViewScion::~RenderViewScion()
@@ -262,6 +266,16 @@ const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerMod
 void RenderViewScion::setWk(void* wk)
 {
     RenderViewScion_setWk(wk, m_handle);
+}
+
+void* RenderViewScion::createRepaintRegionAccumulator() const
+{
+    return RepaintRegionAccumulator_create(m_handle);
+}
+
+void RenderViewScion::destroyRepaintRegionAccumulator(void* accumulatedRepaintRegion)
+{
+    RepaintRegionAccumulator_destroy(accumulatedRepaintRegion);
 }
 
 }

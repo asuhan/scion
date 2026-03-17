@@ -50,6 +50,7 @@ class RenderViewScion final : public CanMakeCheckedPtr<RenderViewScion> {
 public:
     RenderViewScion(void* handle)
         : m_handle(handle)
+        , m_accumulatedRepaintRegion(nullptr)
     {
     }
 
@@ -121,8 +122,13 @@ public:
 
     void setWk(void*);
 
+    void* createRepaintRegionAccumulator() const;
+
+    static void destroyRepaintRegionAccumulator(void*);
+
 private:
     void* m_handle;
+    void* m_accumulatedRepaintRegion;
 };
 
 }

@@ -201,6 +201,7 @@ public:
     private:
         SingleThreadWeakPtr<RenderView> m_rootView;
         bool m_wasAccumulatingRepaintRegion { false };
+        void* m_handle = nullptr;
     };
 
     void layerChildrenChangedDuringStyleChange(RenderLayer&);

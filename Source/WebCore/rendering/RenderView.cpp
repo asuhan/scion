@@ -1065,6 +1065,10 @@ RenderView::RepaintRegionAccumulator::RepaintRegionAccumulator(RenderView* view)
 {
     if (!view)
         return;
+    if (view->m_scion) {
+        m_handle = view->m_scion->createRepaintRegionAccumulator();
+        return;
+    }
 
     auto* rootRenderView = view->document().topDocument().renderView();
     if (!rootRenderView)
@@ -1078,6 +1082,10 @@ RenderView::RepaintRegionAccumulator::RepaintRegionAccumulator(RenderView* view)
 
 RenderView::RepaintRegionAccumulator::~RepaintRegionAccumulator()
 {
+    if (m_handle) {
+        RenderViewScion::destroyRepaintRegionAccumulator(m_handle);
+        return;
+    }
     if (m_wasAccumulatingRepaintRegion)
         return;
     if (!m_rootView)
