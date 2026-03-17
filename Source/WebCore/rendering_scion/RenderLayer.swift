@@ -3186,7 +3186,9 @@ class RenderLayerWrapper {
   }
 
   func isComposited() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_isComposited(layerId())
+    }
     return backing != nil
   }
 
