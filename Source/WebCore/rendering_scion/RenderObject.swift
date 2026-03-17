@@ -749,13 +749,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMultiColumnSet() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .MultiColumnSet
   }
 
   func isRenderMultiColumnFlow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return type() == .MultiColumnFlow
   }
 
   func isDocumentElementRenderer() -> Bool {
