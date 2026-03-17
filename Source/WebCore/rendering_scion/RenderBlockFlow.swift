@@ -935,8 +935,33 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     init(
       block: RenderBlockFlowWrapper, beforeBorderPadding: LayoutUnit, afterBorderPadding: LayoutUnit
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      atBeforeSideOfBlock = true
+      atAfterSideOfBlock = false
+      hasMarginBeforeQuirk = false
+      hasMarginAfterQuirk = false
+      determinedMarginBeforeQuirk = false
+      let blockStyle = block.style()
+      assert(block.isRenderView() || block.parent() != nil)
+      canCollapseWithChildren = !block.createsNewFormattingContext() && !block.isRenderView()
+
+      m_canCollapseMarginBeforeWithChildren = canCollapseWithChildren && !beforeBorderPadding.bool()
+
+      // If any height other than auto is specified in CSS, then we don't collapse our bottom
+      // margins with our children's margins. To do otherwise would be to risk odd visual
+      // effects when the children overflow out of the parent block and yet still collapse
+      // with it. We also don't collapse if we have any bottom border/padding.
+      canCollapseMarginAfterWithChildren =
+        canCollapseWithChildren && !afterBorderPadding.bool()
+        && blockStyle.logicalHeight().isAuto() && blockStyle.logicalHeight().value() == 0
+
+      quirkContainer = block.isRenderTableCell() || block.isBody()
+
+      positiveMargin =
+        m_canCollapseMarginBeforeWithChildren
+        ? block.maxPositiveMarginBefore() : LayoutUnit(value: UInt64(0))
+      negativeMargin =
+        m_canCollapseMarginBeforeWithChildren
+        ? block.maxNegativeMarginBefore() : LayoutUnit(value: UInt64(0))
     }
 
     mutating func clearMargin() {
@@ -979,12 +1004,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     func margin() -> LayoutUnit { return positiveMargin - negativeMargin }
 
     // Collapsing flags for whether we can collapse our margins with our children's margins.
+    let canCollapseWithChildren: Bool
+    private let m_canCollapseMarginBeforeWithChildren: Bool
     var canCollapseMarginAfterWithChildren = false
 
     // Whether or not we are a quirky container, i.e., do we collapse away top and bottom
     // margins in our container. Table cells and the body are the common examples. We
     // also have a custom style property for Safari RSS to deal with TypePad blog articles.
-    let quirkContainer = false
+    let quirkContainer: Bool
 
     // This flag tracks whether we are still looking at child margins that can all collapse together at the beginning of a block.
     // They may or may not collapse with the top margin of the block (|m_canCollapseTopWithChildren| tells us that), but they will
