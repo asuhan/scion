@@ -1903,8 +1903,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func requiresColumns(desiredColumnCount: Int32) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return willCreateColumns(desiredColumnCount: UInt32(desiredColumnCount))
   }
 
   override func containsFloats() -> Bool {
