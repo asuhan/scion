@@ -251,8 +251,9 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func section() -> RenderTableSectionWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard let row = self.row() else { return nil }
+    return row.parent() as! RenderTableSectionWrapper?
   }
 
   func table() -> RenderTableWrapper? {
