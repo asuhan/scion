@@ -280,8 +280,21 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func logicalHeightForRowSizing() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // FIXME: This function does too much work, and is very hot during table layout!
+    let adjustedLogicalHeight =
+      logicalHeight() - (intrinsicPaddingBefore() + intrinsicPaddingAfter())
+    if !style().logicalHeight().isSpecified() {
+      return adjustedLogicalHeight
+    }
+    var styleLogicalHeight = valueForLength(length: style().logicalHeight(), maximumValue: 0)
+    // In strict mode, box-sizing: content-box do the right thing and actually add in the border and padding.
+    // Call computedCSSPadding* directly to avoid including implicitPadding.
+    if !document().inQuirksMode() && style().boxSizing() != .BorderBox {
+      styleLogicalHeight +=
+        computedCSSPaddingBefore() + computedCSSPaddingAfter() + borderBefore() + borderAfter()
+    }
+    return max(styleLogicalHeight, adjustedLogicalHeight)
   }
 
   func setCellLogicalWidth(_ tableLayoutLogicalWidth: LayoutUnit) {
