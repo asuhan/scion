@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum PaginationMode {
+enum PaginationMode: UInt8 {
   case Unpaginated
   case LeftToRightPaginated
   case RightToLeftPaginated
@@ -34,6 +34,8 @@ enum PaginationMode {
 struct Pagination {
   typealias Mode = PaginationMode
 
-  let mode: Mode = .Unpaginated
-  let pageLength: UInt32 = 0
+  let mode: Mode
+  let behavesLikeColumns: Bool
+  let pageLength: UInt32
+  let gap: UInt32
 }

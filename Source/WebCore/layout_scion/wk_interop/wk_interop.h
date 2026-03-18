@@ -230,6 +230,13 @@ struct IntRectRaw {
     struct IntSizeRaw size;
 };
 
+struct PaginationRaw {
+    uint8_t mode;
+    bool behavesLikeColumns;
+    uint32_t pageLength;
+    uint32_t gap;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -461,6 +468,7 @@ const void* LocalFrameViewLayoutContext_layoutState(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 const void* LocalFrameView_layoutContext(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
+struct PaginationRaw LocalFrameView_pagination(const void*);
 void* RenderElement_element(const void*);
 void* RenderElement_firstChild(const void*);
 void RenderElement_setChildNeedsLayout(void* p, uint8_t mark_parents);

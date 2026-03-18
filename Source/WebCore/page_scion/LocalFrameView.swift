@@ -246,8 +246,10 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   // it will return Page::pagination() since currently there are no callers that need to
   // distinguish between the two.
   func pagination() -> Pagination {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.LocalFrameView_pagination(p)
+    return Pagination(
+      mode: Pagination.Mode(rawValue: raw.mode)!, behavesLikeColumns: raw.behavesLikeColumns,
+      pageLength: raw.pageLength, gap: raw.gap)
   }
 
   // This function "smears" the "position:fixed" uninflatedBounds for scrolling, returning a rect that is the union of

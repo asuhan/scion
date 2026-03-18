@@ -164,6 +164,19 @@ extern "C" WEBCORE_EXPORT LayoutPointRaw LocalFrameView_scrollPositionRespecting
     return { layoutPoint.x().rawValue(), layoutPoint.y().rawValue() };
 }
 
+struct PaginationRaw {
+    uint8_t mode;
+    bool behavesLikeColumns;
+    uint32_t pageLength;
+    uint32_t gap;
+};
+
+extern "C" WEBCORE_EXPORT PaginationRaw LocalFrameView_pagination(const void* p)
+{
+    const auto& pagination = static_cast<const WebCore::LocalFrameView*>(p)->pagination();
+    return { static_cast<uint8_t>(pagination.mode), pagination.behavesLikeColumns, pagination.pageLength, pagination.gap };
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
