@@ -491,8 +491,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func selection() -> RenderSelection {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_selection!
   }
 
   func printing() -> Bool {
