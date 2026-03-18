@@ -864,13 +864,13 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func setCanUseSimplifiedTextMeasuring(_ canUseSimplifiedTextMeasuring: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_canUseSimplifiedTextMeasuring = canUseSimplifiedTextMeasuring
   }
 
   func canUseSimplifiedTextMeasuring() -> Bool? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_canUseSimplifiedTextMeasuring
   }
 
   func setHasStrongDirectionalityContent(hasStrongDirectionalityContent: Bool) {
