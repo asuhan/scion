@@ -620,6 +620,14 @@ func RenderViewScion_updateVisibleViewportRect(
       height: visibleRectRaw.size.height))
 }
 
+@_cdecl("RenderViewScion_viewTransitionRoot")
+func RenderViewScion_viewTransitionRoot(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  guard let root = view.viewTransitionRoot() else { return nil }
+  assert(!root.isNativeImpl())
+  return root.id()
+}
+
 @_cdecl("RenderViewScion_styleDidChange")
 func RenderViewScion_styleDidChange(
   _ viewRaw: UnsafeMutableRawPointer, _ diffRaw: UInt8, _ oldStyleRaw: UnsafeRawPointer

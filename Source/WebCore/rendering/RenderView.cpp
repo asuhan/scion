@@ -1209,6 +1209,7 @@ bool RenderView::hasSoftwareFilters() const
 
 SingleThreadWeakPtr<RenderElement> RenderView::viewTransitionRoot() const
 {
+    if (m_scion) { return m_scion->viewTransitionRoot(); }
     return m_viewTransitionRoot;
 }
 

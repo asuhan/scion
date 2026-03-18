@@ -122,6 +122,8 @@ public:
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 
+    SingleThreadWeakPtr<RenderElement> viewTransitionRoot() const;
+
     void styleDidChange(StyleDifference, const RenderStyle*);
 
     const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;

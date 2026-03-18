@@ -73,6 +73,8 @@ extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
 extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRaw);
 
+extern "C" void* RenderViewScion_viewTransitionRoot(const void*);
+
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*, void*);
@@ -272,6 +274,11 @@ const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryB
     static SingleThreadWeakHashSet<const RenderBox> unused;
     ASSERT_NOT_REACHED();
     return unused;
+}
+
+SingleThreadWeakPtr<RenderElement> RenderViewScion::viewTransitionRoot() const
+{
+    return static_cast<RenderElement*>(RenderViewScion_viewTransitionRoot(m_handle));
 }
 
 void RenderViewScion::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
