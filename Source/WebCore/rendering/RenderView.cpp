@@ -384,6 +384,7 @@ void RenderView::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 
 RenderElement* RenderView::rendererForRootBackground() const
 {
+    if (m_scion) { return m_scion->rendererForRootBackground(); }
     auto* firstChild = this->firstChild();
     if (!firstChild)
         return nullptr;

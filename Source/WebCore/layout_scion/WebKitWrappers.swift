@@ -567,6 +567,16 @@ func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
   view.repaintRootContents()
 }
 
+@_cdecl("RenderViewScion_rendererForRootBackground")
+func RenderViewScion_rendererForRootBackground(_ viewRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  guard let element = view.rendererForRootBackground() else { return nil }
+  assert(!element.isNativeImpl())
+  return element.id()
+}
+
 @_cdecl("RenderViewScion_setIsInWindow")
 func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

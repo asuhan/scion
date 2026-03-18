@@ -60,6 +60,8 @@ extern "C" bool RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(cons
 
 extern "C" void RenderViewScion_repaintRootContents(const void*);
 
+extern "C" void* RenderViewScion_rendererForRootBackground(const void*);
+
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(const void*);
@@ -218,6 +220,11 @@ void RenderViewScion::repaintRootContents()
 void RenderViewScion::repaintViewAndCompositedLayers()
 {
     ASSERT_NOT_REACHED();
+}
+
+RenderElement* RenderViewScion::rendererForRootBackground() const
+{
+    return static_cast<RenderElement*>(RenderViewScion_rendererForRootBackground(m_handle));
 }
 
 void RenderViewScion::setIsInWindow(bool isInWindow)

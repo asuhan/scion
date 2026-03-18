@@ -101,6 +101,8 @@ public:
 
     void repaintViewAndCompositedLayers();
 
+    RenderElement* rendererForRootBackground() const;
+
     void setIsInWindow(bool);
 
     RenderLayerCompositor& compositor();
