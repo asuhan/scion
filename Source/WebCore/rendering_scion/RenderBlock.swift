@@ -597,8 +597,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
     position: LayoutUnit, fragment: RenderFragmentContainerWrapper?,
     logicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return !style().isLeftToRightDirection()
+      ? logicalLeftOffsetForLineInFragment(position, fragment, logicalHeight)
+      : logicalWidth() - logicalRightOffsetForLineInFragment(position, fragment, logicalHeight)
   }
 
   func availableLogicalWidthForLine(
