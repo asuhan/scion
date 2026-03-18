@@ -694,8 +694,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   // create an extra anonymous RenderBlock to handle mixing directionality anyway, in which case we can lock
   // the block flow directionality of the cells to the table's directionality.
   override func paddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return computedCSSPaddingBefore() + intrinsicPaddingBefore()
   }
 
   override func paddingAfter() -> LayoutUnit {
