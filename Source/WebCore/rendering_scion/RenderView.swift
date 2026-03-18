@@ -752,6 +752,13 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  func takeStyleChangeLayerTreeMutationRoot() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
+    let result = m_styleChangeLayerMutationRoot
+    m_styleChangeLayerMutationRoot = nil
+    return result
+  }
+
   func registerBoxWithScrollSnapPositions(_ box: RenderBoxWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -922,6 +929,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   private var accumulatedRepaintRegion: Region? = nil
   private var m_selection: RenderSelection? = nil
+
+  private var m_styleChangeLayerMutationRoot: RenderLayerWrapper? = nil
 
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
