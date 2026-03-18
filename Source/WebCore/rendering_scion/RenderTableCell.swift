@@ -699,8 +699,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func paddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return computedCSSPaddingAfter() + intrinsicPaddingAfter()
   }
 
   func setOverridingLogicalHeightFromRowHeight(rowHeight: LayoutUnit) {
