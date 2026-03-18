@@ -681,13 +681,13 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func intrinsicPaddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_intrinsicPaddingBefore
   }
 
   func intrinsicPaddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_intrinsicPaddingAfter
   }
 
   // FIXME: For now we just assume the cell has the same block flow direction as the table. It's likely we'll
@@ -1061,13 +1061,13 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   private func setIntrinsicPaddingBefore(p: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_intrinsicPaddingBefore = p
   }
 
   private func setIntrinsicPaddingAfter(p: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_intrinsicPaddingAfter = p
   }
 
   private func hasStartBorderAdjoiningTable() -> Bool {
@@ -1902,4 +1902,6 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private let hasEmptyCollapsedAfterBorder = false
   private let hasEmptyCollapsedStartBorder = false
   private let hasEmptyCollapsedEndBorder = false
+  private var m_intrinsicPaddingBefore = LayoutUnit(value: 0)
+  private var m_intrinsicPaddingAfter = LayoutUnit(value: 0)
 }
