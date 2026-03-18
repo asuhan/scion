@@ -515,6 +515,9 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
       || requiresRenderingConsolidationForViewTransition() || isRenderViewTransitionCapture()
   }
 
+  // This will work on inlines to return the bounding box of all of the lines' border boxes.
+  func borderBoundingBox() -> LayoutRectWrapper { fatalError("Not reached") }
+
   // These return the CSS computed padding values.
   func computedCSSPaddingTop() -> LayoutUnit {
     assert(isNativeImpl())

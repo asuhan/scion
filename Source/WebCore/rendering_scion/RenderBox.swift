@@ -873,7 +873,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
   }
 
-  func borderBoundingBox() -> LayoutRectWrapper {
+  override final func borderBoundingBox() -> LayoutRectWrapper {
     assert(isNativeImpl())
     return borderBoxRect()
   }

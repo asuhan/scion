@@ -525,8 +525,25 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   func setBestTruncatedAt(
     y: Int32, forRenderer: RenderBoxModelObjectWrapper, forcedBreak: Bool = false
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Nobody else can set a page break once we have a forced break.
+    if m_legacyPrinting.m_forcedPageBreak {
+      return
+    }
+
+    // Forced breaks always win over unforced breaks.
+    if forcedBreak {
+      m_legacyPrinting.m_forcedPageBreak = true
+      m_legacyPrinting.m_bestTruncatedAt = y
+      return
+    }
+
+    // Prefer the widest object that tries to move the pagination point
+    let boundingBox = forRenderer.borderBoundingBox()
+    if boundingBox.width() > m_legacyPrinting.m_truncatorWidth {
+      m_legacyPrinting.m_truncatorWidth = boundingBox.width().int()
+      m_legacyPrinting.m_bestTruncatedAt = y
+    }
   }
 
   func truncatedAt() -> Int32 {
@@ -933,6 +950,17 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   private var m_selection: RenderSelection? = nil
 
   private var m_styleChangeLayerMutationRoot: RenderLayerWrapper? = nil
+
+  // FIXME: Only used by embedded WebViews inside AppKit NSViews.  Find a way to remove.
+  private struct LegacyPrinting {
+    var m_bestTruncatedAt: Int32 = 0
+    var m_truncatedAt: Int32 = 0
+    var m_truncatorWidth: Int32 = 0
+    let m_printRect = IntRect()
+    var m_forcedPageBreak = false
+  }
+  private var m_legacyPrinting = LegacyPrinting()
+  // End deprecated members.
 
   private var pageLogicalSize: LayoutSizeWrapper? = nil
   private var pageLogicalHeightChanged = false
