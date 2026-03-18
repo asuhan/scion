@@ -858,8 +858,9 @@ class RenderTextWrapper: RenderObjectWrapper {
   }
 
   func resetMinMaxWidth() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    minWidth = nil
+    maxWidth = nil
   }
 
   func setCanUseSimplifiedTextMeasuring(_ canUseSimplifiedTextMeasuring: Bool) {
