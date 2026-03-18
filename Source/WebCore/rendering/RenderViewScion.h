@@ -128,6 +128,8 @@ public:
 
     const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
 
+    bool requiresColumns(int desiredColumnCount) const;
+
     void setWk(void*);
 
     void* createRepaintRegionAccumulator() const;

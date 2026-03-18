@@ -655,6 +655,14 @@ func RenderViewScion_pushMappingToContainer(
   return nil
 }
 
+@_cdecl("RenderViewScion_requiresColumns")
+func RenderViewScion_requiresColumns(_ viewRaw: UnsafeRawPointer, _ desiredColumnCount: Int32)
+  -> Bool
+{
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.requiresColumns(desiredColumnCount: desiredColumnCount)
+}
+
 @_cdecl("RenderViewScion_setWk")
 func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

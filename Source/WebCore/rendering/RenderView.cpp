@@ -351,8 +351,9 @@ void RenderView::mapAbsoluteToLocalPoint(OptionSet<MapCoordinatesMode> mode, Tra
         transformState.move(toLayoutSize(protectedFrameView()->scrollPositionRespectingCustomFixedPosition()));
 }
 
-bool RenderView::requiresColumns(int) const
+bool RenderView::requiresColumns(int desiredColumnCount) const
 {
+    if (m_scion) { return m_scion->requiresColumns(desiredColumnCount); }
     return protectedFrameView()->pagination().mode != Pagination::Mode::Unpaginated;
 }
 

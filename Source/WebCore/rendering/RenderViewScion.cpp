@@ -79,6 +79,8 @@ extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
 extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*, void*);
 
+extern "C" bool RenderViewScion_requiresColumns(const void*, int32_t desiredColumnCount);
+
 extern "C" void RenderViewScion_setWk(void*, void*);
 
 extern "C" void* RepaintRegionAccumulator_create(void*);
@@ -289,6 +291,11 @@ void RenderViewScion::styleDidChange(StyleDifference diff, const RenderStyle* ol
 const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const
 {
     return static_cast<const RenderObject*>(RenderViewScion_pushMappingToContainer(m_handle, ancestorToStopAt ? ancestorToStopAt->scion() : nullptr, &geometryMap));
+}
+
+bool RenderViewScion::requiresColumns(int desiredColumnCount) const
+{
+    return RenderViewScion_requiresColumns(m_handle, desiredColumnCount);
 }
 
 void RenderViewScion::setWk(void* wk)
