@@ -552,8 +552,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func printRect() -> IntRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_legacyPrinting.m_printRect
   }
 
   func setIsInWindow(_ isInWindow: Bool) {
