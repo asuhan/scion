@@ -25,6 +25,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+import wk_interop
+
 final class LocalFrameWrapper: FrameWrapper {
   func document() -> Document? {
     // TODO(asuhan): implement this
@@ -59,6 +61,10 @@ final class LocalFrameWrapper: FrameWrapper {
   func contentRenderer() -> RenderViewWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func shouldUsePrintingLayout() -> Bool {
+    return wk_interop.LocalFrame_shouldUsePrintingLayout(p)
   }
 
   // Scale factor of this frame with respect to the container.

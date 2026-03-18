@@ -464,6 +464,7 @@ struct OptionalLegacyLineClampRaw RenderLayoutState_legacyLineClamp(const void*)
 struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
+bool LocalFrame_shouldUsePrintingLayout(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 const void* LocalFrameView_layoutContext(const void*);

@@ -899,8 +899,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   private func shouldUsePrintingLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !printing() {
+      return false
+    }
+    return protectedFrameView().frame().shouldUsePrintingLayout()
   }
 
   // TODO(asuhan): remove

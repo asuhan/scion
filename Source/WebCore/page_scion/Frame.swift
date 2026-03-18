@@ -65,5 +65,5 @@ class FrameWrapper {
     fatalError("Not implemented")
   }
 
-  private let p: UnsafeRawPointer
+  let p: UnsafeRawPointer
 }
