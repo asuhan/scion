@@ -547,8 +547,8 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func truncatedAt() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_legacyPrinting.m_truncatedAt
   }
 
   func printRect() -> IntRect {
