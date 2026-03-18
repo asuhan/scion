@@ -87,6 +87,8 @@ public:
 
     bool isChildAllowed(const RenderObject&, const RenderStyle&) const;
 
+    void layout();
+
     LocalFrameView& frameView() const;
 
     Ref<LocalFrameView> protectedFrameView() const;

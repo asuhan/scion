@@ -533,6 +533,12 @@ func RenderViewScion_isChildAllowed(
   return view.isChildAllowed(RenderObjectWrapper(p: childRaw), style)
 }
 
+@_cdecl("RenderViewScion_layout")
+func RenderViewScion_layout(_ viewRaw: UnsafeRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.layout()
+}
+
 @_cdecl("RenderViewScion_frameView")
 func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

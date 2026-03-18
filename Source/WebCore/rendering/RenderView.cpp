@@ -185,6 +185,10 @@ bool RenderView::isChildAllowed(const RenderObject& child, const RenderStyle& st
 
 void RenderView::layout()
 {
+    if (m_scion) {
+        m_scion->layout();
+        return;
+    }
     StackStats::LayoutCheckPoint layoutCheckPoint;
     if (!document().paginated())
         m_pageLogicalSize = { };
