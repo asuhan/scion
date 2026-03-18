@@ -20,6 +20,16 @@
  */
 
 class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
+  private func linesBoundingBox() -> IntRect {
+    assert(isNativeImpl())
+    let run = InlineIterator.boxFor(self)
+    if !run.bool() {
+      return IntRect()
+    }
+
+    return enclosingIntRect(rect: run.get().visualRectIgnoringBlockDirection())
+  }
+
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
     assert(isNativeImpl())
   }
@@ -85,6 +95,12 @@ class RenderLineBreakWrapper: RenderBoxModelObjectWrapper {
   override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     assert(isNativeImpl())
     return LayoutUnit(value: 0)
+  }
+
+  override final func borderBoundingBox() -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    return LayoutRectWrapper(
+      location: LayoutPointWrapper(), size: LayoutSizeWrapper(size: linesBoundingBox().size))
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper { fatalError("Not reached") }

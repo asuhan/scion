@@ -224,6 +224,11 @@ extension InlineIterator {
     private let begin: BoxIterator<BoxType>
   }
 
+  static func boxFor(_ renderer: RenderLineBreakWrapper) -> LeafBoxIterator {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   static func boxFor(_ renderer: RenderBoxWrapper) -> LeafBoxIterator {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
