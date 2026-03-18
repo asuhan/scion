@@ -810,6 +810,7 @@ void* Document_documentElement(const void*);
 void* Document_view(const void* raw);
 const void* Document_settings(const void* raw);
 void* Document_renderView(const void* raw);
+bool Document_printing(const void* raw);
 bool Document_paginated(const void* raw);
 bool Document_inQuirksMode(const void* raw);
 bool Document_inLimitedQuirksMode(const void* raw);

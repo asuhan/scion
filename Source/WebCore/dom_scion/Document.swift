@@ -111,10 +111,7 @@ class Document: TreeScopeWrapper {
     fatalError("Not implemented")
   }
 
-  func printing() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func printing() -> Bool { return wk_interop.Document_printing(p) }
 
   func paginated() -> Bool { return wk_interop.Document_paginated(p) }
 

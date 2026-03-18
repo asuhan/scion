@@ -428,6 +428,11 @@ extern "C" WEBCORE_EXPORT void* Document_renderView(const void* raw)
     return static_cast<const WebCore::Document*>(raw)->renderView();
 }
 
+extern "C" WEBCORE_EXPORT bool Document_printing(const void* raw)
+{
+    return static_cast<const WebCore::Document*>(raw)->printing();
+}
+
 extern "C" WEBCORE_EXPORT bool Document_paginated(const void* raw)
 {
     return static_cast<const WebCore::Document*>(raw)->paginated();
