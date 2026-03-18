@@ -709,13 +709,13 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   private func cellWidthChanged() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_cellWidthChanged
   }
 
   private func setCellWidthChanged(b: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_cellWidthChanged = b
   }
 
   static func createAnonymousWithParentRenderer(parent: RenderTableRowWrapper)
@@ -1904,6 +1904,7 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  private var m_cellWidthChanged = false
   private let hasEmptyCollapsedBeforeBorder = false
   private let hasEmptyCollapsedAfterBorder = false
   private let hasEmptyCollapsedStartBorder = false
