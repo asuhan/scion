@@ -612,8 +612,14 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func isBaselineAligned() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let alignContent = style().alignContent()
+    if !alignContent.isNormal() {
+      return alignContent.position == .Baseline
+    }
+    let va = style().verticalAlign()
+    return va == .Baseline || va == .TextBottom || va == .TextTop || va == .Super || va == .Sub
+      || va == .Length
   }
 
   func computeIntrinsicPadding(rowHeight: LayoutUnit) {
