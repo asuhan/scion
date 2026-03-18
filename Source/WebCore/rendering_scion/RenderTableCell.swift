@@ -142,8 +142,7 @@ private func chooseBorder(border1: CollapsedBorderValue, border2: CollapsedBorde
 }
 
 private func emptyBorder() -> CollapsedBorderValue {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return CollapsedBorderValue(border: BorderValue(), color: ColorWrapper(), precedence: .Cell)
 }
 
 private func addBorderStyle(
