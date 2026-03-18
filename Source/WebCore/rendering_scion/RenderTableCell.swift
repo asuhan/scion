@@ -263,8 +263,9 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func rowIndex() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // This function shouldn't be called on a detached cell.
+    return row()!.rowIndex()
   }
 
   func styleOrColLogicalWidth() -> LengthWrapper {
