@@ -756,8 +756,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func isFirstOrLastCellInRow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return table()!.cellAfter(cell: self) == nil || table()!.cellBefore(cell: self) == nil
   }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
