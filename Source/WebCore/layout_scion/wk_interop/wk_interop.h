@@ -865,3 +865,4 @@ struct IntPointRaw Element_savedLayerScrollPosition(const void*);
 void Element_setSavedLayerScrollPosition(void* p, struct IntPointRaw raw);
 void RenderGeometryMap_pushView(void* raw, const void* view_raw, struct LayoutSizeRaw scroll_offset_raw, const void* t_raw);
 int32_t ScrollView_layoutWidth(const void*);
+bool ScrollView_useFixedLayout(const void*);
