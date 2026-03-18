@@ -19,7 +19,7 @@
 
 final class RenderTableCaptionWrapper: RenderBlockFlowWrapper {
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return containingBlock()?.logicalWidth() ?? LayoutUnit()
   }
 }
