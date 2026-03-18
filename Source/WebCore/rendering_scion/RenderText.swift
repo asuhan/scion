@@ -990,8 +990,9 @@ class RenderTextWrapper: RenderObjectWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RepaintRects(
+      rect: clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint))
   }
 
   private func computePreferredLogicalWidths(
