@@ -676,8 +676,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   func clearIntrinsicPadding() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    setIntrinsicPadding(LayoutUnit(value: 0), LayoutUnit(value: 0))
   }
 
   func intrinsicPaddingBefore() -> LayoutUnit {
@@ -1068,6 +1068,12 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   private func setIntrinsicPaddingAfter(p: LayoutUnit) {
     assert(isNativeImpl())
     m_intrinsicPaddingAfter = p
+  }
+
+  private func setIntrinsicPadding(_ before: LayoutUnit, _ after: LayoutUnit) {
+    assert(isNativeImpl())
+    setIntrinsicPaddingBefore(p: before)
+    setIntrinsicPaddingAfter(p: after)
   }
 
   private func hasStartBorderAdjoiningTable() -> Bool {
