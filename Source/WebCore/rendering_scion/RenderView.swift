@@ -187,8 +187,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     if !shouldUsePrintingLayout() {
       let frameView = frameView()
       width = frameView.layoutWidth()
-      width = Int32(
-        frameView.useFixedLayout() ? ceilf(style().usedZoom() * Float32(width)) : Float32(width))
+      width = frameView.useFixedLayout() ? Int32(ceilf(style().usedZoom() * Float32(width))) : width
     }
     return width
   }
