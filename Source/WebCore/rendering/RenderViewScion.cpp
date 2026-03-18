@@ -26,6 +26,7 @@
 #include "RenderViewScion.h"
 #include "Document.h"
 #include "RenderFragmentContainer.h"
+#include "RenderLayer.h"
 #include "RenderSelection.h"
 #include "RenderViewScion.h"
 #include <wtf/Assertions.h>
@@ -72,6 +73,8 @@ extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
 extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRaw);
+
+extern "C" void* RenderViewScion_takeStyleChangeLayerTreeMutationRoot(const void*);
 
 extern "C" void* RenderViewScion_viewTransitionRoot(const void*);
 
@@ -269,6 +272,11 @@ void RenderViewScion::didCreateRenderer()
 void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)
 {
     RenderViewScion_updateVisibleViewportRect(m_handle, { visibleRect.location().x(), visibleRect.location().y(), visibleRect.size().width(), visibleRect.size().height() });
+}
+
+RenderLayer* RenderViewScion::takeStyleChangeLayerTreeMutationRoot()
+{
+    return static_cast<RenderLayer*>(RenderViewScion_takeStyleChangeLayerTreeMutationRoot(m_handle));
 }
 
 const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryBoxes() const

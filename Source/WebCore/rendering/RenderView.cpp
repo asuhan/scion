@@ -1165,6 +1165,7 @@ void RenderView::layerChildrenChangedDuringStyleChange(RenderLayer& layer)
 
 RenderLayer* RenderView::takeStyleChangeLayerTreeMutationRoot()
 {
+    if (m_scion) { return m_scion->takeStyleChangeLayerTreeMutationRoot(); }
     auto* result = m_styleChangeLayerMutationRoot.get();
     m_styleChangeLayerMutationRoot.clear();
     return result;

@@ -38,6 +38,7 @@ extern "C" void* RenderViewScion_create(void*, const void*);
 
 namespace WebCore {
 
+class RenderLayer;
 class RenderLayerCompositor;
 class RenderFragmentContainer;
 
@@ -119,6 +120,8 @@ public:
     void didCreateRenderer();
 
     void updateVisibleViewportRect(const IntRect&);
+
+    RenderLayer* takeStyleChangeLayerTreeMutationRoot();
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;
 

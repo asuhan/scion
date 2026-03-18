@@ -620,6 +620,16 @@ func RenderViewScion_updateVisibleViewportRect(
       height: visibleRectRaw.size.height))
 }
 
+@_cdecl("RenderViewScion_takeStyleChangeLayerTreeMutationRoot")
+func RenderViewScion_takeStyleChangeLayerTreeMutationRoot(_ viewRaw: UnsafeRawPointer)
+  -> UnsafeMutableRawPointer?
+{
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  guard let root = view.takeStyleChangeLayerTreeMutationRoot() else { return nil }
+  assert(!root.isNativeImpl())
+  return root.layerId()
+}
+
 @_cdecl("RenderViewScion_viewTransitionRoot")
 func RenderViewScion_viewTransitionRoot(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
