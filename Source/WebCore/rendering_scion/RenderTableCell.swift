@@ -1900,8 +1900,12 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
   }
 
   override func hasLineIfEmpty() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if element()?.hasEditableStyle() ?? false {
+      return true
+    }
+
+    return super.hasLineIfEmpty()
   }
 
   private var m_cellWidthChanged = false
