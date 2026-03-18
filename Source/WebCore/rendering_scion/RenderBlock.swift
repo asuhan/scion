@@ -311,10 +311,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  ) { fatalError("Not reached") }
 
   func insertPositionedObject(positioned: RenderBoxWrapper) {
     assert(!isAnonymousBlock())
