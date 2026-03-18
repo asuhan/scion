@@ -160,6 +160,12 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     return offset
   }
 
+  override final func borderBoundingBox() -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    return LayoutRectWrapper(
+      location: LayoutPointWrapper(), size: LayoutSizeWrapper(size: linesBoundingBox().size))
+  }
+
   func innerPaddingBoxWidth() -> LayoutUnit {
     var firstInlineBoxPaddingBoxLeft = LayoutUnit()
     var lastInlineBoxPaddingBoxRight = LayoutUnit()
