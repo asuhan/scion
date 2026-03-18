@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 enum DelegatedScrollingMode: UInt8 {
   case NotDelegated
   case DelegatedToNativeScrollView
@@ -31,6 +33,10 @@ enum DelegatedScrollingMode: UInt8 {
 }
 
 class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
+  init(p: UnsafeMutableRawPointer) {
+    self.p = p
+  }
+
   // Returns a clip rect in host window coordinates. Used to clip the blit on a scroll.
   func windowClipRect() -> IntRect {
     // TODO(asuhan): implement this
@@ -74,10 +80,7 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     fatalError("Not implemented")
   }
 
-  func layoutWidth() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func layoutWidth() -> Int32 { return wk_interop.ScrollView_layoutWidth(p) }
 
   func layoutHeight() -> Int32 {
     // TODO(asuhan): implement this
@@ -200,4 +203,6 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  var p: UnsafeMutableRawPointer
 }

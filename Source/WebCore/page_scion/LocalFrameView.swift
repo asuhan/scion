@@ -25,10 +25,6 @@
 import wk_interop
 
 class LocalFrameViewWrapper: FrameViewWrapper {
-  init(p: UnsafeMutableRawPointer) {
-    self.p = p
-  }
-
   func frame() -> LocalFrameWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -328,6 +324,4 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
-
-  var p: UnsafeMutableRawPointer
 }
