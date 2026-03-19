@@ -1050,8 +1050,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasClipOrNonVisibleOverflow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasClip() || hasNonVisibleOverflow()
   }
 
   func hasClipPath() -> Bool {
