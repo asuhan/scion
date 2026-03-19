@@ -186,8 +186,10 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
   }
 
   override func setRenderedText(_ text: StringWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    super.setRenderedText(text)
+
+    needsFontUpdate = true
+    combineTextIfNeeded()
   }
 
   private var combineFontStyle: RenderStyleWrapper? = nil
