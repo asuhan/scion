@@ -1025,8 +1025,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func opacity() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().opacity()
   }
 
   func visibleToHitTesting(request: HitTestRequestWrapper? = nil) -> Bool {
