@@ -76,6 +76,8 @@ extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
+extern "C" void RenderViewScion_didCreateRenderer(void*);
+
 extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRaw);
 
 extern "C" void* RenderViewScion_takeStyleChangeLayerTreeMutationRoot(const void*);
@@ -280,7 +282,7 @@ bool RenderViewScion::hasSoftwareFilters() const
 
 void RenderViewScion::didCreateRenderer()
 {
-    ASSERT_NOT_REACHED();
+    RenderViewScion_didCreateRenderer(m_handle);
 }
 
 void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)

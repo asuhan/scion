@@ -177,7 +177,7 @@ public:
     WEBCORE_EXPORT bool hasSoftwareFilters() const;
 
     uint64_t rendererCount() const { return m_rendererCount; }
-    void didCreateRenderer() { ++m_rendererCount; }
+    void didCreateRenderer();
     void didDestroyRenderer() { --m_rendererCount; }
 
     void updateVisibleViewportRect(const IntRect&);

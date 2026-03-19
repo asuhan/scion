@@ -932,6 +932,15 @@ ImageQualityController& RenderView::imageQualityController()
     return *m_imageQualityController;
 }
 
+void RenderView::didCreateRenderer()
+{
+    if (m_scion) {
+        m_scion->didCreateRenderer();
+        return;
+    }
+    ++m_rendererCount;
+}
+
 void RenderView::registerForVisibleInViewportCallback(RenderElement& renderer)
 {
     ASSERT(!m_visibleInViewportRenderers.contains(renderer));

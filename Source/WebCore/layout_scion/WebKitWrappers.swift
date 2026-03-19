@@ -625,6 +625,12 @@ func RenderViewScion_hasSoftwareFilters(_ viewRaw: UnsafeRawPointer) -> Bool {
   return view.hasSoftwareFilters()
 }
 
+@_cdecl("RenderViewScion_didCreateRenderer")
+func RenderViewScion_didCreateRenderer(_ viewRaw: UnsafeMutableRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.didCreateRenderer()
+}
+
 @_cdecl("RenderViewScion_updateVisibleViewportRect")
 func RenderViewScion_updateVisibleViewportRect(
   _ viewRaw: UnsafeRawPointer, _ visibleRectRaw: IntRectRaw
