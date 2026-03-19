@@ -96,8 +96,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func shouldClipFragmentedFlowContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasNonVisibleOverflow()
   }
 
   // These methods represent the width and height of a "page" and for a RenderFragmentContainer they are just the
