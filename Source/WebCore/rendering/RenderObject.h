@@ -70,6 +70,7 @@ class RenderFragmentedFlow;
 class RenderGeometryMap;
 class RenderLayer;
 class RenderLayerModelObject;
+class RenderObjectScion;
 class RenderFragmentContainer;
 class RenderTheme;
 class RenderTreeBuilder;
@@ -331,6 +332,8 @@ public:
     // marked as anonymous in the constructor.
     RenderObject(Type, Node&, OptionSet<TypeFlag>, TypeSpecificFlags);
     virtual ~RenderObject();
+
+    void setScionHandle(void* handle);
 
     Type type() const { return m_type; }
     Layout::Box* layoutBox() { return m_layoutBox.get(); }
@@ -1297,6 +1300,8 @@ private:
     const TypeSpecificFlags m_typeSpecificFlags;
 
     CheckedPtr<Layout::Box> m_layoutBox;
+
+    std::unique_ptr<RenderObjectScion> m_scion;
 
     // FIXME: This should be RenderElementRareData.
     class RenderObjectRareData {

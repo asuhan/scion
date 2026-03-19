@@ -64,6 +64,7 @@
 #include "RenderMultiColumnFlow.h"
 #include "RenderMultiColumnSet.h"
 #include "RenderMultiColumnSpannerPlaceholder.h"
+#include "RenderObjectScion.h"
 #include "RenderReplica.h"
 #include "RenderSVGBlock.h"
 #include "RenderSVGInline.h"
@@ -156,6 +157,7 @@ struct SameSizeAsRenderObject final : public CachedImageClient, public CanMakeCh
     uint8_t m_type;
     uint8_t m_typeSpecificFlags;
     CheckedPtr<Layout::Box> layoutBox;
+    std::unique_ptr<RenderObjectScion> m_scion;
 };
 
 #if CPU(ADDRESS64)
@@ -197,6 +199,11 @@ RenderObject::~RenderObject()
     renderObjectCounter.decrement();
 #endif
     ASSERT(!hasRareData());
+}
+
+void RenderObject::setScionHandle(void* handle)
+{
+    m_scion = std::make_unique<RenderObjectScion>(handle);
 }
 
 CheckedRef<RenderView> RenderObject::checkedView() const
