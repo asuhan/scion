@@ -28,5 +28,8 @@ final class RenderCounter: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
-  override final func canBeSelectionLeaf() -> Bool { return false }
+  override final func canBeSelectionLeaf() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
 }
