@@ -56,7 +56,7 @@ public:
 
     ASCIILiteral renderName() const override { return "RenderView"_s; }
 
-    bool requiresLayer() const override { return true; }
+    bool requiresLayer() const override;
 
     bool isChildAllowed(const RenderObject&, const RenderStyle&) const override;
 
