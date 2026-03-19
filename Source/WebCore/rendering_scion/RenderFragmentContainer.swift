@@ -115,9 +115,15 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return fragmentedFlow!.isHorizontalWritingMode() ? contentHeight() : contentWidth()
   }
 
+  private func logicalTopOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
+    assert(isValid)
+    return fragmentedFlow!.isHorizontalWritingMode() ? rect.y() : rect.x()
+  }
+
   func logicalTopForFragmentedFlowContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return logicalTopOfFragmentedFlowContentRect(fragmentedFlowPortionRect())
   }
 
   func logicalBottomForFragmentedFlowContent() -> LayoutUnit {
