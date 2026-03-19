@@ -28,8 +28,5 @@ final class RenderCounter: RenderTextWrapper {
     fatalError("Not implemented")
   }
 
-  override final func canBeSelectionLeaf() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  override final func canBeSelectionLeaf() -> Bool { return false }
 }
