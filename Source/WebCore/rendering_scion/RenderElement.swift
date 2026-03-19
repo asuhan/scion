@@ -1045,8 +1045,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isOutOfFlowPositioned() && style().hasClip()
   }
 
   func hasClipOrNonVisibleOverflow() -> Bool {
