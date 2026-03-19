@@ -704,7 +704,7 @@ public:
     bool hasVisibleBoxDecorations() const { return m_stateBitfields.boxDecorationState() != BoxDecorationState::None; }
     bool backgroundIsKnownToBeObscured(const LayoutPoint& paintOffset);
 
-    bool needsLayout() const;
+    WEBCORE_EXPORT bool needsLayout() const;
     bool selfNeedsLayout() const { return m_stateBitfields.hasFlag(StateFlag::NeedsLayout); }
     bool needsPositionedMovementLayout() const { return m_stateBitfields.hasFlag(StateFlag::NeedsPositionedMovementLayout); }
     bool needsPositionedMovementLayoutOnly() const;
@@ -1463,15 +1463,6 @@ inline bool RenderObject::isAnonymousBlock() const
         && !isRenderFragmentedFlow()
         && !isRenderMultiColumnSet()
         && !isRenderView();
-}
-
-inline bool RenderObject::needsLayout() const
-{
-    return selfNeedsLayout()
-        || normalChildNeedsLayout()
-        || posChildNeedsLayout()
-        || needsSimplifiedNormalFlowLayout()
-        || needsPositionedMovementLayout();
 }
 
 inline bool RenderObject::needsPositionedMovementLayoutOnly() const

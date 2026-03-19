@@ -24,3 +24,11 @@
  */
 
 #include "RenderObjectScion.h"
+
+extern "C" bool RenderObject_needsLayout(const void*);
+
+namespace WebCore {
+
+bool RenderObjectScion::needsLayout() const { return RenderObject_needsLayout(m_handle); }
+
+}

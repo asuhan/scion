@@ -724,3 +724,9 @@ func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawP
   assert(!layer.isNativeImpl())
   return layer.layerId()
 }
+
+@_cdecl("RenderObject_needsLayout")
+func RenderObject_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  return object.needsLayout()
+}

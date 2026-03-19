@@ -2849,6 +2849,18 @@ bool RenderObject::isSkippedContentForLayout() const
     return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout();
 }
 
+bool RenderObject::needsLayout() const
+{
+    if (m_scion) {
+        return m_scion->needsLayout();
+    }
+    return selfNeedsLayout()
+        || normalChildNeedsLayout()
+        || posChildNeedsLayout()
+        || needsSimplifiedNormalFlowLayout()
+        || needsPositionedMovementLayout();
+}
+
 TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
 {
     ts << renderer.debugDescription();

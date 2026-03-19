@@ -40,6 +40,8 @@ public:
     {
     }
 
+    bool needsLayout() const;
+
 private:
     void* m_handle;
 };
