@@ -664,6 +664,9 @@ void RenderView::absoluteQuads(Vector<FloatQuad>& quads, bool* wasFixed) const
 
 bool RenderView::printing() const
 {
+    if (m_scion) {
+        return m_scion->printing();
+    }
     return document().printing();
 }
 

@@ -46,6 +46,8 @@ struct IntRectRaw {
     struct IntSizeRaw size;
 };
 
+extern "C" bool RenderViewScion_printing(const void*);
+
 extern "C" bool RenderViewScion_requiresLayer(const void*);
 
 extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
@@ -181,6 +183,11 @@ RenderSelection& RenderViewScion::selection()
     static RenderSelection* unused = nullptr;
     ASSERT_NOT_REACHED();
     return *unused;
+}
+
+bool RenderViewScion::printing() const
+{
+    return RenderViewScion_printing(m_handle);
 }
 
 bool RenderViewScion::requiresLayer() const

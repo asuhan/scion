@@ -83,6 +83,8 @@ public:
 
     RenderSelection& selection();
 
+    bool printing() const;
+
     bool requiresLayer() const;
 
     bool isChildAllowed(const RenderObject&, const RenderStyle&) const;

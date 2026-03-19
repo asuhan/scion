@@ -517,6 +517,12 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderViewScion_printing")
+func RenderViewScion_printing(_ viewRaw: UnsafeRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.printing()
+}
+
 @_cdecl("RenderViewScion_requiresLayer")
 func RenderViewScion_requiresLayer(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
