@@ -36,8 +36,11 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // Clip to the padding box to at least give content the extra padding space.
+    return LayoutRectWrapper(
+      x: additionalOffset.x + borderLeft(), y: additionalOffset.y + borderTop(),
+      width: width() - borderLeft() - borderRight(), height: height() - borderTop() - borderBottom()
+    )
   }
 
   override func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {
