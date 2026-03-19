@@ -36,6 +36,7 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     // Clip to the padding box to at least give content the extra padding space.
     return LayoutRectWrapper(
       x: additionalOffset.x + borderLeft(), y: additionalOffset.y + borderTop(),
@@ -44,6 +45,7 @@ final class RenderButtonWrapper: RenderFlexibleBoxWrapper {
   }
 
   override func updateAnonymousChildStyle(_ childStyle: RenderStyleWrapper) {
+    assert(isNativeImpl())
     childStyle.setFlexGrow(1)
 
     // min-inline-size: 0; is needed for correct shrinking.
