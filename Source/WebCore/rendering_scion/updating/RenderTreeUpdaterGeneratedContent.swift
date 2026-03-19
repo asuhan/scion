@@ -66,7 +66,7 @@ private func createContentRenderers(
     while content != nil {
       let child = content!.createContentRenderer(
         document: pseudoRenderer.document(), pseudoStyle: style)
-      if pseudoRenderer.isChildAllowed(child: child, style: style) {
+      if pseudoRenderer.isChildAllowed(child, style) {
         builder.attach(parent: pseudoRenderer, child: child)
       }
       content = content!.next()

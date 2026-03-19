@@ -297,9 +297,7 @@ class RenderTreeUpdater {
 
     renderTreePosition.computeNextSibling(node: textNode)
 
-    if !renderTreePosition.parent.isChildAllowed(
-      child: textRenderer!, style: renderTreePosition.parent.style())
-    {
+    if !renderTreePosition.parent.isChildAllowed(textRenderer!, renderTreePosition.parent.style()) {
       return
     }
 
@@ -489,7 +487,7 @@ class RenderTreeUpdater {
       return
     }
 
-    if !insertionPosition.parent.isChildAllowed(child: newRenderer!, style: newRenderer!.style()) {
+    if !insertionPosition.parent.isChildAllowed(newRenderer!, newRenderer!.style()) {
       return
     }
 

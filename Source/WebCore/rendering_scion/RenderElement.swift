@@ -491,11 +491,6 @@ class RenderElementWrapper: RenderObjectWrapper {
     return selectionColor(colorProperty: .CSSPropertyWebkitTextFillColor)
   }
 
-  func isChildAllowed(child: RenderObjectWrapper, style: RenderStyleWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func isChildAllowed(_ child: RenderObjectWrapper, _ style: RenderStyleWrapper) -> Bool {
     assert(isNativeImpl())
     return true
