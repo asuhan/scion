@@ -121,14 +121,20 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     return fragmentedFlow!.isHorizontalWritingMode() ? rect.y() : rect.x()
   }
 
+  private func logicalBottomOfFragmentedFlowContentRect(_ rect: LayoutRectWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
+    assert(isValid)
+    return fragmentedFlow!.isHorizontalWritingMode() ? rect.maxY() : rect.maxX()
+  }
+
   func logicalTopForFragmentedFlowContent() -> LayoutUnit {
     assert(isNativeImpl())
     return logicalTopOfFragmentedFlowContentRect(fragmentedFlowPortionRect())
   }
 
   func logicalBottomForFragmentedFlowContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return logicalBottomOfFragmentedFlowContentRect(fragmentedFlowPortionRect())
   }
 
   // This method represents the logical height of the entire flow thread portion used by the fragment or set.
