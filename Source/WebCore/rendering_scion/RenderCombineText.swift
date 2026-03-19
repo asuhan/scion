@@ -23,6 +23,7 @@ private let textCombineMargin: Float32 = 1.15
 
 final class RenderCombineTextWrapper: RenderTextWrapper {
   func combineTextIfNeeded() {
+    assert(isNativeImpl())
     if !needsFontUpdate {
       return
     }
@@ -143,6 +144,7 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
     character: CharacterNames.Unicode.objectReplacementCharacter)
 
   func computeTextOrigin(boxRect: FloatRectWrapper) -> FloatPoint? {
+    assert(isNativeImpl())
     if !m_isCombined {
       return nil
     }
@@ -156,15 +158,28 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
     return result
   }
 
-  func isCombined() -> Bool { return m_isCombined }
+  func isCombined() -> Bool {
+    assert(isNativeImpl())
+    return m_isCombined
+  }
 
-  func combinedTextWidth(_ font: FontCascadeWrapper) -> Float32 { return font.size() }
+  func combinedTextWidth(_ font: FontCascadeWrapper) -> Float32 {
+    assert(isNativeImpl())
+    return font.size()
+  }
 
-  func originalFont() -> FontCascadeWrapper { return parent()!.style().fontCascade() }
+  func originalFont() -> FontCascadeWrapper {
+    assert(isNativeImpl())
+    return parent()!.style().fontCascade()
+  }
 
-  func textCombineFont() -> FontCascadeWrapper { return combineFontStyle!.fontCascade() }
+  func textCombineFont() -> FontCascadeWrapper {
+    assert(isNativeImpl())
+    return combineFontStyle!.fontCascade()
+  }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     // FIXME: This is pretty hackish.
     // Only cache a new font style if our old one actually changed. We do this to avoid
     // clobbering width variants and shrink-to-fit changes, since we won't recombine when
@@ -186,6 +201,7 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
   }
 
   override func setRenderedText(_ text: StringWrapper) {
+    assert(isNativeImpl())
     super.setRenderedText(text)
 
     needsFontUpdate = true
