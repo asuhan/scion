@@ -155,8 +155,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
 
   // Whether or not this fragment is a set.
   func isRenderFragmentContainerSet() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   func repaintFragmentedFlowContent(_ repaintRect: LayoutRectWrapper) {
