@@ -162,10 +162,7 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
 
   func originalFont() -> FontCascadeWrapper { return parent()!.style().fontCascade() }
 
-  func textCombineFont() -> FontCascadeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func textCombineFont() -> FontCascadeWrapper { return combineFontStyle!.fontCascade() }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
     // FIXME: This is pretty hackish.
