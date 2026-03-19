@@ -375,8 +375,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplySizeContainment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return layout_scion.isSkippedContentRoot(style: style(), element: element())
+      || shouldApplySizeOrStyleContainment(style().containsSize())
   }
 
   func shouldApplyInlineSizeContainment() -> Bool {
