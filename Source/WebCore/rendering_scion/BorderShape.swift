@@ -142,8 +142,8 @@ struct BorderShape {
   }
 
   func deprecatedPixelSnappedInnerRoundedRect(_ deviceScaleFactor: Float32) -> FloatRoundedRect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return innerEdgeRoundedRect().pixelSnappedRoundedRectForPainting(
+      deviceScaleFactor: deviceScaleFactor)
   }
 
   // Returns true if the given rect is entirely inside the shape, without impinging on any of the corners.
