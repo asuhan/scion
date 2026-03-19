@@ -141,8 +141,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   // For RenderFragmentContainers it matches logicalPaginationHeight(), but for sets it is the height of all the pages
   // or columns added together.
   func logicalHeightOfAllFragmentedFlowContent() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return pageLogicalHeight()
   }
 
   // The top of the nearest page inside the fragment. For RenderFragmentContainers, this is just the logical top of the
