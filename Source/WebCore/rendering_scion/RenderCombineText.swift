@@ -160,10 +160,7 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
 
   func combinedTextWidth(_ font: FontCascadeWrapper) -> Float32 { return font.size() }
 
-  func originalFont() -> FontCascadeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func originalFont() -> FontCascadeWrapper { return parent()!.style().fontCascade() }
 
   func textCombineFont() -> FontCascadeWrapper {
     // TODO(asuhan): implement this
