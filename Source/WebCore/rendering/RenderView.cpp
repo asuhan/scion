@@ -419,6 +419,12 @@ RenderElement* RenderView::rendererForRootBackground() const
     return &documentRenderer;
 }
 
+RenderSelection& RenderView::selection()
+{
+    if (m_scion) { return m_scion->selection(); }
+    return m_selection;
+}
+
 static inline bool rendererObscuresBackground(const RenderElement& rootElement)
 {
     auto& style = rootElement.style();

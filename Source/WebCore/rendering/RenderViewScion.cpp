@@ -48,6 +48,8 @@ struct IntRectRaw {
 
 extern "C" bool RenderViewScion_printing(const void*);
 
+extern "C" void* RenderViewScion_selection(const void*);
+
 extern "C" bool RenderViewScion_requiresLayer(const void*);
 
 extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
@@ -180,9 +182,7 @@ void RenderViewScion::updateColumnProgressionFromStyle(const RenderStyle&)
 
 RenderSelection& RenderViewScion::selection()
 {
-    static RenderSelection* unused = nullptr;
-    ASSERT_NOT_REACHED();
-    return *unused;
+    return *static_cast<RenderSelection*>(RenderViewScion_selection(m_handle));
 }
 
 bool RenderViewScion::printing() const

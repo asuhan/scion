@@ -43,6 +43,16 @@
 #include <wtf/WeakRef.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" void* RenderSelection_create(void* viewRaw)
+{
+    return new WebCore::RenderSelection(*static_cast<WebCore::RenderView*>(viewRaw));
+}
+
+extern "C" void RenderSelection_destroy(const void* selection)
+{
+    delete static_cast<const WebCore::RenderSelection*>(selection);
+}
+
 namespace WebCore {
 
 namespace {

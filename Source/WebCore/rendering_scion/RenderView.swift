@@ -923,7 +923,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   // TODO(asuhan): remove
-  func setWk(_ wk: UnsafeMutableRawPointer) { self.wk = wk }
+  func setWk(_ wk: UnsafeMutableRawPointer) {
+    self.wk = wk
+    m_selection!.setWk(wk)
+  }
 
   func getWk() -> UnsafeMutableRawPointer { return wk! }
 

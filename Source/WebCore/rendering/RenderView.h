@@ -101,7 +101,7 @@ public:
     // Return the renderer whose background style is used to paint the root background.
     RenderElement* rendererForRootBackground() const;
 
-    RenderSelection& selection() { return m_selection; }
+    RenderSelection& selection();
 
     bool printing() const;
 

@@ -517,6 +517,12 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   return unmanaged.toOpaque()
 }
 
+@_cdecl("RenderViewScion_selection")
+func RenderViewScion_selection(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.selection().interop()
+}
+
 @_cdecl("RenderViewScion_printing")
 func RenderViewScion_printing(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
@@ -729,4 +735,12 @@ func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawP
 func RenderObject_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.needsLayout()
+}
+
+@_cdecl("RenderSelectionScion_create")
+func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let renderSelection = RenderSelection(view)
+  let unmanaged = Unmanaged.passRetained(renderSelection)
+  return unmanaged.toOpaque()
 }

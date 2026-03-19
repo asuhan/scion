@@ -28,6 +28,8 @@
  * SUCH DAMAGE.
  */
 
+import wk_interop
+
 private func rendererAfterOffset(_ renderer: RenderObjectWrapper, _ offset: UInt32)
   -> RenderObjectWrapper?
 {
@@ -82,6 +84,7 @@ class RenderHighlight {
   }
 
   func setRenderRange(highlightRange: HighlightRangeWrapper) -> Bool {  // Returns true if successful.
+    assert(isNativeImpl())
     if highlightRange.startPosition.isNull() || highlightRange.endPosition.isNull() {
       return false
     }
@@ -132,6 +135,7 @@ class RenderHighlight {
   private func highlightStateForRenderer(_ renderer: RenderObjectWrapper)
     -> RenderObjectWrapper.HighlightState
   {
+    assert(isNativeImpl())
     if isSelection {
       return renderer.selectionState()
     }
@@ -176,6 +180,7 @@ class RenderHighlight {
   func highlightStateForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange)
     -> RenderObjectWrapper.HighlightState
   {
+    assert(isNativeImpl())
     let state = highlightStateForRenderer(renderer)
 
     if state == .None || state == .Inside {
@@ -216,6 +221,7 @@ class RenderHighlight {
   func rangeForTextBox(renderer: RenderTextWrapper, textBoxRange: TextBoxSelectableRange) -> (
     UInt32, UInt32
   ) {
+    assert(isNativeImpl())
     let state = highlightStateForTextBox(renderer: renderer, textBoxRange: textBoxRange)
 
     switch state {
@@ -232,6 +238,21 @@ class RenderHighlight {
     }
   }
 
+  func interop() -> UnsafeMutableRawPointer { return p! }
+
+  func setWk(_ wkView: UnsafeMutableRawPointer) {
+    p = wk_interop.RenderSelection_create(wkView)
+  }
+
+  func isNativeImpl() -> Bool { return p == nil }
+
+  deinit {
+    if p != nil {
+      wk_interop.RenderSelection_destroy(p)
+    }
+  }
+
   private let renderRange = RenderRange()
   private let isSelection: Bool
+  private var p: UnsafeMutableRawPointer? = nil
 }
