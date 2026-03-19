@@ -1084,8 +1084,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasOutline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().hasOutline() || hasOutlineAnnotation()
   }
 
   func hasSelfPaintingLayer() -> Bool {
