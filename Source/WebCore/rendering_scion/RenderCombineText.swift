@@ -156,10 +156,7 @@ final class RenderCombineTextWrapper: RenderTextWrapper {
     return result
   }
 
-  func isCombined() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isCombined() -> Bool { return m_isCombined }
 
   func combinedTextWidth(_ font: FontCascadeWrapper) -> Float32 { return font.size() }
 
