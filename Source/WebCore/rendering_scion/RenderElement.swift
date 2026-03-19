@@ -1241,13 +1241,13 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // https://www.w3.org/TR/css-transforms-1/#transform-box
   func transformReferenceBoxRect(style: RenderStyleWrapper) -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return referenceBoxRect(boxType: transformBoxToCSSBoxType(style.transformBox()))
   }
 
   func transformReferenceBoxRect() -> FloatRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return transformReferenceBoxRect(style: style())
   }
 
   // https://www.w3.org/TR/css-transforms-1/#reference-box

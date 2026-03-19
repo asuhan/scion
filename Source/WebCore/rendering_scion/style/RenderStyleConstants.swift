@@ -608,6 +608,21 @@ func alwaysPageBreak(between: BreakBetween) -> Bool {
   return between.rawValue >= BreakBetween.Page.rawValue
 }
 
+func transformBoxToCSSBoxType(_ transformBox: TransformBox) -> CSSBoxType {
+  switch transformBox {
+  case .StrokeBox:
+    return .StrokeBox
+  case .ContentBox:
+    return .ContentBox
+  case .BorderBox:
+    return .BorderBox
+  case .FillBox:
+    return .FillBox
+  case .ViewBox:
+    return .ViewBox
+  }
+}
+
 enum BreakInside: UInt8 {
   case Auto
   case Avoid
