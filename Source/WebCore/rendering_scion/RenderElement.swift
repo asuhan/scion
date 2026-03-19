@@ -1015,8 +1015,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func createsGroup() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return RenderElementWrapper.createsGroupForStyle(style: style())
   }
 
   func isTransparent() -> Bool {
