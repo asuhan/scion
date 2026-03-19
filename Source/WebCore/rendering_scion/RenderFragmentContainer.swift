@@ -50,8 +50,10 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func fragmentedFlowPortionOverflowRect() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return overflowRectForFragmentedFlowPortion(
+      fragmentedFlowPortionRect(), isFirstPortion: isFirstFragment(),
+      isLastPortion: isLastFragment())
   }
 
   func renderBoxFragmentInfo(box: RenderBoxWrapper) -> RenderBoxFragmentInfo? {
