@@ -104,13 +104,15 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   // content width and content height of a fragment. For RenderFragmentContainerSets, however, they will be the width and
   // height of a single column or page in the set.
   func pageLogicalWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isValid)
+    return fragmentedFlow!.isHorizontalWritingMode() ? contentWidth() : contentHeight()
   }
 
   func pageLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isValid)
+    return fragmentedFlow!.isHorizontalWritingMode() ? contentHeight() : contentWidth()
   }
 
   func logicalTopForFragmentedFlowContent() -> LayoutUnit {
