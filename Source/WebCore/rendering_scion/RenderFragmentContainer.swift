@@ -168,8 +168,7 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
     _ layerFragments: inout LayerFragments, layerBoundingBox: LayoutRectWrapper,
     dirtyRect: LayoutRectWrapper
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
   }
 
   func addLayoutOverflowForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper) {
