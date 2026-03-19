@@ -1060,8 +1060,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasHiddenBackface() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().backfaceVisibility() == .Hidden
   }
 
   func hasViewTransitionName() -> Bool {
