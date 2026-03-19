@@ -161,7 +161,7 @@ public:
     FloatSize sizeForCSSDynamicViewportUnits() const;
     FloatSize sizeForCSSDefaultViewportUnits() const;
 
-    bool hasQuotesNeedingUpdate() const { return m_hasQuotesNeedingUpdate; }
+    bool hasQuotesNeedingUpdate() const;
     void setHasQuotesNeedingUpdate(bool b) { m_hasQuotesNeedingUpdate = b; }
 
     void addCounterNeedingUpdate(RenderCounter&);

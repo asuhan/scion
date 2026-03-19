@@ -117,6 +117,8 @@ public:
 
     FloatSize sizeForCSSLargeViewportUnits() const;
 
+    bool hasQuotesNeedingUpdate() const;
+
     uint64_t rendererCount() const;
 
     bool hasSoftwareFilters() const;

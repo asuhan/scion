@@ -619,6 +619,12 @@ func RenderViewScion_documentRect(_ viewRaw: UnsafeRawPointer) -> IntRectRaw {
     size: IntSizeRaw(width: rect.size.width, height: rect.size.height))
 }
 
+@_cdecl("RenderViewScion_hasQuotesNeedingUpdate")
+func RenderViewScion_hasQuotesNeedingUpdate(_ viewRaw: UnsafeRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.hasQuotesNeedingUpdate()
+}
+
 @_cdecl("RenderViewScion_hasSoftwareFilters")
 func RenderViewScion_hasSoftwareFilters(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

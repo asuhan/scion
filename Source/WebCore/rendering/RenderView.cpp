@@ -851,6 +851,14 @@ FloatSize RenderView::sizeForCSSDefaultViewportUnits() const
     return protectedFrameView()->sizeForCSSDefaultViewportUnits();
 }
 
+bool RenderView::hasQuotesNeedingUpdate() const
+{
+    if (m_scion) {
+        return m_scion->hasQuotesNeedingUpdate();
+    }
+    return m_hasQuotesNeedingUpdate;
+}
+
 Node* RenderView::nodeForHitTest() const
 {
     return document().documentElement();
