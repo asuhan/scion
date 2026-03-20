@@ -153,6 +153,8 @@ public:
 
     bool requiresColumns(int desiredColumnCount) const;
 
+    void computeColumnCountAndWidth();
+
     void updateInitialContainingBlockSize();
 
     bool shouldUsePrintingLayout() const;

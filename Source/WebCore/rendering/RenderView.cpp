@@ -383,6 +383,10 @@ bool RenderView::requiresColumns(int desiredColumnCount) const
 
 void RenderView::computeColumnCountAndWidth()
 {
+    if (m_scion) {
+        m_scion->computeColumnCountAndWidth();
+        return;
+    }
     int columnWidth = contentLogicalWidth();
     if (style().hasInlineColumnAxis()) {
         if (int pageLength = protectedFrameView()->pagination().pageLength)
