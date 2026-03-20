@@ -56,6 +56,8 @@ extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
 
 extern "C" void RenderViewScion_layout(void*);
 
+extern "C" int32_t RenderViewScion_viewHeight(const void*);
+
 extern "C" void* RenderViewScion_frameView(const void*);
 
 extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
@@ -209,6 +211,11 @@ bool RenderViewScion::isChildAllowed(const RenderObject& child, const RenderStyl
 void RenderViewScion::layout()
 {
     RenderViewScion_layout(m_handle);
+}
+
+int RenderViewScion::viewHeight() const
+{
+    return RenderViewScion_viewHeight(m_handle);
 }
 
 LocalFrameView& RenderViewScion::frameView() const

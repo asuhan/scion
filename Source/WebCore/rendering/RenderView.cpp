@@ -794,6 +794,7 @@ IntRect RenderView::documentRect() const
 
 int RenderView::viewHeight() const
 {
+    if (m_scion) { return m_scion->viewHeight(); }
     int height = 0;
     if (!shouldUsePrintingLayout()) {
         Ref frameView = this->frameView();

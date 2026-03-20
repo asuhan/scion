@@ -91,6 +91,8 @@ public:
 
     void layout();
 
+    int viewHeight() const;
+
     LocalFrameView& frameView() const;
 
     Ref<LocalFrameView> protectedFrameView() const;
