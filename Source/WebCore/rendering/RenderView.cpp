@@ -83,6 +83,11 @@ extern "C" WEBCORE_EXPORT void* RenderView_layoutState(void* p)
     return &static_cast<WebCore::RenderView*>(p)->layoutState();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderView_scion(const void* p)
+{
+    return static_cast<const WebCore::RenderView*>(p)->scion();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderView);
@@ -1268,6 +1273,11 @@ SingleThreadWeakPtr<RenderElement> RenderView::viewTransitionRoot() const
 void RenderView::setViewTransitionRoot(RenderElement& renderer)
 {
     m_viewTransitionRoot = renderer;
+}
+
+void* RenderView::scion() const
+{
+    return m_scion ? m_scion->handle() : nullptr;
 }
 
 } // namespace WebCore

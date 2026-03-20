@@ -218,6 +218,8 @@ public:
     SingleThreadWeakPtr<RenderElement> viewTransitionRoot() const;
     void setViewTransitionRoot(RenderElement& renderer);
 
+    void* scion() const;
+
 private:
     void styleDidChange(StyleDifference, const RenderStyle* oldStyle) override;
 

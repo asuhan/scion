@@ -454,6 +454,7 @@ void* RenderObject_layoutBox(void*);
 void* RenderObject_parent(void*);
 void* RenderView_frameView(const void*);
 void* RenderView_layoutState(void*);
+void* RenderView_scion(const void*);
 void* RenderLayerCompositor_create(void*);
 void RenderLayerCompositor_destroy(void*);
 bool RenderLayerCompositor_hasContentCompositingLayers(const void*);

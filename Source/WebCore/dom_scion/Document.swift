@@ -97,8 +97,9 @@ class Document: TreeScopeWrapper {
   }
 
   func renderView() -> RenderViewWrapper? {
-    let raw = wk_interop.Document_renderView(p)
-    return raw != nil ? RenderViewWrapper(p: raw!) : nil
+    guard let raw = wk_interop.Document_renderView(p) else { return nil }
+    guard let viewRaw = RenderView_scion(raw) else { return nil }
+    return Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   }
 
   func existingAXObjectCache() -> AXObjectCacheWrapper? {
