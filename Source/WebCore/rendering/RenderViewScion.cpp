@@ -56,6 +56,8 @@ extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
 
 extern "C" void RenderViewScion_layout(void*);
 
+extern "C" void RenderViewScion_updateLogicalWidth(void*);
+
 extern "C" int32_t RenderViewScion_viewHeight(const void*);
 
 extern "C" int32_t RenderViewScion_viewWidth(const void*);
@@ -217,6 +219,11 @@ void RenderViewScion::layout()
     RenderViewScion_layout(m_handle);
 }
 
+void RenderViewScion::updateLogicalWidth()
+{
+    RenderViewScion_updateLogicalWidth(m_handle);
+}
+
 int RenderViewScion::viewHeight() const
 {
     return RenderViewScion_viewHeight(m_handle);
@@ -333,7 +340,7 @@ IntRectRaw convertIntRect(const IntRect& r)
     return { r.location().x(), r.location().y(), r.size().width(), r.size().height() };
 }
 
-}  // namespace
+} // namespace
 
 void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)
 {

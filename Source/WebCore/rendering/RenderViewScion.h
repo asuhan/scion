@@ -91,6 +91,8 @@ public:
 
     void layout();
 
+    void updateLogicalWidth();
+
     int viewHeight() const;
 
     int viewWidth() const;

@@ -162,6 +162,10 @@ inline int RenderView::viewLogicalWidth() const
 
 void RenderView::updateLogicalWidth()
 {
+    if (m_scion) {
+        m_scion->updateLogicalWidth();
+        return;
+    }
     setLogicalWidth(shouldUsePrintingLayout() ? m_pageLogicalSize->width() : LayoutUnit(viewLogicalWidth()));
 }
 
