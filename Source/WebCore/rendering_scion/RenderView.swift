@@ -682,6 +682,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     m_rendererCount += 1
   }
 
+  func didDestroyRenderer() {
+    assert(isNativeImpl())
+    m_rendererCount -= 1
+  }
+
   func updateVisibleViewportRect(_ visibleRect: IntRect) {
     assert(isNativeImpl())
     resumePausedImageAnimationsIfNeeded(visibleRect)
