@@ -130,6 +130,11 @@ extern "C" WEBCORE_EXPORT bool RenderLayerCompositor_hasContentCompositingLayers
     return static_cast<const WebCore::RenderLayerCompositor*>(p)->hasContentCompositingLayers();
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayerCompositor_setIsInWindow(void* p, bool isInWindow)
+{
+    static_cast<WebCore::RenderLayerCompositor*>(p)->setIsInWindow(isInWindow);
+}
+
 namespace WebCore {
 
 #if PLATFORM(IOS_FAMILY)

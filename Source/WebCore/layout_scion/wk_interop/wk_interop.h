@@ -459,6 +459,7 @@ void* RenderLayerCompositor_create(void*);
 void RenderLayerCompositor_destroy(void*);
 bool RenderLayerCompositor_usesCompositing(const void* p);
 bool RenderLayerCompositor_hasContentCompositingLayers(const void*);
+void RenderLayerCompositor_setIsInWindow(void*, bool);
 bool RenderLayoutState_isPaginated(const void*);
 void* RenderLayoutState_lineGrid(const void*);
 struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void*);

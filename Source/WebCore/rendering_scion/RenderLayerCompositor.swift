@@ -1263,8 +1263,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   }
 
   func setIsInWindow(_ isInWindow: Bool) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    wk_interop.RenderLayerCompositor_setIsInWindow(interop(), isInWindow)
   }
 
   private func invalidateEventRegionForAllFrames() {
