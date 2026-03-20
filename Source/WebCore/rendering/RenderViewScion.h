@@ -127,6 +127,8 @@ public:
 
     void didCreateRenderer();
 
+    void didDestroyRenderer();
+
     void updateVisibleViewportRect(const IntRect&);
 
     void resumePausedImageAnimationsIfNeeded(const IntRect&);

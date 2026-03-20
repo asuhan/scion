@@ -649,6 +649,12 @@ func RenderViewScion_didCreateRenderer(_ viewRaw: UnsafeMutableRawPointer) {
   view.didCreateRenderer()
 }
 
+@_cdecl("RenderViewScion_didDestroyRenderer")
+func RenderViewScion_didDestroyRenderer(_ viewRaw: UnsafeMutableRawPointer) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.didDestroyRenderer()
+}
+
 private func convertIntRect(_ r: IntRectRaw) -> IntRect {
   return IntRect(x: r.location.x, y: r.location.y, width: r.size.width, height: r.size.height)
 }

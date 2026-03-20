@@ -959,6 +959,15 @@ void RenderView::didCreateRenderer()
     ++m_rendererCount;
 }
 
+void RenderView::didDestroyRenderer()
+{
+    if (m_scion) {
+        m_scion->didDestroyRenderer();
+        return;
+    }
+    --m_rendererCount;
+}
+
 void RenderView::registerForVisibleInViewportCallback(RenderElement& renderer)
 {
     ASSERT(!m_visibleInViewportRenderers.contains(renderer));

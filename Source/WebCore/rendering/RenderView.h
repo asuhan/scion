@@ -178,7 +178,7 @@ public:
 
     uint64_t rendererCount() const { return m_rendererCount; }
     void didCreateRenderer();
-    void didDestroyRenderer() { --m_rendererCount; }
+    void didDestroyRenderer();
 
     void updateVisibleViewportRect(const IntRect&);
     void registerForVisibleInViewportCallback(RenderElement&);

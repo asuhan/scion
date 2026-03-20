@@ -84,6 +84,8 @@ extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
 extern "C" void RenderViewScion_didCreateRenderer(void*);
 
+extern "C" void RenderViewScion_didDestroyRenderer(void*);
+
 extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRaw);
 
 extern "C" void RenderViewScion_resumePausedImageAnimationsIfNeeded(const void*, IntRectRaw);
@@ -299,6 +301,11 @@ bool RenderViewScion::hasSoftwareFilters() const
 void RenderViewScion::didCreateRenderer()
 {
     RenderViewScion_didCreateRenderer(m_handle);
+}
+
+void RenderViewScion::didDestroyRenderer()
+{
+    RenderViewScion_didDestroyRenderer(m_handle);
 }
 
 namespace {
