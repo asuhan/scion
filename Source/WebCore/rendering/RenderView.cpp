@@ -806,6 +806,7 @@ int RenderView::viewHeight() const
 
 int RenderView::viewWidth() const
 {
+    if (m_scion) { return m_scion->viewWidth(); }
     int width = 0;
     if (!shouldUsePrintingLayout()) {
         Ref frameView = this->frameView();
