@@ -698,7 +698,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     }
   }
 
-  private func resumePausedImageAnimationsIfNeeded(_ visibleRect: IntRect) {
+  func resumePausedImageAnimationsIfNeeded(_ visibleRect: IntRect) {
     assert(isNativeImpl())
     // TODO(asuhan): use array with inline storage
     var toRemove: [(RenderElementWrapper, WeakNullableRef<CachedImageWrapper>)] = []

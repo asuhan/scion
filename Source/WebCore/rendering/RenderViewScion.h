@@ -129,6 +129,8 @@ public:
 
     void updateVisibleViewportRect(const IntRect&);
 
+    void resumePausedImageAnimationsIfNeeded(const IntRect&);
+
     RenderLayer* takeStyleChangeLayerTreeMutationRoot();
 
     const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const;

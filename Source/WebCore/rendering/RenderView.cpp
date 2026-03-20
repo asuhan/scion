@@ -1025,6 +1025,10 @@ void RenderView::removeRendererWithPausedImageAnimations(RenderElement& renderer
 
 void RenderView::resumePausedImageAnimationsIfNeeded(const IntRect& visibleRect)
 {
+    if (m_scion) {
+        m_scion->resumePausedImageAnimationsIfNeeded(visibleRect);
+        return;
+    }
     Vector<std::pair<SingleThreadWeakPtr<RenderElement>, WeakPtr<CachedImage>>, 10> toRemove;
     for (auto it : m_renderersWithPausedImageAnimation) {
         auto& renderer = it.key;

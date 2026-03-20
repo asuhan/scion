@@ -86,6 +86,8 @@ extern "C" void RenderViewScion_didCreateRenderer(void*);
 
 extern "C" void RenderViewScion_updateVisibleViewportRect(const void*, IntRectRaw);
 
+extern "C" void RenderViewScion_resumePausedImageAnimationsIfNeeded(const void*, IntRectRaw);
+
 extern "C" void* RenderViewScion_takeStyleChangeLayerTreeMutationRoot(const void*);
 
 extern "C" void* RenderViewScion_viewTransitionRoot(const void*);
@@ -299,9 +301,23 @@ void RenderViewScion::didCreateRenderer()
     RenderViewScion_didCreateRenderer(m_handle);
 }
 
+namespace {
+
+IntRectRaw convertIntRect(const IntRect& r)
+{
+    return { r.location().x(), r.location().y(), r.size().width(), r.size().height() };
+}
+
+}  // namespace
+
 void RenderViewScion::updateVisibleViewportRect(const IntRect& visibleRect)
 {
-    RenderViewScion_updateVisibleViewportRect(m_handle, { visibleRect.location().x(), visibleRect.location().y(), visibleRect.size().width(), visibleRect.size().height() });
+    RenderViewScion_updateVisibleViewportRect(m_handle, convertIntRect(visibleRect));
+}
+
+void RenderViewScion::resumePausedImageAnimationsIfNeeded(const IntRect& visibleRect)
+{
+    RenderViewScion_resumePausedImageAnimationsIfNeeded(m_handle, convertIntRect(visibleRect));
 }
 
 RenderLayer* RenderViewScion::takeStyleChangeLayerTreeMutationRoot()

@@ -649,15 +649,24 @@ func RenderViewScion_didCreateRenderer(_ viewRaw: UnsafeMutableRawPointer) {
   view.didCreateRenderer()
 }
 
+private func convertIntRect(_ r: IntRectRaw) -> IntRect {
+  return IntRect(x: r.location.x, y: r.location.y, width: r.size.width, height: r.size.height)
+}
+
 @_cdecl("RenderViewScion_updateVisibleViewportRect")
 func RenderViewScion_updateVisibleViewportRect(
   _ viewRaw: UnsafeRawPointer, _ visibleRectRaw: IntRectRaw
 ) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
-  view.updateVisibleViewportRect(
-    IntRect(
-      x: visibleRectRaw.location.x, y: visibleRectRaw.location.y, width: visibleRectRaw.size.width,
-      height: visibleRectRaw.size.height))
+  view.updateVisibleViewportRect(convertIntRect(visibleRectRaw))
+}
+
+@_cdecl("RenderViewScion_resumePausedImageAnimationsIfNeeded")
+func RenderViewScion_resumePausedImageAnimationsIfNeeded(
+  _ viewRaw: UnsafeRawPointer, _ visibleRectRaw: IntRectRaw
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.resumePausedImageAnimationsIfNeeded(convertIntRect(visibleRectRaw))
 }
 
 @_cdecl("RenderViewScion_takeStyleChangeLayerTreeMutationRoot")
