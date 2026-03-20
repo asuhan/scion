@@ -149,6 +149,8 @@ public:
 
     bool requiresColumns(int desiredColumnCount) const;
 
+    void updateInitialContainingBlockSize();
+
     bool shouldUsePrintingLayout() const;
 
     void setWk(void*);

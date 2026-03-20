@@ -263,6 +263,10 @@ bool RenderView::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly
 
 void RenderView::updateInitialContainingBlockSize()
 {
+    if (m_scion) {
+        m_scion->updateInitialContainingBlockSize();
+        return;
+    }
     // Initial containing block has no margin/padding/border.
     m_layoutState->ensureGeometryForBox(m_initialContainingBlock).setContentBoxSize(frameView().size());
 }

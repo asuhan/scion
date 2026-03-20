@@ -104,6 +104,8 @@ extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*
 
 extern "C" bool RenderViewScion_requiresColumns(const void*, int32_t desiredColumnCount);
 
+extern "C" void RenderViewScion_updateInitialContainingBlockSize(void*);
+
 extern "C" bool RenderViewScion_shouldUsePrintingLayout(const void*);
 
 extern "C" void RenderViewScion_setWk(void*, void*);
@@ -373,6 +375,11 @@ const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerMod
 bool RenderViewScion::requiresColumns(int desiredColumnCount) const
 {
     return RenderViewScion_requiresColumns(m_handle, desiredColumnCount);
+}
+
+void RenderViewScion::updateInitialContainingBlockSize()
+{
+    RenderViewScion_updateInitialContainingBlockSize(m_handle);
 }
 
 bool RenderViewScion::shouldUsePrintingLayout() const

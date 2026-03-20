@@ -913,7 +913,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     accumulatedRepaintRegion = nil
   }
 
-  private func updateInitialContainingBlockSize() {
+  func updateInitialContainingBlockSize() {
     assert(isNativeImpl())
     // Initial containing block has no margin/padding/border.
     m_layoutState!.ensureGeometryForBox(layoutBox: m_initialContainingBlock!).setContentBoxSize(
