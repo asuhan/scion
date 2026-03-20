@@ -679,6 +679,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   func rendererCount() -> UInt64 { return m_rendererCount }
 
   func didCreateRenderer() {
+    assert(isNativeImpl())
     m_rendererCount += 1
   }
 
