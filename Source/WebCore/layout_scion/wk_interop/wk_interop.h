@@ -457,6 +457,7 @@ void* RenderView_layoutState(void*);
 void* RenderView_scion(const void*);
 void* RenderLayerCompositor_create(void*);
 void RenderLayerCompositor_destroy(void*);
+bool RenderLayerCompositor_usesCompositing(const void* p);
 bool RenderLayerCompositor_hasContentCompositingLayers(const void*);
 bool RenderLayoutState_isPaginated(const void*);
 void* RenderLayoutState_lineGrid(const void*);

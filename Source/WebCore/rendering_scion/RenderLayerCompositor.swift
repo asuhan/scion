@@ -498,7 +498,9 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   // Return true if this RenderView is in "compositing mode" (i.e. has one or more
   // composited RenderLayers)
   func usesCompositing() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerCompositor_usesCompositing(interop())
+    }
     return m_compositing
   }
 
