@@ -62,6 +62,8 @@ extern "C" int32_t RenderViewScion_viewHeight(const void*);
 
 extern "C" int32_t RenderViewScion_viewWidth(const void*);
 
+extern "C" int32_t RenderViewScion_viewLogicalWidth(const void*);
+
 extern "C" void* RenderViewScion_frameView(const void*);
 
 extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
@@ -232,6 +234,11 @@ int RenderViewScion::viewHeight() const
 int RenderViewScion::viewWidth() const
 {
     return RenderViewScion_viewWidth(m_handle);
+}
+
+int RenderViewScion::viewLogicalWidth() const
+{
+    return RenderViewScion_viewLogicalWidth(m_handle);
 }
 
 LocalFrameView& RenderViewScion::frameView() const

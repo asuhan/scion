@@ -157,6 +157,7 @@ RenderBox::LogicalExtentComputedValues RenderView::computeLogicalHeight(LayoutUn
 
 inline int RenderView::viewLogicalWidth() const
 {
+    if (m_scion) { return m_scion->viewLogicalWidth(); }
     return style().isHorizontalWritingMode() ? viewWidth() : viewHeight();
 }
 

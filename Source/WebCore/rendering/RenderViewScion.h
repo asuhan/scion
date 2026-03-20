@@ -97,6 +97,8 @@ public:
 
     int viewWidth() const;
 
+    int viewLogicalWidth() const;
+
     LocalFrameView& frameView() const;
 
     Ref<LocalFrameView> protectedFrameView() const;

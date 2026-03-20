@@ -569,6 +569,12 @@ func RenderViewScion_viewWidth(_ viewRaw: UnsafeRawPointer) -> Int32 {
   return view.viewWidth()
 }
 
+@_cdecl("RenderViewScion_viewLogicalWidth")
+func RenderViewScion_viewLogicalWidth(_ viewRaw: UnsafeRawPointer) -> Int32 {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.viewLogicalWidth()
+}
+
 @_cdecl("RenderViewScion_frameView")
 func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

@@ -192,7 +192,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return width
   }
 
-  private func viewLogicalWidth() -> Int32 {
+  func viewLogicalWidth() -> Int32 {
     assert(isNativeImpl())
     return style().isHorizontalWritingMode() ? viewWidth() : viewHeight()
   }
