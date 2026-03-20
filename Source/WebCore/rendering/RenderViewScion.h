@@ -145,6 +145,8 @@ public:
 
     bool requiresColumns(int desiredColumnCount) const;
 
+    bool shouldUsePrintingLayout() const;
+
     void setWk(void*);
 
     void* createRepaintRegionAccumulator() const;

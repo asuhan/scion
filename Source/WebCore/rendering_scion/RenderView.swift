@@ -920,7 +920,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
       size: LayoutSizeWrapper(size: frameView().size()))
   }
 
-  private func shouldUsePrintingLayout() -> Bool {
+  func shouldUsePrintingLayout() -> Bool {
     assert(isNativeImpl())
     if !printing() {
       return false

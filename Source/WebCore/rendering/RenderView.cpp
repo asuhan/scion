@@ -684,6 +684,7 @@ bool RenderView::printing() const
 
 bool RenderView::shouldUsePrintingLayout() const
 {
+    if (m_scion) { return m_scion->shouldUsePrintingLayout(); }
     if (!printing())
         return false;
     return protectedFrameView()->frame().shouldUsePrintingLayout();

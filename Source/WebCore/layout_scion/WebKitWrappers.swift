@@ -728,6 +728,12 @@ func RenderViewScion_requiresColumns(_ viewRaw: UnsafeRawPointer, _ desiredColum
   return view.requiresColumns(desiredColumnCount: desiredColumnCount)
 }
 
+@_cdecl("RenderViewScion_shouldUsePrintingLayout")
+func RenderViewScion_shouldUsePrintingLayout(_ viewRaw: UnsafeRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.shouldUsePrintingLayout()
+}
+
 @_cdecl("RenderViewScion_setWk")
 func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

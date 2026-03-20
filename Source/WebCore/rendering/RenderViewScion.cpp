@@ -100,6 +100,8 @@ extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*
 
 extern "C" bool RenderViewScion_requiresColumns(const void*, int32_t desiredColumnCount);
 
+extern "C" bool RenderViewScion_shouldUsePrintingLayout(const void*);
+
 extern "C" void RenderViewScion_setWk(void*, void*);
 
 extern "C" void* RepaintRegionAccumulator_create(void*);
@@ -357,6 +359,11 @@ const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerMod
 bool RenderViewScion::requiresColumns(int desiredColumnCount) const
 {
     return RenderViewScion_requiresColumns(m_handle, desiredColumnCount);
+}
+
+bool RenderViewScion::shouldUsePrintingLayout() const
+{
+    return RenderViewScion_shouldUsePrintingLayout(m_handle);
 }
 
 void RenderViewScion::setWk(void* wk)
