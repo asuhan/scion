@@ -932,6 +932,7 @@ bool RenderView::usesCompositing() const
 
 RenderLayerCompositor& RenderView::compositor()
 {
+    if (m_scion) { return m_scion->compositor(); }
     if (!m_compositor)
         m_compositor = makeUnique<RenderLayerCompositor>(*this);
 
