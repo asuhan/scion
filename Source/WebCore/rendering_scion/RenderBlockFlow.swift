@@ -559,7 +559,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   ) {
     if firstChild() == nil {
       // Empty block containers produce empty formatting lines which may affect trim-start/end.
-      let _ = TextBoxTrimmer(blockContainer: self)
+      let unused = TextBoxTrimmer(blockContainer: self)
+      use(unused)
 
       var logicalHeight = borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
       if hasLineIfEmpty() {
@@ -576,7 +577,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     }
 
     if childrenInline() {
-      let _ = TextBoxTrimmer(blockContainer: self)
+      let unused = TextBoxTrimmer(blockContainer: self)
+      use(unused)
       let _ = LineClampUpdater(blockContainer: self)
       return layoutInlineChildren(
         relayoutChildren: relayoutChildren, repaintLogicalTop: &repaintLogicalTop,
@@ -586,7 +588,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     do {
       do {
         // With block children, there's no way to tell what the last formatted line is until after we finished laying out the subtree.
-        let _ = TextBoxTrimmer(blockContainer: self)
+        let unused = TextBoxTrimmer(blockContainer: self)
+        use(unused)
         let _ = LineClampUpdater(blockContainer: self)
         layoutBlockChildren(
           relayoutChildren: relayoutChildren, maxFloatLogicalBottom: &maxFloatLogicalBottom)
@@ -604,8 +607,9 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
           ancestor = ancestor!.containingBlock()
         }
 
-        let _ = TextBoxTrimmer(
+        let unused = TextBoxTrimmer(
           blockContainer: self, lastFormattedLineRoot: rootForLastFormattedLine)
+        use(unused)
         layoutBlockChildren(relayoutChildren: false, maxFloatLogicalBottom: &maxFloatLogicalBottom)
       }
     }

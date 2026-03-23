@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+func use(_ x: TextBoxTrimmer) {}
+
 class TextBoxTrimmer {
   init(blockContainer: RenderBlockFlowWrapper) {
     // TODO(asuhan): implement this
