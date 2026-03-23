@@ -153,8 +153,9 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   // flow thread portion we contain. For sets, we have to figure out the top of the nearest column or
   // page.
   func pageLogicalTopForOffset(offset: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return fragmentedFlow!.isHorizontalWritingMode()
+      ? fragmentedFlowPortionRect().y() : fragmentedFlowPortionRect().x()
   }
 
   // Whether or not this fragment is a set.
