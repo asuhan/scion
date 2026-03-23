@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+func use(_ x: LineClampUpdater) {}
+
 class LineClampUpdater {
   init(blockContainer: RenderBlockFlowWrapper) {
     // TODO(asuhan): implement this

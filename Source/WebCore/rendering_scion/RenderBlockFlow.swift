@@ -579,7 +579,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     if childrenInline() {
       let unused = TextBoxTrimmer(blockContainer: self)
       use(unused)
-      let _ = LineClampUpdater(blockContainer: self)
+      let unused = LineClampUpdater(blockContainer: self)
+      use(unused)
       return layoutInlineChildren(
         relayoutChildren: relayoutChildren, repaintLogicalTop: &repaintLogicalTop,
         repaintLogicalBottom: &repaintLogicalBottom)
@@ -590,7 +591,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
         // With block children, there's no way to tell what the last formatted line is until after we finished laying out the subtree.
         let unused = TextBoxTrimmer(blockContainer: self)
         use(unused)
-        let _ = LineClampUpdater(blockContainer: self)
+        let unused = LineClampUpdater(blockContainer: self)
+        use(unused)
         layoutBlockChildren(
           relayoutChildren: relayoutChildren, maxFloatLogicalBottom: &maxFloatLogicalBottom)
       }
