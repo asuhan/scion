@@ -108,6 +108,8 @@ private func flexItemHasAspectRatio(flexItem: RenderBoxWrapper) -> Bool {
     || isSVGRootWithIntrinsicAspectRatio(flexItem: flexItem)
 }
 
+func use(_ x: borrowing ScopedFlexBasisAsFlexItemMainSize) {}
+
 // This is a RAII class that is used to temporarily set the flex basis as the child size in the main axis.
 struct ScopedFlexBasisAsFlexItemMainSize: ~Copyable {
   init(flexItem: RenderBoxWrapper, flexBasis: LengthWrapper, mainAxisIsInlineAxis: Bool) {
@@ -1473,10 +1475,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     flexItem: RenderBoxWrapper, mainAxisBorderAndPadding: LayoutUnit, relayoutChildren: Bool
   ) -> LayoutUnit {
     let flexBasis = flexBasisForFlexItem(flexItem: flexItem)
-    let _ = ScopedFlexBasisAsFlexItemMainSize(
+    let scoped = ScopedFlexBasisAsFlexItemMainSize(
       flexItem: flexItem,
       flexBasis: flexBasis.isContent() ? LengthWrapper(type: .MaxContent) : flexBasis,
       mainAxisIsInlineAxis: mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
+    use(scoped)
     // FIXME: While we are supposed to ignore min/max here, clients of maybeCacheFlexItemMainIntrinsicSize may expect min/max constrained size.
     let unused = SetForScope(scopedVariable: &isComputingFlexBaseSizes, newValue: true)
     use(unused)
