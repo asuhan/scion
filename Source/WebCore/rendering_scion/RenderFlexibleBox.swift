@@ -28,6 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+func use(_ x: borrowing OverridingSizesScope) {}
+
 // RAII class which defines a scope in which overriding sizes of a box are either:
 //   1) replaced by other size in one axis if size is specified
 //   2) cleared in both axis if size == nil
@@ -987,7 +989,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
 
     var values = LogicalExtentComputedValues()
     do {
-      let _ = OverridingSizesScope(box: flexItem, axis: .Inline)
+      let unused = OverridingSizesScope(box: flexItem, axis: .Inline)
+      use(unused)
       flexItem.computeLogicalWidthInFragment(computedValues: &values)
     }
     return values.extent
@@ -1362,13 +1365,15 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     if flexItemCrossSizeShouldUseContainerCrossSize(flexItem: flexItem) && !isFlexItem() {
       let axis: OverridingSizesScope.Axis =
         mainAxisIsFlexItemInlineAxis(flexItem: flexItem) ? .Block : .Inline
-      let _ = OverridingSizesScope(
+      let unused = OverridingSizesScope(
         box: flexItem, axis: axis,
         size: computeCrossSizeForFlexItemUsingContainerCrossSize(flexItem: flexItem))
+      use(unused)
       return super.computeChildIntrinsicLogicalWidths(child: flexItem)
     }
 
-    let _ = OverridingSizesScope(box: flexItem, axis: .Both)
+    let unused = OverridingSizesScope(box: flexItem, axis: .Both)
+    use(unused)
     return super.computeChildIntrinsicLogicalWidths(child: flexItem)
   }
 
