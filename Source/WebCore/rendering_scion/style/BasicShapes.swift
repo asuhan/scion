@@ -62,11 +62,6 @@ struct BasicShapeRadius {
 class BasicShapeCircleOrEllipse: BasicShape {}
 
 class BasicShapeCircle: BasicShapeCircleOrEllipse {
-  override init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func centerX() -> BasicShapeCenterCoordinate {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -97,7 +92,9 @@ class BasicShapeCircle: BasicShapeCircleOrEllipse {
     }
   }
 
-  private let m_radius: BasicShapeRadius
+  private let m_centerX = BasicShapeCenterCoordinate()
+  private let m_centerY = BasicShapeCenterCoordinate()
+  private let m_radius = BasicShapeRadius()
 }
 
 final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
