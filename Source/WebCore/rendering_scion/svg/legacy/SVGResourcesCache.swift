@@ -60,6 +60,8 @@ class SVGResourcesCache {
     fatalError("Not implemented")
   }
 
+  static func use(_ x: borrowing SetStyleForScope) {}
+
   struct SetStyleForScope: ~Copyable {
     init(
       _ renderer: RenderElementWrapper, _ scopedStyle: RenderStyleWrapper,

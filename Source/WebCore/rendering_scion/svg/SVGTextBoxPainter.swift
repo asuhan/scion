@@ -443,7 +443,9 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
 
     // Draw text using selection style from the start to the end position of the selection
     do {
-      let _ = SVGResourcesCache.SetStyleForScope(parentRenderer(), style, newStyle: selectionStyle)
+      let unused = SVGResourcesCache.SetStyleForScope(
+        parentRenderer(), style, newStyle: selectionStyle)
+      SVGResourcesCache.use(unused)
       paintTextWithShadows(
         selectionStyle, textRun, fragment, startPosition: startPosition, endPosition: endPosition)
     }
