@@ -542,7 +542,8 @@ final class GridTrackSizingAlgorithm {
       direction: direction, numTracks: numTracks, sizingOperation: sizingOperation,
       availableSpace: availableSpace)
 
-    let _ = StateMachine(algorithm: self)
+    let unused = StateMachine(algorithm: self)
+    GridTrackSizingAlgorithm.use(unused)
 
     if renderGrid!.isMasonry(direction: direction) {
       return
@@ -2182,6 +2183,8 @@ final class GridTrackSizingAlgorithm {
   private let rowBaselineItemsMap: BaselineItemsCache
 
   private let rowSubgridsWithBaselineAlignedItems: WeakHashSet<RenderGridWrapper>
+
+  private static func use(_ x: StateMachine) {}
 
   // This is a RAII class used to ensure that the track sizing algorithm is
   // executed as it is supposed to be, i.e., first resolve columns and then
