@@ -103,7 +103,8 @@ struct EllipsisBoxPainter {
       backgroundColor = backgroundColor.invertedColorWithAlpha(alpha: 1)
     }
 
-    let _ = GraphicsContextStateSaver(context: context)
+    let unused = GraphicsContextStateSaver(context: context)
+    use(unused)
 
     var visualRect = LayoutRectWrapper(r: lineBox.ellipsisVisualRect(adjustedForSelection: .Yes))
     visualRect.move(dx: paintOffset.x, dy: paintOffset.y)

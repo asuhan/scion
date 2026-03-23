@@ -590,7 +590,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
       }
     }
 
-    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+    let unused = GraphicsContextStateSaver(context: paintInfo.context())
+    use(unused)
 
     paintInfo.context().setFillColor(color: textColor)
 

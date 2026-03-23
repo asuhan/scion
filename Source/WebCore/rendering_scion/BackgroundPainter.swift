@@ -351,8 +351,9 @@ class BackgroundPainter {
       let applyBoxShadowToBackground = BackgroundPainter.boxShadowShouldBeAppliedToBackground(
         renderer: renderer, paintOffset: rect.location(), bleedAvoidance: bleedAvoidance,
         inlineBox: inlineBoxIterator)
-      let _ = GraphicsContextStateSaver(
+      let clipWithScrollingStateSaver = GraphicsContextStateSaver(
         context: context, saveAndRestore: applyBoxShadowToBackground)
+      use(clipWithScrollingStateSaver)
       if applyBoxShadowToBackground {
         applyBoxShadowForBackground(context: context, style: style)
       }
@@ -388,7 +389,9 @@ class BackgroundPainter {
     // FillBox::BorderBox radius clipping is taken care of by BackgroundBleedUseTransparencyLayer
     let clipToBorderRadius =
       hasRoundedBorder && !(isBorderFill && bleedAvoidance == .BackgroundBleedUseTransparencyLayer)
-    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clipToBorderRadius)
+    let clipToBorderStateSaver = GraphicsContextStateSaver(
+      context: context, saveAndRestore: clipToBorderRadius)
+    use(clipToBorderStateSaver)
     if clipToBorderRadius {
 
       switch layerClip {
@@ -415,7 +418,9 @@ class BackgroundPainter {
     let pLeft = includeLeftEdge ? renderer.paddingLeft() : LayoutUnit(value: 0)
     let pRight = includeRightEdge ? renderer.paddingRight() : LayoutUnit(value: 0)
 
-    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clippedWithLocalScrolling)
+    let clipWithScrollingStateSaver = GraphicsContextStateSaver(
+      context: context, saveAndRestore: clippedWithLocalScrolling)
+    use(clipWithScrollingStateSaver)
     var scrolledPaintRect = rect
     if clippedWithLocalScrolling {
       // Clip to the overflow area.
@@ -538,8 +543,9 @@ class BackgroundPainter {
           }
         }
 
-        let _ = GraphicsContextStateSaver(
+        let unused = GraphicsContextStateSaver(
           context: context, saveAndRestore: applyBoxShadowToBackground)
+        use(unused)
         if applyBoxShadowToBackground {
           applyBoxShadowForBackground(context: context, style: style)
         }
@@ -729,7 +735,8 @@ class BackgroundPainter {
         let pixelSnappedShadowRect = snapRectToDevicePixels(
           rect: shadowRect, pixelSnappingFactor: deviceScaleFactor)
 
-        let _ = GraphicsContextStateSaver(context: context)
+        let unused = GraphicsContextStateSaver(context: context)
+        use(unused)
         context.clip(rect: pixelSnappedShadowRect)
 
         // Move the fill just outside the clip, adding at least 1 pixel of separation so that the fill does not
@@ -842,7 +849,8 @@ class BackgroundPainter {
         let pixelSnappedOuterRect = snapRectToDevicePixels(
           rect: shadowCastingRect, pixelSnappingFactor: deviceScaleFactor)
 
-        let _ = GraphicsContextStateSaver(context: context)
+        let unused = GraphicsContextStateSaver(context: context)
+        use(unused)
         if hasBorderRadius {
           context.clipRoundedRect(rect: pixelSnappedBorderRect)
         } else {

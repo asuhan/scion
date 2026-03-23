@@ -114,7 +114,8 @@ final class LegacyRenderSVGImageWrapper: LegacyRenderSVGModelObject {
     }
 
     let childPaintInfo = paintInfo.deepCopy()
-    let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+    let unused = GraphicsContextStateSaver(context: childPaintInfo.context())
+    use(unused)
     childPaintInfo.applyTransform(m_localTransform)
 
     if childPaintInfo.phase == .Foreground {

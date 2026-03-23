@@ -95,7 +95,8 @@ final class RenderSVGImageWrapper: RenderSVGModelObjectWrapper {
     }
 
     assert(paintInfo.phase == .Foreground)
-    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+    let unused = GraphicsContextStateSaver(context: paintInfo.context())
+    use(unused)
 
     let coordinateSystemOriginTranslation =
       adjustedPaintOffset - flooredLayoutPoint(p: objectBoundingBox().location())

@@ -50,7 +50,8 @@ private func shouldUnavailablePluginMessageBeButton(
 
 private func drawReplacementArrow(_ context: GraphicsContextWrapper, _ insideRect: FloatRectWrapper)
 {
-  let _ = GraphicsContextStateSaver(context: context)
+  let unused = GraphicsContextStateSaver(context: context)
+  use(unused)
 
   var rect = insideRect
   rect.inflate(d: -replacementArrowPadding)
@@ -126,7 +127,8 @@ final class RenderEmbeddedObjectWrapper: RenderWidgetWrapper {
       r.indicatorRect,
       FloatSize(width: replacementTextRoundedRectRadius, height: replacementTextRoundedRectRadius))
 
-    let _ = GraphicsContextStateSaver(context: context)
+    let unused = GraphicsContextStateSaver(context: context)
+    use(unused)
     context.clip(rect: r.contentRect)
     context.setFillColor(
       color: ColorWrapper(

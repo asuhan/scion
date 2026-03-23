@@ -35,7 +35,8 @@ final class LegacyRenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
     }
 
     var childPaintInfo = paintInfo.deepCopy()
-    let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+    let unused = GraphicsContextStateSaver(context: childPaintInfo.context())
+    use(unused)
     childPaintInfo.applyTransform(localTransform())
 
     if SVGRenderSupport.isOverflowHidden(self) {

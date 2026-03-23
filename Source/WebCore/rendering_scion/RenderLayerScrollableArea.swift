@@ -388,7 +388,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     if !hasOverlayScrollbars() && (vBar != nil || hBar != nil)
       && renderer.style().scrollbarWidth() != .None
     {
-      let _ = GraphicsContextStateSaver(context: context)
+      let unused = GraphicsContextStateSaver(context: context)
+      use(unused)
       context.clip(rect: resizerAbsRect.FloatRect())
       var largerCorner = resizerAbsRect
       let one = LayoutUnit(value: UInt64(1))

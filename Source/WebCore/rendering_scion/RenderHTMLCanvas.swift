@@ -74,7 +74,8 @@ final class RenderHTMLCanvasWrapper: RenderReplacedWrapper {
 
     // Not allowed to overflow the content box.
     let clip = !contentBoxRect.contains(other: replacedContentRect)
-    let _ = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: clip)
+    let unused = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: clip)
+    use(unused)
     if clip {
       paintInfo.context().clip(rect: FloatRectWrapper(r: snappedIntRect(rect: contentBoxRect)))
     }

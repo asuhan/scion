@@ -269,7 +269,9 @@ class BorderPainter {
 
     let rectToClipOut = renderer.paintRectToClipOutFromBorder(paintRect: rect)
     let appliedClipAlready = !rectToClipOut.isEmpty()
-    let _ = GraphicsContextStateSaver(context: graphicsContext, saveAndRestore: appliedClipAlready)
+    let unused = GraphicsContextStateSaver(
+      context: graphicsContext, saveAndRestore: appliedClipAlready)
+    use(unused)
     if !rectToClipOut.isEmpty() {
       graphicsContext.clipOut(
         rect: snapRectToDevicePixels(
@@ -1203,8 +1205,9 @@ class BorderPainter {
     }
 
     let clipToOuterBorder = sides.outerBorder.isRounded()
-    let _ = GraphicsContextStateSaver(
+    let unused = GraphicsContextStateSaver(
       context: graphicsContext, saveAndRestore: clipToOuterBorder && !sides.appliedClipAlready)
+    use(unused)
     if clipToOuterBorder {
       // Clip to the inner and outer radii rects.
       if sides.bleedAvoidance != .BackgroundBleedUseTransparencyLayer {
@@ -1429,7 +1432,8 @@ class BorderPainter {
     let graphicsContext = paintInfo.context()
 
     if let path = path {
-      let _ = GraphicsContextStateSaver(context: graphicsContext)
+      let unused = GraphicsContextStateSaver(context: graphicsContext)
+      use(unused)
 
       clipBorderSidePolygon(
         outerBorder: outerBorder, innerBorder: innerBorder, side: side,
@@ -1456,7 +1460,8 @@ class BorderPainter {
         && mitreAdjacentSide2
       let shouldClip = clipForStyle || clipAdjacentSide1 || clipAdjacentSide2
 
-      let _ = GraphicsContextStateSaver(context: graphicsContext, saveAndRestore: shouldClip)
+      let unused = GraphicsContextStateSaver(context: graphicsContext, saveAndRestore: shouldClip)
+      use(unused)
       if shouldClip {
         let aliasAdjacentSide1 = clipAdjacentSide1 || (clipForStyle && mitreAdjacentSide1)
         let aliasAdjacentSide2 = clipAdjacentSide2 || (clipForStyle && mitreAdjacentSide2)
@@ -1545,7 +1550,8 @@ class BorderPainter {
 
       // Draw inner border line
       do {
-        let _ = GraphicsContextStateSaver(context: graphicsContext)
+        let unused = GraphicsContextStateSaver(context: graphicsContext)
+        use(unused)
         let innerClip = RenderStyleWrapper.getRoundedInnerBorderFor(
           borderRect: borderRect,
           topWidth: innerBorderTopWidth, bottomWidth: innerBorderBottomWidth,
@@ -1565,7 +1571,8 @@ class BorderPainter {
 
       // Draw outer border line
       do {
-        let _ = GraphicsContextStateSaver(context: graphicsContext)
+        let unused = GraphicsContextStateSaver(context: graphicsContext)
+        use(unused)
         var outerRect = borderRect
         if bleedAvoidance == .BackgroundBleedUseTransparencyLayer {
           outerRect.inflate(d: 1)
@@ -1611,7 +1618,8 @@ class BorderPainter {
         includeLogicalRightEdge: includeLogicalRightEdge, isHorizontal: isHorizontal)
 
       // Paint inner only
-      let _ = GraphicsContextStateSaver(context: graphicsContext)
+      let unused = GraphicsContextStateSaver(context: graphicsContext)
+      use(unused)
       let topWidth = LayoutUnit(value: edges.top.widthForPainting() / 2)
       let bottomWidth = LayoutUnit(value: edges.bottom.widthForPainting() / 2)
       let leftWidth = LayoutUnit(value: edges.left.widthForPainting() / 2)

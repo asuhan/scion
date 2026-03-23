@@ -758,9 +758,10 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
 
     let isTransparentMarkedText =
       markedText.type == .DraggedContent || markedText.type == .TransparentContent
-    let _ = GraphicsContextStateSaver(
+    let unused = GraphicsContextStateSaver(
       context: context,
       saveAndRestore: markedText.style.textStyles.strokeWidth > 0 || isTransparentMarkedText)
+    use(unused)
     if isTransparentMarkedText {
       context.setAlpha(alpha: markedText.style.alpha)
     }
@@ -798,7 +799,8 @@ class TextBoxPainter<TextBoxPath: BoxPath> {
     }
 
     let context = paintInfo.context()
-    let _ = GraphicsContextStateSaver(context: context)
+    let unused = GraphicsContextStateSaver(context: context)
+    use(unused)
     updateGraphicsContext(context: context, paintStyle: TextPaintStyle(color: color))  // Don't draw text at all!
 
     // Note that if the text is truncated, we let the thing being painted in the truncation

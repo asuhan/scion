@@ -232,7 +232,8 @@ class InlineBoxPainter {
 
       let clipRect = clipRectForNinePieceImageStrip(
         box: inlineBox, image: maskNinePieceImage, paintRect: paintRect)
-      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+      let unused = GraphicsContextStateSaver(context: paintInfo.context())
+      use(unused)
       paintInfo.context().clip(rect: clipRect.FloatRect())
       borderPainter.paintNinePieceImage(
         rect: LayoutRectWrapper(x: stripX, y: stripY, width: stripWidth, height: stripHeight),
@@ -344,7 +345,8 @@ class InlineBoxPainter {
 
     let clipRect = clipRectForNinePieceImageStrip(
       box: inlineBox, image: borderImage, paintRect: paintRect)
-    let _ = GraphicsContextStateSaver(context: context)
+    let unused = GraphicsContextStateSaver(context: context)
+    use(unused)
     context.clip(rect: clipRect.FloatRect())
     borderPainter.paintBorder(
       rect: LayoutRectWrapper(x: stripX, y: stripY, width: stripWidth, height: stripHeight),
@@ -386,7 +388,8 @@ class InlineBoxPainter {
     }
 
     if renderer.style().boxDecorationBreak() == .Clone {
-      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+      let unused = GraphicsContextStateSaver(context: paintInfo.context())
+      use(unused)
       paintInfo.context().clip(
         rect: FloatRectWrapper(
           location: rect.location().FloatPoint(),
@@ -442,7 +445,8 @@ class InlineBoxPainter {
         : totalLogicalWidth
     )
 
-    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+    let unused = GraphicsContextStateSaver(context: paintInfo.context())
+    use(unused)
     paintInfo.context().clip(rect: rect.FloatRect())
     backgroundPainter.paintFillLayer(
       color: color, bgLayer: fillLayer, rect: rect, bleedAvoidance: .BackgroundBleedNone,

@@ -67,7 +67,8 @@ private func strokeWavyTextDecoration(
   bounds.setY(y: bounds.y() - wavyStrokeParameters.controlPointDistance)
   bounds.setHeight(height: bounds.height() + 2 * wavyStrokeParameters.controlPointDistance)
   // Clip the extra wavy line added before
-  let _ = GraphicsContextStateSaver(context: context)
+  let unused = GraphicsContextStateSaver(context: context)
+  use(unused)
   context.clip(rect: bounds)
 
   context.adjustLineToPixelBoundaries(

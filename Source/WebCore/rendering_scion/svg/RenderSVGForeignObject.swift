@@ -42,7 +42,8 @@ final class RenderSVGForeignObjectWrapper: RenderSVGBlockWrapper {
       return
     }
 
-    let _ = GraphicsContextStateSaver(context: paintInfo.context())
+    let unused = GraphicsContextStateSaver(context: paintInfo.context())
+    use(unused)
     paintInfo.context().translate(
       x: adjustedPaintOffset.x.float(), y: adjustedPaintOffset.y.float())
     super.paint(paintInfo: &paintInfo, paintOffset: paintOffset)

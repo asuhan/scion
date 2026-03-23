@@ -109,7 +109,8 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     for fragment in textBoxIterator().get().textFragments() {
       assert(legacyPaintingResource == nil)
 
-      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+      let unused = GraphicsContextStateSaver(context: paintInfo.context())
+      use(unused)
       fragment.buildFragmentTransform(&fragmentTransform)
       if !fragmentTransform.isIdentity() {
         paintInfo.context().concatCTM(transform: fragmentTransform)
@@ -254,7 +255,8 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
     var width = fragment.width
     let scaledFontMetrics = scaledFont.metricsOfPrimaryFont()
 
-    let _ = GraphicsContextStateSaver(context: context)
+    let unused = GraphicsContextStateSaver(context: context)
+    use(unused)
     if scalingFactor != 1 {
       width *= scalingFactor
       decorationOrigin.scale(scalingFactor)
@@ -369,7 +371,8 @@ class SVGTextBoxPainter<TextBoxPath: BoxPath>: TextBoxPainter<TextBoxPath> {
                 textRootBlock.repaintRectInLocalCoordinates(), gradient!, gradientSpaceTransform)
             } else {
               // FIXME: should be fillRect(const FloatRect&, Pattern&) on GraphicsContext.
-              let _ = GraphicsContextStateSaver(context: usedContext)
+              let unused = GraphicsContextStateSaver(context: usedContext)
+              use(unused)
               if usedContext.strokePattern() != nil {
                 usedContext.setFillPattern(pattern: usedContext.strokePattern()!)
               }

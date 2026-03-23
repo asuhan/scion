@@ -571,7 +571,8 @@ final class RenderTableCellWrapper: RenderBlockFlowWrapper {
         && (CPtrToInt(backgroundObject.id()) == CPtrToInt(id())
           || CPtrToInt(backgroundObject.id()) == CPtrToInt(parent()?.id()))
         && tableElt!.collapseBorders())
-    let _ = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: shouldClip)
+    let unused = GraphicsContextStateSaver(context: paintInfo.context(), saveAndRestore: shouldClip)
+    use(unused)
     if paintBackgroundObject {
       paintInfo.context().clip(
         rect: LayoutRectWrapper(location: adjustedPaintOffset, size: size()).FloatRect())

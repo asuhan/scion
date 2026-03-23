@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+func use(_ unused: GraphicsContextStateSaver) {}
+
 class GraphicsContextStateSaver {
   init(context: GraphicsContextWrapper, saveAndRestore: Bool = true) {
     // TODO(asuhan): implement this

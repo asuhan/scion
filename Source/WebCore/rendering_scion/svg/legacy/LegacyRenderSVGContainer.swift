@@ -46,7 +46,8 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
 
     var childPaintInfo = paintInfo.deepCopy()
     do {
-      let _ = GraphicsContextStateSaver(context: childPaintInfo.context())
+      let unused = GraphicsContextStateSaver(context: childPaintInfo.context())
+      use(unused)
 
       // Let the LegacyRenderSVGViewportContainer subclass clip if necessary
       applyViewportClip(childPaintInfo)

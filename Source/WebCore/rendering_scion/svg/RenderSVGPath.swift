@@ -189,7 +189,8 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
     let nonScalingTransform =
       hasNonScalingStroke() ? nonScalingStrokeTransform() : AffineTransform()
 
-    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: true)
+    let unused = GraphicsContextStateSaver(context: context, saveAndRestore: true)
+    use(unused)
     useStrokeStyleToFill(context)
     for zeroLengthLinecapLocation in zeroLengthLinecapLocations.a {
       var usePath = zeroLengthLinecapPath(zeroLengthLinecapLocation)
@@ -233,7 +234,8 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
         marker.hasLayer()
       {
         let context = paintInfo.context()
-        let _ = GraphicsContextStateSaver(context: context)
+        let unused = GraphicsContextStateSaver(context: context)
+        use(unused)
 
         let contentTransform = marker.markerTransformation(
           markerPosition.origin, autoAngle: markerPosition.angle, strokeWidth: strokeWidth)

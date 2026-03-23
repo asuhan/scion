@@ -305,7 +305,8 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
       }
 
       assert(paintInfo.phase == .Foreground)
-      let _ = GraphicsContextStateSaver(context: paintInfo.context())
+      let unused = GraphicsContextStateSaver(context: paintInfo.context())
+      use(unused)
 
       let coordinateSystemOriginTranslation = adjustedPaintOffset - nominalSVGLayoutLocation()
       paintInfo.context().translate(
@@ -332,7 +333,8 @@ final class RenderSVGTextWrapper: RenderSVGBlockWrapper {
     }
 
     var blockInfo = paintInfo.deepCopy()
-    let _ = GraphicsContextStateSaver(context: blockInfo.context())
+    let unused = GraphicsContextStateSaver(context: blockInfo.context())
+    use(unused)
     blockInfo.applyTransform(localToParentTransform())
     super.paint(paintInfo: &blockInfo, paintOffset: LayoutPointWrapper())
 

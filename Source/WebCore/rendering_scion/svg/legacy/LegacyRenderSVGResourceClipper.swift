@@ -135,7 +135,8 @@ class LegacyRenderSVGResourceClipper: LegacyRenderSVGResourceContainer {
       if let resources = SVGResourcesCache.cachedResourcesForRenderer(self),
         let clipper = resources.clipper()
       {
-        let _ = GraphicsContextStateSaver(context: maskContext)
+        let unused = GraphicsContextStateSaver(context: maskContext)
+        use(unused)
 
         if clipper.applyClippingToContext(
           context: maskContext, renderer: self, objectBoundingBox: objectBoundingBox,

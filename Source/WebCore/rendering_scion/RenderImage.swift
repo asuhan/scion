@@ -439,7 +439,8 @@ class RenderImageWrapper: RenderReplacedWrapper {
     var replacedContentRect = self.replacedContentRect()
     replacedContentRect.moveBy(offset: paintOffset)
     let clip = !contentBoxRect.contains(other: replacedContentRect)
-    let _ = GraphicsContextStateSaver(context: context, saveAndRestore: clip)
+    let unused = GraphicsContextStateSaver(context: context, saveAndRestore: clip)
+    use(unused)
     if clip {
       context.clip(rect: contentBoxRect.FloatRect())
     }
