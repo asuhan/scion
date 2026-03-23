@@ -663,8 +663,10 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // RepaintOutlineBounds is unused for inlines.
+    return RepaintRects(
+      rect: clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint))
   }
 
   override final func rectWithOutlineForRepaint(
