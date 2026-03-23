@@ -92,15 +92,9 @@ class BasicShapeCircle: BasicShapeCircleOrEllipse {
 }
 
 final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
-  func centerX() -> BasicShapeCenterCoordinate {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func centerX() -> BasicShapeCenterCoordinate { return m_centerX }
 
-  func centerY() -> BasicShapeCenterCoordinate {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func centerY() -> BasicShapeCenterCoordinate { return m_centerY }
 
   func floatSizeForRadiusInBox(_ boxSize: FloatSize, _ center: FloatPoint) -> FloatSize {
     let sizeForAxis = {
@@ -128,6 +122,8 @@ final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
       height: sizeForAxis(m_radiusY, center.y, boxSize.height))
   }
 
+  private let m_centerX = BasicShapeCenterCoordinate()
+  private let m_centerY = BasicShapeCenterCoordinate()
   private let m_radiusX = BasicShapeRadius()
   private let m_radiusY = BasicShapeRadius()
 }
