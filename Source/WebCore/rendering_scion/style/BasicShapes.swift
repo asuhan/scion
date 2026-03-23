@@ -138,43 +138,13 @@ final class BasicShapePolygon: BasicShape {
 }
 
 final class BasicShapeInset: BasicShape {
-  func top() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  let right = LengthWrapper()
+  let top = LengthWrapper()
+  let bottom = LengthWrapper()
+  let left = LengthWrapper()
 
-  func right() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func bottom() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func left() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func topLeftRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func topRightRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func bottomRightRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
-  func bottomLeftRadius() -> LengthSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  let topLeftRadius = LengthSize()
+  let topRightRadius = LengthSize()
+  let bottomRightRadius = LengthSize()
+  let bottomLeftRadius = LengthSize()
 }

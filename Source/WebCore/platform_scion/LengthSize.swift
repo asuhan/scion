@@ -21,5 +21,12 @@ struct LengthSize {
   let width: LengthWrapper
   let height: LengthWrapper
 
+  init(width: LengthWrapper, height: LengthWrapper) {
+    self.width = width
+    self.height = height
+  }
+
+  init() { self.init(width: LengthWrapper(), height: LengthWrapper()) }
+
   func isEmpty() -> Bool { return width.isZero() || height.isZero() }
 }

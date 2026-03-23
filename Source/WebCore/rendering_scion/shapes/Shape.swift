@@ -174,27 +174,27 @@ class ShapeWrapper {
 
     case .Inset:
       let inset = basicShape as! BasicShapeInset
-      let left = floatValueForLength(length: inset.left(), maximumValue: boxWidth)
-      let top = floatValueForLength(length: inset.top(), maximumValue: boxHeight)
+      let left = floatValueForLength(length: inset.left, maximumValue: boxWidth)
+      let top = floatValueForLength(length: inset.top, maximumValue: boxHeight)
       let rect = FloatRectWrapper(
         x: left, y: top,
         width: max(
-          boxWidth - left - floatValueForLength(length: inset.right(), maximumValue: boxWidth), 0),
+          boxWidth - left - floatValueForLength(length: inset.right, maximumValue: boxWidth), 0),
         height: max(
-          boxHeight - top - floatValueForLength(length: inset.bottom(), maximumValue: boxHeight), 0)
+          boxHeight - top - floatValueForLength(length: inset.bottom, maximumValue: boxHeight), 0)
       )
       var logicalRect = physicalRectToLogical(rect, logicalBoxSize.height().float(), writingMode)
       logicalRect.moveBy(delta: borderBoxOffset.FloatPoint())
 
       let boxSize = FloatSize(width: boxWidth.float(), height: boxHeight.float())
       let topLeftRadius = physicalSizeToLogical(
-        floatSizeForLengthSize(inset.topLeftRadius(), boxSize), writingMode)
+        floatSizeForLengthSize(inset.topLeftRadius, boxSize), writingMode)
       let topRightRadius = physicalSizeToLogical(
-        floatSizeForLengthSize(inset.topRightRadius(), boxSize), writingMode)
+        floatSizeForLengthSize(inset.topRightRadius, boxSize), writingMode)
       let bottomLeftRadius = physicalSizeToLogical(
-        floatSizeForLengthSize(inset.bottomLeftRadius(), boxSize), writingMode)
+        floatSizeForLengthSize(inset.bottomLeftRadius, boxSize), writingMode)
       let bottomRightRadius = physicalSizeToLogical(
-        floatSizeForLengthSize(inset.bottomRightRadius(), boxSize), writingMode)
+        floatSizeForLengthSize(inset.bottomRightRadius, boxSize), writingMode)
       var cornerRadii = FloatRoundedRect.Radii(
         topLeft: topLeftRadius, topRight: topRightRadius, bottomLeft: bottomLeftRadius,
         bottomRight: bottomRightRadius)
