@@ -1159,13 +1159,13 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
   private func hasMultipleLines() -> Bool { return style().boxLines() == .Multiple }
 
   private func isVertical() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().boxOrient() == .Vertical
   }
 
   private func isHorizontal() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().boxOrient() == .Horizontal
   }
 
   private func clearLineClamp() {
