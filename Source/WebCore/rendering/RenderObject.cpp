@@ -2861,6 +2861,15 @@ bool RenderObject::needsLayout() const
         || needsPositionedMovementLayout();
 }
 
+void RenderObject::setNormalChildNeedsLayoutBit(bool b)
+{
+    if (m_scion) {
+        m_scion->setNormalChildNeedsLayoutBit(b);
+        return;
+    }
+    m_stateBitfields.setFlag(StateFlag::NormalChildNeedsLayout, b);
+}
+
 TextStream& operator<<(TextStream& ts, const RenderObject& renderer)
 {
     ts << renderer.debugDescription();

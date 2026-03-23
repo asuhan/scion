@@ -42,6 +42,8 @@ public:
 
     bool needsLayout() const;
 
+    void setNormalChildNeedsLayoutBit(bool b);
+
 private:
     void* m_handle;
 };

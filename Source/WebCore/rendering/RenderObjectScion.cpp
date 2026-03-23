@@ -27,8 +27,12 @@
 
 extern "C" bool RenderObject_needsLayout(const void*);
 
+extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
+
 namespace WebCore {
 
 bool RenderObjectScion::needsLayout() const { return RenderObject_needsLayout(m_handle); }
+
+void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
 
 }
