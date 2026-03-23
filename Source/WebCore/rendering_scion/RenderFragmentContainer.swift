@@ -434,6 +434,8 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   private let isValid = false
 }
 
+func use(_ x: CurrentRenderFragmentContainerMaintainer) {}
+
 class CurrentRenderFragmentContainerMaintainer {
   init(_ fragment: RenderFragmentContainerWrapper) {
     self.fragment = fragment

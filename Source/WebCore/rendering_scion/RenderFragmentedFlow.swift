@@ -840,7 +840,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     if let fragmentFragmentedFlow = fragment.enclosingFragmentedFlow(),
       let (startFragment, _) = fragmentFragmentedFlow.getFragmentRangeForBox(box: fragment)
     {
-      let _ = CurrentRenderFragmentContainerMaintainer(startFragment)
+      let unused = CurrentRenderFragmentContainerMaintainer(startFragment)
+      use(unused)
       fragmentObject.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixed)
       return
     }
