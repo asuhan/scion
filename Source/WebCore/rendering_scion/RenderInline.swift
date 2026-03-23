@@ -858,8 +858,8 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func willChangeCreatesStackingContext() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return style().willChange()?.canCreateStackingContext() ?? false
   }
 
   // All of the line boxes created for this svg inline.
