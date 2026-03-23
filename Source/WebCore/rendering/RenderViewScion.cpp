@@ -48,6 +48,8 @@ struct IntRectRaw {
 
 extern "C" bool RenderViewScion_printing(const void*);
 
+extern "C" int32_t RenderViewScion_pageOrViewLogicalHeight(const void*);
+
 extern "C" void* RenderViewScion_selection(const void*);
 
 extern "C" bool RenderViewScion_requiresLayer(const void*);
@@ -206,6 +208,11 @@ RenderSelection& RenderViewScion::selection()
 bool RenderViewScion::printing() const
 {
     return RenderViewScion_printing(m_handle);
+}
+
+LayoutUnit RenderViewScion::pageOrViewLogicalHeight() const
+{
+    return LayoutUnit::fromRawValue(RenderViewScion_pageOrViewLogicalHeight(m_handle));
 }
 
 bool RenderViewScion::requiresLayer() const

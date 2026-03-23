@@ -278,6 +278,9 @@ void RenderView::updateInitialContainingBlockSize()
 
 LayoutUnit RenderView::pageOrViewLogicalHeight() const
 {
+    if (m_scion) {
+        return m_scion->pageOrViewLogicalHeight();
+    }
     if (shouldUsePrintingLayout())
         return m_pageLogicalSize->height();
     

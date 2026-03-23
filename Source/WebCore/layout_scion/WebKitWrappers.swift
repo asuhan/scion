@@ -529,6 +529,12 @@ func RenderViewScion_printing(_ viewRaw: UnsafeRawPointer) -> Bool {
   return view.printing()
 }
 
+@_cdecl("RenderViewScion_pageOrViewLogicalHeight")
+func RenderViewScion_pageOrViewLogicalHeight(_ viewRaw: UnsafeRawPointer) -> Int32 {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.pageOrViewLogicalHeight().rawValue()
+}
+
 @_cdecl("RenderViewScion_requiresLayer")
 func RenderViewScion_requiresLayer(_ viewRaw: UnsafeRawPointer) -> Bool {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

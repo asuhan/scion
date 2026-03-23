@@ -85,6 +85,8 @@ public:
 
     bool printing() const;
 
+    LayoutUnit pageOrViewLogicalHeight() const;
+
     bool requiresLayer() const;
 
     bool isChildAllowed(const RenderObject&, const RenderStyle&) const;
