@@ -672,8 +672,12 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   override final func rectWithOutlineForRepaint(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
   ) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var r = super.rectWithOutlineForRepaint(repaintContainer, outlineWidth)
+    for child: RenderElementWrapper in childrenOfType(parent: self) {
+      r.unite(other: child.rectWithOutlineForRepaint(repaintContainer, outlineWidth))
+    }
+    return r
   }
 
   override final func computeVisibleRectsInContainer(
