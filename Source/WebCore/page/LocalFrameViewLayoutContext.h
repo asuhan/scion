@@ -163,7 +163,9 @@ private:
     // These functions may only be accessed by LayoutStateMaintainer.
     // Subtree push/pop
     void pushLayoutState(RenderElement&);
+public:
     bool pushLayoutState(RenderBox& renderer, const LayoutSize& offset, LayoutUnit pageHeight = 0_lu, bool pageHeightChanged = false);
+private:
     void popLayoutState();
 
     // Suspends the LayoutState optimization. Used under transforms that cannot be represented by

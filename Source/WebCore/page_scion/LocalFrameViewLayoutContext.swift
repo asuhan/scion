@@ -31,7 +31,7 @@ struct UpdateScrollInfoAfterLayoutTransaction {
 }
 
 class LocalFrameViewLayoutContextWrapper {
-  init(p: UnsafeRawPointer) {
+  init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
 
@@ -118,8 +118,11 @@ class LocalFrameViewLayoutContextWrapper {
     renderer: RenderBoxWrapper, offset: LayoutSizeWrapper,
     pageHeight: LayoutUnit = LayoutUnit(value: UInt64(0)), pageHeightChanged: Bool = false
   ) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(renderer.isNativeImpl())
+    return wk_interop.LocalFrameViewLayoutContext_pushLayoutState(
+      p, (renderer as! RenderViewWrapper).getWk(),
+      LayoutSizeRaw(width: offset.width().rawValue(), height: offset.height().rawValue()),
+      pageHeight.rawValue(), pageHeightChanged)
   }
 
   // Suspends the LayoutState optimization. Used under transforms that cannot be represented by
@@ -137,5 +140,5 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
-  private var p: UnsafeRawPointer
+  private var p: UnsafeMutableRawPointer
 }

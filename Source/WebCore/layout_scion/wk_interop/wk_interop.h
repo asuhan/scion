@@ -470,7 +470,8 @@ bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_ra
 bool LocalFrame_shouldUsePrintingLayout(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
-const void* LocalFrameView_layoutContext(const void*);
+bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSizeRaw, int32_t, bool);
+void* LocalFrameView_layoutContext(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 void* RenderElement_element(const void*);

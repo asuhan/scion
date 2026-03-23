@@ -62,6 +62,17 @@ extern "C" WEBCORE_EXPORT uint32_t LocalFrameViewLayoutContext_layoutIdentifier(
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutIdentifier();
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_pushLayoutState(void* p, void* rendererRaw, LayoutSizeRaw offsetRaw, int32_t pageHeightRaw, bool pageHeightChanged)
+{
+    const auto offset = WebCore::LayoutSize { WebCore::LayoutUnit::fromRawValue(offsetRaw.width), WebCore::LayoutUnit::fromRawValue(offsetRaw.height) };
+    return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->pushLayoutState(*static_cast<WebCore::RenderBox*>(rendererRaw), offset, WebCore::LayoutUnit::fromRawValue(pageHeightRaw), pageHeightChanged);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(LocalFrameViewLayoutContext);
