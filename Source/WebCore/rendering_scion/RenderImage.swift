@@ -693,10 +693,11 @@ class RenderImageWrapper: RenderReplacedWrapper {
       // When calling layout() on a child node, a parent must either push a LayoutStateMaintainer, or
       // instantiate LayoutStateDisabler. Since using a LayoutStateMaintainer is slightly more efficient,
       // and this method might be called many times per second during video playback, use a LayoutStateMaintainer:
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || style().isFlippedBlocksWritingMode())
+      use(unused)
       renderBox.setLocation(
         p: LayoutPointWrapper(x: borderLeft(), y: borderTop())
           + LayoutSizeWrapper(width: paddingLeft(), height: paddingTop()))

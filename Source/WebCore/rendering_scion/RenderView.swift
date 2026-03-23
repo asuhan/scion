@@ -123,10 +123,11 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
       return
     }
 
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: LayoutSizeWrapper(), disablePaintOffsetCache: false,
       pageHeight: (pageLogicalSize ?? LayoutSizeWrapper()).height(),
       pageHeightChanged: pageLogicalHeightChanged)
+    use(unused)
 
     pageLogicalHeightChanged = false
 

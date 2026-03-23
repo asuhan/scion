@@ -227,10 +227,11 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
     var relayoutChildren = relayoutChildren
     let repainter = LayoutRepainter(renderer: self)
     do {
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || style().isFlippedBlocksWritingMode())
+      use(unused)
 
       resetLogicalHeightBeforeLayoutIfNeeded()
       preparePaginationBeforeBlockLayout(relayoutChildren: &relayoutChildren)

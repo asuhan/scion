@@ -269,10 +269,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
       CPtrToInt(table()!.topSection()?.id()) == CPtrToInt(id())
       ? LayoutUnit() : table()!.vBorderSpacing()
 
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
       disablePaintOffsetCache: isTransformed() || hasReflection()
         || style().isFlippedBlocksWritingMode())
+    use(unused)
 
     assert(grid.count + 1 >= rowPos.count)
     while rowPos.count < grid.count + 1 {
@@ -394,9 +395,10 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     let vspacing = table()!.vBorderSpacing()
     let nEffCols = table()!.numEffCols()
 
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
       disablePaintOffsetCache: isTransformed() || style().isFlippedBlocksWritingMode())
+    use(unused)
 
     for r in 0..<totalRows {
       // Set the row's x/y position and width/height.
@@ -1081,10 +1083,11 @@ final class RenderTableSectionWrapper: RenderBoxWrapper {
     // can be called in a loop (e.g during parsing). Doing it now ensures we have a stable-enough structure.
     // TODO(asuhan): shrink to size
 
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
       disablePaintOffsetCache: isTransformed() || hasReflection()
         || style().isFlippedBlocksWritingMode())
+    use(unused)
     let paginated = view().frameView().layoutContext().layoutState()!.isPaginated()
 
     let columnPos = table()!.columnPositions()

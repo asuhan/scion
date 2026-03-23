@@ -177,10 +177,11 @@ final class RenderTableRowWrapper: RenderBoxWrapper {
     assert(needsLayout())
 
     // Table rows do not add translation.
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: LayoutSizeWrapper(),
       disablePaintOffsetCache: isTransformed() || hasReflection()
         || style().isFlippedBlocksWritingMode())
+    use(unused)
 
     let layoutState = view().frameView().layoutContext().layoutState()!
     let paginated = layoutState.isPaginated()

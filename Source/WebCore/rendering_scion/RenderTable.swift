@@ -1070,10 +1070,11 @@ class RenderTableWrapper: RenderBlockWrapper {
 
     let repainter = LayoutRepainter(renderer: self)
     do {
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || style().isFlippedBlocksWritingMode())
+      use(unused)
 
       let oldLogicalWidth = logicalWidth()
       let oldLogicalHeight = logicalHeight()

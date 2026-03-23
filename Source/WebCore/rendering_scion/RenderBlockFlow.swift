@@ -267,11 +267,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     let isPaginated = isPaginated()
     let styleToUse = style()
     repeat {
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || styleToUse.isFlippedBlocksWritingMode(),
         pageHeight: pageLogicalHeight, pageHeightChanged: pageLogicalHeightChanged)
+      use(unused)
 
       preparePaginationBeforeBlockLayout(relayoutChildren: &relayoutChildren)
       if isPaginated {
@@ -354,11 +355,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     do {
       // FIXME: This could be removed once relayoutForPagination() either stop recursing or we manage to
       // re-order them.
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || styleToUse.isFlippedBlocksWritingMode(),
         pageHeight: pageLogicalHeight, pageHeightChanged: pageLogicalHeightChanged)
+      use(unused)
 
       if oldHeight != newHeight && oldHeight > newHeight && maxFloatLogicalBottom > newHeight
         && !childrenInline()

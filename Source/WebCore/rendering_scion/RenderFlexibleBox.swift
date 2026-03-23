@@ -378,10 +378,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     let previousHeight = logicalHeight()
     setLogicalHeight(size: borderAndPaddingLogicalHeight() + scrollbarLogicalHeight())
     do {
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || style().isFlippedBlocksWritingMode())
+      use(unused)
 
       preparePaginationBeforeBlockLayout(relayoutChildren: &relayoutChildren)
 

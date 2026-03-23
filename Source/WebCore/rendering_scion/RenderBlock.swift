@@ -2042,10 +2042,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
       return false
     }
 
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
       disablePaintOffsetCache: isTransformed() || hasReflection()
         || style().isFlippedBlocksWritingMode())
+    use(unused)
     if needsPositionedMovementLayout() && !tryLayoutDoingPositionedMovementOnly() {
       return false
     }

@@ -179,6 +179,8 @@ class RenderLayoutStateWrapper {
   private var p: UnsafeRawPointer
 }
 
+func use(_ x: borrowing LayoutStateMaintainer) {}
+
 // Stack-based class to assist with LayoutState push/pop
 struct LayoutStateMaintainer: ~Copyable {
   init(

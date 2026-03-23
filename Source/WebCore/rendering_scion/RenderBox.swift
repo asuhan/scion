@@ -1582,9 +1582,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       return
     }
 
-    let _ = LayoutStateMaintainer(
+    let unused = LayoutStateMaintainer(
       root: self, offset: locationOffset(),
       disablePaintOffsetCache: style().isFlippedBlocksWritingMode())
+    use(unused)
     while child != nil {
       if child!.needsLayout() {
         (child as! RenderElementWrapper).layout()

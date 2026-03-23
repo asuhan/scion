@@ -457,10 +457,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
   func layoutGrid(relayoutChildren: Bool) {
     let repainter = LayoutRepainter(renderer: self)
     do {
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || style().isFlippedBlocksWritingMode())
+      use(unused)
 
       var gridLayoutState = computeLayoutRequirementsForItemsBeforeLayout()
 
@@ -627,10 +628,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
   func layoutMasonry(relayoutChildren: Bool) {
     let repainter = LayoutRepainter(renderer: self)
     do {
-      let _ = LayoutStateMaintainer(
+      let unused = LayoutStateMaintainer(
         root: self, offset: locationOffset(),
         disablePaintOffsetCache: isTransformed() || hasReflection()
           || style().isFlippedBlocksWritingMode())
+      use(unused)
       var gridLayoutState = GridLayoutState()
 
       var relayoutChildren = relayoutChildren
