@@ -852,8 +852,9 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutUnit
   {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    let lineStyle = firstLine ? firstLineStyle() : style()
+    return LayoutUnit.fromFloatCeil(value: lineStyle.computedLineHeight())
   }
 
   private func willChangeCreatesStackingContext() -> Bool {
