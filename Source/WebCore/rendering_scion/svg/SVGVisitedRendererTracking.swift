@@ -17,6 +17,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+func use(_ x: borrowing SVGVisitedRendererTracking.Scope) {}
+
 class SVGVisitedRendererTracking {
   typealias VisitedSet = WeakHashSet<RenderElementWrapper>
 

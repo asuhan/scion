@@ -105,7 +105,8 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
       return targetBoundingBox
     }
 
-    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    let unused = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    use(unused)
 
     let clipContentRepaintRect = protectedClipPathElement().calculateClipContentRepaintRect(
       repaintRectCalculation)

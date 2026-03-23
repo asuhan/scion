@@ -43,7 +43,8 @@ final class RenderSVGResourceMasker: RenderSVGResourceContainerWrapper {
       return targetBoundingBox
     }
 
-    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    let unused = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    use(unused)
 
     let maskElement = maskElement()
     var maskRect = maskElement.calculateMaskContentRepaintRect(repaintRectCalculation)

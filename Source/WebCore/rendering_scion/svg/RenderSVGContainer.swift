@@ -161,7 +161,8 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
       return false
     }
 
-    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    let unused = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    use(unused)
 
     var localPoint = locationInContainer.point()
     let coordinateSystemOriginTranslation = nominalSVGLayoutLocation() - adjustedLocation

@@ -59,7 +59,8 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
       return FloatRectWrapper()
     }
 
-    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    let unused = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    use(unused)
 
     let markerStart = svgMarkerStartResourceFromStyle()
     let markerMid = svgMarkerMidResourceFromStyle()
@@ -219,7 +220,8 @@ final class RenderSVGPathWrapper: RenderSVGShapeWrapper {
       return
     }
 
-    let _ = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    let unused = SVGVisitedRendererTracking.Scope(recursionTracking, self)
+    use(unused)
 
     let markerStart = svgMarkerStartResourceFromStyle()
     let markerMid = svgMarkerMidResourceFromStyle()
