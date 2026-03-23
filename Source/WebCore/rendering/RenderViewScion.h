@@ -129,6 +129,8 @@ public:
 
     IntRect documentRect() const;
 
+    bool rootElementShouldPaintBaseBackground() const;
+
     FloatSize sizeForCSSLargeViewportUnits() const;
 
     bool hasQuotesNeedingUpdate() const;

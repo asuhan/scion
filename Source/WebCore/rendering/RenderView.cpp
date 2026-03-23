@@ -770,6 +770,7 @@ bool RenderView::shouldPaintBaseBackground() const
 
 bool RenderView::rootElementShouldPaintBaseBackground() const
 {
+    if (m_scion) { return m_scion->rootElementShouldPaintBaseBackground(); }
     auto* documentElement = document().documentElement();
     if (RenderElement* rootRenderer = documentElement ? documentElement->renderer() : nullptr) {
         // The document element's renderer is currently forced to be a block, but may not always be.
