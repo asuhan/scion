@@ -92,11 +92,6 @@ class BasicShapeCircle: BasicShapeCircleOrEllipse {
 }
 
 final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
-  override init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   func centerX() -> BasicShapeCenterCoordinate {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -133,8 +128,8 @@ final class BasicShapeEllipse: BasicShapeCircleOrEllipse {
       height: sizeForAxis(m_radiusY, center.y, boxSize.height))
   }
 
-  private let m_radiusX: BasicShapeRadius
-  private let m_radiusY: BasicShapeRadius
+  private let m_radiusX = BasicShapeRadius()
+  private let m_radiusY = BasicShapeRadius()
 }
 
 final class BasicShapePolygon: BasicShape {
