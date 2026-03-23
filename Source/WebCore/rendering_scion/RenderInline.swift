@@ -544,9 +544,8 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  override func layout() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  override final func layout() {
+    fatalError("Not reached")  // Do nothing for layout()
   }
 
   override final func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
