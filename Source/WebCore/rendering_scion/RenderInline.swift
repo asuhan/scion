@@ -837,8 +837,8 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func frameRectForStickyPositioning() -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutRectWrapper(rect: linesBoundingBox())
   }
 
   override final func dirtyLineFromChangedChild() {
