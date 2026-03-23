@@ -119,7 +119,8 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
-    let _ = SetForScope(scopedVariable: &inLayout, newValue: true)
+    let unused = SetForScope(scopedVariable: &inLayout, newValue: true)
+    use(unused)
     // TODO(asuhan): add stack stats
     assert(needsLayout())
 

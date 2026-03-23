@@ -180,7 +180,8 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
   }
 
   override func layout() {
-    let _ = SetForScope(scopedVariable: &inLayout, newValue: true)
+    let unused = SetForScope(scopedVariable: &inLayout, newValue: true)
+    use(unused)
     // TODO(asuhan): add stack stats
     assert(needsLayout())
 
@@ -195,14 +196,16 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     // FIXME: LBSE should not repeat the same mistake -- remove the on-screen text font-size hacks that predate the modern solutions to this.
     do {
       assert(!isLayoutSizeChanged)
-      let _ = SetForScope(
+      let trackLayoutSizeChanges = SetForScope(
         scopedVariable: &isLayoutSizeChanged, newValue: updateLayoutSizeIfNeeded())
+      use(trackLayoutSizeChanges)
 
       assert(!didTransformToRootUpdate)
       let transformUpdater = SVGLayerTransformUpdater(self)
-      let _ = SetForScope(
+      let trackTransformChanges = SetForScope(
         scopedVariable: &didTransformToRootUpdate,
         newValue: transformUpdater.layerTransformChanged())
+      use(trackTransformChanges)
       layoutChildren()
     }
 

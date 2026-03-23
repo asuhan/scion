@@ -708,9 +708,10 @@ class RenderInlineWrapper: RenderBoxModelObjectWrapper {
     var context = context
     if localContainer!.hasNonVisibleOverflow() {
       // FIXME: Respect the value of context.options.
-      let _ = SetForScope(
+      let unused = SetForScope(
         scopedVariable: &context.options,
         newValue: context.options.union(.ApplyCompositedContainerScrolls))
+      use(unused)
       let isEmpty = !(localContainer! as! RenderLayerModelObjectWrapper)
         .applyCachedClipAndScrollPosition(&adjustedRects, container, context)
       if isEmpty {

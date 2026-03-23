@@ -1472,7 +1472,8 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
       flexBasis: flexBasis.isContent() ? LengthWrapper(type: .MaxContent) : flexBasis,
       mainAxisIsInlineAxis: mainAxisIsFlexItemInlineAxis(flexItem: flexItem))
     // FIXME: While we are supposed to ignore min/max here, clients of maybeCacheFlexItemMainIntrinsicSize may expect min/max constrained size.
-    let _ = SetForScope(scopedVariable: &isComputingFlexBaseSizes, newValue: true)
+    let unused = SetForScope(scopedVariable: &isComputingFlexBaseSizes, newValue: true)
+    use(unused)
 
     maybeCacheFlexItemMainIntrinsicSize(flexItem: flexItem, relayoutChildren: relayoutChildren)
 
@@ -2925,8 +2926,9 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
         flexItem.setOverridingLogicalHeight(height: desiredLogicalHeight)
       }
       if flexItemNeedsRelayout {
-        let _ = SetForScope(
+        let unused = SetForScope(
           scopedVariable: &shouldResetFlexItemLogicalHeightBeforeLayout, newValue: true)
+        use(unused)
         // We cache the child's intrinsic content logical height to avoid it being
         // reset to the stretched height.
         // FIXME: This is fragile. RenderBoxes should be smart enough to

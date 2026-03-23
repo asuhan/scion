@@ -53,7 +53,9 @@ final class RenderSVGResourceClipperWrapper: RenderSVGResourceContainerWrapper {
     assert(layer()!.isSelfPaintingLayer)
 
     assert(currentClippingMode == .NoClipping || currentClippingMode == .MaskClipping)
-    let _ = SetForScope(scopedVariable: &currentClippingMode, newValue: ClippingMode.PathClipping)
+    let unused = SetForScope(
+      scopedVariable: &currentClippingMode, newValue: ClippingMode.PathClipping)
+    use(unused)
 
     let containerRenderer = graphicsElement.containerRenderer()!
     assert(containerRenderer.hasLayer())

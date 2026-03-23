@@ -242,7 +242,9 @@ extension RenderTreeBuilder {
       middleBlock: RenderBlockWrapper?, beforeChild: RenderObjectWrapper?,
       oldCont: RenderBoxModelObjectWrapper?
     ) {
-      let _ = SetForScope(scopedVariable: &builder.internalMovesType, newValue: IsInternalMove.Yes)
+      let unused = SetForScope(
+        scopedVariable: &builder.internalMovesType, newValue: IsInternalMove.Yes)
+      use(unused)
       // Create a clone of this inline.
       var cloneInline = cloneAsContinuation(renderer: parent)
 
@@ -417,8 +419,9 @@ extension RenderTreeBuilder {
         var o = boxFirst
         while o != nil {
           let no = o
-          let _ = SetForScope(
+          let unused = SetForScope(
             scopedVariable: &builder.internalMovesType, newValue: IsInternalMove.Yes)
+          use(unused)
           o = no!.nextSibling()
           let childToMove = builder.detachFromRenderElement(
             parent: block!, child: no!, willBeDestroyed: .No)

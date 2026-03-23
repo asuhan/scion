@@ -1285,9 +1285,10 @@ class RenderTableWrapper: RenderBlockWrapper {
     if sectionMoved && paginated {
       // FIXME: Table layout should always stabilize even when section moves (see webkit.org/b/174412).
       if recursiveSectionMovedWithPaginationLevel < sectionCount {
-        let _ = SetForScope(
+        let unused = SetForScope(
           scopedVariable: &recursiveSectionMovedWithPaginationLevel,
           newValue: recursiveSectionMovedWithPaginationLevel + 1)
+        use(unused)
         markForPaginationRelayoutIfNeeded()
         layoutIfNeeded()
       } else {

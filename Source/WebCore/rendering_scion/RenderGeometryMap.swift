@@ -135,7 +135,8 @@ class RenderGeometryMap {
       assert(mapping.isEmpty)
       pushMappingsToAncestor(layer!.renderer().view(), nil)
 
-      let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+      let unused = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+      use(unused)
       while layer!.parent() != nil {
         pushMappingsToAncestor(
           layer: layer, ancestorLayer: layer!.parent(), respectTransforms: respectTransforms)
@@ -150,7 +151,8 @@ class RenderGeometryMap {
       newFlags.remove(.UseTransforms)
     }
 
-    let _ = SetForScope(scopedVariable: &mapCoordinatesFlags, newValue: newFlags)
+    let unused = SetForScope(scopedVariable: &mapCoordinatesFlags, newValue: newFlags)
+    use(unused)
 
     let renderer = layer!.renderer()
 
@@ -165,7 +167,8 @@ class RenderGeometryMap {
         pushMappingsToAncestor(ancestorLayer!.renderer(), nil)
       }
 
-      let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+      let unused = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+      use(unused)
       push(
         renderer, layerOffset, accumulatingTransform: true, isNonUniform: false,
         isFixedPosition: false, hasTransform: false)
@@ -185,7 +188,8 @@ class RenderGeometryMap {
   ) {
     assert(isNativeImpl())
     // We need to push mappings in reverse order here, so do insertions rather than appends.
-    let _ = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+    let unused = SetForScope(scopedVariable: &insertionPosition, newValue: mapping.count)
+    use(unused)
     var renderer = renderer
     repeat {
       renderer = renderer!.pushMappingToContainer(ancestorRenderer, self)

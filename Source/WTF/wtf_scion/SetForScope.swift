@@ -24,6 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+func use<T, U>(_ unused: SetForScope<T, U>) {}
+
 class SetForScope<T, U> {
   init(scopedVariable: inout T, newValue: U) {
     // TODO(asuhan): implement this

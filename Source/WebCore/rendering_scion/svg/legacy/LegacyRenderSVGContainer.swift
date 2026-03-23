@@ -110,9 +110,10 @@ class LegacyRenderSVGContainer: LegacyRenderSVGModelObject {
 
     // LegacyRenderSVGRoot disables paint offset cache for the SVG rendering tree.
     assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
-    let _ = SetForScope(
+    let unused = SetForScope(
       scopedVariable: &repaintIsSuspendedForChildrenDuringLayout,
       newValue: shouldSuspendRepaintForChildren(self))
+    use(unused)
 
     let checkForRepaintOverride =
       repaintIsSuspendedForChildrenDuringLayout || selfWillPaint()

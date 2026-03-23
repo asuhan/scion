@@ -221,8 +221,9 @@ extension RenderTreeBuilder {
         // Detaching the spanner takes care of removing the placeholder (and merges the RenderMultiColumnSets).
         let spannerToReInsert = builder.detach(
           parent: spanner!.parent()!, child: spanner!, willBeDestroyed: .No)
-        let _ = SetForScope(
+        let unused = SetForScope(
           scopedVariable: &MultiColumn.gRestoringColumnSpannersForContainer, newValue: true)
+        use(unused)
         builder.attach(parent: spannerOriginalParent, child: spannerToReInsert!)
       }
     }
@@ -444,7 +445,8 @@ extension RenderTreeBuilder {
           parent: container, child: descendant, willBeDestroyed: .No)
 
         // This is a guard to stop an ancestor flow thread from processing the spanner.
-        let _ = SetForScope(scopedVariable: &MultiColumn.gShiftingSpanner, newValue: true)
+        let unused = SetForScope(scopedVariable: &MultiColumn.gShiftingSpanner, newValue: true)
+        use(unused)
         builder.blockBuilder!.attach(
           parent: multicolContainer!, child: takenDescendant!,
           beforeChild: insertBeforeMulticolChild

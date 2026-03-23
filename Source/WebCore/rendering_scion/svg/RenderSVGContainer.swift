@@ -88,15 +88,17 @@ class RenderSVGContainerWrapper: RenderSVGModelObjectWrapper {
     // FIXME: LBSE should not repeat the same mistake -- remove the on-screen text font-size hacks that predate the modern solutions to this.
     do {
       assert(!isLayoutSizeChanged)
-      let _ = SetForScope(
+      let trackLayoutSizeChanges = SetForScope(
         scopedVariable: &isLayoutSizeChanged, newValue: updateLayoutSizeIfNeeded())
+      use(trackLayoutSizeChanges)
 
       assert(!didTransformToRootUpdate)
       let transformUpdater = SVGLayerTransformUpdater(self)
-      let _ = SetForScope(
+      let trackTransformChanges = SetForScope(
         scopedVariable: &didTransformToRootUpdate,
         newValue: transformUpdater.layerTransformChanged()
           || SVGContainerLayout.transformToRootChanged(parent()))
+      use(trackTransformChanges)
       layoutChildren()
     }
 

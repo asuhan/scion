@@ -284,8 +284,9 @@ class RenderTreeBuilder {
       return
     }
 
-    let _ = SetForScope(
+    let unused = SetForScope(
       scopedVariable: &tearDownType, newValue: TearDownType.SubtreeWithRootAlreadyDetached)
+    use(unused)
     while rendererToDelete!.firstChild() != nil {
       let firstChild = rendererToDelete!.firstChild()!
       if let node = firstChild.node() {
@@ -333,15 +334,17 @@ class RenderTreeBuilder {
   func destroyAndCleanUpAnonymousWrappers(
     rendererToDestroy: RenderObjectWrapper, subtreeDestroyRoot: RenderElementWrapper?
   ) {
-    let _ = SetForScope(
+    let tearDownTypeScope = SetForScope(
       scopedVariable: &tearDownType,
       newValue: subtreeDestroyRoot == nil
         || CPtrToInt(rendererToDestroy.id()) == CPtrToInt(subtreeDestroyRoot!.id())
         ? TearDownType.Root : TearDownType.SubtreeWithRootStillAttached)
-    let _ = SetForScope(
+    use(tearDownTypeScope)
+    let tearDownDestroyRoot = SetForScope(
       scopedVariable: &self.subtreeDestroyRoot,
       newValue: tearDownType == TearDownType.SubtreeWithRootStillAttached ? subtreeDestroyRoot : nil
     )
+    use(tearDownDestroyRoot)
 
     // If the tree is destroyed, there is no need for a clean-up phase.
     if rendererToDestroy.renderTreeBeingDestroyed() {
@@ -381,15 +384,17 @@ class RenderTreeBuilder {
     let destroyRootParent: RenderElementWrapper? = destroyRoot!.parent()
     if CPtrToInt(rendererToDestroy.id()) != CPtrToInt(destroyRoot?.id()) {
       // Destroy the child renderer first, before we start tearing down the anonymous wrapper ancestor chain.
-      let _ = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRoot)
+      let unused = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRoot)
+      use(unused)
       destroy(renderer: rendererToDestroy)
     }
 
     if destroyRoot != nil {
-      let _ = SetForScope(
+      let unused = SetForScope(
         scopedVariable: &anonymousDestroyRoot,
         newValue: CPtrToInt(destroyRoot?.id()) != CPtrToInt(rendererToDestroy.id())
           ? destroyRoot : nil)
+      use(unused)
       destroy(renderer: destroyRoot!)
     }
 
@@ -397,7 +402,8 @@ class RenderTreeBuilder {
       return
     }
 
-    let _ = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRootParent)
+    let unused = SetForScope(scopedVariable: &anonymousDestroyRoot, newValue: destroyRootParent)
+    use(unused)
     removeAnonymousWrappersForInlineChildrenIfNeeded(parent: destroyRootParent!)
 
     // Anonymous parent might have become empty, try to delete it too.
@@ -1010,7 +1016,8 @@ class RenderTreeBuilder {
       let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)!
       attach(parent: to, child: childToMove, beforeChild: beforeChild)
     } else {
-      let _ = SetForScope(scopedVariable: &internalMovesType, newValue: IsInternalMove.Yes)
+      let unused = SetForScope(scopedVariable: &internalMovesType, newValue: IsInternalMove.Yes)
+      use(unused)
       let childToMove = detachFromRenderElement(parent: from, child: child, willBeDestroyed: .No)!
       attachToRenderElementInternal(parent: to, child: childToMove, beforeChild: beforeChild)
     }
