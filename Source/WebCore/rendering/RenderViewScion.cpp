@@ -92,6 +92,8 @@ extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 
 extern "C" bool RenderViewScion_rootElementShouldPaintBaseBackground(const void*);
 
+extern "C" bool RenderViewScion_shouldPaintBaseBackground(const void*);
+
 extern "C" bool RenderViewScion_hasQuotesNeedingUpdate(const void*);
 
 extern "C" bool RenderViewScion_hasRenderersWithOutline(const void*);
@@ -333,6 +335,11 @@ IntRect RenderViewScion::documentRect() const
 bool RenderViewScion::rootElementShouldPaintBaseBackground() const
 {
     return RenderViewScion_rootElementShouldPaintBaseBackground(m_handle);
+}
+
+bool RenderViewScion::shouldPaintBaseBackground() const
+{
+    return RenderViewScion_shouldPaintBaseBackground(m_handle);
 }
 
 FloatSize RenderViewScion::sizeForCSSLargeViewportUnits() const

@@ -131,6 +131,8 @@ public:
 
     bool rootElementShouldPaintBaseBackground() const;
 
+    bool shouldPaintBaseBackground() const;
+
     FloatSize sizeForCSSLargeViewportUnits() const;
 
     bool hasQuotesNeedingUpdate() const;

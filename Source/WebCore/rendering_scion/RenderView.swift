@@ -617,7 +617,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return shouldPaintBaseBackground()
   }
 
-  private func shouldPaintBaseBackground() -> Bool {
+  func shouldPaintBaseBackground() -> Bool {
     let document = document()
     let frameView = frameView()
     let ownerElement = document.ownerElement()

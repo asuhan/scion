@@ -730,6 +730,7 @@ bool RenderView::rootBackgroundIsEntirelyFixed() const
 
 bool RenderView::shouldPaintBaseBackground() const
 {
+    if (m_scion) { return m_scion->shouldPaintBaseBackground(); }
     auto& document = this->document();
     auto& frameView = this->frameView();
     auto* ownerElement = document.ownerElement();
