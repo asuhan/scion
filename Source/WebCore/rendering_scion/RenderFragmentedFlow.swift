@@ -381,6 +381,13 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
     return fragmentList.first()
   }
 
+  func lastFragment() -> RenderFragmentContainerWrapper? {
+    if !hasFragments() {
+      return nil
+    }
+    return fragmentList.last()
+  }
+
   func setFragmentRangeForBox(
     box: RenderBoxWrapper, startFragment: RenderFragmentContainerWrapper,
     endFragment: RenderFragmentContainerWrapper

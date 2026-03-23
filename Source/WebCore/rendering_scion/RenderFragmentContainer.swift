@@ -86,13 +86,17 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func isFirstFragment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isValid)
+
+    return fragmentedFlow!.firstFragment()?.id() == id()
   }
 
   func isLastFragment() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(isValid)
+
+    return fragmentedFlow!.lastFragment()?.id() == id()
   }
 
   func shouldClipFragmentedFlowContent() -> Bool {
