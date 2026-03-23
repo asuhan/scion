@@ -976,6 +976,14 @@ ImageQualityController& RenderView::imageQualityController()
     return *m_imageQualityController;
 }
 
+uint64_t RenderView::rendererCount() const
+{
+    if (m_scion) {
+        return m_scion->rendererCount();
+    }
+    return m_rendererCount;
+}
+
 void RenderView::didCreateRenderer()
 {
     if (m_scion) {

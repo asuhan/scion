@@ -679,6 +679,12 @@ func RenderViewScion_hasSoftwareFilters(_ viewRaw: UnsafeRawPointer) -> Bool {
   return view.hasSoftwareFilters()
 }
 
+@_cdecl("RenderViewScion_rendererCount")
+func RenderViewScion_rendererCount(_ viewRaw: UnsafeRawPointer) -> UInt64 {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.rendererCount()
+}
+
 @_cdecl("RenderViewScion_didCreateRenderer")
 func RenderViewScion_didCreateRenderer(_ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

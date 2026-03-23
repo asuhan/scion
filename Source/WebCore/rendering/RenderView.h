@@ -176,7 +176,7 @@ public:
     void setHasSoftwareFilters(bool hasSoftwareFilters) { m_hasSoftwareFilters = hasSoftwareFilters; }
     WEBCORE_EXPORT bool hasSoftwareFilters() const;
 
-    uint64_t rendererCount() const { return m_rendererCount; }
+    uint64_t rendererCount() const;
     void didCreateRenderer();
     void didDestroyRenderer();
 

@@ -94,6 +94,8 @@ extern "C" bool RenderViewScion_hasQuotesNeedingUpdate(const void*);
 
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
+extern "C" uint64_t RenderViewScion_rendererCount(const void*);
+
 extern "C" void RenderViewScion_didCreateRenderer(void*);
 
 extern "C" void RenderViewScion_didDestroyRenderer(void*);
@@ -337,8 +339,7 @@ bool RenderViewScion::hasQuotesNeedingUpdate() const
 
 uint64_t RenderViewScion::rendererCount() const
 {
-    ASSERT_NOT_REACHED();
-    return 0;
+    return RenderViewScion_rendererCount(m_handle);
 }
 
 bool RenderViewScion::hasSoftwareFilters() const
