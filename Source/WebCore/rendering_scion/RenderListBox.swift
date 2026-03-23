@@ -323,7 +323,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
     }
 
     if scrollToRevealSelectionAfterLayout {
-      let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+      let unused = LayoutStateDisabler(context: view().frameView().layoutContext())
+      use(unused)
       scrollToRevealSelection()
     }
   }

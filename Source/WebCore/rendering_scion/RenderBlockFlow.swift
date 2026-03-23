@@ -3464,7 +3464,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
     // FIXME: Avoid disabling LayoutState. At the very least, don't disable it for floats originating
     // in this block. Better yet would be to push extra state for the containers of other floats.
-    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+    let unused = LayoutStateDisabler(context: view().frameView().layoutContext())
+    use(unused)
     let floatingObjectSet = floatingObjects!.set()
     for floatingObject in floatingObjectSet {
       // Only repaint the object if it is overhanging, is not in its own layer, and

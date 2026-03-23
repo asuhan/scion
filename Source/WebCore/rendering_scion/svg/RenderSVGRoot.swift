@@ -186,7 +186,8 @@ final class RenderSVGRootWrapper: RenderReplacedWrapper {
     assert(needsLayout())
 
     // Arbitrary affine transforms are incompatible with RenderLayoutState.
-    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+    let layoutStateDisabler = LayoutStateDisabler(context: view().frameView().layoutContext())
+    use(layoutStateDisabler)
 
     let repainter = LayoutRepainter(renderer: self)
 

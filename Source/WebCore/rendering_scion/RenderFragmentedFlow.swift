@@ -198,7 +198,8 @@ class RenderFragmentedFlowWrapper: RenderBlockFlowWrapper {
       return
     }
 
-    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())  // We can't use layout state to repaint, since the fragments are somewhere else.
+    let unused = LayoutStateDisabler(context: view().frameView().layoutContext())  // We can't use layout state to repaint, since the fragments are somewhere else.
+    use(unused)
 
     for fragment in fragmentList {
       fragment.repaintFragmentedFlowContent(repaintRect)

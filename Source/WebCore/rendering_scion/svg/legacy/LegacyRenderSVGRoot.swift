@@ -127,7 +127,8 @@ final class LegacyRenderSVGRootWrapper: RenderReplacedWrapper {
     resourcesNeedingToInvalidateClients.clear()
 
     // Arbitrary affine transforms are incompatible with RenderLayoutState.
-    let _ = LayoutStateDisabler(context: view().frameView().layoutContext())
+    let layoutStateDisabler = LayoutStateDisabler(context: view().frameView().layoutContext())
+    use(layoutStateDisabler)
 
     let needsLayout = selfNeedsLayout()
     let checkForRepaintOverride: LayoutRepainter.CheckForRepaint? = !needsLayout ? .No : nil

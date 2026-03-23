@@ -210,6 +210,8 @@ struct LayoutStateMaintainer: ~Copyable {
   private var didPushLayoutState = false
 }
 
+func use(_ x: borrowing LayoutStateDisabler) {}
+
 struct LayoutStateDisabler: ~Copyable {
   init(context: LocalFrameViewLayoutContextWrapper) {
     self.context = context
