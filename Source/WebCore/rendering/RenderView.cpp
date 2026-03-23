@@ -834,6 +834,7 @@ int RenderView::viewWidth() const
 
 int RenderView::viewLogicalHeight() const
 {
+    if (m_scion) { return m_scion->viewLogicalHeight(); }
     int height = style().isHorizontalWritingMode() ? viewHeight() : viewWidth();
     return height;
 }

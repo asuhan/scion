@@ -198,7 +198,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return style().isHorizontalWritingMode() ? viewWidth() : viewHeight()
   }
 
-  private func viewLogicalHeight() -> Int32 {
+  func viewLogicalHeight() -> Int32 {
     let height = style().isHorizontalWritingMode() ? viewHeight() : viewWidth()
     return height
   }
