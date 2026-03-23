@@ -62,15 +62,9 @@ struct BasicShapeRadius {
 class BasicShapeCircleOrEllipse: BasicShape {}
 
 class BasicShapeCircle: BasicShapeCircleOrEllipse {
-  func centerX() -> BasicShapeCenterCoordinate {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func centerX() -> BasicShapeCenterCoordinate { return m_centerX }
 
-  func centerY() -> BasicShapeCenterCoordinate {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func centerY() -> BasicShapeCenterCoordinate { return m_centerY }
 
   func floatValueForRadiusInBox(_ boxSize: FloatSize, _ center: FloatPoint) -> Float32 {
     switch m_radius.type {
