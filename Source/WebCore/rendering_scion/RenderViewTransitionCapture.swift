@@ -65,8 +65,9 @@ final class RenderViewTransitionCaptureWrapper: RenderReplacedWrapper {
 
     let paintRect = localOverflowRect.FloatRect()
 
-    let _ = InterpolationQualityMaintainer(
+    let unused = InterpolationQualityMaintainer(
       context, ImageQualityController.interpolationQualityFromStyle(style()))
+    use(unused)
     if m_oldImage != nil {
       context.drawImageBuffer(
         m_oldImage!, paintRect, ImagePaintingOptionsWrapper(context.compositeOperation()))

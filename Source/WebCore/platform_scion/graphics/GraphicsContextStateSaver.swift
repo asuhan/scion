@@ -64,6 +64,8 @@ class TransparencyLayerScope {
   }
 }
 
+func use(_ x: borrowing InterpolationQualityMaintainer) {}
+
 struct InterpolationQualityMaintainer: ~Copyable {
   init(
     _ graphicsContext: GraphicsContextWrapper, _ interpolationQualityToUse: InterpolationQuality
