@@ -228,8 +228,11 @@ class RenderFragmentContainerWrapper: RenderBlockFlowWrapper {
   }
 
   func visualOverflowRectForBoxForPropagation(_ box: RenderBoxWrapper) -> LayoutRectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var rect = visualOverflowRectForBox(box)
+    fragmentedFlow!.flipForWritingModeLocalCoordinates(&rect)
+
+    return rect
   }
 
   func rectFlowPortionForBox(_ box: RenderBoxWrapper, _ rect: LayoutRectWrapper)
