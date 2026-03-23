@@ -969,6 +969,14 @@ void RenderView::setIsInWindow(bool isInWindow)
         m_compositor->setIsInWindow(isInWindow);
 }
 
+bool RenderView::hasRenderersWithOutline() const
+{
+    if (m_scion) {
+        return m_scion->hasRenderersWithOutline();
+    }
+    return m_renderersWithOutlineCount;
+}
+
 ImageQualityController& RenderView::imageQualityController()
 {
     if (!m_imageQualityController)

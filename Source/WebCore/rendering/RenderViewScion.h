@@ -133,6 +133,8 @@ public:
 
     bool hasQuotesNeedingUpdate() const;
 
+    bool hasRenderersWithOutline() const;
+
     uint64_t rendererCount() const;
 
     bool hasSoftwareFilters() const;

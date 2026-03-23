@@ -169,7 +169,7 @@ public:
 
     void incrementRendersWithOutline() { ++m_renderersWithOutlineCount; }
     void decrementRendersWithOutline() { ASSERT(m_renderersWithOutlineCount > 0); --m_renderersWithOutlineCount; }
-    bool hasRenderersWithOutline() const { return m_renderersWithOutlineCount; }
+    bool hasRenderersWithOutline() const;
 
     ImageQualityController& imageQualityController();
 

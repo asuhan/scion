@@ -92,6 +92,8 @@ extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 
 extern "C" bool RenderViewScion_hasQuotesNeedingUpdate(const void*);
 
+extern "C" bool RenderViewScion_hasRenderersWithOutline(const void*);
+
 extern "C" bool RenderViewScion_hasSoftwareFilters(const void*);
 
 extern "C" uint64_t RenderViewScion_rendererCount(const void*);
@@ -335,6 +337,11 @@ FloatSize RenderViewScion::sizeForCSSLargeViewportUnits() const
 bool RenderViewScion::hasQuotesNeedingUpdate() const
 {
     return RenderViewScion_hasQuotesNeedingUpdate(m_handle);
+}
+
+bool RenderViewScion::hasRenderersWithOutline() const
+{
+    return RenderViewScion_hasRenderersWithOutline(m_handle);
 }
 
 uint64_t RenderViewScion::rendererCount() const
