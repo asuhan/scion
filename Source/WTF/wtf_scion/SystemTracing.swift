@@ -38,6 +38,8 @@ private func tracePoint(
   fatalError("Not implemented")
 }
 
+func use(_ x: borrowing TraceScope) {}
+
 struct TraceScope: ~Copyable {
   init(
     _ entryCode: TracePointCode, _ exitCode: TracePointCode, _ data1: UInt64 = 0,

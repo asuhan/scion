@@ -536,7 +536,8 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
   ) -> Bool {
     assert(isNativeImpl())
     // TODO(asuhan): add logging and tree debugging
-    let _ = TraceScope(.CompositingUpdateStart, .CompositingUpdateEnd)
+    let unused = TraceScope(.CompositingUpdateStart, .CompositingUpdateEnd)
+    use(unused)
 
     if updateType == .AfterStyleChange || updateType == .AfterLayout {
       cacheAcceleratedCompositingFlagsAfterLayout()  // Some flags (e.g. forceCompositingMode) depend on layout.
