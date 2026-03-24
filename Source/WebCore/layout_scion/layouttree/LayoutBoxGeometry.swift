@@ -195,19 +195,17 @@ class BoxGeometry {
   }
 
   func borderAndPaddingBefore() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingBefore(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingBefore(p))
+    return borderBefore() + paddingBefore()
   }
 
   func borderAndPaddingAfter() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingAfter(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingAfter(p))
+    return borderAfter() + paddingAfter()
   }
 
   func horizontalBorderAndPadding() -> LayoutUnit {
