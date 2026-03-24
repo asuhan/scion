@@ -383,12 +383,13 @@ class BoxGeometry {
   }
 
   func setContentBoxSize(size: LayoutSizeWrapper) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setContentBoxWidth(p, size.width().rawValue())
+      wk_interop.BoxGeometry_setContentBoxHeight(p, size.height().rawValue())
+      return
     }
-    wk_interop.BoxGeometry_setContentBoxWidth(p, size.width().rawValue())
-    wk_interop.BoxGeometry_setContentBoxHeight(p, size.height().rawValue())
+    setContentBoxWidth(width: size.width())
+    setContentBoxHeight(height: size.height())
   }
 
   func setHorizontalMargin(margin: HorizontalEdges) {
