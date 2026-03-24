@@ -105,6 +105,15 @@ extern "C" bool RenderViewScion_usesCompositing(const void*);
 
 extern "C" IntRectRaw RenderViewScion_unscaledDocumentRect(const void*);
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" struct LayoutRectRaw RenderViewScion_unextendedBackgroundRect(const void*);
+
 extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 
 extern "C" bool RenderViewScion_rootElementShouldPaintBaseBackground(const void*);
@@ -358,6 +367,20 @@ IntRect RenderViewScion::unscaledDocumentRect() const
 {
     const auto raw = RenderViewScion_unscaledDocumentRect(m_handle);
     return IntRect({ raw.location.x, raw.location.y }, { raw.size.width, raw.size.height });
+}
+
+namespace {
+
+LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
+}
+
+} // namespace
+
+LayoutRect RenderViewScion::unextendedBackgroundRect() const
+{
+    return convertLayoutRectRaw(RenderViewScion_unextendedBackgroundRect(m_handle));
 }
 
 IntRect RenderViewScion::documentRect() const

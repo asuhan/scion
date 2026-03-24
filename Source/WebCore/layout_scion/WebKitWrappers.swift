@@ -682,6 +682,18 @@ func RenderViewScion_unscaledDocumentRect(_ viewRaw: UnsafeRawPointer) -> IntRec
     size: IntSizeRaw(width: rect.size.width, height: rect.size.height))
 }
 
+private func convertLayoutRect(_ r: LayoutRectWrapper) -> LayoutRectRaw {
+  return LayoutRectRaw(
+    x: r.x().rawValue(), y: r.y().rawValue(), width: r.width().rawValue(),
+    height: r.height().rawValue())
+}
+
+@_cdecl("RenderViewScion_unextendedBackgroundRect")
+func RenderViewScion_unextendedBackgroundRect(_ viewRaw: UnsafeRawPointer) -> LayoutRectRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return convertLayoutRect(view.unextendedBackgroundRect())
+}
+
 @_cdecl("RenderViewScion_documentRect")
 func RenderViewScion_documentRect(_ viewRaw: UnsafeRawPointer) -> IntRectRaw {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

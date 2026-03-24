@@ -131,6 +131,8 @@ public:
 
     IntRect unscaledDocumentRect() const;
 
+    LayoutRect unextendedBackgroundRect() const;
+
     IntRect documentRect() const;
 
     bool rootElementShouldPaintBaseBackground() const;

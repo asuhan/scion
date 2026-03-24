@@ -788,6 +788,7 @@ bool RenderView::rootElementShouldPaintBaseBackground() const
     
 LayoutRect RenderView::unextendedBackgroundRect() const
 {
+    if (m_scion) { return m_scion->unextendedBackgroundRect(); }
     // FIXME: What is this? Need to patch for new columns?
     return unscaledDocumentRect();
 }
