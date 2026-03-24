@@ -367,19 +367,25 @@ class BoxGeometry {
   }
 
   func setContentBoxHeight(height: LayoutUnit) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setContentBoxHeight(p, height.rawValue())
+      return
     }
-    wk_interop.BoxGeometry_setContentBoxHeight(p, height.rawValue())
+    #if ASSERT_ENABLED
+      setHasValidContentBoxHeight()
+    #endif
+    m_contentBoxHeight = height
   }
 
   func setContentBoxWidth(width: LayoutUnit) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setContentBoxWidth(p, width.rawValue())
+      return
     }
-    wk_interop.BoxGeometry_setContentBoxWidth(p, width.rawValue())
+    #if ASSERT_ENABLED
+      setHasValidContentBoxWidth()
+    #endif
+    m_contentBoxWidth = width
   }
 
   func setContentBoxSize(size: LayoutSizeWrapper) {
@@ -481,10 +487,24 @@ class BoxGeometry {
 
   private func isNativeImpl() -> Bool { return p == nil }
 
+  #if ASSERT_ENABLED
+    func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
+    func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
+  #endif  // ASSERT_ENABLED
+
+  private var m_contentBoxWidth = LayoutUnit()
+  private var m_contentBoxHeight = LayoutUnit()
+
   private var border = Edges()
   var padding = Edges()
 
   var verticalSpaceForScrollbar = LayoutUnit()
   var horizontalSpaceForScrollbar = LayoutUnit()
+
+  #if ASSERT_ENABLED
+    private var m_hasValidContentBoxHeight = false
+    private var m_hasValidContentBoxWidth = false
+  #endif  // ASSERT_ENABLED
+
   var p: UnsafeMutableRawPointer? = nil
 }
