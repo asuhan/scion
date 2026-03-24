@@ -121,11 +121,13 @@ class BoxGeometry {
   }
 
   func borderBefore() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderBefore(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderBefore(p))
+    #if ASSERT_ENABLED
+      assert(m_hasValidBorder)
+    #endif  // ASSERT_ENABLED
+    return border.vertical.before
   }
 
   func borderAfter() -> LayoutUnit {
@@ -516,6 +518,7 @@ class BoxGeometry {
   #if ASSERT_ENABLED
     private let m_hasValidHorizontalMargin = false
     private let m_hasValidVerticalMargin = false
+    private let m_hasValidBorder = false
     private var m_hasValidContentBoxHeight = false
     private var m_hasValidContentBoxWidth = false
   #endif  // ASSERT_ENABLED
