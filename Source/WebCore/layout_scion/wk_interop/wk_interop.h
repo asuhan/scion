@@ -237,6 +237,19 @@ struct PaginationRaw {
     uint32_t gap;
 };
 
+struct ComputedMarginValuesRaw {
+    int32_t before;
+    int32_t after;
+    int32_t start;
+    int32_t end;
+};
+
+struct LogicalExtentComputedValuesRaw {
+    int32_t extent;
+    int32_t position;
+    struct ComputedMarginValuesRaw margins;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

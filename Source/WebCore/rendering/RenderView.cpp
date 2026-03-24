@@ -150,8 +150,9 @@ void RenderView::styleDidChange(StyleDifference diff, const RenderStyle* oldStyl
         frameView().topContentDirectionDidChange();
 }
 
-RenderBox::LogicalExtentComputedValues RenderView::computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit) const
+RenderBox::LogicalExtentComputedValues RenderView::computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const
 {
+    if (m_scion) { return m_scion->computeLogicalHeight(logicalHeight, logicalTop); }
     return { !shouldUsePrintingLayout() ? LayoutUnit(viewLogicalHeight()) : logicalHeight, 0_lu, ComputedMarginValues() };
 }
 

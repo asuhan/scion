@@ -95,6 +95,8 @@ public:
 
     void updateLogicalWidth();
 
+    RenderBox::LogicalExtentComputedValues computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const;
+
     int viewHeight() const;
 
     int viewWidth() const;

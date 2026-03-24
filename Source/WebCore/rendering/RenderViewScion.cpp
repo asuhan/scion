@@ -46,6 +46,19 @@ struct IntRectRaw {
     struct IntSizeRaw size;
 };
 
+struct ComputedMarginValuesRaw {
+    int32_t before;
+    int32_t after;
+    int32_t start;
+    int32_t end;
+};
+
+struct LogicalExtentComputedValuesRaw {
+    int32_t extent;
+    int32_t position;
+    struct ComputedMarginValuesRaw margins;
+};
+
 extern "C" bool RenderViewScion_printing(const void*);
 
 extern "C" int32_t RenderViewScion_pageOrViewLogicalHeight(const void*);
@@ -59,6 +72,8 @@ extern "C" bool RenderViewScion_isChildAllowed(const void*, void*, const void*);
 extern "C" void RenderViewScion_layout(void*);
 
 extern "C" void RenderViewScion_updateLogicalWidth(void*);
+
+extern "C" struct LogicalExtentComputedValuesRaw RenderViewScion_computeLogicalHeight(const void*, int32_t, int32_t);
 
 extern "C" int32_t RenderViewScion_viewHeight(const void*);
 
@@ -243,6 +258,16 @@ void RenderViewScion::layout()
 void RenderViewScion::updateLogicalWidth()
 {
     RenderViewScion_updateLogicalWidth(m_handle);
+}
+
+RenderBox::LogicalExtentComputedValues RenderViewScion::computeLogicalHeight(LayoutUnit logicalHeight, LayoutUnit logicalTop) const
+{
+    const auto e = RenderViewScion_computeLogicalHeight(m_handle, logicalHeight.rawValue(), logicalTop.rawValue());
+    return {
+        LayoutUnit::fromRawValue(e.extent),
+        LayoutUnit::fromRawValue(e.position),
+        { LayoutUnit::fromRawValue(e.margins.before), LayoutUnit::fromRawValue(e.margins.after), LayoutUnit::fromRawValue(e.margins.start), LayoutUnit::fromRawValue(e.margins.end) }
+    };
 }
 
 int RenderViewScion::viewHeight() const

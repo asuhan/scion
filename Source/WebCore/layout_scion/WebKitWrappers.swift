@@ -563,6 +563,21 @@ func RenderViewScion_updateLogicalWidth(_ viewRaw: UnsafeMutableRawPointer) {
   view.updateLogicalWidth()
 }
 
+@_cdecl("RenderViewScion_computeLogicalHeight")
+func RenderViewScion_computeLogicalHeight(
+  _ viewRaw: UnsafeRawPointer, _ logicalHeightRaw: Int32, _ logicalTopRaw: Int32
+) -> LogicalExtentComputedValuesRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let e = view.computeLogicalHeight(
+    logicalHeight: LayoutUnit.fromRawValue(value: logicalHeightRaw),
+    logicalTop: LayoutUnit.fromRawValue(value: logicalTopRaw))
+  return LogicalExtentComputedValuesRaw(
+    extent: e.extent.rawValue(), position: e.extent.rawValue(),
+    margins: ComputedMarginValuesRaw(
+      before: e.margins.before.rawValue(), after: e.margins.after.rawValue(),
+      start: e.margins.start.rawValue(), end: e.margins.end.rawValue()))
+}
+
 @_cdecl("RenderViewScion_viewHeight")
 func RenderViewScion_viewHeight(_ viewRaw: UnsafeRawPointer) -> Int32 {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
