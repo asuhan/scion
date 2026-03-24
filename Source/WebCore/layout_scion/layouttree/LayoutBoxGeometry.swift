@@ -131,8 +131,11 @@ class BoxGeometry {
   }
 
   func borderAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      assert(m_hasValidBorder)
+    #endif  // ASSERT_ENABLED
+    return border.vertical.after
   }
 
   func borderStart() -> LayoutUnit {
