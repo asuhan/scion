@@ -114,6 +114,8 @@ struct LayoutRectRaw {
 
 extern "C" struct LayoutRectRaw RenderViewScion_unextendedBackgroundRect(const void*);
 
+extern "C" struct LayoutRectRaw RenderViewScion_backgroundRect(const void*);
+
 extern "C" IntRectRaw RenderViewScion_documentRect(const void*);
 
 extern "C" bool RenderViewScion_rootElementShouldPaintBaseBackground(const void*);
@@ -381,6 +383,11 @@ LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
 LayoutRect RenderViewScion::unextendedBackgroundRect() const
 {
     return convertLayoutRectRaw(RenderViewScion_unextendedBackgroundRect(m_handle));
+}
+
+LayoutRect RenderViewScion::backgroundRect() const
+{
+    return convertLayoutRectRaw(RenderViewScion_backgroundRect(m_handle));
 }
 
 IntRect RenderViewScion::documentRect() const

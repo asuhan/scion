@@ -133,6 +133,8 @@ public:
 
     LayoutRect unextendedBackgroundRect() const;
 
+    LayoutRect backgroundRect() const;
+
     IntRect documentRect() const;
 
     bool rootElementShouldPaintBaseBackground() const;

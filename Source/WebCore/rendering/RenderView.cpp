@@ -795,6 +795,7 @@ LayoutRect RenderView::unextendedBackgroundRect() const
     
 LayoutRect RenderView::backgroundRect() const
 {
+    if (m_scion) { return m_scion->backgroundRect(); }
     // FIXME: New columns care about this?
     Ref frameView = this->frameView();
     if (frameView->hasExtendedBackgroundRectForPainting())
