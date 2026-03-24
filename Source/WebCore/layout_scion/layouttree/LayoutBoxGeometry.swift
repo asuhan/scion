@@ -67,7 +67,7 @@ class BoxGeometry {
   }
 
   func horizontalMargin() -> HorizontalEdges {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -78,7 +78,7 @@ class BoxGeometry {
   }
 
   func marginBefore() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -86,7 +86,7 @@ class BoxGeometry {
   }
 
   func marginStart() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -94,7 +94,7 @@ class BoxGeometry {
   }
 
   func marginAfter() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -102,7 +102,7 @@ class BoxGeometry {
   }
 
   func marginEnd() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -110,7 +110,7 @@ class BoxGeometry {
   }
 
   func borderBefore() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -123,7 +123,7 @@ class BoxGeometry {
   }
 
   func borderStart() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -131,7 +131,7 @@ class BoxGeometry {
   }
 
   func borderEnd() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -149,7 +149,7 @@ class BoxGeometry {
   }
 
   func paddingStart() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -157,7 +157,7 @@ class BoxGeometry {
   }
 
   func paddingEnd() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -165,7 +165,7 @@ class BoxGeometry {
   }
 
   func borderAndPaddingBefore() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -173,7 +173,7 @@ class BoxGeometry {
   }
 
   func borderAndPaddingAfter() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -181,7 +181,7 @@ class BoxGeometry {
   }
 
   func horizontalBorderAndPadding() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -189,7 +189,7 @@ class BoxGeometry {
   }
 
   func verticalBorderAndPadding() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -202,7 +202,7 @@ class BoxGeometry {
   }
 
   func contentBoxLeft() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -210,7 +210,7 @@ class BoxGeometry {
   }
 
   func contentBoxRight() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -218,7 +218,7 @@ class BoxGeometry {
   }
 
   func contentBoxHeight() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -226,7 +226,7 @@ class BoxGeometry {
   }
 
   func contentBoxWidth() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -262,7 +262,7 @@ class BoxGeometry {
   }
 
   func borderBoxHeight() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -270,7 +270,7 @@ class BoxGeometry {
   }
 
   func borderBoxWidth() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -278,7 +278,7 @@ class BoxGeometry {
   }
 
   func marginBoxHeight() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -286,7 +286,7 @@ class BoxGeometry {
   }
 
   func marginBoxWidth() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -298,7 +298,7 @@ class BoxGeometry {
   }
 
   func marginBorderAndPaddingStart() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -306,7 +306,7 @@ class BoxGeometry {
   }
 
   func marginBorderAndPaddingEnd() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -314,7 +314,7 @@ class BoxGeometry {
   }
 
   func horizontalMarginBorderAndPadding() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -333,7 +333,7 @@ class BoxGeometry {
   }
 
   func setTopLeft(topLeft: LayoutPointWrapper) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -346,7 +346,7 @@ class BoxGeometry {
   }
 
   func setLeft(left: LayoutUnit) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -354,7 +354,7 @@ class BoxGeometry {
   }
 
   func moveHorizontally(offset: LayoutUnit) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -367,7 +367,7 @@ class BoxGeometry {
   }
 
   func setContentBoxHeight(height: LayoutUnit) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -375,7 +375,7 @@ class BoxGeometry {
   }
 
   func setContentBoxWidth(width: LayoutUnit) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -383,7 +383,7 @@ class BoxGeometry {
   }
 
   func setContentBoxSize(size: LayoutSizeWrapper) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -392,7 +392,7 @@ class BoxGeometry {
   }
 
   func setHorizontalMargin(margin: HorizontalEdges) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -400,7 +400,7 @@ class BoxGeometry {
   }
 
   func setVerticalMargin(margin: VerticalEdges) {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -426,7 +426,7 @@ class BoxGeometry {
   }
 
   func setVerticalSpaceForScrollbar(scrollbarHeight: LayoutUnit) {
-    if p != nil {
+    if !isNativeImpl() {
       wk_interop.BoxGeometry_setVerticalSpaceForScrollbar(p, scrollbarHeight.rawValue())
       return
     }
@@ -434,7 +434,7 @@ class BoxGeometry {
   }
 
   func setHorizontalSpaceForScrollbar(scrollbarWidth: LayoutUnit) {
-    if p != nil {
+    if !isNativeImpl() {
       wk_interop.BoxGeometry_setHorizontalSpaceForScrollbar(p, scrollbarWidth.rawValue())
       return
     }
@@ -461,7 +461,7 @@ class BoxGeometry {
   }
 
   private func top() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -469,7 +469,7 @@ class BoxGeometry {
   }
 
   private func left() -> LayoutUnit {
-    if p == nil {
+    if isNativeImpl() {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
@@ -477,6 +477,8 @@ class BoxGeometry {
   }
 
   private func topLeft() -> LayoutPointWrapper { return LayoutPointWrapper(x: left(), y: top()) }
+
+  private func isNativeImpl() -> Bool { return p == nil }
 
   private var border = Edges()
   var padding = Edges()
