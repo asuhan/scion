@@ -134,13 +134,19 @@ class LayoutStateWrapper {
   }
 
   func ensureGeometryForBox(layoutBox: BoxWrapper) -> BoxGeometry {
-    if p == nil || layoutBox.p == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    assert((p == nil) == (layoutBox.p == nil))
+    if !isNativeImpl() {
+      let boxGeometry = BoxGeometry()
+      boxGeometry.p = wk_interop.LayoutState_ensureGeometryForBox(p, layoutBox.p)
+      return boxGeometry
     }
-    let boxGeometry = BoxGeometry()
-    boxGeometry.p = wk_interop.LayoutState_ensureGeometryForBox(p, layoutBox.p)
-    return boxGeometry
+    if m_type == .Primary, let boxGeometry = layoutBox.m_cachedGeometryForPrimaryLayoutState {
+      #if ASSERT_ENABLED
+        assert(layoutBox.m_primaryLayoutState === self)
+      #endif
+      return boxGeometry
+    }
+    return ensureGeometryForBoxSlow(layoutBox)
   }
 
   func hasBoxGeometry(layoutBox: BoxWrapper) -> Bool {
@@ -187,6 +193,27 @@ class LayoutStateWrapper {
   }
 
   private func setQuirksMode(_ quirksMode: QuirksMode) { m_quirksMode = quirksMode }
+  private func ensureGeometryForBoxSlow(_ layoutBox: BoxWrapper) -> BoxGeometry {
+    assert(isNativeImpl())
+    if m_type == .Primary {
+      #if ASSERT_ENABLED
+        assert(layoutBox.m_cachedGeometryForPrimaryLayoutState == nil)
+        assert(layoutBox.m_primaryLayoutState == nil)
+        layoutBox.m_primaryLayoutState = self
+      #endif
+      layoutBox.m_cachedGeometryForPrimaryLayoutState = BoxGeometry()
+      return layoutBox.m_cachedGeometryForPrimaryLayoutState!
+    }
+
+    if let boxGeometry = m_layoutBoxToBoxGeometry[ObjectIdentifier(layoutBox)] {
+      return boxGeometry
+    }
+    let boxGeometry = BoxGeometry()
+    m_layoutBoxToBoxGeometry.updateValue(boxGeometry, forKey: ObjectIdentifier(layoutBox))
+    return boxGeometry
+  }
+
+  private func isNativeImpl() -> Bool { return p == nil }
 
   private let m_type: `Type`
 
@@ -195,6 +222,7 @@ class LayoutStateWrapper {
   private var blockFormattingStates: [UInt: BlockFormattingState] = [:]
   var p: UnsafeMutableRawPointer?
 
+  private var m_layoutBoxToBoxGeometry: [ObjectIdentifier: BoxGeometry] = [:]
   private var m_quirksMode: QuirksMode = .No
 
   // TODO(asuhan): make these fields non-optional

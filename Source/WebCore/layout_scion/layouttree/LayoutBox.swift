@@ -634,4 +634,10 @@ class BoxWrapper: Hashable {
   private let m_isInlineIntegrationRoot = false
 
   var style: RenderStyleWrapper
+
+  // Primary LayoutState gets a direct cache.
+  #if ASSERT_ENABLED
+    var m_primaryLayoutState: LayoutStateWrapper? = nil
+  #endif
+  var m_cachedGeometryForPrimaryLayoutState: BoxGeometry? = nil
 }
