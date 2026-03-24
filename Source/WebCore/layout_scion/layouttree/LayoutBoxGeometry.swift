@@ -159,13 +159,19 @@ class BoxGeometry {
   }
 
   func paddingBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      assert(m_hasValidPadding)
+    #endif  // ASSERT_ENABLED
+    return padding.vertical.before
   }
 
   func paddingAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      assert(m_hasValidPadding)
+    #endif  // ASSERT_ENABLED
+    return padding.vertical.after
   }
 
   func paddingStart() -> LayoutUnit {
@@ -526,6 +532,7 @@ class BoxGeometry {
     private let m_hasValidHorizontalMargin = false
     private let m_hasValidVerticalMargin = false
     private let m_hasValidBorder = false
+    private let m_hasValidPadding = false
     private var m_hasValidContentBoxHeight = false
     private var m_hasValidContentBoxWidth = false
   #endif  // ASSERT_ENABLED
