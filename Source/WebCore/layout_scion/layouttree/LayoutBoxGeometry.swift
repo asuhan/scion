@@ -111,11 +111,13 @@ class BoxGeometry {
   }
 
   func marginEnd() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_marginEnd(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_marginEnd(p))
+    #if ASSERT_ENABLED
+      assert(m_hasValidHorizontalMargin)
+    #endif  // ASSERT_ENABLED
+    return margin.horizontal.end
   }
 
   func borderBefore() -> LayoutUnit {
