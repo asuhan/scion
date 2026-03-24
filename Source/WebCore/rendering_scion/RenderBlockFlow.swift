@@ -2996,8 +2996,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func computedColumnWidthForBlockFlow() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return multiColumnFlowForBlockFlow()?.computedColumnWidthForBlockFlow() ?? contentLogicalWidth()
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
