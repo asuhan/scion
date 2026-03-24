@@ -60,6 +60,17 @@ extern "C" WEBCORE_EXPORT bool ScrollView_useFixedLayout(const void* p)
     return static_cast<const WebCore::ScrollView*>(p)->useFixedLayout();
 }
 
+struct IntSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT IntSizeRaw ScrollView_size(const void* p)
+{
+    const auto intSize = static_cast<const WebCore::ScrollView*>(p)->size();
+    return { intSize.width(), intSize.height() };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(ScrollView);

@@ -155,8 +155,8 @@ class ScrollViewWrapper: ScrollableAreaWrapper, Widget {
   }
 
   func size() -> IntSize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let intSizeRaw = wk_interop.ScrollView_size(p)
+    return IntSize(width: intSizeRaw.width, height: intSizeRaw.height)
   }
 
   func location() -> IntPoint {

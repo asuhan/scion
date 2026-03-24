@@ -871,5 +871,6 @@ void RenderGeometryMap_pushView(void* raw, const void* view_raw, struct LayoutSi
 int32_t ScrollView_layoutHeight(const void*);
 int32_t ScrollView_layoutWidth(const void*);
 bool ScrollView_useFixedLayout(const void*);
+struct IntSizeRaw ScrollView_size(const void*);
 void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);
