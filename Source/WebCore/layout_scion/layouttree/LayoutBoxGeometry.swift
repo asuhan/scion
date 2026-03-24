@@ -67,14 +67,17 @@ class BoxGeometry {
   }
 
   func horizontalMargin() -> HorizontalEdges {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      let raw = wk_interop.BoxGeometry_horizontalMargin(p)
+      return HorizontalEdges(
+        start: LayoutUnit.fromRawValue(value: raw.start),
+        end: LayoutUnit.fromRawValue(value: raw.end)
+      )
     }
-    let raw = wk_interop.BoxGeometry_horizontalMargin(p)
-    return HorizontalEdges(
-      start: LayoutUnit.fromRawValue(value: raw.start), end: LayoutUnit.fromRawValue(value: raw.end)
-    )
+    #if ASSERT_ENABLED
+      assert(m_hasValidHorizontalMargin)
+    #endif  // ASSERT_ENABLED
+    return margin.horizontal
   }
 
   func marginBefore() -> LayoutUnit {
@@ -495,6 +498,7 @@ class BoxGeometry {
   private var m_contentBoxWidth = LayoutUnit()
   private var m_contentBoxHeight = LayoutUnit()
 
+  private let margin = Edges()
   private var border = Edges()
   var padding = Edges()
 
@@ -502,6 +506,7 @@ class BoxGeometry {
   var horizontalSpaceForScrollbar = LayoutUnit()
 
   #if ASSERT_ENABLED
+    private var m_hasValidHorizontalMargin = false
     private var m_hasValidContentBoxHeight = false
     private var m_hasValidContentBoxWidth = false
   #endif  // ASSERT_ENABLED
