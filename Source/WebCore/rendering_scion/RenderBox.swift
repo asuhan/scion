@@ -1346,8 +1346,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paddingBoxWidth() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxWidth(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_paddingBoxWidth(id()))
+    }
+    return max(
+      LayoutUnit(value: UInt64(0)),
+      width() - borderLeft() - borderRight() - verticalScrollbarWidth())
   }
 
   func paddingBoxHeight() -> LayoutUnit {
