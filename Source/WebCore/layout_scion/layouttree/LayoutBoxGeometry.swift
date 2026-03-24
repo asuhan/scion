@@ -243,8 +243,8 @@ class BoxGeometry {
   }
 
   func contentBoxTop() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return paddingBoxTop() + paddingBefore()
   }
 
   func contentBoxLeft() -> LayoutUnit {
