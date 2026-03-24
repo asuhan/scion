@@ -962,6 +962,12 @@ RenderLayerCompositor& RenderView::compositor()
     return *m_compositor;
 }
 
+const IntRect& RenderView::printRect() const
+{
+    if (m_scion) { return m_scion->printRect(); }
+    return m_legacyPrinting.m_printRect;
+}
+
 void RenderView::setIsInWindow(bool isInWindow)
 {
     if (m_scion) {

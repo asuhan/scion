@@ -134,7 +134,7 @@ public:
         m_legacyPrinting.m_truncatorWidth = 0;
         m_legacyPrinting.m_forcedPageBreak = false;
     }
-    const IntRect& printRect() const { return m_legacyPrinting.m_printRect; }
+    const IntRect& printRect() const;
     void setPrintRect(const IntRect& r) { m_legacyPrinting.m_printRect = r; }
     // End deprecated functions.
 

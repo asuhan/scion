@@ -121,6 +121,8 @@ public:
 
     RenderElement* rendererForRootBackground() const;
 
+    const IntRect& printRect() const;
+
     void setIsInWindow(bool);
 
     RenderLayerCompositor& compositor();
@@ -182,6 +184,7 @@ public:
 private:
     void* m_handle;
     void* m_accumulatedRepaintRegion;
+    mutable IntRect m_printRect;
 };
 
 }

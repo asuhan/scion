@@ -95,6 +95,8 @@ extern "C" void RenderViewScion_repaintRootContents(const void*);
 
 extern "C" void* RenderViewScion_rendererForRootBackground(const void*);
 
+extern "C" struct IntRectRaw RenderViewScion_printRect(const void*);
+
 extern "C" void RenderViewScion_setIsInWindow(bool, void*);
 
 extern "C" void* RenderViewScion_compositor(const void*);
@@ -328,6 +330,13 @@ void RenderViewScion::repaintViewAndCompositedLayers()
 RenderElement* RenderViewScion::rendererForRootBackground() const
 {
     return static_cast<RenderElement*>(RenderViewScion_rendererForRootBackground(m_handle));
+}
+
+const IntRect& RenderViewScion::printRect() const
+{
+    const auto r = RenderViewScion_printRect(m_handle);
+    m_printRect = { { r.location.x, r.location.y }, { r.size.width, r.size.height } };
+    return m_printRect;
 }
 
 void RenderViewScion::setIsInWindow(bool isInWindow)

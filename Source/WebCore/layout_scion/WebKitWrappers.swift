@@ -646,6 +646,15 @@ func RenderViewScion_rendererForRootBackground(_ viewRaw: UnsafeRawPointer)
   return element.id()
 }
 
+@_cdecl("RenderViewScion_printRect")
+func RenderViewScion_printRect(_ viewRaw: UnsafeRawPointer) -> IntRectRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let r = view.printRect()
+  return IntRectRaw(
+    location: IntPointRaw(x: r.location.x, y: r.location.y),
+    size: IntSizeRaw(width: r.size.width, height: r.size.height))
+}
+
 @_cdecl("RenderViewScion_setIsInWindow")
 func RenderViewScion_setIsInWindow(_ isInWindow: Bool, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
