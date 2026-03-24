@@ -93,6 +93,8 @@ struct LayoutRectWrapper: Equatable {
 
   func setWidth(width: Float32) { m_size.setWidth(width: width) }
 
+  func setWidth(width: Int32) { m_size.setWidth(width: width) }
+
   func setHeight(height: LayoutUnit) { m_size.setHeight(height: height) }
 
   func setHeight(height: Float32) { m_size.setHeight(height: height) }

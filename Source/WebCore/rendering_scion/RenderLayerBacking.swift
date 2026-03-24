@@ -1644,7 +1644,7 @@ final class RenderLayerBacking: GraphicsLayerClientWrapper {
     if layerBounds.isEmpty()
       && (hasNonZeroTransformOrigin(renderer()) || renderer().style().hasPerspective())
     {
-      layerBounds.setWidth(width: 1)
+      layerBounds.setWidth(width: Int32(1))
       layerBounds.setHeight(height: 1)
       artificiallyInflatedBounds = true
     } else {
