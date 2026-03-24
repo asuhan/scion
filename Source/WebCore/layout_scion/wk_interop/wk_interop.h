@@ -468,6 +468,7 @@ struct OptionalTextBoxTrimRaw RenderLayoutState_textBoxTrim(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
 bool LocalFrame_shouldUsePrintingLayout(const void*);
+bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSizeRaw, int32_t, bool);

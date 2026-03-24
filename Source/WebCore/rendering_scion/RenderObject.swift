@@ -822,8 +822,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func everHadLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.EverHadLayout)
   }
 
   func wasSkippedDuringLastLayoutDueToContentVisibility() -> Bool? {

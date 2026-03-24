@@ -1094,8 +1094,11 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func checkForRepaintDuringLayout() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderElement_checkForRepaintDuringLayout(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_checkForRepaintDuringLayout(id())
+    }
+    return everHadLayout() && !hasSelfPaintingLayer()
+      && !document().view()!.layoutContext().needsFullRepaint()
   }
 
   func hasFilter() -> Bool {

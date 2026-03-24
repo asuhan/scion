@@ -60,6 +60,10 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
+  func needsFullRepaint() -> Bool {
+    return wk_interop.LocalFrameViewLayoutContext_needsFullRepaint(p)
+  }
+
   func layoutState() -> RenderLayoutStateWrapper? {
     if let raw = wk_interop.LocalFrameViewLayoutContext_layoutState(p) {
       return RenderLayoutStateWrapper(p: raw)
