@@ -29,7 +29,11 @@
 
 final class RectangleShape: ShapeWrapper {
   init(_ bounds: FloatRectWrapper, _ radii: FloatSize) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_bounds = bounds
+    m_radii = radii
+    super.init()
   }
+
+  private let m_bounds: FloatRectWrapper
+  private let m_radii: FloatSize
 }
