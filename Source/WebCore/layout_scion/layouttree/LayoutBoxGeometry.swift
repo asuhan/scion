@@ -465,11 +465,14 @@ class BoxGeometry {
   }
 
   func setHorizontalMargin(margin: HorizontalEdges) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setHorizontalMargin(p, margin.start.rawValue(), margin.end.rawValue())
+      return
     }
-    wk_interop.BoxGeometry_setHorizontalMargin(p, margin.start.rawValue(), margin.end.rawValue())
+    #if ASSERT_ENABLED
+      setHasValidHorizontalMargin()
+    #endif
+    self.margin.horizontal = margin
   }
 
   func setVerticalMargin(margin: VerticalEdges) {
@@ -556,6 +559,8 @@ class BoxGeometry {
   #if ASSERT_ENABLED
     func setHasValidTop() { m_hasValidTop = true }
     func setHasValidLeft() { m_hasValidLeft = true }
+    func setHasValidHorizontalMargin() { m_hasValidHorizontalMargin = true }
+
     func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
     func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
   #endif  // ASSERT_ENABLED
@@ -564,7 +569,7 @@ class BoxGeometry {
   private var m_contentBoxWidth = LayoutUnit()
   private var m_contentBoxHeight = LayoutUnit()
 
-  private let margin = Edges()
+  private var margin = Edges()
   private var border = Edges()
   var padding = Edges()
 
@@ -574,7 +579,7 @@ class BoxGeometry {
   #if ASSERT_ENABLED
     private var m_hasValidTop = false
     private var m_hasValidLeft = false
-    private let m_hasValidHorizontalMargin = false
+    private var m_hasValidHorizontalMargin = false
     private let m_hasValidVerticalMargin = false
     private let m_hasValidBorder = false
     private let m_hasValidPadding = false
