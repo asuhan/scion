@@ -167,6 +167,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_destroy(const void* p)
     delete static_cast<const WebCore::RenderLayerModelObject*>(p);
 }
 
+extern "C" WEBCORE_EXPORT void* RenderLayer_scrollableArea(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->scrollableArea();
+}
+
 extern "C" WEBCORE_EXPORT void RenderLayer_insertOnlyThisLayer(void* p, bool timing_raw)
 {
     auto timing = timing_raw ? WebCore::RenderLayer::LayerChangeTiming::RenderTreeConstruction : WebCore::RenderLayer::LayerChangeTiming::StyleChange;

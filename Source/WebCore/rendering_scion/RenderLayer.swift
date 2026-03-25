@@ -425,7 +425,12 @@ class RenderLayerWrapper {
   }
 
   func scrollableArea() -> RenderLayerScrollableArea? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      if let raw = wk_interop.RenderLayer_scrollableArea(pInterop!) {
+        return RenderLayerScrollableArea(raw)
+      }
+      return nil
+    }
     return m_scrollableArea
   }
 

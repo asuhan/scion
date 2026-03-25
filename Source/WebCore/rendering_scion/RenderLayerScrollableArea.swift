@@ -60,7 +60,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   init(layer: RenderLayerWrapper) {
     self.m_layer = layer
 
-    let renderer = m_layer.renderer()
+    let renderer = m_layer!.renderer()
     if renderer.document().settings().cssScrollAnchoringEnabled()
       && !(renderer.element() is HTMLHtmlElement)
       && !(renderer.element() is HTMLBodyElement)
@@ -68,6 +68,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }
+
+    self.pInterop = nil
+  }
+
+  init(_ p: UnsafeMutableRawPointer) {
+    self.m_layer = nil
+    self.pInterop = p
   }
 
   func clear() {
@@ -81,12 +88,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func createOrDestroyMarquee() {
-    let renderer = m_layer.renderer()
+    assert(isNativeImpl())
+    let renderer = m_layer!.renderer()
     if renderer.isHTMLMarquee() && renderer.style().marqueeBehavior() != .None
       && renderer.isRenderBox()
     {
       if m_marquee == nil {
-        m_marquee = RenderMarqueeWrapper(m_layer)
+        m_marquee = RenderMarqueeWrapper(m_layer!)
       }
       m_marquee!.updateMarqueeStyle()
     } else if m_marquee != nil {
@@ -95,9 +103,10 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func restoreScrollPosition() {
-    guard let element = m_layer.renderer().element() else { return }
+    assert(isNativeImpl())
+    guard let element = m_layer!.renderer().element() else { return }
 
-    if m_layer.renderBox() != nil {
+    if m_layer!.renderBox() != nil {
       // We save and restore only the scrollOffset as the other scroll values are recalculated.
       m_scrollPosition = element.savedLayerScrollPosition()
       if !m_scrollPosition.isZero() {
@@ -124,7 +133,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func scrollsOverflow() -> Bool {
-    let renderer = m_layer.renderer() as? RenderBoxWrapper
+    assert(isNativeImpl())
+    let renderer = m_layer!.renderer() as? RenderBoxWrapper
     return renderer?.scrollsOverflow() ?? false
   }
 
@@ -143,11 +153,18 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     fatalError("Not implemented")
   }
 
-  func hasHorizontalScrollbar() -> Bool { return horizontalScrollbar() != nil }
+  func hasHorizontalScrollbar() -> Bool {
+    assert(isNativeImpl())
+    return horizontalScrollbar() != nil
+  }
 
-  func hasVerticalScrollbar() -> Bool { return verticalScrollbar() != nil }
+  func hasVerticalScrollbar() -> Bool {
+    assert(isNativeImpl())
+    return verticalScrollbar() != nil
+  }
 
   private func setHasHorizontalScrollbar(_ hasScrollbar: Bool) {
+    assert(isNativeImpl())
     if hasScrollbar == hasHorizontalScrollbar() {
       return
     }
@@ -157,6 +174,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func setHasVerticalScrollbar(_ hasScrollbar: Bool) {
+    assert(isNativeImpl())
     if hasScrollbar == hasVerticalScrollbar() {
       return
     }
@@ -182,10 +200,11 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
 
   // Returns true when the layer could do touch scrolling, but doesn't look at whether there is actually scrollable overflow.
   func canUseCompositedScrolling() -> Bool {
-    let renderer = m_layer.renderer()
+    assert(isNativeImpl())
+    let renderer = m_layer!.renderer()
     let isVisible = renderer.style().usedVisibility() == .Visible
     if renderer.settings().asyncOverflowScrollingEnabled() {
-      return isVisible && scrollsOverflow() && !m_layer.isInsideSVGForeignObject()
+      return isVisible && scrollsOverflow() && !m_layer!.isInsideSVGForeignObject()
     }
 
     // TODO(asuhan): add iOS support
@@ -196,6 +215,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
   ) -> Int32 {
+    assert(isNativeImpl())
     if vBar != nil && vBar!.isOverlayScrollbar()
       && (relevancy == .IgnoreOverlayScrollbarSize || !vBar!.shouldParticipateInHitTesting())
     {
@@ -219,6 +239,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     isHorizontalWritingMode: Bool = true
   ) -> Int32 {
+    assert(isNativeImpl())
     if hBar != nil && hBar!.isOverlayScrollbar()
       && (relevancy == .IgnoreOverlayScrollbarSize || !hBar!.shouldParticipateInHitTesting())
     {
@@ -247,8 +268,9 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect,
     paintingOverlayControls: Bool = false
   ) {
+    assert(isNativeImpl())
     // Don't do anything if we have no overflow.
-    let renderer = m_layer.renderer()
+    let renderer = m_layer!.renderer()
     if !renderer.hasNonVisibleOverflow() {
       return
     }
@@ -278,7 +300,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
         return
       }
 
-      var paintingRoot = m_layer.enclosingCompositingLayer()
+      var paintingRoot = m_layer!.enclosingCompositingLayer()
       if paintingRoot == nil {
         paintingRoot = renderer.view().layer()
       }
@@ -329,6 +351,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private func paintScrollCorner(
     context: GraphicsContextWrapper, paintOffset: IntPoint, damageRect: IntRect
   ) {
+    assert(isNativeImpl())
     var absRect = scrollCornerRect()
     absRect.moveBy(offset: paintOffset)
     if !absRect.intersects(other: damageRect) {
@@ -357,7 +380,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   func paintResizer(
     context: GraphicsContextWrapper, paintOffset: LayoutPointWrapper, damageRect: LayoutRectWrapper
   ) {
-    let renderer = m_layer.renderer()
+    assert(isNativeImpl())
+    let renderer = m_layer!.renderer()
     if renderer.style().resize() == .None {
       return
     }
@@ -404,9 +428,15 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     }
   }
 
-  override final func horizontalScrollbar() -> Scrollbar? { return hBar }
+  override final func horizontalScrollbar() -> Scrollbar? {
+    assert(isNativeImpl())
+    return hBar
+  }
 
-  override final func verticalScrollbar() -> Scrollbar? { return vBar }
+  override final func verticalScrollbar() -> Scrollbar? {
+    assert(isNativeImpl())
+    return vBar
+  }
 
   override final func useDarkAppearance() -> Bool {
     // TODO(asuhan): implement this
@@ -434,8 +464,9 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func updateScrollbarsAfterStyleChange(oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     // Overflow is a box concept.
-    let box = m_layer.renderBox()
+    let box = m_layer!.renderBox()
     if box == nil {
       return
     }
@@ -463,11 +494,12 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func positionOverflowControls(offsetFromRoot: IntSize) {
-    if hBar == nil && vBar == nil && !m_layer.canResize() {
+    assert(isNativeImpl())
+    if hBar == nil && vBar == nil && !m_layer!.canResize() {
       return
     }
 
-    if m_layer.renderBox() == nil {
+    if m_layer!.renderBox() == nil {
       return
     }
 
@@ -493,6 +525,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func updateAllScrollbarRelatedStyle() {
+    assert(isNativeImpl())
     if hBar != nil {
       hBar!.styleChanged()
     }
@@ -514,7 +547,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func overflowControlsRects() -> RenderLayerWrapper.OverflowControlRects {
-    let renderBox = m_layer.renderer() as! RenderBoxWrapper
+    assert(isNativeImpl())
+    let renderBox = m_layer!.renderer() as! RenderBoxWrapper
     // Scrollbars sit inside the border box.
     let overflowControlsPositioningRect = snappedIntRect(
       rect: renderBox.paddingBoxRectIncludingScrollbar())
@@ -602,6 +636,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func overflowControlsIntersectRect(localRect: IntRect) -> Bool {
+    assert(isNativeImpl())
     let rects = overflowControlsRects()
 
     if rects.horizontalScrollbar.intersects(other: localRect) {
@@ -629,6 +664,7 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   func computeHasCompositedScrollableOverflow(layoutUpToDate: LayoutUpToDate) {
+    assert(isNativeImpl())
     var hasCompositedScrollableOverflow = m_hasCompositedScrollableOverflow
 
     switch layoutUpToDate {
@@ -650,13 +686,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     // Whether this layer does composited scrolling affects the configuration of descendant sticky layers. We have to
     // dirty from the enclosing stacking context because overflow scroll doesn't create stacking context so those
     // containing block descendants may not be paint-order descendants, and the compositing dirty bits on RenderLayer act in paint order.
-    if let paintParent = m_layer.stackingContext() {
+    if let paintParent = m_layer!.stackingContext() {
       paintParent.setDescendantsNeedUpdateBackingAndHierarchyTraversal()
     }
 
     m_hasCompositedScrollableOverflow = hasCompositedScrollableOverflow
     if m_hasCompositedScrollableOverflow {
-      m_layer.compositor().layerGainedCompositedScrollableOverflow(layer: m_layer)
+      m_layer!.compositor().layerGainedCompositedScrollableOverflow(layer: m_layer!)
     }
   }
 
@@ -671,7 +707,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func computeScrollOrigin() {
-    let box = m_layer.renderBox()!
+    assert(isNativeImpl())
+    let box = m_layer!.renderBox()!
 
     var scrollableLeftOverflow = Int32(roundToInt(value: overflowLeft() - box.borderLeft()))
     if shouldPlaceVerticalScrollbarOnLeft() {
@@ -690,7 +727,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func updateScrollableAreaSet(_ hasOverflow: Bool) {
-    let renderer = m_layer.renderer()
+    assert(isNativeImpl())
+    let renderer = m_layer!.renderer()
     let frameView = renderer.view().frameView()
 
     var isVisibleToHitTest = renderer.visibleToHitTesting()
@@ -705,7 +743,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func updateScrollCornerStyle() {
-    let renderer = m_layer.renderer()
+    assert(isNativeImpl())
+    let renderer = m_layer!.renderer()
     let actualRenderer = rendererForScrollbar(renderer)
     let corner =
       renderer.hasNonVisibleOverflow() && !renderer.style().usesStandardScrollbarStyle()
@@ -730,11 +769,12 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func updateResizerStyle() {
-    if resizer == nil && !m_layer.canResize() {
+    assert(isNativeImpl())
+    if resizer == nil && !m_layer!.canResize() {
       return
     }
 
-    let renderer = m_layer.renderer()
+    let renderer = m_layer!.renderer()
     let actualRenderer = rendererForScrollbar(renderer)
     let resizerStyle =
       renderer.hasNonVisibleOverflow()
@@ -765,11 +805,13 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   }
 
   private func clearScrollCorner() {
+    assert(isNativeImpl())
     scrollCorner?.setParent(parent: nil)
     scrollCorner = nil
   }
 
   private func clearResizer() {
+    assert(isNativeImpl())
     resizer?.setParent(parent: nil)
     resizer = nil
   }
@@ -783,7 +825,8 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private func updateScrollbarPresenceAndState(
     hasHorizontalOverflow: Bool? = nil, hasVerticalOverflow: Bool? = nil
   ) {
-    let box = m_layer.renderBox()!
+    assert(isNativeImpl())
+    let box = m_layer!.renderBox()!
 
     let scrollbarForAxis = { [self] (orientation: ScrollbarOrientation) in
       return orientation == .Horizontal ? hBar : vBar
@@ -826,13 +869,15 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
     }
   }
 
+  private func isNativeImpl() -> Bool { return pInterop == nil }
+
   private let scrollDimensionsDirty = true
   private var registeredScrollableArea = false
   private var m_hasCompositedScrollableOverflow = false
 
   private var containsDirtyOverlayScrollbars = false
 
-  private let m_layer: RenderLayerWrapper
+  private let m_layer: RenderLayerWrapper?
   private var m_scrollPosition = ScrollPosition()
 
   // For layers with overflow, we have a pair of scrollbars.
@@ -846,4 +891,6 @@ final class RenderLayerScrollableArea: ScrollableAreaWrapper {
   private var resizer: RenderScrollbarPartWrapper? = nil
 
   private var m_marquee: RenderMarqueeWrapper? = nil  // Used for <marquee>.
+
+  private let pInterop: UnsafeMutableRawPointer?
 }
