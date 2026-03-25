@@ -381,10 +381,12 @@ class BoxGeometry {
     return borderBox
   }
 
-  func setHasPrecomputedMarginBefore() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  #if ASSERT_ENABLED
+    func setHasPrecomputedMarginBefore() {
+      assert(isNativeImpl())
+      m_hasPrecomputedMarginBefore = true
+    }
+  #endif  // ASSERT_ENABLED
 
   func setTopLeft(topLeft: LayoutPointWrapper) {
     if isNativeImpl() {
@@ -563,6 +565,7 @@ class BoxGeometry {
     private let m_hasValidPadding = false
     private var m_hasValidContentBoxHeight = false
     private var m_hasValidContentBoxWidth = false
+    private var m_hasPrecomputedMarginBefore = false
   #endif  // ASSERT_ENABLED
 
   var p: UnsafeMutableRawPointer? = nil

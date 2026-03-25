@@ -558,9 +558,11 @@ class BlockFormattingContext: FormattingContext {
         top: verticalPositionWithMargin(
           layoutBox: ancestor, verticalMargin: verticalMargin,
           containingBlockContentBoxTop: constraintsForAncestor.logicalTop))
-      setPrecomputedMarginBefore(
-        layoutBox: ancestor, precomputedMarginBefore: precomputedMarginBefore)
-      boxGeometry.setHasPrecomputedMarginBefore()
+      #if ASSERT_ENABLED
+        setPrecomputedMarginBefore(
+          layoutBox: ancestor, precomputedMarginBefore: precomputedMarginBefore)
+        boxGeometry.setHasPrecomputedMarginBefore()
+      #endif  // ASSERT_ENABLED
       ancestor = FormattingContext.containingBlock(layoutBox: ancestor)
     }
   }
@@ -912,12 +914,14 @@ class BlockFormattingContext: FormattingContext {
     fatalError("Not implemented")
   }
 
-  func setPrecomputedMarginBefore(
-    layoutBox: ElementBoxWrapper, precomputedMarginBefore: PrecomputedMarginBefore
-  ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  #if ASSERT_ENABLED
+    private func setPrecomputedMarginBefore(
+      layoutBox: ElementBoxWrapper, precomputedMarginBefore: PrecomputedMarginBefore
+    ) {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  #endif  // ASSERT_ENABLED
 
   func precomputedMarginBefore(layoutBox: ElementBoxWrapper) -> PrecomputedMarginBefore {
     // TODO(asuhan): implement this
