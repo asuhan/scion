@@ -551,11 +551,13 @@ class BoxGeometry {
   }
 
   private func top() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_top(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_top(p))
+    #if ASSERT_ENABLED
+      assert(m_hasValidTop && (m_hasPrecomputedMarginBefore || m_hasValidVerticalMargin))
+    #endif  // ASSERT_ENABLED
+    return m_topLeft.y
   }
 
   private func left() -> LayoutUnit {
