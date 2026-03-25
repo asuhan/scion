@@ -219,6 +219,11 @@ class BoxGeometry {
     return borderStart() + paddingStart()
   }
 
+  private func borderAndPaddingEnd() -> LayoutUnit {
+    assert(isNativeImpl())
+    return borderEnd() + paddingEnd()
+  }
+
   func borderAndPaddingBefore() -> LayoutUnit {
     if !isNativeImpl() {
       return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_borderAndPaddingBefore(p))
@@ -354,11 +359,10 @@ class BoxGeometry {
   }
 
   func marginBorderAndPaddingEnd() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_marginBorderAndPaddingEnd(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_marginBorderAndPaddingEnd(p))
+    return marginEnd() + borderAndPaddingEnd()
   }
 
   func horizontalMarginBorderAndPadding() -> LayoutUnit {
