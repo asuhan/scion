@@ -54,6 +54,11 @@ extern "C" WEBCORE_EXPORT float Length_percent(const void* p)
     return static_cast<const WebCore::Length*>(p)->percent();
 }
 
+extern "C" WEBCORE_EXPORT bool Length_hasQuirk(const void* p)
+{
+    return static_cast<const WebCore::Length*>(p)->hasQuirk();
+}
+
 extern "C" WEBCORE_EXPORT float Length_nonNanCalculatedValue(const void* p, float maxValue)
 {
     return static_cast<const WebCore::Length*>(p)->nonNanCalculatedValue(maxValue);

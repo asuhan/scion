@@ -432,6 +432,7 @@ const void* AtomString_string(const void*);
 uint8_t Length_type(const void*);
 float Length_value(const void*);
 float Length_percent(const void*);
+bool Length_hasQuirk(const void*);
 float Length_nonNanCalculatedValue(const void*, float);
 bool Length_eq(const void*, const void*);
 bool Length_isFixed(const void*);

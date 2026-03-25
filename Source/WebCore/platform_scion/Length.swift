@@ -154,10 +154,7 @@ struct LengthWrapper: Equatable {
     return type() == .Content
   }
 
-  func hasQuirk() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasQuirk() -> Bool { return wk_interop.Length_hasQuirk(p) }
 
   // FIXME calc: https://bugs.webkit.org/show_bug.cgi?id=80357. A calculated Length
   // always contains a percentage, and without a maxValue passed to these functions
