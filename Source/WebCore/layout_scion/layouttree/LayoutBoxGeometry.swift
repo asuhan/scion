@@ -428,8 +428,8 @@ class BoxGeometry {
   }
 
   func move(size: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_topLeft.move(s: size)
   }
 
   func setContentBoxHeight(height: LayoutUnit) {
