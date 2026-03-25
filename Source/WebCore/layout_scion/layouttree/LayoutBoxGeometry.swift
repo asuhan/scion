@@ -310,19 +310,17 @@ class BoxGeometry {
   }
 
   func borderBoxHeight() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: BoxGeometry_borderBoxHeight(p))
     }
-    return LayoutUnit.fromRawValue(value: BoxGeometry_borderBoxHeight(p))
+    return borderBefore() + paddingBoxHeight() + verticalSpaceForScrollbar + borderAfter()
   }
 
   func borderBoxWidth() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: BoxGeometry_borderBoxWidth(p))
     }
-    return LayoutUnit.fromRawValue(value: BoxGeometry_borderBoxWidth(p))
+    return borderStart() + paddingBoxWidth() + horizontalSpaceForScrollbar + borderEnd()
   }
 
   func marginBoxHeight() -> LayoutUnit {
