@@ -164,7 +164,7 @@ extern "C" WEBCORE_EXPORT void* RenderLayer_create(void* p)
 
 extern "C" WEBCORE_EXPORT void RenderLayer_destroy(const void* p)
 {
-    delete static_cast<const WebCore::RenderLayerModelObject*>(p);
+    delete static_cast<const WebCore::RenderLayer*>(p);
 }
 
 extern "C" WEBCORE_EXPORT void* RenderLayer_scrollableArea(const void* p)
