@@ -253,6 +253,17 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_scrollSnapStop(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->scrollSnapStop());
 }
 
+struct ScrollbarGutterRaw {
+    bool isAuto;
+    bool bothEdges;
+};
+
+extern "C" WEBCORE_EXPORT ScrollbarGutterRaw RenderStyle_scrollbarGutter(const void* p)
+{
+    const auto raw = static_cast<const WebCore::RenderStyle*>(p)->scrollbarGutter();
+    return { raw.isAuto, raw.bothEdges };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_scrollbarWidth(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->scrollbarWidth());

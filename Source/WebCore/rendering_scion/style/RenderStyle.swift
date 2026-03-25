@@ -2091,8 +2091,8 @@ class RenderStyleWrapper: Equatable {
   }
 
   func scrollbarGutter() -> ScrollbarGutter {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_scrollbarGutter(p!)
+    return ScrollbarGutter(isAuto: raw.isAuto, bothEdges: raw.bothEdges)
   }
 
   func scrollbarWidth() -> ScrollbarWidth {

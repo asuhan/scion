@@ -24,6 +24,6 @@
  */
 
 struct ScrollbarGutter {
-  let isAuto = true
-  let bothEdges = false
+  let isAuto: Bool
+  let bothEdges: Bool
 }

@@ -208,6 +208,11 @@ struct ScrollSnapAlignRaw {
     uint8_t inlineAlign;
 };
 
+struct ScrollbarGutterRaw {
+    bool isAuto;
+    bool bothEdges;
+};
+
 struct ScopedNameRaw {
     const void* name;
     int8_t scopeOrdinal;
@@ -607,6 +612,7 @@ struct LengthBoxRaw RenderStyle_scrollMargin(const void*);
 struct LengthBoxRaw RenderStyle_scrollPadding(const void*);
 struct ScrollSnapAlignRaw RenderStyle_scrollSnapAlign(const void*);
 uint8_t RenderStyle_scrollSnapStop(const void*);
+struct ScrollbarGutterRaw RenderStyle_scrollbarGutter(const void* p);
 uint8_t RenderStyle_scrollbarWidth(const void*);
 uint8_t RenderStyle_writingMode(const void*);
 bool RenderStyle_isHorizontalWritingMode(const void*);
