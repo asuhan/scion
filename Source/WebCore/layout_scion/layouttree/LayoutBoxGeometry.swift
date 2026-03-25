@@ -504,8 +504,11 @@ class BoxGeometry {
   }
 
   func setHorizontalPadding(horizontalPadding: HorizontalEdges) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      setHasValidPadding()
+    #endif  // ASSERT_ENABLED
+    padding.horizontal = horizontalPadding
   }
 
   func setPadding(padding: Edges) {
@@ -576,6 +579,7 @@ class BoxGeometry {
     private func setHasValidHorizontalMargin() { m_hasValidHorizontalMargin = true }
 
     private func setHasValidBorder() { m_hasValidBorder = true }
+    private func setHasValidPadding() { m_hasValidPadding = true }
 
     private func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
     private func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
@@ -598,7 +602,7 @@ class BoxGeometry {
     private var m_hasValidHorizontalMargin = false
     private var m_hasValidVerticalMargin = false
     private var m_hasValidBorder = false
-    private let m_hasValidPadding = false
+    private var m_hasValidPadding = false
     private var m_hasValidContentBoxHeight = false
     private var m_hasValidContentBoxWidth = false
     private var m_hasPrecomputedMarginBefore = false
