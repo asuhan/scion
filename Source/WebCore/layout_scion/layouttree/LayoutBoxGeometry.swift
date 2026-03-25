@@ -389,11 +389,15 @@ class BoxGeometry {
   #endif  // ASSERT_ENABLED
 
   func setTopLeft(topLeft: LayoutPointWrapper) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setTopLeft(p, topLeft.x.rawValue(), topLeft.y.rawValue())
+      return
     }
-    wk_interop.BoxGeometry_setTopLeft(p, topLeft.x.rawValue(), topLeft.y.rawValue())
+    #if ASSERT_ENABLED
+      setHasValidTop()
+      setHasValidLeft()
+    #endif
+    m_topLeft = topLeft
   }
 
   func setTop(top: LayoutUnit) {
@@ -544,10 +548,13 @@ class BoxGeometry {
   private func isNativeImpl() -> Bool { return p == nil }
 
   #if ASSERT_ENABLED
+    func setHasValidTop() { m_hasValidTop = true }
+    func setHasValidLeft() { m_hasValidLeft = true }
     func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
     func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
   #endif  // ASSERT_ENABLED
 
+  private var m_topLeft = LayoutPointWrapper()
   private var m_contentBoxWidth = LayoutUnit()
   private var m_contentBoxHeight = LayoutUnit()
 
@@ -559,6 +566,8 @@ class BoxGeometry {
   var horizontalSpaceForScrollbar = LayoutUnit()
 
   #if ASSERT_ENABLED
+    private var m_hasValidTop = false
+    private var m_hasValidLeft = false
     private let m_hasValidHorizontalMargin = false
     private let m_hasValidVerticalMargin = false
     private let m_hasValidBorder = false
