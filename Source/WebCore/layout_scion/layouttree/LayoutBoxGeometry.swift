@@ -415,7 +415,7 @@ class BoxGeometry {
     }
     #if ASSERT_ENABLED
       setHasValidLeft()
-    #endif
+    #endif  // ASSERT_ENABLED
     m_topLeft.setX(x: left)
   }
 
@@ -439,7 +439,7 @@ class BoxGeometry {
     }
     #if ASSERT_ENABLED
       setHasValidContentBoxHeight()
-    #endif
+    #endif  // ASSERT_ENABLED
     m_contentBoxHeight = height
   }
 
@@ -450,7 +450,7 @@ class BoxGeometry {
     }
     #if ASSERT_ENABLED
       setHasValidContentBoxWidth()
-    #endif
+    #endif  // ASSERT_ENABLED
     m_contentBoxWidth = width
   }
 
@@ -471,7 +471,7 @@ class BoxGeometry {
     }
     #if ASSERT_ENABLED
       setHasValidHorizontalMargin()
-    #endif
+    #endif  // ASSERT_ENABLED
     self.margin.horizontal = margin
   }
 
@@ -483,7 +483,7 @@ class BoxGeometry {
     #if ASSERT_ENABLED
       setHasValidVerticalMargin()
       invalidatePrecomputedMarginBefore()
-    #endif
+    #endif  // ASSERT_ENABLED
     self.margin.vertical = margin
   }
 
