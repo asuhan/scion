@@ -420,11 +420,11 @@ class BoxGeometry {
   }
 
   func moveHorizontally(offset: LayoutUnit) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_moveHorizontally(p, offset.rawValue())
+      return
     }
-    wk_interop.BoxGeometry_moveHorizontally(p, offset.rawValue())
+    m_topLeft.move(dx: offset, dy: LayoutUnit(value: UInt64(0)))
   }
 
   func move(size: LayoutSizeWrapper) {
