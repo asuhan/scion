@@ -684,6 +684,7 @@ const void* RenderStyle_textIndent(const void*);
 const void* RenderStyle_marginTop(const void*);
 const void* RenderStyle_marginBottom(const void*);
 const void* RenderStyle_marginLeft(const void*);
+const void* RenderStyle_marginBefore(const void*);
 const void* RenderStyle_marginRight(const void*);
 const void* RenderStyle_paddingLeft(const void*);
 const void* RenderStyle_paddingRight(const void*);
