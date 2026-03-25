@@ -496,6 +496,10 @@ class BoxGeometry {
   }
 
   func setBorder(border: Edges) {
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      setHasValidBorder()
+    #endif  // ASSERT_ENABLED
     self.border = border
   }
 
