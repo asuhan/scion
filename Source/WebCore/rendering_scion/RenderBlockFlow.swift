@@ -91,7 +91,29 @@ struct MarginValues {
 
 // Allocated only when some of these fields have non-default values
 class RenderBlockFlowRareData {
-  var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
+  init(_ block: RenderBlockFlowWrapper) {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  static func positiveMarginBeforeDefault(_ block: RenderBlockWrapper) -> LayoutUnit {
+    return max(block.marginBefore(), LayoutUnit(value: 0))
+  }
+
+  static func negativeMarginBeforeDefault(_ block: RenderBlockWrapper) -> LayoutUnit {
+    return max(-block.marginBefore(), LayoutUnit(value: 0))
+  }
+
+  static func positiveMarginAfterDefault(_ block: RenderBlockWrapper) -> LayoutUnit {
+    return max(block.marginAfter(), LayoutUnit(value: 0))
+  }
+
+  static func negativeMarginAfterDefault(_ block: RenderBlockWrapper) -> LayoutUnit {
+    return max(-block.marginAfter(), LayoutUnit(value: 0))
+  }
+
+  var margins: MarginValues
+  var alignContentShift: LayoutUnit  // Caches negative shifts for overflow calculation.
 }
 
 private func positionForRun(
@@ -2853,8 +2875,16 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func initMaxMarginValues() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !hasRareBlockFlowData() {
+      return
+    }
+
+    rareBlockFlowData().margins = MarginValues(
+      beforePos: RenderBlockFlowRareData.positiveMarginBeforeDefault(self),
+      beforeNeg: RenderBlockFlowRareData.negativeMarginBeforeDefault(self),
+      afterPos: RenderBlockFlowRareData.positiveMarginAfterDefault(self),
+      afterNeg: RenderBlockFlowRareData.negativeMarginAfterDefault(self))
   }
 
   private func setMaxMarginBeforeValues(pos: LayoutUnit, neg: LayoutUnit) {
