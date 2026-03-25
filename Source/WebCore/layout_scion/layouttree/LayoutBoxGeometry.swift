@@ -409,11 +409,14 @@ class BoxGeometry {
   }
 
   func setLeft(left: LayoutUnit) {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setLeft(p, left.rawValue())
+      return
     }
-    wk_interop.BoxGeometry_setLeft(p, left.rawValue())
+    #if ASSERT_ENABLED
+      setHasValidLeft()
+    #endif
+    m_topLeft.setX(x: left)
   }
 
   func moveHorizontally(offset: LayoutUnit) {
