@@ -488,8 +488,11 @@ class BoxGeometry {
   }
 
   func setHorizontalBorder(horizontalBorder: HorizontalEdges) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      setHasValidBorder()
+    #endif  // ASSERT_ENABLED
+    border.horizontal = horizontalBorder
   }
 
   func setBorder(border: Edges) {
@@ -568,6 +571,8 @@ class BoxGeometry {
     private func setHasValidVerticalMargin() { m_hasValidVerticalMargin = true }
     private func setHasValidHorizontalMargin() { m_hasValidHorizontalMargin = true }
 
+    private func setHasValidBorder() { m_hasValidBorder = true }
+
     private func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
     private func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
   #endif  // ASSERT_ENABLED
@@ -588,7 +593,7 @@ class BoxGeometry {
     private var m_hasValidLeft = false
     private var m_hasValidHorizontalMargin = false
     private var m_hasValidVerticalMargin = false
-    private let m_hasValidBorder = false
+    private var m_hasValidBorder = false
     private let m_hasValidPadding = false
     private var m_hasValidContentBoxHeight = false
     private var m_hasValidContentBoxWidth = false
