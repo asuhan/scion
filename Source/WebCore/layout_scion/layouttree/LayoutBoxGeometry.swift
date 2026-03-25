@@ -561,15 +561,15 @@ class BoxGeometry {
   private func isNativeImpl() -> Bool { return p == nil }
 
   #if ASSERT_ENABLED
-    func invalidatePrecomputedMarginBefore() { m_hasPrecomputedMarginBefore = false }
+    private func invalidatePrecomputedMarginBefore() { m_hasPrecomputedMarginBefore = false }
 
-    func setHasValidTop() { m_hasValidTop = true }
-    func setHasValidLeft() { m_hasValidLeft = true }
-    func setHasValidVerticalMargin() { m_hasValidVerticalMargin = true }
-    func setHasValidHorizontalMargin() { m_hasValidHorizontalMargin = true }
+    private func setHasValidTop() { m_hasValidTop = true }
+    private func setHasValidLeft() { m_hasValidLeft = true }
+    private func setHasValidVerticalMargin() { m_hasValidVerticalMargin = true }
+    private func setHasValidHorizontalMargin() { m_hasValidHorizontalMargin = true }
 
-    func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
-    func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
+    private func setHasValidContentBoxHeight() { m_hasValidContentBoxHeight = true }
+    private func setHasValidContentBoxWidth() { m_hasValidContentBoxWidth = true }
   #endif  // ASSERT_ENABLED
 
   private var m_topLeft = LayoutPointWrapper()
