@@ -262,11 +262,13 @@ class BoxGeometry {
   }
 
   func contentBoxHeight() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_contentBoxHeight(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_contentBoxHeight(p))
+    #if ASSERT_ENABLED
+      assert(m_hasValidContentBoxHeight)
+    #endif  // ASSERT_ENABLED
+    return m_contentBoxHeight
   }
 
   func contentBoxWidth() -> LayoutUnit {
