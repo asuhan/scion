@@ -296,13 +296,13 @@ class BoxGeometry {
   }
 
   func paddingBoxHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return paddingBefore() + contentBoxHeight() + paddingAfter()
   }
 
   func paddingBoxWidth() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return paddingStart() + contentBoxWidth() + paddingEnd()
   }
 
   func marginBorderAndPaddingBefore() -> LayoutUnit {
