@@ -24,12 +24,16 @@
  */
 
 struct Rect {
+  init() {}
+
   init(top: LayoutUnit, left: LayoutUnit, width: LayoutUnit, height: LayoutUnit) {
     self.rect = LayoutRectWrapper(x: left, y: top, width: width, height: height)
-    hasValidTop = true
-    hasValidLeft = true
-    hasValidWidth = true
-    hasValidHeight = true
+    #if ASSERT_ENABLED
+      hasValidTop = true
+      hasValidLeft = true
+      hasValidWidth = true
+      hasValidHeight = true
+    #endif  // ASSERT_ENABLED
   }
 
   init(topLeft: LayoutPointWrapper, size: LayoutSizeWrapper) {
@@ -37,77 +41,127 @@ struct Rect {
   }
 
   func top() -> LayoutUnit {
-    assert(hasValidTop)
+    #if ASSERT_ENABLED
+      assert(hasValidTop)
+    #endif  // ASSERT_ENABLED
     return rect.y()
   }
 
   func left() -> LayoutUnit {
-    assert(hasValidLeft)
+    #if ASSERT_ENABLED
+      assert(hasValidLeft)
+    #endif  // ASSERT_ENABLED
     return rect.x()
   }
 
   func topLeft() -> LayoutPointWrapper {
-    assert(hasValidPosition())
+    #if ASSERT_ENABLED
+      assert(hasValidPosition())
+    #endif  // ASSERT_ENABLED
     return rect.minXMinYCorner()
   }
 
   func bottom() -> LayoutUnit {
-    assert(hasValidTop && hasValidHeight)
+    #if ASSERT_ENABLED
+      assert(hasValidTop && hasValidHeight)
+    #endif  // ASSERT_ENABLED
     return rect.maxY()
   }
 
   func right() -> LayoutUnit {
-    assert(hasValidLeft && hasValidWidth)
+    #if ASSERT_ENABLED
+      assert(hasValidLeft && hasValidWidth)
+    #endif  // ASSERT_ENABLED
     return rect.maxX()
   }
 
   func height() -> LayoutUnit {
-    assert(hasValidHeight)
+    #if ASSERT_ENABLED
+      assert(hasValidHeight)
+    #endif  // ASSERT_ENABLED
     return rect.height()
   }
 
   func width() -> LayoutUnit {
-    assert(hasValidWidth)
+    #if ASSERT_ENABLED
+      assert(hasValidWidth)
+    #endif  // ASSERT_ENABLED
     return rect.width()
   }
 
   func size() -> LayoutSizeWrapper {
-    assert(hasValidSize())
+    #if ASSERT_ENABLED
+      assert(hasValidSize())
+    #endif  // ASSERT_ENABLED
     return rect.size()
   }
 
+  mutating func setTopLeft(_ topLeft: LayoutPointWrapper) {
+    #if ASSERT_ENABLED
+      setHasValidPosition()
+    #endif  // ASSERT_ENABLED
+    rect.setLocation(location: topLeft)
+  }
+
   mutating func setWidth(width: LayoutUnit) {
-    hasValidWidth = true
+    #if ASSERT_ENABLED
+      hasValidWidth = true
+    #endif  // ASSERT_ENABLED
     rect.setWidth(width: width)
   }
 
+  mutating func setSize(_ size: LayoutSizeWrapper) {
+    #if ASSERT_ENABLED
+      setHasValidSize()
+    #endif  // ASSERT_ENABLED
+    rect.setSize(size: size)
+  }
+
   mutating func expandToContain(rect: Rect) {
-    assert(hasValidWidth)
-    assert(hasValidHeight)
+    #if ASSERT_ENABLED
+      assert(hasValidWidth)
+      assert(hasValidHeight)
+    #endif  // ASSERT_ENABLED
     self.rect.uniteEvenIfEmpty(other: rect.LayoutRect())
   }
 
   func isEmpty() -> Bool { return rect.isEmpty() }
 
   func LayoutRect() -> LayoutRectWrapper {
-    assert(hasValidGeometry())
+    #if ASSERT_ENABLED
+      assert(hasValidGeometry())
+    #endif  // ASSERT_ENABLED
     return rect
   }
 
   func FloatRect() -> FloatRectWrapper {
-    assert(hasValidGeometry())
+    #if ASSERT_ENABLED
+      assert(hasValidGeometry())
+    #endif  // ASSERT_ENABLED
     return rect.FloatRect()
   }
 
-  private func hasValidPosition() -> Bool { return hasValidTop && hasValidLeft }
+  #if ASSERT_ENABLED
+    private func hasValidPosition() -> Bool { return hasValidTop && hasValidLeft }
 
-  private func hasValidSize() -> Bool { return hasValidWidth && hasValidHeight }
+    private func hasValidSize() -> Bool { return hasValidWidth && hasValidHeight }
 
-  private func hasValidGeometry() -> Bool { return hasValidPosition() && hasValidSize() }
+    private func hasValidGeometry() -> Bool { return hasValidPosition() && hasValidSize() }
 
+    private mutating func setHasValidPosition() {
+      hasValidTop = true
+      hasValidLeft = true
+    }
+
+    private mutating func setHasValidSize() {
+      hasValidWidth = true
+      hasValidHeight = true
+    }
+
+    private var hasValidTop = false
+    private var hasValidLeft = false
+    private var hasValidWidth = false
+    private var hasValidHeight = false
+  #endif  // ASSERT_ENABLED
   private var rect = LayoutRectWrapper()
-  private var hasValidTop = false
-  private var hasValidLeft = false
-  private var hasValidWidth = false
-  private var hasValidHeight = false
 }

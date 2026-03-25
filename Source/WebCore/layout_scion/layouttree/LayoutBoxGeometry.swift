@@ -374,8 +374,11 @@ class BoxGeometry {
   }
 
   func borderBox() -> Rect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    var borderBox = Rect()
+    borderBox.setTopLeft(LayoutPointWrapper())
+    borderBox.setSize(LayoutSizeWrapper(width: borderBoxWidth(), height: borderBoxHeight()))
+    return borderBox
   }
 
   func setHasPrecomputedMarginBefore() {
