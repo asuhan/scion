@@ -787,8 +787,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func marginAfter() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_marginAfter(p!))
   }
 
   func marginEnd() -> LengthWrapper {
