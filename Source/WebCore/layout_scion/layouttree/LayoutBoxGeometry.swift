@@ -396,13 +396,16 @@ class BoxGeometry {
     #if ASSERT_ENABLED
       setHasValidTop()
       setHasValidLeft()
-    #endif
+    #endif  // ASSERT_ENABLED
     m_topLeft = topLeft
   }
 
   func setTop(top: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      setHasValidTop()
+    #endif  // ASSERT_ENABLED
+    m_topLeft.setY(y: top)
   }
 
   func setLeft(left: LayoutUnit) {
