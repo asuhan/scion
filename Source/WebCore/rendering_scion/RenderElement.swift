@@ -2295,6 +2295,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   var renderBlockHasMarginBeforeQuirk: Bool
   var renderBlockHasMarginAfterQuirk: Bool
   var renderBlockShouldForceRelayoutChildren: Bool
+  var renderBlockHasRareData = false
   private let m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
 
   private var m_lastChild: RenderObjectWrapper?

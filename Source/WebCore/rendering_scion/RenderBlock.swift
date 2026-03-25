@@ -270,6 +270,12 @@ struct TextRunFlags: OptionSet {
   static let RespectDirectionOverride = TextRunFlags(rawValue: 1 << 1)
 }
 
+// Allocated only when some of these fields have non-default values
+
+class RenderBlockRareData {
+  var m_paginationStrut = LayoutUnit()
+}
+
 class RenderBlockWrapper: RenderBoxWrapper {
   override init(
     _ type: RenderObjectWrapper.`Type`, _ document: Document, _ style: RenderStyleWrapper,
@@ -770,6 +776,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
+    let rareData = getBlockRareData()
+    if rareData == nil {
+      if !strut.bool() {
+        return
+      }
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -3219,6 +3233,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
         renderer = renderer.container()!
       }
     }
+  }
+
+  private func getBlockRareData() -> RenderBlockRareData? {
+    if !renderBlockHasRareData {
+      return nil
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func recomputeLogicalWidth() -> Bool {
