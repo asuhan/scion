@@ -1117,7 +1117,7 @@ class BackgroundPainter {
         computedXPosition = minimumValueForLength(
           length: LengthWrapper(), maximumValue: availableWidth)
         spaceSize.setWidth(width: space)
-        spaceSize.setHeight(height: 0)
+        spaceSize.setHeight(height: Int32(0))
         phase.setWidth(
           width: actualWidth.bool()
             ? actualWidth - fmodf((computedXPosition + left).float(), actualWidth.float()) : 0)
@@ -1142,7 +1142,7 @@ class BackgroundPainter {
         height: tileSize.height().bool()
           ? tileSize.height() - fmodf((computedYPosition + top).float(), tileSize.height().float())
           : 0)
-      spaceSize.setHeight(height: 0)
+      spaceSize.setHeight(height: Int32(0))
     } else if backgroundRepeatY == .Space && tileSize.height() > 0 {
       if let space = getSpace(areaSize: positioningAreaSize.height(), tileSize: tileSize.height()) {
         let actualHeight = tileSize.height() + space
@@ -1164,7 +1164,7 @@ class BackgroundPainter {
       yOffset = min(yOffset, LayoutUnit(value: 0))
       phase.setHeight(height: -yOffset)
       destinationRect.setHeight(height: tileSize.height() + yOffset)
-      spaceSize.setHeight(height: 0)
+      spaceSize.setHeight(height: Int32(0))
     }
 
     if fixedAttachment {

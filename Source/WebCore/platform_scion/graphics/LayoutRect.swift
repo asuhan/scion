@@ -99,6 +99,8 @@ struct LayoutRectWrapper: Equatable {
 
   func setHeight(height: Float32) { m_size.setHeight(height: height) }
 
+  func setHeight(height: Int32) { m_size.setHeight(height: height) }
+
   func isEmpty() -> Bool { return m_size.isEmpty() }
 
   // NOTE: The result is rounded to integer values, and thus may be not the exact

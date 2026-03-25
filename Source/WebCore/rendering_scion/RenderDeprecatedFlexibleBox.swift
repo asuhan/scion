@@ -249,7 +249,7 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
         relayoutChildren = true
       }
 
-      setHeight(height: 0)
+      setHeight(height: Int32(0))
 
       stretchingChildren = false
 

@@ -80,6 +80,8 @@ class LayoutSizeWrapper: Equatable {
 
   func setHeight(height: Float32) { height_ = LayoutUnit(value: height) }
 
+  func setHeight(height: Int32) { height_ = LayoutUnit(value: height) }
+
   func isEmpty() -> Bool { return width_.rawValue() <= 0 || height_.rawValue() <= 0 }
 
   func isZero() -> Bool { return !width_.bool() && !height_.bool() }
