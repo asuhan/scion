@@ -561,11 +561,13 @@ class BoxGeometry {
   }
 
   private func left() -> LayoutUnit {
-    if isNativeImpl() {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_left(p))
     }
-    return LayoutUnit.fromRawValue(value: wk_interop.BoxGeometry_left(p))
+    #if ASSERT_ENABLED
+      assert(m_hasValidLeft && m_hasValidHorizontalMargin)
+    #endif  // ASSERT_ENABLED
+    return m_topLeft.x
   }
 
   private func topLeft() -> LayoutPointWrapper { return LayoutPointWrapper(x: left(), y: top()) }
