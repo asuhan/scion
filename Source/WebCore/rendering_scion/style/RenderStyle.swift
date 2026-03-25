@@ -1820,10 +1820,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasInlineColumnAxis() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasInlineColumnAxis() -> Bool { return wk_interop.RenderStyle_hasInlineColumnAxis(p!) }
 
   func columnProgression() -> ColumnProgression {
     // TODO(asuhan): implement this
