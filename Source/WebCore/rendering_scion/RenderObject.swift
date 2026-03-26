@@ -698,6 +698,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       && m_typeSpecificFlags.blockFlowFlags().contains(.IsFragmentContainer)
   }
 
+  func isRenderViewTransitionContainer() -> Bool {
+    assert(isNativeImpl())
+    return isRenderBlockFlow()
+      && m_typeSpecificFlags.blockFlowFlags().contains(.IsViewTransitionContainer)
+  }
+
   func isRenderReplica() -> Bool {
     assert(isNativeImpl())
     return type() == .Replica
@@ -798,8 +804,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isViewTransitionPseudo() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderViewTransitionCapture() || isRenderViewTransitionContainer()
   }
 
   func isBeforeContent() -> Bool {
