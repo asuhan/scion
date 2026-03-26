@@ -1206,6 +1206,10 @@ class RenderStyleWrapper: Equatable {
     return rareInheritedData.textIndentLine
   }
 
+  func textBoxTrim() -> TextBoxTrim {
+    return TextBoxTrim(rawValue: wk_interop.RenderStyle_textBoxTrim(p!))!
+  }
+
   func textBoxEdge() -> TextEdge {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

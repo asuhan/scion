@@ -682,6 +682,7 @@ float RenderStyle_outlineSize(const void*);
 bool RenderStyle_hasOutlineInVisualOverflow(const void*);
 uint8_t RenderStyle_clear(const void*);
 const void* RenderStyle_textIndent(const void*);
+uint8_t RenderStyle_textBoxTrim(const void*);
 const void* RenderStyle_marginTop(const void*);
 const void* RenderStyle_marginBottom(const void*);
 const void* RenderStyle_marginLeft(const void*);

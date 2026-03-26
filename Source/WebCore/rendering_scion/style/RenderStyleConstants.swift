@@ -570,6 +570,13 @@ enum TextDecorationSkipInk: UInt8 {
   case All
 }
 
+enum TextBoxTrim: UInt8 {
+  case None
+  case TrimStart
+  case TrimEnd
+  case TrimBoth
+}
+
 struct MarginTrimType: OptionSet {
   let rawValue: UInt8
   static let BlockStart = MarginTrimType(rawValue: 1 << 0)

@@ -25,10 +25,19 @@
 
 func use(_ x: TextBoxTrimmer) {}
 
+private func textBoxTrim(_ textBoxTrimRoot: RenderBlockFlowWrapper) -> TextBoxTrim {
+  if let multiColumnFlow = textBoxTrimRoot as? RenderMultiColumnFlowWrapper {
+    return multiColumnFlow.multiColumnBlockFlow()!.style().textBoxTrim()
+  }
+  return textBoxTrimRoot.style().textBoxTrim()
+}
+
 class TextBoxTrimmer {
   init(blockContainer: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    m_blockContainer = blockContainer
+    if m_blockContainer.view().frameView().layoutContext().layoutState() != nil {
+      adjustTextBoxTrimStatusBeforeLayout(nil)
+    }
   }
 
   init(blockContainer: RenderBlockFlowWrapper, lastFormattedLineRoot: RenderBlockFlowWrapper) {
@@ -47,4 +56,33 @@ class TextBoxTrimmer {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private func adjustTextBoxTrimStatusBeforeLayout(_ lastFormattedLineRoot: RenderBlockFlowWrapper?)
+  {
+    let textBoxTrimValue = textBoxTrim(m_blockContainer)
+    if textBoxTrimValue == .None {
+      return handlePropagatedTextBoxTrimBeforeLayout()
+    }
+
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
+  private func handlePropagatedTextBoxTrimBeforeLayout() {
+    let layoutState = m_blockContainer.view().frameView().layoutContext().layoutState()!
+    // This is when the block container does not have text-box-trim set.
+    // 1. trimming does not get propagated into formatting contexts e.g inside inline-block.
+    // 2. border and padding (start) prevent trim start.
+    if m_blockContainer.createsNewFormattingContext() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if layoutState.hasTextBoxTrimStart() && m_blockContainer.borderAndPaddingStart().bool() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
+  private let m_blockContainer: RenderBlockFlowWrapper
 }
