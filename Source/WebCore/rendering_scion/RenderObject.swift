@@ -729,8 +729,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTextControl() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(.IsTextControl)
   }
 
   func isRenderVideo() -> Bool {
