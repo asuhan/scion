@@ -803,8 +803,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBeforeContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Text nodes don't have their own styles, so ignore the style on a text node.
+    if isRenderText() {
+      return false
+    }
+    if style().pseudoElementType() != .Before {
+      return false
+    }
+    return true
   }
 
   func isAfterContent() -> Bool {
