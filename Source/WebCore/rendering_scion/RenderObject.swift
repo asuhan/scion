@@ -1081,8 +1081,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymousForPercentageResolution() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isAnonymous() && !isViewTransitionPseudo()
   }
 
   func isBlockBox() -> Bool {
