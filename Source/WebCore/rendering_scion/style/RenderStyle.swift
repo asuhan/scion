@@ -1478,10 +1478,7 @@ class RenderStyleWrapper: Equatable {
 
   func containsLayout() -> Bool { return usedContain().contains(.Layout) }
 
-  func containsSize() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func containsSize() -> Bool { return usedContain().contains(.Size) }
 
   func containsPaint() -> Bool {
     return wk_interop.RenderStyle_containsPaint(p!)
