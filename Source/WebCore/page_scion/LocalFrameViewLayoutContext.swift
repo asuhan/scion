@@ -133,6 +133,8 @@ class LocalFrameViewLayoutContextWrapper {
       pageHeight.rawValue(), pageHeightChanged)
   }
 
+  func popLayoutState() { wk_interop.LocalFrameViewLayoutContext_popLayoutState(p) }
+
   // Suspends the LayoutState optimization. Used under transforms that cannot be represented by
   // LayoutState (common in SVG) and when manipulating the render tree during layout in ways
   // that can trigger repaint of a non-child (e.g. when a list item moves its list marker around).
@@ -143,10 +145,7 @@ class LocalFrameViewLayoutContextWrapper {
     fatalError("Not implemented")
   }
 
-  func enablePaintOffsetCache() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func enablePaintOffsetCache() { wk_interop.LocalFrameViewLayoutContext_enablePaintOffsetCache(p) }
 
   private var p: UnsafeMutableRawPointer
 }

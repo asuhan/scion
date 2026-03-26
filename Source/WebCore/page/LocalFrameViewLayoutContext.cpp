@@ -90,6 +90,16 @@ extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_pushLayoutState(void*
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->pushLayoutState(*static_cast<WebCore::RenderBox*>(rendererRaw), offset, WebCore::LayoutUnit::fromRawValue(pageHeightRaw), pageHeightChanged);
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_popLayoutState(void* p)
+{
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->popLayoutState();
+}
+
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_enablePaintOffsetCache(void* p)
+{
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->enablePaintOffsetCache();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(LocalFrameViewLayoutContext);

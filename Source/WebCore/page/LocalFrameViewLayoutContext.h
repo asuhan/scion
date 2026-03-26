@@ -165,16 +165,15 @@ private:
     void pushLayoutState(RenderElement&);
 public:
     bool pushLayoutState(RenderBox& renderer, const LayoutSize& offset, LayoutUnit pageHeight = 0_lu, bool pageHeightChanged = false);
-private:
     void popLayoutState();
-
+    void enablePaintOffsetCache() { ASSERT(m_paintOffsetCacheDisableCount > 0); m_paintOffsetCacheDisableCount--; }
+private:
     // Suspends the LayoutState optimization. Used under transforms that cannot be represented by
     // LayoutState (common in SVG) and when manipulating the render tree during layout in ways
     // that can trigger repaint of a non-child (e.g. when a list item moves its list marker around).
     // Note that even when disabled, LayoutState is still used to store layoutDelta.
     // These functions may only be accessed by LayoutStateMaintainer or LayoutStateDisabler.
     void disablePaintOffsetCache() { m_paintOffsetCacheDisableCount++; }
-    void enablePaintOffsetCache() { ASSERT(m_paintOffsetCacheDisableCount > 0); m_paintOffsetCacheDisableCount--; }
 
     LocalFrame& frame() const;
     Ref<LocalFrame> protectedFrame();

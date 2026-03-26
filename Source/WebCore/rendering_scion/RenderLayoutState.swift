@@ -200,8 +200,10 @@ struct LayoutStateMaintainer: ~Copyable {
     if !didPushLayoutState {
       return
     }
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    context.popLayoutState()
+    if paintOffsetCacheIsDisabled {
+      context.enablePaintOffsetCache()
+    }
   }
 
   private let context: LocalFrameViewLayoutContextWrapper
