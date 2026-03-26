@@ -815,8 +815,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAfterContent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    // Text nodes don't have their own styles, so ignore the style on a text node.
+    if isRenderText() {
+      return false
+    }
+    if style().pseudoElementType() != .After {
+      return false
+    }
+    return true
   }
 
   func isBeforeOrAfterContent() -> Bool {
@@ -825,8 +832,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAfterContent(obj: RenderObjectWrapper?) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return obj?.isAfterContent() ?? false
   }
 
   func beingDestroyed() -> Bool {
