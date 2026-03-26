@@ -1089,8 +1089,14 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasSelfPaintingLayer() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderElement_hasSelfPaintingLayer(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_hasSelfPaintingLayer(id())
+    }
+    if !hasLayer() {
+      return false
+    }
+    let layerModelObject = self as! RenderLayerModelObjectWrapper
+    return layerModelObject.hasSelfPaintingLayerModelObject()
   }
 
   func checkForRepaintDuringLayout() -> Bool {
