@@ -44,19 +44,21 @@ enum ContainingBlockState {
 private class PositionedDescendantsMap {
   func addDescendant(containingBlock: RenderBlockWrapper, positionedDescendant: RenderBoxWrapper) {
     // Protect against double insert where a descendant would end up with multiple containing blocks.
+    let previousContainingBlockRef = containerMap[ObjectIdentifier(positionedDescendant)]
     let previousContainingBlock =
-      containerMap.contains(positionedDescendant) ? *(containerMap.get(positionedDescendant)) : nil
+      previousContainingBlockRef != nil ? *(previousContainingBlockRef!) : nil
     if previousContainingBlock != nil
       && CPtrToInt(previousContainingBlock!.id()) != CPtrToInt(containingBlock.id()),
-      let descendants = descendantsMap.contains(previousContainingBlock!)
-        ? descendantsMap.get(previousContainingBlock!) : nil
+      let descendants = descendantsMap[ObjectIdentifier(previousContainingBlock!)]
     {
       descendants.remove(value: positionedDescendant)
     }
 
-    let descendants = descendantsMap.ensure(
-      containingBlock, { () in return TrackedRendererListHashSet() }
-    ).value!
+    let maybeDescendants = descendantsMap[ObjectIdentifier(containingBlock)]
+    if maybeDescendants == nil {
+      descendantsMap[ObjectIdentifier(containingBlock)] = TrackedRendererListHashSet()
+    }
+    let descendants = descendantsMap[ObjectIdentifier(containingBlock)]!
 
     var isNewEntry = false
     if !(containingBlock is RenderViewWrapper) || descendants.isEmptyIgnoringNullReferences() {
@@ -86,33 +88,33 @@ private class PositionedDescendantsMap {
     }
 
     if !isNewEntry {
-      assert(containerMap.contains(positionedDescendant))
+      assert(containerMap[ObjectIdentifier(positionedDescendant)] != nil)
       return
     }
-    containerMap.set(positionedDescendant, WeakNullableRef(containingBlock))
+    containerMap[ObjectIdentifier(positionedDescendant)] = WeakNullableRef(containingBlock)
   }
 
   func removeDescendant(positionedDescendant: RenderBoxWrapper) {
-    let containingBlock = containerMap.take(positionedDescendant)
-    if !containingBlock.bool() {
-      return
-    }
+    guard let containingBlock = containerMap[ObjectIdentifier(positionedDescendant)] else { return }
 
-    assert(descendantsMap.contains(*containingBlock))
-    let descendants = descendantsMap.get(*containingBlock)
+    let descendants = descendantsMap[ObjectIdentifier(*containingBlock)]!
     assert(descendants.contains(value: positionedDescendant))
 
     descendants.remove(value: positionedDescendant)
     if descendants.isEmptyIgnoringNullReferences() {
-      descendantsMap.remove(*containingBlock)
+      descendantsMap.removeValue(forKey: ObjectIdentifier(*containingBlock))
     }
   }
 
-  private typealias DescendantsMap = HashMap<RenderBlockWrapper, TrackedRendererListHashSet>
-  private typealias ContainerMap = HashMap<RenderBoxWrapper, WeakNullableRef<RenderBlockWrapper>>
+  func positionedRenderers(_ containingBlock: RenderBlockWrapper) -> TrackedRendererListHashSet? {
+    return descendantsMap[ObjectIdentifier(containingBlock)]
+  }
 
-  private let descendantsMap = DescendantsMap()
-  private let containerMap = ContainerMap()
+  private typealias DescendantsMap = [ObjectIdentifier: TrackedRendererListHashSet]
+  private typealias ContainerMap = [ObjectIdentifier: WeakNullableRef<RenderBlockWrapper>]
+
+  private var descendantsMap = DescendantsMap()
+  private var containerMap = ContainerMap()
 }
 
 private let positionedDescendantsMap = PositionedDescendantsMap()
@@ -398,8 +400,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func positionedObjects() -> TrackedRendererListHashSet? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return positionedDescendantsMap.positionedRenderers(self)
   }
 
   func hasPositionedObjects() -> Bool {
