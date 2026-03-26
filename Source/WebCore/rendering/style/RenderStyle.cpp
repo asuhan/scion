@@ -864,6 +864,11 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();
 }
 
+extern "C" WEBCORE_EXPORT void* RenderStyle_offsetPath(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->offsetPath();
+}
+
 struct PathOperationRaw {
     uint8_t type;
     uint8_t referenceBox;

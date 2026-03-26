@@ -3112,6 +3112,9 @@ class RenderStyleWrapper: Equatable {
   }
 
   func offsetPath() -> PathOperation? {
+    if wk_interop.RenderStyle_offsetPath(p!) == nil {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
