@@ -62,6 +62,13 @@ extern "C" WEBCORE_EXPORT const void* LocalFrameViewLayoutContext_layoutState(co
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutState();
 }
 
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_checkLayoutState([[maybe_unused]] void* p)
+{
+#ifndef NDEBUG
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->checkLayoutState();
+#endif
+}
+
 extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void* p)
 {
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransactionIfExists();

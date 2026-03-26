@@ -78,8 +78,7 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func checkLayoutState() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameViewLayoutContext_checkLayoutState(p)
   }
 
   // layoutDelta is used transiently during layout to store how far an object has moved from its
