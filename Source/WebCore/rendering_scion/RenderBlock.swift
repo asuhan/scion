@@ -844,8 +844,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func borderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return boxBorderBefore() + intrinsicBorderForFieldset()
   }
 
   override func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {

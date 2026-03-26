@@ -1121,6 +1121,19 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func borderBeforeWidth() -> Float32 {
+    switch blockFlowDirection() {
+    case .TopToBottom:
+      return borderTopWidth()
+    case .BottomToTop:
+      return borderBottomWidth()
+    case .LeftToRight:
+      return borderLeftWidth()
+    case .RightToLeft:
+      return borderRightWidth()
+    }
+  }
+
   func borderIsEquivalentForPainting(_ otherStyle: RenderStyleWrapper) -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

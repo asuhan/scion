@@ -642,8 +642,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: style().borderBeforeWidth())
   }
 
   func borderAfter() -> LayoutUnit {
@@ -712,8 +712,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderAndPaddingLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return borderAndPaddingBefore() + borderAndPaddingAfter()
   }
 
   func borderAndPaddingLogicalWidth() -> LayoutUnit {

@@ -2856,9 +2856,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       && documentElementRenderer!.style().logicalHeight().isPercentOrCalculated()
   }
 
-  private func boxBorderBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  func boxBorderBefore() -> LayoutUnit {
+    assert(isNativeImpl())
+    return super.borderBefore()
   }
 
   private func boxBorderAfter() -> LayoutUnit {
