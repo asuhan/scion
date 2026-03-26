@@ -101,6 +101,11 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func updateScrollInfoAfterLayoutTransactionIfExists() -> UpdateScrollInfoAfterLayoutTransaction? {
+    if wk_interop.LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(p)
+      == nil
+    {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }

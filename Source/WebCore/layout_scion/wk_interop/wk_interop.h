@@ -496,6 +496,7 @@ bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_ra
 bool LocalFrame_shouldUsePrintingLayout(const void*);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 const void* LocalFrameViewLayoutContext_layoutState(const void*);
+void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSizeRaw, int32_t, bool);
 void* LocalFrameView_layoutContext(const void*);
