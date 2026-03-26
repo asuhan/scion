@@ -113,6 +113,7 @@ class RenderBlockFlowRareData {
   }
 
   var margins: MarginValues
+  var lineBreakToAvoidWidow: Int32
   var alignContentShift: LayoutUnit  // Caches negative shifts for overflow calculation.
 }
 
@@ -1831,8 +1832,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func shouldBreakAtLineToAvoidWidow() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareBlockFlowData() && rareBlockFlowData().lineBreakToAvoidWidow >= 0
   }
 
   func clearShouldBreakAtLineToAvoidWidow() {
