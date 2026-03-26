@@ -1520,8 +1520,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setMarginAfter(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    setAfter(&marginBox, value, (overrideStyle ?? style()).writingMode())
   }
 
   func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {

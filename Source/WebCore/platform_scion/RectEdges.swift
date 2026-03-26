@@ -124,3 +124,21 @@ func setBefore(_ r: inout LayoutBoxExtent, _ before: LayoutUnit, _ writingMode: 
     r.left = before
   }
 }
+
+private func afterSide(_ writingMode: WritingMode) -> BoxSide {
+  return mapLogicalSideToPhysicalSide(writingMode, .BlockEnd)
+}
+
+// TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+func setAfter(_ r: inout LayoutBoxExtent, _ after: LayoutUnit, _ writingMode: WritingMode) {
+  switch afterSide(writingMode) {
+  case .Top:
+    r.top = after
+  case .Right:
+    r.right = after
+  case .Bottom:
+    r.bottom = after
+  case .Left:
+    r.left = after
+  }
+}
