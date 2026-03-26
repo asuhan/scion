@@ -23,15 +23,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class StyleContentAlignmentData: Equatable {
+struct StyleContentAlignmentData: Equatable {
   // Style data for Content-Distribution properties: align-content, justify-content.
   // <content-distribution> || [ <overflow-position>? && <content-position> ]
   init(
     position: ContentPosition, distribution: ContentDistribution,
     overflow: OverflowAlignment = .Default
   ) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.position = position
+    self.distribution = distribution
+    self.overflow = overflow
   }
 
   func isNormal() -> Bool {
@@ -113,7 +114,7 @@ class StyleContentAlignmentData: Equatable {
     fatalError("Not implemented")
   }
 
-  var position: ContentPosition = .Normal
-  var distribution: ContentDistribution = .Default
-  let overflow: OverflowAlignment = .Default
+  let position: ContentPosition
+  let distribution: ContentDistribution
+  let overflow: OverflowAlignment
 }
