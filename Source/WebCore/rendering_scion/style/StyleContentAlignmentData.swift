@@ -109,11 +109,6 @@ struct StyleContentAlignmentData: Equatable {
     return position == .Center || distribution == .SpaceAround || distribution == .SpaceEvenly
   }
 
-  static func == (_ lhs: StyleContentAlignmentData, _ rhs: StyleContentAlignmentData) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   let position: ContentPosition
   let distribution: ContentDistribution
   let overflow: OverflowAlignment
