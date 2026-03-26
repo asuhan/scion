@@ -1208,8 +1208,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasOutlineAutoAncestor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareData() && rareData().hasOutlineAutoAncestor
   }
 
   func paintContainmentApplies() -> Bool {
