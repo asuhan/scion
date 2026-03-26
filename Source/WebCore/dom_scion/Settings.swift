@@ -44,8 +44,7 @@ class SettingsWrapper {
   }
 
   func alignContentOnBlocksEnabled() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.Settings_alignContentOnBlocksEnabled(p)
   }
 
   func animatedImageAsyncDecodingEnabled() -> Bool {

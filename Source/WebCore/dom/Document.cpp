@@ -463,6 +463,11 @@ extern "C" WEBCORE_EXPORT bool Document_activeViewTransitionCapturedDocumentElem
     return static_cast<const WebCore::Document*>(raw)->activeViewTransitionCapturedDocumentElement();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_alignContentOnBlocksEnabled(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->alignContentOnBlocksEnabled();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_asyncOverflowScrollingEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->asyncOverflowScrollingEnabled();
