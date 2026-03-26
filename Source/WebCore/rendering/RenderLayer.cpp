@@ -190,6 +190,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_styleChanged(void* p, uint8_t diff_ra
     static_cast<WebCore::RenderLayer*>(p)->styleChanged(diff, old_style);
 }
 
+extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
+{
+    static_cast<WebCore::RenderLayer*>(p)->updateTransform();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticInlinePosition(const void* p)
 {
     const auto position = static_cast<const WebCore::RenderLayer*>(p)->staticInlinePosition();

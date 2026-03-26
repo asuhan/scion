@@ -841,6 +841,7 @@ void* RenderLayer_scrollableArea(const void*);
 void RenderLayer_insertOnlyThisLayer(void*, bool);
 void RenderLayer_setBackingNeedsRepaint(void*, bool);
 void RenderLayer_styleChanged(void*, uint8_t, const void*);
+void RenderLayer_updateTransform(void*);
 int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);
 void RenderLayer_setStaticInlinePosition(void* p, int32_t position);

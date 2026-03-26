@@ -1481,7 +1481,10 @@ class RenderLayerWrapper {
   }
 
   func updateTransform() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayer_updateTransform(pInterop!)
+      return
+    }
     let hasTransform = renderer().isTransformed()
     let had3DTransform = has3DTransform()
 
