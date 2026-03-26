@@ -274,6 +274,7 @@ struct TextRunFlags: OptionSet {
 
 class RenderBlockRareData {
   var m_paginationStrut = LayoutUnit()
+  let m_intrinsicBorderForFieldset = LayoutUnit()
 }
 
 class RenderBlockWrapper: RenderBoxWrapper {
@@ -806,8 +807,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // in order to ensure that content gets properly pushed down across all layout systems
   // (flexbox, block, etc.)
   func intrinsicBorderForFieldset() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBlock_intrinsicBorderForFieldset(id()))
+    }
+    return getBlockRareData()?.m_intrinsicBorderForFieldset ?? LayoutUnit(value: UInt64(0))
   }
 
   private func setIntrinsicBorderForFieldset(padding: LayoutUnit) {
