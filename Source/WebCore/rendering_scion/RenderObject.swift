@@ -847,8 +847,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func wasSkippedDuringLastLayoutDueToContentVisibility() -> Bool? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return everHadLayout()
+      ? m_stateBitfields.hasFlag(.WasSkippedDuringLastLayoutDueToContentVisibility) : nil
   }
 
   static func searchParentChainForScrollAnchoringController(_ renderer: RenderObjectWrapper)
