@@ -792,8 +792,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isTablePart() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isRenderTableCell() || isRenderTableCol() || isRenderTableCaption() || isRenderTableRow()
+      || isRenderTableSection()
   }
 
   func isViewTransitionPseudo() -> Bool {
