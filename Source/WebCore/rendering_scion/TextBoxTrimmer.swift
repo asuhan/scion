@@ -46,8 +46,9 @@ class TextBoxTrimmer {
   }
 
   deinit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if m_blockContainer.view().frameView().layoutContext().layoutState() != nil {
+      adjustTextBoxTrimStatusAfterLayout()
+    }
   }
 
   static func lastInlineFormattingContextRootForTrimEnd(blockContainer: RenderBlockFlowWrapper)
@@ -84,5 +85,19 @@ class TextBoxTrimmer {
     }
   }
 
+  private func adjustTextBoxTrimStatusAfterLayout() {
+    let layoutState = m_blockContainer.view().frameView().layoutContext().layoutState()!
+    if m_shouldRestoreTextBoxTrimStatus {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+
+    if layoutState.hasTextBoxTrimStart() {
+      // TODO(asuhan): implement this
+      fatalError("Not implemented")
+    }
+  }
+
   private let m_blockContainer: RenderBlockFlowWrapper
+  private var m_shouldRestoreTextBoxTrimStatus = false
 }
