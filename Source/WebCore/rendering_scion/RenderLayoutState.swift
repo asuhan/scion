@@ -59,8 +59,7 @@ class RenderLayoutStateWrapper {
   }
 
   func pageLogicalHeight() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LayoutUnit.fromRawValue(value: wk_interop.RenderLayoutState_pageLogicalHeight(p))
   }
 
   func pageLogicalHeightChanged() -> Bool {
