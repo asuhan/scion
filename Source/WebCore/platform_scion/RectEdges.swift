@@ -107,38 +107,25 @@ struct RectEdges<T: Equatable>: Equatable {
   var left: T
 }
 
-private func beforeSide(_ writingMode: WritingMode) -> BoxSide {
-  return mapLogicalSideToPhysicalSide(writingMode, .BlockStart)
+private func setSide(_ r: inout LayoutBoxExtent, _ side: BoxSide, _ value: LayoutUnit) {
+  switch side {
+  case .Top:
+    r.top = value
+  case .Right:
+    r.right = value
+  case .Bottom:
+    r.bottom = value
+  case .Left:
+    r.left = value
+  }
 }
 
 // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
 func setBefore(_ r: inout LayoutBoxExtent, _ before: LayoutUnit, _ writingMode: WritingMode) {
-  switch beforeSide(writingMode) {
-  case .Top:
-    r.top = before
-  case .Right:
-    r.right = before
-  case .Bottom:
-    r.bottom = before
-  case .Left:
-    r.left = before
-  }
-}
-
-private func afterSide(_ writingMode: WritingMode) -> BoxSide {
-  return mapLogicalSideToPhysicalSide(writingMode, .BlockEnd)
+  setSide(&r, mapLogicalSideToPhysicalSide(writingMode, .BlockStart), before)
 }
 
 // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
 func setAfter(_ r: inout LayoutBoxExtent, _ after: LayoutUnit, _ writingMode: WritingMode) {
-  switch afterSide(writingMode) {
-  case .Top:
-    r.top = after
-  case .Right:
-    r.right = after
-  case .Bottom:
-    r.bottom = after
-  case .Left:
-    r.left = after
-  }
+  setSide(&r, mapLogicalSideToPhysicalSide(writingMode, .BlockEnd), after)
 }
