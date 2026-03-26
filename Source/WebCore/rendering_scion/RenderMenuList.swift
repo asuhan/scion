@@ -66,6 +66,11 @@ final class RenderMenuListWrapper: RenderFlexibleBoxWrapper {
     return intersection(a: outerBox, b: innerBox)
   }
 
+  override func hasControlClip() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {

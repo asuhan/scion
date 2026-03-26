@@ -4182,8 +4182,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasControlClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return false
   }
 
   func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {

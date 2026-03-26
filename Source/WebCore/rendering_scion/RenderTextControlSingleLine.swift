@@ -51,6 +51,11 @@ class RenderTextControlSingleLineWrapper: RenderTextControlWrapper {
     fatalError("Not implemented")
   }
 
+  override func hasControlClip() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   override func controlClipRect(additionalOffset: LayoutPointWrapper) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

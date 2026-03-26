@@ -159,8 +159,8 @@ final class RenderListBoxWrapper: RenderBlockFlowWrapper {
   }
 
   override func hasControlClip() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
