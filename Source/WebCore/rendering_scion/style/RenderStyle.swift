@@ -1573,8 +1573,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func alignContent() -> StyleContentAlignmentData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_alignContent(p)
+    return StyleContentAlignmentData(
+      position: ContentPosition(rawValue: raw.position)!,
+      distribution: ContentDistribution(rawValue: raw.distribution)!,
+      overflow: OverflowAlignment(rawValue: raw.overflow)!)
   }
 
   func alignItems() -> StyleSelfAlignmentData {

@@ -255,6 +255,12 @@ struct LogicalExtentComputedValuesRaw {
     struct ComputedMarginValuesRaw margins;
 };
 
+struct StyleContentAlignmentDataRaw {
+    uint8_t position;
+    uint8_t distribution;
+    uint8_t overflow;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -702,6 +708,7 @@ bool RenderStyle_containsLayoutOrPaint(const void*);
 uint8_t RenderStyle_contentVisibility(const void*);
 uint8_t RenderStyle_usedContentVisibility(const void*);
 bool RenderStyle_hasSkippedContent(const void*);
+struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
 void* RenderStyle_shapeOutside(const void*);

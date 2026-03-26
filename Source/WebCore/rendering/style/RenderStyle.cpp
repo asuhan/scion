@@ -832,6 +832,18 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasSkippedContent(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasSkippedContent();
 }
 
+struct StyleContentAlignmentDataRaw {
+    uint8_t position;
+    uint8_t distribution;
+    uint8_t overflow;
+};
+
+extern "C" WEBCORE_EXPORT StyleContentAlignmentDataRaw RenderStyle_alignContent(const void* p)
+{
+    const auto align_content = static_cast<const WebCore::RenderStyle*>(p)->alignContent();
+    return { static_cast<uint8_t>(align_content.position()), static_cast<uint8_t>(align_content.distribution()), static_cast<uint8_t>(align_content.overflow()) };
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineAlign(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->lineAlign());
