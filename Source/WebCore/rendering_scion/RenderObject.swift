@@ -837,8 +837,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func beingDestroyed() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_stateBitfields.hasFlag(.BeingDestroyed)
   }
 
   func everHadLayout() -> Bool {
