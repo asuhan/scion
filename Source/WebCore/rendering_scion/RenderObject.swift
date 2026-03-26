@@ -595,6 +595,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func createsAnonymousWrapper() -> Bool { return false }
   //////////////////////////////////////////
 
+  func isPseudoElement() -> Bool {
+    assert(isNativeImpl())
+    return node()?.isPseudoElement() ?? false
+  }
+
   func isRenderElement() -> Bool { return !isRenderText() }
 
   func isRenderReplaced() -> Bool {
@@ -1420,8 +1425,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func protectedNode() -> NodeWrapper? { return node() }
 
   func nonPseudoNode() -> NodeWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isPseudoElement() ? nil : node()
   }
 
   func document() -> Document {
