@@ -118,7 +118,7 @@ final class RenderLayerFilters: CachedSVGDocumentClientWrapper {
     let operations = renderer.style().filter()
 
     if !operations.hasFilterThatMovesPixels() {
-      return IntOutsets()
+      return IntOutsets(top: 0, right: 0, bottom: 0, left: 0)
     }
 
     return CSSFilter.calculateOutsets(

@@ -193,7 +193,7 @@ private func calculateReferenceFilterOutsets(
       filterElement: filterElement, targetBoundingBox: targetBoundingBox)
   }
 
-  return IntOutsets()
+  return IntOutsets(top: 0, right: 0, bottom: 0, left: 0)
 }
 
 final class CSSFilter: FilterWrapper, CustomStringConvertible {
@@ -256,7 +256,7 @@ final class CSSFilter: FilterWrapper, CustomStringConvertible {
     renderer: RenderElementWrapper, operations: FilterOperations,
     targetBoundingBox: FloatRectWrapper
   ) -> IntOutsets {
-    var outsets = IntOutsets()
+    var outsets = IntOutsets(top: 0, right: 0, bottom: 0, left: 0)
 
     for operation in operations {
       if let referenceOperation = operation as? ReferenceFilterOperationWrapper {

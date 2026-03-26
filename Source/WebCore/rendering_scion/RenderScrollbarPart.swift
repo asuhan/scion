@@ -144,9 +144,9 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     setWidth(width: max(minWidth, min(maxWidth, width)))
 
     // Buttons and track pieces can all have margins along the axis of the scrollbar.
-    marginBox!.setLeft(
+    marginBox.setLeft(
       minimumValueForLength(length: style().marginLeft(), maximumValue: LayoutUnit()))
-    marginBox!.setRight(
+    marginBox.setRight(
       minimumValueForLength(length: style().marginRight(), maximumValue: LayoutUnit()))
   }
 
@@ -162,9 +162,9 @@ final class RenderScrollbarPartWrapper: RenderBlockWrapper {
     setHeight(height: max(minHeight, min(maxHeight, height)))
 
     // Buttons and track pieces can all have margins along the axis of the scrollbar.
-    marginBox!.setTop(
+    marginBox.setTop(
       minimumValueForLength(length: style().marginTop(), maximumValue: LayoutUnit()))
-    marginBox!.setBottom(
+    marginBox.setBottom(
       minimumValueForLength(length: style().marginBottom(), maximumValue: LayoutUnit()))
   }
 

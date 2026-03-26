@@ -69,6 +69,8 @@ struct TextFlow {
   var blockDirection: FlowDirection
   var textDirection: TextDirection
 
+  func isReversed() -> Bool { return textDirection == .RTL }
+
   func isFlipped() -> Bool {
     return blockDirection == .BottomToTop || blockDirection == .RightToLeft
   }
@@ -106,6 +108,13 @@ func isHorizontalWritingMode(writingMode: WritingMode) -> Bool {
   return !isVerticalWritingMode(writingMode: writingMode)
 }
 
+enum LogicalBoxSide {
+  case BlockStart
+  case InlineEnd
+  case BlockEnd
+  case InlineStart
+}
+
 enum BoxSide: UInt8 {
   case Top
   case Right
@@ -114,3 +123,25 @@ enum BoxSide: UInt8 {
 }
 
 let allBoxSides: [BoxSide] = [.Top, .Right, .Bottom, .Left]
+
+private func mapLogicalSideToPhysicalSide(_ flow: TextFlow, _ logicalSide: LogicalBoxSide)
+  -> BoxSide
+{
+  let isBlock = logicalSide == .BlockStart || logicalSide == .BlockEnd
+  let isStart = logicalSide == .BlockStart || logicalSide == .InlineStart
+  let isNormalStart = isStart != (isBlock ? flow.isFlipped() : flow.isReversed())
+  let isVertical = isBlock != flow.isVertical()
+  if isVertical {
+    return isNormalStart ? .Top : .Bottom
+  }
+  return isNormalStart ? .Left : .Right
+}
+
+func mapLogicalSideToPhysicalSide(_ writingMode: WritingMode, _ logicalSide: LogicalBoxSide)
+  -> BoxSide
+{
+  // Set the direction such that side is mirrored if isFlippedWritingMode() is true
+  let direction: TextDirection = isFlippedWritingMode(writingMode: writingMode) ? .RTL : .LTR
+  return mapLogicalSideToPhysicalSide(
+    makeTextFlow(writingMode: writingMode, direction: direction), logicalSide)
+}

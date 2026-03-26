@@ -49,7 +49,7 @@ class FilterOperationWrapper {
 
   func isIdentity() -> Bool { return false }
 
-  func outsets() -> IntOutsets { return IntOutsets() }
+  func outsets() -> IntOutsets { return IntOutsets(top: 0, right: 0, bottom: 0, left: 0) }
 }
 
 class ReferenceFilterOperationWrapper: FilterOperationWrapper {

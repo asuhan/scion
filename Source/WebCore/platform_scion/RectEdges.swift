@@ -35,11 +35,6 @@ struct BoxSideFlag: OptionSet {
 typealias BoxSideSet = BoxSideFlag
 
 struct RectEdges<T: Equatable>: Equatable {
-  init() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   init(top: T, right: T, bottom: T, left: T) {
     self.top = top
     self.right = right
@@ -110,4 +105,22 @@ struct RectEdges<T: Equatable>: Equatable {
   var right: T
   var bottom: T
   var left: T
+}
+
+private func beforeSide(_ writingMode: WritingMode) -> BoxSide {
+  return mapLogicalSideToPhysicalSide(writingMode, .BlockStart)
+}
+
+// TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+func setBefore(_ r: inout LayoutBoxExtent, _ before: LayoutUnit, _ writingMode: WritingMode) {
+  switch beforeSide(writingMode) {
+  case .Top:
+    r.top = before
+  case .Right:
+    r.right = before
+  case .Bottom:
+    r.bottom = before
+  case .Left:
+    r.left = before
+  }
 }

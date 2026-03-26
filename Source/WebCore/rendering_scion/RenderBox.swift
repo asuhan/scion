@@ -1142,7 +1142,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // RenderBox's basic implementation accounts for the writing mode (only).
   func allowedLayoutOverflowForBox() -> LayoutOptionalOutsets {
-    var allowance = LayoutOptionalOutsets()
+    var allowance = LayoutOptionalOutsets(top: nil, right: nil, bottom: nil, left: nil)
 
     // Overflow is in the block's coordinate space and thus is flipped
     // for horizontal-bt and vertical-rl writing modes. This means we can
@@ -1456,32 +1456,32 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   override func marginBottom() -> LayoutUnit {
     assert(isNativeImpl())
-    return marginBox!.bottom
+    return marginBox.bottom
   }
 
   override func marginLeft() -> LayoutUnit {
     assert(isNativeImpl())
-    return marginBox!.left
+    return marginBox.left
   }
 
   func setMarginTop(margin: LayoutUnit) {
     assert(isNativeImpl())
-    marginBox!.setTop(margin)
+    marginBox.setTop(margin)
   }
 
   func setMarginBottom(margin: LayoutUnit) {
     assert(isNativeImpl())
-    marginBox!.setBottom(margin)
+    marginBox.setBottom(margin)
   }
 
   func setMarginLeft(margin: LayoutUnit) {
     assert(isNativeImpl())
-    marginBox!.setLeft(margin)
+    marginBox.setLeft(margin)
   }
 
   func setMarginRight(margin: LayoutUnit) {
     assert(isNativeImpl())
-    marginBox!.setRight(margin)
+    marginBox.setRight(margin)
   }
 
   func marginLogicalLeft(overrideStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
@@ -1515,8 +1515,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setMarginBefore(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    setBefore(&marginBox, value, (overrideStyle ?? style()).writingMode())
   }
 
   func setMarginAfter(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
@@ -4577,8 +4577,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   {
     if isReplacedOrInlineBlock() {
       return direction == .HorizontalLine
-        ? marginBox!.top + height() + marginBox!.bottom
-        : marginBox!.right + width() + marginBox!.left
+        ? marginBox.top + height() + marginBox.bottom
+        : marginBox.right + width() + marginBox.left
     }
     return LayoutUnit(value: 0)
   }
@@ -7457,7 +7457,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // The width/height of the contents + borders + padding.  The x/y location is relative to our container (which is not always our parent).
   private var m_frameRect = LayoutRectWrapper()
 
-  let marginBox: LayoutBoxExtent? = nil
+  var marginBox = LayoutBoxExtent(
+    top: LayoutUnit(), right: LayoutUnit(), bottom: LayoutUnit(), left: LayoutUnit())
 
   // The preferred logical width of the element if it were to break its lines at every possible opportunity.
   var m_minPreferredLogicalWidth = LayoutUnit()
