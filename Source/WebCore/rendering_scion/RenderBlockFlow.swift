@@ -1984,8 +1984,14 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    super.computeOverflow(oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: recomputeFloats)
+
+    if multiColumnFlowForBlockFlow() == nil
+      && (recomputeFloats || createsNewFormattingContext() || hasSelfPaintingLayer())
+    {
+      addOverflowFromFloats()
+    }
   }
 
   override func positionForPoint(
@@ -3130,6 +3136,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
       fragmentedFlow!.setNeedsHeightsRecalculation(recalculate: false)
     }
     determineLogicalLeftPositionForChild(child: fragmentedFlow!)
+  }
+
+  private func addOverflowFromFloats() {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   private func recomputeLogicalWidthAndColumnWidth() -> Bool {
