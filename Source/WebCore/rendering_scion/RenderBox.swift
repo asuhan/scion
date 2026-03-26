@@ -1333,8 +1333,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func contentHeight() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentHeight(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_contentHeight(id()))
+    }
+    return max(
+      LayoutUnit(value: UInt64(0)),
+      paddingBoxHeight() - paddingTop() - paddingBottom()
+        - (style().scrollbarGutter().bothEdges ? horizontalScrollbarHeight() : 0))
   }
 
   func contentLogicalSize() -> LayoutSizeWrapper {
