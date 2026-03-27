@@ -407,8 +407,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func previousSibling() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return m_previous
   }
 
   func nextSibling() -> RenderObjectWrapper? {
@@ -2731,8 +2731,8 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   //////////////////////////////////////////
   // Helper functions. Dangerous to use!
   func setPreviousSibling(previous: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_previous = previous
   }
 
   func setNextSibling(next: RenderObjectWrapper?) {
@@ -3077,6 +3077,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private let m_node: NodeWrapper?
 
   private let m_parent: RenderElementWrapper? = nil
+  private var m_previous: RenderObjectWrapper? = nil
   private let m_typeFlags: TypeFlag
   private let m_type: `Type`
   private let m_next: RenderObjectWrapper? = nil  // TODO(asuhan): use weak reference
