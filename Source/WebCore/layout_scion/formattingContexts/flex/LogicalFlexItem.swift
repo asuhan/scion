@@ -98,10 +98,7 @@ struct LogicalFlexItem {
     return false
   }
 
-  func isContentBoxBased() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isContentBoxBased() -> Bool { return style().boxSizing() == .ContentBox }
 
   func style() -> RenderStyleWrapper {
     return layoutBox!.style
