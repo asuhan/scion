@@ -1507,8 +1507,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHasOutlineAutoAncestor(hasOutlineAutoAncestor: Bool = true) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if hasOutlineAutoAncestor || hasRareData() {
+      ensureRareData().hasOutlineAutoAncestor = hasOutlineAutoAncestor
+    }
   }
 
   func setPaintContainmentApplies(_ value: Bool = true) {
@@ -3083,7 +3085,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // FIXME: This should be RenderElementRareData.
   class RenderObjectRareData {
     var hasReflection = false
-    let hasOutlineAutoAncestor = false
+    var hasOutlineAutoAncestor = false
     let trimmedMargins: MarginTrimType = []
 
     // From RenderElement
