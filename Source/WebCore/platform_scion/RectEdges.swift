@@ -64,13 +64,17 @@ struct RectEdges<T: Equatable>: Equatable {
   mutating func setLeft(_ left: T) { self.left = left }
 
   func xFlippedCopy() -> RectEdges<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var copy = self
+    copy.left = right
+    copy.right = left
+    return copy
   }
 
   func yFlippedCopy() -> RectEdges<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    var copy = self
+    copy.top = bottom
+    copy.bottom = top
+    return copy
   }
 
   func setStart(start: T, writingMode: WritingMode, direction: TextDirection = .LTR) {
