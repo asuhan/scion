@@ -349,8 +349,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func firstInFlowChild() -> RenderObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    guard let firstChild = self.firstChild() else { return nil }
+    return firstChild.isInFlow() ? firstChild : firstChild.nextInFlowSibling()
   }
 
   override func layoutBox() -> ElementBoxWrapper? {

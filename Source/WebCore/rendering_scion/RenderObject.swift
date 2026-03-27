@@ -416,6 +416,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_next
   }
 
+  func nextInFlowSibling() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    var nextSibling = self.nextSibling()
+    while nextSibling != nil && !nextSibling!.isInFlow() {
+      nextSibling = nextSibling!.nextSibling()
+    }
+    return nextSibling
+  }
+
   // Use RenderElement versions instead.
   func firstChildSlow() -> RenderObjectWrapper? {
     assert(isNativeImpl())
