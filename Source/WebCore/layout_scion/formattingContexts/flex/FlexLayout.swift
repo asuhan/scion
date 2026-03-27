@@ -1203,10 +1203,7 @@ struct FlexLayout {
     return formattingContext().integrationUtils!.maxContentLogicalWidth(box: flexItemBox)
   }
 
-  func flexContainer() -> ElementBoxWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func flexContainer() -> ElementBoxWrapper { return flexFormattingContext.root() }
 
   func flexContainerStyle() -> RenderStyleWrapper {
     return flexContainer().style
