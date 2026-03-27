@@ -2825,8 +2825,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     [.ApplyContainerClip, .ApplyCompositedContainerScrolls])
 
   func isSetNeedsLayoutForbidden() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    #if ASSERT_ENABLED
+      return m_setNeedsLayoutForbidden
+    #else
+      return false
+    #endif  // ASSERT_ENABLED
   }
 
   func issueRepaint(
@@ -3072,6 +3076,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   private let pInterop: UnsafeMutableRawPointer?
+
+  #if ASSERT_ENABLED
+    private var m_setNeedsLayoutForbidden = false
+  #endif  // ASSERT_ENABLED
 
   private var m_stateBitfields = StateBitfields()
 
