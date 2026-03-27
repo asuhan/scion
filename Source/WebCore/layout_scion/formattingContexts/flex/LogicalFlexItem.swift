@@ -86,15 +86,9 @@ struct LogicalFlexItem {
     return crossAxisGeometry
   }
 
-  func growFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func growFactor() -> Float32 { return style().flexGrow() }
 
-  func shrinkFactor() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func shrinkFactor() -> Float32 { return style().flexShrink() }
 
   func hasContentFlexBasis() -> Bool {
     return style().flexBasis().isContent()
