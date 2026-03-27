@@ -2736,13 +2736,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNextSibling(next: RenderObjectWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_next = next
   }
 
   func setParent(parent: RenderElementWrapper?) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    m_parent = parent
   }
   //////////////////////////////////////////
 
@@ -3076,11 +3076,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   private let m_node: NodeWrapper?
 
-  private let m_parent: RenderElementWrapper? = nil
+  private var m_parent: RenderElementWrapper? = nil
   private var m_previous: RenderObjectWrapper? = nil
   private let m_typeFlags: TypeFlag
   private let m_type: `Type`
-  private let m_next: RenderObjectWrapper? = nil  // TODO(asuhan): use weak reference
+  private var m_next: RenderObjectWrapper? = nil  // TODO(asuhan): use weak reference
   private let m_typeSpecificFlags: TypeSpecificFlags
 
   // FIXME: This should be RenderElementRareData.
