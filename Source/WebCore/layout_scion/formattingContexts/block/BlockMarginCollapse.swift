@@ -23,24 +23,32 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+private func hasBorder(_ borderValue: BorderValue) -> Bool {
+  if borderValue.style == .None || borderValue.style == .Hidden {
+    return false
+  }
+  return borderValue.width == 0
+}
+
+private func hasPadding(_ paddingValue: LengthWrapper) -> Bool {
+  // FIXME: Check if percent value needs to be resolved.
+  return !paddingValue.isZero()
+}
+
 func hasBorderBefore(layoutBox: ElementBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return hasBorder(layoutBox.style.borderBefore())
 }
 
 func hasBorderAfter(layoutBox: ElementBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return hasBorder(layoutBox.style.borderAfter())
 }
 
 func hasPaddingBefore(layoutBox: ElementBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return hasPadding(layoutBox.style.paddingBefore())
 }
 
 func hasPaddingAfter(layoutBox: ElementBoxWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return hasPadding(layoutBox.style.paddingAfter())
 }
 
 func establishesBlockFormattingContext(layoutBox: ElementBoxWrapper) -> Bool {
