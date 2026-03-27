@@ -55,25 +55,13 @@ struct RectEdges<T: Equatable>: Equatable {
     }
   }
 
-  func setTop(_ top: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setTop(_ top: T) { self.top = top }
 
-  func setRight(_ right: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setRight(_ right: T) { self.right = right }
 
-  func setBottom(_ bottom: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setBottom(_ bottom: T) { self.bottom = bottom }
 
-  func setLeft(_ left: T) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  mutating func setLeft(_ left: T) { self.left = left }
 
   func xFlippedCopy() -> RectEdges<T> {
     // TODO(asuhan): implement this
