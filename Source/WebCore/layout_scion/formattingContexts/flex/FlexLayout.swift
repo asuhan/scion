@@ -1145,10 +1145,7 @@ struct FlexLayout {
     }
   }
 
-  func isSingleLineFlexContainer() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isSingleLineFlexContainer() -> Bool { return flexContainer().style.flexWrap() == .NoWrap }
 
   // 3. Determine the flex base size and hypothetical main size of each item:
   func computedFlexBase(flexItem: LogicalFlexItem, mainAxis: LogicalConstraints.AxisGeometry)
