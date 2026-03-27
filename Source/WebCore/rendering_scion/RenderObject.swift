@@ -2747,8 +2747,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   //////////////////////////////////////////
 
   func nodeForNonAnonymous() -> NodeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(!isAnonymous())
+    return m_node!
   }
 
   func scheduleLayout(layoutRoot: RenderElementWrapper?) {
