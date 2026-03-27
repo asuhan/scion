@@ -87,16 +87,22 @@ struct RectEdges<T: Equatable>: Equatable {
     fatalError("Not implemented")
   }
 
-  @discardableResult
-  static func += (lhs: inout RectEdges<T>, rhs: RectEdges<T>) -> RectEdges<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
-
   var top: T
   var right: T
   var bottom: T
   var left: T
+}
+
+private func + (a: IntOutsets, b: IntOutsets) -> IntOutsets {
+  return IntOutsets(
+    top: a.top + b.top, right: a.right + b.right, bottom: a.bottom + b.bottom, left: a.left + b.left
+  )
+}
+
+@discardableResult
+func += (a: inout IntOutsets, b: IntOutsets) -> IntOutsets {
+  a = a + b
+  return a
 }
 
 private func setSide(_ r: inout LayoutBoxExtent, _ side: BoxSide, _ value: LayoutUnit) {
