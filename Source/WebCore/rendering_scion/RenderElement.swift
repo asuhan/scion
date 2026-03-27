@@ -329,8 +329,8 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func nonPseudoElement() -> ElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return nonPseudoNode() as! ElementWrapper?
   }
 
   func firstChild() -> RenderObjectWrapper? {
