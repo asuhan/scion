@@ -416,6 +416,15 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_next
   }
 
+  func previousInFlowSibling() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    var previousSibling = self.previousSibling()
+    while previousSibling != nil && !previousSibling!.isInFlow() {
+      previousSibling = previousSibling!.previousSibling()
+    }
+    return previousSibling
+  }
+
   func nextInFlowSibling() -> RenderObjectWrapper? {
     assert(isNativeImpl())
     var nextSibling = self.nextSibling()

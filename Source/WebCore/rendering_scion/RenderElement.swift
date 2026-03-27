@@ -354,6 +354,12 @@ class RenderElementWrapper: RenderObjectWrapper {
     return firstChild.isInFlow() ? firstChild : firstChild.nextInFlowSibling()
   }
 
+  func lastInFlowChild() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    guard let lastChild = self.lastChild() else { return nil }
+    return lastChild.isInFlow() ? lastChild : lastChild.previousInFlowSibling()
+  }
+
   override func layoutBox() -> ElementBoxWrapper? {
     return super.layoutBox() as? ElementBoxWrapper
   }
