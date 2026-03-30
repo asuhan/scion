@@ -97,8 +97,13 @@ struct MarginValues {
 // Allocated only when some of these fields have non-default values
 class RenderBlockFlowRareData {
   init(_ block: RenderBlockFlowWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    margins = MarginValues(
+      beforePos: RenderBlockFlowRareData.positiveMarginBeforeDefault(block),
+      beforeNeg: RenderBlockFlowRareData.negativeMarginBeforeDefault(block),
+      afterPos: RenderBlockFlowRareData.positiveMarginAfterDefault(block),
+      afterNeg: RenderBlockFlowRareData.negativeMarginAfterDefault(block))
+    lineBreakToAvoidWidow = -1
+    didBreakAtLineToAvoidWidow = false
   }
 
   static func positiveMarginBeforeDefault(_ block: RenderBlockWrapper) -> LayoutUnit {
@@ -119,7 +124,7 @@ class RenderBlockFlowRareData {
 
   var margins: MarginValues
   var lineBreakToAvoidWidow: Int32
-  var alignContentShift: LayoutUnit  // Caches negative shifts for overflow calculation.
+  var alignContentShift = LayoutUnit()  // Caches negative shifts for overflow calculation.
 
   var didBreakAtLineToAvoidWidow = false
 }
