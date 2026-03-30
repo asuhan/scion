@@ -32,6 +32,8 @@ namespace WebCore {
 
 DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(WebCore_RenderElementScion);
 
+class RenderObject;
+
 class RenderElementScion final : public CanMakeCheckedPtr<RenderElementScion> {
     WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(WebCore_RenderElementScion);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderElementScion);
@@ -41,6 +43,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    void attachRendererInternal(RenderObject* child, RenderObject* beforeChild);
 
 private:
     void* m_handle;

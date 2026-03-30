@@ -1147,6 +1147,8 @@ public:
 
     PointerEvents usedPointerEvents() const;
 
+    bool isScion() const { return static_cast<bool>(m_scion); }
+
 protected:
     //////////////////////////////////////////
     // Helper functions. Dangerous to use!

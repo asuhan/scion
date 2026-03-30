@@ -886,3 +886,14 @@ func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMu
   let unmanaged = Unmanaged.passRetained(renderSelection)
   return unmanaged.toOpaque()
 }
+
+@_cdecl("RenderElementScion_attachRendererInternal")
+func RenderElementScion_attachRendererInternal(
+  _ elementRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer,
+  _ beforeChildRaw: UnsafeMutableRawPointer?
+) {
+  let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
+  let child = RenderObjectWrapper(p: childRaw)
+  let beforeChild = beforeChildRaw != nil ? RenderObjectWrapper(p: beforeChildRaw!) : nil
+  element.attachRendererInternal(child: child, beforeChild: beforeChild)
+}

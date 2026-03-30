@@ -24,3 +24,14 @@
  */
 
 #include "RenderElementScion.h"
+
+extern "C" void RenderElementScion_attachRendererInternal(void*, void*, void*);
+
+namespace WebCore {
+
+void RenderElementScion::attachRendererInternal(RenderObject* child, RenderObject* beforeChild)
+{
+    RenderElementScion_attachRendererInternal(m_handle, child, beforeChild);
+}
+
+}
