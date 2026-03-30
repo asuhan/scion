@@ -251,6 +251,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) {
+    assert(isNativeImpl())
     assert(needsLayout())
 
     if !relayoutChildren && simplifiedLayout() {
@@ -477,6 +478,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func isPaginated() -> Bool {
+    assert(isNativeImpl())
     // FIXME: Grid calls into layout outside of regular layout phase (during preferred width computation).
     if let layoutState = view().frameView().layoutContext().layoutState() {
       return layoutState.isPaginated()
@@ -489,6 +491,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // descendants are gone when this call completes and will get added back later on after the children have gotten
   // a relayout.
   func rebuildFloatingObjectSetFromIntrudingFloats() {
+    assert(isNativeImpl())
     if floatingObjects != nil {
       floatingObjects!.setHorizontalWritingMode(b: isHorizontalWritingMode())
     }
@@ -580,6 +583,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     if firstChild() == nil {
       // Empty block containers produce empty formatting lines which may affect trim-start/end.
       let unused = TextBoxTrimmer(blockContainer: self)
@@ -642,6 +646,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
 
   private func layoutBlockChildren(relayoutChildren: Bool, maxFloatLogicalBottom: inout LayoutUnit)
   {
+    assert(isNativeImpl())
     assert(firstChild() != nil)
 
     let beforeEdge = borderAndPaddingBefore()
@@ -740,6 +745,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func updateMarginTrimStateIfNeeded(
     layoutState: RenderLayoutStateWrapper, marginInfo: MarginInfo
   ) -> Bool {
+    assert(isNativeImpl())
     let containingBlockTrimmingState = layoutState.blockStartTrimming()
     if style().marginTrim().contains(.BlockStart) {
       layoutState.pushBlockStartTrimming(blockStartTrimming: true)
@@ -761,6 +767,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     relayoutChildren: Bool, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     computeAndSetLineLayoutPath()
 
     if lineLayoutPath() == .InlinePath {
@@ -778,6 +785,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func simplifiedNormalFlowLayout() {
+    assert(isNativeImpl())
     if !childrenInline() {
       super.simplifiedNormalFlowLayout()
       return
@@ -812,6 +820,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     intrinsicLogicalHeight: LayoutUnit, repaintLogicalTop: inout LayoutUnit,
     repaintLogicalBottom: inout LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let alignment = style().alignContent()
 
     // Exit if no alignment necessary.
@@ -884,6 +893,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func paintColumnRules(_ paintInfo: PaintInfoWrapper, _ point: LayoutPointWrapper) {
+    assert(isNativeImpl())
     super.paintColumnRules(paintInfo, point)
 
     if multiColumnFlowForBlockFlow() == nil || paintInfo.context().paintingDisabled() {
@@ -899,6 +909,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func marginValuesForChild(child: RenderBoxWrapper) -> MarginValues {
+    assert(isNativeImpl())
     var childBeforePositive = LayoutUnit()
     var childBeforeNegative = LayoutUnit()
     var childAfterPositive = LayoutUnit()
@@ -1068,6 +1079,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, marginInfo: inout MarginInfo,
     previousFloatLogicalBottom: inout LayoutUnit, maxFloatLogicalBottom: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     let oldPosMarginBefore = maxPositiveMarginBefore()
     let oldNegMarginBefore = maxNegativeMarginBefore()
 
@@ -1243,6 +1255,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func adjustPositionedBlock(child: RenderBoxWrapper, marginInfo: MarginInfo) {
+    assert(isNativeImpl())
     let isHorizontal = isHorizontalWritingMode()
     let hasStaticBlockPosition = child.style().hasStaticBlockPosition(horizontal: isHorizontal)
 
@@ -1267,6 +1280,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func adjustFloatingBlock(marginInfo: MarginInfo) {
+    assert(isNativeImpl())
     // The float should be positioned taking into account the bottom margin
     // of the previous flow. We add that margin into the height, get the
     // float positioned properly, and then subtract the margin out of the
@@ -1288,6 +1302,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func trimBlockEndChildrenMargins() {
+    assert(isNativeImpl())
     assert(style().marginTrim().contains(.BlockEnd))
     // If we are trimming the block end margin, we need to make sure we trim the margin of the children
     // at the end of the block by walking back up the container. Any self collapsing children will also need to
@@ -1336,6 +1351,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func trimSelfCollapsingChildDescendants(child: RenderBoxWrapper) {
+    assert(isNativeImpl())
     assert(child.isSelfCollapsingBlock())
     var itr = RenderIterator<RenderBoxWrapper>(root: child, current: child.firstChildBox())
     while itr.bool() {
@@ -1354,6 +1370,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func updateStaticInlinePositionForChild(child: RenderBoxWrapper, logicalTop: LayoutUnit) {
+    assert(isNativeImpl())
     if child.style().isOriginalDisplayInlineType() {
       setStaticInlinePositionForChild(
         child: child, blockOffset: logicalTop,
@@ -1366,6 +1383,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func staticInlinePositionForOriginalDisplayInline(logicalTop: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     let textAlign = style().textAlign()
     let isLeftToRightDirection = style().isLeftToRightDirection()
 
@@ -1397,6 +1415,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func collapseMargins(child: RenderBoxWrapper, marginInfo: inout MarginInfo) -> LayoutUnit {
+    assert(isNativeImpl())
     return collapseMarginsWithChildInfo(
       child: child, prevSibling: child.previousSibling(), marginInfo: &marginInfo)
   }
@@ -1404,6 +1423,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func collapseMarginsWithChildInfo(
     child: RenderBoxWrapper?, prevSibling: RenderObjectWrapper?, marginInfo: inout MarginInfo
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let childIsSelfCollapsing = child?.isSelfCollapsingBlock() ?? false
     let beforeQuirk = child != nil ? hasMarginBeforeQuirk(child: child!) : false
     let afterQuirk = child != nil ? hasMarginAfterQuirk(child: child!) : false
@@ -1555,6 +1575,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func trimChildBlockMargins(child: RenderBoxWrapper, childIsSelfCollapsing: Bool) {
+    assert(isNativeImpl())
     let childBlockFlow = child as? RenderBlockFlowWrapper
     let zero = LayoutUnit(value: UInt64(0))
     if childBlockFlow != nil {
@@ -1576,6 +1597,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, marginInfo: inout MarginInfo, oldTopPosMargin: LayoutUnit,
     oldTopNegMargin: LayoutUnit, yPos: LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let heightIncrease = getClearDelta(child: child, logicalTop: yPos)
     if !heightIncrease.bool() {
       return yPos
@@ -1641,6 +1663,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func estimateLogicalTopPosition(child: RenderBoxWrapper, marginInfo: MarginInfo)
     -> EstimatedLogicalTopPosition
   {
+    assert(isNativeImpl())
     // FIXME: We need to eliminate the estimation of vertical position, because when it's wrong we sometimes trigger a pathological
     // relayout if there are intruding floats.
     var logicalTopEstimate = logicalHeight()
@@ -1702,6 +1725,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     child: RenderBoxWrapper, positiveMarginBefore: inout LayoutUnit,
     negativeMarginBefore: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     // Give up if in quirks mode and we're a body/table cell and the top margin of the child box is quirky.
     // Give up if the child specified -webkit-margin-collapse: separate that prevents collapsing.
     if document().inQuirksMode() && hasMarginBeforeQuirk(child: child)
@@ -1769,6 +1793,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func handleAfterSideOfBlock(
     beforeSide: LayoutUnit, afterSide: LayoutUnit, marginInfo: inout MarginInfo
   ) {
+    assert(isNativeImpl())
     marginInfo.atAfterSideOfBlock = true
 
     // If our last child was a self-collapsing block with clearance then our logical height is flush with the
@@ -1798,6 +1823,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setCollapsedBottomMargin(marginInfo: MarginInfo) {
+    assert(isNativeImpl())
     if !marginInfo.canCollapseWithMarginAfter() || marginInfo.canCollapseWithMarginBefore() {
       return
     }
@@ -1824,6 +1850,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func childrenPreventSelfCollapsing() -> Bool {
+    assert(isNativeImpl())
     if !childrenInline() {
       return super.childrenPreventSelfCollapsing()
     }
@@ -1862,6 +1889,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func multiColumnFlowForBlockFlow() -> RenderMultiColumnFlowWrapper? {
+    assert(isNativeImpl())
     return hasRareBlockFlowData() ? multiColumnFlowSlowCase() : nil
   }
 
@@ -1881,6 +1909,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func willCreateColumns(desiredColumnCount: UInt32? = nil) -> Bool {
+    assert(isNativeImpl())
     // The following types are not supposed to create multicol context.
     if isRenderFileUploadControl() || isRenderTextControl() || isRenderListBox() {
       return false
@@ -1949,6 +1978,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func subtreeContainsFloats() -> Bool {
+    assert(isNativeImpl())
     if containsFloats() {
       return true
     }
@@ -1963,6 +1993,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func subtreeContainsFloat(renderer: RenderBoxWrapper) -> Bool {
+    assert(isNativeImpl())
     if containsFloat(renderer: renderer) {
       return true
     }
@@ -2005,6 +2036,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     if floatingObjects == nil {
       return LayoutUnit(value: 0)
     }
@@ -2020,6 +2052,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func removeFloatingObjects() {
+    assert(isNativeImpl())
     if floatingObjects == nil {
       return
     }
@@ -2032,6 +2065,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func markAllDescendantsWithFloatsForLayout(
     floatToRemove: RenderBoxWrapper? = nil, inLayout: Bool = true
   ) {
+    assert(isNativeImpl())
     if !everHadLayout() && !containsFloats() {
       return
     }
@@ -2066,6 +2100,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func markSiblingsWithFloatsForLayout(floatToRemove: RenderBoxWrapper? = nil) {
+    assert(isNativeImpl())
     if floatingObjects == nil {
       return
     }
@@ -2126,6 +2161,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func setLogicalTopForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalTop: LayoutUnit
   ) {
+    assert(isNativeImpl())
     if isHorizontalWritingMode() {
       floatingObject.setY(y: logicalTop)
     } else {
@@ -2136,6 +2172,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func setLogicalLeftForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalLeft: LayoutUnit
   ) {
+    assert(isNativeImpl())
     if isHorizontalWritingMode() {
       floatingObject.setX(x: logicalLeft)
     } else {
@@ -2146,6 +2183,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func setLogicalHeightForFloat(
     _ floatingObject: FloatingObjectWrapper, logicalHeight: LayoutUnit
   ) {
+    assert(isNativeImpl())
     if isHorizontalWritingMode() {
       floatingObject.setHeight(height: logicalHeight)
     } else {
@@ -2157,6 +2195,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     _ floatingObject: FloatingObjectWrapper, logicalLeftMargin: LayoutUnit,
     logicalBeforeMargin: LayoutUnit
   ) {
+    assert(isNativeImpl())
     if isHorizontalWritingMode() {
       floatingObject.setMarginOffset(
         offset: LayoutSizeWrapper(width: logicalLeftMargin, height: logicalBeforeMargin))
@@ -2169,6 +2208,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func flipFloatForWritingModeForChild(child: FloatingObjectWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
+    assert(isNativeImpl())
     if !style().isFlippedBlocksWritingMode() {
       return point
     }
@@ -2193,6 +2233,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func setChildrenInline(b: Bool) {
+    assert(isNativeImpl())
     if childrenInline() && !b {
       setLineLayoutPath(path: .UndeterminedPath)
       lineLayout = .None
@@ -2213,6 +2254,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func invalidateLineLayoutPath(invalidationReason: InvalidationReason) {
+    assert(isNativeImpl())
     switch lineLayoutPath() {
     case .UndeterminedPath:
       return
@@ -2284,6 +2326,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func svgTextLayout() -> LegacyLineLayout? {
+    assert(isNativeImpl())
     switch lineLayout {
     case .Legacy(let layout):
       return layout
@@ -2293,6 +2336,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func inlineLayout() -> LayoutIntegration.LineLayout? {
+    assert(isNativeImpl())
     switch lineLayout {
     case .Integration(let layout):
       return layout
@@ -2309,6 +2353,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func nextPageLogicalTop(
     logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let pageLogicalHeight = pageLogicalHeightForOffsetFromBlockFlow(offset: logicalOffset)
     if !pageLogicalHeight.bool() {
       return logicalOffset
@@ -2325,6 +2370,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func pageLogicalHeightForOffsetFromBlockFlow(offset: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     // Unsplittable objects clear out the pageLogicalHeight in the layout state as a way of signaling that no
     // pagination should occur. Therefore we have to check this first and bail if the value has been set to 0.
     let pageLogicalHeight = view().frameView().layoutContext().layoutState()!.pageLogicalHeight()
@@ -2344,6 +2390,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func pageRemainingLogicalHeightForOffsetFromBlockFlow(
     offset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .IncludePageBoundary
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     var offset = offset
     offset += offsetFromLogicalTopOfFirstPage()
 
@@ -2370,6 +2417,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func hasNextPage(
     logicalOffset: LayoutUnit, pageBoundaryRule: PageBoundaryRule = .ExcludePageBoundary
   ) -> Bool {
+    assert(isNativeImpl())
     assert(
       view().frameView().layoutContext().layoutState() != nil
         && view().frameView().layoutContext().layoutState()!.isPaginated())
@@ -2400,6 +2448,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func updateColumnProgressionFromStyle(_ style: RenderStyleWrapper) {
+    assert(isNativeImpl())
     if multiColumnFlowForBlockFlow() == nil {
       return
     }
@@ -2426,6 +2475,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func updateStylesForColumnChildren(_ oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     let columnsNeedLayout =
       oldStyle != nil
       && (oldStyle!.columnCount() != style().columnCount()
@@ -2443,6 +2493,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func needsLayoutAfterFragmentRangeChange() -> Bool {
+    assert(isNativeImpl())
     // A block without floats or that expands to enclose them won't need a relayout
     // after a fragment range change. There is no overflow content needing relayout
     // in the fragment chain because the fragment range can only shrink after the estimation.
@@ -2468,6 +2519,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func adjustSizeContainmentChildForPagination(child: RenderBoxWrapper, offset: LayoutUnit) {
+    assert(isNativeImpl())
     if !child.shouldApplySizeContainment() {
       return
     }
@@ -2492,6 +2544,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func addFloatsToNewParent(toBlockFlow: RenderBlockFlowWrapper) {
+    assert(isNativeImpl())
     // When a portion of the render tree is being detached, anonymous blocks
     // will be combined as their children are deleted. In this process, the
     // anonymous block later in the tree is merged into the one preceeding it.
@@ -2544,6 +2597,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     var needAdjustIntrinsicLogicalWidthsForColumns = true
     if shouldApplySizeOrInlineSizeContainment() {
       if let width = explicitIntrinsicInnerLogicalWidth() {
@@ -2590,6 +2644,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func pushToNextPageWithMinimumLogicalHeight(
     adjustment: inout LayoutUnit, logicalOffset: LayoutUnit, minimumLogicalHeight: LayoutUnit
   ) -> Bool {
+    assert(isNativeImpl())
     var checkFragment = false
     let fragmentedFlow = enclosingFragmentedFlow()
     var currentFragmentContainer: RenderFragmentContainerWrapper? = nil
@@ -2626,6 +2681,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     childBeforeMargin: LayoutUnit = LayoutUnit(value: UInt64(0)),
     childAfterMargin: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     // When flexboxes are embedded inside a block flow, they don't perform any adjustments for unsplittable
     // children. We'll treat flexboxes themselves as unsplittable just to get them to paginate properly inside
     // a block flow.
@@ -2681,6 +2737,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     logicalTopAfterClear: LayoutUnit, estimateWithoutPagination: LayoutUnit,
     child: RenderBoxWrapper, atBeforeSideOfBlock: Bool
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let childRenderBlock = child as? RenderBlockWrapper
 
     if estimateWithoutPagination != logicalTopAfterClear {
@@ -2785,6 +2842,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func applyBeforeBreak(child: RenderBoxWrapper, logicalOffset: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     // FIXME: Add page break checking here when we support printing.
     let fragmentedFlow = enclosingFragmentedFlow()
     let isInsideMulticolFlow = fragmentedFlow != nil
@@ -2824,6 +2882,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func applyAfterBreak(
     child: RenderBoxWrapper, logicalOffset: LayoutUnit, marginInfo: inout MarginInfo
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     // FIXME: Add page break checking here when we support printing.
     let fragmentedFlow = enclosingFragmentedFlow()
     let isInsideMulticolFlow = fragmentedFlow != nil
@@ -2905,6 +2964,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    assert(isNativeImpl())
     let oldStyle = hasInitializedStyle ? style() : nil
     RenderBlockWrapper.canPropagateFloatIntoSibling =
       oldStyle != nil ? !isFloatingOrOutOfFlowPositioned() && !avoidsFloats() : false
@@ -2926,6 +2986,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
 
     // After our style changed, if we lose our ability to propagate floats into next sibling
@@ -2976,6 +3037,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
+    assert(isNativeImpl())
     if isWritingModeRoot() && !isGridItem() && !isFlexItem() {
       return nil
     }
@@ -3000,6 +3062,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
+    assert(isNativeImpl())
     if isWritingModeRoot() && !isGridItem() && !isFlexItem() {
       return nil
     }
@@ -3024,6 +3087,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func setComputedColumnCountAndWidth(count: Int32, width: LayoutUnit) {
+    assert(isNativeImpl())
     assert((multiColumnFlowForBlockFlow() != nil) == requiresColumns(desiredColumnCount: count))
     if let multiColumnFlow = multiColumnFlowForBlockFlow() {
       multiColumnFlow.setColumnCountAndWidth(count: UInt32(count), width: width)
@@ -3038,6 +3102,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+    assert(isNativeImpl())
     var allowance = allowedLayoutOverflowForBox()
 
     if style().alignContent().position != .Normal {
@@ -3062,6 +3127,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func computeColumnCountAndWidth() {
+    assert(isNativeImpl())
     // Calculate our column width and column count.
     // FIXME: Can overflow on fast/block/float/float-not-removed-from-next-sibling4.html, see https://bugs.webkit.org/show_bug.cgi?id=68744
     var desiredColumnCount: UInt32 = 1
@@ -3099,6 +3165,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // Called to lay out the legend for a fieldset or the ruby text of a ruby run. Also used by multi-column layout to handle
   // the flow thread child.
   override func layoutExcludedChildren(relayoutChildren: Bool) {
+    assert(isNativeImpl())
     super.layoutExcludedChildren(relayoutChildren: relayoutChildren)
 
     let fragmentedFlow = multiColumnFlowForBlockFlow()
@@ -3144,6 +3211,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func recomputeLogicalWidthAndColumnWidth() -> Bool {
+    assert(isNativeImpl())
     let changed = recomputeLogicalWidth()
 
     let oldColumnWidth = computedColumnWidthForBlockFlow()
@@ -3153,6 +3221,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func columnGap() -> LayoutUnit {
+    assert(isNativeImpl())
     if style().columnGap().isNormal {
       return LayoutUnit(value: style().fontDescription().computedSize())  // "1em" is recommended as the normal gap setting. Matches <p> margins.
     }
@@ -3160,6 +3229,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func previousSiblingWithOverhangingFloats() -> (RenderBlockFlowWrapper?, Bool) {
+    assert(isNativeImpl())
     // Attempt to locate a previous sibling with overhanging floats. We skip any elements that are
     // out of flow (like floating/positioned elements), and we also skip over any objects that may have shifted
     // to avoid floats.
@@ -3181,6 +3251,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     relayoutChildren: inout Bool, pageLogicalHeight: inout LayoutUnit,
     pageLogicalHeightChanged: inout Bool
   ) {
+    assert(isNativeImpl())
     // If we don't use columns or flow threads, then bail.
     if !isRenderFragmentedFlow() && multiColumnFlowForBlockFlow() == nil {
       return
@@ -3221,6 +3292,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func determineLogicalLeftPositionForChild(
     child: RenderBoxWrapper, applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
   ) {
+    assert(isNativeImpl())
     var startPosition = borderAndPaddingStart()
     let initialStartPosition = startPosition
     if (shouldPlaceVerticalScrollbarOnLeftForLayerModelObject()
@@ -3270,6 +3342,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     _ pointInLogicalContents: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
+    assert(isNativeImpl())
     assert(childrenInline())
 
     let firstLineBox = InlineIterator.firstLineBoxFor(flow: self)
@@ -3411,6 +3484,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func relayoutForPagination() -> Bool {
+    assert(isNativeImpl())
     if multiColumnFlowForBlockFlow() == nil
       || !multiColumnFlowForBlockFlow()!.shouldRelayoutForPagination()
     {
@@ -3460,6 +3534,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     assert(childrenInline())
 
     if let inlineLayout = inlineLayout() {
@@ -3476,6 +3551,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   override func paintFloats(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, preservePhase: Bool = false
   ) {
+    assert(isNativeImpl())
     if floatingObjects == nil {
       return
     }
@@ -3504,6 +3580,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func repaintOverhangingFloats(paintAllDescendants: Bool) {
+    assert(isNativeImpl())
     // Repaint any overhanging floats (if we know we're the one to paint them).
     // Otherwise, bail out.
     if !hasOverhangingFloats() {
@@ -3545,6 +3622,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func computeLogicalLocationForFloat(
     floatingObject: FloatingObjectWrapper, logicalTopOffset: LayoutUnit
   ) {
+    assert(isNativeImpl())
     let childBox = floatingObject.renderer!
     var logicalLeftOffset = logicalLeftOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of left offset.
     var logicalRightOffset = logicalRightOffsetForContent(blockOffset: logicalTopOffset)  // Constant part of right offset.
@@ -3647,6 +3725,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   // Returns true if and only if it has positioned any floats.
   @discardableResult
   private func positionNewFloats() -> Bool {
+    assert(isNativeImpl())
     if floatingObjects == nil {
       return false
     }
@@ -3772,6 +3851,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func logicalRightOffsetForPositioningFloat(
     logicalTop: LayoutUnit, fixedOffset: LayoutUnit, heightRemaining: inout LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     var offset = fixedOffset
     if floatingObjects != nil && floatingObjects!.hasRightObjects() {
       offset = floatingObjects!.logicalRightOffsetForPositioningFloat(
@@ -3783,6 +3863,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func logicalLeftOffsetForPositioningFloat(
     logicalTop: LayoutUnit, fixedOffset: LayoutUnit, heightRemaining: inout LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     var offset = fixedOffset
     if floatingObjects != nil && floatingObjects!.hasLeftObjects() {
       offset = floatingObjects!.logicalLeftOffsetForPositioningFloat(
@@ -3800,6 +3881,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func addOverhangingFloats(child: RenderBlockFlowWrapper, makeChildPaintOtherFloats: Bool)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     // Prevent floats from being added to the canvas by the root element, e.g., <html>.
     if !child.containsFloats() || child.createsNewFormattingContext() {
       return LayoutUnit(value: 0)
@@ -3884,6 +3966,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     prev: RenderBlockFlowWrapper?, container: RenderBlockFlowWrapper?,
     logicalLeftOffset: LayoutUnit, logicalTopOffset: LayoutUnit
   ) {
+    assert(isNativeImpl())
     assert(!avoidsFloats())
 
     // If we create our own block formatting context then our contents don't interact with floats outside it, even those from our parent.
@@ -3937,6 +4020,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func getClearDelta(child: RenderBoxWrapper, logicalTop: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     // There is no need to compute clearance if we have no floats.
     if !containsFloats() {
       return LayoutUnit(value: 0)
@@ -4019,6 +4103,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func addOverflowFromInlineChildren() {
+    assert(isNativeImpl())
     if inlineLayout() != nil {
       inlineLayout()!.collectOverflow()
       return
@@ -4033,6 +4118,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     rects: inout ArraySlice<LayoutRectWrapper>, additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper?
   ) {
+    assert(isNativeImpl())
     assert(childrenInline())
     let box = InlineIterator.firstRootInlineBoxFor(self)
     while box.bool() {
@@ -4054,6 +4140,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func hasInlineLayout() -> Bool {
+    assert(isNativeImpl())
     switch lineLayout {
     case .Integration:
       return true
@@ -4063,6 +4150,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func layoutInlineContent(relayoutChildren: Bool) -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     let layoutState = view().frameView().layoutContext().layoutState()!
 
     var hasSimpleOutOfFlowContentOnly = !hasLineIfEmpty()
@@ -4185,6 +4273,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     layoutState: RenderLayoutStateWrapper,
     layoutFormattingContextLineLayout: LayoutIntegration.LineLayout
   ) {
+    assert(isNativeImpl())
     var legacyLineClamp = layoutState.legacyLineClamp()
     if legacyLineClamp == nil || isFloatingOrOutOfFlowPositioned() {
       return
@@ -4212,6 +4301,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     layoutFormattingContextLineLayout: LayoutIntegration.LineLayout,
     legacyLineClamp: RenderLayoutStateWrapper.LegacyLineClamp?
   ) -> LayoutUnit? {
+    assert(isNativeImpl())
     if let clampedHeight = layoutFormattingContextLineLayout.clampedContentLogicalHeight() {
       return clampedHeight
     }
@@ -4228,6 +4318,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     newBorderBoxBottom: LayoutUnit, oldBorderBoxBottom: LayoutUnit,
     partialRepaintRect: LayoutRectWrapper?, relayoutChildren: Bool
   ) -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     let isFullLayout = selfNeedsLayout() || relayoutChildren
     if isFullLayout {
       if !selfNeedsLayout() {
@@ -4274,6 +4365,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func computeBorderBoxBottom(
     contentBoxTop: LayoutUnit, layoutFormattingContextLineLayout: LayoutIntegration.LineLayout
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let contentBoxBottom =
       contentBoxTop
       + computeContentHeight(layoutFormattingContextLineLayout: layoutFormattingContextLineLayout)
@@ -4284,6 +4376,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func computeContentHeight(layoutFormattingContextLineLayout: LayoutIntegration.LineLayout)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     if !hasLines() && hasLineIfEmpty() {
       if previousInlineLayoutContentBoxLogicalHeight != nil {
         return previousInlineLayoutContentBoxLogicalHeight!
@@ -4305,6 +4398,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func tryComputePreferredWidthsUsingInlinePath() -> (LayoutUnit, LayoutUnit)? {
+    assert(isNativeImpl())
     if firstInFlowChild() == nil {
       return nil
     }
@@ -4337,6 +4431,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setStaticPositionsForSimpleOutOfFlowContent() {
+    assert(isNativeImpl())
     assert(childrenInline())
     #if !NDEBUG
       assert(!hasLineIfEmpty())
@@ -4382,6 +4477,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   private func adjustIntrinsicLogicalWidthsForColumns(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     if style().hasAutoColumnCount() && style().hasAutoColumnWidth() {
       return
     }
@@ -4407,6 +4503,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func computeInlinePreferredLogicalWidths() -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     assert(!shouldApplyInlineSizeContainment())
 
     if let (minLogicalWidth, maxLogicalWidth) = tryComputePreferredWidthsUsingInlinePath() {
@@ -4848,6 +4945,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     childBox: RenderBoxWrapper, logicalTopOffset: inout LayoutUnit,
     marginBeforeOffset: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     let style = firstLineStyle()
     let fontMetrics = style.metricsOfPrimaryFont()
     if fontMetrics.capHeight() == nil {
@@ -4883,6 +4981,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func selfCollapsingMarginBeforeWithClear(candidate: RenderObjectWrapper?) -> LayoutUnit? {
+    assert(isNativeImpl())
     let candidateBlockFlow = candidate as? RenderBlockFlowWrapper
     if candidateBlockFlow == nil {
       return nil
@@ -4909,6 +5008,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func computeLineAdjustmentForPagination(
     lineBox: InlineIterator.LineBoxIterator, delta: LayoutUnit, floatMinimumBottom: LayoutUnit
   ) -> LinePaginationAdjustment {
+    assert(isNativeImpl())
     // FIXME: For now we paginate using line overflow. This ensures that lines don't overlap at all when we
     // put a strut between them for pagination purposes. However, this really isn't the desired rendering, since
     // the line on the top of the next page will appear too far down relative to the same kind of line at the top
