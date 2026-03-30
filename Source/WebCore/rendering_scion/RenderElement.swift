@@ -1949,6 +1949,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
   }
 
+  func renderBlockFlowLineLayoutPath() -> RenderBlockFlowWrapper.LineLayoutPath {
+    assert(isNativeImpl())
+    return m_renderBlockFlowLineLayoutPath
+  }
+
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
     if paintInfo.context().paintingDisabled() {
       return
