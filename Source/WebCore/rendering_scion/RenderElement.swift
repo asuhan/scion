@@ -1042,7 +1042,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasBackground() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_hasBackground(id())
+    }
     return style().hasBackground()
   }
 

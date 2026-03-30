@@ -122,6 +122,11 @@ extern "C" WEBCORE_EXPORT void RenderElement_setChildNeedsLayout(void* p, uint8_
     static_cast<WebCore::RenderElement*>(p)->setChildNeedsLayout(static_cast<WebCore::MarkingBehavior>(mark_parents));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_hasBackground(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->hasBackground();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderElement_hasSelfPaintingLayer(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->hasSelfPaintingLayer();
