@@ -864,27 +864,27 @@ class RenderTreeBuilder {
         || (beforeChild as! RenderTextWrapper).inlineWrapperForDisplayContents() == nil)
 
     // Take the ownership.
-    let newChild = parent.attachRendererInternal(child: child, beforeChild: beforeChild)
+    let newChild = parent.attachRendererInternal(child: child!, beforeChild: beforeChild)
     if parent.renderTreeBeingDestroyed() {
       fatalError("Not reached")
     }
 
-    newChild!.insertedIntoTree()
-    invalidateLineLayout(renderer: newChild!, isRemoval: .No)
+    newChild.insertedIntoTree()
+    invalidateLineLayout(renderer: newChild, isRemoval: .No)
 
     if internalMovesType == .No {
-      newChild!.initializeFragmentedFlowStateOnInsertion()
-      if let fragmentedFlow = newChild!.enclosingFragmentedFlow() as? RenderMultiColumnFlowWrapper {
+      newChild.initializeFragmentedFlowStateOnInsertion()
+      if let fragmentedFlow = newChild.enclosingFragmentedFlow() as? RenderMultiColumnFlowWrapper {
         multiColumnBuilder!.multiColumnDescendantInserted(
-          flow: fragmentedFlow, newDescendant: newChild!)
+          flow: fragmentedFlow, newDescendant: newChild)
       }
       if let listItemRenderer = newChild as? RenderListItemWrapper {
         listItemRenderer.updateListMarkerNumbers()
       }
     }
 
-    newChild!.setNeedsLayoutAndPrefWidthsRecalc()
-    let isOutOfFlowBox = newChild!.style().hasOutOfFlowPosition()
+    newChild.setNeedsLayoutAndPrefWidthsRecalc()
+    let isOutOfFlowBox = newChild.style().hasOutOfFlowPosition()
     if !isOutOfFlowBox {
       parent.setPreferredLogicalWidthsDirty(shouldBeDirty: true)
     }
@@ -892,7 +892,7 @@ class RenderTreeBuilder {
     if !parent.normalChildNeedsLayout() {
       if isOutOfFlowBox {
         if RenderTreeBuilder.newChildIsEligibleForStaticPositionLayoutOnly(
-          newChild: newChild!, parent: parent)
+          newChild: newChild, parent: parent)
         {
           // FIXME: Introduce a dirty bit to bridge the gap between parent and containing block which would
           // not trigger layout but a simple traversal all the way to the direct parent and also expand it non-direct parent cases.
@@ -912,8 +912,8 @@ class RenderTreeBuilder {
     if parent.hasOutlineAutoAncestor()
       || parent.outlineStyleForRepaint().outlineStyleIsAuto() == .On
     {
-      if !(newChild!.previousSibling() is RenderMultiColumnSetWrapper) {
-        newChild!.setHasOutlineAutoAncestor()
+      if !(newChild.previousSibling() is RenderMultiColumnSetWrapper) {
+        newChild.setHasOutlineAutoAncestor()
       }
     }
   }

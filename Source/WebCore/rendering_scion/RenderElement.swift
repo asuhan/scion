@@ -1204,10 +1204,10 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   @discardableResult
-  func attachRendererInternal(child: RenderObjectWrapper?, beforeChild: RenderObjectWrapper?)
-    -> RenderObjectWrapper?
+  func attachRendererInternal(child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?)
+    -> RenderObjectWrapper
   {
-    child!.setParent(parent: self)
+    child.setParent(parent: self)
 
     if CPtrToInt(m_firstChild?.id()) == CPtrToInt(beforeChild?.id()) {
       m_firstChild = child
@@ -1218,15 +1218,15 @@ class RenderElementWrapper: RenderObjectWrapper {
       if previousSibling != nil {
         previousSibling!.setNextSibling(next: child)
       }
-      child!.setPreviousSibling(previous: previousSibling)
-      child!.setNextSibling(next: beforeChild)
+      child.setPreviousSibling(previous: previousSibling)
+      child.setNextSibling(next: beforeChild)
       beforeChild!.setPreviousSibling(previous: child)
       return child
     }
     if m_lastChild != nil {
       m_lastChild!.setNextSibling(next: child)
     }
-    child!.setPreviousSibling(previous: m_lastChild)
+    child.setPreviousSibling(previous: m_lastChild)
     m_lastChild = child
     return child
   }

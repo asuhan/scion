@@ -28,7 +28,7 @@ private func moveAllChildrenToInternal(
 ) {
   while from.firstChild() != nil {
     newParent.attachRendererInternal(
-      child: from.detachRendererInternal(renderer: from.firstChild()!), beforeChild: from)
+      child: from.detachRendererInternal(renderer: from.firstChild()!)!, beforeChild: from)
   }
 }
 
