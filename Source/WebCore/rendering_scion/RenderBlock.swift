@@ -987,13 +987,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginBeforeForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return child.marginBefore(otherStyle: style())
   }
 
   func marginAfterForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return child.marginAfter(otherStyle: style())
   }
 
   func marginStartForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
