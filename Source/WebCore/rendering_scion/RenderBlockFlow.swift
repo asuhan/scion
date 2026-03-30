@@ -2300,8 +2300,12 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func computeAndSetLineLayoutPath() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if lineLayoutPath() != .UndeterminedPath {
+      return
+    }
+    setLineLayoutPath(
+      path: LayoutIntegration.LineLayout.canUseFor(self) ? .InlinePath : .SvgTextPath)
   }
 
   enum LineLayoutPath {

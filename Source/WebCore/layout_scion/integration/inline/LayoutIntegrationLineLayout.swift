@@ -201,6 +201,10 @@ class LayoutIntegration {
         layoutState: flow.view().layoutState(), rootLayoutBox: boxTree.rootLayoutBox())
     }
 
+    static func canUseFor(_ flow: RenderBlockFlowWrapper) -> Bool {
+      return canUseForLineLayout(rootContainer: flow)
+    }
+
     enum TypeOfChangeForInvalidation: UInt8 {
       case NodeInsertion
       case NodeRemoval
