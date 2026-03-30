@@ -2943,23 +2943,31 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func maxPositiveMarginBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareBlockFlowData()
+      ? rareBlockFlowData().margins.positiveMarginBefore
+      : RenderBlockFlowRareData.positiveMarginBeforeDefault(self)
   }
 
   private func maxNegativeMarginBefore() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareBlockFlowData()
+      ? rareBlockFlowData().margins.negativeMarginBefore
+      : RenderBlockFlowRareData.negativeMarginBeforeDefault(self)
   }
 
   private func maxPositiveMarginAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareBlockFlowData()
+      ? rareBlockFlowData().margins.positiveMarginAfter
+      : RenderBlockFlowRareData.positiveMarginAfterDefault(self)
   }
 
   private func maxNegativeMarginAfter() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareBlockFlowData()
+      ? rareBlockFlowData().margins.negativeMarginAfter
+      : RenderBlockFlowRareData.negativeMarginAfterDefault(self)
   }
 
   private func initMaxMarginValues() {
