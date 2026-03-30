@@ -1949,6 +1949,11 @@ class RenderElementWrapper: RenderObjectWrapper {
     }
   }
 
+  func setRenderBlockFlowLineLayoutPath(_ u: RenderBlockFlowWrapper.LineLayoutPath) {
+    assert(isNativeImpl())
+    m_renderBlockFlowLineLayoutPath = u
+  }
+
   func renderBlockFlowLineLayoutPath() -> RenderBlockFlowWrapper.LineLayoutPath {
     assert(isNativeImpl())
     return m_renderBlockFlowLineLayoutPath
@@ -2316,7 +2321,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   var renderBlockHasMarginAfterQuirk: Bool
   var renderBlockShouldForceRelayoutChildren: Bool
   var renderBlockHasRareData = false
-  private let m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
+  private var m_renderBlockFlowLineLayoutPath: RenderBlockFlowWrapper.LineLayoutPath
 
   private var m_lastChild: RenderObjectWrapper?
 

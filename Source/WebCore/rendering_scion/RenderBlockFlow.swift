@@ -2316,8 +2316,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func setLineLayoutPath(path: LineLayoutPath) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    setRenderBlockFlowLineLayoutPath(path)
   }
 
   func lineCount() -> Int32 {
