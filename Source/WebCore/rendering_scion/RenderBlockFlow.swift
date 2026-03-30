@@ -83,8 +83,11 @@ struct MarginValues {
     negativeMarginAfter = afterNeg
   }
 
-  let positiveMarginBefore: LayoutUnit
-  let negativeMarginBefore: LayoutUnit
+  mutating func setPositiveMarginBefore(_ pos: LayoutUnit) { positiveMarginBefore = pos }
+  mutating func setNegativeMarginBefore(_ neg: LayoutUnit) { negativeMarginBefore = neg }
+
+  var positiveMarginBefore: LayoutUnit
+  var negativeMarginBefore: LayoutUnit
   let positiveMarginAfter: LayoutUnit
   let negativeMarginAfter: LayoutUnit
 }
@@ -2984,8 +2987,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setMaxMarginBeforeValues(pos: LayoutUnit, neg: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !hasRareBlockFlowData() {
+      if pos == RenderBlockFlowRareData.positiveMarginBeforeDefault(self)
+        && neg == RenderBlockFlowRareData.negativeMarginBeforeDefault(self)
+      {
+        return
+      }
+      materializeRareBlockFlowData()
+    }
+
+    rareBlockFlowData().margins.setPositiveMarginBefore(pos)
+    rareBlockFlowData().margins.setNegativeMarginBefore(neg)
   }
 
   private func setMaxMarginAfterValues(pos: LayoutUnit, neg: LayoutUnit) {
@@ -5218,11 +5231,17 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  private func materializeRareBlockFlowData() {
+    assert(isNativeImpl())
+    assert(!hasRareBlockFlowData())
+    m_rareBlockFlowData = RenderBlockFlowRareData(self)
+  }
+
   // FIXME: This is temporary until after we remove the forced "line layout codepath" invalidation.
   private var previousInlineLayoutContentBoxLogicalHeight: LayoutUnit?
 
   private let floatingObjects: FloatingObjects? = nil
-  private let m_rareBlockFlowData: RenderBlockFlowRareData? = nil
+  private var m_rareBlockFlowData: RenderBlockFlowRareData? = nil
 
   enum LineLayout {
     case None
