@@ -1874,8 +1874,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func lineBreakToAvoidWidow() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return hasRareBlockFlowData() ? rareBlockFlowData().lineBreakToAvoidWidow : -1
   }
 
   func setBreakAtLineToAvoidWidow(lineToBreak: Int) {
