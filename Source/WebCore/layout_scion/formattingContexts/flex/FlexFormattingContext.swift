@@ -294,7 +294,7 @@ class FlexFormattingContext {
   ) -> FlexRect {
     // Note that flex rects are inner size based.
     if let flexBoxLogicalHeightForWarpReverse = flexBoxLogicalHeightForWarpReverse {
-      let rect = logicalRects[index]
+      var rect = logicalRects[index]
       var adjustedLogicalTop = flexBoxLogicalHeightForWarpReverse - rect.bottom()
       if logicalFlexItem.isContentBoxBased() {
         adjustedLogicalTop -= flexItemGeometry.verticalBorderAndPadding()

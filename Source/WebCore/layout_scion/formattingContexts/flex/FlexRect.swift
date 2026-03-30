@@ -92,9 +92,11 @@ struct FlexRect {
     return m_rect.height()
   }
 
-  func setTop(top: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func setTop(top: LayoutUnit) {
+    #if ASSERT_ENABLED
+      m_hasValidTop = true
+    #endif  // ASSERT_ENABLED
+    m_rect.setY(y: top)
   }
 
   #if ASSERT_ENABLED
@@ -103,7 +105,7 @@ struct FlexRect {
     private let m_hasValidWidth: Bool
     private let m_hasValidHeight: Bool
   #endif  // ASSERT_ENABLED
-  private let m_rect: LayoutRectWrapper
+  private var m_rect: LayoutRectWrapper
   private let m_mainAxisMargins: Margins
   private let m_crossAxisMargins: Margins
 }
