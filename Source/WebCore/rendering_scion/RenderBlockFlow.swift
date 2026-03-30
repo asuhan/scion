@@ -85,11 +85,13 @@ struct MarginValues {
 
   mutating func setPositiveMarginBefore(_ pos: LayoutUnit) { positiveMarginBefore = pos }
   mutating func setNegativeMarginBefore(_ neg: LayoutUnit) { negativeMarginBefore = neg }
+  mutating func setPositiveMarginAfter(_ pos: LayoutUnit) { positiveMarginAfter = pos }
+  mutating func setNegativeMarginAfter(_ neg: LayoutUnit) { negativeMarginAfter = neg }
 
   var positiveMarginBefore: LayoutUnit
   var negativeMarginBefore: LayoutUnit
-  let positiveMarginAfter: LayoutUnit
-  let negativeMarginAfter: LayoutUnit
+  var positiveMarginAfter: LayoutUnit
+  var negativeMarginAfter: LayoutUnit
 }
 
 // Allocated only when some of these fields have non-default values
@@ -3002,8 +3004,18 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func setMaxMarginAfterValues(pos: LayoutUnit, neg: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !hasRareBlockFlowData() {
+      if pos == RenderBlockFlowRareData.positiveMarginAfterDefault(self)
+        && neg == RenderBlockFlowRareData.negativeMarginAfterDefault(self)
+      {
+        return
+      }
+      materializeRareBlockFlowData()
+    }
+
+    rareBlockFlowData().margins.setPositiveMarginAfter(pos)
+    rareBlockFlowData().margins.setNegativeMarginAfter(neg)
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
