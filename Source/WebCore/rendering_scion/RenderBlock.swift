@@ -1017,13 +1017,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func setMarginBeforeForChild(child: RenderBoxWrapper, value: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    child.setMarginBefore(value: value, overrideStyle: style())
   }
 
   func setMarginAfterForChild(child: RenderBoxWrapper, value: LayoutUnit) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    child.setMarginAfter(value: value, overrideStyle: style())
   }
 
   func setTrimmedMarginForChild(child: RenderBoxWrapper, marginTrimType: MarginTrimType) {
