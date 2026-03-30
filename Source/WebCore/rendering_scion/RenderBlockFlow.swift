@@ -5234,8 +5234,9 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func rareBlockFlowData() -> RenderBlockFlowRareData {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    assert(hasRareBlockFlowData())
+    return m_rareBlockFlowData!
   }
 
   func ensureRareBlockFlowData() -> RenderBlockFlowRareData {
