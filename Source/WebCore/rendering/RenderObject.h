@@ -1149,12 +1149,11 @@ public:
 
     bool isScion() const { return static_cast<bool>(m_scion); }
 
-protected:
+public:
     //////////////////////////////////////////
     // Helper functions. Dangerous to use!
     void setPreviousSibling(RenderObject* previous) { m_previous = previous; }
     void setNextSibling(RenderObject* next) { m_next = next; }
-public:
     void setParent(RenderElement*);
     //////////////////////////////////////////
 protected:

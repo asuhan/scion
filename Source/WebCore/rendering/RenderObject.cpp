@@ -117,6 +117,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderObject_maxPreferredLogicalWidth(const vo
     return width.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderObject_setPreviousSibling(void* p, void* previous)
+{
+    static_cast<WebCore::RenderObject*>(p)->setPreviousSibling(static_cast<WebCore::RenderObject*>(previous));
+}
+
 extern "C" WEBCORE_EXPORT void RenderObject_setParent(void* p, void* parent)
 {
     static_cast<WebCore::RenderObject*>(p)->setParent(static_cast<WebCore::RenderElement*>(parent));

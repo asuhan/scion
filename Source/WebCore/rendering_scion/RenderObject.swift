@@ -2749,6 +2749,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   //////////////////////////////////////////
   // Helper functions. Dangerous to use!
   func setPreviousSibling(previous: RenderObjectWrapper?) {
+    if !isNativeImpl() {
+      assert(previous == nil || !previous!.isNativeImpl())
+      wk_interop.RenderObject_setPreviousSibling(id(), previous?.id())
+      return
+    }
     assert(isNativeImpl())
     m_previous = previous
   }
