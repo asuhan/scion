@@ -124,6 +124,7 @@ RenderView::~RenderView()
 
 void RenderView::setScionHandle(void* handle) {
     RenderObject::setScionHandle(handle);
+    RenderElement::setScionHandle(handle);
     RenderLayerModelObject::setScionHandle(handle);
     m_scion = std::make_unique<RenderViewScion>(handle);
     m_scion->setWk(this);

@@ -2746,6 +2746,7 @@ rendering/RenderCounter.cpp
 rendering/RenderDeprecatedFlexibleBox.cpp
 rendering/RenderDetailsMarker.cpp
 rendering/RenderElement.cpp
+rendering/RenderElementScion.cpp
 rendering/RenderEmbeddedObject.cpp
 rendering/RenderFileUploadControl.cpp
 rendering/RenderFlexibleBox.cpp

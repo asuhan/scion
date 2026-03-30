@@ -34,6 +34,7 @@ class ContentData;
 class BlendingKeyframes;
 class ReferencedSVGResources;
 class RenderBlock;
+class RenderElementScion;
 class RenderStyle;
 class RenderTreeBuilder;
 
@@ -51,6 +52,8 @@ class RenderElement : public RenderObject {
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderElement);
 public:
     virtual ~RenderElement();
+
+    void setScionHandle(void* handle);
 
     static bool isContentDataSupported(const ContentData&);
 
@@ -423,6 +426,8 @@ private:
     LayoutIdentifier m_layoutIdentifier : 12 { 0 };
 
     RenderStyle m_style;
+
+    std::unique_ptr<RenderElementScion> m_scion;
 };
 
 inline int adjustForAbsoluteZoom(int, const RenderElement&);

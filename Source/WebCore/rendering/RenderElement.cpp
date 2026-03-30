@@ -59,6 +59,7 @@
 #include "RenderDeprecatedFlexibleBox.h"
 #include "RenderDescendantIterator.h"
 #include "RenderElementInlines.h"
+#include "RenderElementScion.h"
 #include "RenderFlexibleBox.h"
 #include "RenderFragmentContainer.h"
 #include "RenderFragmentedFlow.h"
@@ -146,6 +147,7 @@ struct SameSizeAsRenderElement : public RenderObject {
     SingleThreadPackedWeakPtr<RenderObject> lastChild;
     unsigned bitfields2 : 13;
     RenderStyle style;
+    std::unique_ptr<RenderElementScion> m_scion;
 };
 
 static_assert(sizeof(RenderElement) == sizeof(SameSizeAsRenderElement), "RenderElement should stay small");
@@ -186,6 +188,10 @@ RenderElement::~RenderElement()
 {
     // Do not add any code here. Add it to willBeDestroyed() instead.
     ASSERT(!m_firstChild);
+}
+
+void RenderElement::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderElementScion>(handle);
 }
 
 Layout::ElementBox* RenderElement::layoutBox()
