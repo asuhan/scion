@@ -29,9 +29,25 @@ struct FlexRect {
     var end = LayoutUnit()
   }
 
+  private init(
+    top: LayoutUnit, left: LayoutUnit, width: LayoutUnit, height: LayoutUnit,
+    mainAxisMargins: Margins, crossAxisMargins: Margins
+  ) {
+    m_rect = LayoutRectWrapper(x: left, y: top, width: width, height: height)
+    m_mainAxisMargins = mainAxisMargins
+    m_crossAxisMargins = crossAxisMargins
+    #if ASSERT_ENABLED
+      m_hasValidTop = true
+      m_hasValidLeft = true
+      m_hasValidWidth = true
+      m_hasValidHeight = true
+    #endif  // ASSERT_ENABLED
+  }
+
   init(rect: LayoutRectWrapper, mainAxisMargins: Margins, crossAxisMargins: Margins) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    self.init(
+      top: rect.y(), left: rect.x(), width: rect.width(), height: rect.height(),
+      mainAxisMargins: mainAxisMargins, crossAxisMargins: crossAxisMargins)
   }
 
   func top() -> LayoutUnit {
@@ -68,4 +84,14 @@ struct FlexRect {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  #if ASSERT_ENABLED
+    private let m_hasValidTop: Bool
+    private let m_hasValidLeft: Bool
+    private let m_hasValidWidth: Bool
+    private let m_hasValidHeight: Bool
+  #endif  // ASSERT_ENABLED
+  private let m_rect: LayoutRectWrapper
+  private let m_mainAxisMargins: Margins
+  private let m_crossAxisMargins: Margins
 }
