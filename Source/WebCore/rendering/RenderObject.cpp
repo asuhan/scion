@@ -90,6 +90,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderElement(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderElement();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isHorizontalWritingMode(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isHorizontalWritingMode();

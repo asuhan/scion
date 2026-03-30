@@ -893,7 +893,9 @@ func RenderElementScion_attachRendererInternal(
   _ beforeChildRaw: UnsafeMutableRawPointer?
 ) {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  let child = RenderObjectWrapper(p: childRaw)
+  let child =
+    wk_interop.RenderObject_isRenderElement(childRaw)
+    ? RenderElementWrapper(p: childRaw) : RenderObjectWrapper(p: childRaw)
   let beforeChild = beforeChildRaw != nil ? RenderObjectWrapper(p: beforeChildRaw!) : nil
   element.attachRendererInternal(child: child, beforeChild: beforeChild)
 }
