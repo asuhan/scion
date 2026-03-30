@@ -2759,6 +2759,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setParent(parent: RenderElementWrapper?) {
+    if !isNativeImpl() {
+      wk_interop.RenderObject_setParent(id(), (parent! as! RenderViewWrapper).getWk())
+      return
+    }
     assert(isNativeImpl())
     m_parent = parent
   }

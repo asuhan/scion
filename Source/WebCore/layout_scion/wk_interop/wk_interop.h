@@ -472,6 +472,7 @@ bool RenderObject_hasNonVisibleOverflow(const void*);
 void* RenderObject_view(const void*);
 int32_t RenderObject_minPreferredLogicalWidth(const void*);
 int32_t RenderObject_maxPreferredLogicalWidth(const void*);
+void RenderObject_setParent(void* p, void* parent);
 void RenderObject_setNeedsLayout(void*, uint8_t);
 void* RenderObject_containingBlock(const void*);
 const void* RenderObject_style(const void*);

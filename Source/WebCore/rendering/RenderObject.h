@@ -1154,8 +1154,10 @@ protected:
     // Helper functions. Dangerous to use!
     void setPreviousSibling(RenderObject* previous) { m_previous = previous; }
     void setNextSibling(RenderObject* next) { m_next = next; }
+public:
     void setParent(RenderElement*);
     //////////////////////////////////////////
+protected:
     Node& nodeForNonAnonymous() const { ASSERT(!isAnonymous()); return m_node.get(); }
 
     virtual void willBeDestroyed();
