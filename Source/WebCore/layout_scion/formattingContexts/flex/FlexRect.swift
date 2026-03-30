@@ -51,23 +51,31 @@ struct FlexRect {
   }
 
   func top() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(m_hasValidTop)
+    #endif  // ASSERT_ENABLED
+    return m_rect.y()
   }
 
   func left() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(m_hasValidLeft)
+    #endif  // ASSERT_ENABLED
+    return m_rect.x()
   }
 
   func bottom() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(m_hasValidTop && m_hasValidHeight)
+    #endif  // ASSERT_ENABLED
+    return m_rect.maxY()
   }
 
   func right() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    #if ASSERT_ENABLED
+      assert(m_hasValidLeft && m_hasValidWidth)
+    #endif  // ASSERT_ENABLED
+    return m_rect.maxX()
   }
 
   func width() -> LayoutUnit {
