@@ -299,6 +299,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   )
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     // Inline blocks are replaced elements. Otherwise, just pass off to
     // the base class.  If we're being queried as though we're the root line
     // box, then the fact that we're an inline-block is irrelevant, and we behave
@@ -323,6 +324,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   ) { fatalError("Not reached") }
 
   func insertPositionedObject(positioned: RenderBoxWrapper) {
+    assert(isNativeImpl())
     assert(!isAnonymousBlock())
 
     positioned.clearOverridingContainingBlockContentSize()
@@ -347,6 +349,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     newContainingBlockCandidate: RenderBlockWrapper?,
     containingBlockState: ContainingBlockState = .SameContainingBlock
   ) {
+    assert(isNativeImpl())
     let positionedDescendants = positionedObjects()
     if positionedDescendants == nil {
       return
@@ -457,6 +460,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func isContainingBlockAncestorFor(renderer: RenderObjectWrapper) -> Bool {
+    assert(isNativeImpl())
     var ancestor = renderer.containingBlock()
     while ancestor != nil {
       if CPtrToInt(ancestor!.id()) == CPtrToInt(id()) {
@@ -477,17 +481,28 @@ class RenderBlockWrapper: RenderBoxWrapper {
     renderBlockHasMarginAfterQuirk = b
   }
 
-  func setShouldForceRelayoutChildren(b: Bool) { renderBlockShouldForceRelayoutChildren = b }
+  func setShouldForceRelayoutChildren(b: Bool) {
+    assert(isNativeImpl())
+    renderBlockShouldForceRelayoutChildren = b
+  }
 
-  func hasMarginBeforeQuirk() -> Bool { return renderBlockHasMarginBeforeQuirk }
+  func hasMarginBeforeQuirk() -> Bool {
+    assert(isNativeImpl())
+    return renderBlockHasMarginBeforeQuirk
+  }
 
-  func hasMarginAfterQuirk() -> Bool { return renderBlockHasMarginAfterQuirk }
+  func hasMarginAfterQuirk() -> Bool {
+    assert(isNativeImpl())
+    return renderBlockHasMarginAfterQuirk
+  }
 
   private func hasBorderOrPaddingLogicalWidthChanged() -> Bool {
+    assert(isNativeImpl())
     return renderBlockShouldForceRelayoutChildren
   }
 
   func hasMarginBeforeQuirk(child: RenderBoxWrapper) -> Bool {
+    assert(isNativeImpl())
     // If the child has the same directionality as we do, then we can just return its
     // margin quirk.
     if !child.isWritingModeRoot() {
@@ -512,6 +527,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hasMarginAfterQuirk(child: RenderBoxWrapper) -> Bool {
+    assert(isNativeImpl())
     // If the child has the same directionality as we do, then we can just return its
     // margin quirk.
     if !child.isWritingModeRoot() {
@@ -536,6 +552,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func markPositionedObjectsForLayout() {
+    assert(isNativeImpl())
     guard let positionedDescendants = positionedObjects() else { return }
 
     for descendant in positionedDescendants {
@@ -544,6 +561,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func markForPaginationRelayoutIfNeeded() {
+    assert(isNativeImpl())
     let layoutState = view().frameView().layoutContext().layoutState()
     if needsLayout() || layoutState == nil || !layoutState!.isPaginated() {
       return
@@ -647,6 +665,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
+    assert(isNativeImpl())
     if isRenderTable() {
       return super.positionForPoint(point, source, fragment)
     }
@@ -744,6 +763,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func createAnonymousBoxWithSameTypeAs(renderer: RenderBoxWrapper) -> RenderBoxWrapper? {
+    assert(isNativeImpl())
     return createAnonymousBlockWithStyleAndDisplay(
       document: document(), style: renderer.style(), display: style().display())
   }
@@ -779,6 +799,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
+    assert(isNativeImpl())
     let rareData = getBlockRareData()
     if rareData == nil {
       if !strut.bool() {
@@ -821,6 +842,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func borderTop() -> LayoutUnit {
+    assert(isNativeImpl())
     if style().blockFlowDirection() != .TopToBottom || !intrinsicBorderForFieldset().bool() {
       return super.borderTop()
     }
@@ -828,6 +850,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func borderBottom() -> LayoutUnit {
+    assert(isNativeImpl())
     if style().blockFlowDirection() != .BottomToTop || !intrinsicBorderForFieldset().bool() {
       return super.borderBottom()
     }
@@ -835,6 +858,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func borderLeft() -> LayoutUnit {
+    assert(isNativeImpl())
     if style().blockFlowDirection() != .LeftToRight || !intrinsicBorderForFieldset().bool() {
       return super.borderLeft()
     }
@@ -842,6 +866,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func borderRight() -> LayoutUnit {
+    assert(isNativeImpl())
     if style().blockFlowDirection() != .RightToLeft || !intrinsicBorderForFieldset().bool() {
       return super.borderRight()
     }
@@ -854,6 +879,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
+    assert(isNativeImpl())
     // FIXME: We're doing this to match other browsers even though it's questionable.
     // Shouldn't height:100px mean the fieldset content gets 100px of height even if the
     // resulting fieldset becomes much taller because of the legend?
@@ -877,6 +903,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func paintExcludedChildrenInBorder(
     paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
+    assert(isNativeImpl())
     if !isFieldset() || isSkippedContentRoot() {
       return
     }
@@ -921,6 +948,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     child: RenderBoxWrapper, logicalLeft: LayoutUnit,
     applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
   ) {
+    assert(isNativeImpl())
     let zero = LayoutUnit(value: UInt64(0))
     if isHorizontalWritingMode() {
       if applyDelta == .ApplyLayoutDelta {
@@ -941,6 +969,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     child: RenderBoxWrapper, logicalTop: LayoutUnit,
     applyDelta: ApplyLayoutDeltaMode = .DoNotApplyLayoutDelta
   ) {
+    assert(isNativeImpl())
     let zero = LayoutUnit(value: UInt64(0))
     if isHorizontalWritingMode() {
       if applyDelta == .ApplyLayoutDelta {
@@ -998,6 +1027,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func setTrimmedMarginForChild(child: RenderBoxWrapper, marginTrimType: MarginTrimType) {
+    assert(isNativeImpl())
     let zero = LayoutUnit(value: UInt64(0))
     switch marginTrimType {
     case .BlockStart:
@@ -1023,6 +1053,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func getFirstLetter(skipObject: RenderObjectWrapper? = nil) -> FirstLetterRenderObjects {
+    assert(isNativeImpl())
     var firstLetter: RenderObjectWrapper? = nil
     var firstLetterContainer: RenderElementWrapper? = nil
 
@@ -1089,6 +1120,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func logicalLeftOffsetForContent(_ fragment: RenderFragmentContainerWrapper?)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     var logicalLeftOffset =
       style().isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
     if shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() && isHorizontalWritingMode() {
@@ -1104,6 +1136,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func logicalRightOffsetForContent(_ fragment: RenderFragmentContainerWrapper?)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     var logicalRightOffset =
       style().isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
     if shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() && isHorizontalWritingMode() {
@@ -1133,10 +1166,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalLeftOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     return logicalLeftOffsetForContent(fragmentAtBlockOffset(blockOffset: blockOffset))
   }
 
   func logicalRightOffsetForContent(blockOffset: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     return logicalRightOffsetForContent(fragmentAtBlockOffset(blockOffset: blockOffset))
   }
 
@@ -1146,6 +1181,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalLeftOffsetForContent() -> LayoutUnit {
+    assert(isNativeImpl())
     return isHorizontalWritingMode() ? borderLeft() + paddingLeft() : borderTop() + paddingTop()
   }
 
@@ -1167,6 +1203,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   #if ASSERT_ENABLED
     func checkPositionedObjectsNeedLayout() {
+      assert(isNativeImpl())
       guard let positionedDescendants = positionedObjects() else { return }
 
       for renderer in positionedDescendants {
@@ -1193,6 +1230,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   override final func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
     fragmentedFlow: RenderFragmentedFlowWrapper? = nil
   ) {
+    assert(isNativeImpl())
     if fragmentedFlowState() == .NotInsideFlow {
       return
     }
@@ -1207,6 +1245,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func availableLogicalHeightForPercentageComputation() -> LayoutUnit? {
+    assert(isNativeImpl())
     // For anonymous blocks that are skipped during percentage height calculation,
     // we consider them to have an indefinite height.
     if skipContainingBlockForPercentHeightCalculation(
@@ -1290,9 +1329,15 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return nil
   }
 
-  func hasDefiniteLogicalHeight() -> Bool { return renderBlockHasDefiniteLogicalHeight() }
+  func hasDefiniteLogicalHeight() -> Bool {
+    assert(isNativeImpl())
+    return renderBlockHasDefiniteLogicalHeight()
+  }
 
-  func shouldResetChildLogicalHeightBeforeLayout() -> Bool { return false }
+  func shouldResetChildLogicalHeightBeforeLayout() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
 
   func renderBlockHasDefiniteLogicalHeight() -> Bool {
     assert(isNativeImpl())
@@ -1300,6 +1345,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hasLineIfEmpty() -> Bool {
+    assert(isNativeImpl())
     if element() == nil {
       return false
     }
@@ -1317,6 +1363,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
+    assert(isNativeImpl())
     // TODO(asuhan): add stack stats
 
     // Table cells call layoutBlock directly, so don't add any logic here.  Put code into
@@ -1337,6 +1384,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func layoutPositionedObjects(relayoutChildren: Bool, fixedPositionObjectsOnly: Bool = false) {
+    assert(isNativeImpl())
     if let positionedDescendants = positionedObjects() {
       // Do not cache positionedDescendants->end() in a local variable, since |positionedDescendants| can be mutated
       // as it is walked. We always need to fetch the new end() value dynamically.
@@ -1351,6 +1399,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func layoutPositionedObject(
     r: RenderBoxWrapper, relayoutChildren: Bool, fixedPositionObjectsOnly: Bool
   ) {
+    assert(isNativeImpl())
     if isSkippedContentRoot() {
       r.clearNeedsLayoutForSkippedContent()
       return
@@ -1443,6 +1492,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func markFixedPositionObjectForLayoutIfNeeded(positionedChild: RenderBoxWrapper) {
+    assert(isNativeImpl())
     if positionedChild.style().position() != .Fixed {
       return
     }
@@ -1481,6 +1531,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginIntrinsicLogicalWidthForChild(child: RenderBoxWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
     // A margin has three types: fixed, percentage, and auto (variable).
     // Auto and percentage margins become 0 when computing min/max width.
     // Fixed margins can be added in as is.
@@ -1497,6 +1548,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     let adjustedPaintOffset = paintOffset + location()
     let phase = paintInfo.phase
 
@@ -1531,6 +1583,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func visualContentIsClippedOut(
     paintInfo: PaintInfoWrapper, adjustedPaintOffset: LayoutPointWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     if isDocumentElementRenderer() {
       return false
     }
@@ -1548,6 +1601,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func paintObject(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     let paintPhase = paintInfo.phase
 
     // 1. paint background, borders etc
@@ -1716,6 +1770,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper,
     paintInfoForChild: inout PaintInfoWrapper, usePrintRect: Bool
   ) {
+    assert(isNativeImpl())
     var child = firstChildBox()
     while child != nil {
       if !paintChild(
@@ -1738,6 +1793,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     paintInfoForChild: inout PaintInfoWrapper, usePrintRect: Bool,
     paintType: PaintBlockType = .PaintAsBlock
   ) -> Bool {
+    assert(isNativeImpl())
     if child.isExcludedAndPlacedInBorder() {
       return true
     }
@@ -1800,6 +1856,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ hitTestAction: HitTestAction
   ) -> Bool {
+    assert(isNativeImpl())
     let adjustedLocation = accumulatedOffset + location()
     let localOffset = toLayoutSize(point: adjustedLocation)
 
@@ -1876,6 +1933,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     assert(!childrenInline())
     if shouldApplySizeOrInlineSizeContainment() {
       if let width = explicitIntrinsicInnerLogicalWidth() {
@@ -1895,6 +1953,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func computePreferredLogicalWidths() {
+    assert(isNativeImpl())
     assert(preferredLogicalWidthsDirty())
 
     m_minPreferredLogicalWidth = LayoutUnit(value: 0)
@@ -1927,6 +1986,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func firstLineBaseline() -> LayoutUnit? {
+    assert(isNativeImpl())
     if shouldApplyLayoutContainment() {
       return nil
     }
@@ -1949,6 +2009,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func lastLineBaseline() -> LayoutUnit? {
+    assert(isNativeImpl())
     if shouldApplyLayoutContainment() {
       return nil
     }
@@ -1984,6 +2045,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateScrollInfoAfterLayout() {
+    assert(isNativeImpl())
     if !hasNonVisibleOverflow() {
       return
     }
@@ -2007,6 +2069,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    assert(isNativeImpl())
     let oldStyle = hasInitializedStyle ? style() : nil
     // FIXME: Should change the expression below to newStyle.display() == DisplayType::InlineBlock.
     setReplacedOrInlineBlock(newStyle.isDisplayInlineType())
@@ -2020,10 +2083,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     styleDidChangeRenderBlock(diff: diff, oldStyle: oldStyle)
   }
 
   func styleDidChangeRenderBlock(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
 
     if oldStyle != nil {
@@ -2041,10 +2106,12 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func canPerformSimplifiedLayout() -> Bool {
+    assert(isNativeImpl())
     return renderBlockCanPerformSimplifiedLayout()
   }
 
   func renderBlockCanPerformSimplifiedLayout() -> Bool {
+    assert(isNativeImpl())
     if selfNeedsLayout() || normalChildNeedsLayout() || outOfFlowChildNeedsStaticPositionLayout() {
       return false
     }
@@ -2057,6 +2124,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func simplifiedLayout() -> Bool {
+    assert(isNativeImpl())
     if !canPerformSimplifiedLayout() {
       return false
     }
@@ -2116,6 +2184,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func simplifiedNormalFlowLayout() {
+    assert(isNativeImpl())
     assert(!childrenInline())
 
     var box = firstChildBox()
@@ -2128,6 +2197,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func childBoxIsUnsplittableForFragmentation(child: RenderBoxWrapper) -> Bool {
+    assert(isNativeImpl())
     let fragmentedFlow = enclosingFragmentedFlow()
     let checkColumnBreaks = fragmentedFlow != nil && fragmentedFlow!.shouldCheckColumnBreaks()
     let checkPageBreaks =
@@ -2156,11 +2226,13 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // Overflow is always relative to the border-box of the element in question.
   // Therefore, if the element has a vertical scrollbar placed on the left, an overflow rect at x=2px would conceptually intersect the scrollbar.
   func computeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool = false) {
+    assert(isNativeImpl())
     return renderBlockComputeOverflow(
       oldClientAfterEdge: oldClientAfterEdge, recomputeFloats: recomputeFloats)
   }
 
   private func clearLayoutOverflow() {
+    assert(isNativeImpl())
     if overflow == nil {
       return
     }
@@ -2176,12 +2248,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
 
   // Adjust from painting offsets to the local coords of this renderer
   private func offsetForContents(_ offset: inout LayoutPointWrapper) {
+    assert(isNativeImpl())
     offset = flipForWritingMode(position: offset)
     offset += toLayoutSize(point: LayoutPointWrapper(point: scrollPosition()))
     offset = flipForWritingMode(position: offset)
   }
 
   func renderBlockComputeOverflow(oldClientAfterEdge: LayoutUnit, recomputeFloats: Bool) {
+    assert(isNativeImpl())
     clearOverflow()
     addOverflowFromChildren()
 
@@ -2202,6 +2276,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func includePaddingEnd() {
+    assert(isNativeImpl())
     // As per https://github.com/w3c/csswg-drafts/issues/3653 padding should contribute to the scrollable overflow area.
     if !paddingEnd().bool() {
       return
@@ -2228,6 +2303,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func layoutOverflowLogicalWidthIncludingPaddingEnd(layoutOverflowRect: LayoutRectWrapper)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     if hasHorizontalLayoutOverflow() {
       return (isHorizontalWritingMode() ? layoutOverflowRect.width() : layoutOverflowRect.height())
         + paddingEnd()
@@ -2250,6 +2326,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func includePaddingAfter(oldClientAfterEdge: LayoutUnit) {
+    assert(isNativeImpl())
     // When we have overflow clip, propagate the original spillout since it will include collapsed bottom margins and bottom padding.
     let clientRect = flippedClientBoxRect()
     let zero = LayoutUnit(value: UInt64(0))
@@ -2273,6 +2350,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func findFieldsetLegend(option: FieldsetFindLegendOption = .FieldsetIgnoreFloatingOrOutOfFlow)
     -> RenderBoxWrapper?
   {
+    assert(isNativeImpl())
     for legend: RenderBoxWrapper in childrenOfType(parent: self) {
       if option == .FieldsetIgnoreFloatingOrOutOfFlow && legend.isFloatingOrOutOfFlowPositioned() {
         continue
@@ -2285,6 +2363,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func layoutExcludedChildren(relayoutChildren: Bool) {
+    assert(isNativeImpl())
     if !isFieldset() {
       return
     }
@@ -2364,6 +2443,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func computePreferredWidthsForExcludedChildren() -> (LayoutUnit, LayoutUnit)? {
+    assert(isNativeImpl())
     if !isFieldset() {
       return nil
     }
@@ -2403,6 +2483,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {
+    assert(isNativeImpl())
     if !isFieldset() || isSkippedContentRoot() || !intrinsicBorderForFieldset().bool() {
       return
     }
@@ -2428,6 +2509,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override final func isInlineBlockOrInlineTable() -> Bool {
+    assert(isNativeImpl())
     return isInline() && isReplacedOrInlineBlock()
   }
 
@@ -2440,6 +2522,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func addOverflowFromChildren() {
+    assert(isNativeImpl())
     if childrenInline() {
       addOverflowFromInlineChildren()
 
@@ -2456,6 +2539,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func addOverflowFromInlineChildren() {}
 
   private func addOverflowFromBlockChildren() {
+    assert(isNativeImpl())
     var child = firstChildBox()
     while child != nil {
       if !child!.isFloatingOrOutOfFlowPositioned() {
@@ -2466,6 +2550,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func addOverflowFromPositionedObjects() {
+    assert(isNativeImpl())
     let positionedDescendants = positionedObjects()
     if positionedDescendants == nil {
       return
@@ -2484,6 +2569,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func addVisualOverflowFromTheme() {
+    assert(isNativeImpl())
     if !style().hasUsedAppearance() {
       return
     }
@@ -2502,6 +2588,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
+    assert(isNativeImpl())
     // For blocks inside inlines, we include margins so that we run right up to the inline boxes
     // above and below us (thus getting merged with them to form a single irregular shape).
     let inlineContinuation = inlineContinuation()
@@ -2575,6 +2662,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func computeFragmentRangeForBoxChild(box: RenderBoxWrapper) {
+    assert(isNativeImpl())
     let fragmentedFlow = enclosingFragmentedFlow()
     assert(
       canComputeFragmentRangeForBox(
@@ -2598,6 +2686,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func estimateFragmentRangeForBoxChild(box: RenderBoxWrapper) {
+    assert(isNativeImpl())
     let fragmentedFlow = enclosingFragmentedFlow()
     if !canComputeFragmentRangeForBox(
       parentBlock: self, childBox: box, enclosingFragmentedFlow: fragmentedFlow)
@@ -2625,6 +2714,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateFragmentRangeForBoxChild(box: RenderBoxWrapper) -> Bool {
+    assert(isNativeImpl())
     let fragmentedFlow = enclosingFragmentedFlow()
     if !canComputeFragmentRangeForBox(
       parentBlock: self, childBox: box, enclosingFragmentedFlow: fragmentedFlow)
@@ -2655,6 +2745,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func updateBlockChildDirtyBitsBeforeLayout(relayoutChildren: Bool, child: RenderBoxWrapper) {
+    assert(isNativeImpl())
     if child.isOutOfFlowPositioned() {
       return
     }
@@ -2672,6 +2763,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func preparePaginationBeforeBlockLayout(relayoutChildren: inout Bool) {
+    assert(isNativeImpl())
     // Fragments changing widths can force us to relayout our children.
     if let fragmentedFlow = enclosingFragmentedFlow() {
       fragmentedFlow.logicalWidthChangedInFragmentsForBlock(
@@ -2680,6 +2772,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func computeChildPreferredLogicalWidths(child: RenderObjectWrapper) -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     if let box = child as? RenderBoxWrapper,
       box.isHorizontalWritingMode() != isHorizontalWritingMode()
     {
@@ -2724,12 +2817,14 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func computeChildIntrinsicLogicalWidths(child: RenderObjectWrapper) -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     return (child.minPreferredLogicalWidth(), child.maxPreferredLogicalWidth())
   }
 
   private func createAnonymousBlockWithStyleAndDisplay(
     document: Document, style: RenderStyleWrapper, display: DisplayType
   ) -> RenderBlockWrapper? {
+    assert(isNativeImpl())
     // FIXME: Do we need to convert all our inline displays to block-type in the anonymous logic ?
     var newBox: RenderBlockWrapper? = nil
     if display == .Flex || display == .InlineFlex {
@@ -2749,6 +2844,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func adjustLogicalRightOffsetForLine(_ offsetFromFloats: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     var right = offsetFromFloats
 
     if style().lineAlign() == .None {
@@ -2794,6 +2890,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func adjustLogicalLeftOffsetForLine(_ offsetFromFloats: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     var left = offsetFromFloats
 
     if style().lineAlign() == .None {
@@ -2840,6 +2937,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isSelfCollapsingBlock() -> Bool {
+    assert(isNativeImpl())
     // We are not self-collapsing if we
     // (a) have a non-zero height according to layout (an optimization to avoid wasting time)
     // (b) are a table,
@@ -2879,6 +2977,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func childrenPreventSelfCollapsing() -> Bool {
+    assert(isNativeImpl())
     // Whether or not we collapse is dependent on whether all our normal flow children
     // are also self-collapsing.
     var child = firstChildBox()
@@ -2903,6 +3002,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func paintInlineChildren(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {}
 
   private func paintContents(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if isSkippedContentRoot() {
       return
     }
@@ -2941,6 +3041,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func paintCaret(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, type: CaretType
   ) {
+    assert(isNativeImpl())
     let shouldPaintCaret = {
       [self] (_ caretPainter: RenderBlockWrapper, _ isContentEditable: Bool) in
       if CPtrToInt(caretPainter.id()) != CPtrToInt(id()) {
@@ -2972,6 +3073,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func paintCarets(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if paintInfo.phase == .Foreground {
       paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .CursorCaret)
       paintCaret(paintInfo: paintInfo, paintOffset: paintOffset, type: .DragCaret)
@@ -2999,6 +3101,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func computeBlockPreferredLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     assert(!shouldApplyInlineSizeContainment())
 
     let styleToUse = style()
@@ -3142,6 +3245,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   private func removePositionedObjectsIfNeeded(
     oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) {
+    assert(isNativeImpl())
     let hadTransform = oldStyle.hasTransformRelatedProperty()
     let willHaveTransform = newStyle.hasTransformRelatedProperty()
     let hadLayoutContainment = oldStyle.containsLayout()
@@ -3198,6 +3302,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func dirtyForLayoutFromPercentageHeightDescendants() {
+    assert(isNativeImpl())
     if percentHeightDescendantsMap == nil {
       return
     }
@@ -3241,6 +3346,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func getBlockRareData() -> RenderBlockRareData? {
+    assert(isNativeImpl())
     if !renderBlockHasRareData {
       return nil
     }
@@ -3249,6 +3355,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func recomputeLogicalWidth() -> Bool {
+    assert(isNativeImpl())
     let oldWidth = logicalWidth()
 
     updateLogicalWidth()
@@ -3260,6 +3367,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
+    assert(isNativeImpl())
     let layoutState = view().frameView().layoutContext().layoutState()
     if layoutState != nil && !layoutState!.isPaginated() {
       return LayoutUnit(value: 0)
@@ -3280,6 +3388,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func fragmentAtBlockOffset(blockOffset: LayoutUnit) -> RenderFragmentContainerWrapper? {
+    assert(isNativeImpl())
     if let fragmentedFlow = enclosingFragmentedFlow(), fragmentedFlow.hasValidFragmentInfo() {
       return fragmentedFlow.fragmentAtBlockOffset(
         clampBox: self, offset: offsetFromLogicalTopOfFirstPage() + blockOffset,
