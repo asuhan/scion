@@ -802,6 +802,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingStart(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingStart();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingEnd(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->paddingEnd();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();

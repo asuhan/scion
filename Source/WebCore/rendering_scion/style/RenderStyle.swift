@@ -1412,8 +1412,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func paddingEnd() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingEnd(p!))
   }
 
   func insideLink() -> InsideLink {
