@@ -1491,13 +1491,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func containIntrinsicWidthHasAuto() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_containIntrinsicWidthHasAuto(p!)
   }
 
   func containIntrinsicHeightHasAuto() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_containIntrinsicHeightHasAuto(p!)
   }
 
   func containIntrinsicLogicalWidthHasAuto() -> Bool {
