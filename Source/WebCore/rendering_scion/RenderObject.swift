@@ -1009,6 +1009,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
+  func isLegacyRenderSVGForeignObject() -> Bool {
+    assert(isNativeImpl())
+    return type() == .LegacySVGForeignObject
+  }
+
   func isRenderSVGResourceMarker() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -1022,6 +1027,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func isRenderOrLegacyRenderSVGShape() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  func isRenderOrLegacyRenderSVGForeignObject() -> Bool {
+    assert(isNativeImpl())
+    return isRenderSVGForeignObject() || isLegacyRenderSVGForeignObject()
   }
 
   func isSVGLayerAwareRenderer() -> Bool {

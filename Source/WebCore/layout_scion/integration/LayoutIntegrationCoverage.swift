@@ -25,8 +25,8 @@
 
 extension LayoutIntegration {
   static func canUseForLineLayout(rootContainer: RenderBlockFlowWrapper) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return !(rootContainer is RenderSVGBlockWrapper)
+      || rootContainer.isRenderOrLegacyRenderSVGForeignObject()
   }
 
   static func canUseForFlexLayout(flexBox: RenderFlexibleBoxWrapper) -> Bool {
