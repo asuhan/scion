@@ -106,7 +106,7 @@ class FlexFormattingContext {
     flexItemsNeedReordering: inout Bool
   ) {
     let direction = root().style.flexDirection()
-    var previousLogicalOrder: Int? = nil
+    var previousLogicalOrder: Int32? = nil
 
     var flexItem = root().firstInFlowChild()
     while flexItem != nil {

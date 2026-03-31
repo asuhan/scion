@@ -1520,10 +1520,7 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_hasAutoLengthContainIntrinsicSize(p!)
   }
 
-  func order() -> Int {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func order() -> Int32 { return wk_interop.RenderStyle_order(p!) }
 
   func flexGrow() -> Float32 {
     // TODO(asuhan): implement this

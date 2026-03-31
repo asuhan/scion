@@ -942,6 +942,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoLengthContainIntrinsicSize(con
     return static_cast<const WebCore::RenderStyle*>(p)->hasAutoLengthContainIntrinsicSize();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderStyle_order(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->order();
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;
