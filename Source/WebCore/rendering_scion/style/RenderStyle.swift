@@ -1445,10 +1445,7 @@ class RenderStyleWrapper: Equatable {
     return HangingPunctuation(rawValue: wk_interop.RenderStyle_hangingPunctuation(p!))
   }
 
-  func outlineOffset() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func outlineOffset() -> Float32 { return wk_interop.RenderStyle_outlineOffset(p!) }
 
   func usedContain() -> Containment {
     return Containment(rawValue: wk_interop.RenderStyle_usedContain(p!))
