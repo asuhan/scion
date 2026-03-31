@@ -70,8 +70,24 @@ class LineClampUpdater {
   }
 
   deinit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let layoutState = m_blockContainer.view().frameView().layoutContext().layoutState() else {
+      return
+    }
+
+    if m_skippedLegacyLineClampToRestore != nil {
+      layoutState.setLegacyLineClamp(legacyLineClamp: m_skippedLegacyLineClampToRestore)
+    }
+
+    if m_previousLineClamp == nil {
+      layoutState.setLineClamp(nil)
+      return
+    }
+
+    layoutState.setLineClamp(
+      RenderLayoutStateWrapper.LineClamp(
+        maximumLines: m_previousLineClamp!.maximumLines
+          - (m_blockContainer.childrenInline() ? UInt64(m_blockContainer.lineCount()) : 0),
+        shouldDiscardOverflow: m_previousLineClamp!.shouldDiscardOverflow))
   }
 
   private let m_blockContainer: RenderBlockFlowWrapper
