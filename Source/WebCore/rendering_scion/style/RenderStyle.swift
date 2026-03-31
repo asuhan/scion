@@ -1423,10 +1423,7 @@ class RenderStyleWrapper: Equatable {
 
   func widows() -> UInt16 { return wk_interop.RenderStyle_widows(p!) }
 
-  func orphans() -> UInt16 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func orphans() -> UInt16 { return wk_interop.RenderStyle_orphans(p!) }
 
   func hasAutoWidows() -> Bool {
     // TODO(asuhan): implement this
