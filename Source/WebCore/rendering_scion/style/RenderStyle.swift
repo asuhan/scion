@@ -1408,8 +1408,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func paddingStart() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_paddingStart(p!))
   }
 
   func paddingEnd() -> LengthWrapper {

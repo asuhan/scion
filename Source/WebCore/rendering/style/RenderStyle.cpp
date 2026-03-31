@@ -797,6 +797,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingAfter(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingAfter();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingStart(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->paddingStart();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();
