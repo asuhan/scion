@@ -739,6 +739,7 @@ bool RenderStyle_containIntrinsicWidthHasAuto(const void*);
 bool RenderStyle_containIntrinsicHeightHasAuto(const void*);
 bool RenderStyle_containIntrinsicLogicalWidthHasAuto(const void*);
 bool RenderStyle_containIntrinsicLogicalHeightHasAuto(const void*);
+bool RenderStyle_hasAutoLengthContainIntrinsicSize(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);

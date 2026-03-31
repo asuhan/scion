@@ -937,6 +937,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_containIntrinsicLogicalHeightHasAuto(
     return static_cast<const WebCore::RenderStyle*>(p)->containIntrinsicLogicalHeightHasAuto();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoLengthContainIntrinsicSize(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasAutoLengthContainIntrinsicSize();
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;

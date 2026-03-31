@@ -1517,8 +1517,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasAutoLengthContainIntrinsicSize() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasAutoLengthContainIntrinsicSize(p!)
   }
 
   func order() -> Int {
