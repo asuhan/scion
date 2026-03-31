@@ -1434,13 +1434,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func breakBefore() -> BreakBetween {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BreakBetween(rawValue: wk_interop.RenderStyle_breakBefore(p!))!
   }
 
   func breakAfter() -> BreakBetween {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BreakBetween(rawValue: wk_interop.RenderStyle_breakAfter(p!))!
   }
 
   func hangingPunctuation() -> HangingPunctuation {

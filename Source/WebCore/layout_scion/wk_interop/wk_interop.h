@@ -720,6 +720,8 @@ uint16_t RenderStyle_orphans(const void*);
 bool RenderStyle_hasAutoWidows(const void*);
 bool RenderStyle_hasAutoOrphans(const void*);
 uint8_t RenderStyle_breakInside(const void*);
+uint8_t RenderStyle_breakBefore(const void*);
+uint8_t RenderStyle_breakAfter(const void*);
 const void* RenderStyle_paddingTop(const void*);
 const void* RenderStyle_paddingBottom(const void*);
 uint8_t RenderStyle_hangingPunctuation(const void*);

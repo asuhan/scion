@@ -842,6 +842,16 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_breakInside(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->breakInside());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_breakBefore(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->breakBefore());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_breakAfter(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->breakAfter());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();
