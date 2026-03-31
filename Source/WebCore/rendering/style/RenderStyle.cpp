@@ -907,6 +907,16 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasSkippedContent(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasSkippedContent();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_containIntrinsicWidthType(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->containIntrinsicWidthType());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_containIntrinsicHeightType(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->containIntrinsicHeightType());
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;

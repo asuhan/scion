@@ -733,6 +733,8 @@ uint8_t RenderStyle_containerType(const void*);
 uint8_t RenderStyle_contentVisibility(const void*);
 uint8_t RenderStyle_usedContentVisibility(const void*);
 bool RenderStyle_hasSkippedContent(const void*);
+uint8_t RenderStyle_containIntrinsicWidthType(const void*);
+uint8_t RenderStyle_containIntrinsicHeightType(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
