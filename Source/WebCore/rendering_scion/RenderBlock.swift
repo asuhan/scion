@@ -1002,8 +1002,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func marginEndForChild(child: RenderBoxModelObjectWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return child.marginEnd(otherStyle: style())
   }
 
   private func setMarginStartForChild(child: RenderBoxWrapper, value: LayoutUnit) {
