@@ -549,6 +549,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingAfter())
   }
 
+  func computedCSSPaddingStart() -> LayoutUnit {
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingStart())
+  }
+
   // These functions are used during layout. Table cells and the MathML
   // code override them to include some extra intrinsic padding.
   func padding() -> RectEdges<LayoutUnit> {
@@ -592,8 +597,10 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func paddingStart() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingStart(id()))
+    }
+    return computedCSSPaddingStart()
   }
 
   func paddingEnd() -> LayoutUnit {
