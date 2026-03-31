@@ -807,6 +807,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingEnd(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingEnd();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_insideLink(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->insideLink());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();
