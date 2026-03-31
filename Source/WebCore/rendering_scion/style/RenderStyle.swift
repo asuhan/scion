@@ -1419,10 +1419,7 @@ class RenderStyleWrapper: Equatable {
     return InsideLink(rawValue: wk_interop.RenderStyle_insideLink(p!))!
   }
 
-  func insideDefaultButton() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func insideDefaultButton() -> Bool { return wk_interop.RenderStyle_insideDefaultButton(p!) }
 
   func widows() -> UInt16 {
     // TODO(asuhan): implement this

@@ -714,6 +714,7 @@ const void* RenderStyle_paddingAfter(const void*);
 const void* RenderStyle_paddingStart(const void*);
 const void* RenderStyle_paddingEnd(const void*);
 uint8_t RenderStyle_insideLink(const void*);
+bool RenderStyle_insideDefaultButton(const void*);
 const void* RenderStyle_paddingTop(const void*);
 const void* RenderStyle_paddingBottom(const void*);
 uint8_t RenderStyle_hangingPunctuation(const void*);
