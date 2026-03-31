@@ -98,6 +98,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_borderImage(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->borderImage();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_borderStartWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderStartWidth();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_metricsOfPrimaryFont(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->metricsOfPrimaryFont();

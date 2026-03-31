@@ -652,8 +652,10 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderStart() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_borderStart(id()))
+    }
+    return LayoutUnit(value: style().borderStartWidth())
   }
 
   func borderEnd() -> LayoutUnit {

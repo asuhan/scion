@@ -609,6 +609,8 @@ class RenderStyleWrapper: Equatable {
     return NinePieceImage(wk_interop.RenderStyle_borderImage(p!)!)
   }
 
+  func borderStartWidth() -> Float32 { return wk_interop.RenderStyle_borderStartWidth(p!) }
+
   func borderTopLeftRadius() -> LengthSize {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
