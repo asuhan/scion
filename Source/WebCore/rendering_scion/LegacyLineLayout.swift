@@ -28,6 +28,14 @@ class LegacyLineLayout {
     fatalError("Not implemented")
   }
 
+  private func legacyRootBox() -> LegacyRootInlineBox? {
+    return lineBoxes.firstLegacyLineBox() as! LegacyRootInlineBox?
+  }
+
+  func lineCount() -> UInt64 {
+    return legacyRootBox() != nil ? 1 : 0
+  }
+
   func layoutLineBoxes() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

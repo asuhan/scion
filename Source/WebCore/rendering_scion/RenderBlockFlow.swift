@@ -2353,8 +2353,11 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   func lineCount() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if !childrenInline() {
+      fatalError("Not reached")
+    }
+    return Int32(inlineLayout()?.lineCount() ?? (svgTextLayout()?.lineCount() ?? 0))
   }
 
   func svgTextLayout() -> LegacyLineLayout? {
