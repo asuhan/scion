@@ -1430,8 +1430,7 @@ class RenderStyleWrapper: Equatable {
   func hasAutoOrphans() -> Bool { return wk_interop.RenderStyle_hasAutoOrphans(p!) }
 
   func breakInside() -> BreakInside {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BreakInside(rawValue: wk_interop.RenderStyle_breakInside(p!))!
   }
 
   func breakBefore() -> BreakBetween {
