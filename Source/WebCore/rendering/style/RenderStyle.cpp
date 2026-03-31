@@ -817,6 +817,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_insideDefaultButton(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->insideDefaultButton();
 }
 
+extern "C" WEBCORE_EXPORT uint16_t RenderStyle_widows(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->widows();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();

@@ -1421,10 +1421,7 @@ class RenderStyleWrapper: Equatable {
 
   func insideDefaultButton() -> Bool { return wk_interop.RenderStyle_insideDefaultButton(p!) }
 
-  func widows() -> UInt16 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func widows() -> UInt16 { return wk_interop.RenderStyle_widows(p!) }
 
   func orphans() -> UInt16 {
     // TODO(asuhan): implement this
