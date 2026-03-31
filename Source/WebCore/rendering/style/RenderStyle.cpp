@@ -827,6 +827,16 @@ extern "C" WEBCORE_EXPORT uint16_t RenderStyle_orphans(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->orphans();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoWidows(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasAutoWidows();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoOrphans(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasAutoOrphans();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_paddingTop(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->paddingTop();
