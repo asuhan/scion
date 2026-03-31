@@ -43,7 +43,7 @@ class RenderLayoutStateWrapper {
     var clampedRenderer: RenderBlockFlowWrapper?
   }
 
-  init(p: UnsafeRawPointer) {
+  init(p: UnsafeMutableRawPointer) {
     self.p = p
   }
 
@@ -114,6 +114,13 @@ class RenderLayoutStateWrapper {
     fatalError("Not implemented")
   }
 
+  func setLineClamp(_ lineClamp: LineClamp?) {
+    let lineClampRaw = OptionalLineClampRaw(
+      maximumLines: lineClamp?.maximumLines ?? 0,
+      shouldDiscardOverflow: lineClamp?.shouldDiscardOverflow ?? false, isValid: lineClamp != nil)
+    wk_interop.RenderLayoutState_setLineClamp(p, lineClampRaw)
+  }
+
   func lineClamp() -> LineClamp? {
     let raw = wk_interop.RenderLayoutState_lineClamp(p)
     if !raw.isValid {
@@ -175,7 +182,7 @@ class RenderLayoutStateWrapper {
     fatalError("Not implemented")
   }
 
-  private var p: UnsafeRawPointer
+  private var p: UnsafeMutableRawPointer
 }
 
 func use(_ x: borrowing LayoutStateMaintainer) {}

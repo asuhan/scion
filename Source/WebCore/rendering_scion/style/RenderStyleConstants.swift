@@ -739,6 +739,11 @@ enum LineClamp {
   case Percentage
 }
 
+enum OverflowContinue {
+  case Auto
+  case Discard
+}
+
 enum Hyphens: UInt8 {
   case None
   case Manual

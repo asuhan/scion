@@ -58,6 +58,15 @@ struct OptionalLineClampRaw {
     bool isValid;
 };
 
+extern "C" WEBCORE_EXPORT void RenderLayoutState_setLineClamp(void* p, OptionalLineClampRaw lineClamp)
+{
+    if (lineClamp.isValid) {
+        static_cast<WebCore::RenderLayoutState*>(p)->setLineClamp(WebCore::RenderLayoutState::LineClamp { lineClamp.maximumLines, lineClamp.shouldDiscardOverflow });
+    } else {
+        static_cast<WebCore::RenderLayoutState*>(p)->setLineClamp({});
+    }
+}
+
 extern "C" WEBCORE_EXPORT struct OptionalLineClampRaw RenderLayoutState_lineClamp(const void* p)
 {
     auto lineClamp = static_cast<const WebCore::RenderLayoutState*>(p)->lineClamp();

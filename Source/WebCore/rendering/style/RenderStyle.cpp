@@ -901,6 +901,16 @@ extern "C" WEBCORE_EXPORT struct BlockEllipsisRaw RenderStyle_blockEllipsis(cons
     };
 }
 
+extern "C" WEBCORE_EXPORT uint64_t RenderStyle_maxLines(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->maxLines();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_overflowContinue(const void* p)
+{
+    return static_cast<bool>(static_cast<const WebCore::RenderStyle*>(p)->overflowContinue());
+}
+
 #if ENABLE(TEXT_AUTOSIZING)
 #include <wtf/text/StringHash.h>
 #endif

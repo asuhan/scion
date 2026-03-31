@@ -57,7 +57,7 @@ extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_needsFullRepaint(cons
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->needsFullRepaint();
 }
 
-extern "C" WEBCORE_EXPORT const void* LocalFrameViewLayoutContext_layoutState(const void* p)
+extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_layoutState(const void* p)
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutState();
 }

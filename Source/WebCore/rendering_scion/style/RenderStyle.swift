@@ -2062,6 +2062,12 @@ class RenderStyleWrapper: Equatable {
     return BlockEllipsis(type: type, string: AtomStringWrapper(p: blockEllipsisRaw.string))
   }
 
+  func maxLines() -> UInt64 { return wk_interop.RenderStyle_maxLines(p!) }
+
+  func overflowContinue() -> OverflowContinue {
+    return wk_interop.RenderStyle_overflowContinue(p!) ? .Discard : .Auto
+  }
+
   func initialLetterDrop() -> Int32 {
     return wk_interop.RenderStyle_initialLetterDrop(p!)
   }
