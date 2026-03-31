@@ -998,6 +998,11 @@ final class RenderDeprecatedFlexibleBoxWrapper: RenderBlockWrapper {
     return true
   }
 
+  override final func canDropAnonymousBlockChild() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func computeIntrinsicLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {

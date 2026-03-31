@@ -272,6 +272,11 @@ final class RenderGridWrapper: RenderBlockWrapper {
 
   override func avoidsFloats() -> Bool { return true }
 
+  override final func canDropAnonymousBlockChild() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   func dirtyGrid(subgridChanged: Bool = false) {
     if currentGrid().needsItemsPlacement() {
       return

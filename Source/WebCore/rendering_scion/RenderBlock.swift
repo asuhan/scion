@@ -1213,8 +1213,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   #endif
 
   func canDropAnonymousBlockChild() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return true
   }
 
   private func cachedEnclosingFragmentedFlow() -> RenderFragmentedFlowWrapper? {

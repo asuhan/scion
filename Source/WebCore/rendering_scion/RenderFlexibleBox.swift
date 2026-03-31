@@ -353,6 +353,11 @@ class RenderFlexibleBoxWrapper: RenderBlockWrapper {
     fatalError("Not implemented")
   }
 
+  override final func canDropAnonymousBlockChild() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   override func layoutBlock(
     relayoutChildren: Bool, pageLogicalHeight: LayoutUnit = LayoutUnit(value: UInt64(0))
   ) {
