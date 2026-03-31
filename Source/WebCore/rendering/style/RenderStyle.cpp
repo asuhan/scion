@@ -887,6 +887,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_containsLayoutOrPaint(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->containsLayoutOrPaint();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_containerType(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->containerType());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_contentVisibility(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->contentVisibility());

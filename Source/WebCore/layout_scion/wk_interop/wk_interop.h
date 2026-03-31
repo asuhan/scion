@@ -729,6 +729,7 @@ float RenderStyle_outlineOffset(const void*);
 uint8_t RenderStyle_usedContain(const void*);
 bool RenderStyle_containsPaint(const void*);
 bool RenderStyle_containsLayoutOrPaint(const void*);
+uint8_t RenderStyle_containerType(const void*);
 uint8_t RenderStyle_contentVisibility(const void*);
 uint8_t RenderStyle_usedContentVisibility(const void*);
 bool RenderStyle_hasSkippedContent(const void*);

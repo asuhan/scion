@@ -1464,8 +1464,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func containerType() -> ContainerType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ContainerType(rawValue: wk_interop.RenderStyle_containerType(p!))!
   }
 
   func contentVisibility() -> ContentVisibility {
