@@ -621,6 +621,8 @@ bool RenderStyle_hasAutoColumnWidth(const void*);
 bool RenderStyle_hasAutoColumnCount(const void*);
 bool RenderStyle_specifiesColumns(const void*);
 uint8_t RenderStyle_columnFill(const void*);
+const void* RenderStyle_transformOriginX(const void*);
+const void* RenderStyle_transformOriginY(const void*);
 bool RenderStyle_hasTransform(const void*);
 bool RenderStyle_columnSpan(const void*);
 uint16_t RenderStyle_columnCount(const void*);
