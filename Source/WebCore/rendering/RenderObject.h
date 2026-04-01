@@ -693,7 +693,7 @@ public:
     void setIsExcludedFromNormalLayout(bool excluded) { m_stateBitfields.setFlag(StateFlag::IsExcludedFromNormalLayout, excluded); }
     bool isExcludedAndPlacedInBorder() const { return isExcludedFromNormalLayout() && isLegend(); }
 
-    bool hasLayer() const { return m_stateBitfields.hasFlag(StateFlag::HasLayer); }
+    WEBCORE_EXPORT bool hasLayer() const;
 
     enum class BoxDecorationState : uint8_t {
         None,

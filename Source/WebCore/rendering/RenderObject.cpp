@@ -1859,6 +1859,11 @@ RenderElement* RenderObject::container(const RenderLayerModelObject* repaintCont
     return containerForElement(*this, repaintContainer, &repaintContainerSkipped);
 }
 
+bool RenderObject::hasLayer() const {
+    if (m_scion) { return m_scion->hasLayer(); }
+    return m_stateBitfields.hasFlag(StateFlag::HasLayer);
+}
+
 bool RenderObject::isSelectionBorder() const
 {
     HighlightState st = selectionState();

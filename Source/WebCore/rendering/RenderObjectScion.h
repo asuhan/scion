@@ -40,6 +40,8 @@ public:
     {
     }
 
+    bool hasLayer() const;
+
     bool needsLayout() const;
 
     void setNormalChildNeedsLayoutBit(bool b);
