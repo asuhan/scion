@@ -710,6 +710,7 @@ uint8_t RenderStyle_textDecorationSkipInk(const void*);
 float RenderStyle_usedZoom(const void*);
 uint8_t RenderStyle_textWrapStyle(const void*);
 uint8_t RenderStyle_backgroundClip(const void*);
+uint8_t RenderStyle_backgroundSizeType(const void*);
 bool RenderStyle_hasTransformRelatedProperty(const void*);
 bool RenderStyle_hasPositionedMask(const void*);
 bool RenderStyle_hasMask(const void*);
