@@ -1934,10 +1934,7 @@ class RenderStyleWrapper: Equatable {
 
   func usedPerspective() -> Float32 { return wk_interop.RenderStyle_usedPerspective(p!) }
 
-  func hasPerspective() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasPerspective() -> Bool { return wk_interop.RenderStyle_hasPerspective(p!) }
 
   func perspectiveOriginX() -> LengthWrapper {
     // TODO(asuhan): implement this
