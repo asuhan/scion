@@ -203,6 +203,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_specifiesColumns(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->specifiesColumns();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_columnFill(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->columnFill());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransform(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransform();

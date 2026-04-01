@@ -1788,8 +1788,7 @@ class RenderStyleWrapper: Equatable {
   func specifiesColumns() -> Bool { return wk_interop.RenderStyle_specifiesColumns(p!) }
 
   func columnFill() -> ColumnFill {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ColumnFill(rawValue: wk_interop.RenderStyle_columnFill(p!))!
   }
 
   func columnGap() -> GapLength {
