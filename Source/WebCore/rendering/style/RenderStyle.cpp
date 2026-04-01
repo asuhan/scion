@@ -947,6 +947,16 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_order(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->order();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_flexGrow(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->flexGrow();
+}
+
+extern "C" WEBCORE_EXPORT float RenderStyle_flexShrink(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->flexShrink();
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;

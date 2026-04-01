@@ -1522,15 +1522,9 @@ class RenderStyleWrapper: Equatable {
 
   func order() -> Int32 { return wk_interop.RenderStyle_order(p!) }
 
-  func flexGrow() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func flexGrow() -> Float32 { return wk_interop.RenderStyle_flexGrow(p!) }
 
-  func flexShrink() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func flexShrink() -> Float32 { return wk_interop.RenderStyle_flexShrink(p!) }
 
   func flexBasis() -> LengthWrapper {
     // TODO(asuhan): implement this
