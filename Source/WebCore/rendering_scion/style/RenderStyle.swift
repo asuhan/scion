@@ -1860,8 +1860,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textOrientation() -> TextOrientation {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextOrientation(rawValue: wk_interop.RenderStyle_textOrientation(p!))!
   }
 
   func objectFit() -> ObjectFit {
