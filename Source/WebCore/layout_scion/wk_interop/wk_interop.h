@@ -699,6 +699,7 @@ uint8_t RenderStyle_textIndentType(const void*);
 uint8_t RenderStyle_textDecorationSkipInk(const void*);
 uint8_t RenderStyle_textWrapStyle(const void*);
 bool RenderStyle_hasTransformRelatedProperty(const void*);
+bool RenderStyle_hasPositionedMask(const void*);
 bool RenderStyle_hasMask(const void*);
 uint8_t RenderStyle_backfaceVisibility(const void*);
 uint8_t RenderStyle_lineBoxContain(const void*);

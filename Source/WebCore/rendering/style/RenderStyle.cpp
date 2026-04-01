@@ -735,6 +735,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransformRelatedProperty(const voi
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransformRelatedProperty();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasPositionedMask(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasPositionedMask();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasMask(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasMask();
