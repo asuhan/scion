@@ -153,6 +153,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_verticalBorderSpacing(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->verticalBorderSpacing();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_emptyCells(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->emptyCells());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_boxShadow(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->boxShadow();

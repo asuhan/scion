@@ -1320,16 +1320,15 @@ class RenderStyleWrapper: Equatable {
   }
 
   func horizontalBorderSpacing() -> Float32 {
-    return RenderStyle_horizontalBorderSpacing(p!)
+    return wk_interop.RenderStyle_horizontalBorderSpacing(p!)
   }
 
   func verticalBorderSpacing() -> Float32 {
-    return RenderStyle_verticalBorderSpacing(p!)
+    return wk_interop.RenderStyle_verticalBorderSpacing(p!)
   }
 
   func emptyCells() -> EmptyCell {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return EmptyCell(rawValue: wk_interop.RenderStyle_emptyCells(p!))!
   }
 
   func captionSide() -> CaptionSide {
