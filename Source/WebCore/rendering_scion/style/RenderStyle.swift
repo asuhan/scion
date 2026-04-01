@@ -1819,8 +1819,7 @@ class RenderStyleWrapper: Equatable {
   func transformOriginZ() -> Float32 { return wk_interop.RenderStyle_transformOriginZ(p!) }
 
   func transformBox() -> TransformBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformBox(rawValue: wk_interop.RenderStyle_transformBox(p!))!
   }
 
   func rotate() -> RotateTransformOperation? {

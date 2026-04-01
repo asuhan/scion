@@ -624,6 +624,7 @@ uint8_t RenderStyle_columnFill(const void*);
 const void* RenderStyle_transformOriginX(const void*);
 const void* RenderStyle_transformOriginY(const void*);
 float RenderStyle_transformOriginZ(const void*);
+uint8_t RenderStyle_transformBox(const void*);
 bool RenderStyle_hasTransform(const void*);
 bool RenderStyle_columnSpan(const void*);
 uint16_t RenderStyle_columnCount(const void*);
