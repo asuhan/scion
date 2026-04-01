@@ -1552,15 +1552,9 @@ class RenderStyleWrapper: Equatable {
     return FlexDirection(rawValue: wk_interop.RenderStyle_flexDirection(p!))!
   }
 
-  func isRowFlexDirection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isRowFlexDirection() -> Bool { return wk_interop.RenderStyle_isRowFlexDirection(p!) }
 
-  func isColumnFlexDirection() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isColumnFlexDirection() -> Bool { return wk_interop.RenderStyle_isColumnFlexDirection(p!) }
 
   func flexWrap() -> FlexWrap {
     // TODO(asuhan): implement this

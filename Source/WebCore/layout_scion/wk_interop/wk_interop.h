@@ -745,6 +745,8 @@ float RenderStyle_flexGrow(const void*);
 float RenderStyle_flexShrink(const void*);
 const void* RenderStyle_flexBasis(const void*);
 uint8_t RenderStyle_flexDirection(const void*);
+bool RenderStyle_isRowFlexDirection(const void*);
+bool RenderStyle_isColumnFlexDirection(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);

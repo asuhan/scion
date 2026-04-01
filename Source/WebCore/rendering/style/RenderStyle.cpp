@@ -967,6 +967,16 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_flexDirection(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->flexDirection());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_isRowFlexDirection(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isRowFlexDirection();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_isColumnFlexDirection(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isColumnFlexDirection();
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;
