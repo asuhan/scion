@@ -703,6 +703,7 @@ bool RenderStyle_hasPositionedMask(const void*);
 bool RenderStyle_hasMask(const void*);
 uint8_t RenderStyle_backfaceVisibility(const void*);
 float RenderStyle_perspective(const void*);
+float RenderStyle_usedPerspective(const void*);
 uint8_t RenderStyle_lineBoxContain(const void*);
 uint8_t RenderStyle_textDecorationsInEffect(const void*);
 float RenderStyle_borderLeftWidth(const void*);
