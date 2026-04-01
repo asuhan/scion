@@ -307,6 +307,11 @@ extern "C" WEBCORE_EXPORT LengthBoxRaw RenderStyle_scrollPadding(const void* p)
     return { &scrollPadding.top(), &scrollPadding.right(), &scrollPadding.bottom(), &scrollPadding.left() };
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasSnapPosition(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasSnapPosition();
+}
+
 struct ScrollSnapAlignRaw {
     uint8_t blockAlign;
     uint8_t inlineAlign;

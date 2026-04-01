@@ -1994,10 +1994,7 @@ class RenderStyleWrapper: Equatable {
       bottom: LengthWrapper(p: raw.bottom), left: LengthWrapper(p: raw.left))
   }
 
-  func hasSnapPosition() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasSnapPosition() -> Bool { return wk_interop.RenderStyle_hasSnapPosition(p!) }
 
   func scrollSnapAlign() -> ScrollSnapAlign {
     let raw = wk_interop.RenderStyle_scrollSnapAlign(p!)
