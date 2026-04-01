@@ -27,13 +27,14 @@ class RenderAncestorIterator<T>: RenderIterator<T>, IteratorProtocol where T: Re
   init(_ current: T?) { super.init(root: nil, current: current) }
 
   func next() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let result = bool() ? *self : nil
+    super.traverseAncestor()
+    return result
   }
 }
 
 class RenderAncestorIteratorAdapter<T: RenderObjectWrapper>: Sequence {
-  init(_ first: T) { m_first = first }
+  init(_ first: T?) { m_first = first }
 
   func makeIterator() -> RenderAncestorIterator<T> { return RenderAncestorIterator<T>(m_first) }
 
@@ -49,10 +50,10 @@ class RenderAncestorIteratorAdapter<T: RenderObjectWrapper>: Sequence {
     return ancestorsOfType<T>(descendant: first)
   }
 
-  private let m_first: T
+  private let m_first: T?
 }
 
 func ancestorsOfType<T>(descendant: RenderObjectWrapper) -> RenderAncestorIteratorAdapter<T> {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let first: T? = RenderTraversal.findAncestorOfType(descendant)
+  return RenderAncestorIteratorAdapter<T>(first)
 }

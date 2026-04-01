@@ -55,6 +55,14 @@ class RenderIterator<T: RenderObjectWrapper>: Equatable {
     return self
   }
 
+  @discardableResult
+  func traverseAncestor() -> RenderIterator<T> {
+    assert(m_current != nil)
+    assert(CPtrToInt(m_current!.id()) != CPtrToInt(m_root?.id()))
+    m_current = RenderTraversal.findAncestorOfType(m_current!)
+    return self
+  }
+
   private let m_root: RenderElementWrapper?
   private var m_current: T?
 }
@@ -126,6 +134,17 @@ class RenderTraversal {
       object = object!.nextSibling()
     }
     return object as! T?
+  }
+
+  static func findAncestorOfType<T>(_ current: RenderObjectWrapper) -> T? {
+    var ancestor = current.parent()
+    while ancestor != nil {
+      if IsRendererOfType<T>.f(ancestor!) {
+        return ancestor as! T?
+      }
+      ancestor = ancestor!.parent()
+    }
+    return nil
   }
 
   static func next<T, U: RenderObjectWrapper>(_ current: U, _ stayWithin: RenderObjectWrapper?)
