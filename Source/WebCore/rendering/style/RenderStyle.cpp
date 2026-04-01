@@ -765,6 +765,16 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasPerspective(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasPerspective();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_perspectiveOriginX(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->perspectiveOriginX();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_perspectiveOriginY(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->perspectiveOriginY();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineBoxContain(const void* p)
 {
     const auto lineBoxContain = static_cast<const WebCore::RenderStyle*>(p)->lineBoxContain();

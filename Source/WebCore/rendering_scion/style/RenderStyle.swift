@@ -1937,13 +1937,11 @@ class RenderStyleWrapper: Equatable {
   func hasPerspective() -> Bool { return wk_interop.RenderStyle_hasPerspective(p!) }
 
   func perspectiveOriginX() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_perspectiveOriginX(p!))
   }
 
   func perspectiveOriginY() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_perspectiveOriginY(p!))
   }
 
   func lineBoxContain() -> LineBoxContain {
