@@ -1697,10 +1697,7 @@ class RenderStyleWrapper: Equatable {
     return UserModify(rawValue: wk_interop.RenderStyle_userModify(p!))!
   }
 
-  func userDrag() -> UserDrag {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func userDrag() -> UserDrag { return UserDrag(rawValue: wk_interop.RenderStyle_userDrag(p!))! }
 
   func usedUserSelect() -> UserSelect {
     if effectiveInert() {
