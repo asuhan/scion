@@ -1930,10 +1930,7 @@ class RenderStyleWrapper: Equatable {
     return BackfaceVisibility(rawValue: wk_interop.RenderStyle_backfaceVisibility(p!))!
   }
 
-  func perspective() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func perspective() -> Float32 { return wk_interop.RenderStyle_perspective(p!) }
 
   func usedPerspective() -> Float32 {
     // TODO(asuhan): implement this
