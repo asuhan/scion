@@ -59,7 +59,7 @@ class RenderIterator<T: RenderObjectWrapper>: Equatable {
   private var m_current: T?
 }
 
-private class IsRendererOfType<T> {
+class IsRendererOfType<T> {
   static func f<U>(_ renderer: U) -> Bool { return renderer is T }
 }
 

@@ -23,18 +23,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class RenderAncestorIterator<T>: IteratorProtocol {
+class RenderAncestorIterator<T>: RenderIterator<T>, IteratorProtocol where T: RenderObjectWrapper {
+  init(_ current: T?) { super.init(root: nil, current: current) }
+
   func next() -> T? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
 }
 
-class RenderAncestorIteratorAdapter<T>: Sequence {
-  func makeIterator() -> RenderAncestorIterator<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+class RenderAncestorIteratorAdapter<T: RenderObjectWrapper>: Sequence {
+  init(_ first: T) { m_first = first }
+
+  func makeIterator() -> RenderAncestorIterator<T> { return RenderAncestorIterator<T>(m_first) }
 
   func first() -> T? {
     // TODO(asuhan): implement this
@@ -42,9 +43,13 @@ class RenderAncestorIteratorAdapter<T>: Sequence {
   }
 
   static func lineageOfType(first: RenderObjectWrapper) -> RenderAncestorIteratorAdapter<T> {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if IsRendererOfType<T>.f(first) {
+      return RenderAncestorIteratorAdapter<T>(first as! T)
+    }
+    return ancestorsOfType<T>(descendant: first)
   }
+
+  private let m_first: T
 }
 
 func ancestorsOfType<T>(descendant: RenderObjectWrapper) -> RenderAncestorIteratorAdapter<T> {
