@@ -1527,8 +1527,7 @@ class RenderStyleWrapper: Equatable {
   func flexShrink() -> Float32 { return wk_interop.RenderStyle_flexShrink(p!) }
 
   func flexBasis() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_flexBasis(p!))
   }
 
   func alignContent() -> StyleContentAlignmentData {

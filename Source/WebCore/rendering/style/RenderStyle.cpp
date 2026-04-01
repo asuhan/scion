@@ -957,6 +957,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_flexShrink(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->flexShrink();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_flexBasis(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->flexBasis();
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;
