@@ -1282,8 +1282,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func backgroundClip() -> FillBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FillBox(rawValue: wk_interop.RenderStyle_backgroundClip(p!))!
   }
 
   func backgroundSizeType() -> FillSizeType {

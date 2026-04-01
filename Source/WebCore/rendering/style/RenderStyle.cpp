@@ -757,6 +757,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textWrapStyle(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textWrapStyle());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_backgroundClip(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->backgroundClip());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransformRelatedProperty(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransformRelatedProperty();
