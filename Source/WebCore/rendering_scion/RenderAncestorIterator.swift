@@ -38,14 +38,11 @@ class RenderAncestorIteratorAdapter<T: RenderObjectWrapper>: Sequence {
 
   func makeIterator() -> RenderAncestorIterator<T> { return RenderAncestorIterator<T>(m_first) }
 
-  func first() -> T? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func first() -> T? { return m_first }
 
   static func lineageOfType(first: RenderObjectWrapper) -> RenderAncestorIteratorAdapter<T> {
     if IsRendererOfType<T>.f(first) {
-      return RenderAncestorIteratorAdapter<T>(first as! T)
+      return RenderAncestorIteratorAdapter<T>(first as! T?)
     }
     return ancestorsOfType<T>(descendant: first)
   }
