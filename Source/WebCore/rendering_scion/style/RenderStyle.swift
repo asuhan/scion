@@ -1783,10 +1783,7 @@ class RenderStyleWrapper: Equatable {
 
   func hasAutoColumnWidth() -> Bool { return wk_interop.RenderStyle_hasAutoColumnWidth(p!) }
 
-  func hasAutoColumnCount() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasAutoColumnCount() -> Bool { return wk_interop.RenderStyle_hasAutoColumnCount(p!) }
 
   func specifiesColumns() -> Bool { return wk_interop.RenderStyle_specifiesColumns(p!) }
 

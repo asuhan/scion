@@ -618,6 +618,7 @@ bool RenderStyle_hasInlineColumnAxis(const void*);
 uint8_t RenderStyle_columnProgression(const void*);
 float RenderStyle_columnWidth(const void*);
 bool RenderStyle_hasAutoColumnWidth(const void*);
+bool RenderStyle_hasAutoColumnCount(const void*);
 bool RenderStyle_specifiesColumns(const void*);
 bool RenderStyle_hasTransform(const void*);
 bool RenderStyle_columnSpan(const void*);
