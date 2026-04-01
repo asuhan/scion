@@ -615,6 +615,7 @@ uint8_t RenderStyle_wordBreak(const void*);
 uint8_t RenderStyle_overflowWrap(const void*);
 const void* RenderStyle_computedLocale(const void*);
 bool RenderStyle_hasInlineColumnAxis(const void*);
+uint8_t RenderStyle_columnProgression(const void*);
 float RenderStyle_columnWidth(const void*);
 bool RenderStyle_specifiesColumns(const void*);
 bool RenderStyle_hasTransform(const void*);

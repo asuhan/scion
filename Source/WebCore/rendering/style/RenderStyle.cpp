@@ -178,6 +178,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasInlineColumnAxis(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasInlineColumnAxis();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_columnProgression(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->columnProgression());
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_columnWidth(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->columnWidth();
