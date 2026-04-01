@@ -25,6 +25,8 @@
 
 #include "RenderObjectScion.h"
 
+extern "C" void* RenderObjectScion_enclosingLayer(const void*);
+
 extern "C" bool RenderObject_hasLayer(const void*);
 
 extern "C" bool RenderObject_needsLayout(const void*);
@@ -32,6 +34,8 @@ extern "C" bool RenderObject_needsLayout(const void*);
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
 namespace WebCore {
+
+RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<RenderLayer*>(RenderObjectScion_enclosingLayer(m_handle)); }
 
 bool RenderObjectScion::hasLayer() const { return RenderObject_hasLayer(m_handle); }
 

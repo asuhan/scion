@@ -866,6 +866,14 @@ func RenderLayerModelObjectNative_layer(_ layerModelObjectRaw: UnsafeMutableRawP
   return layer.layerId()
 }
 
+@_cdecl("RenderObjectScion_enclosingLayer")
+func RenderObjectScion_enclosingLayer(_ objectRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer? {
+  let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
+  guard let layer = object.enclosingLayer() else { return nil }
+  assert(!layer.isNativeImpl())
+  return layer.layerId()
+}
+
 @_cdecl("RenderObject_hasLayer")
 func RenderObject_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()

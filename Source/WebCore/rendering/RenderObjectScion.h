@@ -30,6 +30,8 @@
 
 namespace WebCore {
 
+class RenderLayer;
+
 class RenderObjectScion final : public CanMakeCheckedPtr<RenderObjectScion> {
     WTF_MAKE_FAST_ALLOCATED_WITH_HEAP_IDENTIFIER(WebCore_RenderObjectScion);
     WTF_OVERRIDE_DELETE_FOR_CHECKED_PTR(RenderObjectScion);
@@ -39,6 +41,8 @@ public:
         : m_handle(handle)
     {
     }
+
+    RenderLayer* enclosingLayer() const;
 
     bool hasLayer() const;
 

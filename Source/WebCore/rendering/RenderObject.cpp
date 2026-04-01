@@ -545,6 +545,7 @@ RenderObject* RenderObject::traverseNext(const RenderObject* stayWithin, HeightT
 
 RenderLayer* RenderObject::enclosingLayer() const
 {
+    if (m_scion) { return m_scion->enclosingLayer(); }
     for (auto& renderer : lineageOfType<RenderLayerModelObject>(*this)) {
         if (renderer.hasLayer())
             return renderer.layer();
