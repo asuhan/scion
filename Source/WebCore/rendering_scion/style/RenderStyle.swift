@@ -1267,10 +1267,7 @@ class RenderStyleWrapper: Equatable {
     return TextDecorationSkipInk(rawValue: wk_interop.RenderStyle_textDecorationSkipInk(p!))!
   }
 
-  func usedZoom() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func usedZoom() -> Float32 { return wk_interop.RenderStyle_usedZoom(p!) }
 
   func whiteSpaceCollapse() -> WhiteSpaceCollapse {
     return inheritedFlags.whiteSpaceCollapse
