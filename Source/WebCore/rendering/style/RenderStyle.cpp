@@ -228,6 +228,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_transformBox(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->transformBox());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_affectsTransform(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->affectsTransform();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasTransform(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasTransform();

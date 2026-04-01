@@ -1837,10 +1837,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func affectsTransform() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func affectsTransform() -> Bool { return wk_interop.RenderStyle_affectsTransform(p!) }
 
   func textEmphasisMarkString() -> AtomStringWrapper {
     return AtomStringWrapper(p: wk_interop.RenderStyle_textEmphasisMarkString(p!))
