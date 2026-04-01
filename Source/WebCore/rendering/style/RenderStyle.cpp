@@ -283,6 +283,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterHeight(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterHeight();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_effectiveInert(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->effectiveInert();
+}
+
 struct LengthBoxRaw {
     const void* top;
     const void* right;

@@ -1978,10 +1978,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func effectiveInert() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func effectiveInert() -> Bool { return wk_interop.RenderStyle_effectiveInert(p!) }
 
   func scrollMargin() -> LengthBox {
     let raw = wk_interop.RenderStyle_scrollMargin(p!)
