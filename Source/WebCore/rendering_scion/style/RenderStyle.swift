@@ -1316,8 +1316,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderCollapse() -> BorderCollapse {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderCollapse(rawValue: wk_interop.RenderStyle_borderCollapse(p!))!
   }
 
   func horizontalBorderSpacing() -> Float32 {
