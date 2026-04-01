@@ -992,6 +992,16 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_gridSubgridColumns(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->gridSubgridColumns());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_gridMasonryRows(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->gridMasonryRows();
+}
+
+extern "C" WEBCORE_EXPORT bool RenderStyle_gridMasonryColumns(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->gridMasonryColumns();
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;

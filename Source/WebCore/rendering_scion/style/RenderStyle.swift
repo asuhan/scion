@@ -1627,15 +1627,9 @@ class RenderStyleWrapper: Equatable {
 
   func gridSubgridColumns() -> Bool { return wk_interop.RenderStyle_gridSubgridColumns(p!) }
 
-  func gridMasonryRows() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func gridMasonryRows() -> Bool { return wk_interop.RenderStyle_gridMasonryRows(p!) }
 
-  func gridMasonryColumns() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func gridMasonryColumns() -> Bool { return wk_interop.RenderStyle_gridMasonryColumns(p!) }
 
   func gridItemColumnStart() -> GridPosition {
     // TODO(asuhan): implement this
