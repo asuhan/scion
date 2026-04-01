@@ -1771,10 +1771,7 @@ class RenderStyleWrapper: Equatable {
     return AtomStringWrapper(p: wk_interop.RenderStyle_computedLocale(p!))
   }
 
-  func resize() -> Resize {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func resize() -> Resize { return Resize(rawValue: wk_interop.RenderStyle_resize(p!))! }
 
   func hasInlineColumnAxis() -> Bool { return wk_interop.RenderStyle_hasInlineColumnAxis(p!) }
 

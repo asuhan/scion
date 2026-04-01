@@ -757,6 +757,7 @@ uint8_t RenderStyle_userModify(const void*);
 uint8_t RenderStyle_userDrag(const void*);
 uint8_t RenderStyle_userSelect(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
+uint8_t RenderStyle_resize(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
 void* RenderStyle_shapeOutside(const void*);

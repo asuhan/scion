@@ -1034,6 +1034,11 @@ extern "C" WEBCORE_EXPORT StyleContentAlignmentDataRaw RenderStyle_alignContent(
     return { static_cast<uint8_t>(align_content.position()), static_cast<uint8_t>(align_content.distribution()), static_cast<uint8_t>(align_content.overflow()) };
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_resize(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->resize());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineAlign(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->lineAlign());
