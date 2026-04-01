@@ -1623,15 +1623,9 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func gridSubgridRows() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func gridSubgridRows() -> Bool { return wk_interop.RenderStyle_gridSubgridRows(p!) }
 
-  func gridSubgridColumns() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func gridSubgridColumns() -> Bool { return wk_interop.RenderStyle_gridSubgridColumns(p!) }
 
   func gridMasonryRows() -> Bool {
     // TODO(asuhan): implement this

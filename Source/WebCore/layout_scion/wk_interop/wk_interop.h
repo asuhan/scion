@@ -748,6 +748,8 @@ uint8_t RenderStyle_flexDirection(const void*);
 bool RenderStyle_isRowFlexDirection(const void*);
 bool RenderStyle_isColumnFlexDirection(const void*);
 uint8_t RenderStyle_flexWrap(const void*);
+bool RenderStyle_gridSubgridRows(const void*);
+bool RenderStyle_gridSubgridColumns(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
