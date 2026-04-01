@@ -188,6 +188,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_columnWidth(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->columnWidth();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasAutoColumnWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasAutoColumnWidth();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_specifiesColumns(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->specifiesColumns();
