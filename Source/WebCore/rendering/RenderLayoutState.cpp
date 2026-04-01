@@ -122,6 +122,17 @@ extern "C" WEBCORE_EXPORT bool RenderLayoutState_hasTextBoxTrimEnd(const void* p
     return static_cast<const WebCore::RenderLayoutState*>(p)->hasTextBoxTrimEnd(candidate);
 }
 
+struct OptionalBool {
+    bool value;
+    bool is_valid;
+};
+
+extern "C" WEBCORE_EXPORT OptionalBool RenderLayoutState_blockStartTrimming(const void* p)
+{
+    const auto maybeTrimming = static_cast<const WebCore::RenderLayoutState*>(p)->blockStartTrimming();
+    return { maybeTrimming.value_or(false), maybeTrimming.has_value() };
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(RenderLayoutState);
