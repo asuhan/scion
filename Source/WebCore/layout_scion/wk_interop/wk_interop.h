@@ -752,6 +752,7 @@ bool RenderStyle_gridSubgridRows(const void*);
 bool RenderStyle_gridSubgridColumns(const void*);
 bool RenderStyle_gridMasonryRows(const void*);
 bool RenderStyle_gridMasonryColumns(const void*);
+uint8_t RenderStyle_boxSizing(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);

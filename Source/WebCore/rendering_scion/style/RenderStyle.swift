@@ -1680,8 +1680,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxSizing() -> BoxSizing {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BoxSizing(rawValue: wk_interop.RenderStyle_boxSizing(p!))!
   }
 
   func marqueeBehavior() -> MarqueeBehavior {
