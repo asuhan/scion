@@ -1248,8 +1248,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func marginTrim() -> MarginTrimType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return MarginTrimType(rawValue: wk_interop.RenderStyle_marginTrim(p!))
   }
 
   func textIndentType() -> TextIndentType {
