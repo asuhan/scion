@@ -57,7 +57,6 @@ class RenderIterator<T: RenderObjectWrapper>: Equatable {
 
   @discardableResult
   func traverseAncestor() -> RenderIterator<T> {
-    assert(m_current != nil)
     assert(CPtrToInt(m_current!.id()) != CPtrToInt(m_root?.id()))
     m_current = RenderTraversal.findAncestorOfType(m_current!)
     return self
