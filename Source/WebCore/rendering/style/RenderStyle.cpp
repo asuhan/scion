@@ -1017,6 +1017,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_userDrag(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->userDrag());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_userSelect(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->userSelect());
+}
+
 struct StyleContentAlignmentDataRaw {
     uint8_t position;
     uint8_t distribution;

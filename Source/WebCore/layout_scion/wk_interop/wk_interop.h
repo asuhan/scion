@@ -755,6 +755,7 @@ bool RenderStyle_gridMasonryColumns(const void*);
 uint8_t RenderStyle_boxSizing(const void*);
 uint8_t RenderStyle_userModify(const void*);
 uint8_t RenderStyle_userDrag(const void*);
+uint8_t RenderStyle_userSelect(const void*);
 struct StyleContentAlignmentDataRaw RenderStyle_alignContent(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);

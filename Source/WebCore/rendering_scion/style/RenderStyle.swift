@@ -1713,8 +1713,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func userSelect() -> UserSelect {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return UserSelect(rawValue: wk_interop.RenderStyle_userSelect(p!))!
   }
 
   func textOverflow() -> TextOverflow {
