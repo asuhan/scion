@@ -1864,8 +1864,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func objectFit() -> ObjectFit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ObjectFit(rawValue: wk_interop.RenderStyle_objectFit(p!))!
   }
 
   func objectPosition() -> LengthPoint {

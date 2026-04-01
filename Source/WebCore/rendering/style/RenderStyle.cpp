@@ -268,6 +268,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textOrientation(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textOrientation());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_objectFit(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->objectFit());
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterDrop(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterDrop();
