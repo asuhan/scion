@@ -727,13 +727,19 @@ extern "C" WEBCORE_EXPORT uint16_t RenderStyle_lineFitEdge(const void* p)
 
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_marginTrim(const void* p)
 {
-    auto marginTrim = static_cast<const WebCore::RenderStyle*>(p)->marginTrim();
+    const auto marginTrim = static_cast<const WebCore::RenderStyle*>(p)->marginTrim();
     return marginTrim.toRaw();
 }
 
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textIndentType(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textIndentType());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textTransform(const void* p)
+{
+    const auto transform = static_cast<const WebCore::RenderStyle*>(p)->textTransform();
+    return transform.toRaw();
 }
 
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationSkipInk(const void* p)

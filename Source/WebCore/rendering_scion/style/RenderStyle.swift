@@ -1260,8 +1260,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textTransform() -> TextTransform {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextTransform(rawValue: wk_interop.RenderStyle_textTransform(p!))
   }
 
   func textDecorationSkipInk() -> TextDecorationSkipInk {

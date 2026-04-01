@@ -705,6 +705,7 @@ void InlineFormattingContext_setClearGapAfterLastLine(void*, float);
 uint16_t RenderStyle_lineFitEdge(const void*);
 uint8_t RenderStyle_marginTrim(const void*);
 uint8_t RenderStyle_textIndentType(const void*);
+uint8_t RenderStyle_textTransform(const void*);
 uint8_t RenderStyle_textDecorationSkipInk(const void*);
 uint8_t RenderStyle_textWrapStyle(const void*);
 bool RenderStyle_hasTransformRelatedProperty(const void*);
