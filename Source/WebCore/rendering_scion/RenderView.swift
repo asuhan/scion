@@ -86,6 +86,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func layout() {
+    assert(isNativeImpl())
     // TODO(asuhan): add stack stats
     if !document().paginated() {
       pageLogicalSize = nil
@@ -150,12 +151,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
+    assert(isNativeImpl())
     return LogicalExtentComputedValues(
       extent: !shouldUsePrintingLayout() ? LayoutUnit(value: viewLogicalHeight()) : logicalHeight,
       position: LayoutUnit(value: UInt64(0)), margins: ComputedMarginValues())
   }
 
   override func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
+    assert(isNativeImpl())
     // Make sure block progression pagination for percentages uses the column extent and
     // not the view's extent. See https://bugs.webkit.org/show_bug.cgi?id=135204.
     if multiColumnFlowForBlockFlow() != nil
@@ -173,6 +176,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   // The same as the FrameView's layoutHeight/layoutWidth but with null check guards.
   func viewHeight() -> Int32 {
+    assert(isNativeImpl())
     var height: Int32 = 0
     if !shouldUsePrintingLayout() {
       let frameView = frameView()
@@ -184,6 +188,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func viewWidth() -> Int32 {
+    assert(isNativeImpl())
     var width: Int32 = 0
     if !shouldUsePrintingLayout() {
       let frameView = frameView()
@@ -199,6 +204,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func viewLogicalHeight() -> Int32 {
+    assert(isNativeImpl())
     let height = style().isHorizontalWritingMode() ? viewHeight() : viewWidth()
     return height
   }
@@ -221,6 +227,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func protectedFrameView() -> LocalFrameViewWrapper {
+    assert(isNativeImpl())
     return frameView()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
@@ -235,14 +242,17 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() -> Bool {
+    assert(isNativeImpl())
     return m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly
   }
 
   func setNeedsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(_ value: Bool = true) {
+    assert(isNativeImpl())
     m_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly = value
   }
 
   func needsEventRegionUpdateForNonCompositedFrame() -> Bool {
+    assert(isNativeImpl())
     return m_needsEventRegionUpdateForNonCompositedFrame
   }
 
@@ -250,6 +260,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
+    assert(isNativeImpl())
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
     assert(container == nil || CPtrToInt(container!.id()) == CPtrToInt(id()))
@@ -280,6 +291,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func repaintRootContents() {
+    assert(isNativeImpl())
     if layer()!.isComposited() {
       layer()!.setBackingNeedsRepaint(shouldClip: .DoNotClipToLayer)
       return
@@ -294,6 +306,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func repaintViewRectangle(_ repaintRect: LayoutRectWrapper) {
+    assert(isNativeImpl())
     if !shouldRepaint(repaintRect) {
       return
     }
@@ -345,6 +358,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func repaintViewAndCompositedLayers() {
+    assert(isNativeImpl())
     repaintRootContents()
 
     let compositor = compositor()
@@ -354,6 +368,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func paint(paintInfo: inout PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     // If we ever require layout but receive a paint anyway, something has gone horribly wrong.
     assert(!needsLayout())
     // RenderViews should never be called to paint with an offset not on device pixels.
@@ -376,6 +391,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override final func paintBoxDecorations(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper
   ) {
+    assert(isNativeImpl())
     if !paintInfo.shouldPaintWithinRoot(renderer: self) {
       return
     }
@@ -467,6 +483,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
 
   // Return the renderer whose background style is used to paint the root background.
   func rendererForRootBackground() -> RenderElementWrapper? {
+    assert(isNativeImpl())
     guard let firstChild = firstChild() else { return nil }
 
     let documentRenderer = firstChild as! RenderElementWrapper
@@ -497,10 +514,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func printing() -> Bool {
+    assert(isNativeImpl())
     return document().printing()
   }
 
   private func viewRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if shouldUsePrintingLayout() {
       return LayoutRectWrapper(location: LayoutPointWrapper(), size: size())
     }
@@ -509,6 +528,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func pageOrViewLogicalHeight() -> LayoutUnit {
+    assert(isNativeImpl())
     if shouldUsePrintingLayout() {
       return pageLogicalSize!.height()
     }
@@ -558,10 +578,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func setIsInWindow(_ isInWindow: Bool) {
+    assert(isNativeImpl())
     m_compositor?.setIsInWindow(isInWindow)
   }
 
   func compositor() -> RenderLayerCompositorWrapper {
+    assert(isNativeImpl())
     if m_compositor == nil {
       print("TODO: switch to Scion compositor")
       m_compositor = RenderLayerCompositorWrapper(self)
@@ -571,21 +593,25 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func usesCompositing() -> Bool {
+    assert(isNativeImpl())
     return m_compositor?.usesCompositing() ?? false
   }
 
   func unscaledDocumentRect() -> IntRect {
+    assert(isNativeImpl())
     var overflowRect = layoutOverflowRect()
     flipForWritingMode(rect: &overflowRect)
     return snappedIntRect(rect: overflowRect)
   }
 
   func unextendedBackgroundRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     // FIXME: What is this? Need to patch for new columns?
     return LayoutRectWrapper(rect: unscaledDocumentRect())
   }
 
   func backgroundRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     // FIXME: New columns care about this?
     let frameView = frameView()
     if frameView.hasExtendedBackgroundRectForPainting() {
@@ -596,6 +622,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func documentRect() -> IntRect {
+    assert(isNativeImpl())
     var overflowRect = FloatRectWrapper(r: unscaledDocumentRect())
     if isTransformed() {
       overflowRect = layer()!.currentTransform().mapRect(overflowRect)
@@ -604,6 +631,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func rootElementShouldPaintBaseBackground() -> Bool {
+    assert(isNativeImpl())
     let documentElement = document().documentElement()
     if let rootRenderer = documentElement != nil ? documentElement!.renderer() : nil {
       // The document element's renderer is currently forced to be a block, but may not always be.
@@ -618,6 +646,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func shouldPaintBaseBackground() -> Bool {
+    assert(isNativeImpl())
     let document = document()
     let frameView = frameView()
     let ownerElement = document.ownerElement()
@@ -657,7 +686,10 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return false
   }
 
-  func hasQuotesNeedingUpdate() -> Bool { return m_hasQuotesNeedingUpdate }
+  func hasQuotesNeedingUpdate() -> Bool {
+    assert(isNativeImpl())
+    return m_hasQuotesNeedingUpdate
+  }
 
   func incrementRendersWithOutline() {
     assert(isNativeImpl())
@@ -675,9 +707,15 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return m_renderersWithOutlineCount != 0
   }
 
-  func hasSoftwareFilters() -> Bool { return m_hasSoftwareFilters }
+  func hasSoftwareFilters() -> Bool {
+    assert(isNativeImpl())
+    return m_hasSoftwareFilters
+  }
 
-  func rendererCount() -> UInt64 { return m_rendererCount }
+  func rendererCount() -> UInt64 {
+    assert(isNativeImpl())
+    return m_rendererCount
+  }
 
   func didCreateRenderer() {
     assert(isNativeImpl())
@@ -813,6 +851,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
 
     let writingModeChanged = oldStyle != nil && style().writingMode() != oldStyle!.writingMode()
@@ -834,6 +873,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
+    assert(isNativeImpl())
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
     assert(ancestorContainer == nil || CPtrToInt(ancestorContainer!.id()) == CPtrToInt(id()))
@@ -855,6 +895,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
     assert(ancestorToStopAt == nil || CPtrToInt(ancestorToStopAt!.id()) == CPtrToInt(id()))
@@ -874,6 +915,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
+    assert(isNativeImpl())
     if mode.contains(.UseTransforms) && shouldUseTransformFromContainer(nil) {
       let t = getTransformFromContainer(LayoutSizeWrapper())
       transformState.applyTransform(t)
@@ -891,6 +933,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   override func computeColumnCountAndWidth() {
+    assert(isNativeImpl())
     var columnWidth = contentLogicalWidth().int()
     if style().hasInlineColumnAxis() {
       let pageLength = protectedFrameView().pagination().pageLength
@@ -907,6 +950,7 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
   }
 
   func flushAccumulatedRepaintRegion() {
+    assert(isNativeImpl())
     let repaintRects = accumulatedRepaintRegion!.rects()
     for rect in repaintRects {
       protectedFrameView().repaintContentRectangle(rect)
