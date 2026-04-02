@@ -163,6 +163,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func initializeStyle() {
+    assert(isNativeImpl())
     Style.loadPendingResources(style!, protectedDocument(), protectedElement())
 
     styleWillChange(diff: .NewStyle, newStyle: style())
@@ -185,6 +186,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   // out-of-band state (e.g. animations) requires that styleDidChange processing
   // continue even if the style isn't different from the current style.
   func setStyle(style: RenderStyleWrapper, minimalStyleDifference: StyleDifference = .Equal) {
+    assert(isNativeImpl())
     // FIXME: Should change RenderView so it can use initializeStyle too.
     // If we do that, we can assert m_hasInitializedStyle unconditionally,
     // and remove the check of m_hasInitializedStyle below too.
@@ -256,6 +258,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func getCachedPseudoStyle(
     pseudoElementIdentifier: Style.PseudoElementIdentifier, parentStyle: RenderStyleWrapper? = nil
   ) -> RenderStyleWrapper? {
+    assert(isNativeImpl())
     if pseudoElementIdentifier.pseudoId < PseudoId.FirstInternalPseudoId
       && !style().hasPseudoStyle(pseudo: pseudoElementIdentifier.pseudoId)
     {
@@ -284,6 +287,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   )
     -> RenderStyleWrapper?
   {
+    assert(isNativeImpl())
     if pseudoElementRequest.pseudoId() < PseudoId.FirstInternalPseudoId && ownStyle == nil
       && !style().hasPseudoStyle(pseudo: pseudoElementRequest.pseudoId())
     {
@@ -325,6 +329,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func protectedElement() -> ElementWrapper? {
+    assert(isNativeImpl())
     return element()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
@@ -398,11 +403,13 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func shouldApplyPaintContainment() -> Bool {
+    assert(isNativeImpl())
     return shouldApplyLayoutOrPaintContainment(style().containsPaint())
       || shouldApplySizeOrStyleContainment(style().contentVisibility() != .Visible)
   }
 
   func shouldApplyLayoutOrPaintContainment() -> Bool {
+    assert(isNativeImpl())
     return shouldApplyLayoutOrPaintContainment(style().containsLayoutOrPaint())
       || shouldApplySizeOrStyleContainment(style().contentVisibility() != .Visible)
   }
@@ -413,6 +420,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func selectionColor(colorProperty: CSSPropertyID) -> ColorWrapper {
+    assert(isNativeImpl())
     // If the element is unselectable, or we are only painting the selection,
     // don't override the foreground color with the selection foreground color.
     if style().usedUserSelect() == .None
@@ -438,6 +446,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func selectionPseudoStyle() -> RenderStyleWrapper? {
+    assert(isNativeImpl())
     if isAnonymous() {
       return nil
     }
@@ -461,6 +470,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Obtains the selection colors that should be used when painting a selection.
   func selectionBackgroundColor() -> ColorWrapper {
+    assert(isNativeImpl())
     if style().usedUserSelect() == .None {
       return ColorWrapper()
     }
@@ -495,6 +505,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func selectionForegroundColor() -> ColorWrapper {
+    assert(isNativeImpl())
     return selectionColor(colorProperty: .CSSPropertyWebkitTextFillColor)
   }
 
@@ -504,6 +515,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func didAttachChild(child: RenderObjectWrapper) {
+    assert(isNativeImpl())
     if let textRenderer = child as? RenderTextWrapper {
       textRenderer.styleDidChange(diff: .Equal, oldStyle: nil)
     }
@@ -557,6 +569,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setOutOfFlowChildNeedsStaticPositionLayout() {
+    assert(isNativeImpl())
     // FIXME: Currently this dirty bit has a very limited useage but should be expanded to
     // optimize all kinds of out-of-flow cases.
     // It's also assumed that regular, positioned child related bits are already set.
@@ -568,6 +581,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func clearChildNeedsLayout() {
+    assert(isNativeImpl())
     setNormalChildNeedsLayoutBit(b: false)
     setPosChildNeedsLayoutBit(b: false)
     setNeedsSimplifiedNormalFlowLayoutBit(b: false)
@@ -576,6 +590,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func setNeedsPositionedMovementLayout(_ oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     assert(!isSetNeedsLayoutForbidden())
     if needsPositionedMovementLayout() {
       return
@@ -595,6 +610,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func setNeedsSimplifiedNormalFlowLayout() {
+    assert(isNativeImpl())
     assert(!isSetNeedsLayoutForbidden())
     if needsSimplifiedNormalFlowLayout() {
       return
@@ -615,6 +631,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   // (grid items, flex items) require this behavior as well, and this function exists as a helper for them.
   // It is expected that the caller will call this function independent of the value of paintInfo.phase.
   func paintAsInlineBlock(paintInfo: inout PaintInfoWrapper, childPoint: LayoutPointWrapper) {
+    assert(isNativeImpl())
     // Paint all phases atomically, as though the element established its own stacking context.
     // (See Appendix E.2, section 6.4 on inline block/table/replaced elements in the CSS2.1 specification.)
     // This is also used by other elements (e.g. flex items and grid items).
@@ -639,6 +656,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // Recursive function that computes the size and position of this object and all its descendants.
   func layout() {
+    assert(isNativeImpl())
     // TODO(asuhan): add stack stats
     assert(needsLayout())
     var child = firstChild()
@@ -663,6 +681,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ requiresFullRepaint: RequiresFullRepaint,
     oldRects: RenderObjectWrapper.RepaintRects, newRects: RenderObjectWrapper.RepaintRects
   ) -> Bool {
+    assert(isNativeImpl())
     if view().printing() {
       return false  // Don't repaint if we're printing.
     }
@@ -949,6 +968,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func repaintClientsOfReferencedSVGResources() {
+    assert(isNativeImpl())
     if !document().settings().layerBasedSVGEngineEnabled() {
       return
     }
@@ -961,6 +981,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func borderImageIsLoadedAndCanBeRendered() -> Bool {
+    assert(isNativeImpl())
     assert(style().hasBorder())
 
     if let borderImage = style().borderImage().image() {
@@ -971,6 +992,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isVisibleIgnoringGeometry() -> Bool {
+    assert(isNativeImpl())
     if document().activeDOMObjectsAreSuspended() {
       return false
     }
@@ -985,6 +1007,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func isVisibleInDocumentRect(documentRect: IntRect) -> Bool {
+    assert(isNativeImpl())
     if !isVisibleIgnoringGeometry() {
       return false
     }
@@ -1007,6 +1030,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isInsideEntirelyHiddenLayer() -> Bool {
+    assert(isNativeImpl())
     if isSVGLayerAwareRenderer() && document().settings().layerBasedSVGEngineEnabled()
       && enclosingLayer()!.enclosingSVGHiddenOrResourceContainer != nil
     {
@@ -1084,6 +1108,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func requiresRenderingConsolidationForViewTransition() -> Bool {
+    assert(isNativeImpl())
     return hasViewTransitionName() || capturedInViewTransition()
   }
 
@@ -1160,6 +1185,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func removeFromRenderFragmentedFlow() {
+    assert(isNativeImpl())
     assert(fragmentedFlowState() != .NotInsideFlow)
     // Sometimes we remove the element from the flow, but it's not destroyed at that time.
     // It's only until later when we actually destroy it and remove all the children from it.
@@ -1171,6 +1197,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func resetEnclosingFragmentedFlowAndChildInfoIncludingDescendants(
     fragmentedFlow: RenderFragmentedFlowWrapper? = nil
   ) {
+    assert(isNativeImpl())
     fragmentedFlow?.removeFlowChildInfo(self)
 
     for child: RenderElementWrapper in childrenOfType(parent: self) {
@@ -1209,6 +1236,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func attachRendererInternal(child: RenderObjectWrapper, beforeChild: RenderObjectWrapper?)
     -> RenderObjectWrapper
   {
+    assert(isNativeImpl())
     child.setParent(parent: self)
 
     if CPtrToInt(m_firstChild?.id()) == CPtrToInt(beforeChild?.id()) {
@@ -1234,6 +1262,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func detachRendererInternal(renderer: RenderObjectWrapper) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     let parent = renderer.parent()!
     let nextSibling = renderer.nextSibling()
 
@@ -1270,6 +1299,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // https://www.w3.org/TR/css-transforms-1/#reference-box
   func referenceBoxRect(boxType: CSSBoxType) -> FloatRectWrapper {
+    assert(isNativeImpl())
     // CSS box model code is implemented in RenderBox::referenceBoxRect().
 
     // For the legacy SVG engine, RenderElement is the only class that's
@@ -1293,6 +1323,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func alignReferenceBox(referenceBox: FloatRectWrapper) -> FloatRectWrapper {
+    assert(isNativeImpl())
     // The CSS borderBoxRect() is defined to start at an origin of (0, 0).
     // A possible shift of a CSS box (e.g. due to non-static position + top/left properties)
     // does not effect the borderBoxRect() location. The location information
@@ -1318,6 +1349,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func determineSVGViewport() -> FloatRectWrapper {
+    assert(isNativeImpl())
     var viewportElement = element() as! SVGElementWrapper?
 
     // RenderSVGViewportContainer is the only possible anonymous renderer in the SVG tree.
@@ -1343,6 +1375,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func effectiveOverflowX() -> Overflow {
+    assert(isNativeImpl())
     let overflowX = style().overflowX()
     if paintContainmentApplies() && overflowX == .Visible {
       return .Clip
@@ -1351,6 +1384,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func effectiveOverflowY() -> Overflow {
+    assert(isNativeImpl())
     let overflowY = style().overflowY()
     if paintContainmentApplies() && overflowY == .Visible {
       return .Clip
@@ -1376,6 +1410,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isDeprecatedFlexItem() -> Bool {
+    assert(isNativeImpl())
     return !isInline() && !isFloatingOrOutOfFlowPositioned() && parent() != nil
       && parent()!.isRenderDeprecatedFlexibleBox()
   }
@@ -1395,6 +1430,7 @@ class RenderElementWrapper: RenderObjectWrapper {
     paintInfo: PaintInfoWrapper, style: RenderStyleWrapper,
     focusRingRects: ArraySlice<LayoutRectWrapper>
   ) {
+    assert(isNativeImpl())
     assert(style.outlineStyleIsAuto() == .On)
     let outlineOffset = style.outlineOffset()
     var pixelSnappedFocusRingRects: [FloatRectWrapper] = []
@@ -1431,16 +1467,19 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func establishesIndependentFormattingContext() -> Bool {
+    assert(isNativeImpl())
     return renderElementEstablishesIndependentFormattingContext()
   }
 
   func renderElementEstablishesIndependentFormattingContext() -> Bool {
+    assert(isNativeImpl())
     return isFloatingOrOutOfFlowPositioned() || (isBlockBox() && hasPotentiallyScrollableOverflow())
       || style().containsLayout() || paintContainmentApplies()
       || (style().isDisplayBlockLevel() && style().blockStepSize() != nil)
   }
 
   func createsNewFormattingContext() -> Bool {
+    assert(isNativeImpl())
     // Writing-mode changes establish an independent block formatting context
     // if the box is a block-container.
     // https://drafts.csswg.org/css-writing-modes/#block-flow
@@ -1458,6 +1497,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isSkippedContentRoot() -> Bool {
+    assert(isNativeImpl())
     return layout_scion.isSkippedContentRoot(style: style(), element: element())
       && !view().frameView().layoutContext().needsSkippedContentLayout()
   }
@@ -1474,6 +1514,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func layerCreationAllowedForSubtree() -> Bool {
+    assert(isNativeImpl())
     // In LBSE layers are always created regardless of there position in the render tree.
     // Consider the SVG document fragment: "<defs><mask><rect transform="scale(2)".../>"
     // To paint the <rect> into the mask image, the rect needs to be transformed -
@@ -1505,6 +1546,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func propagateStyleToAnonymousChildren(propagationType: StylePropagationType) {
+    assert(isNativeImpl())
     // FIXME: We could save this call when the change only affected non-inherited properties.
     for elementChild: RenderElementWrapper in childrenOfType(parent: self) {
       if !elementChild.isAnonymous() || elementChild.style().pseudoElementType() != .None {
@@ -1555,6 +1597,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   private func repaintBeforeStyleChange(
     diff: StyleDifference, oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     if oldStyle.usedVisibility() == .Hidden {
       // Repaint on hidden renderer is a no-op.
       return false
@@ -1681,6 +1724,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    assert(isNativeImpl())
     assert(
       settings().shouldAllowUserInstalledFonts()
         || newStyle.fontDescription().shouldAllowUserInstalledFonts() == .No)
@@ -1840,6 +1884,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     let registerImages = { [self] (style: RenderStyleWrapper?, oldStyle: RenderStyleWrapper?) in
       if style == nil && oldStyle == nil {
         return
@@ -1960,6 +2005,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func paintOutline(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
+    assert(isNativeImpl())
     if paintInfo.context().paintingDisabled() {
       return
     }
@@ -1973,6 +2019,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateOutlineAutoAncestor(_ hasOutlineAuto: Bool) {
+    assert(isNativeImpl())
     if let placeholder = self as? RenderMultiColumnSpannerPlaceholderWrapper {
       let spanner = placeholder.spanner()!
       spanner.setHasOutlineAutoAncestor(hasOutlineAutoAncestor: hasOutlineAuto)
@@ -2000,6 +2047,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func removeFromRenderFragmentedFlowIncludingDescendants(_ shouldUpdateState: Bool) {
+    assert(isNativeImpl())
     var shouldUpdateState = shouldUpdateState
     // Once we reach another flow thread we don't need to update the flow thread state
     // but we have to continue cleanup the flow thread info.
@@ -2040,6 +2088,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   func adjustFragmentedFlowStateOnContainingBlockChangeIfNeeded(
     oldStyle: RenderStyleWrapper, newStyle: RenderStyleWrapper
   ) {
+    assert(isNativeImpl())
     if fragmentedFlowState() == .NotInsideFlow {
       return
     }
@@ -2076,26 +2125,33 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func isVisibleInViewport() -> Bool {
+    assert(isNativeImpl())
     let frameView = view().frameView()
     let visibleRect = frameView.windowToContents(windowRect: frameView.windowClipRect())
     return isVisibleInDocumentRect(documentRect: visibleRect)
   }
 
   private func shouldApplyLayoutOrPaintContainment(_ containsAccordingToStyle: Bool) -> Bool {
+    assert(isNativeImpl())
     return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox())
       && style().display() != .RubyAnnotation && (!isTablePart() || isRenderBlockFlow())
   }
 
   // FIXME: try to avoid duplication with isSkippedContentRoot.
   private func shouldApplySizeOrStyleContainment(_ containsAccordingToStyle: Bool) -> Bool {
+    assert(isNativeImpl())
     return containsAccordingToStyle && (!isInline() || isAtomicInlineLevelBox())
       && style().display() != .RubyAnnotation && (!isTablePart() || isRenderTableCaption())
       && !isRenderTable()
   }
 
-  override func lastChildSlow() -> RenderObjectWrapper? { return lastChild() }
+  override func lastChildSlow() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
+    return lastChild()
+  }
 
   private func rendererForPseudoStyleAcrossShadowBoundary() -> RenderElementWrapper? {
+    assert(isNativeImpl())
     guard let root = element()!.containingShadowRoot() else { return nil }
     if root.mode() != .UserAgent {
       return nil
@@ -2110,6 +2166,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func shouldRepaintForStyleDifference(_ diff: StyleDifference) -> Bool {
+    assert(isNativeImpl())
     let hasImmediateNonWhitespaceTextChild = { () in
       for child: RenderTextWrapper in childrenOfType(parent: self) {
         if !child.containsOnlyCollapsibleWhitespace() {
@@ -2122,6 +2179,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateFillImages(oldLayers: FillLayerWrapper?, newLayers: FillLayerWrapper?) {
+    assert(isNativeImpl())
     let fillImagesAreIdentical = { (layer1: FillLayerWrapper?, layer2: FillLayerWrapper?) in
       if (layer1 == nil && layer2 == nil)
         || (ObjectIdentifier(layer1!) == ObjectIdentifier(layer2!))
@@ -2189,6 +2247,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateImage(oldImage: StyleImage?, newImage: StyleImage?) {
+    assert(isNativeImpl())
     if oldImage === newImage {
       return
     }
@@ -2197,6 +2256,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func updateShapeImage(oldShapeValue: ShapeValue?, newShapeValue: ShapeValue?) {
+    assert(isNativeImpl())
     if oldShapeValue != nil || newShapeValue != nil {
       updateImage(oldImage: oldShapeValue?.image(), newImage: newShapeValue?.protectedImage())
     }
@@ -2205,6 +2265,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   private func adjustStyleDifference(
     _ diff: StyleDifference, _ contextSensitiveProperties: StyleDifferenceContextSensitiveProperty
   ) -> StyleDifference {
+    assert(isNativeImpl())
     var diff = diff
     // If transform changed, and we are not composited, need to do a layout.
     if contextSensitiveProperties.contains(.Transform) {
@@ -2277,6 +2338,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func issueRepaintForOutlineAuto(_ outlineSize: Float32) {
+    assert(isNativeImpl())
     var repaintRect = LayoutRectWrapper()
     var focusRingRects: [LayoutRectWrapper] = []
     addFocusRingRects(
@@ -2291,6 +2353,7 @@ class RenderElementWrapper: RenderObjectWrapper {
 
   // This needs to run when the entire render tree has been constructed, so can't be called from styleDidChange.
   private func updateReferencedSVGResources() {
+    assert(isNativeImpl())
     let referencedElementIDs = ReferencedSVGResources.referencedSVGResourceIDs(style(), document())
     if !referencedElementIDs.isEmpty {
       // TODO(asuhan): implement this
@@ -2301,6 +2364,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   private func clearReferencedSVGResources() {
+    assert(isNativeImpl())
     if !hasRareData() {
       return
     }
