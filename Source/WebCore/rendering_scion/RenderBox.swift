@@ -4962,7 +4962,9 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRelativeLogicalHeight() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBox_hasRelativeLogicalHeight(id())
+    }
     return style().logicalHeight().isPercentOrCalculated()
       || style().logicalMinHeight().isPercentOrCalculated()
       || style().logicalMaxHeight().isPercentOrCalculated()
