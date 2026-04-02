@@ -105,42 +105,46 @@ func += (a: inout IntOutsets, b: IntOutsets) -> IntOutsets {
   return a
 }
 
-private func at(_ r: LayoutBoxExtent, _ side: BoxSide) -> LayoutUnit {
-  switch side {
-  case .Top:
-    return r.top
-  case .Right:
-    return r.right
-  case .Bottom:
-    return r.bottom
-  case .Left:
-    return r.left
+extension LayoutBoxExtent {
+
+  private func at(_ side: BoxSide) -> LayoutUnit {
+    switch side {
+    case .Top:
+      return top
+    case .Right:
+      return right
+    case .Bottom:
+      return bottom
+    case .Left:
+      return left
+    }
   }
-}
 
-private func setSide(_ r: inout LayoutBoxExtent, _ side: BoxSide, _ value: LayoutUnit) {
-  switch side {
-  case .Top:
-    r.top = value
-  case .Right:
-    r.right = value
-  case .Bottom:
-    r.bottom = value
-  case .Left:
-    r.left = value
+  private mutating func setSide(_ side: BoxSide, _ value: LayoutUnit) {
+    switch side {
+    case .Top:
+      top = value
+    case .Right:
+      right = value
+    case .Bottom:
+      bottom = value
+    case .Left:
+      left = value
+    }
   }
-}
 
-func before(_ r: LayoutBoxExtent, _ writingMode: WritingMode) -> LayoutUnit {
-  return at(r, mapLogicalSideToPhysicalSide(writingMode, .BlockStart))
-}
+  func before(_ writingMode: WritingMode) -> LayoutUnit {
+    return at(mapLogicalSideToPhysicalSide(writingMode, .BlockStart))
+  }
 
-// TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
-func setBefore(_ r: inout LayoutBoxExtent, _ before: LayoutUnit, _ writingMode: WritingMode) {
-  setSide(&r, mapLogicalSideToPhysicalSide(writingMode, .BlockStart), before)
-}
+  // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+  mutating func setBefore(_ before: LayoutUnit, _ writingMode: WritingMode) {
+    setSide(mapLogicalSideToPhysicalSide(writingMode, .BlockStart), before)
+  }
 
-// TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
-func setAfter(_ r: inout LayoutBoxExtent, _ after: LayoutUnit, _ writingMode: WritingMode) {
-  setSide(&r, mapLogicalSideToPhysicalSide(writingMode, .BlockEnd), after)
+  // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.
+  mutating func setAfter(_ after: LayoutUnit, _ writingMode: WritingMode) {
+    setSide(mapLogicalSideToPhysicalSide(writingMode, .BlockEnd), after)
+  }
+
 }

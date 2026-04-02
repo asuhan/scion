@@ -1524,7 +1524,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
     assert(isNativeImpl())
-    return before(marginBox, (otherStyle ?? style()).writingMode())
+    return marginBox.before((otherStyle ?? style()).writingMode())
   }
 
   override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
@@ -1549,12 +1549,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func setMarginBefore(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     assert(isNativeImpl())
-    setBefore(&marginBox, value, (overrideStyle ?? style()).writingMode())
+    marginBox.setBefore(value, (overrideStyle ?? style()).writingMode())
   }
 
   func setMarginAfter(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
     assert(isNativeImpl())
-    setAfter(&marginBox, value, (overrideStyle ?? style()).writingMode())
+    marginBox.setAfter(value, (overrideStyle ?? style()).writingMode())
   }
 
   func setMarginStart(value: LayoutUnit, overrideStyle: RenderStyleWrapper? = nil) {
