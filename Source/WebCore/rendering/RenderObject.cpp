@@ -95,6 +95,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderElement(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderElement();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isFloating(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isFloating();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isOutOfFlowPositioned(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isOutOfFlowPositioned();

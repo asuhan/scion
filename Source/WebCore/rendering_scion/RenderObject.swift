@@ -1183,7 +1183,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFloating() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isFloating(id())
+    }
     return m_stateBitfields.hasFlag(.Floating)
   }
 
