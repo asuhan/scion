@@ -156,6 +156,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   override init(p: UnsafeMutableRawPointer) { super.init(p: p) }
 
   func relativePositionOffset() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     // This function has been optimized to avoid calls to containingBlock() in the common case
     // where all values are either auto or fixed.
     let containingBlock = containingBlock()
@@ -257,6 +258,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   private func availableWidth(containingBlock: RenderBlockWrapper?) -> LayoutUnit {
+    assert(isNativeImpl())
     if let renderBox = self as? RenderBoxWrapper,
       let overridingContainingBlockContentWidth = renderBox.overridingContainingBlockContentWidth(
         writingMode: containingBlock!.style().writingMode())
@@ -269,6 +271,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   private func overridingContainingBlockContentHeight(containingBlock: RenderBlockWrapper?)
     -> LayoutUnit?
   {
+    assert(isNativeImpl())
     if let renderBox = self as? RenderBoxWrapper,
       let overridingContainingBlockContentHeight = renderBox.overridingContainingBlockContentHeight(
         writingMode: containingBlock!.style().writingMode())
@@ -285,6 +288,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func constrainingRectForStickyPosition() -> FloatRectWrapper {
+    assert(isNativeImpl())
     if let enclosingClippingLayer =
       hasLayer() ? layer()!.enclosingOverflowClipLayer(includeSelf: .ExcludeSelf) : nil
     {
@@ -335,6 +339,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func computeStickyPositionConstraints(constrainingRect: FloatRectWrapper)
     -> StickyPositionViewportConstraints
   {
+    assert(isNativeImpl())
     let constraints = StickyPositionViewportConstraints()
     constraints.setConstrainingRectAtLastLayout(rect: constrainingRect)
 
@@ -473,6 +478,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func stickyPositionOffset() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     let constrainingRect = constrainingRectForStickyPosition()
     let constraints = computeStickyPositionConstraints(constrainingRect: constrainingRect)
 
@@ -482,6 +488,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func offsetForInFlowPosition() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     if isRelativelyPositioned() {
       return relativePositionOffset()
     }
@@ -494,6 +501,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func updateFromStyle() {
+    assert(isNativeImpl())
     super.updateFromStyle()
 
     // Set the appropriate bits for a box model object.  Since all bits are cleared in styleWillChange,
@@ -510,13 +518,17 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   override func requiresLayer() -> Bool {
+    assert(isNativeImpl())
     return isDocumentElementRenderer() || isPositioned() || createsGroup()
       || hasTransformRelatedProperty() || hasHiddenBackface() || hasReflection()
       || requiresRenderingConsolidationForViewTransition() || isRenderViewTransitionCapture()
   }
 
   // This will work on inlines to return the bounding box of all of the lines' border boxes.
-  func borderBoundingBox() -> LayoutRectWrapper { fatalError("Not reached") }
+  func borderBoundingBox() -> LayoutRectWrapper {
+    assert(isNativeImpl())
+    fatalError("Not reached")
+  }
 
   // These return the CSS computed padding values.
   func computedCSSPaddingTop() -> LayoutUnit {
@@ -791,7 +803,10 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func horizontalMarginExtent() -> LayoutUnit { return marginLeft() + marginRight() }
+  func horizontalMarginExtent() -> LayoutUnit {
+    assert(isNativeImpl())
+    return marginLeft() + marginRight()
+  }
 
   func marginLogicalHeight() -> LayoutUnit {
     assert(isNativeImpl())
@@ -806,6 +821,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func borderShapeForContentClipping(
     borderBoxRect: LayoutRectWrapper, includeLeftEdge: Bool = true, includeRightEdge: Bool = true
   ) -> BorderShape {
+    assert(isNativeImpl())
     let borderWidths = borderWidths()
     let padding = padding()
 
@@ -847,6 +863,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
+    assert(isNativeImpl())
     guard let container = container() else { return }
 
     container.mapAbsoluteToLocalPoint(mode, &transformState)
@@ -864,6 +881,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func contentChanged(_ changeType: ContentChangeType) {
+    assert(isNativeImpl())
     if !hasLayer() {
       return
     }
@@ -900,11 +918,13 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func hasVisibleBoxDecorationStyle() -> Bool {
+    assert(isNativeImpl())
     return hasBackground() || style().hasVisibleBorderDecoration() || style().hasUsedAppearance()
       || style().boxShadow() != nil
   }
 
   func borderObscuresBackgroundEdge(contextScale: FloatSize) -> Bool {
+    assert(isNativeImpl())
     let edges = borderEdges(style: style(), deviceScaleFactor: document().deviceScaleFactor())
 
     for side in allBoxSides {
@@ -921,6 +941,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderObscuresBackground() -> Bool {
+    assert(isNativeImpl())
     if !style().hasBorder() {
       return false
     }
@@ -949,6 +970,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   func hasAutoHeightOrContainingBlockWithAutoHeight(
     updatePercentageDescendants: UpdatePercentageHeightDescendants = .Yes
   ) -> Bool {
+    assert(isNativeImpl())
     let thisBox = self as? RenderBoxWrapper
     let logicalHeightLength = style().logicalHeight()
     let cb = containingBlockForAutoHeightDetection(logicalHeight: logicalHeightLength)
@@ -992,6 +1014,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func fixedBackgroundPaintsInLocalCoordinates() -> Bool {
+    assert(isNativeImpl())
     if !isDocumentElementRenderer() {
       return false
     }
@@ -1020,6 +1043,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func decodingModeForImageDraw(image: ImageWrapper, paintInfo: PaintInfoWrapper) -> DecodingMode {
+    assert(isNativeImpl())
     // Some document types force synchronous decoding.
     if document().isImageDocument() {
       return .Synchronous
@@ -1078,6 +1102,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   private func defaultDecodingMode(paintInfo: PaintInfoWrapper, bitmapImage: BitmapImageWrapper)
     -> DecodingMode
   {
+    assert(isNativeImpl())
     if paintInfo.paintBehavior.contains(.ForceSynchronousImageDecode) {
       return .Synchronous
     }
@@ -1102,6 +1127,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     context: GraphicsContextWrapper, paintRect: FloatRectWrapper,
     inlineBox: InlineIterator.InlineBoxIterator, scrolledPaintRect: LayoutRectWrapper
   ) {
+    assert(isNativeImpl())
     // Now add the text to the clip. We do this by painting using a special paint phase that signals to
     // the painter it should just modify the clip.
     var maskInfo = PaintInfoWrapper(
@@ -1163,6 +1189,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   )
     -> LayoutSizeWrapper
   {
+    assert(isNativeImpl())
     // A generated image without a fixed size, will always return the container size as intrinsic size.
     if !image.imageHasNaturalDimensions() {
       return LayoutSizeWrapper(
@@ -1219,6 +1246,7 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func containingBlockForAutoHeightDetection(logicalHeight: LengthWrapper) -> RenderBlockWrapper? {
+    assert(isNativeImpl())
     // For percentage heights: The percentage is calculated with respect to the
     // height of the generated box's containing block. If the height of the
     // containing block is not specified explicitly (i.e., it depends on content
