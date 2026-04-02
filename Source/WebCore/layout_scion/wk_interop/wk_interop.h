@@ -809,6 +809,7 @@ struct BlockEllipsisRaw RenderStyle_blockEllipsis(const void*);
 uint64_t RenderStyle_maxLines(const void*);
 bool RenderStyle_overflowContinue(const void*);
 bool RenderStyle_autoWrap(const void*);
+bool RenderStyle_preserveNewline(const void*);
 int32_t RenderStyle_textShadowExtent_top(const void*);
 int32_t RenderStyle_textShadowExtent_right(const void*);
 int32_t RenderStyle_textShadowExtent_bottom(const void*);
