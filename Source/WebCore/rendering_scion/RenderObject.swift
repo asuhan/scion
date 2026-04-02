@@ -1198,7 +1198,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isOutOfFlowPositioned() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isOutOfFlowPositioned(id())
+    }
     return m_stateBitfields.isOutOfFlowPositioned()  // absolute or fixed positioning
   }
 

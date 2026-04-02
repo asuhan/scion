@@ -462,6 +462,7 @@ void ElementBox_setBaselineForIntegration(const void*, int32_t);
 bool ElementBox_hasBaselineForIntegration(const void*);
 int32_t ElementBox_baselineForIntegration(const void*);
 bool RenderObject_isRenderElement(const void*);
+bool RenderObject_isOutOfFlowPositioned(const void*);
 bool RenderObject_isRenderText(const void*);
 bool RenderObject_isRenderListBox(const void*);
 bool RenderObject_isRenderListItem(const void*);
