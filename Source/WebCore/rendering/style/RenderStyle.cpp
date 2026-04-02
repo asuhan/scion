@@ -586,6 +586,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasVisibleBorder(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasVisibleBorder();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasPadding(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasPadding();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_floating(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->floating());
