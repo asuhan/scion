@@ -44,6 +44,8 @@ public:
 
     RenderLayer* enclosingLayer() const;
 
+    void setChildrenInline(bool b);
+
     bool hasLayer() const;
 
     bool needsLayout() const;

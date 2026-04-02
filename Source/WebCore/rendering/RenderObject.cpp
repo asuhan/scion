@@ -2490,6 +2490,15 @@ ScrollAnchoringController* RenderObject::searchParentChainForScrollAnchoringCont
     return renderer.view().frameView().scrollAnchoringController();
 }
 
+void RenderObject::setChildrenInline(bool b)
+{
+    if (m_scion) {
+        m_scion->setChildrenInline(b);
+        return;
+    }
+    m_stateBitfields.setFlag(StateFlag::ChildrenInline, b);
+}
+
 void RenderObject::RepaintRects::transform(const TransformationMatrix& matrix)
 {
     clippedOverflowRect = matrix.mapRect(clippedOverflowRect);
