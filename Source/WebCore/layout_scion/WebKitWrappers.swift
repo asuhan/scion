@@ -907,7 +907,7 @@ func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMu
   return unmanaged.toOpaque()
 }
 
-private func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
+func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
   if wk_interop.RenderObject_isRenderBlockFlow(p) {
     return RenderBlockFlowWrapper(p: p)
   }

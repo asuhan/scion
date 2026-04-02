@@ -99,6 +99,11 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT void* RenderBox_nextSiblingBox(const void* box_raw_ptr)
+{
+    return static_cast<const WebCore::RenderBox*>(box_raw_ptr)->nextSiblingBox();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalWidthLength(void* box_raw_ptr, const void* length_raw_ptr)
 {
     auto* renderer = static_cast<WebCore::RenderBox*>(static_cast<WebCore::RenderBox*>(box_raw_ptr));

@@ -524,6 +524,7 @@ bool RenderElement_checkForRepaintDuringLayout(const void*);
 bool RenderElement_isContinuation(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
+void* RenderBox_nextSiblingBox(const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
 void RenderBox_repaintDuringLayoutIfMoved(void*, struct LayoutRectRaw);
