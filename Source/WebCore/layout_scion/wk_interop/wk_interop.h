@@ -699,6 +699,7 @@ bool RenderStyle_hasStaticBlockPosition(const void*, bool);
 bool RenderStyle_hasViewportConstrainedPosition(const void*);
 bool RenderStyle_hasVisibleBorder(const void*);
 bool RenderStyle_hasPadding(const void*);
+bool RenderStyle_hasBackgroundImage(const void*);
 uint8_t RenderStyle_floating(const void*);
 uint8_t RenderStyle_overflowX(const void*);
 uint8_t RenderStyle_overflowY(const void*);
