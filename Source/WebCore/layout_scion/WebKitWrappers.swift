@@ -907,15 +907,29 @@ func RenderSelectionScion_create(_ viewRaw: UnsafeMutableRawPointer) -> UnsafeMu
   return unmanaged.toOpaque()
 }
 
+private func createRenderObjectWrapper(_ p: UnsafeMutableRawPointer) -> RenderObjectWrapper {
+  if wk_interop.RenderObject_isRenderBlockFlow(p) {
+    return RenderBlockFlowWrapper(p: p)
+  }
+  if wk_interop.RenderObject_isRenderBlock(p) {
+    return RenderBlockWrapper(p: p)
+  }
+  if wk_interop.RenderObject_isRenderBox(p) {
+    return RenderBoxWrapper(p: p)
+  }
+  if wk_interop.RenderObject_isRenderElement(p) {
+    return RenderElementWrapper(p: p)
+  }
+  return RenderObjectWrapper(p: p)
+}
+
 @_cdecl("RenderElementScion_attachRendererInternal")
 func RenderElementScion_attachRendererInternal(
   _ elementRaw: UnsafeMutableRawPointer, _ childRaw: UnsafeMutableRawPointer,
   _ beforeChildRaw: UnsafeMutableRawPointer?
 ) {
   let element = Unmanaged<RenderElementWrapper>.fromOpaque(elementRaw).takeUnretainedValue()
-  let child =
-    wk_interop.RenderObject_isRenderElement(childRaw)
-    ? RenderElementWrapper(p: childRaw) : RenderObjectWrapper(p: childRaw)
+  let child = createRenderObjectWrapper(childRaw)
   let beforeChild = beforeChildRaw != nil ? RenderObjectWrapper(p: beforeChildRaw!) : nil
   element.attachRendererInternal(child: child, beforeChild: beforeChild)
 }
