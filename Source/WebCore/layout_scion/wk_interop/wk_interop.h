@@ -689,6 +689,7 @@ int32_t RenderStyle_getBoxShadowHorizontalExtentLeft(const void*);
 int32_t RenderStyle_getBoxShadowHorizontalExtentRight(const void*);
 int32_t RenderStyle_getBoxShadowVerticalExtentTop(const void*);
 int32_t RenderStyle_getBoxShadowVerticalExtentBottom(const void*);
+bool RenderStyle_hasBorder(const void*);
 bool RenderStyle_hasBorderImage(const void*);
 bool RenderStyle_hasUsedAppearance(const void*);
 bool RenderStyle_hasBackground(const void*);

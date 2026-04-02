@@ -541,6 +541,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_getBoxShadowVerticalExtentBottom(c
     return bottom.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasBorder(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasBorder();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasBorderImage(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasBorderImage();

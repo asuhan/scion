@@ -444,10 +444,7 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_computedFontSize(p!)
   }
 
-  func hasBorder() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasBorder() -> Bool { return wk_interop.RenderStyle_hasBorder(p!) }
 
   func hasBorderImage() -> Bool {
     return wk_interop.RenderStyle_hasBorderImage(p!)
