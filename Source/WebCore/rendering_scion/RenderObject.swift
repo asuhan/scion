@@ -1310,7 +1310,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isExcludedFromNormalLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isExcludedFromNormalLayout(id())
+    }
     return m_stateBitfields.hasFlag(.IsExcludedFromNormalLayout)
   }
 
