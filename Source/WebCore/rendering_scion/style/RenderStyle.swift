@@ -3132,6 +3132,5 @@ func isNonVisibleOverflow(_ overflow: Overflow) -> Bool {
 }
 
 func isVisibleToHitTesting(_ style: RenderStyleWrapper, _ request: HitTestRequestWrapper) -> Bool {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return (request.userTriggered() ? style.usedVisibility() : style.visibility()) == .Visible
 }
