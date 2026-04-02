@@ -1332,8 +1332,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func captionSide() -> CaptionSide {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CaptionSide(rawValue: wk_interop.RenderStyle_captionSide(p!))!
   }
 
   func listStyleType() -> ListStyleType {

@@ -617,6 +617,7 @@ uint8_t RenderStyle_borderCollapse(const void*);
 float RenderStyle_horizontalBorderSpacing(const void*);
 float RenderStyle_verticalBorderSpacing(const void*);
 uint8_t RenderStyle_emptyCells(const void*);
+uint8_t RenderStyle_captionSide(const void*);
 const void* RenderStyle_boxShadow(const void*);
 void* RenderStyle_boxReflect(const void*);
 uint8_t RenderStyle_boxDecorationBreak(const void*);
