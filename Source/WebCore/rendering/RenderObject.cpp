@@ -127,6 +127,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderObject_maxPreferredLogicalWidth(const vo
     return width.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isSkippedContentForLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isSkippedContentForLayout();
+}
+
 extern "C" WEBCORE_EXPORT void RenderObject_setPreviousSibling(void* p, void* previous)
 {
     static_cast<WebCore::RenderObject*>(p)->setPreviousSibling(static_cast<WebCore::RenderObject*>(previous));

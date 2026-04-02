@@ -2884,7 +2884,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSkippedContentForLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isSkippedContentForLayout(id())
+    }
     return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout()
   }
 
