@@ -701,6 +701,7 @@ bool RenderStyle_hasVisibleBorder(const void*);
 bool RenderStyle_hasPadding(const void*);
 bool RenderStyle_hasBackgroundImage(const void*);
 bool RenderStyle_hasAnyFixedBackground(const void*);
+bool RenderStyle_hasEntirelyFixedBackground(const void*);
 uint8_t RenderStyle_floating(const void*);
 uint8_t RenderStyle_overflowX(const void*);
 uint8_t RenderStyle_overflowY(const void*);

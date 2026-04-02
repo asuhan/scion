@@ -465,8 +465,7 @@ class RenderStyleWrapper: Equatable {
   func hasAnyFixedBackground() -> Bool { return wk_interop.RenderStyle_hasAnyFixedBackground(p!) }
 
   func hasEntirelyFixedBackground() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasEntirelyFixedBackground(p!)
   }
 
   func hasUsedAppearance() -> Bool {
