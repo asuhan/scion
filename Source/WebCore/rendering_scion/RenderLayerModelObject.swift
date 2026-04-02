@@ -63,6 +63,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    assert(isNativeImpl())
     RenderLayerModelObjectWrapper.s_wasFloating = isFloating()
     RenderLayerModelObjectWrapper.s_hadLayer = hasLayer()
     RenderLayerModelObjectWrapper.s_wasTransformed = isTransformed()
@@ -80,6 +81,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     super.styleDidChange(diff: diff, oldStyle: oldStyle)
     updateFromStyle()
 
@@ -207,6 +209,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   func shouldPaintSVGRenderer(_ paintInfo: PaintInfoWrapper, _ relevantPaintPhases: PaintPhase = [])
     -> Bool
   {
+    assert(isNativeImpl())
     if paintInfo.context().paintingDisabled() {
       return false
     }
@@ -232,6 +235,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: RenderObjectWrapper.VisibleRectContext
   ) -> RepaintRects? {
+    assert(isNativeImpl())
     assert(self is RenderSVGModelObjectWrapper || self is RenderSVGBlockWrapper)
     assert(!style().hasInFlowPosition())
     assert(!view().frameView().layoutContext().isPaintOffsetCacheEnabled())
@@ -284,6 +288,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
+    assert(isNativeImpl())
     assert(self is RenderSVGModelObjectWrapper || self is RenderSVGBlockWrapper)
     assert(style().position() == .Static)
 
@@ -339,6 +344,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func svgClipperResourceFromStyle() -> RenderSVGResourceClipperWrapper? {
+    assert(isNativeImpl())
     if !document().settings().layerBasedSVGEngineEnabled() {
       return nil
     }
@@ -362,6 +368,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func svgFilterResourceFromStyle() -> RenderSVGResourceFilter? {
+    assert(isNativeImpl())
     if !document().settings().layerBasedSVGEngineEnabled() {
       return nil
     }
@@ -415,6 +422,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func paintSVGClippingMask(paintInfo: PaintInfoWrapper, objectBoundingBox: FloatRectWrapper) {
+    assert(isNativeImpl())
     assert(paintInfo.phase == .ClippingMask)
     let context = paintInfo.context()
     if !paintInfo.shouldPaintWithinRoot(renderer: self) || style().usedVisibility() != .Visible
@@ -430,6 +438,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func paintSVGMask(_ paintInfo: PaintInfoWrapper, _ adjustedPaintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     assert(paintInfo.phase == .Mask)
     let context = paintInfo.context()
     if !paintInfo.shouldPaintWithinRoot(renderer: self) || context.paintingDisabled() {
@@ -448,6 +457,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   func updateLayerTransform() {
+    assert(isNativeImpl())
     if let box = self as? RenderBoxWrapper,
       style().offsetPath() != nil
         && MotionPath.needsUpdateAfterContainingBlockLayout(style().offsetPath()!),
@@ -472,6 +482,7 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   }
 
   private func createLayer() {
+    assert(isNativeImpl())
     assert(m_layer == nil)
     m_layer = RenderLayerWrapper(self)
     setHasLayer(true)
