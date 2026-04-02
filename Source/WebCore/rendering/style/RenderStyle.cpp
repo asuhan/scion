@@ -494,6 +494,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayBlockType(const void
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayBlockType();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_isDisplayTableOrTablePart(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->isDisplayTableOrTablePart();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isOriginalDisplayListItemType(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isOriginalDisplayListItemType();
