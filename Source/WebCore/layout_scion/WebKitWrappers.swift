@@ -880,14 +880,14 @@ func RenderObjectScion_setChildrenInline(_ objectRaw: UnsafeMutableRawPointer, _
   object.setChildrenInline(b: b)
 }
 
-@_cdecl("RenderObject_hasLayer")
-func RenderObject_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
+@_cdecl("RenderObjectScion_hasLayer")
+func RenderObjectScion_hasLayer(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.hasLayer()
 }
 
-@_cdecl("RenderObject_needsLayout")
-func RenderObject_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
+@_cdecl("RenderObjectScion_needsLayout")
+func RenderObjectScion_needsLayout(_ objectRaw: UnsafeRawPointer) -> Bool {
   let object = Unmanaged<RenderObjectWrapper>.fromOpaque(objectRaw).takeUnretainedValue()
   return object.needsLayout()
 }

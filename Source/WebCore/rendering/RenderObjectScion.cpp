@@ -29,9 +29,9 @@ extern "C" void* RenderObjectScion_enclosingLayer(const void*);
 
 extern "C" void RenderObjectScion_setChildrenInline(void*, bool);
 
-extern "C" bool RenderObject_hasLayer(const void*);
+extern "C" bool RenderObjectScion_hasLayer(const void*);
 
-extern "C" bool RenderObject_needsLayout(const void*);
+extern "C" bool RenderObjectScion_needsLayout(const void*);
 
 extern "C" void RenderObjectScion_setNormalChildNeedsLayoutBit(void*, bool);
 
@@ -41,9 +41,9 @@ RenderLayer* RenderObjectScion::enclosingLayer() const { return static_cast<Rend
 
 void RenderObjectScion::setChildrenInline(bool b) { RenderObjectScion_setChildrenInline(m_handle, b); }
 
-bool RenderObjectScion::hasLayer() const { return RenderObject_hasLayer(m_handle); }
+bool RenderObjectScion::hasLayer() const { return RenderObjectScion_hasLayer(m_handle); }
 
-bool RenderObjectScion::needsLayout() const { return RenderObject_needsLayout(m_handle); }
+bool RenderObjectScion::needsLayout() const { return RenderObjectScion_needsLayout(m_handle); }
 
 void RenderObjectScion::setNormalChildNeedsLayoutBit(bool b) { RenderObjectScion_setNormalChildNeedsLayoutBit(m_handle, b); }
 
