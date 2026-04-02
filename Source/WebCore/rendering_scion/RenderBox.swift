@@ -497,6 +497,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func requiresLayerWithScrollableArea() -> Bool {
+    assert(isNativeImpl())
     // FIXME: This is wrong; these boxes' layers should not need ScrollableAreas via RenderLayer.
     if isRenderView() || isDocumentElementRenderer() {
       return true
@@ -518,6 +519,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override final func backgroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper) -> Bool {
+    assert(isNativeImpl())
     if !BackgroundPainter.paintsOwnBackground(renderer: self) {
       return false
     }
@@ -658,6 +660,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalWidth: LayoutUnit, availableWidth: LayoutUnit, cb: RenderBlockWrapper,
     fragment: RenderFragmentContainerWrapper?, allowIntrinsic: AllowIntrinsic = .Yes
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let styleToUse = style()
     var computedMaxWidth = LayoutUnit.max()
     if !styleToUse.logicalMaxWidth().isUndefined()
@@ -700,6 +703,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func constrainLogicalHeightByMinMax(
     logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let styleToUse = style()
     var computedLogicalMaxHeight: LayoutUnit? = nil
     if !styleToUse.logicalMaxHeight().isUndefined() {
@@ -748,6 +752,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func constrainContentBoxLogicalHeightByMinMax(
     logicalHeight: LayoutUnit, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     // If the min/max height and logical height are both percentages we take advantage of already knowing the current resolved percentage height
     // to avoid recursing up through our containing blocks again to determine it.
     let styleToUse = style()
@@ -832,7 +837,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return m_frameRect.location()
   }
 
-  func locationOffset() -> LayoutSizeWrapper { return LayoutSizeWrapper(width: x(), height: y()) }
+  func locationOffset() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
+    return LayoutSizeWrapper(width: x(), height: y())
+  }
 
   func size() -> LayoutSizeWrapper {
     assert(isNativeImpl())
@@ -900,6 +908,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // The content area of the box (excludes padding - and intrinsic padding for table cells, etc... - and border).
   func contentBoxRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var verticalScrollbarWidth = LayoutUnit(value: UInt64(0))
     var horizontalScrollbarHeight = LayoutUnit(value: UInt64(0))
     var leftScrollbarSpace = LayoutUnit(value: UInt64(0))
@@ -963,6 +972,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     var box = localOutlineBoundsRepaintRect()
 
     if CPtrToInt(repaintContainer?.id()) != CPtrToInt(id()) {
@@ -989,6 +999,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     rects: inout [LayoutRectWrapper], additionalOffset: LayoutPointWrapper,
     paintContainer: RenderLayerModelObjectWrapper? = nil
   ) {
+    assert(isNativeImpl())
     if !size().isEmpty() {
       rects.append(LayoutRectWrapper(location: additionalOffset, size: size()))
     }
@@ -996,9 +1007,15 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   override func repaintRectInLocalCoordinates(
     _ repaintRectCalculation: RepaintRectCalculation = .Fast
-  ) -> FloatRectWrapper { return borderBoxRect().FloatRect() }
+  ) -> FloatRectWrapper {
+    assert(isNativeImpl())
+    return borderBoxRect().FloatRect()
+  }
 
-  override func objectBoundingBox() -> FloatRectWrapper { return borderBoxRect().FloatRect() }
+  override func objectBoundingBox() -> FloatRectWrapper {
+    assert(isNativeImpl())
+    return borderBoxRect().FloatRect()
+  }
 
   // Note these functions are not equivalent of childrenOfType<RenderBox>
   func parentBox() -> RenderBoxWrapper? {
@@ -1088,6 +1105,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // respectively are flipped when compared to their physical counterparts.  For example minX is on the left in vertical-lr,
   // but it is on the right in vertical-rl.
   func flippedClientBoxRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     // Because of the special coordinate system used for overflow rectangles (not quite logical, not
     // quite physical), we need to flip the block progression coordinate in vertical-rl and
     // horizontal-bt writing modes. Apart from that, this method does the same as clientBoxRect().
@@ -1145,6 +1163,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // RenderBox's basic implementation accounts for the writing mode (only).
   func allowedLayoutOverflowForBox() -> LayoutOptionalOutsets {
+    assert(isNativeImpl())
     var allowance = LayoutOptionalOutsets(top: nil, right: nil, bottom: nil, left: nil)
 
     // Overflow is in the block's coordinate space and thus is flipped
@@ -1170,7 +1189,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     return allowance
   }
 
-  func allowedLayoutOverflow() -> LayoutOptionalOutsets { return allowedLayoutOverflowForBox() }
+  func allowedLayoutOverflow() -> LayoutOptionalOutsets {
+    assert(isNativeImpl())
+    return allowedLayoutOverflowForBox()
+  }
 
   func addLayoutOverflow(rect: LayoutRectWrapper) {
     assert(!isNativeImpl())
@@ -1195,6 +1217,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clearOverflow() {
+    assert(isNativeImpl())
     overflow = nil
     if let fragmentedFlow = enclosingFragmentedFlow() {
       fragmentedFlow.clearFragmentsOverflow(self)
@@ -1202,6 +1225,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addVisualEffectOverflow() {
+    assert(isNativeImpl())
     let hasBoxShadow = style().boxShadow()
     let hasBorderImageOutsets = style().hasBorderImageOutsets()
     let hasOutline = outlineStyleForRepaint().hasOutlineInVisualOverflow()
@@ -1217,6 +1241,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func applyVisualEffectOverflow(borderBox: LayoutRectWrapper) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var overflowMinX = borderBox.x()
     var overflowMaxX = borderBox.maxX()
     var overflowMinY = borderBox.y()
@@ -1257,16 +1282,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func addOverflowFromChild(child: RenderBoxWrapper) {
+    assert(isNativeImpl())
     addOverflowFromChild(child: child, delta: child.locationOffset())
   }
 
   func addOverflowFromChild(child: RenderBoxWrapper, delta: LayoutSizeWrapper) {
+    assert(isNativeImpl())
     addOverflowFromChild(child: child, delta: delta, flippedClientRect: flippedClientBoxRect())
   }
 
   func addOverflowFromChild(
     child: RenderBoxWrapper, delta: LayoutSizeWrapper, flippedClientRect: LayoutRectWrapper
   ) {
+    assert(isNativeImpl())
     // Never allow flow threads to propagate overflow up to a parent.
     if child.isRenderFragmentedFlow() {
       return
@@ -1315,6 +1343,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func computeChildVisualOverflowRect(child: RenderBoxWrapper, delta: LayoutSizeWrapper)
     -> LayoutRectWrapper?
   {
+    assert(isNativeImpl())
     var childVisualOverflowRect = child.visualOverflowRectForPropagation(parentStyle: style())
     childVisualOverflowRect.move(size: delta)
     return childVisualOverflowRect
@@ -1382,6 +1411,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paddingBoxRect() -> LayoutRectWrapper {
+    assert(isNativeImpl())
     let zero = LayoutUnit(value: UInt64(0))
     var offsetForScrollbar = zero
     var verticalScrollbarWidth = zero
@@ -1555,6 +1585,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func constrainBlockMarginInAvailableSpaceOrTrim(
     containingBlock: RenderBoxWrapper, availableSpace: LayoutUnit, marginSide: MarginTrimType
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     assert(marginSide == .BlockStart || marginSide == .BlockEnd)
     if containingBlock.shouldTrimChildMarginForBox(type: marginSide, child: self) {
       // FIXME(255434): This should be set when the margin is being trimmed
@@ -1578,6 +1609,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func reflectionOffset() -> Int32 {
+    assert(isNativeImpl())
     if style().boxReflect() == nil {
       return 0
     }
@@ -1593,6 +1625,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Given a rect in the object's coordinate space, returns the corresponding rect in the reflection.
   func reflectedRect(r: LayoutRectWrapper) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if style().boxReflect() == nil {
       return LayoutRectWrapper()
     }
@@ -1614,6 +1647,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func layout() {
+    assert(isNativeImpl())
     // TODO(asuhan): add stack stats
     assert(needsLayout())
 
@@ -1643,6 +1677,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ action: HitTestAction
   ) -> Bool {
+    assert(isNativeImpl())
     let adjustedLocation = accumulatedOffset + location()
 
     // Check kids first.
@@ -1730,7 +1765,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fatalError("Not implemented")
   }
 
-  func minimumReplacedHeight() -> LayoutUnit { return LayoutUnit(value: 0) }
+  func minimumReplacedHeight() -> LayoutUnit {
+    assert(isNativeImpl())
+    return LayoutUnit(value: 0)
+  }
 
   func overridingLogicalWidth() -> LayoutUnit? {
     // TODO(asuhan): implement this
@@ -1871,6 +1909,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     // A fragment "has" boxes inside it without being their container.
     assert(
       CPtrToInt(container.id()) == CPtrToInt(self.container()?.id())
@@ -1903,6 +1942,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustBorderBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
     let width = LayoutUnit(value: logicalWidth.value())
     let bordersPlusPadding = borderAndPaddingLogicalWidth()
     if style().boxSizing() == .ContentBox || logicalWidth.isIntrinsicOrAuto() {
@@ -1912,6 +1952,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustContentBoxLogicalWidthForBoxSizing(logicalWidth: LengthWrapper) -> LayoutUnit {
+    assert(isNativeImpl())
     let width = LayoutUnit(value: logicalWidth.value())
     if style().boxSizing() == .ContentBox || logicalWidth.isIntrinsicOrAuto() {
       return max(LayoutUnit(value: UInt64(0)), width)
@@ -1922,6 +1963,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func adjustContentBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     if originalType == .Calculated {
       return adjustContentBoxLogicalWidthForBoxSizing(
         logicalWidth: LengthWrapper(value: computedLogicalWidth, type: .Fixed, hasQuirk: false))
@@ -1933,6 +1975,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: LayoutUnit, originalType: LengthType
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     if originalType == .Calculated {
       return adjustBorderBoxLogicalWidthForBoxSizing(
         logicalWidth: LengthWrapper(value: computedLogicalWidth, type: .Fixed, hasQuirk: false))
@@ -1944,12 +1987,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func adjustBorderBoxLogicalWidthForBoxSizing(
     computedLogicalWidth: Int32, originalType: LengthType
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     return adjustBorderBoxLogicalWidthForBoxSizing(
       computedLogicalWidth: LayoutUnit(value: computedLogicalWidth), originalType: originalType)
   }
 
   // Overridden by fieldsets to subtract out the intrinsic border.
   func adjustBorderBoxLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     let bordersPlusPadding = borderAndPaddingLogicalHeight()
     if style().boxSizing() == .ContentBox {
       return height + bordersPlusPadding
@@ -1958,6 +2003,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustContentBoxLogicalHeightForBoxSizing(height: LayoutUnit?) -> LayoutUnit {
+    assert(isNativeImpl())
     if var result = height {
       if style().boxSizing() == .BorderBox {
         result -= borderAndPaddingLogicalHeight()
@@ -1968,6 +2014,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func adjustIntrinsicLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     if style().boxSizing() == .BorderBox {
       return height + borderAndPaddingLogicalHeight()
     }
@@ -2003,6 +2050,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     availableSpaceAdjustedWithFloats: LayoutUnit?, childWidth: LayoutUnit,
     marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     let containingBlockStyle = containingBlock.style()
     var marginStartLength = style().marginStartUsing(otherStyle: containingBlockStyle)
     var marginEndLength = style().marginEndUsing(otherStyle: containingBlockStyle)
@@ -2070,6 +2118,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlockStyle: RenderStyleWrapper, marginStartLength: LengthWrapper,
     marginEndLength: LengthWrapper
   ) -> Bool {
+    assert(isNativeImpl())
     let containerWidthForMarginAuto = availableSpaceAdjustedWithFloats ?? containerWidth
     // Case One: The object is being centered in the containing block's available logical width.
     let marginAutoCenter =
@@ -2140,6 +2189,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlock: RenderBlockWrapper, marginBefore: inout LayoutUnit,
     marginAfter: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     // First assert that we're not calling this method on box types that don't support margins.
     assert(!isRenderTableCell())
     assert(!isRenderTableRow())
@@ -2156,6 +2206,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeAndSetBlockDirectionMargins(containingBlock: RenderBlockWrapper) {
+    assert(isNativeImpl())
     var marginBefore = LayoutUnit()
     var marginAfter = LayoutUnit()
     computeBlockDirectionMargins(
@@ -2178,6 +2229,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func clientBoxRectInFragment(_ fragment: RenderFragmentContainerWrapper?) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     if fragment == nil {
       return clientBoxRect()
     }
@@ -2200,6 +2252,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func clampToStartAndEndFragments(fragment: RenderFragmentContainerWrapper?)
     -> RenderFragmentContainerWrapper?
   {
+    assert(isNativeImpl())
     let fragmentedFlow = enclosingFragmentedFlow()
 
     assert(isRenderView() || (fragment != nil && fragmentedFlow != nil))
@@ -2228,6 +2281,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func offsetFromLogicalTopOfFirstPage() -> LayoutUnit {
+    assert(isNativeImpl())
     let layoutState = view().frameView().layoutContext().layoutState()
     if (layoutState != nil && !layoutState!.isPaginated())
       || (layoutState == nil && enclosingFragmentedFlow() == nil)
@@ -2240,6 +2294,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func localRectsForRepaint(_ repaintOutlineBounds: RepaintOutlineBounds) -> RepaintRects {
+    assert(isNativeImpl())
     if isInsideEntirelyHiddenLayer() {
       return RepaintRects()
     }
@@ -2261,6 +2316,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
+    assert(isNativeImpl())
     // The rect we compute at each step is shifted by our x/y offset in the parent container's coordinate space.
     // Only when we cross a writing mode boundary will we have to possibly flipForWritingMode (to convert into a more appropriate
     // offset corner for the enclosing container).  This allows for a fully RL or BT document to repaint
@@ -2392,6 +2448,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func repaintOverhangingFloats(paintAllDescendants: Bool) {}
 
   override func containingBlockLogicalWidthForContent() -> LayoutUnit {
+    assert(isNativeImpl())
     if let overridingContainingBlockContentLogicalWidth =
       overridingContainingBlockContentLogicalWidth()
     {
@@ -2408,6 +2465,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   func containingBlockLogicalHeightForContent(heightType: AvailableLogicalHeightType) -> LayoutUnit
   {
+    assert(isNativeImpl())
     if let overridingContainingBlockContentLogicalHeight =
       overridingContainingBlockContentLogicalHeight(),
       let value = overridingContainingBlockContentLogicalHeight
@@ -2428,6 +2486,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlock: RenderBoxModelObjectWrapper, fragment: RenderFragmentContainerWrapper? = nil,
     checkForPerpendicularWritingMode: Bool = true
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     assert(
       containingBlock.canContainAbsolutelyPositionedObjects()
         || containingBlock.canContainFixedPositionObjects())
@@ -2498,6 +2557,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func containingBlockLogicalHeightForPositioned(
     containingBlock: RenderBoxModelObjectWrapper, checkForPerpendicularWritingMode: Bool = true
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     assert(
       containingBlock.canContainAbsolutelyPositionedObjects()
         || containingBlock.canContainFixedPositionObjects())
@@ -2546,6 +2606,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func containingBlockLogicalWidthForContentInFragment(fragment: RenderFragmentContainerWrapper?)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     if fragment == nil {
       return containingBlockLogicalWidthForContent()
     }
@@ -2564,6 +2625,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func containingBlockAvailableLineWidthInFragment(fragment: RenderFragmentContainerWrapper?)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     let cb = containingBlock()
     var containingBlockFragment: RenderFragmentContainerWrapper? = nil
     var logicalTopPosition = logicalTop()
@@ -2582,6 +2644,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func perpendicularContainingBlockLogicalHeight() -> LayoutUnit {
+    assert(isNativeImpl())
     if let overridingContainingBlockContentLogicalHeight =
       overridingContainingBlockContentLogicalHeight(),
       let overridingContainingBlockContentLogicalHeightValue =
@@ -2617,6 +2680,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func updateLogicalWidth() {
+    assert(isNativeImpl())
     var computedValues = LogicalExtentComputedValues()
     computeLogicalWidthInFragment(computedValues: &computedValues)
 
@@ -2627,6 +2691,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func updateLogicalHeight() {
+    assert(isNativeImpl())
     if shouldApplySizeContainment() && !isRenderGrid() {
       overrideLogicalHeightForSizeContainment()
     }
@@ -2643,12 +2708,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
+    assert(isNativeImpl())
     return boxComputeLogicalHeight(logicalHeight: logicalHeight, logicalTop: logicalTop)
   }
 
   func boxComputeLogicalHeight(logicalHeight: LayoutUnit, logicalTop: LayoutUnit)
     -> LogicalExtentComputedValues
   {
+    assert(isNativeImpl())
     var computedValues = LogicalExtentComputedValues(extent: logicalHeight, position: logicalTop)
 
     // Cell height is managed by the table and inline non-replaced elements do not support a height property.
@@ -2821,6 +2888,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func overrideLogicalHeightForSizeContainment() {
+    assert(isNativeImpl())
     var intrinsicHeight = LayoutUnit()
     if let height = explicitIntrinsicInnerLogicalHeight() {
       intrinsicHeight = height
@@ -2840,6 +2908,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func cacheIntrinsicContentLogicalHeightForFlexItem(height: LayoutUnit) {
+    assert(isNativeImpl())
     // FIXME: it should be enough with checking hasOverridingLogicalHeight() as this logic could be shared
     // by any layout system using overrides like grid or flex. However this causes a never ending sequence of calls
     // between layoutBlock() <-> relayoutToAvoidWidows().
@@ -2857,6 +2926,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func paginatedContentNeedsBaseHeight(h: LengthWrapper) -> Bool {
+    assert(isNativeImpl())
     if !document().printing() || !h.isPercentOrCalculated() || isInline() {
       return false
     }
@@ -2895,6 +2965,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // When there is no explicit height, this function assumes a content height of
   // zero (and returns just border + padding).
   func computeLogicalHeightWithoutLayout() -> LayoutUnit {
+    assert(isNativeImpl())
     var estimatedHeight = borderAndPaddingLogicalHeight()
     if shouldApplySizeContainment(), let height = explicitIntrinsicInnerLogicalHeight() {
       estimatedHeight += height + scrollbarLogicalHeight()
@@ -2908,6 +2979,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     fragment: RenderFragmentContainerWrapper?,
     cacheFlag: RenderBoxFragmentInfoFlags = .CacheRenderBoxFragmentInfo
   ) -> RenderBoxFragmentInfo? {
+    assert(isNativeImpl())
     // Make sure nobody is trying to call this with a null fragment.
     if fragment == nil {
       return nil
@@ -2928,6 +3000,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedValues: inout LogicalExtentComputedValues,
     fragment: RenderFragmentContainerWrapper? = nil
   ) {
+    assert(isNativeImpl())
     computedValues.extent = logicalWidth()
     computedValues.position = logicalLeft()
     computedValues.margins.start = marginStart()
@@ -3083,9 +3156,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
       && !shouldComputeLogicalHeightFromAspectRatio() && !isInline()
   }
 
-  func intrinsicSize() -> LayoutSizeWrapper { return LayoutSizeWrapper() }
+  func intrinsicSize() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
+    return LayoutSizeWrapper()
+  }
 
   func intrinsicLogicalWidth() -> LayoutUnit {
+    assert(isNativeImpl())
     return style().isHorizontalWritingMode() ? intrinsicSize().width() : intrinsicSize().height()
   }
 
@@ -3102,6 +3179,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     case MaxSize
   }
   private func sizesLogicalWidthToFitContent(widthType: SizeType) -> Bool {
+    assert(isNativeImpl())
     // Marquees in WinIE are like a mixture of blocks and inline-blocks.  They size as though they're blocks,
     // but they allow text to sit on the same line as the marquee.
     if isFloating() || (isInlineBlockOrInlineTable() && !isHTMLMarquee()) {
@@ -3175,6 +3253,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
   func hasStretchedLogicalHeight() -> Bool {
+    assert(isNativeImpl())
     let style = style()
     if !style.logicalHeight().isAuto() || style.marginBefore().isAuto()
       || style.marginAfter().isAuto()
@@ -3211,6 +3290,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // FIXME: Can/Should we move this inside specific layout classes (flex. grid)? Can we refactor columnFlexItemHasStretchAlignment logic?
   private func hasStretchedLogicalWidth(stretchingMode: StretchingMode = .`Any`) -> Bool {
+    assert(isNativeImpl())
     let style = style()
     if !style.logicalWidth().isAuto() || style.marginStart().isAuto() || style.marginEnd().isAuto()
     {
@@ -3247,6 +3327,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func isStretchingColumnFlexItem() -> Bool {
+    assert(isNativeImpl())
     if parent()!.isRenderDeprecatedFlexibleBox() && parent()!.style().boxOrient() == .Vertical
       && parent()!.style().boxAlign() == .Stretch
     {
@@ -3259,6 +3340,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func columnFlexItemHasStretchAlignment() -> Bool {
+    assert(isNativeImpl())
     // auto margins mean we don't stretch. Note that this function will only be
     // used for widths, so we don't have to check marginBefore/marginAfter.
     let parentStyle = parent()!.style()
@@ -3277,6 +3359,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     childMarginStart: LayoutUnit, childMarginEnd: LayoutUnit, cb: RenderBlockWrapper,
     fragment: RenderFragmentContainerWrapper?
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     var containingBlockFragment: RenderFragmentContainerWrapper? = nil
     var logicalTopPosition = logicalTop()
     if fragment != nil {
@@ -3328,6 +3411,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     widthType: SizeType, logicalWidth: LengthWrapper, availableLogicalWidth: LayoutUnit,
     cb: RenderBlockWrapper, fragment: RenderFragmentContainerWrapper?
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     assert(widthType == .MinSize || widthType == .MainOrPreferredSize || !logicalWidth.isAuto())
     if widthType == .MinSize && logicalWidth.isAuto() {
       return adjustBorderBoxLogicalWidthForBoxSizing(
@@ -3370,6 +3454,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalHeightUsing(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
+    assert(isNativeImpl())
     if self is RenderReplacedWrapper {
       if (heightType == .MinSize || heightType == .MaxSize)
         && !replacedMinMaxLogicalHeightComputesAsNone(sizeType: heightType)
@@ -3390,6 +3475,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeContentLogicalHeight(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
+    assert(isNativeImpl())
     if let heightIncludingScrollbar = computeContentAndScrollbarLogicalHeightUsing(
       heightType: heightType, height: height, intrinsicContentHeight: intrinsicContentHeight)
     {
@@ -3404,6 +3490,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeContentAndScrollbarLogicalHeightUsing(
     heightType: SizeType, height: LengthWrapper, intrinsicContentHeight: LayoutUnit?
   ) -> LayoutUnit? {
+    assert(isNativeImpl())
     if height.isAuto() {
       if heightType != .MinSize {
         return nil
@@ -3435,6 +3522,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalWidthUsing(_ widthType: SizeType, _ logicalWidth: LengthWrapper)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     assert(widthType == .MinSize || widthType == .MainOrPreferredSize || !logicalWidth.isAuto())
     if widthType == .MinSize && logicalWidth.isAuto() {
       return adjustContentBoxLogicalWidthForBoxSizing(
@@ -3486,6 +3574,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalWidthRespectingMinMaxWidth(
     _ logicalWidth: LayoutUnit, _ shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     if shouldIgnoreLogicalMinMaxWidthSizes() {
       return logicalWidth
     }
@@ -3510,6 +3599,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalHeightUsing(heightType: SizeType, logicalHeight: LengthWrapper)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     assert(heightType == .MinSize || heightType == .MainOrPreferredSize || !logicalHeight.isAuto())
     // This function should get called with .MinSize/.MaxSize only if replacedMinMaxLogicalHeightComputesAsNone
     // returns false, otherwise we should not try to compute those values as they may be incorrect. The caller
@@ -3624,6 +3714,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalHeightRespectingMinMaxHeight(logicalHeight: LayoutUnit)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     var minLogicalHeight = LayoutUnit()
     if !replacedMinMaxLogicalHeightComputesAsNone(sizeType: .MinSize) {
       minLogicalHeight = computeReplacedLogicalHeightUsing(
@@ -3640,6 +3731,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalWidthRespectingMinMaxWidth(
     _ logicalWidth: Float32, _ shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     return computeReplacedLogicalWidthRespectingMinMaxWidth(
       LayoutUnit(value: logicalWidth), shouldComputePreferred)
   }
@@ -3647,6 +3739,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalWidthRespectingMinMaxWidth(
     _ logicalWidth: Float64, _ shouldComputePreferred: ShouldComputePreferred = .ComputeActual
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     return computeReplacedLogicalWidthRespectingMinMaxWidth(
       LayoutUnit(value: logicalWidth), shouldComputePreferred)
   }
@@ -3654,6 +3747,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalHeightRespectingMinMaxHeight(logicalHeight: Float32)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     return computeReplacedLogicalHeightRespectingMinMaxHeight(
       logicalHeight: LayoutUnit(value: logicalHeight))
   }
@@ -3661,12 +3755,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeReplacedLogicalWidth(shouldComputePreferred: ShouldComputePreferred = .ComputeActual)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     return computeReplacedLogicalWidthRespectingMinMaxWidth(
       computeReplacedLogicalWidthUsing(.MainOrPreferredSize, style().logicalWidth()),
       shouldComputePreferred)
   }
 
   func computeReplacedLogicalHeight(estimatedUsedWidth: LayoutUnit? = nil) -> LayoutUnit {
+    assert(isNativeImpl())
     return computeReplacedLogicalHeightRespectingMinMaxHeight(
       logicalHeight: computeReplacedLogicalHeightUsing(
         heightType: .MainOrPreferredSize, logicalHeight: style().logicalHeight()))
@@ -3675,6 +3771,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computePercentageLogicalHeight(
     height: LengthWrapper, updateDescendants: UpdatePercentageHeightDescendants = .Yes
   ) -> LayoutUnit? {
+    assert(isNativeImpl())
     var skippedAutoHeightContainingBlock = false
     var cb = containingBlock()
     var containingBlockChild = self
@@ -3761,6 +3858,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
+    assert(isNativeImpl())
     return constrainContentBoxLogicalHeightByMinMax(
       logicalHeight: availableLogicalHeightUsing(style().logicalHeight(), heightType),
       intrinsicContentHeight: nil)
@@ -3769,6 +3867,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func availableLogicalHeightUsing(
     _ h: LengthWrapper, _ heightType: AvailableLogicalHeightType
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     // We need to stop here, since we don't want to increase the height of the table
     // artificially.  We're going to rely on this cell getting expanded to some new
     // height, and then when we lay out again we'll use the calculation below.
@@ -3858,6 +3957,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func verticalScrollbarWidth() -> Int32 {
+    assert(isNativeImpl())
     if let scrollableArea = layer() != nil ? layer()!.scrollableArea() : nil {
       return includeVerticalScrollbarSize()
         ? scrollableArea.verticalScrollbarWidth(
@@ -3868,6 +3968,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func horizontalScrollbarHeight() -> Int32 {
+    assert(isNativeImpl())
     if let scrollableArea = layer() != nil ? layer()!.scrollableArea() : nil {
       return includeHorizontalScrollbarSize()
         ? scrollableArea.horizontalScrollbarHeight(
@@ -3878,6 +3979,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func intrinsicScrollbarLogicalWidthIncludingGutter() -> Int32 {
+    assert(isNativeImpl())
     if !hasNonVisibleOverflow() {
       return 0
     }
@@ -3932,6 +4034,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasAutoScrollbar(_ orientation: ScrollbarOrientation) -> Bool {
+    assert(isNativeImpl())
     if !hasNonVisibleOverflow() {
       return false
     }
@@ -3949,6 +4052,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasAlwaysPresentScrollbar(_ orientation: ScrollbarOrientation) -> Bool {
+    assert(isNativeImpl())
     if !hasNonVisibleOverflow() {
       return false
     }
@@ -3965,14 +4069,19 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     }
   }
 
-  func scrollsOverflow() -> Bool { return scrollsOverflowX() || scrollsOverflowY() }
+  func scrollsOverflow() -> Bool {
+    assert(isNativeImpl())
+    return scrollsOverflowX() || scrollsOverflowY()
+  }
 
   func scrollsOverflowX() -> Bool {
+    assert(isNativeImpl())
     return hasNonVisibleOverflow()
       && (style().overflowX() == .Scroll || style().overflowX() == .Auto)
   }
 
   func scrollsOverflowY() -> Bool {
+    assert(isNativeImpl())
     return hasNonVisibleOverflow()
       && (style().overflowY() == .Scroll || style().overflowY() == .Auto)
   }
@@ -4005,6 +4114,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func percentageLogicalHeightIsResolvable() -> Bool {
+    assert(isNativeImpl())
     // Do this to avoid duplicating all the logic that already exists when computing
     // an actual percentage height.
     let fakeLength = LengthWrapper(value: Int32(100), type: .Percent)
@@ -4012,6 +4122,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasUnsplittableScrollingOverflow() -> Bool {
+    assert(isNativeImpl())
     // We will paginate as long as we don't scroll overflow in the pagination direction.
     let isHorizontal = isHorizontalWritingMode()
     if (isHorizontal && !scrollsOverflowY()) || (!isHorizontal && !scrollsOverflowX()) {
@@ -4041,6 +4152,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func isUnsplittableForPagination() -> Bool {
+    assert(isNativeImpl())
     return isReplacedOrInlineBlock()
       || hasUnsplittableScrollingOverflow()
       || (parent() != nil && isWritingModeRoot())
@@ -4050,6 +4162,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldTreatChildAsReplacedInTableCells() -> Bool {
+    assert(isNativeImpl())
     if isReplacedOrInlineBlock() {
       return true
     }
@@ -4062,6 +4175,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     relevancy: OverlayScrollbarSizeRelevancy = .IgnoreOverlayScrollbarSize,
     phase: PaintPhase = .BlockBackground
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var clipRect = borderBoxRectInFragment(fragment: fragment)
     let topLeft = location + clipRect.location()
     clipRect.setLocation(
@@ -4104,6 +4218,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func pushContentsClip(paintInfo: inout PaintInfoWrapper, accumulatedOffset: LayoutPointWrapper)
     -> Bool
   {
+    assert(isNativeImpl())
     if paintInfo.phase == .BlockBackground || paintInfo.phase == .SelfOutline
       || paintInfo.phase == .Mask
     {
@@ -4150,6 +4265,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func clipRect(location: LayoutPointWrapper, fragment: RenderFragmentContainerWrapper?)
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     let borderBoxRect = borderBoxRectInFragment(fragment: fragment)
     var clipRect = LayoutRectWrapper(
       location: borderBoxRect.location() + location, size: borderBoxRect.size())
@@ -4198,6 +4314,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     paintInfo: inout PaintInfoWrapper, originalPhase: PaintPhase,
     accumulatedOffset: LayoutPointWrapper
   ) {
+    assert(isNativeImpl())
     assert(hasControlClip() || (hasNonVisibleOverflow() && !layer()!.isSelfPaintingLayer))
 
     if paintInfo.phase == .EventRegion || paintInfo.phase == .Accessibility {
@@ -4234,6 +4351,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintBoxDecorations(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if !paintInfo.shouldPaintWithinRoot(renderer: self) {
       return
     }
@@ -4329,6 +4447,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if !paintInfo.shouldPaintWithinRoot(renderer: self) || style().usedVisibility() != .Visible
       || paintInfo.phase != .Mask || paintInfo.context().paintingDisabled()
     {
@@ -4341,6 +4460,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintClippingMask(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
     if !paintInfo.shouldPaintWithinRoot(renderer: self) || style().usedVisibility() != .Visible
       || paintInfo.phase != .ClippingMask || paintInfo.context().paintingDisabled()
     {
@@ -4363,6 +4483,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // Called when a positioned object moves but doesn't necessarily change size.  A simplified layout is attempted
   // that just updates the object's position. If the size does change, the object remains dirty.
   func tryLayoutDoingPositionedMovementOnly() -> Bool {
+    assert(isNativeImpl())
     let oldWidth = width()
     updateLogicalWidth()
     // If we shrink to fit our width may have changed, so we still need full layout.
@@ -4374,6 +4495,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func maskClipRect(paintOffset: LayoutPointWrapper) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     let maskBorder = style().maskBorder()
     if maskBorder.image() != nil {
       var borderImageRect = borderBoxRect()
@@ -4404,6 +4526,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ point: LayoutPointWrapper, _ source: HitTestSource,
     _ fragment: RenderFragmentContainerWrapper?
   ) -> VisiblePosition {
+    assert(isNativeImpl())
     // no children...return this render object's element, if there is one, and offset 0
     if firstChild() == nil {
       return createVisiblePosition(
@@ -4507,6 +4630,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func removeFloatingAndInvalidateForLayout() {
+    assert(isNativeImpl())
     assert(isFloating())
 
     if renderTreeBeingDestroyed() {
@@ -4520,6 +4644,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func removeFloatingOrPositionedChildFromBlockLists() {
+    assert(isNativeImpl())
     assert(!renderTreeBeingDestroyed())
 
     if isFloating() {
@@ -4534,6 +4659,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func enclosingFloatPaintingLayer() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     for box in RenderAncestorIteratorAdapter<RenderBoxWrapper>.lineageOfType(first: self) {
       if box.layer() != nil && box.layer()!.isSelfPaintingLayer {
         return box.layer()
@@ -4553,6 +4679,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shrinkToAvoidFloats() -> Bool {
+    assert(isNativeImpl())
     // Floating objects don't shrink.  Objects that don't avoid floats don't shrink.  Marquees don't shrink.
     if (isInline() && !isHTMLMarquee()) || !avoidsFloats() || isFloating() {
       return false
@@ -4563,6 +4690,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func avoidsFloats() -> Bool {
+    assert(isNativeImpl())
     return isReplacedOrInlineBlock() || isLegend() || isFieldset() || createsNewFormattingContext()
       || (element()?.isFormControlElement() ?? false)
   }
@@ -4578,6 +4706,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   )
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     if isReplacedOrInlineBlock() {
       return direction == .HorizontalLine
         ? marginBox.top + height() + marginBox.bottom
@@ -4589,6 +4718,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func flipForWritingModeForChild(child: RenderBoxWrapper, point: LayoutPointWrapper)
     -> LayoutPointWrapper
   {
+    assert(isNativeImpl())
     if !style().isFlippedBlocksWritingMode() {
       return point
     }
@@ -4604,6 +4734,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(position: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     if !style().isFlippedBlocksWritingMode() {
       return position
     }
@@ -4611,6 +4742,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(position: LayoutPointWrapper) -> LayoutPointWrapper {
+    assert(isNativeImpl())
     if !style().isFlippedBlocksWritingMode() {
       return position
     }
@@ -4637,6 +4769,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func flipForWritingMode(rect: inout FloatRectWrapper) {
+    assert(isNativeImpl())
     if !style().isFlippedBlocksWritingMode() {
       return
     }
@@ -4649,6 +4782,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func flipForWritingMode(_ rects: inout RepaintRects) {
+    assert(isNativeImpl())
     if !style().isFlippedBlocksWritingMode() {
       return
     }
@@ -4659,6 +4793,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // These represent your location relative to your container as a physical offset.
   // In layout related methods you almost always want the logical location (e.g. x() and y()).
   func topLeftLocation() -> LayoutPointWrapper {
+    assert(isNativeImpl())
     // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
     if document().view() == nil || !document().view()!.hasFlippedBlockRenderers() {
       return location()
@@ -4667,6 +4802,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func topLeftLocationOffset() -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     // This is inlined for speed, since it is used by updateLayerPosition() during scrolling.
     if document().view() == nil || !document().view()!.hasFlippedBlockRenderers() {
       return locationOffset()
@@ -4691,6 +4827,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func visualOverflowRectForPropagation(parentStyle: RenderStyleWrapper)
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     // If the writing modes of the child and parent match, then we don't have to
     // do anything fancy. Just return the result.
     var rect = visualOverflowRect()
@@ -4738,6 +4875,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func needsPreferredWidthsRecalculation() -> Bool {
+    assert(isNativeImpl())
     return style().paddingStart().isPercentOrCalculated()
       || style().paddingEnd().isPercentOrCalculated()
       || (style().hasAspectRatio()
@@ -4745,10 +4883,12 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeIntrinsicRatioInformation() -> (FloatSize, FloatSize) {
+    assert(isNativeImpl())
     return (FloatSize(), FloatSize())
   }
 
   func scrollPosition() -> ScrollPosition {
+    assert(isNativeImpl())
     if !hasPotentiallyScrollableOverflow() {
       return ScrollPosition(x: 0, y: 0)
     }
@@ -4775,6 +4915,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ rects: inout RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> Bool {
+    assert(isNativeImpl())
     flipForWritingMode(&rects)
 
     if context.options.contains(.ApplyCompositedContainerScrolls)
@@ -4814,18 +4955,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func hasRelativeDimensions() -> Bool {
+    assert(isNativeImpl())
     return style().height().isPercentOrCalculated() || style().width().isPercentOrCalculated()
       || style().maxHeight().isPercentOrCalculated() || style().maxWidth().isPercentOrCalculated()
       || style().minHeight().isPercentOrCalculated() || style().minWidth().isPercentOrCalculated()
   }
 
   func hasRelativeLogicalHeight() -> Bool {
+    assert(isNativeImpl())
     return style().logicalHeight().isPercentOrCalculated()
       || style().logicalMinHeight().isPercentOrCalculated()
       || style().logicalMaxHeight().isPercentOrCalculated()
   }
 
   func hasRelativeLogicalWidth() -> Bool {
+    assert(isNativeImpl())
     return style().logicalWidth().isPercentOrCalculated()
       || style().logicalMinWidth().isPercentOrCalculated()
       || style().logicalMaxWidth().isPercentOrCalculated()
@@ -4855,7 +4999,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   // True if this box can have a range in an outside fragmentation context.
-  func canHaveOutsideFragmentRange() -> Bool { return !isRenderFragmentedFlow() }
+  func canHaveOutsideFragmentRange() -> Bool {
+    assert(isNativeImpl())
+    return !isRenderFragmentedFlow()
+  }
 
   func needsLayoutAfterFragmentRangeChange() -> Bool {
     assert(isNativeImpl())
@@ -4875,6 +5022,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func adjustBorderBoxRectForPainting(paintRect: inout LayoutRectWrapper) {}
 
   func shouldComputeLogicalHeightFromAspectRatio() -> Bool {
+    assert(isNativeImpl())
     if shouldIgnoreAspectRatio() {
       return false
     }
@@ -4890,6 +5038,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldIgnoreLogicalMinMaxWidthSizes() -> Bool {
+    assert(isNativeImpl())
     if !isFlexItem() {
       return false
     }
@@ -4901,6 +5050,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldIgnoreLogicalMinMaxHeightSizes() -> Bool {
+    assert(isNativeImpl())
     if !isFlexItem() {
       return false
     }
@@ -4913,6 +5063,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // The explicit intrinsic inner size of contain-intrinsic-size
   func explicitIntrinsicInnerWidth() -> LayoutUnit? {
+    assert(isNativeImpl())
     assert(
       isHorizontalWritingMode()
         ? shouldApplySizeOrInlineSizeContainment() : shouldApplySizeContainment())
@@ -4937,6 +5088,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func explicitIntrinsicInnerHeight() -> LayoutUnit? {
+    assert(isNativeImpl())
     assert(
       isHorizontalWritingMode()
         ? shouldApplySizeContainment() : shouldApplySizeOrInlineSizeContainment())
@@ -4961,11 +5113,13 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func explicitIntrinsicInnerLogicalWidth() -> LayoutUnit? {
+    assert(isNativeImpl())
     return style().isHorizontalWritingMode()
       ? explicitIntrinsicInnerWidth() : explicitIntrinsicInnerHeight()
   }
 
   func explicitIntrinsicInnerLogicalHeight() -> LayoutUnit? {
+    assert(isNativeImpl())
     return style().isHorizontalWritingMode()
       ? explicitIntrinsicInnerHeight() : explicitIntrinsicInnerWidth()
   }
@@ -4976,6 +5130,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func updateFloatPainterAfterSelfPaintingLayerChange() {
+    assert(isNativeImpl())
     assert(isFloating())
     assert(!hasLayer() || !layer()!.isSelfPaintingLayer)
 
@@ -4986,6 +5141,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
 
   // Find the ancestor renderer that is supposed to paint this float now that it is not self painting anymore.
   private func floatingObjectForFloatPainting() -> FloatingObjectWrapper? {
+    assert(isNativeImpl())
     let layoutContext = view().frameView().layoutContext()
     if !layoutContext.isInLayout()
       || CPtrToInt(layoutContext.subtreeLayoutRoot()?.id()) != CPtrToInt(id())
@@ -5026,6 +5182,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeHasTransformRelatedProperty(_ styleToUse: RenderStyleWrapper) -> Bool {
+    assert(isNativeImpl())
     if styleToUse.hasTransformRelatedProperty() {
       return true
     }
@@ -5056,6 +5213,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func styleWillChange(diff: StyleDifference, newStyle: RenderStyleWrapper) {
+    assert(isNativeImpl())
     RenderBoxWrapper.hadNonVisibleOverflow = hasNonVisibleOverflow()
 
     let oldStyle = hasInitializedStyle ? style() : nil
@@ -5110,6 +5268,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func styleDidChange(diff: StyleDifference, oldStyle: RenderStyleWrapper?) {
+    assert(isNativeImpl())
     // Horizontal writing mode definition is updated in RenderBoxModelObject::updateFromStyle,
     // (as part of the RenderBoxModelObject::styleDidChange call below). So, we can safely cache the horizontal
     // writing mode value before style change here.
@@ -5212,6 +5371,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func updateFromStyle() {
+    assert(isNativeImpl())
     super.updateFromStyle()
 
     let styleToUse = style()
@@ -5272,6 +5432,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func shouldResetLogicalHeightBeforeLayout() -> Bool { return false }
 
   func resetLogicalHeightBeforeLayoutIfNeeded() {
+    assert(isNativeImpl())
     let shouldSetLogicalHeight = { [self] () in
       if shouldResetLogicalHeightBeforeLayout() {
         return true
@@ -5296,6 +5457,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func getBackgroundPaintedExtent(_ paintOffset: LayoutPointWrapper) -> (
     LayoutRectWrapper, Bool
   ) {
+    assert(isNativeImpl())
     assert(hasBackground())
     let backgroundRect = LayoutRectWrapper(rect: snappedIntRect(rect: borderBoxRect()))
 
@@ -5319,6 +5481,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func foregroundIsKnownToBeOpaqueInRect(_ localRect: LayoutRectWrapper, _ maxDepthToTest: UInt32)
     -> Bool
   {
+    assert(isNativeImpl())
     if maxDepthToTest == 0 {
       return false
     }
@@ -5360,6 +5523,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override func computeBackgroundIsKnownToBeObscured(_ paintOffset: LayoutPointWrapper)
     -> Bool
   {
+    assert(isNativeImpl())
     // Test to see if the children trivially obscure the background.
     // FIXME: This test can be much more comprehensive.
     if !hasBackground() {
@@ -5384,6 +5548,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func paintMaskImages(paintInfo: PaintInfoWrapper, paintRect: LayoutRectWrapper) {
+    assert(isNativeImpl())
     // Figure out if we need to push a transparency layer to render our mask.
     var pushTransparencyLayer = false
     let compositedMask = hasLayer() && layer()!.hasCompositedMask()
@@ -5446,6 +5611,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func determineBackgroundBleedAvoidance(context: GraphicsContextWrapper)
     -> BackgroundBleedAvoidance
   {
+    assert(isNativeImpl())
     if context.paintingDisabled() {
       return .BackgroundBleedNone
     }
@@ -5488,6 +5654,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func backgroundHasOpaqueTopLayer() -> Bool {
+    assert(isNativeImpl())
     let fillLayer = style().backgroundLayers()
     if fillLayer.clip != .BorderBox {
       return false
@@ -5520,6 +5687,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedValues: inout LogicalExtentComputedValues,
     fragment: RenderFragmentContainerWrapper? = nil
   ) {
+    assert(isNativeImpl())
     if isReplacedOrInlineBlock() {
       // FIXME: Positioned replaced elements inside a flow thread are not working properly
       // with variable width fragments (see https://bugs.webkit.org/show_bug.cgi?id=69896 ).
@@ -5697,6 +5865,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalWidthLength: LengthWrapper, availableLogicalWidth: LayoutUnit,
     borderAndPadding: LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     if logicalWidthLength.isFillAvailable() {
       return max(
         borderAndPadding, fillAvailableMeasure(availableLogicalWidth: availableLogicalWidth))
@@ -5743,6 +5912,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalHeightLength: LengthWrapper, intrinsicContentHeight: LayoutUnit?,
     borderAndPadding: LayoutUnit
   ) -> LayoutUnit? {
+    assert(isNativeImpl())
     // FIXME: The CSS sizing spec is considering changing what min-content/max-content should resolve to.
     // If that happens, this code will have to change.
     if logicalHeightLength.isMinContent() || logicalHeightLength.isMaxContent()
@@ -5775,6 +5945,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
+    assert(isNativeImpl())
     if CPtrToInt(ancestorContainer?.id()) == CPtrToInt(id()) {
       return
     }
@@ -5832,6 +6003,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(id()))
 
     let (container, ancestorSkipped) = container(ancestorToStopAt)
@@ -5846,6 +6018,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   override func mapAbsoluteToLocalPoint(
     _ mode: MapCoordinatesMode, _ transformState: inout TransformState
   ) {
+    assert(isNativeImpl())
     var mode = mode
     let isFixedPos = isFixedPositioned()
     if isFixedPos {
@@ -5862,6 +6035,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func skipContainingBlockForPercentHeightCalculation(
     containingBlock: RenderBoxWrapper, isPerpendicularWritingMode: Bool
   ) -> Bool {
+    assert(isNativeImpl())
     // Flow threads for multicol or paged overflow should be skipped. They are invisible to the DOM,
     // and percent heights of children should be resolved against the multicol or paged container.
     if containingBlock.isRenderFragmentedFlow() && !isPerpendicularWritingMode {
@@ -5901,6 +6075,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func resolveAspectRatio() -> Float64? {
+    assert(isNativeImpl())
     if let replacedElement = self as? RenderReplacedWrapper {
       return replacedElement.computeIntrinsicAspectRatio()
     }
@@ -5916,6 +6091,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func isRenderReplacedWithIntrinsicRatio() -> Bool {
+    assert(isNativeImpl())
     if let replaced = self as? RenderReplacedWrapper {
       return replaced.computeIntrinsicAspectRatio() != 0
     }
@@ -5923,6 +6099,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shouldComputeLogicalWidthFromAspectRatio() -> Bool {
+    assert(isNativeImpl())
     if shouldIgnoreAspectRatio() {
       return false
     }
@@ -5951,6 +6128,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeLogicalWidthFromAspectRatioInternal() -> LayoutUnit {
+    assert(isNativeImpl())
     assert(shouldComputeLogicalWidthFromAspectRatio())
     let computedValues = computeLogicalHeight(
       logicalHeight: logicalHeight(), logicalTop: logicalTop())
@@ -5967,6 +6145,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeLogicalWidthFromAspectRatio(fragment: RenderFragmentContainerWrapper? = nil)
     -> LayoutUnit
   {
+    assert(isNativeImpl())
     let logicalWidth = computeLogicalWidthFromAspectRatioInternal()
     let containerWidthInInlineDirection = max(
       LayoutUnit(value: 0), containingBlockLogicalWidthForContentInFragment(fragment: fragment))
@@ -5976,6 +6155,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeMinMaxLogicalWidthFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     var transferredMinSize = LayoutUnit()
     var transferredMaxSize = LayoutUnit.max()
     let aspectRatio = resolveAspectRatio()
@@ -6013,6 +6193,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeMinMaxLogicalHeightFromAspectRatio() -> (LayoutUnit, LayoutUnit) {
+    assert(isNativeImpl())
     var transferredMinSize = LayoutUnit()
     var transferredMaxSize = LayoutUnit.max()
     let aspectRatio = resolveAspectRatio()
@@ -6068,6 +6249,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     computedMinSize: inout LayoutUnit, computedMaxSize: inout LayoutUnit, computedSize: LayoutUnit,
     minimumSizeType: MinimumSizeIsAutomaticContentBased, dimension: ConstrainDimension
   ) {
+    assert(isNativeImpl())
     // TODO: Here we use isSpecified() to present the definite value. This is not quite correct, for the definite value should also include
     // a size of the initial containing block and the “stretch-fit” sizing of non-replaced blocks if they have definite values.
     // See https://www.w3.org/TR/css-sizing-3/#definite
@@ -6136,12 +6318,14 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computePreferredLogicalWidths(
     _ minWidth: LengthWrapper, _ maxWidth: LengthWrapper, _ borderAndPadding: LayoutUnit
   ) {
+    assert(isNativeImpl())
     renderBoxComputePreferredLogicalWidths(minWidth, maxWidth, borderAndPadding)
   }
 
   func renderBoxComputePreferredLogicalWidths(
     _ minWidth: LengthWrapper, _ maxWidth: LengthWrapper, _ borderAndPadding: LayoutUnit
   ) {
+    assert(isNativeImpl())
     if !style().logicalWidth().isFixed() && shouldComputeLogicalHeightFromAspectRatio() {
       var (logicalMinWidth, logicalMaxWidth) = computeMinMaxLogicalWidthFromAspectRatio()
       logicalMinWidth = max(logicalMinWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
@@ -6171,6 +6355,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func replacedMinMaxLogicalHeightComputesAsNone(sizeType: SizeType) -> Bool {
+    assert(isNativeImpl())
     assert(sizeType == .MinSize || sizeType == .MaxSize)
 
     let logicalHeight =
@@ -6205,6 +6390,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func updateShapeOutsideInfoAfterStyleChange(
     style: RenderStyleWrapper, oldStyle: RenderStyleWrapper?
   ) {
+    assert(isNativeImpl())
     let shapeOutside = style.shapeOutside()
     let oldShapeOutside = oldStyle != nil ? oldStyle!.shapeOutside() : nil
 
@@ -6238,6 +6424,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func updateGridPositionAfterStyleChange(
     style: RenderStyleWrapper, oldStyle: RenderStyleWrapper?
   ) {
+    assert(isNativeImpl())
     if oldStyle == nil {
       return
     }
@@ -6264,6 +6451,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     containingBlock: RenderBlockWrapper, marginSide: MarginTrimType,
     computeInlineMargin: () -> LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     if containingBlock.shouldTrimChildMarginForBox(type: marginSide, child: self) {
       // FIXME(255434): This should be set when the margin is being trimmed
       // within the context of its layout system (block, flex, grid) and should not
@@ -6279,18 +6467,21 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func includeVerticalScrollbarSize() -> Bool {
+    assert(isNativeImpl())
     return hasNonVisibleOverflow() && layer() != nil && !layer()!.hasOverlayScrollbars()
       && (style().overflowY() == .Scroll || style().overflowY() == .Auto
         || (style().overflowY() == .Hidden && !style().scrollbarGutter().isAuto))
   }
 
   private func includeHorizontalScrollbarSize() -> Bool {
+    assert(isNativeImpl())
     return hasNonVisibleOverflow() && layer() != nil && !layer()!.hasOverlayScrollbars()
       && (style().overflowX() == .Scroll || style().overflowX() == .Auto
         || (style().overflowX() == .Hidden && !style().scrollbarGutter().isAuto))
   }
 
   private func computePositionedLogicalHeight(computedValues: inout LogicalExtentComputedValues) {
+    assert(isNativeImpl())
     if isReplacedOrInlineBlock() {
       computePositionedLogicalHeightReplaced(computedValues: &computedValues)
       return
@@ -6420,6 +6611,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     marginLogicalLeft: LengthWrapper, marginLogicalRight: LengthWrapper,
     computedValues: inout LogicalExtentComputedValues
   ) {
+    assert(isNativeImpl())
     assert(widthType == .MinSize || widthType == .MainOrPreferredSize || !logicalWidth.isAuto())
     let originalLogicalWidthType = logicalWidth.type()
     var logicalWidth = logicalWidth
@@ -6665,6 +6857,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func shrinkToFitLogicalWidth(
     availableLogicalWidth: LayoutUnit, bordersPlusPadding: LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let preferredMaxLogicalWidth = maxPreferredLogicalWidth() - bordersPlusPadding
     let preferredMinLogicalWidth = minPreferredLogicalWidth() - bordersPlusPadding
     return clamp(
@@ -6718,6 +6911,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
     logicalBottom: LengthWrapper, marginBefore: LengthWrapper, marginAfter: LengthWrapper,
     computedValues: inout LogicalExtentComputedValues
   ) {
+    assert(isNativeImpl())
     assert(
       heightType == .MinSize || heightType == .MainOrPreferredSize || !logicalHeightLength.isAuto())
     var logicalHeightLength = logicalHeightLength
@@ -6919,6 +7113,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func computePositionedLogicalHeightReplaced(
     computedValues: inout LogicalExtentComputedValues
   ) {
+    assert(isNativeImpl())
     // The following is based off of the W3C Working Draft from April 11, 2006 of
     // CSS 2.1: Section 10.6.5 "Absolutely positioned, replaced elements"
     // <http://www.w3.org/TR/2005/WD-CSS21-20050613/visudet.html#abs-replaced-height>
@@ -7076,6 +7271,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func computePositionedLogicalWidthReplaced(
     computedValues: inout LogicalExtentComputedValues
   ) {
+    assert(isNativeImpl())
     // The following is based off of the W3C Working Draft from April 11, 2006 of
     // CSS 2.1: Section 10.3.8 "Absolutely positioned, replaced elements"
     // <http://www.w3.org/TR/2005/WD-CSS21-20050613/visudet.html#abs-replaced-width>
@@ -7290,6 +7486,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func fillAvailableMeasure(availableLogicalWidth: LayoutUnit) -> LayoutUnit {
+    assert(isNativeImpl())
     var marginStart = LayoutUnit()
     var marginEnd = LayoutUnit()
     return fillAvailableMeasure(
@@ -7300,6 +7497,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   private func fillAvailableMeasure(
     availableLogicalWidth: LayoutUnit, marginStart: inout LayoutUnit, marginEnd: inout LayoutUnit
   ) -> LayoutUnit {
+    assert(isNativeImpl())
     let container = containingBlock()
     let isOrthogonalElement = isHorizontalWritingMode() != container!.isHorizontalWritingMode()
     let marginStartLength = style().marginStart()
@@ -7324,6 +7522,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computeIntrinsicKeywordLogicalWidths(
     minLogicalWidth: inout LayoutUnit, maxLogicalWidth: inout LayoutUnit
   ) {
+    assert(isNativeImpl())
     computeIntrinsicLogicalWidths(
       minLogicalWidth: &minLogicalWidth, maxLogicalWidth: &maxLogicalWidth)
   }
@@ -7332,6 +7531,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   // These values are used in shrink-to-fit layout systems.
   // These include tables, positioned objects, floats and flexible boxes.
   func computePreferredLogicalWidths() {
+    assert(isNativeImpl())
     assert(preferredLogicalWidthsDirty())
 
     computePreferredLogicalWidths(
@@ -7343,6 +7543,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   func computePreferredLogicalWidths(
     minWidth: LengthWrapper, maxWidth: LengthWrapper, borderAndPadding: LayoutUnit
   ) {
+    assert(isNativeImpl())
     if !style().logicalWidth().isFixed() && shouldComputeLogicalHeightFromAspectRatio() {
       var (logicalMinWidth, logicalMaxWidth) = computeMinMaxLogicalWidthFromAspectRatio()
       logicalMinWidth = max(logicalMinWidth - borderAndPadding, LayoutUnit(value: UInt64(0)))
@@ -7377,6 +7578,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func computeVisibleRectsUsingPaintOffset(_ rects: RepaintRects) -> RepaintRects {
+    assert(isNativeImpl())
     var adjustedRects = rects
     let layoutState = view().frameView().layoutContext().layoutState()!
 
@@ -7398,6 +7600,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func topLeftLocationWithFlipping() -> LayoutPointWrapper {
+    assert(isNativeImpl())
     assert(view().frameView().hasFlippedBlockRenderers())
 
     let containerBlock = containingBlock()
@@ -7409,6 +7612,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   private func addLayoutOverflow(rect: LayoutRectWrapper, clientBox: LayoutRectWrapper) {
+    assert(isNativeImpl())
     if clientBox.contains(other: rect) || rect.isEmpty() {
       return
     }
