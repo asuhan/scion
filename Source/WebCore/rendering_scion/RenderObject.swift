@@ -345,7 +345,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     // TODO(asuhan): add leak counter
   }
 
-  func type() -> `Type` { return m_type }
+  func type() -> `Type` {
+    assert(isNativeImpl())
+    return m_type
+  }
 
   func layoutBox() -> BoxWrapper? {
     assert(!isNativeImpl())
@@ -392,10 +395,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func checkedParent() -> RenderElementWrapper? {
+    assert(isNativeImpl())
     return parent()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
   func isDescendantOf(ancestor: RenderObjectWrapper?) -> Bool {
+    assert(isNativeImpl())
     var renderer: RenderObjectWrapper? = self
     while renderer != nil {
       if CPtrToInt(renderer!.id()) == CPtrToInt(ancestor?.id()) {
@@ -446,6 +451,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrder() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     if let o = firstChildSlow() {
       return o
     }
@@ -454,6 +460,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrder(stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     if let o = firstChildSlow() {
       return o
     }
@@ -462,6 +469,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrderAfterChildren() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     if let o = nextSibling() {
       return o
     }
@@ -473,6 +481,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func nextInPreOrderAfterChildren(_ stayWithin: RenderObjectWrapper?) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     if CPtrToInt(id()) == CPtrToInt(stayWithin?.id()) {
       return nil
     }
@@ -493,6 +502,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func previousInPreOrder() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     if var o = previousSibling() {
       while let last = o.lastChildSlow() {
         o = last
@@ -504,6 +514,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func childAt(_ index: UInt32) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     var child = firstChildSlow()
     for _ in 0..<index {
       if child == nil {
@@ -515,6 +526,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func lastLeafChild() -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     var r = lastChildSlow()
     while r != nil {
       if let n = r!.lastChildSlow() {
@@ -527,6 +539,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func firstNonAnonymousAncestor() -> RenderElementWrapper? {
+    assert(isNativeImpl())
     var ancestor = parent()
     while ancestor != nil && ancestor!.isAnonymous() {
       ancestor = ancestor!.parent()
@@ -535,6 +548,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingLayer() -> RenderLayerWrapper? {
+    assert(isNativeImpl())
     for renderer in RenderAncestorIteratorAdapter<RenderLayerModelObjectWrapper>.lineageOfType(
       first: self)
     {
@@ -557,6 +571,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func enclosingScrollableContainer() -> RenderBoxWrapper? {
+    assert(isNativeImpl())
     // Walk up the container chain to find the scrollable container that contains
     // this RenderObject. The important thing here is that `container()` respects
     // the containing block chain for positioned elements. This is important because
@@ -607,6 +622,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // - the block doesn't have any special assumption on its text children.
   // This correctly prevents form controls from having such renderers.
   func canHaveGeneratedChildren() -> Bool {
+    assert(isNativeImpl())
     return canHaveChildren()
   }
 
@@ -618,27 +634,43 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return node()?.isPseudoElement() ?? false
   }
 
-  func isRenderElement() -> Bool { return !isRenderText() }
+  func isRenderElement() -> Bool {
+    assert(isNativeImpl())
+    return !isRenderText()
+  }
 
   func isRenderReplaced() -> Bool {
     assert(isNativeImpl())
     return m_typeSpecificFlags.kind == .Replaced
   }
 
-  func isRenderBoxModelObject() -> Bool { return m_typeFlags.contains(.IsBoxModelObject) }
+  func isRenderBoxModelObject() -> Bool {
+    assert(isNativeImpl())
+    return m_typeFlags.contains(.IsBoxModelObject)
+  }
 
-  func isRenderBlock() -> Bool { return m_typeFlags.contains(.IsRenderBlock) }
+  func isRenderBlock() -> Bool {
+    assert(isNativeImpl())
+    return m_typeFlags.contains(.IsRenderBlock)
+  }
 
-  func isRenderBlockFlow() -> Bool { return m_typeSpecificFlags.kind == .BlockFlow }
+  func isRenderBlockFlow() -> Bool {
+    assert(isNativeImpl())
+    return m_typeSpecificFlags.kind == .BlockFlow
+  }
 
   func isRenderInline() -> Bool {
     assert(isNativeImpl())
     return m_typeFlags.contains(.IsRenderInline)
   }
 
-  func isRenderLayerModelObject() -> Bool { return m_typeFlags.contains(.IsLayerModelObject) }
+  func isRenderLayerModelObject() -> Bool {
+    assert(isNativeImpl())
+    return m_typeFlags.contains(.IsLayerModelObject)
+  }
 
   func isAtomicInlineLevelBox() -> Bool {
+    assert(isNativeImpl())
     return style().isDisplayInlineType()
       && !(style().display() == .Inline && !isReplacedOrInlineBlock())
   }
@@ -697,6 +729,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderMedia() -> Bool {
+    assert(isNativeImpl())
     return isRenderReplaced() && m_typeSpecificFlags.replacedFlags().contains(.IsMedia)
   }
 
@@ -768,6 +801,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderViewTransitionCapture() -> Bool {
+    assert(isNativeImpl())
     return isRenderReplaced()
       && m_typeSpecificFlags.replacedFlags().contains(.IsViewTransitionCapture)
   }
@@ -793,10 +827,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isDocumentElementRenderer() -> Bool {
+    assert(isNativeImpl())
     return CPtrToInt(document().documentElement()?.p) == CPtrToInt(m_node?.p)
   }
 
   func isBody() -> Bool {
+    assert(isNativeImpl())
     if node() == nil {
       return false
     }
@@ -805,6 +841,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isLegend() -> Bool {
+    assert(isNativeImpl())
     if node() == nil {
       return false
     }
@@ -813,6 +850,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isHTMLMarquee() -> Bool {
+    assert(isNativeImpl())
     if node() == nil {
       return false
     }
@@ -911,6 +949,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private func setFragmentedFlowStateIncludingDescendants(
     state: FragmentedFlowState, skipDescendentFragmentedFlow: SkipDescendentFragmentedFlow = .Yes
   ) {
+    assert(isNativeImpl())
     setFragmentedFlowState(state)
 
     guard let renderElement = self as? RenderElementWrapper else { return }
@@ -1035,6 +1074,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSVGLayerAwareRenderer() -> Bool {
+    assert(isNativeImpl())
     return isRenderSVGRoot() || isRenderSVGModelObject() || isRenderSVGText() || isRenderSVGInline()
       || isRenderSVGForeignObject()
   }
@@ -1100,6 +1140,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isAnonymousBlock() -> Bool {
+    assert(isNativeImpl())
     // This function must be kept in sync with anonymous block creation conditions in RenderBlock::createAnonymousBlock().
     // FIXME: That seems difficult. Can we come up with a simpler way to make behavior correct?
     // FIXME: Does this relatively long function benefit from being inlined?
@@ -1119,6 +1160,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBlockBox() -> Bool {
+    assert(isNativeImpl())
     // A block-level box that is also a block container.
     return isBlockLevelBox() && isBlockContainer()
   }
@@ -1129,6 +1171,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBlockContainer() -> Bool {
+    assert(isNativeImpl())
     let display = style().display()
     return
       (display == .Block
@@ -1160,10 +1203,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFixedPositioned() -> Bool {
+    assert(isNativeImpl())
     return isOutOfFlowPositioned() && style().position() == .Fixed
   }
 
   func isAbsolutelyPositioned() -> Bool {
+    assert(isNativeImpl())
     return isOutOfFlowPositioned() && style().position() == .Absolute
   }
 
@@ -1193,14 +1238,17 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBR() -> Bool {
+    assert(isNativeImpl())
     return isRenderLineBreak() && !hasWBRLineBreakFlag()
   }
 
   private func isWBR() -> Bool {
+    assert(isNativeImpl())
     return isRenderLineBreak() && hasWBRLineBreakFlag()
   }
 
   func isLineBreakOpportunity() -> Bool {
+    assert(isNativeImpl())
     return isRenderLineBreak() && isWBR()
   }
 
@@ -1216,7 +1264,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return type() == .TableRow
   }
 
-  func isRenderView() -> Bool { return type() == .View }
+  func isRenderView() -> Bool {
+    assert(isNativeImpl())
+    return type() == .View
+  }
 
   func isInline() -> Bool {
     assert(isNativeImpl())
@@ -1233,7 +1284,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return wk_interop.RenderObject_isHorizontalWritingMode(id())
   }
 
-  func hasReflection() -> Bool { return hasRareData() && rareData().hasReflection }
+  func hasReflection() -> Bool {
+    assert(isNativeImpl())
+    return hasRareData() && rareData().hasReflection
+  }
 
   func isRenderFragmentedFlow() -> Bool {
     assert(isNativeImpl())
@@ -1265,7 +1319,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     m_stateBitfields.setFlag(.IsExcludedFromNormalLayout, excluded)
   }
 
-  func isExcludedAndPlacedInBorder() -> Bool { return isExcludedFromNormalLayout() && isLegend() }
+  func isExcludedAndPlacedInBorder() -> Bool {
+    assert(isNativeImpl())
+    return isExcludedFromNormalLayout() && isLegend()
+  }
 
   func hasLayer() -> Bool {
     assert(isNativeImpl())
@@ -1285,6 +1342,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func backgroundIsKnownToBeObscured(paintOffset: LayoutPointWrapper) -> Bool {
+    assert(isNativeImpl())
     if m_stateBitfields.boxDecorationState == .InvalidObscurationStatus {
       let boxDecorationState: BoxDecorationState =
         computeBackgroundIsKnownToBeObscured(paintOffset) ? .IsKnownToBeObscured : .MayBeVisible
@@ -1294,6 +1352,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsLayout() -> Bool {
+    assert(isNativeImpl())
     return selfNeedsLayout()
       || normalChildNeedsLayout()
       || posChildNeedsLayout()
@@ -1312,6 +1371,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsPositionedMovementLayoutOnly() -> Bool {
+    assert(isNativeImpl())
     return needsPositionedMovementLayout()
       && !selfNeedsLayout()
       && !normalChildNeedsLayout()
@@ -1330,6 +1390,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsSimplifiedNormalFlowLayoutOnly() -> Bool {
+    assert(isNativeImpl())
     return needsSimplifiedNormalFlowLayout() && !selfNeedsLayout() && !normalChildNeedsLayout()
       && !posChildNeedsLayout() && !needsPositionedMovementLayout()
   }
@@ -1350,6 +1411,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSelectionBorder() -> Bool {
+    assert(isNativeImpl())
     let st = selectionState()
     return st == .Start
       || st == .End
@@ -1379,10 +1441,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isTransformed() -> Bool {
+    assert(isNativeImpl())
     return hasTransformRelatedProperty() && (style().affectsTransform() || hasSVGTransform())
   }
 
   func hasTransformOrPerspective() -> Bool {
+    assert(isNativeImpl())
     return hasTransformRelatedProperty() && (isTransformed() || style().hasPerspective())
   }
 
@@ -1392,6 +1456,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setCapturedInViewTransition(_ captured: Bool) {
+    assert(isNativeImpl())
     if capturedInViewTransition() == captured {
       return
     }
@@ -1412,6 +1477,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   // When the document element is captured, the captured contents uses the RenderView
   // instead. Returns the capture state with this adjustment applied.
   func effectiveCapturedInViewTransition() -> Bool {
+    assert(isNativeImpl())
     if isDocumentElementRenderer() {
       return false
     }
@@ -1422,6 +1488,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func preservesNewline() -> Bool {
+    assert(isNativeImpl())
     return !isRenderSVGInlineText() && style().preserveNewline()
   }
 
@@ -1433,6 +1500,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func checkedView() -> RenderViewWrapper {
+    assert(isNativeImpl())
     return view()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
@@ -1450,7 +1518,10 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_node
   }
 
-  func protectedNode() -> NodeWrapper? { return node() }
+  func protectedNode() -> NodeWrapper? {
+    assert(isNativeImpl())
+    return node()
+  }
 
   func nonPseudoNode() -> NodeWrapper? {
     assert(isNativeImpl())
@@ -1463,6 +1534,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func protectedDocument() -> Document {
+    assert(isNativeImpl())
     return document()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
@@ -1471,17 +1543,27 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not implemented")
   }
 
-  func frame() -> LocalFrameWrapper { return document().frame()! }
+  func frame() -> LocalFrameWrapper {
+    assert(isNativeImpl())
+    return document().frame()!
+  }
 
-  func protectedFrame() -> LocalFrameWrapper { return frame() }  // TODO(asuhan): just remove this wrapper, not needed in Swift
+  func protectedFrame() -> LocalFrameWrapper {
+    assert(isNativeImpl())
+    return frame()
+  }  // TODO(asuhan): just remove this wrapper, not needed in Swift
 
   func page() -> PageWrapper {
+    assert(isNativeImpl())
     // The render tree will always be torn down before Frame is disconnected from Page,
     // so it's safe to assume Frame::page() is non-null as long as there are live RenderObjects.
     return frame().page()!
   }
 
-  func settings() -> SettingsWrapper { return page().settings() }
+  func settings() -> SettingsWrapper {
+    assert(isNativeImpl())
+    return page().settings()
+  }
 
   // Returns the object containing this one. Can be different from parent for positioned elements.
   // If repaintContainer and repaintContainerSkipped are not null, on return *repaintContainerSkipped
@@ -1512,6 +1594,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func invalidateContainerPreferredLogicalWidths() {
+    assert(isNativeImpl())
     // In order to avoid pathological behavior when inlines are deeply nested, we do include them
     // in the chain that we mark dirty (even though they're kind of irrelevant).
     var ancestor = isRenderTableCell() ? containingBlock() : container()
@@ -1561,6 +1644,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ locationInContainer: HitTestLocationWrapper, _ accumulatedOffset: LayoutPointWrapper,
     _ hitTestFilter: HitTestFilter = .HitTestAll
   ) -> Bool {
+    assert(isNativeImpl())
     var inside = false
     if hitTestFilter != .HitTestSelf {
       // First test the foreground layer (lines and inlines).
@@ -1602,6 +1686,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?,
     mode: MapCoordinatesMode = [.UseTransforms]
   ) -> FloatQuad {
+    assert(isNativeImpl())
     var wasFixed: Bool? = nil
     return localToContainerQuad(
       localQuad: localQuad, container: container, mode: mode, wasFixed: &wasFixed)
@@ -1611,6 +1696,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     localQuad: FloatQuad, container: RenderLayerModelObjectWrapper?, mode: MapCoordinatesMode,
     wasFixed: inout Bool?
   ) -> FloatQuad {
+    assert(isNativeImpl())
     // Track the point at the center of the quad's bounding box. As mapLocalToContainer() calls offsetFromContainer(),
     // it will use that point as the reference point to decide which column's transform to apply in multiple-column blocks.
     let transformState = TransformState(
@@ -1625,6 +1711,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?, wasFixed: inout Bool?,
     mode: MapCoordinatesMode = .UseTransforms
   ) -> FloatPoint {
+    assert(isNativeImpl())
     let transformState = TransformState(.ApplyTransformDirection, localPoint)
     mapLocalToContainer(container, transformState, mode.union(.ApplyContainerFlip), &wasFixed)
     transformState.flatten()
@@ -1635,6 +1722,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func localToContainerPoint(localPoint: FloatPoint, container: RenderLayerModelObjectWrapper?)
     -> FloatPoint
   {
+    assert(isNativeImpl())
     var wasFixed: Bool? = nil
     return localToContainerPoint(localPoint: localPoint, container: container, wasFixed: &wasFixed)
   }
@@ -1645,6 +1733,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ container: RenderElementWrapper, _ physicalPoint: LayoutPointWrapper,
     _ offsetDependsOnPoint: inout Bool?
   ) -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     assert(CPtrToInt(container.id()) == CPtrToInt(self.container()?.id()))
 
     var offset = LayoutSizeWrapper()
@@ -1661,6 +1750,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Return the offset from an object up the container() chain. Asserts that none of the intermediate objects have transforms.
   func offsetFromAncestorContainer(_ container: RenderElementWrapper) -> LayoutSizeWrapper {
+    assert(isNativeImpl())
     var offset = LayoutSizeWrapper()
     var referencePoint = LayoutPointWrapper()
     var currentContainer = self
@@ -1693,6 +1783,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func markContainingBlocksForLayout(layoutRoot: RenderElementWrapper? = nil)
     -> RenderElementWrapper?
   {
+    assert(isNativeImpl())
     assert(!isSetNeedsLayoutForbidden())
     if self is RenderViewWrapper {
       return self as! RenderElementWrapper?
@@ -1772,6 +1863,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func clearNeedsLayout(hadSkippedLayout: HadSkippedLayout = .No) {
+    assert(isNativeImpl())
     // FIXME: Consider not setting the "ever had layout" bit to true when "hadSkippedLayout"
     setEverHadLayout()
     setHadSkippedLayout(hadSkippedLayout == .Yes)
@@ -1792,6 +1884,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setNeedsLayoutAndPrefWidthsRecalc() {
+    assert(isNativeImpl())
     setNeedsLayout()
     setPreferredLogicalWidthsDirty(shouldBeDirty: true)
   }
@@ -1830,6 +1923,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func invalidateBackgroundObscurationStatus() {
+    assert(isNativeImpl())
     if !hasVisibleBoxDecorations() {
       return
     }
@@ -1866,6 +1960,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setHasReflection(_ hasReflection: Bool = true) {
+    assert(isNativeImpl())
     if hasReflection || hasRareData() {
       ensureRareData().hasReflection = hasReflection
     }
@@ -1899,6 +1994,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func createVisiblePosition(_ offset: Int32, _ affinity: Affinity) -> VisiblePosition {
+    assert(isNativeImpl())
     // If this is a non-anonymous renderer in an editable area, then it's simple.
     if let node = nonPseudoNode() {
       if !node.hasEditableStyle() {
@@ -1967,6 +2063,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func createVisiblePosition(_ position: Position) -> VisiblePosition {
+    assert(isNativeImpl())
     if position.isNotNull() {
       return VisiblePosition(position)
     }
@@ -2035,6 +2132,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func localToAbsolute(
     localPoint: FloatPoint = FloatPoint(), mode: MapCoordinatesMode = MapCoordinatesMode()
   ) -> FloatPoint {
+    assert(isNativeImpl())
     var unused: Bool? = nil
     return localToAbsolute(localPoint, mode, &unused)
   }
@@ -2061,6 +2159,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func firstLineStyle() -> RenderStyleWrapper {
+    assert(isNativeImpl())
     if isRenderText() {
       return m_parent!.firstLineStyle()
     }
@@ -2082,6 +2181,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func containerForRepaint() -> RepaintContainerStatus {
+    assert(isNativeImpl())
     var repaintContainer: RenderLayerModelObjectWrapper? = nil
     var fullRepaintAlreadyScheduled = false
 
@@ -2128,6 +2228,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ r: LayoutRectWrapper,
     _ shouldClipToLayer: Bool = true
   ) {
+    assert(isNativeImpl())
     if r.isEmpty() {
       return
     }
@@ -2183,6 +2284,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func repaint(forceRepaint: ForceRepaint = .No) {
+    assert(isNativeImpl())
     assert(
       isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper
         || self is RenderReplicaWrapper)
@@ -2195,6 +2297,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // Repaint a specific subrectangle within a given object. The rect |r| is in the object's coordinate space.
   func repaintRectangle(repaintRect: LayoutRectWrapper, shouldClipToLayer: Bool = true) {
+    assert(isNativeImpl())
     assert(isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper)
     return repaintRectangle(repaintRect, shouldClipToLayer ? .Yes : .No, .No)
   }
@@ -2208,6 +2311,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ repaintRect: LayoutRectWrapper, _ shouldClipToLayer: ClipRepaintToLayer,
     _ forceRepaint: ForceRepaint, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
   ) {
+    assert(isNativeImpl())
     assert(
       isDescendantOf(ancestor: view()) || self is RenderScrollbarPartWrapper
         || self is RenderReplicaWrapper)
@@ -2350,6 +2454,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func clippedOverflowRect(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ context: VisibleRectContext
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     let repaintRects = localRectsForRepaint(.No)
     if repaintRects.clippedOverflowRect.isEmpty() {
       return LayoutRectWrapper()
@@ -2361,12 +2466,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func clippedOverflowRectForRepaint(_ repaintContainer: RenderLayerModelObjectWrapper?)
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     return clippedOverflowRect(repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)
   }
 
   func rectWithOutlineForRepaint(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ outlineWidth: LayoutUnit
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     var r = clippedOverflowRectForRepaint(repaintContainer)
     r.inflate(d: outlineWidth)
     return r
@@ -2377,6 +2484,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   )
     -> LayoutRectWrapper
   {
+    assert(isNativeImpl())
     return LayoutRectWrapper()
   }
 
@@ -2386,12 +2494,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ rects: RepaintRects, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects {
+    assert(isNativeImpl())
     return computeVisibleRectsInContainer(rects, repaintContainer, context)!
   }
 
   func computeRectForRepaint(
     rect: LayoutRectWrapper, repaintContainer: RenderLayerModelObjectWrapper?
   ) -> LayoutRectWrapper {
+    assert(isNativeImpl())
     let repaintRects = RepaintRects(rect: rect)
     return computeRects(
       repaintRects, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint
@@ -2401,6 +2511,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func computeFloatRectForRepaint(
     _ rect: FloatRectWrapper, _ repaintContainer: RenderLayerModelObjectWrapper?
   ) -> FloatRectWrapper {
+    assert(isNativeImpl())
     return computeFloatVisibleRectInContainer(
       rect, repaintContainer, RenderObjectWrapper.visibleRectContextForRepaint)!
   }
@@ -2408,6 +2519,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func rectsForRepaintingAfterLayout(
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ repaintOutlineBounds: RepaintOutlineBounds
   ) -> RepaintRects {
+    assert(isNativeImpl())
     let localRects = localRectsForRepaint(repaintOutlineBounds)
     if localRects.clippedOverflowRect.isEmpty() {
       return RepaintRects()
@@ -2431,6 +2543,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ rects: RepaintRects, _ container: RenderLayerModelObjectWrapper?,
     _ context: VisibleRectContext
   ) -> RepaintRects? {
+    assert(isNativeImpl())
     if CPtrToInt(container?.id()) == CPtrToInt(id()) {
       return rects
     }
@@ -2459,10 +2572,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFloatingOrOutOfFlowPositioned() -> Bool {
+    assert(isNativeImpl())
     return isFloating() || isOutOfFlowPositioned()
   }
 
-  func isInFlow() -> Bool { return !isFloatingOrOutOfFlowPositioned() }
+  func isInFlow() -> Bool {
+    assert(isNativeImpl())
+    return !isFloatingOrOutOfFlowPositioned()
+  }
 
   enum HighlightState: UInt8 {
     case None  // The object is not selected.
@@ -2500,6 +2617,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isFlexibleBoxIncludingDeprecated() -> Bool {
+    assert(isNativeImpl())
     return isRenderFlexibleBox() || isRenderDeprecatedFlexibleBox()
   }
 
@@ -2516,6 +2634,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ ancestorContainer: RenderLayerModelObjectWrapper?, _ transformState: TransformState,
     _ mode: MapCoordinatesMode, _ wasFixed: inout Bool?
   ) {
+    assert(isNativeImpl())
     if CPtrToInt(ancestorContainer?.id()) == CPtrToInt(id()) {
       return
     }
@@ -2543,6 +2662,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func mapAbsoluteToLocalPoint(_ mode: MapCoordinatesMode, _ transformState: inout TransformState) {
+    assert(isNativeImpl())
     if let parent = parent() {
       parent.mapAbsoluteToLocalPoint(mode, &transformState)
       if let box = parent as? RenderBoxWrapper {
@@ -2556,6 +2676,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   func pushMappingToContainer(
     _ ancestorToStopAt: RenderLayerModelObjectWrapper?, _ geometryMap: RenderGeometryMap
   ) -> RenderObjectWrapper? {
+    assert(isNativeImpl())
     assert(CPtrToInt(ancestorToStopAt?.id()) != CPtrToInt(id()))
 
     let container = parent()
@@ -2575,6 +2696,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func shouldUseTransformFromContainer(_ containerObject: RenderObjectWrapper?) -> Bool {
+    assert(isNativeImpl())
     if isTransformed() {
       return true
     }
@@ -2586,6 +2708,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   // FIXME: Now that it's no longer passed a container maybe this should be renamed?
   func getTransformFromContainer(_ offsetInContainer: LayoutSizeWrapper) -> TransformationMatrix {
+    assert(isNativeImpl())
     var transform = TransformationMatrix()
     transform.makeIdentity()
     transform.translate(
@@ -2623,6 +2746,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ repaintContainer: RenderLayerModelObjectWrapper?, _ container: RenderElementWrapper?,
     _ offsetInContainer: LayoutSizeWrapper, _ containerSkipped: Bool
   ) {
+    assert(isNativeImpl())
     let preserve3D = mode.contains(.UseTransforms) && participatesInPreserve3D()
     if mode.contains(.UseTransforms) && shouldUseTransformFromContainer(container) {
       let matrix = getTransformFromContainer(offsetInContainer)
@@ -2647,6 +2771,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ geometryMap: RenderGeometryMap, _ repaintContainer: RenderLayerModelObjectWrapper?,
     _ container: RenderElementWrapper?, _ containerSkipped: Bool
   ) {
+    assert(isNativeImpl())
     let isFixedPos = isFixedPositioned()
     var adjustmentForSkippedAncestor = LayoutSizeWrapper()
     if containerSkipped {
@@ -2681,6 +2806,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func participatesInPreserve3D() -> Bool {
+    assert(isNativeImpl())
     return hasLayer()
       && (self as! RenderLayerModelObjectWrapper).layer()!.participatesInPreserve3D()
   }
@@ -2700,12 +2826,14 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func willBeRemovedFromTree() {
+    assert(isNativeImpl())
     // FIXME: We should ASSERT(isRooted()) but we have some out-of-order removals which would need to be fixed first.
     // Update cached boundaries in SVG renderers, if a child is removed.
     checkedParent()!.invalidateCachedBoundaries()
   }
 
   func resetFragmentedFlowStateOnRemoval() {
+    assert(isNativeImpl())
     assert(!renderTreeBeingDestroyed())
 
     if fragmentedFlowState() == .NotInsideFlow {
@@ -2726,6 +2854,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func initializeFragmentedFlowStateOnInsertion() {
+    assert(isNativeImpl())
     assert(parent() != nil)
 
     // A RenderFragmentedFlow is always considered to be inside itself, so it never has to change its state in response to parent changes.
@@ -2753,6 +2882,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isSkippedContentForLayout() -> Bool {
+    assert(isNativeImpl())
     return isSkippedContent() && !view().frameView().layoutContext().needsSkippedContentLayout()
   }
 
@@ -2790,6 +2920,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func scheduleLayout(layoutRoot: RenderElementWrapper?) {
+    assert(isNativeImpl())
     if let renderView = layoutRoot as? RenderViewWrapper {
       return renderView.protectedFrameView().checkedLayoutContext().scheduleLayout()
     }
@@ -2874,6 +3005,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     _ partialRepaintRect: LayoutRectWrapper? = nil, _ clipRepaintToLayer: ClipRepaintToLayer = .No,
     _ forceRepaint: ForceRepaint = .No, _ additionalRepaintOutsets: LayoutBoxExtent? = nil
   ) {
+    assert(isNativeImpl())
     var repaintContainer = containerForRepaint()
     if repaintContainer.renderer == nil {
       repaintContainer = RepaintContainerStatus(
@@ -2908,11 +3040,13 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func setLayerNeedsFullRepaint() {
+    assert(isNativeImpl())
     assert(hasLayer())
     (self as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus = .NeedsFullRepaint
   }
 
   func setLayerNeedsFullRepaintForPositionedMovementLayout() {
+    assert(isNativeImpl())
     assert(hasLayer())
     (self as! RenderLayerModelObjectWrapper).checkedLayer()!.repaintStatus =
       .NeedsFullRepaintForPositionedMovementLayout
@@ -2921,6 +3055,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   private func propagateRepaintToParentWithOutlineAutoIfNeeded(
     _ repaintContainer: RenderLayerModelObjectWrapper, _ repaintRect: LayoutRectWrapper
   ) {
+    assert(isNativeImpl())
     if !hasOutlineAutoAncestor() {
       return
     }
@@ -2992,6 +3127,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   #if ASSERT_ENABLED
     private func checkBlockPositionedObjectsNeedLayout() {
+      assert(isNativeImpl())
       assert(!needsLayout())
 
       (self as? RenderBlockWrapper)?.checkPositionedObjectsNeedLayout()
