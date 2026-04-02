@@ -105,6 +105,19 @@ func += (a: inout IntOutsets, b: IntOutsets) -> IntOutsets {
   return a
 }
 
+private func at(_ r: LayoutBoxExtent, _ side: BoxSide) -> LayoutUnit {
+  switch side {
+  case .Top:
+    return r.top
+  case .Right:
+    return r.right
+  case .Bottom:
+    return r.bottom
+  case .Left:
+    return r.left
+  }
+}
+
 private func setSide(_ r: inout LayoutBoxExtent, _ side: BoxSide, _ value: LayoutUnit) {
   switch side {
   case .Top:
@@ -116,6 +129,10 @@ private func setSide(_ r: inout LayoutBoxExtent, _ side: BoxSide, _ value: Layou
   case .Left:
     r.left = value
   }
+}
+
+func before(_ r: LayoutBoxExtent, _ writingMode: WritingMode) -> LayoutUnit {
+  return at(r, mapLogicalSideToPhysicalSide(writingMode, .BlockStart))
 }
 
 // TODO(asuhan): Make this a method of RectEdges once the segfault root cause is fixed.

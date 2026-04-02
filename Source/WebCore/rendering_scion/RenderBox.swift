@@ -1523,8 +1523,8 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   override func marginBefore(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return before(marginBox, (otherStyle ?? style()).writingMode())
   }
 
   override func marginAfter(otherStyle: RenderStyleWrapper? = nil) -> LayoutUnit {
