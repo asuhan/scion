@@ -105,6 +105,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_y(const void* p)
     return y.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBox_setY(void* p, int32_t y)
+{
+    static_cast<WebCore::RenderBox*>(p)->setY(WebCore::LayoutUnit::fromRawValue(y));
+}
+
 extern "C" WEBCORE_EXPORT void* RenderBox_nextSiblingBox(const void* box_raw_ptr)
 {
     return static_cast<const WebCore::RenderBox*>(box_raw_ptr)->nextSiblingBox();
