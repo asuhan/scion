@@ -911,7 +911,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func everHadLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_everHadLayout(id()) }
     return m_stateBitfields.hasFlag(.EverHadLayout)
   }
 

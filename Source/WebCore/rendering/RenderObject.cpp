@@ -105,6 +105,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isBody(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isBody();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_everHadLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->everHadLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_childrenInline(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->childrenInline();
