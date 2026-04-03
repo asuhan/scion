@@ -841,8 +841,7 @@ class RenderStyleWrapper: Equatable {
   func boxLines() -> BoxLines { return wk_interop.RenderStyle_boxLines(p!) ? .Multiple : .Single }
 
   func boxOrient() -> BoxOrient {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_boxOrient(p!) ? .Vertical : .Horizontal
   }
 
   func boxPack() -> BoxPack {
