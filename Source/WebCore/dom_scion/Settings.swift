@@ -157,6 +157,14 @@ class SettingsWrapper {
     fatalError("Not implemented")
   }
 
+  func systemLayoutDirection() -> TextDirection {
+    return wk_interop.Settings_systemLayoutDirection(p) ? .RTL : .LTR
+  }
+
+  func userInterfaceDirectionPolicy() -> UserInterfaceDirectionPolicy {
+    return wk_interop.Settings_userInterfaceDirectionPolicy(p) ? .System : .Content
+  }
+
   func visualViewportEnabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")

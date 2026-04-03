@@ -200,8 +200,16 @@ class RenderLayerModelObjectWrapper: RenderElementWrapper {
   ) -> Bool { return false }
 
   func shouldPlaceVerticalScrollbarOnLeftForLayerModelObject() -> Bool {
-    assert(!isNativeImpl())
-    return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(id())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayerModelObject_shouldPlaceVerticalScrollbarOnLeft(id())
+    }
+    // TODO(asuhan): add iOS support
+    switch settings().userInterfaceDirectionPolicy() {
+    case .Content:
+      return style().shouldPlaceVerticalScrollbarOnLeft()
+    case .System:
+      return settings().systemLayoutDirection() == .RTL
+    }
   }
 
   // Single source of truth deciding if a SVG renderer should be painted. All SVG renderers

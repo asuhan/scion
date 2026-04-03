@@ -16,5 +16,6 @@ target_sources(layout_scion PRIVATE
     RemoteFrameView.swift
     SecurityOrigin.swift
     SecurityOriginData.swift
+    UserInterfaceDirectionPolicy.swift
 )
 add_subdirectory(scrolling)
