@@ -69,6 +69,17 @@ extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_checkLayoutState([[ma
 #endif
 }
 
+struct LayoutSizeRaw {
+    int32_t width;
+    int32_t height;
+};
+
+extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_addLayoutDelta(void* p, LayoutSizeRaw delta_raw)
+{
+    const auto delta = WebCore::LayoutSize { WebCore::LayoutUnit::fromRawValue(delta_raw.width), WebCore::LayoutUnit::fromRawValue(delta_raw.height) };
+    static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->addLayoutDelta(delta);
+}
+
 extern "C" WEBCORE_EXPORT void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void* p)
 {
     return static_cast<WebCore::LocalFrameViewLayoutContext*>(p)->updateScrollInfoAfterLayoutTransactionIfExists();
@@ -78,11 +89,6 @@ extern "C" WEBCORE_EXPORT uint32_t LocalFrameViewLayoutContext_layoutIdentifier(
 {
     return static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutIdentifier();
 }
-
-struct LayoutSizeRaw {
-    int32_t width;
-    int32_t height;
-};
 
 extern "C" WEBCORE_EXPORT bool LocalFrameViewLayoutContext_pushLayoutState(void* p, void* rendererRaw, LayoutSizeRaw offsetRaw, int32_t pageHeightRaw, bool pageHeightChanged)
 {

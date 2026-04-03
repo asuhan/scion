@@ -516,6 +516,7 @@ bool LocalFrame_shouldUsePrintingLayout(const void*);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 void* LocalFrameViewLayoutContext_layoutState(const void*);
 void LocalFrameViewLayoutContext_checkLayoutState(void*);
+void LocalFrameViewLayoutContext_addLayoutDelta(void*, struct LayoutSizeRaw);
 void* LocalFrameViewLayoutContext_updateScrollInfoAfterLayoutTransactionIfExists(void*);
 uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSizeRaw, int32_t, bool);

@@ -90,8 +90,8 @@ class LocalFrameViewLayoutContextWrapper {
   }
 
   func addLayoutDelta(delta: LayoutSizeWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.LocalFrameViewLayoutContext_addLayoutDelta(
+      p, LayoutSizeRaw(width: delta.width().rawValue(), height: delta.height().rawValue()))
   }
 
   func layoutDeltaMatches(delta: LayoutSizeWrapper) -> Bool {
