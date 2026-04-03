@@ -825,8 +825,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func boxSizingForAspectRatio() -> BoxSizing {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_boxSizingForAspectRatio(p!) ? .BorderBox : .ContentBox
   }
 
   func hasAspectRatio() -> Bool {

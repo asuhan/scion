@@ -1014,6 +1014,11 @@ extern "C" WEBCORE_EXPORT double RenderStyle_logicalAspectRatio(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->logicalAspectRatio();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_boxSizingForAspectRatio(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->boxSizingForAspectRatio() == WebCore::BoxSizing::BorderBox;
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
