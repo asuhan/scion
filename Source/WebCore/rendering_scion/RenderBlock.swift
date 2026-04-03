@@ -487,7 +487,9 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func hasMarginBeforeQuirk() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderBlock_hasMarginBeforeQuirk(id())
+    }
     return renderBlockHasMarginBeforeQuirk
   }
 

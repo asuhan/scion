@@ -82,6 +82,11 @@
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/text/TextStream.h>
 
+extern "C" WEBCORE_EXPORT bool RenderBlock_hasMarginBeforeQuirk(const void* p)
+{
+    return static_cast<const WebCore::RenderBlock*>(p)->hasMarginBeforeQuirk();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBlock_containsFloats(const void* p)
 {
     return static_cast<const WebCore::RenderBlock*>(p)->containsFloats();

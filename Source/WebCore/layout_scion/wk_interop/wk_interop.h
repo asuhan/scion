@@ -901,6 +901,7 @@ bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
 struct LayoutRectRaw PaintInfo_rect(const void*);
 uint16_t PaintInfo_phase(const void*);
+bool RenderBlock_hasMarginBeforeQuirk(const void*);
 bool RenderBlock_containsFloats(const void*);
 int32_t RenderBlock_intrinsicBorderForFieldset(const void*);
 bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);
