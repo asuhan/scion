@@ -631,6 +631,7 @@ bool RenderStyle_isFloating(const void*);
 uint8_t RenderStyle_position(const void*);
 const void* RenderStyle_borderImage(const void*);
 float RenderStyle_borderStartWidth(const void*);
+float RenderStyle_borderEndWidth(const void*);
 const void* RenderStyle_metricsOfPrimaryFont(const void*);
 const void* RenderStyle_fontDescription(const void*);
 float RenderStyle_computedFontSize(const void*);

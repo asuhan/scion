@@ -678,8 +678,8 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderEnd() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return LayoutUnit(value: style().borderEndWidth())
   }
 
   func borderAndPaddingStart() -> LayoutUnit {
