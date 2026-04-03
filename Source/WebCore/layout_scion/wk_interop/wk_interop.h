@@ -477,6 +477,7 @@ bool RenderObject_isImage(const void*);
 bool RenderObject_isFieldset(const void*);
 bool RenderObject_isHorizontalWritingMode(const void*);
 bool RenderObject_isExcludedFromNormalLayout(const void*);
+bool RenderObject_selfNeedsLayout(const void*);
 bool RenderObject_hasNonVisibleOverflow(const void*);
 void* RenderObject_view(const void*);
 int32_t RenderObject_minPreferredLogicalWidth(const void*);

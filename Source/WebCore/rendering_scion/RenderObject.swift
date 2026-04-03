@@ -1367,7 +1367,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func selfNeedsLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_selfNeedsLayout(id())
+    }
     return m_stateBitfields.hasFlag(.NeedsLayout)
   }
 

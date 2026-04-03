@@ -115,6 +115,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isExcludedFromNormalLayout(const voi
     return static_cast<const WebCore::RenderObject*>(p)->isExcludedFromNormalLayout();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_selfNeedsLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->selfNeedsLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_hasNonVisibleOverflow(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->hasNonVisibleOverflow();
