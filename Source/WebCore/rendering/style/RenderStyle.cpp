@@ -1064,6 +1064,16 @@ extern "C" WEBCORE_EXPORT uint32_t RenderStyle_gridAutoRepeatRowsInsertionPoint(
     return static_cast<const WebCore::RenderStyle*>(p)->gridAutoRepeatRowsInsertionPoint();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_gridAutoRepeatColumnsType(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->gridAutoRepeatColumnsType());
+}
+
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_gridAutoRepeatRowsType(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->gridAutoRepeatRowsType());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();

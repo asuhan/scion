@@ -798,6 +798,8 @@ bool RenderStyle_boxOrient(const void*);
 uint8_t RenderStyle_boxPack(const void*);
 uint32_t RenderStyle_gridAutoRepeatColumnsInsertionPoint(const void*);
 uint32_t RenderStyle_gridAutoRepeatRowsInsertionPoint(const void*);
+uint8_t RenderStyle_gridAutoRepeatColumnsType(const void*);
+uint8_t RenderStyle_gridAutoRepeatRowsType(const void*);
 const void* RenderStyle_marginRight(const void*);
 const void* RenderStyle_paddingLeft(const void*);
 const void* RenderStyle_paddingRight(const void*);

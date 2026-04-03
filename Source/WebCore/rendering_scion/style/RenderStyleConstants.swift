@@ -871,7 +871,7 @@ enum MasonryAutoFlowPlacementOrder {
   case Ordered
 }
 
-enum AutoRepeatType {
+enum AutoRepeatType: UInt8 {
   case None
   case Fill
   case Fit
