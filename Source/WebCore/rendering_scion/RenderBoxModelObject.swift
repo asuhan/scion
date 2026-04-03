@@ -561,6 +561,11 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
     return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingAfter())
   }
 
+  private func computedCSSPaddingEnd() -> LayoutUnit {
+    assert(isNativeImpl())
+    return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingEnd())
+  }
+
   func computedCSSPaddingStart() -> LayoutUnit {
     assert(isNativeImpl())
     return resolveLengthPercentageUsingContainerLogicalWidth(style().paddingStart())
@@ -616,8 +621,10 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func paddingEnd() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBoxModelObject_paddingEnd(id()))
+    }
+    return computedCSSPaddingEnd()
   }
 
   func borderWidths() -> RectEdges<LayoutUnit> {
