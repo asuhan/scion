@@ -791,6 +791,7 @@ double RenderStyle_logicalAspectRatio(const void*);
 bool RenderStyle_boxSizingForAspectRatio(const void*);
 bool RenderStyle_hasAspectRatio(const void*);
 uint8_t RenderStyle_boxAlign(const void*);
+float RenderStyle_boxFlex(const void*);
 const void* RenderStyle_marginRight(const void*);
 const void* RenderStyle_paddingLeft(const void*);
 const void* RenderStyle_paddingRight(const void*);
