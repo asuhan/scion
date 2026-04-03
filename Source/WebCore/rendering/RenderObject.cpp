@@ -140,6 +140,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isExcludedFromNormalLayout(const voi
     return static_cast<const WebCore::RenderObject*>(p)->isExcludedFromNormalLayout();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_needsLayout(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->needsLayout();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_selfNeedsLayout(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->selfNeedsLayout();

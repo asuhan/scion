@@ -482,6 +482,7 @@ bool RenderObject_isFieldset(const void*);
 bool RenderObject_isRenderView(const void*);
 bool RenderObject_isHorizontalWritingMode(const void*);
 bool RenderObject_isExcludedFromNormalLayout(const void*);
+bool RenderObject_needsLayout(const void*);
 bool RenderObject_selfNeedsLayout(const void*);
 bool RenderObject_hasNonVisibleOverflow(const void*);
 void* RenderObject_view(const void*);

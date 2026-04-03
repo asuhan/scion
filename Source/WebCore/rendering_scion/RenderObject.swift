@@ -1362,7 +1362,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func needsLayout() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_needsLayout(id()) }
     return selfNeedsLayout()
       || normalChildNeedsLayout()
       || posChildNeedsLayout()
