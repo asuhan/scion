@@ -587,7 +587,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func setX(x: LayoutUnit) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBox_setX(id(), x.rawValue())
+      return
+    }
     m_frameRect.setX(x: x)
   }
 
