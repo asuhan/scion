@@ -771,7 +771,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderTableCell() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isRenderTableCell(id())
+    }
     return type() == .TableCell
   }
 

@@ -95,6 +95,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isRenderElement(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isRenderElement();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderTableCell(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderTableCell();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_childrenInline(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->childrenInline();
