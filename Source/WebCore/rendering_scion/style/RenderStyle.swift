@@ -821,8 +821,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func logicalAspectRatio() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_logicalAspectRatio(p!)
   }
 
   func boxSizingForAspectRatio() -> BoxSizing {

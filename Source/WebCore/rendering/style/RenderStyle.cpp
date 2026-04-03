@@ -1009,6 +1009,11 @@ extern "C" WEBCORE_EXPORT double RenderStyle_aspectRatioLogicalHeight(const void
     return static_cast<const WebCore::RenderStyle*>(p)->aspectRatioLogicalHeight();
 }
 
+extern "C" WEBCORE_EXPORT double RenderStyle_logicalAspectRatio(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->logicalAspectRatio();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
