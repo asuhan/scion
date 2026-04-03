@@ -921,6 +921,7 @@ bool RenderBlock_hasMarginBeforeQuirk(const void*);
 void RenderBlock_markForPaginationRelayoutIfNeeded(void*);
 bool RenderBlock_containsFloats(const void*);
 int32_t RenderBlock_intrinsicBorderForFieldset(const void*);
+void RenderBlock_layout(void*);
 bool u_hasBinaryProperty_scion(int32_t c, uint32_t which);
 uint32_t u_getIntPropertyValue_scion(uint16_t character, uint32_t property);
 int32_t u_toupper_scion(int32_t);

@@ -103,6 +103,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlock_intrinsicBorderForFieldset(const v
     return r.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBlock_layout(void* p)
+{
+    static_cast<WebCore::RenderBlock*>(p)->layout();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

@@ -298,10 +298,10 @@ public:
 
     void updateDescendantTransformsAfterLayout();
 
+    void layout() override;
+
 protected:
     RenderFragmentedFlow* locateEnclosingFragmentedFlow() const override;
-
-    void layout() override;
 
     void layoutPositionedObjects(bool relayoutChildren, bool fixedPositionObjectsOnly = false);
     virtual void layoutPositionedObject(RenderBox&, bool relayoutChildren, bool fixedPositionObjectsOnly);

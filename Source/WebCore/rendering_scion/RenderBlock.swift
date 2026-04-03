@@ -1368,7 +1368,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func layout() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlock_layout(id())
+      return
+    }
     // TODO(asuhan): add stack stats
 
     // Table cells call layoutBlock directly, so don't add any logic here.  Put code into
