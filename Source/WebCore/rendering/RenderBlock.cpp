@@ -87,6 +87,11 @@ extern "C" WEBCORE_EXPORT bool RenderBlock_hasMarginBeforeQuirk(const void* p)
     return static_cast<const WebCore::RenderBlock*>(p)->hasMarginBeforeQuirk();
 }
 
+extern "C" WEBCORE_EXPORT void RenderBlock_markForPaginationRelayoutIfNeeded(void* p)
+{
+    static_cast<WebCore::RenderBlock*>(p)->markForPaginationRelayoutIfNeeded();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBlock_containsFloats(const void* p)
 {
     return static_cast<const WebCore::RenderBlock*>(p)->containsFloats();

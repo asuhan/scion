@@ -563,7 +563,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func markForPaginationRelayoutIfNeeded() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderBlock_markForPaginationRelayoutIfNeeded(id())
+      return
+    }
     let layoutState = view().frameView().layoutContext().layoutState()
     if needsLayout() || layoutState == nil || !layoutState!.isPaginated() {
       return
