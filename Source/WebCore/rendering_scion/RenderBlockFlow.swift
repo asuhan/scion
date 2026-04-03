@@ -2959,13 +2959,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func maxPositiveMarginBefore() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBlockFlow_maxPositiveMarginBefore(id()))
+    }
     return hasRareBlockFlowData()
       ? rareBlockFlowData().margins.positiveMarginBefore
       : RenderBlockFlowRareData.positiveMarginBeforeDefault(self)
   }
 
   private func maxNegativeMarginBefore() -> LayoutUnit {
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBlockFlow_maxNegativeMarginBefore(id()))
+    }
     assert(isNativeImpl())
     return hasRareBlockFlowData()
       ? rareBlockFlowData().margins.negativeMarginBefore

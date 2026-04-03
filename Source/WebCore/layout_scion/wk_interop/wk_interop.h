@@ -915,6 +915,8 @@ void RenderBlockFlow_setStaticInlinePositionForChild(void* p, void* child_raw, i
 int32_t RenderBlockFlow_lowestFloatLogicalBottom(const void* p, uint8_t float_type_raw);
 int32_t RenderBlockFlow_endPaddingWidthForCaret(const void*);
 struct OptionalLayoutUnitRaw RenderBlockFlow_lowestInitialLetterLogicalBottom(const void*);
+int32_t RenderBlockFlow_maxPositiveMarginBefore(const void*);
+int32_t RenderBlockFlow_maxNegativeMarginBefore(const void*);
 bool RenderBlockFlow_hasNonSyntheticBaseline(const void*);
 void* RenderBlockFlow_insertFloatingObjectForIFC(void* floating_object_raw, void* float_box_raw);
 struct LayoutRectRaw PaintInfo_rect(const void*);

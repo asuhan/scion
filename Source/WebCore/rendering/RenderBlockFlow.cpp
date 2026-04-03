@@ -108,6 +108,18 @@ extern "C" WEBCORE_EXPORT struct OptionalLayoutUnitRaw RenderBlockFlow_lowestIni
     return { lowestInitialLetterLogicalBottom->rawValue(), true };
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxPositiveMarginBefore(const void* p)
+{
+    const auto margin = static_cast<const WebCore::RenderBlockFlow*>(p)->maxPositiveMarginBefore();
+    return margin.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxNegativeMarginBefore(const void* p)
+{
+    const auto margin = static_cast<const WebCore::RenderBlockFlow*>(p)->maxNegativeMarginBefore();
+    return margin.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT uint16_t PaintInfo_phase(const void* p)
 {
     return static_cast<uint16_t>(static_cast<const WebCore::PaintInfo*>(p)->phase);
