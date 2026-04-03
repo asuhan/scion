@@ -104,6 +104,13 @@ extern "C" WEBCORE_EXPORT void* RenderBox_nextSiblingBox(const void* box_raw_ptr
     return static_cast<const WebCore::RenderBox*>(box_raw_ptr)->nextSiblingBox();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_marginBefore(const void* box_raw_ptr, const void* override_style_raw_ptr)
+{
+    const auto override_style = static_cast<const WebCore::RenderStyle*>(override_style_raw_ptr);
+    const auto width = static_cast<const WebCore::RenderBox*>(box_raw_ptr)->marginBefore(override_style);
+    return width.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setOverridingLogicalWidthLength(void* box_raw_ptr, const void* length_raw_ptr)
 {
     auto* renderer = static_cast<WebCore::RenderBox*>(static_cast<WebCore::RenderBox*>(box_raw_ptr));

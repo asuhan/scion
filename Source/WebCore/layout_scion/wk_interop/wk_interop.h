@@ -530,6 +530,7 @@ bool RenderElement_isContinuation(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 void* RenderBox_nextSiblingBox(const void*);
+int32_t RenderBox_marginBefore(const void*, const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
 void RenderBox_computeAndSetBlockDirectionMargins(void*, const void*);
