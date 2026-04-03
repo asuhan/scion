@@ -463,6 +463,7 @@ bool ElementBox_hasBaselineForIntegration(const void*);
 int32_t ElementBox_baselineForIntegration(const void*);
 bool RenderObject_isRenderElement(const void*);
 bool RenderObject_isRenderTableCell(const void*);
+bool RenderObject_isBody(const void*);
 bool RenderObject_childrenInline(const void*);
 bool RenderObject_isFloating(const void*);
 bool RenderObject_isOutOfFlowPositioned(const void*);

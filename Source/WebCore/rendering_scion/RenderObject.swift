@@ -834,7 +834,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isBody() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isBody(id()) }
     if node() == nil {
       return false
     }
