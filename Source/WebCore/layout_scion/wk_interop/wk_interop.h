@@ -779,6 +779,7 @@ const void* RenderStyle_marginLeft(const void*);
 const void* RenderStyle_marginBefore(const void*);
 const void* RenderStyle_marginAfter(const void*);
 const void* RenderStyle_marginStartUsing(const void*, const void*);
+const void* RenderStyle_marginEndUsing(const void*, const void*);
 const void* RenderStyle_marginRight(const void*);
 const void* RenderStyle_paddingLeft(const void*);
 const void* RenderStyle_paddingRight(const void*);
