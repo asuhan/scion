@@ -83,6 +83,11 @@ extern "C" WEBCORE_EXPORT void RenderBlockFlow_setStaticInlinePositionForChild(v
     static_cast<WebCore::RenderBlockFlow*>(p)->setStaticInlinePositionForChild(*child, blockOffset, inlinePosition);
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBlockFlow_containsFloats(const void* p)
+{
+    return static_cast<const WebCore::RenderBlockFlow*>(p)->containsFloats();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_lowestFloatLogicalBottom(const void* p, uint8_t float_type_raw)
 {
     return static_cast<const WebCore::RenderBlockFlow*>(p)->lowestFloatLogicalBottom(static_cast<WebCore::FloatingObject::Type>(float_type_raw)).rawValue();

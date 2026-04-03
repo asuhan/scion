@@ -1996,7 +1996,7 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func containsFloats() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBlockFlow_containsFloats(id()) }
     return floatingObjects != nil && !floatingObjects!.set().isEmpty()
   }
 
