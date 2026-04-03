@@ -4688,7 +4688,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func shrinkToAvoidFloats() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBox_shrinkToAvoidFloats(id()) }
     // Floating objects don't shrink.  Objects that don't avoid floats don't shrink.  Marquees don't shrink.
     if (isInline() && !isHTMLMarquee()) || !avoidsFloats() || isFloating() {
       return false

@@ -543,6 +543,7 @@ void RenderBox_setOverridingLogicalWidthLength(void*, const void*);
 void RenderBox_clearOverridingLogicalWidthLength(void*);
 void RenderBox_computeAndSetBlockDirectionMargins(void*, const void*);
 void RenderBox_repaintDuringLayoutIfMoved(void*, struct LayoutRectRaw);
+bool RenderBox_shrinkToAvoidFloats(const void*);
 bool RenderBox_avoidsFloats(const void*);
 void RenderBox_flipForWritingMode(void* p, struct LayoutPointRaw position);
 int32_t RenderBox_availableLogicalWidth(const void*);
