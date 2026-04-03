@@ -831,8 +831,7 @@ class RenderStyleWrapper: Equatable {
   func hasAspectRatio() -> Bool { return wk_interop.RenderStyle_hasAspectRatio(p!) }
 
   func boxAlign() -> BoxAlignment {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BoxAlignment(rawValue: wk_interop.RenderStyle_boxAlign(p!))!
   }
 
   func boxFlex() -> Float32 {
