@@ -412,7 +412,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func previousSibling() -> RenderObjectWrapper? {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      guard let previousSiblingRaw = wk_interop.RenderObject_previousSibling(id()) else {
+        return nil
+      }
+      return createRenderObjectWrapper(previousSiblingRaw)
+    }
     return m_previous
   }
 

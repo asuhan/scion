@@ -90,6 +90,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" WEBCORE_EXPORT void* RenderObject_previousSibling(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->previousSibling();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isRenderElement(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isRenderElement();
