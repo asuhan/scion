@@ -516,6 +516,7 @@ struct OptionalBool RenderLayoutState_blockStartTrimming(const void*);
 bool RenderLayoutState_hasTextBoxTrimStart(const void*);
 bool RenderLayoutState_hasTextBoxTrimEnd(const void* p, const void* candidate_raw);
 bool LocalFrame_shouldUsePrintingLayout(const void*);
+void* LocalFrame_view(const void* p);
 bool LocalFrameViewLayoutContext_needsFullRepaint(const void*);
 void* LocalFrameViewLayoutContext_layoutState(const void*);
 void LocalFrameViewLayoutContext_checkLayoutState(void*);

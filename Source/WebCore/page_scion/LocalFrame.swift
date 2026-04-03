@@ -34,8 +34,8 @@ final class LocalFrameWrapper: FrameWrapper {
   }
 
   func view() -> LocalFrameViewWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.LocalFrame_view(p) else { return nil }
+    return LocalFrameViewWrapper(p: raw)
   }
 
   func editor() -> EditorWrapper {
