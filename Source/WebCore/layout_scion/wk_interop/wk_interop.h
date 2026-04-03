@@ -795,6 +795,7 @@ float RenderStyle_boxFlex(const void*);
 uint32_t RenderStyle_boxFlexGroup(const void*);
 bool RenderStyle_boxLines(const void*);
 bool RenderStyle_boxOrient(const void*);
+uint8_t RenderStyle_boxPack(const void*);
 const void* RenderStyle_marginRight(const void*);
 const void* RenderStyle_paddingLeft(const void*);
 const void* RenderStyle_paddingRight(const void*);

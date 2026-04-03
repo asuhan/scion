@@ -1049,6 +1049,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_boxOrient(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->boxOrient() == WebCore::BoxOrient::Vertical;
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_boxPack(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->boxPack());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();

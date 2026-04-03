@@ -844,10 +844,7 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_boxOrient(p!) ? .Vertical : .Horizontal
   }
 
-  func boxPack() -> BoxPack {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func boxPack() -> BoxPack { return BoxPack(rawValue: wk_interop.RenderStyle_boxPack(p!))! }
 
   func gridColumnTrackSizes() -> ArraySlice<GridTrackSize> {
     // TODO(asuhan): implement this
