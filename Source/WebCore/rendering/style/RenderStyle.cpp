@@ -1039,6 +1039,11 @@ extern "C" WEBCORE_EXPORT uint32_t RenderStyle_boxFlexGroup(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->boxFlexGroup();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_boxLines(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->boxLines() == WebCore::BoxLines::Multiple;
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
