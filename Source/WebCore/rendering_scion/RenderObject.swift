@@ -927,7 +927,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func childrenInline() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_childrenInline(id()) }
     return m_stateBitfields.hasFlag(.ChildrenInline)
   }
 
