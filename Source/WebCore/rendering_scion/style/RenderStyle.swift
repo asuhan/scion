@@ -789,13 +789,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func marginBeforeUsing(otherStyle: RenderStyleWrapper) -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_marginBeforeUsing(p!, otherStyle.p!))
   }
 
   func marginAfterUsing(otherStyle: RenderStyleWrapper) -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_marginAfterUsing(p!, otherStyle.p!))
   }
 
   func direction() -> TextDirection {
