@@ -693,12 +693,18 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func borderAndPaddingBefore() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_borderAndPaddingBefore(id()))
+    }
     return borderBefore() + paddingBefore()
   }
 
   func borderAndPaddingAfter() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBoxModelObject_borderAndPaddingAfter(id()))
+    }
     return borderAfter() + paddingAfter()
   }
 

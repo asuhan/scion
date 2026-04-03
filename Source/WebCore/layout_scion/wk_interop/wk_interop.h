@@ -563,6 +563,8 @@ const void* RenderBox_shapeOutsideInfo(const void*);
 int32_t RenderBoxModelObject_paddingStart(const void*);
 int32_t RenderBoxModelObject_paddingEnd(const void*);
 int32_t RenderBoxModelObject_borderStart(const void*);
+int32_t RenderBoxModelObject_borderAndPaddingBefore(const void*);
+int32_t RenderBoxModelObject_borderAndPaddingAfter(const void*);
 int32_t RenderBoxModelObject_marginStart(const void*, const void*);
 int32_t RenderBoxModelObject_baselinePosition(const void*, uint8_t, bool, uint8_t, uint8_t);
 void* RenderBoxModelObject_inlineContinuation(const void*);

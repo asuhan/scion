@@ -92,6 +92,16 @@ extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_borderStart(const void* p
     return static_cast<const WebCore::RenderBoxModelObject*>(p)->borderStart().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_borderAndPaddingBefore(const void* p)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->borderAndPaddingBefore().rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_borderAndPaddingAfter(const void* p)
+{
+    return static_cast<const WebCore::RenderBoxModelObject*>(p)->borderAndPaddingAfter().rawValue();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderBoxModelObject_marginStart(const void* p, const void* other_style)
 {
     return static_cast<const WebCore::RenderBoxModelObject*>(p)->marginStart(static_cast<const WebCore::RenderStyle*>(other_style)).rawValue();
