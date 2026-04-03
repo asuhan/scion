@@ -140,6 +140,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isHorizontalWritingMode(const void* 
     return static_cast<const WebCore::RenderObject*>(p)->isHorizontalWritingMode();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderFragmentedFlow(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderFragmentedFlow();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isExcludedFromNormalLayout(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isExcludedFromNormalLayout();

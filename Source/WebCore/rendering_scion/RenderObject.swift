@@ -1303,7 +1303,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isRenderFragmentedFlow() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isRenderFragmentedFlow(id()) }
     return isRenderBlockFlow() && m_typeSpecificFlags.blockFlowFlags().contains(.IsFragmentedFlow)
   }
 
