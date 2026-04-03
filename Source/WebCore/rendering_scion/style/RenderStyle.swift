@@ -836,10 +836,7 @@ class RenderStyleWrapper: Equatable {
 
   func boxFlex() -> Float32 { return wk_interop.RenderStyle_boxFlex(p!) }
 
-  func boxFlexGroup() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func boxFlexGroup() -> UInt32 { return wk_interop.RenderStyle_boxFlexGroup(p!) }
 
   func boxLines() -> BoxLines {
     // TODO(asuhan): implement this

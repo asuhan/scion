@@ -1034,6 +1034,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_boxFlex(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->boxFlex();
 }
 
+extern "C" WEBCORE_EXPORT uint32_t RenderStyle_boxFlexGroup(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->boxFlexGroup();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
