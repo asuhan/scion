@@ -2588,10 +2588,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     fatalError("Not reached")
   }
 
-  func isFloatingOrOutOfFlowPositioned() -> Bool {
-    assert(isNativeImpl())
-    return isFloating() || isOutOfFlowPositioned()
-  }
+  func isFloatingOrOutOfFlowPositioned() -> Bool { return isFloating() || isOutOfFlowPositioned() }
 
   func isInFlow() -> Bool {
     assert(isNativeImpl())
