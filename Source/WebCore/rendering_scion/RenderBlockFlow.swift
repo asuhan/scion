@@ -2064,7 +2064,10 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   func lowestFloatLogicalBottom(floatType: FloatingObjectWrapper.`Type` = .FloatLeftRight)
     -> LayoutUnit
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit(
+        value: wk_interop.RenderBlockFlow_lowestFloatLogicalBottom(id(), floatType.rawValue))
+    }
     if floatingObjects == nil {
       return LayoutUnit(value: 0)
     }
