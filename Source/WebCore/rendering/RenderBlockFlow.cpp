@@ -120,6 +120,18 @@ extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxNegativeMarginBefore(const 
     return margin.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxPositiveMarginAfter(const void* p)
+{
+    const auto margin = static_cast<const WebCore::RenderBlockFlow*>(p)->maxPositiveMarginAfter();
+    return margin.rawValue();
+}
+
+extern "C" WEBCORE_EXPORT int32_t RenderBlockFlow_maxNegativeMarginAfter(const void* p)
+{
+    const auto margin = static_cast<const WebCore::RenderBlockFlow*>(p)->maxNegativeMarginAfter();
+    return margin.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT uint16_t PaintInfo_phase(const void* p)
 {
     return static_cast<uint16_t>(static_cast<const WebCore::PaintInfo*>(p)->phase);

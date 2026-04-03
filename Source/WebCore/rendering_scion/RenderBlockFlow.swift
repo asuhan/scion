@@ -2980,14 +2980,20 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   private func maxPositiveMarginAfter() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBlockFlow_maxPositiveMarginAfter(id()))
+    }
     return hasRareBlockFlowData()
       ? rareBlockFlowData().margins.positiveMarginAfter
       : RenderBlockFlowRareData.positiveMarginAfterDefault(self)
   }
 
   private func maxNegativeMarginAfter() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(
+        value: wk_interop.RenderBlockFlow_maxNegativeMarginAfter(id()))
+    }
     return hasRareBlockFlowData()
       ? rareBlockFlowData().margins.negativeMarginAfter
       : RenderBlockFlowRareData.negativeMarginAfterDefault(self)
