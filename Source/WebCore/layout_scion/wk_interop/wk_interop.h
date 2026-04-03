@@ -529,6 +529,7 @@ bool RenderElement_hasBackground(const void*);
 bool RenderElement_hasSelfPaintingLayer(const void*);
 bool RenderElement_checkForRepaintDuringLayout(const void*);
 bool RenderElement_isContinuation(const void*);
+bool RenderElement_createsNewFormattingContext(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 void* RenderBox_nextSiblingBox(const void*);

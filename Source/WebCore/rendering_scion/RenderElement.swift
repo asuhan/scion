@@ -1479,7 +1479,9 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func createsNewFormattingContext() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderElement_createsNewFormattingContext(id())
+    }
     // Writing-mode changes establish an independent block formatting context
     // if the box is a block-container.
     // https://drafts.csswg.org/css-writing-modes/#block-flow
