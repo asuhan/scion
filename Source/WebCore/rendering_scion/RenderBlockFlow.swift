@@ -1996,8 +1996,8 @@ class RenderBlockFlowWrapper: RenderBlockWrapper {
   }
 
   override func containsFloats() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return floatingObjects != nil && !floatingObjects!.set().isEmpty()
   }
 
   func containsFloat(renderer: RenderBoxWrapper) -> Bool {
