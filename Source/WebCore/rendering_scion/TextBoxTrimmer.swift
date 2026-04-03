@@ -54,6 +54,11 @@ class TextBoxTrimmer {
   static func lastInlineFormattingContextRootForTrimEnd(blockContainer: RenderBlockFlowWrapper)
     -> RenderBlockFlowWrapper?
   {
+    let textBoxTrimValue = textBoxTrim(blockContainer)
+    let hasTextBoxTrimEnd = textBoxTrimValue == .TrimEnd || textBoxTrimValue == .TrimBoth
+    if !hasTextBoxTrimEnd {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
