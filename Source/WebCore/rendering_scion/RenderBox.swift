@@ -2206,7 +2206,11 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func computeAndSetBlockDirectionMargins(containingBlock: RenderBlockWrapper) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      let containingBlockRaw = (containingBlock as! RenderViewWrapper).getWk()
+      wk_interop.RenderBox_computeAndSetBlockDirectionMargins(id(), containingBlockRaw)
+      return
+    }
     var marginBefore = LayoutUnit()
     var marginAfter = LayoutUnit()
     computeBlockDirectionMargins(
