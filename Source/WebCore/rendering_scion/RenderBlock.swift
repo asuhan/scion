@@ -2945,7 +2945,7 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func isSelfCollapsingBlock() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBlock_isSelfCollapsingBlock(id()) }
     // We are not self-collapsing if we
     // (a) have a non-zero height according to layout (an optimization to avoid wasting time)
     // (b) are a table,

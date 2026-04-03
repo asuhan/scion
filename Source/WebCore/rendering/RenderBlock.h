@@ -405,7 +405,9 @@ private:
 
     ASCIILiteral renderName() const override;
 
+public:
     bool isSelfCollapsingBlock() const override;
+private:
     virtual bool childrenPreventSelfCollapsing() const;
 
     // FIXME-BLOCKFLOW: Remove virtualizaion when all callers have moved to RenderBlockFlow

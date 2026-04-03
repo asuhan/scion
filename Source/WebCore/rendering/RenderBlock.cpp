@@ -108,6 +108,11 @@ extern "C" WEBCORE_EXPORT void RenderBlock_layout(void* p)
     static_cast<WebCore::RenderBlock*>(p)->layout();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBlock_isSelfCollapsingBlock(const void* p)
+{
+    return static_cast<const WebCore::RenderBlock*>(p)->isSelfCollapsingBlock();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;
