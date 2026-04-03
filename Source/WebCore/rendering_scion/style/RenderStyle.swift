@@ -872,13 +872,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func gridAutoRepeatColumnsInsertionPoint() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_gridAutoRepeatColumnsInsertionPoint(p!)
   }
 
   func gridAutoRepeatRowsInsertionPoint() -> UInt32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_gridAutoRepeatRowsInsertionPoint(p!)
   }
 
   func gridAutoRepeatColumnsType() -> AutoRepeatType {
