@@ -541,6 +541,7 @@ void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
 int32_t RenderBox_x(const void*);
 int32_t RenderBox_y(const void*);
+int32_t RenderBox_height(const void*);
 void RenderBox_setX(void*, int32_t);
 void RenderBox_setY(void*, int32_t);
 void* RenderBox_nextSiblingBox(const void*);

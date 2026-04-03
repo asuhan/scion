@@ -582,7 +582,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func height() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return LayoutUnit.fromRawValue(value: RenderBox_height(id())) }
     return m_frameRect.height()
   }
 

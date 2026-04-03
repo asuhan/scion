@@ -111,6 +111,12 @@ extern "C" WEBCORE_EXPORT int32_t RenderBox_y(const void* p)
     return y.rawValue();
 }
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_height(const void* p)
+{
+    const auto height = static_cast<const WebCore::RenderBox*>(p)->height();
+    return height.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_setX(void* p, int32_t x)
 {
     static_cast<WebCore::RenderBox*>(p)->setX(WebCore::LayoutUnit::fromRawValue(x));
