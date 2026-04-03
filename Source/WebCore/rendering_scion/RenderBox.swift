@@ -4699,7 +4699,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func avoidsFloats() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBox_avoidsFloats(id()) }
     return isReplacedOrInlineBlock() || isLegend() || isFieldset() || createsNewFormattingContext()
       || (element()?.isFormControlElement() ?? false)
   }

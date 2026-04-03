@@ -272,6 +272,11 @@ extern "C" WEBCORE_EXPORT void RenderBox_repaintDuringLayoutIfMoved(void* p, str
         WebCore::LayoutUnit::fromRawValue(rect.height)));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_avoidsFloats(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->avoidsFloats();
+}
+
 extern "C" WEBCORE_EXPORT void RenderBox_flipForWritingMode(void* p, struct LayoutPointRaw position)
 {
     static_cast<WebCore::RenderBox*>(p)->flipForWritingMode(WebCore::LayoutPoint(
