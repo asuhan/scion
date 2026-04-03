@@ -964,6 +964,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_marginAfter(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->marginAfter();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_marginStartUsing(const void* p, const void* other_style_raw)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->marginStartUsing(static_cast<const WebCore::RenderStyle*>(other_style_raw));
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();

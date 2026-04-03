@@ -3862,8 +3862,10 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func availableLogicalWidth() -> LayoutUnit {
-    assert(!isNativeImpl())
-    return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(id()))
+    if !isNativeImpl() {
+      return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_availableLogicalWidth(id()))
+    }
+    return contentLogicalWidth()
   }
 
   func availableLogicalHeight(heightType: AvailableLogicalHeightType) -> LayoutUnit {
