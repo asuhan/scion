@@ -476,6 +476,7 @@ bool RenderObject_isRenderInline(const void*);
 bool RenderObject_isRenderBox(const void*);
 bool RenderObject_isImage(const void*);
 bool RenderObject_isFieldset(const void*);
+bool RenderObject_isRenderView(const void*);
 bool RenderObject_isHorizontalWritingMode(const void*);
 bool RenderObject_isExcludedFromNormalLayout(const void*);
 bool RenderObject_selfNeedsLayout(const void*);

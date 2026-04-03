@@ -110,6 +110,11 @@ extern "C" WEBCORE_EXPORT bool RenderObject_isOutOfFlowPositioned(const void* p)
     return static_cast<const WebCore::RenderObject*>(p)->isOutOfFlowPositioned();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isRenderView(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isRenderView();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderObject_isHorizontalWritingMode(const void* p)
 {
     return static_cast<const WebCore::RenderObject*>(p)->isHorizontalWritingMode();
