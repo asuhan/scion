@@ -989,6 +989,16 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_aspectRatioType(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->aspectRatioType());
 }
 
+extern "C" WEBCORE_EXPORT double RenderStyle_aspectRatioWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->aspectRatioWidth();
+}
+
+extern "C" WEBCORE_EXPORT double RenderStyle_aspectRatioHeight(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->aspectRatioHeight();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_marginRight(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->marginRight();
