@@ -813,13 +813,11 @@ class RenderStyleWrapper: Equatable {
   func aspectRatioHeight() -> Float64 { return wk_interop.RenderStyle_aspectRatioHeight(p!) }
 
   func aspectRatioLogicalWidth() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_aspectRatioLogicalWidth(p!)
   }
 
   func aspectRatioLogicalHeight() -> Float64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_aspectRatioLogicalHeight(p!)
   }
 
   func logicalAspectRatio() -> Float64 {
