@@ -534,6 +534,7 @@ bool RenderElement_isContinuation(const void*);
 bool RenderElement_createsNewFormattingContext(const void*);
 void RenderElement_layoutIfNeeded(void*);
 bool RenderElement_isWritingModeRoot(const void*);
+int32_t RenderBox_y(const void*);
 void* RenderBox_nextSiblingBox(const void*);
 int32_t RenderBox_marginBefore(const void*, const void*);
 void RenderBox_setOverridingLogicalWidthLength(void*, const void*);

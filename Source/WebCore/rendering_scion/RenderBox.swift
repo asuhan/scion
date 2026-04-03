@@ -572,7 +572,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func y() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_y(id())) }
     return m_frameRect.y()
   }
 

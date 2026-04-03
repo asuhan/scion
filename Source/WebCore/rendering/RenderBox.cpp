@@ -99,6 +99,12 @@
 #include <wtf/StackStats.h>
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT int32_t RenderBox_y(const void* p)
+{
+    const auto y = static_cast<const WebCore::RenderBox*>(p)->y();
+    return y.rawValue();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderBox_nextSiblingBox(const void* box_raw_ptr)
 {
     return static_cast<const WebCore::RenderBox*>(box_raw_ptr)->nextSiblingBox();
