@@ -930,6 +930,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_borderLeftStyle(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->borderLeftStyle());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_borderLeftIsTransparent(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderLeftIsTransparent();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_borderRightWidth(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->borderRightWidth();
