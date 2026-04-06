@@ -970,6 +970,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_borderBottomWidth(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->borderBottomWidth();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_borderBottomStyle(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->borderBottomStyle());
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_outlineSize(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->outlineSize();
