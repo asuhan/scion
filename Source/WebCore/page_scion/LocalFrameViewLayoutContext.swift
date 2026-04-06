@@ -85,8 +85,10 @@ class LocalFrameViewLayoutContextWrapper {
   // last layout location, in order to repaint correctly.
   // If we're doing a full repaint m_layoutState will be 0, but in that case layoutDelta doesn't matter.
   func layoutDelta() -> LayoutSizeWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let delta = wk_interop.LocalFrameViewLayoutContext_layoutDelta(p)
+    return LayoutSizeWrapper(
+      width: LayoutUnit.fromRawValue(value: delta.width),
+      height: LayoutUnit.fromRawValue(value: delta.height))
   }
 
   func addLayoutDelta(delta: LayoutSizeWrapper) {

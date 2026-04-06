@@ -74,6 +74,12 @@ struct LayoutSizeRaw {
     int32_t height;
 };
 
+extern "C" WEBCORE_EXPORT LayoutSizeRaw LocalFrameViewLayoutContext_layoutDelta(const void* p)
+{
+    const auto delta = static_cast<const WebCore::LocalFrameViewLayoutContext*>(p)->layoutDelta();
+    return { delta.width().rawValue(), delta.height().rawValue() };
+}
+
 extern "C" WEBCORE_EXPORT void LocalFrameViewLayoutContext_addLayoutDelta(void* p, LayoutSizeRaw delta_raw)
 {
     const auto delta = WebCore::LayoutSize { WebCore::LayoutUnit::fromRawValue(delta_raw.width), WebCore::LayoutUnit::fromRawValue(delta_raw.height) };
