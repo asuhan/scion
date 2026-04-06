@@ -35,4 +35,9 @@ RenderLayer* RenderLayerModelObjectScion::layer() const
     return static_cast<RenderLayer*>(RenderLayerModelObjectNative_layer(m_handle));
 }
 
+CheckedPtr<RenderLayer> RenderLayerModelObjectScion::checkedLayer() const
+{
+    return layer();
+}
+
 }

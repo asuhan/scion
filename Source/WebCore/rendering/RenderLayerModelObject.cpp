@@ -663,6 +663,7 @@ bool RenderLayerModelObject::pointInSVGClippingArea(const FloatPoint& point) con
 
 CheckedPtr<RenderLayer> RenderLayerModelObject::checkedLayer() const
 {
+    if (m_scion) { return m_scion->checkedLayer(); }
     return m_layer.get();
 }
 

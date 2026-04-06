@@ -46,6 +46,8 @@ public:
 
     RenderLayer* layer() const;
 
+    CheckedPtr<RenderLayer> checkedLayer() const;
+
     void* handle() const { return m_handle; }
 
 private:
