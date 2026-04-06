@@ -923,8 +923,7 @@ class RenderStyleWrapper: Equatable {
   func columnCount() -> UInt16 { return wk_interop.RenderStyle_columnCount(p!) }
 
   func columnRuleStyle() -> BorderStyle {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderStyle(rawValue: wk_interop.RenderStyle_columnRuleStyle(p!))!
   }
 
   func columnRuleWidth() -> UInt16 {
