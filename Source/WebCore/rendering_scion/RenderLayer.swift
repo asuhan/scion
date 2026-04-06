@@ -465,7 +465,10 @@ class RenderLayerWrapper {
   }
 
   func renderer() -> RenderLayerModelObjectWrapper {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return createRenderObjectWrapper(wk_interop.RenderLayer_renderer(pInterop!))
+        as! RenderLayerModelObjectWrapper
+    }
     return m_renderer!
   }
 
