@@ -960,6 +960,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_borderTopStyle(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->borderTopStyle());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_borderTopIsTransparent(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->borderTopIsTransparent();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_borderBottomWidth(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->borderBottomWidth();

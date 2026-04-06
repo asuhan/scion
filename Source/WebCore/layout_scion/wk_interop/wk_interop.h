@@ -784,6 +784,7 @@ uint8_t RenderStyle_borderRightStyle(const void*);
 bool RenderStyle_borderRightIsTransparent(const void*);
 float RenderStyle_borderTopWidth(const void*);
 uint8_t RenderStyle_borderTopStyle(const void*);
+bool RenderStyle_borderTopIsTransparent(const void*);
 float RenderStyle_borderBottomWidth(const void*);
 float RenderStyle_outlineSize(const void*);
 bool RenderStyle_hasOutlineInVisualOverflow(const void*);
