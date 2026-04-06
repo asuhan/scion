@@ -2548,10 +2548,7 @@ class RenderStyleWrapper: Equatable {
     return PaintOrder(rawValue: wk_interop.RenderStyle_paintOrder(p!))!
   }
 
-  func joinStyle() -> LineJoin {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func joinStyle() -> LineJoin { return LineJoin(rawValue: wk_interop.RenderStyle_joinStyle(p!))! }
 
   private func strokeWidth() -> LengthWrapper {
     // TODO(asuhan): implement this

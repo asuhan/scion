@@ -887,6 +887,7 @@ uint8_t RenderStyle_resize(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
 uint8_t RenderStyle_paintOrder(const void*);
+uint8_t RenderStyle_joinStyle(const void*);
 void* RenderStyle_shapeOutside(const void*);
 void* RenderStyle_offsetPath(const void*);
 struct PathOperationRaw RenderStyle_clipPath(const void*);
