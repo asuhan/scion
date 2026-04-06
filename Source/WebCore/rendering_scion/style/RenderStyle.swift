@@ -1950,8 +1950,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func typographicMode() -> TypographicMode {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_typographicMode(p!) ? .Vertical : .Horizontal
   }
 
   func imageOrientation() -> ImageOrientation {
