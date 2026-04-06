@@ -2554,10 +2554,7 @@ class RenderStyleWrapper: Equatable {
     return LengthWrapper(p: wk_interop.RenderStyle_strokeWidth(p!))
   }
 
-  func hasVisibleStroke() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasVisibleStroke() -> Bool { return wk_interop.RenderStyle_hasVisibleStroke(p!) }
 
   func computedStrokeColor() -> ColorWrapper {
     // TODO(asuhan): implement this

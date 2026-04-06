@@ -889,6 +889,7 @@ uint8_t RenderStyle_lineSnap(const void*);
 uint8_t RenderStyle_paintOrder(const void*);
 uint8_t RenderStyle_joinStyle(const void*);
 const void* RenderStyle_strokeWidth(const void*);
+bool RenderStyle_hasVisibleStroke(const void*);
 void* RenderStyle_shapeOutside(const void*);
 void* RenderStyle_offsetPath(const void*);
 struct PathOperationRaw RenderStyle_clipPath(const void*);

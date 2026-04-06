@@ -1492,6 +1492,11 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_strokeWidth(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->strokeWidth();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasVisibleStroke(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasVisibleStroke();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();
