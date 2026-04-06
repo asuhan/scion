@@ -1000,6 +1000,26 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasOutlineInVisualOverflow(const void
     return static_cast<const WebCore::RenderStyle*>(p)->hasOutlineInVisualOverflow();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_clipLeft(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->clipLeft();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_clipRight(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->clipRight();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_clipTop(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->clipTop();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_clipBottom(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->clipBottom();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_clear(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->clear());

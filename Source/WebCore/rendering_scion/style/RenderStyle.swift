@@ -1096,24 +1096,18 @@ class RenderStyleWrapper: Equatable {
     return wk_interop.RenderStyle_hasOutlineInVisualOverflow(p!)
   }
 
-  func clipLeft() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func clipLeft() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_clipLeft(p!)) }
 
   func clipRight() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_clipRight(p!))
   }
 
   func clipTop() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_clipTop(p!))
   }
 
   func clipBottom() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_clipBottom(p!))
   }
 
   func clear() -> Clear {
