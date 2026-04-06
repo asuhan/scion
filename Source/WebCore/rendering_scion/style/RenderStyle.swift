@@ -1135,8 +1135,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func fieldSizing() -> FieldSizing {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_fieldSizing(p!) ? .Content : .Fixed
   }
 
   func textIndent() -> LengthWrapper {
