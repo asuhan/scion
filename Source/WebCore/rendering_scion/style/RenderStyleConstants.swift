@@ -402,7 +402,7 @@ enum ContentDistribution: UInt8 {
   case Stretch
 }
 
-enum TextSecurity {
+enum TextSecurity: UInt8 {
   case None
   case Disc
   case Circle

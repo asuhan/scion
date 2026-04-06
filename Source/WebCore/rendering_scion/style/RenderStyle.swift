@@ -1922,8 +1922,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textSecurity() -> TextSecurity {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextSecurity(rawValue: wk_interop.RenderStyle_textSecurity(p!))!
   }
 
   func writingMode() -> WritingMode {
