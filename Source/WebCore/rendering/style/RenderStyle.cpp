@@ -990,6 +990,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_outlineWidth(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->outlineWidth();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_outlineStyleIsAuto(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->outlineStyleIsAuto() == WebCore::OutlineIsAuto::On;
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_hasOutlineInVisualOverflow(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->hasOutlineInVisualOverflow();

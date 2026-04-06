@@ -1089,8 +1089,7 @@ class RenderStyleWrapper: Equatable {
   func outlineWidth() -> Float32 { return wk_interop.RenderStyle_outlineWidth(p!) }
 
   func outlineStyleIsAuto() -> OutlineIsAuto {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_outlineStyleIsAuto(p!) ? .On : .Off
   }
 
   func hasOutlineInVisualOverflow() -> Bool {

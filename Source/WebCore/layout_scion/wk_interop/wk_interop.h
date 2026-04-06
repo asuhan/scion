@@ -790,6 +790,7 @@ uint8_t RenderStyle_borderBottomStyle(const void*);
 bool RenderStyle_borderBottomIsTransparent(const void*);
 float RenderStyle_outlineSize(const void*);
 float RenderStyle_outlineWidth(const void*);
+bool RenderStyle_outlineStyleIsAuto(const void*);
 bool RenderStyle_hasOutlineInVisualOverflow(const void*);
 uint8_t RenderStyle_clear(const void*);
 const void* RenderStyle_textIndent(const void*);
