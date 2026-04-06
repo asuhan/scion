@@ -195,6 +195,17 @@ extern "C" WEBCORE_EXPORT void RenderLayer_updateTransform(void* p)
     static_cast<WebCore::RenderLayer*>(p)->updateTransform();
 }
 
+struct EnclosingCompositingLayerStatusRaw {
+    bool fullRepaintAlreadyScheduled;
+    void* layer;
+};
+
+extern "C" WEBCORE_EXPORT EnclosingCompositingLayerStatusRaw RenderLayer_enclosingCompositingLayerForRepaint(const void* p, bool exclude_self)
+{
+    const auto status = static_cast<const WebCore::RenderLayer*>(p)->enclosingCompositingLayerForRepaint(exclude_self ? WebCore::IncludeSelfOrNot::ExcludeSelf : WebCore::IncludeSelfOrNot::IncludeSelf);
+    return { status.fullRepaintAlreadyScheduled, status.layer };
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderLayer_staticInlinePosition(const void* p)
 {
     const auto position = static_cast<const WebCore::RenderLayer*>(p)->staticInlinePosition();

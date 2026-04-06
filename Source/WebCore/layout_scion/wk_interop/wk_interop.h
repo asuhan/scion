@@ -266,6 +266,11 @@ struct StyleContentAlignmentDataRaw {
     uint8_t overflow;
 };
 
+struct EnclosingCompositingLayerStatusRaw {
+    bool fullRepaintAlreadyScheduled;
+    void* layer;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -997,6 +1002,7 @@ void RenderLayer_insertOnlyThisLayer(void*, bool);
 void RenderLayer_setBackingNeedsRepaint(void*, bool);
 void RenderLayer_styleChanged(void*, uint8_t, const void*);
 void RenderLayer_updateTransform(void*);
+struct EnclosingCompositingLayerStatusRaw RenderLayer_enclosingCompositingLayerForRepaint(const void*, bool);
 int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);
 void RenderLayer_setStaticInlinePosition(void* p, int32_t position);

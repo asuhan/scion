@@ -1828,7 +1828,13 @@ class RenderLayerWrapper {
   func enclosingCompositingLayerForRepaint(includeSelf: IncludeSelfOrNot = .IncludeSelf)
     -> EnclosingCompositingLayerStatus
   {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      let status = wk_interop.RenderLayer_enclosingCompositingLayerForRepaint(
+        layerId(), includeSelf == .ExcludeSelf)
+      return EnclosingCompositingLayerStatus(
+        fullRepaintAlreadyScheduled: status.fullRepaintAlreadyScheduled,
+        layer: status.layer != nil ? RenderLayerWrapper(p: status.layer!) : nil)
+    }
     var fullRepaintAlreadyScheduled =
       RenderLayerWrapper.isEligibleForFullRepaintCheck(layer: self) && needsFullRepaint()
     if includeSelf == .IncludeSelf,
