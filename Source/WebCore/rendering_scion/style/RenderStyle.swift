@@ -2551,8 +2551,7 @@ class RenderStyleWrapper: Equatable {
   func joinStyle() -> LineJoin { return LineJoin(rawValue: wk_interop.RenderStyle_joinStyle(p!))! }
 
   private func strokeWidth() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_strokeWidth(p!))
   }
 
   func hasVisibleStroke() -> Bool {

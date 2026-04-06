@@ -1487,6 +1487,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_joinStyle(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->joinStyle());
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_strokeWidth(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->strokeWidth();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();
