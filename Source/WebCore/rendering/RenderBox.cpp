@@ -319,6 +319,11 @@ extern "C" WEBCORE_EXPORT struct LayoutRectRaw RenderBox_layoutOverflowRectForPr
     return { rect.x().rawValue(), rect.y().rawValue(), rect.width().rawValue(), rect.height().rawValue() };
 }
 
+extern "C" WEBCORE_EXPORT bool RenderBox_needsPreferredWidthsRecalculation(const void* p)
+{
+    return static_cast<const WebCore::RenderBox*>(p)->needsPreferredWidthsRecalculation();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderBox_hasRelativeLogicalHeight(const void* p)
 {
     return static_cast<const WebCore::RenderBox*>(p)->hasRelativeLogicalHeight();

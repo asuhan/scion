@@ -4886,7 +4886,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func needsPreferredWidthsRecalculation() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderBox_needsPreferredWidthsRecalculation(id()) }
     return style().paddingStart().isPercentOrCalculated()
       || style().paddingEnd().isPercentOrCalculated()
       || (style().hasAspectRatio()
