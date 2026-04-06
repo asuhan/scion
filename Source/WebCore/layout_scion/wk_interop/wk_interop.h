@@ -777,6 +777,7 @@ uint8_t RenderStyle_textDecorationsInEffect(const void*);
 uint8_t RenderStyle_textDecorationLine(const void*);
 uint8_t RenderStyle_textDecorationStyle(const void*);
 float RenderStyle_borderLeftWidth(const void*);
+uint8_t RenderStyle_borderLeftStyle(const void*);
 float RenderStyle_borderRightWidth(const void*);
 float RenderStyle_borderTopWidth(const void*);
 float RenderStyle_borderBottomWidth(const void*);
