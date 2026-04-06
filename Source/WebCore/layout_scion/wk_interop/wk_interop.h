@@ -808,6 +808,7 @@ uint32_t RenderStyle_gridAutoRepeatRowsInsertionPoint(const void*);
 uint8_t RenderStyle_gridAutoRepeatColumnsType(const void*);
 uint8_t RenderStyle_gridAutoRepeatRowsType(const void*);
 bool RenderStyle_isGridAutoFlowDirectionColumn(const void*);
+bool RenderStyle_isGridAutoFlowAlgorithmDense(const void*);
 const void* RenderStyle_marginRight(const void*);
 const void* RenderStyle_paddingLeft(const void*);
 const void* RenderStyle_paddingRight(const void*);
