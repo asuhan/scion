@@ -564,8 +564,18 @@ class RenderElementWrapper: RenderObjectWrapper {
   func dirtyLineFromChangedChild() {}
 
   func setChildNeedsLayout(markParents: MarkingBehavior = .MarkContainingBlockChain) {
-    assert(!isNativeImpl())
-    wk_interop.RenderElement_setChildNeedsLayout(id(), markParents.rawValue)
+    if !isNativeImpl() {
+      wk_interop.RenderElement_setChildNeedsLayout(id(), markParents.rawValue)
+      return
+    }
+    assert(!isSetNeedsLayoutForbidden())
+    if normalChildNeedsLayout() {
+      return
+    }
+    setNormalChildNeedsLayoutBit(b: true)
+    if markParents == .MarkContainingBlockChain {
+      scheduleLayout(layoutRoot: markContainingBlocksForLayout())
+    }
   }
 
   func setOutOfFlowChildNeedsStaticPositionLayout() {
