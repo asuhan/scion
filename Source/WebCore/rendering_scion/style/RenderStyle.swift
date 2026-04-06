@@ -1270,10 +1270,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func isFixedTableLayout() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isFixedTableLayout() -> Bool { return wk_interop.RenderStyle_isFixedTableLayout(p!) }
 
   func marginTop() -> LengthWrapper {
     return LengthWrapper(p: wk_interop.RenderStyle_marginTop(p!))
