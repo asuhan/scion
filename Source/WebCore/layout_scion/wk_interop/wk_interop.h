@@ -679,6 +679,7 @@ bool RenderStyle_columnSpan(const void*);
 uint16_t RenderStyle_columnCount(const void*);
 uint8_t RenderStyle_columnRuleStyle(const void*);
 uint16_t RenderStyle_columnRuleWidth(const void*);
+bool RenderStyle_columnRuleIsTransparent(const void*);
 const void* RenderStyle_textEmphasisMarkString(const void*);
 uint8_t RenderStyle_rubyPosition(const void*);
 bool RenderStyle_isInterCharacterRubyPosition(const void*);

@@ -929,8 +929,7 @@ class RenderStyleWrapper: Equatable {
   func columnRuleWidth() -> UInt16 { return wk_interop.RenderStyle_columnRuleWidth(p!) }
 
   func columnRuleIsTransparent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_columnRuleIsTransparent(p!)
   }
 
   func columnSpan() -> ColumnSpan {
