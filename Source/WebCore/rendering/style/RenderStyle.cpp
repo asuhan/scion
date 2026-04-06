@@ -909,6 +909,12 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationsInEffect(const void
     return textDecorationsInEffect.toRaw();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textDecorationLine(const void* p)
+{
+    const auto textDecorationLine = static_cast<const WebCore::RenderStyle*>(p)->textDecorationLine();
+    return textDecorationLine.toRaw();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_borderLeftWidth(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->borderLeftWidth();

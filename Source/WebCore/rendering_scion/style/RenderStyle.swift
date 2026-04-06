@@ -998,8 +998,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textDecorationLine() -> TextDecorationLine {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextDecorationLine(rawValue: wk_interop.RenderStyle_textDecorationLine(p!))
   }
 
   func textDecorationStyle() -> TextDecorationStyle {
