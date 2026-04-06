@@ -67,6 +67,12 @@ class LayoutStateWrapper {
     m_formattingContextLogicalWidthFunction = nil
   }
 
+  deinit {
+    if interopOwner {
+      wk_interop.LayoutState_destroy(p)
+    }
+  }
+
   func updateQuirksMode(_ document: Document) {
     let quirksMode = { () -> QuirksMode in
       if document.inLimitedQuirksMode() {
@@ -221,6 +227,7 @@ class LayoutStateWrapper {
 
   private var blockFormattingStates: [UInt: BlockFormattingState] = [:]
   var p: UnsafeMutableRawPointer?
+  var interopOwner = false
 
   private var m_layoutBoxToBoxGeometry: [ObjectIdentifier: BoxGeometry] = [:]
   private var m_quirksMode: QuirksMode = .No

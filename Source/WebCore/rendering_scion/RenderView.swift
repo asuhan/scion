@@ -52,10 +52,14 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     super.init(type: .View, document: document, style: style)
     m_frameView = document.view()
     m_initialContainingBlock = InitialContainingBlock(style: RenderStyleWrapper.clone(style: style))
+    m_initialContainingBlock!.p = InitialContainingBlock_create(style.p!)
+    m_initialContainingBlock!.interopOwner = true
     m_layoutState = LayoutStateWrapper(
       document, m_initialContainingBlock!, .Primary,
       LayoutIntegration.layoutWithFormattingContextForBox,
       LayoutIntegration.formattingContextRootLogicalWidthForType)
+    m_layoutState!.p = LayoutState_createForView(document.p, m_initialContainingBlock!.p)
+    m_layoutState!.interopOwner = true
     m_selection = RenderSelection(self)
 
     // FIXME: We should find a way to enforce this at compile time.
@@ -231,9 +235,16 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     return frameView()  // TODO(asuhan): just remove this wrapper, not needed in Swift
   }
 
+  func initialContainingBlock() -> InitialContainingBlock {
+    assert(isNativeImpl())
+    return m_initialContainingBlock!
+  }
+
   func layoutState() -> LayoutStateWrapper {
-    assert(!isNativeImpl())
-    return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(id()))
+    if !isNativeImpl() {
+      return LayoutStateWrapper(p: wk_interop.RenderView_layoutState(id()))
+    }
+    return m_layoutState!
   }
 
   func updateQuirksMode() {

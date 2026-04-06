@@ -42,6 +42,11 @@ class RenderLayer;
 class RenderLayerCompositor;
 class RenderFragmentContainer;
 
+namespace Layout {
+    class InitialContainingBlock;
+    class LayoutState;
+}
+
 DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(WebCore_RenderViewScion);
 
 class RenderViewScion final : public CanMakeCheckedPtr<RenderViewScion> {
@@ -108,6 +113,10 @@ public:
     LocalFrameView& frameView() const;
 
     Ref<LocalFrameView> protectedFrameView() const;
+
+    Layout::InitialContainingBlock& initialContainingBlock();
+
+    Layout::LayoutState& layoutState();
 
     bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;
 

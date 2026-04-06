@@ -30,6 +30,17 @@
 #include "RenderStyle.h"
 #include <wtf/TZoneMallocInlines.h>
 
+extern "C" WEBCORE_EXPORT const void* InitialContainingBlock_create(const void* style_raw)
+{
+    const auto& style = *static_cast<const WebCore::RenderStyle*>(style_raw);
+    return new WebCore::Layout::InitialContainingBlock(WebCore::RenderStyle::clone(style));
+}
+
+extern "C" WEBCORE_EXPORT void InitialContainingBlock_destroy(const void* p)
+{
+    delete static_cast<const WebCore::Layout::InitialContainingBlock*>(p);
+}
+
 namespace WebCore {
 namespace Layout {
 

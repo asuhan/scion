@@ -277,5 +277,5 @@ class Document: TreeScopeWrapper {
 
   func ContainerNode() -> ContainerNodeWrapper { return ContainerNodeWrapper(p: p) }
 
-  private let p: UnsafeMutableRawPointer
+  let p: UnsafeMutableRawPointer
 }

@@ -25,6 +25,7 @@
 
 #include "RenderViewScion.h"
 #include "Document.h"
+#include "LayoutInitialContainingBlock.h"
 #include "RenderFragmentContainer.h"
 #include "RenderLayer.h"
 #include "RenderSelection.h"
@@ -84,6 +85,10 @@ extern "C" int32_t RenderViewScion_viewLogicalWidth(const void*);
 extern "C" int32_t RenderViewScion_viewLogicalHeight(const void*);
 
 extern "C" void* RenderViewScion_frameView(const void*);
+
+extern "C" const void* RenderViewScion_initialContainingBlock(const void*);
+
+extern "C" void* RenderViewScion_layoutState(const void*);
 
 extern "C" bool RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(const void*);
 
@@ -313,6 +318,16 @@ LocalFrameView& RenderViewScion::frameView() const
 Ref<LocalFrameView> RenderViewScion::protectedFrameView() const
 {
     return frameView();
+}
+
+Layout::InitialContainingBlock& RenderViewScion::initialContainingBlock()
+{
+    return *const_cast<Layout::InitialContainingBlock*>(static_cast<const Layout::InitialContainingBlock*>(RenderViewScion_initialContainingBlock(m_handle)));
+}
+
+Layout::LayoutState& RenderViewScion::layoutState()
+{
+    return *static_cast<Layout::LayoutState*>(RenderViewScion_layoutState(m_handle));
 }
 
 bool RenderViewScion::needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const

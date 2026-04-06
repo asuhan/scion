@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class InitialContainingBlock: ElementBoxWrapper {
   init(style: RenderStyleWrapper, firstLineStyle: RenderStyleWrapper? = nil) {
     super.init(
@@ -33,4 +35,12 @@ class InitialContainingBlock: ElementBoxWrapper {
   override init(wrapperStyle: RenderStyleWrapper = RenderStyleWrapper()) {
     super.init(wrapperStyle: wrapperStyle)
   }
+
+  deinit {
+    if interopOwner {
+      wk_interop.InitialContainingBlock_destroy(p!)
+    }
+  }
+
+  var interopOwner = false
 }

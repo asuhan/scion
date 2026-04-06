@@ -80,9 +80,9 @@ public:
     LocalFrameView& frameView() const;
     Ref<LocalFrameView> protectedFrameView() const;
 
-    Layout::InitialContainingBlock& initialContainingBlock() { return m_initialContainingBlock.get(); }
+    Layout::InitialContainingBlock& initialContainingBlock();
     const Layout::InitialContainingBlock& initialContainingBlock() const { return m_initialContainingBlock.get(); }
-    Layout::LayoutState& layoutState() { return *m_layoutState; }
+    Layout::LayoutState& layoutState();
     void updateQuirksMode();
 
     bool needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly() const;

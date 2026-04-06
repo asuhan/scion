@@ -88,6 +88,21 @@ extern "C" WEBCORE_EXPORT void* RenderView_scion(const void* p)
     return static_cast<const WebCore::RenderView*>(p)->scion();
 }
 
+extern "C" WEBCORE_EXPORT void* LayoutState_createForView(const void* document_raw, const void* root_container_raw)
+{
+    const auto& document = *static_cast<const WebCore::Document*>(document_raw);
+    const auto& rootContainer = *static_cast<const WebCore::Layout::ElementBox*>(root_container_raw);
+    return new WebCore::Layout::LayoutState(
+        document, rootContainer, WebCore::Layout::LayoutState::Type::Primary,
+        WebCore::LayoutIntegration::layoutWithFormattingContextForBox,
+        WebCore::LayoutIntegration::formattingContextRootLogicalWidthForType);
+}
+
+extern "C" WEBCORE_EXPORT void LayoutState_destroy(const void* p)
+{
+    delete static_cast<const WebCore::Layout::LayoutState*>(p);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderView);
@@ -870,6 +885,17 @@ Ref<LocalFrameView> RenderView::protectedFrameView() const {
         return m_scion->protectedFrameView();
     }
     return m_frameView.get();
+}
+
+Layout::InitialContainingBlock& RenderView::initialContainingBlock() {
+    if (m_scion) { return m_scion->initialContainingBlock(); }
+    return m_initialContainingBlock.get();
+}
+
+Layout::LayoutState& RenderView::layoutState()
+{
+    if (m_scion) { return m_scion->layoutState(); }
+    return *m_layoutState;
 }
 
 FloatSize RenderView::sizeForCSSSmallViewportUnits() const

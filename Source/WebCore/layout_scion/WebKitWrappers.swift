@@ -608,6 +608,18 @@ func RenderViewScion_frameView(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawP
   return view.frameView().p
 }
 
+@_cdecl("RenderViewScion_initialContainingBlock")
+func RenderViewScion_initialContainingBlock(_ viewRaw: UnsafeRawPointer) -> UnsafeRawPointer {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.initialContainingBlock().p!
+}
+
+@_cdecl("RenderViewScion_layoutState")
+func RenderViewScion_layoutState(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.layoutState().p!
+}
+
 @_cdecl("RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly")
 func RenderViewScion_needsRepaintHackAfterCompositingLayerUpdateForDebugOverlaysOnly(
   _ viewRaw: UnsafeRawPointer
