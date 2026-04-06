@@ -160,6 +160,8 @@ extern "C" void* RepaintRegionAccumulator_create(void*);
 
 extern "C" void RepaintRegionAccumulator_destroy(void*);
 
+extern "C" bool RenderViewScion_containerQueryBoxesIsEmpty(const void*);
+
 namespace WebCore {
 
 RenderViewScion::~RenderViewScion()
@@ -469,6 +471,9 @@ RenderLayer* RenderViewScion::takeStyleChangeLayerTreeMutationRoot()
 const SingleThreadWeakHashSet<const RenderBox>& RenderViewScion::containerQueryBoxes() const
 {
     static SingleThreadWeakHashSet<const RenderBox> unused;
+    if (containerQueryBoxesIsEmpty()) {
+        return unused;
+    }
     ASSERT_NOT_REACHED();
     return unused;
 }
@@ -521,6 +526,10 @@ void* RenderViewScion::createRepaintRegionAccumulator() const
 void RenderViewScion::destroyRepaintRegionAccumulator(void* accumulatedRepaintRegion)
 {
     RepaintRegionAccumulator_destroy(accumulatedRepaintRegion);
+}
+
+bool RenderViewScion::containerQueryBoxesIsEmpty() const {
+    return RenderViewScion_containerQueryBoxesIsEmpty(m_handle);
 }
 
 }

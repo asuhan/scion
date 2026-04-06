@@ -840,6 +840,12 @@ class RenderViewWrapper: RenderBlockFlowWrapper {
     fatalError("Not implemented")
   }
 
+  // TODO(asuhan): remove when containerQueryBoxes is implemented
+  func containerQueryBoxesIsEmpty() -> Bool {
+    assert(isNativeImpl())
+    return true
+  }
+
   func viewTransitionRoot() -> RenderElementWrapper? {
     assert(isNativeImpl())
     return m_viewTransitionRoot

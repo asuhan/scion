@@ -186,6 +186,9 @@ public:
     void* handle() const { return m_handle; }
 
 private:
+    // TODO(asuhan): remove when containerQueryBoxes is implemented
+    bool containerQueryBoxesIsEmpty() const;
+
     void* m_handle;
     void* m_accumulatedRepaintRegion;
     mutable IntRect m_printRect;

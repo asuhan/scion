@@ -213,7 +213,7 @@ public:
 
     void registerContainerQueryBox(const RenderBox&);
     void unregisterContainerQueryBox(const RenderBox&);
-    const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes() const { return m_containerQueryBoxes; }
+    const SingleThreadWeakHashSet<const RenderBox>& containerQueryBoxes();
 
     SingleThreadWeakPtr<RenderElement> viewTransitionRoot() const;
     void setViewTransitionRoot(RenderElement& renderer);

@@ -848,6 +848,12 @@ func RenderViewScion_shouldUsePrintingLayout(_ viewRaw: UnsafeRawPointer) -> Boo
   return view.shouldUsePrintingLayout()
 }
 
+@_cdecl("RenderViewScion_containerQueryBoxesIsEmpty")
+func RenderViewScion_containerQueryBoxesIsEmpty(_ viewRaw: UnsafeRawPointer) -> Bool {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  return view.containerQueryBoxesIsEmpty()
+}
+
 @_cdecl("RenderViewScion_setWk")
 func RenderViewScion_setWk(_ wk: UnsafeMutableRawPointer, _ viewRaw: UnsafeMutableRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()

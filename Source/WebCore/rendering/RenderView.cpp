@@ -1295,6 +1295,12 @@ void RenderView::unregisterContainerQueryBox(const RenderBox& box)
     m_containerQueryBoxes.remove(box);
 }
 
+const SingleThreadWeakHashSet<const RenderBox>& RenderView::containerQueryBoxes()
+{
+    if (m_scion) { return m_scion->containerQueryBoxes(); }
+    return m_containerQueryBoxes;
+}
+
 void RenderView::addCounterNeedingUpdate(RenderCounter& renderer)
 {
     m_countersNeedingUpdate.add(renderer);
