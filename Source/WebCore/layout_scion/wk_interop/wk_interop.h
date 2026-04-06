@@ -780,6 +780,7 @@ float RenderStyle_borderLeftWidth(const void*);
 uint8_t RenderStyle_borderLeftStyle(const void*);
 bool RenderStyle_borderLeftIsTransparent(const void*);
 float RenderStyle_borderRightWidth(const void*);
+uint8_t RenderStyle_borderRightStyle(const void*);
 float RenderStyle_borderTopWidth(const void*);
 float RenderStyle_borderBottomWidth(const void*);
 float RenderStyle_outlineSize(const void*);

@@ -940,6 +940,11 @@ extern "C" WEBCORE_EXPORT float RenderStyle_borderRightWidth(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->borderRightWidth();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_borderRightStyle(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->borderRightStyle());
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_borderTopWidth(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->borderTopWidth();

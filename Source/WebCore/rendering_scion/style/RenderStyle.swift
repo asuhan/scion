@@ -1022,8 +1022,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func borderRightStyle() -> BorderStyle {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderStyle(rawValue: wk_interop.RenderStyle_borderRightStyle(p!))!
   }
 
   func borderRightIsTransparent() -> Bool {
