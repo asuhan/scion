@@ -775,6 +775,7 @@ const void* RenderStyle_perspectiveOriginY(const void*);
 uint8_t RenderStyle_lineBoxContain(const void*);
 uint8_t RenderStyle_textDecorationsInEffect(const void*);
 uint8_t RenderStyle_textDecorationLine(const void*);
+uint8_t RenderStyle_textDecorationStyle(const void*);
 float RenderStyle_borderLeftWidth(const void*);
 float RenderStyle_borderRightWidth(const void*);
 float RenderStyle_borderTopWidth(const void*);

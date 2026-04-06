@@ -1002,8 +1002,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textDecorationStyle() -> TextDecorationStyle {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TextDecorationStyle(rawValue: wk_interop.RenderStyle_textDecorationStyle(p!))!
   }
 
   func borderLeftWidth() -> Float32 {
