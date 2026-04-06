@@ -741,6 +741,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_columnRuleStyle(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->columnRuleStyle());
 }
 
+extern "C" WEBCORE_EXPORT uint16_t RenderStyle_columnRuleWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->columnRuleWidth();
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textEmphasisMark(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textEmphasisMark());
