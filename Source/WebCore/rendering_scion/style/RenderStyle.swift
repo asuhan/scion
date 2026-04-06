@@ -2545,8 +2545,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func paintOrder() -> PaintOrder {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return PaintOrder(rawValue: wk_interop.RenderStyle_paintOrder(p!))!
   }
 
   func joinStyle() -> LineJoin {
