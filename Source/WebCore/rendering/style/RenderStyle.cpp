@@ -711,6 +711,11 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_textShadowExtent_left(const void* 
     return static_cast<const WebCore::RenderStyle*>(p)->textShadowExtent().left().rawValue();
 }
 
+extern "C" WEBCORE_EXPORT float RenderStyle_textStrokeWidth(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->textStrokeWidth();
+}
+
 extern "C" WEBCORE_EXPORT float RenderStyle_opacity(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->opacity();

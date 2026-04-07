@@ -725,10 +725,7 @@ class RenderStyleWrapper: Equatable {
     return LayoutBoxExtent(top: top, right: right, bottom: bottom, left: left)
   }
 
-  func textStrokeWidth() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func textStrokeWidth() -> Float32 { return wk_interop.RenderStyle_textStrokeWidth(p!) }
 
   func opacity() -> Float32 { return wk_interop.RenderStyle_opacity(p!) }
 

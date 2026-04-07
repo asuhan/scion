@@ -928,6 +928,7 @@ int32_t RenderStyle_textShadowExtent_top(const void*);
 int32_t RenderStyle_textShadowExtent_right(const void*);
 int32_t RenderStyle_textShadowExtent_bottom(const void*);
 int32_t RenderStyle_textShadowExtent_left(const void*);
+float RenderStyle_textStrokeWidth(const void*);
 float RenderStyle_opacity(const void*);
 bool RenderStyle_hasOpacity(const void*);
 uint8_t RenderStyle_usedAppearance(const void*);
