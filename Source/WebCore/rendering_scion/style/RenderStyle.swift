@@ -737,10 +737,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func opacity() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func opacity() -> Float32 { return wk_interop.RenderStyle_opacity(p!) }
 
   func hasOpacity() -> Bool { return wk_interop.RenderStyle_hasOpacity(p!) }
 
