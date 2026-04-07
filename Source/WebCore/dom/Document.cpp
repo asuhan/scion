@@ -483,6 +483,11 @@ extern "C" WEBCORE_EXPORT bool Settings_asyncOverflowScrollingEnabled(const void
     return static_cast<const WebCore::Settings*>(raw)->asyncOverflowScrollingEnabled();
 }
 
+extern "C" WEBCORE_EXPORT bool Settings_backgroundShouldExtendBeyondPage(const void* raw)
+{
+    return static_cast<const WebCore::Settings*>(raw)->backgroundShouldExtendBeyondPage();
+}
+
 extern "C" WEBCORE_EXPORT bool Settings_css3DTransformBackfaceVisibilityInteroperabilityEnabled(const void* raw)
 {
     return static_cast<const WebCore::Settings*>(raw)->css3DTransformBackfaceVisibilityInteroperabilityEnabled();
