@@ -952,6 +952,7 @@ void* LayoutState_geometryForBox(const void*, const void*);
 void* LayoutState_createForView(const void*, const void*);
 void LayoutState_destroy(const void*);
 bool PaintInfo_shouldPaintWithinRoot(void* p, const void*);
+bool PaintInfo_skipRootBackground(const void*);
 struct LayoutPositionRaw InlineDamage_layoutStartPosition(const void*);
 bool InlineDamage_isInlineItemListDirty(const void*);
 void InlineDamage_setInlineItemListClean(void*);

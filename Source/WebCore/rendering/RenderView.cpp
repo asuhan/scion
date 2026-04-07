@@ -108,6 +108,11 @@ extern "C" WEBCORE_EXPORT bool PaintInfo_shouldPaintWithinRoot(const void* p, co
     return static_cast<const WebCore::PaintInfo*>(p)->shouldPaintWithinRoot(*static_cast<const WebCore::RenderObject*>(renderer_raw));
 }
 
+extern "C" WEBCORE_EXPORT bool PaintInfo_skipRootBackground(const void* p)
+{
+    return static_cast<const WebCore::PaintInfo*>(p)->skipRootBackground();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderView);
