@@ -662,6 +662,7 @@ bool RenderView::needsEventRegionUpdateForNonCompositedFrame() const
 
 auto RenderView::computeVisibleRectsInContainer(const RepaintRects& rects, const RenderLayerModelObject* container, VisibleRectContext context) const -> std::optional<RepaintRects>
 {
+    if (m_scion) { return m_scion->computeVisibleRectsInContainer(rects, container, context); }
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
     ASSERT_ARG(container, !container || container == this);

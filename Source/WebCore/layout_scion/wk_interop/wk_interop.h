@@ -271,6 +271,23 @@ struct EnclosingCompositingLayerStatusRaw {
     void* layer;
 };
 
+struct RepaintRectsRaw {
+    struct LayoutRectRaw clippedOverflowRect;
+    struct OptionalLayoutRectRaw outlineBoundsRect;
+};
+
+struct OptionalRepaintRectsRaw {
+    struct RepaintRectsRaw rects;
+    bool is_valid;
+};
+
+struct VisibleRectContextRaw {
+    bool hasPositionFixedDescendant;
+    bool dirtyRectIsFlipped;
+    bool descendantNeedsEnclosingIntRect;
+    uint8_t options;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);

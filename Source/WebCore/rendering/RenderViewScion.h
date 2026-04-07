@@ -43,8 +43,8 @@ class RenderLayerCompositor;
 class RenderFragmentContainer;
 
 namespace Layout {
-    class InitialContainingBlock;
-    class LayoutState;
+class InitialContainingBlock;
+class LayoutState;
 }
 
 DECLARE_ALLOCATOR_WITH_HEAP_IDENTIFIER(WebCore_RenderViewScion);
@@ -123,6 +123,8 @@ public:
     void updateQuirksMode();
 
     bool needsEventRegionUpdateForNonCompositedFrame() const;
+
+    std::optional<RenderObject::RepaintRects> computeVisibleRectsInContainer(const RenderObject::RepaintRects&, const RenderLayerModelObject* container, RenderObject::VisibleRectContext) const;
 
     void repaintRootContents();
 

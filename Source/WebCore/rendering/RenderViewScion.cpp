@@ -96,6 +96,37 @@ extern "C" void RenderViewScion_updateQuirksMode(const void*);
 
 extern "C" bool RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(const void*);
 
+struct LayoutRectRaw {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+};
+
+struct OptionalLayoutRectRaw {
+    LayoutRectRaw rect;
+    bool is_valid;
+};
+
+struct RepaintRectsRaw {
+    LayoutRectRaw clippedOverflowRect;
+    OptionalLayoutRectRaw outlineBoundsRect;
+};
+
+struct OptionalRepaintRectsRaw {
+    RepaintRectsRaw rects;
+    bool is_valid;
+};
+
+struct VisibleRectContextRaw {
+    bool hasPositionFixedDescendant;
+    bool dirtyRectIsFlipped;
+    bool descendantNeedsEnclosingIntRect;
+    uint8_t options;
+};
+
+extern "C" OptionalRepaintRectsRaw RenderViewScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
+
 extern "C" void RenderViewScion_repaintRootContents(const void*);
 
 extern "C" void* RenderViewScion_rendererForRootBackground(const void*);
@@ -109,13 +140,6 @@ extern "C" void* RenderViewScion_compositor(const void*);
 extern "C" bool RenderViewScion_usesCompositing(const void*);
 
 extern "C" IntRectRaw RenderViewScion_unscaledDocumentRect(const void*);
-
-struct LayoutRectRaw {
-    int32_t x;
-    int32_t y;
-    int32_t width;
-    int32_t height;
-};
 
 extern "C" struct LayoutRectRaw RenderViewScion_unextendedBackgroundRect(const void*);
 
@@ -345,6 +369,49 @@ bool RenderViewScion::needsEventRegionUpdateForNonCompositedFrame() const
     return RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(m_handle);
 }
 
+namespace {
+
+LayoutRectRaw convertLayoutRect(const LayoutRect& r)
+{
+    return { r.x().rawValue(), r.y().rawValue(), r.width().rawValue(), r.height().rawValue() };
+}
+
+RepaintRectsRaw convertRepaintRects(const RenderObject::RepaintRects& rects)
+{
+    return { convertLayoutRect(rects.clippedOverflowRect), { convertLayoutRect(rects.outlineBoundsRect.value_or({})), static_cast<bool>(rects.outlineBoundsRect) } };
+}
+
+VisibleRectContextRaw convertVisibleRectContext(WebCore::RenderObject::VisibleRectContext context)
+{
+    return { context.hasPositionFixedDescendant, context.dirtyRectIsFlipped, context.descendantNeedsEnclosingIntRect, static_cast<uint8_t>(context.options.toRaw()) };
+}
+
+LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
+{
+    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
+}
+
+RenderObject::RepaintRects convertRepaintRectsRaw(const RepaintRectsRaw& rects)
+{
+    return { convertLayoutRectRaw(rects.clippedOverflowRect), rects.outlineBoundsRect.is_valid ? convertLayoutRectRaw(rects.outlineBoundsRect.rect) : LayoutRect {} };
+}
+
+} // namespace
+
+std::optional<WebCore::RenderObject::RepaintRects> RenderViewScion::computeVisibleRectsInContainer(const WebCore::RenderObject::RepaintRects& rects, const RenderLayerModelObject* container, WebCore::RenderObject::VisibleRectContext context) const
+{
+    if (!container || !container->scion()) {
+        ASSERT_NOT_REACHED();
+    }
+    const auto rectsRaw = convertRepaintRects(rects);
+    const auto contextRaw = convertVisibleRectContext(context);
+    const auto raw = RenderViewScion_computeVisibleRectsInContainer(m_handle, rectsRaw, container->scion(), contextRaw);
+    if (!raw.is_valid) {
+        return {};
+    }
+    return convertRepaintRectsRaw(raw.rects);
+}
+
 void RenderViewScion::repaintRootContents()
 {
     RenderViewScion_repaintRootContents(m_handle);
@@ -387,15 +454,6 @@ IntRect RenderViewScion::unscaledDocumentRect() const
     const auto raw = RenderViewScion_unscaledDocumentRect(m_handle);
     return IntRect({ raw.location.x, raw.location.y }, { raw.size.width, raw.size.height });
 }
-
-namespace {
-
-LayoutRect convertLayoutRectRaw(const LayoutRectRaw& r)
-{
-    return { LayoutUnit::fromRawValue(r.x), LayoutUnit::fromRawValue(r.y), LayoutUnit::fromRawValue(r.width), LayoutUnit::fromRawValue(r.height) };
-}
-
-} // namespace
 
 LayoutRect RenderViewScion::unextendedBackgroundRect() const
 {
@@ -543,7 +601,8 @@ void RenderViewScion::destroyRepaintRegionAccumulator(void* accumulatedRepaintRe
     RepaintRegionAccumulator_destroy(accumulatedRepaintRegion);
 }
 
-bool RenderViewScion::containerQueryBoxesIsEmpty() const {
+bool RenderViewScion::containerQueryBoxesIsEmpty() const
+{
     return RenderViewScion_containerQueryBoxesIsEmpty(m_handle);
 }
 

@@ -517,6 +517,67 @@ func RenderViewScion_create(_ documentRaw: UnsafeMutableRawPointer, _ styleRaw: 
   return unmanaged.toOpaque()
 }
 
+private func convertLayoutRect(_ raw: LayoutRectRaw) -> LayoutRectWrapper {
+  return LayoutRectWrapper(
+    x: LayoutUnit.fromRawValue(value: raw.x), y: LayoutUnit.fromRawValue(value: raw.y),
+    width: LayoutUnit.fromRawValue(value: raw.width),
+    height: LayoutUnit.fromRawValue(value: raw.height))
+}
+
+private func convertLayoutRect(_ r: LayoutRectWrapper) -> LayoutRectRaw {
+  return LayoutRectRaw(
+    x: r.x().rawValue(), y: r.y().rawValue(), width: r.width().rawValue(),
+    height: r.height().rawValue())
+}
+
+private func convertRepaintRects(_ raw: RepaintRectsRaw) -> RenderObjectWrapper.RepaintRects {
+  return RenderObjectWrapper.RepaintRects(
+    rect: convertLayoutRect(raw.clippedOverflowRect),
+    outlineBounds: raw.outlineBoundsRect.is_valid
+      ? convertLayoutRect(raw.outlineBoundsRect.rect) : nil)
+}
+
+private func convertRepaintRects(_ rects: RenderObjectWrapper.RepaintRects) -> RepaintRectsRaw {
+  let clippedOverflowRect = convertLayoutRect(rects.clippedOverflowRect)
+  let emptyRect = LayoutRectRaw(x: 0, y: 0, width: 0, height: 0)
+  let outlineBoundsRect = OptionalLayoutRectRaw(
+    rect: rects.outlineBoundsRect != nil ? convertLayoutRect(rects.outlineBoundsRect!) : emptyRect,
+    is_valid: rects.outlineBoundsRect != nil)
+  return RepaintRectsRaw(
+    clippedOverflowRect: clippedOverflowRect, outlineBoundsRect: outlineBoundsRect)
+}
+
+private func convertVisibleRectContext(_ raw: VisibleRectContextRaw)
+  -> RenderObjectWrapper.VisibleRectContext
+{
+  var context = RenderObjectWrapper.VisibleRectContext(
+    hasPositionFixedDescendant: raw.hasPositionFixedDescendant,
+    dirtyRectIsFlipped: raw.dirtyRectIsFlipped,
+    RenderObjectWrapper.VisibleRectContextOption(rawValue: raw.options))
+  context.descendantNeedsEnclosingIntRect = raw.descendantNeedsEnclosingIntRect
+  return context
+}
+
+@_cdecl("RenderViewScion_computeVisibleRectsInContainer")
+func RenderViewScion_computeVisibleRectsInContainer(
+  _ viewRaw: UnsafeRawPointer, _ rectsRaw: RepaintRectsRaw, _ containerRaw: UnsafeRawPointer?,
+  _ contextRaw: VisibleRectContextRaw
+) -> OptionalRepaintRectsRaw {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let rects = convertRepaintRects(rectsRaw)
+  let container = Unmanaged<RenderLayerModelObjectWrapper>.fromOpaque(containerRaw!)
+    .takeUnretainedValue()
+  let context = convertVisibleRectContext(contextRaw)
+  if let repaintRects = view.computeVisibleRectsInContainer(rects, container, context) {
+    return OptionalRepaintRectsRaw(rects: convertRepaintRects(repaintRects), is_valid: true)
+  }
+  let emptyRect = LayoutRectRaw(x: 0, y: 0, width: 0, height: 0)
+  let emptyRepaintRects = RepaintRectsRaw(
+    clippedOverflowRect: emptyRect,
+    outlineBoundsRect: OptionalLayoutRectRaw(rect: emptyRect, is_valid: false))
+  return OptionalRepaintRectsRaw(rects: emptyRepaintRects, is_valid: false)
+}
+
 @_cdecl("RenderViewScion_selection")
 func RenderViewScion_selection(_ viewRaw: UnsafeRawPointer) -> UnsafeMutableRawPointer {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
@@ -692,12 +753,6 @@ func RenderViewScion_unscaledDocumentRect(_ viewRaw: UnsafeRawPointer) -> IntRec
   return IntRectRaw(
     location: IntPointRaw(x: rect.location.x, y: rect.location.y),
     size: IntSizeRaw(width: rect.size.width, height: rect.size.height))
-}
-
-private func convertLayoutRect(_ r: LayoutRectWrapper) -> LayoutRectRaw {
-  return LayoutRectRaw(
-    x: r.x().rawValue(), y: r.y().rawValue(), width: r.width().rawValue(),
-    height: r.height().rawValue())
 }
 
 @_cdecl("RenderViewScion_unextendedBackgroundRect")
