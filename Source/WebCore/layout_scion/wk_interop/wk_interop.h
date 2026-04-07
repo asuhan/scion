@@ -1073,6 +1073,7 @@ void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
 void* Document_frame(const void*);
 void* Document_documentElement(const void*);
 void* Document_view(const void* raw);
+const void* Document_page(const void*);
 const void* Document_settings(const void* raw);
 void* Document_renderView(const void* raw);
 bool Document_printing(const void* raw);

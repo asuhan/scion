@@ -75,10 +75,7 @@ class Document: TreeScopeWrapper {
     return LocalFrameViewWrapper(p: wk_interop.Document_view(p))
   }
 
-  func page() -> PageWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func page() -> PageWrapper? { return PageWrapper(wk_interop.Document_page(p)) }
 
   func settings() -> SettingsWrapper {
     return SettingsWrapper(wk_interop.Document_settings(p))
