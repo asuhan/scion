@@ -1108,6 +1108,7 @@ void* ShapeValue_image(const void*);
 void* Frame_page(const void*);
 bool Frame_isMainFrame(const void*);
 void* Page_settings(const void*);
+float Page_pageScaleFactor(const void*);
 const void* FilterOperations_create();
 void FilterOperations_destroy(const void*);
 bool FilterOperations_eq(const void*, const void*);
