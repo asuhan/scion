@@ -93,6 +93,16 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_position(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->position());
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_width(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->width();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_height(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->height();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_borderImage(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->borderImage();

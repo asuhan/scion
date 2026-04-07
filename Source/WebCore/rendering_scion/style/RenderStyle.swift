@@ -295,15 +295,9 @@ class RenderStyleWrapper: Equatable {
 
   func hasInFlowPosition() -> Bool { return position() == .Relative || position() == .Sticky }
 
-  func width() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func width() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_width(p!)) }
 
-  func height() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func height() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_height(p!)) }
 
   func minWidth() -> LengthWrapper {
     // TODO(asuhan): implement this

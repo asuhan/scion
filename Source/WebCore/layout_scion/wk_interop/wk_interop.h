@@ -663,6 +663,8 @@ uint32_t RenderStyle_pseudoElementType(const void*);
 const void* RenderStyle_getCachedPseudoStyle(const void*, uint32_t, const void*);
 bool RenderStyle_isFloating(const void*);
 uint8_t RenderStyle_position(const void*);
+const void* RenderStyle_width(const void*);
+const void* RenderStyle_height(const void*);
 const void* RenderStyle_borderImage(const void*);
 float RenderStyle_borderStartWidth(const void*);
 float RenderStyle_borderEndWidth(const void*);
