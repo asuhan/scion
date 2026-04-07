@@ -25,10 +25,7 @@
 import wk_interop
 
 class LocalFrameViewWrapper: FrameViewWrapper {
-  func frame() -> LocalFrameWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func frame() -> LocalFrameWrapper { return LocalFrameWrapper(wk_interop.LocalFrameView_frame(p)) }
 
   func renderView() -> RenderViewWrapper? {
     // TODO(asuhan): implement this

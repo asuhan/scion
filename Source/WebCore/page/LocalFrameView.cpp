@@ -148,6 +148,11 @@
 #define FRAME_ID m_frame->frameID().object().toUInt64()
 #define FRAMEVIEW_RELEASE_LOG(channel, fmt, ...) RELEASE_LOG(channel, "%p - [pageID=%" PRIu64 ", frameID=%" PRIu64 ", isMainFrame=%d] LocalFrameView::" fmt, this, PAGE_ID, FRAME_ID, m_frame->isMainFrame(), ##__VA_ARGS__)
 
+extern "C" WEBCORE_EXPORT void* LocalFrameView_frame(const void* p)
+{
+    return &static_cast<const WebCore::LocalFrameView*>(p)->frame();
+}
+
 extern "C" WEBCORE_EXPORT void* LocalFrameView_layoutContext(const void* p)
 {
     return const_cast<WebCore::LocalFrameViewLayoutContext*>(&static_cast<const WebCore::LocalFrameView*>(p)->layoutContext());

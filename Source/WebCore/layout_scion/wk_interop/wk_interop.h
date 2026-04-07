@@ -550,6 +550,7 @@ uint32_t LocalFrameViewLayoutContext_layoutIdentifier(const void*);
 bool LocalFrameViewLayoutContext_pushLayoutState(void*, void*, struct LayoutSizeRaw, int32_t, bool);
 void LocalFrameViewLayoutContext_popLayoutState(void*);
 void LocalFrameViewLayoutContext_enablePaintOffsetCache(void*);
+void* LocalFrameView_frame(const void*);
 void* LocalFrameView_layoutContext(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
