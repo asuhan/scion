@@ -127,6 +127,11 @@ extern "C" WEBCORE_EXPORT bool RenderElement_hasBackground(const void* p)
     return static_cast<const WebCore::RenderElement*>(p)->hasBackground();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderElement_hasClipPath(const void* p)
+{
+    return static_cast<const WebCore::RenderElement*>(p)->hasClipPath();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderElement_hasSelfPaintingLayer(const void* p)
 {
     return static_cast<const WebCore::RenderElement*>(p)->hasSelfPaintingLayer();

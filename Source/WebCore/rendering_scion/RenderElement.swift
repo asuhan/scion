@@ -1098,7 +1098,7 @@ class RenderElementWrapper: RenderObjectWrapper {
   }
 
   func hasClipPath() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderElement_hasClipPath(id()) }
     return style().clipPath() != nil
   }
 
