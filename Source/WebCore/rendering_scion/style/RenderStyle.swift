@@ -320,13 +320,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func logicalMinWidth() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalMinWidth(p!))
   }
 
   func logicalMaxWidth() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalMaxWidth(p!))
   }
 
   func logicalMinHeight() -> LengthWrapper {

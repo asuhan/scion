@@ -133,6 +133,16 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalHeight(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->logicalHeight();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalMinWidth(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->logicalMinWidth();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalMaxWidth(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->logicalMaxWidth();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_borderImage(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->borderImage();
