@@ -750,8 +750,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func marginStart() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_marginStart(p!))
   }
 
   func marginBefore() -> LengthWrapper {

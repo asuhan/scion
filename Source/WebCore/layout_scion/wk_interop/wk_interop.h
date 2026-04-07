@@ -832,6 +832,7 @@ bool RenderStyle_isFixedTableLayout(const void*);
 const void* RenderStyle_marginTop(const void*);
 const void* RenderStyle_marginBottom(const void*);
 const void* RenderStyle_marginLeft(const void*);
+const void* RenderStyle_marginStart(const void*);
 const void* RenderStyle_marginBefore(const void*);
 const void* RenderStyle_marginAfter(const void*);
 const void* RenderStyle_marginStartUsing(const void*, const void*);
