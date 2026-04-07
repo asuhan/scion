@@ -2358,8 +2358,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
       hasPositionFixedDescendant: Bool = false, dirtyRectIsFlipped: Bool = false,
       _ options: VisibleRectContextOption = []
     ) {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      self.hasPositionFixedDescendant = hasPositionFixedDescendant
+      self.dirtyRectIsFlipped = dirtyRectIsFlipped
+      self.options = options
     }
 
     func repaintRectCalculation() -> RepaintRectCalculation {
@@ -2368,7 +2369,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
     var hasPositionFixedDescendant: Bool
     var dirtyRectIsFlipped: Bool
-    var descendantNeedsEnclosingIntRect: Bool
+    var descendantNeedsEnclosingIntRect = false
     var options: VisibleRectContextOption
   }
 
