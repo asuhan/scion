@@ -1097,6 +1097,7 @@ const void* FillLayer_next(const void*);
 void* NinePieceImage_image(const void*);
 void* ShapeValue_image(const void*);
 void* Frame_page(const void*);
+bool Frame_isMainFrame(const void*);
 void* Page_settings(const void*);
 const void* FilterOperations_create();
 void FilterOperations_destroy(const void*);

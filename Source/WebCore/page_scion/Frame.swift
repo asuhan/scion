@@ -45,10 +45,7 @@ class FrameWrapper {
     fatalError("Not implemented")
   }
 
-  func isMainFrame() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isMainFrame() -> Bool { return wk_interop.Frame_isMainFrame(p) }
 
   func isRootFrame() -> Bool {
     // TODO(asuhan): implement this

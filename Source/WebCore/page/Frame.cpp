@@ -45,6 +45,11 @@ extern "C" WEBCORE_EXPORT void* Frame_page(const void* raw)
     return static_cast<const WebCore::Frame*>(raw)->page();
 }
 
+extern "C" WEBCORE_EXPORT bool Frame_isMainFrame(const void* raw)
+{
+    return static_cast<const WebCore::Frame*>(raw)->isMainFrame();
+}
+
 namespace WebCore {
 
 #if ASSERT_ENABLED
