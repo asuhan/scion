@@ -1136,3 +1136,4 @@ void* RenderSelection_create(void*);
 void RenderSelection_destroy(const void*);
 const void* InitialContainingBlock_create(const void*);
 void InitialContainingBlock_destroy(const void*);
+void* ContainerNode_renderer(const void*);

@@ -21,6 +21,8 @@
  *
  */
 
+import wk_interop
+
 class ContainerNodeWrapper: NodeWrapper {
   func firstChild() -> NodeWrapper? {
     // TODO(asuhan): implement this
@@ -33,7 +35,6 @@ class ContainerNodeWrapper: NodeWrapper {
   }
 
   func containerRenderer() -> RenderElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return createRenderObjectWrapper(wk_interop.ContainerNode_renderer(p)) as! RenderElementWrapper?
   }
 }
