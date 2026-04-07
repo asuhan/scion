@@ -577,7 +577,7 @@ class RenderBoxWrapper: RenderBoxModelObjectWrapper {
   }
 
   func width() -> LayoutUnit {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return LayoutUnit.fromRawValue(value: wk_interop.RenderBox_width(id())) }
     return m_frameRect.width()
   }
 
