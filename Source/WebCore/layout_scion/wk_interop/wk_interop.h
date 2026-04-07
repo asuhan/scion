@@ -669,6 +669,8 @@ const void* RenderStyle_minWidth(const void*);
 const void* RenderStyle_maxWidth(const void*);
 const void* RenderStyle_minHeight(const void*);
 const void* RenderStyle_maxHeight(const void*);
+const void* RenderStyle_logicalWidth(const void*);
+const void* RenderStyle_logicalHeight(const void*);
 const void* RenderStyle_borderImage(const void*);
 float RenderStyle_borderStartWidth(const void*);
 float RenderStyle_borderEndWidth(const void*);
