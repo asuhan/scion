@@ -627,10 +627,7 @@ class RenderStyleWrapper: Equatable {
 
   func hasBorderRadius() -> Bool { return wk_interop.RenderStyle_hasBorderRadius(p!) }
 
-  func hasOutline() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasOutline() -> Bool { return wk_interop.RenderStyle_hasOutline(p!) }
 
   func outlineStyle() -> BorderStyle {
     // TODO(asuhan): implement this
