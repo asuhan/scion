@@ -130,6 +130,8 @@ public:
 
     void repaintViewAndCompositedLayers();
 
+    void paint(PaintInfo&, const LayoutPoint&);
+
     RenderElement* rendererForRootBackground() const;
 
     const IntRect& printRect() const;

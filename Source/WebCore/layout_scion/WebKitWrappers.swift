@@ -473,6 +473,12 @@ func LineLayoutScion_hasDetachedContent(handle: UInt64) -> Bool {
   return globalLineLayout!.hasDetachedContent()
 }
 
+private func convertLayoutPointRaw(_ point: LayoutPointRaw) -> LayoutPointWrapper {
+  return LayoutPointWrapper(
+    x: LayoutUnit.fromRawValue(value: point.x),
+    y: LayoutUnit.fromRawValue(value: point.y))
+}
+
 @_cdecl("LineLayoutScion_paint")
 func LineLayoutScion_paint(
   handle: UInt64, paintInfoRaw: UnsafeMutableRawPointer, paintInfoRawVal: PaintInfoRaw,
@@ -480,9 +486,7 @@ func LineLayoutScion_paint(
   layerRendererRaw: UnsafeMutableRawPointer?
 ) {
   let paintInfo = PaintInfoWrapper(p: paintInfoRaw)
-  let paintOffset = LayoutPointWrapper(
-    x: LayoutUnit.fromRawValue(value: paintOffset.x),
-    y: LayoutUnit.fromRawValue(value: paintOffset.y))
+  let paintOffset = convertLayoutPointRaw(paintOffset)
   let layerRenderer = layerRendererRaw != nil ? RenderInlineWrapper(p: layerRendererRaw!) : nil
   globalLineLayout!.paint(
     paintInfo: paintInfo, paintOffset: paintOffset, layerRenderer: layerRenderer)
@@ -707,6 +711,16 @@ func RenderViewScion_needsEventRegionUpdateForNonCompositedFrame(_ viewRaw: Unsa
 func RenderViewScion_repaintRootContents(_ viewRaw: UnsafeRawPointer) {
   let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
   view.repaintRootContents()
+}
+
+@_cdecl("RenderViewScion_paint")
+func RenderViewScion_paint(
+  _ viewRaw: UnsafeMutableRawPointer, _ paintInfoRaw: UnsafeMutableRawPointer,
+  _ paintOffset: LayoutPointRaw
+) {
+  var paintInfo = PaintInfoWrapper(p: paintInfoRaw)
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  view.paint(paintInfo: &paintInfo, paintOffset: convertLayoutPointRaw(paintOffset))
 }
 
 @_cdecl("RenderViewScion_rendererForRootBackground")

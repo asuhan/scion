@@ -125,9 +125,16 @@ struct VisibleRectContextRaw {
     uint8_t options;
 };
 
+struct LayoutPointRaw {
+    int32_t x;
+    int32_t y;
+};
+
 extern "C" OptionalRepaintRectsRaw RenderViewScion_computeVisibleRectsInContainer(const void*, RepaintRectsRaw, const void*, VisibleRectContextRaw);
 
 extern "C" void RenderViewScion_repaintRootContents(const void*);
+
+extern "C" void RenderViewScion_paint(void*, void*, LayoutPointRaw);
 
 extern "C" void* RenderViewScion_rendererForRootBackground(const void*);
 
@@ -420,6 +427,17 @@ void RenderViewScion::repaintRootContents()
 void RenderViewScion::repaintViewAndCompositedLayers()
 {
     ASSERT_NOT_REACHED();
+}
+
+namespace {
+
+LayoutPointRaw convertLayoutPoint(const LayoutPoint& point) { return { point.x().rawValue(), point.y().rawValue() }; }
+
+} // namespace
+
+void RenderViewScion::paint(PaintInfo& paintInfo, const LayoutPoint& paintOffset)
+{
+    RenderViewScion_paint(m_handle, &paintInfo, convertLayoutPoint(paintOffset));
 }
 
 RenderElement* RenderViewScion::rendererForRootBackground() const
