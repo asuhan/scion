@@ -328,13 +328,11 @@ class RenderStyleWrapper: Equatable {
   }
 
   func logicalMinHeight() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalMinHeight(p!))
   }
 
   func logicalMaxHeight() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalMaxHeight(p!))
   }
 
   func border() -> BorderData {
