@@ -920,7 +920,10 @@ final class RenderLayerCompositorWrapper: GraphicsLayerClientWrapper {
 
   // Called after the view transparency, or the document or base background color change.
   func rootBackgroundColorOrTransparencyChanged() {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.RenderLayerCompositor_rootBackgroundColorOrTransparencyChanged(interop())
+      return
+    }
     if !usesCompositing() {
       return
     }
