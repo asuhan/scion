@@ -170,6 +170,11 @@ extern "C" WEBCORE_EXPORT void* RenderObject_view(const void* p)
     return &static_cast<const WebCore::RenderObject*>(p)->view();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderObject_isComposited(const void* p)
+{
+    return static_cast<const WebCore::RenderObject*>(p)->isComposited();
+}
+
 extern "C" WEBCORE_EXPORT int32_t RenderObject_minPreferredLogicalWidth(const void* p)
 {
     const auto width = static_cast<const WebCore::RenderObject*>(p)->minPreferredLogicalWidth();

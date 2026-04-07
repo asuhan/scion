@@ -1652,7 +1652,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isComposited() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() { return wk_interop.RenderObject_isComposited(id()) }
     return hasLayer() && (self as! RenderLayerModelObjectWrapper).layer()!.isComposited()
   }
 
