@@ -137,8 +137,8 @@ class Document: TreeScopeWrapper {
   // Returns the owning element in the parent document.
   // Returns nullptr if this is the top level document.
   func ownerElement() -> HTMLFrameOwnerElementWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    guard let raw = wk_interop.Document_ownerElement(p) else { return nil }
+    return HTMLFrameOwnerElementWrapper(p: raw)
   }
 
   // This is the "HTML body element" as defined by CSSOM View spec, the first body child of the
