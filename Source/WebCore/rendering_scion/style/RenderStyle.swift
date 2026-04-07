@@ -655,8 +655,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func visibility() -> Visibility {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return Visibility(rawValue: wk_interop.RenderStyle_visibility(p!))!
   }
 
   func usedVisibility() -> Visibility {
