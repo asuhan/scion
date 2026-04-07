@@ -1511,7 +1511,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func view() -> RenderViewWrapper {
     if !isNativeImpl() {
-      return RenderViewWrapper(p: wk_interop.RenderObject_view(id()))
+      let viewRaw = wk_interop.RenderObject_view(id())
+      guard let scionViewRaw = wk_interop.RenderView_scion(viewRaw) else {
+        return RenderViewWrapper(p: viewRaw!)
+      }
+      return Unmanaged<RenderViewWrapper>.fromOpaque(scionViewRaw).takeUnretainedValue()
     }
     return document().renderView()!
   }
