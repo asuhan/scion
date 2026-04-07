@@ -158,6 +158,11 @@ extern "C" WEBCORE_EXPORT void* LocalFrameView_layoutContext(const void* p)
     return const_cast<WebCore::LocalFrameViewLayoutContext*>(&static_cast<const WebCore::LocalFrameView*>(p)->layoutContext());
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_isTransparent(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->isTransparent();
+}
+
 struct LayoutPointRaw {
     int32_t x;
     int32_t y;

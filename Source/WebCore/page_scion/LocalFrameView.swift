@@ -58,10 +58,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
     fatalError("Not implemented")
   }
 
-  func isTransparent() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isTransparent() -> Bool { return wk_interop.LocalFrameView_isTransparent(p) }
 
   func baseBackgroundColor() -> ColorWrapper {
     // TODO(asuhan): implement this
