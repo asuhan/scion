@@ -665,6 +665,8 @@ bool RenderStyle_isFloating(const void*);
 uint8_t RenderStyle_position(const void*);
 const void* RenderStyle_width(const void*);
 const void* RenderStyle_height(const void*);
+const void* RenderStyle_minWidth(const void*);
+const void* RenderStyle_maxWidth(const void*);
 const void* RenderStyle_borderImage(const void*);
 float RenderStyle_borderStartWidth(const void*);
 float RenderStyle_borderEndWidth(const void*);
