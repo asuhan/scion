@@ -496,25 +496,13 @@ class RenderStyleWrapper: Equatable {
     return DisplayType(rawValue: wk_interop.RenderStyle_display(p!))!
   }
 
-  func left() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func left() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_left(p!)) }
 
-  func right() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func right() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_right(p!)) }
 
-  func top() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func top() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_top(p!)) }
 
-  func bottom() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func bottom() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_bottom(p!)) }
 
   func logicalLeft() -> LengthWrapper {
     // TODO(asuhan): implement this

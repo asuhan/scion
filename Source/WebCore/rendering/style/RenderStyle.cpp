@@ -198,6 +198,26 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_display(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->display());
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_left(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->left();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_right(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->right();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_top(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->top();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_bottom(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->bottom();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_backgroundLayers(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->backgroundLayers();
