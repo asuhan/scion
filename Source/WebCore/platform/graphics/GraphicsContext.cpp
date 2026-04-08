@@ -48,6 +48,11 @@ extern "C" WEBCORE_EXPORT uint8_t GraphicsContext_compositeOperation(const void*
     return static_cast<uint8_t>(static_cast<const WebCore::GraphicsContext*>(p)->compositeOperation());
 }
 
+extern "C" WEBCORE_EXPORT void GraphicsContext_setCompositeOperation(void* p, uint8_t operation, uint8_t blendMode)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->setCompositeOperation(static_cast<WebCore::CompositeOperator>(operation), static_cast<WebCore::BlendMode>(blendMode));
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

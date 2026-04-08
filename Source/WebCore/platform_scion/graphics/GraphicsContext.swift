@@ -153,8 +153,7 @@ class GraphicsContextWrapper {
   }
 
   func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    wk_interop.GraphicsContext_setCompositeOperation(p!, operation.rawValue, blendMode.rawValue)
   }
 
   func alpha() -> Float32 {
