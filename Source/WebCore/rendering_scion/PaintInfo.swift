@@ -142,8 +142,8 @@ struct PaintInfoWrapper {
   }
 
   func paintRootBackgroundOnly() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(n == nil)
+    return wk_interop.PaintInfo_paintRootBackgroundOnly(p!)
   }
 
   func enclosingSelfPaintingLayer() -> RenderLayerWrapper? {
