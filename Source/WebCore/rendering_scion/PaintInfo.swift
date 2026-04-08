@@ -163,6 +163,9 @@ struct PaintInfoWrapper {
 
   func eventRegionContext() -> EventRegionContext? {
     if n == nil {
+      if wk_interop.PaintInfo_eventRegionContext(p!) == nil {
+        return nil
+      }
       // TODO(asuhan): implement this
       fatalError("Not implemented")
     }

@@ -128,6 +128,11 @@ extern "C" WEBCORE_EXPORT bool PaintInfo_paintRootBackgroundOnly(const void* p)
     return static_cast<const WebCore::PaintInfo*>(p)->paintRootBackgroundOnly();
 }
 
+extern "C" WEBCORE_EXPORT void* PaintInfo_eventRegionContext(void* p)
+{
+    return static_cast<WebCore::PaintInfo*>(p)->eventRegionContext();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderView);
