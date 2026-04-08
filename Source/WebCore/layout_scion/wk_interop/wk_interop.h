@@ -1129,6 +1129,7 @@ bool Settings_userInterfaceDirectionPolicy(const void*);
 bool Node_isDocumentNode(const void*);
 bool Node_isRootEditableElement(const void*);
 void* Node_document(const void*);
+void* Node_renderer(const void*);
 const void* BoxTree_handleNullRootBox(void*);
 void BoxTree_buildTreeForInlineContent(void*);
 void* InlineWalker_new(const void*);
