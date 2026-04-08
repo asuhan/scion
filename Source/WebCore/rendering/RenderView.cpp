@@ -103,6 +103,11 @@ extern "C" WEBCORE_EXPORT void LayoutState_destroy(const void* p)
     delete static_cast<const WebCore::Layout::LayoutState*>(p);
 }
 
+extern "C" WEBCORE_EXPORT void* PaintInfo_context(const void* p)
+{
+    return &static_cast<const WebCore::PaintInfo*>(p)->context();
+}
+
 extern "C" WEBCORE_EXPORT bool PaintInfo_shouldPaintWithinRoot(const void* p, const void* renderer_raw)
 {
     return static_cast<const WebCore::PaintInfo*>(p)->shouldPaintWithinRoot(*static_cast<const WebCore::RenderObject*>(renderer_raw));

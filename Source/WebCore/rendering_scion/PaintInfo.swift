@@ -86,8 +86,7 @@ struct PaintInfoWrapper {
 
   func context() -> GraphicsContextWrapper {
     if n == nil {
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      return GraphicsContextWrapper(wk_interop.PaintInfo_context(p!))
     }
     return n!.context
   }

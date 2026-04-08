@@ -24,6 +24,13 @@
  */
 
 class GraphicsContextWrapper {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
+  init() {
+    // TODO(asuhan): implement this
+    self.p = nil
+  }
+
   func paintingDisabled() -> Bool {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -556,4 +563,6 @@ class GraphicsContextWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer?
 }
