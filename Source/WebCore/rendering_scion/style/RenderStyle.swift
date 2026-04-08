@@ -833,14 +833,10 @@ class RenderStyleWrapper: Equatable {
     return AutoRepeatType(rawValue: wk_interop.RenderStyle_gridAutoRepeatRowsType(p!))!
   }
 
-  func namedGridAreaRowCount() -> UInt64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func namedGridAreaRowCount() -> UInt64 { return wk_interop.RenderStyle_namedGridAreaRowCount(p!) }
 
   func namedGridAreaColumnCount() -> UInt64 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_namedGridAreaColumnCount(p!)
   }
 
   func gridAutoFlow() -> GridAutoFlow {
