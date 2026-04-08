@@ -759,6 +759,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
     return super.positionForPoint(point, source, fragment)
   }
 
+  private func isSelectionRoot() -> Bool {
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
+  }
+
   func addContinuationWithOutline(flow: RenderInlineWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -3044,6 +3049,10 @@ class RenderBlockWrapper: RenderBoxWrapper {
   func paintColumnRules(_ paintInfo: PaintInfoWrapper, _ point: LayoutPointWrapper) {}
 
   private func paintSelection(paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {
+    assert(isNativeImpl())
+    if !shouldPaintSelectionGaps() || paintInfo.phase != .Foreground {
+      return
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
@@ -3237,6 +3246,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   ) -> LayoutRectWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
+  }
+
+  override final func shouldPaintSelectionGaps() -> Bool {
+    assert(isNativeImpl())
+    return selectionState() != .None && style().usedVisibility() == .Visible && isSelectionRoot()
   }
 
   private func paintContinuationOutlines(info: PaintInfoWrapper, paintOffset: LayoutPointWrapper) {

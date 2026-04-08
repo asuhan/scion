@@ -2619,6 +2619,12 @@ class RenderObjectWrapper: CachedImageClientWrapper {
 
   func canBeSelectionLeaf() -> Bool { return false }
 
+  // Whether or not a given block needs to paint selection gaps.
+  func shouldPaintSelectionGaps() -> Bool {
+    assert(isNativeImpl())
+    return false
+  }
+
   // When performing a global document tear-down, or when going into the back/forward cache, the renderer of the document is cleared.
   func renderTreeBeingDestroyed() -> Bool {
     // TODO(asuhan): implement this
