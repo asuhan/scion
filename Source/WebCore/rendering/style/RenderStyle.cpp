@@ -218,6 +218,26 @@ extern "C" WEBCORE_EXPORT const void* RenderStyle_bottom(const void* p)
     return &static_cast<const WebCore::RenderStyle*>(p)->bottom();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalLeft(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->logicalLeft();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalRight(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->logicalRight();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalTop(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->logicalTop();
+}
+
+extern "C" WEBCORE_EXPORT const void* RenderStyle_logicalBottom(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->logicalBottom();
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_backgroundLayers(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->backgroundLayers();

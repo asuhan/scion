@@ -1342,7 +1342,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func hasLayer() -> Bool {
-    if (!isNativeImpl()) {
+    if !isNativeImpl() {
       return wk_interop.RenderObject_hasLayer(id())
     }
     return m_stateBitfields.hasFlag(.HasLayer)

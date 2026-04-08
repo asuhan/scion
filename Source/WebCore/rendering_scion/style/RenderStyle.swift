@@ -505,23 +505,19 @@ class RenderStyleWrapper: Equatable {
   func bottom() -> LengthWrapper { return LengthWrapper(p: wk_interop.RenderStyle_bottom(p!)) }
 
   func logicalLeft() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalLeft(p!))
   }
 
   func logicalRight() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalRight(p!))
   }
 
   func logicalTop() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalTop(p!))
   }
 
   func logicalBottom() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_logicalBottom(p!))
   }
 
   // Whether or not a positioned element requires normal flow x/y to be computed to determine its position.
