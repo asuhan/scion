@@ -97,8 +97,10 @@ struct PaintInfoWrapper {
   }
 
   func updateSubtreePaintRootForChildren(renderer: RenderObjectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(n == nil)
+    assert(renderer.isNativeImpl())
+    wk_interop.PaintInfo_updateSubtreePaintRootForChildren(
+      p!, (renderer as! RenderViewWrapper).getWk())
   }
 
   func shouldPaintWithinRoot(renderer: RenderObjectWrapper) -> Bool {

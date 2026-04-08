@@ -108,6 +108,11 @@ extern "C" WEBCORE_EXPORT void* PaintInfo_context(const void* p)
     return &static_cast<const WebCore::PaintInfo*>(p)->context();
 }
 
+extern "C" WEBCORE_EXPORT void PaintInfo_updateSubtreePaintRootForChildren(void* p, const void* renderer_raw)
+{
+    static_cast<WebCore::PaintInfo*>(p)->updateSubtreePaintRootForChildren(static_cast<const WebCore::RenderObject*>(renderer_raw));
+}
+
 extern "C" WEBCORE_EXPORT bool PaintInfo_shouldPaintWithinRoot(const void* p, const void* renderer_raw)
 {
     return static_cast<const WebCore::PaintInfo*>(p)->shouldPaintWithinRoot(*static_cast<const WebCore::RenderObject*>(renderer_raw));
