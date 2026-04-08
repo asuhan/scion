@@ -418,6 +418,12 @@ extern "C" WEBCORE_EXPORT int32_t RenderStyle_initialLetterHeight(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->initialLetterHeight();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_eventListenerRegionTypes(const void* p)
+{
+    auto o = static_cast<const WebCore::RenderStyle*>(p)->eventListenerRegionTypes();
+    return o.toRaw();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_effectiveInert(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->effectiveInert();

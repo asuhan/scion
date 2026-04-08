@@ -1825,8 +1825,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func eventListenerRegionTypes() -> EventListenerRegionType {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return EventListenerRegionType(rawValue: wk_interop.RenderStyle_eventListenerRegionTypes(p!))
   }
 
   func effectiveInert() -> Bool { return wk_interop.RenderStyle_effectiveInert(p!) }

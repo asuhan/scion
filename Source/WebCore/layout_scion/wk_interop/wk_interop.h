@@ -745,6 +745,7 @@ uint8_t RenderStyle_textOrientation(const void*);
 uint8_t RenderStyle_objectFit(const void*);
 int32_t RenderStyle_initialLetterDrop(const void*);
 int32_t RenderStyle_initialLetterHeight(const void*);
+uint8_t RenderStyle_eventListenerRegionTypes(const void*);
 bool RenderStyle_effectiveInert(const void*);
 struct LengthBoxRaw RenderStyle_scrollMargin(const void*);
 struct LengthBoxRaw RenderStyle_scrollPadding(const void*);
