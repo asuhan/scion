@@ -98,6 +98,11 @@
 #include "SelectionGeometry.h"
 #endif
 
+extern "C" void* FrameSelection_caretRendererWithoutUpdatingLayout(const void* p)
+{
+    return static_cast<const WebCore::FrameSelection*>(p)->caretRendererWithoutUpdatingLayout();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(CaretBase);

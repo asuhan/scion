@@ -23,6 +23,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class CaretBaseWrapper {}
 
 final class DragCaretControllerWrapper: CaretBaseWrapper {
@@ -64,6 +66,9 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
 
   // Return the renderer that is responsible for painting the caret (in the selection start node).
   func caretRendererWithoutUpdatingLayout() -> RenderBlockWrapper? {
+    if wk_interop.FrameSelection_caretRendererWithoutUpdatingLayout(p) == nil {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
