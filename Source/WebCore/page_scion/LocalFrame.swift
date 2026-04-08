@@ -49,8 +49,7 @@ final class LocalFrameWrapper: FrameWrapper {
   }
 
   func selection() -> FrameSelectionWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return FrameSelectionWrapper(wk_interop.LocalFrame_selection(p))
   }
 
   func rootFrame() -> LocalFrameWrapper {

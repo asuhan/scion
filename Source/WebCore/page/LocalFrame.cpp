@@ -132,6 +132,11 @@ extern "C" void* LocalFrame_view(const void* p)
     return static_cast<const WebCore::LocalFrame*>(p)->view();
 }
 
+extern "C" void* LocalFrame_selection(void* p)
+{
+    return &static_cast<WebCore::LocalFrame*>(p)->selection();
+}
+
 namespace WebCore {
 
 using namespace HTMLNames;

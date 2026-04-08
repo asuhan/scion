@@ -45,6 +45,8 @@ final class DragCaretControllerWrapper: CaretBaseWrapper {
 }
 
 final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   func selection() -> VisibleSelectionWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -85,4 +87,6 @@ final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }

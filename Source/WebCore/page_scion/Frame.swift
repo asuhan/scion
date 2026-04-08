@@ -26,7 +26,7 @@
 import wk_interop
 
 class FrameWrapper {
-  init(_ p: UnsafeRawPointer) { self.p = p }
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
   func tree() -> FrameTreeWrapper {
     // TODO(asuhan): implement this
@@ -62,5 +62,5 @@ class FrameWrapper {
     fatalError("Not implemented")
   }
 
-  let p: UnsafeRawPointer
+  let p: UnsafeMutableRawPointer
 }
