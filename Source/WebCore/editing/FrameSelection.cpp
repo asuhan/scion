@@ -103,6 +103,11 @@ extern "C" void* FrameSelection_caretRendererWithoutUpdatingLayout(const void* p
     return static_cast<const WebCore::FrameSelection*>(p)->caretRendererWithoutUpdatingLayout();
 }
 
+extern "C" void* DragCaretController_caretRenderer(const void* p)
+{
+    return static_cast<const WebCore::DragCaretController*>(p)->caretRenderer();
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(CaretBase);

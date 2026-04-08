@@ -1184,3 +1184,4 @@ uint8_t GraphicsContext_compositeOperation(const void*);
 void GraphicsContext_setCompositeOperation(void*, uint8_t, uint8_t);
 void GraphicsContext_fillRect(void* p, struct FloatRectRaw, struct SRGBARaw);
 void* FrameSelection_caretRendererWithoutUpdatingLayout(const void*);
+void* DragCaretController_caretRenderer(const void*);

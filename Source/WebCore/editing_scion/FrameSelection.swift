@@ -31,6 +31,9 @@ final class DragCaretControllerWrapper: CaretBaseWrapper {
   init(_ p: UnsafeRawPointer) { self.p = p }
 
   func caretRenderer() -> RenderBlockWrapper? {
+    if wk_interop.DragCaretController_caretRenderer(p) == nil {
+      return nil
+    }
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
