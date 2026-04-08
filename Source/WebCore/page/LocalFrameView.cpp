@@ -163,6 +163,11 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_isTransparent(const void* p)
     return static_cast<const WebCore::LocalFrameView*>(p)->isTransparent();
 }
 
+extern "C" WEBCORE_EXPORT bool LocalFrameView_hasExtendedBackgroundRectForPainting(const void* p)
+{
+    return static_cast<const WebCore::LocalFrameView*>(p)->hasExtendedBackgroundRectForPainting();
+}
+
 struct SRGBARaw {
     uint8_t red;
     uint8_t green;

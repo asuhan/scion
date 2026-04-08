@@ -71,8 +71,7 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func hasExtendedBackgroundRectForPainting() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.LocalFrameView_hasExtendedBackgroundRectForPainting(p)
   }
 
   func extendedBackgroundRectForPainting() -> IntRect {

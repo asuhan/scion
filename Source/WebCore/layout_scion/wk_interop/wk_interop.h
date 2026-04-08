@@ -565,6 +565,7 @@ void LocalFrameViewLayoutContext_enablePaintOffsetCache(void*);
 void* LocalFrameView_frame(const void*);
 void* LocalFrameView_layoutContext(const void*);
 bool LocalFrameView_isTransparent(const void*);
+bool LocalFrameView_hasExtendedBackgroundRectForPainting(const void*);
 struct LayoutPointRaw LocalFrameView_scrollPositionRespectingCustomFixedPosition(const void*);
 struct PaginationRaw LocalFrameView_pagination(const void*);
 void* RenderElement_element(const void*);
