@@ -908,11 +908,17 @@ class RenderBoxModelObjectWrapper: RenderLayerModelObjectWrapper {
   }
 
   func inlineContinuation() -> RenderInlineWrapper? {
-    assert(!isNativeImpl())
-    if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(id()) {
-      return RenderInlineWrapper(p: raw)
+    if !isNativeImpl() {
+      if let raw = wk_interop.RenderBoxModelObject_inlineContinuation(id()) {
+        return RenderInlineWrapper(p: raw)
+      }
+      return nil
     }
-    return nil
+    if !hasContinuationChainNode() {
+      return nil
+    }
+    // TODO(asuhan): implement this
+    fatalError("Not implemented")
   }
 
   func insertIntoContinuationChainAfter(afterRenderer: RenderBoxModelObjectWrapper) {
