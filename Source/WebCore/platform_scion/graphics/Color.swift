@@ -23,6 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// TODO(asuhan): Support more color types, not just sRGB.
 struct ColorWrapper: Equatable {
   struct Flags: OptionSet {
     let rawValue: UInt8
@@ -32,14 +33,14 @@ struct ColorWrapper: Equatable {
   }
 
   init() {
-    self.srgba = SRGBA(red: 0, green: 0, blue: 0, alpha: 0)
-    self.valid = false
+    srgba = SRGBA(red: 0, green: 0, blue: 0, alpha: 0)
+    valid = false
   }
 
   init(_ color: SRGBA<UInt8>, _ flags: Flags = []) {
     assert(flags.isEmpty)
-    self.srgba = color
-    self.valid = true
+    srgba = color
+    valid = true
   }
 
   func isValid() -> Bool { return valid }
@@ -49,10 +50,7 @@ struct ColorWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func isVisible() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isVisible() -> Bool { return srgba.alpha > 0 }
 
   func alphaAsFloat() -> Float32 {
     // TODO(asuhan): implement this
