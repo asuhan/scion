@@ -163,6 +163,20 @@ extern "C" WEBCORE_EXPORT bool LocalFrameView_isTransparent(const void* p)
     return static_cast<const WebCore::LocalFrameView*>(p)->isTransparent();
 }
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+extern "C" WEBCORE_EXPORT SRGBARaw LocalFrameView_documentBackgroundColor(const void* p)
+{
+    const auto color = static_cast<const WebCore::LocalFrameView*>(p)->documentBackgroundColor();
+    const auto [r, g, b, a] = color.tryGetAsSRGBABytes()->resolved();
+    return { r, g, b, a };
+}
+
 struct LayoutPointRaw {
     int32_t x;
     int32_t y;

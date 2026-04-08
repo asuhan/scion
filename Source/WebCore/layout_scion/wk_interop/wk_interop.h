@@ -288,6 +288,13 @@ struct VisibleRectContextRaw {
     uint8_t options;
 };
 
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
 uint8_t RenderStyle_unicodeBidi(const void*);
 float RenderStyle_tabSizeValue(const void*);
 bool RenderStyle_tabSizeIsSpaces(const void*);
@@ -1163,3 +1170,4 @@ void RenderSelection_destroy(const void*);
 const void* InitialContainingBlock_create(const void*);
 void InitialContainingBlock_destroy(const void*);
 void* ContainerNode_renderer(const void*);
+struct SRGBARaw LocalFrameView_documentBackgroundColor(const void*);

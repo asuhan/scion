@@ -185,8 +185,9 @@ class LocalFrameViewWrapper: FrameViewWrapper {
   }
 
   func documentBackgroundColor() -> ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    // TODO(asuhan): handle all color types, flags.
+    let c = wk_interop.LocalFrameView_documentBackgroundColor(p)
+    return ColorWrapper(SRGBA(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha))
   }
 
   func incrementVisuallyNonEmptyCharacterCount(inlineText: StringWrapper) {

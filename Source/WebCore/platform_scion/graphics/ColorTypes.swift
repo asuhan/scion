@@ -23,7 +23,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-struct SRGBA<T: BinaryInteger> {
+struct SRGBA<T: BinaryInteger>: Equatable {
   init(red: T, green: T, blue: T, alpha: T = 255) {
     self.red = red
     self.green = green
