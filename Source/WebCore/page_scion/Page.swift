@@ -39,8 +39,7 @@ class PageWrapper {
   }
 
   func dragCaretController() -> DragCaretControllerWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return DragCaretControllerWrapper(wk_interop.Page_dragCaretController(p))
   }
 
   func focusController() -> FocusControllerWrapper {

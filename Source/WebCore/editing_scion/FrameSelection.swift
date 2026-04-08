@@ -28,6 +28,8 @@ import wk_interop
 class CaretBaseWrapper {}
 
 final class DragCaretControllerWrapper: CaretBaseWrapper {
+  init(_ p: UnsafeRawPointer) { self.p = p }
+
   func caretRenderer() -> RenderBlockWrapper? {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -44,6 +46,8 @@ final class DragCaretControllerWrapper: CaretBaseWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeRawPointer
 }
 
 final class FrameSelectionWrapper: CaretBaseWrapper, CaretAnimationClient {

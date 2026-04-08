@@ -1140,6 +1140,7 @@ void* NinePieceImage_image(const void*);
 void* ShapeValue_image(const void*);
 void* Frame_page(const void*);
 bool Frame_isMainFrame(const void*);
+const void* Page_dragCaretController(const void*);
 void* Page_settings(const void*);
 float Page_pageScaleFactor(const void*);
 const void* FilterOperations_create();
