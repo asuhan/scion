@@ -3186,8 +3186,8 @@ class RenderLayerWrapper {
   }
 
   func isBackdropRoot() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(!isNativeImpl())
+    return wk_interop.RenderLayer_isBackdropRoot(layerId())
   }
 
   func hasBlendMode() -> Bool {
