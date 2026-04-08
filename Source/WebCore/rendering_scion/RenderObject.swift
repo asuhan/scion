@@ -1335,7 +1335,9 @@ class RenderObjectWrapper: CachedImageClientWrapper {
   }
 
   func isExcludedAndPlacedInBorder() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderObject_isExcludedAndPlacedInBorder(id())
+    }
     return isExcludedFromNormalLayout() && isLegend()
   }
 
