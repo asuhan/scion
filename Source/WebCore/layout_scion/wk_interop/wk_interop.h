@@ -806,6 +806,8 @@ bool RenderStyle_hasOutline(const void*);
 uint8_t RenderStyle_overflowX(const void*);
 uint8_t RenderStyle_overflowY(const void*);
 bool RenderStyle_isOverflowVisible(const void*);
+uint8_t RenderStyle_overscrollBehaviorX(const void*);
+uint8_t RenderStyle_overscrollBehaviorY(const void*);
 uint8_t RenderStyle_visibility(const void*);
 uint8_t RenderStyle_usedVisibility(const void*);
 uint8_t RenderStyle_verticalAlign(const void*);

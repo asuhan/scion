@@ -608,13 +608,11 @@ class RenderStyleWrapper: Equatable {
   func isOverflowVisible() -> Bool { return wk_interop.RenderStyle_isOverflowVisible(p!) }
 
   func overscrollBehaviorX() -> OverscrollBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return OverscrollBehavior(rawValue: wk_interop.RenderStyle_overscrollBehaviorX(p!))!
   }
 
   func overscrollBehaviorY() -> OverscrollBehavior {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return OverscrollBehavior(rawValue: wk_interop.RenderStyle_overscrollBehaviorY(p!))!
   }
 
   func visibility() -> Visibility {
