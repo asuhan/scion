@@ -510,6 +510,7 @@ bool RenderObject_isRenderBox(const void*);
 bool RenderObject_isImage(const void*);
 bool RenderObject_isFieldset(const void*);
 bool RenderObject_isRenderView(const void*);
+bool RenderObject_isReplacedOrInlineBlock(const void*);
 bool RenderObject_isHorizontalWritingMode(const void*);
 bool RenderObject_isRenderFragmentedFlow(const void*);
 bool RenderObject_isExcludedFromNormalLayout(const void*);
