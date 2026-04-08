@@ -142,6 +142,11 @@ extern "C" WEBCORE_EXPORT uint16_t PaintInfo_phase(const void* p)
     return static_cast<uint16_t>(static_cast<const WebCore::PaintInfo*>(p)->phase);
 }
 
+extern "C" WEBCORE_EXPORT void PaintInfo_setPhase(void* p, uint16_t phase)
+{
+    static_cast<WebCore::PaintInfo*>(p)->phase = static_cast<WebCore::PaintPhase>(phase);
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_OR_ISO_ALLOCATED_IMPL(RenderBlockFlow);

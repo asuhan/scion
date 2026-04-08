@@ -217,8 +217,7 @@ struct PaintInfoWrapper {
         n!.phase = newValue
         return
       }
-      // TODO(asuhan): implement this
-      fatalError("Not implemented")
+      wk_interop.PaintInfo_setPhase(p!, newValue.rawValue)
     }
   }
 
