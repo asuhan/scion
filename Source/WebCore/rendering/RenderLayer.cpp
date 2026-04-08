@@ -233,6 +233,11 @@ extern "C" WEBCORE_EXPORT void RenderLayer_setStaticBlockPosition(void* p, int32
     static_cast<WebCore::RenderLayer*>(p)->setStaticBlockPosition(WebCore::LayoutUnit::fromRawValue(position));
 }
 
+extern "C" WEBCORE_EXPORT bool RenderLayer_isolatesBlending(const void* p)
+{
+    return static_cast<const WebCore::RenderLayer*>(p)->isolatesBlending();
+}
+
 extern "C" WEBCORE_EXPORT bool RenderLayer_isComposited(const void* p)
 {
     return static_cast<const WebCore::RenderLayer*>(p)->isComposited();

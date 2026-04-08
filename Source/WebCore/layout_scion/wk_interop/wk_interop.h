@@ -1102,6 +1102,7 @@ int32_t RenderLayer_staticInlinePosition(const void*);
 int32_t RenderLayer_staticBlockPosition(const void*);
 void RenderLayer_setStaticInlinePosition(void* p, int32_t position);
 void RenderLayer_setStaticBlockPosition(void* p, int32_t position);
+bool RenderLayer_isolatesBlending(const void*);
 bool RenderLayer_isComposited(const void*);
 void RenderLayer_setIsHiddenByOverflowTruncation(void* p, bool is_hidden);
 void* Document_frame(const void*);

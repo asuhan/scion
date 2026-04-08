@@ -3201,7 +3201,9 @@ class RenderLayerWrapper {
   }
 
   func isolatesBlending() -> Bool {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      return wk_interop.RenderLayer_isolatesBlending(layerId())
+    }
     return hasNotIsolatedBlendingDescendants && isCSSStackingContext()
   }
 
