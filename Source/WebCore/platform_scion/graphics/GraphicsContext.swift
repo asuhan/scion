@@ -276,8 +276,10 @@ class GraphicsContextWrapper {
   }
 
   func fillRect(rect: FloatRectWrapper, color: ColorWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let srgba = color.toSRGBA()
+    wk_interop.GraphicsContext_fillRect(
+      p!, FloatRectRaw(x: rect.x(), y: rect.y(), width: rect.width(), height: rect.height()),
+      SRGBARaw(red: srgba.red, green: srgba.green, blue: srgba.blue, alpha: srgba.alpha))
   }
 
   func fillRect(

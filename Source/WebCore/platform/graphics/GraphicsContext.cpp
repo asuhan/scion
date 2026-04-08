@@ -53,6 +53,25 @@ extern "C" WEBCORE_EXPORT void GraphicsContext_setCompositeOperation(void* p, ui
     static_cast<WebCore::GraphicsContext*>(p)->setCompositeOperation(static_cast<WebCore::CompositeOperator>(operation), static_cast<WebCore::BlendMode>(blendMode));
 }
 
+struct FloatRectRaw {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+struct SRGBARaw {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+};
+
+extern "C" WEBCORE_EXPORT void GraphicsContext_fillRect(void* p, FloatRectRaw rect_raw, SRGBARaw srgba)
+{
+    static_cast<WebCore::GraphicsContext*>(p)->fillRect({ rect_raw.x, rect_raw.y, rect_raw.width, rect_raw.height }, WebCore::SRGBA { srgba.red, srgba.green, srgba.blue, srgba.alpha });
+}
+
 namespace WebCore {
 
 WTF_MAKE_TZONE_ALLOCATED_IMPL(GraphicsContext);

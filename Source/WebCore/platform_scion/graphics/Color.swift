@@ -97,6 +97,11 @@ struct ColorWrapper: Equatable {
     fatalError("Not implemented")
   }
 
+  func toSRGBA() -> SRGBA<UInt8> {
+    assert(valid)
+    return srgba
+  }
+
   static var transparentBlack: ColorWrapper {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
