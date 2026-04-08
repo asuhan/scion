@@ -1172,3 +1172,4 @@ const void* InitialContainingBlock_create(const void*);
 void InitialContainingBlock_destroy(const void*);
 void* ContainerNode_renderer(const void*);
 struct SRGBARaw LocalFrameView_documentBackgroundColor(const void*);
+uint8_t GraphicsContext_compositeOperation(const void*);

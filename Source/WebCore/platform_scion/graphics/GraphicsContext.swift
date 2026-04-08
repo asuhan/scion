@@ -23,6 +23,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import wk_interop
+
 class GraphicsContextWrapper {
   init(_ p: UnsafeMutableRawPointer) { self.p = p }
 
@@ -147,8 +149,7 @@ class GraphicsContextWrapper {
   }
 
   func compositeOperation() -> CompositeOperator {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return CompositeOperator(rawValue: wk_interop.GraphicsContext_compositeOperation(p!))!
   }
 
   func setCompositeOperation(operation: CompositeOperator, blendMode: BlendMode = .Normal) {
