@@ -1652,6 +1652,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_hasVisibleStroke(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->hasVisibleStroke();
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasExplicitlySetColor(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->hasExplicitlySetColor();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();

@@ -2521,10 +2521,7 @@ class RenderStyleWrapper: Equatable {
     fatalError("Not implemented")
   }
 
-  func hasExplicitlySetColor() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func hasExplicitlySetColor() -> Bool { return wk_interop.RenderStyle_hasExplicitlySetColor(p!) }
 
   private func strokePaintColor() -> StyleColorWrapper {
     // TODO(asuhan): implement this
