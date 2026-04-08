@@ -188,6 +188,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_rtlOrdering(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->rtlOrdering());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_hasDisplayAffectedByAnimations(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->hasDisplayAffectedByAnimations());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_display(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->display());

@@ -694,6 +694,7 @@ const void* RenderStyle_metricsOfPrimaryFont(const void*);
 const void* RenderStyle_fontDescription(const void*);
 float RenderStyle_computedFontSize(const void*);
 uint8_t RenderStyle_rtlOrdering(const void*);
+bool RenderStyle_hasDisplayAffectedByAnimations(const void*);
 uint8_t RenderStyle_display(const void*);
 const void* RenderStyle_backgroundLayers(const void*);
 const void* RenderStyle_maskLayers(const void*);

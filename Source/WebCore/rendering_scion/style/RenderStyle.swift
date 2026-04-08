@@ -486,8 +486,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func hasDisplayAffectedByAnimations() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_hasDisplayAffectedByAnimations(p!)
   }
 
   func display() -> DisplayType {
