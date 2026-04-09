@@ -840,8 +840,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func gridAutoFlow() -> GridAutoFlow {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return GridAutoFlow(rawValue: wk_interop.RenderStyle_gridAutoFlow(p!))
   }
 
   func isGridAutoFlowDirectionColumn() -> Bool {

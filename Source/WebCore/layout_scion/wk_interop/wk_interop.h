@@ -897,6 +897,7 @@ uint8_t RenderStyle_gridAutoRepeatColumnsType(const void*);
 uint8_t RenderStyle_gridAutoRepeatRowsType(const void*);
 uint64_t RenderStyle_namedGridAreaRowCount(const void*);
 uint64_t RenderStyle_namedGridAreaColumnCount(const void*);
+uint8_t RenderStyle_gridAutoFlow(const void*);
 bool RenderStyle_isGridAutoFlowDirectionColumn(const void*);
 bool RenderStyle_isGridAutoFlowAlgorithmDense(const void*);
 const void* RenderStyle_marginRight(const void*);

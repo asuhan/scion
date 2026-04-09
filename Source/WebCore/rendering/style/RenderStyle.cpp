@@ -1361,6 +1361,11 @@ extern "C" WEBCORE_EXPORT uint64_t RenderStyle_namedGridAreaColumnCount(const vo
     return static_cast<const WebCore::RenderStyle*>(p)->namedGridAreaColumnCount();
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_gridAutoFlow(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->gridAutoFlow());
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isGridAutoFlowDirectionColumn(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isGridAutoFlowDirectionColumn();
