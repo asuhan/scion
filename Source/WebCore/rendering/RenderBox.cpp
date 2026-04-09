@@ -62,6 +62,7 @@
 #include "RenderBlockInlines.h"
 #include "RenderBoxFragmentInfo.h"
 #include "RenderBoxInlines.h"
+#include "RenderBoxScion.h"
 #include "RenderChildIterator.h"
 #include "RenderDeprecatedFlexibleBox.h"
 #include "RenderElementInlines.h"
@@ -355,6 +356,7 @@ struct SameSizeAsRenderBox : public RenderBoxModelObject {
     LayoutBoxExtent marginBox;
     LayoutUnit preferredLogicalWidths[2];
     void* pointers[1];
+    std::unique_ptr<RenderBoxScion> m_scion;
 };
 
 static_assert(sizeof(RenderBox) == sizeof(SameSizeAsRenderBox), "RenderBox should stay small");
@@ -395,6 +397,10 @@ RenderBox::RenderBox(Type type, Document& document, RenderStyle&& style, OptionS
 
 // Do not add any code in below destructor. Add it to willBeDestroyed() instead.
 RenderBox::~RenderBox() = default;
+
+void RenderBox::setScionHandle(void* handle) {
+    m_scion = std::make_unique<RenderBoxScion>(handle);
+}
 
 void RenderBox::willBeDestroyed()
 {
@@ -2053,6 +2059,12 @@ bool RenderBox::backgroundIsKnownToBeOpaqueInRect(const LayoutRect& localRect) c
         break;
     }
     return backgroundRect.contains(localRect);
+}
+
+LayoutUnit RenderBox::width() const
+{
+    if (m_scion) { return m_scion->width(); }
+    return m_frameRect.width();
 }
 
 static bool isCandidateForOpaquenessTest(const RenderBox& childBox)

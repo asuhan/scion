@@ -35,6 +35,7 @@ namespace WebCore {
 
 class RenderBlockFlow;
 class RenderBoxFragmentInfo;
+class RenderBoxScion;
 class RenderFragmentContainer;
 class RoundedRectRadii;
 struct PaintInfo;
@@ -52,6 +53,8 @@ class RenderBox : public RenderBoxModelObject {
 public:
     virtual ~RenderBox();
 
+    void setScionHandle(void* handle);
+
     bool requiresLayer() const override;
 
     bool requiresLayerWithScrollableArea() const;
@@ -59,7 +62,7 @@ public:
 
     LayoutUnit x() const { return m_frameRect.x(); }
     LayoutUnit y() const { return m_frameRect.y(); }
-    LayoutUnit width() const { return m_frameRect.width(); }
+    WEBCORE_EXPORT LayoutUnit width() const;
     LayoutUnit height() const { return m_frameRect.height(); }
 
     // These represent your location relative to your container as a physical offset.
@@ -793,6 +796,8 @@ protected:
 private:
     // Used to store state between styleWillChange and styleDidChange
     static bool s_hadNonVisibleOverflow;
+
+    std::unique_ptr<RenderBoxScion> m_scion;
 };
 
 inline RenderBox* RenderBox::parentBox() const
