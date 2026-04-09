@@ -139,8 +139,7 @@ func roundedIntPoint(_ p: FloatPoint) -> IntPoint {
 }
 
 func flooredIntPoint(_ p: FloatPoint) -> IntPoint {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  return IntPoint(x: clampToInteger(value: floorf(p.x)), y: clampToInteger(value: floorf(p.y)))
 }
 
 func toFloatSize(a: FloatPoint) -> FloatSize {
