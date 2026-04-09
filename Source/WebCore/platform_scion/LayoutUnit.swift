@@ -329,10 +329,7 @@ struct LayoutUnit: Comparable {
     fatalError("Not implemented")
   }
 
-  init(value: UInt32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(value: UInt32) { setValue(value) }
 
   init(value: UInt64) {
     self.value = clampTo<Int32>(value: value * UInt64(kFixedPointDenominator))
@@ -349,6 +346,14 @@ struct LayoutUnit: Comparable {
       self.value = Int32.min
     } else {
       self.value = value * kFixedPointDenominator
+    }
+  }
+
+  private mutating func setValue(_ value: UInt32) {
+    if value >= intMaxForLayoutUnit {
+      self.value = Int32.max
+    } else {
+      self.value = Int32(value) * kFixedPointDenominator
     }
   }
 
