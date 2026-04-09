@@ -593,8 +593,7 @@ class RenderStyleWrapper: Equatable {
   func hasOutline() -> Bool { return wk_interop.RenderStyle_hasOutline(p!) }
 
   func outlineStyle() -> BorderStyle {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return BorderStyle(rawValue: wk_interop.RenderStyle_outlineStyle(p!))!
   }
 
   func overflowX() -> Overflow {

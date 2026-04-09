@@ -807,6 +807,7 @@ bool RenderStyle_hasEntirelyFixedBackground(const void*);
 uint8_t RenderStyle_floating(const void*);
 bool RenderStyle_hasBorderRadius(const void*);
 bool RenderStyle_hasOutline(const void*);
+uint8_t RenderStyle_outlineStyle(const void*);
 uint8_t RenderStyle_overflowX(const void*);
 uint8_t RenderStyle_overflowY(const void*);
 bool RenderStyle_isOverflowVisible(const void*);
