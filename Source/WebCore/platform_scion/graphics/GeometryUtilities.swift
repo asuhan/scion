@@ -106,8 +106,19 @@ func distanceToFarthestSide(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
 }
 
 func distanceToClosestCorner(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let topLeft = FloatPoint()
+  let topLeftDistance = (p - topLeft).diagonalLength()
+
+  let topRight = FloatPoint(x: size.width, y: 0)
+  let topRightDistance = (p - topRight).diagonalLength()
+
+  let bottomLeft = FloatPoint(x: 0, y: size.height)
+  let bottomLeftDistance = (p - bottomLeft).diagonalLength()
+
+  let bottomRight = FloatPoint(x: size.width, y: size.height)
+  let bottomRightDistance = (p - bottomRight).diagonalLength()
+
+  return min(topLeftDistance, topRightDistance, bottomLeftDistance, bottomRightDistance)
 }
 
 func distanceToFarthestCorner(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
