@@ -43,6 +43,8 @@ enum GridPositionSide {
   case RowEndSide
 }
 
+private let kGridMaxPosition: Int32 = 1_000_000
+
 struct GridPosition: Equatable {
   func isPositive() -> Bool { return integerPosition() > 0 }
 
@@ -82,15 +84,11 @@ struct GridPosition: Equatable {
 
   // Note that grid line 1 is internally represented by the index 0, that's why the max value for
   // a position is kGridMaxTracks instead of kGridMaxTracks + 1.
-  static func max() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func max() -> Int32 { return gMaxPositionForTesting ?? kGridMaxPosition }
 
-  static func min() -> Int32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static func min() -> Int32 { return -max() }
+
+  private static let gMaxPositionForTesting: Int32? = nil
 
   var type: GridPositionType = .AutoPosition
   private var m_integerPosition: Int32 = 0
