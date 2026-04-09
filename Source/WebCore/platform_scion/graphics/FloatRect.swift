@@ -162,8 +162,10 @@ struct FloatRectWrapper: Equatable {
   }
 
   func contains(_ point: FloatPoint, _ containsMode: ContainsMode = .InsideOrOnStroke) -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if containsMode == .InsideOrOnStroke {
+      return contains(point.x, point.y)
+    }
+    return x() < point.x && maxX() > point.x && y() < point.y && maxY() > point.y
   }
 
   mutating func intersect(other: FloatRectWrapper) {
@@ -203,6 +205,12 @@ struct FloatRectWrapper: Equatable {
     let maxY = max(maxY(), other.maxY())
 
     setLocationAndSizeFromEdges(left: minX, top: minY, right: maxX, bottom: maxY)
+  }
+
+  // Note, this doesn't match what IntRect::contains(IntPoint&) does; the int version
+  // is really checking for containment of 1x1 rect, but that doesn't make sense with floats.
+  private func contains(_ px: Float32, _ py: Float32) -> Bool {
+    return px >= x() && px <= maxX() && py >= y() && py <= maxY()
   }
 
   mutating func inflateX(dx: Float32) {
@@ -263,6 +271,7 @@ func intersection(_ a: FloatRectWrapper, _ b: FloatRectWrapper) -> FloatRectWrap
 }
 
 func enclosingIntRect(rect: FloatRectWrapper) -> IntRect {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let location = FloatPoint(p: flooredIntPoint(rect.minXMinYCorner()))
+  let maxPoint = FloatPoint(p: ceiledIntPoint(rect.maxXMaxYCorner()))
+  return IntRect(location: IntPoint(location), size: IntSize(maxPoint - location))
 }

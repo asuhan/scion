@@ -142,6 +142,10 @@ func flooredIntPoint(_ p: FloatPoint) -> IntPoint {
   return IntPoint(x: clampToInteger(value: floorf(p.x)), y: clampToInteger(value: floorf(p.y)))
 }
 
+func ceiledIntPoint(_ p: FloatPoint) -> IntPoint {
+  return IntPoint(x: clampToInteger(value: ceilf(p.x)), y: clampToInteger(value: ceilf(p.y)))
+}
+
 func toFloatSize(a: FloatPoint) -> FloatSize {
   return FloatSize(width: a.x, height: a.y)
 }

@@ -36,6 +36,11 @@ struct IntPoint: Equatable {
     self.y = y
   }
 
+  init(_ p: FloatPoint) {  // this is lossy
+    x = clampToInteger(value: p.x)
+    y = clampToInteger(value: p.y)
+  }
+
   func isZero() -> Bool { return x == 0 && y == 0 }
 
   mutating func move(dx: Int32, dy: Int32) {

@@ -24,6 +24,18 @@
  */
 
 struct IntSize: Equatable {
+  init() {}
+
+  init(width: Int32, height: Int32) {
+    self.width = width
+    self.height = height
+  }
+
+  init(_ s: FloatSize) {  // this is lossy
+    width = clampToInteger(value: s.width)
+    height = clampToInteger(value: s.height)
+  }
+
   func isEmpty() -> Bool { return width <= 0 || height <= 0 }
   func isZero() -> Bool { return width == 0 && height == 0 }
 
