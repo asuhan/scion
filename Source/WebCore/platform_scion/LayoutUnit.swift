@@ -324,10 +324,7 @@ struct LayoutUnit: Comparable {
 
   init(value: Int32) { setValue(value) }
 
-  init(value: UInt16) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  init(value: UInt16) { setValue(Int32(value)) }
 
   init(value: UInt32) { setValue(value) }
 
