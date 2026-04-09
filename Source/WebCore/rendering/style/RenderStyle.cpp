@@ -1684,6 +1684,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_usedPointerEvents(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->usedPointerEvents());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_usedTransformStyle3D(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->usedTransformStyle3D());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_paintOrder(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->paintOrder());

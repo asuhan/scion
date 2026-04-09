@@ -2449,8 +2449,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func usedTransformStyle3D() -> TransformStyle3D {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return TransformStyle3D(rawValue: wk_interop.RenderStyle_usedTransformStyle3D(p!))!
   }
 
   func preserves3D() -> Bool {
