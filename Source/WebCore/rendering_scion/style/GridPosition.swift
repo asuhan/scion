@@ -50,9 +50,9 @@ struct GridPosition: Equatable {
 
   func isSpan() -> Bool { return type == .SpanPosition }
 
-  func setAutoPosition() {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+  mutating func setAutoPosition() {
+    type = .AutoPosition
+    m_integerPosition = 0
   }
 
   // 'span' values cannot be negative, yet we reuse the <integer> position which can
@@ -92,6 +92,6 @@ struct GridPosition: Equatable {
     fatalError("Not implemented")
   }
 
-  let type: GridPositionType = .AutoPosition
-  private let m_integerPosition: Int32 = 0
+  var type: GridPositionType = .AutoPosition
+  private var m_integerPosition: Int32 = 0
 }

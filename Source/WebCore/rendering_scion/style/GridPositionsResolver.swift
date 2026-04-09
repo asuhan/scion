@@ -407,7 +407,7 @@ private func adjustGridPositionsFromStyle(
   let isForColumns = direction == .ForColumns
   let initialPosition =
     isForColumns ? gridItem.style().gridItemColumnStart() : gridItem.style().gridItemRowStart()
-  let finalPosition =
+  var finalPosition =
     isForColumns ? gridItem.style().gridItemColumnEnd() : gridItem.style().gridItemRowEnd()
 
   // We must handle the placement error handling code here instead of in the StyleAdjuster because we don't want to
