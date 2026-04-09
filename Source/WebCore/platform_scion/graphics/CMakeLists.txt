@@ -6,6 +6,7 @@ target_sources(layout_scion PRIVATE
     ColorLuminance.swift
     ColorMatrix.swift
     ColorTypes.swift
+    ColorUtilities.swift
     DashArray.swift
     DecodingOptions.swift
     DestinationColorSpace.swift

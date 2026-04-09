@@ -49,10 +49,7 @@ struct ColorWrapper: Equatable {
 
   func isVisible() -> Bool { return srgba.alpha > 0 }
 
-  func alphaAsFloat() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func alphaAsFloat() -> Float32 { return convertByteAlphaToFloat(srgba.alpha) }
 
   func luminance() -> Float64 {
     // TODO(asuhan): implement this
