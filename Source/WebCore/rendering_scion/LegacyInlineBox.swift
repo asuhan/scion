@@ -76,10 +76,7 @@ class LegacyInlineBox {
 
   func y() -> Float32 { return m_topLeft.y }
 
-  func topLeft() -> FloatPoint {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func topLeft() -> FloatPoint { return m_topLeft }
 
   func size() -> FloatSize {
     // TODO(asuhan): implement this
