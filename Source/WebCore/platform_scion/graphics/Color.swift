@@ -45,10 +45,7 @@ struct ColorWrapper: Equatable {
 
   func isValid() -> Bool { return valid }
 
-  func isOpaque() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isOpaque() -> Bool { return srgba.alpha == 255 }
 
   func isVisible() -> Bool { return srgba.alpha > 0 }
 
