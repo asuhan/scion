@@ -1097,8 +1097,9 @@ class RenderStyleWrapper: Equatable {
   }
 
   func textBoxEdge() -> TextEdge {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let raw = wk_interop.RenderStyle_textBoxEdge(p!)
+    return TextEdge(
+      over: TextEdgeType(rawValue: raw.over)!, under: TextEdgeType(rawValue: raw.under)!)
   }
 
   func lineFitEdge() -> TextEdge {

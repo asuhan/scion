@@ -1201,6 +1201,17 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_textBoxTrim(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->textBoxTrim());
 }
 
+struct TextEdgeRaw {
+    uint8_t over;
+    uint8_t under;
+};
+
+extern "C" WEBCORE_EXPORT TextEdgeRaw RenderStyle_textBoxEdge(const void* p)
+{
+    const auto edge = static_cast<const WebCore::RenderStyle*>(p)->textBoxEdge();
+    return { static_cast<uint8_t>(edge.over), static_cast<uint8_t>(edge.under) };
+}
+
 extern "C" WEBCORE_EXPORT bool RenderStyle_isFixedTableLayout(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->isFixedTableLayout();
