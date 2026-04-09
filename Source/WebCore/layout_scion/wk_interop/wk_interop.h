@@ -958,6 +958,7 @@ uint8_t RenderStyle_resize(const void*);
 uint8_t RenderStyle_lineAlign(const void*);
 uint8_t RenderStyle_lineSnap(const void*);
 uint8_t RenderStyle_pointerEvents(const void*);
+uint8_t RenderStyle_usedPointerEvents(const void*);
 uint8_t RenderStyle_paintOrder(const void*);
 uint8_t RenderStyle_joinStyle(const void*);
 const void* RenderStyle_strokeWidth(const void*);
