@@ -1674,6 +1674,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_lineSnap(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->lineSnap());
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_pointerEvents(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->pointerEvents());
+}
+
 extern "C" WEBCORE_EXPORT uint8_t RenderStyle_paintOrder(const void* p)
 {
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->paintOrder());

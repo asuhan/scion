@@ -2441,8 +2441,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func pointerEvents() -> PointerEvents {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return PointerEvents(rawValue: wk_interop.RenderStyle_pointerEvents(p!))!
   }
 
   func usedPointerEvents() -> PointerEvents {
