@@ -1243,7 +1243,7 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return m_typeFlags.contains(.IsText)
   }
 
-  private func isRenderLineBreak() -> Bool {
+  func isRenderLineBreak() -> Bool {
     assert(isNativeImpl())
     return type() == .LineBreak
   }

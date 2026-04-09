@@ -24,10 +24,7 @@ class LegacyInlineBox {
     self.renderer = renderer
   }
 
-  func isLineBreak() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isLineBreak() -> Bool { return renderer.isRenderLineBreak() }
 
   func adjustPosition(_ dx: Float32, _ dy: Float32) {
     // TODO(asuhan): implement this
