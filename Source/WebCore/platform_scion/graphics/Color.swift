@@ -96,25 +96,13 @@ struct ColorWrapper: Equatable {
     return srgba
   }
 
-  static var transparentBlack: ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static var transparentBlack = ColorWrapper(SRGBA(red: 0, green: 0, blue: 0, alpha: 0))
 
-  static var black: ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static var black = ColorWrapper(SRGBA(red: 0, green: 0, blue: 0))
 
-  static var white: ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static var white = ColorWrapper(SRGBA(red: 255, green: 255, blue: 255))
 
-  static var lightGray: ColorWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  static var lightGray = ColorWrapper(SRGBA(red: 192, green: 192, blue: 192))
 
   private let srgba: SRGBA<UInt8>
   private let valid: Bool
