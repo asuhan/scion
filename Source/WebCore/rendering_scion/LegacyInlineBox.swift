@@ -26,10 +26,7 @@ class LegacyInlineBox {
 
   func isLineBreak() -> Bool { return renderer.isRenderLineBreak() }
 
-  func adjustPosition(_ dx: Float32, _ dy: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func adjustPosition(_ dx: Float32, _ dy: Float32) { m_topLeft.move(dx: dx, dy: dy) }
 
   func paint(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
@@ -151,4 +148,5 @@ class LegacyInlineBox {
   }
 
   let renderer: RenderObjectWrapper
+  private var m_topLeft = FloatPoint()
 }
