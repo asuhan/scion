@@ -47,8 +47,17 @@ func findIntersection(p1: FloatPoint, p2: FloatPoint, d1: FloatPoint, d2: FloatP
 func mapRect(_ r: FloatRectWrapper, srcRect: FloatRectWrapper, destRect: FloatRectWrapper)
   -> FloatRectWrapper
 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  if srcRect.width() == 0 || srcRect.height() == 0 {
+    return FloatRectWrapper()
+  }
+
+  let widthScale = destRect.width() / srcRect.width()
+  let heightScale = destRect.height() / srcRect.height()
+  return FloatRectWrapper(
+    x: destRect.x() + (r.x() - srcRect.x()) * widthScale,
+    y: destRect.y() + (r.y() - srcRect.y()) * heightScale,
+    width: r.width() * widthScale,
+    height: r.height() * heightScale)
 }
 
 func ellipseContainsPoint(center: FloatPoint, radii: FloatSize, point: FloatPoint) -> Bool {
