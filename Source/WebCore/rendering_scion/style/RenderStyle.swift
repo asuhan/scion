@@ -1899,8 +1899,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func imageRendering() -> ImageRendering {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return ImageRendering(rawValue: wk_interop.RenderStyle_imageRendering(p!))!
   }
 
   func filter() -> FilterOperations { return FilterOperations(wk_interop.RenderStyle_filter(p!)) }

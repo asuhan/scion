@@ -530,6 +530,11 @@ extern "C" WEBCORE_EXPORT bool RenderStyle_typographicMode(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->typographicMode() == WebCore::TypographicMode::Vertical;
 }
 
+extern "C" WEBCORE_EXPORT uint8_t RenderStyle_imageRendering(const void* p)
+{
+    return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->imageRendering());
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_filter(const void* p)
 {
     return &static_cast<const WebCore::RenderStyle*>(p)->filter();
