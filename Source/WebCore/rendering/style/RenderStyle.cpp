@@ -1704,6 +1704,11 @@ extern "C" WEBCORE_EXPORT void* RenderStyle_shapeOutside(const void* p)
     return static_cast<const WebCore::RenderStyle*>(p)->shapeOutside();
 }
 
+extern "C" WEBCORE_EXPORT const void* RenderStyle_shapeMargin(const void* p)
+{
+    return &static_cast<const WebCore::RenderStyle*>(p)->shapeMargin();
+}
+
 extern "C" WEBCORE_EXPORT void* RenderStyle_offsetPath(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->offsetPath();

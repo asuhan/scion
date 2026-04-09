@@ -2262,8 +2262,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func shapeMargin() -> LengthWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return LengthWrapper(p: wk_interop.RenderStyle_shapeMargin(p!))
   }
 
   static func initialShapeMargin() -> LengthWrapper {
