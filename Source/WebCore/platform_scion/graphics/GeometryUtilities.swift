@@ -92,8 +92,10 @@ func ellipseContainsPoint(center: FloatPoint, radii: FloatSize, point: FloatPoin
 }
 
 func distanceToClosestSide(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
-  // TODO(asuhan): implement this
-  fatalError("Not implemented")
+  let widthDelta = abs(size.width - p.x)
+  let heightDelta = abs(size.height - p.y)
+
+  return min(abs(p.x), widthDelta, abs(p.y), heightDelta)
 }
 
 func distanceToFarthestSide(_ p: FloatPoint, _ size: FloatSize) -> Float32 {
