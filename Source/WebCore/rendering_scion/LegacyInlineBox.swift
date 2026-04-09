@@ -67,10 +67,7 @@ class LegacyInlineBox {
   }
 
   // x() is the left side of the box in the containing block's coordinate system.
-  func setX(_ x: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setX(_ x: Float32) { m_topLeft.setX(x: x) }
 
   func x() -> Float32 {
     // TODO(asuhan): implement this
@@ -78,10 +75,7 @@ class LegacyInlineBox {
   }
 
   // y() is the top side of the box in the containing block's coordinate system.
-  func setY(_ y: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setY(_ y: Float32) { m_topLeft.setY(y: y) }
 
   func y() -> Float32 {
     // TODO(asuhan): implement this
