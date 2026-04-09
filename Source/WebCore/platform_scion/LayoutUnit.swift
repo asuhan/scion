@@ -273,8 +273,15 @@ struct LayoutUnit: Comparable {
   }
 
   func ceilToFloat() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    let floatValue = toFloat()
+    if Int32(floatValue * Float32(kFixedPointDenominator)) == value {
+      return floatValue
+    }
+    if floatValue > 0 {
+      return floatValue != Float32.greatestFiniteMagnitude ? floatValue.nextUp : floatValue
+    }
+    // TODO(asuhan): Why are we comparing to least positive normal number? It doesn't look right.
+    return floatValue != Float32.leastNormalMagnitude ? floatValue.nextUp : floatValue
   }
 
   func fraction() -> LayoutUnit {
