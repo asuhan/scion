@@ -1208,8 +1208,7 @@ class RenderStyleWrapper: Equatable {
   }
 
   func listStylePosition() -> ListStylePosition {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return wk_interop.RenderStyle_listStylePosition(p!) ? .Inside : .Outside
   }
 
   func isFixedTableLayout() -> Bool { return wk_interop.RenderStyle_isFixedTableLayout(p!) }

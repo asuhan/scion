@@ -273,6 +273,11 @@ extern "C" WEBCORE_EXPORT uint8_t RenderStyle_captionSide(const void* p)
     return static_cast<uint8_t>(static_cast<const WebCore::RenderStyle*>(p)->captionSide());
 }
 
+extern "C" WEBCORE_EXPORT bool RenderStyle_listStylePosition(const void* p)
+{
+    return static_cast<const WebCore::RenderStyle*>(p)->listStylePosition() == WebCore::ListStylePosition::Inside;
+}
+
 extern "C" WEBCORE_EXPORT const void* RenderStyle_boxShadow(const void* p)
 {
     return static_cast<const WebCore::RenderStyle*>(p)->boxShadow();
