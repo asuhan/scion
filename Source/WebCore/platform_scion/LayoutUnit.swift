@@ -306,23 +306,16 @@ struct LayoutUnit: Comparable {
     fatalError("Not implemented")
   }
 
-  init() {
-    value = 0
-  }
+  init() {}
 
   init(value: Float32) {
     self.init(value: Float64(value))
   }
 
-  init(value: Int) {
-    // TODO(asuhan): implement this correctly
-    self.value = Int32(value)
-  }
+  // TODO(asuhan): remove
+  init(value: Int) { setValue(Int32(value)) }
 
-  init(value: Int32) {
-    // TODO(asuhan): implement this correctly
-    self.value = value
-  }
+  init(value: Int32) { setValue(value) }
 
   init(value: UInt16) {
     // TODO(asuhan): implement this
@@ -340,6 +333,16 @@ struct LayoutUnit: Comparable {
 
   init(value: Float64) {
     self.value = clampToInteger(value: value * Float64(kFixedPointDenominator))
+  }
+
+  private mutating func setValue(_ value: Int32) {
+    if value > intMaxForLayoutUnit {
+      self.value = Int32.max
+    } else if value < intMinForLayoutUnit {
+      self.value = Int32.min
+    } else {
+      self.value = value * kFixedPointDenominator
+    }
   }
 
   static func * (a: LayoutUnit, b: LayoutUnit) -> LayoutUnit {
@@ -473,7 +476,7 @@ struct LayoutUnit: Comparable {
     return returnVal
   }
 
-  private var value: Int32
+  private var value: Int32 = 0
 }
 
 func floorToDevicePixel(value: LayoutUnit, pixelSnappingFactor: Float32) -> Float32 {
