@@ -73,10 +73,7 @@ class LegacyInlineBox {
   func size() -> FloatSize { return FloatSize(width: width(), height: height()) }
 
   // The logicalLeft position is the left edge of the line box in a horizontal line and the top edge in a vertical line.
-  func logicalLeft() -> Float32 {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func logicalLeft() -> Float32 { return isHorizontal() ? m_topLeft.x : m_topLeft.y }
 
   func logicalRight() -> Float32 {
     // TODO(asuhan): implement this
