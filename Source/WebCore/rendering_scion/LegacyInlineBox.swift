@@ -44,10 +44,7 @@ class LegacyInlineBox {
   // FIXME: Hide this once all callers are using tighter types.
   func rendererObject() -> RenderObjectWrapper { return renderer }
 
-  func parent() -> LegacyInlineFlowBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func parent() -> LegacyInlineFlowBox? { return m_parent }
 
   func root() -> LegacyRootInlineBox {
     // TODO(asuhan): implement this
@@ -125,6 +122,8 @@ class LegacyInlineBox {
   }
 
   private let m_nextOnLine: LegacyInlineBox? = nil  // The next element on the same line as us.
+
+  private let m_parent: LegacyInlineFlowBox? = nil  // The box that contains us.
 
   let renderer: RenderObjectWrapper
   private var m_topLeft = FloatPoint()
