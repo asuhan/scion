@@ -114,8 +114,7 @@ class LegacyInlineBox {
   }
 
   func selectionState() -> RenderObjectWrapper.HighlightState {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    return rendererObject().selectionState()
   }
 
   private func lineStyle() -> RenderStyleWrapper {
