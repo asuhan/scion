@@ -130,8 +130,10 @@ class LegacyInlineBox {
   }
 
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !rendererObject().style().isFlippedBlocksWritingMode() {
+      return
+    }
+    root().blockFlow().flipForWritingMode(rect: &rect)
   }
 
   private struct InlineBoxBitfields {
