@@ -28,12 +28,12 @@
 
 #include <wtf/TZoneMallocInlines.h>
 
-struct HorizontalEdgesRaw {
+struct BoxGeometryHorizontalEdgesRaw {
     int32_t start;
     int32_t end;
 };
 
-extern "C" WEBCORE_EXPORT HorizontalEdgesRaw BoxGeometry_horizontalMargin(const void* p)
+extern "C" WEBCORE_EXPORT BoxGeometryHorizontalEdgesRaw BoxGeometry_horizontalMargin(const void* p)
 {
     auto edges = static_cast<const WebCore::Layout::BoxGeometry*>(p)->horizontalMargin();
     return { edges.start.rawValue(), edges.end.rawValue() };
@@ -193,11 +193,6 @@ extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalMargin(void* p, int32_t be
 {
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setVerticalMargin(WebCore::Layout::BoxGeometry::VerticalEdges { WebCore::LayoutUnit::fromRawValue(before), WebCore::LayoutUnit::fromRawValue(after) });
 }
-
-struct BoxGeometryHorizontalEdgesRaw {
-    int32_t start;
-    int32_t end;
-};
 
 struct BoxGeometryVerticalEdgesRaw {
     int32_t before;

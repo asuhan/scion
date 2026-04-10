@@ -68,11 +68,6 @@ struct WordBreakLeftRaw {
     float logicalWidth;
 };
 
-struct HorizontalEdgesRaw {
-    int32_t start;
-    int32_t end;
-};
-
 struct OptionalFloatRaw {
     float value;
     bool is_valid;
@@ -1024,7 +1019,7 @@ void InlineDamage_setInlineItemListClean(void*);
 bool InlineDamage_hasDetachedContent(const void*);
 const void* CPtrArrElement(const void* const*, uint64_t);
 int32_t I32ArrElement(const void*, uint64_t);
-struct HorizontalEdgesRaw BoxGeometry_horizontalMargin(const void*);
+struct BoxGeometryHorizontalEdgesRaw BoxGeometry_horizontalMargin(const void*);
 int32_t BoxGeometry_marginBefore(const void*);
 int32_t BoxGeometry_marginStart(const void*);
 int32_t BoxGeometry_marginAfter(const void*);
