@@ -83,10 +83,7 @@ class LegacyInlineBox {
   func logicalBottom() -> Float32 { return logicalTop() + logicalHeight() }
 
   // The logical width is our extent in the line's overall inline direction, i.e., width for horizontal text and height for vertical text.
-  func setLogicalWidth(_ w: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setLogicalWidth(_ w: Float32) { m_logicalWidth = w }
 
   private func logicalWidth() -> Float32 { return m_logicalWidth }
 
@@ -150,7 +147,7 @@ class LegacyInlineBox {
 
   let renderer: RenderObjectWrapper
 
-  private let m_logicalWidth: Float32 = 0
+  private var m_logicalWidth: Float32 = 0
   private var m_topLeft = FloatPoint()
 
   private var m_bitfields = InlineBoxBitfields()
