@@ -40,6 +40,7 @@ namespace WebCore {
 
 class RenderLayer;
 class RenderLayerCompositor;
+class RenderLayerModelObject;
 class RenderFragmentContainer;
 
 namespace Layout {
@@ -179,6 +180,8 @@ public:
     SingleThreadWeakPtr<RenderElement> viewTransitionRoot() const;
 
     void styleDidChange(StyleDifference, const RenderStyle*);
+
+    void mapLocalToContainer(const RenderLayerModelObject* repaintContainer, TransformState&, OptionSet<MapCoordinatesMode>, bool* wasFixed) const;
 
     const RenderObject* pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap&) const;
 

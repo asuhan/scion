@@ -180,6 +180,8 @@ extern "C" void* RenderViewScion_viewTransitionRoot(const void*);
 
 extern "C" void RenderViewScion_styleDidChange(void*, uint8_t, const void*);
 
+extern "C" void RenderViewScion_mapLocalToContainer(const void*, void*, void*, uint8_t, bool*);
+
 extern "C" void* RenderViewScion_pushMappingToContainer(const void*, const void*, void*);
 
 extern "C" bool RenderViewScion_requiresColumns(const void*, int32_t desiredColumnCount);
@@ -577,6 +579,11 @@ SingleThreadWeakPtr<RenderElement> RenderViewScion::viewTransitionRoot() const
 void RenderViewScion::styleDidChange(StyleDifference diff, const RenderStyle* oldStyle)
 {
     RenderViewScion_styleDidChange(m_handle, static_cast<uint8_t>(diff), oldStyle);
+}
+
+void RenderViewScion::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
+{
+    RenderViewScion_mapLocalToContainer(m_handle, const_cast<RenderLayerModelObject*>(ancestorContainer), &transformState, mode.toRaw(), wasFixed);
 }
 
 const RenderObject* RenderViewScion::pushMappingToContainer(const RenderLayerModelObject* ancestorToStopAt, RenderGeometryMap& geometryMap) const

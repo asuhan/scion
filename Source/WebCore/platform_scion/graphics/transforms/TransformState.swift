@@ -24,6 +24,8 @@
  */
 
 class TransformState {
+  init(_ p: UnsafeMutableRawPointer) { self.p = p }
+
   enum TransformDirection {
     case ApplyTransformDirection
     case UnapplyInverseTransformDirection
@@ -122,4 +124,6 @@ class TransformState {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private let p: UnsafeMutableRawPointer
 }

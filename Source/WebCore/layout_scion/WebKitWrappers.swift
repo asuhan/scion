@@ -886,6 +886,21 @@ func RenderViewScion_styleDidChange(
   view.styleDidChange(diff: StyleDifference(rawValue: diffRaw)!, oldStyle: oldStyle)
 }
 
+@_cdecl("RenderViewScion_mapLocalToContainer")
+func RenderViewScion_mapLocalToContainer(
+  _ viewRaw: UnsafeRawPointer, _ ancestorContainerRaw: UnsafeMutableRawPointer?,
+  _ transformStateRaw: UnsafeMutableRawPointer, _ modeRaw: UInt8,
+  _ wasFixed: UnsafeMutablePointer<Bool>?
+) {
+  let view = Unmanaged<RenderViewWrapper>.fromOpaque(viewRaw).takeUnretainedValue()
+  let ancestorContainer =
+    ancestorContainerRaw != nil ? RenderLayerModelObjectWrapper(p: ancestorContainerRaw!) : nil
+  let transformState = TransformState(transformStateRaw)
+  let mode = MapCoordinatesMode(rawValue: modeRaw)
+  var wasFixedCopy: Bool? = wasFixed?.pointee
+  view.mapLocalToContainer(ancestorContainer, transformState, mode, &wasFixedCopy)
+}
+
 @_cdecl("RenderViewScion_pushMappingToContainer")
 func RenderViewScion_pushMappingToContainer(
   _ viewRaw: UnsafeRawPointer, _ ancestorToStopAtRaw: UnsafeRawPointer?,

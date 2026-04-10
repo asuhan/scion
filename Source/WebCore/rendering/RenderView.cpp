@@ -378,6 +378,10 @@ LayoutUnit RenderView::clientLogicalHeightForFixedPosition() const
 
 void RenderView::mapLocalToContainer(const RenderLayerModelObject* ancestorContainer, TransformState& transformState, OptionSet<MapCoordinatesMode> mode, bool* wasFixed) const
 {
+    if (m_scion) {
+        m_scion->mapLocalToContainer(ancestorContainer, transformState, mode, wasFixed);
+        return;
+    }
     // If a container was specified, and was not nullptr or the RenderView,
     // then we should have found it by now.
     ASSERT_ARG(ancestorContainer, !ancestorContainer || ancestorContainer == this);
