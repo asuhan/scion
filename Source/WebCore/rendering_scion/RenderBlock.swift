@@ -807,8 +807,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func paginationStrut() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return getBlockRareData()?.m_paginationStrut ?? LayoutUnit(value: UInt64(0))
   }
 
   func setPaginationStrut(strut: LayoutUnit) {
