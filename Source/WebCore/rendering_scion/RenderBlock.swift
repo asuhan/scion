@@ -956,8 +956,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   private func logicalLeftForChild(child: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? child.x() : child.y()
   }
 
   func setLogicalLeftForChild(
