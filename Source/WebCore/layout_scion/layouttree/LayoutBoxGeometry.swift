@@ -496,7 +496,16 @@ class BoxGeometry {
   }
 
   func setBorder(border: Edges) {
-    assert(isNativeImpl())
+    if !isNativeImpl() {
+      wk_interop.BoxGeometry_setBorder(
+        p,
+        BoxGeometryEdgesRaw(
+          horizontal: BoxGeometryHorizontalEdgesRaw(
+            start: border.horizontal.start.rawValue(), end: border.horizontal.end.rawValue()),
+          vertical: BoxGeometryVerticalEdgesRaw(
+            before: border.vertical.before.rawValue(), after: border.vertical.after.rawValue())))
+      return
+    }
     #if ASSERT_ENABLED
       setHasValidBorder()
     #endif  // ASSERT_ENABLED

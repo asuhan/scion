@@ -1056,6 +1056,7 @@ void BoxGeometry_setContentBoxHeight(void*, int32_t);
 void BoxGeometry_setContentBoxWidth(void*, int32_t);
 void BoxGeometry_setHorizontalMargin(void*, int32_t, int32_t);
 void BoxGeometry_setVerticalMargin(void*, int32_t, int32_t);
+void BoxGeometry_setBorder(void* p, struct BoxGeometryEdgesRaw);
 void BoxGeometry_setVerticalSpaceForScrollbar(void*, int32_t);
 void BoxGeometry_setHorizontalSpaceForScrollbar(void*, int32_t);
 int32_t BoxGeometry_top(const void*);

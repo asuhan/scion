@@ -194,6 +194,27 @@ extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalMargin(void* p, int32_t be
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setVerticalMargin(WebCore::Layout::BoxGeometry::VerticalEdges { WebCore::LayoutUnit::fromRawValue(before), WebCore::LayoutUnit::fromRawValue(after) });
 }
 
+struct BoxGeometryHorizontalEdgesRaw {
+    int32_t start;
+    int32_t end;
+};
+
+struct BoxGeometryVerticalEdgesRaw {
+    int32_t before;
+    int32_t after;
+};
+
+struct BoxGeometryEdgesRaw {
+    struct BoxGeometryHorizontalEdgesRaw horizontal;
+    struct BoxGeometryVerticalEdgesRaw vertical;
+};
+
+extern "C" WEBCORE_EXPORT void BoxGeometry_setBorder(void* p, BoxGeometryEdgesRaw border_raw)
+{
+    static_cast<WebCore::Layout::BoxGeometry*>(p)->setBorder({ { WebCore::LayoutUnit::fromRawValue(border_raw.horizontal.start), WebCore::LayoutUnit::fromRawValue(border_raw.horizontal.end) },
+        { WebCore::LayoutUnit::fromRawValue(border_raw.vertical.before), WebCore::LayoutUnit::fromRawValue(border_raw.vertical.after) } });
+}
+
 extern "C" WEBCORE_EXPORT void BoxGeometry_setVerticalSpaceForScrollbar(void* p, int32_t scrollbar_height)
 {
     static_cast<WebCore::Layout::BoxGeometry*>(p)->setVerticalSpaceForScrollbar(WebCore::LayoutUnit::fromRawValue(scrollbar_height));
