@@ -130,5 +130,7 @@ class LegacyInlineFlowBox: LegacyInlineBox {
     return lineBottom
   }
 
+  override final func isInlineFlowBox() -> Bool { return true }
+
   private let overflow: RenderOverflow? = nil
 }

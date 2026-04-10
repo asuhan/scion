@@ -35,6 +35,12 @@ class LegacyInlineBox {
     fatalError("Not reached")
   }
 
+  func isInlineFlowBox() -> Bool { return false }
+
+  private func hasVirtualLogicalHeight() -> Bool { return m_bitfields.hasVirtualLogicalHeight }
+
+  func virtualLogicalHeight() -> Float32 { fatalError("Not reached") }
+
   func isHorizontal() -> Bool { return m_bitfields.isHorizontal }
 
   func setIsHorizontal(_ isHorizontal: Bool) { m_bitfields.isHorizontal = isHorizontal }
@@ -94,6 +100,29 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  private func logicalWidth() -> Float32 { return m_logicalWidth }
+
+  // The logical height is our extent in the block flow direction, i.e., height for horizontal text and width for vertical text.
+  private func logicalHeight() -> Float32 {
+    if hasVirtualLogicalHeight() {
+      return virtualLogicalHeight()
+    }
+
+    let lineStyle = self.lineStyle()
+    if rendererObject().isRenderTextOrLineBreak() {
+      return Float32(lineStyle.metricsOfPrimaryFont().intHeight())
+    }
+
+    assert(isInlineFlowBox())
+    let flowObject = boxModelObject()
+    let fontMetrics = lineStyle.metricsOfPrimaryFont()
+    var result = Float32(fontMetrics.intHeight())
+    if parent() != nil {
+      result += flowObject!.borderAndPaddingLogicalHeight()
+    }
+    return result
+  }
+
   func dirtyLineBoxes() {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -104,10 +133,16 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  private func lineStyle() -> RenderStyleWrapper {
+    return m_bitfields.firstLine ? rendererObject().firstLineStyle() : rendererObject().style()
+  }
+
   // Use with caution! The type is not checked!
   func boxModelObject() -> RenderBoxModelObjectWrapper? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    if !(rendererObject() is RenderTextWrapper) {
+      return rendererObject() as! RenderBoxModelObjectWrapper?
+    }
+    return nil
   }
 
   func flipForWritingMode(rect: inout LayoutRectWrapper) {
@@ -116,6 +151,8 @@ class LegacyInlineBox {
   }
 
   private struct InlineBoxBitfields {
+    let firstLine = false
+    let hasVirtualLogicalHeight = false
     var isHorizontal = true
   }
 
@@ -124,6 +161,8 @@ class LegacyInlineBox {
   private let m_parent: LegacyInlineFlowBox? = nil  // The box that contains us.
 
   let renderer: RenderObjectWrapper
+
+  private let m_logicalWidth: Float32 = 0
   private var m_topLeft = FloatPoint()
 
   private var m_bitfields = InlineBoxBitfields()

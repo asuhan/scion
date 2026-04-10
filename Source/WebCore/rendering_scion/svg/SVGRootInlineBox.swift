@@ -27,6 +27,8 @@ final class SVGRootInlineBox: LegacyRootInlineBox {
     super.init(renderSVGText)
   }
 
+  override final func virtualLogicalHeight() -> Float32 { return logicalHeight }
+
   private func setLogicalHeight(_ height: Float32) { logicalHeight = height }
 
   func computePerCharacterLayoutInformation() {

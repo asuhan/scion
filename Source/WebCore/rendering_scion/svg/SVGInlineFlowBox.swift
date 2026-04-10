@@ -38,6 +38,8 @@ final class SVGInlineFlowBox: LegacyInlineFlowBox {
     fatalError("Not implemented")
   }
 
+  override final func virtualLogicalHeight() -> Float32 { return logicalHeight }
+
   override func paint(
     paintInfo: PaintInfoWrapper, paintOffset: LayoutPointWrapper, lineTop: LayoutUnit,
     lineBottom: LayoutUnit

@@ -33,6 +33,8 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     fatalError("Not implemented")
   }
 
+  override final func virtualLogicalHeight() -> Float32 { return logicalHeight }
+
   func paintSelectionBackground(_ paintInfo: PaintInfoWrapper) {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
@@ -46,10 +48,7 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     painter.paint()
   }
 
-  func setLogicalHeight(_ height: Float32) {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func setLogicalHeight(_ height: Float32) { logicalHeight = height }
 
   func calculateBoundaries() -> FloatRectWrapper {
     var textRect = FloatRectWrapper()
@@ -88,6 +87,8 @@ final class SVGInlineTextBox: LegacyInlineTextBox {
     // TODO(asuhan): implement this
     fatalError("Not implemented")
   }
+
+  private var logicalHeight: Float32 = 0
 
   private let textFragments: [SVGTextFragment]
 }

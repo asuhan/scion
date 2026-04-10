@@ -1263,6 +1263,11 @@ class RenderObjectWrapper: CachedImageClientWrapper {
     return isRenderLineBreak() && isWBR()
   }
 
+  func isRenderTextOrLineBreak() -> Bool {
+    assert(isNativeImpl())
+    return isRenderText() || isRenderLineBreak()
+  }
+
   func isRenderBox() -> Bool {
     if !isNativeImpl() {
       return wk_interop.RenderObject_isRenderBox(id())
