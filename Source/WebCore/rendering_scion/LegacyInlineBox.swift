@@ -46,10 +46,7 @@ class LegacyInlineBox {
 
   func parent() -> LegacyInlineFlowBox? { return m_parent }
 
-  func root() -> LegacyRootInlineBox {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func root() -> LegacyRootInlineBox { return parent()?.root() ?? (self as! LegacyRootInlineBox) }
 
   // x() is the left side of the box in the containing block's coordinate system.
   func setX(_ x: Float32) { m_topLeft.setX(x: x) }
