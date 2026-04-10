@@ -35,10 +35,7 @@ class LegacyInlineBox {
     fatalError("Not reached")
   }
 
-  func isHorizontal() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func isHorizontal() -> Bool { return m_bitfields.isHorizontal }
 
   func setIsHorizontal(_ isHorizontal: Bool) {
     // TODO(asuhan): implement this
@@ -129,6 +126,12 @@ class LegacyInlineBox {
     fatalError("Not implemented")
   }
 
+  private struct InlineBoxBitfields {
+    let isHorizontal = true
+  }
+
   let renderer: RenderObjectWrapper
   private var m_topLeft = FloatPoint()
+
+  private let m_bitfields = InlineBoxBitfields()
 }
