@@ -941,8 +941,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   func logicalWidthForChild(child: RenderBoxWrapper) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return isHorizontalWritingMode() ? child.width() : child.height()
   }
 
   func logicalHeightForChild(child: RenderBoxWrapper) -> LayoutUnit {
