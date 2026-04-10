@@ -51,10 +51,7 @@ class LegacyInlineBox {
   }
 
   // FIXME: Hide this once all callers are using tighter types.
-  func rendererObject() -> RenderObjectWrapper {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func rendererObject() -> RenderObjectWrapper { return renderer }
 
   func parent() -> LegacyInlineFlowBox? {
     // TODO(asuhan): implement this
