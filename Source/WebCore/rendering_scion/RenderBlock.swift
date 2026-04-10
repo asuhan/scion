@@ -909,8 +909,11 @@ class RenderBlockWrapper: RenderBoxWrapper {
   }
 
   override func adjustIntrinsicLogicalHeightForBoxSizing(height: LayoutUnit) -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    if style().boxSizing() == .BorderBox {
+      return height + borderAndPaddingLogicalHeight()
+    }
+    return height + intrinsicBorderForFieldset()
   }
 
   func paintExcludedChildrenInBorder(
