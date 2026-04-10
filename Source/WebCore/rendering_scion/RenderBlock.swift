@@ -276,6 +276,7 @@ struct TextRunFlags: OptionSet {
 
 class RenderBlockRareData {
   var m_paginationStrut = LayoutUnit()
+  var m_pageLogicalOffset = LayoutUnit()
   let m_intrinsicBorderForFieldset = LayoutUnit()
 }
 
@@ -827,8 +828,8 @@ class RenderBlockWrapper: RenderBoxWrapper {
   // The page logical offset is the object's offset from the top of the page in the page progression
   // direction (so an x-offset in vertical text and a y-offset for horizontal text).
   func pageLogicalOffset() -> LayoutUnit {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
+    assert(isNativeImpl())
+    return getBlockRareData()?.m_pageLogicalOffset ?? LayoutUnit(value: UInt64(0))
   }
 
   // The page logical offset is the object's offset from the top of the page in the page progression
