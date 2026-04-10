@@ -39,10 +39,7 @@ class LegacyInlineBox {
 
   func setIsHorizontal(_ isHorizontal: Bool) { m_bitfields.isHorizontal = isHorizontal }
 
-  func nextOnLine() -> LegacyInlineBox? {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func nextOnLine() -> LegacyInlineBox? { return m_nextOnLine }
 
   // FIXME: Hide this once all callers are using tighter types.
   func rendererObject() -> RenderObjectWrapper { return renderer }
@@ -126,6 +123,8 @@ class LegacyInlineBox {
   private struct InlineBoxBitfields {
     var isHorizontal = true
   }
+
+  private let m_nextOnLine: LegacyInlineBox? = nil  // The next element on the same line as us.
 
   let renderer: RenderObjectWrapper
   private var m_topLeft = FloatPoint()
