@@ -107,6 +107,11 @@ extern "C" WEBCORE_EXPORT bool Node_hasChildNodes(const void* raw)
     return static_cast<const WebCore::Node*>(raw)->hasChildNodes();
 }
 
+extern "C" WEBCORE_EXPORT bool Node_isSVGElement(const void* raw)
+{
+    return static_cast<const WebCore::Node*>(raw)->isSVGElement();
+}
+
 extern "C" WEBCORE_EXPORT bool Node_isDocumentNode(const void* raw)
 {
     return static_cast<const WebCore::Node*>(raw)->isDocumentNode();
