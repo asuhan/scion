@@ -39,10 +39,7 @@ class NodeWrapper {
     fatalError("Not implemented")
   }
 
-  func nodeHasChildNodes() -> Bool {
-    // TODO(asuhan): implement this
-    fatalError("Not implemented")
-  }
+  func nodeHasChildNodes() -> Bool { return wk_interop.Node_hasChildNodes(p) }
 
   func isSVGElement() -> Bool {
     // TODO(asuhan): implement this

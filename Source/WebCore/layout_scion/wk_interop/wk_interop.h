@@ -1165,6 +1165,7 @@ bool Settings_cssUnprefixedBackdropFilterEnabled(const void*);
 bool Settings_layerBasedSVGEngineEnabled(const void*);
 bool Settings_systemLayoutDirection(const void*);
 bool Settings_userInterfaceDirectionPolicy(const void*);
+bool Node_hasChildNodes(const void*);
 bool Node_isDocumentNode(const void*);
 bool Node_isRootEditableElement(const void*);
 void* Node_document(const void*);
